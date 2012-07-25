@@ -1,0 +1,135 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+using Osm.UI.WinForms.MapViewerUserControl.Logic;
+using Osm.Renderer.Gdi.Targets.UserControlTarget;
+using Osm.Renderer;
+using Tools.Math.Geo;
+
+namespace Osm.UI.WinForms.MapViewerUserControl
+{
+    /// <summary>
+    /// Control used only for viewing the map.
+    /// </summary>
+    public partial class MapViewerUserControl : UserControl
+    {
+        /// <summary>
+        /// Holds the active logic.
+        /// </summary>
+        private MapViewerUserControlLogic _logic;
+
+        public MapViewerUserControl()
+        {
+            InitializeComponent();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);            
+
+            // create the initial logic.
+            _logic = new MapViewingLogic(this);
+        }
+
+        #region Properties
+
+        /// <summary>
+        /// Returns the current view.
+        /// </summary>
+        internal Osm.Renderer.View View
+        {
+            get
+            {
+                return this.mapTarget.View;
+            }
+        }
+
+        /// <summary>
+        /// Returns the target.
+        /// </summary>
+        internal UserControlTarget Target
+        {
+            get
+            {
+                return this.mapTarget;
+            }
+        }
+
+        /// <summary>
+        /// Gets/Sets the map being displayed.
+        /// </summary>
+        public Map.Map Map
+        {
+            get
+            {
+                return this.Target.Map;
+            }
+            set
+            {
+                this.Target.Map = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets/Sets the zoomfactor being displayed.
+        /// </summary>
+        public float ZoomFactor
+        {
+            get
+            {
+                return this.Target.ZoomFactor;
+            }
+            set
+            {
+                this.Target.ZoomFactor = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets/Sets the center being displayed.
+        /// </summary>
+        public GeoCoordinate Center
+        {
+            get
+            {
+                return this.Target.Center;
+            }
+            set
+            {
+                this.Target.Center = value;
+            }
+        }
+
+        #endregion
+
+        #region Events -> Logics
+
+        private void mapTarget_MapMouseDown(UserControlTargetEventArgs e)
+        {
+            _logic = _logic.OnMapMouseDown(e);
+        }
+
+        private void mapTarget_MapMouseMove(UserControlTargetEventArgs e)
+        {
+            _logic = _logic.OnMapMouseMove(e);
+        }
+
+        private void mapTarget_MapMouseUp(UserControlTargetEventArgs e)
+        {
+            _logic = _logic.OnMapMouseUp(e);
+        }
+
+        private void mapTarget_MapMouseWheel(UserControlTargetEventArgs e)
+        {
+            _logic = _logic.OnMapMouseWheel(e);
+        }
+
+        #endregion
+
+    }
+}

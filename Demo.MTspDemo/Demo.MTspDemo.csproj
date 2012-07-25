@@ -1,0 +1,181 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{68F799B2-5701-4217-84BD-36C3A5F0642B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Demo.MTspDemo</RootNamespace>
+    <AssemblyName>Demo.MTspDemo</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DemoForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DemoForm.Designer.cs">
+      <DependentUpon>DemoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="DemoForm.resx">
+      <DependentUpon>DemoForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="App.config" />
+    <None Include="demo.osm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="demo.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Osm.Core\Osm.Core.csproj">
+      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
+      <Name>Osm.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Data.Oracle\Osm.Data.Oracle.csproj">
+      <Project>{060B01E7-9314-41DD-BC17-65ED9E6A54FE}</Project>
+      <Name>Osm.Data.Oracle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Data.XML\Osm.Data.XML.csproj">
+      <Project>{18254C55-15C8-4438-9F92-B3B78E2720F5}</Project>
+      <Name>Osm.Data.XML</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Data\Osm.Data.Core.csproj">
+      <Project>{5BC09D7C-5226-4233-BF54-27BFD838F8F8}</Project>
+      <Name>Osm.Data.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Interpreter\Osm.Interpreter.csproj">
+      <Project>{30CCEC5D-49C1-4A5F-986D-8CE14EBDE666}</Project>
+      <Name>Osm.Interpreter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Map\Osm.Map.csproj">
+      <Project>{B076C8ED-B40F-4BAB-B91A-0673BB753C06}</Project>
+      <Name>Osm.Map</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Renderer.Gdi\Osm.Renderer.Gdi.csproj">
+      <Project>{9B62129C-166A-4D54-AFD5-8ECE28DAC233}</Project>
+      <Name>Osm.Renderer.Gdi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Routing.Core\Osm.Routing.Core.csproj">
+      <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
+      <Name>Osm.Routing.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Routing.Instructions\Osm.Routing.Instructions.csproj">
+      <Project>{022CE792-DBDA-4A1E-8C4B-5954F02C4C67}</Project>
+      <Name>Osm.Routing.Instructions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Routing\Osm.Routing.Raw.csproj">
+      <Project>{5E146436-B64C-4C3A-832E-26A53AA6BA54}</Project>
+      <Name>Osm.Routing.Raw</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.UI.WinForms\Osm.UI.WinForms.csproj">
+      <Project>{3DDB7306-710B-4CD9-90B8-E29F1127B1A5}</Project>
+      <Name>Osm.UI.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Core\Tools.Core.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>Tools.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.AI.Genetic\Tools.Math.AI.Genetic.csproj">
+      <Project>{FC226E3D-F4B5-462A-82BB-09D53F8C6DC2}</Project>
+      <Name>Tools.Math.AI.Genetic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.Graph.Routing.Point2Point\Tools.Math.Graph.Routing.csproj">
+      <Project>{B6B8FEAF-91AB-470C-9347-E10E03DDE11F}</Project>
+      <Name>Tools.Math.Graph.Routing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.Graph\Tools.Math.Graph.csproj">
+      <Project>{FAD63D7A-AE1E-4133-95D4-BAB2A2BB8EFF}</Project>
+      <Name>Tools.Math.Graph</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.TravellingSalesman\Tools.Math.TSP.csproj">
+      <Project>{F12D6C89-D3E2-410C-9D74-55694A05C1BE}</Project>
+      <Name>Tools.Math.TSP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math\Tools.Math.csproj">
+      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
+      <Name>Tools.Math</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Xml\Tools.Xml.csproj">
+      <Project>{550F62F8-B62F-4E77-AF12-ACFD9378B9A0}</Project>
+      <Name>Tools.Xml</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\house.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\flag_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\flag_red.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

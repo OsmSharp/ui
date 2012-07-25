@@ -1,0 +1,82 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Tools.Math.Shapes.PrimitivesFactory;
+
+namespace Tools.Math.Geo.Factory
+{
+    /// <summary>
+    /// A factory creating geo coordinate primitives.
+    /// 
+    /// Used in classes needing primitives of the geo type.
+    /// </summary>
+    public class PrimitiveGeoFactory : IPrimitivesFactory<GeoCoordinate, GeoCoordinateBox, GeoCoordinateLine>
+    {
+        /// <summary>
+        /// Creates a new primitive factory.
+        /// </summary>
+        private PrimitiveGeoFactory()
+        {
+
+        }
+
+        #region Singleton
+
+        /// <summary>
+        /// Holds the instance of the primitives factory.
+        /// </summary>
+        private static PrimitiveGeoFactory _instance;
+
+        /// <summary>
+        /// Returns the instance of the primitives factory.
+        /// </summary>
+        public static PrimitiveGeoFactory Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = new PrimitiveGeoFactory();
+                }
+                return _instance;
+            }
+        }
+
+        #endregion
+
+        #region IPrimitivesFactory<GeoCoordinate,GeoCoordinateBox> Members
+
+        /// <summary>
+        /// Creates a new point.
+        /// </summary>
+        /// <param name="values"></param>
+        /// <returns></returns>
+        public GeoCoordinate CreatePoint(double[] values)
+        {
+            return new GeoCoordinate(values);
+        }
+
+        /// <summary>
+        /// Creates a new geocoordinate box.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public GeoCoordinateBox CreateRectangle(GeoCoordinate[] points)
+        {
+            return new GeoCoordinateBox(points);
+        }
+
+        /// <summary>
+        /// Creates a new geocoordinate line.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public GeoCoordinateLine CreateLine(GeoCoordinate point1, GeoCoordinate point2)
+        {
+            return new GeoCoordinateLine(point1, point2,true,true);
+        }
+
+        #endregion
+    }
+}

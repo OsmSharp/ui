@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{12C3A58D-E095-41D2-A0DE-CE3A3C7ECAE6}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Demo.RangeApp</RootNamespace>
+    <AssemblyName>Demo.RangeApp</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Osm.Data">
+      <HintPath>..\Output\Osm.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Osm.Map">
+      <HintPath>..\Output\Osm.Map.dll</HintPath>
+    </Reference>
+    <Reference Include="Osm.Renderer.Gdi">
+      <HintPath>..\Output\Osm.Renderer.Gdi.dll</HintPath>
+    </Reference>
+    <Reference Include="Osm.Xml">
+      <HintPath>..\Output\Osm.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Tools.Math">
+      <HintPath>..\Output\Tools.Math.dll</HintPath>
+    </Reference>
+    <Reference Include="Tools.Xml">
+      <HintPath>..\Output\Tools.Xml.dll</HintPath>
+    </Reference>
+    <Reference Include="Tools.Xml.Gpx">
+      <HintPath>..\Output\Tools.Xml.Gpx.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="RangeAppForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RangeAppForm.Designer.cs">
+      <DependentUpon>RangeAppForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="RangeAppForm.resx">
+      <DependentUpon>RangeAppForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="App.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <None Include="test_area.osm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Osm.Core\Osm.Core.csproj">
+      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
+      <Name>Osm.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Data.XML\Osm.Data.XML.csproj">
+      <Project>{18254C55-15C8-4438-9F92-B3B78E2720F5}</Project>
+      <Name>Osm.Data.XML</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Data\Osm.Data.Core.csproj">
+      <Project>{5BC09D7C-5226-4233-BF54-27BFD838F8F8}</Project>
+      <Name>Osm.Data.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Routing.Core\Osm.Routing.Core.csproj">
+      <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
+      <Name>Osm.Routing.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Routing\Osm.Routing.Raw.csproj">
+      <Project>{5E146436-B64C-4C3A-832E-26A53AA6BA54}</Project>
+      <Name>Osm.Routing.Raw</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.UI.WinForms\Osm.UI.WinForms.csproj">
+      <Project>{3DDB7306-710B-4CD9-90B8-E29F1127B1A5}</Project>
+      <Name>Osm.UI.WinForms</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Core\Tools.Core.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>Tools.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.Graph\Tools.Math.Graph.csproj">
+      <Project>{FAD63D7A-AE1E-4133-95D4-BAB2A2BB8EFF}</Project>
+      <Name>Tools.Math.Graph</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\car_small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gas_station.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

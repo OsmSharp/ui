@@ -1,0 +1,131 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Osm.Core;
+using Tools.Math.Geo;
+using Osm.Core.Filters;
+
+namespace Osm.Data
+{
+    /// <summary>
+    /// Represents a generic readonly data source.
+    /// 
+    /// This datasource can only generate osm elements.
+    /// 
+    /// Used for: GPX, KML, ...
+    /// 
+    /// </summary>
+    public interface IDataSourceReadOnly
+    {
+        /// <summary>
+        /// Returns the bounding box of the data in this source if possible.
+        /// </summary>
+        GeoCoordinateBox BoundingBox { get; }
+
+        /// <summary>
+        /// The name of this datasource.
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// The unique id for this datasource.
+        /// </summary>
+        Guid Id { get; }
+        
+        #region Features
+
+        /// <summary>
+        /// Returns true if this datasource is bounded.
+        /// </summary>
+        bool HasBoundinBox { get; }
+
+        /// <summary>
+        /// Returns true if this datasource is readonly.
+        /// </summary>
+        bool IsReadOnly { get; }
+
+        #endregion
+
+        #region Nodes
+
+        /// <summary>
+        /// Returns the node with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Node GetNode(long id);
+
+        /// <summary>
+        /// Returns the node(s) with the given id(s).
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        IList<Node> GetNodes(IList<long> ids);
+
+        #endregion
+
+        #region Relation
+
+        /// <summary>
+        /// Returns the relation with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Relation GetRelation(long id);
+
+        /// <summary>
+        /// Returns the relation(s) with the given id(s).
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        IList<Relation> GetRelations(IList<long> ids);
+
+        /// <summary>
+        /// Returns all the relations for the given object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        IList<Relation> GetRelationsFor(OsmBase obj);
+
+        #endregion
+
+        #region Way
+
+        /// <summary>
+        /// Returns the way with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Way GetWay(long id);
+
+        /// <summary>
+        /// Returns the way(s) with given id.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        IList<Way> GetWays(IList<long> ids);
+
+        /// <summary>
+        /// Returns the way(s) for a given node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        IList<Way> GetWaysFor(Node node);
+
+        #endregion
+
+        #region Queries
+
+        /// <summary>
+        /// Returns all the objects in this dataset that evaluate the filter to true.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
+        IList<OsmBase> Get(GeoCoordinateBox box, Filter filter);
+
+        #endregion
+
+    }
+}

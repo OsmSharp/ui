@@ -1,0 +1,130 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
+using System.IO;
+using System.IO.Compression;
+using Osm.Core.Simple;
+using Osm.Data.Core.Processor;
+
+namespace Osm.Data.XML.Raw.Processor
+{
+    public class XmlDataProcessorSource : DataProcessorSource
+    {
+        private XmlReader _reader;
+
+        private XmlSerializer _ser_node;
+
+        private XmlSerializer _ser_way;
+
+        private XmlSerializer _ser_relation;
+
+        private SimpleOsmGeo _next;
+
+        private string _file_name;
+
+        private bool _gzip;
+
+
+        public XmlDataProcessorSource(string file_name) :
+            this(file_name,false)
+        {
+
+        }
+
+
+        public XmlDataProcessorSource(string file_name, bool gzip)
+        {
+            _file_name = file_name;
+            _gzip = gzip;
+        }
+
+        public override void Initialize()
+        {
+            _next = null;
+            _ser_node = new XmlSerializer(typeof(Osm.Core.Xml.v0_6.node));
+            _ser_way = new XmlSerializer(typeof(Osm.Core.Xml.v0_6.way));
+            _ser_relation = new XmlSerializer(typeof(Osm.Core.Xml.v0_6.relation));
+
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.CloseInput = true;
+            settings.CheckCharacters = false;
+            settings.IgnoreComments = true;
+            settings.IgnoreProcessingInstructions = true;
+            //settings.IgnoreWhitespace = true;
+
+            Stream file_stream = new FileInfo(_file_name).OpenRead();
+            if (_gzip)
+            {
+                file_stream = new GZipStream(file_stream, CompressionMode.Decompress);
+            }
+            TextReader text_reader = new StreamReader(file_stream, Encoding.UTF8);
+            _reader = XmlReader.Create(text_reader, settings);     
+        }
+
+        public override void Reset()
+        {
+            XmlReaderSettings settings = new XmlReaderSettings();
+            settings.CloseInput = true;
+            settings.CheckCharacters = false;
+            settings.IgnoreComments = true;
+            settings.IgnoreProcessingInstructions = true;
+
+            TextReader text_reader = new StreamReader(new FileInfo(_file_name).OpenRead(), Encoding.UTF8);
+            _reader = XmlReader.Create(text_reader, settings);     
+        }
+
+        public override bool MoveNext()
+        {
+            while (_reader.Read())
+            {
+                if (_reader.NodeType == XmlNodeType.Element && (_reader.Name == "node" || _reader.Name == "way" || _reader.Name == "relation"))
+                {
+                    // create a stream for only this element.
+                    string name = _reader.Name;
+                    string next_element = _reader.ReadOuterXml();
+                    XmlReader reader = XmlReader.Create(new MemoryStream(Encoding.UTF8.GetBytes(next_element)));
+                    object osm_obj = null;
+
+                    // select type of element.
+                    switch (name)
+                    {
+                         case "node":
+                             osm_obj = _ser_node.Deserialize(reader);
+                             if (osm_obj is Osm.Core.Xml.v0_6.node)
+                             {
+                                 _next = XmlSimpleConverter.ConvertToSimple(osm_obj as Osm.Core.Xml.v0_6.node);
+                                 return true;
+                             }
+                             break;
+                         case "way":
+                             osm_obj = _ser_way.Deserialize(reader);
+                             if (osm_obj is Osm.Core.Xml.v0_6.way)
+                             {
+                                 _next = XmlSimpleConverter.ConvertToSimple(osm_obj as Osm.Core.Xml.v0_6.way);
+                                 return true;
+                             }
+                             break;
+                         case "relation":
+                             osm_obj = _ser_relation.Deserialize(reader);
+                             if (osm_obj is Osm.Core.Xml.v0_6.relation)
+                             {
+                                 _next = XmlSimpleConverter.ConvertToSimple(osm_obj as Osm.Core.Xml.v0_6.relation);
+                                 return true;
+                             }
+                             break;
+                    }
+                }
+            }
+            _next = null;
+            return false;
+        }
+
+        public override SimpleOsmGeo Current()
+        {
+            return _next;
+        }
+    }
+}

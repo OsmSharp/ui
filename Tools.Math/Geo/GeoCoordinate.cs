@@ -1,0 +1,147 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Tools.Math.Units.Distance;
+using Tools.Math.Units.Angle;
+
+namespace Tools.Math.Geo
+{
+    /// <summary>
+    /// Represents a standard geo coordinate.
+    /// 
+    /// 0: longitude.
+    /// 1: latitude.
+    /// </summary>
+    [Serializable]
+    public class GeoCoordinate : PointF2D
+    {
+        /// <summary>
+        /// Creates a geo coordinate.
+        /// </summary>
+        public GeoCoordinate(double[] values)
+            :base(values)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a geo coordinate.
+        /// </summary>
+        /// <param name="longitude"></param>
+        /// <param name="latitude"></param>
+        public GeoCoordinate(double latitude,double longitude)
+            :base(new double[]{longitude,latitude})
+        {
+
+        }
+
+        #region Properties
+
+        /// <summary>
+        /// Gets/Sets the longitude.
+        /// </summary>
+        public double Longitude
+        {
+            get
+            {
+                return this[0];
+            }
+            //set
+            //{
+            //    this[0] = value;
+            //}
+        }
+
+        /// <summary>
+        /// Gets/Sets the latitude.
+        /// </summary>
+        public double Latitude
+        {
+            get
+            {
+                return this[1];
+            }
+            //set
+            //{
+            //    this[1] = value;
+            //}
+        }
+
+        #endregion
+
+        #region Calculations
+
+        /// <summary>
+        /// Calculates the distance between this point and the given point.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public double Distance(GeoCoordinate point)
+        {
+            return PointF2D.Distance(this, point);
+        }
+
+        /// <summary>
+        /// Estimates the distance between this point and the given point in meters.
+        /// Accuracy decreases with distance.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public Meter DistanceEstimate(GeoCoordinate point)
+        {
+            Meter radius_earth = Constants.RadiusOfEarth;
+
+            double lat1_rad = (this.Latitude / 180d) * System.Math.PI;
+            double lon1_rad = (this.Longitude / 180d) * System.Math.PI;
+            double lat2_rad = (point.Latitude / 180d) * System.Math.PI;
+            double lon2_rad = (point.Longitude / 180d) * System.Math.PI;
+
+            double x = (lon2_rad - lon1_rad) * System.Math.Cos((lat1_rad + lat2_rad) / 2.0);
+            double y = lat2_rad - lat1_rad;
+
+            double m = System.Math.Sqrt(x * x + y * y) * radius_earth.Value;
+
+            return m;
+        }
+
+        /// <summary>
+        /// Calculates the real distance in meters between this point and the given point.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        /// <remarks>http://en.wikipedia.org/wiki/Haversine_formula</remarks>
+        public Meter DistanceReal(GeoCoordinate point)
+        {
+            Meter radius_earth = Constants.RadiusOfEarth;
+
+            Radian lat1_rad = new Degree(this.Latitude);
+            Radian lon1_rad = new Degree(this.Longitude);
+            Radian lat2_rad = new Degree(point.Latitude);
+            Radian lon2_rad = new Degree(point.Longitude);
+
+            double dLat = (lat2_rad - lat1_rad).Value;
+            double dLon = (lon2_rad - lon1_rad).Value;
+
+            double a = System.Math.Pow(System.Math.Sin(dLat / 2), 2) +
+                       System.Math.Cos(lat1_rad.Value) * System.Math.Cos(lat2_rad.Value) *
+                       System.Math.Pow(System.Math.Sin(dLon / 2), 2);
+
+            double c = 2 * System.Math.Atan2(System.Math.Sqrt(a), System.Math.Sqrt(1 - a));
+
+            double distance = radius_earth.Value * c;
+
+            return distance;
+        }
+
+        #endregion
+
+
+        public override string ToString()
+        {
+            return string.Format("[{0},{1}]",
+                this.Latitude,
+                this.Longitude);
+        }
+    }
+}

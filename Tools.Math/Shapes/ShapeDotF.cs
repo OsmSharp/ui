@@ -1,0 +1,103 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Tools.Math.Shapes.PrimitivesFactory;
+using Tools.Math.Shapes.ResultHelpers;
+
+namespace Tools.Math.Shapes
+{
+    /// <summary>
+    /// Dot shape class; represents a point with a certain thickness.
+    /// </summary>
+    [Serializable]
+    public class ShapeDotF<PointType, RectangleType, LineType> : ShapeF<PointType, RectangleType, LineType>
+        where PointType : PointF2D
+        where RectangleType : GenericRectangleF2D<PointType>
+        where LineType : GenericLineF2D<PointType>
+    {
+        /// <summary>
+        /// The point a the center of this dot.
+        /// </summary>
+        private PointType _point;
+
+        /// <summary>
+        /// Creates a new dot shape.
+        /// </summary>
+        /// <param name="point"></param>
+        public ShapeDotF(
+            IPrimitivesFactory<PointType, RectangleType, LineType> primitives_factory,
+            PointType point)
+            :base(primitives_factory)
+        {
+            _point = point;
+        }
+
+        /// <summary>
+        /// The point this dot is located at.
+        /// </summary>
+        public PointType Point
+        {
+            get
+            {
+                return _point;
+            }
+        }
+
+        #region Box
+
+        private RectangleType _box;
+
+        /// <summary>
+        /// Returns a bounding box.
+        /// </summary>
+        public override RectangleType BoundingBox
+        {
+            get
+            {
+                if (_box == null)
+                {
+                    _box = this.PrimitivesFactory.CreateRectangle(new PointType[]{_point});
+                }
+                return _box;
+            }
+        }
+
+        /// <summary>
+        /// Calculates the distance to the given point.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public override double Distance(PointType point)
+        {
+            // just calculate the distance point to point.
+            return point.Distance(_point);
+        }
+
+        /// <summary>
+        /// Calculate the distance details to the given point.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public override DistanceResult<PointType> DistanceDetailed(PointType point)
+        {
+            DistanceResult<PointType> distance = new DistanceResult<PointType>();
+            distance.Distance = point.Distance(_point);
+            distance.ClosestPrimitive = _point;
+            return distance;
+        }
+
+        /// <summary>
+        /// Returns true if this dot lies inside the given box.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public override bool Inside(RectangleType box)
+        {
+            return box.IsInside(_point);
+        }
+
+        #endregion
+
+    }
+}

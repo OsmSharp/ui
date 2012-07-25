@@ -1,0 +1,249 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Tools.Math.VRP.MultiSalesman.Genetic
+{
+    /// <summary>
+    /// Fitness object used to represent fitness of an individual.
+    /// </summary>
+    internal class Fitness : IComparable
+    {
+        /// <summary>
+        /// The number of vehicles
+        /// </summary>
+        public int Vehicles { get; set; }
+
+        /// <summary>
+        /// The category the smallest round can be found at.
+        /// </summary>
+        public int SmallestRoundCategory { get; set; }
+
+        /// <summary>
+        /// The category the largest round can be found at.
+        /// </summary>
+        public int LargestRoundCategory { get; set; }
+
+        /// <summary>
+        /// The sum of the categories.
+        /// </summary>
+        public int CategorySum
+        {
+            get
+            {
+                return this.SmallestRoundCategory + this.LargestRoundCategory;
+            }
+        }
+
+        /// <summary>
+        /// The total time of all rounds combined.
+        /// </summary>
+        public double TotalTime { get; set; }
+
+        /// <summary>
+        /// The time of the shortest round.
+        /// </summary>
+        public double MinimumTime { get; set; }
+
+        /// <summary>
+        /// The time of the longest round.
+        /// </summary>
+        public double MaximumTime { get; set; }
+
+        /// <summary>
+        /// The time per round.
+        /// </summary>
+        public List<double> Times { get; set; }
+
+        /// <summary>
+        /// The largest category per round.
+        /// </summary>
+        public List<int> LargestRoundCategories { get; set; }
+
+        /// <summary>
+        /// The smallest category per round.
+        /// </summary>
+        public List<int> SmallestRoundCategories { get; set; }
+
+        /// <summary>
+        /// The problem this fitness needs to be evaluated against.
+        /// </summary>
+        public Problem Problem { get; set; }
+
+        /// <summary>
+        /// True if the solution is feasable.
+        /// </summary>
+        public bool Feasable { get; set; }
+
+        /// <summary>
+        /// Compares this fitness object to another.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public int CompareTo(object obj)
+        {
+            if (obj is Fitness)
+            {
+                //Fitness other = (obj as Fitness);
+                //int this_weighed_count = this.CategorySum; // (int)((double)this.LargestRoundCategory * 1.2 + (double)this.SmallestRoundCategory);
+                //if (this_weighed_count < this.TotalTolerance)
+                //{
+                //    this_weighed_count = 0;
+                //}
+                //int other_weighed_count = other.CategorySum; //  (int)((double)other.LargestRoundCategory * 1.2 + (double)other.SmallestRoundCategory);
+                //if (other_weighed_count < other.TotalTolerance)
+                //{
+                //    other_weighed_count = 0;
+                //}
+                //int equals = this_weighed_count.CompareTo(other_weighed_count);
+                //if (equals == 0)
+                //{
+                //    ////equals = this.SmallestRoundCategory.CompareTo(other.SmallestRoundCategory);
+                //    ////if (equals == 0)
+                //    ////{
+                //    if (this.SmallestRoundCategory == 50 &&
+                //        other.SmallestRoundCategory == 50)
+                //    {
+                //        equals =
+                //            this.Vehicles.CompareTo(other.Vehicles);
+                //        if (equals == 0)
+                //        {
+                //            equals =
+                //                this.TotalTime.CompareTo(other.TotalTime);
+                //        }
+                //    }
+                //    else
+                //    {
+                //        equals =
+                //            this.TotalTime.CompareTo(other.TotalTime);
+                //    }
+                //    //}
+                //}
+                //return -equals;
+
+                //Fitness other = (obj as Fitness);
+                //int this_weighed_count = this.CategorySum; // (int)((double)this.LargestRoundCategory * 1.2 + (double)this.SmallestRoundCategory);
+                //int other_weighed_count = other.CategorySum; //  (int)((double)other.LargestRoundCategory * 1.2 + (double)other.SmallestRoundCategory);
+                //int equals = this_weighed_count.CompareTo(other_weighed_count);
+                //if (equals == 0)
+                //{
+                //    //equals = this.SmallestRoundCategory.CompareTo(other.SmallestRoundCategory);
+                //    //if (equals == 0)
+                //    //{
+                //        equals =
+                //            this.Vehicles.CompareTo(other.Vehicles);
+                //        if (equals == 0)
+                //        {
+                //            equals =
+                //                this.TotalTime.CompareTo(other.TotalTime);
+                //        }
+                //    //}
+                //}
+                //return -equals;
+
+                //Fitness other = (obj as Fitness);
+                //int equals = this.LargestRoundCategory.CompareTo(other.LargestRoundCategory);
+                //if (equals == 0)
+                //{
+                //    equals = this.SmallestRoundCategory.CompareTo(other.SmallestRoundCategory);
+                //    if (equals == 0)
+                //    {
+                //        equals =
+                //            this.Vehicles.CompareTo(other.Vehicles);
+                //        if (equals == 0)
+                //        {
+                //            equals =
+                //                this.TotalTime.CompareTo(other.TotalTime);
+                //        }
+                //    }
+                //}
+                //return -equals;
+                //Fitness other = (obj as Fitness);
+                //int equals =
+                //        this.CategorySum.CompareTo(other.CategorySum);
+                //if (equals == 0)
+                //{
+                //    equals =
+                //        this.Vehicles.CompareTo(other.Vehicles);
+                //    if (equals == 0)
+                //    {
+                //        equals =
+                //            this.TotalTime.CompareTo(other.TotalTime);
+                //    }
+                //}
+                //return -equals;
+
+                Fitness other = (obj as Fitness);
+                int equals = 0;
+                if (this.Feasable && other.Feasable)
+                { // if in regime only consider total time.
+                    equals = this.TotalTime.CompareTo(other.TotalTime);
+                }
+                else
+                { // compare the category sum.
+                    equals = this.CategorySum.CompareTo(other.CategorySum);
+                    if (equals == 0)
+                    { // compare the vehicles.
+                        equals = this.Vehicles.CompareTo(other.Vehicles);
+                        if (equals == 0)
+                        { // compare the total time.
+                            equals = this.TotalTime.CompareTo(other.TotalTime);
+                        }
+                    }
+                }
+                return -equals;
+            }
+            else if (obj == null)
+            {
+                return 1;
+            }
+            throw new ArgumentOutOfRangeException();
+        }
+
+        public override string ToString()
+        {
+            return string.Format("L:{0} S:{1} Vechicles:{2} Time:{3}[{4}-{5}]",
+                this.LargestRoundCategory,
+                this.SmallestRoundCategory,
+                this.Vehicles,
+                System.Math.Round(this.TotalTime, 2),
+                System.Math.Round(this.MinimumTime, 2),
+                System.Math.Round(this.MaximumTime, 2));
+        }
+
+        #region Operator Overloading
+
+        public static bool operator ==(Fitness left, Fitness right)
+        {
+            return left.CompareTo(right) == 0;
+        }
+
+        public static bool operator !=(Fitness left, Fitness right)
+        {
+            return left.CompareTo(right) != 0;
+        }
+
+        public static bool operator <(Fitness left, Fitness right)
+        {
+            return left.CompareTo(right) > 0;
+        }
+
+        public static bool operator >(Fitness left, Fitness right)
+        {
+            return left.CompareTo(right) < 0;
+        }
+
+        public static bool operator <=(Fitness left, Fitness right)
+        {
+            return left.CompareTo(right) >= 0;
+        }
+
+        public static bool operator >=(Fitness left, Fitness right)
+        {
+            return left.CompareTo(right) <= 0;
+        }
+
+        #endregion
+    }
+}

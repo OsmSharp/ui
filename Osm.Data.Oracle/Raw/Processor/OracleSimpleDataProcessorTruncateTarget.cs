@@ -1,0 +1,142 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Oracle.DataAccess.Client;
+using Osm.Core.Simple;
+using Osm.Data.Core.Processor;
+
+namespace Osm.Data.Oracle.Raw.Processor
+{
+    public class OracleSimpleDataProcessorTruncateTarget : DataProcessorTarget
+    {
+        private OracleConnection _connection;
+        
+        private string _connection_string;
+
+        public OracleSimpleDataProcessorTruncateTarget(string connection_string)
+        {
+            _connection_string = connection_string;
+        }
+
+
+        public override void Initialize()
+        {
+            _connection = new OracleConnection(_connection_string);
+            _connection.Open();
+
+            OracleCommand command;
+
+            this.Constraints(false);
+
+            try
+            {
+                command = new OracleCommand("truncate table node");
+                command.Connection = _connection;
+                command.ExecuteNonQuery();
+                command.Dispose();
+
+                command = new OracleCommand("truncate table node_tags");
+                command.Connection = _connection;
+                command.ExecuteNonQuery();
+                command.Dispose();
+
+                command = new OracleCommand("truncate table way");
+                command.Connection = _connection;
+                command.ExecuteNonQuery();
+                command.Dispose();
+
+                command = new OracleCommand("truncate table way_tags");
+                command.Connection = _connection;
+                command.ExecuteNonQuery();
+                command.Dispose();
+
+                command = new OracleCommand("truncate table way_nodes");
+                command.Connection = _connection;
+                command.ExecuteNonQuery();
+                command.Dispose();
+
+                command = new OracleCommand("truncate table relation");
+                command.Connection = _connection;
+                command.ExecuteNonQuery();
+                command.Dispose();
+
+                command = new OracleCommand("truncate table relation_tags");
+                command.Connection = _connection;
+                command.ExecuteNonQuery();
+                command.Dispose();
+
+                command = new OracleCommand("truncate table relation_members");
+                command.Connection = _connection;
+                command.ExecuteNonQuery();
+                command.Dispose();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                this.Constraints(true);
+            }
+        }
+        private void Constraints(bool enable)
+        {
+            OracleCommand command;
+
+            string enable_str = "enable";
+            if (!enable)
+            {
+                enable_str = "disable";
+            }
+
+            string sql
+                = "select c.table_name,constraint_name "
+                + "from user_constraints c, user_tables u "
+                + "where c.table_name = u.table_name "
+                + "and constraint_type = 'R' "
+                ;
+            command = new OracleCommand(sql);
+            command.Connection = _connection;
+            OracleDataReader reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                sql = string.Format("alter table {0} {2} constraint {1}",
+                    reader["table_name"].ToString(),
+                    reader["constraint_name"].ToString(),
+                    enable_str);
+                command = new OracleCommand(sql);
+                command.Connection = _connection;
+                command.ExecuteNonQuery();
+                command.Dispose();
+            }
+            reader.Close();
+            reader.Dispose();
+        }
+
+        public override void ApplyChange(SimpleChangeSet change)
+        {
+
+        }
+
+        public override void AddNode(SimpleNode node)
+        {
+
+        }
+
+        public override void AddWay(SimpleWay way)
+        {
+
+        }
+
+        public override void AddRelation(SimpleRelation relation)
+        {
+
+        }
+
+        public override void Close()
+        {
+            _connection.Close();
+        }
+    }
+}
