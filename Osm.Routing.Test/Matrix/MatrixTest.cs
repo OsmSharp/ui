@@ -132,9 +132,17 @@ namespace Osm.Routing.Test.Matrix
             // create router.
             Router router = new Router(source);
             ResolvedPoint[] points = router.Resolve(coordinates.ToArray());
-
+            List<ResolvedPoint> connected_points = new List<ResolvedPoint>();
             // check connectivity for all points.
-            bool[] connectivity = router.CheckConnectivity(points, 1000);
+            bool[] connectivity = router.CheckConnectivity(points, 300);
+            for (int idx = 0; idx < connectivity.Length; idx++)
+            {
+                if (connectivity[idx])
+                {
+                    connected_points.Add(points[idx]);
+                }
+            }
+            points = connected_points.ToArray();
             float[][] matrix = router.CalculateManyToManyWeight(points, points);
 
             TSPLIBProblem problem = new TSPLIBProblem(

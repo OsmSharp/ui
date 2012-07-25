@@ -110,7 +110,8 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
             int generated = 0;
             Individual best = null;
-            while (generated < _max_offspring)
+            while (generated < _max_offspring 
+                && selectable_cycles.Count > 0)
             {
                 // select some random cycles.
                 List<int> cycle_starts = this.SelectCycles(selectable_cycles);
@@ -269,6 +270,27 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                 }
 
                 generated++;
+            }
+
+            if (best == null)
+            {
+                List<int> new_genome = new List<int>();
+                int next = e_a[0];
+                do
+                {
+                    new_genome.Add(next);
+                    next = e_a[next];
+                }
+                while (next != 0);
+
+                Individual individual = new Individual();
+                individual.Initialize(new_genome);
+                individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
+                if (best == null ||
+                    best.Fitness.CompareTo(individual.Fitness) > 0)
+                {
+                    best = individual;
+                }
             }
             return best;
         }

@@ -24,12 +24,22 @@ namespace Osm.Routing.Test
         {
             OsmGeo.ShapeInterperter = new SimpleShapeInterpreter();
 
-            IDataSourceReadOnly source = new Osm.Data.Oracle.Raw.OracleSimpleSource(
-                "Data source=DEV;User Id=OSM;Password=mixbeton;");
-            source = new Osm.Data.Cache.DataSourceCache(source, 12);
+            //GenerateTSPLIB("031_K1040-06");
+            //GenerateTSPLIB("036_K1210-01");
+            //GenerateTSPLIB("061_K3511");
+            //GenerateTSPLIB("072_K3510");
+            //GenerateTSPLIB("098_K3089");
+            //GenerateTSPLIB("122_K4052");
+            //GenerateTSPLIB("151_K7537");
+            //GenerateTSPLIB("168_K2160");
+            //GenerateTSPLIB("181_K4207");
+            //GenerateTSPLIB("209_K2125");
+            GenerateTSPLIB("254_K3504");
+            GenerateTSPLIB("323_K9960-01");
+            //IDataSourceReadOnly source = new Osm.Data.Oracle.Raw.OracleSimpleSource(
+            //    "Data source=DEV;User Id=OSM;Password=mixbeton;");
+            //source = new Osm.Data.Cache.DataSourceCache(source, 12);
 
-            Matrix.MatrixTest.Test("031_K1040-06", 
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\atsp\031_K1040-06.csv", source);
              
             // finished unit tests.
             //Sparse.SparseTests.DoTests();
@@ -63,6 +73,20 @@ namespace Osm.Routing.Test
             //KDTree.KDTreeTest.TestMatrix();
             //KDTree.KDTreeTest.TestLebbeke();
             //HH.HHTest.Test("tiny", 1);
+        }
+
+        static void GenerateTSPLIB(string name)
+        {
+
+            //IDataSourceReadOnly source = new OsmDataSource(
+            //        new OsmDocument(new XmlFileSource(
+            //            string.Format(@"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\atsp\{0}.osm", name))));
+            //source = new Osm.Data.Cache.DataSourceCache(source, 12);
+            IDataSourceReadOnly source = new Osm.Data.Oracle.Raw.OracleSimpleSource(
+                "Data source=DEV;User Id=OSM;Password=mixbeton;");
+            source = new Osm.Data.Cache.DataSourceCache(source, 12);
+            Matrix.MatrixTest.Test(name,
+                string.Format(@"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\atsp\{0}.csv", name), source);
         }
 
         static void MatrixCalculations()
