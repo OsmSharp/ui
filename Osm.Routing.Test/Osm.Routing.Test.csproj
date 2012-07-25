@@ -378,9 +378,21 @@
       <Project>{FAD63D7A-AE1E-4133-95D4-BAB2A2BB8EFF}</Project>
       <Name>Tools.Math.Graph</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.TravellingSalesman\Tools.Math.TSP.csproj">
+      <Project>{F12D6C89-D3E2-410C-9D74-55694A05C1BE}</Project>
+      <Name>Tools.Math.TSP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.VRP.Tools\Tools.Math.VRP.Core.csproj">
+      <Project>{EE35732E-984C-4C40-9C4F-FEF012A9B6C9}</Project>
+      <Name>Tools.Math.VRP.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tools.Math\Tools.Math.csproj">
       <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
       <Name>Tools.Math</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.TSPLIB\Tools.TSPLIB.csproj">
+      <Project>{24991386-8E24-499A-9A42-2EA5C6D7529B}</Project>
+      <Name>Tools.TSPLIB</Name>
     </ProjectReference>
     <ProjectReference Include="..\Tools.Xml\Tools.Xml.csproj">
       <Project>{550F62F8-B62F-4E77-AF12-ACFD9378B9A0}</Project>

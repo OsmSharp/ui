@@ -23,13 +23,20 @@ namespace Osm.Routing.Test
         static void Main(string[] args)
         {
             OsmGeo.ShapeInterperter = new SimpleShapeInterpreter();
-                        
+
+            IDataSourceReadOnly source = new Osm.Data.Oracle.Raw.OracleSimpleSource(
+                "Data source=DEV;User Id=OSM;Password=mixbeton;");
+            source = new Osm.Data.Cache.DataSourceCache(source, 12);
+
+            Matrix.MatrixTest.Test("031_K1040-06", 
+                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\atsp\031_K1040-06.csv", source);
+             
             // finished unit tests.
             //Sparse.SparseTests.DoTests();
 
             //Sparse.SparseTests.SparseTestRedis();
 
-            CH.CHTests.DoTests();
+            //CH.CHTests.DoTests();
 
             //Sparse.SparseTests.SparseTestMemory(); // tests the sparse code.
             //Sparse.SparseTests.SparseTestRedis(); // tests the sparse code.

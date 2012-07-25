@@ -10,6 +10,7 @@ using Tools.Math.Geo;
 using Osm.Routing.Raw;
 using Osm.Data.Raw.XML.OsmSource;
 using Osm.Core.Xml;
+using Tools.TSPLIB.Problems;
 
 namespace Osm.Routing.Test.Matrix
 {
@@ -108,5 +109,43 @@ namespace Osm.Routing.Test.Matrix
             Console.ReadLine();
 
          }
+
+        public static void Test(string name, string file_name, IDataSourceReadOnly source)
+        {
+            DirectoryInfo info = new FileInfo("dummy.csv").Directory;
+
+            // read matrix points.
+            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
+            DataSet data = Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
+                new System.IO.FileInfo(file_name), 
+                Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
+            foreach (DataRow row in data.Tables[0].Rows)
+            {
+                // be carefull with the parsing and the number formatting for different cultures.
+                double latitude = double.Parse(row[2].ToString(), System.Globalization.CultureInfo.InvariantCulture);
+                double longitude = double.Parse(row[3].ToString(), System.Globalization.CultureInfo.InvariantCulture);
+
+                GeoCoordinate point = new GeoCoordinate(latitude, longitude);
+                coordinates.Add(point);
+            }
+
+            // create router.
+            Router router = new Router(source);
+            ResolvedPoint[] points = router.Resolve(coordinates.ToArray());
+
+            // check connectivity for all points.
+            bool[] connectivity = router.CheckConnectivity(points, 1000);
+            float[][] matrix = router.CalculateManyToManyWeight(points, points);
+
+            TSPLIBProblem problem = new TSPLIBProblem(
+                name, name, matrix.Length, matrix, TSPLIBProblemWeightTypeEnum.Explicit, TSPLIBProblemTypeEnum.ATSP);
+
+            // save the atsp.
+            Tools.TSPLIB.Parser.TSPLIBProblemGenerator.Generate(new FileInfo(string.Format("{0}.atsp", name)),
+                problem);
+            TSPLIBProblem tsp = Tools.TSPLIB.Convertor.ATSP_TSP.ATSP_TSPConvertor.Convert(problem);
+            Tools.TSPLIB.Parser.TSPLIBProblemGenerator.Generate(new FileInfo(string.Format("{0}.tsp", name)),
+                tsp);
+        }
     }
 }
