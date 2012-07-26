@@ -94,5 +94,13 @@ namespace Tools.Math.VRP.Core.Routes
         /// </summary>
         /// <returns></returns>
         bool IsValid();
+
+        /// <summary>
+        /// Returns an enumerable that enumerates between the two given customers.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        IEnumerable<int> Between(int from, int to);
     }
 }

@@ -87,6 +87,7 @@ namespace Tools.Math.TravellingSalesman.LocalSearch.HillClimbing3Opt
         public IRoute Solve(IProblem problem)
         {
             _dont_look_bits = new bool[problem.Size];
+            float[][] weights = problem.WeightMatrix;
 
             // generate some random route first.
             //IRoute route = Tools.Math.TravellingSalesman.Random.RandomSolver.DoSolve(
@@ -102,7 +103,7 @@ namespace Tools.Math.TravellingSalesman.LocalSearch.HillClimbing3Opt
                 {
                     if (!this.Check(problem, v_1))
                     {
-                        if (this.Try3OptMoves(problem, route, v_1))
+                        if (this.Try3OptMoves(problem, weights, route, v_1))
                         {
                             improvement = true;
                             break;
@@ -122,27 +123,29 @@ namespace Tools.Math.TravellingSalesman.LocalSearch.HillClimbing3Opt
         /// <param name="route"></param>
         /// <param name="v_1"></param>
         /// <returns></returns>
-        public bool Try3OptMoves(IProblem problem, IRoute route, int v_1)
+        public bool Try3OptMoves(IProblem problem, float[][] weights, IRoute route, int v_1)
         {
             // get v_2.
             int v_2 = route.GetNeigbours(v_1)[0];
-            BetweenEnumerable between_v_2_v_1 = new BetweenEnumerable(
-                route, v_2, v_1);
+            IEnumerable<int> between_v_2_v_1 = route.Between(v_2, v_1);
             int v_3 = -1;
+            HashSet<int> neighbours = null;
+            if (_nearest_neighbours)
+            {
+                neighbours = problem.Get10NearestNeighbours(v_1);
+            }
+
             foreach (int v_4 in between_v_2_v_1)
             {
                 if (v_3 >= 0 && v_3 != v_1)
                 {
-                    if (_nearest_neighbours)
+                    if (!_nearest_neighbours || 
+                        neighbours.Contains(v_4))
                     {
-                        if (!problem.Get10NearestNeighbours(v_1).Contains(v_4))
+                        if (this.Try3OptMoves(problem, weights, route, v_1, v_2, v_3, v_4))
                         {
-                            break;
+                            return true;
                         }
-                    }
-                    if (this.Try3OptMoves(problem, route, v_1, v_2, v_3, v_4))
-                    {
-                        return true;
                     }
                 }
                 v_3 = v_4;
@@ -157,11 +160,11 @@ namespace Tools.Math.TravellingSalesman.LocalSearch.HillClimbing3Opt
         /// <param name="route"></param>
         /// <param name="v_1"></param>
         /// <returns></returns>
-        public bool Try3OptMoves(IProblem problem, IRoute route, int v_1, int v_2, int v_3)
+        public bool Try3OptMoves(IProblem problem, float[][] weights, IRoute route, int v_1, int v_2, int v_3)
         {
             // get v_4.
             int v_4 = route.GetNeigbours(v_3)[0];
-            return this.Try3OptMoves(problem, route, v_1, v_2, v_3, v_4);
+            return this.Try3OptMoves(problem, weights, route, v_1, v_2, v_3, v_4);
         }
 
         /// <summary>
@@ -173,14 +176,14 @@ namespace Tools.Math.TravellingSalesman.LocalSearch.HillClimbing3Opt
         /// <param name="v_2"></param>
         /// <param name="v_3"></param>
         /// <returns></returns>
-        public bool Try3OptMoves(IProblem problem, IRoute route, int v_1, int v_2, int v_3, int v_4)
+        public bool Try3OptMoves(IProblem problem, float[][] weights, IRoute route, int v_1, int v_2, int v_3, int v_4)
         {
-            BetweenEnumerable between_v_4_v_1 = new BetweenEnumerable(route, v_4, v_1);
+            IEnumerable<int> between_v_4_v_1 = route.Between(v_4, v_1);
             foreach (int v_5 in between_v_4_v_1)
             {
                 if (v_5 != v_1)
                 {
-                    if (this.Try3OptMove(problem, route, v_1, v_2, v_3, v_4, v_5))
+                    if (this.Try3OptMove(problem, weights, route, v_1, v_2, v_3, v_4, v_5))
                     {
                         return true;
                     }
@@ -201,11 +204,11 @@ namespace Tools.Math.TravellingSalesman.LocalSearch.HillClimbing3Opt
         /// <param name="v_5"></param>
         /// <param name="v_6"></param>
         /// <returns></returns>
-        public bool Try3OptMove(IProblem problem, IRoute route, int v_1, int v_2, int v_3, int v_4, int v_5)
+        public bool Try3OptMove(IProblem problem, float[][] weights, IRoute route, int v_1, int v_2, int v_3, int v_4, int v_5)
         {
             // get v_6.
             int v_6 = route.GetNeigbours(v_5)[0];
-            return this.Try3OptMove(problem, route, v_1, v_2, v_3, v_4, v_5, v_6);
+            return this.Try3OptMove(problem, weights, route, v_1, v_2, v_3, v_4, v_5, v_6);
         }
 
         /// <summary>
@@ -216,20 +219,20 @@ namespace Tools.Math.TravellingSalesman.LocalSearch.HillClimbing3Opt
         /// <param name="customer2"></param>
         /// <param name="customer3"></param>
         /// <returns></returns>
-        public bool Try3OptMove(IProblem problem, IRoute route, int v_1, int v_2, int v_3, int v_4, int v_5, int v_6)
+        public bool Try3OptMove(IProblem problem, float[][] weights, IRoute route, int v_1, int v_2, int v_3, int v_4, int v_5, int v_6)
         {
             //Tools.Math.VRP.Core.Routes.ASymmetric.DynamicAsymmetricRoute copy = 
             //    ((route as Tools.Math.VRP.Core.Routes.ASymmetric.DynamicAsymmetricRoute).Clone() 
             //        as Tools.Math.VRP.Core.Routes.ASymmetric.DynamicAsymmetricRoute);
             // calculate the total weights.
-            float weight = problem.WeightMatrix[v_1][v_2] +
-                problem.WeightMatrix[v_3][v_4] +
-                problem.WeightMatrix[v_5][v_6];
+            float weight = weights[v_1][v_2] +
+                weights[v_3][v_4] +
+                weights[v_5][v_6];
 
             // calculate the total weight of the 'new' arcs.
-            float weight_new = problem.WeightMatrix[v_1][v_4] +
-                problem.WeightMatrix[v_3][v_6] +
-                problem.WeightMatrix[v_5][v_2];
+            float weight_new = weights[v_1][v_4] +
+                weights[v_3][v_6] +
+                weights[v_5][v_2];
 
             if (weight_new < weight)
             { // actually do replace the vertices.

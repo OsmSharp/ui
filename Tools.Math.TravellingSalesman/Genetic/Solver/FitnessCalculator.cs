@@ -42,13 +42,15 @@ namespace Tools.Math.TSP.Genetic.Solver
             GeneticProblem problem,
             IList<int> genomes)
         {
-            float weight = problem.Weight(problem.First, genomes[0]);
+            float[][] weights = problem.BaseProblem.WeightMatrix;
+            float weight = weights[problem.First][genomes[0]];
             int idx;
             for (idx = 0; idx < genomes.Count - 1; idx++)
             {
-                weight = weight + (problem.Weight(genomes[idx], genomes[idx + 1]));
+                //weight = weight + (weights[genomes[idx]][genomes[idx + 1]]);
+                weight = weight + (weights[genomes[idx]][genomes[idx + 1]]);
             }
-            weight = weight + (problem.Weight(genomes[idx], problem.Last));
+            weight = weight + (weights[genomes[idx]][problem.Last]);
 
             return new Fitness(weight);
         }

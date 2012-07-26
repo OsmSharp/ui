@@ -60,20 +60,24 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         private void CalculateCycles()
         {
             _cycles = new Dictionary<int, int>();
-            HashSet<int> to_do = new HashSet<int>(_next_array);
-            while (to_do.Count > 0)
+            bool[] done = new bool[_next_array.Length];
+            //HashSet<int> to_do = new HashSet<int>(_next_array);
+            for(int idx = 0; idx < _next_array.Length; idx++)
             {
-                this.CheckForCycle(to_do, to_do.First());
+                if (!done[idx])
+                {
+                    this.CheckForCycle(done, idx);
+                }
             }
         }
 
-        private void CheckForCycle(HashSet<int> to_do, int customer)
+        private void CheckForCycle(bool[] done, int customer)
         {
             int start = customer;
             int count = 1;
             while (_next_array[customer] >= 0)
             {
-                to_do.Remove(customer);
+                done[customer] = true;
 
                 if (_next_array[customer] == start)
                 {

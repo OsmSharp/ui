@@ -247,13 +247,13 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
 
             private int _current = -1;
 
-            private HashSet<int> _customers;
+            //private HashSet<int> _customers;
 
             public Enumerator(int first, int[] next_array)
             {
                 _first = first;
                 _next_array = next_array;
-                _customers = new HashSet<int>();
+                //_customers = new HashSet<int>();
             }
 
             public int Current
@@ -282,7 +282,7 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
                 if (_current == -1)
                 {
                     _current = _first;
-                    _customers.Add(_current);
+                    //_customers.Add(_current);
                 }
                 else
                 {
@@ -291,11 +291,11 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
                     {
                         return false;
                     }
-                    if (_customers.Contains(_current))
-                    {
-                        throw new Exception("Loop!");
-                    }
-                    _customers.Add(_current);
+                    //if (_customers.Contains(_current))
+                    //{
+                    //    throw new Exception("Loop!");
+                    //}
+                    //_customers.Add(_current);
                 }
                 return _current >= 0;
             }
@@ -303,7 +303,7 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
             public void Reset()
             {
                 _current = -1;
-                _customers.Clear();
+                //_customers.Clear();
             }
         }
 
@@ -536,5 +536,11 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         }
 
         #endregion
+
+
+        public IEnumerable<int> Between(int from, int to)
+        {
+            return new DynamicAsymmetricBetweenEnumerable(_next_array, from, to);
+        }
     }
 }

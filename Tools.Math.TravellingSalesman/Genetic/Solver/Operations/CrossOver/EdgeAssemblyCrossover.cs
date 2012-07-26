@@ -162,11 +162,12 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                     int selected_to1 = -1;
                     int selected_to2 = -1;
 
-                    HashSet<int> ignore_list = new HashSet<int>();
+                    bool[] ignore_list = new bool[a.Length];
                     int from;
                     int to;
                     from = current_tour.Key;
-                    ignore_list.Add(from);
+                    ignore_list[from] = true;
+                    //ignore_list.Add(from);
                     to = a[from];
                     do
                     {
@@ -174,7 +175,8 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                         from = to;
                         to = a[from];
 
-                        ignore_list.Add(from);
+                        //ignore_list.Add(from);
+                        ignore_list[from] = true;
                     } while (from != current_tour.Key);
 
                     if (_nn)
@@ -189,8 +191,10 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                             {
                                 int nn_to = a[nn];
 
-                                if (!ignore_list.Contains(nn) &&
-                                    !ignore_list.Contains(nn_to))
+                                //if (!ignore_list.Contains(nn) &&
+                                //    !ignore_list.Contains(nn_to))
+                                if (!ignore_list[nn] &&
+                                    !ignore_list[nn_to])
                                 {
                                     double merge_weight =
                                         (tsp_problem.WeightMatrix[from][nn_to] + tsp_problem.WeightMatrix[nn][to]) -
@@ -218,8 +222,10 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                         {
                             int customer_to = a[customer];
 
-                            if (!ignore_list.Contains(customer) &&
-                                !ignore_list.Contains(customer_to))
+                            //if (!ignore_list.Contains(customer) &&
+                            //    !ignore_list.Contains(customer_to))
+                            if (!ignore_list[customer] &&
+                                !ignore_list[customer_to])
                             {
                                 double merge_weight =
                                     (tsp_problem.WeightMatrix[from][customer_to] + tsp_problem.WeightMatrix[customer][to]) -
@@ -251,7 +257,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                 //{
                 //    throw new Exception();
                 //}
-                List<int> new_genome = new List<int>();
+                List<int> new_genome = new List<int>(a.Length);
                 int next = a[0];
                 do
                 {

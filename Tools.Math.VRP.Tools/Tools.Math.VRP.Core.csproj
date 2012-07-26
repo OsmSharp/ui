@@ -74,6 +74,7 @@
     <Compile Include="IProblemWeights.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes\ASymmetric\AsymmetricCycles.cs" />
+    <Compile Include="Routes\ASymmetric\DynamicAsymmetricBetweenEnumerable.cs" />
     <Compile Include="Routes\ASymmetric\DynamicAsymmetricMultiRoute.cs" />
     <Compile Include="Routes\ASymmetric\DynamicAsymmetricRoute.cs" />
     <Compile Include="Routes\ASymmetric\IASymmetricRoute.cs" />

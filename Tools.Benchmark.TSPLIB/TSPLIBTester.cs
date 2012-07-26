@@ -96,14 +96,16 @@ namespace Tools.Benchmark.TSPLIB
             //Console.WriteLine("====== {0} started! ======", _name);
             //Console.WriteLine();
             //Console.WriteLine("Started: {0}", problem.Name);
-            Console.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}",
+            Console.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
                 PadRight("Problem", 15),
                 PadRight("Name", 40),
+                PadRight("Time"),
                 PadRight("Time (Avg)"),
                 PadRight("# Runs", 6),
                 PadRight("# Bests", 7),
                 PadRight("Avg"),
                 PadRight("Best"),
+                PadRight("Worst"),
                 PadRight("Optimal"),
                 PadRight("%")));
 
@@ -120,6 +122,8 @@ namespace Tools.Benchmark.TSPLIB
 
                     // do the tests.
                     float best = float.MaxValue;
+                    float worst = float.MinValue;
+
                     int best_count = 0;
                     long start_ticks = DateTime.Now.Ticks;
                     float total = 0;
@@ -135,6 +139,10 @@ namespace Tools.Benchmark.TSPLIB
                         {
                             best = weight;
                         }
+                        if (worst < weight)
+                        {
+                            worst = weight;
+                        }
 
                         if (weight == problem.Best)
                         {
@@ -147,22 +155,26 @@ namespace Tools.Benchmark.TSPLIB
 
                     // report the result.
                     TimeSpan time = new TimeSpan(stop_ticks - start_ticks);
-                    string line = string.Format("{0};{1};{2};{3};{4};{5};{6};",
+                    string line = string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};",
                         ToStringEmptyWhenNull(problem.Name),
                         ToStringEmptyWhenNull(solver.Name),
-                        ToStringEmptyWhenNull(System.Math.Round(time.TotalSeconds / (double)_test_count, 3)),
+                        ToStringEmptyWhenNull(problem.Best),
                         ToStringEmptyWhenNull(_test_count),
+                        ToStringEmptyWhenNull(System.Math.Round(time.TotalSeconds / (double)_test_count, 3)),
                         ToStringEmptyWhenNull(best_count),
                         ToStringEmptyWhenNull(System.Math.Round(total / (double)_test_count, 3)),
-                        ToStringEmptyWhenNull(best));
-                    Console.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}",
+                        ToStringEmptyWhenNull(best),
+                        ToStringEmptyWhenNull(worst));
+                    Console.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
                         PadRight(problem.Name, 15),
                         PadRight(solver.Name, 40),
+                        PadRight(System.Math.Round(time.TotalSeconds, 3)),
                         PadRight(System.Math.Round(time.TotalSeconds / (double)_test_count, 3)),
                         PadRight(_test_count, 6),
                         PadRight(best_count, 7),
                         PadRight(System.Math.Round(total /  (double)_test_count, 3)),
                         PadRight(best),
+                        PadRight(worst),
                         PadRight(problem.Best),
                         PadRight(System.Math.Round(
                             (((total /  (double)_test_count) - problem.Best) / problem.Best) * 100.0, 3))));

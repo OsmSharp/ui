@@ -527,6 +527,12 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
                 }
                 return -1; // customer not found!
             }
+
+
+            public IEnumerable<int> Between(int from, int to)
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public bool Equals(DynamicAsymmetricMultiRoute other)

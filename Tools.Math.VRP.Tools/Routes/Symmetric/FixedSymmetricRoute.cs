@@ -359,5 +359,11 @@ namespace Tools.Math.VRP.Core.Routes.Symmetric
             }
             return -1; // customer not found!
         }
+
+
+        public IEnumerable<int> Between(int from, int to)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

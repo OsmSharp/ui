@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Tools.Math.VRP.Core.Routes
 {
-    public class BetweenEnumerable : IEnumerable<int>
+    internal class BetweenEnumerable : IEnumerable<int>
     {
         private int _first;
 
@@ -19,8 +19,6 @@ namespace Tools.Math.VRP.Core.Routes
             _first = first;
             _last = last;
         }
-
-
 
         private class BetweenEnumerator : IEnumerator<int>
         {
@@ -43,9 +41,9 @@ namespace Tools.Math.VRP.Core.Routes
 
             public int Current
             {
-                get 
+                get
                 {
-                    return _enumerator.Current; 
+                    return _enumerator.Current;
                 }
             }
 
@@ -62,7 +60,7 @@ namespace Tools.Math.VRP.Core.Routes
 
             public bool MoveNext()
             {
-                if(_last_reached)
+                if (_last_reached)
                 {
                     return false;
                 }
@@ -82,7 +80,7 @@ namespace Tools.Math.VRP.Core.Routes
                     _enumerator.Reset();
                     _enumerator.MoveNext();
                 }
-                if(_last == _enumerator.Current)
+                if (_last == _enumerator.Current)
                 {
                     _last_reached = true;
                 }
