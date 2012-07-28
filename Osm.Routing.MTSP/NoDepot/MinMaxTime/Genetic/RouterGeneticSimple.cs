@@ -144,8 +144,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic
             long ticks_before = DateTime.Now.Ticks;
             _ticks_before = ticks_before;
 
-            List<IMutationOperation<Genome, Problem, Fitness>> mutators =
-                new List<IMutationOperation<Genome, Problem, Fitness>>();
+            List<IMutationOperation<List<Genome>, Problem, Fitness>> mutators =
+                new List<IMutationOperation<List<Genome>, Problem, Fitness>>();
             mutators.Add(new RoutePartExchangeMutation());
             mutators.Add(new VehicleMutation());
             mutators.Add(new RelocationMutation());
@@ -159,7 +159,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic
                 _probabilities.Add(0);
             }
 
-            CombinedMutation<Genome, Problem, Fitness> mutation = new CombinedMutation<Genome, Problem, Fitness>(
+            CombinedMutation<List<Genome>, Problem, Fitness> mutation = new CombinedMutation<List<Genome>, Problem, Fitness>(
                 StaticRandomGenerator.Get(),
                 mutators,
                 _probabilities);
@@ -167,16 +167,16 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic
             SolverSettings settings = new SolverSettings(_stagnation, _population, _max_generations,
                 _elitism_percentage, _cross_percentage, _mutation_percentage);
             Problem genetic_problem = new Problem(min, max, problem, solutions);
-            Solver<Genome, Problem, Fitness> solver =
-                new Solver<Genome, Problem, Fitness>(genetic_problem, settings,
-                new TournamentBasedSelector<Genome, Problem, Fitness>(10, 0.1),
+            Solver<List<Genome>, Problem, Fitness> solver =
+                new Solver<List<Genome>, Problem, Fitness>(genetic_problem, settings,
+                new TournamentBasedSelector<List<Genome>, Problem, Fitness>(10, 0.1),
                 mutation, //new RoutePartExchangeMutation(),
                 new Order1CrossoverOperation(),//new RouteExchangeOperationSimple(), //new RouteExchangeOperation(), //new RouteExchangeAndVehicleOperation(), // Order1CrossoverOperation()
                 new RandomBestPlacement(),//new RandomGeneration(), //new RandomBestPlacement(),
                 new FitnessCalculator());
-            solver.NewFittest += new Solver<Genome, Problem, Fitness>.NewFittestDelegate(solver_NewFittest);
-            solver.NewGeneration += new Solver<Genome, Problem, Fitness>.NewGenerationDelegate(solver_NewGeneration);
-            Individual<Genome, Problem, Fitness> solution = solver.Start(null);
+            solver.NewFittest += new Solver<List<Genome>, Problem, Fitness>.NewFittestDelegate(solver_NewFittest);
+            solver.NewGeneration += new Solver<List<Genome>, Problem, Fitness>.NewGenerationDelegate(solver_NewGeneration);
+            Individual<List<Genome>, Problem, Fitness> solution = solver.Start(null);
             //this.solver_NewFittest(solution);
 
             Genome routes = solution.Genomes[0];
@@ -233,14 +233,14 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic
 
         int generations = 0;
 
-        void solver_NewGeneration(int generation, int stagnation_count, Population<Genome, Problem, Fitness> population)
+        void solver_NewGeneration(int generation, int stagnation_count, Population<List<Genome>, Problem, Fitness> population)
         {
             generations++;
 
             long ticks_after = DateTime.Now.Ticks;
             TimeSpan span = new TimeSpan(ticks_after - _ticks_before);
 
-            Individual<Genome, Problem, Fitness> solution = population[0];
+            Individual<List<Genome>, Problem, Fitness> solution = population[0];
 
             Genome routes = solution.Genomes[0];
             if (output_each)
@@ -282,7 +282,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic
             }
         }
 
-        void solver_NewFittest(Individual<Genome, Problem, Fitness> solution)
+        void solver_NewFittest(Individual<List<Genome>, Problem, Fitness> solution)
         {
             long ticks_after = DateTime.Now.Ticks;
             TimeSpan span = new TimeSpan(ticks_after - _ticks_before);

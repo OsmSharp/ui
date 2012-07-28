@@ -11,7 +11,7 @@ using Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
 
 namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
 {
-    internal class RoundSplitMutationOperation : IMutationOperation<Genome, Problem, Fitness>
+    internal class RoundSplitMutationOperation : IMutationOperation<List<Genome>, Problem, Fitness>
     {
         public string Name
         {
@@ -21,59 +21,60 @@ namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
             }
         }
 
-        public Individual<Genome, Problem, Fitness> Mutate(
-            Solver<Genome, Problem, Fitness> solver, Individual<Genome, Problem, Fitness> mutating)
+        public Individual<List<Genome>, Problem, Fitness> Mutate(
+            Solver<List<Genome>, Problem, Fitness> solver, Individual<List<Genome>, Problem, Fitness> mutating)
         {
-            Individual<Genome, Problem, Fitness> copy = mutating.Copy();
-            if (!copy.FitnessCalculated)
-            {
-                copy.CalculateFitness(solver.Problem, solver.FitnessCalculator);
-            }
+            throw new NotImplementedException("Not re-implemented after refactoring GA");
+            //Individual<List<Genome>, Problem, Fitness> copy = mutating.Copy();
+            //if (!copy.FitnessCalculated)
+            //{
+            //    copy.CalculateFitness(solver.Problem, solver.FitnessCalculator);
+            //}
 
-            // randomly select a small genome.
-            Genome big = IndividualHelper.SelectRandom(copy, false);
+            //// randomly select a small genome.
+            //Genome big = IndividualHelper.SelectRandom(copy, false);
 
-            // make sure there are at least two.
-            if (big.Count < 3)
-            {
-                return copy;
-            }
+            //// make sure there are at least two.
+            //if (big.Count < 3)
+            //{
+            //    return copy;
+            //}
 
-            // remove the old round.
-            copy.Genomes.Remove(big);
+            //// remove the old round.
+            //copy.Genomes.Remove(big);
 
-            // create new rounds.
-            Genome new_round1 = new Genome();
-            Genome new_round2 = new Genome();
-            List<int> cities = big;
+            //// create new rounds.
+            //Genome new_round1 = new Genome();
+            //Genome new_round2 = new Genome();
+            //List<int> cities = big;
 
-            // place two random.
-            int city_idx = StaticRandomGenerator.Get().Generate(cities.Count);
-            int city = cities[city_idx];
-            cities.RemoveAt(city_idx);
-            new_round1.Add(city);
-            city_idx = StaticRandomGenerator.Get().Generate(cities.Count);
-            city = cities[city_idx];
-            cities.RemoveAt(city_idx);
-            new_round2.Add(city);
+            //// place two random.
+            //int city_idx = StaticRandomGenerator.Get().Generate(cities.Count);
+            //int city = cities[city_idx];
+            //cities.RemoveAt(city_idx);
+            //new_round1.Add(city);
+            //city_idx = StaticRandomGenerator.Get().Generate(cities.Count);
+            //city = cities[city_idx];
+            //cities.RemoveAt(city_idx);
+            //new_round2.Add(city);
 
-            // use best placement.
-            List<Genome> genomes = new List<Genome>();
-            genomes.Add(new_round1);
-            genomes.Add(new_round2);
+            //// use best placement.
+            //List<Genome> genomes = new List<Genome>();
+            //genomes.Add(new_round1);
+            //genomes.Add(new_round2);
 
-            BestPlacementHelper.DoFast(
-                solver.Problem,
-                solver.FitnessCalculator as FitnessCalculator,
-                genomes,
-                cities);
+            //BestPlacementHelper.DoFast(
+            //    solver.Problem,
+            //    solver.FitnessCalculator as FitnessCalculator,
+            //    genomes,
+            //    cities);
 
-            // add the new rounds.
-            copy.Genomes.AddRange(genomes);
+            //// add the new rounds.
+            //copy.Genomes.AddRange(genomes);
 
-            copy.CalculateFitness(solver.Problem, solver.FitnessCalculator);
+            //copy.CalculateFitness(solver.Problem, solver.FitnessCalculator);
 
-            return copy;
+            //return copy;
         }
     }
 }

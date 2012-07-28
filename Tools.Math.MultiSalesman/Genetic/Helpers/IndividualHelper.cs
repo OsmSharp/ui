@@ -9,7 +9,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Helpers
 {
     public class IndividualHelper
     {
-        internal static Genome GetSmallest(Individual<Genome, Problem, Fitness> indivdual)
+        internal static Genome GetSmallest(Individual<List<Genome>, Problem, Fitness> indivdual)
         {
             double weight = double.MaxValue;
             Genome genome = null;
@@ -25,7 +25,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Helpers
             return genome;
         }
 
-        internal static Genome GetLargest(Individual<Genome, Problem, Fitness> indivdual)
+        internal static Genome GetLargest(Individual<List<Genome>, Problem, Fitness> indivdual)
         {
             double weight = double.MinValue;
             Genome genome = null;
@@ -41,7 +41,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Helpers
             return genome;
         }
 
-        internal static Genome SelectRandom(Individual<Genome, Problem, Fitness> indivdual, bool smallest_first)
+        internal static Genome SelectRandom(Individual<List<Genome>, Problem, Fitness> indivdual, bool smallest_first)
         {
             double random_time;
             double current_time;

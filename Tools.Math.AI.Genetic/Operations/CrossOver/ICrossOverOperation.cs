@@ -12,7 +12,7 @@ namespace Tools.Math.AI.Genetic.Operations.CrossOver
     /// <typeparam name="GenomeType"></typeparam>
     public interface ICrossOverOperation<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
-        where GenomeType : IEquatable<GenomeType>
+        where GenomeType : class
         where WeightType : IComparable
     {
         /// <summary>

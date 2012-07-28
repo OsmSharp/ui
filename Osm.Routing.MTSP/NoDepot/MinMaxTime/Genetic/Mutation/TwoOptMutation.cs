@@ -10,7 +10,7 @@ using Tools.Math.VRP.Core.BestPlacement;
 namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.Mutation
 {
     internal class TwoOptMutation :
-        IMutationOperation<Genome, Problem, Fitness>
+        IMutationOperation<List<Genome>, Problem, Fitness>
     {
         public string Name
         {
@@ -20,8 +20,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.Mutation
             }
         }
 
-        public Individual<Genome, Problem, Fitness> Mutate(Solver<Genome, Problem, Fitness> solver,
-            Individual<Genome, Problem, Fitness> mutating)
+        public Individual<List<Genome>, Problem, Fitness> Mutate(Solver<List<Genome>, Problem, Fitness> solver,
+            Individual<List<Genome>, Problem, Fitness> mutating)
         {
             List<Genome> genomes = new List<Genome>();
             Genome genome = mutating.Genomes[0];
@@ -130,8 +130,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.Mutation
             { // just keep the old one.
                 genomes.Add(genome);
             }
-            Individual<Genome, Problem, Fitness> individual = new Individual<Genome, Problem, Fitness>();
-            individual.Initialize(genomes);
+            Individual<List<Genome>, Problem, Fitness> individual = new Individual<List<Genome>, Problem, Fitness>(genomes);
+            //individual.Initialize();
             return individual;
         }
     }

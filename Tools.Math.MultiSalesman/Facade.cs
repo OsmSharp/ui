@@ -48,16 +48,16 @@ namespace Tools.Math.VRP.MultiSalesman
             SolverSettings settings,
             int categories)
         {
-            Solver<Genome, Problem, Fitness> solver = new Solver<Genome, Problem, Fitness>(
+            Solver<List<Genome>, Problem, Fitness> solver = new Solver<List<Genome>, Problem, Fitness>(
                 problem,
                 settings,
-                new TournamentBasedSelector<Genome, Problem, Fitness>(10, 0.5),
+                new TournamentBasedSelector<List<Genome>, Problem, Fitness>(10, 0.5),
                 new RedivideFromLargeMutationOperation(),
                 new RandomRandomSelectionCrossOverOperation(),
                 new BestFastPlacementGenerationOperation(),
                 new FitnessCalculator(categories));
             solver.ProgressReporter = _registered_progress_reporter;
-            solver.NewFittest += new Solver<Genome, Problem, Fitness>.NewFittestDelegate(solver_NewFittest);
+            solver.NewFittest += new Solver<List<Genome>, Problem, Fitness>.NewFittestDelegate(solver_NewFittest);
 
             Individual fittest = solver.Start(null) as Individual;
             int[][] solution = new int[fittest.Genomes.Count][];
@@ -88,7 +88,7 @@ namespace Tools.Math.VRP.MultiSalesman
 
         #endregion
 
-        static void solver_NewFittest(Individual<Genome, Problem, Fitness> individual)
+        static void solver_NewFittest(Individual<List<Genome>, Problem, Fitness> individual)
         {
             Facade.RaiseNewSolution(individual);
         }
@@ -99,7 +99,7 @@ namespace Tools.Math.VRP.MultiSalesman
         /// New fittest delegate for the new fittest event.
         /// </summary>
         /// <param name="individual"></param>
-        internal delegate void FittestDelegate(Individual<Genome, Problem, Fitness> individual);
+        internal delegate void FittestDelegate(Individual<List<Genome>, Problem, Fitness> individual);
 
         /// <summary>
         /// New fittest event.
@@ -110,7 +110,7 @@ namespace Tools.Math.VRP.MultiSalesman
         /// Raises the new fittest event.
         /// </summary>
         /// <param name="individual"></param>
-        private static void RaiseNewSolution(Individual<Genome, Problem, Fitness> individual)
+        private static void RaiseNewSolution(Individual<List<Genome>, Problem, Fitness> individual)
         {
             if (NewSolution != null)
             {
@@ -120,7 +120,7 @@ namespace Tools.Math.VRP.MultiSalesman
 
         #endregion
 
-        internal static Population<Genome, Problem, Fitness> InitializePopulation(
+        internal static Population<List<Genome>, Problem, Fitness> InitializePopulation(
             Problem problem, Second target, int population_size, int round_count)
         {
             IRandomGenerator random = new RandomGenerator();
@@ -133,7 +133,7 @@ namespace Tools.Math.VRP.MultiSalesman
             }
 
             // create the population
-            Population<Genome, Problem, Fitness> population = new Population<Genome, Problem, Fitness>(
+            Population<List<Genome>, Problem, Fitness> population = new Population<List<Genome>, Problem, Fitness>(
                 null, false);
 
             // create the fitness calculator.
@@ -149,8 +149,7 @@ namespace Tools.Math.VRP.MultiSalesman
 
                 // create new individuals.
                 Individual individual =
-                    new Individual();
-                individual.Initialize(new List<Genome>());
+                    new Individual(new List<Genome>());
 
                 // place one random city in each round.
                 for (int round_idx = 0; round_idx < round_count; round_idx++)

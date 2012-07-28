@@ -9,12 +9,12 @@ using Tools.Math.AI.Genetic.Solvers;
 namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.CrossOver
 {
     internal class Order1CrossoverOperation :
-        ICrossOverOperation<Genome, Problem, Fitness>
+        ICrossOverOperation<List<Genome>, Problem, Fitness>
     {
-        public Individual<Genome, Problem, Fitness> CrossOver(
-            Solver<Genome, Problem, Fitness> solver,
-            Individual<Genome, Problem, Fitness> parent1,
-            Individual<Genome, Problem, Fitness> parent2)
+        public Individual<List<Genome>, Problem, Fitness> CrossOver(
+            Solver<List<Genome>, Problem, Fitness> solver,
+            Individual<List<Genome>, Problem, Fitness> parent1,
+            Individual<List<Genome>, Problem, Fitness> parent2)
         {
             int i = Tools.Math.Random.StaticRandomGenerator.Get().Generate(parent1.Genomes[0].Customers.Length);
             int j = Tools.Math.Random.StaticRandomGenerator.Get().Generate(parent1.Genomes[0].Customers.Length);
@@ -87,8 +87,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.CrossOver
 
             List<Genome> genomes = new List<Genome>();
             genomes.Add(genome);
-            Individual<Genome, Problem, Fitness> individual = new Individual<Genome, Problem, Fitness>();
-            individual.Initialize(genomes);
+            Individual<List<Genome>, Problem, Fitness> individual = new Individual<List<Genome>, Problem, Fitness>(genomes);
+            //individual.Initialize();
             return individual;
         }
 

@@ -92,6 +92,11 @@ namespace Osm.Routing.CH.Routing
             throw new NotImplementedException();
         }
 
+        public CHVertex ResolveAt(long vertex_id)
+        {
+            return _ch_router.GetCHVertex(vertex_id);
+        }
+
         public CHVertex Resolve(GeoCoordinate coordinate)
         {
             return _ch_router.Resolve(coordinate);
@@ -432,5 +437,6 @@ namespace Osm.Routing.CH.Routing
         }
 
         #endregion
+
     }
 }

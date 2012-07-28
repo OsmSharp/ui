@@ -11,7 +11,7 @@ using Tools.Math.TSP.LK;
 namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation
 {
     public class LKGenerationOperation :
-        IGenerationOperation<int, GeneticProblem, Fitness>
+        IGenerationOperation<List<int>, GeneticProblem, Fitness>
     {
         public string Name
         {
@@ -28,14 +28,13 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation
         /// </summary>
         /// <param name="solver"></param>
         /// <returns></returns>
-        public Individual<int, GeneticProblem, Fitness> Generate(
-            Solver<int, GeneticProblem, Fitness> solver)
+        public Individual<List<int>, GeneticProblem, Fitness> Generate(
+            Solver<List<int>, GeneticProblem, Fitness> solver)
         {
             ISolver lk_solver = new LinKernighanSolver();
             IRoute route = lk_solver.Solve(solver.Problem.BaseProblem);
 
-            Individual individual = new Individual();
-            individual.Initialize(new List<int>(route));
+            Individual individual = new Individual(new List<int>(route));
             individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
             return individual;
         }

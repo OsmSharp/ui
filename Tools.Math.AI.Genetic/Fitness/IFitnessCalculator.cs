@@ -11,7 +11,7 @@ namespace Tools.Math.AI.Genetic.Fitness
     /// </summary>
     public interface IFitnessCalculator<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
-        where GenomeType : IEquatable<GenomeType>
+        where GenomeType : class
         where WeightType : IComparable
     {
         /// <summary>
@@ -47,7 +47,7 @@ namespace Tools.Math.AI.Genetic.Fitness
         /// <returns></returns>
         WeightType Fitness(
             ProblemType problem,
-            IList<GenomeType> genomes);
+            GenomeType genomes);
 
         /// <summary>
         /// Calculates the average fitness.

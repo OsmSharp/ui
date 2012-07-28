@@ -7,30 +7,18 @@ using Tools.Math.Graph;
 
 namespace Tools.Math.TSP.Genetic.Solver
 {
-    public class Individual : Individual<int, GeneticProblem, Fitness>
+    public class Individual : Individual<List<int>, GeneticProblem, Fitness>
     {
-        public Individual()
+        public Individual(List<int> genomes)
+            :base(genomes)
         {
 
         }
+
         protected Individual(bool fitness_calculated, Fitness fitness)
             : base(fitness_calculated, fitness)
         {
 
-        }
-
-        /// <summary>
-        /// Make a proper copy of the individual.
-        /// </summary>
-        /// <returns></returns>
-        public override Individual<int, GeneticProblem, Fitness> Copy()
-        {
-            List<int> genomes = new List<int>(this.Genomes);
-
-            Individual copy = null;
-            copy = new Individual(false, null);
-            copy.Initialize(genomes);
-            return copy;
         }
 
         /// <summary>

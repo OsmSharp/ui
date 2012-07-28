@@ -16,7 +16,7 @@ namespace Tools.Math.AI.Genetic.Operations
     public class CombinedOperation<GenomeType, ProblemType, WeightType>
         : IOperation<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
-        where GenomeType : IEquatable<GenomeType>
+        where GenomeType : class
         where WeightType : IComparable
     {
         /// <summary>

@@ -12,7 +12,7 @@ using Tools.Math.Graph;
 namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
 {
     public class BestDetailedPlacementMutationOperation :
-        IMutationOperation<int, GeneticProblem, Fitness>
+        IMutationOperation<List<int>, GeneticProblem, Fitness>
     {
         public BestDetailedPlacementMutationOperation()
         {
@@ -29,9 +29,9 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
 
         #region IMutationOperation<Node,Problem> Members
 
-        public Individual<int, GeneticProblem, Fitness> Mutate(
-            Solver<int, GeneticProblem, Fitness> solver,
-            Individual<int, GeneticProblem, Fitness> mutating)
+        public Individual<List<int>, GeneticProblem, Fitness> Mutate(
+            Solver<List<int>, GeneticProblem, Fitness> solver,
+            Individual<List<int>, GeneticProblem, Fitness> mutating)
         {
             if (solver.Random.Next(100) > 60)
             {
@@ -49,9 +49,9 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
         /// <param name="solver"></param>
         /// <param name="mutating"></param>
         /// <returns></returns>
-        private Individual<int, GeneticProblem, Fitness> MutateByTakingPiece(
-            Solver<int, GeneticProblem, Fitness> solver,
-            Individual<int, GeneticProblem, Fitness> mutating)
+        private Individual<List<int>, GeneticProblem, Fitness> MutateByTakingPiece(
+            Solver<List<int>, GeneticProblem, Fitness> solver,
+            Individual<List<int>, GeneticProblem, Fitness> mutating)
         {
             // take a random piece.
             int idx1 = 0;
@@ -69,10 +69,10 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
             }
 
             // if the genome range is big take it from the best individual.
-            Individual<int, GeneticProblem, Fitness> source =
-                (mutating as Individual<int, GeneticProblem, Fitness>);
-            Individual<int, GeneticProblem, Fitness> target =
-                (mutating as Individual<int, GeneticProblem, Fitness>);
+            Individual<List<int>, GeneticProblem, Fitness> source =
+                (mutating as Individual<List<int>, GeneticProblem, Fitness>);
+            Individual<List<int>, GeneticProblem, Fitness> target =
+                (mutating as Individual<List<int>, GeneticProblem, Fitness>);
 
             List<int> source_piece = source.Genomes.GetRange(idx1, idx2 - idx1);
             List<int> new_genome = target.Genomes.GetRange(0, target.Genomes.Count);
@@ -93,8 +93,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
                 new_genome,
                 source_piece);
 
-            Individual individual = new Individual();
-            individual.Initialize(new_genome);
+            Individual individual = new Individual(new_genome);
             individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
             return individual;
         }
@@ -105,9 +104,9 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
         /// <param name="solver"></param>
         /// <param name="mutating"></param>
         /// <returns></returns>
-        private Individual<int, GeneticProblem, Fitness> MutateByRePlacement(
-            Solver<int, GeneticProblem, Fitness> solver,
-            Individual<int, GeneticProblem, Fitness> mutating)
+        private Individual<List<int>, GeneticProblem, Fitness> MutateByRePlacement(
+            Solver<List<int>, GeneticProblem, Fitness> solver,
+            Individual<List<int>, GeneticProblem, Fitness> mutating)
         {
             List<int> nodes_to_re_place = mutating.Genomes.ToList<int>();
             List<int> current_placement = mutating.Genomes.ToList<int>();
@@ -126,8 +125,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
                     node_to_place);
             }
 
-            Individual individual = new Individual();
-            individual.Initialize(current_placement);
+            Individual individual = new Individual(current_placement);
             individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
             return individual;
         }

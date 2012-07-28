@@ -34,8 +34,8 @@ namespace Osm.Routing.Test
             //GenerateTSPLIB("168_K2160");
             //GenerateTSPLIB("181_K4207");
             //GenerateTSPLIB("209_K2125");
-            GenerateTSPLIB("254_K3504");
-            GenerateTSPLIB("323_K9960-01");
+            //GenerateTSPLIB("254_K3504");
+            //GenerateTSPLIB("323_K9960-01");
             //IDataSourceReadOnly source = new Osm.Data.Oracle.Raw.OracleSimpleSource(
             //    "Data source=DEV;User Id=OSM;Password=mixbeton;");
             //source = new Osm.Data.Cache.DataSourceCache(source, 12);
@@ -46,7 +46,7 @@ namespace Osm.Routing.Test
 
             //Sparse.SparseTests.SparseTestRedis();
 
-            //CH.CHTests.DoTests();
+            CH.CHTests.DoTests();
 
             //Sparse.SparseTests.SparseTestMemory(); // tests the sparse code.
             //Sparse.SparseTests.SparseTestRedis(); // tests the sparse code.

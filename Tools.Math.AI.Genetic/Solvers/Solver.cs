@@ -24,7 +24,7 @@ namespace Tools.Math.AI.Genetic.Solvers
     /// <typeparam name="GenomeType"></typeparam>
     public class Solver<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
-        where GenomeType : IEquatable<GenomeType>
+        where GenomeType : class
         where WeightType : IComparable
     {
         /// <summary>

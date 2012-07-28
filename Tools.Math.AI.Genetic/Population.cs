@@ -14,7 +14,7 @@ namespace Tools.Math.AI.Genetic
     public sealed class Population<GenomeType, ProblemType, WeightType> :
         IEnumerable<Individual<GenomeType, ProblemType, WeightType>>
         where ProblemType : IProblem
-        where GenomeType : IEquatable<GenomeType>
+        where GenomeType : class
         where WeightType : IComparable
     {
         /// <summary>

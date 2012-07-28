@@ -9,7 +9,7 @@ using Tools.Math.AI.Genetic.Solvers;
 namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
     public class EdgeAssemblyCrossoverNaive :
-        ICrossOverOperation<int, GeneticProblem, Fitness>
+        ICrossOverOperation<List<int>, GeneticProblem, Fitness>
     {
         private int _max_offspring;
 
@@ -59,10 +59,10 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
         #region ICrossOverOperation<int,Problem> Members
 
-        public Individual<int, GeneticProblem, Fitness> CrossOver(
-            Solver<int, GeneticProblem, Fitness> solver,
-            Individual<int, GeneticProblem, Fitness> parent1,
-            Individual<int, GeneticProblem, Fitness> parent2)
+        public Individual<List<int>, GeneticProblem, Fitness> CrossOver(
+            Solver<List<int>, GeneticProblem, Fitness> solver,
+            Individual<List<int>, GeneticProblem, Fitness> parent1,
+            Individual<List<int>, GeneticProblem, Fitness> parent2)
         {
             Tools.Math.TSP.Problems.IProblem tsp_problem = solver.Problem.BaseProblem;
 
@@ -272,8 +272,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                 }
                 while (next != 0);
 
-                Individual individual = new Individual();
-                individual.Initialize(new_genome);
+                Individual individual = new Individual(new_genome);
                 individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
                 if (best == null ||
                     best.Fitness.CompareTo(individual.Fitness) > 0)

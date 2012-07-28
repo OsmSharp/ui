@@ -12,7 +12,7 @@ namespace Tools.Math.AI.Genetic.Selectors
     /// <typeparam name="GenomeType"></typeparam>
     public interface ISelector<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
-        where GenomeType : IEquatable<GenomeType>
+        where GenomeType : class
         where WeightType : IComparable
     {
         /// <summary>

@@ -15,7 +15,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation
     /// </summary>
     /// <typeparam name="GenomeType"></typeparam>
     public class RandomGenerationOperation :
-        IGenerationOperation<int, GeneticProblem, Fitness>
+        IGenerationOperation<List<int>, GeneticProblem, Fitness>
     {
         public string Name
         {
@@ -32,8 +32,8 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation
         /// </summary>
         /// <param name="solver"></param>
         /// <returns></returns>
-        public Individual<int, GeneticProblem, Fitness> Generate(
-            Solver<int, GeneticProblem, Fitness> solver)
+        public Individual<List<int>, GeneticProblem, Fitness> Generate(
+            Solver<List<int>, GeneticProblem, Fitness> solver)
         {
             List<int> genome = new List<int>();
             List<int> node_indexes = new List<int>();
@@ -51,8 +51,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation
                 node_indexes.RemoveAt(idx); // remove the idx.
             }
 
-            Individual individual = new Individual();
-            individual.Initialize(genome);
+            Individual individual = new Individual(genome);
             individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
             return individual;
         }

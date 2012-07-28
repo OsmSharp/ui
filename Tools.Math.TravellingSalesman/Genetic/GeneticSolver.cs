@@ -26,13 +26,13 @@ namespace Tools.Math.TSP.Genetic
     /// </summary>
     public class GeneticSolver : ISolver
     {
-        private Solver<int, GeneticProblem, Fitness> solver;
+        private Solver<List<int>, GeneticProblem, Fitness> solver;
 
-        private IMutationOperation<int, GeneticProblem, Fitness> _mutation_operation;
+        private IMutationOperation<List<int>, GeneticProblem, Fitness> _mutation_operation;
 
-        private ICrossOverOperation<int, GeneticProblem, Fitness> _cross_over_operation;
+        private ICrossOverOperation<List<int>, GeneticProblem, Fitness> _cross_over_operation;
 
-        private IGenerationOperation<int, GeneticProblem, Fitness> _generation_operation;
+        private IGenerationOperation<List<int>, GeneticProblem, Fitness> _generation_operation;
 
         private int _eltism = 10;
 
@@ -59,9 +59,9 @@ namespace Tools.Math.TSP.Genetic
         }
 
         public GeneticSolver(int population, int stagnation, int elitism,
-            IMutationOperation<int, GeneticProblem, Fitness> mutation_operation, int mutation,
-            ICrossOverOperation<int, GeneticProblem, Fitness> cross_over_operation, int cross_over,
-            IGenerationOperation<int, GeneticProblem, Fitness> generation_operation)
+            IMutationOperation<List<int>, GeneticProblem, Fitness> mutation_operation, int mutation,
+            ICrossOverOperation<List<int>, GeneticProblem, Fitness> cross_over_operation, int cross_over,
+            IGenerationOperation<List<int>, GeneticProblem, Fitness> generation_operation)
         {
             _mutation_operation = mutation_operation;
             _cross_over_operation = cross_over_operation;
@@ -120,7 +120,7 @@ namespace Tools.Math.TSP.Genetic
                 _cross,
                 _mutation);
         
-            //List<IMutationOperation<int, GeneticProblem, Fitness>> mutators = new List<IMutationOperation<int,GeneticProblem,Fitness>>();
+            //List<IMutationOperation<List<int>, GeneticProblem, Fitness>> mutators = new List<IMutationOperation<int,GeneticProblem,Fitness>>();
             ////mutators.Add(new DefaultMutationOperation());
             ////mutators.Add(new BestPlacementMutationOperation());
             //mutators.Add(new BestDetailedPlacementMutationOperation());
@@ -129,7 +129,7 @@ namespace Tools.Math.TSP.Genetic
             ////probabilities.Add(0.5);
             ////probabilities.Add(0.3);
 
-            //CombinedMutation<int, GeneticProblem, Fitness> mutation = new CombinedMutation<int,GeneticProblem,Fitness>(
+            //CombinedMutation<List<int>, GeneticProblem, Fitness> mutation = new CombinedMutation<int,GeneticProblem,Fitness>(
             //    StaticRandomGenerator.Get(),
             //    mutators,
             //    probabilities);
@@ -141,10 +141,10 @@ namespace Tools.Math.TSP.Genetic
 
             //BestPlacementGenerationOperation generation = new BestPlacementGenerationOperation();
             ////RandomGenerationOperation generation = new RandomGenerationOperation();
-            ISelector<int, GeneticProblem, Fitness> selector = new RandomSelector<int, GeneticProblem, Fitness>();
-            //ISelector<int, GeneticProblem, Fitness> selector = new TournamentBasedSelector<int, GeneticProblem, Fitness>(75, 0.01);
+            ISelector<List<int>, GeneticProblem, Fitness> selector = new RandomSelector<List<int>, GeneticProblem, Fitness>();
+            //ISelector<List<int>, GeneticProblem, Fitness> selector = new TournamentBasedSelector<List<int>, GeneticProblem, Fitness>(75, 0.01);
             solver =
-                new Solver<int, GeneticProblem, Fitness>(
+                new Solver<List<int>, GeneticProblem, Fitness>(
                     new GeneticProblem(problem),
                     settings,
                     selector,
@@ -154,15 +154,15 @@ namespace Tools.Math.TSP.Genetic
                     new FitnessCalculator(),
                     true, false);
 
-            solver.NewFittest += new Solver<int, GeneticProblem, Fitness>.NewFittestDelegate(solver_NewFittest);
-            solver.NewGeneration += new Solver<int, GeneticProblem, Fitness>.NewGenerationDelegate(solver_NewGeneration);
+            solver.NewFittest += new Solver<List<int>, GeneticProblem, Fitness>.NewFittestDelegate(solver_NewFittest);
+            solver.NewGeneration += new Solver<List<int>, GeneticProblem, Fitness>.NewGenerationDelegate(solver_NewGeneration);
             List<int> result = new List<int>(solver.Start(null).Genomes);
             result.Insert(0, 0);
             return new SimpleAsymmetricRoute(result, true);
         }
 
         private float _latest_fitness = float.MaxValue;
-        void solver_NewGeneration(int generation, int stagnation_count, Population<int, GeneticProblem, Fitness> population)
+        void solver_NewGeneration(int generation, int stagnation_count, Population<List<int>, GeneticProblem, Fitness> population)
         {
             ProgressStatus status = new ProgressStatus();
             if(population[0].Fitness.Weight < _latest_fitness)
@@ -185,7 +185,7 @@ namespace Tools.Math.TSP.Genetic
             this.ReportProgress(status);
         }
 
-        void solver_NewFittest(Individual<int, GeneticProblem, Fitness> individual)
+        void solver_NewFittest(Individual<List<int>, GeneticProblem, Fitness> individual)
         {
             if (this.CanRaiseIntermidiateResult())
             {

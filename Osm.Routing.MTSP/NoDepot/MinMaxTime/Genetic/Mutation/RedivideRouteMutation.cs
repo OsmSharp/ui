@@ -14,7 +14,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.Mutation
     /// Mutation operation exchanging a part of some route to a part of another route.
     /// </summary>
     internal class RedivideRouteMutation :
-        IMutationOperation<Genome, Problem, Fitness>
+        IMutationOperation<List<Genome>, Problem, Fitness>
     {
         public string Name
         {
@@ -30,9 +30,9 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.Mutation
         /// <param name="solver"></param>
         /// <param name="mutating"></param>
         /// <returns></returns>
-        public Individual<Genome, Problem, Fitness> Mutate(
-            Solver<Genome, Problem, Fitness> solver,
-            Individual<Genome, Problem, Fitness> mutating)
+        public Individual<List<Genome>, Problem, Fitness> Mutate(
+            Solver<List<Genome>, Problem, Fitness> solver,
+            Individual<List<Genome>, Problem, Fitness> mutating)
         {
             // get the route information.
             Genome multi_route = mutating.Genomes[0];
@@ -136,8 +136,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.Mutation
                 throw new Exception();
             }
             genomes.Add(genome);
-            Individual<Genome, Problem, Fitness> individual = new Individual<Genome, Problem, Fitness>();
-            individual.Initialize(genomes);
+            Individual<List<Genome>, Problem, Fitness> individual = new Individual<List<Genome>, Problem, Fitness>(genomes);
+            //individual.Initialize();
             return individual;
         }
     }

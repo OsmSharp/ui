@@ -12,7 +12,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
     /// Implements a version of the sequential constructive crossover operator.
     /// </summary>
     public class SequentialContructiveCrossoverOperator :
-        ICrossOverOperation<int, GeneticProblem, Fitness>
+        ICrossOverOperation<List<int>, GeneticProblem, Fitness>
     {
         public string Name
         {
@@ -24,10 +24,10 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
         #region ICrossOverOperation<int,Problem> Members
 
-        public Individual<int, GeneticProblem, Fitness> CrossOver(
-            Solver<int, GeneticProblem, Fitness> solver,
-            Individual<int, GeneticProblem, Fitness> parent1,
-            Individual<int, GeneticProblem, Fitness> parent2)
+        public Individual<List<int>, GeneticProblem, Fitness> CrossOver(
+            Solver<List<int>, GeneticProblem, Fitness> solver,
+            Individual<List<int>, GeneticProblem, Fitness> parent1,
+            Individual<List<int>, GeneticProblem, Fitness> parent2)
         {
             List<int> new_individual = new List<int>();
             HashSet<int> selected_nodes = new HashSet<int>();
@@ -133,8 +133,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                 //}
             }
 
-            Individual individual = new Individual();
-            individual.Initialize(new_individual);
+            Individual individual = new Individual(new_individual);
             //individual.CalculateFitness(total_weight);
             individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
 

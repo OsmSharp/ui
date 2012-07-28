@@ -298,6 +298,24 @@ namespace Osm.Routing.Raw
         private Dictionary<long, ResolvedPoint> _resolved_list;
 
         /// <summary>
+        /// Returns a resolved vertex at a given node.
+        /// </summary>
+        /// <param name="vertex_id"></param>
+        /// <returns></returns>
+        public ResolvedPoint ResolveAt(long vertex_id)
+        {
+            GraphVertex vertex = _graph.GetVertex(vertex_id);
+
+            // don't return a resolved point if no data was found!
+            if (vertex == null)
+            {
+                return null;
+            }
+            ResolvedPoint resolved_point = new ResolvedPoint(vertex.Coordinate, vertex);
+            return resolved_point;
+        }
+
+        /// <summary>
         /// Resolves a point.
         /// </summary>
         /// <param name="coordinate"></param>

@@ -12,7 +12,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.Mutation
     /// Mutation operation exchanging a part of some route to a part of another route.
     /// </summary>
     internal class VehicleMutation :
-        IMutationOperation<Genome, Problem, Fitness>
+        IMutationOperation<List<Genome>, Problem, Fitness>
     {
         public string Name
         {
@@ -28,9 +28,9 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.Mutation
         /// <param name="solver"></param>
         /// <param name="mutating"></param>
         /// <returns></returns>
-        public Individual<Genome, Problem, Fitness> Mutate(
-            Solver<Genome, Problem, Fitness> solver,
-            Individual<Genome, Problem, Fitness> mutating)
+        public Individual<List<Genome>, Problem, Fitness> Mutate(
+            Solver<List<Genome>, Problem, Fitness> solver,
+            Individual<List<Genome>, Problem, Fitness> mutating)
         {
             Genome genome = mutating.Genomes[0];
             Genome new_genome = null;
@@ -122,8 +122,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.Mutation
 
             List<Genome> genomes = new List<Genome>();
             genomes.Add(new_genome);
-            Individual<Genome, Problem, Fitness> individual = new Individual<Genome, Problem, Fitness>();
-            individual.Initialize(genomes);
+            Individual<List<Genome>, Problem, Fitness> individual = new Individual<List<Genome>, Problem, Fitness>(genomes);
+            //individual.Initialize();
             return individual;
         }
     }

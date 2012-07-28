@@ -11,7 +11,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic
     /// Calculates fitness.
     /// </summary>
     internal class FitnessCalculator :
-        IFitnessCalculator<Genome, Problem, Fitness>
+        IFitnessCalculator<List<Genome>, Problem, Fitness>
     {
         /// <summary>
         /// The amount of categories to devide the times in.
@@ -37,7 +37,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic
 
         public Fitness Fitness(
             Problem problem,
-            Individual<Genome, Problem, Fitness> individual)
+            Individual<List<Genome>, Problem, Fitness> individual)
         {
             return this.Fitness(problem, individual, true);
         }
@@ -50,7 +50,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic
         /// <returns></returns>
         public Fitness Fitness(
             Problem problem,
-            Individual<Genome, Problem, Fitness> individual, bool validate)
+            Individual<List<Genome>, Problem, Fitness> individual, bool validate)
         {
             if (validate)
             {
@@ -68,7 +68,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic
         /// <returns></returns>
         public Fitness Fitness(
             Problem problem,
-            IList<Genome> genomes)
+            List<Genome> genomes)
         {
             // calculate the times.
             List<double> times = this.CalculateTimes(problem, genomes);
@@ -292,7 +292,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic
 
         #endregion
 
-        #region IFitnessCalculator<Genome,Problem,Fitness> Members
+        #region IFitnessCalculator<List<Genome>, Problem, Fitness> Members
 
         //public Fitness FitnessPart(Problem problem, Genome first, Genome second)
         //{
@@ -317,7 +317,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic
         #endregion
 
 
-        public Fitness AverageFitness(Problem problem, IEnumerable<Individual<Genome, Problem, Fitness>> population)
+        public Fitness AverageFitness(Problem problem, IEnumerable<Individual<List<Genome>, Problem, Fitness>> population)
         {
             throw new NotImplementedException();
         }

@@ -106,8 +106,8 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
 
             long ticks_before = DateTime.Now.Ticks;
 
-            List<IMutationOperation<Genome, Problem, Fitness>> mutators =
-                new List<IMutationOperation<Genome, Problem, Fitness>>();
+            List<IMutationOperation<List<Genome>, Problem, Fitness>> mutators =
+                new List<IMutationOperation<List<Genome>, Problem, Fitness>>();
             mutators.Add(new RoutePartExchangeMutation());
             //mutators.Add(new VehicleMutation());
             //mutators.Add(new RelocationMutation());
@@ -118,7 +118,7 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
             //probabilities.Add(0.4);
             //probabilities.Add(0.2);
 
-            CombinedMutation<Genome, Problem, Fitness> mutation = new CombinedMutation<Genome, Problem, Fitness>(
+            CombinedMutation<List<Genome>, Problem, Fitness> mutation = new CombinedMutation<List<Genome>, Problem, Fitness>(
                 StaticRandomGenerator.Get(),
                 mutators,
                 probabilities);
@@ -126,19 +126,19 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
             SolverSettings settings = new SolverSettings(_stagnation, _population, max_generations, _elitism_percentage, _cross_percentage, _mutation_percentage);
             Problem genetic_problem = new Problem(depots, customers, problem);
 
-            Solver<Genome, Problem, Fitness> solver =
-                new Solver<Genome, Problem, Fitness>(genetic_problem, settings,
-                new TournamentBasedSelector<Genome, Problem, Fitness>(10, 0.1),
+            Solver<List<Genome>, Problem, Fitness> solver =
+                new Solver<List<Genome>, Problem, Fitness>(genetic_problem, settings,
+                new TournamentBasedSelector<List<Genome>, Problem, Fitness>(10, 0.1),
                 mutation, //new RoutePartExchangeMutation(),
                 new RouteExchangeOperation(),//new RouteExchangeOperationSimple(), //new RouteExchangeOperation(), //new RouteExchangeAndVehicleOperation(),
                 new RandomBestPlacement(),//new RandomGeneration(), //new RandomBestPlacement(),
                 new FitnessCalculator());
 
-            solver.NewFittest += new Solver<Genome, Problem, Fitness>.NewFittestDelegate(solver_NewFittest);
-            solver.NewGeneration += new Solver<Genome, Problem, Fitness>.NewGenerationDelegate(solver_NewGeneration);
+            solver.NewFittest += new Solver<List<Genome>, Problem, Fitness>.NewFittestDelegate(solver_NewFittest);
+            solver.NewGeneration += new Solver<List<Genome>, Problem, Fitness>.NewGenerationDelegate(solver_NewGeneration);
             
             
-            Individual<Genome, Problem, Fitness> solution = solver.Start(null);
+            Individual<List<Genome>, Problem, Fitness> solution = solver.Start(null);
             //this.solver_NewFittest(solution);
 
             Genome routes = solution.Genomes[0];
@@ -182,12 +182,12 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
 
         int generations = 0;
 
-        void solver_NewGeneration(int generation, int stagnation_count, Population<Genome, Problem, Fitness> population)
+        void solver_NewGeneration(int generation, int stagnation_count, Population<List<Genome>, Problem, Fitness> population)
         {
             generations++;
         }
 
-        void solver_NewFittest(Individual<Genome, Problem, Fitness> individual)
+        void solver_NewFittest(Individual<List<Genome>, Problem, Fitness> individual)
         {
             //Genome genome = individual.Genomes[0];
 

@@ -12,7 +12,7 @@ using Tools.Math.Graph;
 namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
 {
     public class BestPlacementMutationOperation :
-        IMutationOperation<int, GeneticProblem, Fitness>
+        IMutationOperation<List<int>, GeneticProblem, Fitness>
     {        
         public BestPlacementMutationOperation()
         {
@@ -29,9 +29,9 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
 
         #region IMutationOperation<int,Problem> Members
 
-        public Individual<int, GeneticProblem, Fitness> Mutate(
-            Solver<int, GeneticProblem, Fitness> solver,
-            Individual<int, GeneticProblem, Fitness> mutating)
+        public Individual<List<int>, GeneticProblem, Fitness> Mutate(
+            Solver<List<int>, GeneticProblem, Fitness> solver,
+            Individual<List<int>, GeneticProblem, Fitness> mutating)
         {
             // take a random piece.
             int idx = solver.Random.Next(mutating.Genomes.Count);
@@ -48,8 +48,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
                 new_genome,
                 customer);
 
-            Individual individual = new Individual();
-            individual.Initialize(new_genome);
+            Individual individual = new Individual(new_genome);
             individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
             return individual;
         }

@@ -28,7 +28,8 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Helpers
             BestPlacementResult result = null;
 
             // create the new individual.
-            Individual new_individual = (individual.Copy() as Individual);
+            Individual new_individual = null;
+            throw new NotImplementedException();
             cities_to_place = new List<int>(cities_to_place);
             while (cities_to_place.Count > 0)
             {
@@ -69,7 +70,8 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Helpers
             BestPlacementResult result = null;
 
             // create the new individual.
-            Individual new_individual = (individual.Copy() as Individual);
+            Individual new_individual = null;// (individual.Copy() as Individual);
+            throw new NotImplementedException();
             cities_to_place = new List<int>(cities_to_place);
             while (cities_to_place.Count > 0)
             {
@@ -243,7 +245,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Helpers
         internal static BestPlacementResult CalculateBestPlacementInIndividual(
             Problem problem,
             FitnessCalculator calculator,
-            Individual<Genome, Problem, Fitness> individual,
+            Individual<List<Genome>, Problem, Fitness> individual,
             List<int> cities_to_place)
         {
             // initialize the best placement result.
@@ -287,7 +289,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Helpers
             Problem problem,
             FitnessCalculator calculator,
             int round_idx,
-            Individual<Genome, Problem, Fitness> individual,
+            Individual<List<Genome>, Problem, Fitness> individual,
             int city_to_place)
         {
             // if the target round is empty best placement is impossible.

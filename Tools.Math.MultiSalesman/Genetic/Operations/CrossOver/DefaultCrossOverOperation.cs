@@ -10,10 +10,10 @@
 
 //namespace Tools.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver
 //{
-//    public class DefaultCrossOverOperation : ICrossOverOperation<Genome, Problem, Fitness>
+//    public class DefaultCrossOverOperation : ICrossOverOperation<List<Genome>, Problem, Fitness>
 //    {
-//        public Individual<Genome, Problem, Fitness> CrossOver(
-//            Solver<Genome, Problem, Fitness> solver, Individual<Genome, Problem, Fitness> parent1, Individual<Genome, Problem, Fitness> parent2)
+//        public Individual<List<Genome>, Problem, Fitness> CrossOver(
+//            Solver<List<Genome>, Problem, Fitness> solver, Individual<List<Genome>, Problem, Fitness> parent1, Individual<List<Genome>, Problem, Fitness> parent2)
 //        {
 //            bool succes = false;
 //            List<Genome> genomes = null;

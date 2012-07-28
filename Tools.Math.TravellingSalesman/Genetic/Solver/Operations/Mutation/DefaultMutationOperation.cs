@@ -16,7 +16,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
     ///     - Switch order between two random nodes.
     /// </summary>
     public class DefaultMutationOperation :
-        IMutationOperation<int, GeneticProblem, Fitness>
+        IMutationOperation<List<int>, GeneticProblem, Fitness>
     {
 
         public string Name
@@ -35,9 +35,9 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
         /// <param name="solver"></param>
         /// <param name="mutating"></param>
         /// <returns></returns>
-        public Individual<int, GeneticProblem, Fitness> Mutate(
-            Solver<int, GeneticProblem, Fitness> solver,
-            Individual<int, GeneticProblem, Fitness> mutating)
+        public Individual<List<int>, GeneticProblem, Fitness> Mutate(
+            Solver<List<int>, GeneticProblem, Fitness> solver,
+            Individual<List<int>, GeneticProblem, Fitness> mutating)
         {
             List<int> genome = new List<int>(mutating.Genomes);
 
@@ -86,8 +86,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
                 }
             }
 
-            Individual individual = new Individual();
-            individual.Initialize(genome);
+            Individual individual = new Individual(genome);
             individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
             return individual;
         }

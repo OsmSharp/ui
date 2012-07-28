@@ -98,7 +98,7 @@ namespace Tools.TSPLIB.Problems
         /// <summary>
         /// Keeps the nearest neighbour list.
         /// </summary>
-        private Dictionary<int, HashSet<int>> _neighbours = new Dictionary<int,HashSet<int>>();
+        private Dictionary<int, HashSet<int>> _neighbours = new Dictionary<int, HashSet<int>>();
 
         /// <summary>
         /// Generate the nearest neighbour list.
@@ -147,5 +147,66 @@ namespace Tools.TSPLIB.Problems
         }
 
         #endregion
+
+
+
+        //#region Nearest Neighbour
+
+        ///// <summary>
+        ///// Keeps the nearest neighbour list.
+        ///// </summary>
+        //private HashSet<int>[] _neighbours;
+
+        ///// <summary>
+        ///// Generate the nearest neighbour list.
+        ///// </summary>
+        ///// <param name="customer"></param>
+        ///// <returns></returns>
+        //public HashSet<int> Get10NearestNeighbours(int v)
+        //{
+        //    if (_neighbours == null)
+        //    {
+        //        _neighbours = new HashSet<int>[this.Size];
+        //    }
+        //    HashSet<int> result = _neighbours[v];
+        //    if (result == null)
+        //    {
+        //        SortedDictionary<float, List<int>> neighbours = new SortedDictionary<float, List<int>>();
+        //        for (int customer = 0; customer < this.Size; customer++)
+        //        {
+        //            if (customer != v)
+        //            {
+        //                float weight = this.WeightMatrix[v][customer];
+        //                List<int> customers = null;
+        //                if (!neighbours.TryGetValue(weight, out customers))
+        //                {
+        //                    customers = new List<int>();
+        //                    neighbours.Add(weight, customers);
+        //                }
+        //                customers.Add(customer);
+        //            }
+        //        }
+
+        //        result = new HashSet<int>();
+        //        foreach (KeyValuePair<float, List<int>> pair in neighbours)
+        //        {
+        //            foreach (int customer in pair.Value)
+        //            {
+        //                if (result.Count < 10)
+        //                {
+        //                    result.Add(customer);
+        //                }
+        //                else
+        //                {
+        //                    break;
+        //                }
+        //            }
+        //        }
+        //        _neighbours[v] = result;
+        //    }
+        //    return result;
+        //}
+
+        //#endregion
     }
 }

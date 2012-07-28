@@ -9,7 +9,7 @@ using Tools.Math.VRP.Core.Routes;
 
 namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic
 {
-    internal class FitnessCalculator : IFitnessCalculator<Genome, Problem, Fitness>
+    internal class FitnessCalculator : IFitnessCalculator<List<Genome>, Problem, Fitness>
     {
         public double Epsilon
         {
@@ -19,17 +19,17 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic
             }
         }
 
-        public Fitness Fitness(Problem problem, Individual<Genome, Problem, Fitness> individual)
+        public Fitness Fitness(Problem problem, Individual<List<Genome>, Problem, Fitness> individual)
         {
             return this.Fitness(problem, individual, false);
         }
 
-        public Fitness Fitness(Problem problem, Individual<Genome, Problem, Fitness> individual, bool validate)
+        public Fitness Fitness(Problem problem, Individual<List<Genome>, Problem, Fitness> individual, bool validate)
         {
             return this.Fitness(problem, individual.Genomes);
         }
 
-        public Fitness Fitness(Problem problem, IList<Genome> genomes)
+        public Fitness Fitness(Problem problem, List<Genome> genomes)
         {
             Genome multi_route = genomes[0];
 
@@ -102,12 +102,12 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic
         }
 
 
-        public Fitness AverageFitness(Problem problem, IEnumerable<Individual<Genome, Problem, Fitness>> population)
+        public Fitness AverageFitness(Problem problem, IEnumerable<Individual<List<Genome>, Problem, Fitness>> population)
         {
             Fitness average = new Fitness();
 
             double count = 0;
-            foreach (Individual<Genome, Problem, Fitness> individual in population)
+            foreach (Individual<List<Genome>, Problem, Fitness> individual in population)
             {
                 if (!individual.FitnessCalculated)
                 {

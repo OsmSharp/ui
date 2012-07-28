@@ -41,20 +41,20 @@ namespace Tools.Math.TSP.EdgeAssemblyGenetic
         /// <summary>
         /// Holds a generation operation.
         /// </summary>
-        private IGenerationOperation<int, GeneticProblem, Fitness> _generation_operation;
+        private IGenerationOperation<List<int>, GeneticProblem, Fitness> _generation_operation;
 
         /// <summary>
         /// Holds a generation operation.
         /// </summary>
-        private ICrossOverOperation<int, GeneticProblem, Fitness> _cross_over_operation;
+        private ICrossOverOperation<List<int>, GeneticProblem, Fitness> _cross_over_operation;
 
         /// <summary>
         /// Creates a new solver.
         /// </summary>
         /// <param name="problem"></param>
         public EdgeAssemblyCrossOverSolver(int population_size, int stagnation,
-            IGenerationOperation<int, GeneticProblem, Fitness> generation_operation,
-            ICrossOverOperation<int, GeneticProblem, Fitness> cross_over_operation)
+            IGenerationOperation<List<int>, GeneticProblem, Fitness> generation_operation,
+            ICrossOverOperation<List<int>, GeneticProblem, Fitness> cross_over_operation)
         {
             _stopped = false;
             _stagnation = stagnation;
@@ -102,8 +102,8 @@ namespace Tools.Math.TSP.EdgeAssemblyGenetic
                 -1,
                 -1);
 
-            Solver<int, GeneticProblem, Fitness> solver =
-                new Solver<int, GeneticProblem, Fitness>(
+            Solver<List<int>, GeneticProblem, Fitness> solver =
+                new Solver<List<int>, GeneticProblem, Fitness>(
                 new GeneticProblem(problem),
                 settings,
                 null,
@@ -113,12 +113,12 @@ namespace Tools.Math.TSP.EdgeAssemblyGenetic
                 new FitnessCalculator(),
                 true, false);
 
-            Population<int, GeneticProblem, Fitness> population =
-                new Population<int, GeneticProblem, Fitness>(true);
+            Population<List<int>, GeneticProblem, Fitness> population =
+                new Population<List<int>, GeneticProblem, Fitness>(true);
             while (population.Count < _population_size)
             {
                 // generate new.
-                Individual<int, GeneticProblem, Fitness> new_individual =
+                Individual<List<int>, GeneticProblem, Fitness> new_individual =
                     _generation_operation.Generate(solver);
 
                 // add to population.
@@ -126,9 +126,9 @@ namespace Tools.Math.TSP.EdgeAssemblyGenetic
             }
 
             // select each individual once.
-            Population<int, GeneticProblem, Fitness> new_population =
-                new Population<int, GeneticProblem, Fitness>(true);
-            Individual<int, GeneticProblem, Fitness> best = null;
+            Population<List<int>, GeneticProblem, Fitness> new_population =
+                new Population<List<int>, GeneticProblem, Fitness>(true);
+            Individual<List<int>, GeneticProblem, Fitness> best = null;
             int stagnation = 0;
             while (stagnation < _stagnation)
             {
@@ -136,8 +136,8 @@ namespace Tools.Math.TSP.EdgeAssemblyGenetic
                 {
                     // select an individual and the next one.
                     int idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(population.Count);
-                    Individual<int, GeneticProblem, Fitness> individual1 = population[idx];
-                    Individual<int, GeneticProblem, Fitness> individual2 = null;
+                    Individual<List<int>, GeneticProblem, Fitness> individual1 = population[idx];
+                    Individual<List<int>, GeneticProblem, Fitness> individual2 = null;
                     if (idx == population.Count - 1)
                     {
                         individual2 = population[0];
@@ -148,7 +148,7 @@ namespace Tools.Math.TSP.EdgeAssemblyGenetic
                     }
                     population.RemoveAt(idx);
 
-                    Individual<int, GeneticProblem, Fitness> new_individual = _cross_over_operation.CrossOver(solver,
+                    Individual<List<int>, GeneticProblem, Fitness> new_individual = _cross_over_operation.CrossOver(solver,
                         individual1, individual2);
 
                     new_individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
@@ -166,7 +166,7 @@ namespace Tools.Math.TSP.EdgeAssemblyGenetic
                 population = new_population;
                 population.Sort(solver, solver.FitnessCalculator);
 
-                new_population = new Population<int, GeneticProblem, Fitness>(true);
+                new_population = new Population<List<int>, GeneticProblem, Fitness>(true);
 
                 if (best == null ||
                     best.Fitness.CompareTo(population[0].Fitness) > 0)

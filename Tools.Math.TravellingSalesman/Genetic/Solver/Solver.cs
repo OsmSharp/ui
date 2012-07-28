@@ -11,34 +11,34 @@
 
 //namespace Tools.Math.TSP.Genetic.Solver
 //{
-//    public class Solver : Solver<int, GeneticProblem, Fitness>
+//    public class Solver : Solver<List<int>, GeneticProblem, Fitness>
 //    {
 //        public Solver(
 //            GeneticProblem problem,
 //            SolverSettings settings,
-//            ISelector<int, GeneticProblem, Fitness> selector,
-//            IMutationOperation<int, GeneticProblem, Fitness> mutation,
-//            ICrossOverOperation<int, GeneticProblem, Fitness> cross_over,
-//            IGenerationOperation<int, GeneticProblem, Fitness> generation,
-//            IFitnessCalculator<int, GeneticProblem, Fitness> fitness_calculator,
+//            ISelector<List<int>, GeneticProblem, Fitness> selector,
+//            IMutationOperation<List<int>, GeneticProblem, Fitness> mutation,
+//            ICrossOverOperation<List<int>, GeneticProblem, Fitness> cross_over,
+//            IGenerationOperation<List<int>, GeneticProblem, Fitness> generation,
+//            IFitnessCalculator<List<int>, GeneticProblem, Fitness> fitness_calculator,
 //            bool accept_only_better_cross_over, bool accept_only_better_mutation)
 //            :base(problem, settings,selector, mutation,cross_over,generation,fitness_calculator, accept_only_better_cross_over, accept_only_better_mutation)
 //        {
 
 //        }
 
-//        protected override AI.Genetic.Operations.Generation.IGenerationOperation<int, GeneticProblem, Fitness> CreateGenerationOperation()
+//        protected override AI.Genetic.Operations.Generation.IGenerationOperation<List<int>, GeneticProblem, Fitness> CreateGenerationOperation()
 //        {
 //            return new Operations.Generation.BestPlacementGenerationOperation();
 //            //return new Operations.Generation.LKGenerationOperation();
 //        }
 
-//        protected override IMutationOperation<int, GeneticProblem, Fitness> CreateMutationOperation()
+//        protected override IMutationOperation<List<int>, GeneticProblem, Fitness> CreateMutationOperation()
 //        {
 //            return new Operations.Mutation.BestDetailedPlacementMutationOperation();
 //        }
 
-//        protected override ICrossOverOperation<int, GeneticProblem, Fitness> CreateCrossoverOperation()
+//        protected override ICrossOverOperation<List<int>, GeneticProblem, Fitness> CreateCrossoverOperation()
 //        {
 //            return new Operations.CrossOver.SequentialContructiveCrossoverOperator();
 //        }

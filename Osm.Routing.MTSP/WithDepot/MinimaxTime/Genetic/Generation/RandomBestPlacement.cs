@@ -17,7 +17,7 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation
     /// Best-placement generator based on a random first customer for each route.
     /// </summary>
     internal class RandomBestPlacement :
-        IGenerationOperation<Genome, Problem, Fitness>
+        IGenerationOperation<List<Genome>, Problem, Fitness>
     {
         public string Name
         {
@@ -32,8 +32,8 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation
         /// </summary>
         /// <param name="solver"></param>
         /// <returns></returns>
-        public Individual<Genome, Problem, Fitness> Generate(
-            Solver<Genome, Problem, Fitness> solver)
+        public Individual<List<Genome>, Problem, Fitness> Generate(
+            Solver<List<Genome>, Problem, Fitness> solver)
         {
             Problem problem = solver.Problem;
 
@@ -91,8 +91,8 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation
 
             List<Genome> genomes = new List<Genome>();
             genomes.Add(Genome.CreateFrom(multi_route));
-            Individual<Genome, Problem, Fitness> individual = new Individual<Genome, Problem, Fitness>();
-            individual.Initialize(genomes);
+            Individual<List<Genome>, Problem, Fitness> individual = new Individual<List<Genome>, Problem, Fitness>(genomes);
+            //individual.Initialize();
             return individual;
         }
     }

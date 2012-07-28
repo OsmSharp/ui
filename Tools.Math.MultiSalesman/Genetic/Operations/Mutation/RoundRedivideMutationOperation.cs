@@ -11,7 +11,7 @@ using Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
 
 namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
 {
-    internal class RoundRedivideMutationOperation : IMutationOperation<Genome, Problem, Fitness>
+    internal class RoundRedivideMutationOperation : IMutationOperation<List<Genome>, Problem, Fitness>
     {
         public string Name
         {
@@ -21,34 +21,36 @@ namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
             }
         }
 
-        public Individual<Genome, Problem, Fitness> Mutate(
-            Solver<Genome, Problem, Fitness> solver, Individual<Genome, Problem, Fitness> mutating)
+        public Individual<List<Genome>, Problem, Fitness> Mutate(
+            Solver<List<Genome>, Problem, Fitness> solver, Individual<List<Genome>, Problem, Fitness> mutating)
         {
-            Individual<Genome, Problem, Fitness> copy = mutating.Copy();
 
-            if (copy.Genomes.Count <= 1)
-            {
-                return copy;
-            }
+            throw new NotImplementedException("Not re-implemented after refactoring GA");
+            //Individual<List<Genome>, Problem, Fitness> copy = mutating.Copy();
 
-            if (!copy.FitnessCalculated)
-            {
-                copy.CalculateFitness(solver.Problem, solver.FitnessCalculator);
-            }
-            // randomly select a small genome.
-            Genome smallest1 = IndividualHelper.SelectRandom(copy, true);
-            copy.Genomes.Remove(smallest1);
+            //if (copy.Genomes.Count <= 1)
+            //{
+            //    return copy;
+            //}
 
-            // use best placement.
-            copy = BestPlacementHelper.DoFast(
-                solver.Problem,
-                solver.FitnessCalculator as FitnessCalculator,
-                copy as Individual,
-                smallest1);
+            //if (!copy.FitnessCalculated)
+            //{
+            //    copy.CalculateFitness(solver.Problem, solver.FitnessCalculator);
+            //}
+            //// randomly select a small genome.
+            //Genome smallest1 = IndividualHelper.SelectRandom(copy, true);
+            //copy.Genomes.Remove(smallest1);
 
-            copy.CalculateFitness(solver.Problem, solver.FitnessCalculator);
+            //// use best placement.
+            //copy = BestPlacementHelper.DoFast(
+            //    solver.Problem,
+            //    solver.FitnessCalculator as FitnessCalculator,
+            //    copy as Individual,
+            //    smallest1);
 
-            return copy;
+            //copy.CalculateFitness(solver.Problem, solver.FitnessCalculator);
+
+            //return copy;
         }
     }
 }

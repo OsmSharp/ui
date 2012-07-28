@@ -13,12 +13,12 @@ using Tools.Math.VRP.Core.BestPlacement;
 namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.CrossOver
 {
     internal class RouteExchangeOperation :
-        ICrossOverOperation<Genome, Problem, Fitness>
+        ICrossOverOperation<List<Genome>, Problem, Fitness>
     {
-        public Individual<Genome, Problem, Fitness> CrossOver(
-            Solver<Genome, Problem, Fitness> solver,
-            Individual<Genome, Problem, Fitness> parent1,
-            Individual<Genome, Problem, Fitness> parent2)
+        public Individual<List<Genome>, Problem, Fitness> CrossOver(
+            Solver<List<Genome>, Problem, Fitness> solver,
+            Individual<List<Genome>, Problem, Fitness> parent1,
+            Individual<List<Genome>, Problem, Fitness> parent2)
         {
             Genome route1 = parent1.Genomes[0];
             Genome route2 = parent2.Genomes[0];
@@ -151,8 +151,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.CrossOver
             }
             List<Genome> genomes = new List<Genome>();
             genomes.Add(genome);
-            Individual<Genome, Problem, Fitness> individual = new Individual<Genome, Problem, Fitness>();
-            individual.Initialize(genomes);
+            Individual<List<Genome>, Problem, Fitness> individual = new Individual<List<Genome>, Problem, Fitness>(genomes);
+            //individual.Initialize();
             return individual;
         }
 

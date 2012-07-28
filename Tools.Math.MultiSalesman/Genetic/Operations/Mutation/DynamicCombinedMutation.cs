@@ -10,7 +10,7 @@ using Tools.Math.VRP.MultiSalesman.Genetic;
 
 namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
 {
-    internal class DynamicCombinedMutation : CombinedMutation<Genome, Problem, Fitness>
+    internal class DynamicCombinedMutation : CombinedMutation<List<Genome>, Problem, Fitness>
     {
         private IList<double> _initial;
         private IList<double> _increase_rounds;
@@ -20,7 +20,7 @@ namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
         private bool _regime_reached = false;
 
         public DynamicCombinedMutation(
-            IList<IMutationOperation<Genome,Problem,Fitness>> operations,
+            IList<IMutationOperation<List<Genome>, Problem, Fitness>> operations,
             IList<double> initial,
             IList<double> increase_rounds,
             IList<double> decrease_rounds,
@@ -35,8 +35,8 @@ namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
             _decrease_time = decrease_time;
         }
 
-        public override Individual<Genome,Problem,Fitness> Mutate(
-            Solver<Genome,Problem,Fitness> solver, Individual<Genome,Problem,Fitness> mutating)
+        public override Individual<List<Genome>, Problem, Fitness> Mutate(
+            Solver<List<Genome>, Problem, Fitness> solver, Individual<List<Genome>, Problem, Fitness> mutating)
         {
             // determine correct probalities.
             if (mutating.Fitness.Feasable)
@@ -70,7 +70,7 @@ namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
             }
 
             // actually select one.
- 	        Individual<Genome,Problem,Fitness> result = base.Mutate(solver, mutating);
+ 	        Individual<List<Genome>, Problem, Fitness> result = base.Mutate(solver, mutating);
             result.Validate(solver.Problem);
             return result;
         }

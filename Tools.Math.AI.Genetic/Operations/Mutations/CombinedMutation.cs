@@ -9,7 +9,7 @@ namespace Tools.Math.AI.Genetic.Operations.Mutations
 {
     public class CombinedMutation<GenomeType, ProblemType, WeightType> : IMutationOperation<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
-        where GenomeType : IEquatable<GenomeType>
+        where GenomeType : class
         where WeightType : IComparable
     {
         private IList<IMutationOperation<GenomeType, ProblemType, WeightType>> _operations;

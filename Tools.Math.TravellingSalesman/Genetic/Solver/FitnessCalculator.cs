@@ -10,7 +10,7 @@ using Tools.Math.Graph;
 namespace Tools.Math.TSP.Genetic.Solver
 {
     public class FitnessCalculator :
-        IFitnessCalculator<int, GeneticProblem, Fitness>
+        IFitnessCalculator<List<int>, GeneticProblem, Fitness>
     {
         public static double EPSILON = 1;
 
@@ -26,21 +26,21 @@ namespace Tools.Math.TSP.Genetic.Solver
 
         public Fitness Fitness(
             GeneticProblem problem,
-            Individual<int, GeneticProblem, Fitness> individual)
+            Individual<List<int>, GeneticProblem, Fitness> individual)
         {
             return this.Fitness(problem, individual.Genomes);
         }
 
         public Fitness Fitness(
             GeneticProblem problem,
-            Individual<int, GeneticProblem, Fitness> individual, bool validate)
+            Individual<List<int>, GeneticProblem, Fitness> individual, bool validate)
         {
             return this.Fitness(problem, individual.Genomes);
         }
 
         public Fitness Fitness(
             GeneticProblem problem,
-            IList<int> genomes)
+            List<int> genomes)
         {
             float[][] weights = problem.BaseProblem.WeightMatrix;
             float weight = weights[problem.First][genomes[0]];
@@ -105,8 +105,7 @@ namespace Tools.Math.TSP.Genetic.Solver
 
         #endregion
 
-
-        public Fitness AverageFitness(GeneticProblem problem, IEnumerable<Individual<int, GeneticProblem, Fitness>> population)
+        public Fitness AverageFitness(GeneticProblem problem, IEnumerable<Individual<List<int>, GeneticProblem, Fitness>> population)
         {
             throw new NotImplementedException();
         }

@@ -14,12 +14,17 @@ namespace Tools.Math.AI.Genetic
     /// <typeparam name="GenomeType"></typeparam>
     public class Individual<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
-        where GenomeType : IEquatable<GenomeType>
+        where GenomeType : class
         where WeightType : IComparable
     {
-        public Individual()
-        {
+        //public Individual()
+        //{
 
+        //}
+
+        public Individual(GenomeType genomes)
+        {
+            _genomes = genomes;
         }
 
         protected Individual(bool fitness_calculated, 
@@ -39,12 +44,12 @@ namespace Tools.Math.AI.Genetic
         /// <summary>
         /// Holds the list for genomes in this individual.
         /// </summary>
-        private List<GenomeType> _genomes;
+        private GenomeType _genomes;
 
         /// <summary>
         /// Returns the genomes of this individual.
         /// </summary>
-        public List<GenomeType> Genomes
+        public GenomeType Genomes
         {
             get
             {
@@ -54,21 +59,21 @@ namespace Tools.Math.AI.Genetic
 
         #endregion
 
-        #region Initialisation
+        //#region Initialisation
 
-        /// <summary>
-        /// Initializes this individual.
-        /// </summary>
-        public void Initialize(List<GenomeType> genomes)
-        {
-            // this is the only way to inject genomes into an individual.
-            // only the individual factory should call this function.
-            // the responsability of injecting correct genomes lies with the operators defined at problem level.
-            // validation is forced at population level.
-            _genomes = genomes;
-        }
+        ///// <summary>
+        ///// Initializes this individual.
+        ///// </summary>
+        //public void Initialize(List<GenomeType> genomes)
+        //{
+        //    // this is the only way to inject genomes into an individual.
+        //    // only the individual factory should call this function.
+        //    // the responsability of injecting correct genomes lies with the operators defined at problem level.
+        //    // validation is forced at population level.
+        //    _genomes = genomes;
+        //}
 
-        #endregion
+        //#endregion
 
         #region Fitness
 
@@ -160,7 +165,7 @@ namespace Tools.Math.AI.Genetic
             {
                 return false;
             }
-            return i1._genomes.EqualValues(i2._genomes);
+            return i1._genomes.Equals(i2._genomes);
         }
 
         /// <summary>
@@ -180,7 +185,7 @@ namespace Tools.Math.AI.Genetic
             {
                 return true;
             }
-            return !i1._genomes.EqualValues(i2._genomes);
+            return !i1._genomes.Equals(i2._genomes);
         }
 
         #region Overrides
@@ -211,11 +216,11 @@ namespace Tools.Math.AI.Genetic
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
-            foreach (GenomeType genome in this.Genomes)
-            {
-                builder.Append(genome.ToString());
-                builder.Append(Environment.NewLine);
-            }
+            //foreach (GenomeType genome in this.Genomes)
+            //{
+            builder.Append(this.Genomes.ToString());
+                //builder.Append(Environment.NewLine);
+            //}
             return this.Description + Environment.NewLine + 
                 this.Fitness.ToString() + Environment.NewLine + 
                 builder.ToString();
@@ -225,24 +230,24 @@ namespace Tools.Math.AI.Genetic
 
         #endregion
 
-        #region Copy
+        //#region Copy
 
-        /// <summary>
-        /// Creates an exact copy of this individual.
-        /// </summary>
-        /// <returns></returns>
-        public virtual Individual<GenomeType, ProblemType, WeightType> Copy()
-        {
-            Individual<GenomeType, ProblemType, WeightType> new_individual
-                = new Individual<GenomeType, ProblemType, WeightType>(this.FitnessCalculated,this.Fitness);
-            new_individual.Description = this.Description;
-            new_individual.Initialize(new List<GenomeType>(
-                this.Genomes));
+        ///// <summary>
+        ///// Creates an exact copy of this individual.
+        ///// </summary>
+        ///// <returns></returns>
+        //public virtual Individual<GenomeType, ProblemType, WeightType> Copy()
+        //{
+        //    Individual<GenomeType, ProblemType, WeightType> new_individual
+        //        = new Individual<GenomeType, ProblemType, WeightType>(this.FitnessCalculated,this.Fitness);
+        //    new_individual.Description = this.Description;
+        //    new_individual.Initialize(
+        //        this.Genomes);
 
-            return new_individual;
-        }
+        //    return new_individual;
+        //}
 
-        #endregion
+        //#endregion
 
         public virtual void Validate(ProblemType problem)
         {

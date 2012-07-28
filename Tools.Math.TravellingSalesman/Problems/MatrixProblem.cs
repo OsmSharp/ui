@@ -184,7 +184,7 @@ namespace Tools.Math.TSP.Problems
         /// <summary>
         /// Keeps the nearest neighbour list.
         /// </summary>
-        private Dictionary<int, HashSet<int>> _neighbours;
+        private HashSet<int>[] _neighbours;
 
         /// <summary>
         /// Generate the nearest neighbour list.
@@ -193,8 +193,12 @@ namespace Tools.Math.TSP.Problems
         /// <returns></returns>
         public HashSet<int> Get10NearestNeighbours(int v)
         {
-            HashSet<int> result = null;
-            if (!_neighbours.TryGetValue(v, out result))
+            if (_neighbours == null)
+            {
+                _neighbours = new HashSet<int>[this.Size];
+            }
+            HashSet<int> result = _neighbours[v];
+            if (result == null)
             {
                 SortedDictionary<float, List<int>> neighbours = new SortedDictionary<float, List<int>>();
                 for (int customer = 0; customer < this.Size; customer++)
@@ -227,7 +231,7 @@ namespace Tools.Math.TSP.Problems
                         }
                     }
                 }
-                _neighbours.Add(v, result);
+                _neighbours[v] = result;
             }
             return result;
         }

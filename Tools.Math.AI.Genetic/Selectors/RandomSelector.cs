@@ -9,7 +9,7 @@ namespace Tools.Math.AI.Genetic.Selectors
     public class RandomSelector<GenomeType, ProblemType, WeightType> :
         ISelector<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
-        where GenomeType : IEquatable<GenomeType>
+        where GenomeType : class
         where WeightType : IComparable
     {
 

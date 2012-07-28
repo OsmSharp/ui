@@ -634,6 +634,11 @@ namespace Osm.Routing.CH.Routing
         /// </summary>
         private int _next_id = -1;
 
+        public CHVertex ResolveAt(long vertex_id)
+        {
+            return this.GetCHVertex(vertex_id);
+        }
+
         /// <summary>
         /// Returns a resolved point.
         /// </summary>

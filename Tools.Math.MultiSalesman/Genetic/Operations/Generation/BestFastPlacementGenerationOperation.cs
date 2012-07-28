@@ -15,7 +15,7 @@ namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Generation
     /// Generates new individuals by using best placement.
     /// </summary>
     internal class BestFastPlacementGenerationOperation :
-        IGenerationOperation<Genome, Problem, Fitness>
+        IGenerationOperation<List<Genome>, Problem, Fitness>
     {
         public string Name
         {
@@ -30,8 +30,8 @@ namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Generation
         /// </summary>
         /// <param name="solver"></param>
         /// <returns></returns>
-        public Individual<Genome, Problem, Fitness> Generate(
-            Solver<Genome, Problem, Fitness> solver)
+        public Individual<List<Genome>, Problem, Fitness> Generate(
+            Solver<List<Genome>, Problem, Fitness> solver)
         {
             IRandomGenerator random = new RandomGenerator();
 
@@ -44,8 +44,8 @@ namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Generation
 
             // create new individuals.
             Individual individual =
-                new Individual();
-            individual.Initialize(new List<Genome>());
+                new Individual(new List<Genome>());
+            //individual.Initialize();
 
             // place one random city in each round.
             for (int round_idx = 0; round_idx < solver.Problem.InitialVehicles; round_idx++)

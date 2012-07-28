@@ -11,7 +11,7 @@ using Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.Helpers;
 namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
     public class EdgeAssemblyCrossover :
-        ICrossOverOperation<int, GeneticProblem, Fitness>
+        ICrossOverOperation<List<int>, GeneticProblem, Fitness>
     {
         private int _max_offspring;
 
@@ -61,12 +61,13 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
         #region ICrossOverOperation<int,Problem> Members
 
-        public Individual<int, GeneticProblem, Fitness> CrossOver(
-            Solver<int, GeneticProblem, Fitness> solver,
-            Individual<int, GeneticProblem, Fitness> parent1,
-            Individual<int, GeneticProblem, Fitness> parent2)
+        public Individual<List<int>, GeneticProblem, Fitness> CrossOver(
+            Solver<List<int>, GeneticProblem, Fitness> solver,
+            Individual<List<int>, GeneticProblem, Fitness> parent1,
+            Individual<List<int>, GeneticProblem, Fitness> parent2)
         {
             Tools.Math.TSP.Problems.IProblem tsp_problem = solver.Problem.BaseProblem;
+            float[][] weights = tsp_problem.WeightMatrix;
 
             // first create E_a
             AsymmetricCycles e_a = new AsymmetricCycles(parent1.Genomes.Count + 1);
@@ -184,6 +185,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
                         from = current_tour.Key;
                         to = a[from];
+                        float weight_from_to = weights[from][to];
                         do
                         {
                             // check the nearest neighbours of from
@@ -197,8 +199,8 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                                     !ignore_list[nn_to])
                                 {
                                     double merge_weight =
-                                        (tsp_problem.WeightMatrix[from][nn_to] + tsp_problem.WeightMatrix[nn][to]) -
-                                        (tsp_problem.WeightMatrix[from][to] + tsp_problem.WeightMatrix[nn][nn_to]);
+                                        (weights[from][nn_to] + weights[nn][to]) -
+                                        (weight_from_to + weights[nn][nn_to]);
                                     if (weight > merge_weight)
                                     {
                                         weight = merge_weight;
@@ -228,8 +230,8 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                                 !ignore_list[customer_to])
                             {
                                 double merge_weight =
-                                    (tsp_problem.WeightMatrix[from][customer_to] + tsp_problem.WeightMatrix[customer][to]) -
-                                    (tsp_problem.WeightMatrix[from][to] + tsp_problem.WeightMatrix[customer][customer_to]);
+                                    (weights[from][customer_to] + weights[customer][to]) -
+                                    (weights[from][to] + weights[customer][customer_to]);
                                 if (weight > merge_weight)
                                 {
                                     weight = merge_weight;
@@ -266,8 +268,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                 }
                 while (next != 0);
 
-                Individual individual = new Individual();
-                individual.Initialize(new_genome);
+                Individual individual = new Individual(new_genome);
                 individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
                 if (best == null ||
                     best.Fitness.CompareTo(individual.Fitness) > 0)
@@ -289,8 +290,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                 }
                 while (next != 0);
 
-                Individual individual = new Individual();
-                individual.Initialize(new_genome);
+                Individual individual = new Individual(new_genome);
                 individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
                 if (best == null ||
                     best.Fitness.CompareTo(individual.Fitness) > 0)

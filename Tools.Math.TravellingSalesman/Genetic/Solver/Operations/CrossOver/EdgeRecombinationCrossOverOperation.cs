@@ -9,7 +9,7 @@ using Tools.Math.AI.Genetic.Solvers;
 namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
     public class EdgeRecombinationCrossOverOperation :
-        ICrossOverOperation<int, GeneticProblem, Fitness>
+        ICrossOverOperation<List<int>, GeneticProblem, Fitness>
     {
 
         public string Name
@@ -22,10 +22,10 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
         #region ICrossOverOperation<int,Problem> Members
 
-        public Individual<int, GeneticProblem, Fitness> CrossOver(
-            Solver<int, GeneticProblem, Fitness> solver,
-            Individual<int, GeneticProblem, Fitness> parent1,
-            Individual<int, GeneticProblem, Fitness> parent2)
+        public Individual<List<int>, GeneticProblem, Fitness> CrossOver(
+            Solver<List<int>, GeneticProblem, Fitness> solver,
+            Individual<List<int>, GeneticProblem, Fitness> parent1,
+            Individual<List<int>, GeneticProblem, Fitness> parent2)
         {
             List<int> new_individual = new List<int>();
             HashSet<int> selected_cities = new HashSet<int>();
@@ -134,9 +134,8 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                 selected_cities.Add(selected_city);
                 non_selected_cities.Remove(selected_city);
             }
-            
-            Individual individual = new Individual();
-            individual.Initialize(new_individual);
+
+            Individual individual = new Individual(new_individual);
             individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
             return individual;
         }

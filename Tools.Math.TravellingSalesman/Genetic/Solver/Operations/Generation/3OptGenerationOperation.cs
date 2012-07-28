@@ -11,7 +11,7 @@ using Tools.Math.VRP.Core.Routes;
 namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation
 {
     public class _3OptGenerationOperation :
-        IGenerationOperation<int, GeneticProblem, Fitness>
+        IGenerationOperation<List<int>, GeneticProblem, Fitness>
     {
         public string Name
         {
@@ -28,8 +28,8 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation
         /// </summary>
         /// <param name="solver"></param>
         /// <returns></returns>
-        public Individual<int, GeneticProblem, Fitness> Generate(
-            Solver<int, GeneticProblem, Fitness> solver)
+        public Individual<List<int>, GeneticProblem, Fitness> Generate(
+            Solver<List<int>, GeneticProblem, Fitness> solver)
         {
             ISolver lk_solver = new HillClimbing3OptSolver(true, true);
             IRoute route = lk_solver.Solve(solver.Problem.BaseProblem);
@@ -56,8 +56,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation
                 new_genome.Add(customer);
             }
 
-            Individual individual = new Individual();
-            individual.Initialize(new_genome);
+            Individual individual = new Individual(new_genome);
             individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
             return individual;
         }

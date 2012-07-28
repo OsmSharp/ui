@@ -477,5 +477,6 @@ namespace Osm.Routing.Sparse.Routing
         }
 
         #endregion
+
     }
 }

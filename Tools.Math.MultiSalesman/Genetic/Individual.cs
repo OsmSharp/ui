@@ -6,9 +6,10 @@ using Tools.Math.AI.Genetic;
 
 namespace Tools.Math.VRP.MultiSalesman.Genetic
 {
-    internal class Individual : Individual<Genome, Problem, Fitness>
+    internal class Individual : Individual<List<Genome>, Problem, Fitness>
     {
-        public Individual()
+        public Individual(List<Genome> genome)
+            :base(genome)
         {
 
         }
@@ -19,30 +20,30 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic
 
         }
 
-        /// <summary>
-        /// Make a proper copy of the individual.
-        /// </summary>
-        /// <returns></returns>
-        public override Individual<Genome, Problem, Fitness> Copy()
-        {
-            List<Genome> genomes = new List<Genome>();
-            for (int idx = 0; idx < this.Genomes.Count; idx++)
-            {
-                genomes.Add(
-                    new Genome(this.Genomes[idx]));
-            }
-            Individual copy = null;
-            //if (!this.FitnessCalculated)
-            //{
-            copy = new Individual(false, null);
-            //}
-            //else
-            //{
-            //    copy = new Individual(this.FitnessCalculated, this.Fitness);
-            //}
-            copy.Initialize(genomes);
-            return copy;
-        }
+        ///// <summary>
+        ///// Make a proper copy of the individual.
+        ///// </summary>
+        ///// <returns></returns>
+        //public override Individual<List<Genome>, Problem, Fitness> Copy()
+        //{
+        //    List<Genome> genomes = new List<Genome>();
+        //    for (int idx = 0; idx < this.Genomes.Count; idx++)
+        //    {
+        //        genomes.Add(
+        //            new Genome(this.Genomes[idx]));
+        //    }
+        //    Individual copy = null;
+        //    //if (!this.FitnessCalculated)
+        //    //{
+        //    copy = new Individual(false, null);
+        //    //}
+        //    //else
+        //    //{
+        //    //    copy = new Individual(this.FitnessCalculated, this.Fitness);
+        //    //}
+        //    copy.Initialize(genomes);
+        //    return copy;
+        //}
 
         public int Count
         {

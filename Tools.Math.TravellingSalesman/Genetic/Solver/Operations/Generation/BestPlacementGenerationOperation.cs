@@ -16,7 +16,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation
     /// </summary>
     /// <typeparam name="GenomeType"></typeparam>
     public class BestPlacementGenerationOperation :
-        IGenerationOperation<int, GeneticProblem, Fitness>
+        IGenerationOperation<List<int>, GeneticProblem, Fitness>
     {
         public BestPlacementGenerationOperation()
         {
@@ -38,8 +38,8 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation
         /// </summary>
         /// <param name="solver"></param>
         /// <returns></returns>
-        public Individual<int, GeneticProblem, Fitness> Generate(
-            Solver<int, GeneticProblem, Fitness> solver)
+        public Individual<List<int>, GeneticProblem, Fitness> Generate(
+            Solver<List<int>, GeneticProblem, Fitness> solver)
         {
             // create new genomes list.
             List<int> genome = new List<int>();
@@ -61,8 +61,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation
                 genome,
                 cities_to_place);
 
-            Individual individual = new Individual();
-            individual.Initialize(genome);
+            Individual individual = new Individual(genome);
             individual.CalculateFitness(solver.Problem, solver.FitnessCalculator);
             return individual;
         }
