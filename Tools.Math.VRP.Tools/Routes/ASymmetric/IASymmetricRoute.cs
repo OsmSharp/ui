@@ -11,6 +11,11 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
     /// </summary>
     public interface IASymmetricRoute : IRoute, IEnumerable<int>
     {
-
+        /// <summary>
+        /// Returns the customer right after this one.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        int Next(int customer);
     }
 }

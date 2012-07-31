@@ -114,8 +114,8 @@ namespace Tools.Math.TSP.CheapestInsertion
             while (customers.Count > 0 && !_stopped)
             { // keep placing customer 0 until all customers are placed.
                 // calculate placement.
-                BestPlacementResult result =
-                    BestPlacementHelper.CalculateBestPlacement(problem, route, customers);
+                CheapestInsertionResult result =
+                    CheapestInsertionHelper.CalculateBestPlacement(problem, route, customers);
 
                 // place the customer.
                 if (result.CustomerAfter >= 0 && result.CustomerBefore >= 0)

@@ -50,12 +50,5 @@ namespace Tools.Math.TSP.Problems
         {
             get;
         }
-
-        /// <summary>
-        /// Returns the 10 nearest neighbours of the given customer.
-        /// </summary>
-        /// <param name="customer"></param>
-        /// <returns></returns>
-        HashSet<int> Get10NearestNeighbours(int customer);
     }
 }

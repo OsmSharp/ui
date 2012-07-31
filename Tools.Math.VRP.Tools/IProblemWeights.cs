@@ -33,5 +33,12 @@ namespace Tools.Math.VRP.Core
         {
             get;
         }
+
+        /// <summary>
+        /// Returns the 10 nearest neighbours of the given customer.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        NearestNeighbours10 Get10NearestNeighbours(int customer);
     }
 }

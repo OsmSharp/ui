@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 
 namespace Tools.Math.VRP.Core.Routes.ASymmetric
 {
@@ -13,17 +15,17 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         /// <summary>
         /// The is round flag for every route.
         /// </summary>
-        private bool _is_round;
+        protected bool _is_round;
 
         /// <summary>
         /// The next-array containing all route information.
         /// </summary>
-        private int[] _next_array;
+        protected int[] _next_array;
 
         /// <summary>
         /// The first customer for every route.
         /// </summary>
-        private int[] _first;
+        protected int[] _first;
 
         /// <summary>
         /// Creates a new dynamic route by creating shallow copy of the array(s) given.
@@ -31,7 +33,7 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         /// <param name="first"></param>
         /// <param name="_next_array"></param>
         /// <param name="is_round"></param>
-        private DynamicAsymmetricMultiRoute(int[] first, int[] next_array, bool is_round)
+        protected DynamicAsymmetricMultiRoute(int[] first, int[] next_array, bool is_round)
         {
             _first = first.Clone() as int[];
             _next_array = next_array.Clone() as int[];
@@ -196,6 +198,73 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        #region Sizes
+
+        /// <summary>
+        /// Holds the sizes of all routes.
+        /// </summary>
+        private int[] _sizes;
+
+        /// <summary>
+        /// Resets all sizes.
+        /// </summary>
+        private void ResetSizes()
+        {
+            _sizes = null;
+        }
+
+        /// <summary>
+        /// Recalculate all sizes.
+        /// </summary>
+        private void RecalculateSizes()
+        {
+            _sizes = new int[_first.Length];
+            for (int idx = 0; idx < _first.Length; idx++)
+            {
+                int first = _first[idx];
+                _sizes[idx] = this.Route(idx).Count;
+            }
+        }
+
+        /// <summary>
+        /// Returns all sizes.
+        /// </summary>
+        public ReadOnlyCollection<int> Sizes
+        {
+            get
+            {
+                if (_sizes == null)
+                {
+                    this.RecalculateSizes();
+                }
+                return new ReadOnlyCollection<int>(_sizes);
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Returns the customer after the given customer.
+        /// </summary>
+        /// <param name="current"></param>
+        /// <returns></returns>
+        public int Next(int customer)
+        {
+            int next = _next_array[customer];
+            if (next < 0)
+            {
+                for (int idx = 0; idx < this.Count; idx++)
+                {
+                    IRoute route = this.Route(idx);
+                    if (route.Last == customer)
+                    {
+                        return route.First;
+                    }
+                }
+            }
+            return next;
+        }
+
         /// <summary>
         /// Returns true if this route is valid.
         /// </summary>
@@ -333,7 +402,11 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
 
                     // insert customer.
                     _next_array[from] = customer;
-                    _next_array[customer] = to;
+                    if (to < 0) { }
+                    else
+                    {
+                        _next_array[customer] = to;
+                    }
 
                     // update last.
                     if (_first == to)
@@ -386,7 +459,7 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
                         count++;
                     }
                 }
-                if (unique_customers.Count == count)
+                if (unique_customers.Count != count)
                 {
                     throw new Exception("Unique customer count not correct!");
                 }
@@ -528,8 +601,49 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
                 return -1; // customer not found!
             }
 
-
             public IEnumerable<int> Between(int from, int to)
+            {
+                return new DynamicAsymmetricBetweenEnumerable(_next_array, from, to);
+            }
+
+            public bool Contains(int customer)
+            {
+                foreach (int contained in this)
+                {
+                    if (contained == customer)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            public override string ToString()
+            {
+                int previous = -1;
+                StringBuilder result = new StringBuilder();
+                foreach (int customer in this)
+                {
+                    if (previous < 0)
+                    {
+                        result.Append(customer);
+                    }
+                    else
+                    {
+                        result.Append("->");
+                        result.Append(customer);
+                    }
+                    previous = customer;
+                }
+                return result.ToString();
+            }
+
+            public object Clone()
+            {
+                throw new NotSupportedException("Cannot clone a route that's part of a multi-route.");
+            }
+
+            public int Next(int customer)
             {
                 throw new NotImplementedException();
             }
@@ -610,10 +724,32 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
             return removed;
         }
 
-
-        public object Clone()
+        public virtual object Clone()
         {
             return new DynamicAsymmetricMultiRoute(_first, _next_array, _is_round);
+        }
+
+
+        public bool Contains(int from, int to)
+        {
+            return _next_array[from] == to;
+        }
+
+        public bool Contains(int customer)
+        {
+            if (_next_array[customer] >= 0)
+            {
+                return true;
+            }
+            //if (_first.Contains(customer))
+            //{
+            //    return true;
+            //}
+            //if (_next_array.Contains(customer))
+            //{
+            //    return true;
+            //}
+            return false;
         }
     }
 }

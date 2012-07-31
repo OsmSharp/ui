@@ -217,5 +217,81 @@ namespace Tools.Math.VRP.Core.Routes.Symmetric
         {
             return new BetweenEnumerable(this, from, to);
         }
+
+
+        public bool Contains(int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IRoute.IsEmpty
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        bool IRoute.IsRound
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        int IRoute.Count
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        int IRoute.First
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        int IRoute.Last
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        bool IRoute.Contains(int from, int to)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IRoute.Contains(int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IRoute.Remove(int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IRoute.Insert(int from, int customer, int to)
+        {
+            throw new NotImplementedException();
+        }
+
+        int[] IRoute.GetNeigbours(int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        int IRoute.GetIndexOf(int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        bool IRoute.IsValid()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerable<int> IRoute.Between(int from, int to)
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator<int> IEnumerable<int>.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

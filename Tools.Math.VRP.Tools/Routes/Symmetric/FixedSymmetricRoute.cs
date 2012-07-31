@@ -365,5 +365,11 @@ namespace Tools.Math.VRP.Core.Routes.Symmetric
         {
             throw new NotImplementedException();
         }
+
+
+        public bool Contains(int customer)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

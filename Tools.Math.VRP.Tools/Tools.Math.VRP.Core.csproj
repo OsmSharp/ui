@@ -69,9 +69,12 @@
   <ItemGroup>
     <Compile Include="BestPlacement\BestPlacementHelper.cs" />
     <Compile Include="BestPlacement\BestPlacementResult.cs" />
+    <Compile Include="BestPlacement\SeedCustomers\ISeedCustomerSelector.cs" />
+    <Compile Include="BestPlacement\SeedCustomers\SimpleSeeds.cs" />
     <Compile Include="LocalSearch\RePlace1OptHelper.cs" />
     <Compile Include="LocalSearch\RePlace2OptHelper.cs" />
     <Compile Include="IProblemWeights.cs" />
+    <Compile Include="NearestNeighbours10.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routes\ASymmetric\AsymmetricCycles.cs" />
     <Compile Include="Routes\ASymmetric\DynamicAsymmetricBetweenEnumerable.cs" />
@@ -89,7 +92,16 @@
     <Compile Include="TwoOpt\TwoOptHelper.cs" />
     <Compile Include="TwoOpt\TwoOptResult.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Tools.Core\Tools.Core.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>Tools.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math\Tools.Math.csproj">
+      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
+      <Name>Tools.Math</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

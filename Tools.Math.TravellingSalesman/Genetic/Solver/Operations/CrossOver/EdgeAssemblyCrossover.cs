@@ -129,6 +129,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                 }
 
                 // take e_a and remove all edges that are in the selected cycles and replace them by the eges
+                int[] next_array_a = a.NextArray;
                 foreach(int start in cycle_starts)
                 {
                     int current = start;
@@ -143,7 +144,8 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                 }
 
                 // connect all subtoures.
-                while (a.Cycles.Count > 1)
+                int cycle_count = a.Cycles.Count;
+                while (cycle_count > 1)
                 {
                     // get the smallest tour.
                     KeyValuePair<int, int> current_tour = 
@@ -169,12 +171,12 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                     from = current_tour.Key;
                     ignore_list[from] = true;
                     //ignore_list.Add(from);
-                    to = a[from];
+                    to = next_array_a[from];
                     do
                     {
                         // step to the next ones.
                         from = to;
-                        to = a[from];
+                        to = next_array_a[from];
 
                         //ignore_list.Add(from);
                         ignore_list[from] = true;
@@ -184,14 +186,14 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                     { // only try tours containing nn.
 
                         from = current_tour.Key;
-                        to = a[from];
+                        to = next_array_a[from];
                         float weight_from_to = weights[from][to];
                         do
                         {
                             // check the nearest neighbours of from
                             foreach (int nn in tsp_problem.Get10NearestNeighbours(from))
                             {
-                                int nn_to = a[nn];
+                                int nn_to = next_array_a[nn];
 
                                 //if (!ignore_list.Contains(nn) &&
                                 //    !ignore_list.Contains(nn_to))
@@ -214,7 +216,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
                             // step to the next ones.
                             from = to;
-                            to = a[from];
+                            to = next_array_a[from];
                         } while (from != current_tour.Key);
                     }
                     if (selected_from2 < 0)
@@ -222,7 +224,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                         // check the nearest neighbours of from
                         foreach (int customer in parent1.Genomes)
                         {
-                            int customer_to = a[customer];
+                            int customer_to = next_array_a[customer];
 
                             //if (!ignore_list.Contains(customer) &&
                             //    !ignore_list.Contains(customer_to))
@@ -253,6 +255,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                     //{
                     //    throw new Exception();
                     //}
+                        cycle_count--;
                 }
 
                 //if (a.Cycles.Values.First<int>() != a.Length)
@@ -260,11 +263,11 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                 //    throw new Exception();
                 //}
                 List<int> new_genome = new List<int>(a.Length);
-                int next = a[0];
+                int next = next_array_a[0];
                 do
                 {
                     new_genome.Add(next);
-                    next = a[next];
+                    next = next_array_a[next];
                 }
                 while (next != 0);
 

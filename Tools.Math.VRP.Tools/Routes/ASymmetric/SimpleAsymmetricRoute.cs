@@ -173,5 +173,16 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         {
             throw new NotImplementedException();
         }
+
+
+        public bool Contains(int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object Clone()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

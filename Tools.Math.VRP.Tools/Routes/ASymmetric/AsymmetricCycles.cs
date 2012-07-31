@@ -29,6 +29,14 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
             _cycles = cycles;
         }
 
+        public int[] NextArray
+        {
+            get
+            {
+                return _next_array;
+            }
+        }
+
         public int this[int from]
         {
             get

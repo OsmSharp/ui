@@ -8,7 +8,7 @@ namespace Tools.Math.VRP.Core.Routes
     /// <summary>
     /// Represents a route.
     /// </summary>
-    public interface IRoute : IEnumerable<int>
+    public interface IRoute : IEnumerable<int>, ICloneable
     {
         /// <summary>
         /// Returns true if the route is empty.
@@ -59,6 +59,13 @@ namespace Tools.Math.VRP.Core.Routes
         /// <param name="to"></param>
         /// <returns></returns>
         bool Contains(int from, int to);
+
+        /// <summary>
+        /// Returns true if the given customer is in this route.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        bool Contains(int customer);
 
         /// <summary>
         /// Removes a customer from the route.

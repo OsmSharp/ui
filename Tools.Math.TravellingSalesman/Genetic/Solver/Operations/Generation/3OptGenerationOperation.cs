@@ -5,7 +5,7 @@ using System.Text;
 using Tools.Math.AI.Genetic.Operations.Generation;
 using Tools.Math.AI.Genetic;
 using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.TravellingSalesman.LocalSearch.HillClimbing3Opt;
+using Tools.Math.TSP.LocalSearch.HillClimbing3Opt;
 using Tools.Math.VRP.Core.Routes;
 
 namespace Tools.Math.TSP.Genetic.Solver.Operations.Generation

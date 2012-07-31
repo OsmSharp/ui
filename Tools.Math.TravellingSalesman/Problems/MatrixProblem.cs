@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Tools.Math.VRP.Core;
 
 namespace Tools.Math.TSP.Problems
 {
@@ -184,20 +185,20 @@ namespace Tools.Math.TSP.Problems
         /// <summary>
         /// Keeps the nearest neighbour list.
         /// </summary>
-        private HashSet<int>[] _neighbours;
+        private NearestNeighbours10[] _neighbours;
 
         /// <summary>
         /// Generate the nearest neighbour list.
         /// </summary>
         /// <param name="customer"></param>
         /// <returns></returns>
-        public HashSet<int> Get10NearestNeighbours(int v)
+        public NearestNeighbours10 Get10NearestNeighbours(int v)
         {
             if (_neighbours == null)
             {
-                _neighbours = new HashSet<int>[this.Size];
+                _neighbours = new NearestNeighbours10[this.Size];
             }
-            HashSet<int> result = _neighbours[v];
+            NearestNeighbours10 result = _neighbours[v];
             if (result == null)
             {
                 SortedDictionary<float, List<int>> neighbours = new SortedDictionary<float, List<int>>();
@@ -216,13 +217,17 @@ namespace Tools.Math.TSP.Problems
                     }
                 }
 
-                result = new HashSet<int>();
+                result = new NearestNeighbours10();
                 foreach (KeyValuePair<float, List<int>> pair in neighbours)
                 {
                     foreach (int customer in pair.Value)
                     {
                         if (result.Count < 10)
                         {
+                            if (result.Max < pair.Key)
+                            {
+                                result.Max = pair.Key;
+                            }
                             result.Add(customer);
                         }
                         else

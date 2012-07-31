@@ -370,6 +370,10 @@
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
       <Name>Tools.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.AI.Genetic\Tools.Math.AI.Genetic.csproj">
+      <Project>{FC226E3D-F4B5-462A-82BB-09D53F8C6DC2}</Project>
+      <Name>Tools.Math.AI.Genetic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tools.Math.Graph.Routing.Point2Point\Tools.Math.Graph.Routing.csproj">
       <Project>{B6B8FEAF-91AB-470C-9347-E10E03DDE11F}</Project>
       <Name>Tools.Math.Graph.Routing</Name>

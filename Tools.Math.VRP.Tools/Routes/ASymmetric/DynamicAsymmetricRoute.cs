@@ -108,6 +108,20 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         }
 
         /// <summary>
+        /// Returns true if the customer exists in this route.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        public bool Contains(int customer)
+        {
+            if (_next_array.Length > customer)
+            {
+                return _next_array[customer] >= 0;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Inserts a customer right after from and before to.
         /// </summary>
         /// <param name="from"></param>
@@ -210,11 +224,35 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         }
 
         /// <summary>
+        /// Returns the neigbour of the given customer.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        public int Next(int customer)
+        {
+            return _next_array[customer];
+        }
+
+        /// <summary>
         /// Returns true if this route is valid.
         /// </summary>
         /// <returns></returns>
         public bool IsValid()
         {
+            HashSet<int> unique_customers = new HashSet<int>(_next_array);
+            unique_customers.Remove(-1);
+            int count = 0;
+            foreach (int customer in _next_array)
+            {
+                if (customer >= 0)
+                {
+                    count++;
+                }
+            }
+            if (unique_customers.Count != count)
+            {
+                return false;
+            }
             return true;
         }
 
@@ -327,6 +365,11 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         /// <returns></returns>
         public bool Remove(int customer)
         {
+            if (customer == _first)
+            {
+                _first = _next_array[customer];
+                _next_array[customer] = -1;
+            }
             for (int idx = 0; idx < _next_array.Length; idx++)
             {
                 if (_next_array[idx] == customer)
@@ -542,5 +585,6 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         {
             return new DynamicAsymmetricBetweenEnumerable(_next_array, from, to);
         }
+
     }
 }

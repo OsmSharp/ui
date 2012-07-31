@@ -14,7 +14,7 @@ namespace Tools.Math.TSP.ArbitraryInsertion
     /// <summary>
     /// Implements a best-placement solver.
     /// </summary>
-    public class ArbitraryInsertionSolver : ISolver
+    public class ArbitraryInsertionSolver : ISolver, IImprovement
     {
         /// <summary>
         /// Keeps the stopped flag.
@@ -39,7 +39,7 @@ namespace Tools.Math.TSP.ArbitraryInsertion
         /// Creates a new solver.
         /// </summary>
         /// <param name="problem"></param>
-        public ArbitraryInsertionSolver(IProblem problem, IList<int> customers)
+        public ArbitraryInsertionSolver(IList<int> customers)
         {
             _stopped = false;
             _customers = customers;
@@ -135,18 +135,83 @@ namespace Tools.Math.TSP.ArbitraryInsertion
                 int customer = customers[0];
                 customers.RemoveAt(0);
 
-                // calculate placement.
-                BestPlacementResult result =
-                    BestPlacementHelper.CalculateBestPlacement(problem, route, customer);
-
-                // place the customer.
-                if (result.CustomerAfter >= 0 && result.CustomerBefore >= 0)
-                {
-                    route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
-                }
+                // insert the customer at the best place.
+                float difference;
+                ArbitraryInsertionSolver.InsertOne(problem, route, customer, out difference);
             }
 
             return route;
+        }
+
+        /// <summary>
+        /// Tries to improve the existing route using CI and return true if succesful.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <param name="route"></param>
+        /// <returns></returns>
+        public bool Improve(IProblemWeights problem, IRoute route, out float difference)
+        {
+            bool improvement = false;
+            //bool local_improvement = true;
+            //int first = route.First;
+            //int last = route.Last;
+            difference = 0;
+            if (route.Count > 3)
+            {
+                //while (local_improvement)
+                //{
+                //    local_improvement = false;
+                // loop over all customers and try cheapest insertion.
+                for (int customer = 0; customer < problem.Size; customer++)
+                {
+                    if (route.Contains(customer))
+                    {
+                        // remove customer and keep position.
+                        int next = route.GetNeigbours(customer)[0];
+                        route.Remove(customer);
+
+                        // insert again.
+                        ArbitraryInsertionSolver.InsertOne(problem, route, customer, out difference);
+                        if (route.GetNeigbours(customer)[0] != next
+                            && difference < 0)
+                        { // another customer was found as the best, improvement is succesful.
+                            improvement = true;
+                            //local_improvement = true;
+                            //first = route.GetNeigbours(customer)[0];
+                            //break;
+                        }
+                    }
+                }
+                //}
+            }
+            return improvement;
+        }
+        
+        /// <summary>
+        /// Re-inserts a customer in the route.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <param name="route"></param>
+        /// <returns></returns>
+        public static bool InsertOne(IProblemWeights weights, IRoute route, int customer, 
+            out float difference)
+        {
+            // calculate placement.
+            CheapestInsertionResult result =
+                CheapestInsertionHelper.CalculateBestPlacement(weights, route, customer);
+
+            // place the customer.
+            if (result.CustomerAfter >= 0 && result.CustomerBefore >= 0)
+            {
+                route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                difference = 
+                    -(weights.WeightMatrix[result.CustomerBefore][result.CustomerAfter]) +
+                     (weights.WeightMatrix[result.CustomerBefore][result.Customer]) +
+                     (weights.WeightMatrix[result.Customer][result.CustomerAfter]);
+                return true;
+            }
+            difference = 0;
+            return false;
         }
         
         /// <summary>
@@ -186,5 +251,6 @@ namespace Tools.Math.TSP.ArbitraryInsertion
         }
 
         #endregion
+
     }
 }

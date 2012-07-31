@@ -89,7 +89,7 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Mutation
                     {
                         IRoute target = multi_route.Route(target_route_idx);
 
-                        BestPlacementResult route_placement = BestPlacementHelper.CalculateBestPlacement(
+                        CheapestInsertionResult route_placement = CheapestInsertionHelper.CalculateBestPlacement(
                             solver.Problem, target, part_of_orginal[0], part_of_orginal[part_of_orginal.Count - 1]);                        
 
                         // create a new array and start copying.

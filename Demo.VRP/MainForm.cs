@@ -88,7 +88,7 @@ namespace Demo.VRP
             double longitude_center = 3.71939f;
             this.mapEditorUserControl.Map = map;
             this.mapEditorUserControl.Center = new GeoCoordinate(latitude_center, longitude_center);
-            this.mapEditorUserControl.ZoomFactor = 16;
+            this.mapEditorUserControl.ZoomFactor = 15;
 
             this.mapEditorUserControl.mapTarget.DisplayCardinalDirections = false;
             this.mapEditorUserControl.mapTarget.DisplayStatus = false;
@@ -362,12 +362,12 @@ namespace Demo.VRP
 
                 //Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.RouterGeneticSimple<ResolvedPoint> vrp_router
                 //     = new Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.RouterGeneticSimple<ResolvedPoint>(router, 1000, 5400);
-                Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.RouterGeneticSimple<ResolvedPoint> vrp_router
-                    = new Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.RouterGeneticSimple<ResolvedPoint>(router, 1000, 1500,
-                        200, 500, 10, 60, 30);
-                //Osm.Routing.Core.VRP.NoDepot.MinMaxTime.BestPlacement.RouterBestPlacementWithImprovements<ResolvedPoint> vrp_router
-                //    = new Osm.Routing.Core.VRP.NoDepot.MinMaxTime.BestPlacement.RouterBestPlacementWithImprovements<ResolvedPoint>(
-                //        router, 1000, 1500, 10, 0.25f);
+                //Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.RouterGeneticSimple<ResolvedPoint> vrp_router
+                //    = new Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.RouterGeneticSimple<ResolvedPoint>(router, 1000, 1500,
+                //        200, 500, 10, 60, 30);
+                Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithImprovements<ResolvedPoint> vrp_router
+                    = new Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithImprovements<ResolvedPoint>(
+                        router, 1500, 20, 10, 0.25f);
                 vrp_router.IntermidiateResult += new Osm.Routing.Core.VRP.RouterVRP<ResolvedPoint>.OsmSharpRoutesDelegate(vrp_router_IntermidiateResult);
                 //vrp_router.IntermidiateResult += new Osm.Routing.Core.VRP.RouterVRP<ResolvedPoint>.OsmSharpRoutesDelegate(vrp_router_IntermidiateResult);
                 int tests = 1;

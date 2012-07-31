@@ -11,6 +11,7 @@ using Tools.Xml.Sources;
 using Tools.Math.Units.Time;
 using Osm.Core;
 using Osm.Data.Raw.XML.OsmSource;
+using Tools.Math.TSP.Problems;
 
 namespace Osm.Routing.Test.VRP
 {
@@ -19,6 +20,9 @@ namespace Osm.Routing.Test.VRP
     {
         public static void TestEeklo()
         {
+            Tools.Core.Output.OutputTextStreamHost.RegisterOutputStream(
+                new Tools.Core.Output.ConsoleOutputStream());
+
             string source_file = @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Post\Eeklo Osm\post.osm";
             OsmDataSource osm_data = new OsmDataSource(
                 new Osm.Core.Xml.OsmDocument(new XmlFileSource(source_file)));
@@ -38,6 +42,7 @@ namespace Osm.Routing.Test.VRP
                 new System.IO.FileInfo(csv), Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated,
                 true, true);
             int cnt = -1;
+            //int max_count = 250;
             int max_count = 250;
             List<ResolvedType> points = new List<ResolvedType>();
             foreach (System.Data.DataRow row in data.Tables[0].Rows)
@@ -45,9 +50,6 @@ namespace Osm.Routing.Test.VRP
                 cnt++;
                 if (cnt < max_count)
                 {
-                    //int latitude_idx = 8;
-                    //int longitude_idx = 9;
-
                     string latitude_string = (string)row[latitude_idx];
                     string longitude_string = (string)row[longitude_idx];
 
@@ -123,7 +125,7 @@ namespace Osm.Routing.Test.VRP
             //    probabilities.Add(1.0 - prob1);
             //    probabilities.Add(0);
 
-            NoDepotTest<ResolvedType>.MinMaxTest(router, points.ToArray(), min, max, population, stagnation,
+            NoDepotTest<ResolvedType>.MaxTest(router, points.ToArray(), max, population, stagnation,
                 elitism_percentage, cross_percentage, mutation_percentage, 10, null);
 
 
@@ -164,29 +166,47 @@ namespace Osm.Routing.Test.VRP
             //    NoDepotTest<ResolvedType>.MinMaxTest(router, points.ToArray(), min, max, population, stagnation, 
             //        elitism_percentage, cross_percentage, mutation_percentage, 5, null);
             //}  
+
+            Console.ReadLine();
         }
 
-        public static void MinMaxTest(IRouter<ResolvedType> router, ResolvedType[] points, Second min, Second max, int population, int stagnation,
-            double elitism_percentage, double cross_percentage, double mutation_percentage, int tests, List<double> probabilities)
+        public static void MaxTest(IRouter<ResolvedType> router, ResolvedType[] points, Second max, int population, 
+            int stagnation, double elitism_percentage, double cross_percentage, double mutation_percentage, 
+            int tests, List<double> probabilities)
         {
-            Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.RouterGeneticSimple<ResolvedType> vrp_router
-                 = new Core.VRP.NoDepot.MinMaxTime.Genetic.RouterGeneticSimple<ResolvedType>(router, min, max, population, stagnation, elitism_percentage,
-                     cross_percentage, mutation_percentage, probabilities);
+            // first calculate the weights in seconds.
+            float[][] weights = router.CalculateManyToManyWeight(points, points);
+
+            // create the problem for the genetic algorithm.
+            List<int> customers = new List<int>();
+            for (int customer = 0; customer < points.Length; customer++)
+            {
+                customers.Add(customer);
+            }
+            MatrixProblem matrix = new MatrixProblem(weights, false);
+            Osm.Routing.Core.VRP.NoDepot.MaxTime.MaxTimeProblem problem = new Core.VRP.NoDepot.MaxTime.MaxTimeProblem(
+                1500, 20, matrix);
+
+            Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithSeeds<ResolvedType> vrp_router
+                = new Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithSeeds<ResolvedType>(
+                    router, 1500, 20);
+            //Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithImprovements<ResolvedType> vrp_router
+            //    = new Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithImprovements<ResolvedType>(
+            //        router, 1500, 20, 10, 0.05f);
+            //Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.RouterGeneticSimple<ResolvedType> vrp_router
+            //     = new Core.VRP.NoDepot.MaxTime.Genetic.RouterGeneticSimple<ResolvedType>(
+            //         router, max, 20, population, stagnation, elitism_percentage,
+            //         cross_percentage, mutation_percentage, probabilities);
+            vrp_router.IntermidiateResult += new Core.VRP.RouterVRP<ResolvedType>.OsmSharpRoutesDelegate(vrp_router_IntermidiateResult);
             for (int idx1 = 0; idx1 < tests; idx1++)
             {
-                OsmSharpRoute[] routes = vrp_router.CalculateNoDepot(points);
-
-                int idx = 0;
-                foreach (OsmSharpRoute route in routes)
-                {
-                    if (route != null)
-                    {
-                        idx++;
-
-                        route.SaveAsGpx(new System.IO.FileInfo(string.Format("route_{0}_{1}.gpx", points.Length, idx)));
-                    }
-                }
+                int[][] vrp_solution = vrp_router.DoCalculation(problem, customers, max);
             }
+        }
+
+        static void vrp_router_IntermidiateResult(OsmSharpRoute[] result, Dictionary<int, List<int>> solution)
+        {
+
         }
     }
 }

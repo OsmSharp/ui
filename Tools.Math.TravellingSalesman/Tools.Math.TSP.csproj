@@ -109,6 +109,7 @@
     <Compile Include="Genetic\Solver\Operations\Mutation\BestPlacementMutationOperation.cs" />
     <Compile Include="Genetic\Solver\Operations\Mutation\DefaultMutationOperation.cs" />
     <Compile Include="Genetic\Solver\Solver.cs" />
+    <Compile Include="IImprovement.cs" />
     <Compile Include="ISolver.cs" />
     <Compile Include="LocalSearch\HillClimbing3Opt\HillClimbing3OptSolver.cs" />
     <Compile Include="Problems\ProblemExtensions.cs" />

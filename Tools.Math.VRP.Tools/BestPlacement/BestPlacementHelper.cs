@@ -9,7 +9,7 @@ namespace Tools.Math.VRP.Core.BestPlacement
     /// <summary>
     /// Implements some generic functions for best-placement.
     /// </summary>
-    public class BestPlacementHelper
+    public class CheapestInsertionHelper
     {
         /// <summary>
         /// The minimum difference allowed.
@@ -90,19 +90,19 @@ namespace Tools.Math.VRP.Core.BestPlacement
         /// <param name="route"></param>
         /// <param name="customers"></param>
         /// <returns></returns>
-        public static BestPlacementResult CalculateBestPlacement(
+        public static CheapestInsertionResult CalculateBestPlacement(
             IProblemWeights problem,
             IRoute route,
             IEnumerable<int> customers)
             //float[] solutions)
         {  // initialize the best placement result.
-            BestPlacementResult best = new BestPlacementResult();
+            CheapestInsertionResult best = new CheapestInsertionResult();
             best.Increase = float.MaxValue;
             if (!route.IsEmpty)
             {
                 foreach (int customer in customers)
                 {
-                    BestPlacementResult result = BestPlacementHelper.CalculateBestPlacement(
+                    CheapestInsertionResult result = CheapestInsertionHelper.CalculateBestPlacement(
                         problem, route, customer);
                     if (result.Increase < best.Increase)
                     {
@@ -140,7 +140,7 @@ namespace Tools.Math.VRP.Core.BestPlacement
         /// <param name="genomes"></param>
         /// <param name="city_to_place"></param>
         /// <returns></returns>
-        public static BestPlacementResult CalculateBestPlacement(
+        public static CheapestInsertionResult CalculateBestPlacement(
             IProblemWeights problem,
             IRoute route,
             int customer)
@@ -148,8 +148,8 @@ namespace Tools.Math.VRP.Core.BestPlacement
         {  // initialize the best placement result.
             float[][] weights = problem.WeightMatrix;
 
-            BestPlacementResult result
-                = new BestPlacementResult();
+            CheapestInsertionResult result
+                = new CheapestInsertionResult();
             result.Customer = customer;
             result.CustomerAfter = -1;
             result.CustomerBefore = -1;
@@ -250,14 +250,14 @@ namespace Tools.Math.VRP.Core.BestPlacement
         /// <param name="genomes"></param>
         /// <param name="city_to_place"></param>
         /// <returns></returns>
-        public static BestPlacementResult CalculateBestPlacement(
+        public static CheapestInsertionResult CalculateBestPlacement(
             IProblemWeights problem,
             IRoute route,
             int from,
             int to)
         {  // initialize the best placement result.
-            BestPlacementResult result
-                = new BestPlacementResult();
+            CheapestInsertionResult result
+                = new CheapestInsertionResult();
             result.Customer = -1; // this property is useless here!
             result.CustomerAfter = -1;
             result.CustomerBefore = -1;

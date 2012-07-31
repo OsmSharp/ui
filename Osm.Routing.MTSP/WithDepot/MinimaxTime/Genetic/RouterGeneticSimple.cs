@@ -87,7 +87,7 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
         /// <returns></returns>
         protected override int[][] DoCalculation(IProblemWeights problem, ICollection<int> depots, ICollection<int> customers)
         {
-            float[] solutions = Tools.Math.VRP.Core.BestPlacement.BestPlacementHelper.CalculateBestValues(
+            float[] solutions = Tools.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
                 problem, customers);
 
             generations = 0;

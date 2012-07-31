@@ -5,7 +5,6 @@ using System.Text;
 using Tools.Math.AI.Genetic.Operations.Generation;
 using Tools.Math.AI.Genetic;
 using Tools.Math.AI.Genetic.Solvers;
-//using Osm.Routing.Core.VRP.NoDepot.MinMaxTime.BestPlacement;
 using Tools.Math.VRP.Core.BestPlacement;
 using Tools.Math.VRP.Core;
 using Tools.Math.VRP.Core.Routes.ASymmetric;
@@ -45,7 +44,7 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation
             {
                 customers.Add(customer);
             }
-            BestPlacementHelper helper = new BestPlacementHelper();
+            CheapestInsertionHelper helper = new CheapestInsertionHelper();
 
             List<float> weights = new List<float>();
             for (int i = 0; i < problem.Depots.Count; i++)
@@ -68,7 +67,7 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation
                 while (customers.Count > 0)
                 {
                     // calculate the best placement.
-                    BestPlacementResult result = BestPlacementHelper.CalculateBestPlacement(problem, current_route, customers);
+                    CheapestInsertionResult result = CheapestInsertionHelper.CalculateBestPlacement(problem, current_route, customers);
 
                     if (result.CustomerAfter == -1 || result.CustomerBefore == -1)
                     {

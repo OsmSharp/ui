@@ -194,7 +194,7 @@ namespace Tools.Math.TSP
                         cut_part.RemoveAt(c);
 
                         // calculate the best placement.
-                        BestPlacementResult result = BestPlacementHelper.CalculateBestPlacement(
+                        CheapestInsertionResult result = CheapestInsertionHelper.CalculateBestPlacement(
                             problem, cut_route, customer);
                         cut_route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
                         new_weight = new_weight + result.Increase;

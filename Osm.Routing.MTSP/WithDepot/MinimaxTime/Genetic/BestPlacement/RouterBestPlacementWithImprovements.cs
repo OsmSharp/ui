@@ -9,9 +9,9 @@
 //using Tools.Math.VRP.Core.Routes;
 //using Tools.Math.VRP.Core.Routes.ASymmetric;
 
-//namespace Osm.Routing.Core.VRP.NoDepot.MinMaxTime.BestPlacement
+//namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 //{
-//    public class RouterBestPlacementWithImprovements<ResolvedType> : RouterMinMaxTime<ResolvedType>
+//    public class RouterBestPlacementWithImprovements<ResolvedType> : RouterMaxTime<ResolvedType>
 //        where ResolvedType : IResolvedPoint
 //    {
 //        /// <summary>

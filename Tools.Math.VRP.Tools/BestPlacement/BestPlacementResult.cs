@@ -8,7 +8,7 @@ namespace Tools.Math.VRP.Core.BestPlacement
     /// <summary>
     /// The result returned after calculating a best-placement position.
     /// </summary>
-    public struct BestPlacementResult
+    public struct CheapestInsertionResult
     {
         /// <summary>
         /// The increase in weight.

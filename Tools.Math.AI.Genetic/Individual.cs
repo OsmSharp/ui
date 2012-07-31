@@ -221,9 +221,11 @@ namespace Tools.Math.AI.Genetic
             builder.Append(this.Genomes.ToString());
                 //builder.Append(Environment.NewLine);
             //}
-            return this.Description + Environment.NewLine + 
-                this.Fitness.ToString() + Environment.NewLine + 
-                builder.ToString();
+            //return this.Description + Environment.NewLine + 
+            //    this.Fitness.ToString() + Environment.NewLine +
+            //    builder.ToString();
+            return this.Description + Environment.NewLine +
+                this.Fitness.ToString();
         }
 
         #endregion

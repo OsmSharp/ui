@@ -106,7 +106,7 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.CrossOver
                 if (!selected_customers.Contains(customer))
                 {
                     // try reinsertion.
-                    BestPlacementResult result = new BestPlacementResult();
+                    CheapestInsertionResult result = new CheapestInsertionResult();
                     result.Increase = float.MaxValue;
 
                     int target_idx = -1;
@@ -116,8 +116,8 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.CrossOver
 
                         if (genome.Sizes[idx] > 0)
                         {
-                            BestPlacementResult current_result =
-                                BestPlacementHelper.CalculateBestPlacement(solver.Problem.Weights, route, customer);
+                            CheapestInsertionResult current_result =
+                                CheapestInsertionHelper.CalculateBestPlacement(solver.Problem.Weights, route, customer);
                             if (current_result.Increase < result.Increase)
                             {
                                 target_idx = idx;
