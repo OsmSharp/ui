@@ -231,7 +231,7 @@ namespace Osm.Data.Raw.XML.OsmSource
 
                 if (_bb == null)
                 { // calculate bounding box.
-                    throw new NotSupportedException("There is not boundingbox in this datafile!");
+                    throw new NotSupportedException("There is no boundingbox in this datafile!");
                 }
                 return _bb;
             }
