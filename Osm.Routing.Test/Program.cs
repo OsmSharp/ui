@@ -46,12 +46,12 @@ namespace Osm.Routing.Test
 
             //Sparse.SparseTests.SparseTestRedis();
 
-            //CH.CHTests.DoTests();
+            CH.CHTests.DoTests();
 
             //Sparse.SparseTests.SparseTestMemory(); // tests the sparse code.
             //Sparse.SparseTests.SparseTestRedis(); // tests the sparse code.
 
-            NoDepotTest<ResolvedPoint>.TestEeklo();
+            //NoDepotTest<ResolvedPoint>.TestEeklo();
             //Redis.RedisTest.PreProcess();
 
             //Connected.ConnectedTest.TestMatrix();

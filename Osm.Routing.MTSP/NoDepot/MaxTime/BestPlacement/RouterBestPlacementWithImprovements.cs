@@ -48,56 +48,68 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                 new Tools.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver());
         }
 
+        ///// <summary>
+        ///// Uses a best placement algorithm to generate routes in a deterministic way.
+        ///// </summary>
+        ///// <param name="problem"></param>
+        ///// <param name="customers"></param>
+        ///// <returns></returns>
+        //public override int[][] DoCalculation(
+        //    MaxTimeProblem problem,
+        //    ICollection<int> customers,
+        //    Second max)
+        //{
+        //    MaxTimeCalculator calculator = new MaxTimeCalculator(problem);
+
+        //    MaxTimeSolution routes = this.DoCalculationInternal(
+        //        problem, customers, max);
+
+        //    StringBuilder builder = new StringBuilder();
+        //    builder.Append("[");
+        //    float total_weight = 0;
+        //    for (int idx = 0; idx < routes.Count; idx++)
+        //    {
+        //        //IRoute route = routes.Route(idx);
+        //        IRoute route = routes.Route(idx);
+        //        float weight = calculator.CalculateOneRoute(route);
+        //        builder.Append(" ");
+        //        builder.Append(weight);
+        //        builder.Append(" ");
+
+        //        total_weight = total_weight + weight;
+        //    }
+        //    builder.Append("]");
+        //    builder.Append(total_weight);
+        //    builder.Append(": ");
+        //    builder.Append(calculator.Calculate(routes));
+        //    Console.WriteLine(builder.ToString());
+
+        //    // convert output.
+        //    int[][] solution = new int[routes.Count][];
+        //    for (int idx = 0; idx < routes.Count; idx++)
+        //    {
+        //        IRoute current = routes.Route(idx);
+        //        //IRoute current = routes[idx];
+        //        List<int> route = new List<int>(current);
+        //        if (current.IsRound)
+        //        {
+        //            route.Add(route[0]);
+        //        }
+        //        solution[idx] = route.ToArray();
+        //    }
+        //    return solution;
+        //}
+
+
+
         /// <summary>
-        /// Uses a best placement algorithm to generate routes in a deterministic way.
+        /// Executes a solver procedure.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="customers"></param>
         /// <returns></returns>
-        public override int[][] DoCalculation(
-            MaxTimeProblem problem,
-            ICollection<int> customers,
-            Second max)
+        internal override MaxTimeSolution Solve(MaxTimeProblem problem)
         {
-            MaxTimeCalculator calculator = new MaxTimeCalculator(problem);
-
-            MaxTimeSolution routes = this.DoCalculationInternal(
-                problem, customers, max);
-
-            StringBuilder builder = new StringBuilder();
-            builder.Append("[");
-            float total_weight = 0;
-            for (int idx = 0; idx < routes.Count; idx++)
-            {
-                //IRoute route = routes.Route(idx);
-                IRoute route = routes.Route(idx);
-                float weight = calculator.CalculateOneRoute(route);
-                builder.Append(" ");
-                builder.Append(weight);
-                builder.Append(" ");
-
-                total_weight = total_weight + weight;
-            }
-            builder.Append("]");
-            builder.Append(total_weight);
-            builder.Append(": ");
-            builder.Append(calculator.Calculate(routes));
-            Console.WriteLine(builder.ToString());
-
-            // convert output.
-            int[][] solution = new int[routes.Count][];
-            for (int idx = 0; idx < routes.Count; idx++)
-            {
-                IRoute current = routes.Route(idx);
-                //IRoute current = routes[idx];
-                List<int> route = new List<int>(current);
-                if (current.IsRound)
-                {
-                    route.Add(route[0]);
-                }
-                solution[idx] = route.ToArray();
-            }
-            return solution;
+            throw new NotImplementedException();
         }
 
         public MaxTimeSolution DoCalculationInternal(

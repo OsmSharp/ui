@@ -59,7 +59,7 @@ namespace Osm.Routing.CH.PreProcessing.Ordering
         /// Notifies this calculator that the vertex was contracted.
         /// </summary>
         /// <param name="vertex_id"></param>
-        public void NotifyContractedNeighbour(long vertex_id)
+        public void NotifyContracted(CHVertex vertex)
         {
 
         }

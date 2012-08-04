@@ -7,6 +7,7 @@ using Osm.Routing.Core.Route;
 using Tools.Math.TSP.Problems;
 using Tools.Math.Units.Time;
 using Tools.Math.VRP.Core;
+using Tools.Math.VRP.Core.Routes;
 
 namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
 {
@@ -14,7 +15,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
     /// Class to solve VRP problems that have no depot but min-max time constraints on routes.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
-    public abstract class RouterMaxTime<ResolvedType> : RouterNoDepot<ResolvedType>
+    public abstract class RouterMaxTime<ResolvedType> : RouterNoDepot<ResolvedType>, IMaxTimeSolver
         where ResolvedType : ILocationObject
     {
         /// <summary>
@@ -99,7 +100,47 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
         /// <param name="second"></param>
         /// <param name="second_2"></param>
         /// <returns></returns>
-        public abstract int[][] DoCalculation(MaxTimeProblem problem,
-            ICollection<int> customers, Second max);
+        public int[][] DoCalculation(MaxTimeProblem problem,
+            ICollection<int> customers, Second max)
+        {
+            MaxTimeSolution routes = this.Solve(problem);
+
+            // convert output.
+            int[][] solution = new int[routes.Count][];
+            for (int idx = 0; idx < routes.Count; idx++)
+            {
+                IRoute current = routes.Route(idx);
+                //IRoute current = routes[idx];
+                List<int> route = new List<int>(current);
+                if (current.IsRound)
+                {
+                    route.Add(route[0]);
+                }
+                solution[idx] = route.ToArray();
+            }
+            return solution;
+        }
+
+
+        #region IMaxTimeSolver Implementation
+
+        /// <summary>
+        /// Executing a solver function.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <returns></returns>
+        internal abstract MaxTimeSolution Solve(MaxTimeProblem problem);
+
+        /// <summary>
+        /// Implements the solve function of the IMaxTimeSolver interface
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <returns></returns>
+        MaxTimeSolution IMaxTimeSolver.Solve(MaxTimeProblem problem)
+        {
+            return this.Solve(problem);
+        }
+
+        #endregion
     }
 }

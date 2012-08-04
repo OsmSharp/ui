@@ -12,6 +12,7 @@ using Osm.Data.Core.CH.Primitives;
 using Osm.Core.Simple;
 using Osm.Routing.Core.Roads.Tags;
 using Osm.Routing.Core;
+using System.Diagnostics;
 
 namespace Osm.Routing.CH.PreProcessing
 {
@@ -26,10 +27,37 @@ namespace Osm.Routing.CH.PreProcessing
         private ICHData _target;
 
         /// <summary>
+        /// Holds the max of the recalculate queue.
+        /// </summary>
+        private int _max;
+
+        /// <summary>
         /// Creates a new pre-processor.
         /// </summary>
         /// <param name="target"></param>
         public CHPreProcessor(ICHData target, 
+            INodeWeightCalculator calculator,
+            INodeWitnessCalculator witness_calculator,
+            int max)
+        {
+            _target = target;
+            _current_level = 1;
+
+            //_calculator = new EdgeDifference(
+            //    new DykstraWitnessCalculator(_target));
+            _calculator = calculator;
+            _witness_calculator = witness_calculator;
+            _priority_queue = new CHPriorityQueue();
+
+            _k = 0;
+            _max = max;
+        }
+
+        /// <summary>
+        /// Creates a new pre-processor.
+        /// </summary>
+        /// <param name="target"></param>
+        public CHPreProcessor(ICHData target,
             INodeWeightCalculator calculator,
             INodeWitnessCalculator witness_calculator)
         {
@@ -41,6 +69,9 @@ namespace Osm.Routing.CH.PreProcessing
             _calculator = calculator;
             _witness_calculator = witness_calculator;
             _priority_queue = new CHPriorityQueue();
+
+            _k = 0;
+            _max = int.MaxValue;
         }
 
         #region Contraction
@@ -121,12 +152,16 @@ namespace Osm.Routing.CH.PreProcessing
         }
 
         /// <summary>
+        /// Holds the current 'before recalculation value'.
+        /// </summary>
+        private int _k;
+
+        /// <summary>
         /// Selecte the next vertex from the queue.
         /// </summary>
         /// <returns></returns>
         public long SelectNext()
         {
-
             // loop over the priority queue until it's empty.
             while (_priority_queue.Count > 0)
             {
@@ -147,7 +182,22 @@ namespace Osm.Routing.CH.PreProcessing
                     }
                     else
                     { // enqueue again with new weight.
+                        _k++;
+
                         _priority_queue.Enqueue(current_id, new_weight);
+
+                        if (_k > _max)
+                        { // calculate the entire queue.
+                            List<long> redo_list = new List<long>(_priority_queue);
+                            foreach (long redo in redo_list)
+                            {
+                                queued_weight = _priority_queue.Weight(redo);
+                                CHVertex redo_vertex = _target.GetCHVertex(redo);
+                                new_weight = this.CalculateWeight(_current_level, redo_vertex);
+                                _priority_queue.Enqueue(redo, new_weight);
+                            }
+                            _k = 0;
+                        }
                     }
                 }
                 else
@@ -227,17 +277,17 @@ namespace Osm.Routing.CH.PreProcessing
                 }
             }
 
+            // notify a contracted neighbour.
+            _calculator.NotifyContracted(vertex);
+
             // notify neighbours
             foreach (CHVertex neighbour in local_cache.Vertices)
             {
                 // persist the result(s).
                 _target.PersistCHVertex(neighbour);
 
-                // notify a contracted neighbour.
-                _calculator.NotifyContractedNeighbour(neighbour.Id);
-
                 // re-calculate the neighbours.
-                this.QueueNode(neighbour);
+                //this.QueueNode(neighbour);
             }
         }
 
@@ -272,28 +322,28 @@ namespace Osm.Routing.CH.PreProcessing
             }
         }
 
-        /// <summary>
-        /// Queue the given vertex.
-        /// </summary>
-        /// <param name="vertex_id"></param>
-        private void QueueNode(long vertex_id)
-        {
-            this.QueueNode(_target.GetCHVertex(vertex_id));
-        }
+        ///// <summary>
+        ///// Queue the given vertex.
+        ///// </summary>
+        ///// <param name="vertex_id"></param>
+        //private void QueueNode(long vertex_id)
+        //{
+        //    this.QueueNode(_target.GetCHVertex(vertex_id));
+        //}
         
-        /// <summary>
-        /// Queue the given vertex.
-        /// </summary>
-        /// <param name="vertex"></param>
-        private void QueueNode(CHVertex vertex)
-        {
-            if (vertex.Level == int.MaxValue)
-            {
-                double weight = _calculator.Calculate(_current_level, vertex);
+        ///// <summary>
+        ///// Queue the given vertex.
+        ///// </summary>
+        ///// <param name="vertex"></param>
+        //private void QueueNode(CHVertex vertex)
+        //{
+        //    if (vertex.Level == int.MaxValue)
+        //    {
+        //        double weight = _calculator.Calculate(_current_level, vertex);
 
-                _priority_queue.Enqueue(vertex.Id, weight);
-            }
-        }
+        //        _priority_queue.Enqueue(vertex.Id, weight);
+        //    }
+        //}
 
         #endregion
 

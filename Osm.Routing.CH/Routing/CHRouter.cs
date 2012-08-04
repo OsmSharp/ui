@@ -139,10 +139,8 @@ namespace Osm.Routing.CH.Routing
         {
             // intialize weights.
             Dictionary<long, float> results = new Dictionary<long, float>();
-            foreach (CHVertex to in tos)
-            {
-                results[to.Id] = float.MaxValue;
-            }
+            //HashSet<long> permanent_results = new HashSet<long>();
+            Dictionary<long, float> tentative_results = new Dictionary<long, float>();
 
             Dictionary<long, CHPathSegment> settled_vertices =
                 new Dictionary<long, CHPathSegment>();
@@ -150,10 +148,39 @@ namespace Osm.Routing.CH.Routing
             queue.Push(new CHPathSegment(from.Id));
             
             // get the current vertex with the smallest weight.
+            int k = 0;
             while (queue.Count > 0) // TODO: work on a stopping condition?
             {
                 CHPathSegment current = queue.Pop();
+                k++;
 
+                //// remove from the tentative results list.
+                //if (k > 1)
+                //{
+                //    HashSet<long> to_remove_set = new HashSet<long>();
+                //    foreach (KeyValuePair<long, float> result in tentative_results)
+                //    {
+                //        if (result.Value < current.Weight)
+                //        {
+                //            to_remove_set.Add(result.Key);
+                //            if (!results.ContainsKey(result.Key))
+                //            {
+                //                results.Add(result.Key, result.Value);
+                //            }
+                //        }
+                //    }
+                //    foreach (long to_remove in to_remove_set)
+                //    {
+                //        tentative_results.Remove(to_remove);
+                //    }
+                //    k = 0;
+                //}
+
+                // stop search if all results found.
+                if (results.Count == tos.Length)
+                {
+                    break;
+                }
                 // add to the settled vertices.
                 CHPathSegment previous_linked_route;
                 if (settled_vertices.TryGetValue(current.VertexId, out previous_linked_route))
@@ -174,12 +201,28 @@ namespace Osm.Routing.CH.Routing
                 { // there is a bucket!
                     foreach (KeyValuePair<long, float> bucket_entry in bucket)
                     {
-                        float tentative_distance = results[bucket_entry.Key];
-                        float found_distance = bucket_entry.Value + (float)current.Weight;
-                        if (found_distance < tentative_distance)
-                        {
-                            results[bucket_entry.Key] = found_distance;
-                        }
+                        //if (!permanent_results.Contains(bucket_entry.Key))
+                        //{
+                            float found_distance = bucket_entry.Value + (float)current.Weight;
+                            float tentative_distance;
+                            if (tentative_results.TryGetValue(bucket_entry.Key, out tentative_distance))
+                            {
+                                if (found_distance < tentative_distance)
+                                {
+                                    tentative_results[bucket_entry.Key] = found_distance;
+                                }
+
+                                if (tentative_distance < current.Weight)
+                                {
+                                    tentative_results.Remove(bucket_entry.Key);
+                                    results.Add(bucket_entry.Key, tentative_distance);
+                                }
+                            }
+                            //else
+                            //{ // there was no result yet!
+                            //    tentative_results[bucket_entry.Key] = found_distance;
+                            //}
+                        //}
                     }
                 }
 
@@ -197,7 +240,23 @@ namespace Osm.Routing.CH.Routing
                     }
                 }
             }
-            return results;
+
+            foreach (CHVertex to in tos)
+            {
+                if (!tentative_results.ContainsKey(to.Id))
+                {
+                    if (results.ContainsKey(to.Id))
+                    {
+                        tentative_results[to.Id] = results[to.Id];
+                    }
+                    else
+                    {
+                        tentative_results[to.Id] = float.MaxValue;
+                    }
+                }
+            }
+
+            return tentative_results;
         }
 
         #endregion
@@ -304,10 +363,11 @@ namespace Osm.Routing.CH.Routing
         private CHResult CalculateInternal(long from, long to, long exception, double max, int max_settles)
         {
             // keep settled vertices.
-            Dictionary<long, CHPathSegment> settled_backward_vertices = 
-                new Dictionary<long, CHPathSegment>();
-            Dictionary<long, CHPathSegment> settled_forward_vertices = 
-                new Dictionary<long, CHPathSegment>();
+            //Dictionary<long, CHPathSegment> settled_backward_vertices = 
+            //    new Dictionary<long, CHPathSegment>();
+            //Dictionary<long, CHPathSegment> settled_forward_vertices = 
+            //    new Dictionary<long, CHPathSegment>();
+            CHQueue settled_vertices = new CHQueue();
 
             // initialize the queues.
             CHPriorityQueue queue_forward = new CHPriorityQueue();
@@ -320,7 +380,7 @@ namespace Osm.Routing.CH.Routing
             queue_backward.Push(new CHPathSegment(to));
 
             // keep looping until stopping conditions are met.
-            CHBest best = this.CalculateBest(settled_forward_vertices, settled_backward_vertices);
+            CHBest best = this.CalculateBest(settled_vertices);
 
             // calculate stopping conditions.
             double queue_backward_weight = queue_backward.PeekWeight();
@@ -328,23 +388,23 @@ namespace Osm.Routing.CH.Routing
             while (!(queue_backward.Count == 0 && queue_forward.Count == 0) && 
                 (best.Weight > queue_backward_weight && best.Weight > queue_forward_weight) &&
                 (max >= queue_backward_weight && max >= queue_forward_weight) &&
-                (max_settles >= (settled_backward_vertices.Count + settled_forward_vertices.Count)))
+                (max_settles >= (settled_vertices.Forward.Count + settled_vertices.Backward.Count)))
             { // keep looping until stopping conditions.
 
                 // do a forward search.
                 if (queue_forward.Count > 0)
                 {
-                    this.SearchForward(settled_forward_vertices, queue_forward, exception);
+                    this.SearchForward(settled_vertices, queue_forward, exception);
                 }
 
                 // do a backward search.
                 if (queue_backward.Count > 0)
                 {
-                    this.SearchBackward(settled_backward_vertices, queue_backward, exception);
+                    this.SearchBackward(settled_vertices, queue_backward, exception);
                 }
 
                 // calculate the new best if any.
-                best = this.CalculateBest(settled_forward_vertices, settled_backward_vertices);
+                best = this.CalculateBest(settled_vertices);
 
                 // calculate stopping conditions.
                 if (queue_forward.Count > 0)
@@ -365,8 +425,10 @@ namespace Osm.Routing.CH.Routing
             }
             else
             { // construct the existing route.
-                result.Forward = settled_forward_vertices[best.VertexId];
-                result.Backward = settled_backward_vertices[best.VertexId];
+                //result.Forward = settled_forward_vertices[best.VertexId];
+                //result.Backward = settled_backward_vertices[best.VertexId];
+                result.Forward = settled_vertices.Forward[best.VertexId];
+                result.Backward = settled_vertices.Backward[best.VertexId];
             }
             return result;
         }
@@ -377,29 +439,25 @@ namespace Osm.Routing.CH.Routing
         /// <param name="settled_forward_vertices"></param>
         /// <param name="settled_backward_vertices"></param>
         /// <returns></returns>
-        private CHBest CalculateBest(
-            Dictionary<long, CHPathSegment> settled_forward_vertices, 
-            Dictionary<long, CHPathSegment> settled_backward_vertices)
+        private CHBest CalculateBest(CHQueue queue)
         {
             CHBest best = new CHBest();
             best.VertexId = -1;
             best.Weight = double.MaxValue;
 
             // loop over all intersections.
-            foreach (long vertex in settled_backward_vertices.Keys.Intersect<long>(
-                settled_forward_vertices.Keys))
+            foreach (KeyValuePair<long, float> vertex in queue.Intersection)
             {
-                if (vertex != best.VertexId)
-                { // don't retry the same vertex.
-                    double weight = settled_backward_vertices[vertex].Weight +
-                        settled_forward_vertices[vertex].Weight;
-                    if (weight < best.Weight)
-                    {
-                        best = new CHBest();
-                        best.VertexId = vertex;
-                        best.Weight = weight;
-                    }
+                //if (vertex != best.VertexId)
+                //{ // don't retry the same vertex.
+                double weight = vertex.Value;
+                if (weight < best.Weight)
+                {
+                    best = new CHBest();
+                    best.VertexId = vertex.Key;
+                    best.Weight = weight;
                 }
+                //}
             }
             return best;
         }
@@ -433,7 +491,7 @@ namespace Osm.Routing.CH.Routing
         /// </summary>
         /// <param name="queue"></param>
         /// <returns></returns>
-        private void SearchForward(Dictionary<long, CHPathSegment> settled_vertices, CHPriorityQueue queue,
+        private void SearchForward(CHQueue settled_queue, CHPriorityQueue queue,
             long exception)
         {
             // get the current vertex with the smallest weight.
@@ -441,16 +499,18 @@ namespace Osm.Routing.CH.Routing
 
             // add to the settled vertices.
             CHPathSegment previous_linked_route;
-            if (settled_vertices.TryGetValue(current.VertexId, out previous_linked_route))
+            if (settled_queue.Forward.TryGetValue(current.VertexId, out previous_linked_route))
             {
                 if (previous_linked_route.Weight > current.Weight)
                 { // settle the vertex again if it has a better weight.
-                    settled_vertices[current.VertexId] = current;
+                    settled_queue.AddForward(current);
+                    //settled_vertices[current.VertexId] = current;
                 }
             }
             else
             { // settled the vertex.
-                settled_vertices[current.VertexId] = current;
+                settled_queue.AddForward(current);
+                //settled_vertices[current.VertexId] = current;
             }
 
             // get neighbours.
@@ -459,7 +519,7 @@ namespace Osm.Routing.CH.Routing
             // add the neighbours to the queue.
             foreach (CHVertexNeighbour neighbour in vertex.ForwardNeighbours)
             {
-                if (!settled_vertices.ContainsKey(neighbour.Id)
+                if (!settled_queue.Forward.ContainsKey(neighbour.Id)
                     && exception != neighbour.Id)
                 { // if not yet settled.
                     CHPathSegment route_to_neighbour = new CHPathSegment(
@@ -474,7 +534,7 @@ namespace Osm.Routing.CH.Routing
         /// </summary>
         /// <param name="queue"></param>
         /// <returns></returns>
-        private void SearchBackward(Dictionary<long, CHPathSegment> settled_vertices, CHPriorityQueue queue,
+        private void SearchBackward(CHQueue settled_queue, CHPriorityQueue queue,
             long exception)
         {
             // get the current vertex with the smallest weight.
@@ -482,16 +542,18 @@ namespace Osm.Routing.CH.Routing
 
             // add to the settled vertices.
             CHPathSegment previous_linked_route;
-            if (settled_vertices.TryGetValue(current.VertexId, out previous_linked_route))
+            if (settled_queue.Backward.TryGetValue(current.VertexId, out previous_linked_route))
             {
                 if (previous_linked_route.Weight > current.Weight)
                 { // settle the vertex again if it has a better weight.
-                    settled_vertices[current.VertexId] = current;
+                    settled_queue.AddBackward(current);
+                    //settled_vertices[current.VertexId] = current;
                 }
             }
             else
             { // settled the vertex.
-                settled_vertices[current.VertexId] = current;
+                settled_queue.AddBackward(current);
+                //settled_vertices[current.VertexId] = current;
             }
 
             // get neighbours.
@@ -500,7 +562,7 @@ namespace Osm.Routing.CH.Routing
             // add the neighbours to the queue.
             foreach (CHVertexNeighbour neighbour in vertex.BackwardNeighbours)
             {
-                if (!settled_vertices.ContainsKey(neighbour.Id)
+                if (!settled_queue.Backward.ContainsKey(neighbour.Id)
                     && exception != neighbour.Id)
                 { // if not yet settled.
                     CHPathSegment route_to_neighbour = new CHPathSegment(
@@ -618,7 +680,6 @@ namespace Osm.Routing.CH.Routing
         }
 
         #endregion
-
 
         #region ICHData
 

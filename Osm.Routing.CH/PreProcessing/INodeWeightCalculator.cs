@@ -23,6 +23,6 @@ namespace Osm.Routing.CH.PreProcessing
         /// Notifies this calculator that the vertex was contracted.
         /// </summary>
         /// <param name="vertex_id"></param>
-        void NotifyContractedNeighbour(long vertex_id);
+        void NotifyContracted(CHVertex vertex);
     }
 }

@@ -114,7 +114,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public override int[][] DoCalculation(MaxTimeProblem problem, ICollection<int> customers, 
+        public int[][] DoCalculation(MaxTimeProblem problem, ICollection<int> customers, 
             Second max)
         {
             _customers = customers;
@@ -222,6 +222,18 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
                 result[idx] = route.ToArray();
             }
             return result;
+        }
+
+
+
+        /// <summary>
+        /// Executes a solver procedure.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <returns></returns>
+        internal override MaxTimeSolution Solve(MaxTimeProblem problem)
+        {
+            throw new NotImplementedException();
         }
 
         bool output_each = false;
