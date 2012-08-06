@@ -365,9 +365,10 @@ namespace Demo.VRP
                 //Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.RouterGeneticSimple<ResolvedPoint> vrp_router
                 //    = new Osm.Routing.Core.VRP.NoDepot.MinMaxTime.Genetic.RouterGeneticSimple<ResolvedPoint>(router, 1000, 1500,
                 //        200, 500, 10, 60, 30);
-                Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithImprovements<ResolvedPoint> vrp_router
-                    = new Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithImprovements<ResolvedPoint>(
-                        router, 1500, 20, 10, 0.25f);
+                Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.RouterGeneticSimple<ResolvedPoint> vrp_router
+                     = new Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.RouterGeneticSimple<ResolvedPoint>(
+                         router, 1500, 20, 300, 500, 1,
+                         95, 1);
                 vrp_router.IntermidiateResult += new Osm.Routing.Core.VRP.RouterVRP<ResolvedPoint>.OsmSharpRoutesDelegate(vrp_router_IntermidiateResult);
                 //vrp_router.IntermidiateResult += new Osm.Routing.Core.VRP.RouterVRP<ResolvedPoint>.OsmSharpRoutesDelegate(vrp_router_IntermidiateResult);
                 int tests = 1;

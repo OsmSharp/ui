@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Genetic\RouterTSPGenetic.cs" />
+    <Compile Include="Genetic\RouteTSPAEXGenetic.cs" />
     <Compile Include="RandomizedArbitraryInsertion\RouteTSPRAI.cs" />
     <Compile Include="RouterTSP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -156,6 +157,10 @@
     <ProjectReference Include="..\Tools.Core\Tools.Core.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
       <Name>Tools.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.AI.Genetic\Tools.Math.AI.Genetic.csproj">
+      <Project>{FC226E3D-F4B5-462A-82BB-09D53F8C6DC2}</Project>
+      <Name>Tools.Math.AI.Genetic</Name>
     </ProjectReference>
     <ProjectReference Include="..\Tools.Math.TravellingSalesman\Tools.Math.TSP.csproj">
       <Project>{F12D6C89-D3E2-410C-9D74-55694A05C1BE}</Project>

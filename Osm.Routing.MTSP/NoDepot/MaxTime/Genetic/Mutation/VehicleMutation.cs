@@ -53,6 +53,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
                 if (source_size > avg)
                 {
                     int size = Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_size / 2);
+                    //int size = Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_size);
+                    //int size = Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_size / 3);
 
                     if (size > 0)
                     {
@@ -83,6 +85,15 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
 
                 }
                 solution = this.ChangeSizes(solver.Problem, solution, sizes);
+
+                // apply 3Opt to all routes.
+                for (int route_idx = 0; route_idx < solution.Count; route_idx++)
+                {
+                    float difference;
+                    Tools.Math.TSP.LocalSearch.HillClimbing3Opt.HillClimbing3OptSolver hillclimbing_3opt =
+                        new Tools.Math.TSP.LocalSearch.HillClimbing3Opt.HillClimbing3OptSolver(true, true);
+                    hillclimbing_3opt.Improve(solver.Problem, solution.Route(route_idx), out difference);
+                }
 
                 if (!solution.IsValid())
                 {
@@ -118,22 +129,36 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
                     current = solution.Next(current);
                     if (used[current])
                     {
+                        float neighbour_weight = float.MaxValue;
                         foreach (int nn in problem.Get10NearestNeighbours(previous))
                         {
                             if (!used[nn])
                             {
-                                current = nn;
-                                break;
+                                float potential_weight =
+                                    problem.WeightMatrix[previous][current];
+                                if (potential_weight < neighbour_weight)
+                                {
+                                    current = nn;
+                                    neighbour_weight = potential_weight;
+                                }
+                                //break;
                             }
                         }
+                        int used_count = 0;
                         while (used[current])
                         {
                             current++;
+                            used_count++;
 
                             if (current == solution.Size)
                             {
                                 current = 0;
                             }
+
+                            //if (used_count == problem.Size)
+                            //{
+                            //    break;
+                            //}
                         }
                     }
 

@@ -182,7 +182,8 @@ namespace Tools.Math.TSP.EdgeAssemblyGenetic
 
             List<int> result = new List<int>(best.Genomes);
             result.Insert(0, 0);
-            return new SimpleAsymmetricRoute(result, true);
+            //return new SimpleAsymmetricRoute(result, true);
+            return DynamicAsymmetricRoute.CreateFrom(result);
         }
 
         /// <summary>

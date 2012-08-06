@@ -18,6 +18,10 @@ using Tools.Math.Random;
 using System.IO;
 using System.Globalization;
 using Osm.Core;
+using Tools.Math.AI.Genetic.Operations.Generation;
+using Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement;
+using Tools.Math.AI.Genetic.Operations.CrossOver;
+using Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Mutation;
 
 namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
 {
@@ -96,88 +100,88 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
 
         private int _stagnation;
 
-        private StreamWriter output;
-
         private ICollection<int> _customers;
-
-        private Second _max;
-
-        private long _ticks_before;
 
         private int _max_generations;
 
+
         /// <summary>
-        /// Does the actual calculation, in this case, using a genetic algorithm.
+        /// Executes a solver procedure.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="customers"></param>
-        /// <param name="min"></param>
-        /// <param name="max"></param>
         /// <returns></returns>
-        public int[][] DoCalculation(MaxTimeProblem problem, ICollection<int> customers, 
-            Second max)
+        internal override MaxTimeSolution Solve(MaxTimeProblem problem)
         {
-            _customers = customers;
-            _max = max;
+            _customers = problem.Customers;
 
-            float[] solutions = Tools.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
-                problem, customers);
+            //float[] solutions = Tools.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
+            //    problem, _customers);
 
             generations = 0;
 
             _max_generations = 10000000;
 
-            FileInfo output_file = new FileInfo(string.Format("test_{0}.txt",
-                customers.Count));
-            output = output_file.AppendText();
+            // calculate one tsp solution.
+            //Tools.Math.TSP.ISolver tsp_solver = new Tools.Math.TSP.EdgeAssemblyGenetic.EdgeAssemblyCrossOverSolver(_population, _stagnation,
+            //         new Tools.Math.TSP.Genetic.Solver.Operations.Generation._3OptGenerationOperation(),
+            //          new Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.EdgeAssemblyCrossover(30,
+            //                 Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
+            //                 true));
+            //IRoute tsp_solution = tsp_solver.Solve(new Osm.Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement.TSPProblem(
+            //    problem));
+            // initialize the generation.
+            IGenerationOperation<MaxTimeSolution, MaxTimeProblem, Fitness> generation =
+                //new SolverGenerationOperation(new TSPPlacement.TSPPlacementSolver<ResolvedType>(
+                //    this.Router, this.Max, this.DeliveryTime, tsp_solution));
+                new RandomBestPlacement();
+            //new SolverGenerationOperation(new RouterBestPlacementWithSeeds<ResolvedType>(
+            //    this.Router, this.Max, this.DeliveryTime));
 
-            //output.WriteLine(string.Format("New Test {0} {1}->{2}@{3} ({4}, {5}, {6}, {7}, {8}, {9}):", 
-            //    customers.Count, min, max, DateTime.Now,
-            //    stagnation, population, max_generations, elitism_percentage, cross_percentage, mutation_percentage));
-            //output.WriteLine();
+            // initialize the crossover.
+            ICrossOverOperation<MaxTimeSolution, MaxTimeProblem, Fitness> cross_over =
+                new RouteExchangeOperation();
 
-            long ticks_before = DateTime.Now.Ticks;
-            _ticks_before = ticks_before;
+            // initialize the mutation.
+            //IMutationOperation<MaxTimeSolution, MaxTimeProblem, Fitness> mutation =
+            //    new VehicleMutation();
 
-            //List<IMutationOperation<List<Genome>, Problem, Fitness>> mutators =
-            //    new List<IMutationOperation<List<Genome>, Problem, Fitness>>();
+            List<IMutationOperation<MaxTimeSolution, MaxTimeProblem, Fitness>> mutators =
+                new List<IMutationOperation<MaxTimeSolution, MaxTimeProblem, Fitness>>();
             //mutators.Add(new RoutePartExchangeMutation());
-            //mutators.Add(new VehicleMutation());
-            //mutators.Add(new RelocationMutation());
+            mutators.Add(new VehicleMutation());
+            mutators.Add(new ThreeOptMutation());
             //mutators.Add(new RedivideRouteMutation());
-            //if (_probabilities == null)
-            //{
-            //    _probabilities = new List<double>();
-            //    //_probabilities.Add(0);
-            //    _probabilities.Add(0.5);
-            //    _probabilities.Add(0.5);
-            //    //_probabilities.Add(0);
-            //}
+            if (_probabilities == null)
+            {
+                _probabilities = new List<double>();
+                _probabilities.Add(0.2);
+                _probabilities.Add(0.8);
+            }
 
-            //CombinedMutation<List<Genome>, Problem, Fitness> mutation = new CombinedMutation<List<Genome>, Problem, Fitness>(
-            //    StaticRandomGenerator.Get(),
-            //    mutators,
-            //    _probabilities);
+            CombinedMutation<MaxTimeSolution, MaxTimeProblem, Fitness> mutation = new CombinedMutation<MaxTimeSolution, MaxTimeProblem, Fitness>(
+                StaticRandomGenerator.Get(),
+                mutators,
+                _probabilities);
+
 
             SolverSettings settings = new SolverSettings(_stagnation, _population, _max_generations,
                 _elitism_percentage, _cross_percentage, _mutation_percentage);
             MaxTimeProblem genetic_problem = problem;// new MaxTimeProblem(max,  problem, solutions);
             Solver<MaxTimeSolution, MaxTimeProblem, Fitness> solver =
                 new Solver<MaxTimeSolution, MaxTimeProblem, Fitness>(genetic_problem, settings,
-                new TournamentBasedSelector<MaxTimeSolution, MaxTimeProblem, Fitness>(10, 0.1),
-                new ThreeOptMutation(),
-                new RouteExchangeOperation(), //new RouteExchangeOperation(), //new RouteExchangeAndVehicleOperation(), // Order1CrossoverOperation()
-                new RandomBestPlacement(),//new RandomGeneration(), //new RandomBestPlacement(),
+                new TournamentBasedSelector<MaxTimeSolution, MaxTimeProblem, Fitness>(5, 0.5),
+                mutation, //new ThreeOptMutation(),
+                cross_over, // new RouteExchangeOperation(), //new RouteExchangeOperation(), //new RouteExchangeAndVehicleOperation(), // Order1CrossoverOperation()
+                generation, //new RandomBestPlacement(),//new RandomGeneration(), //new RandomBestPlacement(),
                 new FitnessCalculator());
-            //solver.NewFittest += new Solver<MaxTimeSolution, Problem, Fitness>.NewFittestDelegate(solver_NewFittest);
+            //solver.NewFittest += new Solver<MaxTimeSolution, MaxTimeProblem, Fitness>.NewFittestDelegate(solver_NewFittest);
             //solver.NewGeneration += new Solver<MaxTimeSolution, Problem, Fitness>.NewGenerationDelegate(solver_NewGeneration);
             Individual<MaxTimeSolution, MaxTimeProblem, Fitness> solution = solver.Start(null);
             //this.solver_NewFittest(solution);
 
             MaxTimeSolution routes = solution.Genomes;
-            
+
             long ticks_after = DateTime.Now.Ticks;
-            TimeSpan span = new TimeSpan(ticks_after - ticks_before);
 
             StringBuilder sizes = new StringBuilder();
             foreach (int size in routes.Sizes)
@@ -193,47 +197,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
                 weights.Append(" ");
             }
 
-            StringBuilder probalities = new StringBuilder();
-            //foreach (double prod in _probabilities)
-            //{
-            //    probalities.Append(prod.ToString(CultureInfo.InvariantCulture));
-            //    probalities.Append(";");
-            //}
-
-
-            string settings_string = string.Format("{0};{1};{2};{3};{4};{5};{6};{7};",
-                customers.Count, max.Value,
-                _stagnation, _population, _max_generations, _elitism_percentage, _cross_percentage, _mutation_percentage);
-            output.Write(settings_string);
-            output.Write(string.Format("{0};{1};{2};{3};{4};{5};{6};{7}", generations, solution.Fitness.ActualFitness.ToString(CultureInfo.InvariantCulture),
-                solution.Fitness.Vehicles, solution.Fitness.TotalTime.ToString(CultureInfo.InvariantCulture),
-                solution.Fitness.MaxWeight.ToString(CultureInfo.InvariantCulture), sizes.ToString().Trim(), weights.ToString().Trim(), probalities.ToString()));
-            output.WriteLine(string.Format("{0};{1};", span.Ticks, span.ToString()));
-            output.Flush();
-            output.Close();
-            output.Dispose();
-            output_file = null;
-
-            // TODO: convert solution.
-            int[][] result = new int[routes.Count][];
-            for (int idx = 0; idx < routes.Count; idx++)
-            {
-                IRoute route = routes.Route(idx);
-                result[idx] = route.ToArray();
-            }
-            return result;
-        }
-
-
-
-        /// <summary>
-        /// Executes a solver procedure.
-        /// </summary>
-        /// <param name="problem"></param>
-        /// <returns></returns>
-        internal override MaxTimeSolution Solve(MaxTimeProblem problem)
-        {
-            throw new NotImplementedException();
+            return routes;
         }
 
         bool output_each = false;
@@ -245,7 +209,6 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
             generations++;
 
             long ticks_after = DateTime.Now.Ticks;
-            TimeSpan span = new TimeSpan(ticks_after - _ticks_before);
 
             Individual<MaxTimeSolution, MaxTimeProblem, Fitness> solution = population[0];
 
@@ -275,14 +238,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
 
 
                 string settings_string = string.Format("{0};{1};{2};{3};{4};{5};{6};{7};",
-                    _customers.Count, _max.Value,
+                    _customers.Count, this.Max.Value,
                     _stagnation, _population, _max_generations, _elitism_percentage, _cross_percentage, _mutation_percentage);
-                output.Write(settings_string);
-                output.Write(string.Format("{0};{1};{2};{3};{4};{5};{6};{7}", generations, solution.Fitness.ActualFitness.ToString(CultureInfo.InvariantCulture),
-                    solution.Fitness.Vehicles, solution.Fitness.TotalTime.ToString(CultureInfo.InvariantCulture),
-                    solution.Fitness.MaxWeight.ToString(CultureInfo.InvariantCulture), sizes.ToString().Trim(), weights.ToString().Trim(), probalities.ToString()));
-                output.WriteLine(string.Format("{0};{1};", span.Ticks, span.ToString()));
-                output.Flush();
                 //output.Close();
                 //output.Dispose();
                 //output_file = null;
@@ -292,7 +249,6 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
         void solver_NewFittest(Individual<MaxTimeSolution, MaxTimeProblem, Fitness> solution)
         {
             long ticks_after = DateTime.Now.Ticks;
-            TimeSpan span = new TimeSpan(ticks_after - _ticks_before);
 
             MaxTimeSolution routes = solution.Genomes;
             if (output_each)
@@ -320,14 +276,9 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
 
 
                 string settings_string = string.Format("{0};{1};{2};{3};{4};{5};{6};{7};",
-                    _customers.Count, _max.Value,
+                    _customers.Count, this.Max.Value,
                     _stagnation, _population, _max_generations, _elitism_percentage, _cross_percentage, _mutation_percentage);
-                output.Write(settings_string);
-                output.Write(string.Format("{0};{1};{2};{3};{4};{5};{6};{7}", generations, solution.Fitness.ActualFitness.ToString(CultureInfo.InvariantCulture),
-                    solution.Fitness.Vehicles, solution.Fitness.TotalTime.ToString(CultureInfo.InvariantCulture),
-                    solution.Fitness.MaxWeight.ToString(CultureInfo.InvariantCulture), sizes.ToString().Trim(), weights.ToString().Trim(), probalities.ToString()));
-                output.WriteLine(string.Format("{0};{1};", span.Ticks, span.ToString()));
-                output.Flush();
+
                 //output.Close();
                 //output.Dispose();
                 //output_file = null;

@@ -78,6 +78,7 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
             _next_array[customer] = customer;
 
             // return the new route.
+            _sizes = null;
             return this.Route(route_idx);
         }
 
@@ -133,7 +134,7 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         /// <returns></returns>
         public IRoute Route(int idx)
         {
-            return new MultiRoutePart(_first[idx], _next_array, _is_round);
+            return new MultiRoutePart(this, _first[idx], _next_array, _is_round);
         }
 
         /// <summary>
@@ -271,21 +272,123 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         /// <returns></returns>
         public bool IsValid()
         {
-            HashSet<int> unique_customers = new HashSet<int>(_next_array);
-            unique_customers.Remove(-1);
-            int count = 0;
-            foreach (int customer in _next_array)
+            //HashSet<int> unique_customers = new HashSet<int>(_next_array);
+            //unique_customers.Remove(-1);
+            //int count = 0;
+            //foreach (int customer in _next_array)
+            //{
+            //    if (customer >= 0)
+            //    {
+            //        count++;
+            //    }
+            //}
+            //if (unique_customers.Count != count)
+            //{
+            //    return false;
+            //}
+            return true;
+        }
+        public bool Equals(DynamicAsymmetricMultiRoute other)
+        {
+            if (((object)this).Equals((object)other))
             {
-                if (customer >= 0)
+                return true;
+            }
+            if (this.Count == other.Count)
+            {
+                if (this._next_array.Length != other._next_array.Length)
                 {
-                    count++;
+                    return false;
+                }
+
+                // compare the initial customers.
+                for (int route_idx = 0; route_idx < this.Count; route_idx++)
+                {
+                    if (this._first[route_idx] != other._first[route_idx])
+                    {
+                        return false;
+                    }
+                }
+
+                // compare the next array.
+                for (int idx = 0; idx < this._next_array.Length; idx++)
+                {
+                    if (this._next_array[idx] != other._next_array[idx])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        bool IEquatable<DynamicAsymmetricMultiRoute>.Equals(DynamicAsymmetricMultiRoute other)
+        {
+            return this.Equals(other);
+        }
+
+        public bool RemoveCustomer(int customer)
+        {
+            bool removed = false;
+
+            for (int idx = 0; idx < _first.Length; idx++)
+            {
+                if (_first[idx] == customer)
+                {
+                    int next = _next_array[customer];
+                    if (next >= 0)
+                    {
+                        _first[idx] = next;
+                    }
+                    else
+                    { // remove from array
+                        List<int> first = new List<int>(_first);
+                        first.RemoveAt(idx);
+                        _first = first.ToArray();
+                    }
+                    removed = true;
                 }
             }
-            if (unique_customers.Count != count)
+            for (int idx = 0; idx < _next_array.Length; idx++)
             {
-                return false;
+                if (_next_array[idx] == customer)
+                {
+                    _next_array[idx] = _next_array[customer];
+                    _next_array[customer] = -1;
+                    removed = true;
+                }
             }
-            return true;
+
+            return removed;
+        }
+
+        public virtual object Clone()
+        {
+            return new DynamicAsymmetricMultiRoute(_first, _next_array, _is_round);
+        }
+
+
+        public bool Contains(int from, int to)
+        {
+            return _next_array[from] == to;
+        }
+
+        public bool Contains(int customer)
+        {
+            if (_next_array[customer] >= 0)
+            {
+                return true;
+            }
+            //if (_first.Contains(customer))
+            //{
+            //    return true;
+            //}
+            //if (_next_array.Contains(customer))
+            //{
+            //    return true;
+            //}
+            return false;
         }
 
         /// <summary>
@@ -314,19 +417,26 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
             private int _last;
 
             /// <summary>
+            /// Holds the parent route.
+            /// </summary>
+            private DynamicAsymmetricMultiRoute _parent;
+
+            /// <summary>
             /// Creates a new dynamic route.
             /// </summary>
             /// <param name="first"></param>
             /// <param name="_next_array"></param>
             /// <param name="is_round"></param>
-            internal MultiRoutePart(int first, int[] next_array, bool is_round)
+            internal MultiRoutePart(DynamicAsymmetricMultiRoute parent, 
+                int first, int[] next_array, bool is_round)
             {
+                _parent = parent;
+
                 _first = first;
                 _next_array = next_array;
                 _is_round = is_round;
 
-                // calculate the last customer.
-                this.UpdateLast();
+                _last = -1;
             }
 
             /// <summary>
@@ -459,6 +569,7 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
                         count++;
                     }
                 }
+                unique_customers.Remove(-1);
                 if (unique_customers.Count != count)
                 {
                     throw new Exception("Unique customer count not correct!");
@@ -538,6 +649,9 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
 
             #endregion
 
+            /// <summary>
+            /// Returns the number of customers in this route.
+            /// </summary>
             public int Count
             {
                 get
@@ -546,16 +660,47 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
                 }
             }
 
+            /// <summary>
+            /// Removes a customer from this route.
+            /// </summary>
+            /// <param name="customer"></param>
+            /// <returns></returns>
             public bool Remove(int customer)
             {
+                // special handling of the first customer.
+                if (this.First == customer)
+                {
+                    // get the next customer.
+                    int next = _next_array[customer];
+
+                    // see if the next customer is the last one.
+                    if (next == customer)
+                    { // do not allow the remove of the last customer.
+                        throw new Exception("Last customer cannot be removed!");
+                    }
+                    else
+                    { // just remove the customer by setting the next customer as the first one.
+                        _first = next;
+                        for (int idx = 0; idx < _parent._first.Length; idx++)
+                        { // replace the customer if needed.
+                            if (_parent._first[idx] == customer)
+                            { // replace and break.
+                                _parent._first[idx] = next;
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                // customer is not the first one (anymore)
                 for (int idx = 0; idx < _next_array.Length - 1; idx++)
                 {
                     if (_next_array[idx] == customer)
                     {
-                        _next_array[idx] = _next_array[customer];
-                        _next_array[customer] = -1;
+                        _next_array[idx] = _next_array[customer]; // bypass the existing customer.
+                        _next_array[customer] = -1; // there is no next customer anymore.
 
-                        if (customer == _last)
+                        if (customer == this.Last)
                         {
                             this.UpdateLast();
                         }
@@ -578,6 +723,11 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
             {
                 get
                 {
+                    if (_last < 0)
+                    {
+                        // calculate the last customer.
+                        this.UpdateLast();
+                    }
                     return _last;
                 }
             }
@@ -649,107 +799,5 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
-        public bool Equals(DynamicAsymmetricMultiRoute other)
-        {
-            if (((object)this).Equals((object)other))
-            {
-                return true;
-            }
-            if (this.Count == other.Count)
-            {
-                if (this._next_array.Length != other._next_array.Length)
-                {
-                    return false;
-                }
-
-                // compare the initial customers.
-                for (int route_idx = 0; route_idx < this.Count; route_idx++)
-                {
-                    if (this._first[route_idx] != other._first[route_idx])
-                    {
-                        return false;
-                    }
-                }
-
-                // compare the next array.
-                for (int idx = 0; idx < this._next_array.Length; idx++)
-                {
-                    if (this._next_array[idx] != other._next_array[idx])
-                    {
-                        return false;
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
-
-        bool IEquatable<DynamicAsymmetricMultiRoute>.Equals(DynamicAsymmetricMultiRoute other)
-        {
-            return this.Equals(other);
-        }
-
-        public bool RemoveCustomer(int customer)
-        {
-            bool removed = false;
-
-            for (int idx = 0; idx < _first.Length; idx++)
-            {
-                if (_first[idx] == customer)
-                {
-                    int next = _next_array[customer];
-                    if (next >= 0)
-                    {
-                        _first[idx] = next;
-                    }
-                    else
-                    { // remove from array
-                        List<int> first = new List<int>(_first);
-                        first.RemoveAt(idx);
-                        _first = first.ToArray();
-                    }
-                    removed = true;
-                }
-            }
-            for (int idx = 0; idx < _next_array.Length; idx++)
-            {
-                if (_next_array[idx] == customer)
-                {
-                    _next_array[idx] = _next_array[customer];
-                    _next_array[customer] = -1;
-                    removed = true;
-                }
-            }
-
-            return removed;
-        }
-
-        public virtual object Clone()
-        {
-            return new DynamicAsymmetricMultiRoute(_first, _next_array, _is_round);
-        }
-
-
-        public bool Contains(int from, int to)
-        {
-            return _next_array[from] == to;
-        }
-
-        public bool Contains(int customer)
-        {
-            if (_next_array[customer] >= 0)
-            {
-                return true;
-            }
-            //if (_first.Contains(customer))
-            //{
-            //    return true;
-            //}
-            //if (_next_array.Contains(customer))
-            //{
-            //    return true;
-            //}
-            return false;
-        }
     }
 }

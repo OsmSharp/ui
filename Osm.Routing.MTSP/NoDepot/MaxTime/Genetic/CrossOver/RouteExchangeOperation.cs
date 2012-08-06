@@ -20,6 +20,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
             Individual<MaxTimeSolution, MaxTimeProblem, Fitness> parent1,
             Individual<MaxTimeSolution, MaxTimeProblem, Fitness> parent2)
         {
+            MaxTimeCalculator calculator = new MaxTimeCalculator(solver.Problem);
+
             MaxTimeSolution route1 = parent1.Genomes;
             MaxTimeSolution route2 = parent2.Genomes;
 
@@ -41,22 +43,14 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
                 int selected_route = -1;
                 if (first)
                 {
-                    selected_route = Tools.Math.Random.StaticRandomGenerator.Get().Generate(route1.Count);
-                    while (selected_first.Contains(selected_route))
-                    {
-                        selected_route = Tools.Math.Random.StaticRandomGenerator.Get().Generate(route1.Count);
-                    }
+                    selected_route = this.ChooseNextFrom(selected_routes, route1, selected_first);
 
                     selected_first.Add(selected_route);
                     selected_routes.Add(route1.Route(selected_route));
                 }
                 else
                 {
-                    selected_route = Tools.Math.Random.StaticRandomGenerator.Get().Generate(route2.Count);
-                    while (selected_second.Contains(selected_route))
-                    {
-                        selected_route = Tools.Math.Random.StaticRandomGenerator.Get().Generate(route2.Count);
-                    }
+                    selected_route = this.ChooseNextFrom(selected_routes, route2, selected_second);
 
                     selected_second.Add(selected_route);
                     selected_routes.Add(route2.Route(selected_route));
@@ -101,50 +95,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
                 }
             }
 
-            // insert all non-placed customers in the order of the first route.
-            for (int route_idx = 0; route_idx < route1.Count; route_idx++)
-            {
-                IRoute route1_route = route1.Route(route_idx);
-                foreach (int customer in route1_route)
-                {
-                    if (!solution.Contains(customer))
-                    {
-                        //MaxTimeSolution copy = (solution.Clone() as MaxTimeSolution);
-
-                        // try reinsertion.
-                        CheapestInsertionResult result = new CheapestInsertionResult();
-                        result.Increase = float.MaxValue;
-                        int target_idx = -1;
-                        for (int idx = 0; idx < solution.Count; idx++)
-                        {
-                            IRoute route = solution.Route(idx);
-
-                            CheapestInsertionResult current_result =
-                                CheapestInsertionHelper.CalculateBestPlacement(solver.Problem.Weights, route, customer);
-                            if (current_result.Increase < result.Increase)
-                            {
-                                target_idx = idx;
-                                result = current_result;
-
-                                if (result.Increase <= 0)
-                                {
-                                    break;
-                                }
-                            }
-                        }
-
-                        // get the target route and insert.
-                        IRoute target_route = solution.Route(target_idx);
-                        target_route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
-
-                        //solution.ToString();
-                        if (!solution.IsValid())
-                        {
-                            throw new Exception();
-                        }
-                    }
-                }
-            }
+            this.FillRoutes(calculator, route1, solution, solver.Problem);
 
             if (!solution.IsValid())
             {
@@ -160,6 +111,151 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
             {
                 return "NotSet";
             }
+        }
+
+        private int ChooseNextFrom(List<IRoute> selected_routes, MaxTimeSolution solution, HashSet<int> selected)
+        {
+            int selected_route = Tools.Math.Random.StaticRandomGenerator.Get().Generate(solution.Count);
+            while (selected.Contains(selected_route))
+            {
+                selected_route = Tools.Math.Random.StaticRandomGenerator.Get().Generate(solution.Count);
+            }
+            return selected_route;
+        }
+
+        //private int ChooseNextFrom(List<IRoute> selected_routes, MaxTimeSolution solution, HashSet<int> selected)
+        //{
+        //    int min_overlap = int.MaxValue;
+        //    int idx = -1;
+        //    for (int route_idx = 0; route_idx < solution.Count; route_idx++)
+        //    {
+        //        if (!selected.Contains(route_idx))
+        //        {
+        //            int overlap = this.CalculateOverlap(selected_routes, solution.Route(route_idx));
+        //            if (overlap == 0)
+        //            {
+        //                return route_idx;
+        //            }
+        //            else if (overlap < min_overlap)
+        //            {
+        //                min_overlap = overlap;
+        //                idx = route_idx;
+        //            }
+        //        }
+        //    }
+        //    return idx;
+        //}
+
+        private int CalculateOverlap(List<IRoute> selected_routes, IRoute route)
+        {
+            HashSet<int> not_found_customers = new HashSet<int>(route);
+            int count = not_found_customers.Count;
+            foreach (IRoute selected_route in selected_routes)
+            {
+                HashSet<int> old_not_found_customers = new HashSet<int>(not_found_customers);
+                foreach (int customer in not_found_customers)
+                {
+                    if (route.Contains(customer))
+                    {
+                        old_not_found_customers.Remove(customer);
+                    }
+                }
+                not_found_customers = old_not_found_customers;
+            }
+            return count - not_found_customers.Count;
+        }
+
+        private void FillRoutes(MaxTimeCalculator calculator, MaxTimeSolution route1, MaxTimeSolution solution,
+            MaxTimeProblem problem)
+        {
+            float[] weights = new float[solution.Count];
+            
+            // insert all non-placed customers in the order of the first route.
+            HashSet<int> unplaced = new HashSet<int>();
+            for (int route_idx = 0; route_idx < route1.Count; route_idx++)
+            {
+                IRoute route1_route = route1.Route(route_idx);
+                foreach (int customer in route1_route)
+                {
+                    if (!solution.Contains(customer))
+                    {
+                        unplaced.Add(customer);
+                    }
+                }
+            }
+
+            for (int idx = 0; idx < solution.Count; idx++)
+            {
+                IRoute route = solution.Route(idx);
+                weights[idx] = calculator.CalculateOneRoute(route);
+            }
+
+            // insert all non-placed customers in the order of the first route.
+            //for (int route_idx = 0; route_idx < route1.Count; route_idx++)
+            //{
+            //    IRoute route1_route = route1.Route(route_idx);
+            //    foreach (int customer in route1_route)
+            //    {
+            //        if (!solution.Contains(customer))
+            //        {
+            while (unplaced.Count > 0)
+            {
+                int customer = unplaced.First<int>();
+
+                // try reinsertion.
+                CheapestInsertionResult result = new CheapestInsertionResult();
+                result.Increase = float.MaxValue;
+                int target_idx = -1;
+
+                CheapestInsertionResult unlimited_result = new CheapestInsertionResult();
+                unlimited_result.Increase = float.MaxValue;
+                int unlimited_target_idx = -1;
+                for (int idx = 0; idx < solution.Count; idx++)
+                {
+                    IRoute route = solution.Route(idx);
+
+                    CheapestInsertionResult current_result =
+                        CheapestInsertionHelper.CalculateBestPlacement(problem.Weights, route, customer);
+                    if (current_result.Increase < result.Increase)
+                    {
+                        if (weights[idx] + current_result.Increase < problem.Max.Value)
+                        {
+                            target_idx = idx;
+                            result = current_result;
+
+                            if (result.Increase <= 0)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    if (current_result.Increase < unlimited_result.Increase)
+                    {
+                        unlimited_target_idx = idx;
+                        unlimited_result = current_result;
+                    }
+                }
+
+                if (target_idx < 0)
+                {
+                    result = unlimited_result;
+                    target_idx = unlimited_target_idx;
+                }
+
+                // get the target route and insert.
+                IRoute target_route = solution.Route(target_idx);
+                weights[target_idx] = weights[target_idx] + result.Increase;
+                target_route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                unplaced.Remove(result.Customer);
+
+                //solution.ToString();
+                if (!solution.IsValid())
+                {
+                    throw new Exception();
+                }
+            }
+            //    }
+            //}
         }
     }
 }

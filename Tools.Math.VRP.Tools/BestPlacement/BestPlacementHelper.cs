@@ -208,7 +208,7 @@ namespace Tools.Math.VRP.Core.BestPlacement
                 }
 
                 // set the pervious to the last.
-                previous = route.Last;
+                //previous = route.Last;
 
                 // test last-to-first if the route is a round.
                 if (route.IsRound)

@@ -54,6 +54,16 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
             // first calculate the weights in seconds.
             float[][] weights = this.CalculateManyToManyWeigth(points);
 
+            // convert to ints.
+            for (int x = 0; x < weights.Length; x++)
+            {
+                float[] weights_x = weights[x];
+                for (int y = 0; y < weights_x.Length; y++)
+                {
+                    weights_x[y] = (int)weights_x[y];
+                }
+            }
+
             // create the problem for the genetic algorithm.
             List<int> customers = new List<int>();
             for (int customer = 0; customer < points.Length; customer++)

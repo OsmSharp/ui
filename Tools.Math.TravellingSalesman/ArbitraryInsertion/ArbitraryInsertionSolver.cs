@@ -152,15 +152,10 @@ namespace Tools.Math.TSP.ArbitraryInsertion
         public bool Improve(IProblemWeights problem, IRoute route, out float difference)
         {
             bool improvement = false;
-            //bool local_improvement = true;
-            //int first = route.First;
-            //int last = route.Last;
+
             difference = 0;
             if (route.Count > 3)
             {
-                //while (local_improvement)
-                //{
-                //    local_improvement = false;
                 // loop over all customers and try cheapest insertion.
                 for (int customer = 0; customer < problem.Size; customer++)
                 {
@@ -176,13 +171,10 @@ namespace Tools.Math.TSP.ArbitraryInsertion
                             && difference < 0)
                         { // another customer was found as the best, improvement is succesful.
                             improvement = true;
-                            //local_improvement = true;
-                            //first = route.GetNeigbours(customer)[0];
-                            //break;
+                            break;
                         }
                     }
                 }
-                //}
             }
             return improvement;
         }

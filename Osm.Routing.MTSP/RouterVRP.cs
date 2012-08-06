@@ -25,6 +25,17 @@ namespace Osm.Routing.Core.VRP
         }
 
         /// <summary>
+        /// Returns the router.
+        /// </summary>
+        protected IRouter<ResolvedType> Router
+        {
+            get
+            {
+                return _router;
+            }
+        }
+
+        /// <summary>
         /// Calculates a weight matrix for the given array of points.
         /// </summary>
         /// <param name="points"></param>

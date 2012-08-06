@@ -67,7 +67,7 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         public int[] GetNeigbours(int customer)
         {
             int[] neighbours;
-            if (_customers.Count > 0)
+            if (_customers.Count == 0)
             {
                 return new int[0];
             }

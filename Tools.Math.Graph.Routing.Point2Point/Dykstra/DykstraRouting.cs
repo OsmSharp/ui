@@ -266,7 +266,7 @@ namespace Tools.Math.Graph.Routing.Dykstra
             for (int idx = 0; idx < from.Length; idx++)
             {
                 results[idx] = this.CalculateOneToMany(from[idx], tos);
-                System.Diagnostics.Debug.WriteLine("{0}/{1}", idx, from.Length);
+                //System.Diagnostics.Debug.WriteLine("{0}/{1}", idx, from.Length);
             }
 
             return results;

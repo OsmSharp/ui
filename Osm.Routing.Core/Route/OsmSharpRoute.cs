@@ -176,6 +176,8 @@ namespace Osm.Routing.Core.Route
         {
             if (route1 == null) return route2;
             if (route2 == null) return route1;
+            if (route1.Entries.Length == 0) return route2;
+            if (route2.Entries.Length == 0) return route1;
             
             // get the end/start point.
             RoutePointEntry end = route1.Entries[route1.Entries.Length - 1];

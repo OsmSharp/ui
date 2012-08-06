@@ -10,6 +10,15 @@ namespace Tools.TSPLIB.Convertor.ATSP_TSP
 {
     public static class ATSP_TSPConvertor
     {
+        public static TSPLIBProblem Convert(IProblem atsp, string name, string comment)
+        {
+            // convert the problem to a symetric one.
+            IProblem symetric = atsp.ConvertToSymmetric();
+
+            return new TSPLIBProblem(name, comment, symetric.Size, symetric.WeightMatrix,
+                TSPLIBProblemWeightTypeEnum.Explicit, TSPLIBProblemTypeEnum.TSP);
+        }
+
         public static TSPLIBProblem Convert(TSPLIBProblem atsp)
         {
             // check if the problem is not already symmetric.

@@ -1,170 +1,113 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using Tools.Math.AI.Genetic.Operations.Mutations;
-//using Tools.Math.VRP.Core.Routes.ASymmetric;
-//using Tools.Math.AI.Genetic;
-//using Tools.Math.AI.Genetic.Solvers;
-//using Tools.Math.VRP.Core.Routes;
-//using Tools.Math.VRP.Core.BestPlacement;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Tools.Math.AI.Genetic.Operations.Mutations;
+using Tools.Math.VRP.Core.Routes.ASymmetric;
+using Tools.Math.AI.Genetic;
+using Tools.Math.AI.Genetic.Solvers;
+using Tools.Math.VRP.Core.Routes;
+using Tools.Math.VRP.Core.BestPlacement;
 
-//namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
-//{
-//    /// <summary>
-//    /// Mutation operation exchanging a part of some route to a part of another route.
-//    /// </summary>
-//    internal class RoutePartExchangeMutation :
-//        IMutationOperation<List<Genome>, Problem, Fitness>
-//    {
-//        private float _max_selection = 0.5f;
+namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
+{
+    /// <summary>
+    /// Mutation operation exchanging a part of some route to a part of another route.
+    /// </summary>
+    internal class RoutePartExchangeMutation :
+        IMutationOperation<MaxTimeSolution, MaxTimeProblem, Fitness>
+    {
+        private float _max_selection = 0.5f;
 
-//        public string Name
-//        {
-//            get
-//            {
-//                return "RPEX";
-//            }
-//        }
+        public string Name
+        {
+            get
+            {
+                return "RPEX";
+            }
+        }
 
-//        /// <summary>
-//        /// Does the mutation.
-//        /// </summary>
-//        /// <param name="solver"></param>
-//        /// <param name="mutating"></param>
-//        /// <returns></returns>
-//        public Individual<List<Genome>, Problem, Fitness> Mutate(
-//            Solver<List<Genome>, Problem, Fitness> solver,
-//            Individual<List<Genome>, Problem, Fitness> mutating)
-//        {
-//            // get the route information.
-//            Genome multi_route = mutating.Genomes[0];
-//            int[] size_new = null;
-//            int[] customers_new = null;
+        /// <summary>
+        /// Does the mutation.
+        /// </summary>
+        /// <param name="solver"></param>
+        /// <param name="mutating"></param>
+        /// <returns></returns>
+        public Individual<MaxTimeSolution, MaxTimeProblem, Fitness> Mutate(
+            Solver<MaxTimeSolution, MaxTimeProblem, Fitness> solver,
+            Individual<MaxTimeSolution, MaxTimeProblem, Fitness> mutating)
+        {
+            // get the route information.
+            MaxTimeSolution multi_route = mutating.Genomes.Clone() as MaxTimeSolution;
 
-//            if (multi_route.Sizes.Length > 1)
-//            { // TODO: Maybe add some extra code for the the route-count is very low and chances of collisions are big.
-//                // TODO: investigate what is more expensive, and extra random generation or creating a list and remove items.
-//                // http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
-//                // select a route.
-//                int source_route_idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(multi_route.Sizes.Length);
-//                int target_route_idx = -1;
-//                do
-//                {
-//                    target_route_idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(multi_route.Sizes.Length);
-//                } while (source_route_idx == target_route_idx);
-//                int source_count = multi_route.Sizes[source_route_idx];
-//                int target_count = multi_route.Sizes[target_route_idx];
-//                if (target_count > 0 && source_count > 3)
-//                {
-//                    // take a part out of the orginal.
-//                    int size = (int)Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_count);
-//                    int source_location = Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_count);
+            if (multi_route.Count > 1)
+            { // TODO: Maybe add some extra code for the the route-count is very low and chances of collisions are big.
+                // TODO: investigate what is more expensive, and extra random generation or creating a list and remove items.
+                // http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+                // select a route.
+                int source_route_idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(multi_route.Count);
+                int target_route_idx = -1;
+                do
+                {
+                    target_route_idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(multi_route.Count);
+                } while (source_route_idx == target_route_idx);
+                int source_count = multi_route.Sizes[source_route_idx];
+                int target_count = multi_route.Sizes[target_route_idx];
+                if (target_count > 0 && source_count > 3)
+                {
+                    // take a part out of the orginal.
+                    int size = (int)Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_count);
+                    int source_location = Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_count);
 
-//                    int first = source_location - (size / 2);
-//                    if (first < 0)
-//                    {
-//                        first = 0;
-//                    }
-//                    first = multi_route.StartOf(source_route_idx) + first;
-//                    int last = source_location + (size / 2);
-//                    if (last > source_count - 1)
-//                    {
-//                        last = source_count - 1;
-//                    }
-//                    last = multi_route.StartOf(source_route_idx) + last;
-//                    int idx = -1;
-//                    List<int> part_of_orginal = new List<int>();
-//                    foreach (int customer in multi_route.Customers)
-//                    {
-//                        idx++;
-//                        if(idx >= first && idx <= last)
-//                        {
-//                            part_of_orginal.Add(customer);
-//                        }
-//                    }
-                    
-//                    // place it somewhere in the target.
-//                    if (part_of_orginal.Count > 0)
-//                    {
-//                        IRoute target = multi_route.Route(target_route_idx);
+                    int first = source_location - (size / 2);
+                    if (first < 0)
+                    {
+                        first = 0;
+                    }
+                    //first = multi_route.StartOf(source_route_idx) + first;
+                    int last = source_location + (size / 2);
+                    if (last > source_count - 1)
+                    {
+                        last = source_count - 1;
+                    }
+                    //last = multi_route.StartOf(source_route_idx) + last;
+                    int idx = -1;
+                    IRoute source = multi_route.Route(source_route_idx);
+                    List<int> part_of_orginal = new List<int>();
+                    foreach (int customer in source)
+                    {
+                        idx++;
+                        if (idx >= first && idx <= last)
+                        {
+                            part_of_orginal.Add(customer);
+                        }
+                    }
 
-//                        CheapestInsertionResult route_placement = CheapestInsertionHelper.CalculateBestPlacement(
-//                            solver.Problem, target, part_of_orginal[0], part_of_orginal[part_of_orginal.Count - 1]);                        
+                    // remove from the source.
+                    foreach(int customer in part_of_orginal)
+                    {
+                        multi_route.RemoveCustomer(customer);
+                    }
 
-//                        // create a new array and start copying.
-//                        customers_new = new int[multi_route.Customers.Length];
-//                        int new_idx = 0;
-//                        for (idx = 0; idx < multi_route.Customers.Length; idx++)
-//                        {
-//                            if (idx >= first && idx <= last)
-//                            {
-//                                // do nothing.
-//                            }
-//                            else
-//                            {
-//                                customers_new[new_idx] = multi_route.Customers[idx];                               
-//                                new_idx++;
+                    // place it somewhere in the target.
+                    if (part_of_orginal.Count > 0)
+                    {
+                        IRoute target = multi_route.Route(target_route_idx);
 
-//                                if (multi_route.Customers[idx] == route_placement.CustomerBefore)
-//                                { // insert the entire between part here.
-//                                    for (int between_idx = 0; between_idx < part_of_orginal.Count; between_idx++)
-//                                    {
-//                                        customers_new[new_idx] = part_of_orginal[between_idx];         
-//                                        new_idx++;
-//                                    }
-//                                }
-//                            }
-//                        }
+                        CheapestInsertionResult route_placement = CheapestInsertionHelper.CalculateBestPlacement(
+                            solver.Problem, target, part_of_orginal[0], part_of_orginal[part_of_orginal.Count - 1]);
 
-//                        // adjust sizes array.
-//                        size_new = new int[multi_route.Sizes.Length];
-//                        for (idx = 0; idx < multi_route.Sizes.Length; idx++)
-//                        {
-//                            if (idx == source_route_idx)
-//                            {
-//                                size_new[idx] = multi_route.Sizes[idx] - part_of_orginal.Count;
-//                            }
-//                            else if (idx == target_route_idx)
-//                            {
-//                                size_new[idx] = multi_route.Sizes[idx] + part_of_orginal.Count;
-//                            }
-//                            else
-//                            {
-//                                size_new[idx] = multi_route.Sizes[idx];
-//                            }
-//                        }
-//                    }
-//                }
-//            }
+                        int from = route_placement.CustomerBefore;
+                        foreach (int customer in part_of_orginal)
+                        {
+                            target.Insert(from, customer, -1);
+                            from = customer;
+                        }
+                    }
+                }
+            }
 
-//            if (size_new == null || customers_new == null)
-//            {
-//                size_new = multi_route.Sizes.Clone() as int[];
-//                customers_new = multi_route.Customers.Clone() as int[];
-//            }
-
-//            // remove all zero's.
-//            List<int> sizes = new List<int>(size_new);
-//            while (sizes.Remove(0))
-//            {
-
-//            }
-//            size_new = sizes.ToArray<int>();
-
-//            List<Genome> genomes = new List<Genome>();
-//            Genome genome = new Genome();
-//            genome.Sizes = size_new;
-//            genome.Customers = customers_new;
-
-//            if (!genome.IsValid())
-//            {
-//                throw new Exception();
-//            }
-//            genomes.Add(genome);
-//            Individual<List<Genome>, Problem, Fitness> individual = new Individual<List<Genome>, Problem, Fitness>(genomes);
-//            //individual.Initialize(genomes);
-//            return individual;
-//        }
-//    }
-//}
+            return new Individual<MaxTimeSolution,MaxTimeProblem,Fitness>(multi_route);
+        }
+    }
+}

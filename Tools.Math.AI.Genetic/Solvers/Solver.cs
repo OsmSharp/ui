@@ -70,12 +70,12 @@ namespace Tools.Math.AI.Genetic.Solvers
         /// <summary>
         /// Flag indicating what individuals to accept.
         /// </summary>
-        private bool _accept_only_better_on_mutation = true;
+        private bool _accept_only_better_on_mutation = false;
 
         /// <summary>
         /// Flag indicating what individuals to accept.
         /// </summary>
-        private bool _accept_only_better_on_cross_over = true;
+        private bool _accept_only_better_on_cross_over = false;
 
         /// <summary>
         /// The fittest solution found so far.
