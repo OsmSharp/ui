@@ -1,0 +1,239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{28024A20-1A04-4973-93A3-3D6F53B0386A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Osm.Routing.Core.VRP</RootNamespace>
+    <AssemblyName>Osm.Routing.Core.VRP</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|AnyCPU'">
+    <OutputPath>bin\Release x64\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\Osm.Routing.Core.VRP.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|x86'">
+    <OutputPath>bin\x86\Release x64\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>bin\x86\Release\Osm.Routing.Core.VRP.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisLogFile>..\Output\Osm.Routing.Core.VRP.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <DocumentationFile>..\Output\Osm.Routing.Core.VRP.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\Osm.Routing.Core.VRP.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <DocumentationFile>..\Output\Osm.Routing.Core.VRP.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|x64'">
+    <OutputPath>..\Output\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <CodeAnalysisLogFile>bin\Release\Osm.Routing.Core.VRP.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <DocumentationFile>..\Output\Osm.Routing.Core.VRP.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MTSP\RouterMTSP.cs" />
+    <Compile Include="NoDepot\MaxTime\BestPlacement\RouterBestPlacement.cs" />
+    <Compile Include="NoDepot\MaxTime\BestPlacement\RouterBestPlacementWithImprovements.cs" />
+    <Compile Include="NoDepot\MaxTime\BestPlacement\RouterBestPlacementWithSeeds.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\CrossOver\Order1CrossoverOperation.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\CrossOver\RouteExchangeAndVehicleOperation.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\CrossOver\RouteExchangeOperation.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\CrossOver\RouteExchangeOperationSimple.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\Fitness.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\FitnessCalculator.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\Generation\RandomBestPlacement.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\Generation\RandomGeneration.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\Generation\SolverGenerationOperation.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\Genome.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\Mutation\RedivideRouteMutation.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\Mutation\RelocateMutation.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\Mutation\RoutePartExchangeMutation.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\Mutation\ThreeOptMutation.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\Mutation\VehicleMutation.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\Problem.cs" />
+    <Compile Include="NoDepot\MaxTime\Genetic\RouterGeneticSimple.cs" />
+    <Compile Include="NoDepot\MaxTime\IMaxTimeImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\IMaxTimeSolver.cs" />
+    <Compile Include="NoDepot\MaxTime\InterRoute\CrossExchangeImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\InterRoute\ExchangeImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\InterRoute\IInterRouteImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\InterRoute\RelocateImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\InterRoute\TwoOptImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\MaxTimeProblem.cs" />
+    <Compile Include="NoDepot\MaxTime\MaxTimeSolution.cs" />
+    <Compile Include="NoDepot\MaxTime\MaxTimeRouter.cs" />
+    <Compile Include="NoDepot\MaxTime\MaxTimeCalculator.cs" />
+    <Compile Include="NoDepot\MaxTime\TSPPlacement\TSPPlacementSolver.cs" />
+    <Compile Include="NoDepot\MaxTime\TSPPlacement\TSPProblem.cs" />
+    <Compile Include="NoDepot\MaxTime\VNS\VNSSimple.cs" />
+    <Compile Include="NoDepot\RouterNoDepot.cs" />
+    <Compile Include="WithDepot\MinimaxTime\Genetic\BestPlacement\RouterBestPlacement.cs" />
+    <Compile Include="WithDepot\MinimaxTime\Genetic\BestPlacement\RouterBestPlacementWithImprovements.cs" />
+    <Compile Include="WithDepot\MinimaxTime\Genetic\CrossOver\RouteExchangeOperation.cs" />
+    <Compile Include="WithDepot\MinimaxTime\Genetic\Fitness.cs" />
+    <Compile Include="WithDepot\MinimaxTime\Genetic\FitnessCalculator.cs" />
+    <Compile Include="WithDepot\MinimaxTime\Genetic\Generation\RandomBestPlacement.cs" />
+    <Compile Include="WithDepot\MinimaxTime\Genetic\Genome.cs" />
+    <Compile Include="WithDepot\MinimaxTime\Genetic\Mutation\RoutePartExchangeMutation.cs" />
+    <Compile Include="WithDepot\MinimaxTime\Genetic\Problem.cs" />
+    <Compile Include="WithDepot\MinimaxTime\Genetic\RouterGeneticSimple.cs" />
+    <Compile Include="WithDepot\MinimaxTime\RouterMinimaxTime.cs" />
+    <Compile Include="WithDepot\RouterDepot.cs" />
+    <Compile Include="RouterVRP.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Osm.Core\Osm.Core.csproj">
+      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
+      <Name>Osm.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Routing.Core\Osm.Routing.Core.csproj">
+      <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
+      <Name>Osm.Routing.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Core\Tools.Core.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>Tools.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.AI.Genetic\Tools.Math.AI.Genetic.csproj">
+      <Project>{FC226E3D-F4B5-462A-82BB-09D53F8C6DC2}</Project>
+      <Name>Tools.Math.AI.Genetic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.MultiSalesman\Tools.Math.VRP.MultiSalesman.csproj">
+      <Project>{D0F39DE4-5217-4B30-9DC8-EF8C8D6C531C}</Project>
+      <Name>Tools.Math.VRP.MultiSalesman</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.TravellingSalesman\Tools.Math.TSP.csproj">
+      <Project>{F12D6C89-D3E2-410C-9D74-55694A05C1BE}</Project>
+      <Name>Tools.Math.TSP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math.VRP.Tools\Tools.Math.VRP.Core.csproj">
+      <Project>{EE35732E-984C-4C40-9C4F-FEF012A9B6C9}</Project>
+      <Name>Tools.Math.VRP.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math\Tools.Math.csproj">
+      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
+      <Name>Tools.Math</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
