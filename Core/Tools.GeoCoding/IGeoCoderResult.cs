@@ -26,6 +26,11 @@ namespace Tools.GeoCoding
             get;
         }
 
+				/// <summary>
+				/// Text value of geocoder
+				/// </summary>
+				string Text { get; }
+
         /// <summary>
         /// The accuracy of the result.
         /// </summary>

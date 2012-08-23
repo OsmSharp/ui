@@ -173,6 +173,7 @@
     <Compile Include="GeoCoderQuery.cs" />
     <Compile Include="GeoCoderResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReverseQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Tools.GeoCoding\Tools.GeoCoding.csproj">

@@ -163,14 +163,6 @@
     </Reference>
     <Reference Include="System.Xml">
     </Reference>
-    <Reference Include="Tools.Core, Version=1.0.4338.24817, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Tools.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Tools.Math, Version=1.0.4338.24818, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\Tools.Math.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extension.cs" />
@@ -200,6 +192,14 @@
     <ProjectReference Include="..\Osm.Map\Osm.Map.csproj">
       <Project>{B076C8ED-B40F-4BAB-B91A-0673BB753C06}</Project>
       <Name>Osm.Map</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Core\Tools.Core.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>Tools.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math\Tools.Math.csproj">
+      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
+      <Name>Tools.Math</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

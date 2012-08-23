@@ -28,56 +28,56 @@ namespace Osm.Routing.CH.PreProcessing
         /// </summary>
         private ICHData _target;
 
-        /// <summary>
-        /// Holds the max of the recalculate queue.
-        /// </summary>
-        private int _max;
+				/// <summary>
+				/// Holds the max of the recalculate queue.
+				/// </summary>
+				private int _max;
 
-        /// <summary>
-        /// Creates a new pre-processor.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="calculator"></param>
-        /// <param name="witness_calculator"></param>
-        /// <param name="max"></param>
-        public CHPreProcessor(ICHData target, 
-            INodeWeightCalculator calculator,
-            INodeWitnessCalculator witness_calculator,
-            int max)
-        {
-            _target = target;
-            _current_level = 1;
+				/// <summary>
+				/// Creates a new pre-processor.
+				/// </summary>
+				/// <param name="target"></param>
+				/// <param name="calculator"></param>
+				/// <param name="witness_calculator"></param>
+				/// <param name="max"></param>
+				public CHPreProcessor(ICHData target,
+						INodeWeightCalculator calculator,
+						INodeWitnessCalculator witness_calculator,
+						int max)
+				{
+					_target = target;
+					_current_level = 1;
 
-            //_calculator = new EdgeDifference(
-            //    new DykstraWitnessCalculator(_target));
-            _calculator = calculator;
-            _witness_calculator = witness_calculator;
-            _priority_queue = new CHPriorityQueue();
+					//_calculator = new EdgeDifference(
+					//    new DykstraWitnessCalculator(_target));
+					_calculator = calculator;
+					_witness_calculator = witness_calculator;
+					_priority_queue = new CHPriorityQueue();
 
-            _k = 0;
-            _max = max;
-        }
+					_k = 0;
+					_max = max;
+				}
 
-        /// <summary>
-        /// Creates a new pre-processor.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="calculator"></param>
-        /// <param name="witness_calculator"></param>
-        public CHPreProcessor(ICHData target,
-            INodeWeightCalculator calculator,
-            INodeWitnessCalculator witness_calculator)
-        {
-            _target = target;
-            _current_level = 1;
+				/// <summary>
+				/// Creates a new pre-processor.
+				/// </summary>
+				/// <param name="target"></param>
+				/// <param name="calculator"></param>
+				/// <param name="witness_calculator"></param>
+				public CHPreProcessor(ICHData target,
+						INodeWeightCalculator calculator,
+						INodeWitnessCalculator witness_calculator)
+				{
+					_target = target;
+					_current_level = 1;
 
-            _calculator = calculator;
-            _witness_calculator = witness_calculator;
-            _priority_queue = new CHPriorityQueue();
+					_calculator = calculator;
+					_witness_calculator = witness_calculator;
+					_priority_queue = new CHPriorityQueue();
 
-            _k = 0;
-            _max = int.MaxValue;
-        }
+					_k = 0;
+					_max = int.MaxValue;
+				}
 
         #region Contraction
 
@@ -117,22 +117,56 @@ namespace Osm.Routing.CH.PreProcessing
             this.Enqueue(nodes);
 
             // loop over the priority queue until it's empty.
-            long current_id = this.SelectNext();
-            while (current_id > 0)
+            CHVertex vertex = this.SelectNext();
+            while (vertex != null)
             {
                 // dequeue.
-                _priority_queue.Remove(current_id);
+                _priority_queue.Remove(vertex.Id);
 
                 // contract the nodes.
-                //Console.Write(".");
+                //Console.Write(_priority_queue.Count + ". ");
                 //Console.Write("Contracting [{0}]:{1}", _priority_queue.Count, current_id);
-                this.Contract(current_id);
+                this.Contract(vertex);
                 //Console.WriteLine(" Done!");
 
                 // select the next vertex.
-                current_id = this.SelectNext();
+                vertex = this.SelectNext();
             }
         }
+
+				/// <summary>
+				/// Starts pre-processing all nodes
+				/// </summary>
+				/// <param name="nodes"></param>
+				public void Start()
+				{
+					// first enqueue all vertices with no level.
+					foreach (CHVertex vx in _target.GetCHVerticesNoLevel())
+					{
+							double weight = _calculator.Calculate(_current_level, vx);
+							_priority_queue.Enqueue(vx.Id, weight);
+					}
+
+					// loop over the priority queue until it's empty.
+					CHVertex vertex = this.SelectNext();
+					while (vertex != null)
+					{
+						//Stopwatch timer = new Stopwatch();
+						//timer.Start();
+						// dequeue.
+						_priority_queue.Remove(vertex.Id);
+
+						// contract the nodes.
+						//Console.Write("Contracting [{0}]:{1}", _priority_queue.Count, current_id);
+						this.Contract(vertex);
+						//Console.WriteLine(" Done!");
+
+						// select the next vertex.
+						vertex = this.SelectNext();
+						//timer.Stop();
+						//Console.Write(_priority_queue.Count + " - " + timer.Elapsed + " ms. ");
+					}
+				}
 
         /// <summary>
         /// Enqueue some of the nodes.
@@ -150,25 +184,26 @@ namespace Osm.Routing.CH.PreProcessing
                     vertex.Level == int.MaxValue)
                 {
                     double weight = _calculator.Calculate(_current_level, vertex);
-                    if (weight < float.MaxValue)
-                    {
-                        _priority_queue.Enqueue(vertex.Id, weight);
-                    }
+										if (weight < float.MaxValue)
+										{
+											_priority_queue.Enqueue(vertex.Id, weight);
+										}
                 }
             }
         }
 
-        /// <summary>
-        /// Holds the current 'before recalculation value'.
-        /// </summary>
-        private int _k;
+				/// <summary>
+				/// Holds the current 'before recalculation value'.
+				/// </summary>
+				private int _k;
 
         /// <summary>
         /// Select the next vertex from the queue.
         /// </summary>
         /// <returns></returns>
-        public long SelectNext()
+        public CHVertex SelectNext()
         {
+
             // loop over the priority queue until it's empty.
             while (_priority_queue.Count > 0)
             {
@@ -183,52 +218,54 @@ namespace Osm.Routing.CH.PreProcessing
                     double new_weight = this.CalculateWeight(_current_level, vertex);
 
                     if (new_weight <= queued_weight)
-                    { // do the lazy updating.
-                        // vertices are dequeued later.
-                        //_priority_queue.Pop(); // dequeue the current vertex.
+										{ // do the lazy updating.
+											// vertices are dequeued later.
+											//_priority_queue.Pop(); // dequeue the current vertex.
 
-                        return current_id;
+                      return vertex;
                     }
-                    else
-                    { // enqueue again with new weight.
-                        _k++;
+										else
+										{ // enqueue again with new weight.
+											_k++;
 
-                        _priority_queue.Enqueue(current_id, new_weight);
+											_priority_queue.Enqueue(current_id, new_weight);
 
-                        if (_k > _max)
-                        { // calculate the entire queue.
-                            List<long> redo_list = new List<long>(_priority_queue);
-                            foreach (long redo in redo_list)
-                            {
-                                queued_weight = _priority_queue.Weight(redo);
-                                CHVertex redo_vertex = _target.GetCHVertex(redo);
-                                new_weight = this.CalculateWeight(_current_level, redo_vertex);
-                                _priority_queue.Enqueue(redo, new_weight);
-                            }
-                            _k = 0;
-                        }
-                    }
+											if (_k > _max)
+											{ // calculate the entire queue.
+												List<long> redo_list = new List<long>(_priority_queue);
+												foreach (long redo in redo_list)
+												{
+													queued_weight = _priority_queue.Weight(redo);
+													CHVertex redo_vertex = _target.GetCHVertex(redo);
+													new_weight = this.CalculateWeight(_current_level, redo_vertex);
+													_priority_queue.Enqueue(redo, new_weight);
+												}
+												_k = 0;
+											}
+										}
+
                 }
                 else
                 { // dequeue the vertex
                     _priority_queue.Pop();
                 }
             }
-            return -1;
+            return null;
         }
 
         /// <summary>
         /// Contracts the given vertex.
         /// </summary>
         /// <param name="vertex_id"></param>
-        public void Contract(long vertex_id)
+        public void Contract(CHVertex vertex)
         {
             CHLocalCache local_cache = new CHLocalCache();
 
             // adjust the level of the vertex.
-            CHVertex vertex = _target.GetCHVertex(vertex_id);
             vertex.Level = _current_level; // set the level.
             _target.PersistCHVertex(vertex);
+						
+						long vertex_id = vertex.Id;
 
             // increas(e the level.
             _current_level++;
@@ -240,10 +277,10 @@ namespace Osm.Routing.CH.PreProcessing
                 CHVertex from_vertex = local_cache.Get(_target, from.Id);
 
                 // remove the neighbours.
-                foreach (CHVertexNeighbour n in
-                    from_vertex.ForwardNeighbours.Where<CHVertexNeighbour>(n => n.Id == vertex_id))
+                foreach(CHVertexNeighbour n in from_vertex.ForwardNeighbours.Where<CHVertexNeighbour>(n => n.Id == vertex_id))
                 {
                     this.NotifyRemove(from_vertex.Id, n.Id);
+										_target.DeleteNeighbour(from_vertex, n, true);
                 }
                 from_vertex.ForwardNeighbours.RemoveAll(n => n.Id == vertex_id);
 
@@ -252,26 +289,26 @@ namespace Osm.Routing.CH.PreProcessing
                     // notify contracted neighbour.
                     // get the from vertex.
                     CHVertex to_vertex = local_cache.Get(_target, to.Id);
-                    foreach (CHVertexNeighbour n in
-                        to_vertex.BackwardNeighbours.Where<CHVertexNeighbour>(n => n.Id == vertex_id))
+                    foreach (CHVertexNeighbour n in to_vertex.BackwardNeighbours.Where<CHVertexNeighbour>(n => n.Id == vertex_id))
                     {
                         this.NotifyRemove(from_vertex.Id, n.Id);
+												_target.DeleteNeighbour(from_vertex, n, false);
                     }
-                    to_vertex.BackwardNeighbours.RemoveAll(n => n.Id == vertex_id);
+                		to_vertex.BackwardNeighbours.RemoveAll(n => n.Id == vertex_id);
 
                     if (from.Id != to.Id)
                     { // the nodes are different.
                         double weight = to.Weight + from.Weight;
 
                         // test for a witness.
-                        if (!_witness_calculator.Exists(_current_level, from.Id,
-                            to.Id, vertex_id, weight))
+                        if (!_witness_calculator.Exists(_current_level, from.Id, to.Id, vertex_id, weight))
                         {
                             CHVertexNeighbour forward_neighbour = new CHVertexNeighbour();
                             forward_neighbour.ContractedVertexId = vertex_id;
                             forward_neighbour.Id = to.Id;
                             forward_neighbour.Weight = to.Weight + from.Weight;
                             from_vertex.ForwardNeighbours.Add(forward_neighbour);
+														_target.PersistCHVertexNeighbour(from_vertex, forward_neighbour, true);
                             this.NotifyArc(from.Id, to.Id);
 
                             CHVertexNeighbour backward_neighbour = new CHVertexNeighbour();
@@ -279,6 +316,7 @@ namespace Osm.Routing.CH.PreProcessing
                             backward_neighbour.Id = from.Id;
                             backward_neighbour.Weight = to.Weight + from.Weight;
                             to_vertex.BackwardNeighbours.Add(backward_neighbour);
+														_target.PersistCHVertexNeighbour(to_vertex, backward_neighbour, false);
                             this.NotifyArc(to.Id, from.Id);
                         }
                     }
@@ -286,15 +324,14 @@ namespace Osm.Routing.CH.PreProcessing
                 }
             }
 
-            // notify a contracted neighbour.
-            _calculator.NotifyContracted(vertex);
+						// notify a contracted neighbour.
+						_calculator.NotifyContracted(vertex);
 
             // notify neighbours
             foreach (CHVertex neighbour in local_cache.Vertices)
             {
                 // persist the result(s).
-                _target.PersistCHVertex(neighbour);
-
+								_target.PersistCHVertex(neighbour);
                 // re-calculate the neighbours.
                 //this.QueueNode(neighbour);
             }
@@ -313,180 +350,181 @@ namespace Osm.Routing.CH.PreProcessing
 
         #endregion
 
-        #region Queue
+				#region Queue
 
-        /// <summary>
-        /// Holds the priority queue.
-        /// </summary>
-        private CHPriorityQueue _priority_queue;
+				/// <summary>
+				/// Holds the priority queue.
+				/// </summary>
+				private CHPriorityQueue _priority_queue;
 
-        /// <summary>
-        /// Returns the current priority queue.
-        /// </summary>
-        public CHPriorityQueue Queue
-        {
-            get
-            {
-                return _priority_queue;
-            }
-        }
+				/// <summary>
+				/// Returns the current priority queue.
+				/// </summary>
+				public CHPriorityQueue Queue
+				{
+					get
+					{
+						return _priority_queue;
+					}
+				}
 
-        ///// <summary>
-        ///// Queue the given vertex.
-        ///// </summary>
-        ///// <param name="vertex_id"></param>
-        //private void QueueNode(long vertex_id)
-        //{
-        //    this.QueueNode(_target.GetCHVertex(vertex_id));
-        //}
-        
-        ///// <summary>
-        ///// Queue the given vertex.
-        ///// </summary>
-        ///// <param name="vertex"></param>
-        //private void QueueNode(CHVertex vertex)
-        //{
-        //    if (vertex.Level == int.MaxValue)
-        //    {
-        //        double weight = _calculator.Calculate(_current_level, vertex);
+				///// <summary>
+				///// Queue the given vertex.
+				///// </summary>
+				///// <param name="vertex_id"></param>
+				//private void QueueNode(long vertex_id)
+				//{
+				//    this.QueueNode(_target.GetCHVertex(vertex_id));
+				//}
 
-        //        _priority_queue.Enqueue(vertex.Id, weight);
-        //    }
-        //}
+				///// <summary>
+				///// Queue the given vertex.
+				///// </summary>
+				///// <param name="vertex"></param>
+				//private void QueueNode(CHVertex vertex)
+				//{
+				//    if (vertex.Level == int.MaxValue)
+				//    {
+				//        double weight = _calculator.Calculate(_current_level, vertex);
 
-        #endregion
+				//        _priority_queue.Enqueue(vertex.Id, weight);
+				//    }
+				//}
 
-        #region Notifications
+				#endregion
 
-        /// <summary>
-        /// The delegate for arc notifications.
-        /// </summary>
-        /// <param name="from_id"></param>
-        /// <param name="to_id"></param>
-        public delegate void ArcDelegate(long from_id, long to_id);
+				#region Notifications
 
-        /// <summary>
-        /// The event.
-        /// </summary>
-        public event ArcDelegate NotifyArcEvent;
+				/// <summary>
+				/// The delegate for arc notifications.
+				/// </summary>
+				/// <param name="from_id"></param>
+				/// <param name="to_id"></param>
+				public delegate void ArcDelegate(long from_id, long to_id);
 
-        /// <summary>
-        /// Notifies a new arc.
-        /// </summary>
-        /// <param name="from_id"></param>
-        /// <param name="to_id"></param>
-        private void NotifyArc(long from_id, long to_id)
-        {
-            if (this.NotifyArcEvent != null)
-            {
-                this.NotifyArcEvent(from_id, to_id);
-            }
-        }
-        /// <summary>
-        /// The event.
-        /// </summary>
-        public event ArcDelegate NotifyRemoveEvent;
+				/// <summary>
+				/// The event.
+				/// </summary>
+				public event ArcDelegate NotifyArcEvent;
 
-        /// <summary>
-        /// Notifies an arc removal.
-        /// </summary>
-        /// <param name="from_id"></param>
-        /// <param name="to_id"></param>
-        private void NotifyRemove(long from_id, long to_id)
-        {
-            if (this.NotifyRemoveEvent != null)
-            {
-                this.NotifyRemoveEvent(from_id, to_id);
-            }
-        }
+				/// <summary>
+				/// Notifies a new arc.
+				/// </summary>
+				/// <param name="from_id"></param>
+				/// <param name="to_id"></param>
+				private void NotifyArc(long from_id, long to_id)
+				{
+					if (this.NotifyArcEvent != null)
+					{
+						this.NotifyArcEvent(from_id, to_id);
+					}
+				}
+				/// <summary>
+				/// The event.
+				/// </summary>
+				public event ArcDelegate NotifyRemoveEvent;
+
+				/// <summary>
+				/// Notifies an arc removal.
+				/// </summary>
+				/// <param name="from_id"></param>
+				/// <param name="to_id"></param>
+				private void NotifyRemove(long from_id, long to_id)
+				{
+					if (this.NotifyRemoveEvent != null)
+					{
+						this.NotifyRemoveEvent(from_id, to_id);
+					}
+				}
 
 
-        #endregion
+				#endregion
 
         #region Updates
 
-        /// <summary>
-        /// Holds a simple source data.
-        /// </summary>
-        private ISimpleSourceData _simple_source_data;
+				/// <summary>
+				/// Holds a simple source data.
+				/// </summary>
+				private ISimpleSourceData _simple_source_data;
 
-        #region Nodes
+				#region Nodes
 
-        /// <summary>
-        /// Processes a node.
-        /// </summary>
-        /// <param name="node"></param>
-        /// <param name="change"></param>
-        public void Process(SimpleNode node, SimpleChangeType change)
-        {
-            switch (change)
-            {
-                case SimpleChangeType.Create:
-                    this.CreateNode(node);
-                    break;
-                case SimpleChangeType.Modify:
-                    this.ModifyNode(node);
-                    break;
-                case SimpleChangeType.Delete:
-                    this.DeleteNode(node);
-                    break;
-            }
-        }
+				/// <summary>
+				/// Processes a node.
+				/// </summary>
+				/// <param name="node"></param>
+				/// <param name="change"></param>
+				public void Process(SimpleNode node, SimpleChangeType change)
+				{
+					switch (change)
+					{
+						case SimpleChangeType.Create:
+							this.CreateNode(node);
+							break;
+						case SimpleChangeType.Modify:
+							this.ModifyNode(node);
+							break;
+						case SimpleChangeType.Delete:
+							this.DeleteNode(node);
+							break;
+					}
+				}
 
-        /// <summary>
-        /// A node was created, process the creation.
-        /// </summary>
-        /// <param name="node"></param>
-        private void CreateNode(SimpleNode node)
-        {
-            _simple_source_data.AddNode(node);
+				/// <summary>
+				/// A node was created, process the creation.
+				/// </summary>
+				/// <param name="node"></param>
+				private void CreateNode(SimpleNode node)
+				{
+					if(_simple_source_data != null)
+						_simple_source_data.AddNode(node);
 
-            // when creating a new node:
-            // create a CHVertex without any neighbours.
-            // the node will be connected later using way modifications.
-            CHVertex vertex = new CHVertex();
-            vertex.Id = node.Id.Value;
-            vertex.Latitude = node.Latitude.Value;
-            vertex.Longitude = node.Longitude.Value;
-            vertex.Level = int.MaxValue; // start at the highest possible level.
+					// when creating a new node:
+					// create a CHVertex without any neighbours.
+					// the node will be connected later using way modifications.
+					CHVertex vertex = new CHVertex();
+					vertex.Id = node.Id.Value;
+					vertex.Latitude = node.Latitude.Value;
+					vertex.Longitude = node.Longitude.Value;
+					vertex.Level = int.MaxValue; // start at the highest possible level.
 
-            _target.PersistCHVertex(vertex);
-        }
+					_target.PersistCHVertex(vertex);
+				}
 
-        /// <summary>
-        /// A node was deleted, process the deletion.
-        /// </summary>
-        /// <param name="node"></param>
-        private void DeleteNode(SimpleNode node)
-        {
-            _simple_source_data.DeleteNode(node.Id.Value);
+				/// <summary>
+				/// A node was deleted, process the deletion.
+				/// </summary>
+				/// <param name="node"></param>
+				private void DeleteNode(SimpleNode node)
+				{
+					_simple_source_data.DeleteNode(node.Id.Value);
 
-            // when deleting a node:
-            // delete the actual CHVertex without taking into account 
-            // it's neighbours referencing it.
-            // the node will be remove from the neighbours list uwing way modifications.
-            _target.DeleteCHVertex(node.Id.Value);
-        }
+					// when deleting a node:
+					// delete the actual CHVertex without taking into account 
+					// it's neighbours referencing it.
+					// the node will be remove from the neighbours list uwing way modifications.
+					_target.DeleteCHVertex(node.Id.Value);
+				}
 
-        /// <summary>
-        /// A node was modified, process the modifications.
-        /// </summary>
-        /// <param name="node"></param>
-        private void ModifyNode(SimpleNode node)
-        {
-            _simple_source_data.UpdateNode(node);
+				/// <summary>
+				/// A node was modified, process the modifications.
+				/// </summary>
+				/// <param name="node"></param>
+				private void ModifyNode(SimpleNode node)
+				{
+					_simple_source_data.UpdateNode(node);
 
-            // when modifying a node:
-            // update it's position.
-            // other changes will be reflected when using way modifications.
-            CHVertex vertex = _target.GetCHVertex(node.Id.Value);
-            vertex.Latitude = node.Latitude.Value;
-            vertex.Longitude = node.Longitude.Value;
+					// when modifying a node:
+					// update it's position.
+					// other changes will be reflected when using way modifications.
+					CHVertex vertex = _target.GetCHVertex(node.Id.Value);
+					vertex.Latitude = node.Latitude.Value;
+					vertex.Longitude = node.Longitude.Value;
 
-            _target.PersistCHVertex(vertex);
-        }
+					_target.PersistCHVertex(vertex);
+				}
 
-        #endregion
+				#endregion
 
         #region Ways
 
@@ -517,10 +555,10 @@ namespace Osm.Routing.CH.PreProcessing
         /// <param name="way"></param>
         private void CreateWay(SimpleWay way)
         {
-            _simple_source_data.AddWay(way);
-
+						if (_simple_source_data != null)
+							_simple_source_data.AddWay(way);
             RoadTagsInterpreterBase interpreter = new RoadTagsInterpreterBase(way.Tags);
-            if (way.Nodes.Count > 1 && interpreter.IsRoad())
+            if (way.Nodes != null && way.Nodes.Count > 1 && interpreter.IsRoad())
             {
                 bool forward = !(interpreter.IsOneWay() || interpreter.IsOneWayReverse())
                     || interpreter.IsOneWay();
@@ -537,7 +575,7 @@ namespace Osm.Routing.CH.PreProcessing
                         CHVertex current = _target.GetCHVertex(current_id);
                         if (current != null && previous != null)
                         {
-                            float weight = (float)interpreter.Time(VehicleEnum.Car, previous.Location, current.Location);
+														float weight = (float)interpreter.Time(VehicleEnum.Car, previous.Location, current.Location);
 
                             // persist the arc.
                             CHVertexNeighbour arc = new CHVertexNeighbour();
@@ -548,6 +586,7 @@ namespace Osm.Routing.CH.PreProcessing
                             arc.Tags = way.Tags;
                             previous.ForwardNeighbours.Add(arc);
                             this.NotifyArc(previous.Id, arc.Id);
+														_target.PersistCHVertexNeighbour(previous, arc, true);
 
                             // persist the arc.
                             arc = new CHVertexNeighbour();
@@ -558,6 +597,7 @@ namespace Osm.Routing.CH.PreProcessing
                             arc.Tags = way.Tags;
                             current.BackwardNeighbours.Add(arc);
                             this.NotifyArc(current.Id, arc.Id);
+														_target.PersistCHVertexNeighbour(current, arc, false);
                         }
                         previous = current;
                     }
@@ -573,7 +613,7 @@ namespace Osm.Routing.CH.PreProcessing
                         CHVertex current = _target.GetCHVertex(current_id);
                         if (current != null && previous != null)
                         {
-                            float weight = (float)interpreter.Time(VehicleEnum.Car, previous.Location, current.Location);
+													float weight = (float)interpreter.Time(VehicleEnum.Car, previous.Location, current.Location);
 
                             // persist the arc.
                             CHVertexNeighbour arc = new CHVertexNeighbour();
@@ -602,123 +642,123 @@ namespace Osm.Routing.CH.PreProcessing
             }
         }
 
-        /// <summary>
-        /// A way was delete, process it.
-        /// </summary>
-        /// <param name="way"></param>
-        private void DeleteWay(SimpleWay way)
-        {
-            _simple_source_data.DeleteWay(way.Id.Value);
+				/// <summary>
+				/// A way was delete, process it.
+				/// </summary>
+				/// <param name="way"></param>
+				private void DeleteWay(SimpleWay way)
+				{
+					_simple_source_data.DeleteWay(way.Id.Value);
 
-            // initialize the changes list.
-            UpdateList change_list = new UpdateList();
+					// initialize the changes list.
+					UpdateList change_list = new UpdateList();
 
-            // add the nodes to the update list.
-            change_list.AddWay(way);
+					// add the nodes to the update list.
+					change_list.AddWay(way);
 
-            // re-process the nodes in the update list.
-            this.ProcessUpdates(change_list);
-        }
+					// re-process the nodes in the update list.
+					this.ProcessUpdates(change_list);
+				}
 
-        /// <summary>
-        /// A way was modified, process it.
-        /// </summary>
-        /// <param name="way"></param>
-        private void ModifyWay(SimpleWay way)
-        {
-            // get the old way.
-            SimpleWay old_way = _simple_source_data.GetWay(way.Id.Value);
+				/// <summary>
+				/// A way was modified, process it.
+				/// </summary>
+				/// <param name="way"></param>
+				private void ModifyWay(SimpleWay way)
+				{
+					// get the old way.
+					SimpleWay old_way = _simple_source_data.GetWay(way.Id.Value);
 
-            // update way.
-            _simple_source_data.UpdateWay(way);
+					// update way.
+					_simple_source_data.UpdateWay(way);
 
-            // initialize the changes list.
-            UpdateList change_list = new UpdateList();
+					// initialize the changes list.
+					UpdateList change_list = new UpdateList();
 
-            // add the nodes to the update list.
-            change_list.AddWay(way);
-            change_list.AddWay(old_way);
+					// add the nodes to the update list.
+					change_list.AddWay(way);
+					change_list.AddWay(old_way);
 
-            // re-process the nodes in the update list.
-            this.ProcessUpdates(change_list);
-        }
+					// re-process the nodes in the update list.
+					this.ProcessUpdates(change_list);
+				}
 
-        #endregion
+				#endregion
 
-        /// <summary>
-        /// Processes all the updated nodes.
-        /// </summary>
-        /// <param name="change_list"></param>
-        private void ProcessUpdates(UpdateList change_list)
-        {
-            HashSet<long> queue = new HashSet<long>();
-            HashSet<long> settled = new HashSet<long>();
-            HashSet<long> unsettled = new HashSet<long>();
+				/// <summary>
+				/// Processes all the updated nodes.
+				/// </summary>
+				/// <param name="change_list"></param>
+				private void ProcessUpdates(UpdateList change_list)
+				{
+					HashSet<long> queue = new HashSet<long>();
+					HashSet<long> settled = new HashSet<long>();
+					HashSet<long> unsettled = new HashSet<long>();
 
-            // create the queue list.
-            foreach (long node_id in change_list)
-            { // do a search from each node until all non-settled nodes are at level float.MaxValue
-                queue.Add(node_id);
-                settled.Add(node_id);
+					// create the queue list.
+					foreach (long node_id in change_list)
+					{ // do a search from each node until all non-settled nodes are at level float.MaxValue
+						queue.Add(node_id);
+						settled.Add(node_id);
 
-                // loop until the unsettled nodes list is empty.
-                do
-                {
-                    // get the neighbours.
-                    foreach (long neighbours_id in this.GetNeighbours(node_id))
-                    { // add to the unsetteled list.
-                        if (!settled.Contains(neighbours_id))
-                        {
-                            unsettled.Add(neighbours_id);
-                        }
-                    }
+						// loop until the unsettled nodes list is empty.
+						do
+						{
+							// get the neighbours.
+							foreach (long neighbours_id in this.GetNeighbours(node_id))
+							{ // add to the unsetteled list.
+								if (!settled.Contains(neighbours_id))
+								{
+									unsettled.Add(neighbours_id);
+								}
+							}
 
 
-                } while (unsettled.Count > 0);
-            }
+						} while (unsettled.Count > 0);
+					}
 
-            // remove all deleted nodes.
-            foreach (long long_id in change_list)
-            {
-                // get an existing node.
-                SimpleNode node = _simple_source_data.GetNode(long_id);
+					// remove all deleted nodes.
+					foreach (long long_id in change_list)
+					{
+						// get an existing node.
+						SimpleNode node = _simple_source_data.GetNode(long_id);
 
-                if (node == null)
-                { // the node does not exist anymore: delete it.
-                    _target.DeleteCHVertex(long_id);
-                }
-            }
+						if (node == null)
+						{ // the node does not exist anymore: delete it.
+							_target.DeleteCHVertex(long_id);
+						}
+					}
 
-            // queue the changed nodes and update.
+					// queue the changed nodes and update.
 
-        }
+				}
 
-        /// <summary>
-        /// Returns the neighbours for this given node.
-        /// </summary>
-        /// <param name="node_id"></param>
-        private IEnumerable<long> GetNeighbours(long node_id)
-        {
-            throw new NotImplementedException();
-        }
+				/// <summary>
+				/// Returns the neighbours for this given node.
+				/// </summary>
+				/// <param name="node_id"></param>
+				private IEnumerable<long> GetNeighbours(long node_id)
+				{
+					throw new NotImplementedException();
+				}
 
-        /// <summary>
-        /// Process an updated node.
-        /// </summary>
-        /// <param name="long_id"></param>
-        private void ProcessUpdatesForNode(long long_id)
-        {
-            throw new NotImplementedException();
-        }
+				/// <summary>
+				/// Process an updated node.
+				/// </summary>
+				/// <param name="long_id"></param>
+				private void ProcessUpdatesForNode(long long_id)
+				{
+					throw new NotImplementedException();
+				}
 
         #endregion
     }
 
-    internal class UpdateList : List<long>
-    {
-        public void AddWay(SimpleWay way)
-        {
-            this.AddRange(way.Nodes);
-        }
-    }
+		internal class UpdateList : List<long>
+		{
+			public void AddWay(SimpleWay way)
+			{
+				this.AddRange(way.Nodes);
+			}
+		}
 }

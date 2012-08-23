@@ -162,6 +162,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reverse\v1\reverse.cs">
+      <DependentUpon>reverse.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Search\SearchDocument.cs" />
     <Compile Include="Search\v1\search.cs">
       <DependentUpon>search.xsd</DependentUpon>
@@ -173,6 +176,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Reverse\v1\reverse.xsd" />
     <None Include="Search\v1\search.xsc">
       <DependentUpon>search.xsd</DependentUpon>
     </None>

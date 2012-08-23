@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 
@@ -7,6 +8,12 @@ namespace Tools.GeoCoding.Nomatim
 {
     public class GeoCoderQuery : IGeoCoderQuery
     {
+		/// <summary>
+		/// The url of the nomatim service.
+		/// </summary>
+		//private static string _GEOCODER_URL = "http://nominatim.openstreetmap.org/search?q={0}&format=xml&polygon=1&addressdetails=1";
+		private static string _GEOCODER_URL = ConfigurationManager.AppSettings["NomatimAddress"] + "&format=xml&polygon=1&addressdetails=1";
+
         private string _country;
         private string _postal_code;
         private string _commune;
@@ -43,7 +50,7 @@ namespace Tools.GeoCoding.Nomatim
                 builder.Append(" ");
                 builder.Append(_country);
                 builder.Append(" ");
-                return builder.ToString();
+				return string.Format(System.Globalization.CultureInfo.InvariantCulture, _GEOCODER_URL, builder);
             }
         }
 

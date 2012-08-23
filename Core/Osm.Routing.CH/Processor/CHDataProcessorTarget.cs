@@ -62,8 +62,7 @@ namespace Osm.Routing.CH.Processor
         {
             _pre_processor.Process(way, SimpleChangeType.Create);
 
-            if (way.Tags != null && 
-                way.Tags.ContainsKey("highway"))
+            if (way.Nodes != null && way.Tags != null && way.Tags.ContainsKey("highway"))
             {
                 foreach (long id in way.Nodes)
                 {
@@ -82,6 +81,11 @@ namespace Osm.Routing.CH.Processor
         {
             _pre_processor.Start(_highway_nodes.GetEnumerator());
         }
+
+				public void Start()
+				{
+					_pre_processor.Start();
+				}
 
         public HashSet<long> ProcessedNodes
         {

@@ -162,6 +162,10 @@
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
       <Name>Osm.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Osm.Data.SQLite\Osm.Data.SQLite.csproj">
+      <Project>{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}</Project>
+      <Name>Osm.Data.SQLite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Osm.Data.XML\Osm.Data.XML.csproj">
       <Project>{18254C55-15C8-4438-9F92-B3B78E2720F5}</Project>
       <Name>Osm.Data.XML</Name>

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Net;
 using Tools.Xml;
+using Tools.Xml.Nomatim.Reverse.v1;
 using Tools.Xml.Sources;
 using Tools.Xml.Nomatim.Search;
 using Tools.Xml.Nomatim.Search.v1;
@@ -13,11 +14,6 @@ namespace Tools.GeoCoding.Nomatim
 {
     public class GeoCoder : IGeoCoder
     {
-        /// <summary>
-        /// The url of the nomatim service.
-        /// </summary>
-        //private static string _GEOCODER_URL = "http://nominatim.openstreetmap.org/search?q={0}&format=xml&polygon=1&addressdetails=1";
-        private static string _GEOCODER_URL = ConfigurationManager.AppSettings["NomatimAddress"] + "&format=xml&polygon=1&addressdetails=1";
 
         /// <summary>
         /// Holds the web client used to access the nomatim service.
@@ -50,6 +46,11 @@ namespace Tools.GeoCoding.Nomatim
             return new GeoCoderQuery(country, postal_code, commune, street, house_number);
         }
 
+				public IGeoCoderQuery CreateReverseQuery(string url, double lat, double lon)
+    	{
+    		return new ReverseQuery(url, lat, lon);
+    	}
+
         /// <summary>
         /// Geocodes and returns the result.
         /// </summary>
@@ -58,7 +59,7 @@ namespace Tools.GeoCoding.Nomatim
         public IGeoCoderResult Code(IGeoCoderQuery query)
         {
             // the request url.
-            string url =string.Format(_GEOCODER_URL,query.Query);
+            string url = query.Query;
 
             // create the source and get the xml.
             IXmlSource source = this.DownloadXml(url);
@@ -73,8 +74,7 @@ namespace Tools.GeoCoding.Nomatim
             if (search_doc.Search is Tools.Xml.Nomatim.Search.v1.searchresults)
             {
                 searchresults result_v1 = search_doc.Search as Tools.Xml.Nomatim.Search.v1.searchresults;
-                if (result_v1.place != null 
-                    && result_v1.place.Length > 0)
+                if (result_v1.place != null && result_v1.place.Length > 0)
                 {
                     double latitude;
                     double longitude;
@@ -84,6 +84,7 @@ namespace Tools.GeoCoding.Nomatim
                     {
                         res.Latitude = latitude;
                         res.Longitude = longitude;
+                    		res.Text = result_v1.place[0].display_name;
 
                         switch (result_v1.place[0].@class)
                         {
@@ -108,6 +109,24 @@ namespace Tools.GeoCoding.Nomatim
                     }
                 }
             }
+						else if (search_doc.Search is Tools.Xml.Nomatim.Reverse.v1.reversegeocode)
+						{
+							reversegeocode result_v1 = search_doc.Search as Tools.Xml.Nomatim.Reverse.v1.reversegeocode;
+							if (result_v1.result != null && result_v1.result.Length > 0)
+							{
+								double latitude;
+								double longitude;
+
+								if (double.TryParse(result_v1.result[0].lat, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out latitude)
+										&& double.TryParse(result_v1.result[0].lon, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out longitude))
+								{
+									res.Latitude = latitude;
+									res.Longitude = longitude;
+									res.Text = result_v1.result[0].Value;
+									res.Accuracy = AccuracyEnum.UnkownLocationLevel;
+								}
+							}
+						}
 
             return res;
         }

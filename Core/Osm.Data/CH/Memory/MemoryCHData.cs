@@ -61,7 +61,12 @@ namespace Osm.Data.Core.CH.Memory
             return vertices_in_box;
         }
 
-        /// <summary>
+    	public IEnumerable<CHVertex> GetCHVerticesNoLevel()
+    	{
+    		return _ch_vertices.Values.Where(vertex => vertex.Level == int.MaxValue);
+    	}
+
+    	/// <summary>
         /// Persists a given vertex.
         /// </summary>
         /// <param name="vertex"></param>
@@ -70,7 +75,7 @@ namespace Osm.Data.Core.CH.Memory
             _ch_vertices[vertex.Id] = vertex;
         }
 
-        /// <summary>
+    		/// <summary>
         /// Deletes the vertex with the given id.
         /// </summary>
         /// <param name="id"></param>
@@ -79,6 +84,21 @@ namespace Osm.Data.Core.CH.Memory
             _ch_vertices.Remove(id);
         }
 
-        #endregion
+			public void PersistCHVertexNeighbour(CHVertex vertex, CHVertexNeighbour arc, bool forward)
+			{
+				//vertex in memory, not need update
+			}
+
+    	public void DeleteNeighbours(long vertexid)
+    	{
+				//vertex in memory, not need update
+    	}
+
+    	public void DeleteNeighbour(CHVertex vertex, CHVertexNeighbour neighbour, bool forward)
+    	{
+				//vertex in memory, not need update
+    	}
+
+    	#endregion
     }
 }

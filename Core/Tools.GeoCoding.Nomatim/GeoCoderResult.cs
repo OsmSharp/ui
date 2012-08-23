@@ -21,6 +21,8 @@ namespace Tools.GeoCoding.Nomatim
             set;
         }
 
+    		public string Text { get; set;  }
+
         public AccuracyEnum Accuracy
         {
             get;

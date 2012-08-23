@@ -6,10 +6,11 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Osm.Data.Oracle.CH;
+using Osm.Data.SQLite.Raw.Processor;
 using Osm.Map.Layers.Tiles;
 using Osm.Routing.Core.Route.Map;
 using Osm.Map.Layers.Custom;
-using Tools.Math.Geo;
 using System.Threading;
 using Osm.Data.Core.CH;
 using Osm.Routing.CH.PreProcessing;
@@ -23,6 +24,7 @@ using Osm.Renderer.Gdi.Targets.UserControlTarget;
 using Osm.Data.Core.CH.Primitives;
 using Osm.Routing.Core.Route;
 using Osm.Map.Elements;
+using Tools.Math.Geo;
 using Tools.Xml.Sources;
 using Osm.Data.Raw.XML.OsmSource;
 
@@ -118,91 +120,106 @@ namespace OsmRouting.CH.Demo
         /// </summary>
         private void DoCalculation()
         {
-            System.Threading.Thread.Sleep(20000);
 
-            _arcs = new Dictionary<long, Dictionary<long, IElement>>();
+        	System.Threading.Thread.Sleep(20000);
 
-            string xml = "wechel.osm"; // the xml data source file.
-            //string xml = "matrix.osm"; // the xml data source file.
-            //string xml = "eeklo.osm"; // the xml data source file.
-            //string xml = "moscow.osm"; // the xml data source file.
+        	_arcs = new Dictionary<long, Dictionary<long, IElement>>();
 
-            OsmDataSource osm_data = new OsmDataSource(
-                new Osm.Core.Xml.OsmDocument(new XmlFileSource(xml)));
-            if (osm_data.HasBoundinBox)
-            {
-                GeoCoordinateBox box = osm_data.BoundingBox;
+        	string xml = "wechel.osm"; // the xml data source file.
+        	//string xml = "matrix.osm"; // the xml data source file.
+        	//string xml = "eeklo.osm"; // the xml data source file.
+        	//string xml = "moscow.osm"; // the xml data source file.
+        	OsmDataSource osm_data = new OsmDataSource(
+        		new Osm.Core.Xml.OsmDocument(new XmlFileSource(xml)));
+        	if (osm_data.HasBoundinBox)
+        	{
+        		GeoCoordinateBox box = osm_data.BoundingBox;
 
-                // show the data bouding box.
-                List<GeoCoordinate> corners = new List<GeoCoordinate>();
-                corners.Add(box.Corners[3]);
-                corners.Add(box.Corners[1]);
-                corners.Add(box.Corners[0]);
-                corners.Add(box.Corners[2]);
+        		// show the data bouding box.
+        		List<GeoCoordinate> corners = new List<GeoCoordinate>();
+        		corners.Add(box.Corners[3]);
+        		corners.Add(box.Corners[1]);
+        		corners.Add(box.Corners[0]);
+        		corners.Add(box.Corners[2]);
 
-                Color box_color = Color.FromArgb(125, Color.Orange);
-                Osm.Map.Elements.ElementPolygon box_element = new Osm.Map.Elements.ElementPolygon(new Tools.Math.Shapes.ShapePolyGonF<GeoCoordinate, GeoCoordinateBox, GeoCoordinateLine>(
-                        Tools.Math.Geo.Factory.PrimitiveGeoFactory.Instance,
-                        corners.ToArray()),
-                        box_color.ToArgb(),
-                        10,
-                        false,
-                        true);
-                _box_layer.AddElement(box_element);
+        		Color box_color = Color.FromArgb(125, Color.Orange);
+        		Osm.Map.Elements.ElementPolygon box_element = new Osm.Map.Elements.ElementPolygon(new Tools.Math.Shapes.ShapePolyGonF<GeoCoordinate, GeoCoordinateBox, GeoCoordinateLine>(
+        		                                                                                  	Tools.Math.Geo.Factory.PrimitiveGeoFactory.Instance,
+        		                                                                                  	corners.ToArray()),
+        		                                                                                  box_color.ToArgb(),
+        		                                                                                  10,
+        		                                                                                  false,
+        		                                                                                  true);
+        		_box_layer.AddElement(box_element);
 
-                this.mapEditorUserControl.Center = box.Center;
-            }
+        		this.mapEditorUserControl.Center = box.Center;
+        	}
 
-            // save the data.
-            _data = new MemoryCHData();
-            _router = new Router(_data);
-            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(_data);
-            INodeWeightCalculator calculator = null;
-            calculator = new Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering.SparseOrdering();
-            //calculator = new EdgeDifference(
-            //    new DykstraWitnessCalculator(_data, 10));
-            CHPreProcessor pre_processor = new CHPreProcessor(_data, calculator, witness_calculator);
-            pre_processor.NotifyArcEvent += new CHPreProcessor.ArcDelegate(pre_processor_NotifyArcEvent);
-            pre_processor.NotifyRemoveEvent += new CHPreProcessor.ArcDelegate(pre_processor_NotifyRemoveEvent);
-            XmlDataProcessorSource source = new XmlDataProcessorSource(xml);
-            _target = new CHDataProcessorTarget(
-                pre_processor);
-            _target.RegisterSource(source);
-            _target.Pull();
-            _nodes = new List<long>(_target.ProcessedNodes);
+        	// save the data.
+        	_data = new MemoryCHData();
+        	_router = new Router(_data);
+        	INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(_data);
+        	INodeWeightCalculator calculator = null;
+        	calculator = new Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering.SparseOrdering();
+        	//calculator = new EdgeDifference(new DykstraWitnessCalculator(_data, 10));
+        	CHPreProcessor pre_processor = new CHPreProcessor(_data, calculator, witness_calculator);
+        	pre_processor.NotifyArcEvent += new CHPreProcessor.ArcDelegate(pre_processor_NotifyArcEvent);
+        	pre_processor.NotifyRemoveEvent += new CHPreProcessor.ArcDelegate(pre_processor_NotifyRemoveEvent);
+        	_target = new CHDataProcessorTarget(pre_processor);
+        	if (true)
+        	{
+        		XmlDataProcessorSource source = new XmlDataProcessorSource(xml);
+        		_target.RegisterSource(source);
+        		_target.Pull();
+        	}
+        	else
+        	{
+        		//testing start without import
+        		_target.Start();
+        	}
 
-            // try routing the data.
-            _router.NotifyCHPathSegmentEvent += new Router.NotifyCHPathSegmentDelegate(_router_NotifyCHPathSegmentEvent);
+        	_nodes = new List<long>(_target.ProcessedNodes);
 
-            // do some random routing.
-            int count = 10000;
-            while (count > 0)
-            {
-                long from = _nodes[Tools.Math.Random.StaticRandomGenerator.Get().Generate(_nodes.Count)];
-                long to = _nodes[Tools.Math.Random.StaticRandomGenerator.Get().Generate(_nodes.Count)];
+        	// try routing the data.
+        	_router.NotifyCHPathSegmentEvent += new Router.NotifyCHPathSegmentDelegate(_router_NotifyCHPathSegmentEvent);
 
-                if (to != from)
-                {
-                    CHVertex vertex1 = _data.GetCHVertex(from);
-                    CHVertex vertex2 = _data.GetCHVertex(to);
+					if (_nodes.Count == 0)
+						return;
 
-                    // calculate the route.
-                    OsmSharpRoute route = _router.Calculate(vertex1, vertex2);
+        	// do some random routing.
+        	int count = 10000;
+        	while (count > 0)
+        	{
+        		long from = _nodes[Tools.Math.Random.StaticRandomGenerator.Get().Generate(_nodes.Count)];
+        		long to = _nodes[Tools.Math.Random.StaticRandomGenerator.Get().Generate(_nodes.Count)];
 
-                    _route_layer.Clear();
-                    _arcs.Clear();
-                    _arcs_layer.Clear();
-                    if (route != null)
-                    {
-                        _route_layer.AddRoute(route, Color.FromArgb(150, Color.Red));
+        		if (to != from)
+        		{
+        			CHVertex vertex1 = _data.GetCHVertex(from);
+        			CHVertex vertex2 = _data.GetCHVertex(to);
 
-                        this.Invoke(new EmptyDelegate(RefreshMap));
-                    }
-                }
-            }
+        			// calculate the route.
+        			OsmSharpRoute route = _router.Calculate(vertex1, vertex2);
+
+        			_route_layer.Clear();
+        			_arcs.Clear();
+        			_arcs_layer.Clear();
+        			if (route != null)
+        			{
+        				_route_layer.AddRoute(route, Color.FromArgb(150, Color.Red));
+
+        				this.Invoke(new EmptyDelegate(RefreshMap));
+        			}
+        			else
+        			{
+        				_route_layer.AddDot(new GeoCoordinate(vertex1.Latitude, vertex1.Longitude));
+        				_route_layer.AddDot(new GeoCoordinate(vertex2.Latitude, vertex2.Longitude));
+        			}
+        		}
+        	}
         }
 
-        /// <summary>
+    	/// <summary>
         /// Handles notifications of the pre-processor.
         /// </summary>
         /// <param name="arc"></param>

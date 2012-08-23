@@ -26,7 +26,7 @@ namespace Osm.Data.Redis.CH
         /// </summary>
         private IRedisTypedClient<CHVertex> _client_ch_vertex = null;
 
-        /// <summary>
+	    	/// <summary>
         /// Persists a CH vertex.
         /// </summary>
         /// <param name="simple"></param>
@@ -116,6 +116,11 @@ namespace Osm.Data.Redis.CH
             return vertices;
         }
 
+				public IEnumerable<CHVertex> GetCHVerticesNoLevel()
+				{
+					throw new NotImplementedException();
+				}
+
         /// <summary>
         /// Deletes a CH vertex.
         /// </summary>
@@ -125,5 +130,25 @@ namespace Osm.Data.Redis.CH
             _client_ch_vertex.DeleteById(
                 CHPrimitiveExtensions.BuildRedisKeySparseSimpleVertex(id));
         }
+
+    	public void DeleteNeighbours(long vertexid)
+    	{
+    		throw new NotImplementedException();
+    	}
+
+    	public void DeleteNeighbour(CHVertex vertex, CHVertexNeighbour neighbour, bool forward)
+    	{
+    		throw new NotImplementedException();
+    	}
+
+    	public void PersistCHVertexNeighbour(CHVertex vertex, CHVertexNeighbour arc, bool forward)
+    	{
+    		throw new NotImplementedException();
+    	}
+
+    	public IEnumerable<CHVertex> GetCHVertices()
+    	{
+    		throw new NotImplementedException();
+    	}
     }
 }

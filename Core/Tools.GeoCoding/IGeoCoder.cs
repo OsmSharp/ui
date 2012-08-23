@@ -26,6 +26,17 @@ namespace Tools.GeoCoding
             string street,
             string house_number);
 
+		/// <summary>
+		/// Creates a new goe coder query.
+		/// </summary>
+		/// <param name="country"></param>
+		/// <param name="postal_code"></param>
+		/// <param name="commune"></param>
+		/// <param name="street"></param>
+		/// <param name="house_number"></param>
+		/// <returns></returns>
+		IGeoCoderQuery CreateReverseQuery(string url, double lat, double lon);
+
         /// <summary>
         /// Geocodes the query.
         /// </summary>
