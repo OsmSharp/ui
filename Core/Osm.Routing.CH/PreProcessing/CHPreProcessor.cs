@@ -585,8 +585,8 @@ namespace Osm.Routing.CH.PreProcessing
                             arc.Weight = weight;
                             arc.Tags = way.Tags;
                             previous.ForwardNeighbours.Add(arc);
-                            this.NotifyArc(previous.Id, arc.Id);
 														_target.PersistCHVertexNeighbour(previous, arc, true);
+                            this.NotifyArc(previous.Id, arc.Id);
 
                             // persist the arc.
                             arc = new CHVertexNeighbour();
@@ -596,8 +596,8 @@ namespace Osm.Routing.CH.PreProcessing
                             arc.Weight = weight;
                             arc.Tags = way.Tags;
                             current.BackwardNeighbours.Add(arc);
-                            this.NotifyArc(current.Id, arc.Id);
 														_target.PersistCHVertexNeighbour(current, arc, false);
+                            this.NotifyArc(current.Id, arc.Id);
                         }
                         previous = current;
                     }
@@ -623,6 +623,7 @@ namespace Osm.Routing.CH.PreProcessing
                             arc.Weight = weight;
                             arc.Tags = way.Tags;
                             previous.ForwardNeighbours.Add(arc);
+														_target.PersistCHVertexNeighbour(previous, arc, true);
                             this.NotifyArc(previous.Id, arc.Id);
 
                             // persist the arc.
@@ -633,6 +634,7 @@ namespace Osm.Routing.CH.PreProcessing
                             arc.Weight = weight;
                             arc.Tags = way.Tags;
                             current.BackwardNeighbours.Add(arc);
+														_target.PersistCHVertexNeighbour(current, arc, false);
                             this.NotifyArc(current.Id, arc.Id);
                         }
 
