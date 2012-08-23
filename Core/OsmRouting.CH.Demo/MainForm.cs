@@ -125,10 +125,10 @@ namespace OsmRouting.CH.Demo
 
         	_arcs = new Dictionary<long, Dictionary<long, IElement>>();
 
-        	string xml = "wechel.osm"; // the xml data source file.
-        	//string xml = "matrix.osm"; // the xml data source file.
+            //string xml = "wechel.osm"; // the xml data source file.
+            //string xml = "matrix.osm"; // the xml data source file.
         	//string xml = "eeklo.osm"; // the xml data source file.
-        	//string xml = "moscow.osm"; // the xml data source file.
+            string xml = "moscow.osm"; // the xml data source file.
         	OsmDataSource osm_data = new OsmDataSource(
         		new Osm.Core.Xml.OsmDocument(new XmlFileSource(xml)));
         	if (osm_data.HasBoundinBox)
@@ -155,16 +155,17 @@ namespace OsmRouting.CH.Demo
         		this.mapEditorUserControl.Center = box.Center;
         	}
 
-        	// save the data.
-        	_data = new MemoryCHData();
+            //_data = new MemoryCHData();
+            _data = new SQLiteCHData(@"Data Source=c:\temp\sqlite_ch.dat;Synchronous=OFF;Journal Mode=MEMORY;");
+
         	_router = new Router(_data);
         	INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(_data);
         	INodeWeightCalculator calculator = null;
         	calculator = new Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering.SparseOrdering();
         	//calculator = new EdgeDifference(new DykstraWitnessCalculator(_data, 10));
         	CHPreProcessor pre_processor = new CHPreProcessor(_data, calculator, witness_calculator);
-        	pre_processor.NotifyArcEvent += new CHPreProcessor.ArcDelegate(pre_processor_NotifyArcEvent);
-        	pre_processor.NotifyRemoveEvent += new CHPreProcessor.ArcDelegate(pre_processor_NotifyRemoveEvent);
+            //pre_processor.NotifyArcEvent += new CHPreProcessor.ArcDelegate(pre_processor_NotifyArcEvent);
+            //pre_processor.NotifyRemoveEvent += new CHPreProcessor.ArcDelegate(pre_processor_NotifyRemoveEvent);
         	_target = new CHDataProcessorTarget(pre_processor);
         	if (true)
         	{
@@ -261,7 +262,7 @@ namespace OsmRouting.CH.Demo
         {
             this.RemoveArc(from_id, to_id);
 
-            this.Invoke(new EmptyDelegate(RefreshMap));
+            //this.Invoke(new EmptyDelegate(RefreshMap));
         }
 
 
