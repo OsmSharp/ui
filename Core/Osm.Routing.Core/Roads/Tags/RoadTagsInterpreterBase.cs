@@ -322,6 +322,14 @@ namespace Osm.Routing.Core.Roads.Tags
             KilometerPerHour pedestrian_speed = 5;
             KilometerPerHour bike_speed = 15;
 
+            // get max-speed tag if any.
+            string max_speed_value = this.GetValue("maxspeed");
+            int max_speed;
+            if (int.TryParse(max_speed_value, out max_speed))
+            {
+                return max_speed; // TODO: maybe return a differend speed profile, max speed is not always the actual speed.
+            }
+
             string highway_type = this.GetValue("highway");
             switch (highway_type)
             {
