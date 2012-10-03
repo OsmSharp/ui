@@ -6,6 +6,7 @@ using Tools.Math.VRP.Core.LocalSearch;
 using Tools.Math.VRP.Core.Routes;
 using Osm.Core;
 using Tools.Math.TSP;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.TSP.RandomizedArbitraryInsertion
 {
@@ -14,7 +15,7 @@ namespace Osm.Routing.Core.TSP.RandomizedArbitraryInsertion
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public class RouteTSPRAI<ResolvedType> : RouterTSP<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Creates a new TSP router;

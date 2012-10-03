@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Osm.Routing.Core.Route;
 using Osm.Core;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.VRP.WithDepot
 {
@@ -12,7 +13,7 @@ namespace Osm.Routing.Core.VRP.WithDepot
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public abstract class RouterDepot<ResolvedType> : RouterVRP<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Creates a VRP router without a depot.

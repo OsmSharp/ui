@@ -3,25 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Osm.Routing.Core;
-using Osm.Data.Core.CH.Primitives;
 using Osm.Routing.Core.Route;
-using Osm.Data.Core.CH;
 using Osm.Routing.Core.Metrics.Time;
 using Tools.Math.Geo;
+using Osm.Data.Core.DynamicGraph;
+using Osm.Routing.CH.PreProcessing;
 
 namespace Osm.Routing.CH.Routing
 {
-    public class Router : IRouter<CHVertex>
+    public class Router : IRouter<CHResolvedPoint>
     {
         private CHRouter _ch_router;
 
-        private ICHData _data;
+        private IDynamicGraph<CHEdgeData> _data;
 
-        public Router(ICHData data)
+        public Router(IDynamicGraph<CHEdgeData> data)
         {
             _data = data;
             _ch_router = new CHRouter(data);
-            _ch_router.NotifyCHPathSegmentEvent += new CHRouter.NotifyCHPathSegmentDelegate(_ch_router_NotifyCHPathSegmentEvent);
+            //_ch_router.NotifyCHPathSegmentEvent += new CHRouter.NotifyCHPathSegmentDelegate(_ch_router_NotifyCHPathSegmentEvent);
         }
 
         public bool SupportsVehicle(VehicleEnum vehicle)
@@ -29,7 +29,7 @@ namespace Osm.Routing.CH.Routing
             return vehicle == VehicleEnum.Car;
         }
 
-        public OsmSharpRoute Calculate(CHVertex source, CHVertex target)
+        public OsmSharpRoute Calculate(CHResolvedPoint source, CHResolvedPoint target)
         {
             if (source != null && target != null)
             {
@@ -42,7 +42,7 @@ namespace Osm.Routing.CH.Routing
             return null;
         }
 
-        public float CalculateWeight(CHVertex source, CHVertex target)
+        public float CalculateWeight(CHResolvedPoint source, CHResolvedPoint target)
         {
             if (source != null && target != null)
             {
@@ -55,7 +55,7 @@ namespace Osm.Routing.CH.Routing
             return float.MaxValue;
         }
 
-        public float[] CalculateOneToManyWeight(CHVertex source, CHVertex[] targets)
+        public float[] CalculateOneToManyWeight(CHResolvedPoint source, CHResolvedPoint[] targets)
         {
             float[] weights = new float[targets.Length];
             for (int idx = 0; idx < targets.Length; idx++)
@@ -65,7 +65,7 @@ namespace Osm.Routing.CH.Routing
             return weights;
         }
 
-        public float[][] CalculateManyToManyWeight(CHVertex[] sources, CHVertex[] targets)
+        public float[][] CalculateManyToManyWeight(CHResolvedPoint[] sources, CHResolvedPoint[] targets)
         {
             return _ch_router.CalculateManyToManyWeights(sources, targets);
 
@@ -77,34 +77,34 @@ namespace Osm.Routing.CH.Routing
             //    {
             //        weights[i][j] = (float)results[i][j];
             //    }
-                
+
             //}
             //return weights;
         }
 
-        public bool CheckConnectivity(CHVertex point, float weight)
+        public bool CheckConnectivity(CHResolvedPoint point, float weight)
         {
             throw new NotImplementedException();
         }
 
-        public bool[] CheckConnectivity(CHVertex[] point, float weight)
+        public bool[] CheckConnectivity(CHResolvedPoint[] point, float weight)
         {
             throw new NotImplementedException();
         }
 
-        public CHVertex ResolveAt(long vertex_id)
-        {
-            return _ch_router.GetCHVertex(vertex_id);
-        }
+        //public CHResolvedPoint ResolveAt(uint vertex_id)
+        //{
+        //    return _ch_router.GetCHVertex(vertex_id);
+        //}
 
-        public CHVertex Resolve(GeoCoordinate coordinate)
+        public CHResolvedPoint Resolve(GeoCoordinate coordinate)
         {
             return _ch_router.Resolve(coordinate);
         }
 
-        public CHVertex[] Resolve(GeoCoordinate[] coordinates)
+        public CHResolvedPoint[] Resolve(GeoCoordinate[] coordinates)
         {
-            CHVertex[] vertices = new CHVertex[coordinates.Length];
+            CHResolvedPoint[] vertices = new CHResolvedPoint[coordinates.Length];
             for (int idx = 0; idx < coordinates.Length; idx++)
             {
                 vertices[idx] = _ch_router.Resolve(coordinates[idx]);
@@ -114,7 +114,7 @@ namespace Osm.Routing.CH.Routing
 
         public GeoCoordinate Search(GeoCoordinate coordinate)
         {
-            CHVertex vertex = this.Resolve(coordinate);
+            CHResolvedPoint vertex = this.Resolve(coordinate);
             if (vertex != null)
             {
                 return vertex.Location;
@@ -133,53 +133,58 @@ namespace Osm.Routing.CH.Routing
         {
             List<RouteVertex> route_list =
                 new List<RouteVertex>();
-            CHVertex to = _data.GetCHVertex(route.VertexId);
+            CHResolvedPoint to = this.GetCHVertex(route.VertexId);
             while (route.From != null)
             {
-                //CHVertex vertex = _data.GetCHVertex(route.From.VertexId);
+                KeyValuePair<uint, CHEdgeData>[] neighbours = this.GetArcs(to.Id);
 
-                //CHVertexNeighbour arc = null;
-                //foreach (CHVertexNeighbour neighbour in vertex.ForwardNeighbours.Where<CHVertexNeighbour>(
-                //    a => a.Id == route.VertexId))
-                //{
-                //    if (arc == null)
-                //    {
-                //        arc = neighbour;
-                //    }
-                //    else if (arc.Weight > neighbour.Weight)
-                //    {
-                //        arc = neighbour;
-                //    }
-                //}
+                KeyValuePair<uint, CHEdgeData> arc = new KeyValuePair<uint,CHEdgeData>();
+                foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
+                    a => a.Value.Backward && a.Key == route.VertexId))
+                {
+                    if (arc.Value == null)
+                    {
+                        arc = neighbour;
+                    }
+                    else if (arc.Value.Weight > neighbour.Value.Weight)
+                    {
+                        arc = neighbour;
+                    }
+                }
 
                 // get the edge by querying the forward neighbours of the from-vertex.
-                CHVertex vertex = _data.GetCHVertex(route.From.VertexId);
+                CHResolvedPoint vertex = this.GetCHVertex(route.From.VertexId);
 
-                // find the edge with lowest weight.
-                CHVertexNeighbour arc = null;
-                foreach (CHVertexNeighbour forward_arc in vertex.ForwardNeighbours.Where<CHVertexNeighbour>(
-                    a => a.Id == route.VertexId))
+                // get the neighbours.
+                neighbours = this.GetArcs(route.From.VertexId);
+
+                //find the edge with lowest weight.
+                foreach (KeyValuePair<uint, CHEdgeData> forward_arc in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
+                    a => a.Value.Forward && a.Key == route.VertexId))
                 {
-                    if (arc == null)
+                    if (arc.Value == null)
                     {
                         arc = forward_arc;
                     }
-                    else if (arc.Weight > forward_arc.Weight)
+                    else if (arc.Value.Weight > forward_arc.Value.Weight)
                     {
                         arc = forward_arc;
                     }
                 }
-                if (arc == null)
+                if (arc.Value == null)
                 {
-                    CHVertex to_vertex = _data.GetCHVertex(route.VertexId);
-                    foreach (CHVertexNeighbour backward in to_vertex.BackwardNeighbours.Where<CHVertexNeighbour>(
-                        a => a.Id == route.From.VertexId))
+                    //CHVertex to_vertex = this.GetCHVertex(route.VertexId);
+
+                    // get the backward neighbours.
+                    neighbours = this.GetArcs(route.From.VertexId);
+                    foreach (KeyValuePair<uint, CHEdgeData> backward in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
+                        a => a.Value.Backward && a.Key == route.From.VertexId))
                     {
-                        if (arc == null)
+                        if (arc.Value == null)
                         {
                             arc = backward;
                         }
-                        else if (arc.Weight > backward.Weight)
+                        else if (arc.Value.Weight > backward.Value.Weight)
                         {
                             arc = backward;
                         }
@@ -187,25 +192,42 @@ namespace Osm.Routing.CH.Routing
                 }
 
                 // add to the route.
-                route_list.Insert(0, new RouteVertex(vertex as CHVertex, arc.Tags));
+                // TODO: get these tags from somewhere or find a better way to generate routing instructions?
+                // probably there is a need to futher abstract the usages of OSM data into a more general format.
+                route_list.Insert(0, new RouteVertex(vertex, new Dictionary<string, string>()));
 
-
-                // get the routes.
+                 //get the routes.
                 route = route.From;
             }
-            CHVertex from = _data.GetCHVertex(route.VertexId);
+            CHResolvedPoint from = this.GetCHVertex(route.VertexId);
 
-            // construct the actual graph route.
+             //construct the actual graph route.
             return this.Generate(from, to, route_list);
+        }
+
+        private KeyValuePair<uint, CHEdgeData>[] GetArcs(uint p)
+        {
+            return _data.GetArcs(p);
+        }
+
+        public CHResolvedPoint GetCHVertex(uint p)
+        {
+            float latitude;
+            float longitude;
+            if(_data.GetVertex(p, out latitude, out longitude))
+            {
+                return new CHResolvedPoint(p, new GeoCoordinate(latitude, longitude));
+            }
+            throw new NotImplementedException();
         }
 
         private class RouteVertex
         {
-            private CHVertex _vertex;
+            private CHResolvedPoint _vertex;
 
             private IDictionary<string, string> _tags;
 
-            public RouteVertex(CHVertex vertex, IDictionary<string, string> tags)
+            public RouteVertex(CHResolvedPoint vertex, IDictionary<string, string> tags)
             {
                 _tags = tags;
 
@@ -216,7 +238,7 @@ namespace Osm.Routing.CH.Routing
             {
                 get
                 {
-                    return _vertex.Latitude;
+                    return _vertex.Location.Latitude;
                 }
             }
 
@@ -224,22 +246,15 @@ namespace Osm.Routing.CH.Routing
             {
                 get
                 {
-                    return _vertex.Longitude;
+                    return _vertex.Location.Longitude;
                 }
             }
         }
 
-        /// <summary>
-        /// Generates an osm sharp route from a graph route.
-        /// </summary>
-        /// <param name="from_point"></param>
-        /// <param name="to_point"></param>
-        /// <param name="route_list"></param>
-        /// <returns></returns>
-        private OsmSharpRoute Generate(CHVertex from_point, CHVertex to_point,
+        private OsmSharpRoute Generate(CHResolvedPoint from_point, CHResolvedPoint to_point,
            List<RouteVertex> route_list)
         {
-            // create the route.
+             //create the route.
             OsmSharpRoute route = null;
 
             if (route_list != null)
@@ -248,28 +263,28 @@ namespace Osm.Routing.CH.Routing
 
                 RoutePointEntry[] entries = this.GenerateEntries(from_point, to_point, route_list);
 
-                // create the from routing point.
+                 //create the from routing point.
                 RoutePoint from = new RoutePoint();
-                //from.Name = from_point.Name;
+                from.Name = from_point.Name;
                 from.Latitude = (float)from_point.Location.Latitude;
                 from.Longitude = (float)from_point.Location.Longitude;
-                //from.Tags = ConvertTo(from_point.Tags);
+                from.Tags = ConvertTo(from_point.Tags);
                 entries[0].Points = new RoutePoint[1];
                 entries[0].Points[0] = from;
 
-                // create the to routing point.
+                 //create the to routing point.
                 RoutePoint to = new RoutePoint();
-                //to.Name = to_point.Name;
+                to.Name = to_point.Name;
                 to.Latitude = (float)to_point.Location.Latitude;
                 to.Longitude = (float)to_point.Location.Longitude;
-                //to.Tags = ConvertTo(to_point.Tags);
+                to.Tags = ConvertTo(to_point.Tags);
                 entries[entries.Length - 1].Points = new RoutePoint[1];
                 entries[entries.Length - 1].Points[0] = to;
 
-                // set the routing points.
+                 ////set the routing points.
                 route.Entries = entries.ToArray();
 
-                // calculate metrics.
+                 //calculate metrics.
                 TimeCalculator calculator = new TimeCalculator();
                 Dictionary<string, double> metrics = calculator.Calculate(route);
                 route.TotalDistance = metrics[TimeCalculator.DISTANCE_KEY];
@@ -283,7 +298,7 @@ namespace Osm.Routing.CH.Routing
         {
             RouteTags[] tags = null;
 
-            if (list.Count > 0)
+            if (list != null && list.Count > 0)
             {
                 tags = new RouteTags[list.Count];
                 for (int idx = 0; idx < list.Count; idx++)
@@ -299,22 +314,15 @@ namespace Osm.Routing.CH.Routing
             return tags;
         }
 
-        /// <summary>
-        /// Generates a list of entries.
-        /// </summary>
-        /// <param name="interpreter"></param>
-        /// <param name="graph_route"></param>
-        /// <param name="graph"></param>
-        /// <returns></returns>
-        private RoutePointEntry[] GenerateEntries(CHVertex from, CHVertex to,
+        private RoutePointEntry[] GenerateEntries(CHResolvedPoint from, CHResolvedPoint to,
             List<RouteVertex> route_list)
         {
-            HashSet<CHVertex> empty = new HashSet<CHVertex>();
+            HashSet<CHResolvedPoint> empty = new HashSet<CHResolvedPoint>();
 
-            // create an entries list.
+             //create an entries list.
             List<RoutePointEntry> entries = new List<RoutePointEntry>();
 
-            // create the first entry.
+             //create the first entry.
             RoutePointEntry first = new RoutePointEntry();
             first.Latitude = (float)from.Location.Latitude;
             first.Longitude = (float)from.Location.Longitude;
@@ -324,23 +332,25 @@ namespace Osm.Routing.CH.Routing
 
             entries.Add(first);
 
-            // create all the other entries except the last one.
+             //create all the other entries except the last one.
             RouteVertex node_previous = route_list[0];
             for (int idx = 1; idx < route_list.Count - 1; idx++)
             {
-                // get all the data needed to calculate the next route entry.
+                 //get all the data needed to calculate the next route entry.
                 RouteVertex node_current = route_list[idx];
                 RouteVertex node_next = route_list[idx + 1];
                 //Way way_current = route_list[idx].Edge;
 
-                // FIRST CALCULATE ALL THE ENTRY METRICS!
+                //FIRST CALCULATE ALL THE ENTRY METRICS!
 
-                // STEP1: Get the names.
-                //string name = _interpreter.GetName(way_current);
-                //Dictionary<string, string> names = _interpreter.GetNamesInAllLanguages(way_current);
+                //STEP1: Get the names.
+                // TODO: work out how to get proper instructions using CH!
+                string name = string.Empty; // _interpreter.GetName(way_current);
+                Dictionary<string, string> names = new Dictionary<string, string>(); //  _interpreter.GetNamesInAllLanguages(way_current);
 
-                // STEP2: Get the side streets
-                //IList<RoutePointEntrySideStreet> side_streets = new List<RoutePointEntrySideStreet>();
+                // TODO: work out how to get proper instructions using CH!
+                // //STEP2: Get the side streets
+                IList<RoutePointEntrySideStreet> side_streets = new List<RoutePointEntrySideStreet>();
                 //Dictionary<long, VertexAlongEdge> neighbours = _graph.GetNeighboursUndirectedWithEdges(node_current.Id, null);
                 //if (neighbours.Count > 2)
                 //{
@@ -363,22 +373,22 @@ namespace Osm.Routing.CH.Routing
                 //    }
                 //}
 
-                // create the route entry.
+                 //create the route entry.
                 RoutePointEntry route_entry = new RoutePointEntry();
                 route_entry.Latitude = (float)node_current.Latitude;
                 route_entry.Longitude = (float)node_current.Longitude;
-                //route_entry.SideStreets = side_streets.ToArray<RoutePointEntrySideStreet>();
-                //route_entry.Tags = RouteTags.ConvertFrom(way_current.Tags);
+                route_entry.SideStreets = side_streets.ToArray<RoutePointEntrySideStreet>();
+                route_entry.Tags = new RouteTags[0]; //route_entry.Tags = RouteTags.ConvertFrom(way_current.Tags);
                 route_entry.Type = RoutePointEntryType.Along;
-                //route_entry.WayFromName = name;
-                //route_entry.WayFromNames = RouteTags.ConvertFrom(names);
+                route_entry.WayFromName = name;
+                route_entry.WayFromNames = RouteTags.ConvertFrom(names);
                 entries.Add(route_entry);
 
-                // set the previous node.
+                 //set the previous node.
                 node_previous = node_current;
             }
 
-            // create the last entry.
+             //create the last entry.
             if (route_list.Count != 0)
             {
                 int last_idx = route_list.Count - 1;
@@ -387,8 +397,8 @@ namespace Osm.Routing.CH.Routing
                 last.Latitude = (float)to.Location.Latitude;
                 last.Longitude = (float)to.Location.Longitude;
                 last.Type = RoutePointEntryType.Stop;
-                //last.WayFromName = _interpreter.GetName(way_last);
-                //last.WayFromNames = RouteTags.ConvertFrom(_interpreter.GetNamesInAllLanguages(way_last));
+                last.WayFromName = string.Empty; //_interpreter.GetName(way_last);
+                last.WayFromNames = new RouteTags[0];//  RouteTags.ConvertFrom(_interpreter.GetNamesInAllLanguages(way_last));
 
                 entries.Add(last);
             }
@@ -397,45 +407,45 @@ namespace Osm.Routing.CH.Routing
             return entries.ToArray();
         }
 
-        #endregion
+       #endregion
 
-        #region Notifications
+    //    #region Notifications
 
-        /// <summary>
-        /// The delegate for arc notifications.
-        /// </summary>
-        /// <param name="arc"></param>
-        /// <param name="contracted_id"></param>
-        public delegate void NotifyCHPathSegmentDelegate(CHPathSegment route);
+    //     <summary>
+    //     The delegate for arc notifications.
+    //     </summary>
+    //     <param name="arc"></param>
+    //     <param name="contracted_id"></param>
+    //    public delegate void NotifyCHPathSegmentDelegate(CHPathSegment route);
 
-        /// <summary>
-        /// The event.
-        /// </summary>
-        public event NotifyCHPathSegmentDelegate NotifyCHPathSegmentEvent;
+    //     <summary>
+    //     The event.
+    //     </summary>
+    //    public event NotifyCHPathSegmentDelegate NotifyCHPathSegmentEvent;
 
-        /// <summary>
-        /// Notifies the arc.
-        /// </summary>
-        /// <param name="arc"></param>
-        /// <param name="contracted_id"></param>
-        private void NotifyCHPathSegment(CHPathSegment route)
-        {
-            if (this.NotifyCHPathSegmentEvent != null)
-            {
-                this.NotifyCHPathSegmentEvent(route);
-            }
-        }
+    //     <summary>
+    //     Notifies the arc.
+    //     </summary>
+    //     <param name="arc"></param>
+    //     <param name="contracted_id"></param>
+    //    private void NotifyCHPathSegment(CHPathSegment route)
+    //    {
+    //        if (this.NotifyCHPathSegmentEvent != null)
+    //        {
+    //            this.NotifyCHPathSegmentEvent(route);
+    //        }
+    //    }
 
-        /// <summary>
-        /// Notify the path segments.
-        /// </summary>
-        /// <param name="route"></param>
-        void _ch_router_NotifyCHPathSegmentEvent(CHPathSegment route)
-        {
-            this.NotifyCHPathSegment(route);
-        }
+    //     <summary>
+    //     Notify the path segments.
+    //     </summary>
+    //     <param name="route"></param>
+    //    void _ch_router_NotifyCHPathSegmentEvent(CHPathSegment route)
+    //    {
+    //        this.NotifyCHPathSegment(route);
+    //    }
 
-        #endregion
+    //    #endregion
 
     }
 }

@@ -7,6 +7,7 @@ using Tools.Math.Units.Time;
 using Osm.Core;
 using Tools.Math.VRP.Core.Routes;
 using Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.VNS
 {
@@ -15,7 +16,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.VNS
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public class VNSSimple<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Holds the router.

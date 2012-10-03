@@ -10,13 +10,14 @@ namespace Osm.Data.Core.Sparse.Primitives
     /// <summary>
     /// A sparse vertex that is a crucial part of the road network.
     /// </summary>
-    public class SparseVertex  : ILocationObject, IEquatable<SparseVertex>
+    public class SparseVertex  : ILocationObject, IEquatable<SparseVertex>, ITaggedObject
     {
         /// <summary>
         /// Creates a new vertex.
         /// </summary>
         public SparseVertex()
         {
+            this.Tags = new List<KeyValuePair<string, string>>();
             this.Coordinates = new double[2];
         }
 
@@ -104,6 +105,11 @@ namespace Osm.Data.Core.Sparse.Primitives
             }
             return this.Id == other.Id;
         }
+
+        /// <summary>
+        /// The tags of this vertex.
+        /// </summary>
+        public List<KeyValuePair<string, string>> Tags { get; private set; }
     }
 
     /// <summary>

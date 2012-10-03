@@ -161,7 +161,7 @@ namespace Osm.Routing.Test.Sparse
             }
 
             // try routing the data.
-            SparseVertex[] vertices = router.Resolve(coordinates.ToArray());
+            SparseResolvedPoint[] vertices = router.Resolve(coordinates.ToArray());
             float[][] weights = router.CalculateManyToManyWeight(vertices, vertices);
         }
 
@@ -202,8 +202,8 @@ namespace Osm.Routing.Test.Sparse
 
             // try routing the data.
             Router router = new Router(data);
-            SparseVertex start = router.Resolve(new GeoCoordinate(51.2679954, 4.801928));
-            SparseVertex stop = router.Resolve(new GeoCoordinate(51.2610122, 4.7807138));
+            SparseResolvedPoint start = router.Resolve(new GeoCoordinate(51.2679954, 4.801928));
+            SparseResolvedPoint stop = router.Resolve(new GeoCoordinate(51.2610122, 4.7807138));
             OsmSharpRoute route = router.Calculate(start, stop);
 
         }
@@ -237,7 +237,7 @@ namespace Osm.Routing.Test.Sparse
 
             // try routing the data.
             Router router = new Router(data);
-            SparseVertex[] vertices = router.Resolve(coordinates.ToArray());
+            SparseResolvedPoint[] vertices = router.Resolve(coordinates.ToArray());
             float[][] weights = router.CalculateManyToManyWeight(vertices, vertices);
         }
 

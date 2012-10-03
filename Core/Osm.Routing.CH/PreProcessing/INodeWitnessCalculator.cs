@@ -14,12 +14,11 @@ namespace Osm.Routing.CH.PreProcessing
         /// <summary>
         /// Return true if a witness exists for the given graph vertex 
         /// </summary>
-        /// <param name="level"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="via"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        bool Exists(int level, long from, long to, long via, double weight);
+        bool Exists(uint from, uint to, uint via, float weight);
     }
 }

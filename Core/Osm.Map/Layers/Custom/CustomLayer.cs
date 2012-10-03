@@ -378,7 +378,7 @@ namespace Osm.Map.Layers.Custom
 
         public ElementText AddText(
             int color,
-            int size,
+            float size,
             string text,
             GeoCoordinate coordinate)
         {

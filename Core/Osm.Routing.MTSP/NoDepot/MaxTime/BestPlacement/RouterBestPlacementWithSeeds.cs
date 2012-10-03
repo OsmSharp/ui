@@ -11,11 +11,12 @@ using Tools.Math.VRP.Core.BestPlacement;
 using Tools.Math.VRP.Core.Routes.ASymmetric;
 using Osm.Core;
 using Tools.Math.VRP.Core.BestPlacement.SeedCustomers;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 {
     public class RouterBestPlacementWithSeeds<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Holds the seed selector.

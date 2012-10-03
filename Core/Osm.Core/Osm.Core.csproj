@@ -185,6 +185,7 @@
     <Compile Include="Filters\Tags\FilterTagMatch.cs" />
     <Compile Include="ILocationObject.cs" />
     <Compile Include="IShapeInterpreter.cs" />
+    <Compile Include="ITaggedObject.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="OsmBaseIdGenerator.cs" />
     <Compile Include="OsmGeo.cs" />

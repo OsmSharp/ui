@@ -169,10 +169,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CH\ICHData.cs" />
-    <Compile Include="CH\Memory\MemoryCHData.cs" />
-    <Compile Include="CH\Primitives\CHArc.cs" />
-    <Compile Include="CH\Primitives\CHVertex.cs" />
+    <Compile Include="DynamicGraph\IDynamicGraph.cs" />
+    <Compile Include="DynamicGraph\IDynamicGraphEdgeData.cs" />
+    <Compile Include="DynamicGraph\Memory\MemoryDynamicGraph.cs" />
     <Compile Include="Processor\ChangeSets\DataProcessorChangeSetFilter.cs" />
     <Compile Include="Processor\ChangeSets\DataProcessorChangeSetSource.cs" />
     <Compile Include="Processor\ChangeSets\DataProcessorChangeSetTarget.cs" />

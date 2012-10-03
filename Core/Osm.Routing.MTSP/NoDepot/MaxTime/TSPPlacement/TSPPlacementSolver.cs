@@ -5,11 +5,12 @@ using System.Text;
 using Osm.Core;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.Units.Time;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement
 {
     public class TSPPlacementSolver<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         private Tools.Math.TSP.ISolver _tsp_solver;
 

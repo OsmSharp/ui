@@ -43,8 +43,10 @@ namespace Osm.Routing.Core.Route.Map
 
                     this.DoForRoute(coordinates, distance_arrow, route_color, width, 16, 18);
                     this.DoForRoute(coordinates, distance_arrow * 4, route_color, width - 1, 14, 16);
-
-                    return this.DoForRoute(coordinates, distance_arrow * 8, route_color, width - 2, 0, 14);
+                    this.DoForRoute(coordinates, distance_arrow * 8, route_color, width - 2, 12, 14);
+                    this.DoForRoute(coordinates, distance_arrow * 16, route_color, width - 2, 10, 12);
+                    return this.DoForRoute(coordinates, distance_arrow * 32, route_color, width - 2, 0, 10);
+                    //return this.DoForRoute(coordinates, distance_arrow * 16, route_color, width - 2, 0, 10);
                 }
             }
 

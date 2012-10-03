@@ -10,11 +10,12 @@ using Tools.Math.VRP.Core.Routes;
 using Tools.Math.VRP.Core.BestPlacement;
 using Tools.Math.VRP.Core.Routes.ASymmetric;
 using Osm.Core;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 {
     public class RouterBestPlacement<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Creates a new best placement min max no depot vrp router.

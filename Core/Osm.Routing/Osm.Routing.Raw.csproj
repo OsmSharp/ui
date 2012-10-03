@@ -198,7 +198,6 @@
     <Compile Include="Graphs\Sparse\SparseGraphEdge.cs" />
     <Compile Include="Graphs\Sparse\SparseGraphInterpreter.cs" />
     <Compile Include="Graphs\VertexAlongEdge.cs" />
-    <Compile Include="IResolveMatcher.cs" />
     <Compile Include="IRoutingProgressConsumer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Router.cs" />

@@ -22,6 +22,7 @@ using Tools.Math.AI.Genetic.Operations.Generation;
 using Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement;
 using Tools.Math.AI.Genetic.Operations.CrossOver;
 using Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Mutation;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
 {
@@ -30,7 +31,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public class RouterGeneticSimple<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Creates a new genetic min max no depot vrp router.

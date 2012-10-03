@@ -173,6 +173,7 @@
     <Compile Include="Geo\Meta\RelativeDirection.cs" />
     <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
     <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
     <Compile Include="IPointF2D.cs" />
     <Compile Include="PrimitiveF2D.cs" />
     <Compile Include="PrimitiveSimpleF2D.cs" />

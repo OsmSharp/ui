@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Osm.Routing.Core.Route;
 using Osm.Core;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.VRP.MTSP
 {
@@ -12,7 +13,7 @@ namespace Osm.Routing.Core.VRP.MTSP
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public abstract class RouterMTSP<ResolvedType> : RouterVRP<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Creates an MTSP Router.

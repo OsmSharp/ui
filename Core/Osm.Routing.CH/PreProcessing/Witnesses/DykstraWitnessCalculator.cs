@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Osm.Routing.CH.Routing;
-using Osm.Data.Core.CH;
+using Osm.Data.Core.DynamicGraph;
 
 namespace Osm.Routing.CH.PreProcessing.Witnesses
 {
@@ -26,7 +26,7 @@ namespace Osm.Routing.CH.PreProcessing.Witnesses
         /// Creates a new witness calculator.
         /// </summary>
         /// <param name="data"></param>
-        public DykstraWitnessCalculator(ICHData data)
+        public DykstraWitnessCalculator(IDynamicGraph<CHEdgeData> data)
         {
             _router = new CHRouter(data);
             _max_settles = int.MaxValue;
@@ -36,7 +36,7 @@ namespace Osm.Routing.CH.PreProcessing.Witnesses
         /// Creates a new witness calculator.
         /// </summary>
         /// <param name="data"></param>
-        public DykstraWitnessCalculator(ICHData data, int max_settles)
+        public DykstraWitnessCalculator(IDynamicGraph<CHEdgeData> data, int max_settles)
         {
             _router = new CHRouter(data);
             _max_settles = max_settles;
@@ -45,12 +45,12 @@ namespace Osm.Routing.CH.PreProcessing.Witnesses
         /// <summary>
         /// Returns true if the given vertex has a witness calculator.
         /// </summary>
-        /// <param name="level"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
+        /// <param name="via"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool Exists(int level, long from, long to, long via, double weight)
+        public bool Exists(uint from, uint to, uint via, float weight)
         {
             return _router.CalculateWeight(from, to, via, weight, _max_settles) <= weight;
         }

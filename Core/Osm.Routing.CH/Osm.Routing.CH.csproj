@@ -151,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Facade.cs" />
+    <Compile Include="PreProcessing\CHEdgeData.cs" />
     <Compile Include="PreProcessing\CHLocalCache.cs" />
     <Compile Include="PreProcessing\CHPreProcessor.cs" />
     <Compile Include="PreProcessing\CHPriorityQueue.cs" />
@@ -166,6 +167,7 @@
     <Compile Include="Routing\CHPriorityQueue.cs" />
     <Compile Include="Routing\CHPathSegment.cs" />
     <Compile Include="Routing\CHQueue.cs" />
+    <Compile Include="Routing\CHResolvedPoint.cs" />
     <Compile Include="Routing\CHRouter.cs" />
     <Compile Include="Routing\ICHVertexMatcher.cs" />
     <Compile Include="Routing\Router.cs" />

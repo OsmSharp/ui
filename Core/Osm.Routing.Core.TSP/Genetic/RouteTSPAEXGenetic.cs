@@ -10,6 +10,7 @@ using Tools.Math.TSP.Genetic;
 using Tools.Math.TSP.EdgeAssemblyGenetic;
 using Tools.Math.TSP.Genetic.Solver.Operations.Generation;
 using Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.TSP.Genetic
 {
@@ -18,7 +19,7 @@ namespace Osm.Routing.Core.TSP.Genetic
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public class RouterTSPAEXGenetic<ResolvedType> : RouterTSP<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Creates a new TSP router;

@@ -17,7 +17,7 @@ namespace Osm.Routing.Sparse.Routing
     /// <summary>
     /// Router for the sparse vertex.
     /// </summary>
-    public class Router : IRouter<SparseVertex>
+    public class Router : IRouter<SparseResolvedPoint>
     {
         /// <summary>
         /// The sparse graph.
@@ -62,7 +62,7 @@ namespace Osm.Routing.Sparse.Routing
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public OsmSharpRoute Calculate(SparseVertex source, SparseVertex target)
+        public OsmSharpRoute Calculate(SparseResolvedPoint source, SparseResolvedPoint target)
         {
             DykstraRouting routing = new DykstraRouting(_graph);
             RouteLinked route = routing.Calculate(source.Id, target.Id);
@@ -75,7 +75,7 @@ namespace Osm.Routing.Sparse.Routing
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public float CalculateWeight(SparseVertex source, SparseVertex target)
+        public float CalculateWeight(SparseResolvedPoint source, SparseResolvedPoint target)
         {
             DykstraRouting routing = new DykstraRouting(_graph);
             RouteLinked route = routing.Calculate(source.Id, target.Id);
@@ -88,7 +88,7 @@ namespace Osm.Routing.Sparse.Routing
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public float[] CalculateOneToManyWeight(SparseVertex source, SparseVertex[] targets)
+        public float[] CalculateOneToManyWeight(SparseResolvedPoint source, SparseResolvedPoint[] targets)
         {
             Dykstra.DykstraRouting routing = new Dykstra.DykstraRouting(_graph);
             long[] tos = new long[targets.Length];
@@ -105,7 +105,7 @@ namespace Osm.Routing.Sparse.Routing
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public float[][] CalculateManyToManyWeight(SparseVertex[] sources, SparseVertex[] targets)
+        public float[][] CalculateManyToManyWeight(SparseResolvedPoint[] sources, SparseResolvedPoint[] targets)
         {
             Dykstra.DykstraRouting routing = new Dykstra.DykstraRouting(_graph);
             long[] froms = new long[sources.Length];
@@ -131,7 +131,7 @@ namespace Osm.Routing.Sparse.Routing
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(SparseVertex point, float weight)
+        public bool CheckConnectivity(SparseResolvedPoint point, float weight)
         {
             Dykstra.DykstraRouting routing = new Dykstra.DykstraRouting(_graph);
             return routing.CheckConnectivity(point.Id, weight);
@@ -143,7 +143,7 @@ namespace Osm.Routing.Sparse.Routing
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool[] CheckConnectivity(SparseVertex[] point, float weight)
+        public bool[] CheckConnectivity(SparseResolvedPoint[] point, float weight)
         {
             bool[] connectivities = new bool[point.Length];
             for (int idx = 0; idx < point.Length; idx++)
@@ -162,7 +162,7 @@ namespace Osm.Routing.Sparse.Routing
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public SparseVertex Resolve(GeoCoordinate coordinate)
+        public SparseResolvedPoint Resolve(GeoCoordinate coordinate)
         {
             return _graph.Resolve(coordinate, 0.0006f, null);
         }
@@ -172,9 +172,9 @@ namespace Osm.Routing.Sparse.Routing
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public SparseVertex[] Resolve(GeoCoordinate[] coordinate)
+        public SparseResolvedPoint[] Resolve(GeoCoordinate[] coordinate)
         {
-            SparseVertex[] resolved_vertices = new SparseVertex[coordinate.Length];
+            SparseResolvedPoint[] resolved_vertices = new SparseResolvedPoint[coordinate.Length];
             for (int idx = 0; idx < coordinate.Length; idx++)
             {
                 resolved_vertices[idx] = this.Resolve(coordinate[idx]);

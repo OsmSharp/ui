@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data.Core.CH.Primitives;
+using Osm.Data.Core.DynamicGraph;
 
 namespace Osm.Routing.CH.PreProcessing.Ordering
 {
@@ -17,9 +17,14 @@ namespace Osm.Routing.CH.PreProcessing.Ordering
         private INodeWitnessCalculator _witness_calculator;
 
         /// <summary>
+        /// Holds the data.
+        /// </summary>
+        private IDynamicGraph<CHEdgeData> _data;
+
+        /// <summary>
         /// Holds the contracted count.
         /// </summary>
-        private Dictionary<long, long> _contraction_count;
+        private Dictionary<uint, short> _contraction_count;
 
         /// <summary>
         /// Holds the depth.
@@ -30,10 +35,11 @@ namespace Osm.Routing.CH.PreProcessing.Ordering
         /// Creates a new edge difference calculator.
         /// </summary>
         /// <param name="graph"></param>
-        public EdgeDifferenceContractedSearchSpace(INodeWitnessCalculator witness_calculator)
+        public EdgeDifferenceContractedSearchSpace(IDynamicGraph<CHEdgeData> data, INodeWitnessCalculator witness_calculator)
         {
+            _data = data;
             _witness_calculator = witness_calculator;
-            _contraction_count = new Dictionary<long, long>();
+            _contraction_count = new Dictionary<uint, short>();
             _depth = new Dictionary<long, long>();
         }
 
@@ -42,33 +48,51 @@ namespace Osm.Routing.CH.PreProcessing.Ordering
         /// </summary>
         /// <param name="u"></param>
         /// <returns></returns>
-        public float Calculate(int level, CHVertex u)
+        public float Calculate(uint vertex)
         {
-            long contracted = 0;
-            _contraction_count.TryGetValue(u.Id, out contracted);
-
             // simulate the construction of new edges.
             int new_edges = 0;
-            int removed = u.BackwardNeighbours.Count + u.ForwardNeighbours.Count;
-            foreach (CHVertexNeighbour from in u.BackwardNeighbours)
+            int removed = 0;
+
+            short contracted = 0;
+            _contraction_count.TryGetValue(vertex, out contracted);
+
+            // get the neighbours.
+            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(vertex);
+
+            foreach (KeyValuePair<uint, CHEdgeData> from in neighbours)
             { // loop over all incoming neighbours
-                foreach (CHVertexNeighbour to in u.ForwardNeighbours)
+                if (!from.Value.Backward) { continue; }
+
+                foreach (KeyValuePair<uint, CHEdgeData> to in neighbours)
                 { // loop over all outgoing neighbours
-                    if (to.Id != from.Id)
+                    if (!to.Value.Forward) { continue; }
+
+                    if (to.Key != from.Key)
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
-                        if (!_witness_calculator.Exists(level, from.Id, to.Id, u.Id,
-                            from.Weight + to.Weight))
+                        if (!_witness_calculator.Exists(from.Key, to.Key, vertex,
+                            from.Value.Weight + to.Value.Weight))
                         { // no witness exists.
                             new_edges++;
                         }
                     }
                 }
+
+                // count the edges.
+                if (from.Value.Forward)
+                {
+                    removed++;
+                }
+                if (from.Value.Backward)
+                {
+                    removed++;
+                }
             }
 
             // get the depth.                    
             long depth = 0;
-            _depth.TryGetValue(u.Id, out depth);
+            _depth.TryGetValue(vertex, out depth);
             //return (new_edges - removed) + (contracted * 3) + depth;
             return (new_edges - removed) + depth;
         }
@@ -77,71 +101,45 @@ namespace Osm.Routing.CH.PreProcessing.Ordering
         /// Notifies this calculator that the vertex was contracted.
         /// </summary>
         /// <param name="vertex_id"></param>
-        public void NotifyContracted(CHVertex vertex)
+        public void NotifyContracted(uint vertex)
         {
-            _contraction_count.Remove(vertex.Id);
+            // removes the contractions count.
+            _contraction_count.Remove(vertex);
 
-            foreach (CHVertexNeighbour neighbour in vertex.ForwardNeighbours)
+            // loop over all neighbours.
+            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(vertex);
+            foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
             {
-                long count;
-                if (!_contraction_count.TryGetValue(neighbour.Id, out count))
+                short count;
+                if (!_contraction_count.TryGetValue(neighbour.Key, out count))
                 {
-                    _contraction_count[neighbour.Id] = 1;
+                    _contraction_count[neighbour.Key] = 1;
                 }
                 else
                 {
-                    _contraction_count[neighbour.Id] = count++;
-                }
-            }
-
-            foreach (CHVertexNeighbour neighbour in vertex.BackwardNeighbours)
-            {
-                long count;
-                if (!_contraction_count.TryGetValue(neighbour.Id, out count))
-                {
-                    _contraction_count[neighbour.Id] = 1;
-                }
-                else
-                {
-                    _contraction_count[neighbour.Id] = count++;
+                    _contraction_count[neighbour.Key] = count++;
                 }
             }
 
             long vertex_depth = 0;
-            _depth.TryGetValue(vertex.Id, out vertex_depth);
-            _depth.Remove(vertex.Id);
+            _depth.TryGetValue(vertex, out vertex_depth);
+            _depth.Remove(vertex);
             vertex_depth++;
 
-            foreach (CHVertexNeighbour neighbour in vertex.ForwardNeighbours)
+            // store the depth.
+            foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
             {
-                if (!_contraction_count.ContainsKey(neighbour.Id))
+                if (!_contraction_count.ContainsKey(neighbour.Key))
                 {
                     long depth = 0;
-                    _depth.TryGetValue(neighbour.Id, out depth);
+                    _depth.TryGetValue(neighbour.Key, out depth);
                     if (vertex_depth > depth)
                     {
-                        _depth[neighbour.Id] = depth;
+                        _depth[neighbour.Key] = depth;
                     }
                     else
                     {
-                        _depth[neighbour.Id] = vertex_depth;
-                    }
-                }
-            }
-                
-            foreach (CHVertexNeighbour neighbour in vertex.BackwardNeighbours)
-            {
-                if (!_contraction_count.ContainsKey(neighbour.Id))
-                {
-                    long depth = 0;
-                    _depth.TryGetValue(neighbour.Id, out depth);
-                    if (vertex_depth > depth)
-                    {
-                        _depth[neighbour.Id] = depth;
-                    }
-                    else
-                    {
-                        _depth[neighbour.Id] = vertex_depth;
+                        _depth[neighbour.Key] = vertex_depth;
                     }
                 }
             }

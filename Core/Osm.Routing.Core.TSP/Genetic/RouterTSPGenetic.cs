@@ -7,6 +7,7 @@ using Tools.Core.Progress;
 using Osm.Core;
 using Tools.Math.TSP;
 using Tools.Math.TSP.Genetic;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.TSP.Genetic
 {
@@ -15,7 +16,7 @@ namespace Osm.Routing.Core.TSP.Genetic
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public class RouterTSPGenetic<ResolvedType> : RouterTSP<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Creates a new TSP router;

@@ -184,6 +184,7 @@
     <Compile Include="Progress\IProgressReporter.cs" />
     <Compile Include="Progress\ProgressStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Range.cs" />
     <Compile Include="Threading\LIFOThreadPool.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>

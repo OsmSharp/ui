@@ -5,94 +5,44 @@ using System.Text;
 using Osm.Data.Core.Processor;
 using Osm.Routing.CH.PreProcessing;
 using Osm.Core.Simple;
+using Osm.Routing.Core.Processor;
+using Tools.Math.Geo;
+using Osm.Routing.Core.Roads.Tags;
+using Osm.Data.Core.DynamicGraph;
 
 namespace Osm.Routing.CH.Processor
 {
     /// <summary>
     /// Data processor target for osm data that will be converted into a Contracted Graph.
     /// </summary>
-    public class CHDataProcessorTarget : DataProcessorTarget
+    public class CHDataProcessorTarget : DynamicGraphDataProcessorTarget<CHEdgeData>
     {
         /// <summary>
-        /// The sparse pre-processor.
+        /// Creates a new CH data processor target.
         /// </summary>
-        private CHPreProcessor _pre_processor;
+        /// <param name="target"></param>
+        public CHDataProcessorTarget(IDynamicGraph<CHEdgeData> target)
+            : base(target)
+        {
+
+        }
 
         /// <summary>
-        /// The highway nodes.
+        /// Calculates edge data.
         /// </summary>
-        private HashSet<long> _highway_nodes;
-
-        /// <summary>
-        /// Creates a CH target with a CH preprocessor.
-        /// </summary>
-        /// <param name="pre_processor"></param>
-        public CHDataProcessorTarget(CHPreProcessor pre_processor)
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="interpreter"></param>
+        /// <returns></returns>
+        protected override CHEdgeData CalculateEdgeData(GeoCoordinate from, GeoCoordinate to,
+            RoadTagsInterpreterBase interpreter)
         {
-            _pre_processor = pre_processor;
-            _highway_nodes = new HashSet<long>();
-        }
+            CHEdgeData data = new CHEdgeData();
+            data.Weight = (float) interpreter.Time(Core.VehicleEnum.Car, from, to);
+            data.Forward = !interpreter.IsOneWayReverse();
+            data.Backward = !interpreter.IsOneWay();
 
-        public override void Initialize()
-        {
-
-        }
-
-        public override void ApplyChange(SimpleChangeSet change)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void AddNode(SimpleNode node)
-        {
-            _pre_processor.Process(node, SimpleChangeType.Create);
-        }
-
-        private int _levels = 0;
-
-        public int Levels
-        {
-            get
-            {
-                return _levels;
-            }
-        }
-
-        public override void AddWay(SimpleWay way)
-        {
-            _pre_processor.Process(way, SimpleChangeType.Create);
-
-            if (way.Nodes != null && way.Tags != null && way.Tags.ContainsKey("highway"))
-            {
-                foreach (long id in way.Nodes)
-                {
-                    _highway_nodes.Add(id);
-                    _levels = _highway_nodes.Count;
-                }
-            }
-        }
-
-        public override void AddRelation(SimpleRelation relation)
-        {
-
-        }
-
-        public override void Close()
-        {
-            _pre_processor.Start(_highway_nodes.GetEnumerator());
-        }
-
-				public void Start()
-				{
-					_pre_processor.Start();
-				}
-
-        public HashSet<long> ProcessedNodes
-        {
-            get
-            {
-                return _highway_nodes;
-            }
+            return data;
         }
     }
 }

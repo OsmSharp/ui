@@ -5,13 +5,14 @@ using System.Text;
 using Osm.Routing.Sparse.Routing.Graph;
 using Tools.Math.Geo;
 using Osm.Data.Core.Sparse.Primitives;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Sparse.Routing
 {
     /// <summary>
     /// Represents a resolved point.
     /// </summary>
-    internal class SparseResolvedPoint : SparseVertex
+    public class SparseResolvedPoint : SparseVertex, IResolvedPoint
     {
         /// <summary>
         /// The id of this resolved point.
@@ -62,6 +63,22 @@ namespace Osm.Routing.Sparse.Routing
             _weight1 = weight1;
             _neighbour2 = neighbour2;
             _weight2 = weight2;
+        }
+
+        /// <summary>
+        /// Creates a resolved point from an existing vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        internal SparseResolvedPoint(SparseVertex vertex)
+        {
+            _id = vertex.Id;
+            _location = vertex.Location;
+            _original = vertex.Location;
+
+            _neighbour1 = vertex.Id;
+            _weight1 = 1;
+            _neighbour2 = vertex.Id;
+            _weight2 = 0;
         }
 
         /// <summary>

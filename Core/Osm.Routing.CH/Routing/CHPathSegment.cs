@@ -14,7 +14,7 @@ namespace Osm.Routing.CH.Routing
         /// Creates a vertex not linked to any others.
         /// </summary>
         /// <param name="vertex_id"></param>
-        public CHPathSegment(long vertex_id)
+        public CHPathSegment(uint vertex_id)
         {
             this.VertexId = vertex_id;
             this.Weight = 0;
@@ -27,7 +27,7 @@ namespace Osm.Routing.CH.Routing
         /// <param name="vertex_id"></param>
         /// <param name="weight"></param>
         /// <param name="from"></param>
-        public CHPathSegment(long vertex_id, float weight, CHPathSegment from)
+        public CHPathSegment(uint vertex_id, float weight, CHPathSegment from)
         {
             this.VertexId = vertex_id;
             this.Weight = weight;
@@ -37,7 +37,7 @@ namespace Osm.Routing.CH.Routing
         /// <summary>
         /// The id of this vertex.
         /// </summary>
-        public long VertexId { get; private set; }
+        public uint VertexId { get; private set; }
 
         /// <summary>
         /// The weight from the source vertex.

@@ -7,21 +7,21 @@ namespace Osm.Routing.CH.Routing
 {
     public class CHQueue
     {
-        private Dictionary<long, CHPathSegment> _forward;
+        private Dictionary<uint, CHPathSegment> _forward;
 
-        private Dictionary<long, CHPathSegment> _backward;
+        private Dictionary<uint, CHPathSegment> _backward;
 
-        private Dictionary<long, float> _intersection;
+        private Dictionary<uint, float> _intersection;
 
         public CHQueue()
         {
-            _intersection = new Dictionary<long, float>();
+            _intersection = new Dictionary<uint, float>();
 
-            _forward = new Dictionary<long, CHPathSegment>();
-            _backward = new Dictionary<long, CHPathSegment>();
+            _forward = new Dictionary<uint, CHPathSegment>();
+            _backward = new Dictionary<uint, CHPathSegment>();
         }
 
-        public Dictionary<long, float> Intersection
+        public Dictionary<uint, float> Intersection
         {
             get
             {
@@ -29,7 +29,7 @@ namespace Osm.Routing.CH.Routing
             }
         }
 
-        public Dictionary<long, CHPathSegment> Forward
+        public Dictionary<uint, CHPathSegment> Forward
         {
             get
             {
@@ -37,7 +37,7 @@ namespace Osm.Routing.CH.Routing
             }
         }
 
-        public Dictionary<long, CHPathSegment> Backward
+        public Dictionary<uint, CHPathSegment> Backward
         {
             get
             {

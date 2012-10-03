@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Osm.Core;
 using Osm.Routing.Core.Roads;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Raw.Graphs.Resolver
 {

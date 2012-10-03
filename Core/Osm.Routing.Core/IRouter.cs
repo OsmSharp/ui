@@ -5,6 +5,7 @@ using System.Text;
 using Tools.Math.Geo;
 using Osm.Routing.Core.Route;
 using Osm.Core;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core
 {
@@ -12,7 +13,7 @@ namespace Osm.Routing.Core
     /// Interface representing a router.
     /// </summary>
     public interface IRouter<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         #region Capabilities
 

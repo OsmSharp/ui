@@ -14,6 +14,7 @@ using Tools.Math.Graph.Routing;
 using Osm.Routing.Core.Exceptions;
 using Osm.Routing.Core.Metrics.Time;
 using System;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Raw
 {
@@ -612,7 +613,7 @@ namespace Osm.Routing.Raw
     /// <summary>
     /// Represents a resolved point. A hook for the router to route on.
     /// </summary>
-    public class ResolvedPoint : IPointF2D, ILocationObject
+    public class ResolvedPoint : IPointF2D, IResolvedPoint
     {
         /// <summary>
         /// Creates a new resolved point.

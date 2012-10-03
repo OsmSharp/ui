@@ -103,7 +103,7 @@ namespace Osm.Routing.Sparse.Routing.Graph
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public SparseVertex Resolve(GeoCoordinate coordinate, double search_radius, ISparseVertexMatcher matcher)
+        public SparseResolvedPoint Resolve(GeoCoordinate coordinate, double search_radius, ISparseVertexMatcher matcher)
         {
             // get the delta.
             double delta = search_radius;
@@ -410,7 +410,9 @@ namespace Osm.Routing.Sparse.Routing.Graph
                     }
                 }
             }
-            return result;
+
+            // TODO: update this to the actual sparse resolved point being calculated above.
+            return new SparseResolvedPoint(result);
         }
 
         /// <summary>

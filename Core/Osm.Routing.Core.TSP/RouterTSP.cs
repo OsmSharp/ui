@@ -7,6 +7,7 @@ using Tools.Math.TSP.Problems;
 using Tools.Math.TSP;
 using Tools.Math.VRP.Core.Routes;
 using Osm.Core;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.TSP
 {
@@ -15,7 +16,7 @@ namespace Osm.Routing.Core.TSP
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public abstract class RouterTSP<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Holds the basic router.

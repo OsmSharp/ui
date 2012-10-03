@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using Osm.Routing.Core.Route;
 using Osm.Core;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.VRP
 {
     public abstract class RouterVRP<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Holds the basic router.

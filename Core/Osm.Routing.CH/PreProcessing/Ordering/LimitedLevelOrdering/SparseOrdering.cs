@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data.Core.CH.Primitives;
+using Osm.Data.Core.DynamicGraph;
 
 namespace Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
 {
@@ -14,15 +14,43 @@ namespace Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
     public class SparseOrdering : INodeWeightCalculator
     {
         /// <summary>
+        /// Holds the data source.
+        /// </summary>
+        private IDynamicGraph<CHEdgeData> _data;
+
+        /// <summary>
+        /// Creates a new sparse ordering calculator.
+        /// </summary>
+        /// <param name="data"></param>
+        public SparseOrdering(IDynamicGraph<CHEdgeData> data)
+        {
+            _data = data;
+        }
+        /// <summary>
         /// Calculates the ordering.
         /// </summary>
         /// <param name="level"></param>
         /// <param name="u"></param>
         /// <returns></returns>
-        public float Calculate(int level, CHVertex u)
+        public float Calculate(uint vertex)
         {
-            if (u.BackwardNeighbours.Count == 2 &&
-                u.ForwardNeighbours.Count == 2)
+            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(vertex);
+
+            uint forward = 0, backward = 0;
+            foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
+            {
+                if (neighbour.Value.Forward)
+                {
+                    forward++;
+                }
+                if (neighbour.Value.Backward)
+                {
+                    backward++;
+                }
+            }
+
+            if (forward == 2 &&
+                backward == 2)
             {
                 return -1;
             }
@@ -30,13 +58,14 @@ namespace Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
             {
                 return float.MaxValue;
             }
+            throw new NotImplementedException();
         }
 
         /// <summary>
         /// Do nothing with this here!
         /// </summary>
         /// <param name="vertex"></param>
-        public void NotifyContracted(CHVertex vertex)
+        public void NotifyContracted(uint vertex)
         {
 
         }

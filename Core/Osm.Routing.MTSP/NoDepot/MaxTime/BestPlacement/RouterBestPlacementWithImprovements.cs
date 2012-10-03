@@ -10,11 +10,12 @@ using Tools.Math.VRP.Core.Routes.ASymmetric;
 using Osm.Core;
 using Tools.Math.TSP;
 using Osm.Routing.Core.VRP.NoDepot.MaxTime.InterRoute;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 {
     public class RouterBestPlacementWithImprovements<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// The amount of customers to place before applying local improvements.

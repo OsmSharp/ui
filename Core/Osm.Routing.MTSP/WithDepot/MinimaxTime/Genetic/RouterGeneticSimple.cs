@@ -18,6 +18,7 @@ using Tools.Math.Random;
 using System.IO;
 using System.Globalization;
 using Osm.Core;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
 {
@@ -26,7 +27,7 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public class RouterGeneticSimple<ResolvedType> : RouterMinimaxTime<ResolvedType>
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Creates a new genetic min max no depot vrp router.

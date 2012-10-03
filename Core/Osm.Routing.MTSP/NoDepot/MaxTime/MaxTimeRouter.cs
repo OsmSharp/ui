@@ -8,6 +8,7 @@ using Tools.Math.TSP.Problems;
 using Tools.Math.Units.Time;
 using Tools.Math.VRP.Core;
 using Tools.Math.VRP.Core.Routes;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
 {
@@ -16,7 +17,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public abstract class RouterMaxTime<ResolvedType> : RouterNoDepot<ResolvedType>, IMaxTimeSolver
-        where ResolvedType : ILocationObject
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
         /// Creates a new min max VRP router.

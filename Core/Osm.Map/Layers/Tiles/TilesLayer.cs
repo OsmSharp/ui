@@ -19,8 +19,6 @@ namespace Osm.Map.Layers.Tiles
 
     /// <summary>
     /// Layer containing tiles from osm.
-    /// 
-    /// WARNING: This layer uses a caching directory.
     /// </summary>
     public class TilesLayer : ILayer
     {
@@ -28,11 +26,6 @@ namespace Osm.Map.Layers.Tiles
         /// The event raised when data or elements in this layer changed.
         /// </summary>
         public event Map.LayerChangedDelegate Changed;
-
-        /// <summary>
-        /// The maximum age of a tile.
-        /// </summary>
-        private TimeSpan? _maximum_tile_file_age;
 
         /// <summary>
         /// The unique id for this layer.
@@ -52,17 +45,12 @@ namespace Osm.Map.Layers.Tiles
         /// <summary>
         /// The zoom offset.
         /// </summary>
-        private float _zoom_offset = 0.5f;
+        private float _zoom_offset = 0;
 
         /// <summary>
         /// The maximum zoom factor.
         /// </summary>
         private int _max_zoom;
-
-        /// <summary>
-        /// The cache directory.
-        /// </summary>
-        private DirectoryInfo _cache_dir;
 
         /// <summary>
         /// Is this layer lazy.
@@ -109,24 +97,15 @@ namespace Osm.Map.Layers.Tiles
             _is_lazy = is_lazy;
             _zoom_offset = zoom_offset;
 
-            // get the cache directory.
-            if (max_tile_age.HasValue)
-            {
-                _cache_dir = new DirectoryInfo(ConfigurationManager.AppSettings["OsmTileCacheFolder"]);
-            }
-
             // holds all tiles already loaded.
             _tiles_cache = new Dictionary<int, IDictionary<int, IDictionary<int, IElement>>>();
 
-            // holds the maximum age of a tile.
-            _maximum_tile_file_age = max_tile_age;
-
             // initialize the stack to hold unloaded tile requests.
             _tiles_to_load_stack = new LimitedStack<ThreadParameterObject>();
-            _tiles_to_load_stack.Limit = 10;
+            _tiles_to_load_stack.Limit = 20;
 
             // initialize the async tile loading.
-            this.InitializeTileLoading(1);
+            this.InitializeTileLoading(5);
             
             // set the min zoom.
             _min_zoom = 1;
@@ -141,7 +120,7 @@ namespace Osm.Map.Layers.Tiles
         /// Creates a new tiles layer.
         /// </summary>
         public TilesLayer(TimeSpan? max_tile_age)
-            : this(true, 0.5f, max_tile_age)
+            : this(true, 0, max_tile_age)
         {
 
         }
@@ -150,7 +129,7 @@ namespace Osm.Map.Layers.Tiles
         /// Creates a new tiles layer.
         /// </summary>
         public TilesLayer()
-            : this(true,0.5f)
+            : this(true, 0)
         {
 
         }
@@ -169,12 +148,11 @@ namespace Osm.Map.Layers.Tiles
         /// Creates a new tiles layer.
         /// </summary>
         public TilesLayer(string tiles_url)
-            : this(true, 0.5f)
+            : this(true, 0)
         {
             _tiles_url = tiles_url;
             _transparency_color = Color.FromArgb(255, 255, 255, 254);
         }
-
 
         /// <summary>
         /// Creates a new tiles layer.
@@ -353,11 +331,6 @@ namespace Osm.Map.Layers.Tiles
         /// </summary>
         private IDictionary<int, IDictionary<int, IDictionary<int, IElement>>> _tiles_cache;
 
-        ///// <summary>
-        ///// Keeps track of requested tiles.
-        ///// </summary>
-        //private IDictionary<int, IDictionary<int, IDictionary<int, bool>>> _requested_tiles;
-
         /// <summary>
         /// Returns all the tile filling the given bounding box.
         /// </summary>
@@ -455,7 +428,8 @@ namespace Osm.Map.Layers.Tiles
                     requests_per_x = new Dictionary<int, IElement>();
                     tiles_per_zoom.Add(x, requests_per_x);
                 }
-                contains = requests_per_x.ContainsKey(y);
+                contains = requests_per_x.ContainsKey(y) &&
+                    requests_per_x[y] != null;
 
                 if (!contains)
                 {
@@ -478,7 +452,6 @@ namespace Osm.Map.Layers.Tiles
                 }
                 return _tiles_cache[zoom][x][y];
             }
-            return null;
         }
 
         /// <summary>
@@ -512,68 +485,68 @@ namespace Osm.Map.Layers.Tiles
         private ElementImage LoadMissingTile(int x, int y, int zoom)
         {
             ElementImage tile = null;
-            if (!_maximum_tile_file_age.HasValue)
-            { // caching is turned off; there is no maximum file age.
+            //if (!_maximum_tile_file_age.HasValue)
+            //{ // caching is turned off; there is no maximum file age.
                 tile = this.LoadMissingTileFromServer(zoom, x, y);
-            }
-            else
-            { // caching is turned on; there is a maximum file age.
-                // check if the tile exists on file.
-                if (!_cache_dir.Exists)
-                {
-                    _cache_dir.Create();
-                }
+            //}
+            //else
+            //{ // caching is turned on; there is a maximum file age.
+            //    // check if the tile exists on file.
+            //    if (!_cache_dir.Exists)
+            //    {
+            //        _cache_dir.Create();
+            //    }
 
-                // create the file name.
-                FileInfo file = new FileInfo(_cache_dir.FullName + string.Format(@"\Osm_{0}_{1}_{2}.png", zoom, x, y));
-                if (file.Exists && (DateTime.Now - file.LastWriteTime) > _maximum_tile_file_age)
-                { // file too old.
-                    file.Delete();
-                    file = new FileInfo(_cache_dir.FullName + string.Format(@"\Osm_{0}_{1}_{2}.png", zoom, x, y));
-                }
-                // file not too old or does not exist.
-                if (!file.Exists)
-                {
-                    try
-                    {
-                        if (x < 0 || y < 0)
-                        {
+            //    // create the file name.
+            //    FileInfo file = new FileInfo(_cache_dir.FullName + string.Format(@"\Osm_{0}_{1}_{2}.png", zoom, x, y));
+            //    if (file.Exists && (DateTime.Now - file.LastWriteTime) > _maximum_tile_file_age)
+            //    { // file too old.
+            //        file.Delete();
+            //        file = new FileInfo(_cache_dir.FullName + string.Format(@"\Osm_{0}_{1}_{2}.png", zoom, x, y));
+            //    }
+            //    // file not too old or does not exist.
+            //    if (!file.Exists)
+            //    {
+            //        try
+            //        {
+            //            if (x < 0 || y < 0)
+            //            {
 
-                        }
-                        else
-                        {
-                            tile = this.LoadMissingTileFromServer(zoom, x, y);
+            //            }
+            //            else
+            //            {
+            //                tile = this.LoadMissingTileFromServer(zoom, x, y);
 
-                            // save the file to the cache.
-                            tile.Image.Save(file.FullName, ImageFormat.Png);
-                        }
-                    }
-                    catch (WebException)
-                    {
+            //                // save the file to the cache.
+            //                //tile.Image.Save(file.FullName, ImageFormat.Png);
+            //            }
+            //        }
+            //        catch (WebException)
+            //        {
 
-                    }
-                    file = null;
-                }
-                else
-                {
-                    try
-                    {
-                        // load the bitmap
-                        Bitmap img = new Bitmap(file.OpenRead());
+            //        }
+            //        file = null;
+            //    }
+            //    else
+            //    {
+            //        try
+            //        {
+            //            // load the bitmap
+            //            Bitmap img = new Bitmap(file.OpenRead());
 
-                        // calculate the tiles bounding box and set its properties.
-                        GeoCoordinate top_left = TileToWorldPos(x, y, zoom);
-                        GeoCoordinate bottom_right = TileToWorldPos(x + 1, y + 1, zoom);
+            //            // calculate the tiles bounding box and set its properties.
+            //            GeoCoordinate top_left = TileToWorldPos(x, y, zoom);
+            //            GeoCoordinate bottom_right = TileToWorldPos(x + 1, y + 1, zoom);
 
-                        // assign it to the tile.
-                        tile = new ElementImage(top_left, bottom_right, img);
-                    }
-                    catch (Exception)
-                    {
+            //            // assign it to the tile.
+            //            tile = new ElementImage(top_left, bottom_right, img);
+            //        }
+            //        catch (Exception)
+            //        {
 
-                    }
-                }
-            }
+            //        }
+            //    }
+            //}
 
             return tile;
         }
@@ -594,8 +567,8 @@ namespace Osm.Map.Layers.Tiles
                 // get file from tile server.
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(
                     url);
-                request.Timeout = 60000;
-                Debug.WriteLine(url);
+                request.Timeout = 1000;
+                //Debug.WriteLine(url);
 
                 WebResponse myResp = request.GetResponse();
 
@@ -763,24 +736,31 @@ namespace Osm.Map.Layers.Tiles
             int x = param_object.x;
             int y = param_object.y;
 
-            Console.WriteLine("Loading {0}_{1}@{2} STACK {3}",
-                x, y, zoom,_tiles_to_load_stack.Count);
-
-            ElementImage tile = this.LoadMissingTile(x, y, zoom);
-
-            // if the tile was found add it to the cache.
-            if (tile != null)
+            // initialize the tile.
+            ElementImage tile = null;
+            try
+            { // try to load the missing tiles.
+                tile = this.LoadMissingTile(x, y, zoom);
+            }
+            catch
             {
-                lock(_tiles_cache)
-                {
-                    _tiles_cache[zoom][x][y] = tile;
-                }
 
-                // raise the change event.
-                if (this.Changed != null)
+            }
+            finally
+            { // if the tile was found add it to the cache.
+                if (tile != null)
                 {
-                    this.Invalidate();
-                    this.Changed(this);
+                    lock (_tiles_cache)
+                    {
+                        _tiles_cache[zoom][x][y] = tile;
+                    }
+
+                    // raise the change event.
+                    if (this.Changed != null)
+                    {
+                        this.Invalidate();
+                        this.Changed(this);
+                    }
                 }
 
                 // remove from the current loading.

@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Routing.Raw
+namespace Osm.Routing.Core.Resolving
 {
+    /// <summary>
+    /// Interface used to match a coordinate to a configurable routable position.
+    /// </summary>
     public interface IResolveMatcher
     {
         /// <summary>
