@@ -215,6 +215,7 @@
     <Compile Include="Structures\KDTree\Tree2DNode.cs" />
     <Compile Include="Structures\QTree\QuadTree.cs" />
     <Compile Include="Structures\QTree\QuadTreeNode.cs" />
+    <Compile Include="Structures\StringTrees\StringTreeDictionary.cs" />
     <Compile Include="Units\Angle\Degree.cs" />
     <Compile Include="Units\Angle\Radian.cs" />
     <Compile Include="Units\Distance\Kilometer.cs" />
