@@ -148,6 +148,7 @@
     <Compile Include="Resolving\IResolveMatcher.cs" />
     <Compile Include="Roads\RoadInterpreter.cs" />
     <Compile Include="Roads\Tags\RoadTagsInterpreterBase.cs" />
+    <Compile Include="RouteNotFoundException.cs" />
     <Compile Include="Route\Gpx\OsmSharpRouteGpx.cs" />
     <Compile Include="Route\Kml\OsmSharpRouteKml.cs" />
     <Compile Include="Route\Map\RouteLayer.cs" />

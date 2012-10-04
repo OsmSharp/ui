@@ -341,7 +341,7 @@ namespace Osm.Routing.Raw
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public ResolvedPoint Resolve(GeoCoordinate coordinate, IResolveMatcher matcher)
+        public ResolvedPoint Resolve(GeoCoordinate coordinate, IResolveMatcher<ResolvedPoint> matcher)
         {
             GraphVertex vertex = null;
             if (matcher == null)
@@ -368,7 +368,7 @@ namespace Osm.Routing.Raw
         /// </summary>
         /// <param name="coordinates"></param>
         /// <returns></returns>
-        public ResolvedPoint[] Resolve(GeoCoordinate[] coordinates, IResolveMatcher matcher)
+        public ResolvedPoint[] Resolve(GeoCoordinate[] coordinates, IResolveMatcher<ResolvedPoint> matcher)
         {
             ResolvedPoint[] resolved_points = new ResolvedPoint[coordinates.Length];
             for (int idx = 0; idx < coordinates.Length; idx++)
@@ -608,6 +608,8 @@ namespace Osm.Routing.Raw
         }
 
         #endregion
+
+
     }
 
     /// <summary>

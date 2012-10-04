@@ -8,8 +8,8 @@
     <ProjectGuid>{5E146436-B64C-4C3A-832E-26A53AA6BA54}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Osm.Routing</RootNamespace>
-    <AssemblyName>Osm.Routing</AssemblyName>
+    <RootNamespace>Osm.Routing.Raw</RootNamespace>
+    <AssemblyName>Osm.Routing.Raw</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -29,7 +29,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\Osm.Routing.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Osm.Routing.Raw.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -43,7 +43,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\Output\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>..\Output\Osm.Routing.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Osm.Routing.Raw.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisLogFile>..\Output\Osm.Routing.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -69,7 +69,7 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-    <DocumentationFile>..\Output\Osm.Routing.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Osm.Routing.Raw.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|AnyCPU'">
     <OutputPath>bin\Release x64\</OutputPath>
@@ -108,7 +108,7 @@
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\Output\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>..\Output\Osm.Routing.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Osm.Routing.Raw.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <CodeAnalysisLogFile>..\Output\Osm.Routing.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -134,7 +134,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\Osm.Routing.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Osm.Routing.Raw.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|x64'">
     <OutputPath>..\Output\</OutputPath>
@@ -149,7 +149,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\Osm.Routing.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Osm.Routing.Raw.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System">

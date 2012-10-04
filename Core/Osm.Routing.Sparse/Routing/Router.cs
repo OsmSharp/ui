@@ -11,6 +11,7 @@ using Tools.Math.Graph.Routing;
 using Osm.Routing.Core.Metrics.Time;
 using Osm.Data.Core.Sparse;
 using Osm.Data.Core.Sparse.Primitives;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Sparse.Routing
 {
@@ -180,6 +181,16 @@ namespace Osm.Routing.Sparse.Routing
                 resolved_vertices[idx] = this.Resolve(coordinate[idx]);
             }
             return resolved_vertices;
+        }
+
+        public SparseResolvedPoint Resolve(GeoCoordinate coordinate, IResolveMatcher<SparseResolvedPoint> matcher)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SparseResolvedPoint[] Resolve(GeoCoordinate[] coordinate, IResolveMatcher<SparseResolvedPoint> matcher)
+        {
+            throw new NotImplementedException();
         }
 
         public GeoCoordinate Search(GeoCoordinate search)
@@ -477,6 +488,5 @@ namespace Osm.Routing.Sparse.Routing
         }
 
         #endregion
-
     }
 }

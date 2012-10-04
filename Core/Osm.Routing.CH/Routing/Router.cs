@@ -8,6 +8,7 @@ using Osm.Routing.Core.Metrics.Time;
 using Tools.Math.Geo;
 using Osm.Data.Core.DynamicGraph;
 using Osm.Routing.CH.PreProcessing;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.CH.Routing
 {
@@ -110,6 +111,16 @@ namespace Osm.Routing.CH.Routing
                 vertices[idx] = _ch_router.Resolve(coordinates[idx]);
             }
             return vertices;
+        }
+
+        public CHResolvedPoint Resolve(GeoCoordinate coordinate, IResolveMatcher<CHResolvedPoint> matcher)
+        {
+            throw new NotImplementedException();
+        }
+
+        public CHResolvedPoint[] Resolve(GeoCoordinate[] coordinate, IResolveMatcher<CHResolvedPoint> matcher)
+        {
+            throw new NotImplementedException();
         }
 
         public GeoCoordinate Search(GeoCoordinate coordinate)
@@ -446,6 +457,8 @@ namespace Osm.Routing.CH.Routing
     //    }
 
     //    #endregion
+
+
 
     }
 }

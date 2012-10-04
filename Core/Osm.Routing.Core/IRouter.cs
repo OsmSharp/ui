@@ -92,11 +92,25 @@ namespace Osm.Routing.Core
         ResolvedType Resolve(GeoCoordinate coordinate);
 
         /// <summary>
+        /// Resolves a point.
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        ResolvedType Resolve(GeoCoordinate coordinate, IResolveMatcher<ResolvedType> matcher);
+
+        /// <summary>
         /// Resolves all the given points.
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
         ResolvedType[] Resolve(GeoCoordinate[] coordinate);
+
+        /// <summary>
+        /// Resolves all the given points.
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        ResolvedType[] Resolve(GeoCoordinate[] coordinate, IResolveMatcher<ResolvedType> matcher);
 
         #region Search
 

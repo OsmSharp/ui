@@ -8,13 +8,14 @@ namespace Osm.Routing.Core.Resolving
     /// <summary>
     /// Interface used to match a coordinate to a configurable routable position.
     /// </summary>
-    public interface IResolveMatcher
+    public interface IResolveMatcher<ResolvedType>
+        where ResolvedType : IResolvedPoint
     {
         /// <summary>
-        /// Returns true if the way is a suitable candidate for the point being resolved.
+        /// Returns true if the point is a suitable candidate as a point being resolved.
         /// </summary>
         /// <param name="way"></param>
         /// <returns></returns>
-        bool MatchName(string name);
+        bool MatchName(ResolvedType point);
     }
 }
