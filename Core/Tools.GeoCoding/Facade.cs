@@ -54,15 +54,12 @@ namespace Tools.GeoCoding
                 _coders.Add(coder_assembly, coder_instance);
             }
 
-            // create the query.
-            IGeoCoderQuery query = coder_instance.CreateQuery(
+            return coder_instance.Code(
                 country,
                 postal_code,
                 commune,
                 street,
                 house_number);
-
-            return coder_instance.Code(query);
         }
     }
 }

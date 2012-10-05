@@ -107,7 +107,7 @@ namespace Tools.Math.Structures.StringTrees
                     if (_lower_node == null)
                     { // there is no lower node; create one.
                         _lower_node = new StringTreeNode(key[idx]);
-                        _lower_node.Add((short)(idx + 1), key, value);
+                        _lower_node.Add(idx, key, value);
                     }
                     else
                     { // add to the lower node.
@@ -120,7 +120,7 @@ namespace Tools.Math.Structures.StringTrees
                     { // there are still other chars left!
                         if (_equal_node == null)
                         { // there is no equal node; create one.
-                            _equal_node = new StringTreeNode(key[idx]);
+                            _equal_node = new StringTreeNode(key[idx + 1]);
                         }
                         // add to the equals node.
                         _equal_node.Add((short)(idx + 1), key, value);
@@ -136,7 +136,7 @@ namespace Tools.Math.Structures.StringTrees
                     if (_higher_node == null)
                     { // there is no higher node; create one.
                         _higher_node = new StringTreeNode(key[idx]);
-                        _higher_node.Add((short)(idx + 1), key, value);
+                        _higher_node.Add(idx, key, value);
                     }
                     else
                     { // add to the lower node.
@@ -168,7 +168,7 @@ namespace Tools.Math.Structures.StringTrees
                     { // there are still other chars left!
                         if (_equal_node != null)
                         { // there is no equal node; create one.
-                            return _equal_node.SearchExact(idx, key);
+                            return _equal_node.SearchExact((short)(idx + 1), key);
                         }
                     }
                     else

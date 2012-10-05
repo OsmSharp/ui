@@ -28,36 +28,18 @@ namespace Tools.GeoCoding.Nomatim
         #region IGeoCoder Members
 
         /// <summary>
-        /// Creates a new geocoder query.
+        /// Geocodes and returns the result.
         /// </summary>
-        /// <param name="country"></param>
-        /// <param name="postal_code"></param>
-        /// <param name="commune"></param>
-        /// <param name="street"></param>
-        /// <param name="house_number"></param>
+        /// <param name="query"></param>
         /// <returns></returns>
-        public IGeoCoderQuery CreateQuery(
+        public IGeoCoderResult Code(
             string country,
             string postal_code,
             string commune,
             string street,
             string house_number)
         {
-            return new GeoCoderQuery(country, postal_code, commune, street, house_number);
-        }
-
-				public IGeoCoderQuery CreateReverseQuery(string url, double lat, double lon)
-    	{
-    		return new ReverseQuery(url, lat, lon);
-    	}
-
-        /// <summary>
-        /// Geocodes and returns the result.
-        /// </summary>
-        /// <param name="query"></param>
-        /// <returns></returns>
-        public IGeoCoderResult Code(IGeoCoderQuery query)
-        {
+            GeoCoderQuery query = new GeoCoderQuery(country, postal_code, commune, street, house_number);
             // the request url.
             string url = query.Query;
 

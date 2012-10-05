@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Tools.GeoCoding.Nomatim
 {
-    public class GeoCoderQuery : IGeoCoderQuery
+    public class GeoCoderQuery
     {
 		/// <summary>
 		/// The url of the nomatim service.

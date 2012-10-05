@@ -113,6 +113,16 @@ namespace Tools.Core
             }
         }
 
-
+        /// <summary>
+        /// Generates a random string.
+        /// </summary>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string RandomString(int length)
+        {
+            byte[] randBuffer = new byte[length];
+            System.Security.Cryptography.RandomNumberGenerator.Create().GetBytes(randBuffer);
+            return System.Convert.ToBase64String(randBuffer).Remove(length);
+        }
     }
 }

@@ -163,7 +163,6 @@
     <Compile Include="AccuracyEnum.cs" />
     <Compile Include="Facade.cs" />
     <Compile Include="IGeoCoder.cs" />
-    <Compile Include="IGeoCoderQuery.cs" />
     <Compile Include="IGeoCoderResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
