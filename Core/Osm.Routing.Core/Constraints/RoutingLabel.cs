@@ -39,6 +39,23 @@ namespace Osm.Routing.Core.Constraints
             private set;
         }
 
+        /// <summary>
+        /// Returns true if equal.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if ((object)obj == null)
+            {
+                return false;
+            }
+            else if (obj is RoutingLabel)
+            {
+                return (obj as RoutingLabel).Label == this.Label;
+            }
+            return false;
+        }
     }
 
     /// <summary>

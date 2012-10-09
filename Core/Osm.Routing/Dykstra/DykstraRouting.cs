@@ -59,7 +59,7 @@ namespace Osm.Routing.Dykstra
             // intialize dyskstra data structures.
             SortedVisitList visit_list = new SortedVisitList();
             HashSet<long> chosen_nodes = new HashSet<long>();
-            Dictionary<long, List<RoutingLabel>> labels = new Dictionary<long, List<RoutingLabel>>();
+            Dictionary<long, IList<RoutingLabel>> labels = new Dictionary<long, IList<RoutingLabel>>();
 
             // set the from node as the current node and put it in the correct data structures.
             // intialize the source's neighbours.
@@ -99,7 +99,7 @@ namespace Osm.Routing.Dykstra
                         RoutingLabel neighbour_label = _constraints.GetLabelFor(neighbour.Value);
 
                         // only test labels if there is a change.
-                        if (neighbour_label.Equals(current_labels[current_labels.Count - 1]))
+                        if (current_labels.Count == 0 || !neighbour_label.Equals(current_labels[current_labels.Count - 1]))
                         { // labels are different, test them!
                             constraints_ok = _constraints.ForwardSequenceAllowed(current_labels,
                                 neighbour_label);
@@ -111,6 +111,10 @@ namespace Osm.Routing.Dykstra
 
                                 labels[neighbour.Key] = neighbour_labels;
                             }
+                        }
+                        else
+                        { // set the same label(s).
+                            labels[neighbour.Key] = current_labels;
                         }
                     }
 

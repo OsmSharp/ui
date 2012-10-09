@@ -714,41 +714,42 @@ namespace Osm.Routing.Raw.Graphs
         /// <returns></returns>
         internal Dictionary<long, GraphNeighbourInfo> GetNeighboursAdvancedInfo(long vertex_id, HashSet<long> exceptions)
         {
-            //GraphVertex vertex = this.GetVertex(vertex_id);
+            GraphVertex vertex = this.GetVertex(vertex_id);
 
-            //// create the data list.
-            //Dictionary<long, float> neighbours = new Dictionary<long, float>();
+            // create the data list.
+            Dictionary<long, GraphNeighbourInfo> neighbours = new Dictionary<long, GraphNeighbourInfo>();
 
-            //// find the vertex's edges.
-            //IList<Way> edges = this.GetEdgesForVertex(vertex);
+            // find the vertex's edges.
+            IList<Way> edges = this.GetEdgesForVertex(vertex);
 
-            //// calculate the weights to all neighbour nodes.
-            //foreach (Way edge in edges)
-            //{
-            //    // determine if the edge can be traversed for the current interpreter.
-            //    if (_interpreter.CanBeTraversed(edge))
-            //    {
-            //        // determine all the neigbours of the vertex on the given edge.
-            //        IList<GraphVertex> vertices = this.GetNeighbourVerticesOnEdge(edge, vertex);
-            //        foreach (GraphVertex neighbour in vertices)
-            //        {
-            //            // determine if the edge can be traversed from the source vertex to the neigbour.
-            //            if ((exceptions == null || !exceptions.Contains(neighbour.Id))
-            //                && _interpreter.CanBeTraversed(edge, vertex.Node, neighbour.Node))
-            //            {
-            //                // TODO: implement turn restrictions in router!
+            // calculate the weights to all neighbour nodes.
+            foreach (Way edge in edges)
+            {
+                // determine if the edge can be traversed for the current interpreter.
+                if (_interpreter.CanBeTraversed(edge))
+                {
+                    // determine all the neigbours of the vertex on the given edge.
+                    IList<GraphVertex> vertices = this.GetNeighbourVerticesOnEdge(edge, vertex);
+                    foreach (GraphVertex neighbour in vertices)
+                    {
+                        // determine if the edge can be traversed from the source vertex to the neigbour.
+                        if ((exceptions == null || !exceptions.Contains(neighbour.Id))
+                            && _interpreter.CanBeTraversed(edge, vertex.Node, neighbour.Node))
+                        {
+                            // create GraphNeighbourInfo
+                            GraphNeighbourInfo info = new GraphNeighbourInfo();
+                            info.Weight =  _interpreter.Weight(edge, vertex, neighbour);
+                            info.Tags = edge.Tags.ToList<KeyValuePair<string, string>>();
 
-            //                float weight = _interpreter.Weight(edge, vertex, neighbour);
-            //                // add the neighbour nodes to the neighbours list.
-            //                neighbours[neighbour.Id] = weight;
+                            // add the neighbour nodes to the neighbours list.
+                            neighbours[neighbour.Id] = info;
 
-            //            }
-            //        }
-            //    }
-            //}
+                        }
+                    }
+                }
+            }
 
-            //return neighbours;
-            return null;
+            return neighbours;
         }
 
 
@@ -877,6 +878,7 @@ namespace Osm.Routing.Raw.Graphs
     /// </summary>
     internal class GraphNeighbourInfo : ITaggedObject
     {
+
         /// <summary>
         /// The weight.
         /// </summary>

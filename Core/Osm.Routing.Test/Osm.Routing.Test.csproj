@@ -160,6 +160,7 @@
     <Compile Include="CH\CHTests.cs" />
     <Compile Include="Connected\ConnectedTest.cs" />
     <Compile Include="ConsoleProgressReporter.cs" />
+    <Compile Include="Constraints\ConstrainedRoutingTests.cs" />
     <Compile Include="HH\HHTest.cs" />
     <Compile Include="KDTree\KDTreeTest.cs" />
     <Compile Include="Point2Point\Point2PointTest.cs" />
@@ -234,6 +235,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Connected\matrix_bad.osm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Constraints\constrained1.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="HH\tiny.csv">

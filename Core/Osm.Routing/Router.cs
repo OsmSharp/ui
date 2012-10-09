@@ -132,7 +132,7 @@ namespace Osm.Routing.Raw
         /// <returns></returns>
         public OsmSharpRoute Calculate(ResolvedPoint source, ResolvedPoint target)
         {
-            Dykstra.DykstraRouting routing = new Dykstra.DykstraRouting(_graph);
+            Dykstra.DykstraRouting routing = new Dykstra.DykstraRouting(_graph, _constraints);
 
             try
             { 

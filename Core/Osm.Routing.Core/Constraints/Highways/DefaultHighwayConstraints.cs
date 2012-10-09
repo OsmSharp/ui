@@ -13,6 +13,18 @@ namespace Osm.Routing.Core.Constraints.Highways
     public class DefaultHighwayConstraints : IRoutingConstraints
     {
         /// <summary>
+        /// Holds the local label.
+        /// </summary>
+        private RoutingLabel _local_label = 
+            new RoutingLabel('L', "OnlyLocalAccessible");
+
+        /// <summary>
+        /// Holds the general label.
+        /// </summary>
+        private RoutingLabel _general_label = 
+            new RoutingLabel('R', "GeneralAccessible");
+
+        /// <summary>
         /// Returns a label for different categories of highways.
         /// </summary>
         /// <param name="tagged_object"></param>
@@ -22,9 +34,9 @@ namespace Osm.Routing.Core.Constraints.Highways
             Roads.Tags.RoadTagsInterpreterBase tags_interpreter = new Roads.Tags.RoadTagsInterpreterBase(tagged_object.Tags);
             if (tags_interpreter.IsOnlyLocalAccessible())
             {
-                return new RoutingLabel('L', "OnlyLocalAccessible"); // local
+                return _local_label; // local
             }
-            return new RoutingLabel('R', "GeneralAccessible"); // regular.
+            return _general_label; // regular.
         }
 
         /// <summary>
