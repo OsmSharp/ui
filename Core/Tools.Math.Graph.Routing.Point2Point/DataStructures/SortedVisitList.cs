@@ -8,7 +8,7 @@ namespace Tools.Math.Graph.Routing.DataStructures
     /// <summary>
     /// Internal data structure reprenting a visit list,
     /// </summary>
-    internal class SortedVisitList
+    public class SortedVisitList
     {
         /// <summary>
         /// Holds all visited nodes sorted by weight.

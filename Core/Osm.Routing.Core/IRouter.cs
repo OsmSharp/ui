@@ -62,6 +62,26 @@ namespace Osm.Routing.Core
 
         #endregion
 
+        #region Range Calculation
+
+        /// <summary>
+        /// Returns true if range calculation is supported.
+        /// </summary>
+        bool IsCalculateRangeSupported
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns all points located at a given weight (distance/time) from the orgin.
+        /// </summary>
+        /// <param name="orgine"></param>
+        /// <param name="weight"></param>
+        /// <returns></returns>
+        HashSet<ILocationObject> CalculateRange(ResolvedType orgin, float weight);
+
+        #endregion
+
         #region Error Detection/Error Handling
 
         /// <summary>

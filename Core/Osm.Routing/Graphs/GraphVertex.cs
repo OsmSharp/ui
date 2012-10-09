@@ -10,7 +10,7 @@ namespace Osm.Routing.Raw.Graphs
     /// <summary>
     /// Vertex in this graph.
     /// </summary>
-    public class GraphVertex : IEquatable<GraphVertex>
+    public class GraphVertex : IEquatable<GraphVertex>, ILocationObject
     {
         private static long _id_counter = 0;
 
@@ -145,6 +145,14 @@ namespace Osm.Routing.Raw.Graphs
             else
             {
                 return string.Format("{0}", this.Node);
+            }
+        }
+
+        public GeoCoordinate Location
+        {
+            get 
+            { 
+                return this.Coordinate; 
             }
         }
     }

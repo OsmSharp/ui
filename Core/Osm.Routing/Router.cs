@@ -221,6 +221,19 @@ namespace Osm.Routing.Raw
             }
         }
 
+        public bool IsCalculateRangeSupported
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public HashSet<Osm.Core.ILocationObject> CalculateRange(ResolvedPoint orgin, float weight)
+        {
+            throw new NotSupportedException();
+        }
+
         #endregion
 
         #region Error Detection/Error Handling

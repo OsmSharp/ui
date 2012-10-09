@@ -488,5 +488,19 @@ namespace Osm.Routing.Sparse.Routing
         }
 
         #endregion
+
+
+        public bool IsCalculateRangeSupported
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public HashSet<Osm.Core.ILocationObject> CalculateRange(SparseResolvedPoint orgin, float weight)
+        {
+            throw new NotSupportedException();
+        }
     }
 }

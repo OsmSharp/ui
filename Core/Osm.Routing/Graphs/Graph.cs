@@ -703,6 +703,56 @@ namespace Osm.Routing.Raw.Graphs
         
 
         #endregion
+
+        #region Advanced Neighbour Information
+
+        /// <summary>
+        /// Returns the neigbours of the given vertex with extra info.
+        /// </summary>
+        /// <param name="vertex_id"></param>
+        /// <param name="exceptions"></param>
+        /// <returns></returns>
+        internal Dictionary<long, GraphNeighbourInfo> GetNeighboursAdvancedInfo(long vertex_id, HashSet<long> exceptions)
+        {
+            //GraphVertex vertex = this.GetVertex(vertex_id);
+
+            //// create the data list.
+            //Dictionary<long, float> neighbours = new Dictionary<long, float>();
+
+            //// find the vertex's edges.
+            //IList<Way> edges = this.GetEdgesForVertex(vertex);
+
+            //// calculate the weights to all neighbour nodes.
+            //foreach (Way edge in edges)
+            //{
+            //    // determine if the edge can be traversed for the current interpreter.
+            //    if (_interpreter.CanBeTraversed(edge))
+            //    {
+            //        // determine all the neigbours of the vertex on the given edge.
+            //        IList<GraphVertex> vertices = this.GetNeighbourVerticesOnEdge(edge, vertex);
+            //        foreach (GraphVertex neighbour in vertices)
+            //        {
+            //            // determine if the edge can be traversed from the source vertex to the neigbour.
+            //            if ((exceptions == null || !exceptions.Contains(neighbour.Id))
+            //                && _interpreter.CanBeTraversed(edge, vertex.Node, neighbour.Node))
+            //            {
+            //                // TODO: implement turn restrictions in router!
+
+            //                float weight = _interpreter.Weight(edge, vertex, neighbour);
+            //                // add the neighbour nodes to the neighbours list.
+            //                neighbours[neighbour.Id] = weight;
+
+            //            }
+            //        }
+            //    }
+            //}
+
+            //return neighbours;
+            return null;
+        }
+
+
+        #endregion
     }
 
     /// <summary>
@@ -820,5 +870,21 @@ namespace Osm.Routing.Raw.Graphs
                 ^ this.Idx.GetHashCode()
                 ^ this.Position.GetHashCode();
         }
+    }
+
+    /// <summary>
+    /// Represents general info about a neighbour of a node.
+    /// </summary>
+    internal class GraphNeighbourInfo : ITaggedObject
+    {
+        /// <summary>
+        /// The weight.
+        /// </summary>
+        public float Weight { get; set; }
+
+        /// <summary>
+        /// The tags.
+        /// </summary>
+        public List<KeyValuePair<string, string>> Tags { get; set; }
     }
 }

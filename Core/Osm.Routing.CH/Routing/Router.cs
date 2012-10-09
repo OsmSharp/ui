@@ -93,10 +93,20 @@ namespace Osm.Routing.CH.Routing
             throw new NotImplementedException();
         }
 
-        //public CHResolvedPoint ResolveAt(uint vertex_id)
-        //{
-        //    return _ch_router.GetCHVertex(vertex_id);
-        //}
+
+
+        public bool IsCalculateRangeSupported
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public HashSet<Osm.Core.ILocationObject> CalculateRange(CHResolvedPoint orgin, float weight)
+        {
+            throw new NotSupportedException();
+        }
 
         public CHResolvedPoint Resolve(GeoCoordinate coordinate)
         {

@@ -140,6 +140,8 @@
     <Compile Include="ArcAggregation\Output\Aggregated.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
+    <Compile Include="Constraints\IRoutingConstraints.cs" />
+    <Compile Include="Constraints\IRoutingLabel.cs" />
     <Compile Include="Exceptions\RoutingException.cs" />
     <Compile Include="IRouter.cs" />
     <Compile Include="Processing\DynamicGraphDataProcessorTarget.cs" />
