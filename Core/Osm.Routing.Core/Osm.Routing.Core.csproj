@@ -140,8 +140,10 @@
     <Compile Include="ArcAggregation\Output\Aggregated.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
+    <Compile Include="Constraints\Cars\DefaultCarConstraints.cs" />
     <Compile Include="Constraints\IRoutingConstraints.cs" />
-    <Compile Include="Constraints\IRoutingLabel.cs" />
+    <Compile Include="Constraints\RoutingLabel.cs" />
+    <Compile Include="Constraints\Highways\DefaultHighwayConstraints.cs" />
     <Compile Include="Exceptions\RoutingException.cs" />
     <Compile Include="IRouter.cs" />
     <Compile Include="Processing\DynamicGraphDataProcessorTarget.cs" />

@@ -38,6 +38,17 @@ namespace Osm.Routing.Dykstra
         }
 
         /// <summary>
+        /// Creates a new instance of this class.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="constraints"></param>
+        public DykstraRouting(Graph graph, IRoutingConstraints constraints)
+        {
+            _graph = graph;
+            _constraints = constraints;
+        }
+
+        /// <summary>
         /// Calculates the actual route between the given nodes.
         /// </summary>
         /// <param name="from"></param>
@@ -48,13 +59,13 @@ namespace Osm.Routing.Dykstra
             // intialize dyskstra data structures.
             SortedVisitList visit_list = new SortedVisitList();
             HashSet<long> chosen_nodes = new HashSet<long>();
-            Dictionary<long, List<IRoutingLabel>> labels = new Dictionary<long, List<IRoutingLabel>>();
+            Dictionary<long, List<RoutingLabel>> labels = new Dictionary<long, List<RoutingLabel>>();
 
             // set the from node as the current node and put it in the correct data structures.
             // intialize the source's neighbours.
             RouteLinked current =
                 new RouteLinked(from);
-            labels[current.VertexId] = new List<IRoutingLabel>();
+            labels[current.VertexId] = new List<RoutingLabel>();
 
             // test for identical start/end point.
             if (from == to)
@@ -71,7 +82,7 @@ namespace Osm.Routing.Dykstra
             while (true)
             {
                 // get the current labels list (if needed).
-                IList<IRoutingLabel> current_labels = null;
+                IList<RoutingLabel> current_labels = null;
                 if (_constraints != null)
                 { // there are constraints, get the labels.
                     current_labels = labels[current.VertexId];
@@ -85,7 +96,7 @@ namespace Osm.Routing.Dykstra
                     bool constraints_ok = true;
                     if (_constraints != null)
                     { // check if the label is ok.
-                        IRoutingLabel neighbour_label = _constraints.GetLabelFor(neighbour.Value);
+                        RoutingLabel neighbour_label = _constraints.GetLabelFor(neighbour.Value);
 
                         // only test labels if there is a change.
                         if (neighbour_label.Equals(current_labels[current_labels.Count - 1]))
@@ -95,7 +106,7 @@ namespace Osm.Routing.Dykstra
 
                             if (constraints_ok)
                             { // update the labels.
-                                List<IRoutingLabel> neighbour_labels = new List<IRoutingLabel>(current_labels);
+                                List<RoutingLabel> neighbour_labels = new List<RoutingLabel>(current_labels);
                                 neighbour_labels.Add(neighbour_label);
 
                                 labels[neighbour.Key] = neighbour_labels;
@@ -333,13 +344,13 @@ namespace Osm.Routing.Dykstra
             // initialize dyskstra data structures.
             SortedVisitList visit_list = new SortedVisitList();
             HashSet<long> chosen_nodes = new HashSet<long>();
-            Dictionary<long, List<IRoutingLabel>> labels = new Dictionary<long, List<IRoutingLabel>>();
+            Dictionary<long, List<RoutingLabel>> labels = new Dictionary<long, List<RoutingLabel>>();
 
             // set the from node as the current node and put it in the correct data structures.
             // intialize the source's neighbours.
             RouteLinked current =
                 new RouteLinked(from);
-            labels[from] = new List<IRoutingLabel>();
+            labels[from] = new List<RoutingLabel>();
 
             // start routing.
             Dictionary<long, float> neighbours = _graph.GetNeighbours(

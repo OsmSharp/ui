@@ -110,7 +110,6 @@ namespace Osm.Routing.Core.Roads.Tags
                 string highway_type = this.Tags["highway"];
                 switch (highway_type)
                 {
-                    case "service":
                     case "proposed":
                         //case "service":
                         return false;
@@ -167,7 +166,7 @@ namespace Osm.Routing.Core.Roads.Tags
                                 break;
                         }
                         break;
-                    default:
+                    default: // service:
                         switch (vehicle)
                         {
                             case VehicleEnum.Bike:
@@ -180,17 +179,50 @@ namespace Osm.Routing.Core.Roads.Tags
                 }
                 return true;
             }
-            //else if (way.Tags.ContainsKey("osmsharp_resolved"))
-            //{
-            //    return true;
-            //}
-            //else if (way.Tags.ContainsKey("osmsharp_weighed_node"))
-            //{
-            //    return true;
-            //}
             return false;
         }
 
+        /// <summary>
+        /// Returns true if the tags represent a private accessible road.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsPrivate()
+        {
+            if (this.Tags.ContainsKey("access"))
+            {
+                if (this.Tags["access"] == "private"
+                    || this.Tags["access"] == "official")
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the tags represent a road accessible for services.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsService()
+        {
+            if (this.Tags.ContainsKey("highway"))
+            {
+                if (this.Tags["highway"] == "service")
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if only vehicles with a destination can access.
+        /// </summary>
+        /// <returns></returns>
+        public bool IsOnlyLocalAccessible()
+        {
+            return this.IsService() || this.IsPrivate();
+        }
 
         /// <summary>
         /// Returns true if the given vehicle type is a motorized vehicle.

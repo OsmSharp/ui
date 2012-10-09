@@ -15,6 +15,7 @@ using Osm.Routing.Core.Exceptions;
 using Osm.Routing.Core.Metrics.Time;
 using System;
 using Osm.Routing.Core.Resolving;
+using Osm.Routing.Core.Constraints;
 
 namespace Osm.Routing.Raw
 {
@@ -39,6 +40,11 @@ namespace Osm.Routing.Raw
         private Graph _graph;
 
         /// <summary>
+        /// The routing constraints.
+        /// </summary>
+        private IRoutingConstraints _constraints;
+
+        /// <summary>
         /// Creates a router based on the graph.
         /// </summary>
         /// <param name="source"></param>
@@ -50,6 +56,8 @@ namespace Osm.Routing.Raw
             _graph = new Graph(_interpreter, _source);
 
             _resolved_list = new Dictionary<long, ResolvedPoint>();
+
+            _constraints = null;
         }
 
         /// <summary>
@@ -64,6 +72,40 @@ namespace Osm.Routing.Raw
             _graph = new Graph(_interpreter, _source);
 
             _resolved_list = new Dictionary<long, ResolvedPoint>();
+
+            _constraints = null;
+        }
+
+        /// <summary>
+        /// Creates a router based on the graph.
+        /// </summary>
+        /// <param name="source"></param>
+        public Router(IDataSourceReadOnly source, IRoutingConstraints constraints)
+        {
+            _source = source;
+
+            _interpreter = new GraphInterpreterTime(_source, VehicleEnum.Car);
+            _graph = new Graph(_interpreter, _source);
+
+            _resolved_list = new Dictionary<long, ResolvedPoint>();
+
+            _constraints = constraints;
+        }
+
+        /// <summary>
+        /// Creates a router based on the graph.
+        /// </summary>
+        /// <param name="source"></param>
+        public Router(IDataSourceReadOnly source, GraphInterpreterBase interpreter, IRoutingConstraints constraints)
+        {
+            _source = source;
+            _interpreter = interpreter;
+
+            _graph = new Graph(_interpreter, _source);
+
+            _resolved_list = new Dictionary<long, ResolvedPoint>();
+
+            _constraints = constraints;
         }
 
         #region Capabilities
