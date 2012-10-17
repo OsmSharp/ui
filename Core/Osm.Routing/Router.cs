@@ -7,7 +7,6 @@ using Osm.Routing.Core.Route;
 using Osm.Routing.Graphs;
 using Osm.Routing.Raw.Graphs;
 using Osm.Routing.Raw.Graphs.Interpreter;
-using Osm.Routing.Raw.Graphs.Resolver;
 using Tools.Math;
 using Tools.Math.Geo;
 using Tools.Math.Graph.Routing;
@@ -52,7 +51,9 @@ namespace Osm.Routing.Raw
         {
             _source = source;
 
-            _interpreter = new GraphInterpreterTime(_source, VehicleEnum.Car);
+            _interpreter = new GraphInterpreterTime(new Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(
+                new Routing.Core.Interpreter.RoutingVehicleSimple(VehicleEnum.Car)), 
+                _source, VehicleEnum.Car);
             _graph = new Graph(_interpreter, _source);
 
             _resolved_list = new Dictionary<long, ResolvedPoint>();
@@ -64,10 +65,10 @@ namespace Osm.Routing.Raw
         /// Creates a router based on the graph.
         /// </summary>
         /// <param name="source"></param>
-        public Router(IDataSourceReadOnly source, GraphInterpreterBase interpreter)
+        public Router(IDataSourceReadOnly source, Routing.Core.Interpreter.RoutingInterpreterBase interpreter)
         {
             _source = source;
-            _interpreter = interpreter;
+            _interpreter = new GraphInterpreterTime(interpreter, _source, VehicleEnum.Car); 
 
             _graph = new Graph(_interpreter, _source);
 
@@ -84,7 +85,9 @@ namespace Osm.Routing.Raw
         {
             _source = source;
 
-            _interpreter = new GraphInterpreterTime(_source, VehicleEnum.Car);
+            _interpreter = new GraphInterpreterTime(new Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(
+                new Routing.Core.Interpreter.RoutingVehicleSimple(VehicleEnum.Car)),
+                _source, VehicleEnum.Car);
             _graph = new Graph(_interpreter, _source);
 
             _resolved_list = new Dictionary<long, ResolvedPoint>();
@@ -96,10 +99,10 @@ namespace Osm.Routing.Raw
         /// Creates a router based on the graph.
         /// </summary>
         /// <param name="source"></param>
-        public Router(IDataSourceReadOnly source, GraphInterpreterBase interpreter, IRoutingConstraints constraints)
+        public Router(IDataSourceReadOnly source, Routing.Core.Interpreter.RoutingInterpreterBase interpreter, IRoutingConstraints constraints)
         {
             _source = source;
-            _interpreter = interpreter;
+            _interpreter = new GraphInterpreterTime(interpreter, _source, VehicleEnum.Car); 
 
             _graph = new Graph(_interpreter, _source);
 
@@ -396,7 +399,7 @@ namespace Osm.Routing.Raw
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public ResolvedPoint Resolve(GeoCoordinate coordinate, IResolveMatcher<ResolvedPoint> matcher)
+        public ResolvedPoint Resolve(GeoCoordinate coordinate, IResolveMatcher matcher)
         {
             GraphVertex vertex = null;
             if (matcher == null)
@@ -405,7 +408,7 @@ namespace Osm.Routing.Raw
             }
             else
             {
-                vertex = _graph.DoResolve(coordinate, 0.001f, new SimpleGraphResolver(matcher));
+                vertex = _graph.DoResolve(coordinate, 0.001f, matcher);
             }
 
             // don't return a resolved point if no data was found!
@@ -423,7 +426,7 @@ namespace Osm.Routing.Raw
         /// </summary>
         /// <param name="coordinates"></param>
         /// <returns></returns>
-        public ResolvedPoint[] Resolve(GeoCoordinate[] coordinates, IResolveMatcher<ResolvedPoint> matcher)
+        public ResolvedPoint[] Resolve(GeoCoordinate[] coordinates, IResolveMatcher matcher)
         {
             ResolvedPoint[] resolved_points = new ResolvedPoint[coordinates.Length];
             for (int idx = 0; idx < coordinates.Length; idx++)

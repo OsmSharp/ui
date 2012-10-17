@@ -10,6 +10,7 @@ using Osm.Routing.Raw.Graphs.Interpreter;
 using Tools.Math.Shapes;
 using Tools.Math.Shapes.ResultHelpers;
 using Osm.Routing.Graphs;
+using Osm.Routing.Core.Resolving;
 
 namespace Osm.Routing.Raw.Graphs
 {
@@ -205,7 +206,7 @@ namespace Osm.Routing.Raw.Graphs
         /// <param name="matcher"></param>
         /// <param name="create_vertex"></param>
         /// <returns></returns>
-        internal GraphVertex DoResolve(GeoCoordinate coordinate, double search_radius, IGraphResolverMatcher matcher)
+        internal GraphVertex DoResolve(GeoCoordinate coordinate, double search_radius, IResolveMatcher matcher)
         {
             GraphVertex vertex = null;
             GeoCoordinate return_coordinate = null;
@@ -255,7 +256,7 @@ namespace Osm.Routing.Raw.Graphs
                                     bool match = true;
                                     if (matcher != null)
                                     {
-                                        match = matcher.MatchWay(way);
+                                        match = matcher.Match(_interpreter.RoutingInterpreter.GetWayInterpretation(way));
                                     }
 
                                     if (match)

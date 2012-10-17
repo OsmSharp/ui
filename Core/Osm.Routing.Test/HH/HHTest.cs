@@ -12,6 +12,7 @@ using Osm.Routing.Raw.Graphs.Interpreter;
 using Osm.Routing.Core;
 using Osm.Routing.Raw.Graphs;
 using Osm.Data.Raw.XML.OsmSource;
+using Osm.Routing.Core.Interpreter.Default;
 
 namespace Osm.Routing.Test.HH
 {
@@ -25,7 +26,7 @@ namespace Osm.Routing.Test.HH
             OsmDataSource data_source = new OsmDataSource(
                 new OsmDocument(new XmlFileSource(info.FullName + string.Format("\\HH\\{0}.osm", name))));
 
-            GraphInterpreterBase interpreter = new GraphInterpreterTime(data_source, VehicleEnum.Car);
+            GraphInterpreterBase interpreter = new GraphInterpreterTime(new DefaultVehicleInterpreter(VehicleEnum.Car), data_source, VehicleEnum.Car);
             Graph graph = new Graph(interpreter, data_source);
 
 

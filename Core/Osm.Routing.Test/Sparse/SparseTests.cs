@@ -18,6 +18,7 @@ using Osm.Routing.Sparse.Processor;
 using Osm.Routing.Sparse.Routing;
 using Tools.Math.Geo;
 using Tools.Xml.Sources;
+using Osm.Routing.Core.Interpreter.Default;
 
 namespace Osm.Routing.Test.Sparse
 {
@@ -87,8 +88,8 @@ namespace Osm.Routing.Test.Sparse
             // create the raw router.
             OsmDataSource osm_data = new OsmDataSource(
                 new Osm.Core.Xml.OsmDocument(new XmlFileSource(xml)));
-            Osm.Routing.Raw.Router raw_router = new Osm.Routing.Raw.Router(osm_data, 
-                new GraphInterpreterTime(osm_data, VehicleEnum.Car));
+            Osm.Routing.Raw.Router raw_router = new Osm.Routing.Raw.Router(osm_data,
+                new DefaultVehicleInterpreter(VehicleEnum.Car));
 
             // create the sparse router.            
             Router sparse_router = new Router(data);

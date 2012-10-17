@@ -9,6 +9,7 @@ using Tools.Math.Graph;
 using Tools.Math.Geo;
 using Osm.Routing.Core;
 using Osm.Data;
+using Osm.Routing.Core.Interpreter;
 
 namespace Osm.Routing.Raw.Graphs.Interpreter
 {
@@ -22,8 +23,8 @@ namespace Osm.Routing.Raw.Graphs.Interpreter
         /// </summary>
         /// <param name="source"></param>
         /// <param name="vehicle_type"></param>
-        public GraphInterpreterTime(IDataSourceReadOnly source, VehicleEnum vehicle_type)
-            : base(source, vehicle_type)
+        public GraphInterpreterTime(RoutingInterpreterBase routing_interpreter, IDataSourceReadOnly source, VehicleEnum vehicle_type)
+            : base(routing_interpreter, source, vehicle_type)
         {
 
         }

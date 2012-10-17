@@ -24,7 +24,7 @@ namespace Osm.Routing.Test
         {
             OsmGeo.ShapeInterperter = new SimpleShapeInterpreter();
 
-            Constraints.ConstrainedRoutingTests.SimpleTest();
+            Constraints.ConstrainedRoutingTests.SimpleTestPedestrianRoads();
 
             //GenerateTSPLIB("031_K1040-06");
             //GenerateTSPLIB("036_K1210-01");

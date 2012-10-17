@@ -123,12 +123,12 @@ namespace Osm.Routing.CH.Routing
             return vertices;
         }
 
-        public CHResolvedPoint Resolve(GeoCoordinate coordinate, IResolveMatcher<CHResolvedPoint> matcher)
+        public CHResolvedPoint Resolve(GeoCoordinate coordinate, IResolveMatcher matcher)
         {
             throw new NotImplementedException();
         }
 
-        public CHResolvedPoint[] Resolve(GeoCoordinate[] coordinate, IResolveMatcher<CHResolvedPoint> matcher)
+        public CHResolvedPoint[] Resolve(GeoCoordinate[] coordinate, IResolveMatcher matcher)
         {
             throw new NotImplementedException();
         }

@@ -19,6 +19,7 @@ using Tools.TSPLIB.Problems;
 using System.IO;
 using Osm.Routing.Core.Metrics.Time;
 using Osm.Routing.Core.VRP.NoDepot.MaxTime;
+using Osm.Routing.Core.Interpreter.Default;
 
 namespace Osm.Routing.Test.VRP
 {
@@ -61,7 +62,7 @@ namespace Osm.Routing.Test.VRP
             string source_file = string.Format(@"C:\OSM\bin\{0}.osm", osm);
             OsmDataSource osm_data = new OsmDataSource(
                 new Osm.Core.Xml.OsmDocument(new XmlFileSource(source_file)));
-            Router router = new Router(osm_data, new Osm.Routing.Raw.Graphs.Interpreter.GraphInterpreterTime(osm_data, Osm.Routing.Core.VehicleEnum.Car));
+            Router router = new Router(osm_data,new DefaultVehicleInterpreter(VehicleEnum.Car));
 
             // read the source files.
             string points_file = directory + string.Format(@"\{0}.csv", name);

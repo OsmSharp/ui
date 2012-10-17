@@ -145,6 +145,12 @@
     <Compile Include="Constraints\RoutingLabel.cs" />
     <Compile Include="Constraints\Highways\DefaultHighwayConstraints.cs" />
     <Compile Include="Exceptions\RoutingException.cs" />
+    <Compile Include="Interpreter\Default\DefaultVehicleInterpreter.cs" />
+    <Compile Include="Interpreter\Default\DefaultWayInterpreter.cs" />
+    <Compile Include="Interpreter\RoutingInterpreterBase.cs" />
+    <Compile Include="Interpreter\Vehicles\RoutingVehicleBase.cs" />
+    <Compile Include="Interpreter\Vehicles\RoutingVehicleSimple.cs" />
+    <Compile Include="Interpreter\RoutingWayInterperterBase.cs" />
     <Compile Include="IRouter.cs" />
     <Compile Include="Processing\DynamicGraphDataProcessorTarget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

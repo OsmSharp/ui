@@ -21,6 +21,7 @@ using Osm.Routing.Raw.Graphs.Interpreter;
 using Osm.Routing.Core.TSP.Genetic;
 using Osm.Data.Core.Sparse.Primitives;
 using Osm.Data.Raw.XML.OsmSource;
+using Osm.Routing.Core.Interpreter.Default;
 
 namespace Demo.VRP
 {
@@ -304,7 +305,7 @@ namespace Demo.VRP
                 string source_file = @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Post\Eeklo Osm\post.osm";
                 OsmDataSource osm_data = new OsmDataSource(
                     new Osm.Core.Xml.OsmDocument(new XmlFileSource(source_file)));
-                Router router = new Router(osm_data, new Osm.Routing.Raw.Graphs.Interpreter.GraphInterpreterTime(osm_data, Osm.Routing.Core.VehicleEnum.Car));
+                Router router = new Router(osm_data, new DefaultVehicleInterpreter(VehicleEnum.Car));
 
                 //int latitude_idx = 2;
                 //int longitude_idx = 3;

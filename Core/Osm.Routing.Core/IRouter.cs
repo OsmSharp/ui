@@ -116,7 +116,7 @@ namespace Osm.Routing.Core
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        ResolvedType Resolve(GeoCoordinate coordinate, IResolveMatcher<ResolvedType> matcher);
+        ResolvedType Resolve(GeoCoordinate coordinate, IResolveMatcher matcher);
 
         /// <summary>
         /// Resolves all the given points.
@@ -130,7 +130,7 @@ namespace Osm.Routing.Core
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        ResolvedType[] Resolve(GeoCoordinate[] coordinate, IResolveMatcher<ResolvedType> matcher);
+        ResolvedType[] Resolve(GeoCoordinate[] coordinate, IResolveMatcher matcher);
 
         #region Search
 

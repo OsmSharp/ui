@@ -23,6 +23,7 @@ using Osm.Data.Core.Sparse;
 using Osm.Data.Redis.Sparse;
 using Osm.Data.Core.Sparse.Primitives;
 using Osm.Data.Raw.XML.OsmSource;
+using Osm.Routing.Core.Interpreter.Default;
 
 namespace Demo.Routing
 {
@@ -105,7 +106,7 @@ namespace Demo.Routing
             //_data = redis_source;
 
             // initialize the graph.
-            Graph graph = new Graph(new GraphInterpreterTime(_data, VehicleEnum.Car), _data);
+            Graph graph = new Graph(new GraphInterpreterTime(new DefaultVehicleInterpreter(VehicleEnum.Car), _data, VehicleEnum.Car), _data);
 
             this.mapEditorUserControl.Map = map;
             this.mapEditorUserControl.ZoomFactor = 13;

@@ -22,6 +22,7 @@ using Osm.Routing.Core.Route;
 using Osm.Routing.Core;
 using Osm.Routing.Core.Route.Map;
 using Osm.Data.Raw.XML.OsmSource;
+using Osm.Routing.Core.Interpreter.Default;
 
 namespace Demo.RangeApp
 {
@@ -126,7 +127,8 @@ namespace Demo.RangeApp
                 new OsmDataSource(new OsmDocument(new XmlFileSource(string.Format(@"test_area.osm"))));
             
             // create a way interpreter and a grap representing the road net.
-            GraphInterpreterTime interpreter = new GraphInterpreterTime(data_source, VehicleEnum.Car);
+            DefaultVehicleInterpreter interpreter =
+                new DefaultVehicleInterpreter(VehicleEnum.Car);
 
             // show the images.
             _points_layer.Clear();

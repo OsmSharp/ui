@@ -8,6 +8,7 @@ using Osm.Data;
 using Osm.Routing.Raw.Graphs;
 using Tools.Math.Geo;
 using Osm.Routing.Core;
+using Osm.Routing.Core.Interpreter;
 
 namespace Osm.Routing.Raw.Graphs.Interpreter
 {
@@ -27,12 +28,29 @@ namespace Osm.Routing.Raw.Graphs.Interpreter
         private IDataSourceReadOnly _source;
 
         /// <summary>
+        /// Holds the routing interpreter.
+        /// </summary>
+        private RoutingInterpreterBase _routing_interpreter;
+
+        /// <summary>
         /// Creates a new interpreter.
         /// </summary>
-        public GraphInterpreterBase(IDataSourceReadOnly source, VehicleEnum vehicle)
+        public GraphInterpreterBase(RoutingInterpreterBase routing_interpreter, IDataSourceReadOnly source, VehicleEnum vehicle)
         {
+            _routing_interpreter = routing_interpreter;
             _vehicle = vehicle;
             _source = source;
+        }
+
+        /// <summary>
+        /// Returns the routing interpreter.
+        /// </summary>
+        public RoutingInterpreterBase RoutingInterpreter
+        {
+            get
+            {
+                return _routing_interpreter;
+            }
         }
 
         /// <summary>
@@ -220,7 +238,6 @@ namespace Osm.Routing.Raw.Graphs.Interpreter
                 string highway_type = way.Tags["highway"];
                 switch (highway_type)
                 {
-                    case "service":
                     case "proposed":
                     //case "service":
                         switch (_vehicle)
@@ -233,7 +250,6 @@ namespace Osm.Routing.Raw.Graphs.Interpreter
                         }
                         break;
                     case "cycleway":
-                    case "pedestrian":
                     case "steps":
                     case "path":
                     case "footway":
@@ -260,6 +276,7 @@ namespace Osm.Routing.Raw.Graphs.Interpreter
                         }
                         break;
                     case "residential":
+                    case "pedestrian":
                         switch (_vehicle)
                         {
                             case VehicleEnum.Bike:
@@ -389,6 +406,11 @@ namespace Osm.Routing.Raw.Graphs.Interpreter
             return true;
         }
 
+        /// <summary>
+        /// Returns true if the vehicle is a motor vehicle.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <returns></returns>
         public bool IsMotorVehicle(VehicleEnum vehicle)
         {
             switch (vehicle)

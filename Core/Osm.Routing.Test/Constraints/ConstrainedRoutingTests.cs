@@ -15,7 +15,7 @@ namespace Osm.Routing.Test.Constraints
 {
     public static class ConstrainedRoutingTests
     {
-        public static void SimpleTest()
+        public static void SimpleTestServiceRoads()
         {
             DirectoryInfo info = new FileInfo("dummy.csv").Directory;
 
@@ -28,7 +28,7 @@ namespace Osm.Routing.Test.Constraints
             OsmDataSource osm_data = new OsmDataSource(
                 new Osm.Core.Xml.OsmDocument(new XmlFileSource(xml)));
             Osm.Routing.Raw.Router raw_router = new Osm.Routing.Raw.Router(osm_data,
-                new GraphInterpreterTime(osm_data, VehicleEnum.Car), car_constraints);
+                new Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car), car_constraints);
 
             // from Local to Regular.
             ResolvedPoint from = raw_router.ResolveAt(618285258);
@@ -57,6 +57,35 @@ namespace Osm.Routing.Test.Constraints
 
             route = raw_router.Calculate(from, to);
             route.SaveAsGpx(new FileInfo("Constrained_LocalToLocal.gpx"));
+        }
+
+        public static void SimpleTestPedestrianRoads()
+        {
+            DirectoryInfo info = new FileInfo("dummy.csv").Directory;
+
+            string xml = string.Format("{0}\\Constraints\\{1}.osm", info.FullName, "constrained2");
+
+            // create the car interpreter.
+            DefaultCarConstraints car_constraints = new DefaultCarConstraints();
+
+            // create the raw router.
+            OsmDataSource osm_data = new OsmDataSource(
+                new Osm.Core.Xml.OsmDocument(new XmlFileSource(xml)));
+            Osm.Routing.Raw.Router raw_router = new Osm.Routing.Raw.Router(osm_data,
+                new Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car), car_constraints);
+
+            // from Local to Regular.
+            ResolvedPoint from = raw_router.ResolveAt(1131349881);
+            ResolvedPoint to = raw_router.ResolveAt(1128910258);
+
+            OsmSharpRoute route = raw_router.Calculate(from, to);
+            route.SaveAsGpx(new FileInfo("Constrained_Pedestrian1.gpx"));
+
+            // from Regular to Local
+            from = raw_router.ResolveAt(599296033);
+            to = raw_router.ResolveAt(506355189);
+            route = raw_router.Calculate(from, to);
+            route.SaveAsGpx(new FileInfo("Constrained_Pedestrian2.gpx"));
         }
     }
 }

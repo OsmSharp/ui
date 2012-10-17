@@ -183,12 +183,12 @@ namespace Osm.Routing.Sparse.Routing
             return resolved_vertices;
         }
 
-        public SparseResolvedPoint Resolve(GeoCoordinate coordinate, IResolveMatcher<SparseResolvedPoint> matcher)
+        public SparseResolvedPoint Resolve(GeoCoordinate coordinate, IResolveMatcher matcher)
         {
             throw new NotImplementedException();
         }
 
-        public SparseResolvedPoint[] Resolve(GeoCoordinate[] coordinate, IResolveMatcher<SparseResolvedPoint> matcher)
+        public SparseResolvedPoint[] Resolve(GeoCoordinate[] coordinate, IResolveMatcher matcher)
         {
             throw new NotImplementedException();
         }
