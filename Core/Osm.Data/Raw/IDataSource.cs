@@ -18,21 +18,6 @@ namespace Osm.Data
     /// </summary>
     public interface IDataSource : IDataSourceReadOnly
     {
-        //#region Events
-
-        ///// <summary>
-        ///// Delegates used to delegate changes.
-        ///// </summary>
-        ///// <param name="changes"></param>
-        //public delegate void OsmChangesDelegate(IList<Change> changes);
-
-        ///// <summary>
-        ///// Event throw when data was changed.
-        ///// </summary>
-        //public event OsmChangesDelegate DataChanged;
-
-        //#endregion
-
         #region Persist
 
         /// <summary>

@@ -200,6 +200,7 @@
     <Compile Include="Raw\IDataSourceReadOnly.cs" />
     <Compile Include="Raw\KeyGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Raw\Memory\MemoryDataSource.cs" />
     <Compile Include="Sparse\ISparseData.cs" />
     <Compile Include="Sparse\Primitives\SimpleVertex.cs" />
     <Compile Include="Sparse\Primitives\SimpleArc.cs" />
