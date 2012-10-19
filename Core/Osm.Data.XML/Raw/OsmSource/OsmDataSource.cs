@@ -49,6 +49,24 @@ namespace Osm.Data.Raw.XML.OsmSource
             _closed_change_set = new List<long>();
         }
 
+        /// <summary>
+        /// Creates a new osm data source.
+        /// </summary>
+        /// <param name="document"></param>
+        public OsmDataSource(string file)
+        {
+            _document = new Osm.Core.Xml.OsmDocument(new Tools.Xml.Sources.XmlFileSource(file));
+            _id = Guid.NewGuid();
+
+            _read = false;
+            _nodes = new Dictionary<long, Node>();
+            _ways = new Dictionary<long, Way>();
+            _relations = new Dictionary<long, Relation>();
+
+            _ways_per_node = new Dictionary<long, List<long>>();
+            _relations_per_member = new Dictionary<long, List<long>>();
+            _closed_change_set = new List<long>();
+        }
         #region Write/Read functions
 
         // hold all node, ways, relations and changesets and their bounding box.
