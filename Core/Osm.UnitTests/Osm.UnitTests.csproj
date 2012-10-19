@@ -38,7 +38,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
+    <OutputPath>..\Output\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
@@ -53,7 +53,7 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
+    <OutputPath>..\Output\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -73,6 +73,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
@@ -80,14 +81,42 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\NodeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Data\RawMemoryDataSourceTests.cs" />
     <Compile Include="Routing\OsmSharpRouteTests.cs" />
+    <Compile Include="Routing\Raw\RawRoutingTests.cs" />
+    <Compile Include="Routing\RoutingTests.cs" />
+    <Compile Include="TestHelpers\RawDataSource.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Osm.Core\Osm.Core.csproj">
+      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
+      <Name>Osm.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Data.XML\Osm.Data.XML.csproj">
+      <Project>{18254C55-15C8-4438-9F92-B3B78E2720F5}</Project>
+      <Name>Osm.Data.XML</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Data\Osm.Data.Core.csproj">
+      <Project>{5BC09D7C-5226-4233-BF54-27BFD838F8F8}</Project>
+      <Name>Osm.Data.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Osm.Routing.Core\Osm.Routing.Core.csproj">
       <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
       <Name>Osm.Routing.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Osm.Routing\Osm.Routing.Raw.csproj">
+      <Project>{5E146436-B64C-4C3A-832E-26A53AA6BA54}</Project>
+      <Name>Osm.Routing.Raw</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Math\Tools.Math.csproj">
+      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
+      <Name>Tools.Math</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="test_network.osm" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

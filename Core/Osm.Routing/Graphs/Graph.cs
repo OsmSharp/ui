@@ -241,28 +241,36 @@ namespace Osm.Routing.Raw.Graphs
                         // calculate the distance.
                         double dist = (base_obj as OsmGeo).Shape.Distance(coordinate);
 
-                        // take the current object as the new found object 
-                        // if the distance is smaller and if the interpreter 
-                        // says it is routable.
-                        if (dist < distance)
-                        {
-                            // TODO: find a way to add nodes too: otherwise invalid GraphResolved objects will be generated.
-                            if (base_obj is Way)
-                            { // object is a way; see if the way is drivable.
-                                Way way = base_obj as Way;
-                                if (_interpreter.CanBeTraversed(way)
-                                    && _interpreter.CanBeStoppedOn(way))
-                                {
-                                    bool match = true;
-                                    if (matcher != null)
+                        // take the node if the distance is zero.
+                        if (dist == 0 && (base_obj is Node))
+                        { // distance is zero and object is a node.
+                            return new GraphVertex(base_obj as Node);
+                        }
+                        else
+                        { // distance larger than zero or object is a way.
+                            // take the current object as the new found object 
+                            // if the distance is smaller and if the interpreter 
+                            // says it is routable.
+                            if (dist < distance)
+                            {
+                                // TODO: find a way to add nodes too: otherwise invalid GraphResolved objects will be generated.
+                                if (base_obj is Way)
+                                { // object is a way; see if the way is drivable.
+                                    Way way = base_obj as Way;
+                                    if (_interpreter.CanBeTraversed(way)
+                                        && _interpreter.CanBeStoppedOn(way))
                                     {
-                                        match = matcher.Match(_interpreter.RoutingInterpreter.GetWayInterpretation(way));
-                                    }
+                                        bool match = true;
+                                        if (matcher != null)
+                                        {
+                                            match = matcher.Match(_interpreter.RoutingInterpreter.GetWayInterpretation(way));
+                                        }
 
-                                    if (match)
-                                    {
-                                        distance = dist;
-                                        result = way;
+                                        if (match)
+                                        {
+                                            distance = dist;
+                                            result = way;
+                                        }
                                     }
                                 }
                             }

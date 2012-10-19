@@ -140,11 +140,11 @@
     <Compile Include="ArcAggregation\Output\Aggregated.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
-    <Compile Include="Constraints\Cars\DefaultCarConstraints.cs" />
-    <Compile Include="Constraints\IRoutingConstraints.cs" />
-    <Compile Include="Constraints\RoutingLabel.cs" />
-    <Compile Include="Constraints\Highways\DefaultHighwayConstraints.cs" />
     <Compile Include="Exceptions\RoutingException.cs" />
+    <Compile Include="Interpreter\Constraints\Cars\DefaultCarConstraints.cs" />
+    <Compile Include="Interpreter\Constraints\Highways\DefaultHighwayConstraints.cs" />
+    <Compile Include="Interpreter\Constraints\IRoutingConstraints.cs" />
+    <Compile Include="Interpreter\Constraints\RoutingLabel.cs" />
     <Compile Include="Interpreter\Default\DefaultVehicleInterpreter.cs" />
     <Compile Include="Interpreter\Default\DefaultWayInterpreter.cs" />
     <Compile Include="Interpreter\RoutingInterpreterBase.cs" />
@@ -156,8 +156,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resolving\IResolvedPoint.cs" />
     <Compile Include="Resolving\IResolveMatcher.cs" />
-    <Compile Include="Roads\RoadInterpreter.cs" />
-    <Compile Include="Roads\Tags\RoadTagsInterpreterBase.cs" />
+    <Compile Include="Interpreter\Roads\RoadInterpreter.cs" />
+    <Compile Include="Interpreter\Roads\Tags\RoadTagsInterpreterBase.cs" />
     <Compile Include="RouteNotFoundException.cs" />
     <Compile Include="Route\Gpx\OsmSharpRouteGpx.cs" />
     <Compile Include="Route\Kml\OsmSharpRouteKml.cs" />

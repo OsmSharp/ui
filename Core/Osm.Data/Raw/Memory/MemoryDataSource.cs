@@ -162,10 +162,28 @@ namespace Osm.Data.Core.Raw.Memory
             { // get all the ids.
                 for (int idx = 0; idx < ids.Count; idx++)
                 {
-                    nodes[idx] = this.GetNode(ids[idx]);
+                    nodes.Add(this.GetNode(ids[idx]));
                 }
             }
             return nodes;
+        }
+
+        /// <summary>
+        /// Adds a node.
+        /// </summary>
+        /// <param name="node"></param>
+        public void AddNode(Node node)
+        {
+            _nodes[node.Id] = node;
+        }
+
+        /// <summary>
+        /// Removes a node.
+        /// </summary>
+        /// <param name="id"></param>
+        public void RemoveNode(long id)
+        {
+            _nodes.Remove(id);
         }
 
         /// <summary>
@@ -192,10 +210,28 @@ namespace Osm.Data.Core.Raw.Memory
             { // get all the ids.
                 for (int idx = 0; idx < ids.Count; idx++)
                 {
-                    relations[idx] = this.GetRelation(ids[idx]);
+                    relations.Add(this.GetRelation(ids[idx]));
                 }
             }
             return relations;
+        }
+
+        /// <summary>
+        /// Adds a relation.
+        /// </summary>
+        /// <param name="relation"></param>
+        public void AddRelation(Relation relation)
+        {
+            _relations[relation.Id] = relation;
+        }
+
+        /// <summary>
+        /// Removes a relation.
+        /// </summary>
+        /// <param name="id"></param>
+        public void RemoveRelation(long id)
+        {
+            _relations.Remove(id);
         }
 
         /// <summary>
@@ -232,7 +268,7 @@ namespace Osm.Data.Core.Raw.Memory
             { // get all the ids.
                 for (int idx = 0; idx < ids.Count; idx++)
                 {
-                    relations[idx] = this.GetWay(ids[idx]);
+                    relations.Add(this.GetWay(ids[idx]));
                 }
             }
             return relations;
@@ -248,6 +284,40 @@ namespace Osm.Data.Core.Raw.Memory
             IList<Way> ways = null;
             _ways_per_node.TryGetValue(node.Id, out ways);
             return ways;
+        }
+
+        /// <summary>
+        /// Adds a relation.
+        /// </summary>
+        /// <param name="way"></param>
+        public void AddWay(Way way)
+        {
+            _ways[way.Id] = way;
+
+            foreach (Node node in way.Nodes)
+            {
+                if (node != null)
+                {
+                    this.AddNode(node);
+
+                    IList<Way> ways = null;
+                    if (!_ways_per_node.TryGetValue(node.Id, out ways))
+                    {
+                        ways = new List<Way>();
+                        _ways_per_node.Add(node.Id, ways);
+                    }
+                    ways.Add(way);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes a way.
+        /// </summary>
+        /// <param name="id"></param>
+        public void RemoveWay(long id)
+        {
+            _ways.Remove(id);
         }
 
         /// <summary>

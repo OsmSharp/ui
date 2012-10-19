@@ -28,7 +28,7 @@ namespace Osm.Core
         /// <summary>
         /// The interpreter for these objects.
         /// </summary>
-        public static IShapeInterpreter ShapeInterperter;
+        public static IShapeInterpreter ShapeInterperter = new SimpleShapeInterpreter(); // set a default shape interpreter.
 
         /// <summary>
         /// The shape this osm geo object represents.

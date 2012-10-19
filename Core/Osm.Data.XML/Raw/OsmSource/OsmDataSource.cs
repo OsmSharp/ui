@@ -9,6 +9,8 @@ using Osm.Core.Factory;
 using Osm.Core.Xml.v0_6;
 using Osm.Core.Sources;
 using Osm.Core.Filters;
+using System.Xml;
+using System.IO;
 
 namespace Osm.Data.Raw.XML.OsmSource
 {
@@ -54,19 +56,21 @@ namespace Osm.Data.Raw.XML.OsmSource
         /// </summary>
         /// <param name="document"></param>
         public OsmDataSource(string file)
+            : this(new Osm.Core.Xml.OsmDocument(new Tools.Xml.Sources.XmlFileSource(file)))
         {
-            _document = new Osm.Core.Xml.OsmDocument(new Tools.Xml.Sources.XmlFileSource(file));
-            _id = Guid.NewGuid();
 
-            _read = false;
-            _nodes = new Dictionary<long, Node>();
-            _ways = new Dictionary<long, Way>();
-            _relations = new Dictionary<long, Relation>();
-
-            _ways_per_node = new Dictionary<long, List<long>>();
-            _relations_per_member = new Dictionary<long, List<long>>();
-            _closed_change_set = new List<long>();
         }
+
+        /// <summary>
+        /// Creates a new osm data source.
+        /// </summary>
+        /// <param name="stream"></param>
+        public OsmDataSource(Stream stream)
+            : this(new Osm.Core.Xml.OsmDocument(new Tools.Xml.Sources.XmlReaderSource(XmlReader.Create(stream))))
+        {
+            
+        }
+
         #region Write/Read functions
 
         // hold all node, ways, relations and changesets and their bounding box.

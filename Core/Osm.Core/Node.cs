@@ -46,10 +46,15 @@ namespace Osm.Core
 
         public override string ToString()
         {
-            return string.Format("http://www.openstreetmap.org/?node={0}:[{1};{2}]",
-                this.Id,
-                this.Coordinate.Longitude,
-                this.Coordinate.Latitude);
+            if (this.Coordinate != null)
+            {
+                return string.Format("http://www.openstreetmap.org/?node={0}:[{1};{2}]",
+                    this.Id,
+                    this.Coordinate.Longitude,
+                    this.Coordinate.Latitude);
+            }
+            return string.Format("http://www.openstreetmap.org/?node={0}",
+                this.Id);
         }
 
         /// <summary>
