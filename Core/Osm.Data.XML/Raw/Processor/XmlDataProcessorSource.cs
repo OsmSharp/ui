@@ -25,6 +25,8 @@ namespace Osm.Data.XML.Raw.Processor
 
         private string _file_name;
 
+        private Stream _stream;
+
         private bool _gzip;
 
 
@@ -34,6 +36,17 @@ namespace Osm.Data.XML.Raw.Processor
 
         }
 
+        public XmlDataProcessorSource(Stream stream) :
+            this(stream, false)
+        {
+
+        }
+
+        public XmlDataProcessorSource(Stream stream, bool gzip)
+        {
+            _stream = stream;
+            _gzip = gzip;
+        }
 
         public XmlDataProcessorSource(string file_name, bool gzip)
         {
@@ -48,6 +61,7 @@ namespace Osm.Data.XML.Raw.Processor
             _ser_way = new XmlSerializer(typeof(Osm.Core.Xml.v0_6.way));
             _ser_relation = new XmlSerializer(typeof(Osm.Core.Xml.v0_6.relation));
 
+            // create the xml reader settings.
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.CloseInput = true;
             settings.CheckCharacters = false;
@@ -55,11 +69,23 @@ namespace Osm.Data.XML.Raw.Processor
             settings.IgnoreProcessingInstructions = true;
             //settings.IgnoreWhitespace = true;
 
-            Stream file_stream = new FileInfo(_file_name).OpenRead();
+            // create the stream.
+            Stream file_stream = null;
+            if (_stream != null)
+            { // take the preset stream.
+                file_stream = _stream;
+            }
+            else
+            { // create a file stream.
+                file_stream = new FileInfo(_file_name).OpenRead();
+            }
+
+            // decompress if needed.
             if (_gzip)
             {
                 file_stream = new GZipStream(file_stream, CompressionMode.Decompress);
             }
+
             TextReader text_reader = new StreamReader(file_stream, Encoding.UTF8);
             _reader = XmlReader.Create(text_reader, settings);     
         }
