@@ -19,8 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Osm.Core;
 using Osm.Data.Core.Processor;
 using Osm.Core.Simple;
+using Osm.Core.Factory;
 
 namespace Osm.Data.Core.Raw.Memory
 {
@@ -48,7 +50,7 @@ namespace Osm.Data.Core.Raw.Memory
         /// </summary>
         public override void Initialize()
         {
-
+            _nodes = new Dictionary<long, Node>();
         }
 
         /// <summary>
@@ -61,30 +63,63 @@ namespace Osm.Data.Core.Raw.Memory
         }
 
         /// <summary>
+        /// Holds all nodes.
+        /// </summary>
+        private Dictionary<long, Osm.Core.Node> _nodes; 
+
+        /// <summary>
         /// Adds a given node.
         /// </summary>
-        /// <param name="node"></param>
-        public override void AddNode(SimpleNode node)
+        /// <param name="simple_node"></param>
+        public override void AddNode(SimpleNode simple_node)
         {
-            throw new NotImplementedException();
+            Node node= OsmBaseFactory.CreateNodeFrom(simple_node);
+            if (node != null)
+            {
+                _nodes[node.Id] = node;
+
+                _source.AddNode(node);
+            }
         }
+
+        /// <summary>
+        /// Holds all ways.
+        /// </summary>
+        private Dictionary<long, Osm.Core.Way> _ways; 
 
         /// <summary>
         /// Adds a given way.
         /// </summary>
-        /// <param name="way"></param>
-        public override void AddWay(SimpleWay way)
+        /// <param name="simple_way"></param>
+        public override void AddWay(SimpleWay simple_way)
         {
-            throw new NotImplementedException();
+            Way way = OsmBaseFactory.CreateWayFrom(simple_way, _nodes);
+            if (way != null)
+            {
+                _ways[way.Id] = way;
+
+                _source.AddWay(way);
+            }
         }
+
+        /// <summary>
+        /// Holds all relations.
+        /// </summary>
+        private Dictionary<long, Osm.Core.Relation> _relations; 
 
         /// <summary>
         /// Adds a given relation.
         /// </summary>
-        /// <param name="relation"></param>
-        public override void AddRelation(SimpleRelation relation)
+        /// <param name="simple_relation"></param>
+        public override void AddRelation(SimpleRelation simple_relation)
         {
-            throw new NotImplementedException();
+            Relation relation = OsmBaseFactory.CreateRelationFrom(simple_relation, _nodes, _ways, _relations);
+            if (relation != null)
+            {
+                _relations[relation.Id] = relation;
+
+                _source.AddRelation(relation);
+            }
         }
     }
 }
