@@ -1,38 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using Osm.Routing.Raw.Route;
-//using Tools.Math.Units.Time;
-
-//namespace Osm.Routing.Raw.Advanced.M_TSP
-//{
-//    /// <summary>
-//    /// Class handling M-TSP calculations.
-//    /// </summary>
-//    public static class MTspRouter
-//    {
-//        /// <summary>
-//        /// Calculates a solution to the Tsp Problem.
-//        /// </summary>
-//        /// <param name="router"></param>
-//        /// <param name="points"></param>
-//        /// <returns></returns>
-//        public static IList<IList<int>> Calculate(Router router, List<ResolvedPoint> points, int vehicles, int cities, Second minimum, Second maximum)
-//        {
-//            // calculate weight matrix.
-//            List<List<OsmSharpRoute>> matrix = router.CalculateManyToMany(points);
-
-//            // create the problem.
-//            MTspProblem problem = MTspProblem.CreateFrom(vehicles, cities, minimum, maximum, matrix);
-
-//            // calculate a solution.
-//            Tools.Math.VRP.MultiSalesman.Solver.Individual solution = Tools.Math.VRP.MultiSalesman.Facade.Calculate(problem,null,null,10);
-
-//            // TODO: convert the solution.
-
-//            // create a spacial route.
-//            return null;
-//        }
-//    }
-//}
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// Foobar is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Foobar. If not, see <http://www.gnu.org/licenses/>.

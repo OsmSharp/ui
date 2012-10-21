@@ -1,83 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using Osm.Routing.Graphs;
-//using Oracle.DataAccess.Client;
-//using Osm.Routing.Raw.Graphs;
-
-//namespace Osm.Data.Oracle.HH
-//{
-//    internal class GraphVertexEnumerable : IEnumerable<GraphVertex>
-//    {
-//        private OracleDataReader _reader;
-
-//        private IEnumerator<GraphVertex> _enumerator;
-
-//        public GraphVertexEnumerable(OracleDataReader reader)
-//        {
-//            _reader = reader;
-//        }
-
-//        #region IEnumerable<GraphVertex> Members
-
-//        public IEnumerator<GraphVertex> GetEnumerator()
-//        {
-//            if (_enumerator == null)
-//            {
-//                _enumerator = new GraphVertexEnumerator(_reader);
-//            }
-//            else
-//            {
-//                _enumerator.Reset();
-//            }
-//            return _enumerator;
-//        }
-
-//        #endregion
-
-//        #region IEnumerable Members
-
-//        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        #endregion
-//    }
-
-//    internal class GraphVertexEnumerator : IEnumerator<GraphVertex>
-//    {
-//        private OracleDataReader _reader;
-
-//        public GraphVertexEnumerator(OracleDataReader reader)
-//        {
-//            _reader = reader;
-//        }
-        
-//        public GraphVertex Current
-//        {
-//            get { throw new NotImplementedException(); }
-//        }
-
-//        public void Dispose()
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        object System.Collections.IEnumerator.Current
-//        {
-//            get { throw new NotImplementedException(); }
-//        }
-
-//        public bool MoveNext()
-//        {
-//            throw new NotImplementedException();
-//        }
-
-//        public void Reset()
-//        {
-
-//        }
-//    }
-//}
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// Foobar is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Foobar. If not, see <http://www.gnu.org/licenses/>.

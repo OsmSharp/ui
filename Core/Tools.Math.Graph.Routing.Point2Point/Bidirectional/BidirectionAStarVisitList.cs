@@ -1,42 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using Tools.Math.Graph.Routing.Dykstra;
-
-//namespace Tools.Math.Graph.Routing.Bidirectional
-//{
-//    internal class BidirectionAStarVisitList<EdgeType, VertexType>
-//    {
-//        private HashSet<VertexType> _vertices;
-
-//        private Dictionary<VertexType, VertexReference<EdgeType, VertexType>> _references;
-
-//        public BidirectionAStarVisitList()
-//        {
-//            _vertices = new HashSet<VertexType>();
-//            _references = new Dictionary<VertexType,VertexReference<EdgeType,VertexType>>();
-//        }
-
-//        public HashSet<VertexType> Vertices
-//        {
-//            get
-//            {
-//                return _vertices;
-//            }
-//        }
-
-//        public void Add(VertexReference<EdgeType, VertexType> vertex)
-//        {
-//            _vertices.Add(vertex.Vertex);
-//            _references[vertex.Vertex] = vertex;
-//        }
-
-//        public VertexReference<EdgeType, VertexType> GetForVertex(VertexType vertex)
-//        {
-//            VertexReference<EdgeType, VertexType> vertex_reference = null;
-//            _references.TryGetValue(vertex, out vertex_reference);
-//            return vertex_reference;
-//        }
-//    }
-//}
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// Foobar is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Foobar. If not, see <http://www.gnu.org/licenses/>.

@@ -1,38 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using Tools.Math.TSP;
-//using Tools.Math.Geo;
-//using Osm.Core;
-//using Osm.Routing.Raw.Route;
-//using Tools.Math.TSP.Problems;
-
-//namespace Osm.Routing.Raw.Advanced.TSP
-//{
-//    /// <summary>
-//    /// Class describing the salesman problem.
-//    /// </summary>
-//    internal class TspProblem : MatrixProblem
-//    {
-//        public TspProblem(List<List<float>> weights)
-//            :base(TspProblem.Convert(weights),false)
-//        {
-
-//        }
-
-//        private static float[][] Convert(List<List<float>> weights)
-//        {
-//            float[][] weights_array = new float[weights.Count][];
-//            for (int i = 0; i < weights.Count; i++)
-//            {
-//                weights_array[i] = new float[weights.Count];
-//                for (int j = 0; j < weights.Count; j++)
-//                {
-//                    weights_array[i][j] = weights[i][j];
-//                }
-//            }
-//            return weights_array;
-//        }
-//    }
-//}
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// Foobar is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Foobar. If not, see <http://www.gnu.org/licenses/>.

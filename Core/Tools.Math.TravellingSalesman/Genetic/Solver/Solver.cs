@@ -1,46 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using Tools.Math.AI.Genetic.Solvers;
-//using Tools.Math.AI.Genetic.Selectors;
-//using Tools.Math.AI.Genetic.Operations.Mutations;
-//using Tools.Math.AI.Genetic.Operations.CrossOver;
-//using Tools.Math.AI.Genetic.Operations.Generation;
-//using Tools.Math.AI.Genetic.Fitness;
-
-//namespace Tools.Math.TSP.Genetic.Solver
-//{
-//    public class Solver : Solver<List<int>, GeneticProblem, Fitness>
-//    {
-//        public Solver(
-//            GeneticProblem problem,
-//            SolverSettings settings,
-//            ISelector<List<int>, GeneticProblem, Fitness> selector,
-//            IMutationOperation<List<int>, GeneticProblem, Fitness> mutation,
-//            ICrossOverOperation<List<int>, GeneticProblem, Fitness> cross_over,
-//            IGenerationOperation<List<int>, GeneticProblem, Fitness> generation,
-//            IFitnessCalculator<List<int>, GeneticProblem, Fitness> fitness_calculator,
-//            bool accept_only_better_cross_over, bool accept_only_better_mutation)
-//            :base(problem, settings,selector, mutation,cross_over,generation,fitness_calculator, accept_only_better_cross_over, accept_only_better_mutation)
-//        {
-
-//        }
-
-//        protected override AI.Genetic.Operations.Generation.IGenerationOperation<List<int>, GeneticProblem, Fitness> CreateGenerationOperation()
-//        {
-//            return new Operations.Generation.BestPlacementGenerationOperation();
-//            //return new Operations.Generation.LKGenerationOperation();
-//        }
-
-//        protected override IMutationOperation<List<int>, GeneticProblem, Fitness> CreateMutationOperation()
-//        {
-//            return new Operations.Mutation.BestDetailedPlacementMutationOperation();
-//        }
-
-//        protected override ICrossOverOperation<List<int>, GeneticProblem, Fitness> CreateCrossoverOperation()
-//        {
-//            return new Operations.CrossOver.SequentialContructiveCrossoverOperator();
-//        }
-//    }
-//}
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// Foobar is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Foobar. If not, see <http://www.gnu.org/licenses/>.

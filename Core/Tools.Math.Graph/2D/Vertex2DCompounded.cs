@@ -1,56 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-
-//namespace Tools.Math.Graph._2D
-//{
-//    /// <summary>
-//    /// Represents a vertex that exists on a way in between two nodes. 
-//    /// 
-//    /// Cannot implement the coordinate property because of the lack of a factory or contructor for the PointType.
-//    /// </summary>
-//    public abstract class Vertex2DCompound<VertexType,PointType> : Vertex2D<VertexType, PointType>
-//        where PointType : PointF2D
-//        where VertexType : Vertex2D<VertexType, PointType>
-//    {
-//        /// <summary>
-//        /// The edge this vertex exists on.
-//        /// </summary>
-//        private Edge2D<VertexType, PointType> _edge;
-
-//        /// <summary>
-//        /// The percentage that this vertex lies on the edge from vertex1.
-//        /// 
-//        /// Value 0-1.
-//        /// </summary>
-//        private double _between;
-
-//        /// <summary>
-//        /// Creates a new compounded vertex.
-//        /// </summary>
-//        /// <param name="edge"></param>
-//        /// <param name="idx"></param>
-//        /// <param name="between"></param>
-//        public Vertex2DCompound(
-//            Edge2D<VertexType, PointType> edge,
-//            double between)
-//        {
-//            _edge = edge;
-//        }
-
-//        /// <summary>
-//        /// Calculates the values of the coordinate of this compounded vertex.
-//        /// </summary>
-//        protected double[] CoordinateValues
-//        {
-//            get
-//            {
-//                double[] values = new double[2];
-//                values[0] = _edge.Vertex1.Coordinate[0] * (1.0f - _between) + _edge.Vertex2.Coordinate[0] * _between;
-//                values[1] = _edge.Vertex1.Coordinate[1] * (1.0f - _between) + _edge.Vertex2.Coordinate[1] * _between;
-//                return values;
-//            }
-//        }
-//    }
-//}
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// Foobar is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Foobar. If not, see <http://www.gnu.org/licenses/>.

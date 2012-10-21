@@ -1,36 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-
-//namespace Tools.Math.Graph.Routing
-//{
-//    public static class Extensions<EdgeType, VertexType>
-//        where EdgeType : class
-//        where VertexType : class, IEquatable<VertexType>
-//    {
-//        public static GraphRoute<EdgeType, VertexType>
-//            CreateRoute(IPoint2PointRouter<EdgeType, VertexType> router, List<VertexType> in_order)
-//        {
-//            VertexType from = in_order[0];
-
-//            List<GraphRouteEntry<EdgeType, VertexType>> entries = new List<GraphRouteEntry<EdgeType, VertexType>>();
-
-//            float weight = 0;
-//            for (int idx = 1; idx < in_order.Count; idx++)
-//            {
-//                // get start-end.
-//                VertexType from_in_entry = in_order[idx - 1];
-//                VertexType to_in_entry = in_order[idx];
-
-//                // calculate/get route.
-//                GraphRoute<EdgeType, VertexType> route = router.Calculate(from_in_entry, to_in_entry, -1);
-//                weight = route.Weight + weight;
-//                entries.AddRange(route.Entries);
-//            }
-
-//            return new GraphRoute<EdgeType, VertexType>(
-//                new GraphRouteEntryPoint<VertexType>(from, true), entries, weight);
-//        }
-//    }
-//}
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// Foobar is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Foobar. If not, see <http://www.gnu.org/licenses/>.

@@ -1,64 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading;
-
-//namespace Tools.Core.Threading
-//{
-//    public class LIFOThreadPool
-//    {
-//        private int _max_queue_size;
-
-//        #region Queue List
-
-//        private List<QueuedThreadStart> _schedules_threads;
-
-//        public void Queue(WaitCallback callBack,object param)
-//        {
-//            lock(_schedules_threads)
-//            {
-//                _schedules_threads.Add(
-//                    new QueuedThreadStart(
-//                        callBack,
-//                        param));
-
-                
-//            }
-//        }
-
-//        private class QueuedThreadStart
-//        {
-//            public QueuedThreadStart(
-//                WaitCallback call_back,
-//                object param)
-//            {
-//                this.WaitCallBack = call_back;
-//                this.Param = param;
-//            }
-
-//            public WaitCallback WaitCallBack { get; private set; }
-
-//            public object Param { get; private set; }
-//        }
-
-//        #endregion
-
-//        public void SetMaxQueueSize(int maxQueueSize)
-//        {
-
-//        }
-
-//        public void SetMaxThreads(int workerThreads)
-//        {
-
-//        }
-
-//        public QueueWorkerItem(WaitCallback callback,object param)
-//        {
-
-//        }
-
-
-//    }
-//}
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// Foobar is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Foobar. If not, see <http://www.gnu.org/licenses/>.

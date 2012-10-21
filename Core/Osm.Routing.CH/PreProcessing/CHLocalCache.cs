@@ -1,46 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using Osm.Data.Core.CH.Primitives;
-//using Osm.Data.Core.CH;
-
-//namespace Osm.Routing.CH.PreProcessing
-//{
-//    internal class CHLocalCache
-//    {
-//        private Dictionary<long, CHVertex> _cache;
-
-//        public CHLocalCache()
-//        {
-//            _cache = new Dictionary<long, CHVertex>();
-//        }
-
-//        public CHVertex Get(ICHData data, long vertex_id)
-//        {
-//            CHVertex vertex;
-//            if (!_cache.TryGetValue(vertex_id, out vertex))
-//            {
-//                vertex = data.GetCHVertex(vertex_id);
-//                _cache.Add(vertex_id, vertex);
-//            }
-//            return vertex;
-//        }
-
-//        public IEnumerable<CHVertex> Vertices
-//        {
-//            get
-//            {
-//                return _cache.Values;
-//            }
-//        }
-
-//        public IEnumerable<long> Keys
-//        {
-//            get
-//            {
-//                return _cache.Keys;
-//            }
-//        }
-//    }
-//}
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// Foobar is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Foobar. If not, see <http://www.gnu.org/licenses/>.

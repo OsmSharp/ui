@@ -1,43 +1,17 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using Osm.Routing.HH.Highways;
-//using Osm.Routing.Graphs;
-
-//namespace Osm.Routing.HH.Router
-//{
-//    public class HighwayHierarchyLevelGraph : Tools.Math.Graph.Graph<HighwayEdge, GraphVertex>
-//    {
-//        private int _level;
-
-//        private IHighwayHierarchy _highway_hierarchy;
-
-//        public HighwayHierarchyLevelGraph(IHighwayHierarchy highway_hierarchy, int level)
-//            :base(new HighwayHierarchyGraphInterpreter())
-//        {
-//            _level = level;
-//            _highway_hierarchy = highway_hierarchy;
-//        }
-
-//        public bool ContainsVertex(GraphVertex vertex)
-//        {
-//            return _highway_hierarchy.ContainsVertex(_level, vertex);
-//        }
-
-//        public override IList<HighwayEdge> GetEdgesForVertex(GraphVertex vertex)
-//        {
-//            return new List<HighwayEdge>(_highway_hierarchy.GetNeigbours(_level, vertex, null));
-//        }
-
-//        public override IList<GraphVertex> GetNeighbourVerticesOnEdge(HighwayEdge edge, GraphVertex vertex)
-//        {
-//            List<GraphVertex> neighbours = new List<GraphVertex>();
-//            if (edge.From == vertex)
-//            {
-//                neighbours.Add(edge.To);
-//            }
-//            return neighbours;
-//        }
-//    }
-//}
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// Foobar is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// Foobar is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with Foobar. If not, see <http://www.gnu.org/licenses/>.
