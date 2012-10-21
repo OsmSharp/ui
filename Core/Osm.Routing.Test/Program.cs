@@ -15,6 +15,7 @@ using Osm.Routing.Raw;
 using Osm.Routing.Core.Route;
 using Osm.Routing.Test.VRP;
 using Osm.Data.Raw.XML.OsmSource;
+using Osm.Routing.Test.PBF;
 
 namespace Osm.Routing.Test
 {
@@ -24,7 +25,9 @@ namespace Osm.Routing.Test
         {
             OsmGeo.ShapeInterperter = new SimpleShapeInterpreter();
 
-            Constraints.ConstrainedRoutingTests.SimpleTestPedestrianRoads();
+            PBFTest.TestPBFRead();
+
+            //Constraints.ConstrainedRoutingTests.SimpleTestPedestrianRoads();
 
             //GenerateTSPLIB("031_K1040-06");
             //GenerateTSPLIB("036_K1210-01");

@@ -143,6 +143,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="protobuf-net, Version=2.0.0.594, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lib\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System">
     </Reference>
     <Reference Include="System.Core">
@@ -163,6 +167,7 @@
     <Compile Include="Constraints\ConstrainedRoutingTests.cs" />
     <Compile Include="HH\HHTest.cs" />
     <Compile Include="KDTree\KDTreeTest.cs" />
+    <Compile Include="PBF\PBFTest.cs" />
     <Compile Include="Point2Point\Point2PointTest.cs" />
     <Compile Include="Redis\RedisTest.cs" />
     <Compile Include="Sparse\SparseTests.cs" />
@@ -403,6 +408,10 @@
     <ProjectReference Include="..\Osm.Data.Oracle\Osm.Data.Oracle.csproj">
       <Project>{060B01E7-9314-41DD-BC17-65ED9E6A54FE}</Project>
       <Name>Osm.Data.Oracle</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Osm.Data.PBF\Osm.Data.PBF.csproj">
+      <Project>{5DCC16FB-44D8-4789-9AA0-C939574F0D95}</Project>
+      <Name>Osm.Data.PBF</Name>
     </ProjectReference>
     <ProjectReference Include="..\Osm.Data.Redis\Osm.Data.Redis.csproj">
       <Project>{9152A85F-61AC-486F-B5F6-E2C969132738}</Project>

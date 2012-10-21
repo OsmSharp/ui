@@ -201,6 +201,7 @@
     <Compile Include="Raw\KeyGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Raw\Memory\MemoryDataSource.cs" />
+    <Compile Include="Raw\Memory\MemoryDataSourceProcessorTarget.cs" />
     <Compile Include="Sparse\ISparseData.cs" />
     <Compile Include="Sparse\Primitives\SimpleVertex.cs" />
     <Compile Include="Sparse\Primitives\SimpleArc.cs" />

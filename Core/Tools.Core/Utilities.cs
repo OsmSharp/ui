@@ -124,5 +124,28 @@ namespace Tools.Core
             System.Security.Cryptography.RandomNumberGenerator.Create().GetBytes(randBuffer);
             return System.Convert.ToBase64String(randBuffer).Remove(length);
         }
+
+        /// <summary>
+        /// Converts a number of milliseconds from 1/1/1970 into a standard DateTime.
+        /// </summary>
+        /// <param name="unixTime"></param>
+        /// <returns></returns>
+        public static DateTime FromUnixTime(this long milliseconds)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return epoch.AddMilliseconds(milliseconds);
+        }
+
+        /// <summary>
+        /// Converts a standard DateTime into the number of milliseconds since 1/1/1970.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static long ToUnixTime(this DateTime date)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return Convert.ToInt64((date - epoch).TotalMilliseconds);
+        }
+
     }
 }

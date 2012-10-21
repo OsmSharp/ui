@@ -161,6 +161,9 @@
     <Content Include="Npgsql.dll" />
     <Content Include="Npgsql.XML" />
     <Content Include="Oracle.DataAccess.dll" />
+    <Content Include="protobuf-net.dll" />
+    <Content Include="protobuf-net.pdb" />
+    <Content Include="protobuf-net.xml" />
     <Content Include="ServiceStack.Common.dll" />
     <Content Include="ServiceStack.Common.pdb" />
     <Content Include="ServiceStack.Common.xml" />
@@ -178,6 +181,7 @@
     <Content Include="ServiceStack.xml" />
     <Content Include="System.Data.SQLite.dll" />
     <Content Include="System.Data.SQLite.pdb" />
+    <Content Include="zlib.net.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
