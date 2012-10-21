@@ -14,7 +14,7 @@
 // GNU General Public License for more details.
 // 
 // You should have received a copy of the GNU General Public License
-// along with Foobar. If not, see <http://www.gnu.org/licenses/>.
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
