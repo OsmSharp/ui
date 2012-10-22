@@ -3,12 +3,12 @@
 // 
 // This file is part of OsmSharp.
 // 
-// Foobar is free software: you can redistribute it and/or modify
+// OsmSharp is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 2 of the License, or
 // (at your option) any later version.
 // 
-// Foobar is distributed in the hope that it will be useful,
+// OsmSharp is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
@@ -230,24 +230,25 @@ namespace OsmRouting.CH.Demo
                     // calculate the route.
                     OsmSharpRoute route = _router.Calculate(vertex1, vertex2);
 
-                    _route_layer.Clear();
-                    _arcs.Clear();
-                    _arcs_layer.Clear();
                     if (route != null)
                     {
+                        _route_layer.Clear();
+                        _arcs.Clear();
+                        _arcs_layer.Clear();
+
                         _route_layer.AddRoute(route, Color.FromArgb(150, Color.Blue));
 
                         this.Invoke(new EmptyDelegate(RefreshMap));
                     }
-                    else
-                    {
-                        ElementDot dot1 = _route_layer.AddDot(new GeoCoordinate(vertex1.Location.Latitude, vertex1.Location.Longitude));
-                        //dot1.Radius = 0.01;
-                        ElementDot dot2 = _route_layer.AddDot(new GeoCoordinate(vertex2.Location.Latitude, vertex2.Location.Longitude));
-                        //dot2.Radius = 0.01;
+                    //else
+                    //{
+                    //    ElementDot dot1 = _route_layer.AddDot(new GeoCoordinate(vertex1.Location.Latitude, vertex1.Location.Longitude));
+                    //    //dot1.Radius = 0.01;
+                    //    ElementDot dot2 = _route_layer.AddDot(new GeoCoordinate(vertex2.Location.Latitude, vertex2.Location.Longitude));
+                    //    //dot2.Radius = 0.01;
 
-                        this.Invoke(new EmptyDelegate(RefreshMap));
-                    }
+                    //    this.Invoke(new EmptyDelegate(RefreshMap));
+                    //}
 
                     //System.Threading.Thread.Sleep(10000);
                 }
