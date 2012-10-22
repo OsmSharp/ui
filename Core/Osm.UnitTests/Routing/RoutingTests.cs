@@ -76,9 +76,38 @@ namespace Osm.UnitTests.Routing
             Assert.AreEqual(51.0576193, route.Entries[4].Latitude, 0.00001);
             Assert.AreEqual(3.7191801, route.Entries[4].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
+        }
 
+        /// <summary>
+        /// Tests that a router preserves tags given to resolved points.
+        /// </summary>
+        protected void DoTestResolvedTags()
+        {
+            IRouter<ResolvedType> router = this.BuildRouter(
+                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
+                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+            ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
+            source.Tags.Add(new KeyValuePair<string,string>("name", "source"));
+            ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
+            target.Tags.Add(new KeyValuePair<string, string>("name", "target"));
 
+            OsmSharpRoute route = router.Calculate(source, target);
+            Assert.IsNotNull(route);
+            Assert.AreEqual(5, route.Entries.Length);
 
+            Assert.AreEqual(51.0578532, route.Entries[0].Latitude, 0.00001);
+            Assert.AreEqual(3.7192229, route.Entries[0].Longitude, 0.00001);
+            Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
+            Assert.IsNotNull(route.Entries[0].Points[0].Tags);
+            Assert.AreEqual(1, route.Entries[0].Points[0].Tags.Length);
+            Assert.AreEqual("source", route.Entries[0].Points[0].Tags[0].Value);
+
+            Assert.AreEqual(51.0576193, route.Entries[4].Latitude, 0.00001);
+            Assert.AreEqual(3.7191801, route.Entries[4].Longitude, 0.00001);
+            Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
+            Assert.IsNotNull(route.Entries[4].Points[0].Tags);
+            Assert.AreEqual(1, route.Entries[4].Points[0].Tags.Length);
+            Assert.AreEqual("target", route.Entries[4].Points[0].Tags[0].Value);
         }
     }
 }

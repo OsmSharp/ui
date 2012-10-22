@@ -613,6 +613,20 @@ namespace Osm.Routing.Core.Route
             return tags_list.ToArray();
         }
 
+        public static RouteTags[] ConvertFrom(List<KeyValuePair<string, string>> tags)
+        {
+            List<RouteTags> tags_list = new List<RouteTags>();
+            foreach (KeyValuePair<string, string> pair in tags)
+            {
+                RouteTags tag = new RouteTags();
+                tag.Key = pair.Key;
+                tag.Value = pair.Value;
+                tags_list.Add(tag);
+            }
+            return tags_list.ToArray();
+        }
+
+
         public static List<KeyValuePair<string, string>> ConvertTo(RouteTags[] tags)
         {
             List<KeyValuePair<string, string>> tags_list = new List<KeyValuePair<string, string>>();

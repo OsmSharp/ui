@@ -158,7 +158,7 @@ namespace Osm.Routing.Raw
             { 
                 // try to calculate this roure.
                 RouteLinked route = routing.Calculate(source.VertexId, target.VertexId);
-                return this.ConstructRoute(route);
+                return this.ConstructRoute(route, source, target);
             }
             catch (Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
             {
@@ -468,7 +468,7 @@ namespace Osm.Routing.Raw
         /// </summary>
         /// <param name="route"></param>
         /// <returns></returns>
-        private OsmSharpRoute ConstructRoute(RouteLinked route)
+        private OsmSharpRoute ConstructRoute(RouteLinked route, ResolvedPoint source, ResolvedPoint target)
         {
             List<VertexAlongEdge> route_list = 
                 new List<VertexAlongEdge>();
@@ -497,7 +497,7 @@ namespace Osm.Routing.Raw
             GraphVertex from = _graph.GetVertex(route.VertexId);
 
             // construct the actual graph route.
-            return this.Generate(from, to, route_list);
+            return this.Generate(source, from, target, to, route_list);
         }
 
 
@@ -508,7 +508,9 @@ namespace Osm.Routing.Raw
         /// <param name="to_point"></param>
         /// <param name="route_list"></param>
         /// <returns></returns>
-        internal OsmSharpRoute Generate(GraphVertex from_point, GraphVertex to_point,
+        internal OsmSharpRoute Generate(
+            ResolvedPoint from_resolved, GraphVertex from_point,
+            ResolvedPoint to_resolved, GraphVertex to_point,
            List<VertexAlongEdge> route_list)
         {
             // create the route.
@@ -537,6 +539,7 @@ namespace Osm.Routing.Raw
                 {
                     entries[0].Points = new RoutePoint[1];
                     entries[0].Points[0] = from;
+                    entries[0].Points[0].Tags = RouteTags.ConvertFrom(from_resolved.Tags);
                 }
 
                 // create the to routing point.
@@ -549,6 +552,7 @@ namespace Osm.Routing.Raw
                     //to.Tags = ConvertTo(to_point.Tags);
                     entries[entries.Length - 1].Points = new RoutePoint[1];
                     entries[entries.Length - 1].Points[0] = to;
+                    entries[entries.Length - 1].Points[0].Tags = RouteTags.ConvertFrom(to_resolved.Tags);
                 }
 
                 // set the routing points.

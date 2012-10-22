@@ -53,9 +53,18 @@ namespace Osm.UnitTests.Routing.Raw
         /// Tests a simple shortest route calculation.
         /// </summary>
         [TestMethod]
-        public void TestShortedDefault()
+        public void TestRawShortedDefault()
         {
             this.DoTestShortestDefault();
+        }
+
+        /// <summary>
+        /// Tests if the raw router preserves tags.
+        /// </summary>
+        [TestMethod]
+        public void TestRawResolvedTags()
+        {
+            this.DoTestResolvedTags();
         }
     }
 }
