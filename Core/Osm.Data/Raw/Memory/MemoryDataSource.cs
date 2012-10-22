@@ -22,6 +22,7 @@ using System.Text;
 using Osm.Core;
 using Tools.Math.Geo;
 using Osm.Core.Filters;
+using Osm.Data.Core.Processor;
 
 namespace Osm.Data.Core.Raw.Memory
 {
@@ -346,6 +347,18 @@ namespace Osm.Data.Core.Raw.Memory
         public IList<OsmBase> Get(GeoCoordinateBox box, Filter filter)
         {
             return new List<OsmBase>();
+        }
+
+        /// <summary>
+        /// Adds all objects from the given source to this memory data source.
+        /// </summary>
+        /// <param name="source"></param>
+        public void PullFromSource(DataProcessorSource source)
+        {
+            // create a special memory data source target.
+            MemoryDataSourceProcessorTarget target = new MemoryDataSourceProcessorTarget(this);
+            target.RegisterSource(source); // register the given source as the source.
+            target.Pull(); // pull the data from the source into the created target.
         }
     }
 }

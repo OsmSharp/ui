@@ -98,7 +98,7 @@ namespace Osm.Data.PBF.Raw.Processor
         /// </summary>
         /// <param name="pbf_primitive"></param>
         /// <returns></returns>
-        public SimpleOsmGeo Convert(KeyValuePair<PrimitiveBlock, object> pbf_primitive)
+        internal SimpleOsmGeo Convert(KeyValuePair<PrimitiveBlock, object> pbf_primitive)
         {
             if (pbf_primitive.Value == null || pbf_primitive.Key == null)
             {
@@ -132,7 +132,6 @@ namespace Osm.Data.PBF.Raw.Processor
                 Way way = (pbf_primitive.Value as Way);
 
                 SimpleWay simple_way = new SimpleWay();
-                simple_way.ChangeSetId = way.info.changeset;
                 simple_way.Id = way.id;
                 simple_way.Nodes = new List<long>();
                 long node_id = 0;
@@ -148,11 +147,15 @@ namespace Osm.Data.PBF.Raw.Processor
                         ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.keys[tag_idx]]),
                         ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.vals[tag_idx]])));
                 }
-                simple_way.TimeStamp = Tools.Core.Utilities.FromUnixTime((long)way.info.timestamp *
-                    (long)block.date_granularity);
-                simple_way.UserId = way.info.uid;
-                simple_way.UserName = ASCIIEncoding.ASCII.GetString(block.stringtable.s[way.info.user_sid]);
-                simple_way.Version = (ulong)way.info.version;
+                if (way.info != null)
+                { // add the metadata if any.
+                    simple_way.ChangeSetId = way.info.changeset;
+                    simple_way.TimeStamp = Tools.Core.Utilities.FromUnixTime((long)way.info.timestamp *
+                        (long)block.date_granularity);
+                    simple_way.UserId = way.info.uid;
+                    simple_way.UserName = ASCIIEncoding.ASCII.GetString(block.stringtable.s[way.info.user_sid]);
+                    simple_way.Version = (ulong)way.info.version;
+                }
                 simple_way.Visible = true;
 
                 return simple_way;
@@ -162,7 +165,6 @@ namespace Osm.Data.PBF.Raw.Processor
                 Relation relation = (pbf_primitive.Value as Relation);
 
                 SimpleRelation simple_relation = new SimpleRelation();
-                simple_relation.ChangeSetId = relation.info.changeset;
                 simple_relation.Id = relation.id;
                 simple_relation.Members = new List<SimpleRelationMember>();
                 long member_id = 0;
@@ -196,11 +198,15 @@ namespace Osm.Data.PBF.Raw.Processor
                         ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]),
                         ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.vals[tag_idx]])));
                 }
-                simple_relation.TimeStamp = Tools.Core.Utilities.FromUnixTime((long)relation.info.timestamp *
-                    (long)block.date_granularity);
-                simple_relation.UserId = relation.info.uid;
-                simple_relation.UserName = ASCIIEncoding.ASCII.GetString(block.stringtable.s[relation.info.user_sid]);
-                simple_relation.Version = (ulong)relation.info.version;
+                if (relation.info != null)
+                { // read metadata if any.
+                    simple_relation.ChangeSetId = relation.info.changeset;
+                    simple_relation.TimeStamp = Tools.Core.Utilities.FromUnixTime((long)relation.info.timestamp *
+                        (long)block.date_granularity);
+                    simple_relation.UserId = relation.info.uid;
+                    simple_relation.UserName = ASCIIEncoding.ASCII.GetString(block.stringtable.s[relation.info.user_sid]);
+                    simple_relation.Version = (ulong)relation.info.version;
+                }
                 simple_relation.Visible = true;
 
                 return simple_relation;
@@ -292,13 +298,13 @@ namespace Osm.Data.PBF.Raw.Processor
 
         #endregion
 
-        #region IPBFOsmPrimitiveConsumer Implementation
+        #endregion
 
         /// <summary>
         /// Processes a node.
         /// </summary>
         /// <param name="node"></param>
-        public void ProcessNode(PrimitiveBlock block, Node node)
+        void IPBFOsmPrimitiveConsumer.ProcessNode(PrimitiveBlock block, Node node)
         {
             this.QueuePrimitive(block, node);
         }
@@ -307,7 +313,7 @@ namespace Osm.Data.PBF.Raw.Processor
         /// Processes a way.
         /// </summary>
         /// <param name="way"></param>
-        public void ProcessWay(PrimitiveBlock block, Way way)
+        void IPBFOsmPrimitiveConsumer.ProcessWay(PrimitiveBlock block, Way way)
         {
             this.QueuePrimitive(block, way);
         }
@@ -316,13 +322,9 @@ namespace Osm.Data.PBF.Raw.Processor
         /// Processes a relation.
         /// </summary>
         /// <param name="relation"></param>
-        public void ProcessRelation(PrimitiveBlock block, Relation relation)
+        void IPBFOsmPrimitiveConsumer.ProcessRelation(PrimitiveBlock block, Relation relation)
         {
             this.QueuePrimitive(block, relation);
         }
-
-        #endregion
-
-        #endregion
     }
 }

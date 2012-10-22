@@ -1,5 +1,6 @@
-<?xml version="1.0"?>
-<osm generator="Merkaartor 0.17" version="0.6">
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="CGImap 0.0.2">
+  <bound box="51.057619,3.719180,51.057924,3.720107" origin="http://www.openstreetmap.org/api/0.6"/>
   <node version="0" lon="3.7192229" lat="51.0578532" timestamp="2012-10-19T10:58:43Z" user="" id="-1" actor="0" dirtylevel="1"/>
   <way version="0" timestamp="2012-10-19T10:58:43Z" user="" id="-2" actor="0" dirtylevel="7">
     <nd ref="-1"/>
@@ -23,5 +24,4 @@
   <node version="0" lon="3.7200602" lat="51.0577374" timestamp="2012-10-19T10:58:53Z" user="" id="-18" actor="0" dirtylevel="1"/>
   <node version="0" lon="3.7201065" lat="51.0578929" timestamp="2012-10-19T10:58:54Z" user="" id="-20" actor="0" dirtylevel="1"/>
   <node version="0" lon="3.7199817" lat="51.0579235" timestamp="2012-10-19T10:58:55Z" user="" id="-23" actor="0" dirtylevel="1"/>
-  <bound box="51.057619,3.719180,51.057924,3.720107" origin="http://www.openstreetmap.org/api/0.6"/>
 </osm>

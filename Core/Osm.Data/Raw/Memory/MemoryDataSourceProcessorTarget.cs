@@ -51,6 +51,8 @@ namespace Osm.Data.Core.Raw.Memory
         public override void Initialize()
         {
             _nodes = new Dictionary<long, Node>();
+            _ways = new Dictionary<long, Way>();
+            _relations = new Dictionary<long, Relation>();
         }
 
         /// <summary>

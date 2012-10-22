@@ -43,9 +43,12 @@ namespace Osm.Core.Factory
 
             node.ChangeSetId = simple_node.ChangeSetId;
             node.Coordinate = new GeoCoordinate(simple_node.Latitude.Value, simple_node.Longitude.Value);
-            foreach (KeyValuePair<string, string> pair in simple_node.Tags)
+            if (simple_node.Tags != null)
             {
-                node.Tags.Add(pair);
+                foreach (KeyValuePair<string, string> pair in simple_node.Tags)
+                {
+                    node.Tags.Add(pair);
+                }
             }
             node.TimeStamp = simple_node.TimeStamp;
             node.User = simple_node.UserName;

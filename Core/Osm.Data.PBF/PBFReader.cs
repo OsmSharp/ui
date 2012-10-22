@@ -26,7 +26,7 @@ namespace Osm.Data.PBF
     /// <summary>
     /// Reads PBF files.
     /// </summary>
-    public class PBFReader
+    internal class PBFReader
     {
         /// <summary>
         /// The stream containing the PBF data.
@@ -111,22 +111,32 @@ namespace Osm.Data.PBF
                     {
                         blob = Serializer.Deserialize<Blob>(tmp);
                     }
-                    if (blob.zlib_data == null) throw new NotSupportedException("I'm only handling zlib here!");
 
+                    // construct the source stream, compressed or not.
+                    Stream source_stream = null;
+                    if (blob.zlib_data == null)
+                    { // use a regular uncompressed stream.
+                        source_stream = new MemoryStream(blob.raw);
+                    }
+                    else
+                    { // construct a compressed stream.
+                        var ms = new MemoryStream(blob.zlib_data);
+                        source_stream = new ZLibStream(ms);
+                    }
+
+                    // use the stream to read the block.
                     HeaderBlock headerBlock;
-
-                    using (var ms = new MemoryStream(blob.zlib_data))
-                    using (var zlib = new ZLibStream(ms))
+                    using (source_stream)
                     {
                         if (header.type == "OSMHeader")
                         {
-                            headerBlock = Serializer.Deserialize<HeaderBlock>(zlib);
+                            headerBlock = Serializer.Deserialize<HeaderBlock>(source_stream);
                             not_found_but = true;
                         }
 
                         if (header.type == "OSMData")
                         {
-                            block = Serializer.Deserialize<PrimitiveBlock>(zlib);
+                            block = Serializer.Deserialize<PrimitiveBlock>(source_stream);
                         }
                     }
                 }

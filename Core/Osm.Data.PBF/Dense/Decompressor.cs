@@ -71,16 +71,19 @@ namespace Osm.Data.PBF.Dense
                                 primitivegroup.dense.lat[idx];
                             current_lon = current_lon + 
                                 primitivegroup.dense.lon[idx];
-                            current_changeset = current_changeset + 
-                                primitivegroup.dense.denseinfo.changeset[idx];
-                            current_timestamp = current_timestamp + 
-                                primitivegroup.dense.denseinfo.timestamp[idx];
-                            current_uid = current_uid + 
-                                primitivegroup.dense.denseinfo.uid[idx];
-                            current_user_sid = current_user_sid + 
-                                primitivegroup.dense.denseinfo.user_sid[idx];
-                            current_version = current_version + 
-                                primitivegroup.dense.denseinfo.version[idx];
+                            if (primitivegroup.dense.denseinfo != null)
+                            { // add all the metadata.
+                                current_changeset = current_changeset +
+                                    primitivegroup.dense.denseinfo.changeset[idx];
+                                current_timestamp = current_timestamp +
+                                    primitivegroup.dense.denseinfo.timestamp[idx];
+                                current_uid = current_uid +
+                                    primitivegroup.dense.denseinfo.uid[idx];
+                                current_user_sid = current_user_sid +
+                                    primitivegroup.dense.denseinfo.user_sid[idx];
+                                current_version = current_version +
+                                    primitivegroup.dense.denseinfo.version[idx];
+                            }
 
                             Node node = new Node();
                             node.id = current_id;
@@ -97,7 +100,8 @@ namespace Osm.Data.PBF.Dense
                             List<int> keys_vals = primitivegroup.dense.keys_vals;
                             List<uint> keys = new List<uint>();
                             List<uint> vals = new List<uint>();
-                            while (keys_vals[key_vals_idx] != 0)
+                            while (keys_vals.Count > key_vals_idx && 
+                                keys_vals[key_vals_idx] != 0)
                             {
                                 node.keys.Add((uint)keys_vals[key_vals_idx]);
                                 key_vals_idx++;

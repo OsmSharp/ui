@@ -36,26 +36,26 @@ namespace Osm.Routing.Test.PBF
 
             //PBFReader reader = new PBFReader(file);
             //reader.ReadAll(new Consumer());
-            DataProcessorTargetEmpty target = new DataProcessorTargetEmpty();
-            target.RegisterSource(new PBFDataProcessorSource(file));
-            target.Pull();
+            //DataProcessorTargetEmpty target = new DataProcessorTargetEmpty();
+            //target.RegisterSource(new PBFDataProcessorSource(file));
+            //target.Pull();
         }
     }
 
-    class Consumer : IPBFPrimitiveBlockConsumer
-    {
+    //class Consumer : IPBFPrimitiveBlockConsumer
+    //{
 
-        public void ProcessPrimitiveBlock(PrimitiveBlock block)
-        {
-            foreach(PrimitiveGroup group in block.primitivegroup)
-            {
-                DenseNodes dense = group.dense;
+    //    public void ProcessPrimitiveBlock(PrimitiveBlock block)
+    //    {
+    //        foreach(PrimitiveGroup group in block.primitivegroup)
+    //        {
+    //            DenseNodes dense = group.dense;
 
-                foreach (Node node in group.nodes)
-                {
-                    Trace.Write(node.ToString());
-                }
-            }
-        }
-    }
+    //            foreach (Node node in group.nodes)
+    //            {
+    //                Trace.Write(node.ToString());
+    //            }
+    //        }
+    //    }
+    //}
 }
