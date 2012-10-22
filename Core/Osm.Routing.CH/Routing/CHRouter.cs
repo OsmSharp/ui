@@ -540,7 +540,8 @@ namespace Osm.Routing.CH.Routing
             {
                 if (neighbour.Value.Forward && 
                     !settled_queue.Forward.ContainsKey(neighbour.Key) && 
-                    exception != neighbour.Key)
+                    exception != neighbour.Key &&
+                    exception != neighbour.Value.ContractedVertexId)
                 {
                     // if not yet settled.
                     CHPathSegment route_to_neighbour = new CHPathSegment(
@@ -548,7 +549,8 @@ namespace Osm.Routing.CH.Routing
                     queue.Push(route_to_neighbour);
                 }
                 else if (neighbour.Value.Forward &&
-                    exception != neighbour.Key)
+                    exception != neighbour.Key &&
+                    exception != neighbour.Value.ContractedVertexId)
                 {
                     // node was settled before: make sure this route is not shorter.
                     CHPathSegment route_to_neighbour = new CHPathSegment(
@@ -599,7 +601,8 @@ namespace Osm.Routing.CH.Routing
             {
                 if (neighbour.Value.Backward &&
                     !settled_queue.Backward.ContainsKey(neighbour.Key)
-                    && exception != neighbour.Key)
+                    && exception != neighbour.Key &&
+                    exception != neighbour.Value.ContractedVertexId)
                 {
                     // if not yet settled.
                     CHPathSegment route_to_neighbour = new CHPathSegment(
@@ -607,7 +610,8 @@ namespace Osm.Routing.CH.Routing
                     queue.Push(route_to_neighbour);
                 }
                 else if (neighbour.Value.Backward &&
-                    exception != neighbour.Key)
+                    exception != neighbour.Key &&
+                    exception != neighbour.Value.ContractedVertexId)
                 {
                     // node was settled before: make sure this route is not shorter.
                     CHPathSegment route_to_neighbour = new CHPathSegment(

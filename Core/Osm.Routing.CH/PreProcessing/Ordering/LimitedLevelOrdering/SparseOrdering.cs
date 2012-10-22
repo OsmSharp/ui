@@ -53,29 +53,79 @@ namespace Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
         {
             KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(vertex);
 
-            uint forward = 0, backward = 0;
+            Dictionary<uint, KeyValuePair<bool, bool>> directions_per_neighbour = new Dictionary<uint, KeyValuePair<bool, bool>>();
+            List<uint> neighbours_list = new List<uint>();
             foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
             {
-                if (neighbour.Value.Forward)
+                // get the existing direction.
+                KeyValuePair<bool, bool> directions;
+                if (!directions_per_neighbour.TryGetValue(neighbour.Key, out directions))
                 {
-                    forward++;
+                    directions = new KeyValuePair<bool, bool>(false, false);
                 }
-                if (neighbour.Value.Backward)
+
+                // create the new directions.
+                directions = new KeyValuePair<bool,bool>(directions.Key || neighbour.Value.Forward,
+                    directions.Value || neighbour.Value.Backward);
+
+                // keep the direction settings.
+                directions_per_neighbour[neighbour.Key] = directions;
+
+                // if there are more than two return.
+                if (directions_per_neighbour.Count > 2)
+                { // it is impossible that this is sparse.
+                    return float.MaxValue;
+                }
+
+                // add to the list.
+                if(!neighbours_list.Contains(neighbour.Key))
                 {
-                    backward++;
+                    neighbours_list.Add(neighbour.Key);
                 }
             }
 
-            if (forward == 2 &&
-                backward == 2)
+
+            // check the proper conditions.
+            if (neighbours_list.Count == 2)
             {
-                return -1;
+                // check if one of the neighbours is only forward.
+                foreach (uint neighbour in neighbours_list)
+                {
+                    KeyValuePair<bool, bool> direction_for_neighbour;
+                    if (directions_per_neighbour.TryGetValue(neighbour, out direction_for_neighbour))
+                    { // directions exist.
+                        if (direction_for_neighbour.Key && !direction_for_neighbour.Value)
+                        { // the neighbour has only a forward connection check at it's neighbour if there is a connection back.
+                            KeyValuePair<uint, CHEdgeData>[] neighbour_neigbours = _data.GetArcs(neighbour);
+                            foreach (KeyValuePair<uint, CHEdgeData> neighbour_neigbour in neighbour_neigbours)
+                            {
+                                if (neighbour_neigbour.Key == vertex &&
+                                    neighbour_neigbour.Value.Forward)
+                                { // there is also a backward direction.
+                                    directions_per_neighbour[neighbour] = new KeyValuePair<bool, bool>(true, true);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                KeyValuePair<bool, bool> directions1 = directions_per_neighbour[neighbours_list[0]];
+                KeyValuePair<bool, bool> directions2 = directions_per_neighbour[neighbours_list[1]];
+
+                if (directions1.Key && directions2.Key && directions1.Value && directions2.Value)
+                { // this one can be contracted.
+                    return -1;
+                }
+                else if (directions1.Key && directions2.Key && !directions1.Value && !directions2.Value)
+                { // this one can be contracted.
+                    return -1;
+                }
+                else if (!directions1.Key && !directions2.Key && directions1.Value && directions2.Value)
+                { // this one can be contracted.
+                    return -1;
+                }
             }
-            else
-            {
-                return float.MaxValue;
-            }
-            throw new NotImplementedException();
+            return float.MaxValue;
         }
 
         /// <summary>

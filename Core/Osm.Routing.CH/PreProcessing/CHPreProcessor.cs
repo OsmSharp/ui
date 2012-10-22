@@ -155,6 +155,9 @@ namespace Osm.Routing.CH.PreProcessing
                         new_data.Forward = true;
                         new_data.Backward = from.Value.Forward && to.Value.Backward;
                         new_data.Weight = weight;
+                        new_data.ContractedVertexId = vertex;
+
+                        // add the forward direction.
                         _target.AddArc(from.Key, to.Key, new_data);
 
                         this.NotifyArc(from.Key, to.Key); // notify a new arc.

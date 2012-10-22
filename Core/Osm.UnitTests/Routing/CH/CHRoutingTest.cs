@@ -22,14 +22,14 @@ namespace Osm.UnitTests.Routing.CH
     [TestClass]
     public class CHRoutingTest : SimpleRoutingTests<CHResolvedPoint>
     {
-        ///// <summary>
-        ///// Tests a simple shortest route calculation.
-        ///// </summary>
-        //[TestMethod]
-        //public void TestCHShortedDefault()
-        //{
-        //    this.DoTestShortestDefault();
-        //}
+        /// <summary>
+        /// Tests a simple shortest route calculation.
+        /// </summary>
+        [TestMethod]
+        public void TestCHShortedDefault()
+        {
+            this.DoTestShortestDefault();
+        }
 
         /// <summary>
         /// Returns a new router.
