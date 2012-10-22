@@ -104,7 +104,11 @@ namespace Osm.Data.Core.DynamicGraph.Memory
         /// <returns></returns>
         public IEnumerable<uint> GetVertices()
         {
-            return Tools.Core.Range.UInt32(1, (uint)_next_id - 1, 1U);
+            if (_next_id > 1)
+            {
+                return Tools.Core.Range.UInt32(1, (uint)_next_id - 1, 1U);
+            }
+            return new List<uint>();
         }
 
         /// <summary>
@@ -184,7 +188,7 @@ namespace Osm.Data.Core.DynamicGraph.Memory
                 }
                 return _vertices[vertex].Arcs;
             }
-            throw new ArgumentOutOfRangeException("vertex");
+            return new KeyValuePair<uint, EdgeData>[0]; // return empty data if the vertex does not exist!
         }
 
         /// <summary>

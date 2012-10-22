@@ -44,5 +44,16 @@ namespace Osm.Data.Core.Processor.Default
         {
 
         }
+
+        /// <summary>
+        /// Returns true if this source can be reset.
+        /// </summary>
+        public override bool CanReset
+        {
+            get
+            {
+                return true;
+            }
+        }
     }
 }

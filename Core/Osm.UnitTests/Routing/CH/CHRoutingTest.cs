@@ -15,6 +15,7 @@ using Osm.Data.XML.Raw.Processor;
 using Osm.Routing.CH.Processor;
 using Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using Osm.Routing.CH.PreProcessing.Witnesses;
+using Osm.Data.Core.Processor.Filter.Sort;
 
 namespace Osm.UnitTests.Routing.CH
 {
@@ -45,7 +46,11 @@ namespace Osm.UnitTests.Routing.CH
             // load the data.
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("Osm.UnitTests.test_network.osm"));
+            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
+            sorter.RegisterSource(data_processor_source);
             CHDataProcessorTarget ch_target = new CHDataProcessorTarget(data);
+            ch_target.RegisterSource(sorter);
+            ch_target.Pull();
 
             // do the pre-processing part.
             CHPreProcessor pre_processor = new CHPreProcessor(data, new SparseOrdering(data), new DykstraWitnessCalculator(data));

@@ -436,5 +436,10 @@ namespace Osm.Data.SQLite.Raw.Processor
                 _node_reader = null;
             }
         }
+
+        public override bool CanReset
+        {
+            get { return true; }
+        }
     }
 }

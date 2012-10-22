@@ -89,6 +89,11 @@ namespace Osm.Data.Core.Processor.ChangeSets.Impl
             throw new NotImplementedException();
         }
 
+        public override bool CanReset
+        {
+            get { throw new NotImplementedException(); }
+        }
+
         #endregion
 
     }

@@ -58,5 +58,14 @@ namespace Osm.Data.Core.Processor
         /// Resets the source to the beginning.
         /// </summary>
         public abstract void Reset();
+
+        /// <summary>
+        /// Returns true if this source can be reset.
+        /// </summary>
+        /// <returns></returns>
+        public abstract bool CanReset
+        {
+            get;
+        }
     }
 }

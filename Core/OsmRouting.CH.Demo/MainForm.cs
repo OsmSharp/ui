@@ -144,7 +144,7 @@ namespace OsmRouting.CH.Demo
             //string xml = "moscow.osm"; // the xml data source file.
             //this.mapEditorUserControl.Center = new GeoCoordinate(55.741005f, 37.546965f);
             //string xml = @"C:\OSM\bin\belgium_highway.osm";
-            string xml = @"C:\OSM\bin\flanders_highway.osm";
+            string xml = @"C:\OSM\bin\test_network.osm";
             OsmDataSource osm_data = new OsmDataSource(
                 new Osm.Core.Xml.OsmDocument(new XmlFileSource(xml)));
             //if (osm_data.HasBoundinBox)

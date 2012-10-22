@@ -78,6 +78,11 @@ namespace Osm.Data.XML.Raw.Processor
             _ser_way = new XmlSerializer(typeof(Osm.Core.Xml.v0_6.way));
             _ser_relation = new XmlSerializer(typeof(Osm.Core.Xml.v0_6.relation));
 
+            this.Reset();
+        }
+
+        public override void Reset()
+        {            
             // create the xml reader settings.
             XmlReaderSettings settings = new XmlReaderSettings();
             settings.CloseInput = true;
@@ -91,6 +96,12 @@ namespace Osm.Data.XML.Raw.Processor
             if (_stream != null)
             { // take the preset stream.
                 file_stream = _stream;
+
+                // seek to the beginning of the stream.
+                if (file_stream.CanSeek)
+                { // if a non-seekable stream is given resetting is disabled.
+                    file_stream.Seek(0, SeekOrigin.Begin);
+                }
             }
             else
             { // create a file stream.
@@ -107,16 +118,19 @@ namespace Osm.Data.XML.Raw.Processor
             _reader = XmlReader.Create(text_reader, settings);     
         }
 
-        public override void Reset()
+        /// <summary>
+        /// Returns true if this source can be reset.
+        /// </summary>
+        public override bool CanReset
         {
-            XmlReaderSettings settings = new XmlReaderSettings();
-            settings.CloseInput = true;
-            settings.CheckCharacters = false;
-            settings.IgnoreComments = true;
-            settings.IgnoreProcessingInstructions = true;
-
-            TextReader text_reader = new StreamReader(new FileInfo(_file_name).OpenRead(), Encoding.UTF8);
-            _reader = XmlReader.Create(text_reader, settings);     
+            get
+            {
+                if (_file_name == null)
+                {
+                    return _stream.CanSeek;
+                }
+                return true;
+            }
         }
 
         public override bool MoveNext()

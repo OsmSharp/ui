@@ -187,6 +187,11 @@ namespace Osm.Data.Core.Processor.Filter
             this.Source.Reset();
         }
 
+        public override bool CanReset
+        {
+            get { return this.Source.CanReset; }
+        }
+
         HashSet<long> _relations_considered = new HashSet<long>();
 
         private bool IsInBB(SimpleOsmGeo osm_geo)

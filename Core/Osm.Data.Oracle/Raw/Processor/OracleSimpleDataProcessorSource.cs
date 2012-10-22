@@ -494,5 +494,10 @@ namespace Osm.Data.Oracle.Raw.Processor
                 _node_tag_reader = null;
             }
         }
+
+        public override bool CanReset
+        {
+            get { return true; }
+        }
     }
 }

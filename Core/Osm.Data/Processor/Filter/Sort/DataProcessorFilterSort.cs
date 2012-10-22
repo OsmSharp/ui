@@ -86,5 +86,15 @@ namespace Osm.Data.Core.Processor.Filter.Sort
             _current_type = SimpleOsmGeoType.Node;
             this.Source.Reset();
         }
+        /// <summary>
+        /// Returns true if this source can be reset.
+        /// </summary>
+        public override bool CanReset
+        {
+            get
+            {
+                return this.Source.CanReset;
+            }
+        }
     }
 }

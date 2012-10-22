@@ -26,7 +26,6 @@ namespace Osm.Data.Processor.Main.Filters
 {
     public class RoutingFilter : DataProcessorFilter
     {
-
         public override void Initialize()
         {
             this.Source.Initialize();
@@ -159,5 +158,11 @@ namespace Osm.Data.Processor.Main.Filters
             _stack = new Stack<SimpleOsmGeo>();
             _highway_nodes = null;
         }
+
+        public override bool CanReset
+        {
+            get { return this.Source.CanReset; }
+        }
+
     }
 }

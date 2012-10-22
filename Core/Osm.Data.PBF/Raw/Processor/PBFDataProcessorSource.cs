@@ -88,7 +88,18 @@ namespace Osm.Data.PBF.Raw.Processor
         /// </summary>
         public override void Reset()
         {
-            throw new NotSupportedException();
+            _stream.Seek(0, SeekOrigin.Begin);
+        }
+
+        /// <summary>
+        /// Returns true if this source can be reset.
+        /// </summary>
+        public override bool CanReset
+        {
+            get
+            {
+                return _stream.CanSeek;
+            }
         }
 
         #region Primitive Conversion
