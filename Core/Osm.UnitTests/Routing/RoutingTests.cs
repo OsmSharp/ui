@@ -109,5 +109,35 @@ namespace Osm.UnitTests.Routing
             Assert.AreEqual(1, route.Entries[4].Points[0].Tags.Length);
             Assert.AreEqual("target", route.Entries[4].Points[0].Tags[0].Value);
         }
+
+        /// <summary>
+        /// Tests that a router preserves tags that are located on ways/arcs in the route.
+        /// </summary>
+        protected void DoTestArcTags()
+        {
+            IRouter<ResolvedType> router = this.BuildRouter(
+                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
+                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+            ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
+            source.Tags.Add(new KeyValuePair<string, string>("name", "source"));
+            ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
+            target.Tags.Add(new KeyValuePair<string, string>("name", "target"));
+
+            OsmSharpRoute route = router.Calculate(source, target);
+            Assert.IsNotNull(route);
+            Assert.AreEqual(5, route.Entries.Length);
+
+            Assert.AreEqual("highway", route.Entries[1].Tags[0].Key);
+            Assert.AreEqual("residential", route.Entries[1].Tags[0].Value);
+
+            Assert.AreEqual("highway", route.Entries[2].Tags[0].Key);
+            Assert.AreEqual("residential", route.Entries[2].Tags[0].Value);
+
+            Assert.AreEqual("highway", route.Entries[3].Tags[0].Key);
+            Assert.AreEqual("residential", route.Entries[3].Tags[0].Value);
+
+            Assert.AreEqual("highway", route.Entries[4].Tags[0].Key);
+            Assert.AreEqual("residential", route.Entries[4].Tags[0].Value);
+        }
     }
 }

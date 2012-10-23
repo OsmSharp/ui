@@ -66,5 +66,14 @@ namespace Osm.UnitTests.Routing.Raw
         {
             this.DoTestResolvedTags();
         }
+
+        /// <summary>
+        /// Tests if the raw router preserves tags on arcs/ways.
+        /// </summary>
+        [TestMethod]
+        public void TestRawArcTags()
+        {
+            this.DoTestArcTags();
+        }
     }
 }

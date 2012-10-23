@@ -676,6 +676,7 @@ namespace Osm.Routing.Raw
                 last.Latitude = (float)route_list[last_idx].Vertex.Coordinate.Latitude;
                 last.Longitude = (float)route_list[last_idx].Vertex.Coordinate.Longitude;
                 last.Type = RoutePointEntryType.Stop;
+                last.Tags = RouteTags.ConvertFrom(route_list[route_list.Count - 1].Edge.Tags);
                 last.WayFromName = _interpreter.GetName(way_last);
                 last.WayFromNames = RouteTags.ConvertFrom(_interpreter.GetNamesInAllLanguages(way_last));
 
