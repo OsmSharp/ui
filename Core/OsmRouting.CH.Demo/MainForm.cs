@@ -98,7 +98,7 @@ namespace OsmRouting.CH.Demo
         /// <summary>
         /// Keeps the data.
         /// </summary>
-        private IDynamicGraph<CHEdgeData> _data;
+        private CHDataSource _data;
 
         /// <summary>
         /// Keeps the first point.
@@ -171,16 +171,16 @@ namespace OsmRouting.CH.Demo
             //    this.mapEditorUserControl.Center = box.Center;
             //}
 
-            _data = new Osm.Data.Core.DynamicGraph.Memory.MemoryDynamicGraph<CHEdgeData>();
+            _data = new CHDataSource();
             //_data = new SQLiteCHData(@"Data Source=c:\temp\sqlite_ch.dat;Synchronous=OFF;Journal Mode=MEMORY;");
 
             _router = new Router(_data);
-            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(_data);
+            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(_data.Graph);
             INodeWeightCalculator calculator = null;
-            calculator = new Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering.SparseOrdering(_data);
+            calculator = new Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering.SparseOrdering(_data.Graph);
             //calculator = new EdgeDifference(_data, new DykstraWitnessCalculator(_data, 10));
             //calculator = new EdgeDifferenceContractedSearchSpace(_data, new DykstraWitnessCalculator(_data, 10));
-            CHPreProcessor pre_processor = new CHPreProcessor(_data, calculator, witness_calculator);
+            CHPreProcessor pre_processor = new CHPreProcessor(_data.Graph, calculator, witness_calculator);
             //pre_processor.NotifyArcEvent += new CHPreProcessor.ArcDelegate(pre_processor_NotifyArcEvent);
             //pre_processor.NotifyRemoveEvent += new CHPreProcessor.ArcDelegate(pre_processor_NotifyRemoveEvent);
             _target = new CHDataProcessorTarget(_data);
@@ -198,12 +198,12 @@ namespace OsmRouting.CH.Demo
 
             //pre_processor.Start();
 
-            _nodes = new List<uint>(_data.GetVertices());
+            _nodes = new List<uint>(_data.Graph.GetVertices());
 
             foreach (uint node in _nodes)
             {
                 float latitude, longitude;
-                if (_data.GetVertex(node, out latitude, out longitude))
+                if (_data.Graph.GetVertex(node, out latitude, out longitude))
                 {
                     //_nodes_layer.AddText(Color.Black.ToArgb(), 0.4f, node.ToString(), new GeoCoordinate(latitude, longitude));
                 }

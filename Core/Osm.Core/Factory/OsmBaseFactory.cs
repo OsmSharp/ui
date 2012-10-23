@@ -38,12 +38,12 @@ namespace Osm.Core.Factory
             return new Node(id);
         }
 
-        public static Node CreateNode(StringTable table)
+        public static Node CreateNode(ObjectTable<string> table)
         {
             return CreateNode(table, OsmBaseIdGenerator.NewId());
         }
 
-        public static Node CreateNode(StringTable table, long id)
+        public static Node CreateNode(ObjectTable<string> table, long id)
         {
             return new Node(table, id);
         }
@@ -70,7 +70,7 @@ namespace Osm.Core.Factory
             return node;
         }
 
-        public static Node CreateNodeFrom(StringTable table, SimpleNode simple_node)
+        public static Node CreateNodeFrom(ObjectTable<string> table, SimpleNode simple_node)
         {
             Node node = OsmBaseFactory.CreateNode(table, simple_node.Id.Value);
 
@@ -133,17 +133,17 @@ namespace Osm.Core.Factory
             return way;
         }
 
-        public static Way CreateWay(StringTable table)
+        public static Way CreateWay(ObjectTable<string> table)
         {
             return CreateWay(table, OsmBaseIdGenerator.NewId());
         }
 
-        public static Way CreateWay(StringTable table, long id)
+        public static Way CreateWay(ObjectTable<string> table, long id)
         {
             return new Way(table, id);
         }
 
-        public static Way CreateWayFrom(StringTable table, SimpleWay simple_way, IDictionary<long, Node> nodes)
+        public static Way CreateWayFrom(ObjectTable<string> table, SimpleWay simple_way, IDictionary<long, Node> nodes)
         {
             Way way = OsmBaseFactory.CreateWay(table, simple_way.Id.Value);
 
@@ -251,17 +251,17 @@ namespace Osm.Core.Factory
             return relation;
         }
 
-        public static Relation CreateRelation(StringTable table)
+        public static Relation CreateRelation(ObjectTable<string> table)
         {
             return CreateRelation(table, OsmBaseIdGenerator.NewId());
         }
 
-        public static Relation CreateRelation(StringTable table, long id)
+        public static Relation CreateRelation(ObjectTable<string> table, long id)
         {
             return new Relation(table, id);
         }
 
-        public static Relation CreateRelationFrom(StringTable table, SimpleRelation simple_relation,
+        public static Relation CreateRelationFrom(ObjectTable<string> table, SimpleRelation simple_relation,
             IDictionary<long, Node> nodes,
             IDictionary<long, Way> ways,
             IDictionary<long, Relation> relations)

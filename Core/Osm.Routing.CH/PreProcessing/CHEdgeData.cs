@@ -31,6 +31,12 @@ namespace Osm.Routing.CH.PreProcessing
 
         public float Weight { get; set; }
 
+        public bool HasContractedVertex { get; set; }
+
         public uint ContractedVertexId { get; set; }
+
+        public bool HasTags { get; set; }
+
+        public uint Tags { get; set; }
     }
 }

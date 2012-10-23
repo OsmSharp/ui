@@ -8,17 +8,17 @@ namespace Tools.Core.Collections
     /// <summary>
     /// A stringtable containing and index of strings to reduce memory usage.
     /// </summary>
-    public class StringTable
+    public class ObjectTable<Type>
     {
         /// <summary>
         /// The array containing all strings.
         /// </summary>
-        private string[] _strings;
+        private Type[] _strings;
 
         /// <summary>
         /// A dictionary containing the index of each string.
         /// </summary>
-        private Dictionary<string, uint> _reverse_index;
+        private Dictionary<Type, uint> _reverse_index;
 
         /// <summary>
         /// Holds the initial capacity and is also used as an allocation step.
@@ -34,7 +34,7 @@ namespace Tools.Core.Collections
         /// Creates a new string table.
         /// </summary>
         /// <param name="reverse_index">The reverse index is enable if true.</param>
-        public StringTable(bool reverse_index)
+        public ObjectTable(bool reverse_index)
             :this(reverse_index, 1000)
         {
 
@@ -44,9 +44,9 @@ namespace Tools.Core.Collections
         /// Creates a new string table.
         /// </summary>
         /// <param name="reverse_index">The reverse index is enable if true.</param>
-        public StringTable(bool reverse_index, int init_capacity)
+        public ObjectTable(bool reverse_index, int init_capacity)
         {
-            _strings = new string[init_capacity];
+            _strings = new Type[init_capacity];
 
             if (reverse_index)
             {
@@ -61,10 +61,10 @@ namespace Tools.Core.Collections
         /// </summary>
         public void BuildReverseIndex()
         {
-            _reverse_index = new Dictionary<string, uint>();
+            _reverse_index = new Dictionary<Type, uint>();
             for(uint idx = 0; idx < _strings.Length; idx++)
             {
-                string value = _strings[idx];
+                Type value = _strings[idx];
                 if (value != null)
                 {
                     _reverse_index[value] = idx;
@@ -84,13 +84,13 @@ namespace Tools.Core.Collections
 
         #region Table
 
-        private uint AddString(string value)
+        private uint AddString(Type value)
         {
             uint value_int = _next_idx;
 
             if (_strings.Length <= _next_idx)
             { // the string table is not big enough anymore.
-                Array.Resize<string>(ref _strings, _strings.Length + _init_capacity);
+                Array.Resize<Type>(ref _strings, _strings.Length + _init_capacity);
             }
             _strings[_next_idx] = value;
 
@@ -110,7 +110,7 @@ namespace Tools.Core.Collections
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public uint Add(string value)
+        public uint Add(Type value)
         {
             uint value_int;
             if (_reverse_index != null)
@@ -122,7 +122,7 @@ namespace Tools.Core.Collections
             }
             else
             {
-                int idx = Array.IndexOf<string>(_strings, value); // this is O(n), a lot worse compared to the best-case O(1).
+                int idx = Array.IndexOf<Type>(_strings, value); // this is O(n), a lot worse compared to the best-case O(1).
                 if (idx < 0)
                 { // string was not found.
                     value_int = this.AddString(value);
@@ -140,7 +140,7 @@ namespace Tools.Core.Collections
         /// </summary>
         /// <param name="value_idx"></param>
         /// <returns></returns>
-        public string Get(uint value_idx)
+        public Type Get(uint value_idx)
         {
             return _strings[value_idx];
         }

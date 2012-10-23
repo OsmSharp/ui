@@ -69,7 +69,7 @@ namespace Osm.Core
         /// </summary>
         /// <param name="id"></param>
         /// <param name="string_table"></param>
-        internal protected Way(StringTable string_table, long id)
+        internal protected Way(ObjectTable<string> string_table, long id)
             : base(string_table, id)
         {
             _nodes = new List<Node>();

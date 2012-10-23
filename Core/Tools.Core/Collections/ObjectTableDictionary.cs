@@ -8,12 +8,12 @@ namespace Tools.Core.Collections
     /// <summary>
     /// A dictionary that uses a string table behind.
     /// </summary>
-    public class StringTableDictionary : IDictionary<string, string>
+    public class StringTableDictionary<Type> : IDictionary<Type, Type>
     {
         /// <summary>
         /// Holds the string table.
         /// </summary>
-        private StringTable _string_table;
+        private ObjectTable<Type> _string_table;
 
         /// <summary>
         /// The dictionary behind.
@@ -24,7 +24,7 @@ namespace Tools.Core.Collections
         /// Creates a new dictionary.
         /// </summary>
         /// <param name="string_table"></param>
-        public StringTableDictionary(StringTable string_table)
+        public StringTableDictionary(ObjectTable<Type> string_table)
         {
             _string_table = string_table;
         }
@@ -34,7 +34,7 @@ namespace Tools.Core.Collections
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void Add(string key, string value)
+        public void Add(Type key, Type value)
         {
             uint key_int = _string_table.Add(key);
             uint value_int = _string_table.Add(value);
@@ -47,7 +47,7 @@ namespace Tools.Core.Collections
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public bool ContainsKey(string key)
+        public bool ContainsKey(Type key)
         {
             uint key_int = _string_table.Add(key);  // TODO: this could be problematic, testing contains adds objects to string table.
 
@@ -57,12 +57,12 @@ namespace Tools.Core.Collections
         /// <summary>
         /// Returns a collection of keys.
         /// </summary>
-        public ICollection<string> Keys
+        public ICollection<Type> Keys
         {
             get 
             { // i know pretty naive implementation.
                 // TODO: add an ICollection<string> accepting a StringTable object and an ICollection<uint>
-                List<string> keys = new List<string>();
+                List<Type> keys = new List<Type>();
                 foreach (uint key_int in _dictionary.Keys)
                 {
                     keys.Add(_string_table.Get(key_int));
@@ -76,7 +76,7 @@ namespace Tools.Core.Collections
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public bool Remove(string key)
+        public bool Remove(Type key)
         {
             uint key_int = _string_table.Add(key);
 
@@ -89,11 +89,11 @@ namespace Tools.Core.Collections
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public bool TryGetValue(string key, out string value)
+        public bool TryGetValue(Type key, out Type value)
         {
             uint key_int = _string_table.Add(key);
             uint value_int;
-            value = null;
+            value = default(Type);
             if (_dictionary.TryGetValue(key_int, out value_int))
             {
                 value = _string_table.Get(value_int);
@@ -104,12 +104,12 @@ namespace Tools.Core.Collections
         /// <summary>
         /// Returns all values in this dictionary.
         /// </summary>
-        public ICollection<string> Values
+        public ICollection<Type> Values
         {
             get
             { // i know pretty naive implementation.
                 // TODO: add an ICollection<string> accepting a StringTable object and an ICollection<uint>
-                List<string> keys = new List<string>();
+                List<Type> keys = new List<Type>();
                 foreach (uint key_int in _dictionary.Values)
                 {
                     keys.Add(_string_table.Get(key_int));
@@ -123,7 +123,7 @@ namespace Tools.Core.Collections
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public string this[string key]
+        public Type this[Type key]
         {
             get
             {
@@ -143,7 +143,7 @@ namespace Tools.Core.Collections
         /// Adds a key value pair.
         /// </summary>
         /// <param name="item"></param>
-        public void Add(KeyValuePair<string, string> item)
+        public void Add(KeyValuePair<Type, Type> item)
         {
             KeyValuePair<uint, uint> item_int = new KeyValuePair<uint, uint>(
                 _string_table.Add(item.Key), _string_table.Add(item.Key));
@@ -163,7 +163,7 @@ namespace Tools.Core.Collections
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool Contains(KeyValuePair<string, string> item)
+        public bool Contains(KeyValuePair<Type, Type> item)
         {
             uint value_int;
             if (_dictionary.TryGetValue(_string_table.Add(item.Key), out value_int))
@@ -178,9 +178,9 @@ namespace Tools.Core.Collections
         /// </summary>
         /// <param name="array"></param>
         /// <param name="arrayIndex"></param>
-        public void CopyTo(KeyValuePair<string, string>[] array, int arrayIndex)
+        public void CopyTo(KeyValuePair<Type, Type>[] array, int arrayIndex)
         {
-            foreach (KeyValuePair<string, string> pair in this)
+            foreach (KeyValuePair<Type, Type> pair in this)
             {
                 array[arrayIndex] = pair;
                 arrayIndex++;
@@ -208,7 +208,7 @@ namespace Tools.Core.Collections
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool Remove(KeyValuePair<string, string> item)
+        public bool Remove(KeyValuePair<Type, Type> item)
         {
             return this.Remove(item.Key);
         }
@@ -219,7 +219,7 @@ namespace Tools.Core.Collections
         /// Returns a enumerator for this dictionary.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<KeyValuePair<string, string>> GetEnumerator()
+        public IEnumerator<KeyValuePair<Type, Type>> GetEnumerator()
         {
             throw new NotImplementedException();
         }
@@ -233,21 +233,21 @@ namespace Tools.Core.Collections
             throw new NotImplementedException();
         }
 
-        private class StringTableDictionaryEnumerator : IEnumerator<KeyValuePair<string, string>>
+        private class StringTableDictionaryEnumerator : IEnumerator<KeyValuePair<Type, Type>>
         {
-            private KeyValuePair<string, string> _current;
+            private KeyValuePair<Type, Type> _current;
 
             private IEnumerator<KeyValuePair<uint, uint>> _enumerator;
 
-            private StringTable _string_table;
+            private ObjectTable<Type> _string_table;
 
-            public StringTableDictionaryEnumerator(StringTable string_table, IEnumerator<KeyValuePair<uint, uint>> enumerator)
+            public StringTableDictionaryEnumerator(ObjectTable<Type> string_table, IEnumerator<KeyValuePair<uint, uint>> enumerator)
             {
                 _enumerator = enumerator;
                 _string_table = string_table;
             }
 
-            public KeyValuePair<string, string> Current
+            public KeyValuePair<Type, Type> Current
             {
                 get { return _current; }
             }
@@ -266,7 +266,7 @@ namespace Tools.Core.Collections
             {
                 if (_enumerator.MoveNext())
                 {
-                    _current = new KeyValuePair<string, string>(
+                    _current = new KeyValuePair<Type, Type>(
                         _string_table.Get(_enumerator.Current.Key), _string_table.Get(_enumerator.Current.Value));
                     return true;
                 }

@@ -49,7 +49,7 @@ namespace Osm.Core
         /// Creates a new OsmGeo object with a string table.
         /// </summary>
         /// <param name="id"></param>
-        internal OsmGeo(StringTable string_table, long id)
+        internal OsmGeo(ObjectTable<string> string_table, long id)
             : base(string_table, id)
         {
             this.Visible = true;

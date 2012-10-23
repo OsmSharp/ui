@@ -16,7 +16,7 @@ namespace Tools.Test
         [TestMethod]
         public void TestStringTable_AddStrings()
         {
-            StringTable table = new StringTable(false);
+            ObjectTable<string> table = new ObjectTable<string>(false);
             uint zero = table.Add("zero");
             uint one = table.Add("one");
             uint two = table.Add("two");
@@ -34,7 +34,7 @@ namespace Tools.Test
             Assert.AreEqual("six", table.Get(6));
 
 
-            table = new StringTable(true);
+            table = new ObjectTable<string>(true);
             zero = table.Add("zero");
             one = table.Add("one");
             two = table.Add("two");
@@ -56,7 +56,7 @@ namespace Tools.Test
         [TestMethod]
         public void TestStringTable_AddStringsTwice()
         {
-            StringTable table = new StringTable(false);
+            ObjectTable<string> table = new ObjectTable<string>(false);
             uint zero = table.Add("zero");
             uint one = table.Add("one");
             uint two = table.Add("two");
@@ -89,7 +89,7 @@ namespace Tools.Test
             Assert.AreEqual("five", table.Get(5));
             Assert.AreEqual("six", table.Get(6));
 
-            table = new StringTable(true);
+            table = new ObjectTable<string>(true);
             zero = table.Add("zero");
             one = table.Add("one");
             two = table.Add("two");

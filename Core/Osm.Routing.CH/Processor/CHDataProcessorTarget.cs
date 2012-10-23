@@ -26,6 +26,8 @@ using Osm.Routing.Core.Processor;
 using Tools.Math.Geo;
 using Osm.Routing.Core.Roads.Tags;
 using Osm.Data.Core.DynamicGraph;
+using Osm.Routing.CH.PreProcessing.Tags;
+using Osm.Routing.CH.Routing;
 
 namespace Osm.Routing.CH.Processor
 {
@@ -35,13 +37,18 @@ namespace Osm.Routing.CH.Processor
     public class CHDataProcessorTarget : DynamicGraphDataProcessorTarget<CHEdgeData>
     {
         /// <summary>
+        /// Creates a new tags index.
+        /// </summary>
+        private CHDataSource _data_source;
+
+        /// <summary>
         /// Creates a new CH data processor target.
         /// </summary>
         /// <param name="target"></param>
-        public CHDataProcessorTarget(IDynamicGraph<CHEdgeData> target)
-            : base(target)
+        public CHDataProcessorTarget(CHDataSource data_source)
+            : base(data_source.Graph)
         {
-
+            _data_source = data_source;
         }
 
         /// <summary>
@@ -58,6 +65,16 @@ namespace Osm.Routing.CH.Processor
             data.Weight = (float) interpreter.Time(Core.VehicleEnum.Car, from, to);
             data.Forward = !interpreter.IsOneWayReverse();
             data.Backward = !interpreter.IsOneWay();
+            if (interpreter.Tags != null && interpreter.Tags.Count > 0)
+            {
+                data.HasTags = true;
+                data.Tags = _data_source.Add(interpreter.Tags);
+            }
+            else
+            {
+                data.HasTags = false;
+            }
+            data.HasContractedVertex = false;
 
             return data;
         }

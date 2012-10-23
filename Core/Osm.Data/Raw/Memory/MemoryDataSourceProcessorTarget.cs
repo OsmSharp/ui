@@ -40,7 +40,7 @@ namespace Osm.Data.Core.Raw.Memory
         /// <summary>
         /// Holds the string table.
         /// </summary>
-        private StringTable _string_table;
+        private ObjectTable<string> _string_table;
 
         /// <summary>
         /// Creates a memory data processor target.
@@ -55,7 +55,7 @@ namespace Osm.Data.Core.Raw.Memory
         /// Creates a memory data processor target.
         /// </summary>
         /// <param name="source"></param>
-        public MemoryDataSourceProcessorTarget(StringTable string_table, MemoryDataSource source)
+        public MemoryDataSourceProcessorTarget(ObjectTable<string> string_table, MemoryDataSource source)
         {
             _source = source;
             _string_table = string_table;

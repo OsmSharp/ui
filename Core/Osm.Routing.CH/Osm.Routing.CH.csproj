@@ -164,6 +164,7 @@
     <Compile Include="Processor\CHDataProcessorTarget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
+    <Compile Include="Routing\CHDataSource.cs" />
     <Compile Include="Routing\CHPriorityQueue.cs" />
     <Compile Include="Routing\CHPathSegment.cs" />
     <Compile Include="Routing\CHQueue.cs" />

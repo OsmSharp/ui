@@ -60,7 +60,7 @@ namespace Osm.Routing.Core.Roads.Tags
         /// <summary>
         /// Returns the tags this interpreter is for.
         /// </summary>
-        protected IDictionary<string, string> Tags
+        public IDictionary<string, string> Tags
         {
             get
             {

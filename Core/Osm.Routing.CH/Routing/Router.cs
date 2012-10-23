@@ -33,12 +33,12 @@ namespace Osm.Routing.CH.Routing
     {
         private CHRouter _ch_router;
 
-        private IDynamicGraph<CHEdgeData> _data;
+        private CHDataSource _data;
 
-        public Router(IDynamicGraph<CHEdgeData> data)
+        public Router(CHDataSource data)
         {
             _data = data;
-            _ch_router = new CHRouter(data);
+            _ch_router = new CHRouter(data.Graph);
             //_ch_router.NotifyCHPathSegmentEvent += new CHRouter.NotifyCHPathSegmentDelegate(_ch_router_NotifyCHPathSegmentEvent);
         }
 
@@ -241,7 +241,10 @@ namespace Osm.Routing.CH.Routing
                     }
 
                     // add the tags of the current arc to the previous point.
-                    entry.Tags = new RouteTags[0]; // TODO: add a way to do the tagging stuff!
+                    if (arc.Value != null && arc.Value.HasTags)
+                    {
+                        entry.Tags = RouteTags.ConvertFrom(_data.Get(arc.Value.Tags));
+                    }
 
                     // add to the route.
                     // TODO: get these tags from somewhere or find a better way to generate routing instructions?
@@ -300,7 +303,7 @@ namespace Osm.Routing.CH.Routing
         /// <returns></returns>
         private KeyValuePair<uint, CHEdgeData>[] GetArcs(uint vertex)
         {
-            return _data.GetArcs(vertex);
+            return _data.Graph.GetArcs(vertex);
         }
 
         /// <summary>
@@ -312,7 +315,7 @@ namespace Osm.Routing.CH.Routing
         {
             float latitude;
             float longitude;
-            if (_data.GetVertex(vertex, out latitude, out longitude))
+            if (_data.Graph.GetVertex(vertex, out latitude, out longitude))
             {
                 return new CHResolvedPoint(vertex, new GeoCoordinate(latitude, longitude));
             }

@@ -56,13 +56,13 @@ namespace Osm.Core
         /// </summary>
         /// <param name="string_table"></param>
         /// <param name="id"></param>
-        internal OsmBase(StringTable string_table, long id)
+        internal OsmBase(ObjectTable<string> string_table, long id)
         {
             _id = id;
 
             if (string_table != null)
             {
-                _tags = new StringTableDictionary(string_table);
+                _tags = new StringTableDictionary<string>(string_table);
             }
             else
             {

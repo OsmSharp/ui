@@ -209,6 +209,7 @@
     <Compile Include="Sources\INodeSource.cs" />
     <Compile Include="Sources\IRelationSource.cs" />
     <Compile Include="Sources\IWaySource.cs" />
+    <Compile Include="Tags\OsmTagsIndex.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Way.cs" />
     <Compile Include="Xml\OsmDocument.cs" />

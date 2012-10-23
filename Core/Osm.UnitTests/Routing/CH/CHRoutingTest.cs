@@ -59,7 +59,7 @@ namespace Osm.UnitTests.Routing.CH
             IRoutingConstraints constraints)
         {
             // build the memory data source.
-            IDynamicGraph<CHEdgeData> data = new MemoryDynamicGraph<CHEdgeData>();
+            CHDataSource data = new CHDataSource();
 
             // load the data.
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
@@ -71,7 +71,8 @@ namespace Osm.UnitTests.Routing.CH
             ch_target.Pull();
 
             // do the pre-processing part.
-            CHPreProcessor pre_processor = new CHPreProcessor(data, new SparseOrdering(data), new DykstraWitnessCalculator(data));
+            CHPreProcessor pre_processor = new CHPreProcessor(data.Graph,
+                new SparseOrdering(data.Graph), new DykstraWitnessCalculator(data.Graph));
             pre_processor.Start();
             
             // create the router from the contracted data.

@@ -49,7 +49,7 @@ namespace Osm.Core
         /// </summary>
         /// <param name="id"></param>
         /// <param name="string_table"></param>
-        internal protected Relation(StringTable string_table, long id)
+        internal protected Relation(ObjectTable<string> string_table, long id)
             : base(string_table, id)
         {
             _members = new List<RelationMember>();
