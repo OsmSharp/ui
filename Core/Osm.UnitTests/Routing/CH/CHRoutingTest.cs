@@ -32,6 +32,15 @@ namespace Osm.UnitTests.Routing.CH
         }
 
         /// <summary>
+        /// Tests if the raw router preserves tags.
+        /// </summary>
+        [TestMethod]
+        public void TestCHResolvedTags()
+        {
+            this.DoTestResolvedTags();
+        }
+
+        /// <summary>
         /// Returns a new router.
         /// </summary>
         /// <param name="interpreter"></param>

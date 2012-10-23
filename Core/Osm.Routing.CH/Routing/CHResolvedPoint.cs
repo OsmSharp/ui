@@ -31,6 +31,7 @@ namespace Osm.Routing.CH.Routing
         {
             this.Id = id;
             this.Location = coordinate;
+            this.Tags = new List<KeyValuePair<string, string>>();
         }
 
         public string Name { get; set; }
@@ -39,6 +40,6 @@ namespace Osm.Routing.CH.Routing
 
         public GeoCoordinate Location { get; private set; }
 
-        public List<KeyValuePair<string, string>> Tags { get; set; }
+        public List<KeyValuePair<string, string>> Tags { get; private set; }
     }
 }
