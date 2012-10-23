@@ -188,10 +188,10 @@ namespace Osm.Routing.CH.Routing
                 while (route.From != null)
                 {
                     // get the neighbours and retrieve the tags.
-                    KeyValuePair<uint, CHEdgeData>[] neighbours = this.GetArcs(to.Id);
+                    KeyValuePair<uint, CHEdgeData>[] neighbours = this.GetArcs(route.VertexId);
                     KeyValuePair<uint, CHEdgeData> arc = new KeyValuePair<uint, CHEdgeData>();
                     foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
-                        a => a.Value.Backward && a.Key == route.VertexId))
+                        a => a.Value.Backward && a.Key == route.From.VertexId))
                     {
                         if (arc.Value == null)
                         {
@@ -202,9 +202,6 @@ namespace Osm.Routing.CH.Routing
                             arc = neighbour;
                         }
                     }
-
-                    // get the edge by querying the forward neighbours of the from-vertex.
-                    CHResolvedPoint vertex = this.GetCHVertex(route.From.VertexId);
 
                     // get the neighbours.
                     neighbours = this.GetArcs(route.From.VertexId);
@@ -245,6 +242,9 @@ namespace Osm.Routing.CH.Routing
                     {
                         entry.Tags = RouteTags.ConvertFrom(_data.Get(arc.Value.Tags));
                     }
+
+                    // get the edge by querying the forward neighbours of the from-vertex.
+                    CHResolvedPoint vertex = this.GetCHVertex(route.From.VertexId);
 
                     // add to the route.
                     // TODO: get these tags from somewhere or find a better way to generate routing instructions?
