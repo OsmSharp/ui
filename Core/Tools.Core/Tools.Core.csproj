@@ -171,6 +171,8 @@
     <Compile Include="Collections\DictionaryWithEvents.cs" />
     <Compile Include="Collections\LimitedStack.cs" />
     <Compile Include="Collections\SortedSet.cs" />
+    <Compile Include="Collections\StringTable.cs" />
+    <Compile Include="Collections\StringTableDictionary.cs" />
     <Compile Include="DelimitedFiles\DefaultDelimitedFormat.cs" />
     <Compile Include="DelimitedFiles\DelimitedFileHandler.cs" />
     <Compile Include="DelimitedFiles\DelimiterType.cs" />

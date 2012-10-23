@@ -41,6 +41,15 @@ namespace Osm.UnitTests.Routing.CH
         }
 
         /// <summary>
+        /// Tests if the raw router preserves tags on arcs/ways.
+        /// </summary>
+        [TestMethod]
+        public void TestCHArcTags()
+        {
+            this.DoTestArcTags();
+        }
+
+        /// <summary>
         /// Returns a new router.
         /// </summary>
         /// <param name="interpreter"></param>

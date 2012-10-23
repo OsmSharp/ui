@@ -147,6 +147,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StringTableTests.cs" />
     <Compile Include="StringTreeDictionaryTest.cs" />
     <None Include="test.v2.0.kml" />
     <None Include="test.v1.1.gpx" />
