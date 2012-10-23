@@ -23,6 +23,7 @@ using Osm.Core;
 using Osm.Data.Core.Processor;
 using Osm.Core.Simple;
 using Osm.Core.Factory;
+using Tools.Core.Collections;
 
 namespace Osm.Data.Core.Raw.Memory
 {
@@ -37,12 +38,27 @@ namespace Osm.Data.Core.Raw.Memory
         private MemoryDataSource _source;
 
         /// <summary>
+        /// Holds the string table.
+        /// </summary>
+        private StringTable _string_table;
+
+        /// <summary>
         /// Creates a memory data processor target.
         /// </summary>
         /// <param name="source"></param>
         public MemoryDataSourceProcessorTarget(MemoryDataSource source)
         {
             _source = source;
+        }
+
+        /// <summary>
+        /// Creates a memory data processor target.
+        /// </summary>
+        /// <param name="source"></param>
+        public MemoryDataSourceProcessorTarget(StringTable string_table, MemoryDataSource source)
+        {
+            _source = source;
+            _string_table = string_table;
         }
 
         /// <summary>
@@ -75,7 +91,7 @@ namespace Osm.Data.Core.Raw.Memory
         /// <param name="simple_node"></param>
         public override void AddNode(SimpleNode simple_node)
         {
-            Node node= OsmBaseFactory.CreateNodeFrom(simple_node);
+            Node node= OsmBaseFactory.CreateNodeFrom(_string_table, simple_node);
             if (node != null)
             {
                 _nodes[node.Id] = node;
@@ -95,7 +111,7 @@ namespace Osm.Data.Core.Raw.Memory
         /// <param name="simple_way"></param>
         public override void AddWay(SimpleWay simple_way)
         {
-            Way way = OsmBaseFactory.CreateWayFrom(simple_way, _nodes);
+            Way way = OsmBaseFactory.CreateWayFrom(_string_table, simple_way, _nodes);
             if (way != null)
             {
                 _ways[way.Id] = way;
@@ -115,7 +131,7 @@ namespace Osm.Data.Core.Raw.Memory
         /// <param name="simple_relation"></param>
         public override void AddRelation(SimpleRelation simple_relation)
         {
-            Relation relation = OsmBaseFactory.CreateRelationFrom(simple_relation, _nodes, _ways, _relations);
+            Relation relation = OsmBaseFactory.CreateRelationFrom(_string_table, simple_relation, _nodes, _ways, _relations);
             if (relation != null)
             {
                 _relations[relation.Id] = relation;

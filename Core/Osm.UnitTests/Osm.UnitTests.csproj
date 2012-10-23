@@ -122,6 +122,10 @@
       <Project>{5E146436-B64C-4C3A-832E-26A53AA6BA54}</Project>
       <Name>Osm.Routing.Raw</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tools.Core\Tools.Core.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>Tools.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tools.Math\Tools.Math.csproj">
       <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
       <Name>Tools.Math</Name>

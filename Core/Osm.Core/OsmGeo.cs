@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using Tools.Math.Geo;
 using Tools.Math.Shapes;
+using Tools.Core.Collections;
 
 namespace Osm.Core
 {
@@ -32,8 +33,24 @@ namespace Osm.Core
     [Serializable]
     public abstract class OsmGeo : OsmBase
     {
+        /// <summary>
+        /// Creates a new OsmGeo object.
+        /// </summary>
+        /// <param name="id"></param>
         internal OsmGeo(long id)
             :base(id)
+        {
+            this.Visible = true;
+            this.UserId = null;
+            this.User = null;
+        }
+
+        /// <summary>
+        /// Creates a new OsmGeo object with a string table.
+        /// </summary>
+        /// <param name="id"></param>
+        internal OsmGeo(StringTable string_table, long id)
+            : base(string_table, id)
         {
             this.Visible = true;
             this.UserId = null;

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.Geo;
+using Tools.Core.Collections;
 
 namespace Osm.Core
 {
@@ -29,8 +30,23 @@ namespace Osm.Core
     [Serializable]
     public class Node : OsmGeo, IEquatable<Node>
     {
+        /// <summary>
+        /// Creates a new node.
+        /// </summary>
+        /// <param name="id"></param>
         internal protected Node(long id)
             :base(id)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new node using a string table.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="string_table"></param>
+        internal protected Node(StringTable string_table, long id)
+            : base(string_table, id)
         {
 
         }
@@ -61,6 +77,10 @@ namespace Osm.Core
 
         #endregion
 
+        /// <summary>
+        /// Returns a description of this node.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             if (this.Coordinate != null)

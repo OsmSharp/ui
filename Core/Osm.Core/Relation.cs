@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Tools.Core.Collections;
 
 namespace Osm.Core
 {
@@ -39,6 +40,17 @@ namespace Osm.Core
         /// <param name="id"></param>
         internal protected Relation(long id)
             :base(id)
+        {
+            _members = new List<RelationMember>();
+        }
+
+        /// <summary>
+        /// Creates a new relation using a string table.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="string_table"></param>
+        internal protected Relation(StringTable string_table, long id)
+            : base(string_table, id)
         {
             _members = new List<RelationMember>();
         }

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.Geo;
+using Tools.Core.Collections;
 
 namespace Osm.Core
 {
@@ -35,13 +36,38 @@ namespace Osm.Core
     [Serializable]
     public abstract class OsmBase : IEquatable<OsmBase>
     {
+        /// <summary>
+        /// Holds the id of the object.
+        /// </summary>
         private long _id;
 
+        /// <summary>
+        /// Creates a new base object.
+        /// </summary>
+        /// <param name="id"></param>
         internal OsmBase(long id)
+            : this(null, id)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new base object with a string table for the tags.
+        /// </summary>
+        /// <param name="string_table"></param>
+        /// <param name="id"></param>
+        internal OsmBase(StringTable string_table, long id)
         {
             _id = id;
 
-            _tags = new Dictionary<string, string>();
+            if (string_table != null)
+            {
+                _tags = new StringTableDictionary(string_table);
+            }
+            else
+            {
+                _tags = new Dictionary<string, string>();
+            }
         }
 
         /// <summary>

@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using Tools.Math.Geo;
 using Osm.Core.Factory;
+using Tools.Core.Collections;
 
 namespace Osm.Core
 {
@@ -57,79 +58,22 @@ namespace Osm.Core
         /// Creates a new way.
         /// </summary>
         /// <param name="id"></param>
-
         internal protected Way(long id)
             : base(id)
         {
             _nodes = new List<Node>();
         }
 
-        private string _oldTag = null;
-        private HighwayTypeEnum _highwaytype = HighwayTypeEnum.not_set;
-
-        public HighwayTypeEnum HighwayType
+        /// <summary>
+        /// Creates a new way using a string table.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="string_table"></param>
+        internal protected Way(StringTable string_table, long id)
+            : base(string_table, id)
         {
-            get
-            {
-                if (!base.Tags.ContainsKey("highway")) return HighwayTypeEnum.not_set;
-                if (_oldTag == base.Tags["highway"]) return _highwaytype;
-                _oldTag = base.Tags["highway"];
-                switch (_oldTag)
-                {
-                    case "residential":
-                        _highwaytype = HighwayTypeEnum.residential;
-                        break;
-                    case "tertiary":
-                        _highwaytype = HighwayTypeEnum.tertiary;
-                        break;
-                    case "secondary":
-                        _highwaytype = HighwayTypeEnum.secondary;
-                        break;
-                    case "primary":
-                    case "primary_link":
-                        _highwaytype = HighwayTypeEnum.primary;
-                        break;
-                    case "trunk":
-                    case "trunk_link":
-                        _highwaytype = HighwayTypeEnum.trunk;
-                        break;
-                    case "motorway":
-                    case "motorway_link":
-                        _highwaytype = HighwayTypeEnum.motorway;
-                        break;
-                    case "service":
-                        _highwaytype = HighwayTypeEnum.service;
-                        break;
-                    case "living_street":
-                    case "unclassified":
-                        _highwaytype = HighwayTypeEnum.living_Street;
-                        break;
-                    case "pedestrian":
-                    case "steps":
-                    case "path":
-                    case "footway":
-                        _highwaytype = HighwayTypeEnum.pedestrian;
-                        break;
-                    case "proposed":
-                        _highwaytype = HighwayTypeEnum.proposed;
-                        break;
-                    case "cycleway":
-                        _highwaytype = HighwayTypeEnum.cycleway;
-                        break;
-                    case "track":
-                        _highwaytype = HighwayTypeEnum.track;
-                        break;
-                    default:
-                        _highwaytype = HighwayTypeEnum.others;
-                        break;
-                }
-                return _highwaytype;
-            }
+            _nodes = new List<Node>();
         }
-
-
-
-
 
         /// <summary>
         /// Returns the way type.
