@@ -105,6 +105,7 @@ namespace Osm.Routing.CH.PreProcessing.Tags
                     {
                         tags_int[idx, 0] = string_table.Add(tag.Key);
                         tags_int[idx, 1] = string_table.Add(tag.Value);
+                        idx++;
                     }
                     return new OsmTags(tags_int);
                 }

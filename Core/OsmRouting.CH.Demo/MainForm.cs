@@ -144,7 +144,7 @@ namespace OsmRouting.CH.Demo
             //string xml = "moscow.osm"; // the xml data source file.
             //this.mapEditorUserControl.Center = new GeoCoordinate(55.741005f, 37.546965f);
             //string xml = @"C:\OSM\bin\belgium_highway.osm";
-            string xml = @"C:\OSM\bin\wechel.osm";
+            string xml = @"C:\OSM\bin\eeklo.osm";
             OsmDataSource osm_data = new OsmDataSource(
                 new Osm.Core.Xml.OsmDocument(new XmlFileSource(xml)));
             //if (osm_data.HasBoundinBox)
@@ -177,8 +177,8 @@ namespace OsmRouting.CH.Demo
             _router = new Router(_data);
             INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(_data.Graph);
             INodeWeightCalculator calculator = null;
-            calculator = new Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering.SparseOrdering(_data.Graph);
-            //calculator = new EdgeDifference(_data, new DykstraWitnessCalculator(_data, 10));
+            //calculator = new Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering.SparseOrdering(_data.Graph);
+            calculator = new EdgeDifference(_data.Graph, new DykstraWitnessCalculator(_data.Graph, 10));
             //calculator = new EdgeDifferenceContractedSearchSpace(_data, new DykstraWitnessCalculator(_data, 10));
             CHPreProcessor pre_processor = new CHPreProcessor(_data.Graph, calculator, witness_calculator);
             //pre_processor.NotifyArcEvent += new CHPreProcessor.ArcDelegate(pre_processor_NotifyArcEvent);
