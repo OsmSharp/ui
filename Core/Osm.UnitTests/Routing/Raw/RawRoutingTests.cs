@@ -75,5 +75,50 @@ namespace Osm.UnitTests.Routing.Raw
         {
             this.DoTestArcTags();
         }
+
+        /// <summary>
+        /// Test is the raw router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestRawShortest1()
+        {
+            this.DoTestShortest1();
+        }
+
+        /// <summary>
+        /// Test is the raw router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestRawShortest2()
+        {
+            this.DoTestShortest2();
+        }
+
+        /// <summary>
+        /// Test is the raw router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestRawShortest3()
+        {
+            this.DoTestShortest3();
+        }
+
+        /// <summary>
+        /// Test is the raw router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestRawShortest4()
+        {
+            this.DoTestShortest4();
+        }
+
+        /// <summary>
+        /// Test is the raw router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestRawShortest5()
+        {
+            this.DoTestShortest5();
+        }
     }
 }

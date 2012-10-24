@@ -259,7 +259,7 @@ namespace Osm.Routing.Raw.Graphs
                         double dist = (base_obj as OsmGeo).Shape.Distance(coordinate);
 
                         // take the node if the distance is zero.
-                        if (dist == 0 && (base_obj is Node))
+                        if (dist < 0.000001 && (base_obj is Node))
                         { // distance is zero and object is a node.
                             return new GraphVertex(base_obj as Node);
                         }

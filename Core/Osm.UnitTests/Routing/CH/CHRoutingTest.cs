@@ -78,5 +78,52 @@ namespace Osm.UnitTests.Routing.CH
             // create the router from the contracted data.
             return new Router(data);
         }
+
+
+
+        /// <summary>
+        /// Test is the CH router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHShortest1()
+        {
+            this.DoTestShortest1();
+        }
+
+        /// <summary>
+        /// Test is the CH router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHShortest2()
+        {
+            this.DoTestShortest2();
+        }
+
+        /// <summary>
+        /// Test is the CH router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHShortest3()
+        {
+            this.DoTestShortest3();
+        }
+
+        /// <summary>
+        /// Test is the CH router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHShortest4()
+        {
+            this.DoTestShortest4();
+        }
+
+        /// <summary>
+        /// Test is the CH router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHShortest5()
+        {
+            this.DoTestShortest5();
+        }
     }
 }

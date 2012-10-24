@@ -139,5 +139,85 @@ namespace Osm.UnitTests.Routing
             Assert.AreEqual("highway", route.Entries[4].Tags[0].Key);
             Assert.AreEqual("residential", route.Entries[4].Tags[0].Value);
         }
+
+        /// <summary>
+        /// Tests that a router actually finds the shortest route.
+        /// </summary>
+        protected void DoTestShortest1()
+        {
+            IRouter<ResolvedType> router = this.BuildRouter(
+                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
+                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+            ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
+            ResolvedType target = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
+
+            OsmSharpRoute route = router.Calculate(source, target);
+            Assert.IsNotNull(route);
+            Assert.AreEqual(6, route.Entries.Length);
+        }
+
+        /// <summary>
+        /// Tests that a router actually finds the shortest route.
+        /// </summary>
+        protected void DoTestShortest2()
+        {
+            IRouter<ResolvedType> router = this.BuildRouter(
+                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
+                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+            ResolvedType source = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
+            ResolvedType target = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
+
+            OsmSharpRoute route = router.Calculate(source, target);
+            Assert.IsNotNull(route);
+            Assert.AreEqual(6, route.Entries.Length);
+        }
+
+        /// <summary>
+        /// Tests that a router actually finds the shortest route.
+        /// </summary>
+        protected void DoTestShortest3()
+        {
+            IRouter<ResolvedType> router = this.BuildRouter(
+                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
+                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+            ResolvedType source = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
+            ResolvedType target = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
+
+            OsmSharpRoute route = router.Calculate(source, target);
+            Assert.IsNotNull(route);
+            Assert.AreEqual(6, route.Entries.Length);
+        }
+
+        /// <summary>
+        /// Tests that a router actually finds the shortest route.
+        /// </summary>
+        protected void DoTestShortest4()
+        {
+            IRouter<ResolvedType> router = this.BuildRouter(
+                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
+                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+            ResolvedType source = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
+            ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
+
+            OsmSharpRoute route = router.Calculate(source, target);
+            Assert.IsNotNull(route);
+            Assert.AreEqual(6, route.Entries.Length);
+        }
+
+        /// <summary>
+        /// Tests that a router actually finds the shortest route.
+        /// </summary>
+        protected void DoTestShortest5()
+        {
+            IRouter<ResolvedType> router = this.BuildRouter(
+                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
+                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+            ResolvedType source = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
+            ResolvedType target = router.Resolve(new GeoCoordinate(51.0581001, 3.7200612));
+
+            OsmSharpRoute route = router.Calculate(source, target);
+            Assert.IsNotNull(route);
+            Assert.AreEqual(7, route.Entries.Length);
+        }
     }
 }
