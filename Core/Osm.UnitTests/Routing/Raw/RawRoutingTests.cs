@@ -120,5 +120,14 @@ namespace Osm.UnitTests.Routing.Raw
         {
             this.DoTestShortest5();
         }
+
+        /// <summary>
+        /// Test if the raw router many-to-many weights correspond to the point-to-point weights.
+        /// </summary>
+        [TestMethod]
+        public void TestRawManyToMany1()
+        {
+            this.DoTestManyToMany1();
+        }
     }
 }

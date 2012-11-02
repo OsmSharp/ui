@@ -125,5 +125,14 @@ namespace Osm.UnitTests.Routing.CH
         {
             this.DoTestShortest5();
         }
+
+        /// <summary>
+        /// Test if the ch router many-to-many weights correspond to the point-to-point weights.
+        /// </summary>
+        [TestMethod]
+        public void TestCHManyToMany1()
+        {
+            this.DoTestManyToMany1();
+        }
     }
 }

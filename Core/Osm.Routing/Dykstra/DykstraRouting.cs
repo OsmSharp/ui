@@ -71,7 +71,7 @@ namespace Osm.Routing.Dykstra
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public RouteLinked Calculate(long from, long to)
+        public RouteLinked Calculate(long from, long to, float max)
         {
             // intialize dyskstra data structures.
             SortedVisitList visit_list = new SortedVisitList();
@@ -152,7 +152,16 @@ namespace Osm.Routing.Dykstra
                     // choose the next vertex.
                     current = visit_list.GetFirst();
                     chosen_nodes.Add(current.VertexId);
+                    while (current != null && current.Weight > max)
+                    {
+                        current = visit_list.GetFirst();
+                    }
 
+                    if (current == null)
+                    {
+                        break;
+                    }
+                    
                     // check target.
                     if (to == current.VertexId)
                     {
@@ -198,7 +207,7 @@ namespace Osm.Routing.Dykstra
         /// <returns></returns>
         public float CalculateWeight(long from, long to)
         {
-            RouteLinked linked_route = this.Calculate(from, to);
+            RouteLinked linked_route = this.Calculate(from, to, float.MaxValue);
             if (linked_route != null)
             {
                 return linked_route.Weight;
@@ -609,6 +618,113 @@ namespace Osm.Routing.Dykstra
         }
 
         #endregion
+
+        /// <summary>
+        /// Calculates all weights between one vertex and a list of others.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="tos"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public RouteLinked CalculateToClosest(long from, long[] tos, float max)
+        {
+            // intialize dyskstra data structures.
+            SortedVisitList visit_list = new SortedVisitList();
+            HashSet<long> chosen_nodes = new HashSet<long>();
+
+            // initialize the target list.
+            int unique_tos_count = 0;
+            RouteLinked found_to = null;
+            Dictionary<long, RouteLinked> to_dictionary = new Dictionary<long, RouteLinked>();
+            foreach (long to in tos)
+            {
+                if (to != from && !to_dictionary.ContainsKey(to))
+                {
+                    to_dictionary.Add(to, null);
+                    unique_tos_count++;
+                }
+            }
+
+            // set the from node as the current node and put it in the correct data structures.
+            // intialize the source's neighbours.
+            RouteLinked current =
+                new RouteLinked(from);
+            Dictionary<long, float> neighbours = _graph.GetNeighbours(
+                current.VertexId, null);
+            chosen_nodes.Add(current.VertexId);
+
+            // loop until target is found and the route is the shortest!
+            while (true)
+            {
+                // update the visited nodes.
+                foreach (KeyValuePair<long, float> neighbour in neighbours)
+                {
+                    // calculate neighbours weight.
+                    float total_weight = current.Weight + neighbour.Value;
+
+                    // update the visit list;
+                    RouteLinked neighbour_route = new RouteLinked(neighbour.Key, total_weight, current);
+                    visit_list.UpdateVertex(neighbour_route);
+                }
+
+                // while the visit list is not empty.
+                if (visit_list.Count > 0)
+                {
+                    // choose the next vertex.
+                    current = visit_list.GetFirst();
+                    while (current != null && current.Weight > max)
+                    {
+                        current = visit_list.GetFirst();
+                    }
+
+                    if (current == null)
+                    {
+                        break;
+                    }
+
+                    // check stopping conditions.
+                    if (to_dictionary.ContainsKey(current.VertexId))
+                    {
+                        found_to = current;
+                        break;
+                    }
+
+                    // check stopping conditions.
+                    if (this.StopCalculate(from, tos, current.VertexId, chosen_nodes.Count))
+                    {
+                        break;
+                    }
+
+                    // get the neigbours of the current node.
+                    neighbours = _graph.GetNeighbours(
+                        current.VertexId, chosen_nodes);
+                    chosen_nodes.Add(current.VertexId);
+                }
+                else
+                { // the visit list is emtpy and the algorithm will stop without a result.
+                    if (!this.NotFoundCalculateOneToMany(from, tos, chosen_nodes))
+                    {
+                        HashSet<long> tos_not_found = new HashSet<long>();
+                        for (int idx = 0; idx < tos.Length; idx++)
+                        {
+                            long to = tos[idx];
+                            RouteLinked route;
+                            if (!to_dictionary.TryGetValue(to, out route)
+                                || route != null)
+                            {
+                                //tos_not_found.Add(to);
+                            }
+                        }
+
+                        //throw new RoutingException(from, tos_not_found.ToArray<long>());
+                    }
+                    break;
+                }
+            }
+
+            // return the result.
+            return found_to;
+        }
 
     }
 }

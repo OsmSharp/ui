@@ -49,6 +49,11 @@ namespace Osm.Routing.CH.Routing
 
         public OsmSharpRoute Calculate(CHResolvedPoint source, CHResolvedPoint target)
         {
+            return this.Calculate(source, target, float.MaxValue);
+        }
+
+        public OsmSharpRoute Calculate(CHResolvedPoint source, CHResolvedPoint target, float max)
+        {
             if (source != null && target != null)
             {
                 CHPathSegment result = _ch_router.Calculate(source.Id, target.Id);
@@ -60,15 +65,47 @@ namespace Osm.Routing.CH.Routing
             return null;
         }
 
+        /// <summary>
+        /// Calculates a route between two given points.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public OsmSharpRoute CalculateToClosest(CHResolvedPoint source, CHResolvedPoint[] targets)
+        {
+            return this.CalculateToClosest(source, targets, float.MaxValue);
+        }
+
+        /// <summary>
+        /// Calculates a route between two given points.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public OsmSharpRoute CalculateToClosest(CHResolvedPoint source, CHResolvedPoint[] targets, float max)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns the weight between source and target.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
         public float CalculateWeight(CHResolvedPoint source, CHResolvedPoint target)
         {
             if (source != null && target != null)
-            {
-                OsmSharpRoute route = this.Calculate(source, target);
-                if (route != null)
-                {
-                    return (float)route.TotalTime;
+            { // the source/targets exist!
+                // quickwin: check for identical start/end points.
+                if (source.Id == target.Id ||
+                    (source.Location == target.Location))
+                { // the weight will always be zero when source and target are indentical.
+                    return 0;
                 }
+
+                // calculate the weight.
+                return (float)_ch_router.CalculateWeight(source.Id, target.Id);
             }
             return float.MaxValue;
         }
@@ -159,17 +196,31 @@ namespace Osm.Routing.CH.Routing
         /// <returns></returns>
         private OsmSharpRoute ConstructRoute(CHResolvedPoint source, CHResolvedPoint target, CHPathSegment route)
         {
-            if (route != null && route.From != null)
-            {
+            if (route != null && route.From == null)
+            { // path contains just one single point.
                 // build the entries list.
                 List<RoutePointEntry> entries =
                     new List<RoutePointEntry>();
 
                 // get the start point.
-                CHResolvedPoint to = this.GetCHVertex(route.VertexId);
-
-                // insert the start point.
+                CHResolvedPoint from = this.GetCHVertex(route.VertexId);
                 RoutePointEntry entry = new RoutePointEntry();
+                entry.Type = RoutePointEntryType.Start;
+                entry.Latitude = (float)from.Location.Latitude;
+                entry.Longitude = (float)from.Location.Longitude;
+                entry.Points = new RoutePoint[1];
+                entry.Points[0] = new RoutePoint();
+                entry.Points[0].Distance = 0;
+                entry.Points[0].Latitude = (float)source.Location.Latitude;
+                entry.Points[0].Longitude = (float)source.Location.Longitude;
+                entry.Points[0].Name = source.Name;
+                entry.Points[0].Tags = RouteTags.ConvertFrom(source.Tags);
+                entry.Points[0].Time = 0;
+                entries.Add(entry);
+
+                // insert the stop point.
+                CHResolvedPoint to = this.GetCHVertex(route.VertexId);
+                entry = new RoutePointEntry();
                 entry.Distance = 0;
                 entry.Latitude = (float)to.Location.Latitude;
                 entry.Longitude = (float)to.Location.Longitude;
@@ -182,102 +233,7 @@ namespace Osm.Routing.CH.Routing
                 entry.Points[0].Tags = RouteTags.ConvertFrom(target.Tags);
                 entry.Points[0].Time = 0;
                 entry.Type = RoutePointEntryType.Stop;
-                entries.Insert(0, entry);
-
-                // loop over the route, insert the others.
-                while (route.From != null)
-                {
-                    // get the neighbours and retrieve the tags.
-                    KeyValuePair<uint, CHEdgeData>[] neighbours = this.GetArcs(route.VertexId);
-                    KeyValuePair<uint, CHEdgeData> arc = new KeyValuePair<uint, CHEdgeData>();
-                    foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
-                        a => a.Value.Backward && a.Key == route.From.VertexId))
-                    {
-                        if (arc.Value == null)
-                        {
-                            arc = neighbour;
-                        }
-                        else if (arc.Value.Weight > neighbour.Value.Weight)
-                        {
-                            arc = neighbour;
-                        }
-                    }
-
-                    // get the neighbours.
-                    neighbours = this.GetArcs(route.From.VertexId);
-
-                    //find the edge with lowest weight.
-                    foreach (KeyValuePair<uint, CHEdgeData> forward_arc in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
-                        a => a.Value.Forward && a.Key == route.VertexId))
-                    {
-                        if (arc.Value == null)
-                        {
-                            arc = forward_arc;
-                        }
-                        else if (arc.Value.Weight > forward_arc.Value.Weight)
-                        {
-                            arc = forward_arc;
-                        }
-                    }
-                    if (arc.Value == null)
-                    {
-                        // get the backward neighbours.
-                        neighbours = this.GetArcs(route.From.VertexId);
-                        foreach (KeyValuePair<uint, CHEdgeData> backward in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
-                            a => a.Value.Backward && a.Key == route.From.VertexId))
-                        {
-                            if (arc.Value == null)
-                            {
-                                arc = backward;
-                            }
-                            else if (arc.Value.Weight > backward.Value.Weight)
-                            {
-                                arc = backward;
-                            }
-                        }
-                    }
-
-                    // add the tags of the current arc to the previous point.
-                    if (arc.Value != null && arc.Value.HasTags)
-                    {
-                        entry.Tags = RouteTags.ConvertFrom(_data.Get(arc.Value.Tags));
-                    }
-
-                    // get the edge by querying the forward neighbours of the from-vertex.
-                    CHResolvedPoint vertex = this.GetCHVertex(route.From.VertexId);
-
-                    // add to the route.
-                    // TODO: get these tags from somewhere or find a better way to generate routing instructions?
-                    // probably there is a need to futher abstract the usages of OSM data into a more general format.
-                    entry = new RoutePointEntry();
-                    entry.Distance = 0;
-                    entry.Latitude = (float)vertex.Location.Latitude;
-                    entry.Longitude = (float)vertex.Location.Longitude;
-                    //entry.Tags = RouteTags.ConvertFrom( // 
-                    entry.Time = 0;
-                    entry.Type = RoutePointEntryType.Along;
-                    //entry.
-
-                    entries.Insert(0, entry);
-
-                    //get the routes.
-                    route = route.From;
-                }
-
-                // get the source points and add everything to the latest.
-                CHResolvedPoint from = this.GetCHVertex(route.VertexId);
-                if (entry != null)
-                { // adjust the last entry to be the start entry.
-                    entry.Type = RoutePointEntryType.Start;
-                    entry.Points = new RoutePoint[1];
-                    entry.Points[0] = new RoutePoint();
-                    entry.Points[0].Distance = 0;
-                    entry.Points[0].Latitude = (float)source.Location.Latitude;
-                    entry.Points[0].Longitude = (float)source.Location.Longitude;
-                    entry.Points[0].Name = source.Name;
-                    entry.Points[0].Tags = RouteTags.ConvertFrom(source.Tags);
-                    entry.Points[0].Time = 0;
-                }
+                entries.Add(entry);
 
                 //construct the actual route.
                 OsmSharpRoute osm_sharp_route = new OsmSharpRoute();
@@ -293,7 +249,144 @@ namespace Osm.Routing.CH.Routing
 
                 return osm_sharp_route;
             }
-            return null; // there was no route!
+            else
+            { // path contains more than one single point or none at all.
+                if (route != null && route.From != null)
+                {
+                    // build the entries list.
+                    List<RoutePointEntry> entries =
+                        new List<RoutePointEntry>();
+
+                    // get the start point.
+                    CHResolvedPoint to = this.GetCHVertex(route.VertexId);
+
+                    // insert the start point.
+                    RoutePointEntry entry = new RoutePointEntry();
+                    entry.Distance = 0;
+                    entry.Latitude = (float)to.Location.Latitude;
+                    entry.Longitude = (float)to.Location.Longitude;
+                    entry.Points = new RoutePoint[1];
+                    entry.Points[0] = new RoutePoint();
+                    entry.Points[0].Distance = 0;
+                    entry.Points[0].Latitude = (float)target.Location.Latitude;
+                    entry.Points[0].Longitude = (float)target.Location.Longitude;
+                    entry.Points[0].Name = target.Name;
+                    entry.Points[0].Tags = RouteTags.ConvertFrom(target.Tags);
+                    entry.Points[0].Time = 0;
+                    entry.Type = RoutePointEntryType.Stop;
+                    entries.Insert(0, entry);
+
+                    // loop over the route, insert the others.
+                    while (route.From != null)
+                    {
+                        // get the neighbours and retrieve the tags.
+                        KeyValuePair<uint, CHEdgeData>[] neighbours = this.GetArcs(route.VertexId);
+                        KeyValuePair<uint, CHEdgeData> arc = new KeyValuePair<uint, CHEdgeData>();
+                        foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
+                            a => a.Value.Backward && a.Key == route.From.VertexId))
+                        {
+                            if (arc.Value == null)
+                            {
+                                arc = neighbour;
+                            }
+                            else if (arc.Value.Weight > neighbour.Value.Weight)
+                            {
+                                arc = neighbour;
+                            }
+                        }
+
+                        // get the neighbours.
+                        neighbours = this.GetArcs(route.From.VertexId);
+
+                        //find the edge with lowest weight.
+                        foreach (KeyValuePair<uint, CHEdgeData> forward_arc in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
+                            a => a.Value.Forward && a.Key == route.VertexId))
+                        {
+                            if (arc.Value == null)
+                            {
+                                arc = forward_arc;
+                            }
+                            else if (arc.Value.Weight > forward_arc.Value.Weight)
+                            {
+                                arc = forward_arc;
+                            }
+                        }
+                        if (arc.Value == null)
+                        {
+                            // get the backward neighbours.
+                            neighbours = this.GetArcs(route.From.VertexId);
+                            foreach (KeyValuePair<uint, CHEdgeData> backward in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
+                                a => a.Value.Backward && a.Key == route.From.VertexId))
+                            {
+                                if (arc.Value == null)
+                                {
+                                    arc = backward;
+                                }
+                                else if (arc.Value.Weight > backward.Value.Weight)
+                                {
+                                    arc = backward;
+                                }
+                            }
+                        }
+
+                        // add the tags of the current arc to the previous point.
+                        if (arc.Value != null && arc.Value.HasTags)
+                        {
+                            entry.Tags = RouteTags.ConvertFrom(_data.Get(arc.Value.Tags));
+                        }
+
+                        // get the edge by querying the forward neighbours of the from-vertex.
+                        CHResolvedPoint vertex = this.GetCHVertex(route.From.VertexId);
+
+                        // add to the route.
+                        // TODO: get these tags from somewhere or find a better way to generate routing instructions?
+                        // probably there is a need to futher abstract the usages of OSM data into a more general format.
+                        entry = new RoutePointEntry();
+                        entry.Distance = 0;
+                        entry.Latitude = (float)vertex.Location.Latitude;
+                        entry.Longitude = (float)vertex.Location.Longitude;
+                        //entry.Tags = RouteTags.ConvertFrom( // 
+                        entry.Time = 0;
+                        entry.Type = RoutePointEntryType.Along;
+                        //entry.
+
+                        entries.Insert(0, entry);
+
+                        //get the routes.
+                        route = route.From;
+                    }
+
+                    // get the source points and add everything to the latest.
+                    CHResolvedPoint from = this.GetCHVertex(route.VertexId);
+                    if (entry != null)
+                    { // adjust the last entry to be the start entry.
+                        entry.Type = RoutePointEntryType.Start;
+                        entry.Points = new RoutePoint[1];
+                        entry.Points[0] = new RoutePoint();
+                        entry.Points[0].Distance = 0;
+                        entry.Points[0].Latitude = (float)source.Location.Latitude;
+                        entry.Points[0].Longitude = (float)source.Location.Longitude;
+                        entry.Points[0].Name = source.Name;
+                        entry.Points[0].Tags = RouteTags.ConvertFrom(source.Tags);
+                        entry.Points[0].Time = 0;
+                    }
+
+                    //construct the actual route.
+                    OsmSharpRoute osm_sharp_route = new OsmSharpRoute();
+
+                    // set the routing points.
+                    osm_sharp_route.Entries = entries.ToArray();
+
+                    //calculate metrics.
+                    TimeCalculator calculator = new TimeCalculator();
+                    Dictionary<string, double> metrics = calculator.Calculate(osm_sharp_route);
+                    osm_sharp_route.TotalDistance = metrics[TimeCalculator.DISTANCE_KEY];
+                    osm_sharp_route.TotalTime = metrics[TimeCalculator.TIME_KEY];
+
+                    return osm_sharp_route;
+                }
+                return null; // there was no route!
+            }
         }
 
         /// <summary>

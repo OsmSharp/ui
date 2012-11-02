@@ -51,7 +51,7 @@ namespace Tools.Math.Graph.Routing.Dykstra
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public RouteLinked Calculate(long from, long to)
+        public RouteLinked Calculate(long from, long to, float max)
         {            
             // intialize dyskstra data structures.
             SortedVisitList visit_list = new SortedVisitList();
@@ -138,7 +138,7 @@ namespace Tools.Math.Graph.Routing.Dykstra
         /// <returns></returns>
         public float CalculateWeight(long from, long to)
         {
-            RouteLinked linked_route = this.Calculate(from, to);
+            RouteLinked linked_route = this.Calculate(from, to, float.MaxValue);
             if (linked_route != null)
             {
                 return linked_route.Weight;

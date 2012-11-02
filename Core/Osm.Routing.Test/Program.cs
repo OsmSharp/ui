@@ -40,9 +40,15 @@ namespace Osm.Routing.Test
     {
         static void Main(string[] args)
         {
-            OsmGeo.ShapeInterperter = new SimpleShapeInterpreter();
+            // registeren the output stream to the console.
+            Tools.Core.Output.OutputTextStreamHost.RegisterOutputStream(
+                new Tools.Core.Output.ConsoleOutputStream());
 
-            PBFTest.TestPBFRead();
+            // executes the many-to-many tests.
+            ManyToMany.ManyToManyExecution.Execute(); 
+
+
+            //PBFTest.TestPBFRead();
 
             //Constraints.ConstrainedRoutingTests.SimpleTestPedestrianRoads();
 
@@ -95,6 +101,8 @@ namespace Osm.Routing.Test
             //KDTree.KDTreeTest.TestMatrix();
             //KDTree.KDTreeTest.TestLebbeke();
             //HH.HHTest.Test("tiny", 1);
+
+            Console.ReadLine();
         }
 
         static void GenerateTSPLIB(string name)

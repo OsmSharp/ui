@@ -33,7 +33,7 @@ namespace Tools.Math.Graph.Routing
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        RouteLinked Calculate(long from, long to);
+        RouteLinked Calculate(long from, long to, float max);
 
         /// <summary>
         /// Calculates the weight of the route between the two given vertices.

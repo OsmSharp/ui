@@ -219,5 +219,33 @@ namespace Osm.UnitTests.Routing
             Assert.IsNotNull(route);
             Assert.AreEqual(7, route.Entries.Length);
         }
+
+        /// <summary>
+        /// Tests if the many-to-many weights are the same as the point-to-point weights.
+        /// </summary>
+        protected void DoTestManyToMany1()
+        {
+            IRouter<ResolvedType> router = this.BuildRouter(
+                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
+                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+
+            ResolvedType[] resolved_points = new ResolvedType[3];
+            resolved_points[0] = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
+            resolved_points[1] = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
+            resolved_points[2] = router.Resolve(new GeoCoordinate(51.0581001, 3.7200612));
+
+            float[][] weights = router.CalculateManyToManyWeight(resolved_points, resolved_points);
+
+            for (int x = 0; x < weights.Length; x++)
+            {
+                for (int y = 0; y < weights.Length; y++)
+                {   
+                    float many_to_many = weights[x][y];
+                    float point_to_point = router.CalculateWeight(resolved_points[x], resolved_points[y]);
+
+                    Assert.AreEqual(point_to_point, many_to_many);
+                }
+            }
+        }
     }
 }

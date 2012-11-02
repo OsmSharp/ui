@@ -164,6 +164,65 @@ namespace Tools.Core.DelimitedFiles
             return delimited_data_set;
         }
 
+        #region Read Delimited Files
+
+        /// <summary>
+        /// Reads a delimited file into an array of an array of strings.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="delimiter"></param>
+        /// <param name="firstRowHasHeaders"></param>
+        /// <param name="ignoreHeader"></param>
+        /// <returns></returns>
+        public static string[][] ReadDelimitedFileFromStream(
+            Stream stream,
+            DelimiterType delimiter,
+            bool ignoreHeader)
+        {
+            // converts the stream into a text reader.
+            TextReader tr = new StreamReader(stream);
+
+            // get the lines.
+            StringReader strReader = new StringReader(tr.ReadToEnd());
+            List<string> lines = new List<string>();
+            bool isheader = ignoreHeader;
+            while ((strReader.Peek() > -1))
+            {
+                if (isheader)
+                {
+                    isheader = false;
+                    strReader.ReadLine();
+                }
+                else
+                {
+                    lines.Add(strReader.ReadLine());
+                }
+            }
+            
+            // get the columns.
+            string[][] values = new string[lines.Count][];
+            char split = DelimitedFileHandler.GetDelimiterChar(delimiter);
+            for (int idx = 0; idx < lines.Count; idx++)
+            {
+                values[idx] = lines[idx].Split(split);
+            }
+            return values;
+        }
+
+        /// <summary>
+        /// Reads a delimited file into an array of an array of strings.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="delimiter"></param>
+        /// <returns></returns>
+        public static string[][] ReadDelimitedFileFromStream(
+            Stream stream,
+            DelimiterType delimiter)
+        {
+            return DelimitedFileHandler.ReadDelimitedFileFromStream(stream, delimiter, true);
+        }
+
+        #endregion
 
         /// <summary>
         /// Writes a delimited file using the given format.

@@ -142,9 +142,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="testfiles.txt" />
+    <Content Include="test_network.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="api.osm.pbf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test_network.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

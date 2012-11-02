@@ -164,9 +164,10 @@
     <Compile Include="CH\CHTests.cs" />
     <Compile Include="Connected\ConnectedTest.cs" />
     <Compile Include="ConsoleProgressReporter.cs" />
-    <Compile Include="Constraints\ConstrainedRoutingTests.cs" />
-    <Compile Include="HH\HHTest.cs" />
-    <Compile Include="KDTree\KDTreeTest.cs" />
+    <Compile Include="ManyToMany\ManyToManyCHTests.cs" />
+    <Compile Include="ManyToMany\ManyToManyExecution.cs" />
+    <Compile Include="ManyToMany\ManyToManyRawTests.cs" />
+    <Compile Include="ManyToMany\ManyToManyTests.cs" />
     <Compile Include="PBF\PBFTest.cs" />
     <Compile Include="Point2Point\Point2PointTest.cs" />
     <Compile Include="Redis\RedisTest.cs" />
@@ -185,42 +186,42 @@
     <None Include="CH\DM103.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="CH\eeklo.csv">
+    <EmbeddedResource Include="TestData\eeklo.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="CH\eeklo.osm">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\eeklo.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="CH\lebbeke.csv">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\lebbeke.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="CH\lebbeke.osm">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\lebbeke.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
     <None Include="CH\matrix.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="CH\matrix.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="CH\matrix_big_area.csv">
+    <EmbeddedResource Include="TestData\matrix_big_area.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="CH\matrix_big_area.osm">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\matrix_big_area.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="CH\moscow.csv">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\moscow.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="CH\moscow.osm">
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\moscow.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="CH\tiny.csv">
+    </EmbeddedResource>
+    <EmbeddedResource Include="CH\tiny.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="CH\tiny.osm">
+    </EmbeddedResource>
+    <EmbeddedResource Include="CH\tiny.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    </EmbeddedResource>
     <None Include="CH\wechel.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -242,31 +243,12 @@
     <None Include="Connected\matrix_bad.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Constraints\constrained1.osm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Constraints\constrained2.osm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="HH\tiny.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="HH\tiny.osm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="KDTree\matrix.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="KDTree\matrix.osm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Matrix\atomic.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="Matrix\MatrixTest.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SimpleShapeInterpreter.cs" />
     <None Include="Matrix\eeklo.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -339,6 +321,18 @@
     <None Include="Sparse\wechel.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <EmbeddedResource Include="TestData\tiny.osm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\tiny.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\matrix.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestData\matrix.osm">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <None Include="Tsp\matrix.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -391,12 +385,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Matrix\matrix.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="test1_input.osm">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="test2_input.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

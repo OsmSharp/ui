@@ -522,7 +522,7 @@ namespace Osm.Routing.Core.Roads.Tags
         {
             double distance = nodes.DistanceEstimate(start, lenght);
 
-            return distance / (this.MaxSpeed(vehicle).Value * 0.75);
+            return distance / (this.MaxSpeed(vehicle).Value) * 3.6;
         }
 
         /// <summary>
@@ -534,7 +534,7 @@ namespace Osm.Routing.Core.Roads.Tags
         {
             double distance = from.DistanceEstimate(to).Value;
 
-            return distance / (this.MaxSpeed(vehicle).Value * 0.75);
+            return distance / (this.MaxSpeed(vehicle).Value) * 3.6;
         }
 
 

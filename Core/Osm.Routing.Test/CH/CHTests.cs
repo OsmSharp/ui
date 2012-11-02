@@ -27,13 +27,23 @@ using Osm.Routing.CH.Processor;
 using Osm.Routing.CH.PreProcessing;
 using Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using Osm.Routing.CH.PreProcessing.Witnesses;
+using System.Reflection;
+using Tools.Math.Geo;
+using System.Collections.Generic;
 namespace Osm.Routing.Test.CH
 {
     class CHTest
     {
+        /// <summary>
+        /// Does some testing!
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="test_count"></param>
         public static void Test(string name, int test_count)
         {
-
+            CHTest.BuildRouter(string.Format("Osm.Routing.Test.CH.{0}.osm", name), string.Format("Osm.Routing.Test.CH.{0}.csv", name),
+                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
+                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
         }
 
         /// <summary>
@@ -42,14 +52,15 @@ namespace Osm.Routing.Test.CH
         /// <param name="interpreter"></param>
         /// <param name="constraints"></param>
         /// <returns></returns>
-        public static IRouter<CHResolvedPoint> BuildRouter(string xml, RoutingInterpreterBase interpreter,
-            IRoutingConstraints constraints)
+        public static void BuildRouter(string xml_embedded, string csv_embedded, 
+            RoutingInterpreterBase interpreter, IRoutingConstraints constraints)
         {
             // build the memory data source.
             CHDataSource data = new CHDataSource();
 
             // load the data.
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(new FileStream(xml, FileMode.Open));
+            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded));
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
             sorter.RegisterSource(data_processor_source);
             CHDataProcessorTarget ch_target = new CHDataProcessorTarget(data);
@@ -62,7 +73,27 @@ namespace Osm.Routing.Test.CH
             pre_processor.Start();
 
             // create the router from the contracted data.
-            return new Router(data);
+            IRouter<CHResolvedPoint> router = new Router(data);
+
+            // read matrix points.
+            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
+            string[][] lines = Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(csv_embedded), Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated);
+            foreach (string[] row in lines)
+            {
+                // be carefull with the parsing and the number formatting for different cultures.
+                double latitude = double.Parse(row[2].ToString(), System.Globalization.CultureInfo.InvariantCulture);
+                double longitude = double.Parse(row[3].ToString(), System.Globalization.CultureInfo.InvariantCulture);
+
+                GeoCoordinate point = new GeoCoordinate(latitude, longitude);
+                coordinates.Add(point);
+            }
+
+            // resolve the point(s).
+            CHResolvedPoint[] points = router.Resolve(coordinates.ToArray());
+
+            // calculate the matrix.
+            float[][] weights = router.CalculateManyToManyWeight(points, points);
         }
     }
 }

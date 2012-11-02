@@ -47,6 +47,7 @@ namespace Tools.Core.Collections
         public ObjectTable(bool reverse_index, int init_capacity)
         {
             _strings = new Type[init_capacity];
+            _init_capacity = init_capacity;
 
             if (reverse_index)
             {

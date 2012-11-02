@@ -143,7 +143,7 @@ namespace Osm.Routing.Raw
         #endregion
 
         #region Routing
-
+        
         /// <summary>
         /// Calculates a route between two given points.
         /// </summary>
@@ -152,12 +152,23 @@ namespace Osm.Routing.Raw
         /// <returns></returns>
         public OsmSharpRoute Calculate(ResolvedPoint source, ResolvedPoint target)
         {
+            return this.Calculate(source, target, float.MaxValue);
+        }
+
+        /// <summary>
+        /// Calculates a route between two given points.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public OsmSharpRoute Calculate(ResolvedPoint source, ResolvedPoint target, float max)
+        {
             Dykstra.DykstraRouting routing = new Dykstra.DykstraRouting(_graph, _constraints);
 
             try
             { 
                 // try to calculate this roure.
-                RouteLinked route = routing.Calculate(source.VertexId, target.VertexId);
+                RouteLinked route = routing.Calculate(source.VertexId, target.VertexId, max);
                 return this.ConstructRoute(route, source, target);
             }
             catch (Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
@@ -178,6 +189,52 @@ namespace Osm.Routing.Raw
         }
 
         /// <summary>
+        /// Calculates a route between two given points.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public OsmSharpRoute CalculateToClosest(ResolvedPoint source, ResolvedPoint[] targets)
+        {
+            return this.CalculateToClosest(source, targets, float.MaxValue);
+        }
+
+        /// <summary>
+        /// Calculates a route between two given points.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public OsmSharpRoute CalculateToClosest(ResolvedPoint source, ResolvedPoint[] targets, float max)
+        {
+            Dykstra.DykstraRouting routing = new Dykstra.DykstraRouting(_graph, _constraints);
+
+            long[] tos = new long[targets.Length];
+            for (int idx = 0; idx < targets.Length; idx++)
+            {
+                tos[idx] = targets[idx].VertexId;
+            }
+
+            // try to calculate this roure.
+            RouteLinked route = routing.CalculateToClosest(source.VertexId, tos, max);
+
+            // get the target point.
+            if (route != null)
+            {
+                ResolvedPoint target = null;
+                for (int idx = 0; idx < tos.Length; idx++)
+                {
+                    if (route.VertexId == tos[idx])
+                    {
+                        target = targets[idx];
+                    }
+                }
+                return this.ConstructRoute(route, source, target);
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Calculates the weight between two given points.
         /// </summary>
         /// <param name="source"></param>
@@ -188,7 +245,7 @@ namespace Osm.Routing.Raw
             try
             {
                 Dykstra.DykstraRouting routing = new Dykstra.DykstraRouting(_graph);
-                RouteLinked route = routing.Calculate(source.VertexId, target.VertexId);
+                RouteLinked route = routing.Calculate(source.VertexId, target.VertexId, float.MaxValue);
                 return route.Weight;
             }
             catch (Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)

@@ -82,9 +82,42 @@ namespace Osm.Routing.Sparse.Routing
         /// <returns></returns>
         public OsmSharpRoute Calculate(SparseResolvedPoint source, SparseResolvedPoint target)
         {
+            return this.Calculate(source, target, float.MaxValue);
+        }
+
+        /// <summary>
+        /// Calculates a route between two given points.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public OsmSharpRoute Calculate(SparseResolvedPoint source, SparseResolvedPoint target, float max)
+        {
             DykstraRouting routing = new DykstraRouting(_graph);
-            RouteLinked route = routing.Calculate(source.Id, target.Id);
+            RouteLinked route = routing.Calculate(source.Id, target.Id, max);
             return this.ConstructRoute(route);
+        }
+
+        /// <summary>
+        /// Calculates a route between two given points.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public OsmSharpRoute CalculateToClosest(SparseResolvedPoint source, SparseResolvedPoint[] targets)
+        {
+            return this.CalculateToClosest(source, targets, float.MaxValue);
+        }
+
+        /// <summary>
+        /// Calculates a route between two given points.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public OsmSharpRoute CalculateToClosest(SparseResolvedPoint source, SparseResolvedPoint[] targets, float max)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -96,7 +129,7 @@ namespace Osm.Routing.Sparse.Routing
         public float CalculateWeight(SparseResolvedPoint source, SparseResolvedPoint target)
         {
             DykstraRouting routing = new DykstraRouting(_graph);
-            RouteLinked route = routing.Calculate(source.Id, target.Id);
+            RouteLinked route = routing.Calculate(source.Id, target.Id, float.MaxValue);
             return route.Weight;
         }
 

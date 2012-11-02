@@ -236,16 +236,16 @@ namespace Osm.Routing.CH.Routing
                                 tentative_results[bucket_entry.Key] = found_distance;
                             }
 
-                            if (tentative_distance < current.Weight)
-                            {
-                                tentative_results.Remove(bucket_entry.Key);
-                                results.Add(bucket_entry.Key, tentative_distance);
-                            }
+                            //if (tentative_distance < current.Weight)
+                            //{
+                            //    tentative_results.Remove(bucket_entry.Key);
+                            //    results[bucket_entry.Key] = tentative_distance;
+                            //}
                         }
-                        //else
-                        //{ // there was no result yet!
-                        //    tentative_results[bucket_entry.Key] = found_distance;
-                        //}
+                        else
+                        { // there was no result yet!
+                            tentative_results[bucket_entry.Key] = found_distance;
+                        }
                         //}
                     }
                 }
@@ -643,23 +643,30 @@ namespace Osm.Routing.CH.Routing
             CHPathSegment current = path;
             CHPathSegment expanded_path = null;
 
-            while (current != null && current.From != null)
-            {
-                // recursively convert edge.
-                CHPathSegment local_path =
-                    new CHPathSegment(current.VertexId, -1, new CHPathSegment(
-                                                                current.From.VertexId));
-                CHPathSegment expanded_arc = this.ConvertArc(local_path);
-                if (expanded_path != null)
+            if (current != null && current.From == null)
+            { // path contains just a single point.
+                expanded_path = current;
+            }
+            else
+            { // path containts at least two points or none at all.
+                while (current != null && current.From != null)
                 {
-                    expanded_path.ConcatenateAfter(expanded_arc);
-                }
-                else
-                {
-                    expanded_path = expanded_arc;
-                }
+                    // recursively convert edge.
+                    CHPathSegment local_path =
+                        new CHPathSegment(current.VertexId, -1, new CHPathSegment(
+                                                                    current.From.VertexId));
+                    CHPathSegment expanded_arc = this.ConvertArc(local_path);
+                    if (expanded_path != null)
+                    {
+                        expanded_path.ConcatenateAfter(expanded_arc);
+                    }
+                    else
+                    {
+                        expanded_path = expanded_arc;
+                    }
 
-                current = current.From;
+                    current = current.From;
+                }
             }
             return expanded_path;
         }

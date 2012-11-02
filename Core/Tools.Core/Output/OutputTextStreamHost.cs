@@ -35,6 +35,11 @@ namespace Tools.Core.Output
             }
         }
 
+        public static void WriteLine()
+        {
+            OutputTextStreamHost.WriteLine(string.Empty);
+        }
+
         public static void WriteLine(string text)
         {
             OutputTextStreamHost.InitializeIfNeeded();

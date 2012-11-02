@@ -48,10 +48,36 @@ namespace Osm.Routing.Core
         /// <summary>
         /// Calculates a route between two given points.
         /// </summary>
-        /// <param name="source"></param>
-        /// <param name="target"></param>
+        /// <param name="source">The source point.</param>
+        /// <param name="target">The target point.</param>
         /// <returns></returns>
         OsmSharpRoute Calculate(ResolvedType source, ResolvedType target);
+
+        /// <summary>
+        /// Calculates a route between two given points.
+        /// </summary>
+        /// <param name="source">The source point.</param>
+        /// <param name="target">The target point.</param>
+        /// <param name="max">The maximum weight to stop the calculation.</param>
+        /// <returns></returns>
+        OsmSharpRoute Calculate(ResolvedType source, ResolvedType target, float max);
+
+        /// <summary>
+        /// Calculates a shortest route from a given point to any of the targets points.
+        /// </summary>
+        /// <param name="source">The source point.</param>
+        /// <param name="targets">The target point(s).</param>
+        /// <returns></returns>
+        OsmSharpRoute CalculateToClosest(ResolvedType source, ResolvedType[] targets);
+
+        /// <summary>
+        /// Calculates a shortest route from a given point to any of the targets points.
+        /// </summary>
+        /// <param name="source">The source point.</param>
+        /// <param name="targets">The target point(s).</param>
+        /// <param name="max">The maximum weight to stop the calculation.</param>
+        /// <returns></returns>
+        OsmSharpRoute CalculateToClosest(ResolvedType source, ResolvedType[] targets, float max);
 
         /// <summary>
         /// Calculates the weight between two given points.
