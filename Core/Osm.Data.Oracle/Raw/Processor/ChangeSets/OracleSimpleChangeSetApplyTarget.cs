@@ -56,17 +56,17 @@ namespace Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     if (geo is SimpleNode)
                                     {
                                         this.Create(geo as SimpleNode);
-                                        Tools.Core.Output.OutputTextStreamHost.Write("+(n:{0})", geo.Id.Value);
+                                        Tools.Core.Output.OutputStreamHost.Write("+(n:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleWay)
                                     {
                                         this.Create(geo as SimpleWay);
-                                        Tools.Core.Output.OutputTextStreamHost.Write("+(w:{0})", geo.Id.Value);
+                                        Tools.Core.Output.OutputStreamHost.Write("+(w:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleRelation)
                                     {
                                         this.Create(geo as SimpleRelation);
-                                        Tools.Core.Output.OutputTextStreamHost.Write("+(r:{0})", geo.Id.Value);
+                                        Tools.Core.Output.OutputStreamHost.Write("+(r:{0})", geo.Id.Value);
                                     }
                                     trans.Commit();
                                 }
@@ -79,7 +79,7 @@ namespace Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     }
                                     else
                                     {
-                                        Tools.Core.Output.OutputTextStreamHost.Write("+(E:{0}-{1})", geo.Id.Value,geo.Type.ToString());
+                                        Tools.Core.Output.OutputStreamHost.Write("+(E:{0}-{1})", geo.Id.Value,geo.Type.ToString());
                                     }
                                 }
                             }
@@ -94,17 +94,17 @@ namespace Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     if (geo is SimpleNode)
                                     {
                                         this.Delete(geo as SimpleNode);
-                                        Tools.Core.Output.OutputTextStreamHost.Write("-(n:{0})", geo.Id.Value);
+                                        Tools.Core.Output.OutputStreamHost.Write("-(n:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleWay)
                                     {
                                         this.Delete(geo as SimpleWay);
-                                        Tools.Core.Output.OutputTextStreamHost.Write("-(w:{0})", geo.Id.Value);
+                                        Tools.Core.Output.OutputStreamHost.Write("-(w:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleRelation)
                                     {
                                         this.Delete(geo as SimpleRelation);
-                                        Tools.Core.Output.OutputTextStreamHost.Write("-(r:{0})", geo.Id.Value);
+                                        Tools.Core.Output.OutputStreamHost.Write("-(r:{0})", geo.Id.Value);
                                     }
                                     trans.Commit();
                                 }
@@ -117,7 +117,7 @@ namespace Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     }
                                     else
                                     {
-                                        Tools.Core.Output.OutputTextStreamHost.Write("-(E:{0}-{1})", geo.Id.Value, geo.Type.ToString());
+                                        Tools.Core.Output.OutputStreamHost.Write("-(E:{0}-{1})", geo.Id.Value, geo.Type.ToString());
                                     }
                                 }
                             }
@@ -132,17 +132,17 @@ namespace Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     if (geo is SimpleNode)
                                     {
                                         this.Modify(geo as SimpleNode);
-                                        Tools.Core.Output.OutputTextStreamHost.Write("/(n:{0})", geo.Id.Value);
+                                        Tools.Core.Output.OutputStreamHost.Write("/(n:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleWay)
                                     {
                                         this.Modify(geo as SimpleWay);
-                                        Tools.Core.Output.OutputTextStreamHost.Write("/(w:{0})", geo.Id.Value);
+                                        Tools.Core.Output.OutputStreamHost.Write("/(w:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleRelation)
                                     {
                                         this.Modify(geo as SimpleRelation);
-                                        Tools.Core.Output.OutputTextStreamHost.Write("/(r:{0})", geo.Id.Value);
+                                        Tools.Core.Output.OutputStreamHost.Write("/(r:{0})", geo.Id.Value);
                                     }
                                     trans.Commit();
                                 }
@@ -155,7 +155,7 @@ namespace Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     }
                                     else
                                     {
-                                        Tools.Core.Output.OutputTextStreamHost.Write("/(E:{0}-{1})", geo.Id.Value, geo.Type.ToString());
+                                        Tools.Core.Output.OutputStreamHost.Write("/(E:{0}-{1})", geo.Id.Value, geo.Type.ToString());
                                     }
                                 }
                             }
@@ -686,7 +686,7 @@ namespace Osm.Data.Oracle.Raw.Processor.ChangeSets
                 }
                 catch(Exception ex)
                 {
-                    Tools.Core.Output.OutputTextStreamHost.WriteLine("Could not insert way_nodes record for way {0} and node {1}:{2}",
+                    Tools.Core.Output.OutputStreamHost.WriteLine("Could not insert way_nodes record for way {0} and node {1}:{2}",
                         id, nodes[idx],
                         ex.Message);
                 }

@@ -69,8 +69,8 @@ namespace Osm.Data.Core.Processor.Filter
                 if (changes_inside.Key.Changes.Count > 0)
                 {
                     // some data in this changeset is ok!
-                    Tools.Core.Output.OutputTextStreamHost.WriteLine(string.Empty);
-                    Tools.Core.Output.OutputTextStreamHost.Write("Changeset accepted:");
+                    Tools.Core.Output.OutputStreamHost.WriteLine(string.Empty);
+                    Tools.Core.Output.OutputStreamHost.Write("Changeset accepted:");
 
                     // set the converted changeset as the current one!
                     _current = changes_inside.Key;

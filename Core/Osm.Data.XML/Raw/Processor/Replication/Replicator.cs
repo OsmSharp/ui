@@ -129,8 +129,8 @@ namespace Osm.Data.XML.Raw.Processor.Replication
                     current_source.Initialize();
                     _sequenceNumber = next;
 
-                    Tools.Core.Output.OutputTextStreamHost.WriteLine("");
-                    Tools.Core.Output.OutputTextStreamHost.WriteLine("Started applying changeset {0}:{1}!", _sequenceNumber,state_array[0]);
+                    Tools.Core.Output.OutputStreamHost.WriteLine("");
+                    Tools.Core.Output.OutputStreamHost.WriteLine("Started applying changeset {0}:{1}!", _sequenceNumber,state_array[0]);
 
                     _current_source = current_source;
 

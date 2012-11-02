@@ -41,7 +41,7 @@ namespace Osm.Routing.Test
         static void Main(string[] args)
         {
             // registeren the output stream to the console.
-            Tools.Core.Output.OutputTextStreamHost.RegisterOutputStream(
+            Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
                 new Tools.Core.Output.ConsoleOutputStream());
 
             // executes the many-to-many tests.
@@ -146,7 +146,7 @@ namespace Osm.Routing.Test
             for (int idx = 0; idx < instructions.Count; idx++)
             {
                 Instruction ints = instructions[idx];
-                Tools.Core.Output.OutputTextStreamHost.WriteLine(ints.Text);
+                Tools.Core.Output.OutputStreamHost.WriteLine(ints.Text);
             }
 
             Console.ReadLine();

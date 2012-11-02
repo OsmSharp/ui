@@ -401,6 +401,10 @@ namespace Osm.Routing.Raw
                 for (int idx = 0; idx < point.Length; idx++)
                 {
                     connectivities[idx] = this.CheckConnectivity(point[idx], weight);
+
+                    // report progress.
+                    Tools.Core.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.Raw.CheckConnectivity", 
+                        "Checking connectivity...");
                 }
                 return connectivities;
             }
@@ -506,6 +510,9 @@ namespace Osm.Routing.Raw
             for (int idx = 0; idx < coordinates.Length; idx++)
             {
                 resolved_points[idx] = this.Resolve(coordinates[idx], matcher);
+
+                // report progress.
+                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, coordinates.Length, "Router.Raw.Resolve", "Resolving Points...");
             }
             return resolved_points;
         }

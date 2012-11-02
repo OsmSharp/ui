@@ -152,6 +152,7 @@
     <Compile Include="Interpreter\Vehicles\RoutingVehicleSimple.cs" />
     <Compile Include="Interpreter\RoutingWayInterperterBase.cs" />
     <Compile Include="IRouter.cs" />
+    <Compile Include="IRouterExtensions.cs" />
     <Compile Include="Processing\DynamicGraphDataProcessorTarget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resolving\IResolvedPoint.cs" />
@@ -180,6 +181,10 @@
     <ProjectReference Include="..\Osm.Map\Osm.Map.csproj">
       <Project>{B076C8ED-B40F-4BAB-B91A-0673BB753C06}</Project>
       <Name>Osm.Map</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tools.Core\Tools.Core.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>Tools.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Tools.Math.Graph.Routing.Point2Point\Tools.Math.Graph.Routing.csproj">
       <Project>{B6B8FEAF-91AB-470C-9347-E10E03DDE11F}</Project>

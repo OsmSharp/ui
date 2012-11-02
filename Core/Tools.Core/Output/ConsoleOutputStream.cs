@@ -22,7 +22,7 @@ using System.Text;
 
 namespace Tools.Core.Output
 {
-    public class ConsoleOutputStream : IOutputTextStream
+    public class ConsoleOutputStream : IOutputStream
     {
         #region IOutputTextStream Members
 
@@ -36,6 +36,35 @@ namespace Tools.Core.Output
             Console.Write(text);
         }
 
+        private string _previous_progress_string;
+
+        //private string _previous_key;
+
+        public void ReportProgress(double progress, string key, string message)
+        {
+            string current_progress_string = message;//string.Format("{0}:{1}", key, message);
+            if (current_progress_string == _previous_progress_string)
+            {
+                Console.SetCursorPosition(0, Console.CursorTop);
+            }
+            else
+            {
+                Console.WriteLine();
+            }
+            
+            //if (_previous_key != key)
+            //{
+            //    Console.WriteLine(key);
+            //}
+            //_previous_key = key;
+
+            Console.Write(string.Format("{0} : {1}%",
+                current_progress_string, System.Math.Round(progress * 100, 0).ToString().PadRight(6), key, message));
+            _previous_progress_string = current_progress_string;
+        }
+
         #endregion
+
+
     }
 }

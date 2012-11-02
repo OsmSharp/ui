@@ -384,5 +384,30 @@ namespace Osm.Routing.CH.PreProcessing
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Returns the node weight calculator used by this pre-processor.
+        /// </summary>
+        public INodeWeightCalculator NodeWeightCalculator
+        {
+            get
+            {
+                return _calculator;
+            }
+        }
+
+        /// <summary>
+        /// Returns the node witness calculator used by this pre-processor.
+        /// </summary>
+        public INodeWitnessCalculator NodeWitnessCalculator
+        {
+            get
+            {
+                return _witness_calculator;
+            }
+        }
+        #endregion
+
     }
 }

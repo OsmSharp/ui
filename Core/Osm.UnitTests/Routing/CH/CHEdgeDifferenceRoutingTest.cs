@@ -20,34 +20,8 @@ using Osm.Data.Core.Processor.Filter.Sort;
 namespace Osm.UnitTests.Routing.CH
 {
     [TestClass]
-    public class CHRoutingTest : SimpleRoutingTests<CHResolvedPoint>
+    public class CHEdgeDifferenceRoutingTest : SimpleRoutingTests<CHResolvedPoint>
     {
-        /// <summary>
-        /// Tests a simple shortest route calculation.
-        /// </summary>
-        [TestMethod]
-        public void TestCHShortedDefault()
-        {
-            this.DoTestShortestDefault();
-        }
-
-        /// <summary>
-        /// Tests if the raw router preserves tags.
-        /// </summary>
-        [TestMethod]
-        public void TestCHResolvedTags()
-        {
-            this.DoTestResolvedTags();
-        }
-
-        /// <summary>
-        /// Tests if the raw router preserves tags on arcs/ways.
-        /// </summary>
-        [TestMethod]
-        public void TestCHArcTags()
-        {
-            this.DoTestArcTags();
-        }
 
         /// <summary>
         /// Returns a new router.
@@ -55,7 +29,7 @@ namespace Osm.UnitTests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="constraints"></param>
         /// <returns></returns>
-        public override IRouter<CHResolvedPoint> BuildRouter(RoutingInterpreterBase interpreter, 
+        public override IRouter<CHResolvedPoint> BuildRouter(RoutingInterpreterBase interpreter,
             IRoutingConstraints constraints)
         {
             // build the memory data source.
@@ -71,21 +45,50 @@ namespace Osm.UnitTests.Routing.CH
             ch_target.Pull();
 
             // do the pre-processing part.
+            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data.Graph);
+            INodeWeightCalculator ordering = new Osm.Routing.CH.PreProcessing.Ordering.EdgeDifference(
+                data.Graph, witness_calculator);
             CHPreProcessor pre_processor = new CHPreProcessor(data.Graph,
-                new SparseOrdering(data.Graph), new DykstraWitnessCalculator(data.Graph));
+                ordering, witness_calculator);
             pre_processor.Start();
-            
+
             // create the router from the contracted data.
             return new Router(data);
         }
 
+        /// <summary>
+        /// Tests a simple shortest route calculation.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceShortedDefault()
+        {
+            this.DoTestShortestDefault();
+        }
+
+        /// <summary>
+        /// Tests if the raw router preserves tags.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceResolvedTags()
+        {
+            this.DoTestResolvedTags();
+        }
+
+        /// <summary>
+        /// Tests if the raw router preserves tags on arcs/ways.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceArcTags()
+        {
+            this.DoTestArcTags();
+        }
 
 
         /// <summary>
         /// Test is the CH router can calculate another route.
         /// </summary>
         [TestMethod]
-        public void TestCHShortest1()
+        public void TestCHEdgeDifferenceShortest1()
         {
             this.DoTestShortest1();
         }
@@ -94,7 +97,7 @@ namespace Osm.UnitTests.Routing.CH
         /// Test is the CH router can calculate another route.
         /// </summary>
         [TestMethod]
-        public void TestCHShortest2()
+        public void TestCHEdgeDifferenceShortest2()
         {
             this.DoTestShortest2();
         }
@@ -103,7 +106,7 @@ namespace Osm.UnitTests.Routing.CH
         /// Test is the CH router can calculate another route.
         /// </summary>
         [TestMethod]
-        public void TestCHShortest3()
+        public void TestCHEdgeDifferenceShortest3()
         {
             this.DoTestShortest3();
         }
@@ -112,7 +115,7 @@ namespace Osm.UnitTests.Routing.CH
         /// Test is the CH router can calculate another route.
         /// </summary>
         [TestMethod]
-        public void TestCHShortest4()
+        public void TestCHEdgeDifferenceShortest4()
         {
             this.DoTestShortest4();
         }
@@ -121,7 +124,7 @@ namespace Osm.UnitTests.Routing.CH
         /// Test is the CH router can calculate another route.
         /// </summary>
         [TestMethod]
-        public void TestCHShortest5()
+        public void TestCHEdgeDifferenceShortest5()
         {
             this.DoTestShortest5();
         }
@@ -130,9 +133,18 @@ namespace Osm.UnitTests.Routing.CH
         /// Test if the ch router many-to-many weights correspond to the point-to-point weights.
         /// </summary>
         [TestMethod]
-        public void TestCHManyToMany1()
+        public void TestCHEdgeDifferenceManyToMany1()
         {
             this.DoTestManyToMany1();
+        }
+
+        /// <summary>
+        /// Test if the ch router handles connectivity questions correctly.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceConnectivity1()
+        {
+            this.DoTestConnectivity1();
         }
     }
 }

@@ -45,8 +45,6 @@ namespace Osm.Routing.CH.Routing
         public CHRouter(IDynamicGraph<CHEdgeData> data)
         {
             _data = data;
-
-            //_ch_vertices = new Dictionary<long, CHResolvedPoint>();
         }
 
         #region Bi-directional Many-to-Many
@@ -63,9 +61,13 @@ namespace Osm.Routing.CH.Routing
 
             // keep a list of distances to the given vertices while performance backward search.
             Dictionary<uint, Dictionary<uint, float>> buckets = new Dictionary<uint, Dictionary<uint, float>>();
-            foreach (CHResolvedPoint to in tos)
+            for (int idx = 0; idx < tos.Length; idx++)
             {
-                this.SearchBackwardIntoBucket(buckets, to);
+                this.SearchBackwardIntoBucket(buckets, tos[idx]);
+
+                // report progress.
+                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
+                    "Calculating backward...");
             }
 
             // conduct a forward search from each source.
@@ -86,6 +88,10 @@ namespace Osm.Routing.CH.Routing
 
                 weights[idx] = to_weights;
                 result.Clear();
+
+                // report progress.
+                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
+                    "Calculating forward...");
             }
             return weights;
         }
@@ -382,6 +388,28 @@ namespace Osm.Routing.CH.Routing
         }
 
         /// <summary>
+        /// Checks connectivity of a vertex.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public bool CheckConnectivity(uint from, double max)
+        {
+            return this.CheckConnectivityInternal(from, max, int.MaxValue);
+        }
+
+        /// <summary>
+        /// Checks connectivity of a vertex.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public bool CheckConnectivity(uint from, int max_settles)
+        {
+            return this.CheckConnectivityInternal(from, double.MaxValue, max_settles);
+        }
+
+        /// <summary>
         /// Calculates a shortest path between the two given vertices.
         /// </summary>
         /// <param name="from"></param>
@@ -454,6 +482,62 @@ namespace Osm.Routing.CH.Routing
                 result.Backward = settled_vertices.Backward[best.VertexId];
             }
             return result;
+        }
+
+        /// <summary>
+        /// Checks if the given vertex is connected to others.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        private bool CheckConnectivityInternal(uint from, double max, int max_settles)
+        {
+            // keep settled vertices.
+            CHQueue settled_vertices = new CHQueue();
+
+            // initialize the queues.
+            CHPriorityQueue queue_forward = new CHPriorityQueue();
+            CHPriorityQueue queue_backward = new CHPriorityQueue();
+
+            // add the from vertex to the forward queue.
+            queue_forward.Push(new CHPathSegment(from));
+
+            // add the from vertex to the backward queue.
+            queue_backward.Push(new CHPathSegment(from));
+
+            // calculate stopping conditions.
+            double queue_backward_weight = queue_backward.PeekWeight();
+            double queue_forward_weight = queue_forward.PeekWeight();
+            while (!(queue_backward.Count == 0 && queue_forward.Count == 0) && // when the queue is empty the connectivity test fails!
+                   (max >= queue_backward_weight && max >= queue_forward_weight) &&
+                   (max_settles >= (settled_vertices.Forward.Count + settled_vertices.Backward.Count)))
+            {
+                // keep looping until stopping conditions.
+
+                // do a forward search.
+                if (queue_forward.Count > 0)
+                {
+                    this.SearchForward(settled_vertices, queue_forward, -1);
+                }
+
+                // do a backward search.
+                if (queue_backward.Count > 0)
+                {
+                    this.SearchBackward(settled_vertices, queue_backward, -1);
+                }
+
+                // calculate stopping conditions.
+                if (queue_forward.Count > 0)
+                {
+                    queue_forward_weight = queue_forward.PeekWeight();
+                }
+                if (queue_backward.Count > 0)
+                {
+                    queue_backward_weight = queue_backward.PeekWeight();
+                }
+            }
+            return (max <= queue_backward_weight && max <= queue_forward_weight) || // the search has continued until both weights exceed the maximum.
+                max_settles <= (settled_vertices.Forward.Count + settled_vertices.Backward.Count); // or until the max settled vertices have been reached.
         }
 
         /// <summary>

@@ -98,25 +98,28 @@ namespace Osm.Routing.Raw.Graphs
             IList<Way> edges = this.GetEdgesForVertex(vertex);
 
             // calculate the weights to all neighbour nodes.
-            foreach (Way edge in edges)
+            if (edges != null)
             {
-                // determine if the edge can be traversed for the current interpreter.
-                if (_interpreter.CanBeTraversed(edge))
+                foreach (Way edge in edges)
                 {
-                    // determine all the neigbours of the vertex on the given edge.
-                    IList<GraphVertex> vertices = this.GetNeighbourVerticesOnEdge(edge, vertex);
-                    foreach (GraphVertex neighbour in vertices)
+                    // determine if the edge can be traversed for the current interpreter.
+                    if (_interpreter.CanBeTraversed(edge))
                     {
-                        // determine if the edge can be traversed from the source vertex to the neigbour.
-                        if ((exceptions == null || !exceptions.Contains(neighbour.Id))
-                            && _interpreter.CanBeTraversed(edge, neighbour.Node, vertex.Node))
+                        // determine all the neigbours of the vertex on the given edge.
+                        IList<GraphVertex> vertices = this.GetNeighbourVerticesOnEdge(edge, vertex);
+                        foreach (GraphVertex neighbour in vertices)
                         {
-                            // TODO: implement turn restrictions in router!
+                            // determine if the edge can be traversed from the source vertex to the neigbour.
+                            if ((exceptions == null || !exceptions.Contains(neighbour.Id))
+                                && _interpreter.CanBeTraversed(edge, neighbour.Node, vertex.Node))
+                            {
+                                // TODO: implement turn restrictions in router!
 
-                            float weight = _interpreter.Weight(edge, vertex, neighbour);
-                            // add the neighbour nodes to the neighbours list.
-                            neighbours[neighbour.Id] = weight;
+                                float weight = _interpreter.Weight(edge, vertex, neighbour);
+                                // add the neighbour nodes to the neighbours list.
+                                neighbours[neighbour.Id] = weight;
 
+                            }
                         }
                     }
                 }

@@ -84,12 +84,12 @@ namespace Osm.Routing.CH.PreProcessing.Ordering
                 }
 
                 // count the edges.
-                if (from.Value.Forward)
-                {
-                    removed++;
-                }
+                //if (from.Value.Forward)
+                //{
+                //    removed++;
+                //}
                 if (from.Value.Backward)
-                {
+                { // backward edges are removed; routing only to a higher level.
                     removed++;
                 }
             }

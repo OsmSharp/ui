@@ -48,7 +48,7 @@ namespace Osm.Routing.Test.VRP
         public static void TestMaxTimeVRP()
         {
             // set the console output stream.
-            Tools.Core.Output.OutputTextStreamHost.RegisterOutputStream(
+            Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
                 new Tools.Core.Output.ConsoleOutputStream());
 
             NoDepotTest.MaxTest("21313", "DM852", 3600, 20);
@@ -126,7 +126,7 @@ namespace Osm.Routing.Test.VRP
                         }
                     }
 
-                    Tools.Core.Output.OutputTextStreamHost.WriteLine("Processed {0}/{1}!",
+                    Tools.Core.Output.OutputStreamHost.WriteLine("Processed {0}/{1}!",
                         data.Tables[0].Rows.IndexOf(row), data.Tables[0].Rows.Count);
                 }
             }

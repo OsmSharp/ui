@@ -28,7 +28,7 @@ using Tools.Math.Graph.Routing.DataStructures;
 using Osm.Routing.Core.Constraints;
 using Osm.Core;
 
-namespace Osm.Routing.Dykstra
+namespace Osm.Routing.Raw.Dykstra
 {
     /// <summary>
     /// Class implementing a version of the Dykstra route calculation algorithm working on a <see cref="Graph<EdgeType,VertexType>"/> object.
@@ -343,16 +343,13 @@ namespace Osm.Routing.Dykstra
         {
             float[][] results = new float[from.Length][];
 
-            //System.Threading.Tasks.Parallel.For(0, from.Length, new Action<int>((idx) =>
-            //{
-            //    results[idx] = this.CalculateOneToMany(from[idx], tos);
-            //    System.Diagnostics.Debug.WriteLine("{0}/{1}", idx, from.Length);
-            //}));
-
             for (int idx = 0; idx < from.Length; idx++)
             {
                 results[idx] = this.CalculateOneToMany(from[idx], tos);
-                //System.Diagnostics.Debug.WriteLine("{0}/{1}", idx, from.Length);
+
+                // report progress.
+                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, from.Length, "Routing.Raw.Dykstra.CalculateManyToMany",
+                    "Calculating many to many weights....");
             }
 
             return results;

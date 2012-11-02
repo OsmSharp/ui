@@ -75,11 +75,11 @@ namespace Tools.Core.Performance
                 string name;
                 if (_counters.TryGetValue(count.Key, out name))
                 {
-                    OutputTextStreamHost.WriteLine("{0}[{1}]:{2}ms", name, count.Key, span.TotalMilliseconds);
+                    OutputStreamHost.WriteLine("{0}[{1}]:{2}ms", name, count.Key, span.TotalMilliseconds);
                 }
                 else
                 {
-                    OutputTextStreamHost.WriteLine("(no name)[{0}]:{1}ms", count.Key, span.TotalMilliseconds);
+                    OutputStreamHost.WriteLine("(no name)[{0}]:{1}ms", count.Key, span.TotalMilliseconds);
                 }
             }
         }

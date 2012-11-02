@@ -247,5 +247,31 @@ namespace Osm.UnitTests.Routing
                 }
             }
         }
+
+        /// <summary>
+        /// Test if the connectivity test succeed/fail.
+        /// </summary>
+        protected void DoTestConnectivity1()
+        {
+            IRouter<ResolvedType> router = this.BuildRouter(
+                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
+                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+
+            ResolvedType[] resolved_points = new ResolvedType[3];
+            resolved_points[0] = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
+            resolved_points[1] = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
+            resolved_points[2] = router.Resolve(new GeoCoordinate(51.0581001, 3.7200612));
+
+            // test connectivity succes.
+            Assert.IsTrue(router.CheckConnectivity(resolved_points[0], 5));
+            Assert.IsTrue(router.CheckConnectivity(resolved_points[1], 5));
+            Assert.IsTrue(router.CheckConnectivity(resolved_points[2], 5));
+
+            // test connectivity failiure.
+            Assert.IsFalse(router.CheckConnectivity(resolved_points[0], 1000));
+            Assert.IsFalse(router.CheckConnectivity(resolved_points[1], 1000));
+            Assert.IsFalse(router.CheckConnectivity(resolved_points[2], 1000));
+
+        }
     }
 }

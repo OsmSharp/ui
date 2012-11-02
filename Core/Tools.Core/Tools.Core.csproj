@@ -178,8 +178,8 @@
     <Compile Include="DelimitedFiles\DelimiterType.cs" />
     <Compile Include="DelimitedFiles\IDelimitedFormat.cs" />
     <Compile Include="Output\ConsoleOutputStream.cs" />
-    <Compile Include="Output\IOutputTextStream.cs" />
-    <Compile Include="Output\OutputTextStreamHost.cs" />
+    <Compile Include="Output\IOutputStream.cs" />
+    <Compile Include="Output\OutputStreamHost.cs" />
     <Compile Include="Performance\PerformanceCounter.cs" />
     <Compile Include="Progress\EmptyProgressReporter.cs" />
     <Compile Include="Progress\IProgressEnabled.cs" />

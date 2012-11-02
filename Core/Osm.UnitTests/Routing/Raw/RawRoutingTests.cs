@@ -129,5 +129,14 @@ namespace Osm.UnitTests.Routing.Raw
         {
             this.DoTestManyToMany1();
         }
+
+        /// <summary>
+        /// Test if the raw router handles connectivity questions correctly.
+        /// </summary>
+        [TestMethod]
+        public void TestRawConnectivity1()
+        {
+            this.DoTestConnectivity1();
+        }
     }
 }

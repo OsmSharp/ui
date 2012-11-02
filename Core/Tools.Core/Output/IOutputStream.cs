@@ -23,9 +23,9 @@ using System.Text;
 namespace Tools.Core.Output
 {
     /// <summary>
-    /// Interface representing a class that can be used as an output stream.
+    /// Interface representing a listener that can be used to listen to output.
     /// </summary>
-    public interface IOutputTextStream
+    public interface IOutputStream
     {
         /// <summary>
         /// Writes a line of text to the output stream.
@@ -38,5 +38,13 @@ namespace Tools.Core.Output
         /// </summary>
         /// <param name="text"></param>
         void Write(string text);
+
+        /// <summary>
+        /// Reports progress to the output stream.
+        /// </summary>
+        /// <param name="progress"></param>
+        /// <param name="key"></param>
+        /// <param name="message"></param>
+        void ReportProgress(double progress, string key, string message);
     }
 }

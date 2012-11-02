@@ -127,15 +127,22 @@ namespace Osm.Routing.CH.Routing
 
         public bool CheckConnectivity(CHResolvedPoint point, float weight)
         {
-            throw new NotImplementedException();
+            return _ch_router.CheckConnectivity(point.Id, weight);
         }
 
         public bool[] CheckConnectivity(CHResolvedPoint[] point, float weight)
         {
-            throw new NotImplementedException();
+            bool[] connectivities = new bool[point.Length];
+            for (int idx = 0; idx < point.Length; idx++)
+            {
+                connectivities[idx] = this.CheckConnectivity(point[idx], weight);
+
+                // report progress.
+                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.CH.CheckConnectivity",
+                    "Checking connectivity...");
+            }
+            return connectivities;
         }
-
-
 
         public bool IsCalculateRangeSupported
         {

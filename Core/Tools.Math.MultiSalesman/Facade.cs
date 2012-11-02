@@ -158,7 +158,7 @@ namespace Tools.Math.VRP.MultiSalesman
 
             while (population.Count < population_size)
             {
-                Tools.Core.Output.OutputTextStreamHost.Write(
+                Tools.Core.Output.OutputStreamHost.Write(
                     "Initializing population individual {0}/{1}...", population.Count + 1, population_size);
 
                 // create copy of cities
@@ -191,7 +191,7 @@ namespace Tools.Math.VRP.MultiSalesman
                 // add inidividual to the population.
                 population.Add(individual);
 
-                Tools.Core.Output.OutputTextStreamHost.WriteLine("Done!");
+                Tools.Core.Output.OutputStreamHost.WriteLine("Done!");
             }
 
             return population;
@@ -224,7 +224,7 @@ namespace Tools.Math.VRP.MultiSalesman
             Genome current_round = null;
             while (cities.Count > 0)
             {
-                Tools.Core.Output.OutputTextStreamHost.WriteLine("Placing cities {0}/{1}",
+                Tools.Core.Output.OutputStreamHost.WriteLine("Placing cities {0}/{1}",
                     cities.Count,
                     problem.Cities);
                 if (_registered_progress_reporter != null)

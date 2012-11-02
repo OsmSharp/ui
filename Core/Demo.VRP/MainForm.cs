@@ -370,7 +370,7 @@ namespace Demo.VRP
                             coordinates.Add(point);
                         }
 
-                        Tools.Core.Output.OutputTextStreamHost.WriteLine("Processed {0}/{1}!",
+                        Tools.Core.Output.OutputStreamHost.WriteLine("Processed {0}/{1}!",
                             data.Tables[0].Rows.IndexOf(row), data.Tables[0].Rows.Count);
                     }
                 }

@@ -22,29 +22,29 @@ using System.Text;
 
 namespace Tools.Core.Output
 {
-    public static class OutputTextStreamHost
+    public static class OutputStreamHost
     {
-        private static IList<IOutputTextStream> _output_streams;
+        private static IList<IOutputStream> _output_streams;
 
         private static void InitializeIfNeeded()
         {
             if (_output_streams == null)
             {
-                _output_streams = new List<IOutputTextStream>();
+                _output_streams = new List<IOutputStream>();
                 //_output_streams.Add(new ConsoleOutputStream());
             }
         }
 
         public static void WriteLine()
         {
-            OutputTextStreamHost.WriteLine(string.Empty);
+            OutputStreamHost.WriteLine(string.Empty);
         }
 
         public static void WriteLine(string text)
         {
-            OutputTextStreamHost.InitializeIfNeeded();
+            OutputStreamHost.InitializeIfNeeded();
 
-            foreach (IOutputTextStream stream in _output_streams)
+            foreach (IOutputStream stream in _output_streams)
             {
                 stream.WriteLine(text);
             }
@@ -52,15 +52,15 @@ namespace Tools.Core.Output
 
         public static void WriteLine(string format, params object[] arg)
         {
-            OutputTextStreamHost.WriteLine(
+            OutputStreamHost.WriteLine(
                 string.Format(format, arg));
         }
 
         public static void Write(string text)
         {
-            OutputTextStreamHost.InitializeIfNeeded();
+            OutputStreamHost.InitializeIfNeeded();
 
-            foreach (IOutputTextStream stream in _output_streams)
+            foreach (IOutputStream stream in _output_streams)
             {
                 stream.Write(text);
             }
@@ -68,22 +68,45 @@ namespace Tools.Core.Output
 
         public static void Write(string format, params object[] arg)
         {
-            OutputTextStreamHost.Write(
+            OutputStreamHost.Write(
                 string.Format(format, arg));
         }
 
-        public static void RegisterOutputStream(
-            IOutputTextStream output_stream)
+        public static void ReportProgress(double progress, string key, string message)
         {
-            OutputTextStreamHost.InitializeIfNeeded();
+            OutputStreamHost.InitializeIfNeeded();
+
+            if (progress > 1)
+            {
+                progress = 1;
+            }
+            if (progress < 0)
+            {
+                progress = 0;
+            }
+            foreach (IOutputStream stream in _output_streams)
+            {
+                stream.ReportProgress(progress, key, message);
+            }
+        }
+
+        public static void ReportProgress(long current, long total, string key, string message)
+        {
+            OutputStreamHost.ReportProgress((double)current / (double)total, key, message);
+        }
+
+        public static void RegisterOutputStream(
+            IOutputStream output_stream)
+        {
+            OutputStreamHost.InitializeIfNeeded();
 
             _output_streams.Add(output_stream);
         }
 
         public static void UnRegisterOutputStream(
-            IOutputTextStream output_stream)
+            IOutputStream output_stream)
         {
-            OutputTextStreamHost.InitializeIfNeeded();
+            OutputStreamHost.InitializeIfNeeded();
 
             _output_streams.Remove(output_stream);
         }

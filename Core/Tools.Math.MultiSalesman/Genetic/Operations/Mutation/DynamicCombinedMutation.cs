@@ -60,7 +60,7 @@ namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
             { // decrease total time.
                 if (_regime_reached == false)
                 {
-                    Tools.Core.Output.OutputTextStreamHost.WriteLine(
+                    Tools.Core.Output.OutputStreamHost.WriteLine(
                         "Regime Reached!");
                 }
                 //Tools.Core.Output.OutputTextStreamHost.Write("DT");
