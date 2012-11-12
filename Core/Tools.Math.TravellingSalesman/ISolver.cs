@@ -60,6 +60,6 @@ namespace Tools.Math.TSP
         /// Delegate to pass on an intermidiate solution.
         /// </summary>
         /// <param name="result"></param>
-        public delegate void IntermidiateDelegate(int[] result, float weight);
+        public delegate void IntermidiateDelegate(int[] result, double weight);
     }
 }

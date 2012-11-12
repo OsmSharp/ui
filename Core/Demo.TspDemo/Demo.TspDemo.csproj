@@ -173,9 +173,9 @@
       <Project>{494BE919-7256-431F-9D94-8B438129D93E}</Project>
       <Name>Osm.Routing.Core.TSP</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing.Core\Osm.Routing.Core.csproj">
+    <ProjectReference Include="..\Osm.Routing.Core\Routing.Core.csproj">
       <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
-      <Name>Osm.Routing.Core</Name>
+      <Name>Routing.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Osm.Routing.Instructions\Osm.Routing.Instructions.csproj">
       <Project>{022CE792-DBDA-4A1E-8C4B-5954F02C4C67}</Project>

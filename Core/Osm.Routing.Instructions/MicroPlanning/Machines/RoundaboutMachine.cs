@@ -22,9 +22,9 @@ using System.Text;
 using Tools.Math.StateMachines;
 using Tools.Math.Geo.Meta;
 using Tools.Math.Geo;
-using Osm.Routing.Core.ArcAggregation.Output;
+using Routing.Core.ArcAggregation.Output;
 
-namespace Osm.Routing.Instructions.MicroPlanning.Machines
+namespace Routing.Instructions.MicroPlanning.Machines
 {
     /// <summary>
     /// Machine to detect roundabouts.
@@ -80,7 +80,7 @@ namespace Osm.Routing.Instructions.MicroPlanning.Machines
                 MicroPlannerMessagePoint point = (test as MicroPlannerMessagePoint);
                 if (point.Point.Next != null)
                 {
-                    Osm.Routing.Core.Roads.Tags.RoadTagsInterpreterBase tags_interpreter = new Osm.Routing.Core.Roads.Tags.RoadTagsInterpreterBase(point.Point.Next.Tags);
+                    Routing.Core.Roads.Tags.RoadTagsInterpreterBase tags_interpreter = new Routing.Core.Roads.Tags.RoadTagsInterpreterBase(point.Point.Next.Tags);
                     if (tags_interpreter.IsRoundabout())
                     {
                         return true;
@@ -100,7 +100,7 @@ namespace Osm.Routing.Instructions.MicroPlanning.Machines
             if (test is MicroPlannerMessageArc)
             {
                 MicroPlannerMessageArc arc = (test as MicroPlannerMessageArc);
-                Osm.Routing.Core.Roads.Tags.RoadTagsInterpreterBase tags_interpreter = new Osm.Routing.Core.Roads.Tags.RoadTagsInterpreterBase(arc.Arc.Tags);
+                Routing.Core.Roads.Tags.RoadTagsInterpreterBase tags_interpreter = new Routing.Core.Roads.Tags.RoadTagsInterpreterBase(arc.Arc.Tags);
                 if (tags_interpreter.IsRoundabout())
                 {
                     return true;
@@ -131,7 +131,7 @@ namespace Osm.Routing.Instructions.MicroPlanning.Machines
                 MicroPlannerMessagePoint point = (test as MicroPlannerMessagePoint);
                 if (point.Point.Next != null)
                 {
-                    Osm.Routing.Core.Roads.Tags.RoadTagsInterpreterBase tags_interpreter = new Osm.Routing.Core.Roads.Tags.RoadTagsInterpreterBase(point.Point.Next.Tags);
+                    Routing.Core.Roads.Tags.RoadTagsInterpreterBase tags_interpreter = new Routing.Core.Roads.Tags.RoadTagsInterpreterBase(point.Point.Next.Tags);
                     if (!tags_interpreter.IsRoundabout())
                     {
                         return true;

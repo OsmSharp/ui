@@ -98,7 +98,7 @@ namespace Osm.Test
             Assert.IsNotNull(data_source.BoundingBox, "Bounding box not loaded!");
 
             // get the objects from the source.
-            IList<OsmBase> objects = data_source.Get(data_source.BoundingBox, Filter.Any());
+            IList<OsmGeo> objects = data_source.Get(data_source.BoundingBox, Filter.Any());
             Assert.AreEqual(objects.Count, 21465,"Invalid number of objects found!");
 
             // closes the datasource.
@@ -170,7 +170,7 @@ namespace Osm.Test
             IDataSource data_source = new OsmDataSource(document);
 
             // test all the query functions.
-            IList<OsmBase> osm_base_list = 
+            IList<OsmGeo> osm_base_list = 
                 data_source.Get(data_source.BoundingBox, Filter.Any());
             Assert.AreEqual(21465, osm_base_list.Count);
 

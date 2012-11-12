@@ -48,7 +48,7 @@ namespace Tools.Math.VRP.MultiSalesman
                 _problem = problem;
             }
 
-            public override float Weight(int city1, int city2)
+            public override double Weight(int city1, int city2)
             {
                 return _problem.Weight(city1, city2);
             }

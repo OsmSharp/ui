@@ -19,11 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Routing.Instructions.MicroPlanning.Machines;
-using Osm.Routing.Instructions.LanguageGeneration;
-using Osm.Routing.Core.ArcAggregation.Output;
+using Routing.Instructions.MicroPlanning.Machines;
+using Routing.Instructions.LanguageGeneration;
+using Routing.Core.ArcAggregation.Output;
+using Routing.Core.ArcAggregation.Output;
+using Routing.Core.Interpreter.Roads;
 
-namespace Osm.Routing.Instructions.MicroPlanning
+namespace Routing.Instructions.MicroPlanning
 {
     /// <summary>
     /// Plans aggregated messages into instructions.

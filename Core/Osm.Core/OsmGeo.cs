@@ -57,6 +57,12 @@ namespace Osm.Core
             this.User = null;
         }
 
+        /// <summary>
+        /// Converts this OsmGeo object to an OsmGeoSimple object.
+        /// </summary>
+        /// <returns></returns>
+        public abstract Osm.Core.Simple.SimpleOsmGeo ToSimple();
+
         #region Shape - Interpreter
 
         /// <summary>

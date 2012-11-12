@@ -34,9 +34,9 @@ namespace Tools.TSPLIB.Problems
     {
         private int _size;
 
-        private float[][] _weights;
+        private double[][] _weights;
 
-        public TSPLIBProblem(string name, string comment, int size, float[][] weights,
+        public TSPLIBProblem(string name, string comment, int size, double[][] weights,
             TSPLIBProblemWeightTypeEnum weight_type,
             TSPLIBProblemTypeEnum problem_type)
         {
@@ -50,8 +50,8 @@ namespace Tools.TSPLIB.Problems
         public TSPLIBProblemTypeEnum Type { get; private set; }
 
         public TSPLIBProblemWeightTypeEnum WeightType { get; private set; }
-        
-        public float[][] WeightMatrix
+
+        public double[][] WeightMatrix
         {
             get 
             {
@@ -67,7 +67,7 @@ namespace Tools.TSPLIB.Problems
             }
         }
 
-        public float Weight(int from, int to)
+        public double Weight(int from, int to)
         {
             return _weights[from][to];
         }
@@ -105,7 +105,7 @@ namespace Tools.TSPLIB.Problems
             }
         }
 
-        public float Best { get; set; }
+        public double Best { get; set; }
 
         public string Name { get; private set; }
 
@@ -133,12 +133,12 @@ namespace Tools.TSPLIB.Problems
             NearestNeighbours10 result = _neighbours[v];
             if (result == null)
             {
-                SortedDictionary<float, List<int>> neighbours = new SortedDictionary<float, List<int>>();
+                SortedDictionary<double, List<int>> neighbours = new SortedDictionary<double, List<int>>();
                 for (int customer = 0; customer < this.Size; customer++)
                 {
                     if (customer != v)
                     {
-                        float weight = this.WeightMatrix[v][customer];
+                        double weight = this.WeightMatrix[v][customer];
                         List<int> customers = null;
                         if (!neighbours.TryGetValue(weight, out customers))
                         {
@@ -150,7 +150,7 @@ namespace Tools.TSPLIB.Problems
                 }
 
                 result = new NearestNeighbours10();
-                foreach (KeyValuePair<float, List<int>> pair in neighbours)
+                foreach (KeyValuePair<double, List<int>> pair in neighbours)
                 {
                     foreach (int customer in pair.Value)
                     {

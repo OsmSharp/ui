@@ -59,7 +59,7 @@ namespace Tools.Core.Output
             //_previous_key = key;
 
             Console.Write(string.Format("{0} : {1}%",
-                current_progress_string, System.Math.Round(progress * 100, 0).ToString().PadRight(6), key, message));
+                current_progress_string, System.Math.Round(progress * 100, 2).ToString().PadRight(6), key, message));
             _previous_progress_string = current_progress_string;
         }
 

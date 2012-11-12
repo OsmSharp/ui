@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using Tools.Math.Geo;
 using Osm.Core;
+using Tools.Math;
 
 namespace Osm.Data.Core.Sparse.Primitives
 {

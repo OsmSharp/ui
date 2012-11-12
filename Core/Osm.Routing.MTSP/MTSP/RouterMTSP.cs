@@ -19,18 +19,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Routing.Core.Route;
-using Osm.Core;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
+using Routing.Core.Route;
 
-namespace Osm.Routing.Core.VRP.MTSP
+namespace Routing.Core.VRP.MTSP
 {
     /// <summary>
     /// Class to solve for a specific class of VRP problems: Multiple Travelling Salesmen.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public abstract class RouterMTSP<ResolvedType> : RouterVRP<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Creates an MTSP Router.
@@ -50,7 +49,7 @@ namespace Osm.Routing.Core.VRP.MTSP
         public OsmSharpRoute[] CalculateMTSP(ResolvedType[] points)
         {
             // calculate the weights.
-            float[][] weights = this.CalculateManyToManyWeigth(points);
+            double[][] weights = this.CalculateManyToManyWeigth(points);
 
             // calculate the MTSP.
             int[][] mtsp_solution = this.CalculateMTSP(weights);
@@ -93,7 +92,7 @@ namespace Osm.Routing.Core.VRP.MTSP
         /// </summary>
         /// <param name="weights"></param>
         /// <returns></returns>
-        internal abstract int[][] CalculateMTSP(float[][] weights);
+        internal abstract int[][] CalculateMTSP(double[][] weights);
 
         #endregion
     }

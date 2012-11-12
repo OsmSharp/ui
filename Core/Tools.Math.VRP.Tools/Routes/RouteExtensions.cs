@@ -32,9 +32,9 @@ namespace Tools.Math.VRP.Core.Routes
         /// </summary>
         /// <param name="route"></param>
         /// <param name="weights"></param>
-        public static float CalculateWeight(this IRoute route, IProblemWeights weights)
+        public static double CalculateWeight(this IRoute route, IProblemWeights weights)
         {
-            float weight = 0;
+            double weight = 0;
             int previous = -1;
             foreach(int customer in route)
             {

@@ -81,6 +81,17 @@ namespace Osm.Data.Core.Processor
         }
 
         /// <summary>
+        /// Returns the registered source.
+        /// </summary>
+        protected DataProcessorSource Source
+        {
+            get
+            {
+                return _source;
+            }
+        }
+
+        /// <summary>
         /// Pulls the changes from the source to this target.
         /// </summary>
         public void Pull()

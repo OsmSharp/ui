@@ -29,7 +29,6 @@ using Osm.Data.Core.Processor.Filter.Sort;
 using Osm.Data.Oracle.Raw.Processor;
 using Osm.Data.Core.Processor.Default;
 using Osm.Data.XML.Raw.Processor.ChangeSets;
-using Osm.Data.Core.Processor.Progress;
 using Osm.Data.Redis.Sparse.Processor;
 
 namespace Osm.Data.Processor.Main
@@ -124,11 +123,11 @@ namespace Osm.Data.Processor.Main
             XmlDataProcessorSource source = new XmlDataProcessorSource(source_file, false);
 
             RedisSparseDataProcessorTarget redis_target = new RedisSparseDataProcessorTarget();
-            //redis_target.RegisterSource(source);
-            //redis_target.Pull();
-            ProgressDataProcessorTarget progress = new ProgressDataProcessorTarget(redis_target);
-            progress.RegisterSource(source);
-            progress.Pull();
+            redis_target.RegisterSource(source);
+            redis_target.Pull();
+            //ProgressDataProcessorTarget progress = new ProgressDataProcessorTarget(redis_target);
+            //progress.RegisterSource(source);
+            //progress.Pull();
 
             //// pre-process.
             //Osm.Routing.Sparse.Memory.MemorySparseData memory_sparse_data = new Routing.Sparse.Memory.MemorySparseData();

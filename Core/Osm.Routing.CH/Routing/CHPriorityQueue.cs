@@ -19,8 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Routing.Core.Graph.Path;
 
-namespace Osm.Routing.CH.Routing
+namespace Routing.CH.Routing
 {
     /// <summary>
     /// Internal data structure reprenting a visit list,
@@ -30,7 +31,7 @@ namespace Osm.Routing.CH.Routing
         /// <summary>
         /// Holds all visited vertices sorted by weight.
         /// </summary>
-        private SortedList<double, HashSet<CHPathSegment>> _visit_list;
+        private SortedList<double, HashSet<PathSegment<long>>> _visit_list;
 
         /// <summary>
         /// Holds all visited vertices.
@@ -42,7 +43,7 @@ namespace Osm.Routing.CH.Routing
         /// </summary>
         public CHPriorityQueue()
         {
-            _visit_list = new SortedList<double, HashSet<CHPathSegment>>();
+            _visit_list = new SortedList<double, HashSet<PathSegment<long>>>();
             _visited = new Dictionary<long, double>();
         }
 
@@ -51,7 +52,7 @@ namespace Osm.Routing.CH.Routing
         /// </summary>
         /// <param name="vertex"></param>
         /// <param name="weight"></param>
-        public void Push(CHPathSegment vertex)
+        public void Push(PathSegment<long> vertex)
         {
             long vertex_id = vertex.VertexId;
             double weight = vertex.Weight;
@@ -63,7 +64,7 @@ namespace Osm.Routing.CH.Routing
                 { // do not add weights higher or equal to the current weight.
                     return;
                 }
-                HashSet<CHPathSegment> current_weight_vertices = _visit_list[current_weight];
+                HashSet<PathSegment<long>> current_weight_vertices = _visit_list[current_weight];
                 current_weight_vertices.Remove(vertex);
                 if (current_weight_vertices.Count == 0)
                 {
@@ -72,10 +73,10 @@ namespace Osm.Routing.CH.Routing
             }
 
             // add/update everthing.
-            HashSet<CHPathSegment> vertices_at_weight;
+            HashSet<PathSegment<long>> vertices_at_weight;
             if (!_visit_list.TryGetValue(weight, out vertices_at_weight))
             {
-                vertices_at_weight = new HashSet<CHPathSegment>();
+                vertices_at_weight = new HashSet<PathSegment<long>>();
                 _visit_list.Add(weight, vertices_at_weight);
             }
             vertices_at_weight.Add(vertex);
@@ -86,14 +87,14 @@ namespace Osm.Routing.CH.Routing
         /// Returns the vertex with the lowest weight and removes it.
         /// </summary>
         /// <returns></returns>
-        public CHPathSegment Pop()
+        public PathSegment<long> Pop()
         {
             if (_visit_list.Count > 0)
             {
                 double weight = _visit_list.Keys[0];
-                HashSet<CHPathSegment> first_set = _visit_list[weight];
-                CHPathSegment vertex =
-                    first_set.First<CHPathSegment>();
+                HashSet<PathSegment<long>> first_set = _visit_list[weight];
+                PathSegment<long> vertex =
+                    first_set.First<PathSegment<long>>();
 
                 // remove the vertex.
                 first_set.Remove(vertex);
@@ -112,14 +113,14 @@ namespace Osm.Routing.CH.Routing
         /// Returns the vertex with the lowest weight and removes it.
         /// </summary>
         /// <returns></returns>
-        public CHPathSegment Peek()
+        public PathSegment<long> Peek()
         {
             if (_visit_list.Count > 0)
             {
                 double weight = _visit_list.Keys[0];
-                HashSet<CHPathSegment> first_set = _visit_list[weight];
-                CHPathSegment vertex =
-                    first_set.First<CHPathSegment>();
+                HashSet<PathSegment<long>> first_set = _visit_list[weight];
+                PathSegment<long> vertex =
+                    first_set.First<PathSegment<long>>();
 
                 return vertex;
             }

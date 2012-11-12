@@ -20,12 +20,18 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Osm.Routing.Core.Resolving;
-using Osm.Routing.Core;
-using Osm.Routing.Core.Interpreter;
-using Osm.Routing.Core.Constraints;
+using Routing.Core.Resolving;
+using Routing.Core;
+using Routing.Core.Interpreter;
+using Routing.Core.Constraints;
 using Tools.Math.Geo;
-using Osm.Routing.Core.Route;
+using Routing.Core.Route;
+using System.Reflection;
+using Osm.Routing.Interpreter;
+using Routing.Core.Constraints.Cars;
+using Routing.Core.Router;
+using Osm.Routing.Data;
+using Routing.Core.Graph;
 
 namespace Osm.UnitTests.Routing
 {
@@ -33,23 +39,34 @@ namespace Osm.UnitTests.Routing
     /// Base class with tests around IRouter<ResolvedType> objects.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
-    public abstract class SimpleRoutingTests<ResolvedType> 
-        where ResolvedType : IResolvedPoint
+    public abstract class SimpleRoutingTests<ResolvedType, EdgeData>
+        where EdgeData : IDynamicGraphEdgeData
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
-        /// Returns a router test object.
+        /// Builds the router;
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="interpreter"></param>
+        /// <returns></returns>
+        public abstract IRouter<ResolvedType> BuildRouter(IRouterDataSource<EdgeData> data,
+            IRoutingInterpreter interpreter);
+
+        /// <summary>
+        /// Builds the data.
         /// </summary>
         /// <returns></returns>
-        public abstract IRouter<ResolvedType> BuildRouter(RoutingInterpreterBase interpreter, IRoutingConstraints constraints);
+        public abstract IRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter);
 
         /// <summary>
         /// Tests that a router actually finds the shortest route.
         /// </summary>
         protected void DoTestShortestDefault()
         {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
-                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car), 
-                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+                data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
 
@@ -57,24 +74,30 @@ namespace Osm.UnitTests.Routing
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
-            Assert.AreEqual(51.0578532, route.Entries[0].Latitude, 0.00001);
-            Assert.AreEqual(3.7192229, route.Entries[0].Longitude, 0.00001);
+            float latitude, longitude;
+            data.GetVertex(20, out latitude, out longitude);
+            Assert.AreEqual(latitude, route.Entries[0].Latitude, 0.00001);
+            Assert.AreEqual(longitude, route.Entries[0].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
 
-            Assert.AreEqual(51.0578518, route.Entries[1].Latitude, 0.00001);
-            Assert.AreEqual(3.7195654, route.Entries[1].Longitude, 0.00001);
+            data.GetVertex(21, out latitude, out longitude);
+            Assert.AreEqual(latitude, route.Entries[1].Latitude, 0.00001);
+            Assert.AreEqual(longitude, route.Entries[1].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[1].Type);
 
-            Assert.AreEqual(51.0577299, route.Entries[2].Latitude, 0.00001);
-            Assert.AreEqual(3.7197450, route.Entries[2].Longitude, 0.00001);
+            data.GetVertex(16, out latitude, out longitude);
+            Assert.AreEqual(latitude, route.Entries[2].Latitude, 0.00001);
+            Assert.AreEqual(longitude, route.Entries[2].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[2].Type);
 
-            Assert.AreEqual(51.0576193, route.Entries[3].Latitude, 0.00001);
-            Assert.AreEqual(3.7196582, route.Entries[3].Longitude, 0.00001);
+            data.GetVertex(22, out latitude, out longitude);
+            Assert.AreEqual(latitude, route.Entries[3].Latitude, 0.00001);
+            Assert.AreEqual(longitude, route.Entries[3].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Along, route.Entries[3].Type);
 
-            Assert.AreEqual(51.0576193, route.Entries[4].Latitude, 0.00001);
-            Assert.AreEqual(3.7191801, route.Entries[4].Longitude, 0.00001);
+            data.GetVertex(23, out latitude, out longitude);
+            Assert.AreEqual(latitude, route.Entries[4].Latitude, 0.00001);
+            Assert.AreEqual(longitude, route.Entries[4].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
         }
 
@@ -83,11 +106,12 @@ namespace Osm.UnitTests.Routing
         /// </summary>
         protected void DoTestResolvedTags()
         {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
-                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+                data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
-            source.Tags.Add(new KeyValuePair<string,string>("name", "source"));
+            source.Tags.Add(new KeyValuePair<string, string>("name", "source"));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
             target.Tags.Add(new KeyValuePair<string, string>("name", "target"));
 
@@ -95,15 +119,18 @@ namespace Osm.UnitTests.Routing
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
-            Assert.AreEqual(51.0578532, route.Entries[0].Latitude, 0.00001);
-            Assert.AreEqual(3.7192229, route.Entries[0].Longitude, 0.00001);
+            float latitude, longitude;
+            data.GetVertex(20, out latitude, out longitude);
+            Assert.AreEqual(latitude, route.Entries[0].Latitude, 0.00001);
+            Assert.AreEqual(longitude, route.Entries[0].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Start, route.Entries[0].Type);
             Assert.IsNotNull(route.Entries[0].Points[0].Tags);
             Assert.AreEqual(1, route.Entries[0].Points[0].Tags.Length);
             Assert.AreEqual("source", route.Entries[0].Points[0].Tags[0].Value);
 
-            Assert.AreEqual(51.0576193, route.Entries[4].Latitude, 0.00001);
-            Assert.AreEqual(3.7191801, route.Entries[4].Longitude, 0.00001);
+            data.GetVertex(23, out latitude, out longitude);
+            Assert.AreEqual(latitude, route.Entries[4].Latitude, 0.00001);
+            Assert.AreEqual(longitude, route.Entries[4].Longitude, 0.00001);
             Assert.AreEqual(RoutePointEntryType.Stop, route.Entries[4].Type);
             Assert.IsNotNull(route.Entries[4].Points[0].Tags);
             Assert.AreEqual(1, route.Entries[4].Points[0].Tags.Length);
@@ -115,9 +142,11 @@ namespace Osm.UnitTests.Routing
         /// </summary>
         protected void DoTestArcTags()
         {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
-                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+                data, interpreter);
+            float latitude, longitude;
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             source.Tags.Add(new KeyValuePair<string, string>("name", "source"));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
@@ -135,9 +164,6 @@ namespace Osm.UnitTests.Routing
 
             Assert.AreEqual("highway", route.Entries[3].Tags[0].Key);
             Assert.AreEqual("residential", route.Entries[3].Tags[0].Value);
-
-            Assert.AreEqual("highway", route.Entries[4].Tags[0].Key);
-            Assert.AreEqual("residential", route.Entries[4].Tags[0].Value);
         }
 
         /// <summary>
@@ -145,9 +171,10 @@ namespace Osm.UnitTests.Routing
         /// </summary>
         protected void DoTestShortest1()
         {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
-                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+                data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
 
@@ -161,9 +188,10 @@ namespace Osm.UnitTests.Routing
         /// </summary>
         protected void DoTestShortest2()
         {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
-                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+                data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
 
@@ -177,9 +205,10 @@ namespace Osm.UnitTests.Routing
         /// </summary>
         protected void DoTestShortest3()
         {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
-                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+                data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
 
@@ -193,9 +222,10 @@ namespace Osm.UnitTests.Routing
         /// </summary>
         protected void DoTestShortest4()
         {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
-                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+                data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
 
@@ -209,9 +239,10 @@ namespace Osm.UnitTests.Routing
         /// </summary>
         protected void DoTestShortest5()
         {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
-                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+                data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0581001, 3.7200612));
 
@@ -221,27 +252,45 @@ namespace Osm.UnitTests.Routing
         }
 
         /// <summary>
+        /// Tests that a router actually finds the shortest route.
+        /// </summary>
+        protected void DoTestShortestResolved1()
+        {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IRouter<ResolvedType> router = this.BuildRouter(
+                data, interpreter);
+            ResolvedType source = router.Resolve(new GeoCoordinate(51.0578153, 3.7193937));
+            ResolvedType target = router.Resolve(new GeoCoordinate(51.0582408, 3.7194636));
+
+            OsmSharpRoute route = router.Calculate(source, target);
+            Assert.IsNotNull(route);
+            Assert.AreEqual(10, route.Entries.Length);
+        }
+
+
+        /// <summary>
         /// Tests if the many-to-many weights are the same as the point-to-point weights.
         /// </summary>
         protected void DoTestManyToMany1()
         {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
-                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
-
+                data, interpreter);
             ResolvedType[] resolved_points = new ResolvedType[3];
             resolved_points[0] = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             resolved_points[1] = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
             resolved_points[2] = router.Resolve(new GeoCoordinate(51.0581001, 3.7200612));
 
-            float[][] weights = router.CalculateManyToManyWeight(resolved_points, resolved_points);
+            double[][] weights = router.CalculateManyToManyWeight(resolved_points, resolved_points);
 
             for (int x = 0; x < weights.Length; x++)
             {
                 for (int y = 0; y < weights.Length; y++)
-                {   
-                    float many_to_many = weights[x][y];
-                    float point_to_point = router.CalculateWeight(resolved_points[x], resolved_points[y]);
+                {
+                    double many_to_many = weights[x][y];
+                    double point_to_point = router.CalculateWeight(resolved_points[x], resolved_points[y]);
 
                     Assert.AreEqual(point_to_point, many_to_many);
                 }
@@ -253,10 +302,10 @@ namespace Osm.UnitTests.Routing
         /// </summary>
         protected void DoTestConnectivity1()
         {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
-                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
-
+                data, interpreter);
             ResolvedType[] resolved_points = new ResolvedType[3];
             resolved_points[0] = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             resolved_points[1] = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
@@ -271,7 +320,6 @@ namespace Osm.UnitTests.Routing
             Assert.IsFalse(router.CheckConnectivity(resolved_points[0], 1000));
             Assert.IsFalse(router.CheckConnectivity(resolved_points[1], 1000));
             Assert.IsFalse(router.CheckConnectivity(resolved_points[2], 1000));
-
         }
     }
 }

@@ -21,13 +21,12 @@ using System.Linq;
 using System.Text;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Core.Progress;
-using Osm.Core;
 using Tools.Math.TSP;
 using Tools.Math.TSP.Genetic;
 using Tools.Math.TSP.EdgeAssemblyGenetic;
 using Tools.Math.TSP.Genetic.Solver.Operations.Generation;
 using Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
 
 namespace Osm.Routing.Core.TSP.Genetic
 {
@@ -36,7 +35,7 @@ namespace Osm.Routing.Core.TSP.Genetic
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public class RouterTSPAEXGenetic<ResolvedType> : RouterTSP<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Creates a new TSP router;

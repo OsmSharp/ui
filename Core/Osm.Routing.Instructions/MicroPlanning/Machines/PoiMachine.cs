@@ -22,7 +22,7 @@ using System.Text;
 using Tools.Math.StateMachines;
 using Tools.Math.Geo;
 
-namespace Osm.Routing.Instructions.MicroPlanning.Machines
+namespace Routing.Instructions.MicroPlanning.Machines
 {
     internal class PoiMachine : MicroPlannerMachine
     {
@@ -135,7 +135,7 @@ namespace Osm.Routing.Instructions.MicroPlanning.Machines
 
         public override void Succes()
         {
-            List<Osm.Routing.Core.ArcAggregation.Output.PointPoi> pois = 
+            List<Routing.Core.ArcAggregation.Output.PointPoi> pois = 
                 (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point.Points;
 
             // construct the box indicating the location of the resulting find by this machine.

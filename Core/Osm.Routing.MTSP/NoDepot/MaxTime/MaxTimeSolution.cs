@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
+namespace Routing.Core.VRP.NoDepot.MaxTime
 {
     /// <summary>
     /// Represents a solution to the MaxTime problem.

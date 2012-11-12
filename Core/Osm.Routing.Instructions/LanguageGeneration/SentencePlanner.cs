@@ -21,9 +21,9 @@ using System.Linq;
 using System.Text;
 using Tools.Math.Geo.Meta;
 using Tools.Math.Geo;
-using Osm.Routing.Core.ArcAggregation.Output;
+using Routing.Core.ArcAggregation.Output;
 
-namespace Osm.Routing.Instructions.LanguageGeneration
+namespace Routing.Instructions.LanguageGeneration
 {
     internal class SentencePlanner
     {

@@ -23,7 +23,7 @@ using Tools.Math.Units.Angle;
 using Tools.Math.Geo;
 using Tools.Math.Geo.Meta;
 
-namespace Osm.Routing.Core.ArcAggregation.Output
+namespace Routing.Core.ArcAggregation.Output
 {
     /// <summary>
     /// Represents a point in an aggregated route.

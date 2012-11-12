@@ -26,7 +26,7 @@ using Tools.Math.VRP.Core.Routes.ASymmetric;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.VRP.Core.BestPlacement;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
+namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
 {
     /// <summary>
     /// Best-placement generator based on a random first customer for each route.
@@ -66,7 +66,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
             while (customers.Count > 0)
             {
                 // select a random customer.
-                float weight = 0;
+                double weight = 0;
                 int customer_idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers.Count);
                 int customer = customers[customer_idx];
                 customers.RemoveAt(customer_idx);
@@ -81,7 +81,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
                     CheapestInsertionResult result = CheapestInsertionHelper.CalculateBestPlacement(problem, current_route, customer_to_place);
 
                     // calculate the new weight.
-                    float potential_weight = result.Increase + weight + 20;
+                    double potential_weight = result.Increase + weight + 20;
                     // cram as many customers into one route as possible.
                     if (potential_weight < problem.Max.Value)
                     { // ok we are done!

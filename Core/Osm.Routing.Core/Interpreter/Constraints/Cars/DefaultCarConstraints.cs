@@ -19,10 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
 using System.Text.RegularExpressions;
+using Tools.Math;
+using Routing.Core.Interpreter.Roads;
 
-namespace Osm.Routing.Core.Constraints.Cars
+namespace Routing.Core.Constraints.Cars
 {
     /// <summary>
     /// Handles default highway constraints.
@@ -30,14 +31,27 @@ namespace Osm.Routing.Core.Constraints.Cars
     public class DefaultCarConstraints : IRoutingConstraints
     {
         /// <summary>
+        /// Holds the edge interpreter.
+        /// </summary>
+        private IEdgeInterpreter _edge_intepreter;
+
+        /// <summary>
+        /// Creates a new highway constraint.
+        /// </summary>
+        /// <param name="edge_intepreter"></param>
+        public DefaultCarConstraints(IEdgeInterpreter edge_intepreter)
+        {
+            _edge_intepreter = edge_intepreter;
+        }
+
+        /// <summary>
         /// Returns a label for different categories of highways.
         /// </summary>
         /// <param name="tagged_object"></param>
         /// <returns></returns>
-        public RoutingLabel GetLabelFor(ITaggedObject tagged_object)
+        public RoutingLabel GetLabelFor(IDictionary<string, string> tags)
         {
-            Roads.Tags.RoadTagsInterpreterBase tags_interpreter = new Roads.Tags.RoadTagsInterpreterBase(tagged_object.Tags);
-            if (tags_interpreter.IsOnlyLocalAccessible())
+            if (_edge_intepreter.IsOnlyLocalAccessible(tags))
             {
                 return new RoutingLabel('L', "OnlyLocalAccessible"); // local
             }

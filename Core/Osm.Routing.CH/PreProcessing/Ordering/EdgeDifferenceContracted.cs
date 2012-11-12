@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Routing.CH.PreProcessing.Ordering
+namespace Routing.CH.PreProcessing.Ordering
 {
     /// <summary>
     /// The edge difference calculator.

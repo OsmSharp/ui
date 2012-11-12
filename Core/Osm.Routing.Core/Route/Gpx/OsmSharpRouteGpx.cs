@@ -24,7 +24,7 @@ using Tools.Xml.Sources;
 using Tools.Xml.Gpx;
 using Tools.Xml.Gpx.v1_1;
 
-namespace Osm.Routing.Core.Route.Gpx
+namespace Routing.Core.Route.Gpx
 {
     /// <summary>
     /// Converts an OsmSharpRoute into a gpx.

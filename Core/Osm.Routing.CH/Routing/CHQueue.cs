@@ -19,26 +19,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Routing.Core.Graph.Path;
 
-namespace Osm.Routing.CH.Routing
+namespace Routing.CH.Routing
 {
     public class CHQueue
     {
-        private Dictionary<uint, CHPathSegment> _forward;
+        private Dictionary<long, PathSegment<long>> _forward;
 
-        private Dictionary<uint, CHPathSegment> _backward;
+        private Dictionary<long, PathSegment<long>> _backward;
 
-        private Dictionary<uint, float> _intersection;
+        private Dictionary<long, double> _intersection;
 
         public CHQueue()
         {
-            _intersection = new Dictionary<uint, float>();
+            _intersection = new Dictionary<long, double>();
 
-            _forward = new Dictionary<uint, CHPathSegment>();
-            _backward = new Dictionary<uint, CHPathSegment>();
+            _forward = new Dictionary<long, PathSegment<long>>();
+            _backward = new Dictionary<long, PathSegment<long>>();
         }
 
-        public Dictionary<uint, float> Intersection
+        public Dictionary<long, double> Intersection
         {
             get
             {
@@ -46,7 +47,7 @@ namespace Osm.Routing.CH.Routing
             }
         }
 
-        public Dictionary<uint, CHPathSegment> Forward
+        public Dictionary<long, PathSegment<long>> Forward
         {
             get
             {
@@ -54,7 +55,7 @@ namespace Osm.Routing.CH.Routing
             }
         }
 
-        public Dictionary<uint, CHPathSegment> Backward
+        public Dictionary<long, PathSegment<long>> Backward
         {
             get
             {
@@ -62,22 +63,22 @@ namespace Osm.Routing.CH.Routing
             }
         }
 
-        public void AddForward(CHPathSegment segment)
+        public void AddForward(PathSegment<long> segment)
         {
             _forward[segment.VertexId] = segment;
 
-            CHPathSegment backward;
+            PathSegment<long> backward;
             if (_backward.TryGetValue(segment.VertexId, out backward))
             {
                 _intersection.Add(segment.VertexId, backward.Weight + segment.Weight);
             }
         }
 
-        public void AddBackward(CHPathSegment segment)
+        public void AddBackward(PathSegment<long> segment)
         {
             _backward[segment.VertexId] = segment;
 
-            CHPathSegment forward;
+            PathSegment<long> forward;
             if (_forward.TryGetValue(segment.VertexId, out forward))
             {
                 _intersection.Add(segment.VertexId, forward.Weight + segment.Weight);

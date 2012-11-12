@@ -104,7 +104,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic
             Problem problem,
             Fitness fitness,
             int round,
-            float increase)
+            double increase)
         {
             // re-calculate times.
             List<double> times = new List<double>(fitness.Times);
@@ -149,7 +149,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic
             // genomes with zero or one city have a zero time.
             if (genome.Count > 1)
             {
-                float weight = problem.Weight(
+                double weight = problem.Weight(
                     genome[0], genome[1]);
                 for (int city_idx = 1; city_idx < genome.Count - 1; city_idx++)
                 {

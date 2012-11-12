@@ -20,17 +20,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.Geo;
-using Osm.Routing.Core.Route;
-using Osm.Core;
-using Osm.Routing.Core.Resolving;
+using Routing.Core.Route;
+using Routing.Core.Resolving;
+using Tools.Math;
 
-namespace Osm.Routing.Core
+namespace Routing.Core
 {
     /// <summary>
     /// Interface representing a router.
     /// </summary>
     public interface IRouter<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         #region Capabilities
 
@@ -85,7 +85,7 @@ namespace Osm.Routing.Core
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        float CalculateWeight(ResolvedType source, ResolvedType target);
+        double CalculateWeight(ResolvedType source, ResolvedType target);
 
         /// <summary>
         /// Calculates a route between one source and many target points.
@@ -93,7 +93,7 @@ namespace Osm.Routing.Core
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        float[] CalculateOneToManyWeight(ResolvedType source, ResolvedType[] targets);
+        double[] CalculateOneToManyWeight(ResolvedType source, ResolvedType[] targets);
 
         /// <summary>
         /// Calculates all routes between many sources/targets.
@@ -101,7 +101,7 @@ namespace Osm.Routing.Core
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        float[][] CalculateManyToManyWeight(ResolvedType[] sources, ResolvedType[] targets);
+        double[][] CalculateManyToManyWeight(ResolvedType[] sources, ResolvedType[] targets);
 
         #endregion
 
@@ -121,7 +121,7 @@ namespace Osm.Routing.Core
         /// <param name="orgine"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        HashSet<ILocationObject> CalculateRange(ResolvedType orgin, float weight);
+        HashSet<GeoCoordinate> CalculateRange(ResolvedType orgin, float weight);
 
         #endregion
 

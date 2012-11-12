@@ -19,14 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Routing.Core.Route;
-using Osm.Core;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
+using Routing.Core.Route;
 
-namespace Osm.Routing.Core.VRP
+namespace Routing.Core.VRP
 {
     public abstract class RouterVRP<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Holds the basic router.
@@ -58,7 +57,7 @@ namespace Osm.Routing.Core.VRP
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        protected float[][] CalculateManyToManyWeigth(ResolvedType[] points)
+        protected double[][] CalculateManyToManyWeigth(ResolvedType[] points)
         {
             return _router.CalculateManyToManyWeight(points, points);
         }

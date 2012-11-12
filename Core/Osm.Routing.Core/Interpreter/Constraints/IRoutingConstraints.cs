@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
+using Tools.Math;
 
-namespace Osm.Routing.Core.Constraints
+namespace Routing.Core.Constraints
 {
     /// <summary>
     /// Represents some routing constraints.
@@ -32,9 +32,9 @@ namespace Osm.Routing.Core.Constraints
         /// <summary>
         /// Translates some tags into some routing label.
         /// </summary>
-        /// <param name="tagged_object"></param>
+        /// <param name="tags"></param>
         /// <returns></returns>
-        RoutingLabel GetLabelFor(ITaggedObject tagged_object);
+        RoutingLabel GetLabelFor(IDictionary<string, string> tags);
 
         /// <summary>
         /// Returns true if a given (forward) sequence of labels is allowed under these constraints.

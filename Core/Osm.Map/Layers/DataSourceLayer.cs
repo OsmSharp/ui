@@ -181,12 +181,12 @@ namespace Osm.Map.Layers
             double zoom_factor)
         {
             // get objects from source.
-            IList<OsmBase> objects = _source.Get(box, null);
+            IList<OsmGeo> objects = _source.Get(box, null);
 
             // convert objects to elements using interpreter.
             List<IElement> elements = new List<IElement>();
             Interpreter.Interpreter interpreter = new Osm.Interpreter.Interpreter();
-            foreach (OsmBase geo in objects)
+            foreach (OsmGeo geo in objects)
             {
                 if (geo is OsmGeo)
                 {

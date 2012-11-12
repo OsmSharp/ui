@@ -47,11 +47,6 @@ namespace Osm.Data
         #region Features
 
         /// <summary>
-        /// Returns true if this datasource is bounded.
-        /// </summary>
-        bool HasBoundinBox { get; }
-
-        /// <summary>
         /// Returns true if this datasource can generate final id's.
         /// </summary>
         bool IsBaseIdGenerator { get; }
@@ -60,11 +55,6 @@ namespace Osm.Data
         /// Returns true if this datasource can create new objects.
         /// </summary>
         bool IsCreator { get; }
-
-        /// <summary>
-        /// Returns true if this datasource is readonly.
-        /// </summary>
-        bool IsReadOnly { get; }
 
         /// <summary>
         /// Returns true if this data source does not have to be saved.

@@ -20,20 +20,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.Units.Time;
-using Osm.Routing.Core.Route;
 using Tools.Math.TSP.Problems;
 using Tools.Math.VRP.Core;
-using Osm.Core;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
+using Routing.Core.Route;
 
-namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime
+namespace Routing.Core.VRP.WithDepot.MinimaxTime
 {
     /// <summary>
     /// Class to solve VRP problems that have no depot but min-max time constraints on routes.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public abstract class RouterMinimaxTime<ResolvedType> : RouterDepot<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Creates a new min max VRP router.
@@ -64,7 +63,7 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime
 
 
             // first calculate the weights in seconds.
-            float[][] weights = this.CalculateManyToManyWeigth(points);
+            double[][] weights = this.CalculateManyToManyWeigth(points);
 
             // create the problem for the genetic algorithm.
             List<int> depotsInt = new List<int>();

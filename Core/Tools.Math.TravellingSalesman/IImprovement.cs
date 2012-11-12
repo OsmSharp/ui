@@ -36,6 +36,6 @@ namespace Tools.Math.TSP
         /// <param name="problem"></param>
         /// <param name="route"></param>
         /// <returns></returns>
-        bool Improve(IProblemWeights problem, IRoute route, out float difference);
+        bool Improve(IProblemWeights problem, IRoute route, out double difference);
     }
 }

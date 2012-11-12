@@ -52,8 +52,8 @@ namespace Tools.Math.VRP.Core.LocalSearch
             foreach (int customer_to_place in customers_to_place)
             {
                 // find the best place.
-                float current_cost = -1;
-                float other_cost = float.MaxValue;
+                double current_cost = -1;
+                double other_cost = double.MaxValue;
                 int previous_before = -1;
                 int previous = -1;
                 foreach (int customer in route)
@@ -68,7 +68,7 @@ namespace Tools.Math.VRP.Core.LocalSearch
                         else if (previous_before != customer_to_place &&
                             customer != customer_to_place)
                         { // calculate the cost.
-                            float cost = problem.Weight(previous_before, customer_to_place) +
+                            double cost = problem.Weight(previous_before, customer_to_place) +
                                 problem.Weight(customer_to_place, previous);
                             if (cost < other_cost)
                             {

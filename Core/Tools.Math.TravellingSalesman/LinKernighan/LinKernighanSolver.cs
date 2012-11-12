@@ -84,7 +84,7 @@ namespace Tools.Math.TSP.LK
             IRoute bp_route = bp_solver.Solve(_problem);
             FixedSymmetricRoute init_route = new FixedSymmetricRoute(bp_route);
 
-            float init_route_weight = LinKernighanSolver.Weight(_problem, init_route);
+            double init_route_weight = LinKernighanSolver.Weight(_problem, init_route);
             RouteFound route = new RouteFound()
             {
                 Route = init_route,
@@ -487,7 +487,7 @@ namespace Tools.Math.TSP.LK
         private struct RouteFound
         {
             public FixedSymmetricRoute Route { get; set; }
-            public float RouteWeight { get; set; }
+            public double RouteWeight { get; set; }
 
             public static RouteFound SelectBest(RouteFound route1, RouteFound route2)
             {
@@ -502,10 +502,10 @@ namespace Tools.Math.TSP.LK
             }
         }
 
-        private static float Weight(IProblem problem, ISymmetricRoute route)
+        private static double Weight(IProblem problem, ISymmetricRoute route)
         {
             int previous = -1;
-            float weight = 0;
+            double weight = 0;
             foreach (int customer in route)
             {
                 if (previous >= 0)
@@ -642,7 +642,7 @@ namespace Tools.Math.TSP.LK
                         //&& !Y.Contains(from, other_customer))
                         && !X.Contains(from, edge.To))
                     {
-                        float extra = edge.Weight;
+                        double extra = edge.Weight;
                         if (y.Weight + extra < x.Weight)
                         {
                             //if (x.Count < 2)
@@ -681,7 +681,7 @@ namespace Tools.Math.TSP.LK
             int next = neigbours[1];
 
             int? best_neighour = null;
-            float best_weight = float.MinValue;
+            double best_weight = double.MinValue;
             if (previous > 0 && (exceptions == null || !exceptions.Contains(previous))
                 && !x.Contains(customer, previous))
                 //&& !X.Contains(customer, previous))
@@ -689,7 +689,7 @@ namespace Tools.Math.TSP.LK
             {
                 //if (x.Count > 2)
                 //{
-                float weight = problem.Weight(customer, previous);
+                double weight = problem.Weight(customer, previous);
                 if (weight > best_weight)
                 {
                     best_neighour = previous;
@@ -708,7 +708,7 @@ namespace Tools.Math.TSP.LK
             {
                 //if (x.Count > 2)
                 //{
-                float weight = problem.Weight(customer, next);
+                double weight = problem.Weight(customer, next);
                 if (weight > best_weight)
                 {
                     best_neighour = next;
@@ -748,7 +748,7 @@ namespace Tools.Math.TSP.LK
         /// Raises the intermidiate results event.
         /// </summary>
         /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(int[] result, float weight)
+        protected void RaiseIntermidiateResult(int[] result, double weight)
         {
             if (IntermidiateResult != null)
             {

@@ -19,18 +19,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Routing.Core.Route;
-using Osm.Core;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
+using Routing.Core.Route;
 
-namespace Osm.Routing.Core.VRP.NoDepot
+namespace Routing.Core.VRP.NoDepot
 {
     /// <summary>
     /// Class to solve for a specific class of VRP problems: VRP problems with any depot.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public abstract class RouterNoDepot<ResolvedType> : RouterVRP<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Creates a VRP router without a depot.

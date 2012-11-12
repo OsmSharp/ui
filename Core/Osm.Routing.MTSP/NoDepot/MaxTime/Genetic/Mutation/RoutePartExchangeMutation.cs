@@ -26,7 +26,7 @@ using Tools.Math.AI.Genetic.Solvers;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.VRP.Core.BestPlacement;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
+namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
 {
     /// <summary>
     /// Mutation operation exchanging a part of some route to a part of another route.

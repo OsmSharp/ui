@@ -535,9 +535,9 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
         /// <param name="start"></param>
         /// <param name="lenght"></param>
         /// <returns></returns>
-        public CutResult CutAndRemove(IProblemWeights weights, float weight, int start, int length)
+        public CutResult CutAndRemove(IProblemWeights weights, double weight, int start, int length)
         {
-            float weight_difference = 0;
+            double weight_difference = 0;
             int[] next_array = _next_array.Clone() as int[];
             List<int> cut_part = new List<int>();
             int position = 0;
@@ -588,7 +588,7 @@ namespace Tools.Math.VRP.Core.Routes.ASymmetric
 
         public struct CutResult
         {
-            public float Weight { get; set; }
+            public double Weight { get; set; }
 
             public DynamicAsymmetricRoute Route { get; set; }
 

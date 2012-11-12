@@ -20,20 +20,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.Units.Time;
-using Osm.Routing.Core.Route;
 using Tools.Math.TSP.Problems;
 using Tools.Math.VRP.Core;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.VRP.Core.BestPlacement;
 using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Osm.Core;
 using Tools.Math.VRP.Core.BestPlacement.SeedCustomers;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
+namespace Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 {
     public class RouterBestPlacementWithSeeds<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Holds the seed selector.
@@ -82,7 +80,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
             // get the seed customers.
             ICollection<int> seeds = _seed_selector.SelectSeeds(
                 problem, _k);
-            float[] weights = new float[seeds.Count];
+            double[] weights = new double[seeds.Count];
 
             // start the seed routes.
             List<int> selectable_customers = problem.Customers;
@@ -124,7 +122,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                         throw new Exception();
                     }
                     // get the current weight
-                    float weight = weights[route_idx];
+                    double weight = weights[route_idx];
                     if (weight + result.Increase + calculator.DeliveryTime < problem.Max.Value)
                     { // route will still be inside bounds.
                         if (result.Increase < best_result.Increase)
@@ -146,7 +144,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                 // do the placement if a placement is found without max violation.
                 // else do the placement in the above max route.
                 CheapestInsertionResult placement_result = new CheapestInsertionResult();
-                placement_result.Increase = float.MaxValue;
+                placement_result.Increase = double.MaxValue;
                 int placement_result_idx = -1;
                 if (best_route_idx >= 0)
                 { // best placement found.
@@ -173,12 +171,12 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 
             StringBuilder builder = new StringBuilder();
             builder.Append("[");
-            float total_weight = 0;
+            double total_weight = 0;
             for (int idx = 0; idx < routes.Count; idx++)
             {
                 //IRoute route = routes.Route(idx);
                 IRoute route = routes.Route(idx);
-                float weight = calculator.CalculateOneRoute(route);
+                double weight = calculator.CalculateOneRoute(route);
                 builder.Append(" ");
                 builder.Append(weight);
                 builder.Append(" ");

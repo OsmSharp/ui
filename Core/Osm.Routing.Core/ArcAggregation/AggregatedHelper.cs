@@ -20,9 +20,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.Geo.Meta;
-using Osm.Routing.Core.ArcAggregation.Output;
+using Routing.Core.ArcAggregation.Output;
 
-namespace Osm.Routing.Core.ArcAggregation
+namespace Routing.Core.ArcAggregation
 {
     public class AggregatedHelper
     {

@@ -59,22 +59,22 @@ namespace Tools.Math.TSP.LK.SparseSets
             foreach (int customer in customers)
             {
                 // initialize nearest list.
-                SortedSet<KeyValuePair<float, int>> nearest_customers = new SortedSet<KeyValuePair<float, int>>(
+                SortedSet<KeyValuePair<double, int>> nearest_customers = new SortedSet<KeyValuePair<double, int>>(
                     new SortedSetComparer());
 
                 // build nearest list.
-                float highest_weight = float.MaxValue;
+                double highest_weight = double.MaxValue;
                 foreach (int neigbour in customers)
                 {
                     if (neigbour != customer)
                     { // do not 
                         // calculate weight
-                        float weight = problem.Weight(customer, neigbour);
+                        double weight = problem.Weight(customer, neigbour);
 
                         // add to nearest list if needed.
                         if (weight < highest_weight)
                         {
-                            nearest_customers.Add(new KeyValuePair<float, int>(weight, neigbour));
+                            nearest_customers.Add(new KeyValuePair<double, int>(weight, neigbour));
 
                             // remove highest weight.
                             if (nearest_customers.Count > n)
@@ -92,7 +92,7 @@ namespace Tools.Math.TSP.LK.SparseSets
                 }
 
                 // add nearest list to sparseset.
-                foreach (KeyValuePair<float, int> neigbour_pair in nearest_customers)
+                foreach (KeyValuePair<double, int> neigbour_pair in nearest_customers)
                 {
                     set.Add(new Edge()
                     {
@@ -105,9 +105,9 @@ namespace Tools.Math.TSP.LK.SparseSets
             return set;
         }
 
-        private class SortedSetComparer : IComparer<KeyValuePair<float, int>>
+        private class SortedSetComparer : IComparer<KeyValuePair<double, int>>
         {
-            public int Compare(KeyValuePair<float, int> x, KeyValuePair<float, int> y)
+            public int Compare(KeyValuePair<double, int> x, KeyValuePair<double, int> y)
             {
                 return x.Key.CompareTo(y.Key);
             }

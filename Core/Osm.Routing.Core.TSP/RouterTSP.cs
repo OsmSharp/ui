@@ -19,12 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Routing.Core.Route;
 using Tools.Math.TSP.Problems;
 using Tools.Math.TSP;
 using Tools.Math.VRP.Core.Routes;
-using Osm.Core;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
+using Routing.Core.Route;
 
 namespace Osm.Routing.Core.TSP
 {
@@ -33,7 +32,7 @@ namespace Osm.Routing.Core.TSP
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public abstract class RouterTSP<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Holds the basic router.
@@ -54,7 +53,7 @@ namespace Osm.Routing.Core.TSP
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        protected float[][] CalculateManyToManyWeight(ResolvedType[] points)
+        protected double[][] CalculateManyToManyWeight(ResolvedType[] points)
         {
             return _router.CalculateManyToManyWeight(points, points);
         }
@@ -69,7 +68,7 @@ namespace Osm.Routing.Core.TSP
         public OsmSharpRoute CalculateTSP(ResolvedType[] points, int first, bool is_round)
         {
             // calculate the weights.
-            float[][] weights = this.CalculateManyToManyWeight(points);
+            double[][] weights = this.CalculateManyToManyWeight(points);
 
             // create solver.
             ISolver solver = this.DoCreateSolver();
@@ -92,7 +91,7 @@ namespace Osm.Routing.Core.TSP
         public OsmSharpRoute CalculateTSP(ResolvedType[] points, int first, int last)
         {
             // calculate the weights.
-            float[][] weights = this.CalculateManyToManyWeight(points);
+            double[][] weights = this.CalculateManyToManyWeight(points);
 
             // create solver.
             ISolver solver = this.DoCreateSolver();
@@ -114,7 +113,7 @@ namespace Osm.Routing.Core.TSP
         public OsmSharpRoute CalculateTSP(ResolvedType[] points, bool is_round)
         {
             // calculate the weights.
-            float[][] weights = this.CalculateManyToManyWeight(points);
+            double[][] weights = this.CalculateManyToManyWeight(points);
 
             // create solver.
             ISolver solver = this.DoCreateSolver();
@@ -142,7 +141,7 @@ namespace Osm.Routing.Core.TSP
         /// </summary>
         /// <param name="result"></param>
         /// <param name="weight"></param>
-        void solver_IntermidiateResult(int[] result, float weight)
+        void solver_IntermidiateResult(int[] result, double weight)
         {
             if (this.CanRaiseIntermidiateResult())
             {
@@ -193,7 +192,7 @@ namespace Osm.Routing.Core.TSP
         /// <param name="last"></param>
         /// <param name="is_round"></param>
         /// <returns></returns>
-        protected IProblem GenerateProblem(float[][] weights, int? first, int? last, bool is_round)
+        protected IProblem GenerateProblem(double[][] weights, int? first, int? last, bool is_round)
         {
             if (first.HasValue)
             {
@@ -236,7 +235,7 @@ namespace Osm.Routing.Core.TSP
         /// Delegate to pass on an intermidiate solution.
         /// </summary>
         /// <param name="result"></param>
-        public delegate void IntermidiateDelegate(int[] result, float weight);
+        public delegate void IntermidiateDelegate(int[] result, double weight);
 
         /// <summary>
         /// Raised when an intermidiate result is available.
@@ -256,7 +255,7 @@ namespace Osm.Routing.Core.TSP
         /// Raises the intermidiate results event.
         /// </summary>
         /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(int[] result, float weight)
+        protected void RaiseIntermidiateResult(int[] result, double weight)
         {
             if (IntermidiateResult != null)
             {

@@ -55,7 +55,7 @@ namespace Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         /// <summary>
         /// The minium difference to register improvement(s).
         /// </summary>
-        private float _epsilon = 0.001f;
+        private double _epsilon = 0.001f;
 
         /// <summary>
         /// Creates a new solver.
@@ -105,7 +105,7 @@ namespace Tools.Math.TSP.LocalSearch.HillClimbing3Opt
             IRoute route = solver.Solve(problem);
 
             // improve the existing solution.
-            float difference;
+            double difference;
             this.Improve(problem, route, out difference);
 
             return route;
@@ -118,7 +118,7 @@ namespace Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         /// <param name="route"></param>
         /// <param name="difference"></param>
         /// <returns></returns>
-        public bool Improve(IProblemWeights problem, IRoute route, out float difference)
+        public bool Improve(IProblemWeights problem, IRoute route, out double difference)
         {
             if (!route.IsValid())
             {
@@ -126,7 +126,7 @@ namespace Tools.Math.TSP.LocalSearch.HillClimbing3Opt
             }
 
             _dont_look_bits = new bool[problem.Size];
-            float[][] weights = problem.WeightMatrix;
+            double[][] weights = problem.WeightMatrix;
 
             // loop over all customers.
             bool any_improvement = false;
@@ -159,12 +159,12 @@ namespace Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         /// <param name="route"></param>
         /// <param name="v_1"></param>
         /// <returns></returns>
-        public bool Try3OptMoves(IProblemWeights problem, float[][] weights, IRoute route, int v_1)
+        public bool Try3OptMoves(IProblemWeights problem, double[][] weights, IRoute route, int v_1)
         {
             // get v_2.
             int v_2 = route.GetNeigbours(v_1)[0];
             IEnumerable<int> between_v_2_v_1 = route.Between(v_2, v_1);
-            float weight_1_2 = weights[v_1][v_2];
+            double weight_1_2 = weights[v_1][v_2];
             int v_3 = -1;
             NearestNeighbours10 neighbours = null;
             if (_nearest_neighbours)
@@ -181,9 +181,9 @@ namespace Tools.Math.TSP.LocalSearch.HillClimbing3Opt
                     if (!_nearest_neighbours ||
                         neighbours.Contains(v_4))
                     {
-                        float weight_1_4 = weights[v_1][v_4];
-                        float weight_1_2_plus_3_4 = weight_1_2 + weights[v_3][v_4];
-                        float[] weights_3 = weights[v_3];
+                        double weight_1_4 = weights[v_1][v_4];
+                        double weight_1_2_plus_3_4 = weight_1_2 + weights[v_3][v_4];
+                        double[] weights_3 = weights[v_3];
                         if (this.Try3OptMoves(problem, weights, route, v_1, v_2, v_3, weights_3, v_4, weight_1_2_plus_3_4, weight_1_4))
                         {
                             return true;
@@ -202,15 +202,15 @@ namespace Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         /// <param name="route"></param>
         /// <param name="v_1"></param>
         /// <returns></returns>
-        public bool Try3OptMoves(IProblemWeights problem, float[][] weights, IRoute route, 
-            int v_1, int v_2, float weight_1_2,
+        public bool Try3OptMoves(IProblemWeights problem, double[][] weights, IRoute route,
+            int v_1, int v_2, double weight_1_2,
             int v_3)
         {
             // get v_4.
             int v_4 = route.GetNeigbours(v_3)[0];
-            float weight_1_2_plus_3_4 = weight_1_2 + weights[v_3][v_4];
-            float weight_1_4 = weights[v_1][v_4];
-            float[] weights_3 = weights[v_3];
+            double weight_1_2_plus_3_4 = weight_1_2 + weights[v_3][v_4];
+            double weight_1_4 = weights[v_1][v_4];
+            double[] weights_3 = weights[v_3];
             return this.Try3OptMoves(problem, weights, route, v_1, v_2, v_3, weights_3, v_4, weight_1_2_plus_3_4, weight_1_4);
         }
 
@@ -223,8 +223,8 @@ namespace Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         /// <param name="v_2"></param>
         /// <param name="v_3"></param>
         /// <returns></returns>
-        public bool Try3OptMoves(IProblemWeights problem, float[][] weights, IRoute route, 
-            int v_1, int v_2, int v_3, float[] weights_3, int v_4, float weight_1_2_plus_3_4, float weight_1_4)
+        public bool Try3OptMoves(IProblemWeights problem, double[][] weights, IRoute route,
+            int v_1, int v_2, int v_3, double[] weights_3, int v_4, double weight_1_2_plus_3_4, double weight_1_4)
         {
             //IEnumerable<int> between_v_4_v_1 = route.Between(v_4, v_1);
             //foreach (int v_5 in between_v_4_v_1)
@@ -254,12 +254,12 @@ namespace Tools.Math.TSP.LocalSearch.HillClimbing3Opt
                         //    weight_1_2_plus_3_4, weight_1_4, v_5, v_6))
                         //{
                         // calculate the total weight of the 'new' arcs.
-                        float weight_new = weight_1_4 +
+                        double weight_new = weight_1_4 +
                             weights_3[v_6] +
                             weights[v_5][v_2];
 
                         // calculate the total weights.
-                        float weight = weight_1_2_plus_3_4 + weights[v_5][v_6];
+                        double weight = weight_1_2_plus_3_4 + weights[v_5][v_6];
 
                         if (weight - weight_new > _epsilon)
                         { // actually do replace the vertices.

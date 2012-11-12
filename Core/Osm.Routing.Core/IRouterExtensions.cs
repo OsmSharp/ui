@@ -1,11 +1,31 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Routing.Core.Resolving;
+using Routing.Core.Resolving;
 
-namespace Osm.Routing.Core
+namespace Routing.Core
 {
+    /// <summary>
+    /// Contains common IRouter extensions.
+    /// </summary>
     public static class IRouterExtensions
     {
         /// <summary>
@@ -18,10 +38,10 @@ namespace Osm.Routing.Core
         /// <returns></returns>
         public static ResolvedType[] CheckConnectivityAndRemoveInvalid<ResolvedType>(
             this IRouter<ResolvedType> router, ResolvedType[] resolved_points, float weight)
-                where ResolvedType : IResolvedPoint
+                where ResolvedType : IRouterPoint
         {
             List<ResolvedType> connected_points = new List<ResolvedType>();
-            for(int idx = 0; idx < resolved_points.Length; idx++)
+            for (int idx = 0; idx < resolved_points.Length; idx++)
             {
                 ResolvedType resolved_point = resolved_points[idx];
                 if (resolved_point != null &&

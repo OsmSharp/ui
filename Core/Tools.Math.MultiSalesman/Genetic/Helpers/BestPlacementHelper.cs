@@ -454,7 +454,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Helpers
             result.City = city_to_place;
 
             // initialize the best increase.
-            float increase = 0;
+            double increase = 0;
 
             if (genome.Count > 0)
             {
@@ -472,16 +472,16 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Helpers
                     for (int idx = 0; idx < genome.Count - 1; idx++)
                     {
                         // calculate the new weights.
-                        float new_weights =
+                        double new_weights =
                             problem.Weight(genome[idx], city_to_place)
                                  + (problem.Weight(city_to_place, genome[idx + 1]));
 
                         // calculate the old weights.
-                        float old_weight =
+                        double old_weight =
                             problem.Weight(genome[idx], genome[idx + 1]);
 
                         // calculate the difference to know the increase.
-                        float new_increase =
+                        double new_increase =
                             new_weights - old_weight;
                         if (increase == null || new_increase < increase)
                         {
@@ -516,7 +516,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Helpers
             /// <summary>
             /// Gets/sets the increase in time.
             /// </summary>
-            public float Increase { get; set; }
+            public double Increase { get; set; }
 
             /// <summary>
             /// The fitness of the individual after best placement.

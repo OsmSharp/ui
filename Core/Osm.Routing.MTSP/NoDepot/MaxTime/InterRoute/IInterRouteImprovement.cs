@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using Tools.Math.VRP.Core.Routes;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
+namespace Routing.Core.VRP.NoDepot.MaxTime.InterRoute
 {
     /// <summary>
     /// Represents an inter route improvement heuristic.
@@ -35,6 +35,6 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
         /// <param name="route"></param>
         /// <param name="difference"></param>
         /// <returns></returns>
-        bool Improve(MaxTimeProblem problem, IRoute route1, IRoute route2, out float difference);
+        bool Improve(MaxTimeProblem problem, IRoute route1, IRoute route2, out double difference);
     }
 }

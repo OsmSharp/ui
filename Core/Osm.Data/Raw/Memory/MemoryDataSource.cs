@@ -344,9 +344,9 @@ namespace Osm.Data.Core.Raw.Memory
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IList<OsmBase> Get(GeoCoordinateBox box, Filter filter)
+        public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
-            return new List<OsmBase>();
+            return new List<OsmGeo>();
         }
 
         /// <summary>

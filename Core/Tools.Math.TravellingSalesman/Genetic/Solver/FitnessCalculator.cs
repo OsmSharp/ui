@@ -22,7 +22,6 @@ using System.Text;
 using Tools.Math.AI.Genetic.Fitness;
 using Tools.Math.AI.Genetic.Solvers;
 using Tools.Math.AI.Genetic;
-using Tools.Math.Graph;
 
 namespace Tools.Math.TSP.Genetic.Solver
 {
@@ -59,8 +58,8 @@ namespace Tools.Math.TSP.Genetic.Solver
             GeneticProblem problem,
             List<int> genomes)
         {
-            float[][] weights = problem.BaseProblem.WeightMatrix;
-            float weight = weights[problem.First][genomes[0]];
+            double[][] weights = problem.BaseProblem.WeightMatrix;
+            double weight = weights[problem.First][genomes[0]];
             int idx;
             for (idx = 0; idx < genomes.Count - 1; idx++)
             {

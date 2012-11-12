@@ -26,7 +26,7 @@ using Tools.Math.VRP.Core.Routes.ASymmetric;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.VRP.Core.BestPlacement;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
+namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
 {
     /// <summary>
     /// Generates individuals based on another solver.

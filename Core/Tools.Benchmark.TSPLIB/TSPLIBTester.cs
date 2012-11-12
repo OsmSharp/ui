@@ -138,19 +138,19 @@ namespace Tools.Benchmark.TSPLIB
                     //Console.WriteLine("Started: {0} -> {1}", problem.Name, solver.Name);
 
                     // do the tests.
-                    float best = float.MaxValue;
-                    float worst = float.MinValue;
+                    double best = float.MaxValue;
+                    double worst = float.MinValue;
 
                     int best_count = 0;
                     long start_ticks = DateTime.Now.Ticks;
-                    float total = 0;
+                    double total = 0;
                     int test_count = _test_count;
                     while (test_count > 0)
                     {
                         // do the actual test.
                         IRoute route = solver.Solve(problem);
                         // calculate the weight.
-                        float weight = this.CalculateWeight(route, problem);
+                        double weight = this.CalculateWeight(route, problem);
                         total = total + weight;
                         if (best > weight)
                         {
@@ -204,11 +204,11 @@ namespace Tools.Benchmark.TSPLIB
             writer.Close();
         }
 
-        private float CalculateWeight(IRoute route, TSPLIBProblem problem)
+        private double CalculateWeight(IRoute route, TSPLIBProblem problem)
         {
             int previous = -1;
             int first = -1;
-            float weight = 0;
+            double weight = 0;
             foreach (int customer in route)
             {
                 if (first < 0)

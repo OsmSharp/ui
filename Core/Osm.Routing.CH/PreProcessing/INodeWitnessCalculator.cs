@@ -19,9 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data.Core.Sparse.Primitives;
 
-namespace Osm.Routing.CH.PreProcessing
+namespace Routing.CH.PreProcessing
 {
     /// <summary>
     /// A witness calculator.

@@ -19,24 +19,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Routing.Instructions.LanguageGeneration;
-using Osm.Routing.Core.Route;
-using Osm.Routing.Core.ArcAggregation.Output;
+using Routing.Core.Route;
+using Routing.Core.ArcAggregation.Output;
+using Routing.Instructions.LanguageGeneration;
 
-namespace Osm.Routing.Instructions
+namespace Routing.Instructions
 {
     public class InstructionGenerator
     {
         public List<Instruction> Generate(OsmSharpRoute raw_route)
         {
             return this.Generate(raw_route, 
-                new Osm.Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
+                new Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
         }
 
         public List<Instruction> Generate(OsmSharpRoute raw_route, ILanguageGenerator language_generator)
         {
-            Osm.Routing.Core.ArcAggregation.ArcAggregator aggregator = 
-                new Osm.Routing.Core.ArcAggregation.ArcAggregator();
+            Routing.Core.ArcAggregation.ArcAggregator aggregator = 
+                new Routing.Core.ArcAggregation.ArcAggregator();
             AggregatedPoint point = 
                 aggregator.Aggregate(raw_route);
 
@@ -46,12 +46,12 @@ namespace Osm.Routing.Instructions
         public List<Instruction> Generate(AggregatedPoint aggregate_point)
         {
             return this.Generate(aggregate_point, 
-                new Osm.Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
+                new Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
         }
 
         public List<Instruction> Generate(AggregatedPoint point, ILanguageGenerator language_generator)
         {
-            Osm.Routing.Core.ArcAggregation.Output.AggregatedPoint p = point;
+            Routing.Core.ArcAggregation.Output.AggregatedPoint p = point;
             while (p != null && p.Next != null)
             {
                 // print point.
@@ -59,7 +59,7 @@ namespace Osm.Routing.Instructions
 
                 if (p.ArcsNotTaken != null)
                 {
-                    foreach (KeyValuePair<Tools.Math.Geo.Meta.RelativeDirection, Osm.Routing.Core.ArcAggregation.Output.AggregatedArc> arc in p.ArcsNotTaken)
+                    foreach (KeyValuePair<Tools.Math.Geo.Meta.RelativeDirection, Routing.Core.ArcAggregation.Output.AggregatedArc> arc in p.ArcsNotTaken)
                     {
                         Tools.Core.Output.OutputStreamHost.WriteLine("ArcNotTaken:{0} - {1}", arc.Key.Direction.ToString(), arc.Value.Name);
                     }

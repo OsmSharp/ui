@@ -19,15 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.Units.Time;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement
+namespace Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement
 {
     public class TSPPlacementSolver<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         private Tools.Math.TSP.ISolver _tsp_solver;
 
@@ -81,8 +80,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement
             int previous = -1;
 
             // place the first customer.
-            float weight = 0;
-            float total_weight = 0;
+            double weight = 0;
+            double total_weight = 0;
             IRoute route = solution.Add(start);
             previous = start;
 
@@ -92,8 +91,8 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement
                 int next = tsp_solution.GetNeigbours(previous)[0];
 
                 // get the weight to the current start.
-                float weight_to_next = problem.WeightMatrix[previous][next];
-                float weight_to_start = problem.WeightMatrix[next][start];
+                double weight_to_next = problem.WeightMatrix[previous][next];
+                double weight_to_start = problem.WeightMatrix[next][start];
                 total_weight = calculator.CalculateOneRouteIncrease(
                     weight, weight_to_next + weight_to_start);
                 weight = calculator.CalculateOneRouteIncrease(

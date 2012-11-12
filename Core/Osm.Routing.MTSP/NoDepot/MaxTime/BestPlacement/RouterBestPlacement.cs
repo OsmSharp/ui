@@ -20,19 +20,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.Units.Time;
-using Osm.Routing.Core.Route;
 using Tools.Math.TSP.Problems;
 using Tools.Math.VRP.Core;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.VRP.Core.BestPlacement;
 using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Osm.Core;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
+namespace Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 {
     public class RouterBestPlacement<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Creates a new best placement min max no depot vrp router.
@@ -80,7 +78,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                 customers.Remove(customer);
 
                 // start a route r.
-                float current_route_weight = 0;
+                double current_route_weight = 0;
                 IRoute current_route = solution.Add(customer);
                 //Console.WriteLine("Starting new route with {0}", customer);
                 while (customers.Count > 0)
@@ -90,7 +88,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                         CheapestInsertionHelper.CalculateBestPlacement(problem, current_route, customers);
 
                     // calculate the new weight.
-                    float potential_weight = calculator.CalculateOneRouteIncrease(current_route_weight, result.Increase);
+                    double potential_weight = calculator.CalculateOneRouteIncrease(current_route_weight, result.Increase);
                     // cram as many customers into one route as possible.
                     if (potential_weight < problem.Max.Value)
                     {

@@ -23,7 +23,6 @@ using Tools.Math.AI.Genetic.Operations.CrossOver;
 using Tools.Math.AI.Genetic.Solvers;
 using Tools.Math.AI.Genetic;
 using Tools.Math.TSP.Genetic.Solver;
-using Tools.Math.Graph;
 
 namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {

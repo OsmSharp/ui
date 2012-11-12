@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace Osm.Routing.Core.Route.Kml
+namespace Routing.Core.Route.Kml
 {
     /// <summary>
     /// Converts an OsmSharpRoute into a kml.

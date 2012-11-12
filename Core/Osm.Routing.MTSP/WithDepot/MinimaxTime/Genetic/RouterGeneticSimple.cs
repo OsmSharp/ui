@@ -20,31 +20,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.Units.Time;
-using Osm.Routing.Core.Route;
 using Tools.Math.AI.Genetic.Solvers;
 using Tools.Math.VRP.Core;
 using Tools.Math.VRP.Core.Routes.ASymmetric;
 using Tools.Math.AI.Genetic.Selectors;
-using Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Mutation;
-using Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.CrossOver;
-using Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation;
 using Tools.Math.AI.Genetic;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.AI.Genetic.Operations.Mutations;
 using Tools.Math.Random;
 using System.IO;
 using System.Globalization;
-using Osm.Core;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
+using Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.CrossOver;
+using Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation;
+using Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Mutation;
 
-namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
+namespace Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
 {
     /// <summary>
     /// Calculates VRP's without a depot with min max time constraints per route using genetic algorithms.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public class RouterGeneticSimple<ResolvedType> : RouterMinimaxTime<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Creates a new genetic min max no depot vrp router.
@@ -105,7 +103,7 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
         /// <returns></returns>
         protected override int[][] DoCalculation(IProblemWeights problem, ICollection<int> depots, ICollection<int> customers)
         {
-            float[] solutions = Tools.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
+            double[] solutions = Tools.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
                 problem, customers);
 
             generations = 0;

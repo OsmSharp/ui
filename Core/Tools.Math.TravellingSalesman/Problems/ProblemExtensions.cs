@@ -40,12 +40,12 @@ namespace Tools.Math.TSP
         public static IProblem ConvertToSymmetric(this IProblem problem)
         {
             int n = problem.Size;
-            float[][] weights = new float[n * 2][];
-            float M = float.MinValue;
+            double[][] weights = new double[n * 2][];
+            double M = double.MinValue;
 
             for (int x = 0; x < n * 2; x++)
             {
-                weights[x] = new float[n * 2];
+                weights[x] = new double[n * 2];
             }
 
             // calculate M
@@ -53,7 +53,7 @@ namespace Tools.Math.TSP
             {
                 for (int j = 0; j < problem.Size; j++)
                 {
-                    float weight = problem.Weight(i, j);
+                    double weight = problem.Weight(i, j);
                     if (weight > M)
                     {
                         M = weight;
@@ -61,7 +61,7 @@ namespace Tools.Math.TSP
                 }
             }
 
-            float m_to_be = 100;
+            double m_to_be = 100;
             while (M > m_to_be)
             {
                 m_to_be = m_to_be * 10;
@@ -69,10 +69,10 @@ namespace Tools.Math.TSP
             M = m_to_be;
 
             // create C with negative M
-            float[][] old_weights = new float[n][];
+            double[][] old_weights = new double[n][];
             for (int i = 0; i < n; i++)
             {
-                old_weights[i] = new float[n];
+                old_weights[i] = new double[n];
                 for (int j = 0; j < n; j++)
                 {
                     if (i == j)
@@ -107,11 +107,11 @@ namespace Tools.Math.TSP
         /// <returns></returns>
         public static IProblem AddVirtualDepot(this IProblem problem)
         {
-            float[][] new_weights = new float[problem.Size + 1][];
+            double[][] new_weights = new double[problem.Size + 1][];
 
             for (int r = 0; r < problem.Size + 1; r++)
             {
-                new_weights[r] = new float[problem.Size + 1];
+                new_weights[r] = new double[problem.Size + 1];
 
                 for(int c = 0; c < problem.Size; c++)
                 {

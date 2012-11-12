@@ -171,7 +171,6 @@
   <ItemGroup>
     <Compile Include="DynamicGraph\IDynamicGraph.cs" />
     <Compile Include="DynamicGraph\IDynamicGraphEdgeData.cs" />
-    <Compile Include="DynamicGraph\Memory\MemoryDynamicGraph.cs" />
     <Compile Include="Processor\ChangeSets\DataProcessorChangeSetFilter.cs" />
     <Compile Include="Processor\ChangeSets\DataProcessorChangeSetSource.cs" />
     <Compile Include="Processor\ChangeSets\DataProcessorChangeSetTarget.cs" />
@@ -189,6 +188,8 @@
     <Compile Include="Processor\Filter\BoundingBox\LongIndex\LongIndexLeaf.cs" />
     <Compile Include="Processor\Filter\BoundingBox\LongIndex\LongIndexNode.cs" />
     <Compile Include="Processor\Filter\Sort\DataProcessorFilterSort.cs" />
+    <Compile Include="Processor\ListSource\OsmGeoListDataProcessorSource.cs" />
+    <Compile Include="Processor\Progress\ProgressDataProcessorSource.cs" />
     <Compile Include="Processor\Progress\ProgressDataProcessorTarget.cs" />
     <Compile Include="Processor\SimpleSource\ISimpleSourceData.cs" />
     <Compile Include="Processor\SimpleSource\SimpleMemoryData.cs" />

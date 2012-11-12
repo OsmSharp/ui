@@ -140,7 +140,7 @@ namespace Osm.Data
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        IList<OsmBase> Get(GeoCoordinateBox box, Filter filter);
+        IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter);
 
         #endregion
 

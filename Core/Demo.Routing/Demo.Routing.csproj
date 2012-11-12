@@ -174,9 +174,9 @@
       <Project>{9B62129C-166A-4D54-AFD5-8ECE28DAC233}</Project>
       <Name>Osm.Renderer.Gdi</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing.Core\Osm.Routing.Core.csproj">
+    <ProjectReference Include="..\Osm.Routing.Core\Routing.Core.csproj">
       <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
-      <Name>Osm.Routing.Core</Name>
+      <Name>Routing.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Osm.Routing.Instructions\Osm.Routing.Instructions.csproj">
       <Project>{022CE792-DBDA-4A1E-8C4B-5954F02C4C67}</Project>

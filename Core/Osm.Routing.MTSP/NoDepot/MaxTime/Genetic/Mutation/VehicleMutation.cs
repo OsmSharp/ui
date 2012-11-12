@@ -24,7 +24,7 @@ using Tools.Math.AI.Genetic;
 using Tools.Math.AI.Genetic.Solvers;
 using Tools.Math.VRP.Core.Routes;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
+namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
 {
     /// <summary>
     /// Mutation operation exchanging a part of some route to a part of another route.
@@ -106,7 +106,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
                 // apply 3Opt to all routes.
                 for (int route_idx = 0; route_idx < solution.Count; route_idx++)
                 {
-                    float difference;
+                    double difference;
                     Tools.Math.TSP.LocalSearch.HillClimbing3Opt.HillClimbing3OptSolver hillclimbing_3opt =
                         new Tools.Math.TSP.LocalSearch.HillClimbing3Opt.HillClimbing3OptSolver(true, true);
                     hillclimbing_3opt.Improve(solver.Problem, solution.Route(route_idx), out difference);
@@ -146,12 +146,12 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
                     current = solution.Next(current);
                     if (used[current])
                     {
-                        float neighbour_weight = float.MaxValue;
+                        double neighbour_weight = double.MaxValue;
                         foreach (int nn in problem.Get10NearestNeighbours(previous))
                         {
                             if (!used[nn])
                             {
-                                float potential_weight =
+                                double potential_weight =
                                     problem.WeightMatrix[previous][current];
                                 if (potential_weight < neighbour_weight)
                                 {

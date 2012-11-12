@@ -41,7 +41,7 @@ namespace Tools.Math.TSP.Problems
         /// <summary>
         /// Holds the weights.
         /// </summary>
-        private float[][] _weights;
+        private double[][] _weights;
 
         /// <summary>
         /// Holds the first customer.
@@ -58,7 +58,7 @@ namespace Tools.Math.TSP.Problems
         /// </summary>
         /// <param name="weights"></param>
         /// <param name="symmetric"></param>
-        public MatrixProblem(float[][] weights
+        public MatrixProblem(double[][] weights
             , bool symmetric)
         {
             _symmetric = symmetric;
@@ -73,7 +73,7 @@ namespace Tools.Math.TSP.Problems
         /// </summary>
         /// <param name="weights"></param>
         /// <param name="symmetric"></param>
-        public MatrixProblem(float[][] weights
+        public MatrixProblem(double[][] weights
             , bool symmetric
             , bool euclidean)
         {
@@ -89,7 +89,7 @@ namespace Tools.Math.TSP.Problems
         /// </summary>
         /// <param name="weights"></param>
         /// <param name="symmetric"></param>
-        public MatrixProblem(float[][] weights
+        public MatrixProblem(double[][] weights
             , bool symmetric
             , int first
             , int? last)
@@ -106,7 +106,7 @@ namespace Tools.Math.TSP.Problems
         /// </summary>
         /// <param name="weights"></param>
         /// <param name="symmetric"></param>
-        public MatrixProblem(float[][] weights
+        public MatrixProblem(double[][] weights
             , bool symmetric
             , bool euclidean
             , int first
@@ -126,7 +126,7 @@ namespace Tools.Math.TSP.Problems
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public float Weight(int from, int to)
+        public double Weight(int from, int to)
         {
             return _weights[from][to];
         }
@@ -189,7 +189,7 @@ namespace Tools.Math.TSP.Problems
         /// <summary>
         /// Returns the actual weight matrix.
         /// </summary>
-        public float[][] WeightMatrix
+        public double[][] WeightMatrix
         {
             get 
             { 
@@ -218,12 +218,12 @@ namespace Tools.Math.TSP.Problems
             NearestNeighbours10 result = _neighbours[v];
             if (result == null)
             {
-                SortedDictionary<float, List<int>> neighbours = new SortedDictionary<float, List<int>>();
+                SortedDictionary<double, List<int>> neighbours = new SortedDictionary<double, List<int>>();
                 for (int customer = 0; customer < this.Size; customer++)
                 {
                     if (customer != v)
                     {
-                        float weight = this.WeightMatrix[v][customer];
+                        double weight = this.WeightMatrix[v][customer];
                         List<int> customers = null;
                         if (!neighbours.TryGetValue(weight, out customers))
                         {
@@ -235,7 +235,7 @@ namespace Tools.Math.TSP.Problems
                 }
 
                 result = new NearestNeighbours10();
-                foreach (KeyValuePair<float, List<int>> pair in neighbours)
+                foreach (KeyValuePair<double, List<int>> pair in neighbours)
                 {
                     foreach (int customer in pair.Value)
                     {

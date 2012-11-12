@@ -24,7 +24,7 @@ using Tools.Math.AI.Genetic.Fitness;
 using Tools.Math.AI.Genetic;
 using Tools.Math.VRP.Core.Routes;
 
-namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
+namespace Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
 {
     internal class FitnessCalculator : IFitnessCalculator<List<Genome>, Problem, Fitness>
     {

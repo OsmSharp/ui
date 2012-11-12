@@ -24,7 +24,7 @@ using Tools.Math.Units.Time;
 using Tools.Math.TSP.Problems;
 using Tools.Math.VRP.Core;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic
+namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic
 {
     ///// <summary>
     ///// The problem description for the genetic algorithm.

@@ -70,7 +70,7 @@ namespace Osm.Data.Cache
         /// </summary>
         private void InitializeCache()
         {
-            _tiles_cache = new Dictionary<int, IDictionary<int, IList<OsmBase>>>();
+            _tiles_cache = new Dictionary<int, IDictionary<int, IList<OsmGeo>>>();
             _nodes = new Dictionary<long, Node>();
             _ways = new Dictionary<long, Way>();
             _relations = new Dictionary<long, Relation>();
@@ -85,7 +85,7 @@ namespace Osm.Data.Cache
         /// 
         /// A zoom level can be chosen to calculate the size of the caching strategy.
         /// </summary>
-        private Dictionary<int, IDictionary<int, IList<OsmBase>>> _tiles_cache;
+        private Dictionary<int, IDictionary<int, IList<OsmGeo>>> _tiles_cache;
 
         /// <summary>
         /// Returns all osm object in a bounding box from cache or from the wrapped data source.
@@ -93,15 +93,15 @@ namespace Osm.Data.Cache
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        private IList<OsmBase> GetObjectsInBox(int x, int y)
+        private IList<OsmGeo> GetObjectsInBox(int x, int y)
         {
-            IDictionary<int,IList<OsmBase>> objects_in_box = null;
+            IDictionary<int, IList<OsmGeo>> objects_in_box = null;
             if (!_tiles_cache.TryGetValue(x, out objects_in_box))
             {
-                objects_in_box = new Dictionary<int, IList<OsmBase>>();
+                objects_in_box = new Dictionary<int, IList<OsmGeo>>();
                 _tiles_cache.Add(x, objects_in_box);
             }
-            IList<OsmBase> objects = null;
+            IList<OsmGeo> objects = null;
             if (!objects_in_box.TryGetValue(y, out objects))
             {
                 objects = this.LoadObjectsInBox(x, y);
@@ -110,33 +110,22 @@ namespace Osm.Data.Cache
             return objects;
         }
 
-        private IList<OsmBase> LoadObjectsInBox(int x, int y)
+        private IList<OsmGeo> LoadObjectsInBox(int x, int y)
         {
             //Tools.Core.Output.OutputTextStreamHost.WriteLine(string.Format("Loading box {0}-{1} at zoom {2}", x, y, _zoom_level));
 
             // make box slightly bigger.
-            GeoCoordinateBox box = this.CreateBoxFor(x,y);
+            GeoCoordinateBox box = (new Tile(x, y, _zoom_level)).Box;
             box = new GeoCoordinateBox(
                 new GeoCoordinate(box.MaxLat + 0.00001, box.MaxLon + 0.00001),
                 new GeoCoordinate(box.MinLat - 0.00001, box.MinLon - 0.00001));
 
-
             return _source.Get(box, Filter.Any());
         }
 
-        private GeoCoordinateBox CreateBoxFor(int x, int y)        
+        private IList<OsmGeo> IndexObjectsInBox(int x, int y)
         {
-
-            // calculate the tiles bounding box and set its properties.
-            GeoCoordinate top_left = TileToWorldPos(x, y, _zoom_level);
-            GeoCoordinate bottom_right = TileToWorldPos(x + 1, y + 1, _zoom_level);
-
-            return new GeoCoordinateBox(top_left, bottom_right);
-        }
-
-        private IList<OsmBase> IndexObjectsInBox(int x, int y)
-        {
-            IList<OsmBase> objects_in_box = null;
+            IList<OsmGeo> objects_in_box = null;
             if (_tiles_cache.ContainsKey(x)
                 && _tiles_cache[x].TryGetValue(y, out objects_in_box))
             {
@@ -148,7 +137,7 @@ namespace Osm.Data.Cache
                 objects_in_box = this.GetObjectsInBox(x, y);
 
                 // get the box x-y.
-                GeoCoordinateBox box = this.CreateBoxFor(x, y);
+                GeoCoordinateBox box = (new Tile(x, y, _zoom_level)).Box;
 
                 // make box slightly smaller to prevent rounding errors.
                 box = new GeoCoordinateBox(
@@ -241,7 +230,7 @@ namespace Osm.Data.Cache
 
         private void IndexObjectsInBox(GeoCoordinateBox box)
         {
-            TileRange range = this.GetTileToLoadFor(box, _zoom_level);
+            TileRange range = TileRange.CreateAroundBoundingBox(box, _zoom_level);
 
             for (int x = range.XMin; x < range.XMax + 1; x++)
             {
@@ -305,56 +294,6 @@ namespace Osm.Data.Cache
         }
 
         #endregion
-
-        /// <summary>
-        /// Converts the tile position to longitude and latitude coordinates.
-        /// </summary>
-        /// <param name="tile_x"></param>
-        /// <param name="tile_y"></param>
-        /// <param name="zoom"></param>
-        /// <returns></returns>
-        private GeoCoordinate TileToWorldPos(double tile_x, double tile_y, int zoom)
-        {
-            double n = System.Math.PI - ((2.0 * System.Math.PI * tile_y) / System.Math.Pow(2.0, zoom));
-
-            double longitude = (double)((tile_x / System.Math.Pow(2.0, zoom) * 360.0) - 180.0);
-            double latitude = (double)(180.0 / System.Math.PI * System.Math.Atan(System.Math.Sinh(n)));
-
-            return new GeoCoordinate(latitude, longitude);
-        }
-
-        /// <summary>
-        /// Returns a range of tiles for a bounding box.
-        /// </summary>
-        /// <param name="bbox"></param>
-        /// <param name="zoom"></param>
-        /// <returns></returns>
-        private TileRange GetTileToLoadFor(GeoCoordinateBox bbox,
-            int zoom)
-        {
-            int n = (int)System.Math.Floor(System.Math.Pow(2, zoom));
-
-            Radian rad = new Degree(bbox.MaxLat);
-
-            int x_tile_min = (int)(((bbox.MinLon + 180.0f) / 360.0f) * (double)n);
-            int y_tile_min = (int)(
-                (1.0f - (System.Math.Log(System.Math.Tan(rad.Value) + (1.0f / System.Math.Cos(rad.Value))))
-                / System.Math.PI) / 2f * (double)n);
-
-
-            rad = new Degree(bbox.MinLat);
-            int x_tile_max = (int)(((bbox.MaxLon + 180.0f) / 360.0f) * (double)n);
-            int y_tile_max = (int)(
-                (1.0f - (System.Math.Log(System.Math.Tan(rad.Value) + (1.0f / System.Math.Cos(rad.Value))))
-                / System.Math.PI) / 2f * (double)n);
-
-            TileRange range = new TileRange();
-            range.XMax = x_tile_max;
-            range.XMin = x_tile_min;
-            range.YMax = y_tile_max;
-            range.YMin = y_tile_min;
-            return range;
-        }
 
         #endregion
 
@@ -562,19 +501,19 @@ namespace Osm.Data.Cache
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IList<Osm.Core.OsmBase> Get(Tools.Math.Geo.GeoCoordinateBox box, Osm.Core.Filters.Filter filter)
+        public IList<OsmGeo> Get(Tools.Math.Geo.GeoCoordinateBox box, Osm.Core.Filters.Filter filter)
         {
-            List<OsmBase> base_objects = new List<OsmBase>();
+            List<OsmGeo> base_objects = new List<OsmGeo>();
 
-            TileRange range = this.GetTileToLoadFor(box,_zoom_level);
+            TileRange range = TileRange.CreateAroundBoundingBox(box, _zoom_level);
 
             for (int x = range.XMin; x < range.XMax + 1; x++)
             {
                 for (int y = range.YMin; y < range.YMax + 1; y++)
                 {
-                    IList<OsmBase> objects_in_box = this.IndexObjectsInBox(x, y);
+                    IList<OsmGeo> objects_in_box = this.IndexObjectsInBox(x, y);
 
-                    foreach (OsmBase obj in objects_in_box)
+                    foreach (OsmGeo obj in objects_in_box)
                     {
                         if (obj is OsmGeo
                             && (obj as OsmGeo).Shape.Inside(box))
@@ -589,29 +528,5 @@ namespace Osm.Data.Cache
         }
 
         #endregion
-        
-        private class TilePosition
-        {
-            public int X { get; set; }
-
-            public int Y { get; set; }
-        }
-
-        private class TileRange
-        {
-            public int XMin { get; set; }
-
-            public int YMin { get; set; }
-
-            public int XMax { get; set; }
-
-            public int YMax { get; set; }
-
-            internal bool IsBorder(int x, int y)
-            {
-                return (x == this.XMin) || (x == this.XMax) 
-                    || (y == this.YMin) || (y == this.YMin);
-            }
-        }
     }
 }

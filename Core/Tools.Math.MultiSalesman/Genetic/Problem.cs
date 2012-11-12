@@ -76,6 +76,6 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic
         /// <param name="city1"></param>
         /// <param name="city1"></param>
         /// <returns></returns>
-        public abstract float Weight(int city1, int city2);
+        public abstract double Weight(int city1, int city2);
     }
 }

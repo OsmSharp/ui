@@ -64,7 +64,7 @@ namespace Tools.TSPLIB.Parser
             TSPLIBProblemTypeEnum? problem_type = null;
             TSPLIBProblemWeightTypeEnum? weight_type = null;
             int size = -1;
-            float[][] weights = null;
+            double[][] weights = null;
             string comment = string.Empty;
             string name = string.Empty;
 
@@ -114,8 +114,8 @@ namespace Tools.TSPLIB.Parser
                 }
                 else if (line.StartsWith(TOKEN_EDGE_WEIGHT_SECTION))
                 {
-                    weights = new float[size][];
-                    weights[0] = new float[size];
+                    weights = new double[size][];
+                    weights[0] = new double[size];
 
                     int x = 0;
                     int y = 0;
@@ -146,7 +146,7 @@ namespace Tools.TSPLIB.Parser
                                         x = x + 1;
                                         if (x < size)
                                         {
-                                            weights[x] = new float[size];
+                                            weights[x] = new double[size];
                                             y = 0;
                                         }
                                     }
@@ -193,13 +193,13 @@ namespace Tools.TSPLIB.Parser
         /// Calculate the euclidean weights.
         /// </summary>
         /// <returns></returns>
-        private static float[][] CalculateEuclideanWeights(List<Point> points)
+        private static double[][] CalculateEuclideanWeights(List<Point> points)
         {
-            float[][] weigths = new float[points.Count][];
+            double[][] weigths = new double[points.Count][];
 
             for (int city1 = 0; city1 < points.Count; city1++)
             {
-                weigths[city1] = new float[points.Count];
+                weigths[city1] = new double[points.Count];
                 for (int city2 = 0; city2 < points.Count; city2++)
                 {
                     weigths[city1][city2] = (float)System.Math.Round(System.Math.Sqrt(

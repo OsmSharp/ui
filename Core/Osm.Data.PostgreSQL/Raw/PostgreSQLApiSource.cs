@@ -355,11 +355,11 @@ namespace Osm.Data.PostgreSQL.Raw
 
         #endregion
 
-        public IList<OsmBase> Get(GeoCoordinateBox box, Filter filter)
+        public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
             // initialize connection.
             NpgsqlConnection con = this.CreateConnection();
-            List<OsmBase> base_list = new List<OsmBase>();
+            List<OsmGeo> base_list = new List<OsmGeo>();
 
             // calculate bounding box parameters to query db.
             int latitude_min = (int)(box.MinLat * 10000000.0);

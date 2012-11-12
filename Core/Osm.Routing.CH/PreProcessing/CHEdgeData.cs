@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data.Core.DynamicGraph;
+using Routing.Core.Graph;
 
-namespace Osm.Routing.CH.PreProcessing
+namespace Routing.CH.PreProcessing
 {
     public class CHEdgeData : IDynamicGraphEdgeData
     {
@@ -31,12 +31,32 @@ namespace Osm.Routing.CH.PreProcessing
 
         public float Weight { get; set; }
 
-        public bool HasContractedVertex { get; set; }
+        public bool HasContractedVertex
+        {
+            get
+            {
+                return this.ContractedVertexId > 0;
+            }
+        }
 
         public uint ContractedVertexId { get; set; }
 
         public bool HasTags { get; set; }
 
         public uint Tags { get; set; }
+
+        public bool IsVirtual
+        {
+            get
+            {
+                return this.HasContractedVertex;
+            }
+        }
+
+
+        double IDynamicGraphEdgeData.Weight
+        {
+            get { return this.Weight; }
+        }
     }
 }

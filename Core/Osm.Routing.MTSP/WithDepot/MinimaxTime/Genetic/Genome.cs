@@ -22,7 +22,7 @@ using System.Text;
 using Tools.Math.VRP.Core.Routes.ASymmetric;
 using Tools.Math.VRP.Core.Routes;
 
-namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
+namespace Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
 {
     internal class Genome : IEquatable<Genome>, ICloneable
     {

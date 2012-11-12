@@ -30,7 +30,7 @@ namespace Tools.Math.VRP.Core
         /// <summary>
         /// Returns the weight matrix if any, else returns null.
         /// </summary>
-        float[][] WeightMatrix
+        double[][] WeightMatrix
         {
             get;
         }
@@ -41,7 +41,7 @@ namespace Tools.Math.VRP.Core
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        float Weight(int from, int to);
+        double Weight(int from, int to);
 
         /// <summary>
         /// Returns the size.

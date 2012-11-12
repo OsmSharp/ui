@@ -49,13 +49,13 @@ namespace Tools.Math.VRP.Core.BestPlacement.SeedCustomers
             }
 
             // find shortest distance.
-            float minimal = float.MaxValue;
+            double minimal = double.MaxValue;
             int selected_idx = -1;
             for (int x = 0; x < k; x++)
             {
                 for (int y = 0; y < x; y++)
                 {
-                    float weight = weights.Weight(seeds[x], seeds[y]);
+                    double weight = weights.Weight(seeds[x], seeds[y]);
                     if (weight < minimal)
                     {
                         selected_idx = x;
@@ -76,12 +76,12 @@ namespace Tools.Math.VRP.Core.BestPlacement.SeedCustomers
                 }
 
                 // check the new minimal.
-                float new_minimal = float.MaxValue;
+                double new_minimal = double.MaxValue;
                 for (int x = 0; x < k; x++)
                 {
                     if (x != selected_idx)
                     {
-                        float weight = weights.Weight(seeds[x], seed);
+                        double weight = weights.Weight(seeds[x], seed);
                         if (weight < new_minimal)
                         {
                             new_minimal = weight;

@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.AI.Genetic;
-using Tools.Math.Graph;
 
 namespace Tools.Math.TSP.Genetic.Solver
 {
@@ -57,7 +56,7 @@ namespace Tools.Math.TSP.Genetic.Solver
         /// <param name="city1"></param>
         /// <param name="city1"></param>
         /// <returns></returns>
-        public float Weight(int city1, int city2)
+        public double Weight(int city1, int city2)
         {
             return _problem.Weight(city1, city2);
         }

@@ -143,10 +143,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="protobuf-net, Version=2.0.0.594, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="System">
     </Reference>
     <Reference Include="System.Core">
@@ -333,6 +329,7 @@
     <EmbeddedResource Include="TestData\matrix.osm">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
+    <EmbeddedResource Include="TestData\test_network.osm" />
     <None Include="Tsp\matrix.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -401,10 +398,6 @@
       <Project>{5DCC16FB-44D8-4789-9AA0-C939574F0D95}</Project>
       <Name>Osm.Data.PBF</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Osm.Data.Redis\Osm.Data.Redis.csproj">
-      <Project>{9152A85F-61AC-486F-B5F6-E2C969132738}</Project>
-      <Name>Osm.Data.Redis</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Osm.Data.XML\Osm.Data.XML.csproj">
       <Project>{18254C55-15C8-4438-9F92-B3B78E2720F5}</Project>
       <Name>Osm.Data.XML</Name>
@@ -413,69 +406,29 @@
       <Project>{5BC09D7C-5226-4233-BF54-27BFD838F8F8}</Project>
       <Name>Osm.Data.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing.CH\Osm.Routing.CH.csproj">
+    <ProjectReference Include="..\Osm.Routing.CH\Routing.CH.csproj">
       <Project>{ABF960CD-353C-4983-BA96-25D001C72F61}</Project>
-      <Name>Osm.Routing.CH</Name>
+      <Name>Routing.CH</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing.Core.TSP\Osm.Routing.Core.TSP.csproj">
-      <Project>{494BE919-7256-431F-9D94-8B438129D93E}</Project>
-      <Name>Osm.Routing.Core.TSP</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing.Core\Osm.Routing.Core.csproj">
+    <ProjectReference Include="..\Osm.Routing.Core\Routing.Core.csproj">
       <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
-      <Name>Osm.Routing.Core</Name>
+      <Name>Routing.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing.HH\Osm.Routing.HH.csproj">
-      <Project>{2C1A853F-93B3-4E23-B841-ADB293F5F86E}</Project>
-      <Name>Osm.Routing.HH</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing.Instructions\Osm.Routing.Instructions.csproj">
-      <Project>{022CE792-DBDA-4A1E-8C4B-5954F02C4C67}</Project>
-      <Name>Osm.Routing.Instructions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing.MTSP\Osm.Routing.Core.VRP.csproj">
+    <ProjectReference Include="..\Osm.Routing.MTSP\Routing.Core.VRP.csproj">
       <Project>{28024A20-1A04-4973-93A3-3D6F53B0386A}</Project>
-      <Name>Osm.Routing.Core.VRP</Name>
+      <Name>Routing.Core.VRP</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing.Sparse\Osm.Routing.Sparse.csproj">
-      <Project>{F02B8B7F-E1F1-44E9-9B8D-EB840A0AA717}</Project>
-      <Name>Osm.Routing.Sparse</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing\Osm.Routing.Raw.csproj">
+    <ProjectReference Include="..\Osm.Routing\Osm.Routing.csproj">
       <Project>{5E146436-B64C-4C3A-832E-26A53AA6BA54}</Project>
-      <Name>Osm.Routing.Raw</Name>
+      <Name>Osm.Routing</Name>
     </ProjectReference>
     <ProjectReference Include="..\Tools.Core\Tools.Core.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
       <Name>Tools.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Tools.Math.AI.Genetic\Tools.Math.AI.Genetic.csproj">
-      <Project>{FC226E3D-F4B5-462A-82BB-09D53F8C6DC2}</Project>
-      <Name>Tools.Math.AI.Genetic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tools.Math.Graph.Routing.Point2Point\Tools.Math.Graph.Routing.csproj">
-      <Project>{B6B8FEAF-91AB-470C-9347-E10E03DDE11F}</Project>
-      <Name>Tools.Math.Graph.Routing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tools.Math.Graph\Tools.Math.Graph.csproj">
-      <Project>{FAD63D7A-AE1E-4133-95D4-BAB2A2BB8EFF}</Project>
-      <Name>Tools.Math.Graph</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tools.Math.TravellingSalesman\Tools.Math.TSP.csproj">
-      <Project>{F12D6C89-D3E2-410C-9D74-55694A05C1BE}</Project>
-      <Name>Tools.Math.TSP</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tools.Math.VRP.Tools\Tools.Math.VRP.Core.csproj">
-      <Project>{EE35732E-984C-4C40-9C4F-FEF012A9B6C9}</Project>
-      <Name>Tools.Math.VRP.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tools.Math\Tools.Math.csproj">
       <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
       <Name>Tools.Math</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Tools.TSPLIB\Tools.TSPLIB.csproj">
-      <Project>{24991386-8E24-499A-9A42-2EA5C6D7529B}</Project>
-      <Name>Tools.TSPLIB</Name>
     </ProjectReference>
     <ProjectReference Include="..\Tools.Xml\Tools.Xml.csproj">
       <Project>{550F62F8-B62F-4E77-AF12-ACFD9378B9A0}</Project>

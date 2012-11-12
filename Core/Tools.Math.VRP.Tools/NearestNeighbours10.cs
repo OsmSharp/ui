@@ -29,6 +29,6 @@ namespace Tools.Math.VRP.Core
 
         }
 
-        public float Max { get; set; }
+        public double Max { get; set; }
     }
 }

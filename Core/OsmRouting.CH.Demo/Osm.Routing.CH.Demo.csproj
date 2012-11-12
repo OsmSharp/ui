@@ -190,9 +190,9 @@
       <Project>{ABF960CD-353C-4983-BA96-25D001C72F61}</Project>
       <Name>Osm.Routing.CH</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing.Core\Osm.Routing.Core.csproj">
+    <ProjectReference Include="..\Osm.Routing.Core\Routing.Core.csproj">
       <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
-      <Name>Osm.Routing.Core</Name>
+      <Name>Routing.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Osm.UI.Model\Osm.UI.Model.csproj">
       <Project>{F9AD02A8-7B4A-402D-BAC0-C2DC610BFD02}</Project>

@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.AI.Genetic;
-using Tools.Math.Graph;
 
 namespace Tools.Math.TSP.Genetic.Solver
 {

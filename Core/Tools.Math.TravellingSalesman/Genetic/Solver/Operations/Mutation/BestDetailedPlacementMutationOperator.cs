@@ -24,7 +24,6 @@ using Tools.Math.AI.Genetic;
 using Tools.Math.AI.Genetic.Solvers;
 using Tools.Math.TSP.Genetic.Solver;
 using Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
-using Tools.Math.Graph;
 
 namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
 {

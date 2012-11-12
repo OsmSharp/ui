@@ -84,7 +84,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
             Individual<List<int>, GeneticProblem, Fitness> parent2)
         {
             Tools.Math.TSP.Problems.IProblem tsp_problem = solver.Problem.BaseProblem;
-            float[][] weights = tsp_problem.WeightMatrix;
+            double[][] weights = tsp_problem.WeightMatrix;
 
             // first create E_a
             AsymmetricCycles e_a = new AsymmetricCycles(parent1.Genomes.Count + 1);
@@ -204,7 +204,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
                         from = current_tour.Key;
                         to = next_array_a[from];
-                        float weight_from_to = weights[from][to];
+                        double weight_from_to = weights[from][to];
                         do
                         {
                             // check the nearest neighbours of from

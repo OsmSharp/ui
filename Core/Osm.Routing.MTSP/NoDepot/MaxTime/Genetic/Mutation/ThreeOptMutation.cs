@@ -25,7 +25,7 @@ using Tools.Math.AI.Genetic.Solvers;
 using Tools.Math.VRP.Core.BestPlacement;
 using Tools.Math.VRP.Core.Routes;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
+namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
 {
     internal class ThreeOptMutation :
         IMutationOperation<MaxTimeSolution, MaxTimeProblem, Fitness>
@@ -54,7 +54,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
                 Tools.Math.Random.StaticRandomGenerator.Get().Generate(mutated.Count));
 
             // apply the improvement operator.
-            float difference;
+            double difference;
             Tools.Math.TSP.LocalSearch.HillClimbing3Opt.HillClimbing3OptSolver hillclimbing_3opt =
                 new Tools.Math.TSP.LocalSearch.HillClimbing3Opt.HillClimbing3OptSolver(true, true);
             hillclimbing_3opt.Improve(solver.Problem, route, out difference);

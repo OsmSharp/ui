@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Core.Collections;
+using Osm.Core.Simple;
 
 namespace Osm.Core
 {
@@ -92,6 +93,45 @@ namespace Osm.Core
                 }
             }
             return null;
+        }
+
+        /// <summary>
+        /// Converts this relation into it's simple counterpart.
+        /// </summary>
+        /// <returns></returns>
+        public override SimpleOsmGeo ToSimple()
+        {
+            SimpleRelation relation = new SimpleRelation();
+            relation.Id = this.Id;
+            relation.ChangeSetId = this.ChangeSetId;
+            relation.Tags = this.Tags;
+            relation.TimeStamp = this.TimeStamp;
+            relation.UserId = this.UserId;
+            relation.UserName = this.User;
+            relation.Version = (ulong?)this.Version;
+            relation.Visible = this.Visible;
+
+            relation.Members = new List<SimpleRelationMember>();
+            foreach (RelationMember member in this.Members)
+            {
+                SimpleRelationMember simple_member = new SimpleRelationMember();
+                simple_member.MemberId = member.Member.Id;
+                simple_member.MemberRole = member.Role;
+                switch(member.Member.Type)
+                {
+                    case OsmType.Node:
+                        simple_member.MemberType = SimpleRelationMemberType.Node;
+                        break;
+                    case OsmType.Relation:
+                        simple_member.MemberType = SimpleRelationMemberType.Relation;
+                        break;
+                    case OsmType.Way:
+                        simple_member.MemberType = SimpleRelationMemberType.Way;
+                        break;
+                }
+                relation.Members.Add(simple_member);
+            }
+            return relation;
         }
     }
 }

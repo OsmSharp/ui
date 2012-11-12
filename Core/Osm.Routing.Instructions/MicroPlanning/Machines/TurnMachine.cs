@@ -22,15 +22,21 @@ using System.Text;
 using Tools.Math.StateMachines;
 using Tools.Math.Geo.Meta;
 using Tools.Math.Geo;
-using Osm.Routing.Core.ArcAggregation.Output;
+using Routing.Core.ArcAggregation.Output;
+using Routing.Core.Interpreter.Roads;
 
-namespace Osm.Routing.Instructions.MicroPlanning.Machines
+namespace Routing.Instructions.MicroPlanning.Machines
 {
     /// <summary>
     /// Machine to detect significant turns.
     /// </summary>
     internal class TurnMachine : MicroPlannerMachine
     {
+        /// <summary>
+        /// Creates a new turn machine.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="planner"></param>
         public TurnMachine(MicroPlanner planner)
             : base(TurnMachine.Initialize(), planner, 100)
         {
@@ -150,24 +156,6 @@ namespace Osm.Routing.Instructions.MicroPlanning.Machines
             // let the scentence planner generate the correct information.
             this.Planner.SentencePlanner.GenerateTurn(box, latest_point.Angle, 0, count, latest_arc.Tags, latest_point.Next.Tags, latest_point.Points);
         }
-//<<<<<<< .mine
-        
-//        public override bool Equals(object obj)
-//        {
-//            if (obj is ImmidateTurnMachine)
-//            { // if the machine can be used more than once 
-//                // this comparision will have to be updated.
-//                return true;
-//            }
-//            return false;
-//        }
-
-//        public override int GetHashCode()
-//        {// if the machine can be used more than once 
-//            // this hashcode will have to be updated.
-//            return this.GetType().GetHashCode();
-//        }
-//=======
 
         public override bool Equals(object obj)
         {
@@ -184,6 +172,5 @@ namespace Osm.Routing.Instructions.MicroPlanning.Machines
             // this hashcode will have to be updated.
             return this.GetType().GetHashCode();
         }
-//>>>>>>> .r303
     }
 }

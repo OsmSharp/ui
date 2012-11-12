@@ -22,7 +22,7 @@ using System.Text;
 using Tools.Math.VRP.Core;
 using Tools.Math.Units.Time;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
+namespace Routing.Core.VRP.NoDepot.MaxTime
 {
     /// <summary>
     /// Represents a max time problem.
@@ -93,7 +93,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
             }
         }
 
-        public float Weight(int from, int to)
+        public double Weight(int from, int to)
         {
             return _weights.Weight(from, to);
         }
@@ -114,7 +114,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
             }
         }
 
-        public float[][] WeightMatrix
+        public double[][] WeightMatrix
         {
             get
             {
@@ -143,12 +143,12 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
             NearestNeighbours10 result = _neighbours[v];
             if (result == null)
             {
-                SortedDictionary<float, List<int>> neighbours = new SortedDictionary<float, List<int>>();
+                SortedDictionary<double, List<int>> neighbours = new SortedDictionary<double, List<int>>();
                 for (int customer = 0; customer < this.Size; customer++)
                 {
                     if (customer != v)
                     {
-                        float weight = this.WeightMatrix[v][customer];
+                        double weight = this.WeightMatrix[v][customer];
                         List<int> customers = null;
                         if (!neighbours.TryGetValue(weight, out customers))
                         {
@@ -160,7 +160,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
                 }
 
                 result = new NearestNeighbours10();
-                foreach (KeyValuePair<float, List<int>> pair in neighbours)
+                foreach (KeyValuePair<double, List<int>> pair in neighbours)
                 {
                     foreach (int customer in pair.Value)
                     {

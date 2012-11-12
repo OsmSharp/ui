@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Routing.Core.Resolving;
-using Osm.Routing.Core;
-using Osm.Routing.Core.Interpreter;
-using Osm.Routing.Core.Constraints;
 using System.IO;
 using System.Reflection;
 using Tools.Math.Geo;
+using Routing.Core;
+using Osm.Routing.Interpreter;
+using Routing.Core.Interpreter;
 
 namespace Osm.Routing.Test.ManyToMany
 {
@@ -16,14 +15,13 @@ namespace Osm.Routing.Test.ManyToMany
     /// Does some basic many-to-many performance tests.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
-    public abstract class ManyToManyTests<ResolvedType> 
-        where ResolvedType : IResolvedPoint
+    public abstract class ManyToManyTests
     {
         /// <summary>
         /// Executes many-to-many test on embedded files with the given name.
         /// </summary>
         /// <param name="name"></param>
-        public float[][] TestFor(string name)
+        public double[][] TestFor(string name)
         {
             Tools.Core.Output.OutputStreamHost.WriteLine();
             Tools.Core.Output.OutputStreamHost.WriteLine();
@@ -35,9 +33,9 @@ namespace Osm.Routing.Test.ManyToMany
             string csv_embedded = string.Format("Osm.Routing.Test.TestData.{0}.csv", name);
 
             // build the router.
-            IRouter<ResolvedType> router = this.CreateRouter(Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded),
-                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouter<RouterPoint> router = this.CreateRouter(Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded),
+                interpreter);
 
             long ticks_after_router = DateTime.Now.Ticks;
 
@@ -47,17 +45,17 @@ namespace Osm.Routing.Test.ManyToMany
             long ticks_after_reading = DateTime.Now.Ticks;
 
             // resolve the points.
-            ResolvedType[] resolved = router.Resolve(coordinates.ToArray());
+            RouterPoint[] resolved = router.Resolve(coordinates.ToArray());
 
             long ticks_after_resolving = DateTime.Now.Ticks;
 
             // check the connectivity.
-            resolved = router.CheckConnectivityAndRemoveInvalid<ResolvedType>(resolved, 30);
+            resolved = router.CheckConnectivityAndRemoveInvalid<RouterPoint>(resolved, 30);
 
             long ticks_after_connectivity = DateTime.Now.Ticks;
 
             // calculate the many-to-many.
-            float[][] result = router.CalculateManyToManyWeight(resolved, resolved);
+            double[][] result = router.CalculateManyToManyWeight(resolved, resolved);
 
             long ticks_after_calculation = DateTime.Now.Ticks;
 
@@ -84,8 +82,7 @@ namespace Osm.Routing.Test.ManyToMany
         /// <param name="interpreter">The interpreter.</param>
         /// <param name="constraints">The routing constraints.</param>
         /// <returns></returns>
-        protected abstract IRouter<ResolvedType> CreateRouter(Stream data,
-            RoutingInterpreterBase interpreter, IRoutingConstraints constraints);
+        protected abstract IRouter<RouterPoint> CreateRouter(Stream data, IRoutingInterpreter interpreter);
 
         /// <summary>
         /// Reads all test points from the data stream.
@@ -93,7 +90,7 @@ namespace Osm.Routing.Test.ManyToMany
         /// <param name="data"></param>
         /// <returns></returns>
         private IList<GeoCoordinate> ReadPoints(Stream data)
-        {            
+        {
             // read matrix points.
             List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
             string[][] lines = Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(

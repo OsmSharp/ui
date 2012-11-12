@@ -56,12 +56,19 @@ namespace Tools.Math.Graph.Routing.DataStructures
             float current_weight;
             if (_visited.TryGetValue(route.VertexId, out current_weight))
             { // the vertex was already in this list.
-                Dictionary<long, RouteLinked> current_weight_vertices = _visit_list[current_weight];
-                current_weight_vertices.Remove(route.VertexId);
-                if (current_weight_vertices.Count == 0)
-                {
-                    _visit_list.Remove(current_weight);
-                }                
+                if (current_weight > route.Weight)
+                { // replace the existing.
+                    Dictionary<long, RouteLinked> current_weight_vertices = _visit_list[current_weight];
+                    current_weight_vertices.Remove(route.VertexId);
+                    if (current_weight_vertices.Count == 0)
+                    {
+                        _visit_list.Remove(current_weight);
+                    }
+                }
+                else
+                { // do nothing, the existing weight is better.
+                    return;
+                }
             }
 
             // add/update everthing.

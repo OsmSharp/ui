@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
+namespace Routing.Core.VRP.NoDepot.MaxTime
 {
     /// <summary>
     /// Represents an improvement heurstics for the MaxTimeProblem.

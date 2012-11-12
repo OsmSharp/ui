@@ -174,7 +174,10 @@
     <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
     <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
     <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
+    <Compile Include="ILocationObject.cs" />
     <Compile Include="IPointF2D.cs" />
+    <Compile Include="ITaggedObject.cs" />
+    <Compile Include="ITagsIndex.cs" />
     <Compile Include="PrimitiveF2D.cs" />
     <Compile Include="PrimitiveSimpleF2D.cs" />
     <Compile Include="Primitives\Enumerators\Lines\ILineList.cs" />
@@ -211,8 +214,10 @@
     <Compile Include="StateMachines\FiniteStateMachineState.cs" />
     <Compile Include="StateMachines\FiniteStateMachineTransition.cs" />
     <Compile Include="StateMachines\FiniteStateMachineTransitionCondition.cs" />
+    <Compile Include="Structures\ILocatedObjectIndex.cs" />
     <Compile Include="Structures\KDTree\Tree2D.cs" />
     <Compile Include="Structures\KDTree\Tree2DNode.cs" />
+    <Compile Include="Structures\LocatedObjectIndexList.cs" />
     <Compile Include="Structures\QTree\QuadTree.cs" />
     <Compile Include="Structures\QTree\QuadTreeNode.cs" />
     <Compile Include="Structures\StringTrees\StringTreeDictionary.cs" />

@@ -22,7 +22,7 @@ using System.Text;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.VRP.Core.BestPlacement;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
+namespace Routing.Core.VRP.NoDepot.MaxTime.InterRoute
 {
     /// <summary>
     /// Relocate heurstic.
@@ -37,7 +37,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
         /// <param name="route2"></param>
         /// <param name="difference"></param>
         /// <returns></returns>
-        public bool Improve(MaxTimeProblem problem, IRoute route1, IRoute route2, out float difference)
+        public bool Improve(MaxTimeProblem problem, IRoute route1, IRoute route2, out double difference)
         {
             if (this.RelocateFromTo(problem, route1, route2, out difference))
             {
@@ -58,7 +58,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
         /// <param name="route2"></param>
         /// <param name="difference"></param>
         /// <returns></returns>
-        private bool RelocateFromTo(MaxTimeProblem problem, IRoute route1, IRoute route2, out float difference)
+        private bool RelocateFromTo(MaxTimeProblem problem, IRoute route1, IRoute route2, out double difference)
         {
             int previous = -1;
             int current = -1;
@@ -89,10 +89,10 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
         /// <param name="current"></param>
         /// <param name="next"></param>
         /// <returns></returns>
-        private bool ConsiderCustomer(MaxTimeProblem problem, IRoute route, int previous, int current, int next, out float difference)
+        private bool ConsiderCustomer(MaxTimeProblem problem, IRoute route, int previous, int current, int next, out double difference)
         {
             // calculate the removal gain of the customer.
-            float removal_gain = problem.WeightMatrix[previous][current] + problem.WeightMatrix[current][next]
+            double removal_gain = problem.WeightMatrix[previous][current] + problem.WeightMatrix[current][next]
                 - problem.WeightMatrix[previous][next];
             if (removal_gain > 0)
             {

@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data.Core.DynamicGraph;
+using Routing.Core.Graph;
 
-namespace Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
+namespace Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
 {
     /// <summary>
     /// Orders the vertices putting the sparse vertices first, any other float.MaxValue.

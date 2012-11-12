@@ -166,7 +166,7 @@ namespace Tools.Math.TSP
             }
 
             // do the Arbitrary Insertion.
-            float weight = route.CalculateWeight(problem);
+            double weight = route.CalculateWeight(problem);
 
             int try_count = 0;
             while (try_count < (route.Count * route.Count))
@@ -199,7 +199,7 @@ namespace Tools.Math.TSP
                         problem, weight, i, length);
 
                     // calculate the weight that was removed.
-                    float new_weight = cut_result.Weight;
+                    double new_weight = cut_result.Weight;
                     List<int> cut_part = cut_result.CutPart;
                     DynamicAsymmetricRoute cut_route = cut_result.Route;
 
@@ -273,7 +273,7 @@ namespace Tools.Math.TSP
         /// Raises the intermidiate results event.
         /// </summary>
         /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(int[] result, float weight)
+        protected void RaiseIntermidiateResult(int[] result, double weight)
         {
             if (IntermidiateResult != null)
             {

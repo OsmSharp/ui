@@ -20,13 +20,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.Geo.Meta;
-using Osm.Routing.Core.Roads.Tags;
-using Osm.Routing.Core.ArcAggregation.Output;
+using Routing.Core.ArcAggregation.Output;
+using Routing.Core.Interpreter.Roads;
+using Tools.Math;
 
-namespace Osm.Routing.Instructions.MicroPlanning
+namespace Routing.Instructions.MicroPlanning
 {
     internal class MicroPlannerHelper
     {
+        public static IEdgeInterpreter Interpreter { get; set; }
+
         public static bool IsLeft(RelativeDirectionEnum direction)
         {
             switch (direction)
@@ -62,7 +65,7 @@ namespace Osm.Routing.Instructions.MicroPlanning
         }
 
 
-        public static int GetStraightOn(IList<MicroPlannerMessage> messages)
+        public static int GetStraightOn(IEdgeInterpreter interpreter, IList<MicroPlannerMessage> messages)
         {
             int straight = 0;
             foreach (MicroPlannerMessage message in messages)
@@ -85,9 +88,7 @@ namespace Osm.Routing.Instructions.MicroPlanning
                 {
                     if (!MicroPlannerHelper.IsTurn(arc_pair.Key.Direction))
                     {
-                        RoadTagsInterpreterBase interpreter = new RoadTagsInterpreterBase(arc_pair.Value.Tags);
-
-                        if (interpreter.IsImportantSideStreet())
+                        if (MicroPlannerHelper.Interpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
                         {
                             straight++;
                         }
@@ -120,9 +121,7 @@ namespace Osm.Routing.Instructions.MicroPlanning
                 {
                     if (MicroPlannerHelper.IsLeft(arc_pair.Key.Direction))
                     {
-                        RoadTagsInterpreterBase interpreter = new RoadTagsInterpreterBase(arc_pair.Value.Tags);
-
-                        if (interpreter.IsImportantSideStreet())
+                        if (MicroPlannerHelper.Interpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
                         {
                             left++;
                         }
@@ -155,9 +154,7 @@ namespace Osm.Routing.Instructions.MicroPlanning
                 {
                     if (MicroPlannerHelper.IsRight(arc_pair.Key.Direction))
                     {
-                        RoadTagsInterpreterBase interpreter = new RoadTagsInterpreterBase(arc_pair.Value.Tags);
-
-                        if (interpreter.IsImportantSideStreet())
+                        if (MicroPlannerHelper.Interpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
                         {
                             right++;
                         }

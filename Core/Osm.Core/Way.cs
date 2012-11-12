@@ -22,6 +22,7 @@ using System.Text;
 using Tools.Math.Geo;
 using Osm.Core.Factory;
 using Tools.Core.Collections;
+using Osm.Core.Simple;
 
 namespace Osm.Core
 {
@@ -149,6 +150,30 @@ namespace Osm.Core
         public bool HasNode(Node node)
         {
             return this.Nodes.Contains(node);
+        }
+
+        /// <summary>
+        /// Converts this relation into it's simple counterpart.
+        /// </summary>
+        /// <returns></returns>
+        public override SimpleOsmGeo ToSimple()
+        {
+            SimpleWay way = new SimpleWay();
+            way.Id = this.Id;
+            way.ChangeSetId = this.ChangeSetId;
+            way.Tags = this.Tags;
+            way.TimeStamp = this.TimeStamp;
+            way.UserId = this.UserId;
+            way.UserName = this.User;
+            way.Version = (ulong?)this.Version;
+            way.Visible = this.Visible;
+
+            way.Nodes = new List<long>();
+            foreach (Node node in this.Nodes)
+            {
+                way.Nodes.Add(node.Id);
+            }
+            return way;
         }
 
         public override string ToString()

@@ -19,20 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data.Core.Sparse;
-using Osm.Data.Core.Sparse.Primitives;
-using Osm.Routing.CH.PreProcessing.Ordering;
-using Osm.Routing.CH.PreProcessing.Witnesses;
-using Osm.Routing.CH.Routing;
-using Osm.Core.Simple;
-using Osm.Routing.Core.Roads.Tags;
-using Osm.Routing.Core;
+using Routing.CH.PreProcessing.Ordering;
+using Routing.CH.Routing;
 using System.Diagnostics;
 using Tools.Math.Geo;
-using Osm.Data.Core.Processor.SimpleSource;
-using Osm.Data.Core.DynamicGraph;
+using Routing.Core.Graph;
 
-namespace Osm.Routing.CH.PreProcessing
+namespace Routing.CH.PreProcessing
 {
     /// <summary>
     /// Pre-processor to construct a Contraction Hierarchy (CH).
@@ -146,7 +139,7 @@ namespace Osm.Routing.CH.PreProcessing
                     if (to.Key == from.Key) { continue; }
 
                     // add weights.
-                    float weight = to.Value.Weight + from.Value.Weight;
+                    float weight = (float)to.Value.Weight + (float)from.Value.Weight;
 
                     // test for a witness.
                     if (!_witness_calculator.Exists(from.Key, to.Key, vertex, weight))

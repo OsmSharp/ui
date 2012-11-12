@@ -24,7 +24,7 @@ namespace Tools.Math.TSP.LK
 {
     class EdgeList
     {
-        private float _weight;
+        private double _weight;
 
         private List<Edge> _edges;
 
@@ -91,7 +91,7 @@ namespace Tools.Math.TSP.LK
             return this.Contains(e.From, e.To);
         }
 
-        public float Weight
+        public double Weight
         {
             get
             {

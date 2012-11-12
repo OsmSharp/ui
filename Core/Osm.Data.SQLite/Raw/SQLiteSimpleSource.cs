@@ -606,11 +606,11 @@ namespace Osm.Data.SQLite.Raw
 
 		#endregion
 
-		public IList<OsmBase> Get(GeoCoordinateBox box, Filter filter)
+        public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
 		{
 			// initialize connection.
 			SQLiteConnection con = this.CreateConnection();
-			List<OsmBase> base_list = new List<OsmBase>();
+            List<OsmGeo> base_list = new List<OsmGeo>();
 
 			// calculate bounding box parameters to query db.
 			long latitude_min = (long)(box.MinLat * 10000000.0);

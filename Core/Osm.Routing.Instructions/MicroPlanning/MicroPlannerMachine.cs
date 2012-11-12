@@ -22,7 +22,7 @@ using System.Text;
 using Tools.Math.Automata;
 using Tools.Math.StateMachines;
 
-namespace Osm.Routing.Instructions.MicroPlanning
+namespace Routing.Instructions.MicroPlanning
 {
     internal abstract class MicroPlannerMachine : FiniteStateMachine<MicroPlannerMessage>
     {

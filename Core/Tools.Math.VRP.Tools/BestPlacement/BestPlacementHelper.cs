@@ -39,17 +39,17 @@ namespace Tools.Math.VRP.Core.BestPlacement
         /// <param name="problem"></param>
         /// <param name="customers"></param>
         /// <returns></returns>
-        public static float[] CalculateBestValues(
+        public static double[] CalculateBestValues(
             IProblemWeights problem,
             IEnumerable<int> customers)
         {
-            float[][] weights = problem.WeightMatrix;
+            double[][] weights = problem.WeightMatrix;
 
-            float[] solutions = new float[customers.Count<int>()];
+            double[] solutions = new double[customers.Count<int>()];
             int idx = 0;
             foreach (int customer in customers)
             {
-                float solution = float.MaxValue;
+                double solution = double.MaxValue;
                 foreach (int first in customers)
                 {
                     if (first != customer)
@@ -58,7 +58,7 @@ namespace Tools.Math.VRP.Core.BestPlacement
                         {
                             if (second != customer)
                             {
-                                float new_solution = weights[first][customer] + weights[customer][second];
+                                double new_solution = weights[first][customer] + weights[customer][second];
                                 if (new_solution < solution)
                                 {
                                     solution = new_solution;
@@ -163,20 +163,20 @@ namespace Tools.Math.VRP.Core.BestPlacement
             int customer)
             //float[] solutions)
         {  // initialize the best placement result.
-            float[][] weights = problem.WeightMatrix;
+            double[][] weights = problem.WeightMatrix;
 
             CheapestInsertionResult result
                 = new CheapestInsertionResult();
             result.Customer = customer;
             result.CustomerAfter = -1;
             result.CustomerBefore = -1;
-            result.Increase = float.MaxValue;
+            result.Increase = double.MaxValue;
 
-            float difference = float.MaxValue;
+            double difference = double.MaxValue;
             if (!route.IsEmpty)
             {
-                float new_weight = float.MaxValue;
-                float old_weight = 0;
+                double new_weight = double.MaxValue;
+                double old_weight = 0;
 
                 int previous = -1;
                 int first = -1;
@@ -278,12 +278,12 @@ namespace Tools.Math.VRP.Core.BestPlacement
             result.Customer = -1; // this property is useless here!
             result.CustomerAfter = -1;
             result.CustomerBefore = -1;
-            result.Increase = float.MaxValue;
+            result.Increase = double.MaxValue;
 
             if (!route.IsEmpty)
             {
-                float new_weight = float.MaxValue;
-                float old_weight = 0;
+                double new_weight = double.MaxValue;
+                double old_weight = 0;
 
                 int previous = -1;
                 int first = -1;
@@ -299,7 +299,7 @@ namespace Tools.Math.VRP.Core.BestPlacement
                         old_weight = problem.Weight(previous, current);
 
                         // calculate the difference.
-                        float difference = new_weight - old_weight;
+                        double difference = new_weight - old_weight;
                         if (result.Increase > difference)
                         {
                             result.CustomerAfter = current;
@@ -327,7 +327,7 @@ namespace Tools.Math.VRP.Core.BestPlacement
                     old_weight = problem.Weight(previous, first);
 
                     // calculate the difference.
-                    float difference = new_weight - old_weight;
+                    double difference = new_weight - old_weight;
                     if (result.Increase > difference)
                     {
                         result.CustomerAfter = previous;

@@ -19,11 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
-using Osm.Data.Core.Sparse.Primitives;
-using Osm.Data.Core.DynamicGraph;
+using Routing.Core.Graph;
 
-namespace Osm.Routing.CH.PreProcessing.Ordering
+namespace Routing.CH.PreProcessing.Ordering
 {
     /// <summary>
     /// The edge difference calculator.
@@ -76,7 +74,7 @@ namespace Osm.Routing.CH.PreProcessing.Ordering
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
                         if (!_witness_calculator.Exists(from.Key, to.Key, vertex,
-                            from.Value.Weight + to.Value.Weight))
+                            (float)from.Value.Weight + (float)to.Value.Weight))
                         { // no witness exists.
                             new_edges++;
                         }

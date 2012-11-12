@@ -19,34 +19,63 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Routing.Raw;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Osm.Routing.Core;
+using Routing.Core;
 using Osm.Data.Raw.XML.OsmSource;
-using Osm.Routing.Core.Interpreter;
-using Osm.Routing.Core.Constraints;
+using Routing.Core.Interpreter;
+using Routing.Core.Constraints;
 using System.IO;
 using System.Reflection;
 using Osm.Core.Xml;
 using System.Xml;
+using Osm.Routing.Interpreter;
+using Routing.Core.Router.Memory;
+using Osm.Routing.Data;
+using Osm.Routing.Data.Processing;
+using Osm.Data.XML.Raw.Processor;
+using Osm.Data.Core.Processor.Filter.Sort;
+using Routing.Core.Router;
+using Osm.Core;
 
 namespace Osm.UnitTests.Routing.Raw
 {
     [TestClass]
-    public class RawRoutingTests : SimpleRoutingTests<ResolvedPoint>
+    public class RawRoutingTests : SimpleRoutingTests<RouterPoint, OsmEdgeData>
     {
         /// <summary>
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override IRouter<ResolvedPoint> BuildRouter(RoutingInterpreterBase interpreter, IRoutingConstraints constraints)
+        public override IRouter<RouterPoint> BuildRouter(IRouterDataSource<OsmEdgeData> data, 
+            IRoutingInterpreter interpreter)
         {
-            // build all the data source.
-            OsmDataSource osm_data = new OsmDataSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("Osm.UnitTests.test_network.osm"));
+            // initialize the router.
+            return new Router<OsmEdgeData>(
+                    data, interpreter);
+        }
 
-            // build the router.
-            return new Router(osm_data, interpreter, constraints);
+        /// <summary>
+        /// Builds data source.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <returns></returns>
+        public override IRouterDataSource<OsmEdgeData> BuildData(IRoutingInterpreter interpreter)
+        {
+            OsmTagsIndex tags_index = new OsmTagsIndex();
+
+            // do the data processing.
+            MemoryRouterDataSource<OsmEdgeData> data =
+                new MemoryRouterDataSource<OsmEdgeData>(tags_index);
+            OsmEdgeDataGraphProcessingTarget target_data = new OsmEdgeDataGraphProcessingTarget(
+                data, interpreter, data.TagsIndex);
+            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("Osm.UnitTests.test_network.osm"));
+            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
+            sorter.RegisterSource(data_processor_source);
+            target_data.RegisterSource(sorter);
+            target_data.Pull();
+
+            return data;
         }
 
         /// <summary>
@@ -119,6 +148,15 @@ namespace Osm.UnitTests.Routing.Raw
         public void TestRawShortest5()
         {
             this.DoTestShortest5();
+        }
+
+        /// <summary>
+        /// Test is the raw router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestRawShortestResolved1()
+        {
+            this.DoTestShortestResolved1();
         }
 
         /// <summary>

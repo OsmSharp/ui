@@ -301,7 +301,7 @@ namespace Osm.Data.Redis.Raw
             return new List<Way>();
         }
 
-        public IList<OsmBase> Get(GeoCoordinateBox box, Filter filter)
+        public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
             // TODO: improve this to allow loading of bigger bb's. 
             uint x_min = lon2x(box.MinLon);
@@ -311,7 +311,7 @@ namespace Osm.Data.Redis.Raw
 
             IList<long> boxes = new List<long>();
 
-            List<OsmBase> result = new List<OsmBase>();
+            List<OsmGeo> result = new List<OsmGeo>();
             HashSet<long> way_ids = new HashSet<long>();
 
             var hash_keys = new List<string>();

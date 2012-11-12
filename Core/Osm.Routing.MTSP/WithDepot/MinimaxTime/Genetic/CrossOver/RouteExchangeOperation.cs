@@ -27,7 +27,7 @@ using Tools.Math.AI.Genetic.Solvers;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.VRP.Core.BestPlacement;
 
-namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.CrossOver
+namespace Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.CrossOver
 {
     internal class RouteExchangeOperation :
         ICrossOverOperation<List<Genome>, Problem, Fitness>

@@ -153,7 +153,7 @@ namespace Tools.Math.TSP.ArbitraryInsertion
                 customers.RemoveAt(0);
 
                 // insert the customer at the best place.
-                float difference;
+                double difference;
                 ArbitraryInsertionSolver.InsertOne(problem, route, customer, out difference);
             }
 
@@ -166,7 +166,7 @@ namespace Tools.Math.TSP.ArbitraryInsertion
         /// <param name="problem"></param>
         /// <param name="route"></param>
         /// <returns></returns>
-        public bool Improve(IProblemWeights problem, IRoute route, out float difference)
+        public bool Improve(IProblemWeights problem, IRoute route, out double difference)
         {
             bool improvement = false;
 
@@ -208,8 +208,8 @@ namespace Tools.Math.TSP.ArbitraryInsertion
         /// <param name="weights"></param>
         /// <param name="route"></param>
         /// <returns></returns>
-        public static bool InsertOne(IProblemWeights weights, IRoute route, int customer, 
-            out float difference)
+        public static bool InsertOne(IProblemWeights weights, IRoute route, int customer,
+            out double difference)
         {
             // calculate placement.
             CheapestInsertionResult result =

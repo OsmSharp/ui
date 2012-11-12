@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Routing.Core
+namespace Routing.Core
 {
     /// <summary>
     /// Enumeration of supported vehicle types.
@@ -31,5 +31,27 @@ namespace Osm.Routing.Core
         Bus,
         Pedestrian,
         Bike
+    }
+
+    /// <summary>
+    /// Extensions for VehicleEnum
+    /// </summary>
+    public static class VehicleEnumExtensions
+    {
+        /// <summary>
+        /// Returns true if the given vehicle type is a motorized vehicle.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <returns></returns>
+        public static bool IsMotorVehicle(this VehicleEnum vehicle)
+        {
+            switch (vehicle)
+            {
+                case VehicleEnum.Bike:
+                case VehicleEnum.Pedestrian:
+                    return false;
+            }
+            return true;
+        }
     }
 }

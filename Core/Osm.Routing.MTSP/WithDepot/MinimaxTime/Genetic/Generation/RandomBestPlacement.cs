@@ -27,7 +27,7 @@ using Tools.Math.VRP.Core;
 using Tools.Math.VRP.Core.Routes.ASymmetric;
 using Tools.Math.VRP.Core.Routes;
 
-namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation
+namespace Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation
 {
     /// <summary>
     /// Best-placement generator based on a random first customer for each route.
@@ -63,7 +63,7 @@ namespace Osm.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation
             }
             CheapestInsertionHelper helper = new CheapestInsertionHelper();
 
-            List<float> weights = new List<float>();
+            List<double> weights = new List<double>();
             for (int i = 0; i < problem.Depots.Count; i++)
             {
                 multi_route.Add(i);

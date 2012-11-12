@@ -30,7 +30,7 @@ namespace Tools.Math.VRP.Core.BestPlacement
         /// <summary>
         /// The increase in weight.
         /// </summary>
-        public float Increase;
+        public double Increase;
 
         /// <summary>
         /// The customer where the customer needs to be placed after.

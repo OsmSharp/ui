@@ -216,10 +216,6 @@
       <Project>{FC226E3D-F4B5-462A-82BB-09D53F8C6DC2}</Project>
       <Name>Tools.Math.AI.Genetic</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Tools.Math.Graph\Tools.Math.Graph.csproj">
-      <Project>{FAD63D7A-AE1E-4133-95D4-BAB2A2BB8EFF}</Project>
-      <Name>Tools.Math.Graph</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tools.Math.VRP.Tools\Tools.Math.VRP.Core.csproj">
       <Project>{EE35732E-984C-4C40-9C4F-FEF012A9B6C9}</Project>
       <Name>Tools.Math.VRP.Core</Name>

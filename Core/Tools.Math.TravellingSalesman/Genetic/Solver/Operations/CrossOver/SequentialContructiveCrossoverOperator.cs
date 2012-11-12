@@ -77,7 +77,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
             non_selected_nodes.Remove(selected_node);
 
             // find the next legitimate node in both.
-            float total_weight = solver.Problem.Weight(solver.Problem.First, selected_node);
+            double total_weight = solver.Problem.Weight(solver.Problem.First, selected_node);
             while (non_selected_nodes.Count > 0)
             {
                 int node_parent1 = edges_in_parent1[selected_node];
@@ -122,8 +122,8 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
                 }
                 else
                 {
-                    float weight1 = solver.Problem.Weight(selected_node, node_parent1);
-                    float weight2 = solver.Problem.Weight(selected_node, node_parent2);
+                    double weight1 = solver.Problem.Weight(selected_node, node_parent1);
+                    double weight2 = solver.Problem.Weight(selected_node, node_parent2);
                     if (weight1 < weight2)
                     {
                         selected_node = node_parent1;

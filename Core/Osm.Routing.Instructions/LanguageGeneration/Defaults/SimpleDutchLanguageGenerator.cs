@@ -20,9 +20,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Math.Geo.Meta;
-using Osm.Routing.Core.ArcAggregation.Output;
+using Routing.Core.ArcAggregation.Output;
 
-namespace Osm.Routing.Instructions.LanguageGeneration.Defaults
+namespace Routing.Instructions.LanguageGeneration.Defaults
 {
     internal class SimpleDutchLanguageGenerator : ILanguageGenerator
     {

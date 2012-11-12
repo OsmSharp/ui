@@ -656,11 +656,11 @@ namespace Osm.Data.Raw.XML.GpxSource
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IList<OsmBase> Get(GeoCoordinateBox box, Filter filter)
+        public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
             this.ReadFromDocument();
 
-            IList<OsmBase> res = new List<OsmBase>();
+            IList<OsmGeo> res = new List<OsmGeo>();
             foreach (Node node in _nodes.Values)
             {
                 if ((filter == null

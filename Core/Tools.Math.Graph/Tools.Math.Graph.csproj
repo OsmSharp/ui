@@ -188,12 +188,6 @@
     <Compile Include="IGraphDirected.cs" />
     <Compile Include="IGraphInterpreter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routing\GraphRoute.cs" />
-    <Compile Include="Routing\GraphRouteEntry.cs" />
-    <Compile Include="Routing\GraphRouteEntryPoint.cs" />
-    <Compile Include="Routing\GraphRouteEntryPointTarget.cs" />
-    <Compile Include="Routing\GraphRouteTarget.cs" />
-    <Compile Include="Routing\GraphRoutingException.cs" />
     <Compile Include="SparseGraph\SparseGraph.cs" />
   </ItemGroup>
   <ItemGroup>

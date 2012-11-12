@@ -3,42 +3,47 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Tools.Core.Collections;
+using Tools.Math;
 
-namespace Osm.Routing.CH.PreProcessing.Tags
+namespace Osm.Core
 {
     /// <summary>
     /// An osm tags index.
     /// </summary>
-    public class OsmTagsIndex
+    public class OsmTagsIndex : ITagsIndex
     {
         /// <summary>
         /// Holds all the tags objects.
         /// </summary>
         private ObjectTable<OsmTags> _tags;
 
-        /// <summary>
-        /// Holds the string table.
-        /// </summary>
-        private ObjectTable<string> _string_table;
+        ///// <summary>
+        ///// Holds the string table.
+        ///// </summary>
+        //private ObjectTable<string> _string_table;
 
         /// <summary>
         /// Creates a new tags index with a given strings table.
         /// </summary>
         /// <param name="string_table"></param>
-        public OsmTagsIndex(ObjectTable<string> string_table)
-        {
-            _string_table = string_table;
-            _tags = new ObjectTable<OsmTags>(false);
-        }
-
-        /// <summary>
-        /// Creates a new tags index.
-        /// </summary>
         public OsmTagsIndex()
         {
-            _string_table = new ObjectTable<string>(false);
-            _tags = new ObjectTable<OsmTags>(false);
+            //_string_table = string_table;
+            _tags = new ObjectTable<OsmTags>(true);
+
+            this.Add(new Dictionary<string, string>());
         }
+
+        ///// <summary>
+        ///// Creates a new tags index.
+        ///// </summary>
+        //public OsmTagsIndex()
+        //{
+        //    _string_table = new ObjectTable<string>(true);
+        //    _tags = new ObjectTable<OsmTags>(true);
+
+        //    this.Add(new Dictionary<string, string>());
+        //}
 
         /// <summary>
         /// Returns the tags with the given id.
@@ -50,7 +55,7 @@ namespace Osm.Routing.CH.PreProcessing.Tags
             OsmTags osm_tags = _tags.Get(tags_int);
             if (osm_tags != null)
             {
-                return osm_tags.GetTags(_string_table);
+                return osm_tags.GetTags();
             }
             return null;
         }
@@ -62,7 +67,7 @@ namespace Osm.Routing.CH.PreProcessing.Tags
         /// <returns></returns>
         public uint Add(IDictionary<string, string> tags)
         {
-            OsmTags osm_tags = OsmTags.CreateFrom(_string_table, tags);
+            OsmTags osm_tags = OsmTags.CreateFrom( tags);
             if (osm_tags != null)
             {
                 return _tags.Add(osm_tags);
@@ -78,13 +83,13 @@ namespace Osm.Routing.CH.PreProcessing.Tags
             /// <summary>
             /// Holds all the tags.
             /// </summary>
-            private uint[,] _tags;
+            private string[,] _tags;
 
             /// <summary>
             /// Creates a new tags object.
             /// </summary>
             /// <param name="tags"></param>
-            private OsmTags(uint[,] tags)
+            private OsmTags(string[,] tags)
             {
                 _tags = tags;
             }
@@ -95,33 +100,33 @@ namespace Osm.Routing.CH.PreProcessing.Tags
             /// <param name="string_table"></param>
             /// <param name="tags"></param>
             /// <returns></returns>
-            internal static OsmTags CreateFrom(ObjectTable<string> string_table, IDictionary<string, string> tags)
+            internal static OsmTags CreateFrom(IDictionary<string, string> tags)
             {
-                if (tags != null && tags.Count > 0)
+                if (tags != null)
                 {
-                    uint[,] tags_int = new uint[tags.Count, 2];
+                    string[,] tags_int = new string[tags.Count, 2];
                     int idx = 0;
                     foreach (KeyValuePair<string, string> tag in tags)
                     {
-                        tags_int[idx, 0] = string_table.Add(tag.Key);
-                        tags_int[idx, 1] = string_table.Add(tag.Value);
+                        tags_int[idx, 0] = tag.Key; // string_table.Add(tag.Key);
+                        tags_int[idx, 1] = tag.Value; // string_table.Add(tag.Value);
                         idx++;
                     }
                     return new OsmTags(tags_int);
                 }
-                return null;  // don't was space on tags that contain no information.
+                return null;  // don't waste space on tags that contain no information.
             }
 
             /// <summary>
             /// Returns the actual tags.
             /// </summary>
-            public IDictionary<string, string> GetTags(ObjectTable<string> string_table)
+            public IDictionary<string, string> GetTags()
             {
                 Dictionary<string, string> tags = new Dictionary<string, string>();
                 for (int idx = 0; idx < this._tags.GetLength(0); idx++)
                 {
-                    tags.Add(string_table.Get(this._tags[idx, 0]),
-                        string_table.Get(this._tags[idx, 1]));
+                    tags.Add(this._tags[idx, 0],
+                        this._tags[idx, 1]);
                 }
                 return tags;
             }
@@ -173,9 +178,9 @@ namespace Osm.Routing.CH.PreProcessing.Tags
             public override int GetHashCode()
             {
                 int hash = _tags.Length;
-                foreach (uint value in _tags)
+                foreach (string value in _tags)
                 {
-                    hash = hash ^ (int)value;
+                    hash = hash ^ value.GetHashCode();
                 }
                 return hash;
             }

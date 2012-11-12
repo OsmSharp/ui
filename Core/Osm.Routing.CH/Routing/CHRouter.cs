@@ -19,102 +19,249 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data.Core.Sparse.Primitives;
 using Tools.Math.Geo;
 using Tools.Math.Shapes;
 using Tools.Math.Geo.Factory;
-using Osm.Data.Core.DynamicGraph;
-using Osm.Routing.CH.PreProcessing;
+using Routing.CH.PreProcessing;
+using Routing.Core.Graph;
+using Routing.Core.Graph.Router;
+using Routing.Core.Graph.Path;
+using Routing.Core.Interpreter;
 
-namespace Osm.Routing.CH.Routing
+namespace Routing.CH.Routing
 {
     /// <summary>
     /// A router for CH.
     /// </summary>
-    public class CHRouter
+    public class CHRouter : IDynamicGraphRouter<CHEdgeData>
     {
         /// <summary>
         /// The CH data.
         /// </summary>
-        private IDynamicGraph<CHEdgeData> _data;
+        private IDynamicGraphReadOnly<CHEdgeData> _data;
 
         /// <summary>
         /// Creates a new CH router on the givend data.
         /// </summary>
         /// <param name="data"></param>
-        public CHRouter(IDynamicGraph<CHEdgeData> data)
+        public CHRouter(IDynamicGraphReadOnly<CHEdgeData> data)
         {
             _data = data;
         }
 
-        #region Bi-directional Many-to-Many
+        /// <summary>
+        /// Calculates the shortest path from the given vertex to the given vertex given the weights in the graph.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public PathSegment<long> Calculate(IDynamicGraphReadOnly<CHEdgeData> graph, IRoutingInterpreter interpreter, 
+            PathSegmentVisitList source, PathSegmentVisitList target, double max)
+        {
+            // do the basic CH calculations.
+            CHResult result = this.DoCalculate(graph, interpreter, source, target, max, int.MaxValue, long.MaxValue);
+
+            // construct the route.
+            PathSegment<long> route = result.Forward;
+            PathSegment<long> next = result.Backward;
+            while (next != null && next.From != null)
+            {
+                route = new PathSegment<long>(next.From.VertexId,
+                                          next.Weight + route.Weight, route);
+                next = next.From;
+            }
+
+            // expand the CH path to a regular path.
+            return this.ExpandPath(route);
+        }
+
+
 
         /// <summary>
-        /// Calculates all the weights between all the vertices.
+        /// Calculates the weight of shortest path from the given vertex to the given vertex given the weights in the graph.
         /// </summary>
-        /// <param name="froms"></param>
-        /// <param name="tos"></param>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <param name="max"></param>
         /// <returns></returns>
-        public float[][] CalculateManyToManyWeights(CHResolvedPoint[] froms, CHResolvedPoint[] tos)
+        public double CalculateWeight(IDynamicGraphReadOnly<CHEdgeData> graph, IRoutingInterpreter interpreter,
+            PathSegmentVisitList source, PathSegmentVisitList target, double max)
         {
-            // TODO: implement switching of from/to when to < from.
+            // do the basic CH calculations.
+            CHResult result = this.DoCalculate(graph, interpreter, source, target, max, int.MaxValue, long.MaxValue);
 
-            // keep a list of distances to the given vertices while performance backward search.
-            Dictionary<uint, Dictionary<uint, float>> buckets = new Dictionary<uint, Dictionary<uint, float>>();
-            for (int idx = 0; idx < tos.Length; idx++)
-            {
-                this.SearchBackwardIntoBucket(buckets, tos[idx]);
-
-                // report progress.
-                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
-                    "Calculating backward...");
-            }
-
-            // conduct a forward search from each source.
-            float[][] weights = new float[froms.Length][];
-            for (int idx = 0; idx < froms.Length; idx++)
-            {
-                CHResolvedPoint from = froms[idx];
-
-                // calculate all from's.
-                Dictionary<uint, float> result =
-                    this.SearchForwardFromBucket(buckets, from, tos);
-
-                float[] to_weights = new float[tos.Length];
-                for (int to_idx = 0; to_idx < tos.Length; to_idx++)
-                {
-                    to_weights[to_idx] = result[tos[to_idx].Id];
-                }
-
-                weights[idx] = to_weights;
-                result.Clear();
-
-                // report progress.
-                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
-                    "Calculating forward...");
-            }
-            return weights;
+            return result.Backward.Weight + result.Forward.Weight;
         }
+
+        /// <summary>
+        /// Calculate route to the closest.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="source"></param>
+        /// <param name="targets"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<CHEdgeData> graph, IRoutingInterpreter interpreter, 
+            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Calculates all weights from one source to multiple targets.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="source"></param>
+        /// <param name="targets"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<CHEdgeData> graph, IRoutingInterpreter interpreter, 
+            PathSegmentVisitList source, PathSegmentVisitList[] targets, double max)
+        {
+            double[][] many_to_many_result = this.CalculateManyToManyWeight(
+                graph, interpreter, new PathSegmentVisitList[] { source }, targets, max);
+
+            return many_to_many_result[0];
+        }
+
+        /// <summary>
+        /// Calculates all weights from multiple sources to multiple targets.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="sources"></param>
+        /// <param name="targets"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<CHEdgeData> graph, IRoutingInterpreter interpreter, 
+            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max)
+        {
+            return this.DoCalculateManyToMany(
+                   graph, interpreter, sources, targets, max, int.MaxValue);
+        }
+
+        /// <summary>
+        /// Returns false.
+        /// </summary>
+        public bool IsCalculateRangeSupported
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Not supported
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="source"></param>
+        /// <param name="weight"></param>
+        /// <returns></returns>
+        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<CHEdgeData> graph, IRoutingInterpreter interpreter,
+            PathSegmentVisitList source, double weight)
+        {
+            throw new NotSupportedException("Check IsCalculateRangeSupported before using this functionality!");
+        }
+
+        /// <summary>
+        /// Returns true if the search can move beyond the given weight.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="source"></param>
+        /// <param name="weight"></param>
+        /// <returns></returns>
+        public bool CheckConnectivity(IDynamicGraphReadOnly<CHEdgeData> graph, IRoutingInterpreter interpreter,
+            PathSegmentVisitList source, double weight)
+        {
+            return this.DoCheckConnectivity(source, weight, int.MaxValue);
+        }
+
+        #region Implementation
+
+        #region Bi-directional Many-to-Many
+
+        ///// <summary>
+        ///// Calculates all the weights between all the vertices.
+        ///// </summary>
+        ///// <param name="froms"></param>
+        ///// <param name="tos"></param>
+        ///// <returns></returns>
+        //public float[][] CalculateManyToManyWeights(uint[] froms, uint[] tos)
+        //{
+        //    // TODO: implement switching of from/to when to < from.
+
+        //    // keep a list of distances to the given vertices while performance backward search.
+        //    Dictionary<uint, Dictionary<uint, float>> buckets = new Dictionary<uint, Dictionary<uint, float>>();
+        //    for (int idx = 0; idx < tos.Length; idx++)
+        //    {
+        //        this.SearchBackwardIntoBucket(buckets, tos[idx]);
+
+        //        // report progress.
+        //        Tools.Core.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
+        //            "Calculating backward...");
+        //    }
+
+        //    // conduct a forward search from each source.
+        //    float[][] weights = new float[froms.Length][];
+        //    for (int idx = 0; idx < froms.Length; idx++)
+        //    {
+        //        uint from = froms[idx];
+
+        //        // calculate all from's.
+        //        Dictionary<uint, float> result =
+        //            this.SearchForwardFromBucket(buckets, from, tos);
+
+        //        float[] to_weights = new float[tos.Length];
+        //        for (int to_idx = 0; to_idx < tos.Length; to_idx++)
+        //        {
+        //            to_weights[to_idx] = result[tos[to_idx]];
+        //        }
+
+        //        weights[idx] = to_weights;
+        //        result.Clear();
+
+        //        // report progress.
+        //        Tools.Core.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
+        //            "Calculating forward...");
+        //    }
+        //    return weights;
+        //}
 
         /// <summary>
         /// Searches backwards and puts the weigths from the to-vertex into the buckets list.
         /// </summary>
         /// <param name="queue"></param>
         /// <returns></returns>
-        private void SearchBackwardIntoBucket(Dictionary<uint, Dictionary<uint, float>> buckets, CHResolvedPoint to)
+        private long SearchBackwardIntoBucket(Dictionary<long, Dictionary<long, double>> buckets, PathSegmentVisitList to_visit_list)
         {
-            Dictionary<long, CHPathSegment> settled_vertices =
-                new Dictionary<long, CHPathSegment>();
+            long? to = null;
+            Dictionary<long, PathSegment<long>> settled_vertices =
+                new Dictionary<long, PathSegment<long>>();
             CHPriorityQueue queue = new CHPriorityQueue();
-            queue.Push(new CHPathSegment(to.Id));
+            foreach (long vertex in to_visit_list.GetVertices())
+            {
+                PathSegment<long> path = to_visit_list.GetPathTo(vertex);
+                if (!to.HasValue)
+                {
+                    to = path.First().VertexId;
+                }
+                queue.Push(path);
+            }
 
             // get the current vertex with the smallest weight.
             while (queue.Count > 0) // TODO: work on a stopping condition?
             {
-                CHPathSegment current = queue.Pop();
+                PathSegment<long> current = queue.Pop();
 
                 // add to the settled vertices.
-                CHPathSegment previous_linked_route;
+                PathSegment<long> previous_linked_route;
                 if (settled_vertices.TryGetValue(current.VertexId, out previous_linked_route))
                 {
                     if (previous_linked_route.Weight > current.Weight)
@@ -130,16 +277,16 @@ namespace Osm.Routing.CH.Routing
                 }
 
                 // add to bucket.
-                Dictionary<uint, float> bucket;
+                Dictionary<long, double> bucket;
                 if (!buckets.TryGetValue(current.VertexId, out bucket))
                 {
-                    bucket = new Dictionary<uint, float>();
-                    buckets.Add(current.VertexId, bucket);
+                    bucket = new Dictionary<long, double>();
+                    buckets.Add(Convert.ToUInt32(current.VertexId), bucket);
                 }
-                bucket[to.Id] = (float)current.Weight;
+                bucket[to.Value] = current.Weight;
 
                 // get neighbours.
-                KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(current.VertexId);
+                KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
                 foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
@@ -148,12 +295,14 @@ namespace Osm.Routing.CH.Routing
                     if (!settled_vertices.ContainsKey(neighbour.Key))
                     {
                         // if not yet settled.
-                        CHPathSegment route_to_neighbour = new CHPathSegment(
+                        PathSegment<long> route_to_neighbour = new PathSegment<long>(
                             neighbour.Key, current.Weight + neighbour.Value.Weight, current);
                         queue.Push(route_to_neighbour);
                     }
                 }
             }
+
+            return to.Value;
         }
 
         /// <summary>
@@ -161,24 +310,33 @@ namespace Osm.Routing.CH.Routing
         /// </summary>
         /// <param name="buckets"></param>
         /// <param name="from"></param>
-        private Dictionary<uint, float> SearchForwardFromBucket(Dictionary<uint, Dictionary<uint, float>> buckets,
-                                                                CHResolvedPoint from, CHResolvedPoint[] tos)
+        private Dictionary<long, double> SearchForwardFromBucket(Dictionary<long, Dictionary<long, double>> buckets, 
+            PathSegmentVisitList from_visit_list, long[] tos)
         {
+            long? from = null;
             // intialize weights.
-            Dictionary<uint, float> results = new Dictionary<uint, float>();
+            Dictionary<long, double> results = new Dictionary<long, double>();
             //HashSet<long> permanent_results = new HashSet<long>();
-            Dictionary<uint, float> tentative_results = new Dictionary<uint, float>();
+            Dictionary<long, double> tentative_results = new Dictionary<long, double>();
 
-            Dictionary<uint, CHPathSegment> settled_vertices =
-                new Dictionary<uint, CHPathSegment>();
+            Dictionary<long, PathSegment<long>> settled_vertices =
+                new Dictionary<long, PathSegment<long>>();
             CHPriorityQueue queue = new CHPriorityQueue();
-            queue.Push(new CHPathSegment(from.Id));
+            foreach (long vertex in from_visit_list.GetVertices())
+            {
+                PathSegment<long> path = from_visit_list.GetPathTo(vertex);
+                if (!from.HasValue)
+                {
+                    from = path.First().VertexId;
+                }
+                queue.Push(path);
+            }
 
             // get the current vertex with the smallest weight.
             int k = 0;
             while (queue.Count > 0) // TODO: work on a stopping condition?
             {
-                CHPathSegment current = queue.Pop();
+                PathSegment<long> current = queue.Pop();
                 k++;
 
                 //// remove from the tentative results list.
@@ -209,7 +367,7 @@ namespace Osm.Routing.CH.Routing
                     break;
                 }
                 // add to the settled vertices.
-                CHPathSegment previous_linked_route;
+                PathSegment<long> previous_linked_route;
                 if (settled_vertices.TryGetValue(current.VertexId, out previous_linked_route))
                 {
                     if (previous_linked_route.Weight > current.Weight)
@@ -225,16 +383,16 @@ namespace Osm.Routing.CH.Routing
                 }
 
                 // search the bucket.
-                Dictionary<uint, float> bucket;
-                if (buckets.TryGetValue(current.VertexId, out bucket))
+                Dictionary<long, double> bucket;
+                if (buckets.TryGetValue(Convert.ToUInt32(current.VertexId), out bucket))
                 {
                     // there is a bucket!
-                    foreach (KeyValuePair<uint, float> bucket_entry in bucket)
+                    foreach (KeyValuePair<long, double> bucket_entry in bucket)
                     {
                         //if (!permanent_results.Contains(bucket_entry.Key))
                         //{
-                        float found_distance = bucket_entry.Value + (float)current.Weight;
-                        float tentative_distance;
+                        double found_distance = bucket_entry.Value + current.Weight;
+                        double tentative_distance;
                         if (tentative_results.TryGetValue(bucket_entry.Key, out tentative_distance))
                         {
                             if (found_distance < tentative_distance)
@@ -258,7 +416,7 @@ namespace Osm.Routing.CH.Routing
 
                 // get neighbours.
                 //CHResolvedPoint vertex = this.GetCHVertex(current.VertexId);
-                KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(current.VertexId);
+                KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(Convert.ToUInt32(current.VertexId));
 
                 // add the neighbours to the queue.
                 foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
@@ -267,24 +425,24 @@ namespace Osm.Routing.CH.Routing
                     if (!settled_vertices.ContainsKey(neighbour.Key))
                     {
                         // if not yet settled.
-                        CHPathSegment route_to_neighbour = new CHPathSegment(
+                        PathSegment<long> route_to_neighbour = new PathSegment<long>(
                             neighbour.Key, current.Weight + neighbour.Value.Weight, current);
                         queue.Push(route_to_neighbour);
                     }
                 }
             }
 
-            foreach (CHResolvedPoint to in tos)
+            foreach (uint to in tos)
             {
-                if (!tentative_results.ContainsKey(to.Id))
+                if (!tentative_results.ContainsKey(to))
                 {
-                    if (results.ContainsKey(to.Id))
+                    if (results.ContainsKey(to))
                     {
-                        tentative_results[to.Id] = results[to.Id];
+                        tentative_results[to] = results[to];
                     }
                     else
                     {
-                        tentative_results[to.Id] = float.MaxValue;
+                        tentative_results[to] = double.MaxValue;
                     }
                 }
             }
@@ -297,46 +455,183 @@ namespace Osm.Routing.CH.Routing
         #region Bi-directional Point-To-Point
 
         /// <summary>
-        /// Calculates the actual route from from to to.
+        /// Calculates a shortest path between the two given vertices.
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public CHPathSegment Calculate(uint from, uint to)
+        private CHResult DoCalculate(IDynamicGraphReadOnly<CHEdgeData> graph, IRoutingInterpreter interpreter,
+            PathSegmentVisitList source, PathSegmentVisitList target, double max, int max_settles, long exception)
         {
-            // calculate the result.
-            CHResult result = this.CalculateInternal(from, to, 0, double.MaxValue, int.MaxValue);
+            // keep settled vertices.
+            CHQueue settled_vertices = new CHQueue();
 
-            // construct the route.
-            CHPathSegment route = result.Forward;
-            CHPathSegment next = result.Backward;
-            while (next != null && next.From != null)
+            // initialize the queues.
+            CHPriorityQueue queue_forward = new CHPriorityQueue();
+            CHPriorityQueue queue_backward = new CHPriorityQueue();
+
+            // add the sources to the forward queue.
+            foreach (long source_vertex in source.GetVertices())
             {
-                route = new CHPathSegment(next.From.VertexId,
-                                          next.Weight + route.Weight, route);
-                next = next.From;
+                queue_forward.Push(source.GetPathTo(source_vertex));
             }
 
-            // report a path segment.
-            this.NotifyCHPathSegment(route);
+            // add the to(s) vertex to the backward queue.
+            foreach (long target_vertex in target.GetVertices())
+            {
+                queue_backward.Push(target.GetPathTo(target_vertex));
+            }
 
-            return this.ExpandPath(route);
+            // keep looping until stopping conditions are met.
+            CHBest best = this.CalculateBest(settled_vertices);
+
+            // calculate stopping conditions.
+            double queue_backward_weight = queue_backward.PeekWeight();
+            double queue_forward_weight = queue_forward.PeekWeight();
+            while (!(queue_backward.Count == 0 && queue_forward.Count == 0) &&
+                   (best.Weight > queue_backward_weight && best.Weight > queue_forward_weight) &&
+                   (max >= queue_backward_weight && max >= queue_forward_weight) &&
+                   (max_settles >= (settled_vertices.Forward.Count + settled_vertices.Backward.Count)))
+            {
+                // keep looping until stopping conditions.
+
+                // do a forward search.
+                if (queue_forward.Count > 0)
+                {
+                    this.SearchForward(settled_vertices, queue_forward, exception);
+                }
+
+                // do a backward search.
+                if (queue_backward.Count > 0)
+                {
+                    this.SearchBackward(settled_vertices, queue_backward, exception);
+                }
+
+                // calculate the new best if any.
+                best = this.CalculateBest(settled_vertices);
+
+                // calculate stopping conditions.
+                if (queue_forward.Count > 0)
+                {
+                    queue_forward_weight = queue_forward.PeekWeight();
+                }
+                if (queue_backward.Count > 0)
+                {
+                    queue_backward_weight = queue_backward.PeekWeight();
+                }
+            }
+
+            // return forward/backward routes.
+            CHResult result = new CHResult();
+            if (best.VertexId <= 0)
+            {
+                // no route was found!
+            }
+            else
+            {
+                // construct the existing route.
+                result.Forward = settled_vertices.Forward[best.VertexId];
+                result.Backward = settled_vertices.Backward[best.VertexId];
+            }
+            return result;
         }
 
         /// <summary>
-        /// Calculates the weight from from to to.
+        /// Calculates all shortest paths between the given vertices.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        /// <param name="max"></param>
+        /// <param name="max_settles"></param>
         /// <returns></returns>
-        public double CalculateWeight(uint from, uint to)
+        private double[][] DoCalculateManyToMany(IDynamicGraphReadOnly<CHEdgeData> graph, IRoutingInterpreter interpreter,
+            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, int max_settles)
         {
-            // calculate the result.
-            CHResult result = this.CalculateInternal(from, to, 0, double.MaxValue, int.MaxValue);
+            // TODO: implement switching of from/to when to < from.
 
-            // construct the route.
-            return result.Forward.Weight + result.Backward.Weight;
+            // keep a list of distances to the given vertices while performance backward search.
+            Dictionary<long, Dictionary<long, double>> buckets = new Dictionary<long, Dictionary<long, double>>();
+            long[] target_ids = new long[sources.Length];
+            for (int idx = 0; idx < sources.Length; idx++)
+            {
+                target_ids[idx] = 
+                    this.SearchBackwardIntoBucket(buckets, sources[idx]);
+
+                // report progress.
+                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, targets.Length, "Router.CH.CalculateManyToManyWeights",
+                    "Calculating backward...");
+            }
+
+            // conduct a forward search from each source.
+            double[][] weights = new double[sources.Length][];
+            for (int idx = 0; idx < sources.Length; idx++)
+            {
+                // calculate all from's.
+                Dictionary<long, double> result =
+                    this.SearchForwardFromBucket(buckets, sources[idx], target_ids);
+
+                double[] to_weights = new double[target_ids.Length];
+                for (int to_idx = 0; to_idx < target_ids.Length; to_idx++)
+                {
+                    if (result.ContainsKey(target_ids[to_idx]))
+                    {
+                        to_weights[to_idx] = result[target_ids[to_idx]];
+                    }
+                }
+
+                weights[idx] = to_weights;
+                result.Clear();
+
+                // report progress.
+                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, sources.Length, "Router.CH.CalculateManyToManyWeights",
+                    "Calculating forward...");
+            }
+            return weights;
         }
+
+        ///// <summary>
+        ///// Calculates the actual route from from to to.
+        ///// </summary>
+        ///// <param name="from"></param>
+        ///// <param name="to"></param>
+        ///// <returns></returns>
+        //public PathSegment<long> Calculate(uint from, uint to)
+        //{
+        //    // calculate the result.
+        //    CHResult result = this.CalculateInternal(from, to, 0, double.MaxValue, int.MaxValue);
+
+        //    // construct the route.
+        //    PathSegment<long> route = result.Forward;
+        //    PathSegment<long> next = result.Backward;
+        //    while (next != null && next.From != null)
+        //    {
+        //        route = new PathSegment<long>(next.From.VertexId,
+        //                                  next.Weight + route.Weight, route);
+        //        next = next.From;
+        //    }
+
+        //    // report a path segment.
+        //    this.NotifyPathSegment(route);
+
+        //    return this.ExpandPath(route);
+        //}
+
+        ///// <summary>
+        ///// Calculates the weight from from to to.
+        ///// </summary>
+        ///// <param name="from"></param>
+        ///// <param name="to"></param>
+        ///// <returns></returns>
+        //public double CalculateWeight(uint from, uint to)
+        //{
+        //    // calculate the result.
+        //    CHResult result = this.CalculateInternal(from, to, 0, double.MaxValue, int.MaxValue);
+
+        //    // construct the route.
+        //    return result.Forward.Weight + result.Backward.Weight;
+        //}
 
         /// <summary>
         /// Calculates the weight from from to to.
@@ -393,9 +688,9 @@ namespace Osm.Routing.CH.Routing
         /// <param name="from"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(uint from, double max)
+        public bool CheckConnectivity(PathSegmentVisitList source, double max)
         {
-            return this.CheckConnectivityInternal(from, max, int.MaxValue);
+            return this.DoCheckConnectivity(source, max, int.MaxValue);
         }
 
         /// <summary>
@@ -404,9 +699,9 @@ namespace Osm.Routing.CH.Routing
         /// <param name="from"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(uint from, int max_settles)
+        public bool CheckConnectivity(PathSegmentVisitList source, int max_settles)
         {
-            return this.CheckConnectivityInternal(from, double.MaxValue, max_settles);
+            return this.DoCheckConnectivity(source, double.MaxValue, max_settles);
         }
 
         /// <summary>
@@ -425,10 +720,10 @@ namespace Osm.Routing.CH.Routing
             CHPriorityQueue queue_backward = new CHPriorityQueue();
 
             // add the from vertex to the forward queue.
-            queue_forward.Push(new CHPathSegment(from));
+            queue_forward.Push(new PathSegment<long>(from));
 
             // add the from vertex to the backward queue.
-            queue_backward.Push(new CHPathSegment(to));
+            queue_backward.Push(new PathSegment<long>(to));
 
             // keep looping until stopping conditions are met.
             CHBest best = this.CalculateBest(settled_vertices);
@@ -490,7 +785,7 @@ namespace Osm.Routing.CH.Routing
         /// <param name="from"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        private bool CheckConnectivityInternal(uint from, double max, int max_settles)
+        private bool DoCheckConnectivity(PathSegmentVisitList source, double max, int max_settles)
         {
             // keep settled vertices.
             CHQueue settled_vertices = new CHQueue();
@@ -499,11 +794,17 @@ namespace Osm.Routing.CH.Routing
             CHPriorityQueue queue_forward = new CHPriorityQueue();
             CHPriorityQueue queue_backward = new CHPriorityQueue();
 
-            // add the from vertex to the forward queue.
-            queue_forward.Push(new CHPathSegment(from));
+            // add the sources to the forward queue.
+            foreach (long source_vertex in source.GetVertices())
+            {
+                queue_forward.Push(source.GetPathTo(source_vertex));
+            }
 
-            // add the from vertex to the backward queue.
-            queue_backward.Push(new CHPathSegment(from));
+            // add the to(s) vertex to the backward queue.
+            foreach (long target_vertex in source.GetVertices())
+            {
+                queue_backward.Push(source.GetPathTo(target_vertex));
+            }
 
             // calculate stopping conditions.
             double queue_backward_weight = queue_backward.PeekWeight();
@@ -552,7 +853,7 @@ namespace Osm.Routing.CH.Routing
             best.Weight = double.MaxValue;
 
             // loop over all intersections.
-            foreach (KeyValuePair<uint, float> vertex in queue.Intersection)
+            foreach (KeyValuePair<long, double> vertex in queue.Intersection)
             {
                 double weight = vertex.Value;
                 if (weight < best.Weight)
@@ -573,20 +874,12 @@ namespace Osm.Routing.CH.Routing
             /// <summary>
             /// The vertex in the 'middle' of the best route yet.
             /// </summary>
-            public uint VertexId { get; set; }
+            public long VertexId { get; set; }
 
             /// <summary>
             /// The weight of the best route yet.
             /// </summary>
             public double Weight { get; set; }
-        }
-
-
-        private struct CHResult
-        {
-            public CHPathSegment Forward { get; set; }
-
-            public CHPathSegment Backward { get; set; }
         }
 
         /// <summary>
@@ -598,10 +891,10 @@ namespace Osm.Routing.CH.Routing
                                    long exception)
         {
             // get the current vertex with the smallest weight.
-            CHPathSegment current = queue.Pop();
+            PathSegment<long> current = queue.Pop();
 
             // add to the settled vertices.
-            CHPathSegment previous_linked_route;
+            PathSegment<long> previous_linked_route;
             if (settled_queue.Forward.TryGetValue(current.VertexId, out previous_linked_route))
             {
                 if (previous_linked_route.Weight > current.Weight)
@@ -617,7 +910,7 @@ namespace Osm.Routing.CH.Routing
             }
 
             // get neighbours.
-            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(current.VertexId);
+            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(Convert.ToUInt32(current.VertexId));
 
             // add the neighbours to the queue.
             foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
@@ -628,7 +921,7 @@ namespace Osm.Routing.CH.Routing
                     exception != neighbour.Value.ContractedVertexId)))
                 {
                     // if not yet settled.
-                    CHPathSegment route_to_neighbour = new CHPathSegment(
+                    PathSegment<long> route_to_neighbour = new PathSegment<long>(
                         neighbour.Key, current.Weight + neighbour.Value.Weight, current);
                     queue.Push(route_to_neighbour);
                 }
@@ -637,7 +930,7 @@ namespace Osm.Routing.CH.Routing
                     exception != neighbour.Value.ContractedVertexId)))
                 {
                     // node was settled before: make sure this route is not shorter.
-                    CHPathSegment route_to_neighbour = new CHPathSegment(
+                    PathSegment<long> route_to_neighbour = new PathSegment<long>(
                         neighbour.Key, current.Weight + neighbour.Value.Weight, current);
 
                     // remove from the queue again when there is a shorter route found.
@@ -659,10 +952,10 @@ namespace Osm.Routing.CH.Routing
                                     long exception)
         {
             // get the current vertex with the smallest weight.
-            CHPathSegment current = queue.Pop();
+            PathSegment<long> current = queue.Pop();
 
             // add to the settled vertices.
-            CHPathSegment previous_linked_route;
+            PathSegment<long> previous_linked_route;
             if (settled_queue.Backward.TryGetValue(current.VertexId, out previous_linked_route))
             {
                 if (previous_linked_route.Weight > current.Weight)
@@ -678,7 +971,7 @@ namespace Osm.Routing.CH.Routing
             }
 
             // get neighbours.
-            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(current.VertexId);
+            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(Convert.ToUInt32(current.VertexId));
 
             // add the neighbours to the queue.
             foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
@@ -689,7 +982,7 @@ namespace Osm.Routing.CH.Routing
                     exception != neighbour.Value.ContractedVertexId)))
                 {
                     // if not yet settled.
-                    CHPathSegment route_to_neighbour = new CHPathSegment(
+                    PathSegment<long> route_to_neighbour = new PathSegment<long>(
                         neighbour.Key, current.Weight + neighbour.Value.Weight, current);
                     queue.Push(route_to_neighbour);
                 }
@@ -698,7 +991,7 @@ namespace Osm.Routing.CH.Routing
                     exception != neighbour.Value.ContractedVertexId)))
                 {
                     // node was settled before: make sure this route is not shorter.
-                    CHPathSegment route_to_neighbour = new CHPathSegment(
+                    PathSegment<long> route_to_neighbour = new PathSegment<long>(
                         neighbour.Key, current.Weight + neighbour.Value.Weight, current);
 
                     // remove from the queue again when there is a shorter route found.
@@ -721,11 +1014,11 @@ namespace Osm.Routing.CH.Routing
         /// <param name="forward"></param>
         /// <param name="backward"></param>
         /// <returns></returns>
-        private CHPathSegment ExpandPath(CHPathSegment path)
+        private PathSegment<long> ExpandPath(PathSegment<long> path)
         {
             // construct the full CH path.
-            CHPathSegment current = path;
-            CHPathSegment expanded_path = null;
+            PathSegment<long> current = path;
+            PathSegment<long> expanded_path = null;
 
             if (current != null && current.From == null)
             { // path contains just a single point.
@@ -736,13 +1029,13 @@ namespace Osm.Routing.CH.Routing
                 while (current != null && current.From != null)
                 {
                     // recursively convert edge.
-                    CHPathSegment local_path =
-                        new CHPathSegment(current.VertexId, -1, new CHPathSegment(
+                    PathSegment<long> local_path =
+                        new PathSegment<long>(current.VertexId, -1, new PathSegment<long>(
                                                                     current.From.VertexId));
-                    CHPathSegment expanded_arc = this.ConvertArc(local_path);
+                    PathSegment<long> expanded_arc = this.ConvertArc(local_path);
                     if (expanded_path != null)
                     {
-                        expanded_path.ConcatenateAfter(expanded_arc);
+                        expanded_path = expanded_path.ConcatenateAfter(expanded_arc);
                     }
                     else
                     {
@@ -760,14 +1053,19 @@ namespace Osm.Routing.CH.Routing
         /// </summary>
         /// <param name="edge"></param>
         /// <returns></returns>
-        private CHPathSegment ConvertArc(CHPathSegment edge)
+        private PathSegment<long> ConvertArc(PathSegment<long> edge)
         {
+            if (edge.VertexId < 0 || edge.From.VertexId < 0)
+            { // these edges are not part of the regular network!
+                return edge;
+            }
+
             // get the edge by querying the forward neighbours of the from-vertex.
             //CHVertex from_vertex = _data.GetCHVertex(edge.From.VertexId);
-            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(edge.From.VertexId);
+            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(Convert.ToUInt32(edge.From.VertexId));
 
             // find the edge with lowest weight.
-            KeyValuePair<uint, CHEdgeData> arc = new KeyValuePair<uint,CHEdgeData>(0, null);
+            KeyValuePair<uint, CHEdgeData> arc = new KeyValuePair<uint, CHEdgeData>(0, null);
             foreach (KeyValuePair<uint, CHEdgeData> forward_arc in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
                 a => a.Key == edge.VertexId && a.Value.Forward))
             {
@@ -782,7 +1080,7 @@ namespace Osm.Routing.CH.Routing
             }
             if (arc.Value == null)
             {
-                neighbours = _data.GetArcs(edge.VertexId);
+                neighbours = _data.GetArcs(Convert.ToUInt32(edge.VertexId));
                 foreach (KeyValuePair<uint, CHEdgeData> backward in neighbours.Where<KeyValuePair<uint, CHEdgeData>>(
                     a => a.Key == edge.From.VertexId && a.Value.Backward))
                 {
@@ -795,32 +1093,32 @@ namespace Osm.Routing.CH.Routing
                         arc = backward;
                     }
                 }
-                return this.ConvertArc(edge, arc.Key, arc.Value.ContractedVertexId, edge.VertexId);
+                return this.ConvertArc(edge, arc.Key, Convert.ToUInt32(arc.Value.ContractedVertexId), Convert.ToUInt32(edge.VertexId));
             }
             else
             {
-                return this.ConvertArc(edge, edge.From.VertexId, arc.Value.ContractedVertexId, arc.Key);
+                return this.ConvertArc(edge, Convert.ToUInt32(edge.From.VertexId), arc.Value.ContractedVertexId, arc.Key);
             }
         }
 
-        private CHPathSegment ConvertArc(CHPathSegment edge,
+        private PathSegment<long> ConvertArc(PathSegment<long> edge,
                                          uint vertex_from_id, uint vertex_contracted_id, uint vertex_to_id)
         {
             // check if the arc is a shortcut.
             if (vertex_contracted_id > 0)
             {
                 // arc is a shortcut.
-                CHPathSegment first_path = new CHPathSegment(vertex_to_id, -1,
-                                                             new CHPathSegment(vertex_contracted_id));
-                CHPathSegment first_path_expanded = this.ConvertArc(first_path);
+                PathSegment<long> first_path = new PathSegment<long>(vertex_to_id, -1,
+                                                             new PathSegment<long>(vertex_contracted_id));
+                PathSegment<long> first_path_expanded = this.ConvertArc(first_path);
 
-                CHPathSegment second_path = new CHPathSegment(vertex_contracted_id, -1,
-                                                              new CHPathSegment(vertex_from_id));
-                CHPathSegment second_path_expanded = this.ConvertArc(second_path);
+                PathSegment<long> second_path = new PathSegment<long>(vertex_contracted_id, -1,
+                                                              new PathSegment<long>(vertex_from_id));
+                PathSegment<long> second_path_expanded = this.ConvertArc(second_path);
 
 
                 // link the two paths.
-                first_path_expanded.ConcatenateAfter(second_path_expanded);
+                first_path_expanded = first_path_expanded.ConcatenateAfter(second_path_expanded);
 
                 return first_path_expanded;
             }
@@ -1297,48 +1595,35 @@ namespace Osm.Routing.CH.Routing
         /// </summary>
         /// <param name="arc"></param>
         /// <param name="contracted_id"></param>
-        public delegate void NotifyCHPathSegmentDelegate(CHPathSegment route);
+        public delegate void NotifyPathSegmentDelegate(PathSegment<long> route);
 
         /// <summary>
         /// The event.
         /// </summary>
-        public event NotifyCHPathSegmentDelegate NotifyCHPathSegmentEvent;
+        public event NotifyPathSegmentDelegate NotifyPathSegmentEvent;
 
         /// <summary>
         /// Notifies the arc.
         /// </summary>
         /// <param name="arc"></param>
         /// <param name="contracted_id"></param>
-        private void NotifyCHPathSegment(CHPathSegment route)
+        private void NotifyPathSegment(PathSegment<long> route)
         {
-            if (this.NotifyCHPathSegmentEvent != null)
+            if (this.NotifyPathSegmentEvent != null)
             {
-                this.NotifyCHPathSegmentEvent(route);
+                this.NotifyPathSegmentEvent(route);
             }
         }
 
         #endregion
 
-        internal CHResolvedPoint Resolve(GeoCoordinate coordinate)
+        #endregion
+
+        private struct CHResult
         {
-            CHResolvedPoint found = null;
-            float current_distance = float.MaxValue;
-            foreach (uint vertex in _data.GetVertices())
-            {
-                float latitude, longitude;
-                if (_data.GetVertex(vertex, out latitude, out longitude))
-                {
-                    GeoCoordinate vertex_coordinate = new GeoCoordinate(
-                        latitude, longitude);
-                    float distance = (float)vertex_coordinate.DistanceEstimate(coordinate).Value;
-                    if (distance < current_distance)
-                    {
-                        current_distance = distance;
-                        found = new CHResolvedPoint(vertex, vertex_coordinate);
-                    }
-                }
-            }
-            return found;
+            public PathSegment<long> Forward { get; set; }
+
+            public PathSegment<long> Backward { get; set; }
         }
     }
 }

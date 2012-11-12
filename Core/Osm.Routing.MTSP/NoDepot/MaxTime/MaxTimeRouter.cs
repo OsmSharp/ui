@@ -19,22 +19,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
-using Osm.Routing.Core.Route;
 using Tools.Math.TSP.Problems;
 using Tools.Math.Units.Time;
 using Tools.Math.VRP.Core;
 using Tools.Math.VRP.Core.Routes;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
+using Routing.Core.Route;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
+namespace Routing.Core.VRP.NoDepot.MaxTime
 {
     /// <summary>
     /// Class to solve VRP problems that have no depot but min-max time constraints on routes.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public abstract class RouterMaxTime<ResolvedType> : RouterNoDepot<ResolvedType>, IMaxTimeSolver
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Creates a new min max VRP router.
@@ -78,12 +77,12 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
             _points = points;
 
             // first calculate the weights in seconds.
-            float[][] weights = this.CalculateManyToManyWeigth(points);
+            double[][] weights = this.CalculateManyToManyWeigth(points);
 
             // convert to ints.
             for (int x = 0; x < weights.Length; x++)
             {
-                float[] weights_x = weights[x];
+                double[] weights_x = weights[x];
                 for (int y = 0; y < weights_x.Length; y++)
                 {
                     weights_x[y] = (int)weights_x[y];

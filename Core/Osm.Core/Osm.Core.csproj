@@ -183,9 +183,7 @@
     <Compile Include="Filters\Tags\FilterTagCount.cs" />
     <Compile Include="Filters\Tags\FilterTagExists.cs" />
     <Compile Include="Filters\Tags\FilterTagMatch.cs" />
-    <Compile Include="ILocationObject.cs" />
     <Compile Include="IShapeInterpreter.cs" />
-    <Compile Include="ITaggedObject.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="OsmBaseIdGenerator.cs" />
     <Compile Include="OsmGeo.cs" />
@@ -210,6 +208,8 @@
     <Compile Include="Sources\IRelationSource.cs" />
     <Compile Include="Sources\IWaySource.cs" />
     <Compile Include="Tags\OsmTagsIndex.cs" />
+    <Compile Include="Tiles\Tile.cs" />
+    <Compile Include="Tiles\TileRange.cs" />
     <Compile Include="User.cs" />
     <Compile Include="Way.cs" />
     <Compile Include="Xml\OsmDocument.cs" />

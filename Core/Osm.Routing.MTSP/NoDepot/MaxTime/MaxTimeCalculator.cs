@@ -24,7 +24,7 @@ using Tools.Math.AI.Genetic;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.VRP.Core;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
+namespace Routing.Core.VRP.NoDepot.MaxTime
 {
     public class MaxTimeCalculator
     {
@@ -51,7 +51,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
         /// <param name="weight"></param>
         /// <param name="difference"></param>
         /// <returns></returns>
-        public float CalculateOneRouteIncrease(float weight, float difference)
+        public double CalculateOneRouteIncrease(double weight, double difference)
         {
             return weight + difference + this.DeliveryTime;
         }
@@ -62,7 +62,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
         /// <param name="problem"></param>
         /// <param name="route"></param>
         /// <returns></returns>
-        public float CalculateOneRoute(IRoute route)
+        public double CalculateOneRoute(IRoute route)
         {
             double current_weight = 0;
             int previous = -1;
@@ -85,7 +85,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
             }
             current_weight = current_weight + _problem.Weight(
                 previous, first) + (count * this.DeliveryTime);
-            return (float)current_weight;
+            return current_weight;
         }
 
         #endregion
@@ -96,7 +96,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
         /// <param name="problem"></param>
         /// <param name="solution"></param>
         /// <returns></returns>
-        public float Calculate(MaxTimeSolution solution)
+        public double Calculate(MaxTimeSolution solution)
         {
             int vehicles = solution.Count;
 
@@ -129,7 +129,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime
             //fitness.ActualFitness = (vehicles * ((total_above_max) + total));
             //fitness.ActualFitness = (vehicles * ((total_above_max * max) + total));
             //fitness.ActualFitness = (vehicles * ((System.Math.Pow(total_above_max, 1.28)) + total + max));
-            return (float)(vehicles * ((System.Math.Pow(total_above_max, 4)) + total));
+            return (vehicles * ((System.Math.Pow(total_above_max, 4)) + total));
             ////fitness.ActualFitness = (vehicles * (total + ((total_count_above_max * above_max_factor) * max)));
             ////fitness.ActualFitness = (total + ((total_count_above_max * above_max_factor) * max));
             //fitness.Vehicles = vehicles;

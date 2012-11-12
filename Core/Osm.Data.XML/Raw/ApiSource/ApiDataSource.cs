@@ -379,9 +379,9 @@ namespace Osm.Data.Raw.XML.ApiSource
             return ways;
         }
 
-        public IList<Osm.Core.OsmBase> Get(Tools.Math.Geo.GeoCoordinateBox box, Osm.Core.Filters.Filter filter)
+        public IList<Osm.Core.OsmGeo> Get(Tools.Math.Geo.GeoCoordinateBox box, Osm.Core.Filters.Filter filter)
         {
-            IList<Osm.Core.OsmBase> base_objects = new List<Osm.Core.OsmBase>();
+            IList<Osm.Core.OsmGeo> base_objects = new List<Osm.Core.OsmGeo>();
 
             // /api/0.6/map?bbox=left,bottom,right,top
             OsmDocument doc = this.DoGetApiCall(string.Format("/api/0.6/map?bbox={0},{1},{2},{3}",

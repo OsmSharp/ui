@@ -21,19 +21,17 @@ using System.Linq;
 using System.Text;
 using Tools.Math.VRP.Core;
 using Tools.Math.Units.Time;
-using Osm.Core;
 using Tools.Math.VRP.Core.Routes;
-using Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.VNS
+namespace Routing.Core.VRP.NoDepot.MaxTime.VNS
 {
     /// <summary>
     /// Uses a Variable Neighbourhood Search technique.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
     public class VNSSimple<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Holds the router.

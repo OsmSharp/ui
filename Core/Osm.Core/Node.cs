@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using Tools.Math.Geo;
 using Tools.Core.Collections;
+using Osm.Core.Simple;
 
 namespace Osm.Core
 {
@@ -63,6 +64,26 @@ namespace Osm.Core
         /// The coordinates of this node.
         /// </summary>
         public GeoCoordinate Coordinate { get; set; }
+
+        /// <summary>
+        /// Converts this node to it's simple counterpart.
+        /// </summary>
+        /// <returns></returns>
+        public override SimpleOsmGeo ToSimple()
+        {
+            SimpleNode simple_node = new SimpleNode();
+            simple_node.Id = this.Id;
+            simple_node.ChangeSetId = this.ChangeSetId;
+            simple_node.Latitude = this.Coordinate.Latitude;
+            simple_node.Longitude = this.Coordinate.Longitude;
+            simple_node.Tags = this.Tags;
+            simple_node.TimeStamp = this.TimeStamp;
+            simple_node.UserId = this.UserId;
+            simple_node.UserName = this.User;
+            simple_node.Version = (ulong?)this.Version;
+            simple_node.Visible = this.Visible;
+            return simple_node;
+        }
 
         #region IEquatable<Node> Members
 

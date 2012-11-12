@@ -24,15 +24,14 @@ using Tools.Math.VRP.Core;
 using Tools.Math.VRP.Core.BestPlacement;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Osm.Core;
 using Tools.Math.TSP;
-using Osm.Routing.Core.VRP.NoDepot.MaxTime.InterRoute;
-using Osm.Routing.Core.Resolving;
+using Routing.Core;
+using Routing.Core.VRP.NoDepot.MaxTime.InterRoute;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
+namespace Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 {
     public class RouterBestPlacementWithImprovements<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : IResolvedPoint
+        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// The amount of customers to place before applying local improvements.
@@ -105,7 +104,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                 customers.Remove(customer);
 
                 // start a route r.
-                float current_route_weight = 0;
+                double current_route_weight = 0;
                 IRoute current_route = solution.Add(customer);
                 //Console.WriteLine("Starting new route with {0}", customer);
                 while (customers.Count > 0)
@@ -115,7 +114,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                         CheapestInsertionHelper.CalculateBestPlacement(problem, current_route, customers);
 
                     // calculate the new weight.
-                    float potential_weight = calculator.CalculateOneRouteIncrease(current_route_weight, result.Increase);
+                    double potential_weight = calculator.CalculateOneRouteIncrease(current_route_weight, result.Increase);
                     // cram as many customers into one route as possible.
                     if (potential_weight < problem.Max.Value - (problem.Max.Value * _delta_percentage))
                     {
@@ -182,10 +181,10 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
         /// </summary>
         /// <param name="problem"></param>
         /// <param name="routes"></param>
-        private float ImproveIntraRoute(IProblemWeights problem, IRoute route, float current_weight)
+        private double ImproveIntraRoute(IProblemWeights problem, IRoute route, double current_weight)
         {
             bool improvement = true;
-            float new_weight = current_weight;
+            double new_weight = current_weight;
             while (improvement)
             { // keep trying while there are still improvements.
                 improvement = false;
@@ -193,7 +192,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                 // loop over all improvement operations.
                 foreach (IImprovement improvement_operation in _intra_improvements)
                 { // try the current improvement operations.
-                    float difference;
+                    double difference;
                     if (improvement_operation.Improve(problem, route, out difference))
                     { // there was an improvement.
                         // update the weight.

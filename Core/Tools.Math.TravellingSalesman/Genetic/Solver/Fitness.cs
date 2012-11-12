@@ -19,20 +19,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Graph;
 
 namespace Tools.Math.TSP.Genetic.Solver
 {
     public class Fitness : IComparable
     {
-        private float _weight;
+        private double _weight;
 
-        public Fitness(float weigth)
+        public Fitness(double weigth)
         {
             _weight = weigth;
         }
 
-        public float Weight 
+        public double Weight 
         {
             get
             {

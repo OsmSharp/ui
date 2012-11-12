@@ -27,7 +27,7 @@ using Tools.Math.AI.Genetic.Solvers;
 using Tools.Math.VRP.Core.Routes;
 using Tools.Math.VRP.Core.BestPlacement;
 
-namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
+namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
 {
     internal class RouteExchangeOperation :
         ICrossOverOperation<MaxTimeSolution, MaxTimeProblem, Fitness>
@@ -185,7 +185,7 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
         private void FillRoutes(MaxTimeCalculator calculator, MaxTimeSolution route1, MaxTimeSolution solution,
             MaxTimeProblem problem)
         {
-            float[] weights = new float[solution.Count];
+            double[] weights = new double[solution.Count];
             
             // insert all non-placed customers in the order of the first route.
             HashSet<int> unplaced = new HashSet<int>();
@@ -221,11 +221,11 @@ namespace Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
 
                 // try reinsertion.
                 CheapestInsertionResult result = new CheapestInsertionResult();
-                result.Increase = float.MaxValue;
+                result.Increase = double.MaxValue;
                 int target_idx = -1;
 
                 CheapestInsertionResult unlimited_result = new CheapestInsertionResult();
-                unlimited_result.Increase = float.MaxValue;
+                unlimited_result.Increase = double.MaxValue;
                 int unlimited_target_idx = -1;
                 for (int idx = 0; idx < solution.Count; idx++)
                 {

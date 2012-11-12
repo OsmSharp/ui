@@ -178,9 +178,9 @@
       <Project>{5BC09D7C-5226-4233-BF54-27BFD838F8F8}</Project>
       <Name>Osm.Data.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Osm.Routing.Core\Osm.Routing.Core.csproj">
+    <ProjectReference Include="..\Osm.Routing.Core\Routing.Core.csproj">
       <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
-      <Name>Osm.Routing.Core</Name>
+      <Name>Routing.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Osm.Routing\Osm.Routing.Raw.csproj">
       <Project>{5E146436-B64C-4C3A-832E-26A53AA6BA54}</Project>

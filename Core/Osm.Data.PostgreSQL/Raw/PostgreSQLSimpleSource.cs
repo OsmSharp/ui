@@ -447,11 +447,11 @@ namespace Osm.Data.PostgreSQL.Raw
 
         }
 
-        public IList<OsmBase> Get(GeoCoordinateBox box, Filter filter)
+        public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
             NpgsqlConnection con = this.CreateConnection();
 
-            List<OsmBase> base_list = new List<OsmBase>();
+            List<OsmGeo> base_list = new List<OsmGeo>();
 
             // query nodes.
             string nodes_sql
@@ -565,12 +565,12 @@ namespace Osm.Data.PostgreSQL.Raw
 
             // TODO: relations
 
-            List<OsmBase> filtered_list = null;
+            List<OsmGeo> filtered_list = null;
             if (filter != null && filter != Filter.Any())
             {
-                filtered_list = new List<OsmBase>();
+                filtered_list = new List<OsmGeo>();
 
-                foreach (OsmBase base_object in base_list)
+                foreach (OsmGeo base_object in base_list)
                 {
                     if (filter.Evaluate(base_object))
                     {

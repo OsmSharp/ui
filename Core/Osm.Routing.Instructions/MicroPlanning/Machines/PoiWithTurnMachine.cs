@@ -23,7 +23,7 @@ using Tools.Math.StateMachines;
 using Tools.Math.Geo;
 using Tools.Math.Geo.Meta;
 
-namespace Osm.Routing.Instructions.MicroPlanning.Machines
+namespace Routing.Instructions.MicroPlanning.Machines
 {
     internal class PoiWithTurnMachine : MicroPlannerMachine
     {
@@ -111,18 +111,18 @@ namespace Osm.Routing.Instructions.MicroPlanning.Machines
 
         public override void Succes()
         {
-            Osm.Routing.Core.ArcAggregation.Output.AggregatedPoint pois_point = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
-            Osm.Routing.Core.ArcAggregation.Output.AggregatedArc previous_arc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
+            Routing.Core.ArcAggregation.Output.AggregatedPoint pois_point = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
+            Routing.Core.ArcAggregation.Output.AggregatedArc previous_arc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
 
             // get the pois list.
-            List<Osm.Routing.Core.ArcAggregation.Output.PointPoi> pois = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point.Points;
+            List<Routing.Core.ArcAggregation.Output.PointPoi> pois = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point.Points;
 
             // get the angle from the pois point.
             RelativeDirection direction = pois_point.Angle;
 
             // calculate the box.
             List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
-            foreach (Osm.Routing.Core.ArcAggregation.Output.PointPoi poi in pois)
+            foreach (Routing.Core.ArcAggregation.Output.PointPoi poi in pois)
             {
                 coordinates.Add(poi.Location);
             }

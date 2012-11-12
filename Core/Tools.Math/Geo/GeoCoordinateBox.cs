@@ -304,5 +304,17 @@ namespace Tools.Math.Geo
         }
 
         #endregion
+
+        /// <summary>
+        /// Resizes this bounding box with the given delta.
+        /// </summary>
+        /// <param name="delta"></param>
+        /// <returns></returns>
+        public GeoCoordinateBox Resize(double delta)
+        {
+            return new GeoCoordinateBox(
+                new GeoCoordinate(this.MaxLat + delta, this.MaxLon + delta),
+                new GeoCoordinate(this.MinLat - delta, this.MinLon - delta));
+        }
     }
 }

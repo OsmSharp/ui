@@ -21,11 +21,11 @@ using System.Linq;
 using System.Text;
 using Tools.Math.Units.Speed;
 using Tools.Math.Units.Time;
-using Osm.Routing.Core;
-using Osm.Routing.Core.ArcAggregation.Output;
-using Osm.Routing.Core.ArcAggregation;
+using Routing.Core;
+using Routing.Core.ArcAggregation.Output;
+using Routing.Core.ArcAggregation;
 
-namespace Osm.Routing.Core.Metrics.Time
+namespace Routing.Core.Metrics.Time
 {
     public class TimeCalculator : OsmSharpRouteMetricCalculator
     {
@@ -121,8 +121,8 @@ namespace Osm.Routing.Core.Metrics.Time
             result[DISTANCE_KEY] = result[DISTANCE_KEY] + arc.Distance.Value;
 
             // update the time.
-            Osm.Routing.Core.Roads.Tags.RoadTagsInterpreterBase road_interpreter =
-                new Osm.Routing.Core.Roads.Tags.RoadTagsInterpreterBase(arc.Tags);
+            Routing.Core.Roads.Tags.RoadTagsInterpreterBase road_interpreter =
+                new Routing.Core.Roads.Tags.RoadTagsInterpreterBase(arc.Tags);
             KilometerPerHour speed = road_interpreter.MaxSpeed(vehicle);
             Second time = arc.Distance / speed;
 

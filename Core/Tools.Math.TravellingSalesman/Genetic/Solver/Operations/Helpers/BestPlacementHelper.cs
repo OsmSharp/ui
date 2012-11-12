@@ -21,7 +21,6 @@ using System.Linq;
 using System.Text;
 using Tools.Math.AI.Genetic.Solvers;
 using Tools.Math.Random;
-using Tools.Math.Graph;
 
 namespace Tools.Math.TSP.Genetic.Solver.Operations.Helpers
 {
@@ -138,21 +137,21 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Helpers
             result.City = city_to_place;
 
             // initialize the best increase.
-            float increase = 0;
+            double increase = 0;
 
             if (genomes.Count > 0)
             {
                 // calculate from first.
-                float new_weights =
+                double new_weights =
                     problem.Weight(problem.First, city_to_place)
                         + (problem.Weight(city_to_place, genomes[0]));
 
                 // calculate the old weights.
-                float old_weight =
+                double old_weight =
                     problem.Weight(problem.First, genomes[0]);
 
                 // calculate the difference to know the increase.
-                float new_increase =
+                double new_increase =
                     new_weights - (old_weight);
 
                 // set the new increase.
@@ -210,16 +209,16 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Helpers
             else
             {
                 // calculate the new weights.
-                float new_weights =
+                double new_weights =
                     problem.Weight(problem.First, city_to_place)
                         + (problem.Weight(city_to_place, problem.Last));
 
                 // calculate the old weights.
-                float old_weight =
+                double old_weight =
                     problem.Weight(problem.First, problem.Last);
 
                 // calculate the difference to know the increase.
-                float new_increase =
+                double new_increase =
                     new_weights - (old_weight);
 
                 // set the new increase.
@@ -325,7 +324,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.Helpers
         /// <summary>
         /// Gets/sets the increase in time.
         /// </summary>
-        public float Increase { get; set; }
+        public double Increase { get; set; }
 
         /// <summary>
         /// The fitness of the individual after best placement.

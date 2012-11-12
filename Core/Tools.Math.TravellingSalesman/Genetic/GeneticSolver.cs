@@ -28,7 +28,6 @@ using Tools.Math.AI.Genetic.Operations.CrossOver;
 using Tools.Math.AI.Genetic;
 using Tools.Math.TSP.Genetic.Solver.Operations.Generation;
 using Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
-using Tools.Math.Graph;
 using Tools.Math.Random;
 using Tools.Math.TSP.Genetic.Solver.Operations.Mutation;
 using Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
@@ -178,7 +177,7 @@ namespace Tools.Math.TSP.Genetic
             return new SimpleAsymmetricRoute(result, true);
         }
 
-        private float _latest_fitness = float.MaxValue;
+        private double _latest_fitness = double.MaxValue;
         void solver_NewGeneration(int generation, int stagnation_count, Population<List<int>, GeneticProblem, Fitness> population)
         {
             ProgressStatus status = new ProgressStatus();
@@ -262,7 +261,7 @@ namespace Tools.Math.TSP.Genetic
         /// Raises the intermidiate results event.
         /// </summary>
         /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(int[] result, float weight)
+        protected void RaiseIntermidiateResult(int[] result, double weight)
         {
             if (IntermidiateResult != null)
             {
