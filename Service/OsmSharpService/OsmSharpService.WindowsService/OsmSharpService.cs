@@ -43,7 +43,7 @@ namespace OsmSharpService.WindowsService
         protected override void OnStart(string[] args)
         {
             // initializes the processor(s).
-            _processors.Add(RoutingResourceProcessor.GetInstance());
+            _processors.Add(RoutingOperationProcessor.GetInstance());
 
             // start all the processor(s).
             foreach (IProcessor processor in _processors)
@@ -54,7 +54,7 @@ namespace OsmSharpService.WindowsService
             // start the self-hosting.
             _host = new AppHost();
             _host.Init();
-            _host.Start(@"http://localhost:666");
+            _host.Start(@"http://localhost:666/");
         }
 
         /// <summary>

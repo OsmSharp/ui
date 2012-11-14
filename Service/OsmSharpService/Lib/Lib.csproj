@@ -53,6 +53,9 @@
     <Content Include="Osm.Routing.dll" />
     <Content Include="Osm.Routing.pdb" />
     <Content Include="Osm.Routing.xml" />
+    <Content Include="protobuf-net.dll" />
+    <Content Include="protobuf-net.pdb" />
+    <Content Include="protobuf-net.xml" />
     <Content Include="Routing.CH.dll" />
     <Content Include="Routing.CH.pdb" />
     <Content Include="Routing.CH.xml" />
@@ -80,6 +83,7 @@
     <Content Include="Tools.Xml.dll" />
     <Content Include="Tools.Xml.pdb" />
     <Content Include="Tools.Xml.XML" />
+    <Content Include="zlib.net.dll" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

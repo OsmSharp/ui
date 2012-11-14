@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{4F4F1276-1617-4643-849A-BF3AD1F91222}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{FD619428-6381-4427-BF61-FBE5B39CB11D}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OsmSharpService.Core</RootNamespace>
-    <AssemblyName>OsmSharpService.Core</AssemblyName>
+    <RootNamespace>OsmSharpService.Test</RootNamespace>
+    <AssemblyName>OsmSharpService.Test</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -28,8 +28,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\OsmSharpService.Core.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -40,79 +38,44 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject />
-  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="AppHost.cs" />
-    <Compile Include="IProcessor.cs" />
-    <Compile Include="Routing\RoutingOperation.cs" />
-    <Compile Include="Routing\RoutingOperationProcessor.cs" />
-    <Compile Include="Routing\RoutingResponse.cs" />
-    <Compile Include="Routing\RoutingRestService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="Osm.Core">
-      <HintPath>..\Lib\Osm.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Osm.Data.Core">
-      <HintPath>..\Lib\Osm.Data.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Osm.Data.PBF">
-      <HintPath>..\Lib\Osm.Data.PBF.dll</HintPath>
-    </Reference>
-    <Reference Include="Osm.Routing">
-      <HintPath>..\Lib\Osm.Routing.dll</HintPath>
-    </Reference>
-    <Reference Include="Routing.CH">
-      <HintPath>..\Lib\Routing.CH.dll</HintPath>
-    </Reference>
-    <Reference Include="Routing.Core">
-      <HintPath>..\Lib\Routing.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Routing.Core.TSP">
-      <HintPath>..\Lib\Routing.Core.TSP.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack, Version=3.9.25.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack">
       <HintPath>..\packages\ServiceStack.3.9.25\lib\net35\ServiceStack.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Common, Version=3.9.25.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.Common">
       <HintPath>..\packages\ServiceStack.Common.3.9.25\lib\net35\ServiceStack.Common.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Interfaces, Version=3.9.25.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.Interfaces">
       <HintPath>..\packages\ServiceStack.Common.3.9.25\lib\net35\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack.ServiceInterface">
       <HintPath>..\packages\ServiceStack.3.9.25\lib\net35\ServiceStack.ServiceInterface.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Text, Version=3.9.27.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="ServiceStack.Text">
       <HintPath>..\packages\ServiceStack.Text.3.9.27\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.configuration" />
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="Tools.Core">
-      <HintPath>..\Lib\Tools.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Tools.GeoCoding">
-      <HintPath>..\Lib\Tools.GeoCoding.dll</HintPath>
-    </Reference>
-    <Reference Include="Tools.GeoCoding.Custom">
-      <HintPath>..\Lib\Tools.GeoCoding.Custom.dll</HintPath>
-    </Reference>
-    <Reference Include="Tools.Math">
-      <HintPath>..\Lib\Tools.Math.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharpService.Core\OsmSharpService.Core.csproj">
+      <Project>{4F4F1276-1617-4643-849A-BF3AD1F91222}</Project>
+      <Name>OsmSharpService.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

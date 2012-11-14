@@ -10,16 +10,16 @@ namespace OsmSharpService.Core.Routing
     /// <summary>
     /// Routing service implementation.
     /// </summary>
-    public class RoutingRestService : IService<RoutingResource>
+    public class RoutingRestService : IService<RoutingOperation>
     {
         /// <summary>
         /// Executes the request.
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public object Execute(RoutingResource request)
+        public object Execute(RoutingOperation request)
         {
-            return null;
+            return RoutingOperationProcessor.GetInstance().ProcessRoutingResource(request);
         }
     }
 }

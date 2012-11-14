@@ -1,6 +1,6 @@
 ﻿namespace OsmSharpService.WindowsService
 {
-    partial class OsmSharpService
+    partial class OsmSharpServiceDebugger
     {
         /// <summary> 
         /// Required designer variable.
@@ -28,11 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            // 
-            // OsmSharpService
-            // 
-            this.ServiceName = "OsmSharpService";
-
+            components = new System.ComponentModel.Container();
+            this.ServiceName = "OsmSharpServiceDebugger";
         }
 
         #endregion

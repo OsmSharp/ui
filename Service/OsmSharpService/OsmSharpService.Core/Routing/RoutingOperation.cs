@@ -11,18 +11,36 @@ namespace OsmSharpService.Core.Routing
     /// Routing resource; tells the services what to route.
     /// </summary>
     [Route("/routing", "GET,POST,PUT,OPTIONS")]
-    [DataContract]
-    public class RoutingResource
+    public class RoutingOperation
     {
+        /// <summary>
+        /// Holds the routing resource type.
+        /// </summary>
+        public RoutingOperationType Type { get; set; }
+
         /// <summary>
         /// The hooks for the router to route on.
         /// </summary>
         public RoutingHook[] Hooks { get; set; }
+    }
 
+    /// <summary>
+    /// Represents the type of resource requested.
+    /// </summary>
+    public enum RoutingOperationType
+    {
         /// <summary>
-        /// Returns only the weights when true.
+        /// Returns a route along all the points.
         /// </summary>
-        public bool OnlyWeights { get; set; }
+        Regular,
+        /// <summary>
+        /// Returns a shortest route along all the points.
+        /// </summary>
+        TSP,
+        /// <summary>
+        /// Returns all the weights between the given points.
+        /// </summary>
+        ManyToMany
     }
 
     /// <summary>
