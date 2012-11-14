@@ -1,0 +1,148 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tools.Xml</name>
+    </assembly>
+    <members>
+        <member name="T:Tools.Xml.Sources.XmlFileSource">
+            <summary>
+            Represents an xml source for a file.
+            </summary>
+        </member>
+        <member name="T:Tools.Xml.IXmlSource">
+            <summary>
+            Reprents an xml source.
+            </summary>
+        </member>
+        <member name="M:Tools.Xml.IXmlSource.GetReader">
+            <summary>
+            Returns the reader for this xml source.
+            </summary>
+        </member>
+        <member name="M:Tools.Xml.IXmlSource.GetWriter">
+            <summary>
+            Returns a write for this xml source.
+            </summary>
+        </member>
+        <member name="M:Tools.Xml.IXmlSource.Close">
+            <summary>
+            Closes the xml source.
+            </summary>
+        </member>
+        <member name="P:Tools.Xml.IXmlSource.Name">
+            <summary>
+            Returns the name of this xml source.
+            </summary>
+        </member>
+        <member name="P:Tools.Xml.IXmlSource.IsReadOnly">
+            <summary>
+            Returns true if the xml source is readonly.
+            </summary>
+        </member>
+        <member name="P:Tools.Xml.IXmlSource.HasData">
+            <summary>
+            Returns true if the source has data.
+            </summary>
+        </member>
+        <member name="F:Tools.Xml.Sources.XmlFileSource._file">
+            <summary>
+            The reference to the file.
+            </summary>
+        </member>
+        <member name="M:Tools.Xml.Sources.XmlFileSource.#ctor(System.String)">
+            <summary>
+            Creates a new xml file source.
+            </summary>
+            <param name="filename"></param>
+        </member>
+        <member name="M:Tools.Xml.Sources.XmlFileSource.#ctor(System.IO.FileInfo)">
+            <summary>
+            Creates a new xml file source.
+            </summary>
+            <param name="file"></param>
+        </member>
+        <member name="M:Tools.Xml.Sources.XmlFileSource.GetReader">
+            <summary>
+            Returns an xml reader.
+            </summary>
+        </member>
+        <member name="M:Tools.Xml.Sources.XmlFileSource.GetWriter">
+            <summary>
+            Returns an xml writer.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Xml.Sources.XmlFileSource.Close">
+            <summary>
+            Closes this file source.
+            </summary>
+        </member>
+        <member name="P:Tools.Xml.Sources.XmlFileSource.IsReadOnly">
+            <summary>
+            Returns true if this file source is readonly.
+            </summary>
+        </member>
+        <member name="P:Tools.Xml.Sources.XmlFileSource.HasData">
+            <summary>
+            Returns true if the file source has data.
+            </summary>
+        </member>
+        <member name="P:Tools.Xml.Sources.XmlFileSource.Name">
+            <summary>
+            Returns the name of the file source.
+            </summary>
+        </member>
+        <member name="T:Tools.Xml.Sources.XmlReaderSource">
+            <summary>
+            Class implementing an xml reader source.
+            </summary>
+        </member>
+        <member name="F:Tools.Xml.Sources.XmlReaderSource._reader">
+            <summary>
+            The string source.
+            </summary>
+        </member>
+        <member name="M:Tools.Xml.Sources.XmlReaderSource.#ctor(System.Xml.XmlReader)">
+            <summary>
+            Creates a new xml reader source.
+            </summary>
+            <param name="source"></param>
+        </member>
+        <member name="M:Tools.Xml.Sources.XmlReaderSource.GetReader">
+            <summary>
+            Returns an xml reader.
+            </summary>
+        </member>
+        <member name="M:Tools.Xml.Sources.XmlReaderSource.GetWriter">
+            <summary>
+            Returns an xml writer.
+            </summary>
+        </member>
+        <member name="T:Tools.Xml.Sources.XmlStringSource">
+            <summary>
+            Class implementing an xml source.
+            </summary>
+        </member>
+        <member name="F:Tools.Xml.Sources.XmlStringSource._source">
+            <summary>
+            The string source.
+            </summary>
+        </member>
+        <member name="M:Tools.Xml.Sources.XmlStringSource.#ctor(System.String)">
+            <summary>
+            Creates a new xml string source.
+            </summary>
+            <param name="source"></param>
+        </member>
+        <member name="M:Tools.Xml.Sources.XmlStringSource.GetReader">
+            <summary>
+            Returns an xml reader.
+            </summary>
+        </member>
+        <member name="M:Tools.Xml.Sources.XmlStringSource.GetWriter">
+            <summary>
+            Returns an xml writer.
+            </summary>
+        </member>
+    </members>
+</doc>

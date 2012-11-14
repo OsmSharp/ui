@@ -1,0 +1,467 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Osm.Routing</name>
+    </assembly>
+    <members>
+        <member name="T:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1">
+            <summary>
+            Data Processor Target to fill a dynamic graph object.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1._dynamic_graph">
+            <summary>
+            Holds the dynamic graph.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1._interpreter">
+            <summary>
+            The interpreter for osm data.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1._tags_index">
+            <summary>
+            Holds the tags index.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1._pre_index_mode">
+            <summary>
+            True when this target is in pre-index mode.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1._box">
+            <summary>
+            The bounding box to limit nodes if any.
+            </summary>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.#ctor(Routing.Core.Graph.IDynamicGraph{`0},Routing.Core.Interpreter.IRoutingInterpreter)">
+            <summary>
+            Creates a new processor target.
+            </summary>
+            <param name="dynamic_graph">The graph that will be filled.</param>
+            <param name="interpreter">The interpreter to generate the edge data.</param>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.#ctor(Routing.Core.Graph.IDynamicGraph{`0},Routing.Core.Interpreter.IRoutingInterpreter,Tools.Math.ITagsIndex)">
+            <summary>
+            Creates a new processor target.
+            </summary>
+            <param name="dynamic_graph">The graph that will be filled.</param>
+            <param name="interpreter">The interpreter to generate the edge data.</param>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.#ctor(Routing.Core.Graph.IDynamicGraph{`0},Routing.Core.Interpreter.IRoutingInterpreter,Tools.Math.ITagsIndex,System.Collections.Generic.IDictionary{System.Int64,System.UInt32})">
+            <summary>
+            Creates a new processor target.
+            </summary>
+            <param name="dynamic_graph">The graph that will be filled.</param>
+            <param name="interpreter">The interpreter to generate the edge data.</param>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.#ctor(Routing.Core.Graph.IDynamicGraph{`0},Routing.Core.Interpreter.IRoutingInterpreter,Tools.Math.ITagsIndex,System.Collections.Generic.IDictionary{System.Int64,System.UInt32},Tools.Math.Geo.GeoCoordinateBox)">
+            <summary>
+            Creates a new processor target.
+            </summary>
+            <param name="dynamic_graph">The graph that will be filled.</param>
+            <param name="interpreter">The interpreter to generate the edge data.</param>
+        </member>
+        <member name="F:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1._coordinates">
+            <summary>
+            Holds the coordinates.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1._pre_index">
+            <summary>
+            Holds the index of all relevant nodes.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1._id_transformations">
+            <summary>
+            Holds the id transformations.
+            </summary>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.Initialize">
+            <summary>
+            Initializes the processing.
+            </summary>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.ApplyChange(Osm.Core.Simple.SimpleChangeSet)">
+            <summary>
+            Applies the changes in the changeset.
+            </summary>
+            <param name="change"></param>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.AddNode(Osm.Core.Simple.SimpleNode)">
+            <summary>
+            Adds the given node.
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="F:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1._used_twice_or_more">
+            <summary>
+            Holds a list of nodes used twice or more.
+            </summary>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.AddWay(Osm.Core.Simple.SimpleWay)">
+            <summary>
+            Adds a given way.
+            </summary>
+            <param name="way"></param>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.AddRoadNode(System.Int64)">
+            <summary>
+            Adds a node that is at least part of one road.
+            </summary>
+            <param name="node_id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.AddRoadEdge(System.Collections.Generic.IDictionary{System.String,System.String},System.Boolean,System.UInt32,System.UInt32)">
+            <summary>
+            Adds an edge.
+            </summary>
+            <param name="from"></param>
+            <param name="to"></param>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.CalculateEdgeData(Routing.Core.Interpreter.Roads.IEdgeInterpreter,Tools.Math.ITagsIndex,System.Collections.Generic.IDictionary{System.String,System.String},System.Boolean,Tools.Math.Geo.GeoCoordinate,Tools.Math.Geo.GeoCoordinate)">
+            <summary>
+            Calculates the edge data.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.AddRelation(Osm.Core.Simple.SimpleRelation)">
+            <summary>
+            Adds a given relation.
+            </summary>
+            <param name="relation"></param>
+        </member>
+        <member name="P:Osm.Routing.Data.Processing.DynamicGraphDataProcessorTarget`1.TagsIndex">
+            <summary>
+            Returns the tags index.
+            </summary>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.OsmEdgeDataGraphProcessingTarget.#ctor(Routing.Core.Graph.IDynamicGraph{Osm.Routing.Data.OsmEdgeData},Routing.Core.Interpreter.IRoutingInterpreter,Tools.Math.ITagsIndex)">
+            <summary>
+            Creates a new osm edge data processing target.
+            </summary>
+            <param name="dynamic_graph"></param>
+            <param name="interpreter"></param>
+            <param name="tags_index"></param>
+            <param name="id_transformations"></param>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.OsmEdgeDataGraphProcessingTarget.#ctor(Routing.Core.Graph.IDynamicGraph{Osm.Routing.Data.OsmEdgeData},Routing.Core.Interpreter.IRoutingInterpreter,Tools.Math.ITagsIndex,System.Collections.Generic.IDictionary{System.Int64,System.UInt32})">
+            <summary>
+            Creates a new osm edge data processing target.
+            </summary>
+            <param name="dynamic_graph"></param>
+            <param name="interpreter"></param>
+            <param name="tags_index"></param>
+            <param name="id_transformations"></param>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.OsmEdgeDataGraphProcessingTarget.#ctor(Routing.Core.Graph.IDynamicGraph{Osm.Routing.Data.OsmEdgeData},Routing.Core.Interpreter.IRoutingInterpreter,Tools.Math.ITagsIndex,Tools.Math.Geo.GeoCoordinateBox)">
+            <summary>
+            Creates a new osm edge data processing target.
+            </summary>
+            <param name="dynamic_graph"></param>
+            <param name="interpreter"></param>
+            <param name="tags_index"></param>
+            <param name="id_transformations"></param>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.OsmEdgeDataGraphProcessingTarget.#ctor(Routing.Core.Graph.IDynamicGraph{Osm.Routing.Data.OsmEdgeData},Routing.Core.Interpreter.IRoutingInterpreter,Tools.Math.ITagsIndex,System.Collections.Generic.IDictionary{System.Int64,System.UInt32},Tools.Math.Geo.GeoCoordinateBox)">
+            <summary>
+            Creates a new osm edge data processing target.
+            </summary>
+            <param name="dynamic_graph"></param>
+            <param name="interpreter"></param>
+            <param name="tags_index"></param>
+            <param name="id_transformations"></param>
+        </member>
+        <member name="M:Osm.Routing.Data.Processing.OsmEdgeDataGraphProcessingTarget.CalculateEdgeData(Routing.Core.Interpreter.Roads.IEdgeInterpreter,Tools.Math.ITagsIndex,System.Collections.Generic.IDictionary{System.String,System.String},System.Boolean,Tools.Math.Geo.GeoCoordinate,Tools.Math.Geo.GeoCoordinate)">
+            <summary>
+            Calculates edge data.
+            </summary>
+            <param name="tags"></param>
+            <param name="direction_forward"></param>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Osm.Routing.Data.Source.OsmSourceRouterDataSource">
+            <summary>
+            A Dynamic graph with extended possibilities to allow resolving points.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Source.OsmSourceRouterDataSource._source">
+            <summary>
+            Holds the data source.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Source.OsmSourceRouterDataSource._data_cache">
+            <summary>
+            Holds a cache of data.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Source.OsmSourceRouterDataSource._tags_index">
+            <summary>
+            Holds the tags index.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Source.OsmSourceRouterDataSource._interpreter">
+            <summary>
+            Holds the edge interpreter.
+            </summary>
+        </member>
+        <member name="M:Osm.Routing.Data.Source.OsmSourceRouterDataSource.#ctor(Routing.Core.Interpreter.IRoutingInterpreter,Tools.Math.ITagsIndex,Osm.Data.IDataSourceReadOnly)">
+            <summary>
+            Creates a OSM dynamic graph.
+            </summary>
+            <param name="source"></param>
+        </member>
+        <member name="M:Osm.Routing.Data.Source.OsmSourceRouterDataSource.GetArcs(Tools.Math.Geo.GeoCoordinateBox)">
+            <summary>
+            Returns all arcs with a given bounding box.
+            </summary>
+            <param name="box"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Data.Source.OsmSourceRouterDataSource.GetVertex(System.UInt32,System.Single@,System.Single@)">
+            <summary>
+            Returns true if the vertex is found.
+            </summary>
+            <param name="id"></param>
+            <param name="latitude"></param>
+            <param name="longitude"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Data.Source.OsmSourceRouterDataSource.GetVertices">
+            <summary>
+            Not supported.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Data.Source.OsmSourceRouterDataSource.GetArcs(System.UInt32)">
+            <summary>
+            Returns all the arcs for a given vertex.
+            </summary>
+            <param name="vertex"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Osm.Routing.Data.Source.OsmSourceRouterDataSource._zoom">
+            <summary>
+            The zoom level to cache at.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Source.OsmSourceRouterDataSource._use_loaded_set">
+            <summary>
+            When true uses a hashset to prevent duplicate calculations.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Source.OsmSourceRouterDataSource._loaded_tiles">
+            <summary>
+            Holds an index of all loaded tiles.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Source.OsmSourceRouterDataSource._loaded_vertices">
+            <summary>
+            Holds an index of all vertices that have been validated with loaded tiles.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.Source.OsmSourceRouterDataSource._id_tranformations">
+            <summary>
+            Holds the id tranformations.
+            </summary>
+        </member>
+        <member name="M:Osm.Routing.Data.Source.OsmSourceRouterDataSource.LoadMissingIfNeeded(System.Int64,System.Single,System.Single)">
+            <summary>
+            Load the missing tile this vertex is in if needed.
+            </summary>
+            <param name="vertex"></param>
+        </member>
+        <member name="M:Osm.Routing.Data.Source.OsmSourceRouterDataSource.LoadMissingIfNeeded(Tools.Math.Geo.GeoCoordinateBox)">
+            <summary>
+            Loads missing tiles for the bounding box if needed.
+            </summary>
+            <param name="box"></param>
+        </member>
+        <member name="M:Osm.Routing.Data.Source.OsmSourceRouterDataSource.LoadTile(Osm.Core.Tile)">
+            <summary>
+            Loads data located in a tile.
+            </summary>
+            <param name="tile"></param>
+        </member>
+        <member name="P:Osm.Routing.Data.Source.OsmSourceRouterDataSource.TagsIndex">
+            <summary>
+            Returns the tags index.
+            </summary>
+        </member>
+        <member name="P:Osm.Routing.Data.Source.OsmSourceRouterDataSource.VertexCount">
+            <summary>
+            Returns the number of vertices currently in this graph.
+            </summary>
+        </member>
+        <member name="T:Osm.Routing.Data.OsmEdgeData">
+            <summary>
+            Basic OSM edge data.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.OsmEdgeData._weight">
+            <summary>
+            Holds the weight of this edge.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.OsmEdgeData._tags">
+            <summary>
+            Holds the tags of this edge.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.OsmEdgeData._forward">
+            <summary>
+            Holds the forward flag.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Data.OsmEdgeData._backward">
+            <summary>
+            Holds the backward flag.
+            </summary>
+        </member>
+        <member name="M:Osm.Routing.Data.OsmEdgeData.#ctor(System.Single,System.Boolean,System.Boolean,System.UInt32)">
+            <summary>
+            Creates a new osm edge data object.
+            </summary>
+            <param name="weight"></param>
+            <param name="forward"></param>
+            <param name="backward"></param>
+            <param name="tags"></param>
+        </member>
+        <member name="P:Osm.Routing.Data.OsmEdgeData.Forward">
+            <summary>
+            Returns true if the edge is traversable forward.
+            </summary>
+        </member>
+        <member name="P:Osm.Routing.Data.OsmEdgeData.Backward">
+            <summary>
+            Returns true if the edge is traversable backward.
+            </summary>
+        </member>
+        <member name="P:Osm.Routing.Data.OsmEdgeData.Weight">
+            <summary>
+            Returns the weight of this edge.
+            </summary>
+        </member>
+        <member name="P:Osm.Routing.Data.OsmEdgeData.Tags">
+            <summary>
+            Returns the tags of this edge.
+            </summary>
+        </member>
+        <member name="P:Osm.Routing.Data.OsmEdgeData.IsVirtual">
+            <summary>
+            These edge can always be resolved on.
+            </summary>
+        </member>
+        <member name="T:Osm.Routing.Interpreter.OsmRoutingInterpreter">
+            <summary>
+            A routing interpreter for OSM data.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Interpreter.OsmRoutingInterpreter._edge_interpreter">
+            <summary>
+            Holds the edge interpreter.
+            </summary>
+        </member>
+        <member name="F:Osm.Routing.Interpreter.OsmRoutingInterpreter._constraints">
+            <summary>
+            Holds the routing constraints.
+            </summary>
+        </member>
+        <member name="M:Osm.Routing.Interpreter.OsmRoutingInterpreter.#ctor">
+            <summary>
+            Creates a new routing intepreter with default settings.
+            </summary>
+        </member>
+        <member name="M:Osm.Routing.Interpreter.OsmRoutingInterpreter.CanBeTraversed(System.UInt32,System.UInt32,System.UInt32)">
+            <summary>
+            Returns true if the given vertices can be traversed in the given order.
+            </summary>
+            <param name="from"></param>
+            <param name="along"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Osm.Routing.Interpreter.OsmRoutingInterpreter.EdgeInterpreter">
+            <summary>
+            Returns and edge interpreter.
+            </summary>
+        </member>
+        <member name="P:Osm.Routing.Interpreter.OsmRoutingInterpreter.Constraints">
+            <summary>
+            Returns the constraints.
+            </summary>
+        </member>
+        <member name="T:Osm.Routing.Interpreter.Edge.EdgeInterpreter">
+            <summary>
+            Default edge interpreter.
+            </summary>
+        </member>
+        <member name="M:Osm.Routing.Interpreter.Edge.EdgeInterpreter.#ctor">
+            <summary>
+            Creates a new edge interpreter.
+            </summary>
+            <param name="vehicle"></param>
+        </member>
+        <member name="M:Osm.Routing.Interpreter.Edge.EdgeInterpreter.CanBeTraversedBy(System.Collections.Generic.IDictionary{System.String,System.String},Routing.Core.VehicleEnum)">
+            <summary>
+            Returns true if the edge with the given tags can be traversed by the given vehicle.
+            </summary>
+            <param name="tags"></param>
+            <param name="vehicle"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Interpreter.Edge.EdgeInterpreter.IsOnlyLocalAccessible(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Returns true if the edge with the given tags is only accessible locally.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Interpreter.Edge.EdgeInterpreter.Weight(System.Collections.Generic.IDictionary{System.String,System.String},Routing.Core.VehicleEnum,Tools.Math.Geo.GeoCoordinate,Tools.Math.Geo.GeoCoordinate)">
+            <summary>
+            Returns the weight between two points on an edge with the given tags for the given vehicle.
+            </summary>
+            <param name="tags"></param>
+            <param name="vehicle"></param>
+            <param name="from"></param>
+            <param name="to"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Interpreter.Edge.EdgeInterpreter.IsRoutable(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Returns true if the edge with the given tags is routable.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Interpreter.Edge.EdgeInterpreter.IsOneWay(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Returns true if the edge is one way forward, false if backward, null if bidirectional.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Interpreter.Edge.EdgeInterpreter.MaxSpeed(System.Collections.Generic.IDictionary{System.String,System.String},Routing.Core.VehicleEnum)">
+            <summary>
+            Returns the maximum speed.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Interpreter.Edge.EdgeInterpreter.GetName(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Returns the name of a given way.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Osm.Routing.Interpreter.Edge.EdgeInterpreter.GetNamesInAllLanguages(System.Collections.Generic.IDictionary{System.String,System.String})">
+            <summary>
+            Returns all the names in all languages and alternatives.
+            </summary>
+            <param name="tags"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

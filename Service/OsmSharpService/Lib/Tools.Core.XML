@@ -1,0 +1,623 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Tools.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Tools.Core.Progress.IProgressEnabled">
+            <summary>
+            Interface for progress enabled objects.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Progress.IProgressEnabled.RegisterProgressReporter(Tools.Core.Progress.IProgressReporter)">
+            <summary>
+            Registers a progress reporter to recieve progress.
+            </summary>
+            <param name="reporter"></param>
+        </member>
+        <member name="M:Tools.Core.Progress.IProgressEnabled.UnRegisterProgressReporter(Tools.Core.Progress.IProgressReporter)">
+            <summary>
+            Unregisters a progress reporter.
+            </summary>
+            <param name="reporter"></param>
+        </member>
+        <member name="T:Tools.Core.Progress.ProgressStatus">
+            <summary>
+            Status object reporting progress information.
+            </summary>
+        </member>
+        <member name="T:Tools.Core.DelimitedFiles.IDelimitedFormat">
+            <summary>
+            Provides an interface to enable a custom format for the delimited files.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.DelimitedFiles.IDelimitedFormat.ConvertValue(System.String,System.Object)">
+            <summary>
+            Converts a value in a given field to another value.
+            </summary>
+            <param name="field"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.DelimitedFiles.IDelimitedFormat.DoExport(System.Int32,System.String)">
+            <summary>
+            Returns true if the column has to be exported.
+            </summary>
+            <param name="index"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Tools.Core.Progress.IProgressReporter">
+            <summary>
+            Implemented on objects that can report progress to users or to another part of the application.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Progress.IProgressReporter.Report(Tools.Core.Progress.ProgressStatus)">
+            <summary>
+            Reports a status to the progress reporter.
+            </summary>
+            <param name="status"></param>
+        </member>
+        <member name="T:Tools.Core.Progress.EmptyProgressReporter">
+            <summary>
+            An empty progress reporter to use when not progress needs to be reported.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Progress.EmptyProgressReporter.#ctor">
+            <summary>
+            Constructs a new empty progress reporter.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Progress.EmptyProgressReporter.Report(Tools.Core.Progress.ProgressStatus)">
+            <summary>
+            Reports progress to this reporter.
+            </summary>
+            <param name="status"></param>
+        </member>
+        <member name="P:Tools.Core.Progress.EmptyProgressReporter.Instance">
+            <summary>
+            Returns an instance 
+            </summary>
+        </member>
+        <member name="T:Tools.Core.Output.IOutputStream">
+            <summary>
+            Interface representing a listener that can be used to listen to output.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Output.IOutputStream.WriteLine(System.String)">
+            <summary>
+            Writes a line of text to the output stream.
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="M:Tools.Core.Output.IOutputStream.Write(System.String)">
+            <summary>
+            Writes text to the output stream.
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="M:Tools.Core.Output.IOutputStream.ReportProgress(System.Double,System.String,System.String)">
+            <summary>
+            Reports progress to the output stream.
+            </summary>
+            <param name="progress"></param>
+            <param name="key"></param>
+            <param name="message"></param>
+        </member>
+        <member name="T:Tools.Core.Collections.ObjectTable`1">
+            <summary>
+            A stringtable containing and index of strings to reduce memory usage.
+            </summary>
+        </member>
+        <member name="F:Tools.Core.Collections.ObjectTable`1._strings">
+            <summary>
+            The array containing all strings.
+            </summary>
+        </member>
+        <member name="F:Tools.Core.Collections.ObjectTable`1._reverse_index">
+            <summary>
+            A dictionary containing the index of each string.
+            </summary>
+        </member>
+        <member name="F:Tools.Core.Collections.ObjectTable`1._init_capacity">
+            <summary>
+            Holds the initial capacity and is also used as an allocation step.
+            </summary>
+        </member>
+        <member name="F:Tools.Core.Collections.ObjectTable`1._next_idx">
+            <summary>
+            Holds the next idx.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.ObjectTable`1.#ctor(System.Boolean)">
+            <summary>
+            Creates a new string table.
+            </summary>
+            <param name="reverse_index">The reverse index is enable if true.</param>
+        </member>
+        <member name="M:Tools.Core.Collections.ObjectTable`1.#ctor(System.Boolean,System.Int32)">
+            <summary>
+            Creates a new string table.
+            </summary>
+            <param name="reverse_index">The reverse index is enable if true.</param>
+        </member>
+        <member name="M:Tools.Core.Collections.ObjectTable`1.BuildReverseIndex">
+            <summary>
+            Builds the reverse index.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.ObjectTable`1.DropReverseIndex">
+            <summary>
+            Drops the reverse index.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.ObjectTable`1.Add(`0)">
+            <summary>
+            Returns an index for the given string.
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Collections.ObjectTable`1.Get(System.UInt32)">
+            <summary>
+            Returns a string given it's encoded index.
+            </summary>
+            <param name="value_idx"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Tools.Core.Collections.LimitedStack`1">
+            <summary>
+            Class implementing a thread-safe limited stack.
+            
+            When the limit is reached the oldest element will be removed.
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
+        <member name="F:Tools.Core.Collections.LimitedStack`1._elements">
+            <summary>
+            Containts the list of elements in this queue.
+            </summary>
+        </member>
+        <member name="F:Tools.Core.Collections.LimitedStack`1._limit">
+            <summary>
+            The limit to the size of this queue.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.LimitedStack`1.#ctor">
+            <summary>
+            Creates a new limited stack with a limit of 10.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.LimitedStack`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Creates a new limited stack with a limit of 10.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.LimitedStack`1.#ctor(System.Int32)">
+            <summary>
+            Creates a new limited stack with a limit of 10.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.LimitedStack`1.Clear">
+            <summary>
+            Clears the elements from this stack.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.LimitedStack`1.Contains(`0)">
+            <summary>
+            Returns true if this stack contains the item.
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Collections.LimitedStack`1.Pop">
+            <summary>
+            Pops the top element from the stack.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Collections.LimitedStack`1.Push(`0)">
+            <summary>
+            Pushes an item on the stack.
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:Tools.Core.Collections.LimitedStack`1.PushToTop(`0)">
+            <summary>
+            Moves an item to the top of the stack if it already exists.
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:Tools.Core.Collections.LimitedStack`1.Peek">
+            <summary>
+            Returns the top element without popping it.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Tools.Core.Collections.LimitedStack`1.Count">
+            <summary>
+            Returns the number of elements in this stack.
+            </summary>
+        </member>
+        <member name="P:Tools.Core.Collections.LimitedStack`1.Limit">
+            <summary>
+            The maximum amount of elements in this queue.
+            </summary>
+        </member>
+        <member name="P:Tools.Core.Cache.LRUCache`2.CacheEntry`1.Id">
+            <summary>
+            The id of the object.
+            </summary>
+        </member>
+        <member name="P:Tools.Core.Cache.LRUCache`2.CacheEntry`1.Value">
+            <summary>
+            The object being cached.
+            </summary>
+        </member>
+        <member name="T:Tools.Core.Collections.StringTableDictionary`1">
+            <summary>
+            A dictionary that uses a string table behind.
+            </summary>
+        </member>
+        <member name="F:Tools.Core.Collections.StringTableDictionary`1._string_table">
+            <summary>
+            Holds the string table.
+            </summary>
+        </member>
+        <member name="F:Tools.Core.Collections.StringTableDictionary`1._dictionary">
+            <summary>
+            The dictionary behind.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.#ctor(Tools.Core.Collections.ObjectTable{`0})">
+            <summary>
+            Creates a new dictionary.
+            </summary>
+            <param name="string_table"></param>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.Add(`0,`0)">
+            <summary>
+            Adds key-value pair of strings.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.ContainsKey(`0)">
+            <summary>
+            Returns true if the given key is present.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.Remove(`0)">
+            <summary>
+            Removes a value with the given key from this dictionary.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.TryGetValue(`0,`0@)">
+            <summary>
+            Tries to get a value from this dictionary.
+            </summary>
+            <param name="key"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.Add(System.Collections.Generic.KeyValuePair{`0,`0})">
+            <summary>
+            Adds a key value pair.
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.Clear">
+            <summary>
+            Clears all content from this dictionary.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.Contains(System.Collections.Generic.KeyValuePair{`0,`0})">
+            <summary>
+            Returns true if the given key value pair is contained in this dictionary.
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.CopyTo(System.Collections.Generic.KeyValuePair{`0,`0}[],System.Int32)">
+            <summary>
+            Copies all objects 
+            </summary>
+            <param name="array"></param>
+            <param name="arrayIndex"></param>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.Remove(System.Collections.Generic.KeyValuePair{`0,`0})">
+            <summary>
+            Removes an item.
+            </summary>
+            <param name="item"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.GetEnumerator">
+            <summary>
+            Returns a enumerator for this dictionary.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Collections.StringTableDictionary`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns a enumerator for this dictionary.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Tools.Core.Collections.StringTableDictionary`1.Keys">
+            <summary>
+            Returns a collection of keys.
+            </summary>
+        </member>
+        <member name="P:Tools.Core.Collections.StringTableDictionary`1.Values">
+            <summary>
+            Returns all values in this dictionary.
+            </summary>
+        </member>
+        <member name="P:Tools.Core.Collections.StringTableDictionary`1.Item(`0)">
+            <summary>
+            Gets/sets a value.
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Tools.Core.Collections.StringTableDictionary`1.Count">
+            <summary>
+            Returns the number of objects in this collection.
+            </summary>
+        </member>
+        <member name="P:Tools.Core.Collections.StringTableDictionary`1.IsReadOnly">
+            <summary>
+            This dictionary is not readonly.
+            </summary>
+        </member>
+        <member name="T:Tools.Core.Collections.SortedSet`1">
+            <summary>
+            Represents a strongly typed list of objects that will be sorted using the IComparable interface.
+            </summary>
+            <typeparam name="T">The type of the elements in the list.</typeparam>
+        </member>
+        <member name="F:Tools.Core.Collections.SortedSet`1._elements">
+            <summary>
+            The list containing the elements.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.SortedSet`1.#ctor">
+            <summary>
+            Creates a new sorted set.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.SortedSet`1.Add(`0)">
+            <summary>
+            Adds an item to the <see cref="T:Tools.Core.Collections.SortedSet`1"/>.
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:Tools.Core.Collections.SortedSet`1.Clear">
+            <summary>
+            Removes all items from the <see cref="T:Tools.Core.Collections.SortedSet`1"/>.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.SortedSet`1.Contains(`0)">
+            <summary>
+            Determines whether the <see cref="T:Tools.Core.Collections.SortedSet`1"/> contains
+                a specific value.
+            </summary>
+            <param name="item">The object to locate in the <see cref="T:Tools.Core.Collections.SortedSet`1"/>.</param>
+            <returns>true if item is found in the <see cref="T:Tools.Core.Collections.SortedSet`1"/>; otherwise,
+                false.</returns>
+        </member>
+        <member name="M:Tools.Core.Collections.SortedSet`1.CopyTo(`0[],System.Int32)">
+            <summary>
+            Copies the elements of the <see cref="T:Tools.Core.Collections.SortedSet`1"/> to an
+                System.Array, starting at a particular System.Array index.
+            </summary>
+            <param name="array">The one-dimensional System.Array that is the destination of the elements
+                copied from <see cref="T:Tools.Core.Collections.SortedSet`1"/>. The System.Array must
+                have zero-based indexing.</param>
+            <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
+        </member>
+        <member name="M:Tools.Core.Collections.SortedSet`1.Remove(`0)">
+            <summary>
+            Removes the first occurrence of a specific object from the <see cref="T:Tools.Core.Collections.SortedSet`1"/>.
+            </summary>
+            <param name="item">The object to remove from the <see cref="T:Tools.Core.Collections.SortedSet`1"/>.</param>
+            <returns>true if item was successfully removed from the <see cref="T:Tools.Core.Collections.SortedSet`1"/>;
+                otherwise, false. This method also returns false if item is not found in
+                the original <see cref="T:Tools.Core.Collections.SortedSet`1"/>.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "M:Tools.Core.Collections.SortedSet`1.GetEnumerator" -->
+        <member name="M:Tools.Core.Collections.SortedSet`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>An System.Collections.IEnumerator object that can be used to iterate through
+                the collection.</returns>
+        </member>
+        <member name="P:Tools.Core.Collections.SortedSet`1.Count">
+            <summary>
+            Gets the number of elements contained in the <see cref="T:Tools.Core.Collections.SortedSet`1"/>.
+            </summary>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:Tools.Core.Collections.SortedSet`1.IsReadOnly" -->
+        <member name="T:Tools.Core.Utilities">
+            <summary>
+            Class containing some utilities and extension methods.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Utilities.Remove``1(``0[],``0)">
+            <summary>
+            Removes one element from an array and returns the result.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="array"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Utilities.Add``1(``0[],``0)">
+            <summary>
+            Removes one element from an array and returns the result.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="array"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Utilities.AddRange``1(``0[],System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Removes one element from an array and returns the result.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="array"></param>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Utilities.EqualValues``1(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Tests two IEnumerables for equal values and equal count.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="self"></param>
+            <param name="items"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Utilities.Shuffle``1(System.Collections.Generic.IList{``0})">
+            <summary>
+            Shuffles the list using Fisher-Yates shuffle.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="list"></param>
+        </member>
+        <member name="M:Tools.Core.Utilities.RandomString(System.Int32)">
+            <summary>
+            Generates a random string.
+            </summary>
+            <param name="length"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Utilities.FromUnixTime(System.Int64)">
+            <summary>
+            Converts a number of milliseconds from 1/1/1970 into a standard DateTime.
+            </summary>
+            <param name="unixTime"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.Utilities.ToUnixTime(System.DateTime)">
+            <summary>
+            Converts a standard DateTime into the number of milliseconds since 1/1/1970.
+            </summary>
+            <param name="date"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Tools.Core.DelimitedFiles.DefaultDelimitedFormat">
+            <summary>
+            Describes a default delimiter format that leaves all data intact and 
+            exports all columns.
+            </summary>
+        </member>
+        <member name="T:Tools.Core.Collections.DictionaryProxy`2">
+            <summary>
+            Proxy class to permit XML Serialization of generic dictionaries
+            </summary>
+            <typeparam name="K">The type of the key</typeparam>
+            <typeparam name="V">The type of the value</typeparam>
+        </member>
+        <member name="M:Tools.Core.Collections.DictionaryProxy`2.#ctor">
+            <summary>
+            Default constructor so deserialization works
+            </summary>
+        </member>
+        <member name="M:Tools.Core.Collections.DictionaryProxy`2.ToDictionary">
+            <summary>
+            Convenience method to return a dictionary from this proxy instance
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Tools.Core.Collections.DictionaryProxy`2.Original">
+            <summary>
+            Use to set the dictionary if necessary, but don't serialize
+            </summary>
+        </member>
+        <member name="P:Tools.Core.Collections.DictionaryProxy`2.KeysAndValues">
+            <remarks>
+            XmlElementAttribute is used to prevent extra nesting level. It's
+            not necessary.
+            </remarks>
+        </member>
+        <member name="T:Tools.Core.Collections.DictionaryProxy`2.KeyAndValue">
+            <summary>
+            Holds the keys and values
+            </summary>
+        </member>
+        <member name="T:Tools.Core.DelimitedFiles.DelimiterType">
+            <summary>
+            The type of delimiter in a delimited file.
+            </summary>
+        </member>
+        <member name="T:Tools.Core.DelimitedFiles.DelimitedFileHandler">
+            <summary>
+            Handles common delimited file functions.
+            </summary>
+        </member>
+        <member name="M:Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(System.IO.Stream,Tools.Core.DelimitedFiles.DelimiterType,System.Boolean)">
+            <summary>
+            Reads a delimited file into an array of an array of strings.
+            </summary>
+            <param name="stream"></param>
+            <param name="delimiter"></param>
+            <param name="firstRowHasHeaders"></param>
+            <param name="ignoreHeader"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(System.IO.Stream,Tools.Core.DelimitedFiles.DelimiterType)">
+            <summary>
+            Reads a delimited file into an array of an array of strings.
+            </summary>
+            <param name="stream"></param>
+            <param name="delimiter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.DelimitedFiles.DelimitedFileHandler.WriteDelimitedFile(Tools.Core.Progress.IProgressReporter,System.Data.DataTable,System.IO.TextWriter,Tools.Core.DelimitedFiles.DelimiterType,System.Boolean,Tools.Core.DelimitedFiles.IDelimitedFormat)">
+            <summary>
+            Writes a delimited file using the given format.
+            </summary>
+            <param name="reporter"></param>
+            <param name="data"></param>
+            <param name="writer"></param>
+            <param name="delimiter_type"></param>
+            <param name="first_row_as_header"></param>
+            <param name="format"></param>
+        </member>
+        <member name="M:Tools.Core.DelimitedFiles.DelimitedFileHandler.GetDelimiterChar(Tools.Core.DelimitedFiles.DelimiterType)">
+            <summary>
+            Returns the delimiter char for a delimiter type.
+            </summary>
+            <param name="type"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Tools.Core.DelimitedFiles.DelimitedFileHandler.WriteDelimitedFile(Tools.Core.Progress.IProgressReporter,System.Data.DataTable,System.IO.TextWriter,Tools.Core.DelimitedFiles.DelimiterType,System.Boolean)">
+            <summary>
+            Writes a delimited file using a default format.
+            </summary>
+            <param name="reporter"></param>
+            <param name="data"></param>
+            <param name="writer"></param>
+            <param name="delimiter_type"></param>
+            <param name="first_row_as_header"></param>
+        </member>
+        <member name="M:Tools.Core.DelimitedFiles.DelimitedFileHandler.WriteDelimitedFile(Tools.Core.Progress.IProgressReporter,System.Data.DataTable,System.IO.FileInfo,Tools.Core.DelimitedFiles.DelimiterType,System.Boolean)">
+            <summary>
+            Writes a delimited file using a default format.
+            </summary>
+            <param name="reporter"></param>
+            <param name="data"></param>
+            <param name="writer"></param>
+            <param name="delimiter_type"></param>
+            <param name="first_row_as_header"></param>
+        </member>
+    </members>
+</doc>
