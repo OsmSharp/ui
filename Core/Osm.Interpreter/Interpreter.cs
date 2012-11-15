@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
-using Osm.Interpreter.Features;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Interpreter.Features;
 
-namespace Osm.Interpreter
+namespace OsmSharp.Osm.Interpreter
 {
     /// <summary>
     /// And osm geo interpreter.

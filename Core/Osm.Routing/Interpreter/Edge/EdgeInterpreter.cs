@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Interpreter.Roads;
-using Routing.Core;
-using Tools.Math.Geo;
-using Tools.Math.Units.Speed;
+using OsmSharp.Routing.Core.Interpreter.Roads;
+using OsmSharp.Routing.Core;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Units.Speed;
 
-namespace Osm.Routing.Interpreter.Edge
+namespace OsmSharp.Osm.Routing.Interpreter.Edge
 {
     /// <summary>
     /// Default edge interpreter.

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Reflection;
-using Tools.Math.Geo;
-using Routing.Core;
-using Osm.Routing.Interpreter;
-using Routing.Core.Interpreter;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core;
+using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Core.Interpreter;
 
-namespace Osm.Routing.Test.ManyToMany
+namespace OsmSharp.Osm.Routing.Test.ManyToMany
 {
     /// <summary>
     /// Does some basic many-to-many performance tests.
@@ -23,9 +23,9 @@ namespace Osm.Routing.Test.ManyToMany
         /// <param name="name"></param>
         public double[][] TestFor(string name)
         {
-            Tools.Core.Output.OutputStreamHost.WriteLine();
-            Tools.Core.Output.OutputStreamHost.WriteLine();
-            Tools.Core.Output.OutputStreamHost.WriteLine("STARTING {0} TESTS:", name);
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("STARTING {0} TESTS:", name);
 
             long ticks_start = DateTime.Now.Ticks;
 
@@ -60,16 +60,16 @@ namespace Osm.Routing.Test.ManyToMany
             long ticks_after_calculation = DateTime.Now.Ticks;
 
             // report
-            Tools.Core.Output.OutputStreamHost.WriteLine();
-            Tools.Core.Output.OutputStreamHost.WriteLine("Create Router: {0}",
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Create Router: {0}",
                 new TimeSpan(ticks_after_router - ticks_start).ToString());
-            Tools.Core.Output.OutputStreamHost.WriteLine("Read CSV: {0}",
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Read CSV: {0}",
                 new TimeSpan(ticks_after_reading - ticks_after_router).ToString());
-            Tools.Core.Output.OutputStreamHost.WriteLine("Resolve Points: {0}",
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Resolve Points: {0}",
                 new TimeSpan(ticks_after_resolving - ticks_after_reading).ToString());
-            Tools.Core.Output.OutputStreamHost.WriteLine("Check Connectivity: {0}",
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Check Connectivity: {0}",
                 new TimeSpan(ticks_after_connectivity - ticks_after_resolving).ToString());
-            Tools.Core.Output.OutputStreamHost.WriteLine("Calculate ManyToMany: {0}",
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Calculate ManyToMany: {0}",
                 new TimeSpan(ticks_after_calculation - ticks_after_connectivity).ToString());
 
             return result;
@@ -78,7 +78,7 @@ namespace Osm.Routing.Test.ManyToMany
         /// <summary>
         /// Creates a router.
         /// </summary>
-        /// <param name="data">The data to use for routing.</param>
+        /// <param name="data">The data to use for OsmSharp.Routing.</param>
         /// <param name="interpreter">The interpreter.</param>
         /// <param name="constraints">The routing constraints.</param>
         /// <returns></returns>
@@ -93,8 +93,8 @@ namespace Osm.Routing.Test.ManyToMany
         {
             // read matrix points.
             List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
-            string[][] lines = Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
-                data, Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated);
+            string[][] lines = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
+                data, OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated);
             foreach (string[] row in lines)
             {
                 // be carefull with the parsing and the number formatting for different cultures.

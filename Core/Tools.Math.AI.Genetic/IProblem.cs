@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.AI.Genetic
+namespace OsmSharp.Tools.Math.AI.Genetic
 {
     /// <summary>
     /// An interface describing the problem to be solved.

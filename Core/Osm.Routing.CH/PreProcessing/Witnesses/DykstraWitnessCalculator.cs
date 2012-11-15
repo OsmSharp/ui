@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.CH.Routing;
-using Routing.Core.Graph;
-using Routing.Core.Graph.Router;
+using OsmSharp.Routing.CH.Routing;
+using OsmSharp.Routing.Core.Graph;
+using OsmSharp.Routing.Core.Graph.Router;
 
-namespace Routing.CH.PreProcessing.Witnesses
+namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
 {
     /// <summary>
     /// A simple dykstra witness calculator.

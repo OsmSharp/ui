@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Angle;
-using Tools.Math.Geo;
-using Tools.Math.Geo.Meta;
+using OsmSharp.Tools.Math.Units.Angle;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Geo.Meta;
 
-namespace Routing.Core.ArcAggregation.Output
+namespace OsmSharp.Routing.Core.ArcAggregation.Output
 {
     /// <summary>
     /// Represents a point in an aggregated route.

@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Shapes.PrimitivesFactory;
+using OsmSharp.Tools.Math.Shapes.PrimitivesFactory;
 
-namespace Tools.Math.Geo.Factory
+namespace OsmSharp.Tools.Math.Geo.Factory
 {
     /// <summary>
     /// A factory creating geo coordinate primitives.

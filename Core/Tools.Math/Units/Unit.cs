@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Units
+namespace OsmSharp.Tools.Math.Units
 {
     /// <summary>
     /// Represents a value representing a unit value.

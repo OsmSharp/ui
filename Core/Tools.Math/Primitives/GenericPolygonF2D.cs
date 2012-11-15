@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Primitives.Enumerators;
-using Tools.Math.Primitives.Enumerators.Lines;
-using Tools.Math.Primitives.Enumerators.Points;
+using OsmSharp.Tools.Math.Primitives.Enumerators;
+using OsmSharp.Tools.Math.Primitives.Enumerators.Lines;
+using OsmSharp.Tools.Math.Primitives.Enumerators.Points;
 
-namespace Tools.Math
+namespace OsmSharp.Tools.Math
 {
     /// <summary>
     /// Class representing a polygon.

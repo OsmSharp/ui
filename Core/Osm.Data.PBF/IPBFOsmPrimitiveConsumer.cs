@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Data.PBF
+namespace OsmSharp.Osm.Data.PBF
 {
     /// <summary>
     /// Consumers Osm PBF primitives.

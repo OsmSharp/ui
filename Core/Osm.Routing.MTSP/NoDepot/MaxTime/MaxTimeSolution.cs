@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
 {
     /// <summary>
     /// Represents a solution to the MaxTime problem.

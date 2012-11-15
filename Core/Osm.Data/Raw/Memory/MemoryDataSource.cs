@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
-using Tools.Math.Geo;
-using Osm.Core.Filters;
-using Osm.Data.Core.Processor;
+using OsmSharp.Osm.Core;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm.Data.Core.Processor;
 
-namespace Osm.Data.Core.Raw.Memory
+namespace OsmSharp.Osm.Data.Core.Raw.Memory
 {
     /// <summary>
     /// An in-memory data repository of OSM data primitives.

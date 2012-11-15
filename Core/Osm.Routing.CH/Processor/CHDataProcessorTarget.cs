@@ -19,17 +19,17 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Osm.Data.Core.Processor;
-//using Routing.CH.PreProcessing;
-//using Osm.Core.Simple;
-//using Osm.Routing.Core.Processor;
-//using Tools.Math.Geo;
-//using Osm.Routing.Core.Roads.Tags;
-//using Osm.Data.Core.DynamicGraph;
-//using Routing.CH.PreProcessing.Tags;
-//using Routing.CH.Routing;
+//using OsmSharp.Osm.Data.Core.Processor;
+//using OsmSharp.Routing.CH.PreProcessing;
+//using OsmSharp.Osm.Core.Simple;
+//using OsmSharp.Osm.Routing.Core.Processor;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Osm.Routing.Core.Roads.Tags;
+//using OsmSharp.Osm.Data.Core.DynamicGraph;
+//using OsmSharp.Routing.CH.PreProcessing.Tags;
+//using OsmSharp.Routing.CH.Routing;
 
-//namespace Routing.CH.Processor
+//namespace OsmSharp.Routing.CH.Processor
 //{
 //    /// <summary>
 //    /// Data processor target for osm data that will be converted into a Contracted Graph.

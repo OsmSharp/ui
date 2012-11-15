@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Graph;
+using OsmSharp.Routing.Core.Graph;
 
-namespace Routing.CH.PreProcessing.Ordering
+namespace OsmSharp.Routing.CH.PreProcessing.Ordering
 {
     /// <summary>
     /// The edge difference calculator.

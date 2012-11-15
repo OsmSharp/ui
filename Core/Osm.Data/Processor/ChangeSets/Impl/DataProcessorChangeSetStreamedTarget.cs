@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core.Simple;
+using OsmSharp.Osm.Core.Simple;
 
-namespace Osm.Data.Core.Processor.ChangeSets.Impl
+namespace OsmSharp.Osm.Data.Core.Processor.ChangeSets.Impl
 {
     /// <summary>
     /// Class accepting a stream of changesets and merging it with a stream of OsmGeo objects to produce a changed stream source of OsmGeo data.

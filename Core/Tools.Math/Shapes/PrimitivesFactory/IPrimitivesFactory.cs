@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Shapes.PrimitivesFactory
+namespace OsmSharp.Tools.Math.Shapes.PrimitivesFactory
 {
     /// <summary>
     /// Interface used to encapsulate the creation of primitive types for usage in shapes.

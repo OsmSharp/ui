@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Tools.Math.AI.Genetic.Fitness;
-using Tools.Math.AI.Genetic;
-using Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.AI.Genetic.Fitness;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
 {
     internal class FitnessCalculator : IFitnessCalculator<MaxTimeSolution, MaxTimeProblem, Fitness>
     {

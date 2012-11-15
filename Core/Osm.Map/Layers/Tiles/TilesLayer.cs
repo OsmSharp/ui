@@ -21,21 +21,21 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Configuration;
-using Osm.Map.Elements;
-using Tools.Math.Units.Angle;
-using Tools.Math.Geo;
+using OsmSharp.Osm.Map.Elements;
+using OsmSharp.Tools.Math.Units.Angle;
+using OsmSharp.Tools.Math.Geo;
 using System.Net;
 using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Threading;
-using Tools.Core.Collections;
+using OsmSharp.Tools.Core.Collections;
 
-namespace Osm.Map.Layers.Tiles
+namespace OsmSharp.Osm.Map.Layers.Tiles
 {
 
     /// <summary>
-    /// Layer containing tiles from osm.
+    /// Layer containing tiles from OsmSharp.Osm.
     /// </summary>
     public class TilesLayer : ILayer
     {
@@ -584,7 +584,7 @@ namespace Osm.Map.Layers.Tiles
                 // get file from tile server.
                 HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(
                     url);
-                request.Timeout = 1000;
+                request.Timeout = 5000;
                 //Debug.WriteLine(url);
 
                 WebResponse myResp = request.GetResponse();

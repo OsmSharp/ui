@@ -1,4 +1,4 @@
-﻿//namespace Tools.Benchmark.TSPLIB
+﻿//namespace OsmSharp.Tools.Benchmark.TSPLIB
 //{
 //    partial class DemoForm
 //    {

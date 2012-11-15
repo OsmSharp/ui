@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Routing.Core.ArcAggregation.Output
+namespace OsmSharp.Routing.Core.ArcAggregation.Output
 {
     public abstract class Aggregated
     {

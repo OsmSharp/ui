@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data.Oracle.Raw.Processor;
+using OsmSharp.Osm.Data.Oracle.Raw.Processor;
 using System.Data;
 using Oracle.DataAccess.Client;
-using Osm.Core.Simple;
-using Osm.Data.Core.Processor;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Core.Processor;
 
-namespace Osm.Data.Oracle.Raw.Processor
+namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
 {
     public class OracleSimpleDataProcessorTarget : DataProcessorTarget
     {

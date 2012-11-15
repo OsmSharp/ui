@@ -19,16 +19,16 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Tools.Math.Units.Distance;
-//using Tools.Math.Units.Speed;
-//using Osm.Core;
-//using Tools.Math.Graph;
-//using Tools.Math.Geo;
-//using Osm.Routing.Core;
-//using Osm.Data;
-//using Osm.Routing.Core.Interpreter;
+//using OsmSharp.Tools.Math.Units.Distance;
+//using OsmSharp.Tools.Math.Units.Speed;
+//using OsmSharp.Osm.Core;
+//using OsmSharp.Tools.Math.Graph;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Osm.Routing.Core;
+//using OsmSharp.Osm.Data;
+//using OsmSharp.Osm.Routing.Core.Interpreter;
 
-//namespace Osm.Routing.Graphs.Interpreter
+//namespace OsmSharp.Osm.Routing.Graphs.Interpreter
 //{
 //    /// <summary>
 //    /// Interpreter return time as the weight for the graph.

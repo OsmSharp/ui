@@ -19,15 +19,15 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Tools.Math.Graph;
-//using Osm.Core;
-//using Osm.Data;
-//using Osm.Routing.Graphs;
-//using Tools.Math.Geo;
-//using Osm.Routing.Core;
-//using Osm.Routing.Core.Interpreter;
+//using OsmSharp.Tools.Math.Graph;
+//using OsmSharp.Osm.Core;
+//using OsmSharp.Osm.Data;
+//using OsmSharp.Osm.Routing.Graphs;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Osm.Routing.Core;
+//using OsmSharp.Osm.Routing.Core.Interpreter;
 
-//namespace Osm.Routing.Graphs.Interpreter
+//namespace OsmSharp.Osm.Routing.Graphs.Interpreter
 //{
 //    /// <summary>
 //    /// Class used to interpret osm data.

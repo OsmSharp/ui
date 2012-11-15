@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Structures.QTree
+namespace OsmSharp.Tools.Math.Structures.QTree
 {
     /// <summary>
     /// An implementation of a quad tree.

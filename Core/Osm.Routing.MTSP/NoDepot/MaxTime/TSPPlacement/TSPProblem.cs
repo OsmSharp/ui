@@ -19,14 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.VRP.Core;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement
 {
     /// <summary>
     /// Represents the equivalent TSP problem related to this VRP.
     /// </summary>
-    public class TSPProblem : Tools.Math.TSP.Problems.IProblem
+    public class TSPProblem : OsmSharp.Tools.Math.TSP.Problems.IProblem
     {
         public TSPProblem(MaxTimeProblem vrp)
         {

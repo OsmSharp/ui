@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Routing.Core
+namespace OsmSharp.Routing.Core
 {
     /// <summary>
     /// Represents a resolved point. A hook for the router to route on.
@@ -40,7 +40,7 @@ namespace Routing.Core
         /// </summary>
         /// <param name="id"></param>
         /// <param name="location"></param>
-        public RouterPoint(long id, GeoCoordinate location)
+        internal RouterPoint(long id, GeoCoordinate location)
         {
             _id = id;
             this.Location = location;

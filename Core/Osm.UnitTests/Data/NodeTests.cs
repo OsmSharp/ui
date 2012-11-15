@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Osm.Core;
-using Osm.Core.Factory;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Core.Factory;
 
-namespace Osm.UnitTests.Data
+namespace OsmSharp.Osm.UnitTests.Data
 {
     [TestClass]
     public class NodeTests
@@ -36,7 +36,7 @@ namespace Osm.UnitTests.Data
         {
             Node test_node = OsmBaseFactory.CreateNode(-1);
             string description = test_node.ToString(); // 
-            test_node.Coordinate = new Tools.Math.Geo.GeoCoordinate(0, 0);
+            test_node.Coordinate = new OsmSharp.Tools.Math.Geo.GeoCoordinate(0, 0);
             description = test_node.ToString();
         }
     }

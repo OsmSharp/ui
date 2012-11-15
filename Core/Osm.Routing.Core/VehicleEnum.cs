@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Routing.Core
+namespace OsmSharp.Routing.Core
 {
     /// <summary>
     /// Enumeration of supported vehicle types.

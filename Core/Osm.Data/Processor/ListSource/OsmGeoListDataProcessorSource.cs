@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
-using Osm.Core.Simple;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Core.Simple;
 
-namespace Osm.Data.Core.Processor.ListSource
+namespace OsmSharp.Osm.Data.Core.Processor.ListSource
 {
     /// <summary>
     /// A data processor source of regular OsmBase objects.

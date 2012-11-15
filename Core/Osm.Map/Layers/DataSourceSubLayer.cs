@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data;
-using Osm.Map.Elements;
-using Tools.Math.Geo;
-using Osm.Core;
+using OsmSharp.Osm.Data;
+using OsmSharp.Osm.Map.Elements;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core;
 
-namespace Osm.Map.Layers
+namespace OsmSharp.Osm.Map.Layers
 {
     /// <summary>
     /// Represents a layer inside a datasource layer.

@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core.Simple;
+using OsmSharp.Osm.Core.Simple;
 
-namespace Osm.Data.Core.Processor.ChangeSets
+namespace OsmSharp.Osm.Data.Core.Processor.ChangeSets
 {
     public abstract class DataProcessorChangeSetFilter : DataProcessorChangeSetSource
     {

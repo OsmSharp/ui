@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Map.Elements
+namespace OsmSharp.Osm.Map.Elements
 {
     public enum LineStyle
     {

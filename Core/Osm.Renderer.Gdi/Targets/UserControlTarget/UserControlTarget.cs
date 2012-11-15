@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
+using OsmSharp.Tools.Math.Geo;
 using System.Windows.Forms;
 using System.Drawing;
-using Osm.Renderer.Gdi.Layers;
-using Osm.Map.Layers;
+using OsmSharp.Osm.Renderer.Gdi.Layers;
+using OsmSharp.Osm.Map.Layers;
 
-namespace Osm.Renderer.Gdi.Targets.UserControlTarget
+namespace OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget
 {
     /// <summary>
     /// Control displaying a map and implementing the IGdiTarget interface.
@@ -75,7 +75,7 @@ namespace Osm.Renderer.Gdi.Targets.UserControlTarget
         /// <summary>
         /// The map this target is displaying.
         /// </summary>
-        public Osm.Map.Map Map 
+        public OsmSharp.Osm.Map.Map Map 
         { 
             get; 
             set; 

@@ -19,16 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Time;
-using Tools.Math.TSP.Problems;
-using Tools.Math.VRP.Core;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.VRP.Core.BestPlacement;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Tools.Math.VRP.Core.BestPlacement.SeedCustomers;
-using Routing.Core;
+using OsmSharp.Tools.Math.Units.Time;
+using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.VRP.Core.BestPlacement.SeedCustomers;
+using OsmSharp.Routing.Core;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 {
     public class RouterBestPlacementWithSeeds<ResolvedType> : RouterMaxTime<ResolvedType>
         where ResolvedType : IRouterPoint

@@ -21,14 +21,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using Tools.Xml.Sources;
-using Osm.Core.Xml;
-using Osm.Core;
-using Osm.Core.Filters;
-using Osm.Data;
-using Osm.Data.Raw.XML.OsmSource;
+using OsmSharp.Tools.Xml.Sources;
+using OsmSharp.Osm.Core.Xml;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm.Data;
+using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 
-namespace Osm.Test
+namespace OsmSharp.Osm.Test
 {
     /// <summary>
     /// Summary description for OsmDataSourceTest
@@ -237,11 +237,11 @@ namespace Osm.Test
 
             // create node(s)
             Node node_1 = data_source.CreateNode();
-            node_1.Coordinate = new Tools.Math.Geo.GeoCoordinate(
+            node_1.Coordinate = new OsmSharp.Tools.Math.Geo.GeoCoordinate(
                 50.882778167724609f,
                 4.283745288848877f);
             Node node_2 = data_source.CreateNode();
-            node_2.Coordinate = new Tools.Math.Geo.GeoCoordinate(
+            node_2.Coordinate = new OsmSharp.Tools.Math.Geo.GeoCoordinate(
                 50.8863410949707f,
                 4.2801661491394043f);
 

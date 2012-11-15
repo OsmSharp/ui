@@ -1,4 +1,4 @@
-﻿namespace Osm.UI.WinForms.Layers
+﻿namespace OsmSharp.Osm.UI.WinForms.Layers
 {
     partial class LayersToolsForm
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.layerUserControl1 = new Osm.UI.WinForms.Layer.LayerUserControl();
+            this.layerUserControl1 = new OsmSharp.Osm.UI.WinForms.Layer.LayerUserControl();
             this.SuspendLayout();
             // 
             // layerUserControl1

@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Tools.Core.Collections;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Core.Collections;
 
-namespace Osm.Core
+namespace OsmSharp.Osm.Core
 {
 
     

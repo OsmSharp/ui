@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Map.Layers;
-using Osm.Map.Elements;
-using Tools.Math.Geo;
+using OsmSharp.Osm.Map.Layers;
+using OsmSharp.Osm.Map.Elements;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Osm.Map
+namespace OsmSharp.Osm.Map
 {
     /// <summary>
     /// Represents an osm map data structure.

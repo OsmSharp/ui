@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Roads.Tags;
+using OsmSharp.Routing.Core.Roads.Tags;
 
-namespace Routing.Core.Resolving
+namespace OsmSharp.Routing.Core.Resolving
 {
     /// <summary>
     /// Interface used to match a coordinate to a configurable routable position.

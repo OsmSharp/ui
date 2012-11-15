@@ -19,15 +19,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.TSP.LK.SparseSets;
-using Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.TSP.LK.SparseSets;
+using OsmSharp.Tools.Math.TSP.Problems;
 using System.Diagnostics;
-using Tools.Math.TSP.ArbitraryInsertion;
-using Tools.Math.VRP.Core.Routes.Symmetric;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.TSP.ArbitraryInsertion;
+using OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace Tools.Math.TSP.LK
+namespace OsmSharp.Tools.Math.TSP.LK
 {
     /// <summary>
     /// A solver that use the Lin-Kernighan heuristic to solve instances of the TSP.

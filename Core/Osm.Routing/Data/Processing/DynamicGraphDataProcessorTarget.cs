@@ -19,20 +19,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core.Simple;
-using Osm.Data.Core.Processor;
-using Routing.Core.Roads;
-using Tools.Math.Geo;
-using Routing.Core.Roads.Tags;
-using Osm.Routing.Interpreter;
-using Routing.Core.Graph;
-using Tools.Math;
-using Osm.Core;
-using Routing.Core.Interpreter;
-using Routing.Core.Graph.Router;
-using Routing.Core.Interpreter.Roads;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Core.Processor;
+using OsmSharp.Routing.Core.Roads;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.Roads.Tags;
+using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Core.Graph;
+using OsmSharp.Tools.Math;
+using OsmSharp.Osm.Core;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Routing.Core.Interpreter.Roads;
 
-namespace Osm.Routing.Data.Processing
+namespace OsmSharp.Osm.Routing.Data.Processing
 {
     /// <summary>
     /// Data Processor Target to fill a dynamic graph object.
@@ -61,6 +61,11 @@ namespace Osm.Routing.Data.Processing
         private bool _pre_index_mode;
 
         /// <summary>
+        /// The bounding box to limit nodes if any.
+        /// </summary>
+        private GeoCoordinateBox _box;
+
+        /// <summary>
         /// Creates a new processor target.
         /// </summary>
         /// <param name="dynamic_graph">The graph that will be filled.</param>
@@ -83,7 +88,7 @@ namespace Osm.Routing.Data.Processing
         {
 
         }
-
+        
         /// <summary>
         /// Creates a new processor target.
         /// </summary>
@@ -91,9 +96,24 @@ namespace Osm.Routing.Data.Processing
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
         public DynamicGraphDataProcessorTarget(IDynamicGraph<EdgeData> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, IDictionary<long, uint> id_transformations)
+            : this(dynamic_graph, interpreter, tags_index, id_transformations, null)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new processor target.
+        /// </summary>
+        /// <param name="dynamic_graph">The graph that will be filled.</param>
+        /// <param name="interpreter">The interpreter to generate the edge data.</param>
+        public DynamicGraphDataProcessorTarget(
+            IDynamicGraph<EdgeData> dynamic_graph, IRoutingInterpreter interpreter, 
+            ITagsIndex tags_index, IDictionary<long, uint> id_transformations,
+            GeoCoordinateBox box)
         {
             _dynamic_graph = dynamic_graph;
             _interpreter = interpreter;
+            _box = box;
 
             _tags_index = tags_index;
             _id_transformations = id_transformations;
@@ -157,13 +177,15 @@ namespace Osm.Routing.Data.Processing
                 { // only save the coordinates for relevant nodes.
                     // save the node-coordinates.
                     // add the relevant nodes.
-                    //_id_transformations[node.Id.Value] =
-                    //     _dynamic_graph.AddVertex((float)node.Latitude.Value, (float)node.Longitude.Value);
-                    _coordinates[node.Id.Value] = new float[] { (float)node.Latitude.Value, (float)node.Longitude.Value };
-                    if (_coordinates.Count == _pre_index.Count)
-                    {
-                        _pre_index.Clear();
-                        _pre_index = null;
+
+                    if (_box == null || _box.IsInside(new GeoCoordinate((float)node.Latitude.Value, (float)node.Longitude.Value)))
+                    { // the coordinate is acceptable.
+                        _coordinates[node.Id.Value] = new float[] { (float)node.Latitude.Value, (float)node.Longitude.Value };
+                        if (_coordinates.Count == _pre_index.Count)
+                        {
+                            _pre_index.Clear();
+                            _pre_index = null;
+                        }
                     }
                 }
             }

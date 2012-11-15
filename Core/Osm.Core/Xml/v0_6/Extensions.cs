@@ -19,17 +19,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Osm.Core;
-using Osm.Core.Factory;
-using Osm.Core.Sources;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Osm.Core.Sources;
 using System.Globalization;
 
-namespace Osm.Core.Xml.v0_6
+namespace OsmSharp.Osm.Core.Xml.v0_6
 {
     public static class Extensions
     {
-        #region Xml <-> Osm.Core Conversions
+        #region Xml <-> OsmSharp.Osm.Core Conversions
 
         #region Convert From Xml
 

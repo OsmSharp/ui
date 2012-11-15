@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic;
-using Tools.Math.Units.Time;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.Units.Time;
 
-namespace Tools.Math.VRP.MultiSalesman.Genetic
+namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
 {
     /// <summary>
     /// Class representing a problem.

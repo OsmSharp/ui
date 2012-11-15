@@ -20,7 +20,7 @@
 //using System.Linq;
 //using System.Text;
 
-//namespace Routing.Core.Interpreter.Default
+//namespace OsmSharp.Routing.Core.Interpreter.Default
 //{
 //    /// <summary>
 //    /// Interpretes specifics about ways tags into roads.

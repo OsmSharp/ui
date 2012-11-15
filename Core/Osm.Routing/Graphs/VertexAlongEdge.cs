@@ -19,10 +19,10 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Osm.Core;
-//using Osm.Routing.Graphs;
+//using OsmSharp.Osm.Core;
+//using OsmSharp.Osm.Routing.Graphs;
 
-//namespace Osm.Routing.Graphs
+//namespace OsmSharp.Osm.Routing.Graphs
 //{
 //    /// <summary>
 //    /// Class representing a vertex that can be reached along an edge.

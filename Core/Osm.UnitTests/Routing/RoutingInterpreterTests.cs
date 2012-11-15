@@ -2,13 +2,13 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Osm.Routing.Core.Interpreter;
-//using Osm.Data.Raw.XML.OsmSource;
-//using Osm.Core;
-//using Tools.Math.Geo;
+//using OsmSharp.Osm.Routing.Core.Interpreter;
+//using OsmSharp.Osm.Data.Raw.XML.OsmSource;
+//using OsmSharp.Osm.Core;
+//using OsmSharp.Tools.Math.Geo;
 //using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-//namespace Osm.UnitTests.Routing
+//namespace OsmSharp.Osm.UnitTests.Routing
 //{
 //    /// <summary>
 //    /// A basic test class for testing routing interpreters.

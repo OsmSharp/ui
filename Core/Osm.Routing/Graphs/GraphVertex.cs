@@ -19,11 +19,11 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Osm.Core;
-//using Tools.Math.Geo;
-//using Tools.Math;
+//using OsmSharp.Osm.Core;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Tools.Math;
 
-//namespace Osm.Routing.Graphs
+//namespace OsmSharp.Osm.Routing.Graphs
 //{
 //    /// <summary>
 //    /// Vertex in this graph.

@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Core;
-using Tools.Math.TSP;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.TSP.Problems;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Core;
+using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace Tools.Math.TravellingSalesman.Random
+namespace OsmSharp.Tools.Math.TravellingSalesman.Random
 {
     /// <summary>
     /// Just generates random routes.

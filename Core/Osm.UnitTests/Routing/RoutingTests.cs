@@ -20,20 +20,20 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Routing.Core.Resolving;
-using Routing.Core;
-using Routing.Core.Interpreter;
-using Routing.Core.Constraints;
-using Tools.Math.Geo;
-using Routing.Core.Route;
+using OsmSharp.Routing.Core.Resolving;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Core.Constraints;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.Route;
 using System.Reflection;
-using Osm.Routing.Interpreter;
-using Routing.Core.Constraints.Cars;
-using Routing.Core.Router;
-using Osm.Routing.Data;
-using Routing.Core.Graph;
+using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Core.Constraints.Cars;
+using OsmSharp.Routing.Core.Router;
+using OsmSharp.Osm.Routing.Data;
+using OsmSharp.Routing.Core.Graph;
 
-namespace Osm.UnitTests.Routing
+namespace OsmSharp.Osm.UnitTests.Routing
 {
     /// <summary>
     /// Base class with tests around IRouter<ResolvedType> objects.
@@ -320,6 +320,28 @@ namespace Osm.UnitTests.Routing
             Assert.IsFalse(router.CheckConnectivity(resolved_points[0], 1000));
             Assert.IsFalse(router.CheckConnectivity(resolved_points[1], 1000));
             Assert.IsFalse(router.CheckConnectivity(resolved_points[2], 1000));
+        }
+
+        /// <summary>
+        /// Test if the resolving of nodes returns those same nodes.
+        /// 
+        /// (does not work on a lazy loading data source!)
+        /// </summary>
+        protected void DoTestResolveAllNodes()
+        {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IRouter<ResolvedType> router = this.BuildRouter(
+                data, interpreter);
+            for (int idx = 1; idx < data.VertexCount; idx++)
+            {
+                float latitude, longitude;
+                if (data.GetVertex((uint)idx, out latitude, out longitude))
+                {
+                    ResolvedType point = router.Resolve(new GeoCoordinate(latitude, longitude));
+                    Assert.AreEqual(idx, (point as RouterPoint).Id);
+                }
+            }
         }
     }
 }

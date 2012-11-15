@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace Tools.Math.VRP.Core.BestPlacement
+namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement
 {
     /// <summary>
     /// Implements some generic functions for best-placement.

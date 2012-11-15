@@ -19,14 +19,14 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Osm.Core;
-//using Osm.Data;
-//using Osm.Routing.Graphs.Interpreter;
+//using OsmSharp.Osm.Core;
+//using OsmSharp.Osm.Data;
+//using OsmSharp.Osm.Routing.Graphs.Interpreter;
 
 
 //// TODO: create a IPointF2D-like graph interface hierarchy to allow other-than-osm datasources.
 
-//namespace Osm.Routing.Graphs.Bounded
+//namespace OsmSharp.Osm.Routing.Graphs.Bounded
 //{
 //    public class BoundedGraph : Graph
 //    {

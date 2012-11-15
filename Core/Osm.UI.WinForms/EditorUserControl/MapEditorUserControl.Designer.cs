@@ -1,7 +1,7 @@
-﻿using Osm.Renderer.Gdi.Targets;
-using Osm.UI.WinForms.EditorUserControl.Controls;
-using Osm.Renderer.Gdi.Targets.UserControlTarget;
-namespace Osm.UI.WinForms.MapEditorUserControl
+﻿using OsmSharp.Osm.Renderer.Gdi.Targets;
+using OsmSharp.Osm.UI.WinForms.EditorUserControl.Controls;
+using OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget;
+namespace OsmSharp.Osm.UI.WinForms.MapEditorUserControl
 {
     partial class MapEditorUserControl
     {
@@ -32,13 +32,13 @@ namespace Osm.UI.WinForms.MapEditorUserControl
         private void InitializeComponent()
         {
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.browserEditorUserControl1 = new Osm.UI.WinForms.BrowserEditorUserControl.BrowserEditorUserControl();
+            this.browserEditorUserControl1 = new OsmSharp.Osm.UI.WinForms.BrowserEditorUserControl.BrowserEditorUserControl();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.tssSeperator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tssSeperator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mapTarget = new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget();
-            this.logControl1 = new Osm.UI.WinForms.EditorUserControl.Controls.LogControl();
+            this.mapTarget = new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget();
+            this.logControl1 = new OsmSharp.Osm.UI.WinForms.EditorUserControl.Controls.LogControl();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.tsbOpenFile = new System.Windows.Forms.ToolStripButton();
             this.tspAddDot = new System.Windows.Forms.ToolStripButton();
@@ -137,12 +137,12 @@ namespace Osm.UI.WinForms.MapEditorUserControl
             this.mapTarget.Size = new System.Drawing.Size(643, 362);
             this.mapTarget.TabIndex = 0;
             this.mapTarget.ZoomFactor = 0F;
-            this.mapTarget.MapMouseUp += new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseUp);
-            this.mapTarget.MapMouseDown += new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseDown);
-            this.mapTarget.MapMouseMove += new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseMove);
-            this.mapTarget.MapMouseWheel += new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseWheel);
-            this.mapTarget.MapMouseDoubleClick += new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseDoubleClick);
-            this.mapTarget.MapMouseClick += new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseClick);
+            this.mapTarget.MapMouseUp += new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseUp);
+            this.mapTarget.MapMouseDown += new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseDown);
+            this.mapTarget.MapMouseMove += new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseMove);
+            this.mapTarget.MapMouseWheel += new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseWheel);
+            this.mapTarget.MapMouseDoubleClick += new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseDoubleClick);
+            this.mapTarget.MapMouseClick += new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseClick);
             // 
             // logControl1
             // 
@@ -159,7 +159,7 @@ namespace Osm.UI.WinForms.MapEditorUserControl
             // tsbOpenFile
             // 
             this.tsbOpenFile.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbOpenFile.Image = global::Osm.UI.WinForms.Properties.Resources.folder;
+            this.tsbOpenFile.Image = global::OsmSharp.Osm.UI.WinForms.Properties.Resources.folder;
             this.tsbOpenFile.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbOpenFile.Name = "tsbOpenFile";
             this.tsbOpenFile.Size = new System.Drawing.Size(23, 22);
@@ -169,7 +169,7 @@ namespace Osm.UI.WinForms.MapEditorUserControl
             // tspAddDot
             // 
             this.tspAddDot.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tspAddDot.Image = global::Osm.UI.WinForms.Properties.Resources.node;
+            this.tspAddDot.Image = global::OsmSharp.Osm.UI.WinForms.Properties.Resources.node;
             this.tspAddDot.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tspAddDot.Name = "tspAddDot";
             this.tspAddDot.Size = new System.Drawing.Size(23, 22);
@@ -180,7 +180,7 @@ namespace Osm.UI.WinForms.MapEditorUserControl
             // tsbAddWay
             // 
             this.tsbAddWay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbAddWay.Image = global::Osm.UI.WinForms.Properties.Resources.way;
+            this.tsbAddWay.Image = global::OsmSharp.Osm.UI.WinForms.Properties.Resources.way;
             this.tsbAddWay.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAddWay.Name = "tsbAddWay";
             this.tsbAddWay.Size = new System.Drawing.Size(23, 22);
@@ -191,7 +191,7 @@ namespace Osm.UI.WinForms.MapEditorUserControl
             // tsbAddRelation
             // 
             this.tsbAddRelation.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbAddRelation.Image = global::Osm.UI.WinForms.Properties.Resources.relation;
+            this.tsbAddRelation.Image = global::OsmSharp.Osm.UI.WinForms.Properties.Resources.relation;
             this.tsbAddRelation.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbAddRelation.Name = "tsbAddRelation";
             this.tsbAddRelation.Size = new System.Drawing.Size(23, 22);
@@ -201,7 +201,7 @@ namespace Osm.UI.WinForms.MapEditorUserControl
             // btnZoomIn
             // 
             this.btnZoomIn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnZoomIn.Image = global::Osm.UI.WinForms.Properties.Resources.map_zoomin;
+            this.btnZoomIn.Image = global::OsmSharp.Osm.UI.WinForms.Properties.Resources.map_zoomin;
             this.btnZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnZoomIn.Name = "btnZoomIn";
             this.btnZoomIn.Size = new System.Drawing.Size(23, 22);
@@ -211,7 +211,7 @@ namespace Osm.UI.WinForms.MapEditorUserControl
             // tsbZoomOut
             // 
             this.tsbZoomOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbZoomOut.Image = global::Osm.UI.WinForms.Properties.Resources.map_zoomout;
+            this.tsbZoomOut.Image = global::OsmSharp.Osm.UI.WinForms.Properties.Resources.map_zoomout;
             this.tsbZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbZoomOut.Name = "tsbZoomOut";
             this.tsbZoomOut.Size = new System.Drawing.Size(23, 22);
@@ -221,7 +221,7 @@ namespace Osm.UI.WinForms.MapEditorUserControl
             // tsbEditOnline
             // 
             this.tsbEditOnline.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbEditOnline.Image = global::Osm.UI.WinForms.Properties.Resources.map_edit;
+            this.tsbEditOnline.Image = global::OsmSharp.Osm.UI.WinForms.Properties.Resources.map_edit;
             this.tsbEditOnline.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbEditOnline.Name = "tsbEditOnline";
             this.tsbEditOnline.Size = new System.Drawing.Size(23, 22);
@@ -232,7 +232,7 @@ namespace Osm.UI.WinForms.MapEditorUserControl
             // 
             this.btnSelect.CheckOnClick = true;
             this.btnSelect.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnSelect.Image = global::Osm.UI.WinForms.Properties.Resources.selection1;
+            this.btnSelect.Image = global::OsmSharp.Osm.UI.WinForms.Properties.Resources.selection1;
             this.btnSelect.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnSelect.Name = "btnSelect";
             this.btnSelect.Size = new System.Drawing.Size(23, 22);
@@ -241,7 +241,7 @@ namespace Osm.UI.WinForms.MapEditorUserControl
             // btnLayers
             // 
             this.btnLayers.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.btnLayers.Image = global::Osm.UI.WinForms.Properties.Resources.layers;
+            this.btnLayers.Image = global::OsmSharp.Osm.UI.WinForms.Properties.Resources.layers;
             this.btnLayers.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.btnLayers.Name = "btnLayers";
             this.btnLayers.Size = new System.Drawing.Size(23, 22);

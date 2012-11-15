@@ -20,24 +20,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Routing.Core;
-using Osm.Data.Raw.XML.OsmSource;
-using Routing.Core.Interpreter;
-using Routing.Core.Constraints;
+using OsmSharp.Routing.Core;
+using OsmSharp.Osm.Data.Raw.XML.OsmSource;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Core.Constraints;
 using System.IO;
 using System.Reflection;
-using Osm.Core.Xml;
+using OsmSharp.Osm.Core.Xml;
 using System.Xml;
-using Osm.Routing.Interpreter;
-using Routing.Core.Router.Memory;
-using Osm.Routing.Data;
-using Osm.Routing.Data.Processing;
-using Osm.Data.XML.Raw.Processor;
-using Osm.Data.Core.Processor.Filter.Sort;
-using Routing.Core.Router;
-using Osm.Core;
+using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Core.Router.Memory;
+using OsmSharp.Osm.Routing.Data;
+using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Routing.Core.Router;
+using OsmSharp.Osm.Core;
 
-namespace Osm.UnitTests.Routing.Raw
+namespace OsmSharp.Osm.UnitTests.Routing.Raw
 {
     [TestClass]
     public class RawRoutingTests : SimpleRoutingTests<RouterPoint, OsmEdgeData>
@@ -175,6 +175,15 @@ namespace Osm.UnitTests.Routing.Raw
         public void TestRawConnectivity1()
         {
             this.DoTestConnectivity1();
+        }
+
+        /// <summary>
+        /// Tests a simple shortest route calculation.
+        /// </summary>
+        [TestMethod]
+        public void TestRawResolveAllNodes()
+        {
+            this.DoTestResolveAllNodes();
         }
     }
 }

@@ -23,10 +23,10 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Osm.Map.Layers.Tiles;
-using Tools.Math.Geo;
+using OsmSharp.Osm.Map.Layers.Tiles;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Osm.UI.WinForms.Test
+namespace OsmSharp.Osm.UI.WinForms.Test
 {
     public partial class MapViewerForm : Form
     {
@@ -39,7 +39,7 @@ namespace Osm.UI.WinForms.Test
         {
             base.OnLoad(e);
 
-            Osm.Map.Map map = new Osm.Map.Map();
+            OsmSharp.Osm.Map.Map map = new OsmSharp.Osm.Map.Map();
             map.Layers.Add(new TilesLayer());
 
             double latitude_center = 51.024154f;

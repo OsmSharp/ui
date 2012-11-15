@@ -20,7 +20,7 @@
 //using System.Linq;
 //using System.Text;
 
-//namespace Osm.Data.Core.DynamicGraph
+//namespace OsmSharp.Osm.Data.Core.DynamicGraph
 //{
 //    /// <summary>
 //    /// Abstracts an interface 

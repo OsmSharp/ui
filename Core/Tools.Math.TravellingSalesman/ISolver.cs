@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.TSP.Problems;
-using Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace Tools.Math.TSP
+namespace OsmSharp.Tools.Math.TSP
 {
     /// <summary>
     /// Interface representing a solver for the TSP.

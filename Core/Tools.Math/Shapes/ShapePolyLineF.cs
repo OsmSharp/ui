@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Shapes.PrimitivesFactory;
-using Tools.Math.Shapes.ResultHelpers;
+using OsmSharp.Tools.Math.Shapes.PrimitivesFactory;
+using OsmSharp.Tools.Math.Shapes.ResultHelpers;
 
-namespace Tools.Math.Shapes
+namespace OsmSharp.Tools.Math.Shapes
 {
     /// <summary>
     /// Polyline shape: represents a line with multiple segments.

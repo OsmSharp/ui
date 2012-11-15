@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.GeoCoding;
+using OsmSharp.Tools.GeoCoding;
 
-namespace Tools.GeoCoding
+namespace OsmSharp.Tools.GeoCoding
 {
     /// <summary>
     /// Describes a generic geo coder.

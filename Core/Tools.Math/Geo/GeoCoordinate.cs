@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Distance;
-using Tools.Math.Units.Angle;
+using OsmSharp.Tools.Math.Units.Distance;
+using OsmSharp.Tools.Math.Units.Angle;
 
-namespace Tools.Math.Geo
+namespace OsmSharp.Tools.Math.Geo
 {
     /// <summary>
     /// Represents a standard geo coordinate.

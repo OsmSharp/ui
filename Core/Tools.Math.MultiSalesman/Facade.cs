@@ -19,29 +19,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Time;
-using Tools.Math.Random;
-using Tools.Core.Progress;
-using Tools.Math.VRP.MultiSalesman.Problems;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation;
-using Tools.Math.VRP.MultiSalesman.Genetic;
-using Tools.Math.AI.Genetic.Selectors;
-using Tools.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver;
-using Tools.Math.VRP.MultiSalesman.Solver.Operations.Generation;
-using Tools.Math.AI.Genetic;
-using Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
+using OsmSharp.Tools.Math.Units.Time;
+using OsmSharp.Tools.Math.Random;
+using OsmSharp.Tools.Core.Progress;
+using OsmSharp.Tools.Math.VRP.MultiSalesman.Problems;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation;
+using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Selectors;
+using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.VRP.MultiSalesman.Solver.Operations.Generation;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
 
-namespace Tools.Math.VRP.MultiSalesman
+namespace OsmSharp.Tools.Math.VRP.MultiSalesman
 {
     public static class Facade
     {
 
         private class LocalProblem : Problem
         {
-            private Tools.Math.VRP.Core.IProblemWeights _problem;
+            private OsmSharp.Tools.Math.VRP.Core.IProblemWeights _problem;
 
-            public LocalProblem(Tools.Math.VRP.Core.IProblemWeights problem,
+            public LocalProblem(OsmSharp.Tools.Math.VRP.Core.IProblemWeights problem,
                 Second min, Second max)
                 :base(problem.Size, min, max)
             {
@@ -53,7 +53,7 @@ namespace Tools.Math.VRP.MultiSalesman
                 return _problem.Weight(city1, city2);
             }
         }
-        public static int[][] Calculate(Tools.Math.VRP.Core.IProblemWeights problem,
+        public static int[][] Calculate(OsmSharp.Tools.Math.VRP.Core.IProblemWeights problem,
             Second min, Second max)
         {
             Problem local_problem = new LocalProblem(problem, min, max);
@@ -158,7 +158,7 @@ namespace Tools.Math.VRP.MultiSalesman
 
             while (population.Count < population_size)
             {
-                Tools.Core.Output.OutputStreamHost.Write(
+                OsmSharp.Tools.Core.Output.OutputStreamHost.Write(
                     "Initializing population individual {0}/{1}...", population.Count + 1, population_size);
 
                 // create copy of cities
@@ -191,7 +191,7 @@ namespace Tools.Math.VRP.MultiSalesman
                 // add inidividual to the population.
                 population.Add(individual);
 
-                Tools.Core.Output.OutputStreamHost.WriteLine("Done!");
+                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Done!");
             }
 
             return population;
@@ -224,7 +224,7 @@ namespace Tools.Math.VRP.MultiSalesman
             Genome current_round = null;
             while (cities.Count > 0)
             {
-                Tools.Core.Output.OutputStreamHost.WriteLine("Placing cities {0}/{1}",
+                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Placing cities {0}/{1}",
                     cities.Count,
                     problem.Cities);
                 if (_registered_progress_reporter != null)
@@ -346,12 +346,12 @@ namespace Tools.Math.VRP.MultiSalesman
         //                }
         //                List<int> tried_and_failed_cities = new List<int>();
 
-        //                Tools.Core.Output.OutputTextStreamHost.WriteLine("");
-        //                Tools.Core.Output.OutputTextStreamHost.Write("Placing cities");
+        //                OsmSharp.Tools.Core.Output.OutputTextStreamHost.WriteLine("");
+        //                OsmSharp.Tools.Core.Output.OutputTextStreamHost.Write("Placing cities");
 
         //                while (cities.Count > 0)
         //                {
-        //                    Tools.Core.Output.OutputTextStreamHost.Write(".",
+        //                    OsmSharp.Tools.Core.Output.OutputTextStreamHost.Write(".",
         //                        cities.Count,
         //                        problem.Count);
 
@@ -425,15 +425,15 @@ namespace Tools.Math.VRP.MultiSalesman
         //                {
         //                    success = true;
 
-        //                    Tools.Core.Output.OutputTextStreamHost.WriteLine("");
-        //                    Tools.Core.Output.OutputTextStreamHost.WriteLine("Done for {0} rounds!", count);
+        //                    OsmSharp.Tools.Core.Output.OutputTextStreamHost.WriteLine("");
+        //                    OsmSharp.Tools.Core.Output.OutputTextStreamHost.WriteLine("Done for {0} rounds!", count);
         //                }
 
         //                if (!success && current_population_size >= population_size)
         //                {
         //                    count++;
-        //                    Tools.Core.Output.OutputTextStreamHost.WriteLine("");
-        //                    Tools.Core.Output.OutputTextStreamHost.WriteLine("Increasing to {0} rounds!", count);
+        //                    OsmSharp.Tools.Core.Output.OutputTextStreamHost.WriteLine("");
+        //                    OsmSharp.Tools.Core.Output.OutputTextStreamHost.WriteLine("Increasing to {0} rounds!", count);
 
         //                    current_population_size = 0;
         //                }

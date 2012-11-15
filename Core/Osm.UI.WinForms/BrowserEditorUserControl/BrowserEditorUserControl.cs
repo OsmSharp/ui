@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Osm.UI.WinForms.BrowserEditorUserControl
+namespace OsmSharp.Osm.UI.WinForms.BrowserEditorUserControl
 {
     public partial class BrowserEditorUserControl : UserControl
     {

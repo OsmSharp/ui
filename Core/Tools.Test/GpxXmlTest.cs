@@ -21,10 +21,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tools.Xml.Gpx;
-using Tools.Xml.Sources;
+using OsmSharp.Tools.Xml.Gpx;
+using OsmSharp.Tools.Xml.Sources;
 
-namespace Tools.Test
+namespace OsmSharp.Tools.Test
 {
     /// <summary>
     /// Summary description for UnitTest1
@@ -89,9 +89,9 @@ namespace Tools.Test
             GpxDocument document = new GpxDocument(source);
             object gpx = document.Gpx;
 
-            if (gpx is Tools.Xml.Gpx.v1_0.gpx)
+            if (gpx is OsmSharp.Tools.Xml.Gpx.v1_0.gpx)
             { // all ok here!
-                Tools.Xml.Gpx.v1_0.gpx gpx_type = (gpx as Tools.Xml.Gpx.v1_0.gpx);
+                OsmSharp.Tools.Xml.Gpx.v1_0.gpx gpx_type = (gpx as OsmSharp.Tools.Xml.Gpx.v1_0.gpx);
 
                 // test the gpx test file content.
                 Assert.IsNotNull(gpx_type.trk, "Gpx has not track!");
@@ -114,7 +114,7 @@ namespace Tools.Test
             GpxDocument document = new GpxDocument(source);
             object gpx = document.Gpx;
 
-            if (gpx is Tools.Xml.Gpx.v1_0.gpx)
+            if (gpx is OsmSharp.Tools.Xml.Gpx.v1_0.gpx)
             { // all ok here!
                 // get the target file.
                 FileInfo write_file = new FileInfo(@"test.written.v1.0.gpx");
@@ -139,9 +139,9 @@ namespace Tools.Test
                 document = new GpxDocument(source);
                 gpx = document.Gpx;
 
-                if (gpx is Tools.Xml.Gpx.v1_0.gpx)
+                if (gpx is OsmSharp.Tools.Xml.Gpx.v1_0.gpx)
                 { // all ok here!
-                    Tools.Xml.Gpx.v1_0.gpx gpx_type = (gpx as Tools.Xml.Gpx.v1_0.gpx);
+                    OsmSharp.Tools.Xml.Gpx.v1_0.gpx gpx_type = (gpx as OsmSharp.Tools.Xml.Gpx.v1_0.gpx);
 
                     // test the gpx test file content.
                     Assert.IsNotNull(gpx_type.trk, "Gpx has not track!");
@@ -174,9 +174,9 @@ namespace Tools.Test
             GpxDocument document = new GpxDocument(source);
             object gpx = document.Gpx;
 
-            if (gpx is Tools.Xml.Gpx.v1_1.gpxType)
+            if (gpx is OsmSharp.Tools.Xml.Gpx.v1_1.gpxType)
             { // all ok here!
-                Tools.Xml.Gpx.v1_1.gpxType gpx_type = (gpx as Tools.Xml.Gpx.v1_1.gpxType);
+                OsmSharp.Tools.Xml.Gpx.v1_1.gpxType gpx_type = (gpx as OsmSharp.Tools.Xml.Gpx.v1_1.gpxType);
 
                 // test the gpx test file content.
                 Assert.IsNotNull(gpx_type.trk, "Gpx has not track!");
@@ -199,7 +199,7 @@ namespace Tools.Test
             GpxDocument document = new GpxDocument(source);
             object gpx = document.Gpx;
 
-            if (gpx is Tools.Xml.Gpx.v1_1.gpxType)
+            if (gpx is OsmSharp.Tools.Xml.Gpx.v1_1.gpxType)
             { // all ok here!
                 // get the target file.
                 FileInfo write_file = new FileInfo(@"test.written.v1.1.gpx");
@@ -223,9 +223,9 @@ namespace Tools.Test
                 source = new XmlFileSource(write_file);
                 document = new GpxDocument(source);
                 gpx = document.Gpx;
-                if (gpx is Tools.Xml.Gpx.v1_1.gpxType)
+                if (gpx is OsmSharp.Tools.Xml.Gpx.v1_1.gpxType)
                 { // all ok here!
-                    Tools.Xml.Gpx.v1_1.gpxType gpx_type = (gpx as Tools.Xml.Gpx.v1_1.gpxType);
+                    OsmSharp.Tools.Xml.Gpx.v1_1.gpxType gpx_type = (gpx as OsmSharp.Tools.Xml.Gpx.v1_1.gpxType);
 
                     // test the gpx test file content.
                     Assert.IsNotNull(gpx_type.trk, "Gpx has not track!");

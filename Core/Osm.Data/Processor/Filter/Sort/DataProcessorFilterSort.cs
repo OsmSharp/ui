@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core.Simple;
+using OsmSharp.Osm.Core.Simple;
 
-namespace Osm.Data.Core.Processor.Filter.Sort
+namespace OsmSharp.Osm.Data.Core.Processor.Filter.Sort
 {
     public class DataProcessorFilterSort : DataProcessorFilter
     {

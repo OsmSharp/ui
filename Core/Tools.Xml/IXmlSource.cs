@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace Tools.Xml
+namespace OsmSharp.Tools.Xml
 {
     /// <summary>
     /// Reprents an xml source.

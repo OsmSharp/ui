@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math
+namespace OsmSharp.Tools.Math
 {
     /// <summary>
     /// Abstracts an index containing tags.

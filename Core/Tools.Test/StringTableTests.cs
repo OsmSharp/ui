@@ -3,9 +3,9 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tools.Core.Collections;
+using OsmSharp.Tools.Core.Collections;
 
-namespace Tools.Test
+namespace OsmSharp.Tools.Test
 {
     /// <summary>
     /// Summary description for StringTableTests

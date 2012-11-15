@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Osm.Core.Factory;
-using Tools.Core.Collections;
-using Osm.Core.Simple;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Tools.Core.Collections;
+using OsmSharp.Osm.Core.Simple;
 
-namespace Osm.Core
+namespace OsmSharp.Osm.Core
 {
     public enum HighwayTypeEnum
     {

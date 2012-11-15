@@ -20,11 +20,11 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Osm.Data.Core.Raw.Memory;
-using Osm.Core.Factory;
-using Osm.Core;
+using OsmSharp.Osm.Data.Core.Raw.Memory;
+using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Osm.Core;
 
-namespace Osm.UnitTests
+namespace OsmSharp.Osm.UnitTests
 {
     [TestClass]
     public class RawMemoryDataSourceTests

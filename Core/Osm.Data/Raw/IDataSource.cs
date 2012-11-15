@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
-using Tools.Math.Geo;
-using Osm.Core.Filters;
-using Osm.Core.Sources;
+using OsmSharp.Osm.Core;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm.Core.Sources;
 
-namespace Osm.Data
+namespace OsmSharp.Osm.Data
 {
     /// <summary>
     /// Represents a generic data source.

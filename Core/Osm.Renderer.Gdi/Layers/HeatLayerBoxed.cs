@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Tools.Math.Units.Angle;
-using Tools.Core.Collections;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Units.Angle;
+using OsmSharp.Tools.Core.Collections;
 using System.Threading;
 
-namespace Osm.Renderer.Gdi.Layers
+namespace OsmSharp.Osm.Renderer.Gdi.Layers
 {
     public abstract class HeatLayerBoxed : HeatLayer
     {
@@ -40,7 +40,7 @@ namespace Osm.Renderer.Gdi.Layers
 
         private List<GeoCoordinate> _coords;
 
-        protected override List<Tools.Math.Geo.GeoCoordinate> GetPoint(Tools.Math.Geo.GeoCoordinateBox box)
+        protected override List<OsmSharp.Tools.Math.Geo.GeoCoordinate> GetPoint(OsmSharp.Tools.Math.Geo.GeoCoordinateBox box)
         {
             // notify a new request.
             this.NotifyRequest(box);
@@ -52,9 +52,9 @@ namespace Osm.Renderer.Gdi.Layers
         /// Issues the correct requests for this box.
         /// </summary>
         /// <param name="box"></param>
-        private List<Tools.Math.Geo.GeoCoordinate> GetLoadedPoints(GeoCoordinateBox box)
+        private List<OsmSharp.Tools.Math.Geo.GeoCoordinate> GetLoadedPoints(GeoCoordinateBox box)
         {
-            List<Tools.Math.Geo.GeoCoordinate> list = new List<GeoCoordinate>();
+            List<OsmSharp.Tools.Math.Geo.GeoCoordinate> list = new List<GeoCoordinate>();
 
             TileRange range = this.GetTileToLoadFor(box, _zoom);
 

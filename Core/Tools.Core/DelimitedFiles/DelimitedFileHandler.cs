@@ -21,9 +21,9 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using System.IO;
-using Tools.Core.Progress;
+using OsmSharp.Tools.Core.Progress;
 
-namespace Tools.Core.DelimitedFiles
+namespace OsmSharp.Tools.Core.DelimitedFiles
 {
     /// <summary>
     /// Handles common delimited file functions.

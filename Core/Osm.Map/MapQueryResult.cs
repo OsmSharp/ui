@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Osm.Map.Elements;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Map.Elements;
 
-namespace Osm.Map
+namespace OsmSharp.Osm.Map
 {
     public class MapQueryResult
     {

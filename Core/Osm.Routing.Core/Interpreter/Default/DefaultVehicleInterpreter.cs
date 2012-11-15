@@ -19,12 +19,12 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Routing.Core.Interpreter.Vehicles;
-//using Tools.Math.Units.Distance;
-//using Tools.Math.Geo;
-//using Tools.Math.Units.Speed;
+//using OsmSharp.Routing.Core.Interpreter.Vehicles;
+//using OsmSharp.Tools.Math.Units.Distance;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Tools.Math.Units.Speed;
 
-//namespace Routing.Core.Interpreter.Default
+//namespace OsmSharp.Routing.Core.Interpreter.Default
 //{
 //    /// <summary>
 //    /// Translates OSM data into an image of the road network represented by it for difference vehicle types.
@@ -50,7 +50,7 @@
 //        /// </summary>
 //        /// <param name="vehicle"></param>
 //        public DefaultVehicleInterpreter(VehicleEnum vehicle)
-//            :this(new Routing.Core.Interpreter.RoutingVehicleSimple(vehicle))
+//            :this(new OsmSharp.Routing.Core.Interpreter.RoutingVehicleSimple(vehicle))
 //        {
 
 //        }

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Data.Redis.Raw.Primitives
+namespace OsmSharp.Osm.Data.Redis.Raw.Primitives
 {
     public class OsmNode
     {

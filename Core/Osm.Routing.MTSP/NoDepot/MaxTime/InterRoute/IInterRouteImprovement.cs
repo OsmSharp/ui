@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.InterRoute
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
 {
     /// <summary>
     /// Represents an inter route improvement heuristic.

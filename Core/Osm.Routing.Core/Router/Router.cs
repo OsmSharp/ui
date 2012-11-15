@@ -19,21 +19,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Graph;
-using Routing.Core.Interpreter;
-using Tools.Math;
-using Routing.Core.Graph.Router;
-using Tools.Math.Geo;
-using Routing.Core.Router;
-using Routing.Core.Resolving;
-using Tools.Math.Units.Distance;
-using Routing.Core.Graph.Memory;
-using Routing.Core.Graph.Path;
-using Routing.Core.Route;
-using Routing.Core.Metrics.Time;
-using Routing.Core.Graph.Router.Dykstra;
+using OsmSharp.Routing.Core.Graph;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Tools.Math;
+using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.Router;
+using OsmSharp.Routing.Core.Resolving;
+using OsmSharp.Tools.Math.Units.Distance;
+using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Routing.Core.Graph.Path;
+using OsmSharp.Routing.Core.Route;
+using OsmSharp.Routing.Core.Metrics.Time;
+using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 
-namespace Routing.Core
+namespace OsmSharp.Routing.Core
 {
     /// <summary>
     /// A class that implements common functionality for a raw routing algorithm.
@@ -244,7 +244,7 @@ namespace Routing.Core
                 connectivity_array[idx] = this.CheckConnectivity(point[idx], weight);
 
                 // report progress.
-                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.Core.CheckConnectivity",
+                OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.Core.CheckConnectivity",
                     "Checking connectivity...");
             }
             return connectivity_array;
@@ -261,10 +261,14 @@ namespace Routing.Core
         /// <returns></returns>
         private OsmSharpRoute ConstructRoute(PathSegment<long> route, RouterPoint source, RouterPoint target)
         {
-            long[] vertices = route.ToArray();
+            if (route != null)
+            {
+                long[] vertices = route.ToArray();
 
-            // construct the actual graph route.
-            return this.Generate(source, target, vertices);
+                // construct the actual graph route.
+                return this.Generate(source, target, vertices);
+            }
+            return null; // calculation failed!
         }
 
         /// <summary>
@@ -1082,7 +1086,7 @@ namespace Routing.Core
                 // return the vertex on top of the list.
                 current = visit_list.GetFirst();
                 // update the settled list.
-                settled.Add(current.VertexId);
+                if (current != null) { settled.Add(current.VertexId); }
                 while (current != null && current.VertexId > 0)
                 {
                     // add to the visit list.

@@ -2,13 +2,13 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Routing.Core.Router;
-//using Tools.Math.Geo;
-//using Routing.Core.Graph.Memory;
-//using Routing.Core.Graph;
-//using Tools.Math.Structures;
+//using OsmSharp.Routing.Core.Router;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Routing.Core.Graph.Memory;
+//using OsmSharp.Routing.Core.Graph;
+//using OsmSharp.Tools.Math.Structures;
 
-//namespace Osm.Routing.Data
+//namespace OsmSharp.Osm.Routing.Data
 //{
 //    /// <summary>
 //    /// A router data source for OSM data holding all data in-memory.

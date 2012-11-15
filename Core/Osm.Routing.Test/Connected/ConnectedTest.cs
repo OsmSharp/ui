@@ -20,15 +20,15 @@
 //using System.Linq;
 //using System.Text;
 //using System.IO;
-//using Tools.Math.Geo;
+//using OsmSharp.Tools.Math.Geo;
 //using System.Data;
-//using Osm.Data;
-//using Tools.Xml.Sources;
-//using Osm.Routing.Raw;
-//using Osm.Data.Raw.XML.OsmSource;
-//using Osm.Core.Xml;
+//using OsmSharp.Osm.Data;
+//using OsmSharp.Tools.Xml.Sources;
+//using OsmSharp.Osm.Routing.Raw;
+//using OsmSharp.Osm.Data.Raw.XML.OsmSource;
+//using OsmSharp.Osm.Core.Xml;
 
-//namespace Osm.Routing.Test.Connected
+//namespace OsmSharp.Osm.Routing.Test.Connected
 //{
 //    class ConnectedTest
 //    {
@@ -54,8 +54,8 @@
 //            // read matrix points.
 //            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
 //            string csv_path = Path.Combine(info.FullName, "Connected",string.Format("{0}.csv",name));
-//            DataSet data = Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
-//                new System.IO.FileInfo(csv_path), Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
+//            DataSet data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
+//                new System.IO.FileInfo(csv_path), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
 //            foreach (DataRow row in data.Tables[0].Rows)
 //            {
 //                // be carefull with the parsing and the number formatting for different cultures.

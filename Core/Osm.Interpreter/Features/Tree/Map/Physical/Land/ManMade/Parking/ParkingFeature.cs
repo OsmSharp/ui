@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core.Filters;
+using OsmSharp.Osm.Core.Filters;
 
-namespace Osm.Interpreter.Features.Tree.Map.Physical.Land.ManMade.Parking
+namespace OsmSharp.Osm.Interpreter.Features.Tree.Map.Physical.Land.ManMade.Parking
 {
     
     public class ParkingFeature : Feature

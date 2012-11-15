@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Tools.Math.TSP.Problems;
-using Tools.TSPLIB.Problems;
+using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Tools.TSPLIB.Problems;
 
-namespace Tools.TSPLIB.Parser
+namespace OsmSharp.Tools.TSPLIB.Parser
 {
     public class TSPLIBProblemGenerator
     {

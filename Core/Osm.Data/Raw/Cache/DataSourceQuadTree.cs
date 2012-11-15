@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Tools.Math.Structures.QTree;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Structures.QTree;
 
-namespace Osm.Data.Cache
+namespace OsmSharp.Osm.Data.Cache
 {
     public class DataSourceQuadTree : QuadTree<GeoCoordinate>
     {

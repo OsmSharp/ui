@@ -19,16 +19,16 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Tools.Math.Graph.Routing.Dykstra;
-//using Osm.Routing.Graphs;
-//using Tools.Math.Graph.Routing;
-//using Tools.Math.Graph;
-//using Tools.Math.Graph.Routing.Point2Point.Exceptions;
-//using Tools.Math.Graph.Routing.DataStructures;
-//using Osm.Routing.Core.Constraints;
-//using Tools.Math;
+//using OsmSharp.Tools.Math.Graph.Routing.Dykstra;
+//using OsmSharp.Osm.Routing.Graphs;
+//using OsmSharp.Tools.Math.Graph.Routing;
+//using OsmSharp.Tools.Math.Graph;
+//using OsmSharp.Tools.Math.Graph.Routing.Point2Point.Exceptions;
+//using OsmSharp.Tools.Math.Graph.Routing.DataStructures;
+//using OsmSharp.Osm.Routing.Core.Constraints;
+//using OsmSharp.Tools.Math;
 
-//namespace Osm.Routing.Dykstra
+//namespace OsmSharp.Osm.Routing.Dykstra
 //{
 //    /// <summary>
 //    /// Class implementing a version of the Dykstra route calculation algorithm working on a <see cref="Graph<EdgeType,VertexType>"/> object.
@@ -90,7 +90,7 @@
 //                return current;
 //            }
 
-//            // start routing.
+//            // start OsmSharp.Routing.
 //            Dictionary<long, GraphNeighbourInfo> neighbours = _graph.GetNeighboursAdvancedInfo(
 //                current.VertexId, null);
 //            chosen_nodes.Add(current.VertexId);
@@ -352,7 +352,7 @@
 //                results[idx] = this.CalculateOneToMany(from[idx], tos);
 
 //                // report progress.
-//                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, from.Length, "Routing.Raw.Dykstra.CalculateManyToMany",
+//                OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, from.Length, "Routing.Raw.Dykstra.CalculateManyToMany",
 //                    "Calculating many to many weights....");
 //            }
 
@@ -383,7 +383,7 @@
 //                new RouteLinked(from);
 //            labels[from] = new List<RoutingLabel>();
 
-//            // start routing.
+//            // start OsmSharp.Routing.
 //            Dictionary<long, float> neighbours = _graph.GetNeighbours(
 //                current.VertexId, null);
 //            chosen_nodes.Add(current.VertexId);

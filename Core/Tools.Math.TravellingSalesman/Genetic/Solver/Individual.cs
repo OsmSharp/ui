@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic;
 
-namespace Tools.Math.TSP.Genetic.Solver
+namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
 {
     public class Individual : Individual<List<int>, GeneticProblem, Fitness>
     {

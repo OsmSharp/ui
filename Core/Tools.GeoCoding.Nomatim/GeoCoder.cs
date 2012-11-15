@@ -20,14 +20,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net;
-using Tools.Xml;
-using Tools.Xml.Nomatim.Reverse.v1;
-using Tools.Xml.Sources;
-using Tools.Xml.Nomatim.Search;
-using Tools.Xml.Nomatim.Search.v1;
+using OsmSharp.Tools.Xml;
+using OsmSharp.Tools.Xml.Nomatim.Reverse.v1;
+using OsmSharp.Tools.Xml.Sources;
+using OsmSharp.Tools.Xml.Nomatim.Search;
+using OsmSharp.Tools.Xml.Nomatim.Search.v1;
 using System.Configuration;
 
-namespace Tools.GeoCoding.Nomatim
+namespace OsmSharp.Tools.GeoCoding.Nomatim
 {
     public class GeoCoder : IGeoCoder
     {
@@ -70,9 +70,9 @@ namespace Tools.GeoCoding.Nomatim
             GeoCoderResult res = new GeoCoderResult();
             res.Accuracy = AccuracyEnum.UnkownLocationLevel;
 
-            if (search_doc.Search is Tools.Xml.Nomatim.Search.v1.searchresults)
+            if (search_doc.Search is OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults)
             {
-                searchresults result_v1 = search_doc.Search as Tools.Xml.Nomatim.Search.v1.searchresults;
+                searchresults result_v1 = search_doc.Search as OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults;
                 if (result_v1.place != null && result_v1.place.Length > 0)
                 {
                     double latitude;
@@ -108,9 +108,9 @@ namespace Tools.GeoCoding.Nomatim
                     }
                 }
             }
-						else if (search_doc.Search is Tools.Xml.Nomatim.Reverse.v1.reversegeocode)
+						else if (search_doc.Search is OsmSharp.Tools.Xml.Nomatim.Reverse.v1.reversegeocode)
 						{
-							reversegeocode result_v1 = search_doc.Search as Tools.Xml.Nomatim.Reverse.v1.reversegeocode;
+							reversegeocode result_v1 = search_doc.Search as OsmSharp.Tools.Xml.Nomatim.Reverse.v1.reversegeocode;
 							if (result_v1.result != null && result_v1.result.Length > 0)
 							{
 								double latitude;

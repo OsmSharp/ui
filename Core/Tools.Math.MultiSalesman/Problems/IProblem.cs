@@ -20,12 +20,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.VRP.MultiSalesman.Problems
+namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Problems
 {
     /// <summary>
     /// Represents an M-TSP problem.
     /// </summary>
-    public interface IProblem : Tools.Math.AI.Genetic.IProblem
+    public interface IProblem : OsmSharp.Tools.Math.AI.Genetic.IProblem
     {
         /// <summary>
         /// Returns the size of the problem.

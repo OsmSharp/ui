@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Geo.Lambert.Ellipsoids
+namespace OsmSharp.Tools.Math.Geo.Lambert.Ellipsoids
 {
     /// <summary>
     /// Represents a hayford 1924 ellipsoid.

@@ -21,20 +21,20 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
-using Tools.Math.TSP;
-using Tools.Math.TSP.ArbitraryInsertion;
-using Tools.Math.TSP.CheapestInsertion;
-using Tools.Math.TSP.EdgeAssemblyGenetic;
-using Tools.Math.TSP.Genetic;
-using Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
-using Tools.Math.TSP.Genetic.Solver.Operations.Generation;
-using Tools.Math.TSP.Genetic.Solver.Operations.Mutation;
-using Tools.Math.TSP.LocalSearch.HillClimbing3Opt;
-using Tools.TSPLIB.Parser;
-using Tools.TSPLIB.Problems;
+using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Tools.Math.TSP.ArbitraryInsertion;
+using OsmSharp.Tools.Math.TSP.CheapestInsertion;
+using OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic;
+using OsmSharp.Tools.Math.TSP.Genetic;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Mutation;
+using OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt;
+using OsmSharp.Tools.TSPLIB.Parser;
+using OsmSharp.Tools.TSPLIB.Problems;
 using System.Diagnostics;
 
-namespace Tools.Benchmark.TSPLIB
+namespace OsmSharp.Tools.Benchmark.TSPLIB
 {
     static class Program
     {
@@ -46,7 +46,7 @@ namespace Tools.Benchmark.TSPLIB
         {
             DoTests();
 
-            Console.WriteLine("Finished!");
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Finished!");
             Console.ReadLine();
         }
 
@@ -54,26 +54,28 @@ namespace Tools.Benchmark.TSPLIB
         {
             bool ga = false;
             bool eax = true;
-            //Tools.Core.Output.OutputTextStreamHost.RegisterOutputStream(
-            //    new Tools.Core.Output.ConsoleOutputStream());
+            OsmSharp.Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
+                new OsmSharp.Tools.Core.Output.ConsoleOutputStream());
+            OsmSharp.Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
+                new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\results_x64.txt"));
             //while (true)
             //{
-            //    Console.WriteLine(Tools.Math.Random.StaticRandomGenerator.Get().Generate(10.0));
+            //    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(10.0));
             //}
 
             List<TSPLIBProblem> problems = new List<TSPLIBProblem>();
 
-            //problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "031_K1040-06.atsp", 341));
-            //problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "036_K1210-01.atsp", 720));
-            //problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "061_K3511.atsp", 281));
-            //problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "072_K3510.atsp", 186));
-            //problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "098_K3089.atsp", 403));
-            //problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "122_K4052.atsp", 463));
-            //problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "151_K7537.atsp", 1489));
-            //problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "168_K2160.atsp", 2232));
-            //problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "181_K4207.atsp", 1234));
-            //problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "209_K2125.atsp", 1284));
-            //problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "254_K3504.atsp", 568));
+            problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "031_K1040-06.atsp", 341));
+            problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "036_K1210-01.atsp", 720));
+            problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "061_K3511.atsp", 281));
+            problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "072_K3510.atsp", 186));
+            problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "098_K3089.atsp", 403));
+            problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "122_K4052.atsp", 463));
+            problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "151_K7537.atsp", 1489));
+            problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "168_K2160.atsp", 2232));
+            problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "181_K4207.atsp", 1234));
+            problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "209_K2125.atsp", 1284));
+            problems.Add(Program.CreateProblem(@"\Problems\DM\{0}", "254_K3504.atsp", 568));
 
             //problems.Add(Program.CreateProblem(@"\Problems\TSP\{0}", "a280.tsp", 2579));
 
@@ -101,12 +103,41 @@ namespace Tools.Benchmark.TSPLIB
             //solvers.Add(new HillClimbing3OptSolver(false, false));
             //solvers.Add(new HillClimbing3OptSolver(true, false));
             //solvers.Add(new HillClimbing3OptSolver(false, true));
-            //solvers.Add(new HillClimbing3OptSolver(true, true));
-            //solvers.Add(new ArbitraryInsertionSolver());
-            //solvers.Add(new CheapestInsertionSolver());
+            solvers.Add(new HillClimbing3OptSolver(true, true));
+            solvers.Add(new ArbitraryInsertionSolver());
+            solvers.Add(new CheapestInsertionSolver());
 
-            int population = 100;
-            int stagnation = 20;
+            Program.DoAddSolvers(solvers, false, true, 100, 20);
+            //Program.DoAddSolvers(solvers, false, true, 200, 20);
+            Program.DoAddSolvers(solvers, false, true, 300, 20);
+
+            TSPLIBTester tester = new TSPLIBTester("log", problems, solvers, 100);
+            tester.StartTests();
+
+            //    DoTest(name, "br17.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "ftv33.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "ftv35.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "ftv38.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "p43.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "ftv44.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "ftv47.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "ry48p.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "ftv55.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "ftv64.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "ft70.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "ftv70.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "kro124p.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "ftv170.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "rbg323.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "rbg358.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "rbg403.atsp", false, 100000000, log_stream);
+            //    DoTest(name, "rbg443.atsp", false, 100000000, log_stream);
+        }
+
+        static void DoAddSolvers( List<ISolver> solvers, bool ga, bool eax, int population, int stagnation)
+        {
+            //int population = 100;
+            //int stagnation = 20;
 
             if (ga)
             {
@@ -130,7 +161,7 @@ namespace Tools.Benchmark.TSPLIB
                           new BestPlacementGenerationOperation()));
                 //solvers.Add(new GeneticSolver(population, stagnation, 0,
                 //        new BestPlacementMutationOperation(), 10,
-                //        new EdgeAssemblyCrossover(5,
+                //        new EdgeAssemblyCrossover(30,
                 //            EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.MultipleRandom,
                 //            false), 90,
                 //        new BestPlacementGenerationOperation()));
@@ -178,11 +209,11 @@ namespace Tools.Benchmark.TSPLIB
                 //      new EdgeAssemblyCrossover(5,
                 //             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
                 //             true)));
-                //solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                //     new BestPlacementGenerationOperation(),
-                //      new EdgeAssemblyCrossover(10,
-                //             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
-                //             true)));
+                solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
+                     new BestPlacementGenerationOperation(),
+                      new EdgeAssemblyCrossover(30,
+                             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
+                             true)));
                 solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
                      new _3OptGenerationOperation(),
                       new EdgeAssemblyCrossover(30,
@@ -199,112 +230,6 @@ namespace Tools.Benchmark.TSPLIB
                 //             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
                 //             true)));
             }
-
-            population = 300;
-            stagnation = 20;
-
-            if (ga)
-            {
-                //solvers.Add(new GeneticSolver(population, stagnation, 0,
-                //        new BestPlacementMutationOperation(), 10,
-                //        new EdgeAssemblyCrossover(5,
-                //            EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
-                //            false), 90,
-                //        new BestPlacementGenerationOperation()));
-                //solvers.Add(new GeneticSolver(population, stagnation, 0,
-                //        new BestPlacementMutationOperation(), 10,
-                //        new EdgeAssemblyCrossover(30,
-                //            EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
-                //            false), 90,
-                //new BestPlacementGenerationOperation()));
-                solvers.Add(new GeneticSolver(population, stagnation, 0,
-                        new BestPlacementMutationOperation(), 10,
-                        new EdgeAssemblyCrossover(30,
-                            EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
-                            true), 90,
-                        new BestPlacementGenerationOperation()));
-                //solvers.Add(new GeneticSolver(population, stagnation, 0,
-                //        new BestPlacementMutationOperation(), 10,
-                //        new EdgeAssemblyCrossover(5,
-                //            EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.MultipleRandom,
-                //            false), 90,
-                //        new BestPlacementGenerationOperation()));
-                //solvers.Add(new GeneticSolver(population, stagnation, 0,
-                //        new BestPlacementMutationOperation(), 10,
-                //        new EdgeAssemblyCrossover(30,
-                //            EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.MultipleRandom,
-                //            false), 90,
-                //        new BestPlacementGenerationOperation()));
-            }
-            if (eax)
-            {
-                //solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                //    new BestPlacementGenerationOperation(),
-                //     new EdgeAssemblyCrossover(1,
-                //            EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.MultipleRandom,
-                //            true)));
-                //solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                //     new BestPlacementGenerationOperation(),
-                //      new EdgeAssemblyCrossover(5,
-                //             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.MultipleRandom,
-                //             true)));
-                //solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                //     new BestPlacementGenerationOperation(),
-                //      new EdgeAssemblyCrossover(10,
-                //             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.MultipleRandom,
-                //             true)));
-                //solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                //     new _3OptGenerationOperation(),
-                //      new EdgeAssemblyCrossover(30,
-                //             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.MultipleRandom,
-                //             true)));
-                //solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                //    new BestPlacementGenerationOperation(),
-                //     new EdgeAssemblyCrossover(1,
-                //            EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
-                //            true)));
-                //solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                //     new BestPlacementGenerationOperation(),
-                //      new EdgeAssemblyCrossover(5,
-                //             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
-                //             true)));
-                solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                     new _3OptGenerationOperation(),
-                      new EdgeAssemblyCrossover(30,
-                             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
-                             false)));
-                solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                     new _3OptGenerationOperation(),
-                      new EdgeAssemblyCrossover(30,
-                             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
-                             true)));
-                //solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                //     new _3OptGenerationOperation(),
-                //      new EdgeAssemblyCrossover(30,
-                //             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
-                //             true)));
-            }
-            TSPLIBTester tester = new TSPLIBTester("log", problems, solvers, 10);
-            tester.StartTests();
-
-            //    DoTest(name, "br17.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "ftv33.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "ftv35.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "ftv38.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "p43.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "ftv44.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "ftv47.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "ry48p.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "ftv55.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "ftv64.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "ft70.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "ftv70.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "kro124p.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "ftv170.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "rbg323.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "rbg358.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "rbg403.atsp", false, 100000000, log_stream);
-            //    DoTest(name, "rbg443.atsp", false, 100000000, log_stream);
         }
 
         static TSPLIBProblem CreateProblem(string path, string file, float best)

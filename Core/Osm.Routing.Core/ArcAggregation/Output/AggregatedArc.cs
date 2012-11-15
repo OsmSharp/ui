@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Distance;
+using OsmSharp.Tools.Math.Units.Distance;
 
-namespace Routing.Core.ArcAggregation.Output
+namespace OsmSharp.Routing.Core.ArcAggregation.Output
 {
     /// <summary>
     /// Represents an arc in the aggregated route.

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.GeoCoding.Nomatim
+namespace OsmSharp.Tools.GeoCoding.Nomatim
 {
     public class GeoCoderResult : IGeoCoderResult
     {

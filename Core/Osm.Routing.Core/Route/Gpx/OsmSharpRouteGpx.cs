@@ -20,11 +20,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Tools.Xml.Sources;
-using Tools.Xml.Gpx;
-using Tools.Xml.Gpx.v1_1;
+using OsmSharp.Tools.Xml.Sources;
+using OsmSharp.Tools.Xml.Gpx;
+using OsmSharp.Tools.Xml.Gpx.v1_1;
 
-namespace Routing.Core.Route.Gpx
+namespace OsmSharp.Routing.Core.Route.Gpx
 {
     /// <summary>
     /// Converts an OsmSharpRoute into a gpx.

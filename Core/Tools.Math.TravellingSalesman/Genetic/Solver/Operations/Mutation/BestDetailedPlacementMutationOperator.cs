@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.Mutations;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.TSP.Genetic.Solver;
-using Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
 
-namespace Tools.Math.TSP.Genetic.Solver.Operations.Mutation
+namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Mutation
 {
     public class BestDetailedPlacementMutationOperation :
         IMutationOperation<List<int>, GeneticProblem, Fitness>

@@ -21,7 +21,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 
-namespace Tools.GeoCoding.Nomatim
+namespace OsmSharp.Tools.GeoCoding.Nomatim
 {
     public class GeoCoderQuery
     {

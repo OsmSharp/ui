@@ -21,11 +21,11 @@ using System.Linq;
 using System.Text;
 using ServiceStack.Redis;
 using ServiceStack.Redis.Generic;
-using Osm.Core.Simple;
-using Osm.Data.Core.Processor;
-using Osm.Data.Redis.Raw.Primitives;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Core.Processor;
+using OsmSharp.Osm.Data.Redis.Raw.Primitives;
 
-namespace Osm.Data.Redis.Sparse.Processor
+namespace OsmSharp.Osm.Data.Redis.Sparse.Processor
 {
     /// <summary>
     /// A data processor target using Redis.

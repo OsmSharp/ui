@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
-using Osm.Data.Core.Processor;
-using Osm.Core.Simple;
-using Osm.Core.Factory;
-using Tools.Core.Collections;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Data.Core.Processor;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Tools.Core.Collections;
 
-namespace Osm.Data.Core.Raw.Memory
+namespace OsmSharp.Osm.Data.Core.Raw.Memory
 {
     /// <summary>
     /// A memory data source processor target.
@@ -83,7 +83,7 @@ namespace Osm.Data.Core.Raw.Memory
         /// <summary>
         /// Holds all nodes.
         /// </summary>
-        private Dictionary<long, Osm.Core.Node> _nodes; 
+        private Dictionary<long, OsmSharp.Osm.Core.Node> _nodes; 
 
         /// <summary>
         /// Adds a given node.
@@ -103,7 +103,7 @@ namespace Osm.Data.Core.Raw.Memory
         /// <summary>
         /// Holds all ways.
         /// </summary>
-        private Dictionary<long, Osm.Core.Way> _ways; 
+        private Dictionary<long, OsmSharp.Osm.Core.Way> _ways; 
 
         /// <summary>
         /// Adds a given way.
@@ -123,7 +123,7 @@ namespace Osm.Data.Core.Raw.Memory
         /// <summary>
         /// Holds all relations.
         /// </summary>
-        private Dictionary<long, Osm.Core.Relation> _relations; 
+        private Dictionary<long, OsmSharp.Osm.Core.Relation> _relations; 
 
         /// <summary>
         /// Adds a given relation.

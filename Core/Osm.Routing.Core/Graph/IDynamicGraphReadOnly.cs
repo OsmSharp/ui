@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Routing.Core.Graph
+namespace OsmSharp.Routing.Core.Graph
 {
     /// <summary>
     /// Abstracts an graph implementation. 
@@ -48,5 +48,13 @@ namespace Routing.Core.Graph
         /// <param name="vertex"></param>
         /// <returns></returns>
         KeyValuePair<uint, EdgeData>[] GetArcs(uint vertex);
+
+        /// <summary>
+        /// Returns the total number of vertices.
+        /// </summary>
+        uint VertexCount
+        {
+            get;
+        }
     }
 }

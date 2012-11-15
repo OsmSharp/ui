@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Tools.Math.AI.Genetic.Operations.Mutations;
-using Tools.Math.AI.Genetic.Operations.Generation;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
 
-namespace Tools.Math.AI.Genetic.Operations
+namespace OsmSharp.Tools.Math.AI.Genetic.Operations
 {
     /// <summary>
     /// Interface abstracting the usage of mutation and cross over operations.

@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace Tools.Math.AI.Genetic.Operations.CrossOver
+namespace OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver
 {
     /// <summary>
     /// Interface abstracting the implementation of crossing over individuals.

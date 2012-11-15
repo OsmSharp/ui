@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.VRP.MultiSalesman.Genetic
+namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
 {
     /// <summary>
     /// Fitness object used to represent fitness of an individual.

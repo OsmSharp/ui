@@ -20,13 +20,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-using Osm.Renderer.Gdi.Layers;
+using OsmSharp.Osm.Renderer.Gdi.Layers;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using Tools.Math.Geo;
-using Tools.Math;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math;
 
-namespace Osm.Renderer.Gdi.Layers
+namespace OsmSharp.Osm.Renderer.Gdi.Layers
 {
     public abstract class HeatLayer : GdiCustomLayer
     {
@@ -40,7 +40,7 @@ namespace Osm.Renderer.Gdi.Layers
             _radius = radius;
         }
 
-        public override void Render(Osm.Renderer.Gdi.IGdiTarget target, Osm.Renderer.View view)
+        public override void Render(Osm.Renderer.Gdi.IGdiTarget target, OsmSharp.Osm.Renderer.View view)
         {
             // Create new graphics surface from memory bitmap
             Graphics DrawSurface = target.Graphics;

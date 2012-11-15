@@ -20,12 +20,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.OracleClient;
-using Osm.Core;
-using Osm.Core.Factory;
-using Tools.Math.Geo;
-using Osm.Core.Filters;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core.Filters;
 
-namespace Osm.Data.Oracle.Raw
+namespace OsmSharp.Osm.Data.Oracle.Raw
 {
     public class OracleSimpleSource : IDataSourceReadOnly, IDisposable
     {

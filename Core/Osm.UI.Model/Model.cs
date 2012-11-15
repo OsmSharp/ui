@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.UI.Model
+namespace OsmSharp.Osm.UI.Model
 {
     /// <summary>
     /// Facade handling all user/application requests. 

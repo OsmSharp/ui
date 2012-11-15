@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Core
+namespace OsmSharp.Tools.Core
 {
     public static class Range
     {

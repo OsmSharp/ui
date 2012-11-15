@@ -1,4 +1,4 @@
-﻿namespace Osm.UI.WinForms.MapViewerUserControl
+﻿namespace OsmSharp.Osm.UI.WinForms.MapViewerUserControl
 {
     partial class MapViewerUserControl
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mapTarget = new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget();
+            this.mapTarget = new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget();
             this.SuspendLayout();
             // 
             // mapTarget
@@ -41,10 +41,10 @@
             this.mapTarget.Size = new System.Drawing.Size(762, 341);
             this.mapTarget.TabIndex = 0;
             this.mapTarget.ZoomFactor = 0F;
-            this.mapTarget.MapMouseWheel += new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseWheel);
-            this.mapTarget.MapMouseUp += new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseUp);
-            this.mapTarget.MapMouseMove += new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseMove);
-            this.mapTarget.MapMouseDown += new Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseDown);
+            this.mapTarget.MapMouseWheel += new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseWheel);
+            this.mapTarget.MapMouseUp += new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseUp);
+            this.mapTarget.MapMouseMove += new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseMove);
+            this.mapTarget.MapMouseDown += new OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget.MapMouseEventDelegate(this.mapTarget_MapMouseDown);
             // 
             // MapViewerUserControl
             // 
@@ -59,6 +59,6 @@
 
         #endregion
 
-        private Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget mapTarget;
+        private OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget.UserControlTarget mapTarget;
     }
 }

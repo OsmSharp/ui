@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math;
-using Tools.Math.Geo;
+using OsmSharp.Tools.Math;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Osm.Renderer
+namespace OsmSharp.Osm.Renderer
 {
     /// <summary>
     /// 
@@ -83,7 +83,7 @@ namespace Osm.Renderer
         {
             double resolution_per_x_degree = ((double)target.XRes) / this.Box.DeltaLon;
 
-            // TODO: explain the arbirtrairy parameter and the actual projection used by OSM.
+            // TODO: explain the arbirtrairy parameter and the actual projection used by OsmSharp.Osm.
             double resolution_per_y_degree = ((double)target.YRes / this.Box.DeltaLat);
 
             double angle_div_x = (point.Longitude - _box.MinLon);

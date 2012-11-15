@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Osm.Core;
-using Tools.Math;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core;
+using OsmSharp.Tools.Math;
 
-namespace Osm.Data.Core.Sparse.Primitives
+namespace OsmSharp.Osm.Data.Core.Sparse.Primitives
 {
     /// <summary>
     /// A sparse vertex that is a crucial part of the road network.
@@ -104,7 +104,7 @@ namespace Osm.Data.Core.Sparse.Primitives
         {
             get 
             {
-                return new Tools.Math.Geo.GeoCoordinate(
+                return new OsmSharp.Tools.Math.Geo.GeoCoordinate(
                     this.Coordinates[0],
                     this.Coordinates[1]);
             }

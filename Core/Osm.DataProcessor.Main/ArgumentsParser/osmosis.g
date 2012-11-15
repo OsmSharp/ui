@@ -12,9 +12,9 @@ tokens
 }
 
 @header {
-using Osm.DataProcessor.Core;
-using Osm.DataProcessor.Core.ChangeSets;
-using Osm.DataProcessor.Main;
+using OsmSharp.Osm.DataProcessor.Core;
+using OsmSharp.Osm.DataProcessor.Core.ChangeSets;
+using OsmSharp.Osm.DataProcessor.Main;
 }
 
 public parse returns [object target]

@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.TSP.Problems;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.VRP.Core.Routes.Symmetric;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
 
-namespace Tools.Math.TSP.CheapestInsertion
+namespace OsmSharp.Tools.Math.TSP.CheapestInsertion
 {
     public class CheapestInsertionSolver : ISolver
     {

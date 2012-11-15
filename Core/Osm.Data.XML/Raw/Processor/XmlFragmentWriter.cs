@@ -22,7 +22,7 @@ using System.Text;
 using System.IO;
 using System.Xml;
 
-namespace Osm.Data.XML.Raw.Processor
+namespace OsmSharp.Osm.Data.XML.Raw.Processor
 {
     class XmlFragmentWriter : XmlTextWriter
     {

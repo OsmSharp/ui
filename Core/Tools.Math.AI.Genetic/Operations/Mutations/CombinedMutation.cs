@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Random;
-using Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.Random;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace Tools.Math.AI.Genetic.Operations.Mutations
+namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations
 {
     public class CombinedMutation<GenomeType, ProblemType, WeightType> : IMutationOperation<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem

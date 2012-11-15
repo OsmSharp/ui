@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.TSP;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.TSP.Problems;
-using Tools.Math.TSP.ArbitraryInsertion;
-using Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.TSP.ArbitraryInsertion;
+using OsmSharp.Tools.Math.VRP.Core;
 
-namespace Tools.Math.TSP.LocalSearch.HillClimbing3Opt
+namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
 {
     /// <summary>
     /// Uses the 3-opt local search procedure to generate ATSP solutions.
@@ -100,7 +100,7 @@ namespace Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         public IRoute Solve(IProblem problem)
         {
             // generate some random route first.
-            //IRoute route = Tools.Math.TravellingSalesman.Random.RandomSolver.DoSolve(
+            //IRoute route = OsmSharp.Tools.Math.TravellingSalesman.Random.RandomSolver.DoSolve(
             //    problem);
             IRoute route = solver.Solve(problem);
 

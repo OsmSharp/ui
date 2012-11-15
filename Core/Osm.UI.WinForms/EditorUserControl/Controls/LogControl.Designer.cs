@@ -1,4 +1,4 @@
-﻿namespace Osm.UI.WinForms.EditorUserControl.Controls
+﻿namespace OsmSharp.Osm.UI.WinForms.EditorUserControl.Controls
 {
     partial class LogControl
     {

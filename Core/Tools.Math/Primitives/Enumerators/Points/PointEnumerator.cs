@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 
-namespace Tools.Math.Primitives.Enumerators.Points
+namespace OsmSharp.Tools.Math.Primitives.Enumerators.Points
 {
     /// <summary>
     /// Enumerator class for any collection if points implementing IPointEnumerable.

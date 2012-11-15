@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math;
+using OsmSharp.Tools.Math;
 
-namespace Routing.Core.Constraints
+namespace OsmSharp.Routing.Core.Constraints
 {
     /// <summary>
     /// Represents some routing constraints.

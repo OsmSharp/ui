@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.InterRoute
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
 {
     /// <summary>
     /// Relocate heurstic.

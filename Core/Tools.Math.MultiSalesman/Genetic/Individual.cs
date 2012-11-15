@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic;
 
-namespace Tools.Math.VRP.MultiSalesman.Genetic
+namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
 {
     internal class Individual : Individual<List<Genome>, Problem, Fitness>
     {

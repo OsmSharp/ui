@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Core.Simple
+namespace OsmSharp.Osm.Core.Simple
 {
     /// <summary>
     /// Primive used as a base class for any osm object that has a meaning on the map (Nodes, Ways and Relations).

@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core;
-using Tools.Math.Units.Time;
-using Tools.Math.VRP.Core.Routes;
-using Routing.Core;
+using OsmSharp.Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.Units.Time;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Routing.Core;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.VNS
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
 {
     /// <summary>
     /// Uses a Variable Neighbourhood Search technique.

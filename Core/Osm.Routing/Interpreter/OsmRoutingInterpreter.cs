@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Interpreter;
-using Routing.Core.Roads.Tags;
-using Routing.Core.Constraints;
-using Routing.Core.Interpreter.Roads;
-using Routing.Core.Constraints.Highways;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Core.Roads.Tags;
+using OsmSharp.Routing.Core.Constraints;
+using OsmSharp.Routing.Core.Interpreter.Roads;
+using OsmSharp.Routing.Core.Constraints.Highways;
 
-namespace Osm.Routing.Interpreter
+namespace OsmSharp.Osm.Routing.Interpreter
 {
     /// <summary>
     /// A routing interpreter for OSM data.

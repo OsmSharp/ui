@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
+namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
     public class EdgeAssemblyCrossoverNaive :
         ICrossOverOperation<List<int>, GeneticProblem, Fitness>
@@ -81,7 +81,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
             Individual<List<int>, GeneticProblem, Fitness> parent1,
             Individual<List<int>, GeneticProblem, Fitness> parent2)
         {
-            Tools.Math.TSP.Problems.IProblem tsp_problem = solver.Problem.BaseProblem;
+            OsmSharp.Tools.Math.TSP.Problems.IProblem tsp_problem = solver.Problem.BaseProblem;
 
             // first create E_a
             int[] e_a = new int[parent1.Genomes.Count + 1];
@@ -309,7 +309,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
             {
                 foreach (Dictionary<int, KeyValuePair<int, int>> cycle in cycles)
                 {
-                    if (Tools.Math.Random.StaticRandomGenerator.Get().Generate(1.0) > 0.25)
+                    if (OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(1.0) > 0.25)
                     {
                         selected.Add(cycle);
                     }
@@ -320,7 +320,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
             {
                 if (cycles.Count > 0)
                 {
-                    int idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(cycles.Count);
+                    int idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(cycles.Count);
                     selected.Add(cycles[idx]);
                     cycles.RemoveAt(idx);
                 }

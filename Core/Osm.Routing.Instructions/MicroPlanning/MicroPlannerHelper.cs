@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo.Meta;
-using Routing.Core.ArcAggregation.Output;
-using Routing.Core.Interpreter.Roads;
-using Tools.Math;
+using OsmSharp.Tools.Math.Geo.Meta;
+using OsmSharp.Routing.Core.ArcAggregation.Output;
+using OsmSharp.Routing.Core.Interpreter.Roads;
+using OsmSharp.Tools.Math;
 
-namespace Routing.Instructions.MicroPlanning
+namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
     internal class MicroPlannerHelper
     {

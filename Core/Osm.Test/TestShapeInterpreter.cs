@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
-using Tools.Math.Shapes;
-using Tools.Math.Geo;
-using Tools.Math.Geo.Factory;
+using OsmSharp.Osm.Core;
+using OsmSharp.Tools.Math.Shapes;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Geo.Factory;
 
-namespace Osm.Test
+namespace OsmSharp.Osm.Test
 {
     public class TestShapeInterpreter : IShapeInterpreter
     {

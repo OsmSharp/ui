@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Osm.Map.Elements;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Map.Elements;
 using System.Windows.Forms;
 
-namespace Osm.Renderer.Gdi.Targets.UserControlTarget
+namespace OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget
 {
     public class UserControlClickEventArgs : UserControlTargetEventArgs
     {        

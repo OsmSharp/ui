@@ -10,7 +10,7 @@
 
 using System.Xml.Serialization;
 
-namespace Tools.Xml.Nomatim.Reverse.v1
+namespace OsmSharp.Tools.Xml.Nomatim.Reverse.v1
 {
 
 // 

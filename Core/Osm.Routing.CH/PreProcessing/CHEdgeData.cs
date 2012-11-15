@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Graph;
+using OsmSharp.Routing.Core.Graph;
 
-namespace Routing.CH.PreProcessing
+namespace OsmSharp.Routing.CH.PreProcessing
 {
     public class CHEdgeData : IDynamicGraphEdgeData
     {

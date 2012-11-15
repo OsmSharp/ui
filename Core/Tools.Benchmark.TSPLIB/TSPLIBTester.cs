@@ -21,13 +21,13 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Reflection;
-using Tools.Core.Progress;
-using Tools.TSPLIB.Parser;
-using Tools.Math.TSP;
-using Tools.TSPLIB.Problems;
-using Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Core.Progress;
+using OsmSharp.Tools.TSPLIB.Parser;
+using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Tools.TSPLIB.Problems;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace Tools.Benchmark.TSPLIB
+namespace OsmSharp.Tools.Benchmark.TSPLIB
 {
     /// <summary>
     /// Class with facilities to test TSP solvers.
@@ -110,10 +110,10 @@ namespace Tools.Benchmark.TSPLIB
             // open a writer to the output file.
             FileInfo output_file = new FileInfo(string.Format("{0}.log", _name));
             StreamWriter writer = output_file.AppendText();
-            //Console.WriteLine("====== {0} started! ======", _name);
-            //Console.WriteLine();
-            //Console.WriteLine("Started: {0}", problem.Name);
-            Console.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
+            //Tools.Core.Output.OutputStreamHost.WriteLine("====== {0} started! ======", _name);
+            //Tools.Core.Output.OutputStreamHost.WriteLine();
+            //Tools.Core.Output.OutputStreamHost.WriteLine("Started: {0}", problem.Name);
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
                 PadRight("Problem", 15),
                 PadRight("Name", 40),
                 PadRight("Time"),
@@ -135,7 +135,7 @@ namespace Tools.Benchmark.TSPLIB
                 for (int solver_idx = 0; solver_idx < _solvers.Count; solver_idx++)
                 { // get the solver instance.
                     ISolver solver = _solvers[solver_idx];
-                    //Console.WriteLine("Started: {0} -> {1}", problem.Name, solver.Name);
+                    //Tools.Core.Output.OutputStreamHost.WriteLine("Started: {0} -> {1}", problem.Name, solver.Name);
 
                     // do the tests.
                     double best = float.MaxValue;
@@ -182,7 +182,7 @@ namespace Tools.Benchmark.TSPLIB
                         ToStringEmptyWhenNull(System.Math.Round(total / (double)_test_count, 3)),
                         ToStringEmptyWhenNull(best),
                         ToStringEmptyWhenNull(worst));
-                    Console.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
+                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
                         PadRight(problem.Name, 15),
                         PadRight(solver.Name, 40),
                         PadRight(System.Math.Round(time.TotalSeconds, 3)),
@@ -198,7 +198,7 @@ namespace Tools.Benchmark.TSPLIB
                     writer.WriteLine(line);
                     writer.Flush();
                 }
-                Console.WriteLine();
+                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
             }
             writer.Flush();
             writer.Close();

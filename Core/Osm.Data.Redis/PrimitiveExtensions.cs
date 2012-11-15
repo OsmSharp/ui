@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core.Simple;
-using Osm.Data.Redis.Raw.Primitives;
-using Osm.Data.Core.Sparse.Primitives;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Redis.Raw.Primitives;
+using OsmSharp.Osm.Data.Core.Sparse.Primitives;
 
-namespace Osm.Data.Redis
+namespace OsmSharp.Osm.Data.Redis
 {
     public static class PrimitiveExtensions
     {

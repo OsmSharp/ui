@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Renderer.Gdi.Targets.UserControlTarget;
-using Osm.UI.WinForms.MapEditorUserControl;
-using Osm.Map.Elements;
+using OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget;
+using OsmSharp.Osm.UI.WinForms.MapEditorUserControl;
+using OsmSharp.Osm.Map.Elements;
 using System.Drawing;
 
-namespace Osm.UI.WinForms.EditorUserControl.Logic
+namespace OsmSharp.Osm.UI.WinForms.EditorUserControl.Logic
 {
     /// <summary>
     /// Logic applied to the map editor control when adding a new node.

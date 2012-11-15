@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Shapes.PrimitivesFactory;
+using OsmSharp.Tools.Math.Shapes.PrimitivesFactory;
 
-namespace Tools.Math.Shapes.Factory
+namespace OsmSharp.Tools.Math.Shapes.Factory
 {
     public class ShapesFactory<PointType, RectangleType, LineType>
         where PointType : PointF2D

@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Constraints;
-using Tools.Math.Geo;
-using Routing.Core.Interpreter.Roads;
+using OsmSharp.Routing.Core.Constraints;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.Interpreter.Roads;
 
-namespace Routing.Core.Interpreter
+namespace OsmSharp.Routing.Core.Interpreter
 {
     /// <summary>
     /// Interprets routing data abstracting the type of data.

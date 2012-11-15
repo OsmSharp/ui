@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Speed;
-using Tools.Math.Units.Time;
-using Routing.Core;
-using Routing.Core.ArcAggregation.Output;
-using Routing.Core.ArcAggregation;
+using OsmSharp.Tools.Math.Units.Speed;
+using OsmSharp.Tools.Math.Units.Time;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.ArcAggregation.Output;
+using OsmSharp.Routing.Core.ArcAggregation;
 
-namespace Routing.Core.Metrics.Time
+namespace OsmSharp.Routing.Core.Metrics.Time
 {
     public class TimeCalculator : OsmSharpRouteMetricCalculator
     {
@@ -78,17 +78,17 @@ namespace Routing.Core.Metrics.Time
                     // TODO: ASSUMED DRIVING ON THE RIGHT; UPDATE TO MAKE CONFIGURABLE.
                     switch (point.Angle.Direction)
                     {
-                        case Tools.Math.Geo.Meta.RelativeDirectionEnum.Left:
-                        case Tools.Math.Geo.Meta.RelativeDirectionEnum.SharpLeft:
-                        case Tools.Math.Geo.Meta.RelativeDirectionEnum.SlightlyLeft:
+                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.Left:
+                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.SharpLeft:
+                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.SlightlyLeft:
                             second = 25;
                             break;
-                        case Tools.Math.Geo.Meta.RelativeDirectionEnum.Right:
-                        case Tools.Math.Geo.Meta.RelativeDirectionEnum.SharpRight:
-                        case Tools.Math.Geo.Meta.RelativeDirectionEnum.SlightlyRight:
+                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.Right:
+                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.SharpRight:
+                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.SlightlyRight:
                             second = 5;
                             break;
-                        case Tools.Math.Geo.Meta.RelativeDirectionEnum.TurnBack:
+                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.TurnBack:
                             second = 30;
                             break;
                     }
@@ -121,8 +121,8 @@ namespace Routing.Core.Metrics.Time
             result[DISTANCE_KEY] = result[DISTANCE_KEY] + arc.Distance.Value;
 
             // update the time.
-            Routing.Core.Roads.Tags.RoadTagsInterpreterBase road_interpreter =
-                new Routing.Core.Roads.Tags.RoadTagsInterpreterBase(arc.Tags);
+            OsmSharp.Routing.Core.Roads.Tags.RoadTagsInterpreterBase road_interpreter =
+                new OsmSharp.Routing.Core.Roads.Tags.RoadTagsInterpreterBase(arc.Tags);
             KilometerPerHour speed = road_interpreter.MaxSpeed(vehicle);
             Second time = arc.Distance / speed;
 

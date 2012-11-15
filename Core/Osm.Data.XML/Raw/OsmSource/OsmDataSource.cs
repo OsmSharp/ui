@@ -19,17 +19,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core.Xml;
-using Osm.Core;
-using Tools.Math.Geo;
-using Osm.Core.Factory;
-using Osm.Core.Xml.v0_6;
-using Osm.Core.Sources;
-using Osm.Core.Filters;
+using OsmSharp.Osm.Core.Xml;
+using OsmSharp.Osm.Core;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Osm.Core.Xml.v0_6;
+using OsmSharp.Osm.Core.Sources;
+using OsmSharp.Osm.Core.Filters;
 using System.Xml;
 using System.IO;
 
-namespace Osm.Data.Raw.XML.OsmSource
+namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
 {
     /// <summary>
     /// An osm data source for an xml stream.
@@ -73,7 +73,7 @@ namespace Osm.Data.Raw.XML.OsmSource
         /// </summary>
         /// <param name="document"></param>
         public OsmDataSource(string file)
-            : this(new Osm.Core.Xml.OsmDocument(new Tools.Xml.Sources.XmlFileSource(file)))
+            : this(new OsmSharp.Osm.Core.Xml.OsmDocument(new OsmSharp.Tools.Xml.Sources.XmlFileSource(file)))
         {
 
         }
@@ -83,7 +83,7 @@ namespace Osm.Data.Raw.XML.OsmSource
         /// </summary>
         /// <param name="stream"></param>
         public OsmDataSource(Stream stream)
-            : this(new Osm.Core.Xml.OsmDocument(new Tools.Xml.Sources.XmlReaderSource(XmlReader.Create(stream))))
+            : this(new OsmSharp.Osm.Core.Xml.OsmDocument(new OsmSharp.Tools.Xml.Sources.XmlReaderSource(XmlReader.Create(stream))))
         {
             
         }
@@ -155,7 +155,7 @@ namespace Osm.Data.Raw.XML.OsmSource
             {
                 _read = true;
 
-                Osm.Core.Xml.v0_6.osm osm = (_document.Osm as Osm.Core.Xml.v0_6.osm);
+                OsmSharp.Osm.Core.Xml.v0_6.osm osm = (_document.Osm as OsmSharp.Osm.Core.Xml.v0_6.osm);
 
                 if (osm != null)
                 { // if there was no data to begin with.
@@ -220,7 +220,7 @@ namespace Osm.Data.Raw.XML.OsmSource
             _bb = this.BoundingBox;
 
             // generate osm document.
-            Osm.Core.Xml.v0_6.osm osm = new Osm.Core.Xml.v0_6.osm();
+            OsmSharp.Osm.Core.Xml.v0_6.osm osm = new OsmSharp.Osm.Core.Xml.v0_6.osm();
 
             // dimension the arrays.
             osm.node = new node[_nodes.Count];

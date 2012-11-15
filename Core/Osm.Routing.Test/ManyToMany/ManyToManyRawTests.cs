@@ -3,17 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Osm.Data.Raw.XML.OsmSource;
-using Routing.Core;
-using Routing.Core.Interpreter;
-using Osm.Core;
-using Routing.Core.Router.Memory;
-using Osm.Routing.Data;
-using Osm.Routing.Data.Processing;
-using Osm.Data.XML.Raw.Processor;
-using Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Osm.Data.Raw.XML.OsmSource;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Osm.Core;
+using OsmSharp.Routing.Core.Router.Memory;
+using OsmSharp.Osm.Routing.Data;
+using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 
-namespace Osm.Routing.Test.ManyToMany
+namespace OsmSharp.Osm.Routing.Test.ManyToMany
 {
     /// <summary>
     /// Executes many-to-many calculation performance tests using the raw data format.

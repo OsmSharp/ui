@@ -20,15 +20,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net;
-using Osm.Core;
+using OsmSharp.Osm.Core;
 using System.IO;
 using System.Xml;
-using Osm.Core.Xml;
-using Tools.Xml.Sources;
-using Osm.Core.Factory;
+using OsmSharp.Osm.Core.Xml;
+using OsmSharp.Tools.Xml.Sources;
+using OsmSharp.Osm.Core.Factory;
 using System.Globalization;
 
-namespace Osm.Data.Raw.XML.ApiSource
+namespace OsmSharp.Osm.Data.Raw.XML.ApiSource
 {
 
     public class ApiDataSource : IApi
@@ -135,7 +135,7 @@ namespace Osm.Data.Raw.XML.ApiSource
         //    req.Headers["Authorization"] = "Basic " + authInfo;
         //}
 
-        public Osm.Core.User AuthenticatedUser
+        public OsmSharp.Osm.Core.User AuthenticatedUser
         {
             get 
             {
@@ -177,17 +177,17 @@ namespace Osm.Data.Raw.XML.ApiSource
             get { throw new NotImplementedException(); }
         }
 
-        public Osm.Core.Node CreateNode()
+        public OsmSharp.Osm.Core.Node CreateNode()
         {
             throw new NotImplementedException();
         }
 
-        public Osm.Core.Relation CreateRelation()
+        public OsmSharp.Osm.Core.Relation CreateRelation()
         {
             throw new NotImplementedException();
         }
 
-        public Osm.Core.Way CreateWay()
+        public OsmSharp.Osm.Core.Way CreateWay()
         {
             throw new NotImplementedException();
         }
@@ -197,7 +197,7 @@ namespace Osm.Data.Raw.XML.ApiSource
             throw new NotImplementedException();
         }
 
-        public Osm.Core.ChangeSet CreateChangeSet()
+        public OsmSharp.Osm.Core.ChangeSet CreateChangeSet()
         {
             throw new NotImplementedException();
         }
@@ -206,7 +206,7 @@ namespace Osm.Data.Raw.XML.ApiSource
 
         #region IDataSourceReadOnly Members
 
-        public Tools.Math.Geo.GeoCoordinateBox BoundingBox
+        public OsmSharp.Tools.Math.Geo.GeoCoordinateBox BoundingBox
         {
             get { throw new NotImplementedException(); }
         }
@@ -228,14 +228,14 @@ namespace Osm.Data.Raw.XML.ApiSource
                 "/api/0.6/node/{0}", id));
             object osm = doc.Osm;
 
-            Osm.Core.Xml.v0_6.node xml_node = (osm as Osm.Core.Xml.v0_6.osm).node[0];
+            OsmSharp.Osm.Core.Xml.v0_6.node xml_node = (osm as OsmSharp.Osm.Core.Xml.v0_6.osm).node[0];
             return this.Convertv6XmlNode(xml_node);
         }
 
         private Node Convertv6XmlNode(Osm.Core.Xml.v0_6.node xml_node)
         {
             Node node = OsmBaseFactory.CreateNode(xml_node.id);
-            node.Coordinate = new Tools.Math.Geo.GeoCoordinate(xml_node.lat, xml_node.lon);
+            node.Coordinate = new OsmSharp.Tools.Math.Geo.GeoCoordinate(xml_node.lat, xml_node.lon);
             if (xml_node.tag != null)
             {
                 foreach (Osm.Core.Xml.v0_6.tag xml_tag in xml_node.tag)
@@ -270,9 +270,9 @@ namespace Osm.Data.Raw.XML.ApiSource
 
                 object osm = doc.Osm;
 
-                if ((osm as Osm.Core.Xml.v0_6.osm).node != null)
+                if ((osm as OsmSharp.Osm.Core.Xml.v0_6.osm).node != null)
                 {
-                    foreach (Osm.Core.Xml.v0_6.node xml_node in (osm as Osm.Core.Xml.v0_6.osm).node)
+                    foreach (Osm.Core.Xml.v0_6.node xml_node in (osm as OsmSharp.Osm.Core.Xml.v0_6.osm).node)
                     {
                         nodes.Add(
                             this.Convertv6XmlNode(xml_node));
@@ -283,7 +283,7 @@ namespace Osm.Data.Raw.XML.ApiSource
             return nodes;
         }
 
-        public Osm.Core.Relation GetRelation(long id)
+        public OsmSharp.Osm.Core.Relation GetRelation(long id)
         {
             throw new NotImplementedException();
         }
@@ -298,7 +298,7 @@ namespace Osm.Data.Raw.XML.ApiSource
             throw new NotImplementedException();
         }
 
-        public Osm.Core.Way GetWay(long id)
+        public OsmSharp.Osm.Core.Way GetWay(long id)
         {
             OsmDocument doc = this.DoGetApiCall(string.Format(
                 "/api/0.6/way/{0}/full", id));
@@ -306,9 +306,9 @@ namespace Osm.Data.Raw.XML.ApiSource
 
             // index the nodes first.
             Dictionary<long, Node> nodes = new Dictionary<long, Node>();
-            if ((osm as Osm.Core.Xml.v0_6.osm).node != null)
+            if ((osm as OsmSharp.Osm.Core.Xml.v0_6.osm).node != null)
             {
-                foreach (Osm.Core.Xml.v0_6.node xml_node in (osm as Osm.Core.Xml.v0_6.osm).node)
+                foreach (Osm.Core.Xml.v0_6.node xml_node in (osm as OsmSharp.Osm.Core.Xml.v0_6.osm).node)
                 {
                     Node node = this.Convertv6XmlNode(xml_node);
                     nodes.Add(node.Id, node);                        
@@ -316,7 +316,7 @@ namespace Osm.Data.Raw.XML.ApiSource
             }
 
             // create the way.
-            return this.Convertv6XmlWay((osm as Osm.Core.Xml.v0_6.osm).way[0],nodes);
+            return this.Convertv6XmlWay((osm as OsmSharp.Osm.Core.Xml.v0_6.osm).way[0],nodes);
         }
 
         private Way Convertv6XmlWay(Osm.Core.Xml.v0_6.way xml_way, Dictionary<long, Node> indexed_nodes)
@@ -369,9 +369,9 @@ namespace Osm.Data.Raw.XML.ApiSource
             OsmDocument doc = this.DoGetApiCall(string.Format("/api/0.6/node/{0}/ways", node.Id));
             object osm = doc.Osm;
 
-            if ((osm as Osm.Core.Xml.v0_6.osm).way != null)
+            if ((osm as OsmSharp.Osm.Core.Xml.v0_6.osm).way != null)
             {
-                foreach (Osm.Core.Xml.v0_6.way xml_way in (osm as Osm.Core.Xml.v0_6.osm).way)
+                foreach (Osm.Core.Xml.v0_6.way xml_way in (osm as OsmSharp.Osm.Core.Xml.v0_6.osm).way)
                 {
                     ways.Add(this.GetWay(xml_way.id));
                 }
@@ -379,7 +379,7 @@ namespace Osm.Data.Raw.XML.ApiSource
             return ways;
         }
 
-        public IList<Osm.Core.OsmGeo> Get(Tools.Math.Geo.GeoCoordinateBox box, Osm.Core.Filters.Filter filter)
+        public IList<Osm.Core.OsmGeo> Get(OsmSharp.Tools.Math.Geo.GeoCoordinateBox box, OsmSharp.Osm.Core.Filters.Filter filter)
         {
             IList<Osm.Core.OsmGeo> base_objects = new List<Osm.Core.OsmGeo>();
 
@@ -393,9 +393,9 @@ namespace Osm.Data.Raw.XML.ApiSource
 
             // get the nodes first and index for usage in the ways.
             Dictionary<long, Node> nodes = new Dictionary<long, Node>();
-            if ((osm as Osm.Core.Xml.v0_6.osm).node != null)
+            if ((osm as OsmSharp.Osm.Core.Xml.v0_6.osm).node != null)
             {
-                foreach (Osm.Core.Xml.v0_6.node xml_node in (osm as Osm.Core.Xml.v0_6.osm).node)
+                foreach (Osm.Core.Xml.v0_6.node xml_node in (osm as OsmSharp.Osm.Core.Xml.v0_6.osm).node)
                 {
                     Node node = this.Convertv6XmlNode(xml_node);
                     nodes.Add(node.Id, node);
@@ -404,9 +404,9 @@ namespace Osm.Data.Raw.XML.ApiSource
             }
 
             // get the ways using the above nodes as much as possible.
-            if ((osm as Osm.Core.Xml.v0_6.osm).way != null)
+            if ((osm as OsmSharp.Osm.Core.Xml.v0_6.osm).way != null)
             {
-                foreach (Osm.Core.Xml.v0_6.way xml_way in (osm as Osm.Core.Xml.v0_6.osm).way)
+                foreach (Osm.Core.Xml.v0_6.way xml_way in (osm as OsmSharp.Osm.Core.Xml.v0_6.osm).way)
                 {
                     foreach (Osm.Core.Xml.v0_6.nd xml_way_node in xml_way.nd)
                     {

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Structures.KDTree
+namespace OsmSharp.Tools.Math.Structures.KDTree
 {
     /// <summary>
     /// An implementation of a 2-dimensional k-d tree.

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Data.Redis.CH
+namespace OsmSharp.Osm.Data.Redis.CH
 {
     /// <summary>
     /// Extensions of Contraction Hierarchy primitives.

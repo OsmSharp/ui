@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.TSPLIB.Problems
+namespace OsmSharp.Tools.TSPLIB.Problems
 {
     /// <summary>
     /// Enumeration representing the type of problem.

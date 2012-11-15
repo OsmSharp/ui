@@ -20,16 +20,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using Tools.Math.AI.Genetic.Operations;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Tools.Math.AI.Genetic.Operations.Mutations;
-using Tools.Math.AI.Genetic.Selectors;
-using Tools.Math.AI.Genetic.Operations.Generation;
-using Tools.Math.AI.Genetic.Fitness;
-using Tools.Core.Progress;
+using OsmSharp.Tools.Math.AI.Genetic.Operations;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
+using OsmSharp.Tools.Math.AI.Genetic.Selectors;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
+using OsmSharp.Tools.Math.AI.Genetic.Fitness;
+using OsmSharp.Tools.Core.Progress;
 using System.Threading.Tasks;
 
-namespace Tools.Math.AI.Genetic.Solvers
+namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
 {
     /// <summary>
     /// Class implementing the main flow of any genetic algorithm.
@@ -292,7 +292,7 @@ namespace Tools.Math.AI.Genetic.Solvers
             WeightType fitness = default(WeightType);
 
             Population<GenomeType, ProblemType, WeightType> population = new Population<GenomeType, ProblemType, WeightType>(initial, true);
-            Tools.Core.Output.OutputStreamHost.Write("Generating population...");
+            OsmSharp.Tools.Core.Output.OutputStreamHost.Write("Generating population...");
 
             // use parallelism to generate population.
             if (_parallel)
@@ -311,7 +311,7 @@ namespace Tools.Math.AI.Genetic.Solvers
                     }
 
                     // report population generation.
-                    Tools.Core.Output.OutputStreamHost.Write(string.Format("Generating population{0}/{1}..."), population.Count, _settings.PopulationSize);
+                    OsmSharp.Tools.Core.Output.OutputStreamHost.Write(string.Format("Generating population{0}/{1}..."), population.Count, _settings.PopulationSize);
                     this.ReportNew(string.Format("Generating population..."), population.Count, _settings.PopulationSize);
                 });
             }
@@ -326,11 +326,11 @@ namespace Tools.Math.AI.Genetic.Solvers
                 population.Add(new_individual);
 
                 // report population generation.
-                Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("Generating population {0}/{1}...", population.Count, _settings.PopulationSize));
+                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("Generating population {0}/{1}...", population.Count, _settings.PopulationSize));
                 this.ReportNew(string.Format("Generating population..."), population.Count, _settings.PopulationSize);
             }
 
-            Tools.Core.Output.OutputStreamHost.WriteLine("Done!");
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Done!");
 
             // sort the initial population.
             population.Sort(this, _fitness_calculator);
@@ -358,7 +358,7 @@ namespace Tools.Math.AI.Genetic.Solvers
                 // reset the stagnation count.
                 stagnation = 0;
 
-                Tools.Core.Output.OutputStreamHost.WriteLine("New Fittest {0}",
+                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("New Fittest {0}",
                     fittest.ToString());
             }
 
@@ -385,7 +385,7 @@ namespace Tools.Math.AI.Genetic.Solvers
 
                 // get the population fitness.
                 population.Sort(this, _fitness_calculator);
-                Tools.Core.Output.OutputStreamHost.WriteLine("{0}->{1}",
+                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("{0}->{1}",
                     population[0].Fitness,
                     population[population.Count - 1].Fitness);
 
@@ -403,7 +403,7 @@ namespace Tools.Math.AI.Genetic.Solvers
                     fitness = new_fitness;
                     fittest = population[0];
                     
-                    Tools.Core.Output.OutputStreamHost.WriteLine("New Fittest {0}-{1} {2}",
+                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("New Fittest {0}-{1} {2}",
                         generation_count,
                         stagnation,
                         fittest.ToString());
@@ -434,21 +434,21 @@ namespace Tools.Math.AI.Genetic.Solvers
                     fittest.ToString()), stagnation, _settings.StagnationCount);
                 if (stagnation != 0 && stagnation % 1 == 0)
                 {
-                    Tools.Core.Output.OutputStreamHost.WriteLine("Generation {0}-{1} {2}",
+                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Generation {0}-{1} {2}",
                         generation_count,
                         stagnation,
                         fittest.ToString());
                 }
             }
 
-            Tools.Core.Output.OutputStreamHost.WriteLine("Result [{0}]:",
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Result [{0}]:",
                 fitness, fittest.ToString());
 
             // report the new generation.
             this.ReportNew(string.Format("Evolution finished @ generation {0}: {1}",
                 generation_count,
                 fittest.ToString()), generation_count, _settings.StagnationCount);
-            Tools.Core.Output.OutputStreamHost.WriteLine("Evolution finished @ generation {0}: {1}",
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Evolution finished @ generation {0}: {1}",
                 generation_count,
                 fittest.ToString());
 

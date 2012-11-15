@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Core.Progress;
+using OsmSharp.Tools.Core.Progress;
 
-namespace Osm.Routing.Test
+namespace OsmSharp.Osm.Routing.Test
 {
     class ConsoleProgressReporter : IProgressReporter
     {

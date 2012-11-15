@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.StateMachines
+namespace OsmSharp.Tools.Math.StateMachines
 {
     /// <summary>
     /// Represents a state in a finite-state machine.

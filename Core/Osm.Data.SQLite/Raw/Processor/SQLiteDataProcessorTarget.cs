@@ -16,13 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 using System.Data.SQLite;
-using Osm.Core.Simple;
-using Osm.Data.Core.Processor;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Core.Processor;
 using System;
 using System.Collections.Generic;
 using System.Data;
 
-namespace Osm.Data.SQLite.Raw.Processor
+namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 {
 	public class SQLiteDataProcessorTarget : DataProcessorTarget
 	{

@@ -20,7 +20,7 @@
 //using System.Linq;
 //using System.Text;
 
-//namespace Routing.Core.Interpreter
+//namespace OsmSharp.Routing.Core.Interpreter
 //{
 //    /// <summary>
 //    /// Interpreters the raw OSM data for routing purposes.

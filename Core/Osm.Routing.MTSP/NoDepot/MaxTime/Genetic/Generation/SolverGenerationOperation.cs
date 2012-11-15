@@ -19,14 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.Generation;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
 {
     /// <summary>
     /// Generates individuals based on another solver.

@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Structures.StringTrees;
+using OsmSharp.Tools.Math.Structures.StringTrees;
 
-namespace Tools.GeoCoding.Custom.Memory
+namespace OsmSharp.Tools.GeoCoding.Custom.Memory
 {
     internal class IndexStreets : StringTreeDictionary<IndexHouseNumbers>
     {

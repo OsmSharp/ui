@@ -21,12 +21,12 @@ using System.Linq;
 using System.Text;
 using ServiceStack.Redis;
 using ServiceStack.Redis.Generic;
-using Tools.Math.Geo;
-using Osm.Core;
-using Osm.Data.Core.Sparse;
-using Osm.Data.Core.Sparse.Primitives;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Data.Core.Sparse;
+using OsmSharp.Osm.Data.Core.Sparse.Primitives;
 
-namespace Osm.Data.Redis.Sparse
+namespace OsmSharp.Osm.Data.Redis.Sparse
 {
     /// <summary>
     /// Redis sparse-data provider.

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Routing.Core.Constraints
+namespace OsmSharp.Routing.Core.Constraints
 {
     /// <summary>
     /// Represents a routing label used to implement routing constraints.

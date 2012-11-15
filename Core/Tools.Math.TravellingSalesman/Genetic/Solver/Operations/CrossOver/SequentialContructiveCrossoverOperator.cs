@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
+namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
     /// <summary>
     /// Implements a version of the sequential constructive crossover operator.

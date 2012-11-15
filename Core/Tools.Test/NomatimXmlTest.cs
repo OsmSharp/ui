@@ -20,11 +20,11 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tools.Xml.Sources;
+using OsmSharp.Tools.Xml.Sources;
 using System.IO;
-using Tools.Xml.Nomatim.Search;
+using OsmSharp.Tools.Xml.Nomatim.Search;
 
-namespace Tools.Test
+namespace OsmSharp.Tools.Test
 {
     /// <summary>
     /// Summary description for NomatimXmlTest
@@ -93,10 +93,10 @@ namespace Tools.Test
             SearchDocument document = new SearchDocument(source);
             object search = document.Search;
 
-            if (search is Tools.Xml.Nomatim.Search.v1.searchresults)
+            if (search is OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults)
             { // all ok here!
-                Assert.IsTrue((search as Tools.Xml.Nomatim.Search.v1.searchresults).place.Length == 1);
-                Assert.IsTrue((search as Tools.Xml.Nomatim.Search.v1.searchresults).place[0].country_code == "be");
+                Assert.IsTrue((search as OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults).place.Length == 1);
+                Assert.IsTrue((search as OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults).place[0].country_code == "be");
             }
             else
             {

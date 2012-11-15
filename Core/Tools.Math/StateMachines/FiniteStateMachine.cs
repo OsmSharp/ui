@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.StateMachines;
+using OsmSharp.Tools.Math.StateMachines;
 
-namespace Tools.Math.Automata
+namespace OsmSharp.Tools.Math.Automata
 {
     /// <summary>
     /// Class representing a finite-state machine consuming objects representing events.

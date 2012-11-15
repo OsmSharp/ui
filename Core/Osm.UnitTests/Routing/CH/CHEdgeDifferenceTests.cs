@@ -2,17 +2,17 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Osm.Routing.CH.Routing;
-//using Osm.Data.XML.Raw.Processor;
-//using Osm.Data.Core.Processor.Filter.Sort;
-//using Osm.Routing.CH.PreProcessing.Witnesses;
-//using Osm.Routing.CH.PreProcessing;
-//using Osm.Routing.CH.Processor;
+//using OsmSharp.Osm.Routing.CH.Routing;
+//using OsmSharp.Osm.Data.XML.Raw.Processor;
+//using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+//using OsmSharp.Osm.Routing.CH.PreProcessing.Witnesses;
+//using OsmSharp.Osm.Routing.CH.PreProcessing;
+//using OsmSharp.Osm.Routing.CH.Processor;
 //using System.Reflection;
 //using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using Osm.Routing.CH.PreProcessing.Ordering;
+//using OsmSharp.Osm.Routing.CH.PreProcessing.Ordering;
 
-//namespace Osm.UnitTests.Routing.CH
+//namespace OsmSharp.Osm.UnitTests.Routing.CH
 //{
 //    [TestClass]
 //    public class CHEdgeDifferenceTests
@@ -47,7 +47,7 @@
 
 //            // do the pre-processing part.
 //            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data.Graph);
-//            return new Osm.Routing.CH.PreProcessing.Ordering.EdgeDifference(
+//            return new OsmSharp.Osm.Routing.CH.PreProcessing.Ordering.EdgeDifference(
 //                data.Graph, witness_calculator);
 //        }
 
@@ -60,7 +60,7 @@
 
 //            // do the pre-processing part.
 //            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data.Graph);
-//            EdgeDifference edge_difference = new Osm.Routing.CH.PreProcessing.Ordering.EdgeDifference(
+//            EdgeDifference edge_difference = new OsmSharp.Osm.Routing.CH.PreProcessing.Ordering.EdgeDifference(
 //                data.Graph, witness_calculator);
 
 //            CHPreProcessor pre_processor = new CHPreProcessor(

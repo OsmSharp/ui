@@ -19,15 +19,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core;
-using Tools.Math.Units.Time;
+using OsmSharp.Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.Units.Time;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
 {
     /// <summary>
     /// Represents a max time problem.
     /// </summary>
-    public class MaxTimeProblem : Tools.Math.AI.Genetic.IProblem, IProblemWeights
+    public class MaxTimeProblem : OsmSharp.Tools.Math.AI.Genetic.IProblem, IProblemWeights
     {
         private IProblemWeights _weights;
 

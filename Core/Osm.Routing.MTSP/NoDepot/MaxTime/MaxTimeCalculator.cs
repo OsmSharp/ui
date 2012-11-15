@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Fitness;
-using Tools.Math.AI.Genetic;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.AI.Genetic.Fitness;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
 {
     public class MaxTimeCalculator
     {

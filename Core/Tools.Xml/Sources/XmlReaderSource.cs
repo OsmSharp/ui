@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 
-namespace Tools.Xml.Sources
+namespace OsmSharp.Tools.Xml.Sources
 {
     /// <summary>
     /// Class implementing an xml reader source.

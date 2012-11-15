@@ -22,7 +22,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace Tools.Xml.Nomatim.Search
+namespace OsmSharp.Tools.Xml.Nomatim.Search
 {
     public class SearchDocument
     {
@@ -116,7 +116,7 @@ namespace Tools.Xml.Nomatim.Search
         private void FindVersionFromObject()
         {
             _version = SearchVersion.Unknown;
-            if (_search_object is Tools.Xml.Nomatim.Search.v1.searchresults)
+            if (_search_object is OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults)
             {
                 _version = SearchVersion.Searchv1;
             }
@@ -162,7 +162,7 @@ namespace Tools.Xml.Nomatim.Search
                 switch (_version)
                 {
                     case SearchVersion.Searchv1:
-                        version_type = typeof(Tools.Xml.Nomatim.Search.v1.searchresults);
+                        version_type = typeof(OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults);
                         break;
                     case SearchVersion.Unknown:
                         throw new XmlException("Version could not be determined!");
@@ -187,7 +187,7 @@ namespace Tools.Xml.Nomatim.Search
                 switch (_version)
                 {
                     case SearchVersion.Searchv1:
-                        version_type = typeof(Tools.Xml.Nomatim.Search.v1.searchresults);
+                        version_type = typeof(OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults);
                         break;
                     case SearchVersion.Unknown:
                         throw new XmlException("Version could not be determined!");

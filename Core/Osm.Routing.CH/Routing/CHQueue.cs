@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Graph.Path;
+using OsmSharp.Routing.Core.Graph.Path;
 
-namespace Routing.CH.Routing
+namespace OsmSharp.Routing.CH.Routing
 {
     public class CHQueue
     {

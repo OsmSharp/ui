@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Data
+namespace OsmSharp.Osm.Data
 {
     /// <summary>
     /// Generator to generate keys for objects that are new and have an id < 0.

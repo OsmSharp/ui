@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Interpreter.Features;
-using Osm.Map.Layers;
-using Osm.Core;
+using OsmSharp.Osm.Interpreter.Features;
+using OsmSharp.Osm.Map.Layers;
+using OsmSharp.Osm.Core;
 
-namespace Osm.Map.Styles
+namespace OsmSharp.Osm.Map.Styles
 {
     /// <summary>
     /// Represents a style of a datasource.

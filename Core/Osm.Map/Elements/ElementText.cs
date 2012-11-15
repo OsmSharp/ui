@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Tools.Math.Shapes;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Shapes;
 using System.Drawing;
 
-namespace Osm.Map.Elements
+namespace OsmSharp.Osm.Map.Elements
 {
     public class ElementText : ElementBase
     {

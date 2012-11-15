@@ -19,24 +19,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Route;
-using Routing.Core.ArcAggregation.Output;
-using Routing.Instructions.LanguageGeneration;
+using OsmSharp.Routing.Core.Route;
+using OsmSharp.Routing.Core.ArcAggregation.Output;
+using OsmSharp.Routing.Instructions.LanguageGeneration;
 
-namespace Routing.Instructions
+namespace OsmSharp.Routing.Instructions
 {
     public class InstructionGenerator
     {
         public List<Instruction> Generate(OsmSharpRoute raw_route)
         {
             return this.Generate(raw_route, 
-                new Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
+                new OsmSharp.Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
         }
 
         public List<Instruction> Generate(OsmSharpRoute raw_route, ILanguageGenerator language_generator)
         {
-            Routing.Core.ArcAggregation.ArcAggregator aggregator = 
-                new Routing.Core.ArcAggregation.ArcAggregator();
+            OsmSharp.Routing.Core.ArcAggregation.ArcAggregator aggregator = 
+                new OsmSharp.Routing.Core.ArcAggregation.ArcAggregator();
             AggregatedPoint point = 
                 aggregator.Aggregate(raw_route);
 
@@ -46,22 +46,22 @@ namespace Routing.Instructions
         public List<Instruction> Generate(AggregatedPoint aggregate_point)
         {
             return this.Generate(aggregate_point, 
-                new Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
+                new OsmSharp.Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
         }
 
         public List<Instruction> Generate(AggregatedPoint point, ILanguageGenerator language_generator)
         {
-            Routing.Core.ArcAggregation.Output.AggregatedPoint p = point;
+            OsmSharp.Routing.Core.ArcAggregation.Output.AggregatedPoint p = point;
             while (p != null && p.Next != null)
             {
                 // print point.
-                Tools.Core.Output.OutputStreamHost.WriteLine("Point: {0}:", p.Location);
+                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Point: {0}:", p.Location);
 
                 if (p.ArcsNotTaken != null)
                 {
-                    foreach (KeyValuePair<Tools.Math.Geo.Meta.RelativeDirection, Routing.Core.ArcAggregation.Output.AggregatedArc> arc in p.ArcsNotTaken)
+                    foreach (KeyValuePair<OsmSharp.Tools.Math.Geo.Meta.RelativeDirection, OsmSharp.Routing.Core.ArcAggregation.Output.AggregatedArc> arc in p.ArcsNotTaken)
                     {
-                        Tools.Core.Output.OutputStreamHost.WriteLine("ArcNotTaken:{0} - {1}", arc.Key.Direction.ToString(), arc.Value.Name);
+                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("ArcNotTaken:{0} - {1}", arc.Key.Direction.ToString(), arc.Value.Name);
                     }
                 }
 
@@ -74,10 +74,10 @@ namespace Routing.Instructions
                         {
                             angle_string = poi.Angle.Direction.ToString();
                         }
-                        Tools.Core.Output.OutputStreamHost.WriteLine("Poi [{0}]:{1}", poi.Name, angle_string);
+                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Poi [{0}]:{1}", poi.Name, angle_string);
                         foreach (KeyValuePair<string, string> tag in poi.Tags)
                         {
-                            Tools.Core.Output.OutputStreamHost.WriteLine("PoiTag: {0}->{1}", tag.Key, tag.Value);
+                            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("PoiTag: {0}->{1}", tag.Key, tag.Value);
                         }
                     }
                 }
@@ -85,19 +85,19 @@ namespace Routing.Instructions
                 // print arc.
                 if (p.Angle != null)
                 {
-                    Tools.Core.Output.OutputStreamHost.WriteLine("Arc: {0}[{1}] {2}", p.Angle.Direction, p.Next.Distance, p.Next.Name);
+                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Arc: {0}[{1}] {2}", p.Angle.Direction, p.Next.Distance, p.Next.Name);
                 }
                 else
                 {
-                    Tools.Core.Output.OutputStreamHost.WriteLine("Arc: {0}[{1}]", p.Next.Name, p.Next.Distance);
+                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Arc: {0}[{1}]", p.Next.Name, p.Next.Distance);
                 }
-                Tools.Core.Output.OutputStreamHost.WriteLine("");
+                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("");
 
                 p = p.Next.Next;
             }
             if (p != null)
             {
-                Tools.Core.Output.OutputStreamHost.WriteLine("Point: {0}:", p.Location);
+                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Point: {0}:", p.Location);
             }
 
             MicroPlanning.MicroPlanner planner = new MicroPlanning.MicroPlanner(language_generator);

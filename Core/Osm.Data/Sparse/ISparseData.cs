@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Osm.Data.Core.Sparse.Primitives;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Data.Core.Sparse.Primitives;
 
-namespace Osm.Data.Core.Sparse
+namespace OsmSharp.Osm.Data.Core.Sparse
 {
     /// <summary>
     /// A sparse data interface.

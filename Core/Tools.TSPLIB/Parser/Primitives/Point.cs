@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.TSPLIB.Parser.Primitives
+namespace OsmSharp.Tools.TSPLIB.Parser.Primitives
 {
     internal class Point
     {

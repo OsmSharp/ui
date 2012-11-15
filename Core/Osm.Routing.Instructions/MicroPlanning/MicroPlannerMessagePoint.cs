@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.ArcAggregation.Output;
+using OsmSharp.Routing.Core.ArcAggregation.Output;
 
-namespace Routing.Instructions.MicroPlanning
+namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
     internal class MicroPlannerMessagePoint : MicroPlannerMessage
     {

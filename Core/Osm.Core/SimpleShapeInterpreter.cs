@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Tools.Math.Shapes;
-using Tools.Math.Geo.Factory;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Shapes;
+using OsmSharp.Tools.Math.Geo.Factory;
 
-namespace Osm.Core
+namespace OsmSharp.Osm.Core
 {
     public class SimpleShapeInterpreter : IShapeInterpreter
     {

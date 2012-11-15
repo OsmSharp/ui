@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic;
 
-namespace Tools.Math.TSP.Genetic.Solver
+namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
 {
     /// <summary>
     /// Class acting as a wrapper for the problem implementing the IProblem interface.
@@ -31,18 +31,18 @@ namespace Tools.Math.TSP.Genetic.Solver
         /// <summary>
         /// The non-genetic problem.
         /// </summary>
-        private Tools.Math.TSP.Problems.IProblem _problem;
+        private OsmSharp.Tools.Math.TSP.Problems.IProblem _problem;
 
         /// <summary>
         /// Creates a new genetic problem.
         /// </summary>
         /// <param name="problem"></param>
-        public GeneticProblem(Tools.Math.TSP.Problems.IProblem problem)
+        public GeneticProblem(OsmSharp.Tools.Math.TSP.Problems.IProblem problem)
         {
             _problem = problem;
         }
 
-        public Tools.Math.TSP.Problems.IProblem BaseProblem
+        public OsmSharp.Tools.Math.TSP.Problems.IProblem BaseProblem
         {
             get
             {

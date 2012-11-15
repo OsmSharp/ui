@@ -19,9 +19,9 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Routing.Core.Interpreter.Vehicles;
+//using OsmSharp.Routing.Core.Interpreter.Vehicles;
 
-//namespace Routing.Core.Interpreter
+//namespace OsmSharp.Routing.Core.Interpreter
 //{
 //    /// <summary>
 //    /// Interpreters properties about a given vehicle.

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.VRP.Core.Routes.ASymmetric
+namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 {
     public class SimpleAsymmetricRoute : IRoute
     {

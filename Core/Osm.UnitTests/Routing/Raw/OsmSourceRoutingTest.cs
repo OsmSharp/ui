@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Routing.Core.Router;
-using Routing.Core;
-using Osm.Routing.Data;
-using Osm.Core;
-using Osm.Data.Raw.XML.OsmSource;
+using OsmSharp.Routing.Core.Router;
+using OsmSharp.Routing.Core;
+using OsmSharp.Osm.Routing.Data;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 using System.Reflection;
-using Osm.Routing.Interpreter;
-using Routing.Core.Interpreter;
+using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Core.Interpreter;
 
-namespace Osm.UnitTests.Routing.Raw
+namespace OsmSharp.Osm.UnitTests.Routing.Raw
 {
     [TestClass]
     public class OsmSourceRoutingTests : SimpleRoutingTests<RouterPoint, OsmEdgeData>
@@ -41,7 +41,7 @@ namespace Osm.UnitTests.Routing.Raw
             // do the data processing.
             OsmDataSource source = new OsmDataSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("Osm.UnitTests.test_network.osm"));
-            return new Osm.Routing.Data.Source.OsmSourceRouterDataSource(interpreter,
+            return new OsmSharp.Osm.Routing.Data.Source.OsmSourceRouterDataSource(interpreter,
                 tags_index, source);
         }
 

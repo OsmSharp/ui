@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Primitives.Enumerators.Points
+namespace OsmSharp.Tools.Math.Primitives.Enumerators.Points
 {
     /// <summary>
     /// Interface representing an enumerable with a list of points.

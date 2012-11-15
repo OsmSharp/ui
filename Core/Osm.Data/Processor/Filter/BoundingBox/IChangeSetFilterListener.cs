@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Osm.Data.Core.Processor.Filter
+namespace OsmSharp.Osm.Data.Core.Processor.Filter
 {
     public interface IChangeSetFilterListener
     {

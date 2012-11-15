@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Renderer.Tweakers
+namespace OsmSharp.Osm.Renderer.Tweakers
 {
     public abstract class Tweak
     {

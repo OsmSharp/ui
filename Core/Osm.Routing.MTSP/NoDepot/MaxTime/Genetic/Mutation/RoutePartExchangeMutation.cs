@@ -19,14 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.Mutations;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
 {
     /// <summary>
     /// Mutation operation exchanging a part of some route to a part of another route.
@@ -62,19 +62,19 @@ namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
                 // TODO: investigate what is more expensive, and extra random generation or creating a list and remove items.
                 // http://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
                 // select a route.
-                int source_route_idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(multi_route.Count);
+                int source_route_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(multi_route.Count);
                 int target_route_idx = -1;
                 do
                 {
-                    target_route_idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(multi_route.Count);
+                    target_route_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(multi_route.Count);
                 } while (source_route_idx == target_route_idx);
                 int source_count = multi_route.Sizes[source_route_idx];
                 int target_count = multi_route.Sizes[target_route_idx];
                 if (target_count > 0 && source_count > 3)
                 {
                     // take a part out of the orginal.
-                    int size = (int)Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_count);
-                    int source_location = Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_count);
+                    int size = (int)OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_count);
+                    int source_location = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_count);
 
                     int first = source_location - (size / 2);
                     if (first < 0)

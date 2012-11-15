@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
+using OsmSharp.Osm.Core;
 
-namespace Osm.Interpreter.Features
+namespace OsmSharp.Osm.Interpreter.Features
 {
     /// <summary>
     /// Represents a feature client.

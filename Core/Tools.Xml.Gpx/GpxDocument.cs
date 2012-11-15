@@ -22,7 +22,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.Xml;
 
-namespace Tools.Xml.Gpx
+namespace OsmSharp.Tools.Xml.Gpx
 {
     /// <summary>
     /// Represents a gpx document.
@@ -120,11 +120,11 @@ namespace Tools.Xml.Gpx
         private void FindVersionFromObject()
         {
             _version = GpxVersion.Unknown;
-            if (_gpx_object is Tools.Xml.Gpx.v1_0.gpx)
+            if (_gpx_object is OsmSharp.Tools.Xml.Gpx.v1_0.gpx)
             {
                 _version = GpxVersion.Gpxv1_0;
             }
-            else if (_gpx_object is Tools.Xml.Gpx.v1_1.gpxType)
+            else if (_gpx_object is OsmSharp.Tools.Xml.Gpx.v1_1.gpxType)
             {
                 _version = GpxVersion.Gpxv1_1;
             }
@@ -179,10 +179,10 @@ namespace Tools.Xml.Gpx
                 switch (_version)
                 {
                     case GpxVersion.Gpxv1_0:
-                        version_type = typeof(Tools.Xml.Gpx.v1_0.gpx);
+                        version_type = typeof(OsmSharp.Tools.Xml.Gpx.v1_0.gpx);
                         break;
                     case GpxVersion.Gpxv1_1:
-                        version_type = typeof(Tools.Xml.Gpx.v1_1.gpxType);
+                        version_type = typeof(OsmSharp.Tools.Xml.Gpx.v1_1.gpxType);
                         break;
                     case GpxVersion.Unknown:
                         throw new XmlException("Version could not be determined!");
@@ -209,10 +209,10 @@ namespace Tools.Xml.Gpx
                 switch (_version)
                 {
                     case GpxVersion.Gpxv1_0:
-                        version_type = typeof(Tools.Xml.Gpx.v1_0.gpx);
+                        version_type = typeof(OsmSharp.Tools.Xml.Gpx.v1_0.gpx);
                         break;
                     case GpxVersion.Gpxv1_1:
-                        version_type = typeof(Tools.Xml.Gpx.v1_1.gpxType);
+                        version_type = typeof(OsmSharp.Tools.Xml.Gpx.v1_1.gpxType);
                         break;
                     case GpxVersion.Unknown:
                         throw new XmlException("Version could not be determined!");

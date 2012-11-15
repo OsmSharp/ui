@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data.Core.Sparse;
-using Osm.Data.Core.Sparse.Primitives;
+using OsmSharp.Osm.Data.Core.Sparse;
+using OsmSharp.Osm.Data.Core.Sparse.Primitives;
 using Oracle.DataAccess.Client;
 
-namespace Osm.Data.Oracle.Sparse
+namespace OsmSharp.Osm.Data.Oracle.Sparse
 {
     public class OracleSparseData : ISparseData
     {
@@ -194,7 +194,7 @@ namespace Osm.Data.Oracle.Sparse
             return vertex;
         }
 
-        public List<SparseSimpleVertex> GetSparseSimpleVertices(Tools.Math.Geo.GeoCoordinateBox box)
+        public List<SparseSimpleVertex> GetSparseSimpleVertices(OsmSharp.Tools.Math.Geo.GeoCoordinateBox box)
         {
             throw new NotImplementedException();
         }

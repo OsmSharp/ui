@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Routing.Core.Interpreter.Roads
+namespace OsmSharp.Routing.Core.Interpreter.Roads
 {
     /// <summary>
     /// Interpreter for edges in the routable data.

@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Xml;
+using OsmSharp.Tools.Xml;
 using System.Xml.Serialization;
 using System.Xml;
 
-namespace Osm.Core.Xml
+namespace OsmSharp.Osm.Core.Xml
 {
 
     /// <summary>

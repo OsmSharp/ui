@@ -22,10 +22,10 @@ using System.Text;
 using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
-using Osm.Core.Simple;
-using Osm.Data.Core.Processor.ChangeSets;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Core.Processor.ChangeSets;
 
-namespace Osm.Data.XML.Raw.Processor.ChangeSets
+namespace OsmSharp.Osm.Data.XML.Raw.Processor.ChangeSets
 {
     public class XmlDataProcessorChangeSetSource : DataProcessorChangeSetSource
     {
@@ -94,25 +94,25 @@ namespace Osm.Data.XML.Raw.Processor.ChangeSets
                     {
                         case "delete":
                             osm_obj = _ser_delete.Deserialize(reader);
-                            if (osm_obj is Osm.Core.Xml.v0_6.delete)
+                            if (osm_obj is OsmSharp.Osm.Core.Xml.v0_6.delete)
                             {
-                                _next = XmlSimpleConverter.ConvertToSimple(osm_obj as Osm.Core.Xml.v0_6.delete);
+                                _next = XmlSimpleConverter.ConvertToSimple(osm_obj as OsmSharp.Osm.Core.Xml.v0_6.delete);
                                 return true;
                             }
                             break;
                         case "modify":
                             osm_obj = _ser_modify.Deserialize(reader);
-                            if (osm_obj is Osm.Core.Xml.v0_6.modify)
+                            if (osm_obj is OsmSharp.Osm.Core.Xml.v0_6.modify)
                             {
-                                _next = XmlSimpleConverter.ConvertToSimple(osm_obj as Osm.Core.Xml.v0_6.modify);
+                                _next = XmlSimpleConverter.ConvertToSimple(osm_obj as OsmSharp.Osm.Core.Xml.v0_6.modify);
                                 return true;
                             }
                             break;
                         case "create":
                             osm_obj = _ser_create.Deserialize(reader);
-                            if (osm_obj is Osm.Core.Xml.v0_6.create)
+                            if (osm_obj is OsmSharp.Osm.Core.Xml.v0_6.create)
                             {
-                                _next = XmlSimpleConverter.ConvertToSimple(osm_obj as Osm.Core.Xml.v0_6.create);
+                                _next = XmlSimpleConverter.ConvertToSimple(osm_obj as OsmSharp.Osm.Core.Xml.v0_6.create);
                                 return true;
                             }
                             break;

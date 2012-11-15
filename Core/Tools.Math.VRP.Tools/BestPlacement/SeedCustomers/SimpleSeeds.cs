@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.VRP.Core.BestPlacement.SeedCustomers
+namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement.SeedCustomers
 {
     /// <summary>
     /// A seed customer selector that maximizes the distance between the selected customers.
@@ -40,10 +40,10 @@ namespace Tools.Math.VRP.Core.BestPlacement.SeedCustomers
             // randomly select k seeds.
             while (seeds.Count < k)
             {
-                int new_seed = Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
+                int new_seed = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
                 while (seeds.Contains(new_seed))
                 {
-                    new_seed = Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
+                    new_seed = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
                 }
                 seeds.Add(new_seed);
             }
@@ -69,10 +69,10 @@ namespace Tools.Math.VRP.Core.BestPlacement.SeedCustomers
             int tries = 0;
             while (tries < max_tries)
             {
-                int seed = Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
+                int seed = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
                 while (seeds.Contains(seed))
                 {
-                    seed = Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
+                    seed = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
                 }
 
                 // check the new minimal.

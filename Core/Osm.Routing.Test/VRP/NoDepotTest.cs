@@ -19,26 +19,26 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Tools.Math.Graph.Routing;
-//using Tools.Math.Geo;
-//using Osm.Routing.Core;
-//using Osm.Routing.Core.Route;
-//using Osm.Routing.Raw;
-//using Tools.Xml.Sources;
-//using Tools.Math.Units.Time;
-//using Osm.Core;
-//using Osm.Data.Raw.XML.OsmSource;
-//using Tools.Math.TSP.Problems;
-//using Tools.Math.TSP.EdgeAssemblyGenetic;
-//using Tools.Math.TSP.Genetic.Solver.Operations.Generation;
-//using Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
-//using Tools.TSPLIB.Problems;
+//using OsmSharp.Tools.Math.Graph.Routing;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Osm.Routing.Core;
+//using OsmSharp.Osm.Routing.Core.Route;
+//using OsmSharp.Osm.Routing.Raw;
+//using OsmSharp.Tools.Xml.Sources;
+//using OsmSharp.Tools.Math.Units.Time;
+//using OsmSharp.Osm.Core;
+//using OsmSharp.Osm.Data.Raw.XML.OsmSource;
+//using OsmSharp.Tools.Math.TSP.Problems;
+//using OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic;
+//using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation;
+//using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
+//using OsmSharp.Tools.TSPLIB.Problems;
 //using System.IO;
-//using Osm.Routing.Core.Metrics.Time;
-//using Osm.Routing.Core.VRP.NoDepot.MaxTime;
-//using Osm.Routing.Core.Interpreter.Default;
+//using OsmSharp.Osm.Routing.Core.Metrics.Time;
+//using OsmSharp.Osm.Routing.Core.VRP.NoDepot.MaxTime;
+//using OsmSharp.Osm.Routing.Core.Interpreter.Default;
 
-//namespace Osm.Routing.Test.VRP
+//namespace OsmSharp.Osm.Routing.Test.VRP
 //{
 //    public static class NoDepotTest
 //    {
@@ -48,8 +48,8 @@
 //        public static void TestMaxTimeVRP()
 //        {
 //            // set the console output stream.
-//            Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
-//                new Tools.Core.Output.ConsoleOutputStream());
+//            OsmSharp.Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
+//                new OsmSharp.Tools.Core.Output.ConsoleOutputStream());
 
 //            NoDepotTest.MaxTest("21313", "DM852", 3600, 20);
 //            //NoDepotTest.MaxTest("21313", "DM852", 5400, 20);
@@ -78,7 +78,7 @@
 //            // get the source file.
 //            string source_file = string.Format(@"C:\OSM\bin\{0}.osm", osm);
 //            OsmDataSource osm_data = new OsmDataSource(
-//                new Osm.Core.Xml.OsmDocument(new XmlFileSource(source_file)));
+//                new OsmSharp.Osm.Core.Xml.OsmDocument(new XmlFileSource(source_file)));
 //            Router router = new Router(osm_data,new DefaultVehicleInterpreter(VehicleEnum.Car));
 
 //            // read the source files.
@@ -86,8 +86,8 @@
 //            int latitude_idx = 3;
 //            int longitude_idx = 4;
 //            StreamWriter log = new StreamWriter(directory + string.Format(@"\{0}.log", name));
-//            System.Data.DataSet data = Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
-//                new FileInfo(points_file), Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
+//            System.Data.DataSet data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
+//                new FileInfo(points_file), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
 //            int cnt = -1;
 //            int max_count = 100000;
 //            List<ResolvedPoint> points = new List<ResolvedPoint>();
@@ -126,7 +126,7 @@
 //                        }
 //                    }
 
-//                    Tools.Core.Output.OutputStreamHost.WriteLine("Processed {0}/{1}!",
+//                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Processed {0}/{1}!",
 //                        data.Tables[0].Rows.IndexOf(row), data.Tables[0].Rows.Count);
 //                }
 //            }
@@ -138,7 +138,7 @@
 //            double total_time = 0;
 //            foreach (KeyValuePair<string, List<ResolvedPoint>> route in points_per_route)
 //            {
-//                Osm.Routing.Core.TSP.Genetic.RouterTSPAEXGenetic<ResolvedPoint> tsp_route =
+//                OsmSharp.Osm.Routing.Core.TSP.Genetic.RouterTSPAEXGenetic<ResolvedPoint> tsp_route =
 //                    new Core.TSP.Genetic.RouterTSPAEXGenetic<ResolvedPoint>(
 //                        router);
 //                OsmSharpRoute old_route = tsp_route.CalculateTSP(route.Value.ToArray());
@@ -158,12 +158,12 @@
 //            RouterMaxTime<ResolvedPoint> vrp_router;
 
 //            // create one router.
-//            vrp_router = new Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacement<ResolvedPoint>(
+//            vrp_router = new OsmSharp.Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacement<ResolvedPoint>(
 //                    router, max.Value, delivery_time.Value);
 //            NoDepotTest.MaxTestRouterMaxTime(log, name, vrp_router, points.ToArray());
 
 //            // create one router.
-//            vrp_router = new Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithSeeds<ResolvedPoint>(
+//            vrp_router = new OsmSharp.Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithSeeds<ResolvedPoint>(
 //                    router, max.Value, delivery_time.Value, 5);
 //            NoDepotTest.MaxTestRouterMaxTime(log, name, vrp_router, points.ToArray());
 
@@ -178,7 +178,7 @@
 //            //         cross_percentage, mutation_percentage, null);
 //            //NoDepotTest.MaxTestRouterMaxTime(log, name, vrp_router, points.ToArray());
 
-//            vrp_router = new Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithImprovements<ResolvedPoint>(
+//            vrp_router = new OsmSharp.Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithImprovements<ResolvedPoint>(
 //                    router, max.Value, delivery_time.Value, 10, 0);
 //            NoDepotTest.MaxTestRouterMaxTime(log, name, vrp_router, points.ToArray());
 //        }
@@ -247,7 +247,7 @@
 //        //    //}
 //        //    //MatrixProblem matrix = new MatrixProblem(weights, false);
 
-//        //    //TSPLIBProblem tsp = Tools.TSPLIB.Convertor.ATSP_TSP.ATSP_TSPConvertor.Convert(matrix, name, string.Empty);
+//        //    //TSPLIBProblem tsp = OsmSharp.Tools.TSPLIB.Convertor.ATSP_TSP.ATSP_TSPConvertor.Convert(matrix, name, string.Empty);
 //        //    //Tools.TSPLIB.Parser.TSPLIBProblemGenerator.Generate(new FileInfo(string.Format("{0}.tsp", name)),
 //        //    //    tsp);
 
@@ -255,7 +255,7 @@
 //        //    //    max, 20, matrix);
 
 //        //    //Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithSeeds<ResolvedType> vrp_router
-//        //    //    = new Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithSeeds<ResolvedType>(
+//        //    //    = new OsmSharp.Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithSeeds<ResolvedType>(
 //        //    //        router, max.Value, delivery_time.Value);
 //        //    //Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.RouterGeneticSimple<ResolvedType> vrp_router
 //        //    //     = new Core.VRP.NoDepot.MaxTime.Genetic.RouterGeneticSimple<ResolvedType>(

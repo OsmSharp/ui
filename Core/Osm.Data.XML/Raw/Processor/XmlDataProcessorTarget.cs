@@ -22,10 +22,10 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
-using Osm.Core.Simple;
-using Osm.Data.Core.Processor;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Core.Processor;
 
-namespace Osm.Data.XML.Raw.Processor
+namespace OsmSharp.Osm.Data.XML.Raw.Processor
 {
     public class XmlDataProcessorTarget : DataProcessorTarget
     {
@@ -76,7 +76,7 @@ namespace Osm.Data.XML.Raw.Processor
         /// <param name="node_to_add"></param>
         public override void AddNode(SimpleNode node_to_add)
         {
-            Osm.Core.Xml.v0_6.node nd = new Osm.Core.Xml.v0_6.node();
+            OsmSharp.Osm.Core.Xml.v0_6.node nd = new OsmSharp.Osm.Core.Xml.v0_6.node();
 
             // set id
             nd.idSpecified = false;
@@ -151,7 +151,7 @@ namespace Osm.Data.XML.Raw.Processor
 
         public override void AddWay(SimpleWay way_to_add)
         {
-            Osm.Core.Xml.v0_6.way wa = new Osm.Core.Xml.v0_6.way();
+            OsmSharp.Osm.Core.Xml.v0_6.way wa = new OsmSharp.Osm.Core.Xml.v0_6.way();
 
             wa.idSpecified = false;
             if (way_to_add.Id.HasValue)
@@ -201,10 +201,10 @@ namespace Osm.Data.XML.Raw.Processor
             // set nodes.
             if (way_to_add.Nodes != null)
             {
-                wa.nd = new Osm.Core.Xml.v0_6.nd[way_to_add.Nodes.Count];
+                wa.nd = new OsmSharp.Osm.Core.Xml.v0_6.nd[way_to_add.Nodes.Count];
                 for (int idx = 0; idx < way_to_add.Nodes.Count; idx++)
                 {
-                    Osm.Core.Xml.v0_6.nd nd = new Osm.Core.Xml.v0_6.nd();
+                    OsmSharp.Osm.Core.Xml.v0_6.nd nd = new OsmSharp.Osm.Core.Xml.v0_6.nd();
                     nd.refSpecified = true;
                     nd.@ref = way_to_add.Nodes[idx];
                     wa.nd[idx] = nd;
@@ -219,7 +219,7 @@ namespace Osm.Data.XML.Raw.Processor
 
         public override void AddRelation(SimpleRelation relation_to_add)
         {
-            Osm.Core.Xml.v0_6.relation re = new Osm.Core.Xml.v0_6.relation();
+            OsmSharp.Osm.Core.Xml.v0_6.relation re = new OsmSharp.Osm.Core.Xml.v0_6.relation();
 
             re.idSpecified = false;
             if (relation_to_add.Id.HasValue)
@@ -269,10 +269,10 @@ namespace Osm.Data.XML.Raw.Processor
             // set members.
             if (relation_to_add.Members != null)
             {
-                re.member = new Osm.Core.Xml.v0_6.member[relation_to_add.Members.Count];
+                re.member = new OsmSharp.Osm.Core.Xml.v0_6.member[relation_to_add.Members.Count];
                 for (int idx = 0; idx < relation_to_add.Members.Count; idx++)
                 {
-                    Osm.Core.Xml.v0_6.member mem = new Osm.Core.Xml.v0_6.member();
+                    OsmSharp.Osm.Core.Xml.v0_6.member mem = new OsmSharp.Osm.Core.Xml.v0_6.member();
                     SimpleRelationMember member_to_add = relation_to_add.Members[idx];
 
                     // set memberid
@@ -290,13 +290,13 @@ namespace Osm.Data.XML.Raw.Processor
                         switch (member_to_add.MemberType.Value)
                         {
                             case SimpleRelationMemberType.Node:
-                                mem.type = Osm.Core.Xml.v0_6.memberType.node;
+                                mem.type = OsmSharp.Osm.Core.Xml.v0_6.memberType.node;
                                 break;
                             case SimpleRelationMemberType.Way:
-                                mem.type = Osm.Core.Xml.v0_6.memberType.way;
+                                mem.type = OsmSharp.Osm.Core.Xml.v0_6.memberType.way;
                                 break;
                             case SimpleRelationMemberType.Relation:
-                                mem.type = Osm.Core.Xml.v0_6.memberType.relation;
+                                mem.type = OsmSharp.Osm.Core.Xml.v0_6.memberType.relation;
                                 break;
                         }
                         mem.typeSpecified = true;
@@ -314,16 +314,16 @@ namespace Osm.Data.XML.Raw.Processor
             _text_writer.Write(_text_writer.NewLine);
         }
 
-        private Osm.Core.Xml.v0_6.tag[] ConvertToXmlTags(IDictionary<string, string> tags)
+        private OsmSharp.Osm.Core.Xml.v0_6.tag[] ConvertToXmlTags(IDictionary<string, string> tags)
         {
             if (tags != null)
             {
-                Osm.Core.Xml.v0_6.tag[] xml_tags = new Osm.Core.Xml.v0_6.tag[tags.Count];
+                OsmSharp.Osm.Core.Xml.v0_6.tag[] xml_tags = new OsmSharp.Osm.Core.Xml.v0_6.tag[tags.Count];
 
                 int idx = 0;
                 foreach (KeyValuePair<string, string> pair in tags)
                 {
-                    xml_tags[idx] = new Osm.Core.Xml.v0_6.tag();
+                    xml_tags[idx] = new OsmSharp.Osm.Core.Xml.v0_6.tag();
                     xml_tags[idx].k = pair.Key;
                     xml_tags[idx].v = pair.Value;
                     idx++;

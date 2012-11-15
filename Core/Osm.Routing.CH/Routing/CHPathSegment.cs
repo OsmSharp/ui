@@ -20,7 +20,7 @@
 //using System.Linq;
 //using System.Text;
 
-//namespace Routing.CH.Routing
+//namespace OsmSharp.Routing.CH.Routing
 //{
 //    /// <summary>
 //    /// Linked list of routed vertices.

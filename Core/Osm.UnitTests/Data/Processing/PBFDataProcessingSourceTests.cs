@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Osm.Data.PBF.Raw.Processor;
+using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using System.Reflection;
-using Osm.Data.Core.Processor.Default;
+using OsmSharp.Osm.Data.Core.Processor.Default;
 
-namespace Osm.UnitTests.Data.Processing
+namespace OsmSharp.Osm.UnitTests.Data.Processing
 {
     /// <summary>
     /// Summary description for PBFDataProcessorSourceTests

@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.Mutations;
-using Tools.Math.Random;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.VRP.MultiSalesman.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
+using OsmSharp.Tools.Math.Random;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic;
 
-namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
+namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
 {
     internal class DynamicCombinedMutation : CombinedMutation<List<Genome>, Problem, Fitness>
     {
@@ -60,7 +60,7 @@ namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
             { // decrease total time.
                 if (_regime_reached == false)
                 {
-                    Tools.Core.Output.OutputStreamHost.WriteLine(
+                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(
                         "Regime Reached!");
                 }
                 //Tools.Core.Output.OutputTextStreamHost.Write("DT");

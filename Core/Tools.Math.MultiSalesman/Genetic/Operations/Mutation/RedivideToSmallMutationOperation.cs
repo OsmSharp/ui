@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.Mutations;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
-using Tools.Math.VRP.MultiSalesman.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
+using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic;
 
-namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
+namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
 {
     internal class RedivideToSmallMutationOperation : IMutationOperation<List<Genome>, Problem, Fitness>
     {
@@ -68,7 +68,7 @@ namespace Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
             //    while (weight < solver.Problem.TargetTime.Value)
             //    {
             //        // best place one of the largest cities into the smallest.
-            //        Tools.Math.VRP.MultiSalesman.Genetic.Helpers.BestPlacementHelper.BestPlacementResult result =
+            //        OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers.BestPlacementHelper.BestPlacementResult result =
             //            BestPlacementHelper.CalculateBestPlacementInGenome(
             //            solver.Problem, (solver.FitnessCalculator as FitnessCalculator), smallest, cities);
 

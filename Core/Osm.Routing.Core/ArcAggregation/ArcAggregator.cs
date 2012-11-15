@@ -19,16 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.ArcAggregation.Output;
-using Tools.Math.Geo;
-using Tools.Math.Units.Angle;
-using Tools.Math.Geo.Meta;
-using Tools.Math.Units.Distance;
-using Routing.Core.Route;
-using Routing.Core;
-using Routing.Core.Roads.Tags;
+using OsmSharp.Routing.Core.ArcAggregation.Output;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Units.Angle;
+using OsmSharp.Tools.Math.Geo.Meta;
+using OsmSharp.Tools.Math.Units.Distance;
+using OsmSharp.Routing.Core.Route;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Roads.Tags;
 
-namespace Routing.Core.ArcAggregation
+namespace OsmSharp.Routing.Core.ArcAggregation
 {
     public class ArcAggregator
     {

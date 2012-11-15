@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Data.Redis
+namespace OsmSharp.Osm.Data.Redis
 {
 
     public static class GeoHash

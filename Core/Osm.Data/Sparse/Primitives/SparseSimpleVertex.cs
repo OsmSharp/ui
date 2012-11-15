@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Data.Core.Sparse.Primitives
+namespace OsmSharp.Osm.Data.Core.Sparse.Primitives
 {
     /// <summary>
     /// Represents a simple vertex that is part of the road network.

@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Osm.Map.Elements;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Map.Elements;
 using System.Drawing;
-using Tools.Math.Shapes;
-using Tools.Math.Geo.Factory;
+using OsmSharp.Tools.Math.Shapes;
+using OsmSharp.Tools.Math.Geo.Factory;
 
-namespace Osm.Map.Layers.Custom
+namespace OsmSharp.Osm.Map.Layers.Custom
 {
     /// <summary>
     /// Custom layer class.
@@ -199,7 +199,7 @@ namespace Osm.Map.Layers.Custom
             ElementDot element = new ElementDot(
                 Color.Black.ToArgb(),
                 0.0002f,
-                new Tools.Math.Shapes.ShapeDotF<GeoCoordinate, GeoCoordinateBox, GeoCoordinateLine>(PrimitiveGeoFactory.Instance, dot),
+                new OsmSharp.Tools.Math.Shapes.ShapeDotF<GeoCoordinate, GeoCoordinateBox, GeoCoordinateLine>(PrimitiveGeoFactory.Instance, dot),
                 false);
 
             lock (_elements)

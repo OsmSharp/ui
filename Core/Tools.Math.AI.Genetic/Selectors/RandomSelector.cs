@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace Tools.Math.AI.Genetic.Selectors
+namespace OsmSharp.Tools.Math.AI.Genetic.Selectors
 {
     public class RandomSelector<GenomeType, ProblemType, WeightType> :
         ISelector<GenomeType, ProblemType, WeightType>
@@ -34,8 +34,8 @@ namespace Tools.Math.AI.Genetic.Selectors
             Population<GenomeType, ProblemType, WeightType> population, 
             HashSet<Individual<GenomeType, ProblemType, WeightType>> do_not_select_list)
         {
-            int idx1 = Tools.Math.Random.StaticRandomGenerator.Get().Generate(population.Count);
-            int idx2 = Tools.Math.Random.StaticRandomGenerator.Get().Generate(population.Count);
+            int idx1 = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(population.Count);
+            int idx2 = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(population.Count);
             if (population[idx1].Fitness.CompareTo(
                     population[idx2].Fitness) > 0)
             {

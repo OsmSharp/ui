@@ -1,4 +1,4 @@
-﻿namespace Osm.UI.WinForms.Test
+﻿namespace OsmSharp.Osm.UI.WinForms.Test
 {
     partial class MapViewerForm
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mapViewerUserControl1 = new Osm.UI.WinForms.MapViewerUserControl.MapViewerUserControl();
+            this.mapViewerUserControl1 = new OsmSharp.Osm.UI.WinForms.MapViewerUserControl.MapViewerUserControl();
             this.SuspendLayout();
             // 
             // mapViewerUserControl1
@@ -53,7 +53,7 @@
 
         #endregion
 
-        private Osm.UI.WinForms.MapViewerUserControl.MapViewerUserControl mapViewerUserControl1;
+        private OsmSharp.Osm.UI.WinForms.MapViewerUserControl.MapViewerUserControl mapViewerUserControl1;
     }
 }
 

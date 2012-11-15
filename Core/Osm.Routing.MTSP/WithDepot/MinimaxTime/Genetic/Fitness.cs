@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
+namespace OsmSharp.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
 {
     public class Fitness : IComparable
     {

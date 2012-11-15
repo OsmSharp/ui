@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.TSP.LK
+namespace OsmSharp.Tools.Math.TSP.LK
 {
     internal class EdgeSet
     {

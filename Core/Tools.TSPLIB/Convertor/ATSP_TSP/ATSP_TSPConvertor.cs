@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.TSP;
-using Tools.TSPLIB.Problems;
-using Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Tools.TSPLIB.Problems;
+using OsmSharp.Tools.Math.TSP.Problems;
 
-namespace Tools.TSPLIB.Convertor.ATSP_TSP
+namespace OsmSharp.Tools.TSPLIB.Convertor.ATSP_TSP
 {
     public static class ATSP_TSPConvertor
     {

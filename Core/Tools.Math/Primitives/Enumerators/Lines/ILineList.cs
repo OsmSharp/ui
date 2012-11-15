@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Primitives.Enumerators.Lines
+namespace OsmSharp.Tools.Math.Primitives.Enumerators.Lines
 {
     /// <summary>
     /// Interface representing a list of lines.

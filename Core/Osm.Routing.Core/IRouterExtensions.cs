@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Resolving;
+using OsmSharp.Routing.Core.Resolving;
 
-namespace Routing.Core
+namespace OsmSharp.Routing.Core
 {
     /// <summary>
     /// Contains common IRouter extensions.
@@ -51,7 +51,7 @@ namespace Routing.Core
                 }
 
                 // report progress.
-                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, resolved_points.Length, "Router.Core.CheckConnectivityAndRemoveInvalid",
+                OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, resolved_points.Length, "Router.Core.CheckConnectivityAndRemoveInvalid",
                     "Checking connectivity...");
             }
             return connected_points.ToArray();

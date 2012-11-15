@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Routing.CH.PreProcessing
+namespace OsmSharp.Routing.CH.PreProcessing
 {
     /// <summary>
     /// A witness calculator.

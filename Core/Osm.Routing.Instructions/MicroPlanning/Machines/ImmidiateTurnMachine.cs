@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.StateMachines;
-using Tools.Math.Geo.Meta;
-using Tools.Math.Geo;
-using Routing.Core.ArcAggregation.Output;
+using OsmSharp.Tools.Math.StateMachines;
+using OsmSharp.Tools.Math.Geo.Meta;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.ArcAggregation.Output;
 
-namespace Routing.Instructions.MicroPlanning.Machines
+namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {
     /// <summary>
     /// Machine to detect significant turns.
@@ -116,7 +116,7 @@ namespace Routing.Instructions.MicroPlanning.Machines
                     }
                     switch (point.Point.Angle.Direction)
                     {
-                        case Tools.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
+                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
                             return false;
                     }
                     return true;

@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core;
+using OsmSharp.Routing.Core;
 
-namespace Routing.Core.Router
+namespace OsmSharp.Routing.Core.Router
 {
     /// <summary>
     /// An implementation of an in-memory dynamic graph.
@@ -200,7 +200,7 @@ namespace Routing.Core.Router
         /// <summary>
         /// Represents a resolved edge.
         /// </summary>
-        internal class RouterResolvedGraphEdge : Routing.Core.Graph.IDynamicGraphEdgeData
+        internal class RouterResolvedGraphEdge : OsmSharp.Routing.Core.Graph.IDynamicGraphEdgeData
         {
             /// <summary>
             /// Returns true if the edge can be followed only in the foward direction.

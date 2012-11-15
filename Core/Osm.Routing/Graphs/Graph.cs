@@ -19,23 +19,23 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Tools.Math.Geo;
-//using Osm.Data;
-//using Osm.Core;
-//using Osm.Core.Filters;
-//using Osm.Routing.Graphs.Interpreter;
-//using Tools.Math.Shapes;
-//using Tools.Math.Shapes.ResultHelpers;
-//using Osm.Routing.Graphs;
-//using Osm.Routing.Core.Resolving;
-//using Tools.Math;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Osm.Data;
+//using OsmSharp.Osm.Core;
+//using OsmSharp.Osm.Core.Filters;
+//using OsmSharp.Osm.Routing.Graphs.Interpreter;
+//using OsmSharp.Tools.Math.Shapes;
+//using OsmSharp.Tools.Math.Shapes.ResultHelpers;
+//using OsmSharp.Osm.Routing.Graphs;
+//using OsmSharp.Osm.Routing.Core.Resolving;
+//using OsmSharp.Tools.Math;
 
-//namespace Osm.Routing.Graphs
+//namespace OsmSharp.Osm.Routing.Graphs
 //{
 //    /// <summary>
 //    /// Represents a graph with osm data in it.
 //    /// </summary>
-//    public class Graph : Tools.Math.Graph.IGraphDirected<GraphVertex>
+//    public class Graph : OsmSharp.Tools.Math.Graph.IGraphDirected<GraphVertex>
 //    {
 //        /// <summary>
 //        /// Holds the data source for this graph.
@@ -251,7 +251,7 @@
 
 //                // query datasource.
 //                IList<OsmBase> query_result =
-//                    _source.Get(new Tools.Math.Geo.GeoCoordinateBox(from_top, from_bottom), Osm.Core.Filters.Filter.Any());
+//                    _source.Get(new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(from_top, from_bottom), OsmSharp.Osm.Core.Filters.Filter.Any());
 
 //                // loop over all found objects.
 //                foreach (OsmBase base_obj in query_result)

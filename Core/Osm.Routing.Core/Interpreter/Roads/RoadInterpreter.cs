@@ -19,13 +19,13 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Routing.Core;
-//using Routing.Core.Roads.Tags;
+//using OsmSharp.Routing.Core;
+//using OsmSharp.Routing.Core.Roads.Tags;
 
-//namespace Routing.Core.Roads
+//namespace OsmSharp.Routing.Core.Roads
 //{
 //    /// <summary>
-//    /// Inteprets the properties of a way and abstracts the usage of tags in OSM.
+//    /// Inteprets the properties of a way and abstracts the usage of tags in OsmSharp.Osm.
 //    /// </summary>
 //    public class RoadInterpreter
 //    {

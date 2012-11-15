@@ -19,14 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Map.Layers;
-using Tools.Math.Geo;
-using Osm.Map.Elements;
+using OsmSharp.Osm.Map.Layers;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Map.Elements;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using Osm.Renderer.Gdi.Layers;
+using OsmSharp.Osm.Renderer.Gdi.Layers;
 
-namespace Osm.Renderer.Gdi
+namespace OsmSharp.Osm.Renderer.Gdi
 {
     public class GdiRenderer : Renderer<IGdiTarget>
     {
@@ -470,7 +470,7 @@ namespace Osm.Renderer.Gdi
             {
                 Font fnt_regular = new System.Drawing.Font("Times New Roman", 10);
 
-                Image image = global::Osm.Renderer.Gdi.Properties.Resources.cardinal_image_small;
+                Image image = global::OsmSharp.Osm.Renderer.Gdi.Properties.Resources.cardinal_image_small;
 
                 this.Target.Graphics.DrawImage(image, new PointF(this.Target.XRes - image.Width - 10,10));
             }

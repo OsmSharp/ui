@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core.Simple;
-using Osm.Data.Core.Processor;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Core.Processor;
 
-namespace Osm.Data.Processor.Main.Filters
+namespace OsmSharp.Osm.Data.Processor.Main.Filters
 {
     public class RoutingFilter : DataProcessorFilter
     {

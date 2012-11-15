@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Map.Elements;
-using Tools.Math.Geo;
+using OsmSharp.Osm.Map.Elements;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Osm.Map.Layers
+namespace OsmSharp.Osm.Map.Layers
 {
     /// <summary>
     /// Represents a map layer.
@@ -32,7 +32,7 @@ namespace Osm.Map.Layers
         /// <summary>
         /// The event raised when data within the layer has changed.
         /// </summary>
-        event Osm.Map.Map.LayerChangedDelegate Changed;
+        event OsmSharp.Osm.Map.Map.LayerChangedDelegate Changed;
 
         /// <summary>
         /// Returns the unique id for this layer.

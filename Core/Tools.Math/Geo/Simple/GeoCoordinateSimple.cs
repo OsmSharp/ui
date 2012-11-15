@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Geo.Simple
+namespace OsmSharp.Tools.Math.Geo.Simple
 {
     /// <summary>
     /// A simple version of a coordinate.

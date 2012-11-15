@@ -22,7 +22,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.Xml;
 
-namespace Tools.Xml.Kml
+namespace OsmSharp.Tools.Xml.Kml
 {
     /// <summary>
     /// Represents a kml document.
@@ -120,15 +120,15 @@ namespace Tools.Xml.Kml
         private void FindVersionFromObject()
         {
             _version = KmlVersion.Unknown;
-            if (_kml_object is Tools.Xml.Kml.v2_0.kml)
+            if (_kml_object is OsmSharp.Tools.Xml.Kml.v2_0.kml)
             {
                 _version = KmlVersion.Kmlv2_0;
             }
-            else if (_kml_object is Tools.Xml.Kml.v2_0_response.kml)
+            else if (_kml_object is OsmSharp.Tools.Xml.Kml.v2_0_response.kml)
             {
                 _version = KmlVersion.Kmlv2_0_response;
             }
-            else if (_kml_object is Tools.Xml.Kml.v2_1.KmlType)
+            else if (_kml_object is OsmSharp.Tools.Xml.Kml.v2_1.KmlType)
             {
                 _version = KmlVersion.Kmlv2_1;
             }
@@ -201,13 +201,13 @@ namespace Tools.Xml.Kml
                     switch (_version)
                     {
                         case KmlVersion.Kmlv2_0:
-                            version_type = typeof(Tools.Xml.Kml.v2_0.kml);
+                            version_type = typeof(OsmSharp.Tools.Xml.Kml.v2_0.kml);
                             break;
                         case KmlVersion.Kmlv2_0_response:
-                            version_type = typeof(Tools.Xml.Kml.v2_0_response.kml);
+                            version_type = typeof(OsmSharp.Tools.Xml.Kml.v2_0_response.kml);
                             break;
                         case KmlVersion.Kmlv2_1:
-                            version_type = typeof(Tools.Xml.Kml.v2_1.KmlType);
+                            version_type = typeof(OsmSharp.Tools.Xml.Kml.v2_1.KmlType);
                             break;
                         case KmlVersion.Unknown:
                             throw new XmlException("Version could not be determined!");
@@ -233,13 +233,13 @@ namespace Tools.Xml.Kml
                 switch (_version)
                 {
                     case KmlVersion.Kmlv2_0:
-                        version_type = typeof(Tools.Xml.Kml.v2_0.kml);
+                        version_type = typeof(OsmSharp.Tools.Xml.Kml.v2_0.kml);
                         break;
                     case KmlVersion.Kmlv2_0_response:
-                        version_type = typeof(Tools.Xml.Kml.v2_0_response.kml);
+                        version_type = typeof(OsmSharp.Tools.Xml.Kml.v2_0_response.kml);
                         break;
                     case KmlVersion.Kmlv2_1:
-                        version_type = typeof(Tools.Xml.Kml.v2_1.KmlType);
+                        version_type = typeof(OsmSharp.Tools.Xml.Kml.v2_1.KmlType);
                         break;
                     case KmlVersion.Unknown:
                         throw new XmlException("Version could not be determined!");

@@ -19,16 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.Generation;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
-using Routing.Core.VRP.NoDepot.MaxTime.BestPlacement;
-using Tools.Math.VRP.Core.BestPlacement;
-using Tools.Math.VRP.Core;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement;
+using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
 {
     /// <summary>
     /// Best-placement generator based on a random first customer for each route.
@@ -65,7 +65,7 @@ namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
             {
                 // select a random customer.
                 double weight = 0;
-                int customer_idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers.Count);
+                int customer_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers.Count);
                 int customer = customers[customer_idx];
                 customers.RemoveAt(customer_idx);
 

@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Osm.UI.WinForms.Layers
+namespace OsmSharp.Osm.UI.WinForms.Layers
 {
     public partial class LayerDetailUserControl : UserControl
     {
@@ -33,7 +33,7 @@ namespace Osm.UI.WinForms.Layers
             InitializeComponent();
         }
 
-        private Osm.Map.Layers.ILayer _layer; 
+        private OsmSharp.Osm.Map.Layers.ILayer _layer; 
 
         internal void SetLayer(Map.Layers.ILayer iLayer)
         {

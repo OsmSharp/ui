@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Tools.Math.Units.Angle;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Units.Angle;
 
-namespace Osm.Core
+namespace OsmSharp.Osm.Core
 {
     /// <summary>
     /// Represents a tile.

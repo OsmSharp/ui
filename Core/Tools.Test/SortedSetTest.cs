@@ -20,9 +20,9 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tools.Core.Collections;
+using OsmSharp.Tools.Core.Collections;
 
-namespace Tools.Test
+namespace OsmSharp.Tools.Test
 {
     /// <summary>
     /// Summary description for SortedSetTest
@@ -81,7 +81,7 @@ namespace Tools.Test
         public void TestSortedSet()
         {
             // initialize a set with integers.
-            Tools.Core.Collections.SortedSet<int> set = new Tools.Core.Collections.SortedSet<int>();
+            OsmSharp.Tools.Core.Collections.SortedSet<int> set = new OsmSharp.Tools.Core.Collections.SortedSet<int>();
 
             // test initial conditions.
             Assert.AreEqual(0, set.Count, "Set count not 0 when empty!");

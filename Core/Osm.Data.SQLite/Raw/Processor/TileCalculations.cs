@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Data.SQLite.Raw.Processor
+namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 {
     internal static class TileCalculations
     {

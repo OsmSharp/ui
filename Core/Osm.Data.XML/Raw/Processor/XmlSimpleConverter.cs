@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core.Simple;
+using OsmSharp.Osm.Core.Simple;
 
-namespace Osm.Data.XML.Raw.Processor
+namespace OsmSharp.Osm.Data.XML.Raw.Processor
 {
     public static class XmlSimpleConverter
     {
@@ -344,7 +344,7 @@ namespace Osm.Data.XML.Raw.Processor
                 relation.Members = new List<SimpleRelationMember>();
                 for (int idx = 0; idx < re.member.Length; idx++)
                 {
-                    Osm.Core.Xml.v0_6.member mem = re.member[idx];
+                    OsmSharp.Osm.Core.Xml.v0_6.member mem = re.member[idx];
                     SimpleRelationMember relation_member = new SimpleRelationMember();
                     // set memberid
                     if (mem.refSpecified)
@@ -360,13 +360,13 @@ namespace Osm.Data.XML.Raw.Processor
                     {
                         switch (mem.type)
                         {
-                            case Osm.Core.Xml.v0_6.memberType.node:
+                            case OsmSharp.Osm.Core.Xml.v0_6.memberType.node:
                                 relation_member.MemberType = SimpleRelationMemberType.Node;
                                 break;
-                            case Osm.Core.Xml.v0_6.memberType.way:
+                            case OsmSharp.Osm.Core.Xml.v0_6.memberType.way:
                                 relation_member.MemberType = SimpleRelationMemberType.Way;
                                 break;
-                            case Osm.Core.Xml.v0_6.memberType.relation:
+                            case OsmSharp.Osm.Core.Xml.v0_6.memberType.relation:
                                 relation_member.MemberType = SimpleRelationMemberType.Relation;
                                 break;
                         }

@@ -19,16 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Time;
-using Tools.Math.VRP.Core;
-using Tools.Math.VRP.Core.BestPlacement;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Tools.Math.TSP;
-using Routing.Core;
-using Routing.Core.VRP.NoDepot.MaxTime.InterRoute;
+using OsmSharp.Tools.Math.Units.Time;
+using OsmSharp.Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.InterRoute;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 {
     public class RouterBestPlacementWithImprovements<ResolvedType> : RouterMaxTime<ResolvedType>
         where ResolvedType : IRouterPoint
@@ -68,7 +68,7 @@ namespace Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 
             _intra_improvements = new List<IImprovement>();
             _intra_improvements.Add(
-                new Tools.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver());
+                new OsmSharp.Tools.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver());
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                         current_route_weight = potential_weight;
 
                         // improve if needed.
-                        //if (improvement_probalitity > Tools.Math.Random.StaticRandomGenerator.Get().Generate(1))
+                        //if (improvement_probalitity > OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(1))
                         if(((problem.Size - customers.Count) % _k) == 0)
                         { // an improvement is descided.
                             current_route_weight = this.ImproveIntraRoute(problem, 
@@ -168,7 +168,7 @@ namespace Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
         private int SelectSeed(MaxTimeProblem problem, MaxTimeCalculator calculator, 
             MaxTimeSolution solution, List<int> customers)
         {
-            int customer_idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers.Count);
+            int customer_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers.Count);
             return customers[customer_idx];
         }
 
@@ -220,8 +220,8 @@ namespace Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
         {
             //// improve the route.
             //Tools.Math.TSP.RandomizedArbitraryInsertionSolver solver = 
-            //    new Tools.Math.TSP.RandomizedArbitraryInsertionSolver(route);
-            //route = solver.Solve(new Tools.Math.TSP.Problems.MatrixProblem(problem.WeightMatrix, false));
+            //    new OsmSharp.Tools.Math.TSP.RandomizedArbitraryInsertionSolver(route);
+            //route = solver.Solve(new OsmSharp.Tools.Math.TSP.Problems.MatrixProblem(problem.WeightMatrix, false));
 
             //weight = this.CalculateWeight(problem, route);
             //return route;

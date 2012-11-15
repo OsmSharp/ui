@@ -22,7 +22,7 @@ using System.Text;
 using System.Xml;
 using System.IO;
 
-namespace Tools.Xml.Sources
+namespace OsmSharp.Tools.Xml.Sources
 {
     /// <summary>
     /// Class implementing an xml source.

@@ -19,16 +19,16 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Osm.Routing.Core;
-//using Osm.Routing.Core.Route;
-//using Osm.Routing.Core.Metrics.Time;
-//using Tools.Math.Geo;
-//using Osm.Data.Core.DynamicGraph;
-//using Routing.CH.PreProcessing;
-//using Osm.Routing.Core.Resolving;
-//using Routing.Core;
+//using OsmSharp.Osm.Routing.Core;
+//using OsmSharp.Osm.Routing.Core.Route;
+//using OsmSharp.Osm.Routing.Core.Metrics.Time;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Osm.Data.Core.DynamicGraph;
+//using OsmSharp.Routing.CH.PreProcessing;
+//using OsmSharp.Osm.Routing.Core.Resolving;
+//using OsmSharp.Routing.Core;
 
-//namespace Routing.CH.Routing
+//namespace OsmSharp.Routing.CH.Routing
 //{
 //    public class Router : IRouter<CHResolvedPoint>
 //    {
@@ -139,7 +139,7 @@
 //                connectivities[idx] = this.CheckConnectivity(point[idx], weight);
 
 //                // report progress.
-//                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.CH.CheckConnectivity",
+//                OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.CH.CheckConnectivity",
 //                    "Checking connectivity...");
 //            }
 //            return connectivities;

@@ -20,13 +20,13 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Osm.Core.Xml;
-using Tools.Xml.Sources;
+using OsmSharp.Osm.Core.Xml;
+using OsmSharp.Tools.Xml.Sources;
 using System.IO;
-using Osm.Core.Xml.v0_6;
+using OsmSharp.Osm.Core.Xml.v0_6;
 using System.Diagnostics;
 
-namespace Osm.Test
+namespace OsmSharp.Osm.Test
 {
     /// <summary>
     /// Summary description for UnitTest1

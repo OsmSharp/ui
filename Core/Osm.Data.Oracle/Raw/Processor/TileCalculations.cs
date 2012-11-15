@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Data.Oracle.Raw.Processor
+namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
 {
     internal static class TileCalculations
     {

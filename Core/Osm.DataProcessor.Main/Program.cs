@@ -19,19 +19,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data.Oracle;
-using Osm.Data.Core.Processor.Filter;
-using Osm.Data.XML.Raw.Processor.Replication;
-using Osm.Data.Oracle.Raw;
-using Osm.Data.Oracle.Raw.Processor.ChangeSets;
-using Osm.Data.XML.Raw.Processor;
-using Osm.Data.Core.Processor.Filter.Sort;
-using Osm.Data.Oracle.Raw.Processor;
-using Osm.Data.Core.Processor.Default;
-using Osm.Data.XML.Raw.Processor.ChangeSets;
-using Osm.Data.Redis.Sparse.Processor;
+using OsmSharp.Osm.Data.Oracle;
+using OsmSharp.Osm.Data.Core.Processor.Filter;
+using OsmSharp.Osm.Data.XML.Raw.Processor.Replication;
+using OsmSharp.Osm.Data.Oracle.Raw;
+using OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets;
+using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Osm.Data.Oracle.Raw.Processor;
+using OsmSharp.Osm.Data.Core.Processor.Default;
+using OsmSharp.Osm.Data.XML.Raw.Processor.ChangeSets;
+using OsmSharp.Osm.Data.Redis.Sparse.Processor;
 
-namespace Osm.Data.Processor.Main
+namespace OsmSharp.Osm.Data.Processor.Main
 {
     class Program
     {
@@ -76,7 +76,7 @@ namespace Osm.Data.Processor.Main
 
                 DataProcessorChangeSetFilterBoundingBox box_filter = new DataProcessorChangeSetFilterBoundingBox(
                     new OracleSimpleSource(connection_string),
-                    new Tools.Math.Geo.GeoCoordinateBox(new Tools.Math.Geo.GeoCoordinate(top, left), new Tools.Math.Geo.GeoCoordinate(bottom, right)),
+                    new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(new OsmSharp.Tools.Math.Geo.GeoCoordinate(top, left), new OsmSharp.Tools.Math.Geo.GeoCoordinate(bottom, right)),
                     listenere);
                 box_filter.RegisterSource(replicator);
 
@@ -107,11 +107,11 @@ namespace Osm.Data.Processor.Main
             //progress.Pull();
 
             //// pre-process.
-            //Osm.Routing.Sparse.Memory.MemorySparseData memory_sparse_data = new Routing.Sparse.Memory.MemorySparseData();
+            //Osm.Routing.Sparse.Memory.MemorySparseData memory_sparse_data = new OsmSharp.Routing.Sparse.Memory.MemorySparseData();
             //Osm.Data.Redis.RedisSimpleSource redis_source = new Data.Redis.RedisSimpleSource();
-            //Osm.Routing.Raw.Graphs.Graph raw_graph = new Routing.Raw.Graphs.Graph(
-            //    new Osm.Routing.Raw.Graphs.Interpreter.GraphInterpreterTime(redis_source, Routing.Core.VehicleEnum.Car), redis_source);
-            //Osm.Routing.Sparse.PreProcessor.SparsePreProcessor pre_processor = new Routing.Sparse.PreProcessor.SparsePreProcessor(
+            //Osm.Routing.Raw.Graphs.Graph raw_graph = new OsmSharp.Routing.Raw.Graphs.Graph(
+            //    new OsmSharp.Osm.Routing.Raw.Graphs.Interpreter.GraphInterpreterTime(redis_source, OsmSharp.Routing.Core.VehicleEnum.Car), redis_source);
+            //Osm.Routing.Sparse.PreProcessor.SparsePreProcessor pre_processor = new OsmSharp.Routing.Sparse.PreProcessor.SparsePreProcessor(
             //    memory_sparse_data, raw_graph);
             //pre_processor.Process(redis_target.ProcessedNodes);
         }
@@ -130,12 +130,12 @@ namespace Osm.Data.Processor.Main
             //progress.Pull();
 
             //// pre-process.
-            //Osm.Routing.Sparse.Memory.MemorySparseData memory_sparse_data = new Routing.Sparse.Memory.MemorySparseData();
+            //Osm.Routing.Sparse.Memory.MemorySparseData memory_sparse_data = new OsmSharp.Routing.Sparse.Memory.MemorySparseData();
             //Osm.Data.Redis.RedisSimpleSource redis_source = new Data.Redis.RedisSimpleSource();
-            //Osm.Routing.Raw.Graphs.Graph raw_graph = new Routing.Raw.Graphs.Graph(
-            //    new Osm.Routing.Raw.Graphs.Interpreter.GraphInterpreterTime(redis_source, Routing.Core.VehicleEnum.Car), redis_source);
+            //Osm.Routing.Raw.Graphs.Graph raw_graph = new OsmSharp.Routing.Raw.Graphs.Graph(
+            //    new OsmSharp.Osm.Routing.Raw.Graphs.Interpreter.GraphInterpreterTime(redis_source, OsmSharp.Routing.Core.VehicleEnum.Car), redis_source);
             //Osm.Routing.Sparse.PreProcessor.SparsePreProcessor pre_processor = 
-            //    new Routing.Sparse.PreProcessor.SparsePreProcessor(
+            //    new OsmSharp.Routing.Sparse.PreProcessor.SparsePreProcessor(
             //    memory_sparse_data);
             //pre_processor.Process(redis_target.ProcessedNodes);
         }
@@ -157,8 +157,8 @@ namespace Osm.Data.Processor.Main
             //double left = 1.99;
             //double right = 6.71;
 
-            //DataProcessorFilterBoundingBox box_filter = new DataProcessorFilterBoundingBox(new Tools.Math.Geo.GeoCoordinateBox(new Tools.Math.Geo.GeoCoordinate(
-            //    top, left), new Tools.Math.Geo.GeoCoordinate(bottom, right)));
+            //DataProcessorFilterBoundingBox box_filter = new DataProcessorFilterBoundingBox(new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(new OsmSharp.Tools.Math.Geo.GeoCoordinate(
+            //    top, left), new OsmSharp.Tools.Math.Geo.GeoCoordinate(bottom, right)));
             //box_filter.RegisterSource(source);
 
             //RoutingFilter routing_filter = new RoutingFilter();
@@ -183,8 +183,8 @@ namespace Osm.Data.Processor.Main
         {
             XmlDataProcessorSource source = new XmlDataProcessorSource(input_file);
 
-            DataProcessorFilterBoundingBox box_filter = new DataProcessorFilterBoundingBox(new Tools.Math.Geo.GeoCoordinateBox(new Tools.Math.Geo.GeoCoordinate(
-                top, left), new Tools.Math.Geo.GeoCoordinate(bottom, right)));
+            DataProcessorFilterBoundingBox box_filter = new DataProcessorFilterBoundingBox(new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(new OsmSharp.Tools.Math.Geo.GeoCoordinate(
+                top, left), new OsmSharp.Tools.Math.Geo.GeoCoordinate(bottom, right)));
             box_filter.RegisterSource(source);
 
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
@@ -222,7 +222,7 @@ namespace Osm.Data.Processor.Main
 
             DataProcessorChangeSetFilterBoundingBox box_filter = new DataProcessorChangeSetFilterBoundingBox(
                 new OracleSimpleSource(""),
-                new Tools.Math.Geo.GeoCoordinateBox(new Tools.Math.Geo.GeoCoordinate(top, left), new Tools.Math.Geo.GeoCoordinate(bottom, right)));
+                new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(new OsmSharp.Tools.Math.Geo.GeoCoordinate(top, left), new OsmSharp.Tools.Math.Geo.GeoCoordinate(bottom, right)));
             box_filter.RegisterSource(change_source);
 
             OracleSimpleChangeSetApplyTarget change_target = new OracleSimpleChangeSetApplyTarget("Data source=TEST;User Id=OSM;Password=not_the_real_password_haha;", true);

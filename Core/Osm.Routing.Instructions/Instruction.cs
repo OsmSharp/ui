@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Routing.Core.ArcAggregation.Output;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.ArcAggregation.Output;
 
-namespace Routing.Instructions
+namespace OsmSharp.Routing.Instructions
 {
     /// <summary>
     /// Represents an instruction.

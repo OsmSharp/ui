@@ -23,12 +23,12 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Osm.UI.WinForms.MapViewerUserControl.Logic;
-using Osm.Renderer.Gdi.Targets.UserControlTarget;
-using Osm.Renderer;
-using Tools.Math.Geo;
+using OsmSharp.Osm.UI.WinForms.MapViewerUserControl.Logic;
+using OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget;
+using OsmSharp.Osm.Renderer;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Osm.UI.WinForms.MapViewerUserControl
+namespace OsmSharp.Osm.UI.WinForms.MapViewerUserControl
 {
     /// <summary>
     /// Control used only for viewing the map.
@@ -58,7 +58,7 @@ namespace Osm.UI.WinForms.MapViewerUserControl
         /// <summary>
         /// Returns the current view.
         /// </summary>
-        internal Osm.Renderer.View View
+        internal OsmSharp.Osm.Renderer.View View
         {
             get
             {

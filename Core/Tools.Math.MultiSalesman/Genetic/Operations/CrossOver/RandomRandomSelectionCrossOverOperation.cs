@@ -19,14 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.Random;
-using Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.Random;
+using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
 
 
-namespace Tools.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver
+namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver
 {
     internal class RandomRandomSelectionCrossOverOperation : ICrossOverOperation<List<Genome>, Problem, Fitness>
     {
@@ -125,7 +125,7 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver
 
             //        Individual<List<Genome>, Problem, Fitness> copy = new_individual.Copy();
 
-            //        Tools.Math.VRP.MultiSalesman.Genetic.Helpers.BestPlacementHelper.BestPlacementResult result =
+            //        OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers.BestPlacementHelper.BestPlacementResult result =
             //            BestPlacementHelper.CalculateBestPlacementInGenome(
             //                solver.Problem,
             //                solver.FitnessCalculator as FitnessCalculator,

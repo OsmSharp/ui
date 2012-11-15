@@ -19,15 +19,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Map.Elements;
+using OsmSharp.Osm.Map.Elements;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Net;
-using Tools.Math.Geo;
+using OsmSharp.Tools.Math.Geo;
 using System.Diagnostics;
 using System.IO;
 
-namespace Osm.Map.Layers.Tiles
+namespace OsmSharp.Osm.Map.Layers.Tiles
 {
     public class BingSateliteTilesLayer : TilesLayer
     {
@@ -42,7 +42,7 @@ namespace Osm.Map.Layers.Tiles
         protected override Elements.ElementImage LoadMissingTileFromServer(int zoom, int x, int y)
         {
             string quad_key = this.TileXYToQuadKey(x,y,zoom);
-            int server = Tools.Math.Random.StaticRandomGenerator.Get().Generate(4);
+            int server = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(4);
             string url = string.Format(this.TilesUrl, server, quad_key, _version, "en", string.Empty);
             try
             {

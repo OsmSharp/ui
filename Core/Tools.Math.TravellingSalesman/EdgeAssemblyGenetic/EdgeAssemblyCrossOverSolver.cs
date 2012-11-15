@@ -19,16 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.TSP.Problems;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.AI.Genetic;
-using Tools.Math.TSP.Genetic.Solver;
-using Tools.Math.AI.Genetic.Operations.Generation;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace Tools.Math.TSP.EdgeAssemblyGenetic
+namespace OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic
 {
     /// <summary>
     /// Implements a best-placement solver.
@@ -85,7 +85,7 @@ namespace Tools.Math.TSP.EdgeAssemblyGenetic
         /// Creates a new solver.
         /// </summary>
         /// <param name="problem"></param>
-        public EdgeAssemblyCrossOverSolver(Tools.Math.TSP.Problems.IProblem problem, IList<int> customers)
+        public EdgeAssemblyCrossOverSolver(OsmSharp.Tools.Math.TSP.Problems.IProblem problem, IList<int> customers)
         {
             _stopped = false;
             _customers = customers;
@@ -108,7 +108,7 @@ namespace Tools.Math.TSP.EdgeAssemblyGenetic
         /// Returns a solution found using best-placement.
         /// </summary>
         /// <returns></returns>
-        public IRoute Solve(Tools.Math.TSP.Problems.IProblem problem)
+        public IRoute Solve(OsmSharp.Tools.Math.TSP.Problems.IProblem problem)
         {
             // create the settings.
             SolverSettings settings = new SolverSettings(
@@ -152,7 +152,7 @@ namespace Tools.Math.TSP.EdgeAssemblyGenetic
                 while (new_population.Count < _population_size)
                 {
                     // select an individual and the next one.
-                    int idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(population.Count);
+                    int idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(population.Count);
                     Individual<List<int>, GeneticProblem, Fitness> individual1 = population[idx];
                     Individual<List<int>, GeneticProblem, Fitness> individual2 = null;
                     if (idx == population.Count - 1)

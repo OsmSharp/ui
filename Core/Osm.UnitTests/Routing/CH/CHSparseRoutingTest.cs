@@ -4,21 +4,21 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
-using Osm.Data.XML.Raw.Processor;
-using Osm.Data.Core.Processor.Filter.Sort;
-using Routing.Core;
-using Routing.Core.Router;
-using Routing.Core.Interpreter;
-using Osm.Routing.Data;
-using Routing.Core.Router.Memory;
-using Osm.Routing.Data.Processing;
-using Osm.Core;
-using Routing.CH.PreProcessing;
-using Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
-using Routing.CH.PreProcessing.Witnesses;
-using Routing.CH.Routing;
+using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Router;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Osm.Routing.Data;
+using OsmSharp.Routing.Core.Router.Memory;
+using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm.Core;
+using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
+using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.CH.Routing;
 
-namespace Osm.UnitTests.Routing.CH
+namespace OsmSharp.Osm.UnitTests.Routing.CH
 {
     [TestClass]
     public class CHSparseRoutingTest : SimpleRoutingTests<RouterPoint, CHEdgeData>
@@ -162,6 +162,15 @@ namespace Osm.UnitTests.Routing.CH
         public void TestCHSparseConnectivity1()
         {
             this.DoTestConnectivity1();
+        }
+
+        /// <summary>
+        /// Tests a simple shortest route calculation.
+        /// </summary>
+        [TestMethod]
+        public void TestCHSparseResolveAllNodes()
+        {
+            this.DoTestResolveAllNodes();
         }
     }
 }

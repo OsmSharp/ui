@@ -19,17 +19,17 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Osm.Data;
-//using Tools.Xml.Sources;
+//using OsmSharp.Osm.Data;
+//using OsmSharp.Tools.Xml.Sources;
 //using System.Data;
 //using System.IO;
-//using Tools.Math.Geo;
-//using Osm.Routing.Raw;
-//using Osm.Data.Raw.XML.OsmSource;
-//using Osm.Core.Xml;
-//using Tools.TSPLIB.Problems;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Osm.Routing.Raw;
+//using OsmSharp.Osm.Data.Raw.XML.OsmSource;
+//using OsmSharp.Osm.Core.Xml;
+//using OsmSharp.Tools.TSPLIB.Problems;
 
-//namespace Osm.Routing.Test.Matrix
+//namespace OsmSharp.Osm.Routing.Test.Matrix
 //{
 //    class MatrixTest
 //    {
@@ -73,8 +73,8 @@
 
 //            // read matrix points.
 //            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
-//            DataSet data = Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null, 
-//                new System.IO.FileInfo(info.FullName + string.Format("\\Matrix\\{0}.csv",name)), Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
+//            DataSet data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null, 
+//                new System.IO.FileInfo(info.FullName + string.Format("\\Matrix\\{0}.csv",name)), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
 //            foreach (DataRow row in data.Tables[0].Rows)
 //            {
 //                // be carefull with the parsing and the number formatting for different cultures.
@@ -95,7 +95,7 @@
 //                // initialize data.
 //                IDataSourceReadOnly data_source = new OsmDataSource(
 //                    new OsmDocument(new XmlFileSource(info.FullName + string.Format("\\Matrix\\{0}.osm",name))));
-//                data_source = new Osm.Data.Cache.DataSourceCache(data_source, 12);
+//                data_source = new OsmSharp.Osm.Data.Cache.DataSourceCache(data_source, 12);
 
 //                // create router.
 //                Router router = new Router(data_source);
@@ -133,9 +133,9 @@
 
 //            // read matrix points.
 //            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
-//            DataSet data = Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
+//            DataSet data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
 //                new System.IO.FileInfo(file_name), 
-//                Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
+//                OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
 //            foreach (DataRow row in data.Tables[0].Rows)
 //            {
 //                // be carefull with the parsing and the number formatting for different cultures.
@@ -166,10 +166,10 @@
 //                name, name, matrix.Length, matrix, TSPLIBProblemWeightTypeEnum.Explicit, TSPLIBProblemTypeEnum.ATSP);
 
 //            // save the atsp.
-//            Tools.TSPLIB.Parser.TSPLIBProblemGenerator.Generate(new FileInfo(string.Format("{0}.atsp", name)),
+//            OsmSharp.Tools.TSPLIB.Parser.TSPLIBProblemGenerator.Generate(new FileInfo(string.Format("{0}.atsp", name)),
 //                problem);
-//            TSPLIBProblem tsp = Tools.TSPLIB.Convertor.ATSP_TSP.ATSP_TSPConvertor.Convert(problem);
-//            Tools.TSPLIB.Parser.TSPLIBProblemGenerator.Generate(new FileInfo(string.Format("{0}.tsp", name)),
+//            TSPLIBProblem tsp = OsmSharp.Tools.TSPLIB.Convertor.ATSP_TSP.ATSP_TSPConvertor.Convert(problem);
+//            OsmSharp.Tools.TSPLIB.Parser.TSPLIBProblemGenerator.Generate(new FileInfo(string.Format("{0}.tsp", name)),
 //                tsp);
 //        }
 //    }

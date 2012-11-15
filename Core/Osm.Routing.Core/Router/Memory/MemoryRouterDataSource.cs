@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Graph;
-using Tools.Math.Geo;
-using Tools.Math.Structures;
-using Routing.Core.Graph.Memory;
-using Tools.Math;
+using OsmSharp.Routing.Core.Graph;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Structures;
+using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Tools.Math;
 
-namespace Routing.Core.Router.Memory
+namespace OsmSharp.Routing.Core.Router.Memory
 {
     /// <summary>
     /// A memory data source.
@@ -145,6 +145,14 @@ namespace Routing.Core.Router.Memory
             { 
                 return _tags_index; 
             }
+        }
+
+        /// <summary>
+        /// Returns the number of vertices in this graph.
+        /// </summary>
+        public uint VertexCount
+        {
+            get { return _graph.VertexCount; }
         }
     }
 }

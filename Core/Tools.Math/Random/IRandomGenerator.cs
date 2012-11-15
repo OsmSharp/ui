@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Random
+namespace OsmSharp.Tools.Math.Random
 {
     public interface IRandomGenerator
     {

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.VRP.MultiSalesman.Genetic
+namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
 {
     public class Genome : List<int>, IEquatable<Genome>
     {

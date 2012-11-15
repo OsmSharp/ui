@@ -19,14 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.Random;
-using Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.Random;
+using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
 
 
-namespace Tools.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver
+namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver
 {
     internal class RandomSelectionCrossOverOperation : ICrossOverOperation<List<Genome>, Problem, Fitness>
     {
@@ -96,14 +96,14 @@ namespace Tools.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver
             //while (place_in_existing_succes && rest.Count > 0)
             //{
             //    place_in_existing_succes = false;
-            //    Tools.Math.VRP.MultiSalesman.Genetic.Helpers.BestPlacementHelper.BestPlacementResult best_result = null;
+            //    OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers.BestPlacementHelper.BestPlacementResult best_result = null;
             //    for (int round_idx = 0; round_idx < genomes.Count; round_idx++)
             //    {
             //        if (new_individual.Fitness.LargestRoundCategories[round_idx] == 0)
             //        {
             //            Individual<List<Genome>, Problem, Fitness> copy = new_individual.Copy();
 
-            //            Tools.Math.VRP.MultiSalesman.Genetic.Helpers.BestPlacementHelper.BestPlacementResult result =
+            //            OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers.BestPlacementHelper.BestPlacementResult result =
             //                BestPlacementHelper.CalculateBestPlacementInGenome(
             //                    solver.Problem,
             //                    solver.FitnessCalculator as FitnessCalculator,

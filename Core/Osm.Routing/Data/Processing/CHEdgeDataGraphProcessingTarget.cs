@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.CH.PreProcessing;
-using Routing.Core.Interpreter.Roads;
-using Tools.Math;
-using Tools.Math.Geo;
-using Routing.Core.Graph;
-using Routing.Core.Interpreter;
+using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Core.Interpreter.Roads;
+using OsmSharp.Tools.Math;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.Graph;
+using OsmSharp.Routing.Core.Interpreter;
 
-namespace Osm.Routing.Data.Processing
+namespace OsmSharp.Osm.Routing.Data.Processing
 {
     public class CHEdgeDataGraphProcessingTarget : DynamicGraphDataProcessorTarget<CHEdgeData>
     {
@@ -24,7 +24,7 @@ namespace Osm.Routing.Data.Processing
             IDictionary<string, string> tags, bool direction_forward, GeoCoordinate from, GeoCoordinate to)
         {
             double weight = edge_interpreter.Weight(
-                tags, global::Routing.Core.VehicleEnum.Car, from, to);
+                tags, global::OsmSharp.Routing.Core.VehicleEnum.Car, from, to);
             bool? direction = edge_interpreter.IsOneWay(tags);
             bool forward = false;
             bool backward = false;

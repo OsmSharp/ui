@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
-using Osm.Core.Simple;
-using Osm.Data.Core.Processor;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Core.Processor;
 
-namespace Osm.Data.SQLite.Raw.Processor
+namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 {
     public class SQLiteSimpleDataProcessorSource : DataProcessorSource
     {

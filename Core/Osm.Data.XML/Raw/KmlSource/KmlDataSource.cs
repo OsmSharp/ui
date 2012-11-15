@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Xml.Kml;
-using Osm.Core.Factory;
-using Osm.Core;
-using Tools.Math.Geo;
-using Osm.Core.Filters;
+using OsmSharp.Tools.Xml.Kml;
+using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Osm.Core;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core.Filters;
 
-namespace Osm.Data.Raw.XML.KmlSource
+namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
 {
     /// <summary>
     /// Represents a data source base on a kml document.
@@ -140,55 +140,55 @@ namespace Osm.Data.Raw.XML.KmlSource
                 { // no data present.
                     return;
                 }
-                if (_document.Kml is Tools.Xml.Kml.v2_1.KmlType)
+                if (_document.Kml is OsmSharp.Tools.Xml.Kml.v2_1.KmlType)
                 { // kml is v2.1.
-                    Tools.Xml.Kml.v2_1.KmlType kml = (_document.Kml as Tools.Xml.Kml.v2_1.KmlType);
+                    OsmSharp.Tools.Xml.Kml.v2_1.KmlType kml = (_document.Kml as OsmSharp.Tools.Xml.Kml.v2_1.KmlType);
 
                     OsmGeo osm_geo = this.ConvertFeature(kml.Item);
                     this.AddOsmBase(osm_geo);
                 } 
-                else if(_document.Kml is Tools.Xml.Kml.v2_0_response.kml)
+                else if(_document.Kml is OsmSharp.Tools.Xml.Kml.v2_0_response.kml)
                 { // kml is a v2.0 response.
-                    Tools.Xml.Kml.v2_0_response.kml kml = (_document.Kml as Tools.Xml.Kml.v2_0_response.kml);
+                    OsmSharp.Tools.Xml.Kml.v2_0_response.kml kml = (_document.Kml as OsmSharp.Tools.Xml.Kml.v2_0_response.kml);
 
-                    if(kml.Item is Tools.Xml.Kml.v2_0_response.Document)
+                    if(kml.Item is OsmSharp.Tools.Xml.Kml.v2_0_response.Document)
                     {
-                        OsmGeo osm_geo = this.ConvertDocument(kml.Item as Tools.Xml.Kml.v2_0_response.Document);
+                        OsmGeo osm_geo = this.ConvertDocument(kml.Item as OsmSharp.Tools.Xml.Kml.v2_0_response.Document);
                         this.AddOsmBase(osm_geo);
                     }
-                    else if(kml.Item is Tools.Xml.Kml.v2_0_response.Folder)
+                    else if(kml.Item is OsmSharp.Tools.Xml.Kml.v2_0_response.Folder)
                     {
-                        OsmGeo osm_geo = this.ConvertFolder(kml.Item as Tools.Xml.Kml.v2_0_response.Folder);
+                        OsmGeo osm_geo = this.ConvertFolder(kml.Item as OsmSharp.Tools.Xml.Kml.v2_0_response.Folder);
                         this.AddOsmBase(osm_geo);
                     }
-                    else if(kml.Item is Tools.Xml.Kml.v2_0_response.Placemark)
+                    else if(kml.Item is OsmSharp.Tools.Xml.Kml.v2_0_response.Placemark)
                     {
-                        OsmGeo osm_geo = this.ConvertPlacemark(kml.Item as Tools.Xml.Kml.v2_0_response.Placemark);
+                        OsmGeo osm_geo = this.ConvertPlacemark(kml.Item as OsmSharp.Tools.Xml.Kml.v2_0_response.Placemark);
                         this.AddOsmBase(osm_geo);
                     }
-                    else if(kml.Item is Tools.Xml.Kml.v2_0_response.Response)
+                    else if(kml.Item is OsmSharp.Tools.Xml.Kml.v2_0_response.Response)
                     {
-                        OsmGeo osm_geo = this.ConvertResponse(kml.Item as Tools.Xml.Kml.v2_0_response.Response);
+                        OsmGeo osm_geo = this.ConvertResponse(kml.Item as OsmSharp.Tools.Xml.Kml.v2_0_response.Response);
                         this.AddOsmBase(osm_geo);
                     }
                 }
-                else if (_document.Kml is Tools.Xml.Kml.v2_0.kml)
+                else if (_document.Kml is OsmSharp.Tools.Xml.Kml.v2_0.kml)
                 { // kml is v2.0
-                    Tools.Xml.Kml.v2_0.kml kml = (_document.Kml as Tools.Xml.Kml.v2_0.kml);
+                    OsmSharp.Tools.Xml.Kml.v2_0.kml kml = (_document.Kml as OsmSharp.Tools.Xml.Kml.v2_0.kml);
 
-                    if (kml.Item is Tools.Xml.Kml.v2_0.Document)
+                    if (kml.Item is OsmSharp.Tools.Xml.Kml.v2_0.Document)
                     {
-                        OsmGeo osm_geo = this.ConvertDocument(kml.Item as Tools.Xml.Kml.v2_0.Document);
+                        OsmGeo osm_geo = this.ConvertDocument(kml.Item as OsmSharp.Tools.Xml.Kml.v2_0.Document);
                         this.AddOsmBase(osm_geo);
                     }
-                    else if (kml.Item is Tools.Xml.Kml.v2_0.Folder)
+                    else if (kml.Item is OsmSharp.Tools.Xml.Kml.v2_0.Folder)
                     {
-                        OsmGeo osm_geo = this.ConvertFolder(kml.Item as Tools.Xml.Kml.v2_0.Folder);
+                        OsmGeo osm_geo = this.ConvertFolder(kml.Item as OsmSharp.Tools.Xml.Kml.v2_0.Folder);
                         this.AddOsmBase(osm_geo);
                     }
-                    else if (kml.Item is Tools.Xml.Kml.v2_0.Placemark)
+                    else if (kml.Item is OsmSharp.Tools.Xml.Kml.v2_0.Placemark)
                     {
-                        OsmGeo osm_geo = this.ConvertPlacemark(kml.Item as Tools.Xml.Kml.v2_0.Placemark);
+                        OsmGeo osm_geo = this.ConvertPlacemark(kml.Item as OsmSharp.Tools.Xml.Kml.v2_0.Placemark);
                         this.AddOsmBase(osm_geo);
                     }
                 }
@@ -209,7 +209,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="placemark"></param>
         /// <returns></returns>
-        private OsmGeo ConvertPlacemark(Tools.Xml.Kml.v2_0.Placemark placemark)
+        private OsmGeo ConvertPlacemark(OsmSharp.Tools.Xml.Kml.v2_0.Placemark placemark)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -220,45 +220,45 @@ namespace Osm.Data.Raw.XML.KmlSource
                 RelationMember member;
                 switch (placemark.ItemsElementName[idx])
                 {
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType1.LineString:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType1.LineString:
                         member = new RelationMember();
-                        member.Member = this.ConvertLineString(placemark.Items[idx] as Tools.Xml.Kml.v2_0.LineString);
+                        member.Member = this.ConvertLineString(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.LineString);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType1.MultiGeometry:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType1.MultiGeometry:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiGeometry(placemark.Items[idx] as Tools.Xml.Kml.v2_0.MultiGeometry);
+                        member.Member = this.ConvertMultiGeometry(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.MultiGeometry);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType1.MultiLineString:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType1.MultiLineString:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiLineString(placemark.Items[idx] as Tools.Xml.Kml.v2_0.MultiLineString);
+                        member.Member = this.ConvertMultiLineString(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.MultiLineString);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType1.MultiPoint:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType1.MultiPoint:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiPoint(placemark.Items[idx] as Tools.Xml.Kml.v2_0.MultiPoint);
+                        member.Member = this.ConvertMultiPoint(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.MultiPoint);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType1.MultiPolygon:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType1.MultiPolygon:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiPolygon(placemark.Items[idx] as Tools.Xml.Kml.v2_0.MultiPolygon);
+                        member.Member = this.ConvertMultiPolygon(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.MultiPolygon);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType1.Point:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType1.Point:
                         member = new RelationMember();
-                        member.Member = this.ConvertPoint(placemark.Items[idx] as Tools.Xml.Kml.v2_0.Point);
+                        member.Member = this.ConvertPoint(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.Point);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType1.Polygon:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType1.Polygon:
                         member = new RelationMember();
-                        member.Member = this.ConvertPolygon(placemark.Items[idx] as Tools.Xml.Kml.v2_0.Polygon);
+                        member.Member = this.ConvertPolygon(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.Polygon);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
@@ -273,7 +273,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="polygon"></param>
         /// <returns></returns>
-        private OsmGeo ConvertPolygon(Tools.Xml.Kml.v2_0.Polygon polygon)
+        private OsmGeo ConvertPolygon(OsmSharp.Tools.Xml.Kml.v2_0.Polygon polygon)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -303,7 +303,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="linearRing"></param>
         /// <returns></returns>
-        private OsmGeo ConvertLinearRing(Tools.Xml.Kml.v2_0.LinearRing linearRing)
+        private OsmGeo ConvertLinearRing(OsmSharp.Tools.Xml.Kml.v2_0.LinearRing linearRing)
         {
             Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
 
@@ -326,7 +326,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private OsmGeo ConvertPoint(Tools.Xml.Kml.v2_0.Point point)
+        private OsmGeo ConvertPoint(OsmSharp.Tools.Xml.Kml.v2_0.Point point)
         {
             Node node = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
 
@@ -343,7 +343,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="multiPolygon"></param>
         /// <returns></returns>
-        private OsmGeo ConvertMultiPolygon(Tools.Xml.Kml.v2_0.MultiPolygon multiPolygon)
+        private OsmGeo ConvertMultiPolygon(OsmSharp.Tools.Xml.Kml.v2_0.MultiPolygon multiPolygon)
         {
             return this.ConvertPolygon(multiPolygon.Polygon);
         }
@@ -353,7 +353,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="multiPoint"></param>
         /// <returns></returns>
-        private OsmGeo ConvertMultiPoint(Tools.Xml.Kml.v2_0.MultiPoint multiPoint)
+        private OsmGeo ConvertMultiPoint(OsmSharp.Tools.Xml.Kml.v2_0.MultiPoint multiPoint)
         {
             return this.ConvertPoint(multiPoint.Point);
         }
@@ -363,7 +363,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="multiLineString"></param>
         /// <returns></returns>
-        private OsmGeo ConvertMultiLineString(Tools.Xml.Kml.v2_0.MultiLineString multiLineString)
+        private OsmGeo ConvertMultiLineString(OsmSharp.Tools.Xml.Kml.v2_0.MultiLineString multiLineString)
         {
             return this.ConvertLineString(multiLineString.LineString);
         }
@@ -373,7 +373,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="multiGeometry"></param>
         /// <returns></returns>
-        private OsmGeo ConvertMultiGeometry(Tools.Xml.Kml.v2_0.MultiGeometry multiGeometry)
+        private OsmGeo ConvertMultiGeometry(OsmSharp.Tools.Xml.Kml.v2_0.MultiGeometry multiGeometry)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -384,45 +384,45 @@ namespace Osm.Data.Raw.XML.KmlSource
                 RelationMember member;
                 switch (multiGeometry.ItemsElementName[idx])
                 {
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType.LineString:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType.LineString:
                         member = new RelationMember();
-                        member.Member = this.ConvertLineString(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0.LineString);
+                        member.Member = this.ConvertLineString(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.LineString);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType.MultiGeometry:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType.MultiGeometry:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiGeometry(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0.MultiGeometry);
+                        member.Member = this.ConvertMultiGeometry(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.MultiGeometry);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType.MultiLineString:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType.MultiLineString:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiLineString(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0.MultiLineString);
+                        member.Member = this.ConvertMultiLineString(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.MultiLineString);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType.MultiPoint:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType.MultiPoint:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiPoint(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0.MultiPoint);
+                        member.Member = this.ConvertMultiPoint(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.MultiPoint);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType.MultiPolygon:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType.MultiPolygon:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiPolygon(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0.MultiPolygon);
+                        member.Member = this.ConvertMultiPolygon(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.MultiPolygon);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType.Point:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType.Point:
                         member = new RelationMember();
-                        member.Member = this.ConvertPoint(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0.Point);
+                        member.Member = this.ConvertPoint(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.Point);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType.Polygon:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType.Polygon:
                         member = new RelationMember();
-                        member.Member = this.ConvertPolygon(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0.Polygon);
+                        member.Member = this.ConvertPolygon(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.Polygon);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
@@ -437,7 +437,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="lineString"></param>
         /// <returns></returns>
-        private OsmGeo ConvertLineString(Tools.Xml.Kml.v2_0.LineString lineString)
+        private OsmGeo ConvertLineString(OsmSharp.Tools.Xml.Kml.v2_0.LineString lineString)
         {
             Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
 
@@ -459,7 +459,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="folder"></param>
         /// <returns></returns>
-        private OsmGeo ConvertFolder(Tools.Xml.Kml.v2_0.Folder folder)
+        private OsmGeo ConvertFolder(OsmSharp.Tools.Xml.Kml.v2_0.Folder folder)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -470,21 +470,21 @@ namespace Osm.Data.Raw.XML.KmlSource
                 RelationMember member;
                 switch (folder.ItemsElementName[idx])
                 {
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType2.Document:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType2.Document:
                         member = new RelationMember();
-                        member.Member = this.ConvertDocument(folder.Items[idx] as Tools.Xml.Kml.v2_0.Document);
+                        member.Member = this.ConvertDocument(folder.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.Document);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType2.Folder:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType2.Folder:
                         member = new RelationMember();
-                        member.Member = this.ConvertFolder(folder.Items[idx] as Tools.Xml.Kml.v2_0.Folder);
+                        member.Member = this.ConvertFolder(folder.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.Folder);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType2.Placemark:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType2.Placemark:
                         member = new RelationMember();
-                        member.Member = this.ConvertPlacemark(folder.Items[idx] as Tools.Xml.Kml.v2_0.Placemark);
+                        member.Member = this.ConvertPlacemark(folder.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.Placemark);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
@@ -499,7 +499,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="document"></param>
         /// <returns></returns>
-        private OsmGeo ConvertDocument(Tools.Xml.Kml.v2_0.Document document)
+        private OsmGeo ConvertDocument(OsmSharp.Tools.Xml.Kml.v2_0.Document document)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -510,21 +510,21 @@ namespace Osm.Data.Raw.XML.KmlSource
                 RelationMember member;
                 switch (document.ItemsElementName[idx])
                 {
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType3.Document:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType3.Document:
                         member = new RelationMember();
-                        member.Member = this.ConvertDocument(document.Items[idx] as Tools.Xml.Kml.v2_0.Document);
+                        member.Member = this.ConvertDocument(document.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.Document);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType3.Folder:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType3.Folder:
                         member = new RelationMember();
-                        member.Member = this.ConvertFolder(document.Items[idx] as Tools.Xml.Kml.v2_0.Folder);
+                        member.Member = this.ConvertFolder(document.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.Folder);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0.ItemsChoiceType3.Placemark:
+                    case OsmSharp.Tools.Xml.Kml.v2_0.ItemsChoiceType3.Placemark:
                         member = new RelationMember();
-                        member.Member = this.ConvertPlacemark(document.Items[idx] as Tools.Xml.Kml.v2_0.Placemark);
+                        member.Member = this.ConvertPlacemark(document.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0.Placemark);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
@@ -543,7 +543,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="response"></param>
         /// <returns></returns>
-        private OsmGeo ConvertResponse(Tools.Xml.Kml.v2_0_response.Response response)
+        private OsmGeo ConvertResponse(OsmSharp.Tools.Xml.Kml.v2_0_response.Response response)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -551,28 +551,18 @@ namespace Osm.Data.Raw.XML.KmlSource
 
             foreach (object item in response.Items)
             {
-                if (item is Tools.Xml.Kml.v2_0_response.Document)
+                if (item is OsmSharp.Tools.Xml.Kml.v2_0_response.Document)
                 {
-                    OsmGeo osm_geo = this.ConvertDocument(item as Tools.Xml.Kml.v2_0_response.Document);
+                    OsmGeo osm_geo = this.ConvertDocument(item as OsmSharp.Tools.Xml.Kml.v2_0_response.Document);
 
                     RelationMember member = new RelationMember();
                     member.Member = osm_geo;
                     member.Role = "";
                     relation.Members.Add(member);
                 }
-                else if (item is Tools.Xml.Kml.v2_0_response.Folder)
+                else if (item is OsmSharp.Tools.Xml.Kml.v2_0_response.Folder)
                 {
-                    OsmGeo osm_geo = this.ConvertFolder(item as Tools.Xml.Kml.v2_0_response.Folder);
-
-                    RelationMember member = new RelationMember();
-                    member.Member = osm_geo;
-                    member.Role = "";
-                    relation.Members.Add(member);
-                    
-                }
-                else if (item is Tools.Xml.Kml.v2_0_response.Placemark)
-                {
-                    OsmGeo osm_geo = this.ConvertPlacemark(item as Tools.Xml.Kml.v2_0_response.Placemark);
+                    OsmGeo osm_geo = this.ConvertFolder(item as OsmSharp.Tools.Xml.Kml.v2_0_response.Folder);
 
                     RelationMember member = new RelationMember();
                     member.Member = osm_geo;
@@ -580,9 +570,19 @@ namespace Osm.Data.Raw.XML.KmlSource
                     relation.Members.Add(member);
                     
                 }
-                else if (item is Tools.Xml.Kml.v2_0_response.Response)
+                else if (item is OsmSharp.Tools.Xml.Kml.v2_0_response.Placemark)
                 {
-                    OsmGeo osm_geo = this.ConvertResponse(item as Tools.Xml.Kml.v2_0_response.Response);
+                    OsmGeo osm_geo = this.ConvertPlacemark(item as OsmSharp.Tools.Xml.Kml.v2_0_response.Placemark);
+
+                    RelationMember member = new RelationMember();
+                    member.Member = osm_geo;
+                    member.Role = "";
+                    relation.Members.Add(member);
+                    
+                }
+                else if (item is OsmSharp.Tools.Xml.Kml.v2_0_response.Response)
+                {
+                    OsmGeo osm_geo = this.ConvertResponse(item as OsmSharp.Tools.Xml.Kml.v2_0_response.Response);
 
                     RelationMember member = new RelationMember();
                     member.Member = osm_geo;
@@ -599,7 +599,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="placemark"></param>
         /// <returns></returns>
-        private OsmGeo ConvertPlacemark(Tools.Xml.Kml.v2_0_response.Placemark placemark)
+        private OsmGeo ConvertPlacemark(OsmSharp.Tools.Xml.Kml.v2_0_response.Placemark placemark)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -610,45 +610,45 @@ namespace Osm.Data.Raw.XML.KmlSource
                 RelationMember member;
                 switch (placemark.ItemsElementName[idx])
                 {
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.LineString:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.LineString:
                         member = new RelationMember();
-                        member.Member = this.ConvertLineString(placemark.Items[idx] as Tools.Xml.Kml.v2_0_response.LineString);
+                        member.Member = this.ConvertLineString(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.LineString);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiGeometry:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiGeometry:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiGeometry(placemark.Items[idx] as Tools.Xml.Kml.v2_0_response.MultiGeometry);
+                        member.Member = this.ConvertMultiGeometry(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.MultiGeometry);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiLineString:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiLineString:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiLineString(placemark.Items[idx] as Tools.Xml.Kml.v2_0_response.MultiLineString);
+                        member.Member = this.ConvertMultiLineString(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.MultiLineString);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiPoint:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiPoint:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiPoint(placemark.Items[idx] as Tools.Xml.Kml.v2_0_response.MultiPoint);
+                        member.Member = this.ConvertMultiPoint(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.MultiPoint);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiPolygon:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.MultiPolygon:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiPolygon(placemark.Items[idx] as Tools.Xml.Kml.v2_0_response.MultiPolygon);
+                        member.Member = this.ConvertMultiPolygon(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.MultiPolygon);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.Point:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.Point:
                         member = new RelationMember();
-                        member.Member = this.ConvertPoint(placemark.Items[idx] as Tools.Xml.Kml.v2_0_response.Point);
+                        member.Member = this.ConvertPoint(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.Point);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.Polygon:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType1.Polygon:
                         member = new RelationMember();
-                        member.Member = this.ConvertPolygon(placemark.Items[idx] as Tools.Xml.Kml.v2_0_response.Polygon);
+                        member.Member = this.ConvertPolygon(placemark.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.Polygon);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
@@ -663,7 +663,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="polygon"></param>
         /// <returns></returns>
-        private OsmGeo ConvertPolygon(Tools.Xml.Kml.v2_0_response.Polygon polygon)
+        private OsmGeo ConvertPolygon(OsmSharp.Tools.Xml.Kml.v2_0_response.Polygon polygon)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -693,7 +693,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="linearRing"></param>
         /// <returns></returns>
-        private OsmGeo ConvertLinearRing(Tools.Xml.Kml.v2_0_response.LinearRing linearRing)
+        private OsmGeo ConvertLinearRing(OsmSharp.Tools.Xml.Kml.v2_0_response.LinearRing linearRing)
         {
             Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
 
@@ -716,7 +716,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private OsmGeo ConvertPoint(Tools.Xml.Kml.v2_0_response.Point point)
+        private OsmGeo ConvertPoint(OsmSharp.Tools.Xml.Kml.v2_0_response.Point point)
         {
             Node node = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
 
@@ -733,7 +733,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="multiPolygon"></param>
         /// <returns></returns>
-        private OsmGeo ConvertMultiPolygon(Tools.Xml.Kml.v2_0_response.MultiPolygon multiPolygon)
+        private OsmGeo ConvertMultiPolygon(OsmSharp.Tools.Xml.Kml.v2_0_response.MultiPolygon multiPolygon)
         {
             return this.ConvertPolygon(multiPolygon.Polygon);
         }
@@ -743,7 +743,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="multiPoint"></param>
         /// <returns></returns>
-        private OsmGeo ConvertMultiPoint(Tools.Xml.Kml.v2_0_response.MultiPoint multiPoint)
+        private OsmGeo ConvertMultiPoint(OsmSharp.Tools.Xml.Kml.v2_0_response.MultiPoint multiPoint)
         {
             return this.ConvertPoint(multiPoint.Point);
         }
@@ -753,7 +753,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="multiLineString"></param>
         /// <returns></returns>
-        private OsmGeo ConvertMultiLineString(Tools.Xml.Kml.v2_0_response.MultiLineString multiLineString)
+        private OsmGeo ConvertMultiLineString(OsmSharp.Tools.Xml.Kml.v2_0_response.MultiLineString multiLineString)
         {
             return this.ConvertLineString(multiLineString.LineString);
         }
@@ -763,7 +763,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="multiGeometry"></param>
         /// <returns></returns>
-        private OsmGeo ConvertMultiGeometry(Tools.Xml.Kml.v2_0_response.MultiGeometry multiGeometry)
+        private OsmGeo ConvertMultiGeometry(OsmSharp.Tools.Xml.Kml.v2_0_response.MultiGeometry multiGeometry)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -774,45 +774,45 @@ namespace Osm.Data.Raw.XML.KmlSource
                 RelationMember member;
                 switch (multiGeometry.ItemsElementName[idx])
                 {
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType.LineString:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType.LineString:
                         member = new RelationMember();
-                        member.Member = this.ConvertLineString(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0_response.LineString);
+                        member.Member = this.ConvertLineString(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.LineString);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType.MultiGeometry:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType.MultiGeometry:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiGeometry(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0_response.MultiGeometry);
+                        member.Member = this.ConvertMultiGeometry(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.MultiGeometry);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType.MultiLineString:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType.MultiLineString:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiLineString(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0_response.MultiLineString);
+                        member.Member = this.ConvertMultiLineString(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.MultiLineString);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType.MultiPoint:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType.MultiPoint:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiPoint(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0_response.MultiPoint);
+                        member.Member = this.ConvertMultiPoint(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.MultiPoint);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType.MultiPolygon:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType.MultiPolygon:
                         member = new RelationMember();
-                        member.Member = this.ConvertMultiPolygon(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0_response.MultiPolygon);
+                        member.Member = this.ConvertMultiPolygon(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.MultiPolygon);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType.Point:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType.Point:
                         member = new RelationMember();
-                        member.Member = this.ConvertPoint(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0_response.Point);
+                        member.Member = this.ConvertPoint(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.Point);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType.Polygon:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType.Polygon:
                         member = new RelationMember();
-                        member.Member = this.ConvertPolygon(multiGeometry.Items[idx] as Tools.Xml.Kml.v2_0_response.Polygon);
+                        member.Member = this.ConvertPolygon(multiGeometry.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.Polygon);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
@@ -827,7 +827,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="lineString"></param>
         /// <returns></returns>
-        private OsmGeo ConvertLineString(Tools.Xml.Kml.v2_0_response.LineString lineString)
+        private OsmGeo ConvertLineString(OsmSharp.Tools.Xml.Kml.v2_0_response.LineString lineString)
         {
             Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
 
@@ -849,7 +849,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="folder"></param>
         /// <returns></returns>
-        private OsmGeo ConvertFolder(Tools.Xml.Kml.v2_0_response.Folder folder)
+        private OsmGeo ConvertFolder(OsmSharp.Tools.Xml.Kml.v2_0_response.Folder folder)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -860,21 +860,21 @@ namespace Osm.Data.Raw.XML.KmlSource
                 RelationMember member;
                 switch (folder.ItemsElementName[idx])
                 {
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType2.Document:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType2.Document:
                         member = new RelationMember();
-                        member.Member = this.ConvertDocument(folder.Items[idx] as Tools.Xml.Kml.v2_0_response.Document);
+                        member.Member = this.ConvertDocument(folder.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.Document);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType2.Folder:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType2.Folder:
                         member = new RelationMember();
-                        member.Member = this.ConvertFolder(folder.Items[idx] as Tools.Xml.Kml.v2_0_response.Folder);
+                        member.Member = this.ConvertFolder(folder.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.Folder);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType2.Placemark:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType2.Placemark:
                         member = new RelationMember();
-                        member.Member = this.ConvertPlacemark(folder.Items[idx] as Tools.Xml.Kml.v2_0_response.Placemark);
+                        member.Member = this.ConvertPlacemark(folder.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.Placemark);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
@@ -889,7 +889,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="document"></param>
         /// <returns></returns>
-        private OsmGeo ConvertDocument(Tools.Xml.Kml.v2_0_response.Document document)
+        private OsmGeo ConvertDocument(OsmSharp.Tools.Xml.Kml.v2_0_response.Document document)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -900,21 +900,21 @@ namespace Osm.Data.Raw.XML.KmlSource
                 RelationMember member;
                 switch (document.ItemsElementName[idx])
                 {
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType3.Document:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType3.Document:
                         member = new RelationMember();
-                        member.Member = this.ConvertDocument(document.Items[idx] as Tools.Xml.Kml.v2_0_response.Document);
+                        member.Member = this.ConvertDocument(document.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.Document);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType3.Folder:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType3.Folder:
                         member = new RelationMember();
-                        member.Member = this.ConvertFolder(document.Items[idx] as Tools.Xml.Kml.v2_0_response.Folder);
+                        member.Member = this.ConvertFolder(document.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.Folder);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
-                    case Tools.Xml.Kml.v2_0_response.ItemsChoiceType3.Placemark:
+                    case OsmSharp.Tools.Xml.Kml.v2_0_response.ItemsChoiceType3.Placemark:
                         member = new RelationMember();
-                        member.Member = this.ConvertPlacemark(document.Items[idx] as Tools.Xml.Kml.v2_0_response.Placemark);
+                        member.Member = this.ConvertPlacemark(document.Items[idx] as OsmSharp.Tools.Xml.Kml.v2_0_response.Placemark);
                         member.Role = "";
                         relation.Members.Add(member);
                         break;
@@ -932,10 +932,10 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// Converts all the features into osm elements.
         /// </summary>
         /// <param name="featureType"></param>
-        private IList<OsmGeo> ConvertFeatures(Tools.Xml.Kml.v2_1.FeatureType[] featureType)
+        private IList<OsmGeo> ConvertFeatures(OsmSharp.Tools.Xml.Kml.v2_1.FeatureType[] featureType)
         {
             IList<OsmGeo> relations = new List<OsmGeo>();
-            foreach (Tools.Xml.Kml.v2_1.FeatureType feature in featureType)
+            foreach (OsmSharp.Tools.Xml.Kml.v2_1.FeatureType feature in featureType)
             {
                 OsmGeo relation = this.ConvertFeature(feature);
                 if (relation != null)
@@ -952,15 +952,15 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="featureType"></param>
         /// <returns></returns>
-        private OsmGeo ConvertFeature(Tools.Xml.Kml.v2_1.FeatureType feature)
+        private OsmGeo ConvertFeature(OsmSharp.Tools.Xml.Kml.v2_1.FeatureType feature)
         {
-            if (feature is Tools.Xml.Kml.v2_1.ContainerType)
+            if (feature is OsmSharp.Tools.Xml.Kml.v2_1.ContainerType)
             {
-                return this.ConvertContainer(feature as Tools.Xml.Kml.v2_1.ContainerType);
+                return this.ConvertContainer(feature as OsmSharp.Tools.Xml.Kml.v2_1.ContainerType);
             }
-            else if (feature is Tools.Xml.Kml.v2_1.PlacemarkType)
+            else if (feature is OsmSharp.Tools.Xml.Kml.v2_1.PlacemarkType)
             {
-                return this.ConvertPlacemark(feature as Tools.Xml.Kml.v2_1.PlacemarkType);
+                return this.ConvertPlacemark(feature as OsmSharp.Tools.Xml.Kml.v2_1.PlacemarkType);
             }
             return null;
         }
@@ -970,7 +970,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="placemarkType"></param>
         /// <returns></returns>
-        private OsmGeo ConvertPlacemark(Tools.Xml.Kml.v2_1.PlacemarkType placemark)
+        private OsmGeo ConvertPlacemark(OsmSharp.Tools.Xml.Kml.v2_1.PlacemarkType placemark)
         {
             return this.ConvertGeometry(placemark.Item1);
         }
@@ -980,28 +980,28 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="geometryType"></param>
         /// <returns></returns>
-        private OsmGeo ConvertGeometry(Tools.Xml.Kml.v2_1.GeometryType geometry)
+        private OsmGeo ConvertGeometry(OsmSharp.Tools.Xml.Kml.v2_1.GeometryType geometry)
         {
-            if (geometry is Tools.Xml.Kml.v2_1.PointType)
+            if (geometry is OsmSharp.Tools.Xml.Kml.v2_1.PointType)
             {
-                return this.ConvertPoint(geometry as Tools.Xml.Kml.v2_1.PointType);
+                return this.ConvertPoint(geometry as OsmSharp.Tools.Xml.Kml.v2_1.PointType);
                 
             }
-            else if (geometry is Tools.Xml.Kml.v2_1.LineStringType)
+            else if (geometry is OsmSharp.Tools.Xml.Kml.v2_1.LineStringType)
             {
-                return this.ConvertLineString(geometry as Tools.Xml.Kml.v2_1.LineStringType);
+                return this.ConvertLineString(geometry as OsmSharp.Tools.Xml.Kml.v2_1.LineStringType);
             }
-            else if (geometry is Tools.Xml.Kml.v2_1.LinearRingType)
+            else if (geometry is OsmSharp.Tools.Xml.Kml.v2_1.LinearRingType)
             {
-                return this.ConvertLinearRing(geometry as Tools.Xml.Kml.v2_1.LinearRingType);
+                return this.ConvertLinearRing(geometry as OsmSharp.Tools.Xml.Kml.v2_1.LinearRingType);
             }
-            else if (geometry is Tools.Xml.Kml.v2_1.PolygonType)
+            else if (geometry is OsmSharp.Tools.Xml.Kml.v2_1.PolygonType)
             {
-                return this.ConvertPolygon(geometry as Tools.Xml.Kml.v2_1.PolygonType);
+                return this.ConvertPolygon(geometry as OsmSharp.Tools.Xml.Kml.v2_1.PolygonType);
             }
-            else if (geometry is Tools.Xml.Kml.v2_1.MultiGeometryType)
+            else if (geometry is OsmSharp.Tools.Xml.Kml.v2_1.MultiGeometryType)
             {
-                return this.ConvertMultiGeometry(geometry as Tools.Xml.Kml.v2_1.MultiGeometryType);
+                return this.ConvertMultiGeometry(geometry as OsmSharp.Tools.Xml.Kml.v2_1.MultiGeometryType);
             }
             return null;
         }
@@ -1011,14 +1011,14 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="multiGeometryType"></param>
         /// <returns></returns>
-        private OsmGeo ConvertMultiGeometry(Tools.Xml.Kml.v2_1.MultiGeometryType multiGeometry)
+        private OsmGeo ConvertMultiGeometry(OsmSharp.Tools.Xml.Kml.v2_1.MultiGeometryType multiGeometry)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
             relation.Visible = true;
             relation.Tags.Add("kml_type", "MultiGeometryType");
 
-            foreach (Tools.Xml.Kml.v2_1.GeometryType geo in multiGeometry.Items)
+            foreach (OsmSharp.Tools.Xml.Kml.v2_1.GeometryType geo in multiGeometry.Items)
             {
                 OsmGeo geo_osm = this.ConvertGeometry(geo);
                 if (geo_osm != null)
@@ -1037,7 +1037,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="polygonType"></param>
         /// <returns></returns>
-        private OsmGeo ConvertPolygon(Tools.Xml.Kml.v2_1.PolygonType polygon)
+        private OsmGeo ConvertPolygon(OsmSharp.Tools.Xml.Kml.v2_1.PolygonType polygon)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
@@ -1069,14 +1069,14 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="boundaryType"></param>
         /// <returns></returns>
-        private OsmGeo ConvertBoundary(Tools.Xml.Kml.v2_1.boundaryType[] boundary)
+        private OsmGeo ConvertBoundary(OsmSharp.Tools.Xml.Kml.v2_1.boundaryType[] boundary)
         {
             Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
             relation.Visible = true;
             relation.Tags.Add("kml_type", "boundaryType[]");
 
-            foreach (Tools.Xml.Kml.v2_1.boundaryType geo in boundary)
+            foreach (OsmSharp.Tools.Xml.Kml.v2_1.boundaryType geo in boundary)
             {
                 OsmGeo geo_osm = this.ConvertLinearRing(geo.LinearRing);
                 if (geo_osm != null)
@@ -1095,7 +1095,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="linearRingType"></param>
         /// <returns></returns>
-        private OsmGeo ConvertLinearRing(Tools.Xml.Kml.v2_1.LinearRingType linearRing)
+        private OsmGeo ConvertLinearRing(OsmSharp.Tools.Xml.Kml.v2_1.LinearRingType linearRing)
         {
             Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
 
@@ -1118,7 +1118,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="lineStringType"></param>
         /// <returns></returns>
-        private OsmGeo ConvertLineString(Tools.Xml.Kml.v2_1.LineStringType lineString)
+        private OsmGeo ConvertLineString(OsmSharp.Tools.Xml.Kml.v2_1.LineStringType lineString)
         {
             Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
 
@@ -1140,7 +1140,7 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// </summary>
         /// <param name="pointType"></param>
         /// <returns></returns>
-        private OsmGeo ConvertPoint(Tools.Xml.Kml.v2_1.PointType point)
+        private OsmGeo ConvertPoint(OsmSharp.Tools.Xml.Kml.v2_1.PointType point)
         {
             Node n = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
             IList<GeoCoordinate> coordinates = this.ConvertCoordinates(point.coordinates);
@@ -1156,12 +1156,12 @@ namespace Osm.Data.Raw.XML.KmlSource
         /// Converts a container and it's contents to osm elements.
         /// </summary>
         /// <param name="container"></param>
-        private Relation ConvertContainer(Tools.Xml.Kml.v2_1.ContainerType container)
+        private Relation ConvertContainer(OsmSharp.Tools.Xml.Kml.v2_1.ContainerType container)
         {
             // get the features.
-            if (container is Tools.Xml.Kml.v2_1.FolderType)
+            if (container is OsmSharp.Tools.Xml.Kml.v2_1.FolderType)
             {
-                Tools.Xml.Kml.v2_1.FolderType folder = (container as Tools.Xml.Kml.v2_1.FolderType);
+                OsmSharp.Tools.Xml.Kml.v2_1.FolderType folder = (container as OsmSharp.Tools.Xml.Kml.v2_1.FolderType);
 
                 // items1 are the features.
                 IList<OsmGeo> created_features = this.ConvertFeatures(folder.Items1);
@@ -1183,9 +1183,9 @@ namespace Osm.Data.Raw.XML.KmlSource
 
                 return relation;
             }
-            else if(container is Tools.Xml.Kml.v2_1.DocumentType)
+            else if(container is OsmSharp.Tools.Xml.Kml.v2_1.DocumentType)
             {
-                Tools.Xml.Kml.v2_1.DocumentType document = (container as Tools.Xml.Kml.v2_1.DocumentType);
+                OsmSharp.Tools.Xml.Kml.v2_1.DocumentType document = (container as OsmSharp.Tools.Xml.Kml.v2_1.DocumentType);
 
                 // items1 are the features.
                 IList<OsmGeo> created_features = this.ConvertFeatures(document.Items1);

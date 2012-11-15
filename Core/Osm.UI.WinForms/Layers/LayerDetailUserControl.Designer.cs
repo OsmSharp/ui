@@ -1,4 +1,4 @@
-﻿namespace Osm.UI.WinForms.Layers
+﻿namespace OsmSharp.Osm.UI.WinForms.Layers
 {
     partial class LayerDetailUserControl
     {

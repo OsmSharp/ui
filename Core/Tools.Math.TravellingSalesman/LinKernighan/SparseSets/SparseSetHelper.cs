@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.TSP.Problems;
 
-namespace Tools.Math.TSP.LK.SparseSets
+namespace OsmSharp.Tools.Math.TSP.LK.SparseSets
 {
     internal static class SparseSetHelper
     {

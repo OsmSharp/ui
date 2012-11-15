@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.Random;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.Random;
 
-namespace Tools.Math.TSP.Genetic.Solver.Operations.Helpers
+namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers
 {
     internal class BestPlacementHelper
     {

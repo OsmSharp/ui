@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.CH.PreProcessing.Ordering;
-using Routing.CH.Routing;
+using OsmSharp.Routing.CH.PreProcessing.Ordering;
+using OsmSharp.Routing.CH.Routing;
 using System.Diagnostics;
-using Tools.Math.Geo;
-using Routing.Core.Graph;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.Graph;
 
-namespace Routing.CH.PreProcessing
+namespace OsmSharp.Routing.CH.PreProcessing
 {
     /// <summary>
     /// Pre-processor to construct a Contraction Hierarchy (CH).

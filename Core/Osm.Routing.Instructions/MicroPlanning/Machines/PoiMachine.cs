@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.StateMachines;
-using Tools.Math.Geo;
+using OsmSharp.Tools.Math.StateMachines;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Routing.Instructions.MicroPlanning.Machines
+namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {
     internal class PoiMachine : MicroPlannerMachine
     {
@@ -75,7 +75,7 @@ namespace Routing.Instructions.MicroPlanning.Machines
             //            }
             //            switch (point.Point.Angle.Direction)
             //            {
-            //                case Tools.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
+            //                case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
             //                    return true;
             //            }
             //        }
@@ -105,7 +105,7 @@ namespace Routing.Instructions.MicroPlanning.Machines
         //                }
         //                switch (point.Point.Angle.Direction)
         //                {
-        //                    case Tools.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
+        //                    case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
         //                        return true;
         //                }
         //            }

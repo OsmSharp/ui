@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.VRP.Core.BestPlacement
+namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement
 {
     /// <summary>
     /// The result returned after calculating a best-placement position.

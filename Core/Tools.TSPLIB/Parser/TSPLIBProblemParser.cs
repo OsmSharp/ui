@@ -22,10 +22,10 @@ using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Globalization;
-using Tools.TSPLIB.Problems;
-using Tools.TSPLIB.Parser.Primitives;
+using OsmSharp.Tools.TSPLIB.Problems;
+using OsmSharp.Tools.TSPLIB.Parser.Primitives;
 
-namespace Tools.TSPLIB.Parser
+namespace OsmSharp.Tools.TSPLIB.Parser
 {
     public class TSPLIBProblemParser
     {

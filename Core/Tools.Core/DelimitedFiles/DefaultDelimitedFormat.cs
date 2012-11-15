@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Core.DelimitedFiles
+namespace OsmSharp.Tools.Core.DelimitedFiles
 {
     /// <summary>
     /// Describes a default delimiter format that leaves all data intact and 

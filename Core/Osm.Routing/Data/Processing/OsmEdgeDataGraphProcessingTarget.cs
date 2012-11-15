@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Tools.Math;
-using Routing.Core.Interpreter.Roads;
-using Routing.Core.Graph;
-using Routing.Core.Interpreter;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math;
+using OsmSharp.Routing.Core.Interpreter.Roads;
+using OsmSharp.Routing.Core.Graph;
+using OsmSharp.Routing.Core.Interpreter;
 
-namespace Osm.Routing.Data.Processing
+namespace OsmSharp.Osm.Routing.Data.Processing
 {
     public class OsmEdgeDataGraphProcessingTarget : DynamicGraphDataProcessorTarget<OsmEdgeData>
     {
@@ -35,7 +35,35 @@ namespace Osm.Routing.Data.Processing
         /// <param name="id_transformations"></param>
         public OsmEdgeDataGraphProcessingTarget(IDynamicGraph<OsmEdgeData> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, IDictionary<long, uint> id_transformations)
-            : base(dynamic_graph, interpreter, tags_index, id_transformations)
+            : this(dynamic_graph, interpreter, tags_index, id_transformations, null)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new osm edge data processing target.
+        /// </summary>
+        /// <param name="dynamic_graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="tags_index"></param>
+        /// <param name="id_transformations"></param>
+        public OsmEdgeDataGraphProcessingTarget(IDynamicGraph<OsmEdgeData> dynamic_graph,
+            IRoutingInterpreter interpreter, ITagsIndex tags_index, GeoCoordinateBox box)
+            : this(dynamic_graph, interpreter, tags_index, new Dictionary<long, uint>(), box)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new osm edge data processing target.
+        /// </summary>
+        /// <param name="dynamic_graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="tags_index"></param>
+        /// <param name="id_transformations"></param>
+        public OsmEdgeDataGraphProcessingTarget(IDynamicGraph<OsmEdgeData> dynamic_graph,
+            IRoutingInterpreter interpreter, ITagsIndex tags_index, IDictionary<long, uint> id_transformations, GeoCoordinateBox box)
+            : base(dynamic_graph, interpreter, tags_index, id_transformations, box)
         {
 
         }
@@ -52,7 +80,7 @@ namespace Osm.Routing.Data.Processing
             bool direction_forward, GeoCoordinate from, GeoCoordinate to)
         {
             double weight = edge_interpreter.Weight(
-                tags, global::Routing.Core.VehicleEnum.Car, from, to);
+                tags, global::OsmSharp.Routing.Core.VehicleEnum.Car, from, to);
             bool? direction = edge_interpreter.IsOneWay(tags);
             bool forward = false;
             bool backward = false;

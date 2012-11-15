@@ -20,16 +20,16 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tools.Xml;
-using Tools.Xml.Sources;
+using OsmSharp.Tools.Xml;
+using OsmSharp.Tools.Xml.Sources;
 using System.IO;
-using Tools.Xml.Kml;
-using Tools.Math.Geo;
-using Osm.Core;
-using Osm.Core.Filters;
-using Osm.Data.Raw.XML.KmlSource;
+using OsmSharp.Tools.Xml.Kml;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm.Data.Raw.XML.KmlSource;
 
-namespace Osm.Test
+namespace OsmSharp.Osm.Test
 {
     /// <summary>
     /// Summary description for KmlDataSourceTest

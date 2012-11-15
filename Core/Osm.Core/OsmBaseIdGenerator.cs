@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Core
+namespace OsmSharp.Osm.Core
 {
     internal static class OsmBaseIdGenerator
     {

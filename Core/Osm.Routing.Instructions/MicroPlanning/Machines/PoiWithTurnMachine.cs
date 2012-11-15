@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.StateMachines;
-using Tools.Math.Geo;
-using Tools.Math.Geo.Meta;
+using OsmSharp.Tools.Math.StateMachines;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Geo.Meta;
 
-namespace Routing.Instructions.MicroPlanning.Machines
+namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {
     internal class PoiWithTurnMachine : MicroPlannerMachine
     {
@@ -79,7 +79,7 @@ namespace Routing.Instructions.MicroPlanning.Machines
                         }
                         switch (point.Point.Angle.Direction)
                         {
-                            case Tools.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
+                            case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
                             case RelativeDirectionEnum.SlightlyLeft:
                             case RelativeDirectionEnum.SlightlyRight:
                                 return true;
@@ -111,8 +111,8 @@ namespace Routing.Instructions.MicroPlanning.Machines
 
         public override void Succes()
         {
-            Routing.Core.ArcAggregation.Output.AggregatedPoint pois_point = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
-            Routing.Core.ArcAggregation.Output.AggregatedArc previous_arc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
+            OsmSharp.Routing.Core.ArcAggregation.Output.AggregatedPoint pois_point = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
+            OsmSharp.Routing.Core.ArcAggregation.Output.AggregatedArc previous_arc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
 
             // get the pois list.
             List<Routing.Core.ArcAggregation.Output.PointPoi> pois = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point.Points;

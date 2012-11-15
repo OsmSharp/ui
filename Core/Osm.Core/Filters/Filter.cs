@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core.Filters.Tags;
+using OsmSharp.Osm.Core.Filters.Tags;
 
-namespace Osm.Core.Filters
+namespace OsmSharp.Osm.Core.Filters
 {
     public abstract class Filter
     {

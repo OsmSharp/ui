@@ -20,7 +20,7 @@
 //using System.Linq;
 //using System.Text;
 
-//namespace Routing.Core.Interpreter.Vehicles
+//namespace OsmSharp.Routing.Core.Interpreter.Vehicles
 //{
 //    /// <summary>
 //    /// Represents a routing vehicle with all it's properties.

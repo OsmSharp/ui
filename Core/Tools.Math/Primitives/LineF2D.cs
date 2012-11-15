@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math
+namespace OsmSharp.Tools.Math
 {
     [Serializable]
     public class LineF2D : GenericLineF2D<PointF2D>

@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Routing.Core.Route;
-using Routing.Core.Resolving;
-using Tools.Math;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.Route;
+using OsmSharp.Routing.Core.Resolving;
+using OsmSharp.Tools.Math;
 
-namespace Routing.Core
+namespace OsmSharp.Routing.Core
 {
     /// <summary>
     /// Interface representing a router.

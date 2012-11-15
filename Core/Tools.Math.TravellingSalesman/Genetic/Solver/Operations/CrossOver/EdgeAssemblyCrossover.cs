@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.Helpers;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.Helpers;
 
-namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
+namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
     public class EdgeAssemblyCrossover :
         ICrossOverOperation<List<int>, GeneticProblem, Fitness>
@@ -83,7 +83,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
             Individual<List<int>, GeneticProblem, Fitness> parent1,
             Individual<List<int>, GeneticProblem, Fitness> parent2)
         {
-            Tools.Math.TSP.Problems.IProblem tsp_problem = solver.Problem.BaseProblem;
+            OsmSharp.Tools.Math.TSP.Problems.IProblem tsp_problem = solver.Problem.BaseProblem;
             double[][] weights = tsp_problem.WeightMatrix;
 
             // first create E_a
@@ -329,7 +329,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
             {
                 foreach (int cycle in cycles)
                 {
-                    if (Tools.Math.Random.StaticRandomGenerator.Get().Generate(1.0) > 0.25)
+                    if (OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(1.0) > 0.25)
                     {
                         starts.Add(cycle);
                     }
@@ -340,7 +340,7 @@ namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
             {
                 if (cycles.Count > 0)
                 {
-                    int idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(cycles.Count);
+                    int idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(cycles.Count);
                     starts.Add(cycles[idx]);
                     cycles.RemoveAt(idx);
                 }

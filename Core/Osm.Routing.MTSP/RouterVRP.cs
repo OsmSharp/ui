@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core;
-using Routing.Core.Route;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Route;
 
-namespace Routing.Core.VRP
+namespace OsmSharp.Routing.Core.VRP
 {
     public abstract class RouterVRP<ResolvedType>
         where ResolvedType : IRouterPoint

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Core
+namespace OsmSharp.Tools.Core
 {
     /// <summary>
     /// Class containing some utilities and extension methods.

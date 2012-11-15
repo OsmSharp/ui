@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Angle;
+using OsmSharp.Tools.Math.Units.Angle;
 
-namespace Tools.Math.Geo.Meta
+namespace OsmSharp.Tools.Math.Geo.Meta
 {
     public static class RelativeDirectionCalculator
     {

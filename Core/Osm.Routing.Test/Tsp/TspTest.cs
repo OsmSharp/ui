@@ -20,18 +20,18 @@
 //using System.Linq;
 //using System.Text;
 //using System.IO;
-//using Tools.Math.Geo;
+//using OsmSharp.Tools.Math.Geo;
 //using System.Data;
-//using Osm.Data;
-//using Tools.Xml.Sources;
-//using Osm.Core.Xml;
-//using Osm.Routing.Raw;
-//using Osm.Routing.Core.Route;
-//using Osm.Routing.Core.TSP.Genetic;
-//using Osm.Routing.Core.TSP.RandomizedArbitraryInsertion;
-//using Osm.Data.Raw.XML.OsmSource;
+//using OsmSharp.Osm.Data;
+//using OsmSharp.Tools.Xml.Sources;
+//using OsmSharp.Osm.Core.Xml;
+//using OsmSharp.Osm.Routing.Raw;
+//using OsmSharp.Osm.Routing.Core.Route;
+//using OsmSharp.Osm.Routing.Core.TSP.Genetic;
+//using OsmSharp.Osm.Routing.Core.TSP.RandomizedArbitraryInsertion;
+//using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 
-//namespace Osm.Routing.Test.Tsp
+//namespace OsmSharp.Osm.Routing.Test.Tsp
 //{
 //    class TspTest
 //    {
@@ -41,8 +41,8 @@
 
 //            // read matrix points.
 //            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
-//            DataSet data = Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
-//                new System.IO.FileInfo(info.FullName + string.Format("\\Tsp\\{0}.csv", name)), Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
+//            DataSet data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
+//                new System.IO.FileInfo(info.FullName + string.Format("\\Tsp\\{0}.csv", name)), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
 //            foreach (DataRow row in data.Tables[0].Rows)
 //            {
 //                // be carefull with the parsing and the number formatting for different cultures.

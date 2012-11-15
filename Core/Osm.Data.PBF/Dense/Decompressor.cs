@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Data.PBF.Dense
+namespace OsmSharp.Osm.Data.PBF.Dense
 {
     /// <summary>
     /// 'Decompresses' dense formatted primitives to their regular counterparts.

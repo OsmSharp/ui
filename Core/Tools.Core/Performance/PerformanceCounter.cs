@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Core.Output;
+using OsmSharp.Tools.Core.Output;
 using System.Diagnostics;
 
-namespace Tools.Core.Performance
+namespace OsmSharp.Tools.Core.Performance
 {
     public static class PerformanceCounter
     {

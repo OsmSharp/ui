@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Graph;
-using Tools.Math.Geo;
-using Tools.Math;
+using OsmSharp.Routing.Core.Graph;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math;
 
-namespace Routing.Core.Router
+namespace OsmSharp.Routing.Core.Router
 {
     /// <summary>
     /// Abstracts a data source of a router that is a dynamic graph with an extra lookup function.

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.StateMachines
+namespace OsmSharp.Tools.Math.StateMachines
 {
     /// <summary>
     /// Represents a transition in a finite-state machine.
@@ -103,7 +103,7 @@ namespace Tools.Math.StateMachines
         /// <returns></returns>
         public static FiniteStateMachineTransition Generate(
             List<FiniteStateMachineState> states, int start, int end,Type event_type,
-            Tools.Math.StateMachines.FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate check_delegate)
+            OsmSharp.Tools.Math.StateMachines.FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate check_delegate)
         {
             return FiniteStateMachineTransition.Generate(states, start, end, false, event_type, check_delegate);
         }
@@ -118,7 +118,7 @@ namespace Tools.Math.StateMachines
         /// <returns></returns>
         public static FiniteStateMachineTransition Generate(
             List<FiniteStateMachineState> states, int start, int end, bool inverted, Type event_type,
-            Tools.Math.StateMachines.FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate check_delegate)
+            OsmSharp.Tools.Math.StateMachines.FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate check_delegate)
         {
             List<FiniteStateMachineTransitionCondition> conditions = new List<FiniteStateMachineTransitionCondition>();
 

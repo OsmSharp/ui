@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo.Meta;
+using OsmSharp.Tools.Math.Geo.Meta;
 
-namespace Routing.Instructions.LanguageGeneration
+namespace OsmSharp.Routing.Instructions.LanguageGeneration
 {
     public interface ILanguageGenerator
     {

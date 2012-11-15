@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 
 // Generated from: fileformat.proto
-namespace Osm.Data.PBF
+namespace OsmSharp.Osm.Data.PBF
 {
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Blob")]
   public partial class Blob : global::ProtoBuf.IExtensible

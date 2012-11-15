@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Osm.UI.WinForms.EditorUserControl.Controls
+namespace OsmSharp.Osm.UI.WinForms.EditorUserControl.Controls
 {
     public partial class LogControl : UserControl
     {

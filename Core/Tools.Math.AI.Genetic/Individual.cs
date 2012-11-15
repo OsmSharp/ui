@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Core;
-using Tools.Math.AI.Genetic.Fitness;
-using Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Core;
+using OsmSharp.Tools.Math.AI.Genetic.Fitness;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace Tools.Math.AI.Genetic
+namespace OsmSharp.Tools.Math.AI.Genetic
 {
     /// <summary>
     /// Class representing an individual in the population.

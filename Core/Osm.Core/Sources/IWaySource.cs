@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Core.Sources
+namespace OsmSharp.Osm.Core.Sources
 {
     /// <summary>
     /// Represents any source of ways.

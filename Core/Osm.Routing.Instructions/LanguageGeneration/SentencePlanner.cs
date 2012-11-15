@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo.Meta;
-using Tools.Math.Geo;
-using Routing.Core.ArcAggregation.Output;
+using OsmSharp.Tools.Math.Geo.Meta;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.ArcAggregation.Output;
 
-namespace Routing.Instructions.LanguageGeneration
+namespace OsmSharp.Routing.Instructions.LanguageGeneration
 {
     internal class SentencePlanner
     {

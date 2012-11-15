@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Renderer.Gdi.Targets.UserControlTarget;
+using OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget;
 
-namespace Osm.UI.WinForms.MapViewerUserControl
+namespace OsmSharp.Osm.UI.WinForms.MapViewerUserControl
 {
     /// <summary>
     /// Base class for all logic that can be applied to the map view user control.

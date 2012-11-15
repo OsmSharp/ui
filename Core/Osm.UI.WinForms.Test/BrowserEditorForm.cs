@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Osm.UI.WinForms.Test
+namespace OsmSharp.Osm.UI.WinForms.Test
 {
     public partial class BrowserEditorForm : Form
     {

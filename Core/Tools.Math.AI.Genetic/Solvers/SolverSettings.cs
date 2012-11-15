@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.AI.Genetic.Solvers
+namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
 {
     /// <summary>
     /// Holds settings used by the solver class.

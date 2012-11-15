@@ -17,23 +17,23 @@
 //// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 //using System.Collections.Generic;
 //using System.Linq;
-//using Osm.Core;
-//using Osm.Data;
-//using Osm.Routing.Core;
-//using Osm.Routing.Core.Route;
-//using Osm.Routing.Graphs;
-//using Osm.Routing.Graphs;
-//using Osm.Routing.Graphs.Interpreter;
-//using Tools.Math;
-//using Tools.Math.Geo;
-//using Tools.Math.Graph.Routing;
-//using Osm.Routing.Core.Exceptions;
-//using Osm.Routing.Core.Metrics.Time;
+//using OsmSharp.Osm.Core;
+//using OsmSharp.Osm.Data;
+//using OsmSharp.Osm.Routing.Core;
+//using OsmSharp.Osm.Routing.Core.Route;
+//using OsmSharp.Osm.Routing.Graphs;
+//using OsmSharp.Osm.Routing.Graphs;
+//using OsmSharp.Osm.Routing.Graphs.Interpreter;
+//using OsmSharp.Tools.Math;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Tools.Math.Graph.Routing;
+//using OsmSharp.Osm.Routing.Core.Exceptions;
+//using OsmSharp.Osm.Routing.Core.Metrics.Time;
 //using System;
-//using Osm.Routing.Core.Resolving;
-//using Osm.Routing.Core.Constraints;
+//using OsmSharp.Osm.Routing.Core.Resolving;
+//using OsmSharp.Osm.Routing.Core.Constraints;
 
-//namespace Osm.Routing
+//namespace OsmSharp.Osm.Routing
 //{
 //    /// <summary>
 //    /// Handles all routing on osm data.
@@ -68,8 +68,8 @@
 //        {
 //            _source = source;
 
-//            _interpreter = new GraphInterpreterTime(new Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(
-//                new Routing.Core.Interpreter.RoutingVehicleSimple(VehicleEnum.Car)), 
+//            _interpreter = new GraphInterpreterTime(new OsmSharp.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(
+//                new OsmSharp.Routing.Core.Interpreter.RoutingVehicleSimple(VehicleEnum.Car)), 
 //                _source, VehicleEnum.Car);
 //            _graph = new Graph(_interpreter, _source);
 
@@ -82,7 +82,7 @@
 //        /// Creates a router based on the graph.
 //        /// </summary>
 //        /// <param name="source"></param>
-//        public Router(IDataSourceReadOnly source, Routing.Core.Interpreter.RoutingInterpreterBase interpreter)
+//        public Router(IDataSourceReadOnly source, OsmSharp.Routing.Core.Interpreter.RoutingInterpreterBase interpreter)
 //        {
 //            _source = source;
 //            _interpreter = new GraphInterpreterTime(interpreter, _source, VehicleEnum.Car); 
@@ -102,8 +102,8 @@
 //        {
 //            _source = source;
 
-//            _interpreter = new GraphInterpreterTime(new Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(
-//                new Routing.Core.Interpreter.RoutingVehicleSimple(VehicleEnum.Car)),
+//            _interpreter = new GraphInterpreterTime(new OsmSharp.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(
+//                new OsmSharp.Routing.Core.Interpreter.RoutingVehicleSimple(VehicleEnum.Car)),
 //                _source, VehicleEnum.Car);
 //            _graph = new Graph(_interpreter, _source);
 
@@ -116,7 +116,7 @@
 //        /// Creates a router based on the graph.
 //        /// </summary>
 //        /// <param name="source"></param>
-//        public Router(IDataSourceReadOnly source, Routing.Core.Interpreter.RoutingInterpreterBase interpreter, IRoutingConstraints constraints)
+//        public Router(IDataSourceReadOnly source, OsmSharp.Routing.Core.Interpreter.RoutingInterpreterBase interpreter, IRoutingConstraints constraints)
 //        {
 //            _source = source;
 //            _interpreter = new GraphInterpreterTime(interpreter, _source, VehicleEnum.Car); 
@@ -168,10 +168,10 @@
 //            try
 //            { 
 //                // try to calculate this roure.
-//                RouteLinked route = routing.Calculate(source.VertexId, target.VertexId, max);
+//                RouteLinked route = OsmSharp.Routing.Calculate(source.VertexId, target.VertexId, max);
 //                return this.ConstructRoute(route, source, target);
 //            }
-//            catch (Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
+//            catch (OsmSharp.Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
 //            {
 //                // get the resolved points.
 //                HashSet<ILocationObject> from_resolved = new HashSet<ILocationObject>();
@@ -216,7 +216,7 @@
 //            }
 
 //            // try to calculate this roure.
-//            RouteLinked route = routing.CalculateToClosest(source.VertexId, tos, max);
+//            RouteLinked route = OsmSharp.Routing.CalculateToClosest(source.VertexId, tos, max);
 
 //            // get the target point.
 //            if (route != null)
@@ -245,10 +245,10 @@
 //            try
 //            {
 //                Dykstra.DykstraRouting routing = new Dykstra.DykstraRouting(_graph);
-//                RouteLinked route = routing.Calculate(source.VertexId, target.VertexId, float.MaxValue);
+//                RouteLinked route = OsmSharp.Routing.Calculate(source.VertexId, target.VertexId, float.MaxValue);
 //                return route.Weight;
 //            }
-//            catch (Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
+//            catch (OsmSharp.Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
 //            {
 //                // get the resolved points.
 //                HashSet<ILocationObject> from_resolved = new HashSet<ILocationObject>();
@@ -281,9 +281,9 @@
 //                {
 //                    tos[idx] = targets[idx].VertexId;
 //                }
-//                return routing.CalculateOneToMany(source.VertexId, tos);
+//                return OsmSharp.Routing.CalculateOneToMany(source.VertexId, tos);
 //            }
-//            catch (Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
+//            catch (OsmSharp.Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
 //            {
 //                // get the resolved points.
 //                HashSet<ILocationObject> from_resolved = new HashSet<ILocationObject>();
@@ -321,9 +321,9 @@
 //                {
 //                    tos[idx] = targets[idx].VertexId;
 //                }
-//                return routing.CalculateManyToMany(froms, tos);
+//                return OsmSharp.Routing.CalculateManyToMany(froms, tos);
 //            }
-//            catch (Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
+//            catch (OsmSharp.Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
 //            {
 //                // get the resolved points.
 //                HashSet<ILocationObject> from_resolved = new HashSet<ILocationObject>();
@@ -368,9 +368,9 @@
 //            try
 //            {
 //                Dykstra.DykstraRouting routing = new Dykstra.DykstraRouting(_graph);
-//                return routing.CheckConnectivity(point.VertexId, weight);
+//                return OsmSharp.Routing.CheckConnectivity(point.VertexId, weight);
 //            }
-//            catch (Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
+//            catch (OsmSharp.Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
 //            {
 //                // get the resolved points.
 //                HashSet<ILocationObject> from_resolved = new HashSet<ILocationObject>();
@@ -403,12 +403,12 @@
 //                    connectivities[idx] = this.CheckConnectivity(point[idx], weight);
 
 //                    // report progress.
-//                    Tools.Core.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.Raw.CheckConnectivity", 
+//                    OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.Raw.CheckConnectivity", 
 //                        "Checking connectivity...");
 //                }
 //                return connectivities;
 //            }
-//            catch (Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
+//            catch (OsmSharp.Tools.Math.Graph.Routing.Point2Point.Exceptions.RoutingException ex)
 //            {
 //                // get the resolved points.
 //                HashSet<ILocationObject> from_resolved = new HashSet<ILocationObject>();
@@ -512,7 +512,7 @@
 //                resolved_points[idx] = this.Resolve(coordinates[idx], matcher);
 
 //                // report progress.
-//                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, coordinates.Length, "Router.Raw.Resolve", "Resolving Points...");
+//                OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, coordinates.Length, "Router.Raw.Resolve", "Resolving Points...");
 //            }
 //            return resolved_points;
 //        }

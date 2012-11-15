@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Structures
+namespace OsmSharp.Tools.Math.Structures
 {
     /// <summary>
     /// A naive reference implementation of the ILocatedObjectIndex<PointType, DataType> interface.

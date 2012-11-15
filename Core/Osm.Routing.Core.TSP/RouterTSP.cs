@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.TSP.Problems;
-using Tools.Math.TSP;
-using Tools.Math.VRP.Core.Routes;
-using Routing.Core;
-using Routing.Core.Route;
+using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Route;
 
-namespace Osm.Routing.Core.TSP
+namespace OsmSharp.Osm.Routing.Core.TSP
 {
     /// <summary>
     /// Router that calculates TSP solutions.

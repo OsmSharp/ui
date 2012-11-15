@@ -20,13 +20,13 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tools.Math.Geo;
-using Tools.Math.Geo.Lambert;
-using Tools.Math.Geo.Lambert.Ellipsoids;
-using Tools.Math.Units.Angle;
-using Tools.Math.Geo.Lambert.International.Belgium;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Geo.Lambert;
+using OsmSharp.Tools.Math.Geo.Lambert.Ellipsoids;
+using OsmSharp.Tools.Math.Units.Angle;
+using OsmSharp.Tools.Math.Geo.Lambert.International.Belgium;
 
-namespace Tools.Test
+namespace OsmSharp.Tools.Test
 {
     /// <summary>
     /// Summary description for LambertProjectionTest

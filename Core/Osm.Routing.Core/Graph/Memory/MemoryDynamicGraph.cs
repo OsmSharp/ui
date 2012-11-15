@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Routing.Core.Graph.Memory
+namespace OsmSharp.Routing.Core.Graph.Memory
 {
     /// <summary>
     /// An implementation of an in-memory dynamic graph.
@@ -106,7 +106,7 @@ namespace Routing.Core.Graph.Memory
         {
             if (_next_id > 1)
             {
-                return Tools.Core.Range.UInt32(1, (uint)_next_id - 1, 1U);
+                return OsmSharp.Tools.Core.Range.UInt32(1, (uint)_next_id - 1, 1U);
             }
             return new List<uint>();
         }
@@ -210,6 +210,14 @@ namespace Routing.Core.Graph.Memory
             /// Holds an array of edges starting at this vertex.
             /// </summary>
             public KeyValuePair<uint, EdgeData>[] Arcs { get; set; }
+        }
+
+        /// <summary>
+        /// Returns the number of vertices in this graph.
+        /// </summary>
+        public uint VertexCount
+        {
+            get { return _next_id - 1; }
         }
     }
 }

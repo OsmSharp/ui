@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Core.Filters
+namespace OsmSharp.Osm.Core.Filters
 {
     internal class FilterType : Filter
     {

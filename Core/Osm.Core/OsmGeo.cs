@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Tools.Math.Shapes;
-using Tools.Core.Collections;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Shapes;
+using OsmSharp.Tools.Core.Collections;
 
-namespace Osm.Core
+namespace OsmSharp.Osm.Core
 {
     /// <summary>
     /// Base class for all the osm data that represents an object on the map.
@@ -61,7 +61,7 @@ namespace Osm.Core
         /// Converts this OsmGeo object to an OsmGeoSimple object.
         /// </summary>
         /// <returns></returns>
-        public abstract Osm.Core.Simple.SimpleOsmGeo ToSimple();
+        public abstract OsmSharp.Osm.Core.Simple.SimpleOsmGeo ToSimple();
 
         #region Shape - Interpreter
 

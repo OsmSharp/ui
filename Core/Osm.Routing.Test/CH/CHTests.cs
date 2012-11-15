@@ -16,20 +16,20 @@
 //// You should have received a copy of the GNU General Public License
 //// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-//using Osm.Routing.Core;
-//using Osm.Routing.Core.Interpreter;
-//using Osm.Routing.Core.Constraints;
-//using Osm.Data.XML.Raw.Processor;
+//using OsmSharp.Osm.Routing.Core;
+//using OsmSharp.Osm.Routing.Core.Interpreter;
+//using OsmSharp.Osm.Routing.Core.Constraints;
+//using OsmSharp.Osm.Data.XML.Raw.Processor;
 //using System.IO;
-//using Osm.Data.Core.Processor.Filter.Sort;
-//using Osm.Routing.CH.Processor;
-//using Osm.Routing.CH.PreProcessing;
-//using Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
-//using Osm.Routing.CH.PreProcessing.Witnesses;
+//using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+//using OsmSharp.Osm.Routing.CH.Processor;
+//using OsmSharp.Osm.Routing.CH.PreProcessing;
+//using OsmSharp.Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
+//using OsmSharp.Osm.Routing.CH.PreProcessing.Witnesses;
 //using System.Reflection;
-//using Tools.Math.Geo;
+//using OsmSharp.Tools.Math.Geo;
 //using System.Collections.Generic;
-//namespace Osm.Routing.Test.CH
+//namespace OsmSharp.Osm.Routing.Test.CH
 //{
 //    class CHTest
 //    {
@@ -41,8 +41,8 @@
 //        public static void Test(string name, int test_count)
 //        {
 //            CHTest.BuildRouter(string.Format("Osm.Routing.Test.CH.{0}.osm", name), string.Format("Osm.Routing.Test.CH.{0}.csv", name),
-//                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-//                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
+//                new OsmSharp.Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
+//                new OsmSharp.Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
 //        }
 
 //        /// <summary>
@@ -76,8 +76,8 @@
 
 //            // read matrix points.
 //            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
-//            string[][] lines = Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
-//                Assembly.GetExecutingAssembly().GetManifestResourceStream(csv_embedded), Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated);
+//            string[][] lines = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
+//                Assembly.GetExecutingAssembly().GetManifestResourceStream(csv_embedded), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated);
 //            foreach (string[] row in lines)
 //            {
 //                // be carefull with the parsing and the number formatting for different cultures.

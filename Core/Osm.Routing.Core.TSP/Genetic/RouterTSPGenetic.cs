@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Core.Progress;
-using Tools.Math.TSP;
-using Tools.Math.TSP.Genetic;
-using Routing.Core;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Core.Progress;
+using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Tools.Math.TSP.Genetic;
+using OsmSharp.Routing.Core;
 
-namespace Osm.Routing.Core.TSP.Genetic
+namespace OsmSharp.Osm.Routing.Core.TSP.Genetic
 {
     /// <summary>
     /// A TSP router using a genetic algorithm.

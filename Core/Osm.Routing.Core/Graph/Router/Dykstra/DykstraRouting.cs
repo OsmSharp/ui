@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Graph;
-using Routing.Core.Graph.Path;
-using Routing.Core.Interpreter;
-using Routing.Core.Constraints;
-using Tools.Math;
+using OsmSharp.Routing.Core.Graph;
+using OsmSharp.Routing.Core.Graph.Path;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Core.Constraints;
+using OsmSharp.Tools.Math;
 
-namespace Routing.Core.Graph.Router.Dykstra
+namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
 {
     /// <summary>
     /// A class containing a fast dykstra implementation.
@@ -143,7 +143,7 @@ namespace Routing.Core.Graph.Router.Dykstra
                 results[idx] = this.CalculateOneToManyWeight(graph, interpreter, sources[idx], targets, max);
 
                 // report progress.
-                Tools.Core.Output.OutputStreamHost.ReportProgress(idx, sources.Length, "Router.Core.Graph.Router.Dykstra.DykstraRouting<EdgeData>.CalculateManyToManyWeight",
+                OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, sources.Length, "Router.Core.Graph.Router.Dykstra.DykstraRouting<EdgeData>.CalculateManyToManyWeight",
                     "Calculating weights...");
             }
             return results;
@@ -275,7 +275,7 @@ namespace Routing.Core.Graph.Router.Dykstra
                 }
             }
 
-            // start routing.
+            // start OsmSharp.Routing.
             KeyValuePair<uint, EdgeData>[] arcs = graph.GetArcs(
                 Convert.ToUInt32(current.VertexId));
             chosen_vertices.Add(current.VertexId);

@@ -20,12 +20,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Renderer.Gdi
+namespace OsmSharp.Osm.Renderer.Gdi
 {
     public static class Extensions
     {
         public static System.Drawing.PointF[] ConvertToDrawing(
-            this Tools.Math.PointF2D[] points)
+            this OsmSharp.Tools.Math.PointF2D[] points)
         {
             System.Drawing.PointF[] drawing_points = new System.Drawing.PointF[points.Length];
 
@@ -40,7 +40,7 @@ namespace Osm.Renderer.Gdi
         }
 
         public static System.Drawing.PointF ConvertToDrawing(
-            this Tools.Math.PointF2D point)
+            this OsmSharp.Tools.Math.PointF2D point)
         {
             return new System.Drawing.PointF(
                     (float)point[0],

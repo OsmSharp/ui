@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Geo
+namespace OsmSharp.Tools.Math.Geo
 {
     /// <summary>
     /// Class reprenting a polygon made out of geo coordinate points.

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Routing.Core.Graph.Path
+namespace OsmSharp.Routing.Core.Graph.Path
 {
     /// <summary>
     /// Linked list of routed vertices.

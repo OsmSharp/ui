@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Graph.Path;
-using Routing.Core.Interpreter;
-using Tools.Math;
+using OsmSharp.Routing.Core.Graph.Path;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Tools.Math;
 
-namespace Routing.Core.Graph.Router
+namespace OsmSharp.Routing.Core.Graph.Router
 {
     /// <summary>
     /// Abstract a router that works on a dynamic graph.

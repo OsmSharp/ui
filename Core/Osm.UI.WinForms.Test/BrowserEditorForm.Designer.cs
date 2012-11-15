@@ -1,4 +1,4 @@
-﻿namespace Osm.UI.WinForms.Test
+﻿namespace OsmSharp.Osm.UI.WinForms.Test
 {
     partial class BrowserEditorForm
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.browserEditorUserControl1 = new Osm.UI.WinForms.BrowserEditorUserControl.BrowserEditorUserControl();
+            this.browserEditorUserControl1 = new OsmSharp.Osm.UI.WinForms.BrowserEditorUserControl.BrowserEditorUserControl();
             this.SuspendLayout();
             // 
             // browserEditorUserControl1
@@ -53,6 +53,6 @@
 
         #endregion
 
-        private Osm.UI.WinForms.BrowserEditorUserControl.BrowserEditorUserControl browserEditorUserControl1;
+        private OsmSharp.Osm.UI.WinForms.BrowserEditorUserControl.BrowserEditorUserControl browserEditorUserControl1;
     }
 }

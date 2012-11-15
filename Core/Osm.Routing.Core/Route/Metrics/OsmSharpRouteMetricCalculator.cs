@@ -20,17 +20,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using Routing.Core.Route;
-using Routing.Core.ArcAggregation.Output;
-using Routing.Core;
+using OsmSharp.Routing.Core.Route;
+using OsmSharp.Routing.Core.ArcAggregation.Output;
+using OsmSharp.Routing.Core;
 
-namespace Routing.Core.Metrics
+namespace OsmSharp.Routing.Core.Metrics
 {
     public abstract class OsmSharpRouteMetricCalculator
     {
         public Dictionary<string, double> Calculate(OsmSharpRoute route)
         {
-            Routing.Core.ArcAggregation.ArcAggregator aggregator = new Routing.Core.ArcAggregation.ArcAggregator();
+            OsmSharp.Routing.Core.ArcAggregation.ArcAggregator aggregator = new OsmSharp.Routing.Core.ArcAggregation.ArcAggregator();
             AggregatedPoint p = aggregator.Aggregate(route);
             return this.Calculate(route.Vehicle, p);
         }

@@ -19,14 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.TSP.Problems;
-using Tools.Math.VRP.Core;
-using Tools.Math.VRP.Core.BestPlacement;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.VRP.Core.Routes.Symmetric;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace Tools.Math.TSP.ArbitraryInsertion
+namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
 {
     /// <summary>
     /// Implements a best-placement solver.
@@ -95,7 +95,7 @@ namespace Tools.Math.TSP.ArbitraryInsertion
                 }
                 while (customers_to_place.Count > 0)
                 {
-                    int idx = Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers_to_place.Count);
+                    int idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers_to_place.Count);
                     customers.Add(customers_to_place[idx]);
                     customers_to_place.RemoveAt(idx);
                 }

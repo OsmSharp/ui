@@ -19,14 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Osm.Core;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core;
 using Npgsql;
-using Osm.Core.Factory;
-using Osm.Core.Filters;
+using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Osm.Core.Filters;
 using System.Text.RegularExpressions;
 
-namespace Osm.Data.PostgreSQL.Raw
+namespace OsmSharp.Osm.Data.PostgreSQL.Raw
 {
     public class PostgreSQLSimpleSource : IDataSourceReadOnly, IDisposable
     {

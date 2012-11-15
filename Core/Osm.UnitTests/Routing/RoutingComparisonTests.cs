@@ -2,18 +2,18 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Osm.Routing.Core.Resolving;
-//using Osm.Routing.Core;
-//using Osm.Routing.Core.Interpreter;
-//using Osm.Routing.Core.Constraints;
+//using OsmSharp.Osm.Routing.Core.Resolving;
+//using OsmSharp.Osm.Routing.Core;
+//using OsmSharp.Osm.Routing.Core.Interpreter;
+//using OsmSharp.Osm.Routing.Core.Constraints;
 //using System.Reflection;
-//using Osm.Routing.Core.Constraints.Cars;
-//using Tools.Math.Geo;
+//using OsmSharp.Osm.Routing.Core.Constraints.Cars;
+//using OsmSharp.Tools.Math.Geo;
 //using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using Osm.Routing.Core.Route;
+//using OsmSharp.Osm.Routing.Core.Route;
 //using System.IO;
 
-//namespace Osm.UnitTests.Routing
+//namespace OsmSharp.Osm.UnitTests.Routing
 //{
 //    /// <summary>
 //    /// Base class with tests around IRouter<ResolvedType> objects.
@@ -33,9 +33,9 @@
 //        /// Builds a raw data source.
 //        /// </summary>
 //        /// <returns></returns>
-//        public Osm.Data.Raw.XML.OsmSource.OsmDataSource BuildRawDataSource()
+//        public OsmSharp.Osm.Data.Raw.XML.OsmSource.OsmDataSource BuildRawDataSource()
 //        {
-//            return new Osm.Data.Raw.XML.OsmSource.OsmDataSource(
+//            return new OsmSharp.Osm.Data.Raw.XML.OsmSource.OsmDataSource(
 //                   Assembly.GetExecutingAssembly().GetManifestResourceStream("Osm.UnitTests.test_network.osm"));
 //        }
 
@@ -47,19 +47,19 @@
 //            IRoutingConstraints constraints)
 //        {
 //            // build the router.
-//            return new Osm.Routing.Raw.Router(osm_data, interpreter, constraints);
+//            return new OsmSharp.Osm.Routing.Raw.Router(osm_data, interpreter, constraints);
 //        }
 
 //        public void TestCompareAll()
 //        {   
 //            // get the osm data source.
-//            Osm.Data.Raw.XML.OsmSource.OsmDataSource data = this.BuildRawDataSource(); 
+//            OsmSharp.Osm.Data.Raw.XML.OsmSource.OsmDataSource data = this.BuildRawDataSource(); 
 
 //            // build the routing settings.
-//            Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter interpreter = 
-//                new Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car);
+//            OsmSharp.Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter interpreter = 
+//                new OsmSharp.Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car);
 //            DefaultCarConstraints constraints =
-//                new Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints();
+//                new OsmSharp.Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints();
 
 //            // build the reference router.
 //            IRouter<Osm.Routing.Raw.ResolvedPoint> reference_router = this.BuildRawRouter(
@@ -71,7 +71,7 @@
 //            // loop over all nodes and resolve their locations.
 //            ResolvedType[] resolved = router.Resolve(
 //                data.GetNodes().Select<Osm.Core.Node, GeoCoordinate>(x => x.Coordinate).ToArray());
-//            Osm.Routing.Raw.ResolvedPoint[] resolved_reference = reference_router.Resolve(
+//            OsmSharp.Osm.Routing.Raw.ResolvedPoint[] resolved_reference = reference_router.Resolve(
 //                data.GetNodes().Select<Osm.Core.Node, GeoCoordinate>(x => x.Coordinate).ToArray());
 
 //            // check if the resolved points are exactly the same.

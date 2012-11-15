@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math
+namespace OsmSharp.Tools.Math
 {
     [Serializable]
     public class PolygonF2D : GenericPolygonF2D<PointF2D>

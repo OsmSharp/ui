@@ -21,7 +21,7 @@ using System.Text;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
-namespace Tools.Core.Cache
+namespace OsmSharp.Tools.Core.Cache
 {
     public class LRUCache<TKey, TValue>
     {

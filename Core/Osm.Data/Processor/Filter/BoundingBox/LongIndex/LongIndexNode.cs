@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Data.Core.Processor.Filter.LongIndex
+namespace OsmSharp.Osm.Data.Core.Processor.Filter.LongIndex
 {
     internal class LongIndexNode : ILongIndexNode
     {

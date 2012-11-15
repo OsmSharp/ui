@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.TSP.Genetic.Solver
+namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
 {
     public class Fitness : IComparable
     {

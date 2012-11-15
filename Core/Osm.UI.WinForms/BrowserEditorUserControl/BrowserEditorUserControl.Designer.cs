@@ -1,4 +1,4 @@
-﻿namespace Osm.UI.WinForms.BrowserEditorUserControl
+﻿namespace OsmSharp.Osm.UI.WinForms.BrowserEditorUserControl
 {
     partial class BrowserEditorUserControl
     {

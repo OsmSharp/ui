@@ -19,23 +19,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Time;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.VRP.Core;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Tools.Math.AI.Genetic.Selectors;
-using Tools.Math.AI.Genetic;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.AI.Genetic.Operations.Mutations;
-using Tools.Math.Random;
+using OsmSharp.Tools.Math.Units.Time;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.AI.Genetic.Selectors;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
+using OsmSharp.Tools.Math.Random;
 using System.IO;
 using System.Globalization;
-using Tools.Math.AI.Genetic.Operations.Generation;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Routing.Core;
-using Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
 {
     /// <summary>
     /// Calculates VRP's without a depot with min max time constraints per route using genetic algorithms.
@@ -137,7 +137,7 @@ namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic
         {
             _customers = problem.Customers;
 
-            //float[] solutions = Tools.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
+            //float[] solutions = OsmSharp.Tools.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
             //    problem, _customers);
 
             generations = 0;
@@ -145,24 +145,24 @@ namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic
             _max_generations = 10000000;
 
             // calculate one tsp solution.
-            //Tools.Math.TSP.ISolver tsp_solver = new Tools.Math.TSP.EdgeAssemblyGenetic.EdgeAssemblyCrossOverSolver(_population, _stagnation,
-            //         new Tools.Math.TSP.Genetic.Solver.Operations.Generation._3OptGenerationOperation(),
-            //          new Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.EdgeAssemblyCrossover(30,
-            //                 Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
+            //Tools.Math.TSP.ISolver tsp_solver = new OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic.EdgeAssemblyCrossOverSolver(_population, _stagnation,
+            //         new OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation._3OptGenerationOperation(),
+            //          new OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.EdgeAssemblyCrossover(30,
+            //                 OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
             //                 true));
-            //IRoute tsp_solution = tsp_solver.Solve(new Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement.TSPProblem(
+            //IRoute tsp_solution = tsp_solver.Solve(new OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement.TSPProblem(
             //    problem));
             // initialize the generation.
             IGenerationOperation<MaxTimeSolution, MaxTimeProblem, Fitness> generation =
                 //new SolverGenerationOperation(new TSPPlacement.TSPPlacementSolver<ResolvedType>(
                 //    this.Router, this.Max, this.DeliveryTime, tsp_solution));
-                new Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation.RandomBestPlacement();
+                new OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation.RandomBestPlacement();
             //new SolverGenerationOperation(new RouterBestPlacementWithSeeds<ResolvedType>(
             //    this.Router, this.Max, this.DeliveryTime));
 
             // initialize the crossover.
             ICrossOverOperation<MaxTimeSolution, MaxTimeProblem, Fitness> cross_over =
-                new Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver.RouteExchangeOperation();
+                new OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver.RouteExchangeOperation();
 
             // initialize the mutation.
             //IMutationOperation<MaxTimeSolution, MaxTimeProblem, Fitness> mutation =

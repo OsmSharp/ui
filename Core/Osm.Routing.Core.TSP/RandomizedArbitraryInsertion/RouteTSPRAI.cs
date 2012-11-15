@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core.LocalSearch;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.TSP;
-using Routing.Core;
+using OsmSharp.Tools.Math.VRP.Core.LocalSearch;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Routing.Core;
 
-namespace Osm.Routing.Core.TSP.RandomizedArbitraryInsertion
+namespace OsmSharp.Osm.Routing.Core.TSP.RandomizedArbitraryInsertion
 {
     /// <summary>
     /// A TSP router using a genetic algorithm.

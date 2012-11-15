@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Core.Progress
+namespace OsmSharp.Tools.Core.Progress
 {
     /// <summary>
     /// An empty progress reporter to use when not progress needs to be reported.

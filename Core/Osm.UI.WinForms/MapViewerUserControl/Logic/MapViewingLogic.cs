@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Renderer.Gdi.Targets.UserControlTarget;
-using Tools.Math.Geo;
+using OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Osm.UI.WinForms.MapViewerUserControl.Logic
+namespace OsmSharp.Osm.UI.WinForms.MapViewerUserControl.Logic
 {
     /// <summary>
     /// Class applied to the map viewer user control when the user is moving/zooming the map.

@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using Tools.Math;
-using Routing.Core.Interpreter.Roads;
+using OsmSharp.Tools.Math;
+using OsmSharp.Routing.Core.Interpreter.Roads;
 
-namespace Routing.Core.Constraints.Highways
+namespace OsmSharp.Routing.Core.Constraints.Highways
 {
     /// <summary>
     /// Handles default highway constraints.

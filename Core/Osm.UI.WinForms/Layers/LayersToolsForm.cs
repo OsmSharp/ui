@@ -24,7 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Osm.UI.WinForms.Layers
+namespace OsmSharp.Osm.UI.WinForms.Layers
 {
     public partial class LayersToolsForm : Form
     {

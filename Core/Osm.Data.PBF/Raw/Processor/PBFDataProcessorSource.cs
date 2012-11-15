@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data.Core.Processor;
+using OsmSharp.Osm.Data.Core.Processor;
 using System.IO;
-using Osm.Data.PBF.Dense;
-using Osm.Core.Simple;
+using OsmSharp.Osm.Data.PBF.Dense;
+using OsmSharp.Osm.Core.Simple;
 
-namespace Osm.Data.PBF.Raw.Processor
+namespace OsmSharp.Osm.Data.PBF.Raw.Processor
 {
     /// <summary>
     /// A source of PBF formatted OSM data.
@@ -50,6 +50,8 @@ namespace Osm.Data.PBF.Raw.Processor
         /// </summary>
         public override void Initialize()
         {
+            _stream.Seek(0, SeekOrigin.Begin);
+
             this.InitializePBFReader();
         }
 
@@ -127,7 +129,7 @@ namespace Osm.Data.PBF.Raw.Processor
                     + ((double)block.granularity * (double)node.lat));
                 simple_node.Longitude = .000000001 * ((double)block.lon_offset 
                     + ((double)block.granularity * (double)node.lon));
-                simple_node.TimeStamp = Tools.Core.Utilities.FromUnixTime((long)node.info.timestamp * 
+                simple_node.TimeStamp = OsmSharp.Tools.Core.Utilities.FromUnixTime((long)node.info.timestamp * 
                     (long)block.date_granularity);
                 simple_node.Visible = true;
                 simple_node.Version = (uint)node.info.version;
@@ -161,7 +163,7 @@ namespace Osm.Data.PBF.Raw.Processor
                 if (way.info != null)
                 { // add the metadata if any.
                     simple_way.ChangeSetId = way.info.changeset;
-                    simple_way.TimeStamp = Tools.Core.Utilities.FromUnixTime((long)way.info.timestamp *
+                    simple_way.TimeStamp = OsmSharp.Tools.Core.Utilities.FromUnixTime((long)way.info.timestamp *
                         (long)block.date_granularity);
                     simple_way.UserId = way.info.uid;
                     simple_way.UserName = ASCIIEncoding.ASCII.GetString(block.stringtable.s[way.info.user_sid]);
@@ -212,7 +214,7 @@ namespace Osm.Data.PBF.Raw.Processor
                 if (relation.info != null)
                 { // read metadata if any.
                     simple_relation.ChangeSetId = relation.info.changeset;
-                    simple_relation.TimeStamp = Tools.Core.Utilities.FromUnixTime((long)relation.info.timestamp *
+                    simple_relation.TimeStamp = OsmSharp.Tools.Core.Utilities.FromUnixTime((long)relation.info.timestamp *
                         (long)block.date_granularity);
                     simple_relation.UserId = relation.info.uid;
                     simple_relation.UserName = ASCIIEncoding.ASCII.GetString(block.stringtable.s[relation.info.user_sid]);

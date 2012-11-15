@@ -22,7 +22,7 @@ using System.Text;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace Tools.Math.VRP.Core.Routes.ASymmetric
+namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 {
     /// <summary>
     /// An asymetric dynamically sizeable mutliple routes object.

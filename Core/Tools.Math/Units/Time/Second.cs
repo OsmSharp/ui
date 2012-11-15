@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Distance;
-using Tools.Math.Units.Speed;
+using OsmSharp.Tools.Math.Units.Distance;
+using OsmSharp.Tools.Math.Units.Speed;
 
-namespace Tools.Math.Units.Time
+namespace OsmSharp.Tools.Math.Units.Time
 {
     public class Second : Unit
     {

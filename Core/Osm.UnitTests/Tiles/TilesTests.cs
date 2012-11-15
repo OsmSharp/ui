@@ -3,10 +3,10 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Osm.Core;
-using Tools.Math.Geo;
+using OsmSharp.Osm.Core;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Osm.UnitTests.Tiles
+namespace OsmSharp.Osm.UnitTests.Tiles
 {
     [TestClass]
     public class TilesTests

@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Map.Layers;
-using Tools.Math.Geo;
-using Osm.Map.Elements;
-using Osm.Renderer.Tweakers;
+using OsmSharp.Osm.Map.Layers;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Map.Elements;
+using OsmSharp.Osm.Renderer.Tweakers;
 using System.Drawing.Drawing2D;
 
-namespace Osm.Renderer
+namespace OsmSharp.Osm.Renderer
 {
     /// <summary>
     /// Represents a renderer for an osm map.
@@ -40,7 +40,7 @@ namespace Osm.Renderer
         /// <summary>
         /// The map this renderer is for.
         /// </summary>
-        private Osm.Map.Map _map;
+        private OsmSharp.Osm.Map.Map _map;
 
         /// <summary>
         /// The target this renderer is for.
@@ -74,11 +74,11 @@ namespace Osm.Renderer
 
                 if (layer != null && layer.Visible)
                 {
-                    layer.Changed -= new Osm.Map.Map.LayerChangedDelegate(layer_Changed);
+                    layer.Changed -= new OsmSharp.Osm.Map.Map.LayerChangedDelegate(layer_Changed);
 
                     this.Render(layer,view);
 
-                    layer.Changed += new Osm.Map.Map.LayerChangedDelegate(layer_Changed);
+                    layer.Changed += new OsmSharp.Osm.Map.Map.LayerChangedDelegate(layer_Changed);
                 }
             }
 

@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Osm.Core.Simple;
-using Osm.Data.Core.Processor.ChangeSets;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Core.Processor.ChangeSets;
 
-namespace Osm.Data.Core.Processor.Filter
+namespace OsmSharp.Osm.Data.Core.Processor.Filter
 {
     /// <summary>
     /// Filter processing changesets and filtering them on bounding box based on a database
@@ -31,7 +31,7 @@ namespace Osm.Data.Core.Processor.Filter
     /// </summary>
     public class DataProcessorChangeSetFilterBoundingBox : DataProcessorChangeSetFilter
     {
-        private Osm.Data.IDataSourceReadOnly _data_source;
+        private OsmSharp.Osm.Data.IDataSourceReadOnly _data_source;
 
         private GeoCoordinateBox _box;
 
@@ -69,8 +69,8 @@ namespace Osm.Data.Core.Processor.Filter
                 if (changes_inside.Key.Changes.Count > 0)
                 {
                     // some data in this changeset is ok!
-                    Tools.Core.Output.OutputStreamHost.WriteLine(string.Empty);
-                    Tools.Core.Output.OutputStreamHost.Write("Changeset accepted:");
+                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Empty);
+                    OsmSharp.Tools.Core.Output.OutputStreamHost.Write("Changeset accepted:");
 
                     // set the converted changeset as the current one!
                     _current = changes_inside.Key;
@@ -121,7 +121,7 @@ namespace Osm.Data.Core.Processor.Filter
                         SimpleNode node = geo as SimpleNode;
                         GeoCoordinate coord = new GeoCoordinate(node.Latitude.Value, node.Longitude.Value);
 
-                        if (_box.IsInsideAny(new Tools.Math.PointF2D[] { coord }))
+                        if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { coord }))
                         {
                             nodes_changed.Add(node);
                             nodes_inside.Add(node.Id.Value);
@@ -170,7 +170,7 @@ namespace Osm.Data.Core.Processor.Filter
                     }
 
                     // first try to load the complete way.
-                    Osm.Core.Way way = _data_source.GetWay(geo.Id.Value);
+                    OsmSharp.Osm.Core.Way way = _data_source.GetWay(geo.Id.Value);
                     if (way != null && way.Nodes != null)
                     {
                         foreach (Osm.Core.Node node in way.Nodes)
@@ -178,7 +178,7 @@ namespace Osm.Data.Core.Processor.Filter
                             if (node != null)
                             { // only if the node is found
                                 changes_coordinates.Add(node.Coordinate);
-                                if (_box.IsInsideAny(new Tools.Math.PointF2D[] { node.Coordinate }))
+                                if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { node.Coordinate }))
                                 {
                                     changes_coordinates.Add(node.Coordinate);
                                     ways_changed.Add(geo);
@@ -197,10 +197,10 @@ namespace Osm.Data.Core.Processor.Filter
                     // second try to load the nodes individually.
                     foreach (long node_id in (geo as SimpleWay).Nodes)
                     {
-                        Osm.Core.Node node = _data_source.GetNode(node_id);
+                        OsmSharp.Osm.Core.Node node = _data_source.GetNode(node_id);
                         if (node != null)
                         { // only if the node is found
-                            if (_box.IsInsideAny(new Tools.Math.PointF2D[] { node.Coordinate }))
+                            if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { node.Coordinate }))
                             {
                                 changes_coordinates.Add(node.Coordinate);
                                 ways_changed.Add(geo);
@@ -289,7 +289,7 @@ namespace Osm.Data.Core.Processor.Filter
                         SimpleNode node = geo as SimpleNode;
                         GeoCoordinate coord = new GeoCoordinate(node.Latitude.Value, node.Longitude.Value);
                         
-                        if (_box.IsInsideAny(new Tools.Math.PointF2D[] { coord }))
+                        if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { coord }))
                         {
                             return true;
                         }
@@ -306,14 +306,14 @@ namespace Osm.Data.Core.Processor.Filter
             {
                 if (geo is SimpleWay && (geo as SimpleWay).Nodes != null)
                 {
-                    Osm.Core.Way way = _data_source.GetWay(geo.Id.Value);
+                    OsmSharp.Osm.Core.Way way = _data_source.GetWay(geo.Id.Value);
                     if (way != null && way.Nodes != null)
                     {
                         foreach (Osm.Core.Node node in way.Nodes)
                         {
                             if (node != null)
                             { // only if the node is found
-                                if (_box.IsInsideAny(new Tools.Math.PointF2D[] { node.Coordinate }))
+                                if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { node.Coordinate }))
                                 {
                                     return true;
                                 }
@@ -374,11 +374,11 @@ namespace Osm.Data.Core.Processor.Filter
                             }
 
                             // check unknown nodes.
-                            Osm.Core.Node node = _data_source.GetNode(member.MemberId.Value);
+                            OsmSharp.Osm.Core.Node node = _data_source.GetNode(member.MemberId.Value);
 
                             if (node != null)
                             { // only if the node is found
-                                if (_box.IsInsideAny(new Tools.Math.PointF2D[] { node.Coordinate }))
+                                if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { node.Coordinate }))
                                 {
                                     nodes_inside.Add(node.Id);
                                     return true;
@@ -402,13 +402,13 @@ namespace Osm.Data.Core.Processor.Filter
                             }
 
                             // check unknown ways.
-                            Osm.Core.Way way = _data_source.GetWay(member.MemberId.Value);
+                            OsmSharp.Osm.Core.Way way = _data_source.GetWay(member.MemberId.Value);
 
                             if (way != null)
                             { // only if the node is found
                                 foreach (Osm.Core.Node node in way.Nodes)
                                 {
-                                    if (_box.IsInsideAny(new Tools.Math.PointF2D[] { node.Coordinate }))
+                                    if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { node.Coordinate }))
                                     {
                                         ways_inside.Add(way.Id);
                                         nodes_inside.Add(node.Id);
@@ -432,7 +432,7 @@ namespace Osm.Data.Core.Processor.Filter
                                 _tested_relations.Add(member.MemberId.Value);
 
                                 // get the relation.
-                                Osm.Core.Relation relation = _data_source.GetRelation(member.MemberId.Value);
+                                OsmSharp.Osm.Core.Relation relation = _data_source.GetRelation(member.MemberId.Value);
                                 if (relation != null)
                                 {
                                     List<SimpleRelationMember> simple_members = new List<SimpleRelationMember>();
@@ -443,13 +443,13 @@ namespace Osm.Data.Core.Processor.Filter
                                         simple_member.MemberRole = loaded_member.Role;
                                         switch (loaded_member.Member.Type)
                                         {
-                                            case Osm.Core.OsmType.Node:
+                                            case OsmSharp.Osm.Core.OsmType.Node:
                                                 simple_member.MemberType = SimpleRelationMemberType.Node;
                                                 break;
-                                            case Osm.Core.OsmType.Way:
+                                            case OsmSharp.Osm.Core.OsmType.Way:
                                                 simple_member.MemberType = SimpleRelationMemberType.Way;
                                                 break;
-                                            case Osm.Core.OsmType.Relation:
+                                            case OsmSharp.Osm.Core.OsmType.Relation:
                                                 simple_member.MemberType = SimpleRelationMemberType.Relation;
                                                 break;
                                         }

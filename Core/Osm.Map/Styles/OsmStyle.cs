@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Map.Styles
+namespace OsmSharp.Osm.Map.Styles
 {
     public class OsmStyle
     {

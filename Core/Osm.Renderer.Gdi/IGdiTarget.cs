@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
-namespace Osm.Renderer.Gdi
+namespace OsmSharp.Osm.Renderer.Gdi
 {
     public interface IGdiTarget : ITarget
     {

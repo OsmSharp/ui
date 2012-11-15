@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Routing.Instructions.MicroPlanning
+namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
     internal class MicroPlannerException : Exception
     {

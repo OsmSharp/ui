@@ -21,10 +21,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tools.Xml.Kml;
-using Tools.Xml.Sources;
+using OsmSharp.Tools.Xml.Kml;
+using OsmSharp.Tools.Xml.Sources;
 
-namespace Tools.Test
+namespace OsmSharp.Tools.Test
 {
     /// <summary>
     /// Summary description for UnitTest1
@@ -92,15 +92,15 @@ namespace Tools.Test
             KmlDocument document = new KmlDocument(source);
             object kml = document.Kml;
 
-            if (kml is Tools.Xml.Kml.v2_0.kml)
+            if (kml is OsmSharp.Tools.Xml.Kml.v2_0.kml)
             { // all ok here!
-                Tools.Xml.Kml.v2_0.kml kml_type = (kml as Tools.Xml.Kml.v2_0.kml);
+                OsmSharp.Tools.Xml.Kml.v2_0.kml kml_type = (kml as OsmSharp.Tools.Xml.Kml.v2_0.kml);
 
                 // test the gpx test file content.
                 Assert.IsNotNull(kml_type.Item, "No item was found!");
-                Assert.IsInstanceOfType(kml_type.Item, typeof(Tools.Xml.Kml.v2_0.Placemark), "Incorrect item type!");
+                Assert.IsInstanceOfType(kml_type.Item, typeof(OsmSharp.Tools.Xml.Kml.v2_0.Placemark), "Incorrect item type!");
 
-                Tools.Xml.Kml.v2_0.Placemark type = (kml_type.Item as Tools.Xml.Kml.v2_0.Placemark);
+                OsmSharp.Tools.Xml.Kml.v2_0.Placemark type = (kml_type.Item as OsmSharp.Tools.Xml.Kml.v2_0.Placemark);
                 Assert.AreEqual(type.Items.Length, 3, "Incorrect number of items in folder!");
             }
             else
@@ -123,7 +123,7 @@ namespace Tools.Test
             KmlDocument document = new KmlDocument(source);
             object kml = document.Kml;
 
-            if (kml is Tools.Xml.Kml.v2_0.kml)
+            if (kml is OsmSharp.Tools.Xml.Kml.v2_0.kml)
             { // all ok here!
 
                 // delete the target file.
@@ -155,15 +155,15 @@ namespace Tools.Test
                 kml = document.Kml;
 
                 // check the result that was written and then read again.
-                if (kml is Tools.Xml.Kml.v2_0.kml)
+                if (kml is OsmSharp.Tools.Xml.Kml.v2_0.kml)
                 { // all ok here!
-                    Tools.Xml.Kml.v2_0.kml kml_type = (kml as Tools.Xml.Kml.v2_0.kml);
+                    OsmSharp.Tools.Xml.Kml.v2_0.kml kml_type = (kml as OsmSharp.Tools.Xml.Kml.v2_0.kml);
 
                     // test the gpx test file content.
                     Assert.IsNotNull(kml_type.Item, "No item was found!");
-                    Assert.IsInstanceOfType(kml_type.Item, typeof(Tools.Xml.Kml.v2_0.Placemark), "Incorrect item type!");
+                    Assert.IsInstanceOfType(kml_type.Item, typeof(OsmSharp.Tools.Xml.Kml.v2_0.Placemark), "Incorrect item type!");
 
-                    Tools.Xml.Kml.v2_0.Placemark type = (kml_type.Item as Tools.Xml.Kml.v2_0.Placemark);
+                    OsmSharp.Tools.Xml.Kml.v2_0.Placemark type = (kml_type.Item as OsmSharp.Tools.Xml.Kml.v2_0.Placemark);
                     Assert.AreEqual(type.Items.Length, 3, "Incorrect number of items in folder!");
                 }
                 else
@@ -200,15 +200,15 @@ namespace Tools.Test
             KmlDocument document = new KmlDocument(source);
             object kml = document.Kml;
 
-            if (kml is Tools.Xml.Kml.v2_0_response.kml)
+            if (kml is OsmSharp.Tools.Xml.Kml.v2_0_response.kml)
             { // all ok here!
-                Tools.Xml.Kml.v2_0_response.kml kml_type = (kml as Tools.Xml.Kml.v2_0_response.kml);
+                OsmSharp.Tools.Xml.Kml.v2_0_response.kml kml_type = (kml as OsmSharp.Tools.Xml.Kml.v2_0_response.kml);
 
                 // test the gpx test file content.
                 Assert.IsNotNull(kml_type.Item, "No item was found!");
-                Assert.IsInstanceOfType(kml_type.Item, typeof(Tools.Xml.Kml.v2_0_response.Response), "Incorrect item type!");
+                Assert.IsInstanceOfType(kml_type.Item, typeof(OsmSharp.Tools.Xml.Kml.v2_0_response.Response), "Incorrect item type!");
 
-                Tools.Xml.Kml.v2_0_response.Response type = (kml_type.Item as Tools.Xml.Kml.v2_0_response.Response);
+                OsmSharp.Tools.Xml.Kml.v2_0_response.Response type = (kml_type.Item as OsmSharp.Tools.Xml.Kml.v2_0_response.Response);
                 Assert.AreEqual(type.Items.Length, 8, "Incorrect number of items in response!");
             }
             else
@@ -231,7 +231,7 @@ namespace Tools.Test
             KmlDocument document = new KmlDocument(source);
             object kml = document.Kml;
 
-            if (kml is Tools.Xml.Kml.v2_0_response.kml)
+            if (kml is OsmSharp.Tools.Xml.Kml.v2_0_response.kml)
             { // all ok here!
 
                 // delete the target file.
@@ -263,15 +263,15 @@ namespace Tools.Test
                 kml = document.Kml;
 
                 // check the result that was written and then read again.
-                if (kml is Tools.Xml.Kml.v2_0_response.kml)
+                if (kml is OsmSharp.Tools.Xml.Kml.v2_0_response.kml)
                 { // all ok here!
-                    Tools.Xml.Kml.v2_0_response.kml kml_type = (kml as Tools.Xml.Kml.v2_0_response.kml);
+                    OsmSharp.Tools.Xml.Kml.v2_0_response.kml kml_type = (kml as OsmSharp.Tools.Xml.Kml.v2_0_response.kml);
 
                     // test the gpx test file content.
                     Assert.IsNotNull(kml_type.Item, "No item was found!");
-                    Assert.IsInstanceOfType(kml_type.Item, typeof(Tools.Xml.Kml.v2_0_response.Response), "Incorrect item type!");
+                    Assert.IsInstanceOfType(kml_type.Item, typeof(OsmSharp.Tools.Xml.Kml.v2_0_response.Response), "Incorrect item type!");
 
-                    Tools.Xml.Kml.v2_0_response.Response type = (kml_type.Item as Tools.Xml.Kml.v2_0_response.Response);
+                    OsmSharp.Tools.Xml.Kml.v2_0_response.Response type = (kml_type.Item as OsmSharp.Tools.Xml.Kml.v2_0_response.Response);
                     Assert.AreEqual(type.Items.Length, 8, "Incorrect number of items in response!");
                 }
                 else
@@ -307,15 +307,15 @@ namespace Tools.Test
             KmlDocument document = new KmlDocument(source);
             object kml = document.Kml;
 
-            if (kml is Tools.Xml.Kml.v2_1.KmlType)
+            if (kml is OsmSharp.Tools.Xml.Kml.v2_1.KmlType)
             { // all ok here!
-                Tools.Xml.Kml.v2_1.KmlType kml_type = (kml as Tools.Xml.Kml.v2_1.KmlType);
+                OsmSharp.Tools.Xml.Kml.v2_1.KmlType kml_type = (kml as OsmSharp.Tools.Xml.Kml.v2_1.KmlType);
 
                 // test the gpx test file content.
                 Assert.IsNotNull(kml_type.Item, "No item was found!");
-                Assert.IsInstanceOfType(kml_type.Item, typeof(Tools.Xml.Kml.v2_1.FolderType), "Incorrect item type!");
+                Assert.IsInstanceOfType(kml_type.Item, typeof(OsmSharp.Tools.Xml.Kml.v2_1.FolderType), "Incorrect item type!");
 
-                Tools.Xml.Kml.v2_1.FolderType type = (kml_type.Item as Tools.Xml.Kml.v2_1.FolderType);
+                OsmSharp.Tools.Xml.Kml.v2_1.FolderType type = (kml_type.Item as OsmSharp.Tools.Xml.Kml.v2_1.FolderType);
                 Assert.AreEqual(type.Items1.Length, 10, "Incorrect number of items in folder!");
             }
             else
@@ -339,7 +339,7 @@ namespace Tools.Test
             KmlDocument document = new KmlDocument(source);
             object kml = document.Kml;
 
-            if (kml is Tools.Xml.Kml.v2_1.KmlType)
+            if (kml is OsmSharp.Tools.Xml.Kml.v2_1.KmlType)
             { // all ok here!
 
                 // delete the target file.
@@ -371,15 +371,15 @@ namespace Tools.Test
                 kml = document.Kml;
 
                 // check the result that was written and then read again.
-                if (kml is Tools.Xml.Kml.v2_1.KmlType)
+                if (kml is OsmSharp.Tools.Xml.Kml.v2_1.KmlType)
                 { // all ok here!
-                    Tools.Xml.Kml.v2_1.KmlType kml_type = (kml as Tools.Xml.Kml.v2_1.KmlType);
+                    OsmSharp.Tools.Xml.Kml.v2_1.KmlType kml_type = (kml as OsmSharp.Tools.Xml.Kml.v2_1.KmlType);
 
                     // test the gpx test file content.
                     Assert.IsNotNull(kml_type.Item, "No item was found!");
-                    Assert.IsInstanceOfType(kml_type.Item, typeof(Tools.Xml.Kml.v2_1.FolderType), "Incorrect item type!");
+                    Assert.IsInstanceOfType(kml_type.Item, typeof(OsmSharp.Tools.Xml.Kml.v2_1.FolderType), "Incorrect item type!");
 
-                    Tools.Xml.Kml.v2_1.FolderType type = (kml_type.Item as Tools.Xml.Kml.v2_1.FolderType);
+                    OsmSharp.Tools.Xml.Kml.v2_1.FolderType type = (kml_type.Item as OsmSharp.Tools.Xml.Kml.v2_1.FolderType);
                     Assert.AreEqual(type.Items1.Length, 10, "Incorrect number of items in folder!");
                 }
                 else

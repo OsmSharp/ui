@@ -20,7 +20,7 @@
 //using System.Linq;
 //using System.Text;
 
-//namespace Routing.CH
+//namespace OsmSharp.Routing.CH
 //{
 //    public static class Facade
 //    {

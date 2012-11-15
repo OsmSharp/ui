@@ -21,7 +21,7 @@ using System.IO;
 using ProtoBuf;
 using zlib;
 
-namespace Osm.Data.PBF
+namespace OsmSharp.Osm.Data.PBF
 {
     /// <summary>
     /// Reads PBF files.

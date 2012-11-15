@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using System.Collections;
 
-namespace Tools.Math.Primitives.Enumerators.Lines
+namespace OsmSharp.Tools.Math.Primitives.Enumerators.Lines
 {
     internal class LineEnumerator<PointType> :
         IEnumerator<GenericLineF2D<PointType>>,

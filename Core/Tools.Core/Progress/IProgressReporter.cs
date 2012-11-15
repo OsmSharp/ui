@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Core.Progress
+namespace OsmSharp.Tools.Core.Progress
 {
     /// <summary>
     /// Implemented on objects that can report progress to users or to another part of the application.

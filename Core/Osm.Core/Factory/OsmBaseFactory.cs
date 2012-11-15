@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
-using Osm.Core.Simple;
-using Tools.Math.Geo;
-using Tools.Core.Collections;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Core.Collections;
 
-namespace Osm.Core.Factory
+namespace OsmSharp.Osm.Core.Factory
 {
     public static class OsmBaseFactory
     {

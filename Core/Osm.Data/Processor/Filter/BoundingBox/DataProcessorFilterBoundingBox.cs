@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Osm.Core.Simple;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core.Simple;
 
-namespace Osm.Data.Core.Processor.Filter
+namespace OsmSharp.Osm.Data.Core.Processor.Filter
 {
     public class DataProcessorFilterBoundingBox : DataProcessorFilter
     {

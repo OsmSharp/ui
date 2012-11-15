@@ -20,9 +20,9 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Osm.Core;
+using OsmSharp.Osm.Core;
 
-namespace Osm.Test
+namespace OsmSharp.Osm.Test
 {
     /// <summary>
     /// Summary description for ApiDataSourceTest

@@ -19,23 +19,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.TSP.Genetic.Solver;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.AI.Genetic.Selectors;
-using Tools.Math.AI.Genetic.Operations.Mutations;
-using Tools.Math.AI.Genetic.Operations.Generation;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Tools.Math.AI.Genetic;
-using Tools.Math.TSP.Genetic.Solver.Operations.Generation;
-using Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
-using Tools.Math.Random;
-using Tools.Math.TSP.Genetic.Solver.Operations.Mutation;
-using Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
-using Tools.Core.Progress;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.AI.Genetic.Selectors;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
+using OsmSharp.Tools.Math.Random;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Mutation;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
+using OsmSharp.Tools.Core.Progress;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace Tools.Math.TSP.Genetic
+namespace OsmSharp.Tools.Math.TSP.Genetic
 {
     /// <summary>
     /// Solver that uses a Genetic Algorithm to solve instances of the TSP.
@@ -111,7 +111,7 @@ namespace Tools.Math.TSP.Genetic
         /// </summary>
         /// <param name="problem"></param>
         /// <returns></returns>
-        public IRoute Solve(Tools.Math.TSP.Problems.IProblem problem)
+        public IRoute Solve(OsmSharp.Tools.Math.TSP.Problems.IProblem problem)
         {
             //int population_size = 10;
             //if (problem.Size < 100)

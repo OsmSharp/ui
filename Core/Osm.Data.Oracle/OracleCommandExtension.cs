@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using Oracle.DataAccess.Client;
 
-namespace Osm.Data.Oracle
+namespace OsmSharp.Osm.Data.Oracle
 {
     public static class OracleCommandExtension
     {

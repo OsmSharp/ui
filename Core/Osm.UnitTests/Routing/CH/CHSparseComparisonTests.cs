@@ -3,19 +3,19 @@
 //using System.Linq;
 //using System.Text;
 //using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using Osm.Routing.CH.Routing;
-//using Osm.Routing.Core;
-//using Osm.Routing.Core.Interpreter;
-//using Osm.Routing.Core.Constraints;
-//using Osm.Data.XML.Raw.Processor;
+//using OsmSharp.Osm.Routing.CH.Routing;
+//using OsmSharp.Osm.Routing.Core;
+//using OsmSharp.Osm.Routing.Core.Interpreter;
+//using OsmSharp.Osm.Routing.Core.Constraints;
+//using OsmSharp.Osm.Data.XML.Raw.Processor;
 //using System.Reflection;
-//using Osm.Data.Core.Processor.Filter.Sort;
-//using Osm.Routing.CH.Processor;
-//using Osm.Routing.CH.PreProcessing;
-//using Osm.Routing.CH.PreProcessing.Witnesses;
-//using Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
+//using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+//using OsmSharp.Osm.Routing.CH.Processor;
+//using OsmSharp.Osm.Routing.CH.PreProcessing;
+//using OsmSharp.Osm.Routing.CH.PreProcessing.Witnesses;
+//using OsmSharp.Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 
-//namespace Osm.UnitTests.Routing.CH
+//namespace OsmSharp.Osm.UnitTests.Routing.CH
 //{
 //    [TestClass]
 //    public class CHSparseComparisonTests : RoutingComparisonTests<CHResolvedPoint>

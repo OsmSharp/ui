@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Automata;
-using Tools.Math.StateMachines;
+using OsmSharp.Tools.Math.Automata;
+using OsmSharp.Tools.Math.StateMachines;
 
-namespace Routing.Instructions.MicroPlanning
+namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
     internal abstract class MicroPlannerMachine : FiniteStateMachine<MicroPlannerMessage>
     {

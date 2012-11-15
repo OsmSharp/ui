@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using Osm.Data.XML.Raw.Processor;
-using Osm.Data.Core.Processor.Filter.Sort;
-using Osm.Core;
-using Routing.Core.Interpreter;
-using Routing.Core;
-using Routing.Core.Router.Memory;
-using Osm.Routing.Data.Processing;
-using Routing.CH.PreProcessing;
+using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Osm.Core;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Router.Memory;
+using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Routing.CH.PreProcessing;
 using System.Reflection;
-using Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
-using Routing.CH.PreProcessing.Witnesses;
-using Routing.CH.Routing;
+using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
+using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.CH.Routing;
 
-namespace Osm.Routing.Test.ManyToMany
+namespace OsmSharp.Osm.Routing.Test.ManyToMany
 {
     /// <summary>
     /// Executes many-to-many calculation performance tests using the CH data format.

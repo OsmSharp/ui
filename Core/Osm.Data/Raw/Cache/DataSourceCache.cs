@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
-using Tools.Math.Units.Angle;
-using Tools.Math.Geo;
-using Osm.Core.Filters;
+using OsmSharp.Osm.Core;
+using OsmSharp.Tools.Math.Units.Angle;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core.Filters;
 
-namespace Osm.Data.Cache
+namespace OsmSharp.Osm.Data.Cache
 {
     /// <summary>
     /// Class used for caching data using bounding boxes.
@@ -299,7 +299,7 @@ namespace Osm.Data.Cache
 
         #region IDataSourceReadOnly Members
 
-        public Tools.Math.Geo.GeoCoordinateBox BoundingBox
+        public OsmSharp.Tools.Math.Geo.GeoCoordinateBox BoundingBox
         {
             get 
             {
@@ -344,7 +344,7 @@ namespace Osm.Data.Cache
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Osm.Core.Node GetNode(long id)
+        public OsmSharp.Osm.Core.Node GetNode(long id)
         {
             Node node = this.NodeCacheTryGet(id);
             if (node == null)
@@ -381,7 +381,7 @@ namespace Osm.Data.Cache
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Osm.Core.Relation GetRelation(long id)
+        public OsmSharp.Osm.Core.Relation GetRelation(long id)
         {
             Relation relation = this.RelationCacheTryGet(id);
             if (relation == null)
@@ -431,7 +431,7 @@ namespace Osm.Data.Cache
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Osm.Core.Way GetWay(long id)
+        public OsmSharp.Osm.Core.Way GetWay(long id)
         {
             Way way = this.WayCacheTryGet(id);
             if (way == null)
@@ -501,7 +501,7 @@ namespace Osm.Data.Cache
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IList<OsmGeo> Get(Tools.Math.Geo.GeoCoordinateBox box, Osm.Core.Filters.Filter filter)
+        public IList<OsmGeo> Get(OsmSharp.Tools.Math.Geo.GeoCoordinateBox box, OsmSharp.Osm.Core.Filters.Filter filter)
         {
             List<OsmGeo> base_objects = new List<OsmGeo>();
 

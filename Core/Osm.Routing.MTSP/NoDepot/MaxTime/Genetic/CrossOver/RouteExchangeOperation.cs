@@ -19,15 +19,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Tools.Math.AI.Genetic.Operations.Mutations;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Tools.Math.AI.Genetic;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
 
-namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
 {
     internal class RouteExchangeOperation :
         ICrossOverOperation<MaxTimeSolution, MaxTimeProblem, Fitness>
@@ -132,10 +132,10 @@ namespace Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
 
         private int ChooseNextFrom(List<IRoute> selected_routes, MaxTimeSolution solution, HashSet<int> selected)
         {
-            int selected_route = Tools.Math.Random.StaticRandomGenerator.Get().Generate(solution.Count);
+            int selected_route = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(solution.Count);
             while (selected.Contains(selected_route))
             {
-                selected_route = Tools.Math.Random.StaticRandomGenerator.Get().Generate(solution.Count);
+                selected_route = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(solution.Count);
             }
             return selected_route;
         }

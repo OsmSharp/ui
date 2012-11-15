@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.UI.WinForms.MapEditorUserControl;
-using Tools.Math.Geo;
+using OsmSharp.Osm.UI.WinForms.MapEditorUserControl;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Osm.UI.WinForms.EditorUserControl.Logic
+namespace OsmSharp.Osm.UI.WinForms.EditorUserControl.Logic
 {
     internal class MapSelectLogic :  MapEditorUserControlLogic
     {

@@ -1,4 +1,4 @@
-﻿namespace Osm.UI.WinForms.Test
+﻿namespace OsmSharp.Osm.UI.WinForms.Test
 {
     partial class MapEditorForm
     {
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.mapEditorUserControl1 = new Osm.UI.WinForms.MapEditorUserControl.MapEditorUserControl();
+            this.mapEditorUserControl1 = new OsmSharp.Osm.UI.WinForms.MapEditorUserControl.MapEditorUserControl();
             this.SuspendLayout();
             // 
             // mapEditorUserControl1
@@ -46,7 +46,7 @@
             this.mapEditorUserControl1.Size = new System.Drawing.Size(760, 405);
             this.mapEditorUserControl1.TabIndex = 0;
             this.mapEditorUserControl1.ZoomFactor = 0F;
-            this.mapEditorUserControl1.MapClick += new Osm.UI.WinForms.MapEditorUserControl.MapEditorUserControl.MapClickDelegate(this.mapEditorUserControl1_MapClick);
+            this.mapEditorUserControl1.MapClick += new OsmSharp.Osm.UI.WinForms.MapEditorUserControl.MapEditorUserControl.MapClickDelegate(this.mapEditorUserControl1_MapClick);
             // 
             // MapEditorForm
             // 
@@ -62,6 +62,6 @@
 
         #endregion
 
-        private Osm.UI.WinForms.MapEditorUserControl.MapEditorUserControl mapEditorUserControl1;
+        private OsmSharp.Osm.UI.WinForms.MapEditorUserControl.MapEditorUserControl mapEditorUserControl1;
     }
 }

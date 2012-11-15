@@ -20,9 +20,9 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Routing.Core.Route;
+using OsmSharp.Routing.Core.Route;
 
-namespace Osm.UnitTests
+namespace OsmSharp.Osm.UnitTests
 {
     [TestClass]
     public class OsmSharpRouteTests

@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Time;
-using Tools.Math.Units.Speed;
+using OsmSharp.Tools.Math.Units.Time;
+using OsmSharp.Tools.Math.Units.Speed;
 
-namespace Tools.Math.Units.Distance
+namespace OsmSharp.Tools.Math.Units.Distance
 {
     /// <summary>
     /// Represents a distance in kilometers.

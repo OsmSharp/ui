@@ -19,11 +19,11 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Tools.Math.Geo;
-//using Osm.Core;
-//using Osm.Routing.Core.Resolving;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Osm.Core;
+//using OsmSharp.Osm.Routing.Core.Resolving;
 
-//namespace Routing.CH.Routing
+//namespace OsmSharp.Routing.CH.Routing
 //{
 //    public class CHResolvedPoint : IResolvedPoint
 //    {

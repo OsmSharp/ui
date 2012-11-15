@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.TSP;
+using OsmSharp.Tools.Math.TSP;
 using System.IO;
 using System.Text.RegularExpressions;
-using Tools.Math.TSP.Problems;
-using Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Tools.Math.VRP.Core;
 
-namespace Tools.TSPLIB.Problems
+namespace OsmSharp.Tools.TSPLIB.Problems
 {
     /// <summary>
     /// Represents and parses a TSPLIB problem.

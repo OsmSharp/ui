@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.GeoCoding
+namespace OsmSharp.Tools.GeoCoding
 {
     /// <summary>
     /// Describing the accuracy of a geocoding result.

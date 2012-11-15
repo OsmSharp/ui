@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Geo;
-using Tools.Math;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math;
 
-namespace Routing.Core
+namespace OsmSharp.Routing.Core
 {
     /// <summary>
     /// Represents a resolved point. A hook for the router to route on.

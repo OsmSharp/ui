@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.TSPLIB.Problems;
+using OsmSharp.Tools.TSPLIB.Problems;
 using System.IO;
 
-namespace Tools.TSPLIB
+namespace OsmSharp.Tools.TSPLIB
 {
     class Program
     {

@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Angle;
-using Tools.Math.Geo.Lambert.International.Belgium;
-using Tools.Math.Geo.Lambert.Ellipsoids;
+using OsmSharp.Tools.Math.Units.Angle;
+using OsmSharp.Tools.Math.Geo.Lambert.International.Belgium;
+using OsmSharp.Tools.Math.Geo.Lambert.Ellipsoids;
 
-namespace Tools.Math.Geo.Lambert
+namespace OsmSharp.Tools.Math.Geo.Lambert
 {
     /// <summary>
     /// A standard lamber projection.

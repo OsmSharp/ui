@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Globalization;
 
-namespace Routing.Core.Interpreter.Roads
+namespace OsmSharp.Routing.Core.Interpreter.Roads
 {
     /// <summary>
     /// Contains common tags extensions for usage in EdgeInterpreters.

@@ -23,10 +23,10 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using System.IO.Compression;
-using Osm.Core.Simple;
-using Osm.Data.Core.Processor;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Core.Processor;
 
-namespace Osm.Data.XML.Raw.Processor
+namespace OsmSharp.Osm.Data.XML.Raw.Processor
 {
     public class XmlDataProcessorSource : DataProcessorSource
     {
@@ -150,25 +150,25 @@ namespace Osm.Data.XML.Raw.Processor
                     {
                          case "node":
                              osm_obj = _ser_node.Deserialize(reader);
-                             if (osm_obj is Osm.Core.Xml.v0_6.node)
+                             if (osm_obj is OsmSharp.Osm.Core.Xml.v0_6.node)
                              {
-                                 _next = XmlSimpleConverter.ConvertToSimple(osm_obj as Osm.Core.Xml.v0_6.node);
+                                 _next = XmlSimpleConverter.ConvertToSimple(osm_obj as OsmSharp.Osm.Core.Xml.v0_6.node);
                                  return true;
                              }
                              break;
                          case "way":
                              osm_obj = _ser_way.Deserialize(reader);
-                             if (osm_obj is Osm.Core.Xml.v0_6.way)
+                             if (osm_obj is OsmSharp.Osm.Core.Xml.v0_6.way)
                              {
-                                 _next = XmlSimpleConverter.ConvertToSimple(osm_obj as Osm.Core.Xml.v0_6.way);
+                                 _next = XmlSimpleConverter.ConvertToSimple(osm_obj as OsmSharp.Osm.Core.Xml.v0_6.way);
                                  return true;
                              }
                              break;
                          case "relation":
                              osm_obj = _ser_relation.Deserialize(reader);
-                             if (osm_obj is Osm.Core.Xml.v0_6.relation)
+                             if (osm_obj is OsmSharp.Osm.Core.Xml.v0_6.relation)
                              {
-                                 _next = XmlSimpleConverter.ConvertToSimple(osm_obj as Osm.Core.Xml.v0_6.relation);
+                                 _next = XmlSimpleConverter.ConvertToSimple(osm_obj as OsmSharp.Osm.Core.Xml.v0_6.relation);
                                  return true;
                              }
                              break;

@@ -19,16 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core;
-using Tools.Math.Geo;
-using Osm.Core.Filters;
+using OsmSharp.Osm.Core;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core.Filters;
 using ServiceStack.Redis;
 using ServiceStack.Redis.Generic;
-using Osm.Data.Redis.Raw.Primitives;
-using Osm.Core.Factory;
-using Osm.Data.Redis.Raw;
+using OsmSharp.Osm.Data.Redis.Raw.Primitives;
+using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Osm.Data.Redis.Raw;
 
-namespace Osm.Data.Redis.Raw
+namespace OsmSharp.Osm.Data.Redis.Raw
 {
     public class RedisSimpleSource : IDataSourceReadOnly, IDisposable
     {
@@ -59,7 +59,7 @@ namespace Osm.Data.Redis.Raw
             //_client_relation = _client.GetTypedClient<SimpleRelation>();
         }
 
-        public Tools.Math.Geo.GeoCoordinateBox BoundingBox
+        public OsmSharp.Tools.Math.Geo.GeoCoordinateBox BoundingBox
         {
             get 
             { 

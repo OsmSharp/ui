@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Osm.Core.Filters.Tags
+namespace OsmSharp.Osm.Core.Filters.Tags
 {
     internal class FilterTagExists : FilterTag
     {

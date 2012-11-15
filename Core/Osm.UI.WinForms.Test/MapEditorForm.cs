@@ -23,12 +23,12 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Osm.Map.Layers.Tiles;
-using Tools.Math.Geo;
-using Osm.Map.Layers.Custom;
-using Tools.GeoCoding;
+using OsmSharp.Osm.Map.Layers.Tiles;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Map.Layers.Custom;
+using OsmSharp.Tools.GeoCoding;
 
-namespace Osm.UI.WinForms.Test
+namespace OsmSharp.Osm.UI.WinForms.Test
 {
     public partial class MapEditorForm : Form
     {
@@ -41,7 +41,7 @@ namespace Osm.UI.WinForms.Test
         {
             base.OnLoad(e);
 
-            Osm.Map.Map map = new Osm.Map.Map();
+            OsmSharp.Osm.Map.Map map = new OsmSharp.Osm.Map.Map();
             map.Layers.Add(new TilesLayer());
 
 

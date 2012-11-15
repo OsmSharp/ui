@@ -23,11 +23,11 @@ using System.Threading;
 using System.Net;
 using System.IO;
 using System.IO.Compression;
-using Osm.Core.Simple;
-using Osm.Data.Core.Processor.ChangeSets;
-using Osm.Data.XML.Raw.Processor.ChangeSets;
+using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Data.Core.Processor.ChangeSets;
+using OsmSharp.Osm.Data.XML.Raw.Processor.ChangeSets;
 
-namespace Osm.Data.XML.Raw.Processor.Replication
+namespace OsmSharp.Osm.Data.XML.Raw.Processor.Replication
 {
     public class Replicator : DataProcessorChangeSetSource
     {
@@ -129,8 +129,8 @@ namespace Osm.Data.XML.Raw.Processor.Replication
                     current_source.Initialize();
                     _sequenceNumber = next;
 
-                    Tools.Core.Output.OutputStreamHost.WriteLine("");
-                    Tools.Core.Output.OutputStreamHost.WriteLine("Started applying changeset {0}:{1}!", _sequenceNumber,state_array[0]);
+                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("");
+                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Started applying changeset {0}:{1}!", _sequenceNumber,state_array[0]);
 
                     _current_source = current_source;
 

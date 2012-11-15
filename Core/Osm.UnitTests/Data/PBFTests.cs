@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
-using Osm.Data.PBF.Raw.Processor;
-using Osm.Data.Core.Raw.Memory;
-using Osm.Core;
-using Osm.Data;
+using OsmSharp.Osm.Data.PBF.Raw.Processor;
+using OsmSharp.Osm.Data.Core.Raw.Memory;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Data;
 
-namespace Osm.UnitTests.Data
+namespace OsmSharp.Osm.UnitTests.Data
 {
     /// <summary>
     /// Containts tests for the PBF format.

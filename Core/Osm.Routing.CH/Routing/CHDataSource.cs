@@ -2,12 +2,12 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Routing.CH.PreProcessing;
-//using Routing.Core.Graph;
-//using Routing.Core.Graph.Memory;
-//using Tools.Math;
+//using OsmSharp.Routing.CH.PreProcessing;
+//using OsmSharp.Routing.Core.Graph;
+//using OsmSharp.Routing.Core.Graph.Memory;
+//using OsmSharp.Tools.Math;
 
-//namespace Routing.CH.Routing
+//namespace OsmSharp.Routing.CH.Routing
 //{
 //    /// <summary>
 //    /// Represents a data source for CH data.

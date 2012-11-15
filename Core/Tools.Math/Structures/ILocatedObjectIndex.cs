@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Structures
+namespace OsmSharp.Tools.Math.Structures
 {
     /// <summary>
     /// Abstracts a data structure indexing objects by their location.

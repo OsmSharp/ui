@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core;
-using Tools.Math.Units.Speed;
-using Tools.Math.Geo;
+using OsmSharp.Routing.Core;
+using OsmSharp.Tools.Math.Units.Speed;
+using OsmSharp.Tools.Math.Geo;
 
-namespace Routing.Core.Roads.Tags
+namespace OsmSharp.Routing.Core.Roads.Tags
 {
     /// <summary>
     /// Interpreter for way tags that can be implemented to use a more configurable tag interpretation method.

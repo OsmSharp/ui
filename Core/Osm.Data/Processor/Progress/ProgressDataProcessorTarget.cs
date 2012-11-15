@@ -19,10 +19,10 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using Tools.Math.Geo;
-//using Osm.Core.Simple;
+//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Osm.Core.Simple;
 
-//namespace Osm.Data.Core.Processor.Progress
+//namespace OsmSharp.Osm.Data.Core.Processor.Progress
 //{
 //    public class ProgressDataProcessorTarget : DataProcessorTarget
 //    {
@@ -68,7 +68,7 @@
 //            {
 //                long stop = DateTime.Now.Ticks;
 //                long seconds = (stop - _start) / TimeSpan.TicksPerSecond;
-//                Tools.Core.Output.OutputStreamHost.WriteLine("Node[{0}]: {1}node/s", _node, (int)((double)_node / (double)seconds));
+//                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Node[{0}]: {1}node/s", _node, (int)((double)_node / (double)seconds));
 //            }
 
 //            if (node.Latitude > _max_latitude)
@@ -99,7 +99,7 @@
 //            {
 //                long stop = DateTime.Now.Ticks;
 //                long seconds = (stop - _start) / TimeSpan.TicksPerSecond;
-//                Tools.Core.Output.OutputStreamHost.WriteLine("Way[{0}]: {1}ways/s", _way, (int)((double)_way / (double)seconds));
+//                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Way[{0}]: {1}ways/s", _way, (int)((double)_way / (double)seconds));
 //            }
 //        }
 
@@ -113,7 +113,7 @@
 //            {
 //                long stop = DateTime.Now.Ticks;
 //                long seconds = (stop - _start) / TimeSpan.TicksPerSecond;
-//                Tools.Core.Output.OutputStreamHost.WriteLine("Relation[{0}]: {1}relation/s", _relation, (int)((double)_relation / (double)seconds));
+//                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Relation[{0}]: {1}relation/s", _relation, (int)((double)_relation / (double)seconds));
 //            }
 //        }
 

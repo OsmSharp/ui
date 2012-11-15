@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Primitives.Enumerators.Lines;
+using OsmSharp.Tools.Math.Primitives.Enumerators.Lines;
 
-namespace Tools.Math.Primitives.Enumerators.Points
+namespace OsmSharp.Tools.Math.Primitives.Enumerators.Points
 {
     public sealed class LineEnumerable<PointType> : IEnumerable<GenericLineF2D<PointType>>
         where PointType : PointF2D

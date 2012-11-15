@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core;
-using Routing.Core.Route;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Route;
 
-namespace Routing.Core.VRP.WithDepot
+namespace OsmSharp.Routing.Core.VRP.WithDepot
 {
     /// <summary>
     /// Class to solve for a specific class of VRP problems: VRP problems with multi depot.

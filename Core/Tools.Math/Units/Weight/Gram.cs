@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Units.Weight
+namespace OsmSharp.Tools.Math.Units.Weight
 {
     public class Gram : Unit
     {        

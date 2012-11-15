@@ -3,21 +3,21 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using Osm.Routing.CH.Routing;
-//using Osm.Routing.Core;
-//using Osm.Routing.Core.Interpreter;
-//using Osm.Routing.Core.Constraints;
-//using Osm.Data.Core.DynamicGraph.Memory;
-//using Osm.Routing.CH.PreProcessing;
-//using Osm.Data.Core.DynamicGraph;
+//using OsmSharp.Osm.Routing.CH.Routing;
+//using OsmSharp.Osm.Routing.Core;
+//using OsmSharp.Osm.Routing.Core.Interpreter;
+//using OsmSharp.Osm.Routing.Core.Constraints;
+//using OsmSharp.Osm.Data.Core.DynamicGraph.Memory;
+//using OsmSharp.Osm.Routing.CH.PreProcessing;
+//using OsmSharp.Osm.Data.Core.DynamicGraph;
 //using System.Reflection;
-//using Osm.Data.XML.Raw.Processor;
-//using Osm.Routing.CH.Processor;
-//using Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
-//using Osm.Routing.CH.PreProcessing.Witnesses;
-//using Osm.Data.Core.Processor.Filter.Sort;
+//using OsmSharp.Osm.Data.XML.Raw.Processor;
+//using OsmSharp.Osm.Routing.CH.Processor;
+//using OsmSharp.Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
+//using OsmSharp.Osm.Routing.CH.PreProcessing.Witnesses;
+//using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 
-//namespace Osm.UnitTests.Routing.CH
+//namespace OsmSharp.Osm.UnitTests.Routing.CH
 //{
 //    [TestClass]
 //    public class CHEdgeDifferenceRoutingTest : SimpleRoutingTests<CHResolvedPoint>
@@ -46,7 +46,7 @@
 
 //            // do the pre-processing part.
 //            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data.Graph);
-//            INodeWeightCalculator ordering = new Osm.Routing.CH.PreProcessing.Ordering.EdgeDifference(
+//            INodeWeightCalculator ordering = new OsmSharp.Osm.Routing.CH.PreProcessing.Ordering.EdgeDifference(
 //                data.Graph, witness_calculator);
 //            CHPreProcessor pre_processor = new CHPreProcessor(data.Graph,
 //                ordering, witness_calculator);

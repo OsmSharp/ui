@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Tools.Math.Structures.KDTree
+namespace OsmSharp.Tools.Math.Structures.KDTree
 {
     /// <summary>
     /// Represents a node in a k-d tree.

@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Core.Collections;
-using Tools.Math;
+using OsmSharp.Tools.Core.Collections;
+using OsmSharp.Tools.Math;
 
-namespace Osm.Core
+namespace OsmSharp.Osm.Core
 {
     /// <summary>
     /// An osm tags index.

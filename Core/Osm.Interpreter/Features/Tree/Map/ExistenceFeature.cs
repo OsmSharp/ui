@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Core.Filters;
-using Osm.Interpreter.Features.Tree.Map.Administrative;
+using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm.Interpreter.Features.Tree.Map.Administrative;
 
-namespace Osm.Interpreter.Features.Tree.Map
+namespace OsmSharp.Osm.Interpreter.Features.Tree.Map
 {
     public class ExistenceFeature : Feature
     {

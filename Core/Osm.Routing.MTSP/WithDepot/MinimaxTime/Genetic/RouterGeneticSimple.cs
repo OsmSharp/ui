@@ -19,23 +19,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.Units.Time;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.VRP.Core;
-using Tools.Math.VRP.Core.Routes.ASymmetric;
-using Tools.Math.AI.Genetic.Selectors;
-using Tools.Math.AI.Genetic;
-using Tools.Math.VRP.Core.Routes;
-using Tools.Math.AI.Genetic.Operations.Mutations;
-using Tools.Math.Random;
+using OsmSharp.Tools.Math.Units.Time;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.VRP.Core;
+using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.AI.Genetic.Selectors;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
+using OsmSharp.Tools.Math.Random;
 using System.IO;
 using System.Globalization;
-using Routing.Core;
-using Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.CrossOver;
-using Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation;
-using Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Mutation;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.CrossOver;
+using OsmSharp.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation;
+using OsmSharp.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Mutation;
 
-namespace Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
+namespace OsmSharp.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
 {
     /// <summary>
     /// Calculates VRP's without a depot with min max time constraints per route using genetic algorithms.
@@ -103,7 +103,7 @@ namespace Routing.Core.VRP.WithDepot.MinimaxTime.Genetic
         /// <returns></returns>
         protected override int[][] DoCalculation(IProblemWeights problem, ICollection<int> depots, ICollection<int> customers)
         {
-            double[] solutions = Tools.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
+            double[] solutions = OsmSharp.Tools.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
                 problem, customers);
 
             generations = 0;

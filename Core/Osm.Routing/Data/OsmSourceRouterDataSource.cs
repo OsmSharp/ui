@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data;
-using Routing.Core.Router;
-using Tools.Math.Geo;
-using Routing.Core.Router.Memory;
-using Tools.Math;
-using Osm.Core;
-using Routing.Core.Interpreter.Roads;
-using Osm.Routing.Data.Processing;
-using Routing.Core.Interpreter;
-using Osm.Data.Core.Processor.ListSource;
-using Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Osm.Data;
+using OsmSharp.Routing.Core.Router;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.Router.Memory;
+using OsmSharp.Tools.Math;
+using OsmSharp.Osm.Core;
+using OsmSharp.Routing.Core.Interpreter.Roads;
+using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Osm.Data.Core.Processor.ListSource;
+using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 
-namespace Osm.Routing.Data.Source
+namespace OsmSharp.Osm.Routing.Data.Source
 {
     /// <summary>
     /// A Dynamic graph with extended possibilities to allow resolving points.
@@ -214,7 +214,7 @@ namespace Osm.Routing.Data.Source
         {
             // load data.
             GeoCoordinateBox box = tile.Box.Resize(0.00001);
-            IList<OsmGeo> data = _source.Get(box, Osm.Core.Filters.Filter.Any());
+            IList<OsmGeo> data = _source.Get(box, OsmSharp.Osm.Core.Filters.Filter.Any());
 
             // process the list of data just loaded.
             OsmEdgeDataGraphProcessingTarget target_data = new OsmEdgeDataGraphProcessingTarget(
@@ -228,5 +228,13 @@ namespace Osm.Routing.Data.Source
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns the number of vertices currently in this graph.
+        /// </summary>
+        public uint VertexCount
+        {
+            get { return _data_cache.VertexCount; }
+        }
     }
 }

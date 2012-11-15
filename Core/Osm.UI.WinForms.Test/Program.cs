@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using Osm.Core;
+using OsmSharp.Osm.Core;
 
-namespace Osm.UI.WinForms.Test
+namespace OsmSharp.Osm.UI.WinForms.Test
 {
     static class Program
     {

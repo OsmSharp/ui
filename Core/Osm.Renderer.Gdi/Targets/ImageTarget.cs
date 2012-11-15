@@ -23,7 +23,7 @@ using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
 
-namespace Osm.Renderer.Gdi.Targets
+namespace OsmSharp.Osm.Renderer.Gdi.Targets
 {
     public class ImageTarget : 
         IGdiTarget

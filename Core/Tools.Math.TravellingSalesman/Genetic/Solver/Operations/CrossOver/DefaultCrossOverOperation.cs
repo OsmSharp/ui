@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic.Operations.CrossOver;
-using Tools.Math.AI.Genetic.Solvers;
-using Tools.Math.AI.Genetic;
-using Tools.Math.TSP.Genetic.Solver;
+using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
+using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.TSP.Genetic.Solver;
 
-namespace Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
+namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
     public class DefaultCrossOverOperation :
         ICrossOverOperation<List<int>, GeneticProblem, Fitness>

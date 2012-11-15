@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math;
-using Routing.Core.Graph;
+using OsmSharp.Tools.Math;
+using OsmSharp.Routing.Core.Graph;
 
-namespace Osm.Routing.Data
+namespace OsmSharp.Osm.Routing.Data
 {
     /// <summary>
     /// Basic OSM edge data.

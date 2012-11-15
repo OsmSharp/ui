@@ -20,10 +20,10 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tools.Math.Structures.StringTrees;
-using Tools.Core;
+using OsmSharp.Tools.Math.Structures.StringTrees;
+using OsmSharp.Tools.Core;
 
-namespace Tools.Test
+namespace OsmSharp.Tools.Test
 {
     [TestClass]
     public class StringTreeDictionaryTest

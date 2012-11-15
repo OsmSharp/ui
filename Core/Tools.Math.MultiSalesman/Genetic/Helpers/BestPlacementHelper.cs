@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.AI.Genetic;
+using OsmSharp.Tools.Math.AI.Genetic;
 
-namespace Tools.Math.VRP.MultiSalesman.Genetic.Helpers
+namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers
 {
     /// <summary>
     /// Helper class containing best placement optimisation algorithms.

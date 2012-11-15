@@ -23,23 +23,23 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Osm.Map.Layers.Custom;
-using Osm.Core;
-using Osm.Map.Layers.Tiles;
-using Tools.Math.Geo;
-using Osm.Renderer.Gdi.Targets.UserControlTarget;
+using OsmSharp.Osm.Map.Layers.Custom;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Map.Layers.Tiles;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget;
 using System.IO;
-using Tools.Xml.Gpx;
-using Tools.Xml.Sources;
-using Osm.Map.Layers;
-using Osm.Core.Xml;
-using Osm.UI.WinForms.EditorUserControl.Logic;
+using OsmSharp.Tools.Xml.Gpx;
+using OsmSharp.Tools.Xml.Sources;
+using OsmSharp.Osm.Map.Layers;
+using OsmSharp.Osm.Core.Xml;
+using OsmSharp.Osm.UI.WinForms.EditorUserControl.Logic;
 using System.Globalization;
-using Osm.Map.Elements;
-using Osm.Map;
-using Osm.UI.WinForms.Layers;
+using OsmSharp.Osm.Map.Elements;
+using OsmSharp.Osm.Map;
+using OsmSharp.Osm.UI.WinForms.Layers;
 
-namespace Osm.UI.WinForms.MapEditorUserControl
+namespace OsmSharp.Osm.UI.WinForms.MapEditorUserControl
 {
     public partial class MapEditorUserControl : UserControl
     {
@@ -84,7 +84,7 @@ namespace Osm.UI.WinForms.MapEditorUserControl
         /// <summary>
         /// Returns the current view.
         /// </summary>
-        public Osm.Renderer.View View
+        public OsmSharp.Osm.Renderer.View View
         {
             get
             {

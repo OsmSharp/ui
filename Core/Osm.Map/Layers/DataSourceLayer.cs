@@ -19,17 +19,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Osm.Data;
-using Osm.Interpreter.Features;
-using Osm.Map.Styles;
-using Osm.Map.Elements;
-using Tools.Math.Geo;
-using Osm.Core;
-using Tools.Math.Shapes;
+using OsmSharp.Osm.Data;
+using OsmSharp.Osm.Interpreter.Features;
+using OsmSharp.Osm.Map.Styles;
+using OsmSharp.Osm.Map.Elements;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core;
+using OsmSharp.Tools.Math.Shapes;
 using System.Drawing;
-using Tools.Math.Geo.Factory;
+using OsmSharp.Tools.Math.Geo.Factory;
 
-namespace Osm.Map.Layers
+namespace OsmSharp.Osm.Map.Layers
 {
     /// <summary>
     /// A layer around a data source.
@@ -185,7 +185,7 @@ namespace Osm.Map.Layers
 
             // convert objects to elements using interpreter.
             List<IElement> elements = new List<IElement>();
-            Interpreter.Interpreter interpreter = new Osm.Interpreter.Interpreter();
+            Interpreter.Interpreter interpreter = new OsmSharp.Osm.Interpreter.Interpreter();
             foreach (OsmGeo geo in objects)
             {
                 if (geo is OsmGeo)
@@ -199,7 +199,7 @@ namespace Osm.Map.Layers
                             //ElementDot dot = new ElementDot(
                             //    Color.Red.ToArgb(),
                             //    0.0002f,
-                            //    new Tools.Math.Shapes.ShapeDotF<GeoCoordinate, GeoCoordinateBox>(
+                            //    new OsmSharp.Tools.Math.Shapes.ShapeDotF<GeoCoordinate, GeoCoordinateBox>(
                             //        n.Coordinate));
                             //elements.Add(dot);
                         }

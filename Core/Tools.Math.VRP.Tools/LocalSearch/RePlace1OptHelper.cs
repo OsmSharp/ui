@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Tools.Math.VRP.Core.Routes;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace Tools.Math.VRP.Core.LocalSearch
+namespace OsmSharp.Tools.Math.VRP.Core.LocalSearch
 {
     /// <summary>
     /// Responsible for an local search strategy doing best-placement.
