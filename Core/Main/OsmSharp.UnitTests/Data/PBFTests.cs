@@ -23,7 +23,7 @@ namespace OsmSharp.Osm.UnitTests.Data
         [TestMethod]
         public void TestPBFReaderDefault()
         {
-            this.TestReadPBF("Osm.UnitTests.api.osm.pbf");
+            this.TestReadPBF("OsmSharp.UnitTests.api.osm.pbf");
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace OsmSharp.Osm.UnitTests.Data
         [TestMethod]
         public void TestPBFReaderNoMeta()
         {
-            this.TestReadPBF("Osm.UnitTests.api_omitmetadata_true.osm.pbf");
+            this.TestReadPBF("OsmSharp.UnitTests.api_omitmetadata_true.osm.pbf");
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace OsmSharp.Osm.UnitTests.Data
         [TestMethod]
         public void TestPBFReaderNoCompress()
         {
-            this.TestReadPBF("Osm.UnitTests.api_compress_none.osm.pbf");
+            this.TestReadPBF("OsmSharp.UnitTests.api_compress_none.osm.pbf");
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace OsmSharp.Osm.UnitTests.Data
         [TestMethod]
         public void TestPBFReaderUseDense()
         {
-            this.TestReadPBF("Osm.UnitTests.api_usedense_false.osm.pbf");
+            this.TestReadPBF("OsmSharp.UnitTests.api_usedense_false.osm.pbf");
         }
 
         /// <summary>

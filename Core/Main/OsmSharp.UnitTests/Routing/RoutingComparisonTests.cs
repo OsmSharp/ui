@@ -36,7 +36,7 @@
 //        public OsmSharp.Osm.Data.Raw.XML.OsmSource.OsmDataSource BuildRawDataSource()
 //        {
 //            return new OsmSharp.Osm.Data.Raw.XML.OsmSource.OsmDataSource(
-//                   Assembly.GetExecutingAssembly().GetManifestResourceStream("Osm.UnitTests.test_network.osm"));
+//                   Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
 //        }
 
 //        /// <summary>

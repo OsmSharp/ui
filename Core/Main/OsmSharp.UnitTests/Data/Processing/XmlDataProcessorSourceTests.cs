@@ -20,7 +20,7 @@ namespace OsmSharp.Osm.UnitTests.Data.Processing
         {
             // generate the source.
             XmlDataProcessorSource source = new XmlDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("Osm.UnitTests.api.osm"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.api.osm"));
 
             // pull the data out.
             DataProcessorTargetEmpty target = new DataProcessorTargetEmpty();

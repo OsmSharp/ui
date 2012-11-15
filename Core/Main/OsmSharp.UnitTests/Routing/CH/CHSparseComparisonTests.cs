@@ -34,7 +34,7 @@
 
 //            // load the data.
 //            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-//                Assembly.GetExecutingAssembly().GetManifestResourceStream("Osm.UnitTests.test_network.osm"));
+//                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
 //            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
 //            sorter.RegisterSource(data_processor_source);
 //            CHDataProcessorTarget ch_target = new CHDataProcessorTarget(data);

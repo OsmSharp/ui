@@ -40,7 +40,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
             
             // do the data processing.
             OsmDataSource source = new OsmDataSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("Osm.UnitTests.test_network.osm"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
             return new OsmSharp.Osm.Routing.Data.Source.OsmSourceRouterDataSource(interpreter,
                 tags_index, source);
         }

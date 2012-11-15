@@ -20,7 +20,7 @@ namespace OsmSharp.Osm.UnitTests.Data.Processing
         {
             // generate the source.
             PBFDataProcessorSource source = new PBFDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("Osm.UnitTests.api.osm.pbf"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.api.osm.pbf"));
 
             // pull the data out.
             DataProcessorTargetEmpty target = new DataProcessorTargetEmpty();

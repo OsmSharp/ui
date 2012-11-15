@@ -38,7 +38,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                 data, interpreter, data.TagsIndex);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("Osm.UnitTests.test_network.osm"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
             sorter.RegisterSource(data_processor_source);
             target_data.RegisterSource(sorter);
