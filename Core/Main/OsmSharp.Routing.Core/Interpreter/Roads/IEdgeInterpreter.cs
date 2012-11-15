@@ -1,0 +1,66 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using OsmSharp.Tools.Math.Geo;
+
+namespace OsmSharp.Routing.Core.Interpreter.Roads
+{
+    /// <summary>
+    /// Interpreter for edges in the routable data.
+    /// </summary>
+    public interface IEdgeInterpreter
+    {
+        /// <summary>
+        /// Returns true if in some configuration this edge is traversable.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        bool IsRoutable(IDictionary<string, string> tags);
+
+        /// <summary>
+        /// Returns true if the tags represent a oneway edge, false if oneway reverse and null if none.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        bool? IsOneWay(IDictionary<string, string> tags);
+
+        /// <summary>
+        /// Returns true if the edge with given tags can be traversed by the given vehicle.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <returns></returns>
+        bool CanBeTraversedBy(IDictionary<string, string> tags, VehicleEnum vehicle);
+
+        /// <summary>
+        /// Returns true if the edge is only locally accessible.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        bool IsOnlyLocalAccessible(IDictionary<string, string> tags);
+
+        /// <summary>
+        /// Returns the weight between two points on the given edge.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
+        double Weight(IDictionary<string, string> tags, VehicleEnum vehicle,
+            GeoCoordinate from, GeoCoordinate to);
+
+        /// <summary>
+        /// Returns the name of the edge represented by the tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        string GetName(IDictionary<string, string> tags);
+
+        /// <summary>
+        /// Returns the names of the edge represented by the tags in each available language.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        Dictionary<string, string> GetNamesInAllLanguages(IDictionary<string, string> tags);
+    }
+}
