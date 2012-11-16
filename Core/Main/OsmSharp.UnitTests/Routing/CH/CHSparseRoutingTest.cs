@@ -10,16 +10,19 @@ using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.Router;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Routing.Core.Router.Memory;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Osm.Core;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.Routing;
+using OsmSharp.Routing.Core.Graph.Memory;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH
 {
+    /// <summary>
+    /// Tests the sparse node ordering CH.
+    /// </summary>
     [TestClass]
     public class CHSparseRoutingTest : SimpleRoutingTests<RouterPoint, CHEdgeData>
     {
@@ -28,7 +31,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// </summary>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public override IRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
+        public override IBasicRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
         {
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
@@ -58,7 +61,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <param name="data"></param>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public override IRouter<RouterPoint> BuildRouter(IRouterDataSource<CHEdgeData> data, 
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<CHEdgeData> data, 
             IRoutingInterpreter interpreter)
         {
             return new Router<CHEdgeData>(data, interpreter, new CHRouter(
@@ -141,9 +144,18 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// Test is the raw router can calculate another route.
         /// </summary>
         [TestMethod]
-        public void TestCHShortestResolved1()
+        public void TestCHSparseShortestResolved1()
         {
             this.DoTestShortestResolved1();
+        }
+
+        /// <summary>
+        /// Test is the raw router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHSparseShortestResolved2()
+        {
+            this.DoTestShortestResolved2();
         }
 
         /// <summary>

@@ -24,6 +24,7 @@ using OsmSharp.Routing.CH.Routing;
 using System.Diagnostics;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Graph;
+using OsmSharp.Routing.Core.Graph.DynamicGraph;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {

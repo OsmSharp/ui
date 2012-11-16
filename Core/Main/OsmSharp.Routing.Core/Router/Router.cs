@@ -27,11 +27,11 @@ using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Router;
 using OsmSharp.Routing.Core.Resolving;
 using OsmSharp.Tools.Math.Units.Distance;
-using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.Core.Graph.Path;
 using OsmSharp.Routing.Core.Route;
 using OsmSharp.Routing.Core.Metrics.Time;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
+using OsmSharp.Routing.Core.Graph.DynamicGraph;
 
 namespace OsmSharp.Routing.Core
 {
@@ -44,12 +44,12 @@ namespace OsmSharp.Routing.Core
         /// <summary>
         /// Holds the graph object containing the routable network.
         /// </summary>
-        private IRouterDataSource<EdgeData> _data_graph;
+        private IBasicRouterDataSource<EdgeData> _data_graph;
 
         /// <summary>
         /// Holds the basic router that works on the dynamic graph.
         /// </summary>
-        private IDynamicGraphRouter<EdgeData> _router;
+        private IBasicRouter<EdgeData> _router;
 
         /// <summary>
         /// Interpreter for the routing network.
@@ -61,7 +61,7 @@ namespace OsmSharp.Routing.Core
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
-        public Router(IRouterDataSource<EdgeData> data, IRoutingInterpreter interpreter)
+        public Router(IBasicRouterDataSource<EdgeData> data, IRoutingInterpreter interpreter)
             : this(data, interpreter, new DykstraRouting<EdgeData>(data.TagsIndex))
         {
 
@@ -72,8 +72,8 @@ namespace OsmSharp.Routing.Core
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
-        public Router(IRouterDataSource<EdgeData> graph, IRoutingInterpreter interpreter,
-            IDynamicGraphRouter<EdgeData> router)
+        public Router(IBasicRouterDataSource<EdgeData> graph, IRoutingInterpreter interpreter,
+            IBasicRouter<EdgeData> router)
         {
             _data_graph = graph;
             _interpreter = interpreter;
@@ -567,7 +567,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public RouterPoint Resolve(GeoCoordinate coordinate, IResolveMatcher matcher)
         {
-            SearchClosestResult result = this.SearchClosest(coordinate, matcher); // search the closest routable object.
+            SearchClosestResult result = _router.SearchClosest(_data_graph, coordinate, matcher); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
@@ -626,7 +626,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public GeoCoordinate Search(GeoCoordinate coordinate)
         {
-            SearchClosestResult result = this.SearchClosest(coordinate, null); // search the closest routable object.
+            SearchClosestResult result = _router.SearchClosest(_data_graph, coordinate, null); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
@@ -646,164 +646,6 @@ namespace OsmSharp.Routing.Core
             }
             return null; // no routable object was found closeby.
         }
-
-        #region Search Closest
-
-        /// <summary>
-        /// Searches the data for a point on an edge closest to the given coordinate.
-        /// </summary>
-        /// <param name="coordinate"></param>
-        /// <param name="matcher"></param>
-        private SearchClosestResult SearchClosest(GeoCoordinate coordinate, IResolveMatcher matcher)
-        {
-            // build the search box.
-            double search_box_size = 0.001f;
-            GeoCoordinateBox search_box = new GeoCoordinateBox(new GeoCoordinate(
-                coordinate.Latitude - search_box_size, coordinate.Longitude- search_box_size),
-                                                               new GeoCoordinate(
-                coordinate.Latitude + search_box_size, coordinate.Longitude+ search_box_size));
-
-            // get the arcs from the data source.
-            KeyValuePair<uint, KeyValuePair<uint, EdgeData>>[] arcs = _data_graph.GetArcs(search_box);
-
-            // loop over all.
-            SearchClosestResult closest_with_match = new SearchClosestResult(double.MaxValue, 0);
-            SearchClosestResult closest_without_match = new SearchClosestResult(double.MaxValue, 0);
-            foreach (KeyValuePair<uint, KeyValuePair<uint, EdgeData>> arc in arcs)
-            {
-                // test the two points.
-                float from_latitude, from_longitude;
-                float to_latitude, to_longitude;
-                double distance;
-                if (_data_graph.GetVertex(arc.Key, out from_latitude, out from_longitude) &&
-                    _data_graph.GetVertex(arc.Value.Key, out to_latitude, out to_longitude))
-                { // return the vertex.
-                    GeoCoordinate from_coordinates = new GeoCoordinate(from_latitude, from_longitude);
-                    distance = coordinate.Distance(from_coordinates);
-
-                    if (distance < 0.00001)
-                    { // the distance is smaller than the tolerance value.
-                        closest_without_match = new SearchClosestResult(
-                            distance, arc.Key);
-                        break;
-
-                        // try and match.
-                        //if(matcher.Match(_
-                    }
-
-                    if (distance < closest_without_match.Distance)
-                    { // the distance is smaller.
-                        closest_without_match = new SearchClosestResult(
-                            distance, arc.Key);
-
-                        // try and match.
-                        //if(matcher.Match(_
-                    }
-                    GeoCoordinate to_coordinates = new GeoCoordinate(to_latitude, to_longitude);
-                    distance = coordinate.Distance(to_coordinates);
-
-                    if (distance < closest_without_match.Distance)
-                    { // the distance is smaller.
-                        closest_without_match = new SearchClosestResult(
-                            distance, arc.Key);
-
-                        // try and match.
-                        //if(matcher.Match(_
-                    }
-
-                    if (!arc.Value.Value.IsVirtual)
-                    { // do not resolve on non-physical edges.
-                        // create a line.
-                        double distance_total = from_coordinates.Distance(to_coordinates);
-                        if (distance_total > 0)
-                        { // the from/to are not the same location.
-                            GeoCoordinateLine line = new GeoCoordinateLine(from_coordinates, to_coordinates, true, true);
-                            distance = line.Distance(coordinate);
-
-                            if (distance < closest_without_match.Distance)
-                            { // the distance is smaller.
-                                PointF2D projected_point =
-                                    line.ProjectOn(coordinate);
-
-                                // calculate the position.
-                                if (projected_point != null)
-                                { // calculate the distance
-                                    double distance_point = from_coordinates.Distance(projected_point);
-                                    double position = distance_point / distance_total;
-
-                                    closest_without_match = new SearchClosestResult(
-                                        distance, arc.Key, arc.Value.Key, position);
-
-                                    // try and match.
-                                    //if(matcher.Match(_
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            // return the best result.
-            if (closest_with_match.Distance < double.MaxValue)
-            {
-                return closest_with_match;
-            }
-            return closest_without_match;
-        }
-
-        /// <summary>
-        /// The result the search closest returns.
-        /// </summary>
-        private struct SearchClosestResult
-        {
-            /// <summary>
-            /// The result is located exactly at one vertex.
-            /// </summary>
-            /// <param name="vertex"></param>
-            public SearchClosestResult(double distance, uint vertex)
-                : this()
-            {
-                this.Distance = distance;
-                this.Vertex1 = vertex;
-                this.Position = 0;
-                this.Vertex2 = null;
-            }
-
-            /// <summary>
-            /// The result is located between two other vertices.
-            /// </summary>
-            /// <param name="vertex"></param>
-            public SearchClosestResult(double distance, uint vertex1, uint vertex2, double position)
-                : this()
-            {
-                this.Distance = distance;
-                this.Vertex1 = vertex1;
-                this.Vertex2 = vertex2;
-                this.Position = position;
-            }
-
-            /// <summary>
-            /// The first vertex.
-            /// </summary>
-            public uint? Vertex1 { get; private set; }
-
-            /// <summary>
-            /// The second vertex.
-            /// </summary>
-            public uint? Vertex2 { get; private set; }
-
-            /// <summary>
-            /// The position between vertex1 and vertex2 (0=vertex1, 1=vertex2).
-            /// </summary>
-            public double Position { get; private set; }
-
-            /// <summary>
-            /// The distance from the point being resolved.
-            /// </summary>
-            public double Distance { get; private set; }
-        }
-
-        #endregion
 
         #region Resolved Points Graph
 

@@ -51,6 +51,8 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>..\Output\OsmSharp.UnitTests.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\Output\</OutputPath>
@@ -130,6 +132,14 @@
     <Compile Include="Routing\RoutingTests.cs" />
     <Compile Include="Routing\RoutingInterpreterTests.cs" />
     <Compile Include="Tiles\TilesTests.cs" />
+    <Compile Include="Tools\GpxXmlTest.cs" />
+    <Compile Include="Tools\KmlXmlTest.cs" />
+    <Compile Include="Tools\LambertProjectionTest.cs" />
+    <Compile Include="Tools\MathTest.cs" />
+    <Compile Include="Tools\NomatimXmlTest.cs" />
+    <Compile Include="Tools\SortedSetTest.cs" />
+    <Compile Include="Tools\StringTableTests.cs" />
+    <Compile Include="Tools\StringTreeDictionaryTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="test_network.osm" />
@@ -143,13 +153,20 @@
   <ItemGroup>
     <Content Include="testfiles.txt" />
     <Content Include="test_network.png" />
+    <EmbeddedResource Include="test_search.v1.xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="api.osm.pbf" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="test_network_big.osm" />
+    <EmbeddedResource Include="test_network_real1.osm" />
     <None Include="test_network.svg" />
+    <EmbeddedResource Include="test.v1.0.gpx" />
+    <EmbeddedResource Include="test.v1.1.gpx" />
+    <EmbeddedResource Include="test.v2.0.kml" />
+    <EmbeddedResource Include="test.v2.0.response.kml" />
+    <EmbeddedResource Include="test.v2.1.kml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm.Core\OsmSharp.Osm.Core.csproj">
@@ -203,6 +220,18 @@
     <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
       <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
       <Name>OsmSharp.Tools.Math</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Tools.Xml.Gpx\OsmSharp.Tools.Xml.Gpx.csproj">
+      <Project>{0EB1E0F0-0A18-4C48-820E-E82CB3AC3F72}</Project>
+      <Name>OsmSharp.Tools.Xml.Gpx</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Tools.Xml.Kml\OsmSharp.Tools.Xml.Kml.csproj">
+      <Project>{4ED3E626-ECE5-430E-9938-167CCDB70995}</Project>
+      <Name>OsmSharp.Tools.Xml.Kml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Tools.Xml.Nomatim\OsmSharp.Tools.Xml.Nomatim.csproj">
+      <Project>{10DE529F-7AFD-4EE9-B748-3F34B03E35F9}</Project>
+      <Name>OsmSharp.Tools.Xml.Nomatim</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Tools.Xml\OsmSharp.Tools.Xml.csproj">
       <Project>{550F62F8-B62F-4E77-AF12-ACFD9378B9A0}</Project>

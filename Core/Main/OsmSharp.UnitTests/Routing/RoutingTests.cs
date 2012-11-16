@@ -32,13 +32,13 @@ using OsmSharp.Routing.Core.Constraints.Cars;
 using OsmSharp.Routing.Core.Router;
 using OsmSharp.Osm.Routing.Data;
 using OsmSharp.Routing.Core.Graph;
+using OsmSharp.Routing.Core.Graph.DynamicGraph;
 
 namespace OsmSharp.Osm.UnitTests.Routing
 {
     /// <summary>
-    /// Base class with tests around IRouter<ResolvedType> objects.
+    /// Base class with tests around IRouter objects.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
     public abstract class SimpleRoutingTests<ResolvedType, EdgeData>
         where EdgeData : IDynamicGraphEdgeData
         where ResolvedType : IRouterPoint
@@ -49,14 +49,14 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// <param name="data"></param>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public abstract IRouter<ResolvedType> BuildRouter(IRouterDataSource<EdgeData> data,
+        public abstract IRouter<ResolvedType> BuildRouter(IBasicRouterDataSource<EdgeData> data,
             IRoutingInterpreter interpreter);
 
         /// <summary>
         /// Builds the data.
         /// </summary>
         /// <returns></returns>
-        public abstract IRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter);
+        public abstract IBasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter);
 
         /// <summary>
         /// Tests that a router actually finds the shortest route.
@@ -64,7 +64,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestShortestDefault()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
@@ -107,7 +107,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestResolvedTags()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
@@ -143,10 +143,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestArcTags()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
-            float latitude, longitude;
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             source.Tags.Add(new KeyValuePair<string, string>("name", "source"));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
@@ -172,7 +171,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestShortest1()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
@@ -189,7 +188,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestShortest2()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
@@ -206,7 +205,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestShortest3()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
@@ -223,7 +222,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestShortest4()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
@@ -240,7 +239,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestShortest5()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
@@ -257,7 +256,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestShortestResolved1()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578153, 3.7193937));
@@ -268,6 +267,23 @@ namespace OsmSharp.Osm.UnitTests.Routing
             Assert.AreEqual(10, route.Entries.Length);
         }
 
+        /// <summary>
+        /// Tests that a router actually finds the shortest route.
+        /// </summary>
+        protected void DoTestShortestResolved2()
+        {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IRouter<ResolvedType> router = this.BuildRouter(
+                data, interpreter);
+            ResolvedType source = router.Resolve(new GeoCoordinate(51.0581843, 3.7201209)); // between 2 - 3
+            ResolvedType target = router.Resolve(new GeoCoordinate(51.0581484, 3.7194957)); // between 9 - 8
+
+            OsmSharpRoute route = router.Calculate(source, target);
+            Assert.IsNotNull(route);
+            Assert.AreEqual(5, route.Entries.Length);
+        }
+
 
         /// <summary>
         /// Tests if the many-to-many weights are the same as the point-to-point weights.
@@ -275,7 +291,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestManyToMany1()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
             ResolvedType[] resolved_points = new ResolvedType[3];
@@ -303,7 +319,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestConnectivity1()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
             ResolvedType[] resolved_points = new ResolvedType[3];
@@ -330,7 +346,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         protected void DoTestResolveAllNodes()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter);
             for (int idx = 1; idx < data.VertexCount; idx++)

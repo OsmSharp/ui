@@ -277,17 +277,6 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
         }
 
         /// <summary>
-        /// Returns the name of this document.
-        /// </summary>
-        public string Name
-        {
-            get 
-            {
-                return _document.Name;
-            }
-        }
-
-        /// <summary>
         /// Returns the id of this data source.
         /// </summary>
         public Guid Id

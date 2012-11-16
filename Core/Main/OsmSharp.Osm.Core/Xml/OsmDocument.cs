@@ -51,17 +51,6 @@ namespace OsmSharp.Osm.Core.Xml
         }
 
         /// <summary>
-        /// Returns the name of this osm document.
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return _source.Name;
-            }
-        }
-
-        /// <summary>
         /// Returns the readonly flag.
         /// </summary>
         public bool IsReadOnly

@@ -34,7 +34,6 @@ using OsmSharp.Osm.Data.XML.Raw.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Routing.Core.Router.Memory;
 using OsmSharp.Routing.Core;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math;

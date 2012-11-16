@@ -8,6 +8,7 @@ using OsmSharp.Tools.Math;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Graph;
 using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Core.Graph.DynamicGraph;
 
 namespace OsmSharp.Osm.Routing.Data.Processing
 {

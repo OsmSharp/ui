@@ -25,6 +25,9 @@ using OsmSharp.Osm.Core.Factory;
 
 namespace OsmSharp.Osm.UnitTests.Data
 {
+    /// <summary>
+    /// Contains some regression tests on nodes.
+    /// </summary>
     [TestClass]
     public class NodeTests
     {

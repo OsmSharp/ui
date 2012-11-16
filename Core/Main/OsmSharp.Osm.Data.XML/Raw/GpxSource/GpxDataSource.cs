@@ -159,7 +159,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
 
                         Relation relation_v1_1 = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
 
-                        relation_v1_1.Tags.Add("name", _document.Name);
+                        //relation_v1_1.Tags.Add("name", _document.Name);
                         relation_v1_1.Tags.Add("description", "v1.1");
                         relation_v1_1.Tags.Add("gpx_type", "gpxType");
 
@@ -400,17 +400,6 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
                     }
                 }
                 return _bb;
-            }
-        }
-
-        /// <summary>
-        /// Returns the name of this datasource.
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return _document.Name;
             }
         }
 

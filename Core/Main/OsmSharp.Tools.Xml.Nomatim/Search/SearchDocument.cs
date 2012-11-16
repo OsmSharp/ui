@@ -51,16 +51,16 @@ namespace OsmSharp.Tools.Xml.Nomatim.Search
             _version = SearchVersion.Unknown;
         }
 
-        /// <summary>
-        /// Returns the name of this document.
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return _source.Name;
-            }
-        }
+        ///// <summary>
+        ///// Returns the name of this document.
+        ///// </summary>
+        //public string Name
+        //{
+        //    get
+        //    {
+        //        return _source.Name;
+        //    }
+        //}
 
         /// <summary>
         /// Returns the readonly flag.

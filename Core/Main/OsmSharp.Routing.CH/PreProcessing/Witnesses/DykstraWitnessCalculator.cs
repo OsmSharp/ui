@@ -22,6 +22,7 @@ using System.Text;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Core.Graph;
 using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Routing.Core.Graph.DynamicGraph;
 
 namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
 {

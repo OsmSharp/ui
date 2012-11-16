@@ -24,6 +24,9 @@ using OsmSharp.Routing.Core.Route;
 
 namespace OsmSharp.Osm.UnitTests
 {
+    /// <summary>
+    /// Does some unittesting on the OsmSharpRoute data format.
+    /// </summary>
     [TestClass]
     public class OsmSharpRouteTests
     {

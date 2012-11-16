@@ -15,6 +15,9 @@ namespace OsmSharp.Osm.UnitTests.Data.Processing
     [TestClass]
     public class PBFDataProcessorSourceTests
     {
+        /// <summary>
+        /// A regression test on resetting a PBF data processor.
+        /// </summary>
         [TestMethod]
         public void PBFDataProcessorSourceReset()
         {

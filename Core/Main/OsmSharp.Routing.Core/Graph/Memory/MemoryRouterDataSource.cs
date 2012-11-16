@@ -5,16 +5,18 @@ using System.Text;
 using OsmSharp.Routing.Core.Graph;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Structures;
-using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Tools.Math;
+using OsmSharp.Routing.Core.Graph.DynamicGraph;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.Memory;
+using OsmSharp.Routing.Core.Router;
 
-namespace OsmSharp.Routing.Core.Router.Memory
+namespace OsmSharp.Routing.Core.Graph.Memory
 {
     /// <summary>
     /// A memory data source.
     /// </summary>
     /// <typeparam name="EdgeData"></typeparam>
-    public class MemoryRouterDataSource<EdgeData> : IRouterDataSource<EdgeData>, IDynamicGraph<EdgeData>
+    public class MemoryRouterDataSource<EdgeData> : IBasicRouterDataSource<EdgeData>, IDynamicGraph<EdgeData>
         where EdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
@@ -142,8 +144,8 @@ namespace OsmSharp.Routing.Core.Router.Memory
         public ITagsIndex TagsIndex
         {
             get
-            { 
-                return _tags_index; 
+            {
+                return _tags_index;
             }
         }
 

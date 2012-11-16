@@ -20,39 +20,49 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Routing.Core.Graph
+namespace OsmSharp.Routing.Core.Graph.DynamicGraph
 {
     /// <summary>
-    /// Abstracts an graph implementation. 
+    /// Abstracts edge information.
     /// </summary>
-    public interface IDynamicGraphReadOnly<EdgeData>
-        where EdgeData : IDynamicGraphEdgeData
+    public interface IDynamicGraphEdgeData
     {
         /// <summary>
-        /// Gets an existing vertex.
+        /// Returns true if the edge can be followed only in the foward direction.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
-        bool GetVertex(uint id, out float latitude, out float longitude);
+        bool Forward
+        {
+            get;
+        }
 
         /// <summary>
-        /// Returns an enumerable of all vertices.
+        /// Returns true if the edge can be followed only in the backward direction.
         /// </summary>
-        /// <returns></returns>
-        IEnumerable<uint> GetVertices();
+        bool Backward
+        {
+            get;
+        }
 
         /// <summary>
-        /// Returns all arcs for the given vertex.
+        /// Returns the weight of this edge.
         /// </summary>
-        /// <param name="vertex"></param>
-        /// <returns></returns>
-        KeyValuePair<uint, EdgeData>[] GetArcs(uint vertex);
+        double Weight
+        {
+            get;
+        }
 
         /// <summary>
-        /// Returns the total number of vertices.
+        /// Returns the tags identifier.
         /// </summary>
-        uint VertexCount
+        uint Tags
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns true if the edge is virtual (it does not exist in the orginal graph).
+        /// </summary>
+        bool IsVirtual
         {
             get;
         }

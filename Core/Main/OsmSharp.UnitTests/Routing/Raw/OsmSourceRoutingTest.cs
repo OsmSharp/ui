@@ -14,6 +14,9 @@ using OsmSharp.Routing.Core.Interpreter;
 
 namespace OsmSharp.Osm.UnitTests.Routing.Raw
 {
+    /// <summary>
+    /// Does some tests on an OsmSource routing implementation.
+    /// </summary>
     [TestClass]
     public class OsmSourceRoutingTests : SimpleRoutingTests<RouterPoint, OsmEdgeData>
     {
@@ -21,7 +24,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override IRouter<RouterPoint> BuildRouter(IRouterDataSource<OsmEdgeData> data, 
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<OsmEdgeData> data, 
             IRoutingInterpreter interpreter)
         {
             // initialize the router.
@@ -34,7 +37,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// </summary>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public override IRouterDataSource<OsmEdgeData> BuildData(IRoutingInterpreter interpreter)
+        public override IBasicRouterDataSource<OsmEdgeData> BuildData(IRoutingInterpreter interpreter)
         {
             OsmTagsIndex tags_index = new OsmTagsIndex();
             

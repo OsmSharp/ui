@@ -307,14 +307,6 @@ namespace OsmSharp.Osm.Data.Cache
             }
         }
 
-        public string Name
-        {
-            get 
-            { 
-                return string.Format("Cached source for {0}",_source.Name); 
-            }
-        }
-
         public Guid Id
         {
             get 

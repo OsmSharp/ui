@@ -1317,17 +1317,6 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         }
 
         /// <summary>
-        /// Returns the name of this datasource.
-        /// </summary>
-        public string Name
-        {
-            get 
-            {
-                return _document.Name;
-            }
-        }
-
-        /// <summary>
         /// Returns the unique guid for this source.
         /// </summary>
         public Guid Id

@@ -15,6 +15,9 @@ namespace OsmSharp.Osm.UnitTests.Data.Processing
     [TestClass]
     public class XmlDataProcessorSourceTests
     {
+        /// <summary>
+        /// A regression test in resetting and XML data source.
+        /// </summary>
         [TestMethod]
         public void XmlDataProcessorSourceReset()
         {

@@ -19,36 +19,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Routing.Core.Graph;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math;
+using OsmSharp.Routing.Core.Graph.DynamicGraph;
 
-namespace OsmSharp.Routing.Core.Graph
+namespace OsmSharp.Routing.Core.Router
 {
     /// <summary>
-    /// Abstracts a graph implementation.
+    /// Abstracts a data source of a router that is a dynamic graph with an extra lookup function.
     /// </summary>
-    public interface IDynamicGraph<EdgeData> : IDynamicGraphReadOnly<EdgeData>
+    /// <typeparam name="EdgeData"></typeparam>
+    public interface IBasicRouterDataSource<EdgeData> : IDynamicGraphReadOnly<EdgeData>
         where EdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
-        /// Adds a vertex.
+        /// Returns a list of edges inside or intersecting with the given bounding box.
         /// </summary>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
+        /// <param name="box"></param>
         /// <returns></returns>
-        uint AddVertex(float latitude, float longitude);
+        KeyValuePair<uint, KeyValuePair<uint, EdgeData>>[] GetArcs(GeoCoordinateBox box);
 
         /// <summary>
-        /// Adds an arc with associated data.
+        /// Returns the tags index.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="data"></param>
-        void AddArc(uint from, uint to, EdgeData data);
-
-        /// <summary>
-        /// Delete all arcs arc between two vertices.
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        void DeleteArc(uint from, uint to);
+        ITagsIndex TagsIndex
+        {
+            get;
+        }
     }
 }

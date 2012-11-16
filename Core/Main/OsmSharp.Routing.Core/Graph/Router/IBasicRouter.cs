@@ -22,13 +22,17 @@ using System.Text;
 using OsmSharp.Routing.Core.Graph.Path;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Tools.Math;
+using OsmSharp.Routing.Core.Graph.DynamicGraph;
+using OsmSharp.Routing.Core.Router;
+using OsmSharp.Routing.Core.Resolving;
+using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Routing.Core.Graph.Router
 {
     /// <summary>
     /// Abstract a router that works on a dynamic graph.
     /// </summary>
-    public interface IDynamicGraphRouter<EdgeData>
+    public interface IBasicRouter<EdgeData>
         where EdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
@@ -116,5 +120,67 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <returns></returns>
         bool CheckConnectivity(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
             PathSegmentVisitList source, double weight);
+
+        /// <summary>
+        /// Searches for the closest routable point.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="coordinate"></param>
+        /// <param name="matcher"></param>
+        /// <returns></returns>
+        SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph,
+            GeoCoordinate coordinate, IResolveMatcher matcher);
+    }
+
+    /// <summary>
+    /// The result the search closest returns.
+    /// </summary>
+    public struct SearchClosestResult
+    {
+        /// <summary>
+        /// The result is located exactly at one vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        public SearchClosestResult(double distance, uint vertex)
+            : this()
+        {
+            this.Distance = distance;
+            this.Vertex1 = vertex;
+            this.Position = 0;
+            this.Vertex2 = null;
         }
+
+        /// <summary>
+        /// The result is located between two other vertices.
+        /// </summary>
+        /// <param name="vertex"></param>
+        public SearchClosestResult(double distance, uint vertex1, uint vertex2, double position)
+            : this()
+        {
+            this.Distance = distance;
+            this.Vertex1 = vertex1;
+            this.Vertex2 = vertex2;
+            this.Position = position;
+        }
+
+        /// <summary>
+        /// The first vertex.
+        /// </summary>
+        public uint? Vertex1 { get; private set; }
+
+        /// <summary>
+        /// The second vertex.
+        /// </summary>
+        public uint? Vertex2 { get; private set; }
+
+        /// <summary>
+        /// The position between vertex1 and vertex2 (0=vertex1, 1=vertex2).
+        /// </summary>
+        public double Position { get; private set; }
+
+        /// <summary>
+        /// The distance from the point being resolved.
+        /// </summary>
+        public double Distance { get; private set; }
+    }
 }

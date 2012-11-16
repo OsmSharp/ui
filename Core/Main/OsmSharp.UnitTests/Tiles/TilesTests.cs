@@ -8,9 +8,15 @@ using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Osm.UnitTests.Tiles
 {
+    /// <summary>
+    /// Does some tests on the tile calculations.
+    /// </summary>
     [TestClass]
     public class TilesTests
     {
+        /// <summary>
+        /// Tests creating a tile.
+        /// </summary>
         [TestMethod]
         public void TestTileCreation()
         {
@@ -24,6 +30,9 @@ namespace OsmSharp.Osm.UnitTests.Tiles
             Assert.AreEqual(tile.Zoom, tile.Zoom);
         }
 
+        /// <summary>
+        /// Tests a tile box.
+        /// </summary>
         [TestMethod]
         public void TestTileBox()
         {
@@ -45,7 +54,9 @@ namespace OsmSharp.Osm.UnitTests.Tiles
             }
         }
 
-
+        /// <summary>
+        /// Tests a tile range enumeration.
+        /// </summary>
         [TestMethod]
         public void TestTileRangeEnumerator()
         {

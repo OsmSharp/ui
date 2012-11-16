@@ -165,6 +165,7 @@
     <Compile Include="ManyToMany\ManyToManyRawTests.cs" />
     <Compile Include="ManyToMany\ManyToManyTests.cs" />
     <Compile Include="PBF\PBFTest.cs" />
+    <Compile Include="Point2Point\Point2PointCHTests.cs" />
     <Compile Include="Point2Point\Point2PointExecution.cs" />
     <Compile Include="Point2Point\Point2PointRawTests.cs" />
     <Compile Include="Point2Point\Point2PointTest.cs" />

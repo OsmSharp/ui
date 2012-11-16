@@ -29,16 +29,19 @@ using System.Reflection;
 using OsmSharp.Osm.Core.Xml;
 using System.Xml;
 using OsmSharp.Osm.Routing.Interpreter;
-using OsmSharp.Routing.Core.Router.Memory;
 using OsmSharp.Osm.Routing.Data;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Core.Router;
 using OsmSharp.Osm.Core;
+using OsmSharp.Routing.Core.Graph.Memory;
 
 namespace OsmSharp.Osm.UnitTests.Routing.Raw
 {
+    /// <summary>
+    /// Does some raw routing tests.
+    /// </summary>
     [TestClass]
     public class RawRoutingTests : SimpleRoutingTests<RouterPoint, OsmEdgeData>
     {
@@ -46,7 +49,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override IRouter<RouterPoint> BuildRouter(IRouterDataSource<OsmEdgeData> data, 
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<OsmEdgeData> data, 
             IRoutingInterpreter interpreter)
         {
             // initialize the router.
@@ -59,7 +62,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// </summary>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public override IRouterDataSource<OsmEdgeData> BuildData(IRoutingInterpreter interpreter)
+        public override IBasicRouterDataSource<OsmEdgeData> BuildData(IRoutingInterpreter interpreter)
         {
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
@@ -157,6 +160,15 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         public void TestRawShortestResolved1()
         {
             this.DoTestShortestResolved1();
+        }
+
+        /// <summary>
+        /// Test is the raw router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestRawShortestResolved2()
+        {
+            this.DoTestShortestResolved2();
         }
 
         /// <summary>

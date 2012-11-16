@@ -41,11 +41,6 @@ namespace OsmSharp.Osm.Data
         GeoCoordinateBox BoundingBox { get; }
 
         /// <summary>
-        /// The name of this datasource.
-        /// </summary>
-        string Name { get; }
-
-        /// <summary>
         /// The unique id for this datasource.
         /// </summary>
         Guid Id { get; }

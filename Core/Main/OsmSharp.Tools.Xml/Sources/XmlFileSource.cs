@@ -32,7 +32,7 @@ namespace OsmSharp.Tools.Xml.Sources
         /// <summary>
         /// The reference to the file.
         /// </summary>
-        private FileInfo _file;
+        private Stream _stream;
 
         /// <summary>
         /// Creates a new xml file source.
@@ -40,7 +40,7 @@ namespace OsmSharp.Tools.Xml.Sources
         /// <param name="filename"></param>
         public XmlFileSource(string filename)
         {
-            _file = new FileInfo(filename);
+            _stream = (new FileInfo(filename)).OpenRead();
         }
 
         /// <summary>
@@ -49,7 +49,16 @@ namespace OsmSharp.Tools.Xml.Sources
         /// <param name="file"></param>
         public XmlFileSource(FileInfo file)
         {
-            _file = file;
+            _stream = file.OpenRead();
+        }
+
+        /// <summary>
+        /// Creates a new xml file source.
+        /// </summary>
+        /// <param name="file"></param>
+        public XmlFileSource(Stream stream)
+        {
+            _stream = stream;
         }
 
         #region IXmlSource Members
@@ -59,7 +68,8 @@ namespace OsmSharp.Tools.Xml.Sources
         /// </summary>
         public XmlReader GetReader()
         {
-            return XmlReader.Create(_file.OpenRead());
+            _stream.Seek(0, SeekOrigin.Begin);
+            return XmlReader.Create(_stream);
         }
 
         /// <summary>
@@ -77,11 +87,11 @@ namespace OsmSharp.Tools.Xml.Sources
             settings.NewLineChars  = Environment.NewLine;
             settings.NewLineHandling = NewLineHandling.Entitize;
             settings.OmitXmlDeclaration = true;
-            if (!_file.Exists)
-            {
-                return XmlWriter.Create(_file.FullName,settings);
-            }
-            return XmlWriter.Create(_file.FullName, settings);
+            //if (!_stream.Exists)
+            //{
+                return XmlWriter.Create(_stream, settings);
+            //}
+            //return XmlWriter.Create(_stream.FullName, settings);
         }
 
         /// <summary>
@@ -91,7 +101,7 @@ namespace OsmSharp.Tools.Xml.Sources
         {
             get
             {
-                if (_file.Exists && _file.IsReadOnly)
+                if (!_stream.CanWrite)
                 {
                     return true;
                 }
@@ -106,23 +116,7 @@ namespace OsmSharp.Tools.Xml.Sources
         {
             get
             {
-                _file.Refresh();
-                if (_file.Exists)
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Returns the name of the file source.
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return _file.Name;
+                return _stream.Length > 1;
             }
         }
 
@@ -131,7 +125,7 @@ namespace OsmSharp.Tools.Xml.Sources
         /// </summary>
         public void Close()
         {
-            _file = null;
+            _stream = null;
         }
 
         #endregion

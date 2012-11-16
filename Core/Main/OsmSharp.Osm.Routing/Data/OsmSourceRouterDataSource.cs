@@ -5,7 +5,6 @@ using System.Text;
 using OsmSharp.Osm.Data;
 using OsmSharp.Routing.Core.Router;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Routing.Core.Router.Memory;
 using OsmSharp.Tools.Math;
 using OsmSharp.Osm.Core;
 using OsmSharp.Routing.Core.Interpreter.Roads;
@@ -13,13 +12,14 @@ using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Osm.Data.Core.Processor.ListSource;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Routing.Core.Graph.Memory;
 
 namespace OsmSharp.Osm.Routing.Data.Source
 {
     /// <summary>
     /// A Dynamic graph with extended possibilities to allow resolving points.
     /// </summary>
-    public class OsmSourceRouterDataSource : IRouterDataSource<OsmEdgeData>
+    public class OsmSourceRouterDataSource : IBasicRouterDataSource<OsmEdgeData>
     {
         /// <summary>
         /// Holds the data source.

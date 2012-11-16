@@ -20,8 +20,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Routing", "Routing", "{F08A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.UnitTests", "OsmSharp.UnitTests\OsmSharp.UnitTests.csproj", "{73BE366F-133A-4C7B-8775-6FA3E7C8452F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Tools.Test", "OsmSharp.Tools.Test\OsmSharp.Tools.Test.csproj", "{1A562B67-40F2-4373-B294-5D956055A2A2}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Osm.Core", "OsmSharp.Osm.Core\OsmSharp.Osm.Core.csproj", "{249DCEC1-615D-40AA-93FF-BCE2178DFF83}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Osm.Data.Core", "OsmSharp.Osm.Data.Core\OsmSharp.Osm.Data.Core.csproj", "{5BC09D7C-5226-4233-BF54-27BFD838F8F8}"
@@ -100,7 +98,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Osm.UI.WinForms.Te
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 42
+		SccNumberOfProjects = 41
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs22
 		SccLocalPath0 = .
@@ -236,32 +234,29 @@ Global
 		SccProjectTopLevelParentUniqueName34 = OsmSharp.sln
 		SccProjectName34 = OsmSharp.Tools.Math
 		SccLocalPath34 = OsmSharp.Tools.Math
-		SccProjectUniqueName35 = OsmSharp.Tools.Test\\OsmSharp.Tools.Test.csproj
-		SccProjectName35 = OsmSharp.Tools.Test
-		SccLocalPath35 = OsmSharp.Tools.Test
-		SccProjectUniqueName36 = OsmSharp.Tools.TSPLIB\\OsmSharp.Tools.TSPLIB.csproj
+		SccProjectUniqueName35 = OsmSharp.Tools.TSPLIB\\OsmSharp.Tools.TSPLIB.csproj
+		SccProjectTopLevelParentUniqueName35 = OsmSharp.sln
+		SccProjectName35 = OsmSharp.Tools.TSPLIB
+		SccLocalPath35 = OsmSharp.Tools.TSPLIB
+		SccProjectUniqueName36 = OsmSharp.Tools.Xml.Gpx\\OsmSharp.Tools.Xml.Gpx.csproj
 		SccProjectTopLevelParentUniqueName36 = OsmSharp.sln
-		SccProjectName36 = OsmSharp.Tools.TSPLIB
-		SccLocalPath36 = OsmSharp.Tools.TSPLIB
-		SccProjectUniqueName37 = OsmSharp.Tools.Xml.Gpx\\OsmSharp.Tools.Xml.Gpx.csproj
+		SccProjectName36 = OsmSharp.Tools.Xml.Gpx
+		SccLocalPath36 = OsmSharp.Tools.Xml.Gpx
+		SccProjectUniqueName37 = OsmSharp.Tools.Xml.Kml\\OsmSharp.Tools.Xml.Kml.csproj
 		SccProjectTopLevelParentUniqueName37 = OsmSharp.sln
-		SccProjectName37 = OsmSharp.Tools.Xml.Gpx
-		SccLocalPath37 = OsmSharp.Tools.Xml.Gpx
-		SccProjectUniqueName38 = OsmSharp.Tools.Xml.Kml\\OsmSharp.Tools.Xml.Kml.csproj
+		SccProjectName37 = OsmSharp.Tools.Xml.Kml
+		SccLocalPath37 = OsmSharp.Tools.Xml.Kml
+		SccProjectUniqueName38 = OsmSharp.Tools.Xml.Nomatim\\OsmSharp.Tools.Xml.Nomatim.csproj
 		SccProjectTopLevelParentUniqueName38 = OsmSharp.sln
-		SccProjectName38 = OsmSharp.Tools.Xml.Kml
-		SccLocalPath38 = OsmSharp.Tools.Xml.Kml
-		SccProjectUniqueName39 = OsmSharp.Tools.Xml.Nomatim\\OsmSharp.Tools.Xml.Nomatim.csproj
+		SccProjectName38 = OsmSharp.Tools.Xml.Nomatim
+		SccLocalPath38 = OsmSharp.Tools.Xml.Nomatim
+		SccProjectUniqueName39 = OsmSharp.Tools.Xml\\OsmSharp.Tools.Xml.csproj
 		SccProjectTopLevelParentUniqueName39 = OsmSharp.sln
-		SccProjectName39 = OsmSharp.Tools.Xml.Nomatim
-		SccLocalPath39 = OsmSharp.Tools.Xml.Nomatim
-		SccProjectUniqueName40 = OsmSharp.Tools.Xml\\OsmSharp.Tools.Xml.csproj
-		SccProjectTopLevelParentUniqueName40 = OsmSharp.sln
-		SccProjectName40 = OsmSharp.Tools.Xml
-		SccLocalPath40 = OsmSharp.Tools.Xml
-		SccProjectUniqueName41 = OsmSharp.UnitTests\\OsmSharp.UnitTests.csproj
-		SccProjectName41 = OsmSharp.UnitTests
-		SccLocalPath41 = OsmSharp.UnitTests
+		SccProjectName39 = OsmSharp.Tools.Xml
+		SccLocalPath39 = OsmSharp.Tools.Xml
+		SccProjectUniqueName40 = OsmSharp.UnitTests\\OsmSharp.UnitTests.csproj
+		SccProjectName40 = OsmSharp.UnitTests
+		SccLocalPath40 = OsmSharp.UnitTests
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = OsmSharp.vsmdi
@@ -293,18 +288,6 @@ Global
 		{73BE366F-133A-4C7B-8775-6FA3E7C8452F}.Release|x64.Build.0 = Release|x64
 		{73BE366F-133A-4C7B-8775-6FA3E7C8452F}.Release|x86.ActiveCfg = Release|x86
 		{73BE366F-133A-4C7B-8775-6FA3E7C8452F}.Release|x86.Build.0 = Release|x86
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Debug|x64.ActiveCfg = Debug|x64
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Debug|x64.Build.0 = Debug|x64
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Debug|x86.ActiveCfg = Debug|x86
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Debug|x86.Build.0 = Debug|x86
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Release|x64.ActiveCfg = Release|x64
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Release|x64.Build.0 = Release|x64
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Release|x86.ActiveCfg = Release|x86
-		{1A562B67-40F2-4373-B294-5D956055A2A2}.Release|x86.Build.0 = Release|x86
 		{249DCEC1-615D-40AA-93FF-BCE2178DFF83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{249DCEC1-615D-40AA-93FF-BCE2178DFF83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{249DCEC1-615D-40AA-93FF-BCE2178DFF83}.Debug|x64.ActiveCfg = Debug|x64

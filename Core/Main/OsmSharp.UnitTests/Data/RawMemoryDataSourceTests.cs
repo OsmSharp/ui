@@ -26,6 +26,9 @@ using OsmSharp.Osm.Core;
 
 namespace OsmSharp.Osm.UnitTests
 {
+    /// <summary>
+    /// Does ome raw data memory tests.
+    /// </summary>
     [TestClass]
     public class RawMemoryDataSourceTests
     {

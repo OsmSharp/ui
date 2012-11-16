@@ -7,7 +7,6 @@ using OsmSharp.Routing.Core.Router;
 using System.IO;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Osm.Core;
-using OsmSharp.Routing.Core.Router.Memory;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
@@ -15,12 +14,13 @@ using OsmSharp.Routing.Core;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
+using OsmSharp.Routing.Core.Graph.Memory;
 
 namespace OsmSharp.Osm.Routing.Test.Point2Point
 {
     class Point2PointRawTests : Point2PointTest<OsmEdgeData>
     {
-        public override IRouterDataSource<OsmEdgeData> BuildData(Stream data_stream, bool pbf,
+        public override IBasicRouterDataSource<OsmEdgeData> BuildData(Stream data_stream, bool pbf,
             IRoutingInterpreter interpreter, GeoCoordinateBox box)
         {
             OsmTagsIndex tags_index = new OsmTagsIndex();
@@ -51,7 +51,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             return osm_data;
         }
 
-        public override IRouter<RouterPoint> BuildRouter(IRouterDataSource<OsmEdgeData> data, 
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<OsmEdgeData> data, 
             IRoutingInterpreter interpreter)
         {
             return new Router<OsmEdgeData>(data, interpreter);

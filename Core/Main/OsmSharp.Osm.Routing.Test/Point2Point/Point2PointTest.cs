@@ -34,6 +34,7 @@ using OsmSharp.Osm.Core;
 using OsmSharp.Osm.Routing.Interpreter;
 using System.Reflection;
 using System.Diagnostics;
+using OsmSharp.Routing.Core.Graph.DynamicGraph;
 
 namespace OsmSharp.Osm.Routing.Test.Point2Point
 {
@@ -47,18 +48,24 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// <param name="test_count"></param>
         public void ExecuteTest(string name, int test_count)
         {
-            string xml_embedded = string.Format("Osm.Routing.Test.TestData.{0}.osm", name);
+            string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
 
             this.ExecuteTest(name, Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded), false, test_count);
         }
 
-
+        /// <summary>
+        /// Executes some general random query performance evaluation(s).
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="data_stream"></param>
+        /// <param name="pbf"></param>
+        /// <param name="test_count"></param>
         public void ExecuteTest(string name, Stream data_stream, bool pbf, int test_count)
         {
             OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Test {0} -> {1}x", name, test_count);
 
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IRouterDataSource<EdgeData> data = this.BuildData(data_stream, pbf,
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(data_stream, pbf,
                 interpreter, null);
 
             // build router;
@@ -84,8 +91,11 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                 RouterPoint second_resolved = router.Resolve(
                     new GeoCoordinate(latitude_second, longitude_second));
 
-                if (router.CheckConnectivity(first_resolved, 30) &&
-                    router.CheckConnectivity(second_resolved, 30))
+
+                if (((second_resolved != null) &&
+                    (first_resolved != null)) &&
+                    (router.CheckConnectivity(first_resolved, 30) &&
+                    router.CheckConnectivity(second_resolved, 30)))
                 {
                     test_pairs.Add(new KeyValuePair<RouterPoint, RouterPoint>(
                         first_resolved, second_resolved));
@@ -95,15 +105,20 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                     "Building pairs list...");
             }
 
+            int successes = 0;
             long before = DateTime.Now.Ticks;
             foreach (KeyValuePair<RouterPoint, RouterPoint> pair in test_pairs)
             {
-                router.Calculate(pair.Key, pair.Value);
+                OsmSharp.Routing.Core.Route.OsmSharpRoute route = router.Calculate(pair.Key, pair.Value);
+                if (route != null)
+                {
+                    successes++;
+                }
             }
             long after = DateTime.Now.Ticks;
             OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("Average calculation time for {0} random routes: {1}ms",
-                test_count, (new TimeSpan((after - before) / test_count)).TotalMilliseconds.ToString()));
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("Average calculation time for {0} random routes: {1}ms with {2} successes",
+                test_count, (new TimeSpan((after - before) / test_count)).TotalMilliseconds.ToString(), successes));
         }
 
         /// <summary>
@@ -113,12 +128,20 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// <param name="test_count"></param>
         public void ExecuteTestIncrementalBoundingBox(string name, int test_count, GeoCoordinateBox outer_box)
         {
-            string xml_embedded = string.Format("Osm.Routing.Test.TestData.{0}.osm", name);
+            string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
 
             this.ExecuteTestIncrementalBoundingBox(name, Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded), false, test_count,
                 outer_box);
         }
 
+        /// <summary>
+        /// Executes a test using a incrementing bounding box.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="data_stream"></param>
+        /// <param name="pbf"></param>
+        /// <param name="test_count"></param>
+        /// <param name="outer_box"></param>
         public void ExecuteTestIncrementalBoundingBox(string name, Stream data_stream, bool pbf, int test_count, GeoCoordinateBox outer_box)
         {
             OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Incremental Test {0} -> {1}x", name, test_count);
@@ -137,14 +160,20 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                 OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
                 OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Testing for a box with total surface of {0}m²",
                     box.Corners[0].DistanceReal(box.Corners[1]).Value * box.Corners[0].DistanceReal(box.Corners[2]).Value);
-                IRouterDataSource<EdgeData> data = this.BuildData(data_stream, pbf,
+                IBasicRouterDataSource<EdgeData> data = this.BuildData(data_stream, pbf,
                     interpreter, box);
 
                 this.DoExecuteTests(data, interpreter, test_count);
             }
         }
 
-        private void DoExecuteTests(IRouterDataSource<EdgeData> data, OsmRoutingInterpreter interpreter, int test_count)
+        /// <summary>
+        /// Executes the actual tests.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="test_count"></param>
+        private void DoExecuteTests(IBasicRouterDataSource<EdgeData> data, OsmRoutingInterpreter interpreter, int test_count)
         {
             if (data.VertexCount == 0)
             {
@@ -169,19 +198,11 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                 data.GetVertex(first, out latitude_first, out longitude_first);
                 RouterPoint first_resolved = router.Resolve(
                     new GeoCoordinate(latitude_first, longitude_first));
-                if (first_resolved == null)
-                {
-                    Debug.WriteLine(string.Empty);
-                }
 
                 float latitude_second, longitude_second;
                 data.GetVertex(second, out latitude_second, out longitude_second);
                 RouterPoint second_resolved = router.Resolve(
                     new GeoCoordinate(latitude_second, longitude_second));
-                if (first_resolved == null)
-                {
-                    Debug.WriteLine(string.Empty);
-                }
 
                 if (((second_resolved != null) &&
                     (first_resolved != null)) && 
@@ -215,7 +236,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public abstract IRouter<RouterPoint> BuildRouter(IRouterDataSource<EdgeData> data,
+        public abstract IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<EdgeData> data,
             IRoutingInterpreter interpreter);
 
         /// <summary>
@@ -223,7 +244,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// </summary>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public abstract IRouterDataSource<EdgeData> BuildData(Stream data, bool pbf, IRoutingInterpreter interpreter, GeoCoordinateBox box);
+        public abstract IBasicRouterDataSource<EdgeData> BuildData(Stream data, bool pbf, IRoutingInterpreter interpreter, GeoCoordinateBox box);
 
     }
 }

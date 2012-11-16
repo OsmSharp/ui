@@ -8,13 +8,13 @@ using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Osm.Core;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Router.Memory;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Routing.CH.PreProcessing;
 using System.Reflection;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.Routing;
+using OsmSharp.Routing.Core.Graph.Memory;
 
 namespace OsmSharp.Osm.Routing.Test.ManyToMany
 {

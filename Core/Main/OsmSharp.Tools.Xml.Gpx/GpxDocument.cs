@@ -55,16 +55,16 @@ namespace OsmSharp.Tools.Xml.Gpx
         }
 
 
-        /// <summary>
-        /// Returns the name of this document.
-        /// </summary>
-        public string Name
-        {
-            get
-            {
-                return _source.Name;
-            }
-        }
+        ///// <summary>
+        ///// Returns the name of this document.
+        ///// </summary>
+        //public string Name
+        //{
+        //    get
+        //    {
+        //        return _source.Name;
+        //    }
+        //}
 
         /// <summary>
         /// Returns the readonly flag.
