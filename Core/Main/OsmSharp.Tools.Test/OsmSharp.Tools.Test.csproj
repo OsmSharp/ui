@@ -147,28 +147,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StringTableTests.cs" />
-    <Compile Include="StringTreeDictionaryTest.cs" />
-    <None Include="test.v2.0.kml" />
-    <None Include="test.v1.1.gpx" />
-    <Compile Include="KmlXmlTest.cs" />
-    <Compile Include="LambertProjectionTest.cs" />
-    <Compile Include="MathTest.cs" />
-    <Compile Include="NomatimXmlTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GpxXmlTest.cs" />
-    <Compile Include="SortedSetTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AuthoringTests.txt" />
-    <None Include="test_search.v1.xml" />
-    <None Include="test.v2.0.response.kml" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="test.v1.0.gpx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="test.v2.1.kml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">

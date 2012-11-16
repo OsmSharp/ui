@@ -24,15 +24,11 @@ using OsmSharp.Tools.Core.Collections;
 
 namespace OsmSharp.Osm.Core
 {
-
-    
-
     /// <summary>
     /// Base class of all osm objects.
     /// 
-    /// ChangeSets, Nodes, Ways & Relations.
-    /// </summary>    
-    
+    /// ChangeSets, Nodes, Ways and Relations.
+    /// </summary>   
     [Serializable]
     public abstract class OsmBase : IEquatable<OsmBase>
     {
@@ -194,6 +190,11 @@ namespace OsmSharp.Osm.Core
 
         #region IEquatable<OsmBase> Members
 
+        /// <summary>
+        /// Returns true if the given object equals this one.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(OsmBase other)
         {
             if (other == null)
@@ -208,12 +209,21 @@ namespace OsmSharp.Osm.Core
             return false;
         }
 
+        /// <summary>
+        /// Returns a hascode for this object.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return this.Type.GetHashCode() 
                 ^ this.Id.GetHashCode();
         }
 
+        /// <summary>
+        /// Returns true if object equals the given object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is OsmBase)
@@ -225,6 +235,10 @@ namespace OsmSharp.Osm.Core
 
         #endregion
 
+        /// <summary>
+        /// Returns a description of this object.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("{0}:{1}",

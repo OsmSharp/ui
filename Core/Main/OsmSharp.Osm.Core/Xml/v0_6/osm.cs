@@ -1467,6 +1467,9 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
 
         private string generatorField;
 
+        /// <summary>
+        /// Creates a new xml serializer object.
+        /// </summary>
         public osm()
         {
             this.versionField = ((double)(0.6F));

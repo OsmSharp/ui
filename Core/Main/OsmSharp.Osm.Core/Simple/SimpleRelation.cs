@@ -22,15 +22,28 @@ using System.Text;
 
 namespace OsmSharp.Osm.Core.Simple
 {
+    /// <summary>
+    /// Represents a simple relation.
+    /// </summary>
     public class SimpleRelation : SimpleOsmGeo
     {
+        /// <summary>
+        /// Creates new simple relation.
+        /// </summary>
         public SimpleRelation()
         {
             this.Type = SimpleOsmGeoType.Relation;
         }
 
+        /// <summary>
+        /// The relation members.
+        /// </summary>
         public List<SimpleRelationMember> Members { get; set; }
         
+        /// <summary>
+        /// Returns a description of this object.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("Relation[{0}]", this.Id.Value);

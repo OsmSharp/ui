@@ -136,6 +136,9 @@ namespace OsmSharp.Osm.Core.Xml
     /// </summary>
     public enum OsmVersion
     {
+        /// <summary>
+        /// v0.6
+        /// </summary>
         Osmv0_6
     }
 }

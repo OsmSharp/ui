@@ -25,6 +25,9 @@ using OsmSharp.Tools.Math.Geo.Factory;
 
 namespace OsmSharp.Osm.Core
 {
+    /// <summary>
+    /// Interpreter translating OSM object to shapes.
+    /// </summary>
     public class SimpleShapeInterpreter : IShapeInterpreter
     {
         #region IShapeInterpreter Members

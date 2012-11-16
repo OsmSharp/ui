@@ -48,6 +48,7 @@ namespace OsmSharp.Osm.Core
         /// <summary>
         /// Creates a new OsmGeo object with a string table.
         /// </summary>
+        /// <param name="string_table"></param>
         /// <param name="id"></param>
         internal OsmGeo(ObjectTable<string> string_table, long id)
             : base(string_table, id)

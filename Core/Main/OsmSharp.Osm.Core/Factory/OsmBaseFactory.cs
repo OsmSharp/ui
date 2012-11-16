@@ -26,28 +26,56 @@ using OsmSharp.Tools.Core.Collections;
 
 namespace OsmSharp.Osm.Core.Factory
 {
+    /// <summary>
+    /// A factory for OSM base objects.
+    /// </summary>
     public static class OsmBaseFactory
     {
+        /// <summary>
+        /// Creates a new node with a new id.
+        /// </summary>
+        /// <returns></returns>
         public static Node CreateNode()
         {
             return CreateNode(OsmBaseIdGenerator.NewId());
         }
 
+        /// <summary>
+        /// Creates a new node with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static Node CreateNode(long id)
         {
             return new Node(id);
         }
 
+        /// <summary>
+        /// Creates a new node using the given stringtable.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
         public static Node CreateNode(ObjectTable<string> table)
         {
             return CreateNode(table, OsmBaseIdGenerator.NewId());
         }
 
+        /// <summary>
+        /// Creates a new node using a given string table with the given id.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static Node CreateNode(ObjectTable<string> table, long id)
         {
             return new Node(table, id);
         }
 
+        /// <summary>
+        /// Creates a new node from a SimpleNode.
+        /// </summary>
+        /// <param name="simple_node"></param>
+        /// <returns></returns>
         public static Node CreateNodeFrom(SimpleNode simple_node)
         {
             Node node = OsmBaseFactory.CreateNode(simple_node.Id.Value);
@@ -70,6 +98,12 @@ namespace OsmSharp.Osm.Core.Factory
             return node;
         }
 
+        /// <summary>
+        /// Creates a new node from a SimpleNode using a string table.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="simple_node"></param>
+        /// <returns></returns>
         public static Node CreateNodeFrom(ObjectTable<string> table, SimpleNode simple_node)
         {
             Node node = OsmBaseFactory.CreateNode(table, simple_node.Id.Value);
@@ -92,16 +126,31 @@ namespace OsmSharp.Osm.Core.Factory
             return node;
         }
 
+        /// <summary>
+        /// Creates a new way.
+        /// </summary>
+        /// <returns></returns>
         public static Way CreateWay()
         {
             return CreateWay(OsmBaseIdGenerator.NewId());
         }
 
+        /// <summary>
+        /// Creates a new way with a given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static Way CreateWay(long id)
         {
             return new Way(id);
         }
 
+        /// <summary>
+        /// Creates a new way from a SimpleWay given a dictionary with nodes.
+        /// </summary>
+        /// <param name="simple_way"></param>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
         public static Way CreateWayFrom(SimpleWay simple_way, IDictionary<long, Node> nodes)
         {
             Way way = OsmBaseFactory.CreateWay(simple_way.Id.Value);
@@ -133,16 +182,34 @@ namespace OsmSharp.Osm.Core.Factory
             return way;
         }
 
+        /// <summary>
+        /// Creates a new way with a new id given a stringtable.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
         public static Way CreateWay(ObjectTable<string> table)
         {
             return CreateWay(table, OsmBaseIdGenerator.NewId());
         }
 
+        /// <summary>
+        /// Creates a new way with a given id given a stringtable.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static Way CreateWay(ObjectTable<string> table, long id)
         {
             return new Way(table, id);
         }
 
+        /// <summary>
+        /// Creates a new way from a SimpleWay given a stringtable.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="simple_way"></param>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
         public static Way CreateWayFrom(ObjectTable<string> table, SimpleWay simple_way, IDictionary<long, Node> nodes)
         {
             Way way = OsmBaseFactory.CreateWay(table, simple_way.Id.Value);
@@ -174,17 +241,33 @@ namespace OsmSharp.Osm.Core.Factory
             return way;
         }
 
+        /// <summary>
+        /// Creates a relation with a new id.
+        /// </summary>
+        /// <returns></returns>
         public static Relation CreateRelation()
         {
             return CreateRelation(OsmBaseIdGenerator.NewId());
         }
 
+        /// <summary>
+        /// Creates a relation with a given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static Relation CreateRelation(long id)
         {
             return new Relation(id);
         }
 
-
+        /// <summary>
+        /// Creates a relation from a SimpleRelation.
+        /// </summary>
+        /// <param name="simple_relation"></param>
+        /// <param name="nodes"></param>
+        /// <param name="ways"></param>
+        /// <param name="relations"></param>
+        /// <returns></returns>
         public static Relation CreateRelationFrom(SimpleRelation simple_relation, 
             IDictionary<long, Node> nodes,
             IDictionary<long, Way> ways,
@@ -251,16 +334,36 @@ namespace OsmSharp.Osm.Core.Factory
             return relation;
         }
 
+        /// <summary>
+        /// Creates a new relation.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
         public static Relation CreateRelation(ObjectTable<string> table)
         {
             return CreateRelation(table, OsmBaseIdGenerator.NewId());
         }
 
+        /// <summary>
+        /// Creates a new relation.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static Relation CreateRelation(ObjectTable<string> table, long id)
         {
             return new Relation(table, id);
         }
 
+        /// <summary>
+        /// Creates a new relation from a SimpleRelation.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="simple_relation"></param>
+        /// <param name="nodes"></param>
+        /// <param name="ways"></param>
+        /// <param name="relations"></param>
+        /// <returns></returns>
         public static Relation CreateRelationFrom(ObjectTable<string> table, SimpleRelation simple_relation,
             IDictionary<long, Node> nodes,
             IDictionary<long, Way> ways,
@@ -327,11 +430,20 @@ namespace OsmSharp.Osm.Core.Factory
             return relation;
         }
 
+        /// <summary>
+        /// Creates a new changeset.
+        /// </summary>
+        /// <returns></returns>
         public static ChangeSet CreateChangeSet()
         {
             return CreateChangeSet(OsmBaseIdGenerator.NewId());
         }
 
+        /// <summary>
+        /// Creates a new changeset.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public static ChangeSet CreateChangeSet(long id)
         {
             return new ChangeSet(id);

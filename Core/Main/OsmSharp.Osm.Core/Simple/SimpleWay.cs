@@ -22,16 +22,28 @@ using System.Text;
 
 namespace OsmSharp.Osm.Core.Simple
 {
+    /// <summary>
+    /// Represents a simple way.
+    /// </summary>
     public class SimpleWay : SimpleOsmGeo
     {
+        /// <summary>
+        /// Creates a new simple way.
+        /// </summary>
         public SimpleWay()
         {
             this.Type = SimpleOsmGeoType.Way;
         }
 
+        /// <summary>
+        /// Holds the list of nodes.
+        /// </summary>
         public List<long>  Nodes { get; set; }
 
-
+        /// <summary>
+        /// Returns a description of this object.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("Way[{0}]", this.Id.Value);

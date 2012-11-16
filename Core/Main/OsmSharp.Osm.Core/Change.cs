@@ -72,10 +72,22 @@ namespace OsmSharp.Osm.Core
         }
     }
 
+    /// <summary>
+    /// Represents a type of change.
+    /// </summary>
     public enum ChangeType
     {
+        /// <summary>
+        /// Create
+        /// </summary>
         Create,
+        /// <summary>
+        /// Delete
+        /// </summary>
         Delete,
+        /// <summary>
+        /// Modify
+        /// </summary>
         Modify
     }
 }

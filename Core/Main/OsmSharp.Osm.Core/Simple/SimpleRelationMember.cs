@@ -22,12 +22,24 @@ using System.Text;
 
 namespace OsmSharp.Osm.Core.Simple
 {
+    /// <summary>
+    /// Represents simple relation member.
+    /// </summary>
     public class SimpleRelationMember
     {
+        /// <summary>
+        /// The type of this relation member.
+        /// </summary>
         public SimpleRelationMemberType? MemberType { get; set; }
 
+        /// <summary>
+        /// The member id.
+        /// </summary>
         public long? MemberId { get; set; }
 
+        /// <summary>
+        /// The member role.
+        /// </summary>
         public string MemberRole { get; set; }
     }
 }

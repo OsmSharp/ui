@@ -113,11 +113,20 @@ namespace OsmSharp.Osm.Core
 
         #endregion
 
+        /// <summary>
+        /// Returns en enumerator of tiles.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<Tile> GetEnumerator()
         {
             return new TileRangeEnumerator(this);
         }
 
+
+        /// <summary>
+        /// Returns en enumerator of tiles.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();

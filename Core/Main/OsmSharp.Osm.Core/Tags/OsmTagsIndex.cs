@@ -17,15 +17,9 @@ namespace OsmSharp.Osm.Core
         /// </summary>
         private ObjectTable<OsmTags> _tags;
 
-        ///// <summary>
-        ///// Holds the string table.
-        ///// </summary>
-        //private ObjectTable<string> _string_table;
-
         /// <summary>
         /// Creates a new tags index with a given strings table.
         /// </summary>
-        /// <param name="string_table"></param>
         public OsmTagsIndex()
         {
             //_string_table = string_table;
@@ -97,7 +91,6 @@ namespace OsmSharp.Osm.Core
             /// <summary>
             /// Creates a new tags object.
             /// </summary>
-            /// <param name="string_table"></param>
             /// <param name="tags"></param>
             /// <returns></returns>
             internal static OsmTags CreateFrom(IDictionary<string, string> tags)

@@ -87,6 +87,11 @@ namespace OsmSharp.Osm.Core
 
         #region IEquatable<Node> Members
 
+        /// <summary>
+        /// Returns true if the given object equals the other in content.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Node other)
         {
             if (other != null)

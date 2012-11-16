@@ -22,14 +22,22 @@ using System.Text;
 
 namespace OsmSharp.Osm.Core.Simple
 {
+    /// <summary>
+    /// Represents a set of changes.
+    /// </summary>
     public class SimpleChangeSet
     {
+        /// <summary>
+        /// Creates a new changeset.
+        /// </summary>
         public SimpleChangeSet()
         {
 
         }
 
+        /// <summary>
+        /// Holds the actual list of changes.
+        /// </summary>
         public List<SimpleChange> Changes { get; set; }
-        
     }
 }

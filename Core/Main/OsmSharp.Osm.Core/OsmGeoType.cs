@@ -27,9 +27,21 @@ namespace OsmSharp.Osm.Core
     /// </summary>
     public enum OsmType
     {
+        /// <summary>
+        /// Node
+        /// </summary>
         Node,
+        /// <summary>
+        /// Way
+        /// </summary>
         Way,
+        /// <summary>
+        /// Relation
+        /// </summary>
         Relation,
+        /// <summary>
+        /// Changeset
+        /// </summary>
         ChangeSet
     }
 }

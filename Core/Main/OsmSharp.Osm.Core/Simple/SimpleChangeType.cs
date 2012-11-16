@@ -22,10 +22,22 @@ using System.Text;
 
 namespace OsmSharp.Osm.Core.Simple
 {
+    /// <summary>
+    /// Represents the type of change.
+    /// </summary>
     public enum SimpleChangeType
     {
+        /// <summary>
+        /// Delete
+        /// </summary>
         Delete,
+        /// <summary>
+        /// Modify
+        /// </summary>
         Modify,
+        /// <summary>
+        /// Create
+        /// </summary>
         Create
     }
 }

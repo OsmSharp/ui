@@ -22,17 +22,33 @@ using System.Text;
 
 namespace OsmSharp.Osm.Core.Simple
 {
+    /// <summary>
+    /// Represents a simple node.
+    /// </summary>
     public class SimpleNode : SimpleOsmGeo
     {
+        /// <summary>
+        /// Creates a new simple node.
+        /// </summary>
         public SimpleNode()
         {
             this.Type = SimpleOsmGeoType.Node;
         }
 
+        /// <summary>
+        /// The latitude.
+        /// </summary>
         public double? Latitude { get; set; }
 
+        /// <summary>
+        /// The longitude.
+        /// </summary>
         public double? Longitude { get; set; }
 
+        /// <summary>
+        /// Returns a description of this object.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("Node[{0}]", this.Id.Value);

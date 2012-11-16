@@ -26,24 +26,6 @@ using OsmSharp.Osm.Core.Simple;
 
 namespace OsmSharp.Osm.Core
 {
-    public enum HighwayTypeEnum
-    {
-        not_set,
-        living_Street,
-        residential,
-        tertiary,
-        secondary,
-        primary,
-        trunk,
-        motorway,
-        service,
-        proposed,
-        cycleway,
-        pedestrian,
-        others,
-        track
-    }
-
     /// <summary>
     /// Way class.
     /// </summary>
@@ -176,6 +158,10 @@ namespace OsmSharp.Osm.Core
             return way;
         }
 
+        /// <summary>
+        /// Returns a description of this object.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("http://www.openstreetmap.org/?way={0}",

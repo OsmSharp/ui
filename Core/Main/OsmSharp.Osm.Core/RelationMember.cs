@@ -22,11 +22,20 @@ using System.Text;
 
 namespace OsmSharp.Osm.Core
 {
+    /// <summary>
+    /// Represents a relationmember.
+    /// </summary>
     [Serializable]
     public class RelationMember
     {
+        /// <summary>
+        /// The member.
+        /// </summary>
         public OsmGeo Member { get; set; }
 
+        /// <summary>
+        /// The role.
+        /// </summary>
         public string Role{ get; set; }
     }
 }

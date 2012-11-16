@@ -27,22 +27,49 @@ namespace OsmSharp.Osm.Core.Simple
     /// </summary>
     public class SimpleOsmGeo
     {
+        /// <summary>
+        /// The id.
+        /// </summary>
         public long? Id { get; set; }
 
+        /// <summary>
+        /// The type.
+        /// </summary>
         public SimpleOsmGeoType Type { get; protected set; }
 
+        /// <summary>
+        /// The tags.
+        /// </summary>
         public IDictionary<string,string> Tags { get; set; }
 
+        /// <summary>
+        /// The changeset id.
+        /// </summary>
         public long? ChangeSetId { get; set; }
 
+        /// <summary>
+        /// The visible flag.
+        /// </summary>
         public bool? Visible { get; set; }
 
+        /// <summary>
+        /// The timestamp.
+        /// </summary>
         public DateTime? TimeStamp { get; set; }
 
+        /// <summary>
+        /// The version.
+        /// </summary>
         public ulong? Version { get; set; }
 
+        /// <summary>
+        /// The userid.
+        /// </summary>
         public long? UserId { get; set; }
 
+        /// <summary>
+        /// The username.
+        /// </summary>
         public string UserName { get; set; }
     }
 }

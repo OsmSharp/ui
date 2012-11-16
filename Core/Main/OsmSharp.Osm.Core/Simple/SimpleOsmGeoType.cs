@@ -22,10 +22,22 @@ using System.Text;
 
 namespace OsmSharp.Osm.Core.Simple
 {
+    /// <summary>
+    /// Represents a type of Geo OSM object.
+    /// </summary>
     public enum SimpleOsmGeoType
     {
+        /// <summary>
+        /// Node
+        /// </summary>
         Node,
+        /// <summary>
+        /// Way
+        /// </summary>
         Way,
+        /// <summary>
+        /// Relation
+        /// </summary>
         Relation
     }
 }

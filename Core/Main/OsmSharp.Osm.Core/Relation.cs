@@ -78,7 +78,7 @@ namespace OsmSharp.Osm.Core
         /// <summary>
         /// Find a member in this relation with the given role.
         /// </summary>
-        /// <param name="p"></param>
+        /// <param name="role"></param>
         /// <returns></returns>
         public OsmBase FindMember(string role)
         {

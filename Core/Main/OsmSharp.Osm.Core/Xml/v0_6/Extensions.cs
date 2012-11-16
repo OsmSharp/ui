@@ -27,6 +27,9 @@ using System.Globalization;
 
 namespace OsmSharp.Osm.Core.Xml.v0_6
 {
+    /// <summary>
+    /// Some common extensions.
+    /// </summary>
     public static class Extensions
     {
         #region Xml <-> OsmSharp.Osm.Core Conversions
@@ -52,7 +55,7 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
         /// <summary>
         /// Extensions method for a bound.
         /// </summary>
-        /// <param name="bounds"></param>
+        /// <param name="bound"></param>
         /// <returns></returns>
         public static GeoCoordinateBox ConvertFrom(this bound bound)
         {
@@ -71,10 +74,13 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
         /// <summary>
         /// Converts an Xml relation to an Osm domain model relation.
         /// </summary>
-        /// <param name="relation"></param>
-        /// <param name="factory"></param>
+        /// <param name="xml_obj"></param>
+        /// <param name="node_source"></param>
+        /// <param name="way_source"></param>
+        /// <param name="relation_source"></param>
         /// <returns></returns>
-        public static Relation ConvertFrom(this relation xml_obj, INodeSource node_source, IWaySource way_source, IRelationSource relation_source)
+        public static Relation ConvertFrom(this relation xml_obj, INodeSource node_source, 
+            IWaySource way_source, IRelationSource relation_source)
         {
             // create a new node and immidiately set the id.
             Relation new_obj = OsmBaseFactory.CreateRelation(xml_obj.id);
@@ -177,8 +183,8 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
         /// <summary>
         /// Converts an Xml way to an Osm domain model way.
         /// </summary>
-        /// <param name="way"></param>
-        /// <param name="factory"></param>
+        /// <param name="xml_obj"></param>
+        /// <param name="node_source"></param>
         /// <returns></returns>
         public static Way ConvertFrom(this way xml_obj, INodeSource node_source)
         {
@@ -244,8 +250,7 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
         /// <summary>
         /// Converts an Xml node to an Osm domain model node.
         /// </summary>
-        /// <param name="node"></param>
-        /// <param name="factory"></param>
+        /// <param name="xml_obj"></param>
         /// <returns></returns>
         public static Node ConvertFrom(this node xml_obj)
         {
@@ -321,7 +326,6 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
         /// Converts an domain model changeset to and Xml changeset.
         /// </summary>
         /// <param name="changeset"></param>
-        /// <param name="factory"></param>
         /// <returns></returns>
         public static changeset ConvertTo(this ChangeSet changeset)
         {
@@ -331,8 +335,7 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
         /// <summary>
         /// Converts a domain model relation to an Xml relation.
         /// </summary>
-        /// <param name="relation"></param>
-        /// <param name="factory"></param>
+        /// <param name="dom_obj"></param>
         /// <returns></returns>
         public static relation ConvertTo(this Relation dom_obj)
         {
@@ -425,8 +428,7 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
         /// <summary>
         /// Converts a domain model way to an Xml way.
         /// </summary>
-        /// <param name="way"></param>
-        /// <param name="factory"></param>
+        /// <param name="dom_obj"></param>
         /// <returns></returns>
         public static way ConvertTo(this Way dom_obj)
         {
@@ -499,8 +501,7 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
         /// <summary>
         /// Converts an Xml node to an Osm domain model node.
         /// </summary>
-        /// <param name="node"></param>
-        /// <param name="factory"></param>
+        /// <param name="dom_obj"></param>
         /// <returns></returns>
         public static node ConvertTo(this Node dom_obj)
         {

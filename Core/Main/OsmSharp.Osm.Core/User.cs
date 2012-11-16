@@ -27,8 +27,14 @@ namespace OsmSharp.Osm.Core
     /// </summary>
     public class User
     {
+        /// <summary>
+        /// The name of the user.
+        /// </summary>
         public string Name { get; set; }
 
+        /// <summary>
+        /// The id of the user.
+        /// </summary>
         public string Uid { get; set; }
     }
 }

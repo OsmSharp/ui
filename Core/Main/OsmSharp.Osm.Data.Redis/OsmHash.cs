@@ -21,10 +21,18 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Geo;
 
-namespace OsmSharp.Osm.Core
+namespace OsmSharp.Osm.Data.Redis
 {
+    /// <summary>
+    /// Converts OSM objects to a hashstring.
+    /// </summary>
     public static class OsmHash
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
         public static string GetOsmHashAsString(GeoCoordinate coordinate)
         {
             return OsmHash.GetOsmHashAsString(coordinate.Latitude, coordinate.Longitude);

@@ -23,6 +23,9 @@ using OsmSharp.Osm.Core.Filters.Tags;
 
 namespace OsmSharp.Osm.Core.Filters
 {
+    /// <summary>
+    /// A basic class defining a gilter on OsmBase object.
+    /// </summary>
     public abstract class Filter
     {
         /// <summary>
@@ -60,7 +63,6 @@ namespace OsmSharp.Osm.Core.Filters
         /// Negates a filter into a new filter by using not.
         /// </summary>
         /// <param name="filter1"></param>
-        /// <param name="filter2"></param>
         /// <returns></returns>
         public static Filter operator !(Filter filter1)
         {

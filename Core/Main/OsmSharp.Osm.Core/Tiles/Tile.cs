@@ -128,6 +128,7 @@ namespace OsmSharp.Osm.Core
         /// Returns the tile at the given location at the given zoom.
         /// </summary>
         /// <param name="location"></param>
+        /// <param name="zoom"></param>
         /// <returns></returns>
         public static Tile CreateAroundLocation(GeoCoordinate location, int zoom)
         {

@@ -160,6 +160,7 @@
     <Compile Include="GeoHash.cs" />
     <Compile Include="HH\HighwayHierachy.cs" />
     <Compile Include="CH\RedisCHData.cs" />
+    <Compile Include="OsmHash.cs" />
     <Compile Include="PrimitiveExtensions.cs" />
     <Compile Include="Raw\Processor\Primitives\OsmMember.cs" />
     <Compile Include="Raw\Processor\Primitives\OsmNode.cs" />

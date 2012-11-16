@@ -22,10 +22,19 @@ using System.Text;
 
 namespace OsmSharp.Osm.Core.Simple
 {
+    /// <summary>
+    /// Represents a simple change.
+    /// </summary>
     public class SimpleChange
     {
+        /// <summary>
+        /// The list of objects changing.
+        /// </summary>
         public List<SimpleOsmGeo> OsmGeo { get; set; }
 
+        /// <summary>
+        /// The type of change.
+        /// </summary>
         public SimpleChangeType Type { get; set; }
     }
 }
