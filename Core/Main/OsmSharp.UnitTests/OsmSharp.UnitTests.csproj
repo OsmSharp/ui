@@ -137,6 +137,7 @@
     <Compile Include="Tools\LambertProjectionTest.cs" />
     <Compile Include="Tools\MathTest.cs" />
     <Compile Include="Tools\NomatimXmlTest.cs" />
+    <Compile Include="Tools\PermutationEnumerationTests.cs" />
     <Compile Include="Tools\SortedSetTest.cs" />
     <Compile Include="Tools\StringTableTests.cs" />
     <Compile Include="Tools\StringTreeDictionaryTest.cs" />

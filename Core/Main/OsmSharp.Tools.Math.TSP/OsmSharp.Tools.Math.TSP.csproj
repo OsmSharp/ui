@@ -170,6 +170,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArbitraryInsertion\ArbitraryInsertionSolver.cs" />
+    <Compile Include="BruteForce\BruteForceSolver.cs" />
     <Compile Include="CheapestInsertion\CheapestInsertionSolver.cs" />
     <Compile Include="EdgeAssemblyGenetic\EdgeAssemblyCrossOverSolver.cs" />
     <Compile Include="Genetic\GeneticSolver.cs" />

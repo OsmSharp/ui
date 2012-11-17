@@ -178,6 +178,7 @@
     <Compile Include="DelimitedFiles\DelimitedFileHandler.cs" />
     <Compile Include="DelimitedFiles\DelimiterType.cs" />
     <Compile Include="DelimitedFiles\IDelimitedFormat.cs" />
+    <Compile Include="Enumerations\PermutationEnumerator.cs" />
     <Compile Include="Output\ConsoleOutputStream.cs" />
     <Compile Include="Output\FileOutputStream.cs" />
     <Compile Include="Output\IOutputStream.cs" />
