@@ -57,17 +57,6 @@ namespace OsmSharp.Routing.Core
         private IRoutingInterpreter _interpreter;
 
         /// <summary>
-        /// Creates a new router, defaulting to a dykstra implementation.
-        /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="interpreter"></param>
-        public Router(IBasicRouterDataSource<EdgeData> data, IRoutingInterpreter interpreter)
-            : this(data, interpreter, new DykstraRouting<EdgeData>(data.TagsIndex))
-        {
-
-        }
-
-        /// <summary>
         /// Creates a new router.
         /// </summary>
         /// <param name="graph"></param>
@@ -567,7 +556,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public RouterPoint Resolve(GeoCoordinate coordinate, IResolveMatcher matcher)
         {
-            SearchClosestResult result = _router.SearchClosest(_data_graph, coordinate, matcher); // search the closest routable object.
+            SearchClosestResult result = _router.SearchClosest(_data_graph, coordinate, matcher, 0.001f); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
@@ -626,7 +615,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public GeoCoordinate Search(GeoCoordinate coordinate)
         {
-            SearchClosestResult result = _router.SearchClosest(_data_graph, coordinate, null); // search the closest routable object.
+            SearchClosestResult result = _router.SearchClosest(_data_graph, coordinate, null, 0.001f); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)

@@ -1,4 +1,21 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +28,8 @@ using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 using System.Reflection;
 using OsmSharp.Osm.Routing.Interpreter;
 using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 
 namespace OsmSharp.Osm.UnitTests.Routing.Raw
 {
@@ -25,11 +44,21 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// </summary>
         /// <returns></returns>
         public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<OsmEdgeData> data, 
-            IRoutingInterpreter interpreter)
+            IRoutingInterpreter interpreter, IBasicRouter<OsmEdgeData> basic_router)
         {
             // initialize the router.
             return new Router<OsmEdgeData>(
-                    data, interpreter);
+                    data, interpreter, basic_router);
+        }
+
+        /// <summary>
+        /// Builds a basic router.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public override IBasicRouter<OsmEdgeData> BuildBasicRouter(IBasicRouterDataSource<OsmEdgeData> data)
+        {
+            return new DykstraRouting<OsmEdgeData>(data.TagsIndex);
         }
 
         /// <summary>

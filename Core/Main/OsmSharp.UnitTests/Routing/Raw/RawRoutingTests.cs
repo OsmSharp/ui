@@ -36,6 +36,9 @@ using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Core.Router;
 using OsmSharp.Osm.Core;
 using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Tools.Math;
+using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 
 namespace OsmSharp.Osm.UnitTests.Routing.Raw
 {
@@ -49,12 +52,22 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<OsmEdgeData> data, 
-            IRoutingInterpreter interpreter)
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<OsmEdgeData> data, IRoutingInterpreter interpreter,
+            IBasicRouter<OsmEdgeData> basic_router)
         {
             // initialize the router.
             return new Router<OsmEdgeData>(
-                    data, interpreter);
+                    data, interpreter, basic_router);
+        }
+
+        /// <summary>
+        /// Builds a basic router.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public override IBasicRouter<OsmEdgeData> BuildBasicRouter(IBasicRouterDataSource<OsmEdgeData> data)
+        {
+            return new DykstraRouting<OsmEdgeData>(data.TagsIndex);
         }
 
         /// <summary>
@@ -196,6 +209,15 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         public void TestRawResolveAllNodes()
         {
             this.DoTestResolveAllNodes();
+        }
+
+        /// <summary>
+        /// Tests resolving coordinates to routable points.
+        /// </summary>
+        [TestMethod]
+        public void TestRawResolveBetweenNodes()
+        {
+            this.DoTestResolveBetweenNodes();
         }
     }
 }

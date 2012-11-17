@@ -27,6 +27,7 @@ namespace OsmSharp.Tools.Core.Collections
         public StringTableDictionary(ObjectTable<Type> string_table)
         {
             _string_table = string_table;
+            _dictionary = new Dictionary<uint, uint>();
         }
 
         /// <summary>

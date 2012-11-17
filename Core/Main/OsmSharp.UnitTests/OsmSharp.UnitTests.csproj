@@ -151,6 +151,7 @@
     <EmbeddedResource Include="api_usedense_false.osm.pbf" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="test_network_points.txt" />
     <Content Include="testfiles.txt" />
     <Content Include="test_network.png" />
     <EmbeddedResource Include="test_search.v1.xml" />

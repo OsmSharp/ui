@@ -1,22 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 using System.Reflection;
-using OsmSharp.Tools.Math.Geo;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.IO;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Routing.Core.Constraints;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Routing.Core.Route;
 using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Osm.Routing.Data;
 using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
-using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Core.Route;
 using OsmSharp.Routing.Core.Router;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 
 namespace OsmSharp.Osm.UnitTests.Routing
 {
@@ -61,11 +74,11 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// </summary>
         /// <returns></returns>
         public IRouter<RouterPoint> BuildRawRouter(IBasicRouterDataSource<OsmEdgeData> data, 
-            IRoutingInterpreter interpreter)
+            IRoutingInterpreter interpreter, IBasicRouter<OsmEdgeData> basic_router)
         {
             // initialize the router.
             return new Router<OsmEdgeData>(
-                    data, interpreter);
+                    data, interpreter, basic_router);
         }
 
         /// <summary>
@@ -79,9 +92,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
             // get the osm data source.
             IBasicRouterDataSource<OsmEdgeData> data = this.BuildRawDataSource(interpreter, embedded_name);
 
-            // build the reference router.
+            // build the reference router.;
             IRouter<RouterPoint> reference_router = this.BuildRawRouter(
-                this.BuildRawDataSource(interpreter, embedded_name), interpreter);
+                this.BuildRawDataSource(interpreter, embedded_name), interpreter, new DykstraRouting<OsmEdgeData>(data.TagsIndex));
 
             // build the router to be tested.
             IRouter<RouterPoint> router = this.BuildRouter(interpreter, embedded_name);
@@ -120,6 +133,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
                     Assert.IsNotNull(reference_route);
                     Assert.IsNotNull(route);
                     Assert.AreEqual(reference_route.TotalDistance, route.TotalDistance, 0.0001);
+                    // TODO: meta data is missing in some CH routing; see issue 
                     //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
                 }
             }

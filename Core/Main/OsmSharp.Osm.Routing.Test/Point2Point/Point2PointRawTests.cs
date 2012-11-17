@@ -15,6 +15,8 @@ using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 
 namespace OsmSharp.Osm.Routing.Test.Point2Point
 {
@@ -52,9 +54,19 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         }
 
         public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<OsmEdgeData> data, 
-            IRoutingInterpreter interpreter)
+            IRoutingInterpreter interpreter, IBasicRouter<OsmEdgeData> router_basic)
         {
-            return new Router<OsmEdgeData>(data, interpreter);
+            return new Router<OsmEdgeData>(data, interpreter, router_basic);
+        }
+
+        public override IBasicRouter<OsmEdgeData> BuildBasicRouter(IBasicRouterDataSource<OsmEdgeData> data)
+        {
+            return new DykstraRouting<OsmEdgeData>(data.TagsIndex);
+        }
+
+        public override IRouter<RouterPoint> BuildReferenceRouter(Stream data_stream, bool pbf, IRoutingInterpreter interpreter)
+        { // no use using a reference router.
+            return null;
         }
     }
 }

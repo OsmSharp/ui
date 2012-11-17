@@ -13,7 +13,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
     static class Point2PointExecution
     {
         /// <summary>
-        /// Executes the actual many-to-many tests.
+        /// Executes the actual point-to-point tests.
         /// </summary>
         public static void Execute()
         {
@@ -31,8 +31,10 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         static void Execute<EdgeData>(Point2PointTest<EdgeData> tester)
             where EdgeData : IDynamicGraphEdgeData
         {
+            tester.ExecuteComparisionTests("tiny", 100);
+
             //tester.ExecuteTest("tiny", 100);
-            tester.ExecuteTest("matrix", 100);
+            //tester.ExecuteTest("matrix", 100);
             //tester.ExecuteTest("matrix_big_area", 100);
             //tester.ExecuteTest("eeklo", 100);
             //tester.ExecuteTest("moscow", 100);

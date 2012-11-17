@@ -33,6 +33,8 @@ using OsmSharp.Routing.Core.Router;
 using OsmSharp.Osm.Routing.Data;
 using OsmSharp.Routing.Core.Graph;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
+using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Tools.Math;
 
 namespace OsmSharp.Osm.UnitTests.Routing
 {
@@ -48,9 +50,17 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// </summary>
         /// <param name="data"></param>
         /// <param name="interpreter"></param>
+        /// <param name="basic_router"></param>
         /// <returns></returns>
         public abstract IRouter<ResolvedType> BuildRouter(IBasicRouterDataSource<EdgeData> data,
-            IRoutingInterpreter interpreter);
+            IRoutingInterpreter interpreter, IBasicRouter<EdgeData> basic_router);
+
+        /// <summary>
+        /// Builds the basic router.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public abstract IBasicRouter<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data);
 
         /// <summary>
         /// Builds the data.
@@ -65,8 +75,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
 
@@ -108,8 +119,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             source.Tags.Add(new KeyValuePair<string, string>("name", "source"));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
@@ -144,8 +156,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             source.Tags.Add(new KeyValuePair<string, string>("name", "source"));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
@@ -172,8 +185,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
 
@@ -189,8 +203,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
 
@@ -206,8 +221,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
 
@@ -223,8 +239,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0579235, 3.7199811));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
 
@@ -240,8 +257,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0581001, 3.7200612));
 
@@ -257,8 +275,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0578153, 3.7193937));
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0582408, 3.7194636));
 
@@ -274,8 +293,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType source = router.Resolve(new GeoCoordinate(51.0581843, 3.7201209)); // between 2 - 3
             ResolvedType target = router.Resolve(new GeoCoordinate(51.0581484, 3.7194957)); // between 9 - 8
 
@@ -284,7 +304,6 @@ namespace OsmSharp.Osm.UnitTests.Routing
             Assert.AreEqual(5, route.Entries.Length);
         }
 
-
         /// <summary>
         /// Tests if the many-to-many weights are the same as the point-to-point weights.
         /// </summary>
@@ -292,8 +311,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType[] resolved_points = new ResolvedType[3];
             resolved_points[0] = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             resolved_points[1] = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
@@ -320,8 +340,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             ResolvedType[] resolved_points = new ResolvedType[3];
             resolved_points[0] = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
             resolved_points[1] = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
@@ -347,8 +368,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter);
+                data, interpreter, basic_router);
             for (int idx = 1; idx < data.VertexCount; idx++)
             {
                 float latitude, longitude;
@@ -358,6 +380,97 @@ namespace OsmSharp.Osm.UnitTests.Routing
                     Assert.AreEqual(idx, (point as RouterPoint).Id);
                 }
             }
+        }
+
+        /// <summary>
+        /// Test resolving all nodes.
+        /// </summary>
+        protected void DoTestResolveBetweenNodes()
+        {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+
+            double search_box_size = 0.001f;
+            SearchClosestResult result;
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0578761, 3.7193972), null, search_box_size); //,-103,  -4,  -8
+            Assert.IsTrue((result.Vertex1 == 20 && result.Vertex2 == 21) ||
+                (result.Vertex1 == 21 && result.Vertex2 == 20));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0576510, 3.7194124), null, search_box_size); //,-104, -14, -12
+            Assert.IsTrue((result.Vertex1 == 22 && result.Vertex2 == 23) ||
+                (result.Vertex1 == 23 && result.Vertex2 == 22));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0576829, 3.7196791), null, search_box_size); //,-105, -12, -10
+            Assert.IsTrue((result.Vertex1 == 22 && result.Vertex2 == 16) ||
+                (result.Vertex1 == 16 && result.Vertex2 == 22));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0577819, 3.7196308), null, search_box_size); //,-106, -10,  -8
+            Assert.IsTrue((result.Vertex1 == 21 && result.Vertex2 == 16) ||
+                (result.Vertex1 == 16 && result.Vertex2 == 21));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0577516, 3.7198975), null, search_box_size); //,-107, -10, -18
+            Assert.IsTrue((result.Vertex1 == 17 && result.Vertex2 == 16) ||
+                (result.Vertex1 == 16 && result.Vertex2 == 17));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0578218, 3.7200626), null, search_box_size); //,-108, -18, -20
+            Assert.IsTrue((result.Vertex1 == 17 && result.Vertex2 == 7) ||
+                (result.Vertex1 == 7 && result.Vertex2 == 17));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0578170, 3.7202480), null, search_box_size); //,-109, -20, -76
+            Assert.IsTrue((result.Vertex1 == 6 && result.Vertex2 == 7) ||
+                (result.Vertex1 == 7 && result.Vertex2 == 6));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0577580, 3.7204004), null, search_box_size); //,-110, -76, -74
+            Assert.IsTrue((result.Vertex1 == 5 && result.Vertex2 == 6) ||
+                (result.Vertex1 == 6 && result.Vertex2 == 5));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0579032, 3.7204258), null, search_box_size); //,-111, -74, -72
+            Assert.IsTrue((result.Vertex1 == 1 && result.Vertex2 == 5) ||
+                (result.Vertex1 == 5 && result.Vertex2 == 1));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0580453, 3.7204614), null, search_box_size); //,-112, -72, -70
+            Assert.IsTrue((result.Vertex1 == 4 && result.Vertex2 == 1) ||
+                (result.Vertex1 == 1 && result.Vertex2 == 4));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0581938, 3.7203953), null, search_box_size); //,-113, -70, -68
+            Assert.IsTrue((result.Vertex1 == 3 && result.Vertex2 == 4) ||
+                (result.Vertex1 == 4 && result.Vertex2 == 3));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0581826, 3.7201413), null, search_box_size); //,-114, -46, -68
+            Assert.IsTrue((result.Vertex1 == 3 && result.Vertex2 == 2) ||
+                (result.Vertex1 == 2 && result.Vertex2 == 3));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0580310, 3.7201998), null, search_box_size); //,-115, -46, -72
+            Assert.IsTrue((result.Vertex1 == 2 && result.Vertex2 == 1) ||
+                (result.Vertex1 == 1 && result.Vertex2 == 2));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0579208, 3.7200525), null, search_box_size); //,-116, -20, -22
+            Assert.IsTrue((result.Vertex1 == 11 && result.Vertex2 == 7) ||
+                (result.Vertex1 == 7 && result.Vertex2 == 11));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0580134, 3.7199966), null, search_box_size); //,-117, -46, -22
+            Assert.IsTrue((result.Vertex1 == 2 && result.Vertex2 == 11) ||
+                (result.Vertex1 == 11 && result.Vertex2 == 2));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0581251, 3.7198950), null, search_box_size); //,-118, -46, -48
+            Assert.IsTrue((result.Vertex1 == 18 && result.Vertex2 == 2) ||
+                (result.Vertex1 == 2 && result.Vertex2 == 18));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0579479, 3.7197985), null, search_box_size); //,-119, -22, -56
+            Assert.IsTrue((result.Vertex1 == 10 && result.Vertex2 == 11) ||
+                (result.Vertex1 == 11 && result.Vertex2 == 10));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0580166, 3.7195496), null, search_box_size); //,-120, -56, -65
+            Assert.IsTrue((result.Vertex1 == 10 && result.Vertex2 == 9) ||
+                (result.Vertex1 == 9 && result.Vertex2 == 10));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0581299, 3.7195673), null, search_box_size); //,-121, -65, -50
+            Assert.IsTrue((result.Vertex1 == 8 && result.Vertex2 == 9) ||
+                (result.Vertex1 == 9 && result.Vertex2 == 8));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0581651, 3.7196664), null, search_box_size); //,-122, -50, -48
+            Assert.IsTrue((result.Vertex1 == 8 && result.Vertex2 == 18) ||
+                (result.Vertex1 == 18 && result.Vertex2 == 8));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0582050, 3.7194505), null, search_box_size); //,-123, -50, -52
+            Assert.IsTrue((result.Vertex1 == 19 && result.Vertex2 == 8) ||
+                (result.Vertex1 == 8 && result.Vertex2 == 19));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0582082, 3.7191330), null, search_box_size); //,-124, -52, -54
+            Assert.IsTrue((result.Vertex1 == 15 && result.Vertex2 == 19) ||
+                (result.Vertex1 == 19 && result.Vertex2 == 15));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0581651, 3.7189628), null, search_box_size); //,-125, -54, -62
+            Assert.IsTrue((result.Vertex1 == 15 && result.Vertex2 == 14) ||
+                (result.Vertex1 == 14 && result.Vertex2 == 15));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0580725, 3.7189781), null, search_box_size); //,-126, -62, -60
+            Assert.IsTrue((result.Vertex1 == 14 && result.Vertex2 == 13) ||
+                (result.Vertex1 == 13 && result.Vertex2 == 14));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0580006, 3.7191305), null, search_box_size); //,-127, -60, -58
+            Assert.IsTrue((result.Vertex1 == 13 && result.Vertex2 == 12) ||
+                (result.Vertex1 == 12 && result.Vertex2 == 13));
+            result = basic_router.SearchClosest(data, new GeoCoordinate(51.0579783, 3.7194149), null, search_box_size); //,-128, -58, -56
+            Assert.IsTrue((result.Vertex1 == 10 && result.Vertex2 == 12) ||
+                (result.Vertex1 == 12 && result.Vertex2 == 10));
         }
     }
 }

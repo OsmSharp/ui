@@ -129,7 +129,7 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <param name="matcher"></param>
         /// <returns></returns>
         SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph,
-            GeoCoordinate coordinate, IResolveMatcher matcher);
+            GeoCoordinate coordinate, IResolveMatcher matcher, double search_box_size);
     }
 
     /// <summary>

@@ -403,17 +403,15 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         #endregion
 
         #region Search Closest
-
         /// <summary>
         /// Searches the data for a point on an edge closest to the given coordinate.
         /// </summary>
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, 
-            GeoCoordinate coordinate, IResolveMatcher matcher)
+            GeoCoordinate coordinate, IResolveMatcher matcher, double search_box_size)
         {
-            // build the search box.
-            double search_box_size = 0.001f;
+            // create the search box.
             GeoCoordinateBox search_box = new GeoCoordinateBox(new GeoCoordinate(
                 coordinate.Latitude - search_box_size, coordinate.Longitude - search_box_size),
                                                                new GeoCoordinate(

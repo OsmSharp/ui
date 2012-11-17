@@ -1,4 +1,21 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +34,7 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Routing.Core.Graph.Router;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH
 {
@@ -26,6 +44,29 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
     [TestClass]
     public class CHSparseRoutingTest : SimpleRoutingTests<RouterPoint, CHEdgeData>
     {
+        /// <summary>
+        /// Returns a new router.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="basic_router"></param>
+        /// <returns></returns>
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<CHEdgeData> data,
+            IRoutingInterpreter interpreter, IBasicRouter<CHEdgeData> basic_router)
+        {
+            return new Router<CHEdgeData>(data, interpreter, basic_router);
+        }
+
+        /// <summary>
+        /// Returns a basic router.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public override IBasicRouter<CHEdgeData> BuildBasicRouter(IBasicRouterDataSource<CHEdgeData> data)
+        {
+            return new CHRouter(data);
+        }
+
         /// <summary>
         /// Builds the data.
         /// </summary>
@@ -53,19 +94,6 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
             pre_processor.Start();
 
             return data;
-        }
-
-        /// <summary>
-        /// Returns a new router.
-        /// </summary>
-        /// <param name="data"></param>
-        /// <param name="interpreter"></param>
-        /// <returns></returns>
-        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<CHEdgeData> data, 
-            IRoutingInterpreter interpreter)
-        {
-            return new Router<CHEdgeData>(data, interpreter, new CHRouter(
-                data));
         }
 
         /// <summary>
@@ -183,6 +211,15 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         public void TestCHSparseResolveAllNodes()
         {
             this.DoTestResolveAllNodes();
+        }
+
+        /// <summary>
+        /// Tests a simple shortest route calculation.
+        /// </summary>
+        [TestMethod]
+        public void TestCHSparseResolveBetweenNodes()
+        {
+            this.DoTestResolveBetweenNodes();
         }
     }
 }
