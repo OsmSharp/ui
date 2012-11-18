@@ -234,7 +234,7 @@ namespace OsmSharp.Tools.Benchmark.TSPLIB
 
         static TSPLIBProblem CreateProblem(string path, string file, float best)
         {
-            TSPLIBProblem problem = TSPLIBProblemParser.ParseFromFile(new FileInfo(new FileInfo(
+            TSPLIBProblem problem = TSPLIBProblemParser.ParseFrom(new FileInfo(new FileInfo(
                     Assembly.GetExecutingAssembly().Location).DirectoryName + string.Format(path, file)));
             problem.Best = best;
             return problem;

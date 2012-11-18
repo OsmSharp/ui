@@ -141,6 +141,7 @@
     <Compile Include="Tools\SortedSetTest.cs" />
     <Compile Include="Tools\StringTableTests.cs" />
     <Compile Include="Tools\StringTreeDictionaryTest.cs" />
+    <Compile Include="TSP\BruteForceTSPTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="test_network.osm" />
@@ -169,6 +170,8 @@
     <EmbeddedResource Include="test.v2.0.kml" />
     <EmbeddedResource Include="test.v2.0.response.kml" />
     <EmbeddedResource Include="test.v2.1.kml" />
+    <EmbeddedResource Include="test_tsp_5.tsp" />
+    <EmbeddedResource Include="test_tsp_6.tsp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm.Core\OsmSharp.Osm.Core.csproj">
@@ -222,6 +225,10 @@
     <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
       <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
       <Name>OsmSharp.Tools.Math</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Tools.TSPLIB\OsmSharp.Tools.TSPLIB.csproj">
+      <Project>{24991386-8E24-499A-9A42-2EA5C6D7529B}</Project>
+      <Name>OsmSharp.Tools.TSPLIB</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Tools.Xml.Gpx\OsmSharp.Tools.Xml.Gpx.csproj">
       <Project>{0EB1E0F0-0A18-4C48-820E-E82CB3AC3F72}</Project>

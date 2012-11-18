@@ -51,7 +51,17 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         /// <returns></returns>
         public static TSPLIBProblem ParseFrom(string path)
         {
-            return TSPLIBProblemParser.ParseFromFile(new FileInfo(path));
+            return TSPLIBProblemParser.ParseFrom(new FileInfo(path));
+        }
+
+        /// <summary>
+        /// Parses a TSP-lib file and creates a TSPLIBProblem.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static TSPLIBProblem ParseFrom(FileInfo info)
+        {
+            return TSPLIBProblemParser.ParseFrom(info.OpenText());
         }
 
         /// <summary>
@@ -59,7 +69,7 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static TSPLIBProblem ParseFromFile(FileInfo file)
+        public static TSPLIBProblem ParseFrom(StreamReader reader)
         {
             TSPLIBProblemTypeEnum? problem_type = null;
             TSPLIBProblemWeightTypeEnum? weight_type = null;
@@ -68,7 +78,6 @@ namespace OsmSharp.Tools.TSPLIB.Parser
             string comment = string.Empty;
             string name = string.Empty;
 
-            StreamReader reader = file.OpenText();
             while (!reader.EndOfStream)
             {
                 string line = reader.ReadLine().Trim().Replace(" :", ":");

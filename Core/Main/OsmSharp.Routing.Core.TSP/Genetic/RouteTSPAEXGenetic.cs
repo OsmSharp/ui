@@ -52,7 +52,7 @@ namespace OsmSharp.Osm.Routing.Core.TSP.Genetic
         /// </summary>
         /// <param name="problem"></param>
         /// <returns></returns>
-        internal override ISolver DoCreateSolver()
+        internal override ISolver DoCreateSolver(int size)
         {
             return new EdgeAssemblyCrossOverSolver(100, 100,
                      new _3OptGenerationOperation(),

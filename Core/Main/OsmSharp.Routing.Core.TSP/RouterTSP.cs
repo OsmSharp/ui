@@ -71,7 +71,7 @@ namespace OsmSharp.Osm.Routing.Core.TSP
             double[][] weights = this.CalculateManyToManyWeight(points);
 
             // create solver.
-            ISolver solver = this.DoCreateSolver();
+            ISolver solver = this.DoCreateSolver(points.Length);
             solver.IntermidiateResult += new SolverDelegates.IntermidiateDelegate(solver_IntermidiateResult);
 
             // calculate the TSP.
@@ -94,7 +94,7 @@ namespace OsmSharp.Osm.Routing.Core.TSP
             double[][] weights = this.CalculateManyToManyWeight(points);
 
             // create solver.
-            ISolver solver = this.DoCreateSolver();
+            ISolver solver = this.DoCreateSolver(points.Length);
             solver.IntermidiateResult += new SolverDelegates.IntermidiateDelegate(solver_IntermidiateResult);
 
             // calculate the TSP.
@@ -116,7 +116,15 @@ namespace OsmSharp.Osm.Routing.Core.TSP
             double[][] weights = this.CalculateManyToManyWeight(points);
 
             // create solver.
-            ISolver solver = this.DoCreateSolver();
+            ISolver solver = null;
+            if (points.Length < 6)
+            { // creates a bute force solver.
+                solver = new OsmSharp.Tools.Math.TSP.BruteForce.BruteForceSolver();
+            }
+            else
+            { // creates a solver for the larger problems.
+                solver = this.DoCreateSolver(points.Length);
+            }
             solver.IntermidiateResult += new SolverDelegates.IntermidiateDelegate(solver_IntermidiateResult);
 
             // calculate the TSP.
@@ -223,11 +231,11 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         }
 
         /// <summary>
-        /// Generates a solver.
+        /// Generates a solver in function of the size of the problem.
         /// </summary>
         /// <param name="problem"></param>
         /// <returns></returns>
-        internal abstract ISolver DoCreateSolver();
+        internal abstract ISolver DoCreateSolver(int size);
 
         #region Intermidiate Results
 
