@@ -125,7 +125,9 @@
     <Compile Include="Routing\CH\CHSparseComparisonTests.cs" />
     <Compile Include="Routing\CH\CHSparseRoutingTest.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceRoutingTest.cs" />
+    <Compile Include="Routing\RoutingOneWayTests.cs" />
     <Compile Include="Routing\OsmSharpRouteTests.cs" />
+    <Compile Include="Routing\Raw\RawRoutingOneWayTests.cs" />
     <Compile Include="Routing\Raw\OsmSourceRoutingTest.cs" />
     <Compile Include="Routing\Raw\RawRoutingTests.cs" />
     <Compile Include="Routing\RoutingComparisonTests.cs" />
@@ -172,6 +174,7 @@
     <EmbeddedResource Include="test.v2.1.kml" />
     <EmbeddedResource Include="test_tsp_5.tsp" />
     <EmbeddedResource Include="test_tsp_6.tsp" />
+    <EmbeddedResource Include="test_network_oneway.osm" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm.Core\OsmSharp.Osm.Core.csproj">

@@ -15,153 +15,213 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-//using System;
-//using System.Text;
-//using System.Collections.Generic;
-//using System.Linq;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using OsmSharp.Osm.Routing.CH.Routing;
-//using OsmSharp.Osm.Routing.Core;
-//using OsmSharp.Osm.Routing.Core.Interpreter;
-//using OsmSharp.Osm.Routing.Core.Constraints;
-//using OsmSharp.Osm.Data.Core.DynamicGraph.Memory;
-//using OsmSharp.Osm.Routing.CH.PreProcessing;
-//using OsmSharp.Osm.Data.Core.DynamicGraph;
-//using System.Reflection;
-//using OsmSharp.Osm.Data.XML.Raw.Processor;
-//using OsmSharp.Osm.Routing.CH.Processor;
-//using OsmSharp.Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
-//using OsmSharp.Osm.Routing.CH.PreProcessing.Witnesses;
-//using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using System;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Reflection;
+using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Router;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Osm.Routing.Data;
+using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm.Core;
+using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
+using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.CH.Routing;
+using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Routing.CH.PreProcessing.Ordering;
 
-//namespace OsmSharp.Osm.UnitTests.Routing.CH
-//{
-//    [TestClass]
-//    public class CHEdgeDifferenceRoutingTest : SimpleRoutingTests<CHResolvedPoint>
-//    {
+namespace OsmSharp.Osm.UnitTests.Routing.CH
+{
+    /// <summary>
+    /// Tests the sparse node ordering CH.
+    /// </summary>
+    [TestClass]
+    public class CHEdgeDifferenceRoutingTest : SimpleRoutingTests<RouterPoint, CHEdgeData>
+    {
+        /// <summary>
+        /// Returns a new router.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="basic_router"></param>
+        /// <returns></returns>
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<CHEdgeData> data,
+            IRoutingInterpreter interpreter, IBasicRouter<CHEdgeData> basic_router)
+        {
+            return new Router<CHEdgeData>(data, interpreter, basic_router);
+        }
 
-//        /// <summary>
-//        /// Returns a new router.
-//        /// </summary>
-//        /// <param name="interpreter"></param>
-//        /// <param name="constraints"></param>
-//        /// <returns></returns>
-//        public override IRouter<CHResolvedPoint> BuildRouter(RoutingInterpreterBase interpreter,
-//            IRoutingConstraints constraints)
-//        {
-//            // build the memory data source.
-//            CHDataSource data = new CHDataSource();
+        /// <summary>
+        /// Returns a basic router.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public override IBasicRouter<CHEdgeData> BuildBasicRouter(IBasicRouterDataSource<CHEdgeData> data)
+        {
+            return new CHRouter(data);
+        }
 
-//            // load the data.
-//            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-//                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
-//            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-//            sorter.RegisterSource(data_processor_source);
-//            CHDataProcessorTarget ch_target = new CHDataProcessorTarget(data);
-//            ch_target.RegisterSource(sorter);
-//            ch_target.Pull();
+        /// <summary>
+        /// Builds the data.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <returns></returns>
+        public override IBasicRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
+        {
+            OsmTagsIndex tags_index = new OsmTagsIndex();
 
-//            // do the pre-processing part.
-//            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data.Graph);
-//            INodeWeightCalculator ordering = new OsmSharp.Osm.Routing.CH.PreProcessing.Ordering.EdgeDifference(
-//                data.Graph, witness_calculator);
-//            CHPreProcessor pre_processor = new CHPreProcessor(data.Graph,
-//                ordering, witness_calculator);
-//            pre_processor.Start();
+            // do the data processing.
+            MemoryRouterDataSource<CHEdgeData> data =
+                new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+                data, interpreter, data.TagsIndex);
+            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
+            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
+            sorter.RegisterSource(data_processor_source);
+            target_data.RegisterSource(sorter);
+            target_data.Pull();
 
-//            // create the router from the contracted data.
-//            return new Router(data);
-//        }
+            // do the pre-processing part.
+            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);
+            CHPreProcessor pre_processor = new CHPreProcessor(data,
+                new EdgeDifference(data, witness_calculator), witness_calculator);
+            pre_processor.Start();
 
-//        /// <summary>
-//        /// Tests a simple shortest route calculation.
-//        /// </summary>
-//        [TestMethod]
-//        public void TestCHEdgeDifferenceShortedDefault()
-//        {
-//            this.DoTestShortestDefault();
-//        }
+            return data;
+        }
 
-//        /// <summary>
-//        /// Tests if the raw router preserves tags.
-//        /// </summary>
-//        [TestMethod]
-//        public void TestCHEdgeDifferenceResolvedTags()
-//        {
-//            this.DoTestResolvedTags();
-//        }
+        /// <summary>
+        /// Tests a simple shortest route calculation.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceShortedDefault()
+        {
+            this.DoTestShortestDefault();
+        }
 
-//        /// <summary>
-//        /// Tests if the raw router preserves tags on arcs/ways.
-//        /// </summary>
-//        [TestMethod]
-//        public void TestCHEdgeDifferenceArcTags()
-//        {
-//            this.DoTestArcTags();
-//        }
+        /// <summary>
+        /// Tests if the raw router preserves tags.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceResolvedTags()
+        {
+            this.DoTestResolvedTags();
+        }
 
+        /// <summary>
+        /// Tests if the raw router preserves tags on arcs/ways.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceArcTags()
+        {
+            this.DoTestArcTags();
+        }
 
-//        /// <summary>
-//        /// Test is the CH router can calculate another route.
-//        /// </summary>
-//        [TestMethod]
-//        public void TestCHEdgeDifferenceShortest1()
-//        {
-//            this.DoTestShortest1();
-//        }
+        /// <summary>
+        /// Test is the CH router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceShortest1()
+        {
+            this.DoTestShortest1();
+        }
 
-//        /// <summary>
-//        /// Test is the CH router can calculate another route.
-//        /// </summary>
-//        [TestMethod]
-//        public void TestCHEdgeDifferenceShortest2()
-//        {
-//            this.DoTestShortest2();
-//        }
+        /// <summary>
+        /// Test is the CH router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceShortest2()
+        {
+            this.DoTestShortest2();
+        }
 
-//        /// <summary>
-//        /// Test is the CH router can calculate another route.
-//        /// </summary>
-//        [TestMethod]
-//        public void TestCHEdgeDifferenceShortest3()
-//        {
-//            this.DoTestShortest3();
-//        }
+        /// <summary>
+        /// Test is the CH router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceShortest3()
+        {
+            this.DoTestShortest3();
+        }
 
-//        /// <summary>
-//        /// Test is the CH router can calculate another route.
-//        /// </summary>
-//        [TestMethod]
-//        public void TestCHEdgeDifferenceShortest4()
-//        {
-//            this.DoTestShortest4();
-//        }
+        /// <summary>
+        /// Test is the CH router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceShortest4()
+        {
+            this.DoTestShortest4();
+        }
 
-//        /// <summary>
-//        /// Test is the CH router can calculate another route.
-//        /// </summary>
-//        [TestMethod]
-//        public void TestCHEdgeDifferenceShortest5()
-//        {
-//            this.DoTestShortest5();
-//        }
+        /// <summary>
+        /// Test is the CH router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceShortest5()
+        {
+            this.DoTestShortest5();
+        }
 
-//        /// <summary>
-//        /// Test if the ch router many-to-many weights correspond to the point-to-point weights.
-//        /// </summary>
-//        [TestMethod]
-//        public void TestCHEdgeDifferenceManyToMany1()
-//        {
-//            this.DoTestManyToMany1();
-//        }
+        /// <summary>
+        /// Test is the raw router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceShortestResolved1()
+        {
+            this.DoTestShortestResolved1();
+        }
 
-//        /// <summary>
-//        /// Test if the ch router handles connectivity questions correctly.
-//        /// </summary>
-//        [TestMethod]
-//        public void TestCHEdgeDifferenceConnectivity1()
-//        {
-//            this.DoTestConnectivity1();
-//        }
-//    }
-//}
+        /// <summary>
+        /// Test is the raw router can calculate another route.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceShortestResolved2()
+        {
+            this.DoTestShortestResolved2();
+        }
+
+        /// <summary>
+        /// Test if the ch router many-to-many weights correspond to the point-to-point weights.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceManyToMany1()
+        {
+            this.DoTestManyToMany1();
+        }
+
+        /// <summary>
+        /// Test if the ch router handles connectivity questions correctly.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceConnectivity1()
+        {
+            this.DoTestConnectivity1();
+        }
+
+        /// <summary>
+        /// Tests a simple shortest route calculation.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceResolveAllNodes()
+        {
+            this.DoTestResolveAllNodes();
+        }
+
+        /// <summary>
+        /// Tests a simple shortest route calculation.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceResolveBetweenNodes()
+        {
+            this.DoTestResolveBetweenNodes();
+        }
+    }
+}

@@ -41,6 +41,7 @@ using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic;
 using OsmSharp.Routing.Core.Route;
 using OsmSharp.Osm.Data.Core.Processor.Progress;
+using OsmSharp.Osm.Routing.Test.CH;
 
 namespace OsmSharp.Osm.Routing.Test
 {
@@ -57,6 +58,7 @@ namespace OsmSharp.Osm.Routing.Test
             //PBF.PBFTest.Execute();
             //ManyToMany.ManyToManyExecution.Execute();
             Point2Point.Point2PointExecution.Execute();
+            //CHTest.Execute();
 
             //// initialize the interpreters.
             //OsmRoutingInterpreter interpreter = 

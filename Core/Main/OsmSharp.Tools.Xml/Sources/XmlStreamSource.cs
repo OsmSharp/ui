@@ -1,21 +1,4 @@
-﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
-// 
-// This file is part of OsmSharp.
-// 
-// OsmSharp is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
-// 
-// OsmSharp is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,32 +7,20 @@ using System.Xml;
 
 namespace OsmSharp.Tools.Xml.Sources
 {
-    /// <summary>
-    /// Represents an xml source for a file.
-    /// </summary>
-    public class XmlFileSource : IXmlSource
+    public class XmlStreamSource : IXmlSource
     {
         /// <summary>
         /// The reference to the file.
         /// </summary>
-        private FileInfo _stream;
+        private Stream _stream;
 
         /// <summary>
         /// Creates a new xml file source.
         /// </summary>
         /// <param name="filename"></param>
-        public XmlFileSource(string filename)
+        public XmlStreamSource(Stream stream)
         {
-            _stream = new FileInfo(filename);
-        }
-
-        /// <summary>
-        /// Creates a new xml file source.
-        /// </summary>
-        /// <param name="file"></param>
-        public XmlFileSource(FileInfo file)
-        {
-            _stream = file;
+            _stream = stream;
         }
 
         #region IXmlSource Members
@@ -59,7 +30,8 @@ namespace OsmSharp.Tools.Xml.Sources
         /// </summary>
         public XmlReader GetReader()
         {
-            return XmlReader.Create(_stream.OpenRead());
+            _stream.Seek(0, SeekOrigin.Begin);
+            return XmlReader.Create(_stream);
         }
 
         /// <summary>
@@ -77,11 +49,9 @@ namespace OsmSharp.Tools.Xml.Sources
             settings.NewLineChars  = Environment.NewLine;
             settings.NewLineHandling = NewLineHandling.Entitize;
             settings.OmitXmlDeclaration = true;
-            if (!_stream.Exists)
-            {
-                return XmlWriter.Create(_stream.OpenWrite(), settings);
-            }
-            return XmlWriter.Create(_stream.FullName, settings);
+
+            _stream.SetLength(0);
+            return XmlWriter.Create(_stream);
         }
 
         /// <summary>

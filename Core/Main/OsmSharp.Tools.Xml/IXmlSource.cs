@@ -28,14 +28,6 @@ namespace OsmSharp.Tools.Xml
     /// </summary>
     public interface IXmlSource
     {
-        ///// <summary>
-        ///// Returns the name of this xml source.
-        ///// </summary>
-        //string Name
-        //{
-        //    get;
-        //}
-
         /// <summary>
         /// Returns true if the xml source is readonly.
         /// </summary>

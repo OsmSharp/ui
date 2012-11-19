@@ -92,18 +92,22 @@ namespace OsmSharp.Routing.CH.PreProcessing
             return vertex_id;
         }
 
-        public void Remove(uint vertex_id)
+        public bool Remove(uint vertex_id)
         {
             // remove the vertex.
-            float weight = _weights[vertex_id];
-            HashSet<uint> first_set = _sorted_weights[weight];
-            first_set.Remove(vertex_id);
-            if (first_set.Count == 0)
+            float weight;
+            if (_weights.TryGetValue(vertex_id, out weight))
             {
-                _sorted_weights.Remove(weight);
+                HashSet<uint> first_set = _sorted_weights[weight];
+                first_set.Remove(vertex_id);
+                if (first_set.Count == 0)
+                {
+                    _sorted_weights.Remove(weight);
+                }
+                _weights.Remove(vertex_id);
+                return true;
             }
-            _weights.Remove(vertex_id);
-
+            return false;
         }
 
         public uint Peek()

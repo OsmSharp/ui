@@ -74,6 +74,8 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
 
             // do the pre-processing part.
             INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(osm_data);
+            //CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
+            //    new SparseOrdering(osm_data), witness_calculator);
             CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
                 new EdgeDifference(osm_data, witness_calculator), witness_calculator);
             pre_processor.Start();
@@ -88,6 +90,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// <returns></returns>
         public override IBasicRouter<CHEdgeData> BuildBasicRouter(IBasicRouterDataSource<CHEdgeData> data)
         {
+            //return new DykstraRouting<CHEdgeData>(data.TagsIndex);
             return new CHRouter(data);
         }
 

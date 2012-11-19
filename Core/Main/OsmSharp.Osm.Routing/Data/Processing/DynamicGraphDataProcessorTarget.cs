@@ -238,7 +238,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
                                 { // 
                                     if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value))
                                     {
-                                        this.AddRoadEdge(way.Tags, true, to.Value, from.Value);
+                                        this.AddRoadEdge(way.Tags, false, to.Value, from.Value);
                                     }
                                 }
 

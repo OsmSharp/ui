@@ -82,7 +82,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                     }
                 }
 
-                // count the edges.
+                // //count the edges.
                 //if (from.Value.Forward)
                 //{
                 //    removed++;

@@ -92,8 +92,10 @@ namespace OsmSharp.Osm.Routing.Data.Processing
             }
             else
             { // define back/forward.
-                forward = direction_forward && direction.Value;
-                backward = !direction_forward && !direction.Value;
+                forward = (direction_forward && direction.Value) || 
+                    (!direction_forward && !direction.Value);
+                backward = (direction_forward && !direction.Value) ||
+                    (!direction_forward && direction.Value);
             }
 
             // initialize the edge data.

@@ -82,6 +82,15 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
             this.TestCompareAll("test_network.osm");
         }
 
+        /// <summary>
+        /// Compares all routes possible against a reference implementation.
+        /// </summary>
+        [TestMethod]
+        public void TestCHSparseOneWayAgainstReference()
+        {
+            this.TestCompareAll("test_network_oneway.osm");
+        }
+
         ///// <summary>
         ///// Compares all routes possible against a reference implementation.
         ///// </summary>

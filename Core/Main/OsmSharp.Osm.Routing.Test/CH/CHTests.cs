@@ -1,98 +1,74 @@
-﻿//// OsmSharp - OpenStreetMap tools & library.
-//// Copyright (C) 2012 Abelshausen Ben
-//// 
-//// This file is part of OsmSharp.
-//// 
-//// OsmSharp is free software: you can redistribute it and/or modify
-//// it under the terms of the GNU General Public License as published by
-//// the Free Software Foundation, either version 2 of the License, or
-//// (at your option) any later version.
-//// 
-//// OsmSharp is distributed in the hope that it will be useful,
-//// but WITHOUT ANY WARRANTY; without even the implied warranty of
-//// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-//// GNU General Public License for more details.
-//// 
-//// You should have received a copy of the GNU General Public License
-//// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-//using OsmSharp.Osm.Routing.Core;
-//using OsmSharp.Osm.Routing.Core.Interpreter;
-//using OsmSharp.Osm.Routing.Core.Constraints;
-//using OsmSharp.Osm.Data.XML.Raw.Processor;
-//using System.IO;
-//using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-//using OsmSharp.Osm.Routing.CH.Processor;
-//using OsmSharp.Osm.Routing.CH.PreProcessing;
-//using OsmSharp.Osm.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
-//using OsmSharp.Osm.Routing.CH.PreProcessing.Witnesses;
-//using System.Reflection;
-//using OsmSharp.Tools.Math.Geo;
-//using System.Collections.Generic;
-//namespace OsmSharp.Osm.Routing.Test.CH
-//{
-//    class CHTest
-//    {
-//        /// <summary>
-//        /// Does some testing!
-//        /// </summary>
-//        /// <param name="name"></param>
-//        /// <param name="test_count"></param>
-//        public static void Test(string name, int test_count)
-//        {
-//            CHTest.BuildRouter(string.Format("Osm.Routing.Test.CH.{0}.osm", name), string.Format("Osm.Routing.Test.CH.{0}.csv", name),
-//                new OsmSharp.Osm.Routing.Core.Interpreter.Default.DefaultVehicleInterpreter(VehicleEnum.Car),
-//                new OsmSharp.Osm.Routing.Core.Constraints.Cars.DefaultCarConstraints());
-//        }
+using OsmSharp.Osm.Core;
+using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm.Data.Core.Processor;
+using OsmSharp.Osm.Data.PBF.Raw.Processor;
+using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
+using System.Reflection;
+using OsmSharp.Osm.Routing.Interpreter;
+using System.IO;
+namespace OsmSharp.Osm.Routing.Test.CH
+{
+    class CHTest
+    {
+        public static void Execute()
+        {
+            CHTest.DoContraction("matrix");
+        }
 
-//        /// <summary>
-//        /// Returns a new router.
-//        /// </summary>
-//        /// <param name="interpreter"></param>
-//        /// <param name="constraints"></param>
-//        /// <returns></returns>
-//        public static void BuildRouter(string xml_embedded, string csv_embedded, 
-//            RoutingInterpreterBase interpreter, IRoutingConstraints constraints)
-//        {
-//            // build the memory data source.
-//            CHDataSource data = new CHDataSource();
+        private static void DoContraction(string name)
+        {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
+            Stream data_stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded);
+            bool pbf = false;
 
-//            // load the data.
-//            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-//                Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded));
-//            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-//            sorter.RegisterSource(data_processor_source);
-//            CHDataProcessorTarget ch_target = new CHDataProcessorTarget(data);
-//            ch_target.RegisterSource(sorter);
-//            ch_target.Pull();
+            OsmTagsIndex tags_index = new OsmTagsIndex();
 
-//            // do the pre-processing part.
-//            CHPreProcessor pre_processor = new CHPreProcessor(data.Graph,
-//                new SparseOrdering(data.Graph), new DykstraWitnessCalculator(data.Graph));
-//            pre_processor.Start();
+            // do the data processing.
+            MemoryRouterDataSource<CHEdgeData> osm_data =
+                new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+                osm_data, interpreter, osm_data.TagsIndex);
+            DataProcessorSource data_processor_source;
+            if (pbf)
+            {
+                data_processor_source = new PBFDataProcessorSource(data_stream);
+            }
+            else
+            {
+                data_processor_source = new XmlDataProcessorSource(data_stream);
+            }
 
-//            // create the router from the contracted data.
-//            IRouter<CHResolvedPoint> router = new Router(data);
+            target_data.RegisterSource(data_processor_source);
+            target_data.Pull();
 
-//            // read matrix points.
-//            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
-//            string[][] lines = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
-//                Assembly.GetExecutingAssembly().GetManifestResourceStream(csv_embedded), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated);
-//            foreach (string[] row in lines)
-//            {
-//                // be carefull with the parsing and the number formatting for different cultures.
-//                double latitude = double.Parse(row[2].ToString(), System.Globalization.CultureInfo.InvariantCulture);
-//                double longitude = double.Parse(row[3].ToString(), System.Globalization.CultureInfo.InvariantCulture);
-
-//                GeoCoordinate point = new GeoCoordinate(latitude, longitude);
-//                coordinates.Add(point);
-//            }
-
-//            // resolve the point(s).
-//            CHResolvedPoint[] points = router.Resolve(coordinates.ToArray());
-
-//            // calculate the matrix.
-//            float[][] weights = router.CalculateManyToManyWeight(points, points);
-//        }
-//    }
-//}
+            // do the pre-processing part.
+            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(osm_data);
+            CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
+                new SparseOrdering(osm_data), witness_calculator);
+            pre_processor.Start();
+        }
+    }
+}

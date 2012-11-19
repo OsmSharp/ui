@@ -82,7 +82,7 @@ namespace OsmSharp.UnitTests
         public void KmlReadTestv2_0()
         {
             // instantiate and load the gpx test document.
-            XmlFileSource source = new XmlFileSource(
+            XmlStreamSource source = new XmlStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test.v2.0.kml"));
             KmlDocument document = new KmlDocument(source);
             object kml = document.Kml;
@@ -192,7 +192,7 @@ namespace OsmSharp.UnitTests
         public void KmlReadTestv2_0_response()
         {
             // instantiate and load the gpx test document.
-            XmlFileSource source = new XmlFileSource(
+            XmlStreamSource source = new XmlStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test.v2.0.response.kml"));
             KmlDocument document = new KmlDocument(source);
             object kml = document.Kml;
@@ -300,7 +300,7 @@ namespace OsmSharp.UnitTests
         public void KmlReadTestv2_1()
         {
             // instantiate and load the gpx test document.
-            XmlFileSource source = new XmlFileSource(
+            XmlStreamSource source = new XmlStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test.v2.1.kml"));
             KmlDocument document = new KmlDocument(source);
             object kml = document.Kml;

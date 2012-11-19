@@ -60,7 +60,7 @@ namespace OsmSharp.UnitTests
         public void GpxReadv1_0Test()
         {
             // instantiate and load the gpx test document.
-            XmlFileSource source = new XmlFileSource(
+            XmlStreamSource source = new XmlStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test.v1.0.gpx"));
             GpxDocument document = new GpxDocument(source);
             object gpx = document.Gpx;
@@ -154,7 +154,7 @@ namespace OsmSharp.UnitTests
         public void GpxReadv1_1Test()
         {
             // instantiate and load the gpx test document.
-            XmlFileSource source = new XmlFileSource(
+            XmlStreamSource source = new XmlStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test.v1.1.gpx"));
             GpxDocument document = new GpxDocument(source);
             object gpx = document.Gpx;

@@ -99,6 +99,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
             // get all nodes from the source.
             _all_nodes = _target.GetVertices().GetEnumerator();
 
+            uint total = _target.VertexCount;
+            uint current = 1;
+
             // loop over the priority queue until it's empty.
             uint? vertex = this.SelectNext();
             while (vertex != null)
@@ -108,6 +111,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
                 // select the next vertex.
                 vertex = this.SelectNext();
+
+                Tools.Core.Output.OutputStreamHost.ReportProgress(current, total, "CHPreProcessor", "Pre-processing...");
+                current++;
             }
         }
 
@@ -117,6 +123,14 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="vertex_id"></param>
         public void Contract(uint vertex)
         {
+            if (_contracted.Length > vertex && _contracted[vertex])
+            {
+                throw new Exception("Is already contracted!");
+            }
+
+            // keep the neighbours.
+            HashSet<uint> neighbours = new HashSet<uint>();
+
             // get all information from the source.
             KeyValuePair<uint, CHEdgeData>[] edges = _target.GetArcs(vertex);
 
@@ -124,6 +138,37 @@ namespace OsmSharp.Routing.CH.PreProcessing
             foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
             { // remove the edge.
                 _target.DeleteArc(edge.Key, vertex);
+
+                // keep the neighbour.
+                neighbours.Add(edge.Key);
+            }
+
+            // calculate all witnesses.
+            Dictionary<uint, Dictionary<uint, bool>> witnesses
+                = new Dictionary<uint, Dictionary<uint, bool>>();
+            foreach (KeyValuePair<uint, CHEdgeData> from in edges) // loop over all from-neighbours.
+            { // loop over all from neighbours.
+                // skip forward edges.
+                if (!from.Value.Backward) { continue; }
+
+                foreach (KeyValuePair<uint, CHEdgeData> to in edges) // loop over all to-neighbours.
+                { // loop over all to neighbours.
+                    // skip backward edges.
+                    if (!to.Value.Forward) { continue; }
+
+                    // add weights.
+                    float weight = (float)to.Value.Weight + (float)from.Value.Weight;
+
+                    // test for a witness.
+                    Dictionary<uint, bool> from_dic;
+                    if (!witnesses.TryGetValue(from.Key, out from_dic))
+                    {
+                        from_dic = new Dictionary<uint, bool>();
+                        witnesses[from.Key] = from_dic;
+                    }
+                    from_dic[to.Key] =
+                       _witness_calculator.Exists(from.Key, to.Key, vertex, weight);
+                }
             }
 
             foreach (KeyValuePair<uint, CHEdgeData> from in edges) // loop over all from-neighbours.
@@ -143,7 +188,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     float weight = (float)to.Value.Weight + (float)from.Value.Weight;
 
                     // test for a witness.
-                    if (!_witness_calculator.Exists(from.Key, to.Key, vertex, weight))
+                    //if (!_witness_calculator.Exists(from.Key, to.Key, vertex, weight))
+                    if(!witnesses[from.Key][to.Key])
                     { // add edge from from to to.
                         CHEdgeData new_data = new CHEdgeData();
                         new_data.Forward = true;
@@ -155,7 +201,38 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         _target.AddArc(from.Key, to.Key, new_data);
 
                         this.NotifyArc(from.Key, to.Key); // notify a new arc.
+
+                        bool witness;
+                        Dictionary<uint, bool> from_dic;
+                        if (!witnesses.TryGetValue(to.Key, out from_dic) ||
+                            !from_dic.TryGetValue(from.Key, out witness) ||
+                            witness)
+                        { // there is a witness in the reverse direction but add an edge anyway.
+                            new_data = new CHEdgeData();
+                            new_data.Forward = false;
+                            new_data.Backward = false;
+                            new_data.Weight = weight;
+                            new_data.ContractedVertexId = vertex;
+
+                            // add the forward direction.
+                            _target.AddArc(to.Key, from.Key, new_data);
+
+                        }
                     }
+                }
+            }
+
+            // re-enqueue all the neigbours.
+            foreach (uint neighbour in neighbours)
+            {
+                if (_queue.Remove(neighbour))
+                {
+                    this.ReQueue(neighbour);
+                }
+                if (_contracted.Length > neighbour && _contracted[neighbour])
+                { // vertex was neighbour but already contracted (= impossible)
+                    throw new Exception(string.Format("Vertex {0} has contracted neighbour: {1}!",
+                        vertex, neighbour));
                 }
             }
 
@@ -222,6 +299,12 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <returns></returns>
         private uint? SelectNext()
         {
+            // enqueu more vertices.
+            while (_queue.Count < 10000 && _all_nodes.MoveNext())
+            { // keep enqueuing until the last node, or until no more nodes are left.
+                this.ReQueue(_all_nodes.Current);
+            }
+
             // first check the first of the current queue.
             if (_queue.Count > 0)
             { // get the first vertex and check.
@@ -234,6 +317,19 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 }
             }
 
+            //// first check the first of the current queue.
+            //foreach (float weight in _queue.Weights)
+            //{ // get the first vertex and check.
+            //    foreach (uint vertex in new List<uint>(_queue.PeekAtWeight(weight)))
+            //    { // get the first vertex and check.
+            //        if (this.CanBeContracted(vertex))
+            //        { // yet, this vertex can be contracted!
+            //            _queue.Remove(vertex);
+            //            return vertex;
+            //        }
+            //    }
+            //}
+
             // keep going over the enumerator and check.
             while (_all_nodes.MoveNext())
             {
@@ -244,19 +340,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 { // yes, this vertex can be contracted!
                     _queue.Remove(next);
                     return next;
-                }
-            }
-
-            // first check the first of the current queue.
-            foreach (float weight in _queue.Weights)
-            { // get the first vertex and check.
-                foreach (uint vertex in new List<uint>(_queue.PeekAtWeight(weight)))
-                { // get the first vertex and check.
-                    if (this.CanBeContracted(vertex))
-                    { // yet, this vertex can be contracted!
-                        _queue.Remove(vertex);
-                        return vertex;
-                    }
                 }
             }
 
@@ -276,28 +359,55 @@ namespace OsmSharp.Routing.CH.PreProcessing
         private bool CanBeContracted(uint vertex)
         {
             // calculate the priority of the vertex first.
+            float priority = this.ReQueue(vertex);
+
+            if (priority < float.MaxValue)
+            { // there is a valid priority.
+                return this.CanBeContractedLocally(vertex, priority);
+            }
+            return false; // priority is 'infinite'.
+        }
+
+        /// <summary>
+        /// Re-calculates the priority and queues the given vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        private float ReQueue(uint vertex)
+        {            
+            // calculate the priority of the vertex first.
+            //_queue.Remove(vertex);
             float priority = this.CalculatePriority(vertex);
 
             if (priority < float.MaxValue)
             {
                 // enqueue the vertex.
                 _queue.Enqueue(vertex, priority);
+            }
+            return priority;
+        }
 
-                // compare the priority with that of it's neighbours.
-                foreach (KeyValuePair<uint, CHEdgeData> edge in _target.GetArcs(vertex))
-                { // check the priority.
-                    if (!this.IsContracted(edge.Key))
-                    {
-                        float edge_priority = this.CalculatePriority(edge.Key);
-                        if (edge_priority < priority) // TODO: <= or <
-                        { // there is a neighbour with lower priority.
-                            return false;
-                        }
+        /// <summary>
+        /// Returns true if the given vertex's neighbours have a higher priority.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="priority"></param>
+        /// <returns></returns>
+        private bool CanBeContractedLocally(uint vertex, float priority)
+        {
+            // compare the priority with that of it's neighbours.
+            foreach (KeyValuePair<uint, CHEdgeData> edge in _target.GetArcs(vertex))
+            { // check the priority.
+                if (!this.IsContracted(edge.Key))
+                {
+                    float edge_priority = this.CalculatePriority(edge.Key);
+                    if (edge_priority < priority) // TODO: <= or <
+                    { // there is a neighbour with lower priority.
+                        return false;
                     }
                 }
-                return true;
             }
-            return false; // priority is 'infinite'.
+            return true;
         }
 
         /// <summary>

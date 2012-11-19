@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
+using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Osm.Routing.Test.Point2Point
 {
@@ -17,8 +18,8 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// </summary>
         public static void Execute()
         {
-            Point2PointExecution.Execute<OsmSharp.Osm.Routing.Data.OsmEdgeData>(
-                new Point2Point.Point2PointRawTests());
+            //Point2PointExecution.Execute<OsmSharp.Osm.Routing.Data.OsmEdgeData>(
+            //    new Point2Point.Point2PointRawTests());
             Point2PointExecution.Execute<OsmSharp.Routing.CH.PreProcessing.CHEdgeData>(
                 new Point2Point.Point2PointCHTests());
         }
@@ -31,7 +32,12 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         static void Execute<EdgeData>(Point2PointTest<EdgeData> tester)
             where EdgeData : IDynamicGraphEdgeData
         {
-            tester.ExecuteComparisionTests("tiny", 100);
+            //tester.ExecuteComparisonTest("matrix", new GeoCoordinate(51.0116202, 3.9704693), new GeoCoordinate(51.0104423, 3.9673151));
+
+            //tester.ExecuteComparisonTests("tiny", 100);
+            //tester.ExecuteComparisonTests("matrix", 100);
+            //tester.ExecuteComparisonTests("matrix_big_area", 100);
+            //tester.ExecuteComparisonTests("moscow", 100);
 
             //tester.ExecuteTest("tiny", 100);
             //tester.ExecuteTest("matrix", 100);
@@ -40,6 +46,8 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             //tester.ExecuteTest("moscow", 100);
             //tester.ExecuteTest("matrix_big_area", 100);
             //tester.ExecuteTest("lebbeke", 100);
+            tester.ExecuteTest("flanders_highway", (new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf")).OpenRead(),
+                true, 100);
 
             //tester.ExecuteTestIncrementalBoundingBox("eeklo", 100, new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(
             //    new OsmSharp.Tools.Math.Geo.GeoCoordinate(51.10800, 3.46400),

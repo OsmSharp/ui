@@ -241,13 +241,45 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// </summary>
         /// <param name="name"></param>
         /// <param name="test_count"></param>
-        public void ExecuteComparisionTests(string name, int test_count)
+        public void ExecuteComparisonTests(string name, int test_count)
         {
             string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
 
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             this.ExecuteComparisionTests(name,
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded), false, interpreter, test_count);
+        }
+
+        /// <summary>
+        /// Executes a test comparing two routes.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public void ExecuteComparisonTest(string name, GeoCoordinate from, GeoCoordinate to)
+        {
+            string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
+            Stream data_stream =
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded);
+
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            // build the reference router.
+            IRouter<RouterPoint> reference_router = this.BuildReferenceRouter(data_stream, false,
+                interpreter);
+            if (reference_router != null)
+            {
+                // build the new router.
+                IBasicRouterDataSource<EdgeData> data = this.BuildData(data_stream, false,
+                        interpreter, null);
+                IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+                IRouter<RouterPoint> router = this.BuildRouter(data, interpreter, basic_router);
+
+                OsmSharpRoute route = router.Calculate(
+                    router.Resolve(from), router.Resolve(to));
+                OsmSharpRoute route_reference = reference_router.Calculate(
+                    reference_router.Resolve(from), reference_router.Resolve(to));
+
+            }
         }
 
         /// <summary>
@@ -259,6 +291,8 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         private void ExecuteComparisionTests(string name, Stream data_stream, bool pbf,
             IRoutingInterpreter interpreter, int test_count)
         {
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Comparison Test {0}: {1}x", name, test_count);
+
             // build the reference router.
             IRouter<RouterPoint> reference_router = this.BuildReferenceRouter(data_stream, pbf,
                 interpreter);
@@ -316,7 +350,6 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                         "Building pairs list...");
                 }
 
-                long before = DateTime.Now.Ticks;
                 for (int idx = 0; idx < test_pairs.Count; idx++)
                 {
                     KeyValuePair<RouterPoint, RouterPoint> pair = test_pairs[idx];
@@ -327,20 +360,34 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
 
                     if (reference_route != null)
                     { // the reference route was found!
-                        if (route.TotalDistance != reference_route.TotalDistance)
+                        if (route == null)
+                        { // the other routes does not exist!
+                            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
+                            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(
+                                "Route does not exist:{0} {1}m", reference_route.Entries.Length,
+                                    reference_route.TotalDistance);
+
+                            reference_route.SaveAsGpx(new FileInfo(
+                                string.Format(@"c:\temp\route_{0}_reference_not_exist.gpx", reference_route.Entries.Length)));
+                        }
+                        else if (System.Math.Abs(route.TotalDistance - reference_route.TotalDistance) > 0.00001)
                         { // the routes are not equal.
                             OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
-                            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("One route not found!");
+                            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(
+                                "Routes do not match:{0} with {1}m difference", reference_route.Entries.Length,
+                                    route.TotalDistance - reference_route.TotalDistance);
+
+                            route.SaveAsGpx(new FileInfo(
+                                string.Format(@"c:\temp\route_{0}.gpx", reference_route.Entries.Length)));
+                            reference_route.SaveAsGpx(new FileInfo(
+                                string.Format(@"c:\temp\route_{0}_reference.gpx", reference_route.Entries.Length)));
                         }
                     }
 
                     OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, test_pairs.Count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
                         "Routing pairs...");
                 }
-                long after = DateTime.Now.Ticks;
                 OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
-                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("Average calculation time for {0} random routes: {1}ms",
-                    test_count, (new TimeSpan((after - before) / test_count)).TotalMilliseconds.ToString()));
             }
         }
 

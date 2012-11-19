@@ -31,7 +31,18 @@ namespace OsmSharp.Osm.Routing.Interpreter
         public OsmRoutingInterpreter()
         {
             _edge_interpreter = new Edge.EdgeInterpreter();
-            _constraints = new DefaultHighwayConstraints(_edge_interpreter);            
+            _constraints = null;
+            //_constraints = new DefaultHighwayConstraints(_edge_interpreter);            
+        }
+
+        /// <summary>
+        /// Creates a new routing interpreter with given constraints.
+        /// </summary>
+        /// <param name="constraints"></param>
+        public OsmRoutingInterpreter(IRoutingConstraints constraints)
+        {
+            _edge_interpreter = new Edge.EdgeInterpreter();
+            _constraints = constraints;   
         }
 
         /// <summary>

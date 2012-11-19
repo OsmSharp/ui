@@ -48,7 +48,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         public DykstraWitnessCalculator(IDynamicGraph<CHEdgeData> data)
         {
             _router = new CHRouter(data);
-            _max_settles = int.MaxValue;
+            _max_settles = 40;
         }
 
         /// <summary>
