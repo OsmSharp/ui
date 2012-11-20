@@ -137,6 +137,7 @@
     <Compile Include="Routing\RoutingTests.cs" />
     <Compile Include="Routing\RoutingInterpreterTests.cs" />
     <Compile Include="Tiles\TilesTests.cs" />
+    <Compile Include="Tools\BinairyHeapTests.cs" />
     <Compile Include="Tools\GpxXmlTest.cs" />
     <Compile Include="Tools\KmlXmlTest.cs" />
     <Compile Include="Tools\LambertProjectionTest.cs" />

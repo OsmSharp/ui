@@ -77,7 +77,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             //CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
             //    new SparseOrdering(osm_data), witness_calculator);
             CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
-                new EdgeDifference(osm_data, witness_calculator), witness_calculator);
+                new EdgeDifferenceContractedSearchSpace(osm_data, witness_calculator), witness_calculator);
             pre_processor.Start();
 
             return osm_data;

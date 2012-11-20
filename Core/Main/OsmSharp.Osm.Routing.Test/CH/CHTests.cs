@@ -28,13 +28,14 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using System.Reflection;
 using OsmSharp.Osm.Routing.Interpreter;
 using System.IO;
+using OsmSharp.Routing.CH.PreProcessing.Ordering;
 namespace OsmSharp.Osm.Routing.Test.CH
 {
     class CHTest
     {
         public static void Execute()
         {
-            CHTest.DoContraction("matrix");
+            CHTest.DoContraction("lebbeke");
         }
 
         private static void DoContraction(string name)
@@ -67,7 +68,7 @@ namespace OsmSharp.Osm.Routing.Test.CH
             // do the pre-processing part.
             INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(osm_data);
             CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
-                new SparseOrdering(osm_data), witness_calculator);
+                new EdgeDifference(osm_data, witness_calculator), witness_calculator);
             pre_processor.Start();
         }
     }
