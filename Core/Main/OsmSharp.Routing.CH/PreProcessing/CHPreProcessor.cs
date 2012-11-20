@@ -134,6 +134,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
             // get all information from the source.
             KeyValuePair<uint, CHEdgeData>[] edges = _target.GetArcs(vertex);
 
+            // report the before contraction event.
+            this.OnBeforeContraction(vertex, edges);
+
             // remove the edges from the neighbours to the target.
             foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
             { // remove the edge.
@@ -241,6 +244,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
             // notify a contracted neighbour.
             _calculator.NotifyContracted(vertex);
+
+            // report the after contraction event.
+            this.OnAfterContraction(vertex, edges);
         }
 
         #endregion
@@ -279,6 +285,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             }
             return false;
         }
+
         #endregion
 
         #region Selection
@@ -482,6 +489,49 @@ namespace OsmSharp.Routing.CH.PreProcessing
             if (this.NotifyRemoveEvent != null)
             {
                 this.NotifyRemoveEvent(from_id, to_id);
+            }
+        }
+
+        /// <summary>
+        /// The delegate for arc notifications.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="edges"></param>
+        public delegate void VertexDelegate(uint vertex, KeyValuePair<uint, CHEdgeData>[] edges);
+
+        /// <summary>
+        /// The before contraction delegate.
+        /// </summary>
+        public event VertexDelegate OnBeforeContractionEvent;
+
+        /// <summary>
+        /// Notifies an arc removal.
+        /// </summary>
+        /// <param name="from_id"></param>
+        /// <param name="to_id"></param>
+        private void OnBeforeContraction(uint vertex, KeyValuePair<uint, CHEdgeData>[] edges)
+        {
+            if (this.OnBeforeContractionEvent != null)
+            {
+                this.OnBeforeContractionEvent(vertex, edges);
+            }
+        }
+
+        /// <summary>
+        /// The after contraction delegate.
+        /// </summary>
+        public event VertexDelegate OnAfterContractionEvent;
+
+        /// <summary>
+        /// Notifies an arc removal.
+        /// </summary>
+        /// <param name="from_id"></param>
+        /// <param name="to_id"></param>
+        private void OnAfterContraction(uint vertex, KeyValuePair<uint, CHEdgeData>[] edges)
+        {
+            if (this.OnAfterContractionEvent != null)
+            {
+                this.OnAfterContractionEvent(vertex, edges);
             }
         }
 

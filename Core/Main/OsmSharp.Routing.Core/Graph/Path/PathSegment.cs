@@ -183,5 +183,44 @@ namespace OsmSharp.Routing.Core.Graph.Path
             vertices.Reverse();
             return vertices.ToArray();
         }
+
+        /// <summary>
+        /// Returns true if the path is the samen.
+        /// </summary>
+        /// <param name="segment1"></param>
+        /// <param name="segment2"></param>
+        /// <returns></returns>
+        public static bool operator ==(PathSegment<IdType> segment1, PathSegment<IdType> segment2)
+        {
+            if ((object)segment1 != null && (object)segment2 != null)
+            {
+                if (segment1.VertexId.Equals(segment2.VertexId) &&
+                    segment1.Weight == segment2.Weight)
+                {
+                    if ((object)segment1.From != null && (object)segment2.From != null)
+                    {
+                        return segment1.From == segment2.From;
+                    }
+                    else
+                    {
+                        return (object)segment1.From == null && (object)segment2.From == null;
+                    }
+                }
+                return false;
+            }
+            return (object)segment1 == null && (object)segment2 == null;
+        }
+
+
+        /// <summary>
+        /// Returns true if the path is the samen.
+        /// </summary>
+        /// <param name="segment1"></param>
+        /// <param name="segment2"></param>
+        /// <returns></returns>
+        public static bool operator !=(PathSegment<IdType> segment1, PathSegment<IdType> segment2)
+        {
+            return !(segment2 == segment1);
+        }
     }
 }

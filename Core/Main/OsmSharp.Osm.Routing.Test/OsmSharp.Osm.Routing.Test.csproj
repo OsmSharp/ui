@@ -158,6 +158,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CH\CHTests.cs" />
+    <Compile Include="CH\CHVerifiedContractionTests.cs" />
     <Compile Include="Connected\ConnectedTest.cs" />
     <Compile Include="ConsoleProgressReporter.cs" />
     <Compile Include="ManyToMany\ManyToManyCHTests.cs" />

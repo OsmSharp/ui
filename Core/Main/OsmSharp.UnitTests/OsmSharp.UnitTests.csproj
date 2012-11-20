@@ -125,6 +125,8 @@
     <Compile Include="Routing\CH\CHSparseComparisonTests.cs" />
     <Compile Include="Routing\CH\CHSparseRoutingTest.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceRoutingTest.cs" />
+    <Compile Include="Routing\CH\CHVerifiedContractionTests.cs" />
+    <Compile Include="Routing\PathSegmentTests.cs" />
     <Compile Include="Routing\RoutingOneWayTests.cs" />
     <Compile Include="Routing\OsmSharpRouteTests.cs" />
     <Compile Include="Routing\Raw\RawRoutingOneWayTests.cs" />
@@ -192,6 +194,10 @@
     <ProjectReference Include="..\OsmSharp.Osm.Data.XML\OsmSharp.Osm.Data.XML.csproj">
       <Project>{18254C55-15C8-4438-9F92-B3B78E2720F5}</Project>
       <Name>OsmSharp.Osm.Data.XML</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Osm.Routing.Test\OsmSharp.Osm.Routing.Test.csproj">
+      <Project>{BB016754-882F-49EB-8965-561E5F413498}</Project>
+      <Name>OsmSharp.Osm.Routing.Test</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Osm.Routing\OsmSharp.Osm.Routing.csproj">
       <Project>{5E146436-B64C-4C3A-832E-26A53AA6BA54}</Project>
