@@ -115,6 +115,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Routing\CH\Contraction\CHContractionTests.cs" />
     <Compile Include="Data\NodeTests.cs" />
     <Compile Include="Data\PBFTests.cs" />
     <Compile Include="Data\Processing\PBFDataProcessingSourceTests.cs" />
@@ -168,6 +169,9 @@
   <ItemGroup>
     <EmbeddedResource Include="test_network_big.osm" />
     <EmbeddedResource Include="test_network_real1.osm" />
+    <EmbeddedResource Include="Routing\CH\Contraction\contraction_test3.osm" />
+    <EmbeddedResource Include="Routing\CH\Contraction\contraction_test2.osm" />
+    <EmbeddedResource Include="Routing\CH\Contraction\contraction_test1.osm" />
     <None Include="test_network.svg" />
     <EmbeddedResource Include="test.v1.0.gpx" />
     <EmbeddedResource Include="test.v1.1.gpx" />

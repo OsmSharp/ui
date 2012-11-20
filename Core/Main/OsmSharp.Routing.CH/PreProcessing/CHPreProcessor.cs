@@ -115,6 +115,13 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 Tools.Core.Output.OutputStreamHost.ReportProgress(current, total, "CHPreProcessor", "Pre-processing...");
                 current++;
             }
+
+            // Remark: this is possible with SparseOrdering (not all vertices will be contracted!)
+            //if (current != _target.VertexCount + 1)
+            //{ // not all vertices have been contracted.
+            //    throw new Exception(string.Format("Not all vertices have been contracted: only {0}/{1}!",
+            //        current, _target.VertexCount));
+            //}
         }
 
         /// <summary>
@@ -146,80 +153,131 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 neighbours.Add(edge.Key);
             }
 
-            // calculate all witnesses.
-            Dictionary<uint, Dictionary<uint, bool>> witnesses
-                = new Dictionary<uint, Dictionary<uint, bool>>();
-            foreach (KeyValuePair<uint, CHEdgeData> from in edges) // loop over all from-neighbours.
-            { // loop over all from neighbours.
-                // skip forward edges.
-                if (!from.Value.Backward) { continue; }
+            //// calculate all witnesses.
+            //Dictionary<uint, Dictionary<uint, bool>> witnesses
+            //    = new Dictionary<uint, Dictionary<uint, bool>>();
+            //foreach (KeyValuePair<uint, CHEdgeData> from in edges) // loop over all from-neighbours.
+            //{ // loop over all from neighbours.
+            //    // skip forward edges.
+            //    if (!from.Value.Backward) { continue; }
 
-                foreach (KeyValuePair<uint, CHEdgeData> to in edges) // loop over all to-neighbours.
-                { // loop over all to neighbours.
-                    // skip backward edges.
-                    if (!to.Value.Forward) { continue; }
+            //    foreach (KeyValuePair<uint, CHEdgeData> to in edges) // loop over all to-neighbours.
+            //    { // loop over all to neighbours.
+            //        // skip backward edges.
+            //        if (!to.Value.Forward) { continue; }
 
-                    // add weights.
-                    float weight = (float)to.Value.Weight + (float)from.Value.Weight;
+            //        // add weights.
+            //        float weight = (float)to.Value.Weight + (float)from.Value.Weight;
 
-                    // test for a witness.
-                    Dictionary<uint, bool> from_dic;
-                    if (!witnesses.TryGetValue(from.Key, out from_dic))
-                    {
-                        from_dic = new Dictionary<uint, bool>();
-                        witnesses[from.Key] = from_dic;
-                    }
-                    from_dic[to.Key] =
-                       _witness_calculator.Exists(from.Key, to.Key, vertex, weight);
-                }
-            }
+            //        // test for a witness.
+            //        Dictionary<uint, bool> from_dic;
+            //        if (!witnesses.TryGetValue(from.Key, out from_dic))
+            //        {
+            //            from_dic = new Dictionary<uint, bool>();
+            //            witnesses[from.Key] = from_dic;
+            //        }
+            //        from_dic[to.Key] =
+            //           _witness_calculator.Exists(from.Key, to.Key, vertex, weight);
+            //    }
+            //}
 
-            foreach (KeyValuePair<uint, CHEdgeData> from in edges) // loop over all from-neighbours.
-            { // loop over all from neighbours.
-                // skip forward edges.
-                if (!from.Value.Backward) { continue; }
+            //foreach (KeyValuePair<uint, CHEdgeData> from in edges) // loop over all from-neighbours.
+            //{ // loop over all from neighbours.
+            //    // skip forward edges.
+            //    if (!from.Value.Backward) { continue; }
 
-                foreach (KeyValuePair<uint, CHEdgeData> to in edges) // loop over all to-neighbours.
-                { // loop over all to neighbours.
-                    // skip backward edges.
-                    if (!to.Value.Forward) { continue; }
+            //    foreach (KeyValuePair<uint, CHEdgeData> to in edges) // loop over all to-neighbours.
+            //    { // loop over all to neighbours.
+            //        // skip backward edges.
+            //        if (!to.Value.Forward) { continue; }
 
-                    // skip routes to self.
-                    if (to.Key == from.Key) { continue; }
+            //        // skip routes to self.
+            //        if (to.Key == from.Key) { continue; }
 
-                    // add weights.
-                    float weight = (float)to.Value.Weight + (float)from.Value.Weight;
+            //        // add weights.
+            //        float weight = (float)to.Value.Weight + (float)from.Value.Weight;
 
-                    // test for a witness.
-                    //if (!_witness_calculator.Exists(from.Key, to.Key, vertex, weight))
-                    if(!witnesses[from.Key][to.Key])
-                    { // add edge from from to to.
-                        CHEdgeData new_data = new CHEdgeData();
-                        new_data.Forward = true;
-                        new_data.Backward = from.Value.Forward && to.Value.Backward;
-                        new_data.Weight = weight;
-                        new_data.ContractedVertexId = vertex;
+            //        // test for a witness.
+            //        //if (!_witness_calculator.Exists(from.Key, to.Key, vertex, weight))
+            //        if(!witnesses[from.Key][to.Key])
+            //        { // add edge from from to to.
+            //            CHEdgeData new_data = new CHEdgeData();
+            //            new_data.Forward = true;
+            //            new_data.Backward = from.Value.Forward && to.Value.Backward;
+            //            new_data.Weight = weight;
+            //            new_data.ContractedVertexId = vertex;
 
-                        // add the forward direction.
-                        _target.AddArc(from.Key, to.Key, new_data);
+            //            // add the forward direction.
+            //            _target.AddArc(from.Key, to.Key, new_data);
 
-                        this.NotifyArc(from.Key, to.Key); // notify a new arc.
+            //            this.NotifyArc(from.Key, to.Key); // notify a new arc.
 
-                        bool witness;
-                        Dictionary<uint, bool> from_dic;
-                        if (!witnesses.TryGetValue(to.Key, out from_dic) ||
-                            !from_dic.TryGetValue(from.Key, out witness) ||
-                            witness)
-                        { // there is a witness in the reverse direction but add an edge anyway.
-                            new_data = new CHEdgeData();
-                            new_data.Forward = false;
-                            new_data.Backward = false;
-                            new_data.Weight = weight;
-                            new_data.ContractedVertexId = vertex;
+            //            bool witness;
+            //            Dictionary<uint, bool> from_dic;
+            //            if (!witnesses.TryGetValue(to.Key, out from_dic) ||
+            //                !from_dic.TryGetValue(from.Key, out witness) ||
+            //                witness)
+            //            { // there is a witness in the reverse direction but add an edge anyway.
+            //                new_data = new CHEdgeData();
+            //                new_data.Forward = false;
+            //                new_data.Backward = false;
+            //                new_data.Weight = weight;
+            //                new_data.ContractedVertexId = vertex;
 
-                            // add the forward direction.
-                            _target.AddArc(to.Key, from.Key, new_data);
+            //                // add the forward direction.
+            //                _target.AddArc(to.Key, from.Key, new_data);
 
+            //            }
+            //        }
+            //    }
+            //}
+
+            // loop over each combination of edges just once.
+            for (int x = 1; x < edges.Length; x++)
+            { // loop over all elements first.
+                KeyValuePair<uint, CHEdgeData> x_edge = edges[x];
+ 
+                for (int y = 0; y < x; y++)
+                { // loop over all elements.
+                    KeyValuePair<uint, CHEdgeData> y_edge = edges[y];
+
+                    // calculate the total weight.
+                    float weight = x_edge.Value.Weight + y_edge.Value.Weight;
+
+                    // add the combinations of these edges.
+                    if ((x_edge.Value.Backward && y_edge.Value.Forward) ||
+                        (y_edge.Value.Backward && x_edge.Value.Forward))
+                    { // there is a connection from x to y and there is no witness path.
+
+                        bool witness_x_to_y = _witness_calculator.Exists(x_edge.Key, y_edge.Key, vertex, weight);
+                        bool witness_y_to_x = _witness_calculator.Exists(y_edge.Key, x_edge.Key, vertex, weight);
+
+                        // create x-to-y data and edge.
+                        CHEdgeData data_x_to_y = new CHEdgeData();
+                        data_x_to_y.Forward = (x_edge.Value.Backward && y_edge.Value.Forward) && 
+                            !witness_x_to_y;
+                        data_x_to_y.Backward = (y_edge.Value.Backward && x_edge.Value.Forward) && 
+                            !witness_y_to_x;
+                        data_x_to_y.Weight = weight;
+                        data_x_to_y.ContractedVertexId = vertex;
+                        if ((data_x_to_y.Forward || data_x_to_y.Backward) ||
+                            !_target.HasNeighbour(x_edge.Key, y_edge.Key))
+                        { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
+                            _target.AddArc(x_edge.Key, y_edge.Key, data_x_to_y);
+                        }
+
+                        // create y-to-x data and edge.
+                        CHEdgeData data_y_to_x = new CHEdgeData();
+                        data_y_to_x.Forward = (y_edge.Value.Backward && x_edge.Value.Forward) && 
+                            !witness_y_to_x;
+                        data_y_to_x.Backward = (x_edge.Value.Backward && y_edge.Value.Forward) && 
+                            !witness_x_to_y;
+                        data_y_to_x.Weight = weight;
+                        data_y_to_x.ContractedVertexId = vertex;
+                        if ((data_y_to_x.Forward || data_y_to_x.Backward) ||
+                            !_target.HasNeighbour(y_edge.Key, x_edge.Key))
+                        { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
+                            _target.AddArc(y_edge.Key, x_edge.Key, data_y_to_x);
                         }
                     }
                 }

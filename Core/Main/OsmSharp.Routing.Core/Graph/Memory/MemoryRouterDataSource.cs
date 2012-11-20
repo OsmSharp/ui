@@ -104,6 +104,18 @@ namespace OsmSharp.Routing.Core.Graph.Memory
         }
 
         /// <summary>
+        /// Returns true if the given vertex has neighbour as a neighbour.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="neighbour"></param>
+        /// <returns></returns>
+        public bool HasNeighbour(uint vertex, uint neighbour)
+        {
+            return _graph.HasNeighbour(vertex, neighbour);
+        }
+
+
+        /// <summary>
         /// Adds a new vertex.
         /// </summary>
         /// <param name="latitude"></param>

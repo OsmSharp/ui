@@ -358,8 +358,8 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
 
             processor.Contract(5);
 
-            Assert.AreEqual(0, edge_difference.Calculate(2)); // witness paths from 11<->5.
-            Assert.AreEqual(-1, edge_difference.Calculate(6));
+            Assert.AreEqual(1, edge_difference.Calculate(2)); // witness paths from 11<->5.
+            Assert.AreEqual(-2, edge_difference.Calculate(6));
             Assert.AreEqual(0, edge_difference.Calculate(7));
             Assert.AreEqual(3, edge_difference.Calculate(8));
             Assert.AreEqual(0, edge_difference.Calculate(9));
@@ -418,12 +418,12 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
 
             Assert.AreEqual(3, edge_difference.Calculate(8));
             Assert.AreEqual(0, edge_difference.Calculate(9));
-            Assert.AreEqual(0, edge_difference.Calculate(10));
+            Assert.AreEqual(1, edge_difference.Calculate(10));
             Assert.AreEqual(0, edge_difference.Calculate(12));
             Assert.AreEqual(0, edge_difference.Calculate(13));
             Assert.AreEqual(0, edge_difference.Calculate(14));
             Assert.AreEqual(0, edge_difference.Calculate(15));
-            Assert.AreEqual(-1, edge_difference.Calculate(18)); // witness paths from 10<->8.
+            Assert.AreEqual(-2, edge_difference.Calculate(18)); // witness paths from 10<->8.
             Assert.AreEqual(0, edge_difference.Calculate(19));
 
             processor.Contract(18);
@@ -458,11 +458,11 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
 
             processor.Contract(10);
 
-            Assert.AreEqual(-1, edge_difference.Calculate(12));
+            Assert.AreEqual(-2, edge_difference.Calculate(12));
             Assert.AreEqual(0, edge_difference.Calculate(13));
             Assert.AreEqual(0, edge_difference.Calculate(14));
             Assert.AreEqual(0, edge_difference.Calculate(15));
-            Assert.AreEqual(-1, edge_difference.Calculate(19)); // witness paths from 15<->10.
+            Assert.AreEqual(-2, edge_difference.Calculate(19)); // witness paths from 15<->10.
 
             processor.Contract(12);
 

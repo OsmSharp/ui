@@ -350,6 +350,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                         "Building pairs list...");
                 }
 
+                int min_length = int.MaxValue;
                 for (int idx = 0; idx < test_pairs.Count; idx++)
                 {
                     KeyValuePair<RouterPoint, RouterPoint> pair = test_pairs[idx];
@@ -377,10 +378,15 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                                 "Routes do not match:{0} with {1}m difference", reference_route.Entries.Length,
                                     route.TotalDistance - reference_route.TotalDistance);
 
-                            route.SaveAsGpx(new FileInfo(
-                                string.Format(@"c:\temp\route_{0}.gpx", reference_route.Entries.Length)));
-                            reference_route.SaveAsGpx(new FileInfo(
-                                string.Format(@"c:\temp\route_{0}_reference.gpx", reference_route.Entries.Length)));
+                            if (min_length > reference_route.Entries.Length)
+                            {
+                                route.SaveAsGpx(new FileInfo(
+                                    string.Format(@"c:\temp\route_{0}.gpx", reference_route.Entries.Length)));
+                                reference_route.SaveAsGpx(new FileInfo(
+                                    string.Format(@"c:\temp\route_{0}_reference.gpx", reference_route.Entries.Length)));
+
+                                min_length = reference_route.Entries.Length;
+                            }
                         }
                     }
 

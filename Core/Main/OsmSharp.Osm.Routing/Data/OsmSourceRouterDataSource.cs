@@ -114,6 +114,25 @@ namespace OsmSharp.Osm.Routing.Data.Source
         }
 
         /// <summary>
+        /// Returns true if the given vertex has neighbour as a neighbour.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="neighbour"></param>
+        /// <returns></returns>
+        public bool HasNeighbour(uint vertex, uint neighbour)
+        {
+            foreach (KeyValuePair<uint, OsmEdgeData> arc in this.GetArcs(vertex))
+            {
+                if (arc.Key == neighbour)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        /// <summary>
         /// Returns the tags index.
         /// </summary>
         public ITagsIndex TagsIndex

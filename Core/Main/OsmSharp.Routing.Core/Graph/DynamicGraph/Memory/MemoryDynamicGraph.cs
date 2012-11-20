@@ -192,6 +192,31 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         }
 
         /// <summary>
+        /// Returns true if the given vertex has neighbour as a neighbour.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="neighbour"></param>
+        /// <returns></returns>
+        public bool HasNeighbour(uint vertex, uint neighbour)
+        {
+            if (_vertices.Length > vertex)
+            {
+                if (_vertices[vertex].Arcs == null)
+                {
+                    return false;
+                }
+                foreach(KeyValuePair<uint, EdgeData> arc in  _vertices[vertex].Arcs)
+                {
+                    if (arc.Key == neighbour)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Represents a simple vertex.
         /// </summary>
         private struct Vertex

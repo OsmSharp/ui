@@ -50,6 +50,14 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph
         KeyValuePair<uint, EdgeData>[] GetArcs(uint vertex);
 
         /// <summary>
+        /// Returns true if the given vertex has the neighbour as a neighbour.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <param name="neighbour"></param>
+        /// <returns></returns>
+        bool HasNeighbour(uint vertex, uint neighbour);
+
+        /// <summary>
         /// Returns the total number of vertices.
         /// </summary>
         uint VertexCount

@@ -32,8 +32,8 @@ namespace OsmSharp.UnitTests.Routing.CH
         [TestMethod]
         public void TestCHVerifiedContractionTestNetwork()
         {
-            this.DoTestCHVerifiedContraction(
-                "OsmSharp.UnitTests.test_network.osm");
+            this.DoTestCHSparseVerifiedContraction(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
         }
 
         /// <summary>
@@ -42,8 +42,18 @@ namespace OsmSharp.UnitTests.Routing.CH
         [TestMethod]
         public void TestCHVerifiedContractionTestNetworkReal()
         {
-            this.DoTestCHVerifiedContraction(
-                "OsmSharp.UnitTests.test_network_real1.osm");
+            this.DoTestCHSparseVerifiedContraction(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network_real1.osm"));
+        }
+
+        /// <summary>
+        /// Executes the CH contractions while verifying each step.
+        /// </summary>
+        [TestMethod]
+        public void TestCHVerifiedContractionTestNetworkOneWay()
+        {
+            this.DoTestCHSparseVerifiedContraction(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network_oneway.osm"));
         }
     }
 }

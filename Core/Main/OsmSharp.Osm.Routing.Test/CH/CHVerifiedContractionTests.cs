@@ -16,6 +16,8 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.Core.Graph.Path;
 using OsmSharp.Routing.CH.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
+using OsmSharp.Routing.CH.PreProcessing.Ordering;
 
 namespace OsmSharp.Osm.Routing.Test.CH
 {
@@ -31,10 +33,11 @@ namespace OsmSharp.Osm.Routing.Test.CH
         /// </summary>
         public static void Execute()
         {
-            CHVerifiedContractionBaseTests.Execute("OsmSharp.Osm.Routing.Test.TestData.matrix.osm");
+            //CHVerifiedContractionBaseTests.ExecuteSparse("OsmSharp.Osm.Routing.Test.TestData.matrix.osm");
+            CHVerifiedContractionBaseTests.ExecuteEdgeDifference("OsmSharp.Osm.Routing.Test.TestData.matrix.osm");
             //CHVerifiedContractionBaseTests.Execute("OsmSharp.Osm.Routing.Test.TestData.matrix_big_area.osm");
             //CHVerifiedContractionBaseTests.Execute("OsmSharp.Osm.Routing.Test.TestData.lebbeke.osm");
-            CHVerifiedContractionBaseTests.Execute("OsmSharp.Osm.Routing.Test.TestData.eeklo.osm");
+            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Osm.Routing.Test.TestData.eeklo.osm");
             //CHVerifiedContractionBaseTests.Execute("OsmSharp.Osm.Routing.Test.TestData.moscow.osm");
         }
 
@@ -42,12 +45,24 @@ namespace OsmSharp.Osm.Routing.Test.CH
         /// Executes the tests.
         /// </summary>
         /// <param name="xml"></param>
-        private static void Execute(string xml)
+        private static void ExecuteEdgeDifference(string xml)
         {
             Tools.Core.Output.OutputStreamHost.WriteLine(xml);
 
             CHVerifiedContractionBaseTests tester = new CHVerifiedContractionBaseTests();
-            tester.DoTestCHVerifiedContraction(xml);
+            tester.DoTestCHEdgeDifferenceVerifiedContraction(xml);
+        }
+
+        /// <summary>
+        /// Executes the tests.
+        /// </summary>
+        /// <param name="xml"></param>
+        private static void ExecuteSparse(string xml)
+        {
+            Tools.Core.Output.OutputStreamHost.WriteLine(xml);
+
+            CHVerifiedContractionBaseTests tester = new CHVerifiedContractionBaseTests();
+            tester.DoTestCHSparseVerifiedContraction(xml);
         }
 
         #region Testing Code
@@ -65,8 +80,18 @@ namespace OsmSharp.Osm.Routing.Test.CH
         /// <summary>
         /// Executes the CH contractions while verifying each step.
         /// </summary>
+        /// <param name="stream"></param>
+        private void DoTestCHSparseVerifiedContraction(string xml)
+        {
+            this.DoTestCHSparseVerifiedContraction(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(xml));
+        }
+
+        /// <summary>
+        /// Executes the CH contractions while verifying each step.
+        /// </summary>
         /// <param name="xml"></param>
-        public void DoTestCHVerifiedContraction(string xml)
+        public void DoTestCHSparseVerifiedContraction(Stream stream)
         {
             _interpreter = new OsmRoutingInterpreter();
 
@@ -76,8 +101,7 @@ namespace OsmSharp.Osm.Routing.Test.CH
             _data = new MemoryRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                 _data, _interpreter, _data.TagsIndex);
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(xml));
+            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
             sorter.RegisterSource(data_processor_source);
             target_data.RegisterSource(sorter);
@@ -86,6 +110,46 @@ namespace OsmSharp.Osm.Routing.Test.CH
             // do the pre-processing part.
             CHPreProcessor pre_processor = new CHPreProcessor(_data,
                 new SparseOrdering(_data), new DykstraWitnessCalculator(_data));
+            pre_processor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
+            pre_processor.OnAfterContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
+            pre_processor.Start();
+        }
+        
+        /// <summary>
+        /// Executes the CH contractions while verifying each step.
+        /// </summary>
+        /// <param name="stream"></param>
+        private void DoTestCHEdgeDifferenceVerifiedContraction(string xml)
+        {
+            this.DoTestCHSparseVerifiedContraction(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(xml));
+        }
+
+        /// <summary>
+        /// Executes the CH contractions while verifying each step.
+        /// </summary>
+        /// <param name="xml"></param>
+        public void DoTestCHEdgeDifferenceVerifiedContraction(Stream stream)
+        {
+            _interpreter = new OsmRoutingInterpreter();
+
+            OsmTagsIndex tags_index = new OsmTagsIndex();
+
+            // do the data processing.
+            _data = new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+                _data, _interpreter, _data.TagsIndex);
+            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
+            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
+            sorter.RegisterSource(data_processor_source);
+            target_data.RegisterSource(sorter);
+            target_data.Pull();
+
+            // do the pre-processing part.
+            DykstraWitnessCalculator witness_calculator = new DykstraWitnessCalculator(
+                _data);
+            CHPreProcessor pre_processor = new CHPreProcessor(_data,
+                new EdgeDifference(_data, witness_calculator), witness_calculator);
             pre_processor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
             pre_processor.OnAfterContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
             pre_processor.Start();

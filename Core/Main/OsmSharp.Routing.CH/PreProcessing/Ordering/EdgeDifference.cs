@@ -56,21 +56,18 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <returns></returns>
         public float Calculate(uint vertex)
         {
-            // simulate the construction of new edges.
-            int new_edges = 0;
-            int removed = 0;
-
             // get the neighbours.
             KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(vertex);
 
+            // simulate the construction of new edges.
+            int new_edges = 0;
+            int removed = neighbours.Length;
+
+            // loop over all neighbours and check for witnesses.
             foreach (KeyValuePair<uint, CHEdgeData> from in neighbours)
             { // loop over all incoming neighbours
-                if(!from.Value.Backward) {continue;}
-
                 foreach (KeyValuePair<uint, CHEdgeData> to in neighbours)
                 { // loop over all outgoing neighbours
-                    if(!to.Value.Forward) {continue;}
-
                     if (to.Key != from.Key)
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
@@ -80,16 +77,6 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                             new_edges++;
                         }
                     }
-                }
-
-                // //count the edges.
-                //if (from.Value.Forward)
-                //{
-                //    removed++;
-                //}
-                if (from.Value.Backward)
-                { // backward edges are removed; routing only to a higher level.
-                    removed++;
                 }
             }
             return new_edges - removed;
