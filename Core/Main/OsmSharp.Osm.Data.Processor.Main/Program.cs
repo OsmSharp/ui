@@ -30,6 +30,8 @@ using OsmSharp.Osm.Data.Oracle.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Default;
 using OsmSharp.Osm.Data.XML.Raw.Processor.ChangeSets;
 using OsmSharp.Osm.Data.Redis.Sparse.Processor;
+using OsmSharp.Osm.Data.PBF.Raw.Processor;
+using System.IO;
 
 namespace OsmSharp.Osm.Data.Processor.Main
 {
@@ -42,7 +44,7 @@ namespace OsmSharp.Osm.Data.Processor.Main
         static void Main(string[] args)
         {
             //string source_file = @"C:\temp\RU-MOW.osm";
-            string source_file = @"C:\OSM\bin\belgium.osm";
+            string source_file = @"C:\OSM\bin\belgium.osm.pbf";
             //Program.TestImportRedisAndSparsePreProcessing(source_file);
             Program.TestImportOracleAndSparsePreProcessing(source_file);
             //var startTime = DateTime.Now;
@@ -55,40 +57,40 @@ namespace OsmSharp.Osm.Data.Processor.Main
             ////test_oracle_target.RegisterSource(source);
             ////test_oracle_target.Pull();
 
-            string connection_string = "Data source=PROD;User Id=OSM;Password=mixbeton;";
+            string connection_string = "Data source=DEV;User Id=OSM;Password=mixbeton;";
             ////////string source_file = @"drongen.osm";
             //string source_file = @"\\dm-wks-200\c$\OSM\bin\belgium.osm";
-            //TestImportBelgium(source_file, connection_string);
+            TestImportBelgium(source_file, connection_string);
 
 
-            double top = 51.6;
-            double bottom = 50.5;
-            double left = 2.3;
-            double right = 6.3;
+            //double top = 51.6;
+            //double bottom = 50.5;
+            //double left = 2.3;
+            //double right = 6.3;
 
-            DummyListener listenere = new DummyListener();
+            //DummyListener listenere = new DummyListener();
 
-            int begin_nr = 20282;
-            while (true)
-            {
-                //Replicator replicator = new Replicator(begin_nr, @"http://planet.openstreetmap.org/minute-replicate", 10000, 100);
-                Replicator replicator = new Replicator(begin_nr, @"http://planet.openstreetmap.org/hour-replicate", 100, 100);
+            //int begin_nr = 20282;
+            //while (true)
+            //{
+            //    //Replicator replicator = new Replicator(begin_nr, @"http://planet.openstreetmap.org/minute-replicate", 10000, 100);
+            //    Replicator replicator = new Replicator(begin_nr, @"http://planet.openstreetmap.org/hour-replicate", 100, 100);
 
-                DataProcessorChangeSetFilterBoundingBox box_filter = new DataProcessorChangeSetFilterBoundingBox(
-                    new OracleSimpleSource(connection_string),
-                    new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(new OsmSharp.Tools.Math.Geo.GeoCoordinate(top, left), new OsmSharp.Tools.Math.Geo.GeoCoordinate(bottom, right)),
-                    listenere);
-                box_filter.RegisterSource(replicator);
+            //    DataProcessorChangeSetFilterBoundingBox box_filter = new DataProcessorChangeSetFilterBoundingBox(
+            //        new OracleSimpleSource(connection_string),
+            //        new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(new OsmSharp.Tools.Math.Geo.GeoCoordinate(top, left), new OsmSharp.Tools.Math.Geo.GeoCoordinate(bottom, right)),
+            //        listenere);
+            //    box_filter.RegisterSource(replicator);
 
-                OracleSimpleChangeSetApplyTarget change_target = new OracleSimpleChangeSetApplyTarget(connection_string, true);
-                change_target.RegisterSource(box_filter);
-                change_target.Pull();
-                change_target.Close();
+            //    OracleSimpleChangeSetApplyTarget change_target = new OracleSimpleChangeSetApplyTarget(connection_string, true);
+            //    change_target.RegisterSource(box_filter);
+            //    change_target.Pull();
+            //    change_target.Close();
 
-                replicator.Close();
+            //    replicator.Close();
 
-                begin_nr = begin_nr + 99;
-            }
+            //    begin_nr = begin_nr + 99;
+            //}
         }
 
 
@@ -150,7 +152,7 @@ namespace OsmSharp.Osm.Data.Processor.Main
             Console.WriteLine("Truncated data!");
 
             // import data
-            XmlDataProcessorSource source = new XmlDataProcessorSource(source_file,false);
+            PBFDataProcessorSource source = new PBFDataProcessorSource(new FileInfo(source_file).OpenRead());
 
             //double bottom = 49.35;
             //double top = 51.6;
