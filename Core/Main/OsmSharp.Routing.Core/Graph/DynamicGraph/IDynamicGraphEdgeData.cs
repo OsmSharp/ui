@@ -58,13 +58,5 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph
         {
             get;
         }
-
-        /// <summary>
-        /// Returns true if the edge is virtual (it does not exist in the orginal graph).
-        /// </summary>
-        bool IsVirtual
-        {
-            get;
-        }
     }
 }

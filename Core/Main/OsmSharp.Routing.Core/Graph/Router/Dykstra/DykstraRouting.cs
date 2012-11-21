@@ -459,38 +459,35 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                     if (distance < closest_without_match.Distance)
                     { // the distance is smaller.
                         closest_without_match = new SearchClosestResult(
-                            distance, arc.Key);
+                            distance, arc.Value.Key);
 
                         // try and match.
                         //if(matcher.Match(_
                     }
 
-                    if (!arc.Value.Value.IsVirtual)
-                    { // do not resolve on non-physical edges.
-                        // create a line.
-                        double distance_total = from_coordinates.Distance(to_coordinates);
-                        if (distance_total > 0)
-                        { // the from/to are not the same location.
-                            GeoCoordinateLine line = new GeoCoordinateLine(from_coordinates, to_coordinates, true, true);
-                            distance = line.Distance(coordinate);
+                    // create a line.
+                    double distance_total = from_coordinates.Distance(to_coordinates);
+                    if (distance_total > 0)
+                    { // the from/to are not the same location.
+                        GeoCoordinateLine line = new GeoCoordinateLine(from_coordinates, to_coordinates, true, true);
+                        distance = line.Distance(coordinate);
 
-                            if (distance < closest_without_match.Distance)
-                            { // the distance is smaller.
-                                PointF2D projected_point =
-                                    line.ProjectOn(coordinate);
+                        if (distance < closest_without_match.Distance)
+                        { // the distance is smaller.
+                            PointF2D projected_point =
+                                line.ProjectOn(coordinate);
 
-                                // calculate the position.
-                                if (projected_point != null)
-                                { // calculate the distance
-                                    double distance_point = from_coordinates.Distance(projected_point);
-                                    double position = distance_point / distance_total;
+                            // calculate the position.
+                            if (projected_point != null)
+                            { // calculate the distance
+                                double distance_point = from_coordinates.Distance(projected_point);
+                                double position = distance_point / distance_total;
 
-                                    closest_without_match = new SearchClosestResult(
-                                        distance, arc.Key, arc.Value.Key, position);
+                                closest_without_match = new SearchClosestResult(
+                                    distance, arc.Key, arc.Value.Key, position);
 
-                                    // try and match.
-                                    //if(matcher.Match(_
-                                }
+                                // try and match.
+                                //if(matcher.Match(_
                             }
                         }
                     }

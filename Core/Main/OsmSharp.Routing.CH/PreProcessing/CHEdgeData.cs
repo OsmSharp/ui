@@ -46,15 +46,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
         public uint Tags { get; set; }
 
-        public bool IsVirtual
-        {
-            get
-            {
-                return this.HasContractedVertex;
-            }
-        }
-
-
         double IDynamicGraphEdgeData.Weight
         {
             get { return this.Weight; }
