@@ -163,5 +163,20 @@ namespace OsmSharp.Tools.Core
             var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return Convert.ToInt64((date - epoch).TotalMilliseconds);
         }
+
+        /// <summary>
+        /// Returns a trucated string if the string is larger than the given max length.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="max_length"></param>
+        /// <returns></returns>
+        public static string Truncate(this string value, int max_length)
+        {
+            if (value != null && value.Length > max_length)
+            {
+                return value.Substring(0, max_length);
+            }
+            return value;
+        }
     }
 }
