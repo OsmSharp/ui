@@ -28,6 +28,7 @@ using OsmSharp.Routing.Core.Graph.DynamicGraph;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Resolving;
 using OsmSharp.Routing.Core.Router;
+using OsmSharp.Tools.Core.Collections.PriorityQueues;
 
 namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
 {
@@ -35,7 +36,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
     /// A class containing a fast dykstra implementation.
     /// </summary>
     /// <typeparam name="EdgeData"></typeparam>
-    public class DykstraRouting<EdgeData> : IBasicRouter<EdgeData>
+    public class DykstraRoutingBinairyHeap<EdgeData> : IBasicRouter<EdgeData>
         where EdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
@@ -47,7 +48,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// Creates a new dykstra routing object.
         /// </summary>
         /// <param name="tags_index"></param>
-        public DykstraRouting(ITagsIndex tags_index)
+        public DykstraRoutingBinairyHeap(ITagsIndex tags_index)
         {
             _tags_index = tags_index;
         }
@@ -108,7 +109,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        public double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, 
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max)
         {
             PathSegment<long>[] many = this.DoCalculation(graph, interpreter,
@@ -138,7 +139,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        public double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, 
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max)
         {
             double[][] results = new double[sources.Length][];
@@ -158,7 +159,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// </summary>
         public bool IsCalculateRangeSupported
         {
-            get
+            get 
             {
                 return true;
             }
@@ -216,7 +217,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="return_at_weight"></param>
         /// <returns></returns>
         private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
-            PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
+            PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight, 
             bool stop_at_first, bool return_at_weight)
         {
             //  initialize the result data structures.
@@ -229,17 +230,25 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
             long found_targets = 0;
 
             // intialize dyskstra data structures.
-            PathSegmentVisitList visit_list = new PathSegmentVisitList(source);
+            BinairyHeap<PathSegment<long>> heap = new BinairyHeap<PathSegment<long>>();
             HashSet<long> chosen_vertices = new HashSet<long>();
             Dictionary<long, IList<RoutingLabel>> labels = new Dictionary<long, IList<RoutingLabel>>();
-            foreach (long vertex in visit_list.GetVertices())
+            foreach (long vertex in source.GetVertices())
             {
                 labels[vertex] = new List<RoutingLabel>();
+
+                PathSegment<long> path = source.GetPathTo(vertex);
+                heap.Enqueue(path, (float)path.Weight);
             }
 
             // set the from node as the current node and put it in the correct data structures.
             // intialize the source's neighbours.
-            PathSegment<long> current = visit_list.GetFirst();
+            PathSegment<long> current = heap.DeQueue();
+            while (current != null &&
+                chosen_vertices.Contains(current.VertexId))
+            { // keep dequeuing.
+                current = heap.DeQueue();
+            }
 
             // test for identical start/end point.
             for (int idx = 0; idx < targets.Length; idx++)
@@ -335,18 +344,26 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
 
                             // update the visit list;
                             PathSegment<long> neighbour_route = new PathSegment<long>(neighbour.Key, total_weight, current);
-                            visit_list.UpdateVertex(neighbour_route);
+                            heap.Enqueue(neighbour_route, (float)neighbour_route.Weight);
                         }
                     }
                 }
 
                 // while the visit list is not empty.
                 current = null;
-                if (visit_list.Count > 0)
+                if (heap.Count > 0)
                 {
                     // choose the next vertex.
-                    current = visit_list.GetFirst();
-                    chosen_vertices.Add(current.VertexId);
+                    current = heap.DeQueue();
+                    while (current != null && 
+                        chosen_vertices.Contains(current.VertexId))
+                    { // keep dequeuing.
+                        current = heap.DeQueue();
+                    }
+                    if (current != null)
+                    {
+                        chosen_vertices.Add(current.VertexId);
+                    }
                 }
                 while (current != null && current.Weight > weight)
                 {
@@ -355,7 +372,13 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                         segments_at_weight.Add(current);
                     }
 
-                    current = visit_list.GetFirst();
+                    // choose the next vertex.
+                    current = heap.DeQueue();
+                    while (current != null &&
+                        chosen_vertices.Contains(current.VertexId))
+                    { // keep dequeuing.
+                        current = heap.DeQueue();
+                    }
                 }
 
                 if (current == null)
@@ -408,7 +431,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// </summary>
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph,
+        public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, 
             GeoCoordinate coordinate, IResolveMatcher matcher, double search_box_size)
         {
             // create the search box.

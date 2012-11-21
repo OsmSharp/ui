@@ -104,6 +104,53 @@ namespace OsmSharp.UnitTests.Tools
                 // dequeue.
                 elements.Add(new KeyValuePair<string, float>(heap.DeQueue(), elements.Count + 1));
             }
+
+            // try to dequeue again.
+            Assert.AreEqual(null, heap.DeQueue());
+
+            // clear the elements list and try again!
+            elements.Clear();
+            elements.Add(new KeyValuePair<string, float>("one", 1));
+            elements.Add(new KeyValuePair<string, float>("two", 2));
+            elements.Add(new KeyValuePair<string, float>("three", 3));
+            elements.Add(new KeyValuePair<string, float>("four", 4));
+            elements.Add(new KeyValuePair<string, float>("five", 5));
+            elements.Add(new KeyValuePair<string, float>("six", 6));
+            elements.Add(new KeyValuePair<string, float>("seven", 7));
+            elements.Add(new KeyValuePair<string, float>("eight", 8));
+            elements.Add(new KeyValuePair<string, float>("nine", 9));
+            elements.Add(new KeyValuePair<string, float>("ten", 10));
+
+            // enqueue one item.
+            while (elements.Count > 0)
+            { // keep selecting existing elements.
+                int selected = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(elements.Count);
+
+                KeyValuePair<string, float> selected_pair =
+                    elements[selected];
+                elements.RemoveAt(selected);
+
+                // add to the heap.
+                heap.Enqueue(selected_pair.Key, selected_pair.Value);
+            }
+
+            // test the result.
+            Assert.AreEqual(10, heap.Count);
+            Assert.AreEqual(1, heap.PeekWeight());
+            Assert.AreEqual("one", heap.Peek());
+
+            // remove the items one by one and test the results again.
+            while (heap.Count > 0)
+            { // keep removing.
+                Assert.AreEqual(10 - elements.Count, heap.Count);
+                Assert.AreEqual(elements.Count + 1, heap.PeekWeight());
+
+                // dequeue.
+                elements.Add(new KeyValuePair<string, float>(heap.DeQueue(), elements.Count + 1));
+            }
+
+            // try to dequeue again.
+            Assert.AreEqual(null, heap.DeQueue());
         }
     }
 }

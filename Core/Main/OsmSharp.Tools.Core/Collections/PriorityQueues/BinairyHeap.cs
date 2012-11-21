@@ -1,4 +1,21 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -128,51 +145,55 @@ namespace OsmSharp.Tools.Core.Collections.PriorityQueues
         /// <returns></returns>
         public T DeQueue()
         {
-            T item = _heap[1]; // get the first item.
-
-            _count--; // reduce the element count.
-            _latest_index--; // reduce the latest index.
-
-            _heap[1] = _heap[_latest_index]; // place the last element on top.
-            _priorities[1] = _priorities[_latest_index]; // place the last element on top.
-            int swapitem = 1, parent = 1;
-            do
+            if (_count > 0)
             {
-                parent = swapitem;
-                if ((2 * parent + 1) <= _latest_index)
+                T item = _heap[1]; // get the first item.
+
+                _count--; // reduce the element count.
+                _latest_index--; // reduce the latest index.
+
+                _heap[1] = _heap[_latest_index]; // place the last element on top.
+                _priorities[1] = _priorities[_latest_index]; // place the last element on top.
+                int swapitem = 1, parent = 1;
+                do
                 {
-                    if (_priorities[parent] >= _priorities[2 * parent])
+                    parent = swapitem;
+                    if ((2 * parent + 1) <= _latest_index)
                     {
-                        swapitem = 2 * parent;
+                        if (_priorities[parent] >= _priorities[2 * parent])
+                        {
+                            swapitem = 2 * parent;
+                        }
+
+                        if (_priorities[swapitem] >= _priorities[2 * parent + 1])
+                        {
+                            swapitem = 2 * parent + 1;
+                        }
+                    }
+                    else if ((2 * parent) <= _latest_index)
+                    {
+                        // Only one child exists
+                        if (_priorities[parent] >= _priorities[2 * parent])
+                        {
+                            swapitem = 2 * parent;
+                        }
                     }
 
-                    if (_priorities[swapitem] >= _priorities[2 * parent + 1])
+                    // One if the parent's children are smaller or equal, swap them
+                    if (parent != swapitem)
                     {
-                        swapitem = 2 * parent + 1;
+                        float temp_priority = _priorities[parent];
+                        T temp_item = _heap[parent];
+                        _priorities[parent] = _priorities[swapitem];
+                        _heap[parent] = _heap[swapitem];
+                        _priorities[swapitem] = temp_priority;
+                        _heap[swapitem] = temp_item;
                     }
-                }
-                else if ((2 * parent) <= _latest_index)
-                {
-                    // Only one child exists
-                    if (_priorities[parent] >= _priorities[2 * parent])
-                    {
-                        swapitem = 2 * parent;
-                    }
-                }
+                } while (parent != swapitem);
 
-                // One if the parent's children are smaller or equal, swap them
-                if (parent != swapitem)
-                {
-                    float temp_priority = _priorities[parent];
-                    T temp_item = _heap[parent];
-                    _priorities[parent] = _priorities[swapitem];
-                    _heap[parent] = _heap[swapitem];
-                    _priorities[swapitem] = temp_priority;
-                    _heap[swapitem] = temp_item;
-                }
-            } while (parent != swapitem);
-
-            return item;
+                return item;
+            }
+            return default(T);
         }
     }
 }

@@ -147,6 +147,7 @@
     <Compile Include="Graph\DynamicGraph\Memory\MemoryDynamicGraph.cs" />
     <Compile Include="Graph\Path\PathSegment.cs" />
     <Compile Include="Graph\Path\PathSegmentVisitList.cs" />
+    <Compile Include="Graph\Router\Dykstra\DykstraRoutingBinairyHeap.cs" />
     <Compile Include="Graph\Router\IBasicRouter.cs" />
     <Compile Include="Interpreter\Constraints\Cars\DefaultCarConstraints.cs" />
     <Compile Include="Interpreter\Constraints\Highways\DefaultHighwayConstraints.cs" />

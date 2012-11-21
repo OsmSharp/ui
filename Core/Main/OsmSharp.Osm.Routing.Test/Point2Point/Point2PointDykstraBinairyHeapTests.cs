@@ -20,7 +20,7 @@ using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 
 namespace OsmSharp.Osm.Routing.Test.Point2Point
 {
-    class Point2PointRawTests : Point2PointTest<OsmEdgeData>
+    class Point2PointDykstraBinairyHeapTests : Point2PointTest<OsmEdgeData>
     {
         public override IBasicRouterDataSource<OsmEdgeData> BuildData(Stream data_stream, bool pbf,
             IRoutingInterpreter interpreter, GeoCoordinateBox box)
@@ -61,12 +61,31 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
 
         public override IBasicRouter<OsmEdgeData> BuildBasicRouter(IBasicRouterDataSource<OsmEdgeData> data)
         {
-            return new DykstraRouting<OsmEdgeData>(data.TagsIndex);
+            return new DykstraRoutingBinairyHeap<OsmEdgeData>(data.TagsIndex);
         }
 
         public override IRouter<RouterPoint> BuildReferenceRouter(Stream data_stream, bool pbf, IRoutingInterpreter interpreter)
         { // no use using a reference router.
-            return null;
+            OsmTagsIndex tags_index = new OsmTagsIndex();
+
+            // do the data processing.
+            MemoryRouterDataSource<OsmEdgeData> osm_data =
+                new MemoryRouterDataSource<OsmEdgeData>(tags_index);
+            OsmEdgeDataGraphProcessingTarget target_data = new OsmEdgeDataGraphProcessingTarget(
+                osm_data, interpreter, osm_data.TagsIndex);
+            DataProcessorSource data_processor_source;
+            if (pbf)
+            {
+                data_processor_source = new PBFDataProcessorSource(data_stream);
+            }
+            else
+            {
+                data_processor_source = new XmlDataProcessorSource(data_stream);
+            }
+            target_data.RegisterSource(data_processor_source);
+            target_data.Pull();
+
+            return new Router<OsmEdgeData>(osm_data, interpreter, new DykstraRouting<OsmEdgeData>(osm_data.TagsIndex));
         }
     }
 }
