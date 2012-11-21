@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using ServiceStack.ServiceClient.Web;
-using OsmSharpService.Core.Routing;
 using System.IO;
+using OsmSharpService.Core.Routing;
 
 namespace OsmSharpService.Test
 {

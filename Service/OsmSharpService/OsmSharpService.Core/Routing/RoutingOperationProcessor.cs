@@ -2,17 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core;
-using Osm.Routing.Data;
-using Osm.Core;
-using Routing.Core.Router.Memory;
-using Osm.Routing.Data.Processing;
-using Osm.Data.PBF.Raw.Processor;
-using Osm.Data.Core.Processor.Progress;
 using System.IO;
-using Osm.Routing.Interpreter;
-using Tools.Math.Geo;
-using Routing.Core.Route;
+using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Osm.Routing.Data;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Route;
+using OsmSharp.Osm.Routing.Core.TSP.Genetic;
+using OsmSharp.Routing.Core.Graph.Router.Dykstra;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm.Data.PBF.Raw.Processor;
+using OsmSharp.Osm.Data.Core.Processor.Progress;
 
 namespace OsmSharpService.Core.Routing
 {
@@ -59,7 +61,8 @@ namespace OsmSharpService.Core.Routing
             {
                 // resolve the points and do the routing.
                 Router<OsmEdgeData> router = new Router<OsmEdgeData>(
-                    _data, _interpreter);
+                    _data, _interpreter, new DykstraRoutingBinairyHeap<OsmEdgeData>(
+                        _data.TagsIndex));
 
                 // create the coordinates list.
                 GeoCoordinate[] coordinates = new GeoCoordinate[request.Hooks.Length];
@@ -128,7 +131,7 @@ namespace OsmSharpService.Core.Routing
                         response.Route = route;
                         break;
                     case RoutingOperationType.TSP:
-                        Osm.Routing.Core.TSP.Genetic.RouterTSPAEXGenetic<RouterPoint> tsp_solver = new Osm.Routing.Core.TSP.Genetic.RouterTSPAEXGenetic<RouterPoint>(
+                        RouterTSPAEXGenetic<RouterPoint> tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
                             router);
                         response.Route = tsp_solver.CalculateTSP(routable_points.ToArray());
                         break;
@@ -210,7 +213,7 @@ namespace OsmSharpService.Core.Routing
         {
             // initialize the interpreters.
             _interpreter =
-                new Osm.Routing.Interpreter.OsmRoutingInterpreter();
+                new  OsmRoutingInterpreter();
 
             string file = System.Configuration.ConfigurationManager.AppSettings["pbf_file"];
 
@@ -224,10 +227,6 @@ namespace OsmSharpService.Core.Routing
             PBFDataProcessorSource data_processor_source = new PBFDataProcessorSource((new FileInfo(
                 file)).OpenRead());
             ProgressDataProcessorSource progress_source = new ProgressDataProcessorSource(data_processor_source);
-            //ProgressDataProcessorTarget processor_target = new ProgressDataProcessorTarget(
-            //    target_data);
-            //DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            //sorter.RegisterSource(data_processor_source);
             target_data.RegisterSource(progress_source);
             target_data.Pull();
 

@@ -53,26 +53,8 @@
     <Compile Include="Routing\RoutingRestService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Osm.Core">
-      <HintPath>..\Lib\Osm.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Osm.Data.Core">
-      <HintPath>..\Lib\Osm.Data.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Osm.Data.PBF">
-      <HintPath>..\Lib\Osm.Data.PBF.dll</HintPath>
-    </Reference>
-    <Reference Include="Osm.Routing">
-      <HintPath>..\Lib\Osm.Routing.dll</HintPath>
-    </Reference>
-    <Reference Include="Routing.CH">
-      <HintPath>..\Lib\Routing.CH.dll</HintPath>
-    </Reference>
-    <Reference Include="Routing.Core">
-      <HintPath>..\Lib\Routing.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Routing.Core.TSP">
-      <HintPath>..\Lib\Routing.Core.TSP.dll</HintPath>
+    <Reference Include="OsmSharp">
+      <HintPath>..\Lib\OsmSharp.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack, Version=3.9.25.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -96,17 +78,8 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="Tools.Core">
-      <HintPath>..\Lib\Tools.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Tools.GeoCoding">
-      <HintPath>..\Lib\Tools.GeoCoding.dll</HintPath>
-    </Reference>
-    <Reference Include="Tools.GeoCoding.Custom">
-      <HintPath>..\Lib\Tools.GeoCoding.Custom.dll</HintPath>
-    </Reference>
-    <Reference Include="Tools.Math">
-      <HintPath>..\Lib\Tools.Math.dll</HintPath>
+    <Reference Include="zlib.net">
+      <HintPath>..\Lib\zlib.net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

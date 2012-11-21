@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Routing.Core.Route;
+using OsmSharp.Routing.Core.Route;
 
 namespace OsmSharpService.Core.Routing
 {
