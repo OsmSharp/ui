@@ -45,11 +45,11 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             //tester.ExecuteComparisonTests("matrix_big_area", 100);
             //tester.ExecuteComparisonTests("moscow", 100);
 
-            tester.ExecuteTest("tiny", test_count);
-            tester.ExecuteTest("matrix", test_count);
-            tester.ExecuteTest("eeklo", test_count);
-            tester.ExecuteTest("lebbeke", test_count);
-            //tester.ExecuteTest("matrix_big_area", test_count);
+            //tester.ExecuteTest("tiny", test_count);
+            //tester.ExecuteTest("matrix", test_count);
+            //tester.ExecuteTest("eeklo", test_count);
+            //tester.ExecuteTest("lebbeke", test_count);
+            tester.ExecuteTest("matrix_big_area", test_count);
             //tester.ExecuteTest("moscow", test_count);
             //tester.ExecuteTest("flanders_highway", (new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf")).OpenRead(),
             //    true, 100);

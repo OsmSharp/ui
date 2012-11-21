@@ -122,7 +122,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             target_data.RegisterSource(data_processor_source);
             target_data.Pull();
 
-            return new Router<OsmEdgeData>(osm_data, interpreter, new DykstraRouting<OsmEdgeData>(osm_data.TagsIndex));
+            return new Router<OsmEdgeData>(osm_data, interpreter, new DykstraRoutingBinairyHeap<OsmEdgeData>(osm_data.TagsIndex));
         }
     }
 }

@@ -56,8 +56,8 @@ namespace OsmSharp.Osm.Routing.Test
             //    new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\log.txt"));
 
             //PBF.PBFTest.Execute();
-            //ManyToMany.ManyToManyExecution.Execute();
-            Point2Point.Point2PointExecution.Execute();
+            ManyToMany.ManyToManyExecution.Execute();
+            //Point2Point.Point2PointExecution.Execute();
             //CHTest.Execute();
             //CHVerifiedContractionBaseTests.Execute();
 

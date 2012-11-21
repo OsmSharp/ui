@@ -15,6 +15,7 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Routing.CH.PreProcessing.Ordering;
 
 namespace OsmSharp.Osm.Routing.Test.ManyToMany
 {
@@ -47,8 +48,9 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             target_data.Pull();
 
             // do the pre-processing part.
+            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);
             CHPreProcessor pre_processor = new CHPreProcessor(data,
-                new SparseOrdering(data), new DykstraWitnessCalculator(data));
+                new EdgeDifference(data, witness_calculator), witness_calculator);
             pre_processor.Start();
 
             return new Router<CHEdgeData>(data, interpreter, new CHRouter(data));

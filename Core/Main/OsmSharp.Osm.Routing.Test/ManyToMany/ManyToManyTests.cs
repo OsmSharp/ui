@@ -29,8 +29,8 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
 
             long ticks_start = DateTime.Now.Ticks;
 
-            string xml_embedded = string.Format("Osm.Routing.Test.TestData.{0}.osm", name);
-            string csv_embedded = string.Format("Osm.Routing.Test.TestData.{0}.csv", name);
+            string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
+            string csv_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.csv", name);
 
             // build the router.
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
