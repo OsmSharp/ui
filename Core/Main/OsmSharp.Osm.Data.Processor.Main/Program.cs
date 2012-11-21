@@ -44,7 +44,8 @@ namespace OsmSharp.Osm.Data.Processor.Main
         static void Main(string[] args)
         {
             //string source_file = @"C:\temp\RU-MOW.osm";
-            string source_file = @"C:\OSM\bin\belgium.osm.pbf";
+            //string source_file = @"C:\OSM\bin\belgium.osm.pbf";
+            string source_file = @"\\dm-wks-177\c$\temp\belgium.osm.pbf";
             //Program.TestImportRedisAndSparsePreProcessing(source_file);
             Program.TestImportOracleAndSparsePreProcessing(source_file);
             //var startTime = DateTime.Now;
