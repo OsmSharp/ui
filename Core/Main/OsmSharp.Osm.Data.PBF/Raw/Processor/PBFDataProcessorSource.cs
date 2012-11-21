@@ -127,8 +127,15 @@ namespace OsmSharp.Osm.Data.PBF.Raw.Processor
                 simple_node.Id = node.id;
                 simple_node.Latitude = .000000001 * ((double)block.lat_offset 
                     + ((double)block.granularity * (double)node.lat));
-                simple_node.Longitude = .000000001 * ((double)block.lon_offset 
+                simple_node.Longitude = .000000001 * ((double)block.lon_offset
                     + ((double)block.granularity * (double)node.lon));
+                simple_node.Tags = new Dictionary<string, string>();
+                for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
+                {
+                    simple_node.Tags.Add(new KeyValuePair<string, string>(
+                        ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.keys[tag_idx]]),
+                        ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.vals[tag_idx]])));
+                }
                 simple_node.TimeStamp = OsmSharp.Tools.Core.Utilities.FromUnixTime((long)node.info.timestamp * 
                     (long)block.date_granularity);
                 simple_node.Visible = true;
