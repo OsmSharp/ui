@@ -67,7 +67,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// <returns></returns>
         public override IBasicRouter<OsmEdgeData> BuildBasicRouter(IBasicRouterDataSource<OsmEdgeData> data)
         {
-            return new DykstraRouting<OsmEdgeData>(data.TagsIndex);
+            return new DykstraRoutingBinairyHeap<OsmEdgeData>(data.TagsIndex);
         }
 
         /// <summary>

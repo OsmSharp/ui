@@ -79,16 +79,5 @@ namespace OsmSharp.Osm.Routing.Data
         {
             get { return _tags;  }
         }
-
-        /// <summary>
-        /// These edge can always be resolved on.
-        /// </summary>
-        public bool IsVirtual
-        {
-            get
-            {
-                return false;
-            }
-        }
     }
 }
