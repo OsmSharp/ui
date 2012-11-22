@@ -69,7 +69,6 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             _next_array[from] = to;
         }
 
-
         public Dictionary<int, int> Cycles
         {
             get

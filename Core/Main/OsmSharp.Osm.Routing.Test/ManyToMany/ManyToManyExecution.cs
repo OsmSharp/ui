@@ -15,18 +15,20 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
         /// </summary>
         public static void Execute()
         {
-            //ManyToMany.ManyToManyRawTests raw_tests = new ManyToMany.ManyToManyRawTests();
-            //raw_tests.TestFor("tiny");
-            //raw_tests.TestFor("matrix");
-            //raw_tests.TestFor("matrix_big_area");
-            //raw_tests.TestFor("eeklo");
-            //////raw_tests.TestFor("lebbeke");
+            ManyToMany.ManyToManyRawTests raw_tests = new ManyToMany.ManyToManyRawTests();
+            raw_tests.TestForAndCompare("tiny");
 
-            ManyToMany.ManyToManyCHTests ch_tests = new ManyToMany.ManyToManyCHTests();
-            ch_tests.TestFor("tiny");
-            ch_tests.TestFor("matrix");
-            ch_tests.TestFor("matrix_big_area");
-            ch_tests.TestFor("eeklo");
+            raw_tests.TestFor("tiny");
+            raw_tests.TestFor("matrix");
+            raw_tests.TestFor("matrix_big_area");
+            raw_tests.TestFor("eeklo");
+            ////raw_tests.TestFor("lebbeke");
+
+            //ManyToMany.ManyToManyCHTests ch_tests = new ManyToMany.ManyToManyCHTests();
+            //ch_tests.TestFor("tiny");
+            //ch_tests.TestFor("matrix");
+            //ch_tests.TestFor("matrix_big_area");
+            //ch_tests.TestFor("eeklo");
             //ch_tests.TestFor("lebbeke");
         }
 

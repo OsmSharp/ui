@@ -405,11 +405,18 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                         else
                         { // normal one-to-many; add to the result.
                             // check if routing is finished.
-                            found_targets++;
-                            segments[idx] = to_path;
-                            if (found_targets == targets.Length)
-                            { // routing is finished!
-                                return segments.ToArray();
+                            if (segments[idx] == null)
+                            { // make sure only the first route is set.
+                                found_targets++;
+                                segments[idx] = to_path;
+                                if (found_targets == targets.Length)
+                                { // routing is finished!
+                                    return segments.ToArray();
+                                }
+                            }
+                            else if(segments[idx].Weight > to_path.Weight)
+                            { // check if the second, third or later is shorter.
+                                segments[idx] = to_path;
                             }
                         }
                     }
