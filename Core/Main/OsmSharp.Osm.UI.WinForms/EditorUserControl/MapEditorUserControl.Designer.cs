@@ -268,10 +268,10 @@ namespace OsmSharp.Osm.UI.WinForms.MapEditorUserControl
 
         #endregion
 
-        private System.Windows.Forms.SplitContainer splitContainer1;
+        public System.Windows.Forms.SplitContainer splitContainer1;
         public UserControlTarget mapTarget;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private LogControl logControl1;
+        public LogControl logControl1;
         private System.Windows.Forms.ToolStripButton tsbOpenFile;
         private System.Windows.Forms.ToolStripButton tspAddDot;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;

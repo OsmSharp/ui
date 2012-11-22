@@ -184,6 +184,7 @@
     <Compile Include="Layers\DataSourceLayer.cs" />
     <Compile Include="Layers\DataSourceSubLayer.cs" />
     <Compile Include="Layers\ILayer.cs" />
+    <Compile Include="Layers\Routing\OsmSharpRouteLayer.cs" />
     <Compile Include="Layers\Tiles\BingSateliteTilesLayer.cs" />
     <Compile Include="Layers\Tiles\TilesLayer.cs" />
     <Compile Include="Map.cs" />
@@ -209,6 +210,10 @@
     <ProjectReference Include="..\OsmSharp.Osm.Interpreter\OsmSharp.Osm.Interpreter.csproj">
       <Project>{30CCEC5D-49C1-4A5F-986D-8CE14EBDE666}</Project>
       <Name>OsmSharp.Osm.Interpreter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Routing.Core\OsmSharp.Routing.Core.csproj">
+      <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
+      <Name>OsmSharp.Routing.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
