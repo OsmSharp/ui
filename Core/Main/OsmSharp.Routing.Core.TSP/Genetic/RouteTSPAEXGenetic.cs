@@ -38,6 +38,16 @@ namespace OsmSharp.Osm.Routing.Core.TSP.Genetic
         where ResolvedType : IRouterPoint
     {
         /// <summary>
+        /// Holds the population count.
+        /// </summary>
+        private int _population;
+
+        /// <summary>
+        /// Holds the stagnation count.
+        /// </summary>
+        private int _stagnation;
+
+        /// <summary>
         /// Creates a new TSP router;
         /// </summary>
         /// <param name="router"></param>
@@ -48,13 +58,24 @@ namespace OsmSharp.Osm.Routing.Core.TSP.Genetic
         }
 
         /// <summary>
+        /// Creates a new TSP router;
+        /// </summary>
+        /// <param name="router"></param>
+        public RouterTSPAEXGenetic(IRouter<ResolvedType> router, int population, int stagnation)
+            : base(router)
+        {
+            _population = population;
+            _stagnation = stagnation;
+        }
+
+        /// <summary>
         /// Creates a genetic solver.
         /// </summary>
         /// <param name="problem"></param>
         /// <returns></returns>
         internal override ISolver DoCreateSolver(int size)
         {
-            return new EdgeAssemblyCrossOverSolver(100, 100,
+            return new EdgeAssemblyCrossOverSolver(_population, _stagnation,
                      new _3OptGenerationOperation(),
                       new EdgeAssemblyCrossover(30,
                              EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
