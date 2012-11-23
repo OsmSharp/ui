@@ -136,6 +136,23 @@ namespace OsmSharp.Routing.Core.Graph.Path
         }
 
         /// <summary>
+        /// Returns the vertex with the lowest weight.
+        /// </summary>
+        /// <returns></returns>
+        public PathSegment<long> PeekFirst()
+        {
+            if (_visit_list.Count > 0)
+            {
+                double weight = _visit_list.Keys[0];
+                Dictionary<long, PathSegment<long>> first_set = _visit_list[weight];
+                KeyValuePair<long, PathSegment<long>> first_pair =
+                    first_set.First<KeyValuePair<long, PathSegment<long>>>();
+                return first_pair.Value;
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Returns true if the vertex is in this visit list.
         /// </summary>
         /// <param name="vertex"></param>

@@ -59,6 +59,7 @@ namespace OsmSharp.Osm.Routing.Test
             ManyToMany.ManyToManyExecution.Execute();
             //Point2Point.Point2PointExecution.Execute();
             //CHTest.Execute();
+            Tsp.TspTest.Execute();
             //CHVerifiedContractionBaseTests.Execute();
 
             //// initialize the interpreters.

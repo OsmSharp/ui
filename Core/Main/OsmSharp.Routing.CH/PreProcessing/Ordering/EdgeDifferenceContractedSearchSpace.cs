@@ -68,51 +68,38 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <returns></returns>
         public float Calculate(uint vertex)
         {
-            // simulate the construction of new edges.
-            int new_edges = 0;
-            int removed = 0;
-
             short contracted = 0;
             _contraction_count.TryGetValue(vertex, out contracted);
 
             // get the neighbours.
             KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(vertex);
 
+            // simulate the construction of new edges.
+            int new_edges = 0;
+            int removed = neighbours.Length;
+
+            // loop over all neighbours and check for witnesses.
             foreach (KeyValuePair<uint, CHEdgeData> from in neighbours)
             { // loop over all incoming neighbours
-                if (!from.Value.Backward) { continue; }
-
                 foreach (KeyValuePair<uint, CHEdgeData> to in neighbours)
                 { // loop over all outgoing neighbours
-                    if (!to.Value.Forward) { continue; }
-
                     if (to.Key != from.Key)
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
                         if (!_witness_calculator.Exists(from.Key, to.Key, vertex,
-                            (float)from.Value.Weight + (float)to.Value.Weight))
+                            (float)from.Value.Weight + (float)to.Value.Weight, 20))
                         { // no witness exists.
                             new_edges++;
                         }
                     }
-                }
-
-                // count the edges.
-                if (from.Value.Forward)
-                {
-                    removed++;
-                }
-                if (from.Value.Backward)
-                {
-                    removed++;
                 }
             }
 
             // get the depth.                    
             long depth = 0;
             _depth.TryGetValue(vertex, out depth);
-            //return (new_edges - removed) + (contracted * 3) + depth;
-            return (new_edges - removed) + depth;
+            return (3 * (new_edges - removed)) + (2 * contracted);// +depth;
+            //return (new_edges - removed) + depth;
         }
 
         /// <summary>

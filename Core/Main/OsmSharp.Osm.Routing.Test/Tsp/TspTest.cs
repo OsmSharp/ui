@@ -26,6 +26,18 @@ using OsmSharp.Osm.Data;
 using OsmSharp.Tools.Xml.Sources;
 using OsmSharp.Osm.Core.Xml;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
+using System.Reflection;
+using OsmSharp.Routing.Core;
+using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Osm.Core;
+using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Osm.Routing.Data;
+using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Routing.Core.Graph.Router.Dykstra;
+using OsmSharp.Osm.Routing.Core.TSP.Genetic;
+using OsmSharp.Routing.Core.Route;
 
 namespace OsmSharp.Osm.Routing.Test.Tsp
 {
@@ -33,12 +45,78 @@ namespace OsmSharp.Osm.Routing.Test.Tsp
     {
         public static void Execute()
         {
-
+            TspTest.Test("schendelbeke",
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Osm.Routing.Test.TestData.schendelbeke.osm"),
+                false);
         }
 
-        public static void Test(string name, int test_count)
+        public static void Test(string name, Stream data_stream, bool pbf)
         {
+            // create the router.
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            OsmTagsIndex tags_index = new OsmTagsIndex();
 
+            // do the data processing.
+            MemoryRouterDataSource<OsmEdgeData> osm_data =
+                new MemoryRouterDataSource<OsmEdgeData>(tags_index);
+            OsmEdgeDataGraphProcessingTarget target_data = new OsmEdgeDataGraphProcessingTarget(
+                osm_data, interpreter, osm_data.TagsIndex);
+            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(data_stream);
+            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
+            sorter.RegisterSource(data_processor_source);
+            target_data.RegisterSource(sorter);
+            target_data.Pull();
+
+            IRouter<RouterPoint> router = new Router<OsmEdgeData>(osm_data, interpreter,
+                new DykstraRoutingBinairyHeap<OsmEdgeData>(osm_data.TagsIndex));
+
+            // read the source files.
+            int latitude_idx = 2;
+            int longitude_idx = 3;
+            string[][] point_strings = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(@"OsmSharp.Osm.Routing.Test.TestData.{0}.csv", name)),
+                Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated);
+            List<RouterPoint> points = new List<RouterPoint>();
+            int cnt = 10;
+            foreach (string[] line in point_strings)
+            {
+                if (points.Count >= cnt)
+                {
+                    break;
+                }
+                string latitude_string = (string)line[latitude_idx];
+                string longitude_string = (string)line[longitude_idx];
+
+                //string route_ud = (string)line[1];
+
+                double longitude = 0;
+                double latitude = 0;
+                if (double.TryParse(longitude_string, System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture, out longitude) &&
+                   double.TryParse(latitude_string, System.Globalization.NumberStyles.Any,
+                    System.Globalization.CultureInfo.InvariantCulture, out latitude))
+                {
+                    GeoCoordinate point = new GeoCoordinate(latitude, longitude);
+
+                    RouterPoint resolved = router.Resolve(point);
+                    if (resolved != null && router.CheckConnectivity(resolved, 100))
+                    {
+                        points.Add(resolved);
+                    }
+                }
+            }
+
+            RouterTSPGenetic<RouterPoint> tsp_solver = new RouterTSPGenetic<RouterPoint>(router);
+            OsmSharpRoute tsp = tsp_solver.CalculateTSP(points.ToArray());
+            tsp.SaveAsGpx(new FileInfo(@"c:\temp\tsp.gpx"));
+
+            double[][] weights = router.CalculateManyToManyWeight(points.ToArray(), points.ToArray());
+
+            router.Calculate(points[0], points[1]).SaveAsGpx(new FileInfo(@"c:\temp\fromO_to1.gpx"));
+            router.Calculate(points[1], points[0]).SaveAsGpx(new FileInfo(@"c:\temp\from1_to0.gpx"));
+            router.Calculate(points[0], points[9]).SaveAsGpx(new FileInfo(@"c:\temp\fromO_to9.gpx"));
+            router.Calculate(points[9], points[0]).SaveAsGpx(new FileInfo(@"c:\temp\from9_to0.gpx"));
+            //router.Calculate(points[0], points[1]).SaveAsGpx(new FileInfo("fromO_to1.gpx"));
         }
     }
 }

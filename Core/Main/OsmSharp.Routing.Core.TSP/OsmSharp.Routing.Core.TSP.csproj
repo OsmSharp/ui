@@ -140,7 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Genetic\RouterTSPGenetic.cs" />
-    <Compile Include="Genetic\RouteTSPAEXGenetic.cs" />
+    <Compile Include="Genetic\RouterTSPAEXGenetic.cs" />
     <Compile Include="RandomizedArbitraryInsertion\RouteTSPRAI.cs" />
     <Compile Include="RouterTSP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

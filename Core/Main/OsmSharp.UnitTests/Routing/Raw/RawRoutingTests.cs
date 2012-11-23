@@ -219,5 +219,14 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         {
             this.DoTestResolveBetweenNodes();
         }
+
+        /// <summary>
+        /// Regression test on routing resolved nodes.
+        /// </summary>
+        [TestMethod]
+        public void TestRawResolveBetweenRouteToSelf()
+        {
+            this.DoTestResolveBetweenRouteToSelf();
+        }
     }
 }

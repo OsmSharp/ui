@@ -240,6 +240,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="TestData\test_network.osm" />
+    <EmbeddedResource Include="TestData\schendelbeke.csv" />
+    <EmbeddedResource Include="TestData\schendelbeke.osm" />
     <None Include="Tsp\matrix.csv" />
     <None Include="Tsp\matrix.osm" />
     <None Include="Tsp\matrix_big_area.csv" />
@@ -285,6 +287,10 @@
     <ProjectReference Include="..\OsmSharp.Routing.CH\OsmSharp.Routing.CH.csproj">
       <Project>{ABF960CD-353C-4983-BA96-25D001C72F61}</Project>
       <Name>OsmSharp.Routing.CH</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Routing.Core.TSP\OsmSharp.Routing.Core.TSP.csproj">
+      <Project>{494BE919-7256-431F-9D94-8B438129D93E}</Project>
+      <Name>OsmSharp.Routing.Core.TSP</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Routing.Core\OsmSharp.Routing.Core.csproj">
       <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>

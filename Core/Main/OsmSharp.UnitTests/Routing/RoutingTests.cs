@@ -472,5 +472,44 @@ namespace OsmSharp.Osm.UnitTests.Routing
             Assert.IsTrue((result.Vertex1 == 10 && result.Vertex2 == 12) ||
                 (result.Vertex1 == 12 && result.Vertex2 == 10));
         }
+
+        /// <summary>
+        /// Test if routes from a resolved node to itself is correctly calculated.
+        /// 
+        /// Regression Test: Routing to self with a resolved node returns a route to the nearest real node and back.
+        /// </summary>
+        protected void DoTestResolveBetweenRouteToSelf()
+        {
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+            IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);
+            
+            // first test a non-between node.
+            ResolvedType resolved = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
+            OsmSharpRoute route = router.Calculate(resolved, resolved);
+            Assert.AreEqual(1, route.Entries.Length);
+            Assert.AreEqual(0, route.TotalDistance);
+            Assert.AreEqual(0, route.TotalTime);
+
+            resolved = router.Resolve(new GeoCoordinate(51.0578761, 3.7193972)); //,-103,  -4,  -8
+            route = router.Calculate(resolved, resolved);
+            Assert.AreEqual(1, route.Entries.Length);
+            Assert.AreEqual(0, route.TotalDistance);
+            Assert.AreEqual(0, route.TotalTime);
+
+
+            resolved = router.Resolve(new GeoCoordinate(51.0576510, 3.7194124)); //,-104, -14, -12
+            route = router.Calculate(resolved, resolved);
+            Assert.AreEqual(1, route.Entries.Length);
+            Assert.AreEqual(0, route.TotalDistance);
+            Assert.AreEqual(0, route.TotalTime);
+
+            resolved = router.Resolve(new GeoCoordinate(51.0576829, 3.7196791)); //,-105, -12, -10
+            route = router.Calculate(resolved, resolved);
+            Assert.AreEqual(1, route.Entries.Length);
+            Assert.AreEqual(0, route.TotalDistance);
+            Assert.AreEqual(0, route.TotalTime);
+        }
     }
 }

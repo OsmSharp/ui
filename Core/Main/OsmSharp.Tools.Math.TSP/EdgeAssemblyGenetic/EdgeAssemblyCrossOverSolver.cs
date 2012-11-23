@@ -195,6 +195,11 @@ namespace OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic
                 {
                     stagnation++;
                 }
+
+                // report progress.
+                OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(stagnation,_stagnation,
+                    "OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic.EdgeAssemblyCrossOverSolver",
+                    "Solving using EAX...");
             }
 
             List<int> result = new List<int>(best.Genomes);

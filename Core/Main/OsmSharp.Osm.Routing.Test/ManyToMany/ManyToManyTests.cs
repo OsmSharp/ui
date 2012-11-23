@@ -9,6 +9,7 @@ using OsmSharp.Routing.Core;
 using OsmSharp.Osm.Routing.Interpreter;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Routing.Core.Route;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace OsmSharp.Osm.Routing.Test.ManyToMany
 {
@@ -124,10 +125,15 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
                 for (int y = 0; y < result.Length; y++)
                 {
                     OsmSharpRoute route = router.Calculate(resolved[x], resolved[y]);
-                    if (route != null && result[x][y] >= double.MaxValue)
+                    if (route != null && 
+                        result[x][y] >= double.MaxValue)
                     {
                         throw new Exception("ManyToMany returns different result compared to OneToOne!");
                     }
+                    //if(route != null)
+                    //{
+                    //    Assert.AreEqual(result[x][y], route.TotalTime, 0.0001);
+                    //}
                 }
             }
 

@@ -37,28 +37,12 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         private CHRouter _router;
 
         /// <summary>
-        /// The max vertices to settle before stopping the witness search.
-        /// </summary>
-        private int _max_settles;
-
-        /// <summary>
         /// Creates a new witness calculator.
         /// </summary>
         /// <param name="data"></param>
         public DykstraWitnessCalculator(IDynamicGraph<CHEdgeData> data)
         {
             _router = new CHRouter(data);
-            _max_settles = 40;
-        }
-
-        /// <summary>
-        /// Creates a new witness calculator.
-        /// </summary>
-        /// <param name="data"></param>
-        public DykstraWitnessCalculator(IDynamicGraph<CHEdgeData> data, int max_settles)
-        {
-            _router = new CHRouter(data);
-            _max_settles = max_settles;
         }
 
         /// <summary>
@@ -69,9 +53,9 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="via"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool Exists(uint from, uint to, uint via, float weight)
+        public bool Exists(uint from, uint to, uint via, float weight, int max_settles)
         {
-            return _router.CalculateWeight(from, to, via, weight, _max_settles) <= weight;
+            return _router.CalculateWeight(from, to, via, weight, max_settles) <= weight;
         }
     }
 }

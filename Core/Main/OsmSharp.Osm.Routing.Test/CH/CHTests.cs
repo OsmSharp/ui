@@ -29,22 +29,26 @@ using System.Reflection;
 using OsmSharp.Osm.Routing.Interpreter;
 using System.IO;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
+using OsmSharp.Osm.Data.Core.Processor.Progress;
 namespace OsmSharp.Osm.Routing.Test.CH
 {
     class CHTest
     {
         public static void Execute()
         {
-            CHTest.DoContraction("lebbeke");
+            CHTest.DoContraction(new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf").OpenRead(), true);
+            //CHTest.DoContraction("OsmSharp.Osm.Routing.Test.TestData.matrix_big_area.osm", false);
         }
 
-        private static void DoContraction(string name)
+
+        private static void DoContraction(string xml_embedded, bool pbf)
+        {
+            CHTest.DoContraction(Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded), pbf);
+        }
+
+        private static void DoContraction(Stream data_stream, bool pbf)
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
-            Stream data_stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded);
-            bool pbf = false;
-
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
@@ -61,14 +65,14 @@ namespace OsmSharp.Osm.Routing.Test.CH
             {
                 data_processor_source = new XmlDataProcessorSource(data_stream);
             }
-
+            data_processor_source = new ProgressDataProcessorSource(data_processor_source);
             target_data.RegisterSource(data_processor_source);
             target_data.Pull();
 
             // do the pre-processing part.
             INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(osm_data);
             CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
-                new EdgeDifference(osm_data, witness_calculator), witness_calculator);
+                new EdgeDifferenceContractedSearchSpace(osm_data, witness_calculator), witness_calculator);
             pre_processor.Start();
         }
     }

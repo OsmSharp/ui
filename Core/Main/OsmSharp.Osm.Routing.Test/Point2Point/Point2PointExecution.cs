@@ -20,10 +20,10 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         {
             //Point2PointExecution.Execute<OsmSharp.Osm.Routing.Data.OsmEdgeData>(
             //    new Point2Point.Point2PointDykstraTests());
-            Point2PointExecution.Execute<OsmSharp.Osm.Routing.Data.OsmEdgeData>(
-                new Point2Point.Point2PointDykstraBinairyHeapTests());
-            Point2PointExecution.Execute<OsmSharp.Routing.CH.PreProcessing.CHEdgeData>(
-                new Point2Point.Point2PointCHTests());
+            //Point2PointExecution.Execute<OsmSharp.Osm.Routing.Data.OsmEdgeData>(
+            //    new Point2Point.Point2PointDykstraBinairyHeapTests());
+            //Point2PointExecution.Execute<OsmSharp.Routing.CH.PreProcessing.CHEdgeData>(
+            //    new Point2Point.Point2PointCHTests());
         }
 
         /// <summary>

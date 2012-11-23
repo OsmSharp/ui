@@ -124,18 +124,34 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
                 KeyValuePair<uint, EdgeData>[] arcs =
                     _vertices[from].Arcs;
                 int idx = -1;
-                if (arcs == null)
-                {
-                    arcs = new KeyValuePair<uint, EdgeData>[1];
-                    idx = 0;
-                    _vertices[from].Arcs = arcs;
-                }
-                else
-                {
+                if (arcs != null)
+                { // check for an existing edge first.
+                    for (int arc_idx = 0; arc_idx < arcs.Length; arc_idx++)
+                    {
+                        if (arcs[arc_idx].Key == to &&
+                            arcs[arc_idx].Value.Backward == data.Backward &&
+                            arcs[arc_idx].Value.Forward == data.Forward &&
+                            arcs[arc_idx].Value.Weight > data.Weight)
+                        { // an arc was found that represents the same directional information.
+                            arcs[arc_idx] = new KeyValuePair<uint, EdgeData>(
+                                to, data);
+                            return;
+                        }
+                    }
+                    
+                    // if here: there did not exist an edge yet!
                     idx = arcs.Length;
                     Array.Resize<KeyValuePair<uint, EdgeData>>(ref arcs, arcs.Length + 1);
                     _vertices[from].Arcs = arcs;
                 }
+                else
+                { // create an arcs array.
+                    arcs = new KeyValuePair<uint, EdgeData>[1];
+                    idx = 0;
+                    _vertices[from].Arcs = arcs;
+                }
+
+                // set the arc.
                 arcs[idx] = new KeyValuePair<uint, EdgeData>(
                     to, data);
 
