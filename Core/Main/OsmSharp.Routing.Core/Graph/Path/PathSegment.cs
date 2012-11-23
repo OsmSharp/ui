@@ -122,11 +122,20 @@ namespace OsmSharp.Routing.Core.Graph.Path
         {
             PathSegment<IdType> clone = this.Clone();
             PathSegment<IdType> first = clone.First();
+            PathSegment<IdType> path_clone = path.Clone();
+
+            PathSegment<IdType> current = clone;
+            current.Weight = path.Weight + current.Weight;
+            while (current.From != null)
+            {
+                current.From.Weight = path.Weight + current.From.Weight;
+                current = current.From;
+            }
 
             if (first.VertexId.Equals(path.VertexId))
             {
-                first.Weight = path.Weight;
-                first.From = path.From;
+                first.Weight = path_clone.Weight;
+                first.From = path_clone.From;
                 return clone;
             }
             throw new ArgumentException("Paths must share beginning and end vertices to concatenate!");
