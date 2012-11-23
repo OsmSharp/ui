@@ -95,7 +95,7 @@ namespace OsmSharpService.Core.Routing
                 for (int idx = 0; idx < request.Hooks.Length; idx++)
                 {
                     if (router_points[idx] != null &&
-                        router.CheckConnectivity(router_points[idx], 50))
+                        router.CheckConnectivity(router_points[idx], 200))
                     { // the point is connected.
                         routable_points.Add(router_points[idx]);
                     }
@@ -132,7 +132,7 @@ namespace OsmSharpService.Core.Routing
                         break;
                     case RoutingOperationType.TSP:
                         RouterTSPAEXGenetic<RouterPoint> tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
-                            router);
+                            router, 300, 300);
                         response.Route = tsp_solver.CalculateTSP(routable_points.ToArray());
                         break;
                 }

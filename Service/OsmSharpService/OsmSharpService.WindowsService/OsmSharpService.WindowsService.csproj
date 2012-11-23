@@ -108,18 +108,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharpService.Core\OsmSharpService.Core.csproj">
-      <Project>{4F4F1276-1617-4643-849A-BF3AD1F91222}</Project>
-      <Name>OsmSharpService.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Installer.resx">
       <DependentUpon>Installer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OsmSharpService.resx">
       <DependentUpon>OsmSharpService.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharpService.Core\OsmSharpService.Core.csproj">
+      <Project>{4F4F1276-1617-4643-849A-BF3AD1F91222}</Project>
+      <Name>OsmSharpService.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
