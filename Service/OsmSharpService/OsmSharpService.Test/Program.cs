@@ -5,6 +5,7 @@ using System.Text;
 using ServiceStack.ServiceClient.Web;
 using System.IO;
 using OsmSharpService.Core.Routing;
+using OsmSharpService.Core.Routing.Primitives;
 
 namespace OsmSharpService.Test
 {

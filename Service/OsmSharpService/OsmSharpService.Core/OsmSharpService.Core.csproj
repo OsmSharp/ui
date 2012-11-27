@@ -47,10 +47,16 @@
   <ItemGroup>
     <Compile Include="AppHost.cs" />
     <Compile Include="IProcessor.cs" />
+    <Compile Include="ResponseStatusEnum.cs" />
+    <Compile Include="Routing\Primitives\RoutingHook.cs" />
+    <Compile Include="Routing\Primitives\RoutingHookResolved.cs" />
     <Compile Include="Routing\RoutingOperation.cs" />
-    <Compile Include="Routing\RoutingOperationProcessor.cs" />
-    <Compile Include="Routing\RoutingResponse.cs" />
+    <Compile Include="OperationProcessor.cs" />
+    <Compile Include="Routing\Primitives\RoutingResponse.cs" />
     <Compile Include="Routing\RoutingRestService.cs" />
+    <Compile Include="Routing\ResolveOperation.cs" />
+    <Compile Include="Routing\Primitives\ResolveResponse.cs" />
+    <Compile Include="Routing\ResolveRestService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="OsmSharp">

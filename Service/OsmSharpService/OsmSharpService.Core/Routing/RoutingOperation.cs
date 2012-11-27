@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 using ServiceStack.ServiceHost;
+using OsmSharp.Routing.Core;
+using OsmSharpService.Core.Routing.Primitives;
 
 namespace OsmSharpService.Core.Routing
 {
@@ -17,6 +19,11 @@ namespace OsmSharpService.Core.Routing
         /// Holds the routing resource type.
         /// </summary>
         public RoutingOperationType Type { get; set; }
+
+        /// <summary>
+        /// The vehicle type.
+        /// </summary>
+        public VehicleEnum Vehicle { get; set; }
 
         /// <summary>
         /// The hooks for the router to route on.
@@ -41,26 +48,5 @@ namespace OsmSharpService.Core.Routing
         /// Returns all the weights between the given points.
         /// </summary>
         ManyToMany
-    }
-
-    /// <summary>
-    /// A routing hook; a point route from/to.
-    /// </summary>
-    public class RoutingHook
-    {
-        /// <summary>
-        /// The id of the hook.
-        /// </summary>
-        public int Id { get; set; }
-
-        /// <summary>
-        /// The latitude.
-        /// </summary>
-        public float Latitude { get; set; }
-
-        /// <summary>
-        /// The longitude
-        /// </summary>
-        public float Longitude { get; set; }
     }
 }

@@ -43,7 +43,7 @@ namespace OsmSharpService.WindowsService
         protected override void OnStart(string[] args)
         {
             // initializes the processor(s).
-            _processors.Add(RoutingOperationProcessor.GetInstance());
+            _processors.Add(OperationProcessor.GetInstance());
 
             // start all the processor(s).
             foreach (IProcessor processor in _processors)

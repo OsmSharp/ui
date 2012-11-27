@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Core.Route;
 
-namespace OsmSharpService.Core.Routing
+namespace OsmSharpService.Core.Routing.Primitives
 {
     /// <summary>
     /// A generic response for a routing request.
@@ -12,9 +12,9 @@ namespace OsmSharpService.Core.Routing
     public class RoutingResponse
     {
         /// <summary>
-        /// Holds the routing status.
+        /// Holds the status.
         /// </summary>
-        public RoutingResponseStatus Status { get; set; }
+        public OsmSharpServiceResponseStatusEnum Status { get; set; }
 
         /// <summary>
         /// Holds a message with more details about the status.
@@ -44,20 +44,5 @@ namespace OsmSharpService.Core.Routing
         {
             return string.Format("Response: {0}:{1}", this.Status.ToString(), this.StatusMessage);
         }
-    }
-
-    /// <summary>
-    /// An enumeration representing status.
-    /// </summary>
-    public enum RoutingResponseStatus
-    {
-        /// <summary>
-        /// The routing request failed.
-        /// </summary>
-        Failed,
-        /// <summary>
-        /// The request was a succes!
-        /// </summary>
-        Success
     }
 }
