@@ -26,10 +26,13 @@ using OsmSharp.Tools.Math.Geo.Meta;
 using OsmSharp.Tools.Math.Units.Distance;
 using OsmSharp.Routing.Core.Route;
 using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Roads.Tags;
+using OsmSharp.Routing.Core.Interpreter;
 
 namespace OsmSharp.Routing.Core.ArcAggregation
 {
+    /// <summary>
+    /// An arc aggregator.
+    /// </summary>
     public class ArcAggregator
     {
         private AggregatedPoint previous_point = null;
@@ -37,14 +40,28 @@ namespace OsmSharp.Routing.Core.ArcAggregation
         private AggregatedPoint p = null;
 
         /// <summary>
+        /// Holds the routing interpreter.
+        /// </summary>
+        private IRoutingInterpreter _interpreter;
+
+        /// <summary>
+        /// Creates a new arc aggregator.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        public ArcAggregator(IRoutingInterpreter interpreter)
+        {
+            _interpreter = interpreter;
+        }
+
+        /// <summary>
         /// Aggregates a route by remove information useless to the generation of routing instructions.
         /// </summary>
-        /// <param name="raw_route"></param>
+        /// <param name="route"></param>
         /// <returns></returns>
-        public AggregatedPoint Aggregate(OsmSharpRoute raw_route)
+        public AggregatedPoint Aggregate(OsmSharpRoute route)
         {
             // create the enumerator.
-            AggregatedPointEnumerator enumerator = new AggregatedPointEnumerator(raw_route);
+            AggregatedPointEnumerator enumerator = new AggregatedPointEnumerator(route);
 
             AggregatedRoutePoint previous = null;
             AggregatedRoutePoint current = null;
@@ -57,7 +74,7 @@ namespace OsmSharp.Routing.Core.ArcAggregation
                 next = enumerator.Current;
 
                 // process 
-                this.Process(raw_route ,previous, current, next);
+                this.Process(route ,previous, current, next);
 
                 // make the next, current and the current previous.
                 previous = current;
@@ -66,12 +83,19 @@ namespace OsmSharp.Routing.Core.ArcAggregation
             }
 
             // process once more, the current current has not been processed.
-            this.Process(raw_route, previous, current, next);
+            this.Process(route, previous, current, next);
 
             return p;
         }
 
-        private void Process(OsmSharpRoute raw_route, AggregatedRoutePoint previous, AggregatedRoutePoint current, AggregatedRoutePoint next)
+        /// <summary>
+        /// Processes a part of the route.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <param name="previous"></param>
+        /// <param name="current"></param>
+        /// <param name="next"></param>
+        private void Process(OsmSharpRoute route, AggregatedRoutePoint previous, AggregatedRoutePoint current, AggregatedRoutePoint next)
         {
             // process the current point.
             if (current != null)
@@ -112,7 +136,7 @@ namespace OsmSharp.Routing.Core.ArcAggregation
                     }
                     else
                     { // there is a previous arc; a test can be done if the current point is significant.
-                        if (this.IsSignificant(raw_route.Vehicle, previous_arc, next_arc))
+                        if (this.IsSignificant(route.Vehicle, previous_arc, next_arc))
                         { // the arc is significant; append it to the previous arc.
                             previous_arc.Next.Next = next_arc;
                             previous_arc = next_arc;
@@ -161,10 +185,12 @@ namespace OsmSharp.Routing.Core.ArcAggregation
             {
                 next_tags_dic.Add(pair.Key, pair.Value);
             }
-            RoadTagsInterpreterBase previous_interpreter = new RoadTagsInterpreterBase(previous_tags_dic);
-            RoadTagsInterpreterBase next_interpreter = new RoadTagsInterpreterBase(next_tags_dic);
-            if (!previous_interpreter.IsEqualForVehicle(vehicle, next_interpreter))
-            {
+            if (_interpreter.EdgeInterpreter.IsEqualFor(vehicle, previous_tags_dic, next_tags_dic))
+            { // the previous and the next edge do not represent a change for the given vehicle.
+                //RoadTagsInterpreterBase previous_interpreter = new RoadTagsInterpreterBase(previous_tags_dic);
+                //RoadTagsInterpreterBase next_interpreter = new RoadTagsInterpreterBase(next_tags_dic);
+                //if (!previous_interpreter.IsEqualForVehicle(vehicle, next_interpreter))
+                //{
                 return true;
             }
             return false;
@@ -257,6 +283,9 @@ namespace OsmSharp.Routing.Core.ArcAggregation
         }
     }
 
+    /// <summary>
+    /// Enumerates all aggregated points.
+    /// </summary>
     internal class AggregatedPointEnumerator : IEnumerator<AggregatedRoutePoint>
     {
         private int _idx;

@@ -29,9 +29,9 @@ using OsmSharp.Routing.Core.Graph.Path;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
 using OsmSharp.Routing.Core.Router;
-using OsmSharp.Routing.Core.Resolving;
 using OsmSharp.Tools.Math;
 using OsmSharp.Tools.Core.Collections.PriorityQueues;
+using OsmSharp.Routing.Core;
 
 namespace OsmSharp.Routing.CH.Routing
 {
@@ -1282,7 +1282,7 @@ namespace OsmSharp.Routing.CH.Routing
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph,
-            GeoCoordinate coordinate, IResolveMatcher matcher, double search_box_size)
+            GeoCoordinate coordinate, IEdgeMatcher matcher, double search_box_size)
         {
             // build the search box.
             GeoCoordinateBox search_box = new GeoCoordinateBox(new GeoCoordinate(

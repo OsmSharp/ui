@@ -26,7 +26,6 @@ using OsmSharp.Routing.Core.Constraints;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Routing.Core.Resolving;
 using OsmSharp.Routing.Core.Router;
 using OsmSharp.Tools.Core.Collections.PriorityQueues;
 
@@ -467,8 +466,8 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// </summary>
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, 
-            GeoCoordinate coordinate, IResolveMatcher matcher, double search_box_size)
+        public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph,
+            GeoCoordinate coordinate, IEdgeMatcher matcher, double search_box_size)
         {
             // create the search box.
             GeoCoordinateBox search_box = new GeoCoordinateBox(new GeoCoordinate(

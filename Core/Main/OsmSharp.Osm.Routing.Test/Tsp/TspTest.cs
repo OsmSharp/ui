@@ -98,8 +98,8 @@ namespace OsmSharp.Osm.Routing.Test.Tsp
                 {
                     GeoCoordinate point = new GeoCoordinate(latitude, longitude);
 
-                    RouterPoint resolved = router.Resolve(point);
-                    if (resolved != null && router.CheckConnectivity(resolved, 100))
+                    RouterPoint resolved = router.Resolve(VehicleEnum.Car, point);
+                    if (resolved != null && router.CheckConnectivity(VehicleEnum.Car, resolved, 100))
                     {
                         points.Add(resolved);
                     }
@@ -110,12 +110,12 @@ namespace OsmSharp.Osm.Routing.Test.Tsp
             OsmSharpRoute tsp = tsp_solver.CalculateTSP(points.ToArray());
             tsp.SaveAsGpx(new FileInfo(@"c:\temp\tsp.gpx"));
 
-            double[][] weights = router.CalculateManyToManyWeight(points.ToArray(), points.ToArray());
+            double[][] weights = router.CalculateManyToManyWeight(VehicleEnum.Car, points.ToArray(), points.ToArray());
 
-            router.Calculate(points[0], points[1]).SaveAsGpx(new FileInfo(@"c:\temp\fromO_to1.gpx"));
-            router.Calculate(points[1], points[0]).SaveAsGpx(new FileInfo(@"c:\temp\from1_to0.gpx"));
-            router.Calculate(points[0], points[9]).SaveAsGpx(new FileInfo(@"c:\temp\fromO_to9.gpx"));
-            router.Calculate(points[9], points[0]).SaveAsGpx(new FileInfo(@"c:\temp\from9_to0.gpx"));
+            router.Calculate(VehicleEnum.Car, points[0], points[1]).SaveAsGpx(new FileInfo(@"c:\temp\fromO_to1.gpx"));
+            router.Calculate(VehicleEnum.Car, points[1], points[0]).SaveAsGpx(new FileInfo(@"c:\temp\from1_to0.gpx"));
+            router.Calculate(VehicleEnum.Car, points[0], points[9]).SaveAsGpx(new FileInfo(@"c:\temp\fromO_to9.gpx"));
+            router.Calculate(VehicleEnum.Car, points[9], points[0]).SaveAsGpx(new FileInfo(@"c:\temp\from9_to0.gpx"));
             //router.Calculate(points[0], points[1]).SaveAsGpx(new FileInfo("fromO_to1.gpx"));
         }
     }

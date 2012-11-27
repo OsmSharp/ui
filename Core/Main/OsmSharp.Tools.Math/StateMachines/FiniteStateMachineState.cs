@@ -25,7 +25,7 @@ namespace OsmSharp.Tools.Math.StateMachines
     /// <summary>
     /// Represents a state in a finite-state machine.
     /// </summary>
-    public sealed class FiniteStateMachineState
+    public sealed class FiniteStateMachineState<EventType>
     {
         /// <summary>
         /// The unique id.
@@ -35,7 +35,7 @@ namespace OsmSharp.Tools.Math.StateMachines
         /// <summary>
         /// The list of possible outgoing transition.
         /// </summary>
-        public IList<FiniteStateMachineTransition> Outgoing { get; private set; }
+        public IList<FiniteStateMachineTransition<EventType>> Outgoing { get; private set; }
 
         /// <summary>
         /// Boolean representing if the state is final.
@@ -65,15 +65,15 @@ namespace OsmSharp.Tools.Math.StateMachines
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        public static List<FiniteStateMachineState> Generate(int count)
+        public static List<FiniteStateMachineState<EventType>> Generate(int count)
         {
-            List<FiniteStateMachineState> states = new List<FiniteStateMachineState>();
+            List<FiniteStateMachineState<EventType>> states = new List<FiniteStateMachineState<EventType>>();
             for (int idx = 0; idx < count; idx++)
             {
-                states.Add(new FiniteStateMachineState()
+                states.Add(new FiniteStateMachineState<EventType>()
                 {
                     Id = idx,
-                    Outgoing = new List<FiniteStateMachineTransition>(),
+                    Outgoing = new List<FiniteStateMachineTransition<EventType>>(),
                     Final = false,
                     ConsumeAll = false
                 });

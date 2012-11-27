@@ -24,14 +24,42 @@ using OsmSharp.Tools.Math.Units.Time;
 using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.ArcAggregation.Output;
 using OsmSharp.Routing.Core.ArcAggregation;
+using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Tools.Core;
 
 namespace OsmSharp.Routing.Core.Metrics.Time
 {
+    /// <summary>
+    /// A calculator to accurately estimate timings of a route.
+    /// </summary>
     public class TimeCalculator : OsmSharpRouteMetricCalculator
     {
+        /// <summary>
+        /// Constant identifier for Time.
+        /// </summary>
         public const string TIME_KEY = "Time_in_seconds";
+
+        /// <summary>
+        /// Constant identifier for Distance.
+        /// </summary>
         public const string DISTANCE_KEY = "Distance_in_meter";
 
+        /// <summary>
+        /// Creates a new TimeCalculator.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        public TimeCalculator(IRoutingInterpreter interpreter)
+             :base(interpreter)
+        {
+            
+        }
+
+        /// <summary>
+        /// Calculcates the metrics.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
         public override Dictionary<string, double> Calculate(VehicleEnum vehicle, AggregatedPoint p)
         {
             Dictionary<string, double> result = new Dictionary<string, double>();
@@ -121,9 +149,7 @@ namespace OsmSharp.Routing.Core.Metrics.Time
             result[DISTANCE_KEY] = result[DISTANCE_KEY] + arc.Distance.Value;
 
             // update the time.
-            OsmSharp.Routing.Core.Roads.Tags.RoadTagsInterpreterBase road_interpreter =
-                new OsmSharp.Routing.Core.Roads.Tags.RoadTagsInterpreterBase(arc.Tags);
-            KilometerPerHour speed = road_interpreter.MaxSpeed(vehicle);
+            KilometerPerHour speed = this.Interpreter.EdgeInterpreter.MaxSpeed(vehicle, arc.Tags.ConvertFrom());
             Second time = arc.Distance / speed;
 
             // FOR NOW USE A METRIC OF 75% MAX SPEED.

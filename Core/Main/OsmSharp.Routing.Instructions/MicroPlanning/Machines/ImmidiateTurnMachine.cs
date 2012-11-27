@@ -23,6 +23,7 @@ using OsmSharp.Tools.Math.StateMachines;
 using OsmSharp.Tools.Math.Geo.Meta;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.ArcAggregation.Output;
+using OsmSharp.Tools.Math.Automata;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {
@@ -41,29 +42,29 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// Initializes this machine.
         /// </summary>
         /// <returns></returns>
-        private static FiniteStateMachineState Initialize()
+        private static FiniteStateMachineState<MicroPlannerMessage> Initialize()
         {
             // generate states.
-            List<FiniteStateMachineState> states = FiniteStateMachineState.Generate(5);
+            List<FiniteStateMachineState<MicroPlannerMessage>> states = FiniteStateMachineState<MicroPlannerMessage>.Generate(5);
 
             // state 3 is final.
             states[4].Final = true;
 
             // 0
-            FiniteStateMachineTransition.Generate(states, 0, 1, typeof(MicroPlannerMessageArc));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 0, 1, typeof(MicroPlannerMessageArc));
 
             // 1
-            FiniteStateMachineTransition.Generate(states, 1, 0, typeof(MicroPlannerMessagePoint),
-                new FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate(TestNonSignificantTurn));
-            FiniteStateMachineTransition.Generate(states, 1, 2, typeof(MicroPlannerMessagePoint),
-                new FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate(TestSignificantTurn));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 1, 0, typeof(MicroPlannerMessagePoint),
+                new FiniteStateMachineTransitionCondition<MicroPlannerMessage>.FiniteStateMachineTransitionConditionDelegate(TestNonSignificantTurn));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 1, 2, typeof(MicroPlannerMessagePoint),
+                new FiniteStateMachineTransitionCondition<MicroPlannerMessage>.FiniteStateMachineTransitionConditionDelegate(TestSignificantTurn));
             // 2
-            FiniteStateMachineTransition.Generate(states, 2, 3, typeof(MicroPlannerMessageArc),
-                new FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate(TestVeryShortArc));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 2, 3, typeof(MicroPlannerMessageArc),
+                new FiniteStateMachineTransitionCondition<MicroPlannerMessage>.FiniteStateMachineTransitionConditionDelegate(TestVeryShortArc));
 
             // 3
-            FiniteStateMachineTransition.Generate(states, 3, 4, typeof(MicroPlannerMessagePoint),
-                new FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate(TestSignificantTurn));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 3, 4, typeof(MicroPlannerMessagePoint),
+                new FiniteStateMachineTransitionCondition<MicroPlannerMessage>.FiniteStateMachineTransitionConditionDelegate(TestSignificantTurn));
 
             // return the start automata with intial state.
             return states[0];
@@ -74,7 +75,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
-        private static bool TestVeryShortArc(object test)
+        private static bool TestVeryShortArc(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
             if (test is MicroPlannerMessageArc)
             {
@@ -89,9 +90,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
-        private static bool TestNonSignificantTurn(object test)
+        private static bool TestNonSignificantTurn(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
-            if (!ImmidateTurnMachine.TestSignificantTurn(test))
+            if (!ImmidateTurnMachine.TestSignificantTurn(machine, test))
             { // it is no signficant turn.
                 return true;
             }
@@ -103,7 +104,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
-        private static bool TestSignificantTurn(object test)
+        private static bool TestSignificantTurn(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
             if (test is MicroPlannerMessagePoint)
             {
@@ -136,13 +137,13 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             // count the number of streets in the same turning direction as the turn
             // that was found.
             int count = 0;
-            if (MicroPlannerHelper.IsLeft(latest_point.Angle.Direction))
+            if (MicroPlannerHelper.IsLeft(latest_point.Angle.Direction, this.Planner.Interpreter))
             {
-                count = MicroPlannerHelper.GetLeft(this.FinalMessages);
+                count = MicroPlannerHelper.GetLeft(this.FinalMessages, this.Planner.Interpreter);
             }
-            else if (MicroPlannerHelper.IsRight(latest_point.Angle.Direction))
+            else if (MicroPlannerHelper.IsRight(latest_point.Angle.Direction, this.Planner.Interpreter))
             {
-                count = MicroPlannerHelper.GetRight(this.FinalMessages);
+                count = MicroPlannerHelper.GetRight(this.FinalMessages, this.Planner.Interpreter);
             }
 
             // construct the box indicating the location of the resulting find by this machine.
@@ -164,22 +165,6 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             // let the scentence planner generate the correct information.
             this.Planner.SentencePlanner.GenerateImmidiateTurn(box, before_name, first_turn, first_count, second_turn, between_name, next_name, latest_point.Points);
         }
-//<<<<<<< .mine
-
-//        public override bool Equals(object obj)
-//        {
-//            if (obj is ImmidateTurnMachine)
-//            {
-//                return true;
-//            }
-//            return false;
-//        }
-
-//        public override int GetHashCode()
-//        {
-//            return this.GetType().GetHashCode();
-//        }
-//=======
 
         public override bool Equals(object obj)
         {
@@ -196,6 +181,5 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             // this hashcode will have to be updated.
             return this.GetType().GetHashCode();
         }
-//>>>>>>> .r303
     }
 }

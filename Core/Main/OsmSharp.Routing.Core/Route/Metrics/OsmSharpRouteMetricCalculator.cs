@@ -23,18 +23,59 @@ using System.Text;
 using OsmSharp.Routing.Core.Route;
 using OsmSharp.Routing.Core.ArcAggregation.Output;
 using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Interpreter;
 
 namespace OsmSharp.Routing.Core.Metrics
 {
+    /// <summary>
+    /// Calculates route metrics.
+    /// </summary>
     public abstract class OsmSharpRouteMetricCalculator
     {
+        /// <summary>
+        /// Holds a routing interpreter.
+        /// </summary>
+        private IRoutingInterpreter _interpreter;
+
+        /// <summary>
+        /// Creates a new metrics calculator.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        protected OsmSharpRouteMetricCalculator(IRoutingInterpreter interpreter)
+        {
+            _interpreter = interpreter;
+        }
+
+        /// <summary>
+        /// Calculates metrics for the given route.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns></returns>
         public Dictionary<string, double> Calculate(OsmSharpRoute route)
         {
-            OsmSharp.Routing.Core.ArcAggregation.ArcAggregator aggregator = new OsmSharp.Routing.Core.ArcAggregation.ArcAggregator();
+            OsmSharp.Routing.Core.ArcAggregation.ArcAggregator aggregator = 
+                new OsmSharp.Routing.Core.ArcAggregation.ArcAggregator(_interpreter);
             AggregatedPoint p = aggregator.Aggregate(route);
             return this.Calculate(route.Vehicle, p);
         }
 
+        /// <summary>
+        /// Returns the routing interpreter.
+        /// </summary>
+        protected IRoutingInterpreter Interpreter
+        {
+            get
+            {
+                return _interpreter;
+            }
+        }
+
+        /// <summary>
+        /// Does the metric calculations.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
         public abstract Dictionary<string, double> Calculate(VehicleEnum vehicle, AggregatedPoint p);
     }
 }

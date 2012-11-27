@@ -22,6 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.StateMachines;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Geo.Meta;
+using OsmSharp.Tools.Math.Automata;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {
@@ -37,23 +38,23 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// Initializes this machine.
         /// </summary>
         /// <returns></returns>
-        private static FiniteStateMachineState Initialize()
+        private static FiniteStateMachineState<MicroPlannerMessage> Initialize()
         {
             // generate states.
-            List<FiniteStateMachineState> states = FiniteStateMachineState.Generate(3);
+            List<FiniteStateMachineState<MicroPlannerMessage>> states = FiniteStateMachineState<MicroPlannerMessage>.Generate(3);
 
             // state 3 is final.
             states[2].Final = true;
 
             // 0
-            FiniteStateMachineTransition.Generate(states, 0, 1, typeof(MicroPlannerMessageArc));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 0, 1, typeof(MicroPlannerMessageArc));
 
             // 1
-            FiniteStateMachineTransition.Generate(states, 1, 1, typeof(MicroPlannerMessageArc));
-            FiniteStateMachineTransition.Generate(states, 1, 1, typeof(MicroPlannerMessagePoint),
-                new FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate(TestNonSignificantTurnNonPoi));
-            FiniteStateMachineTransition.Generate(states, 1, 2, typeof(MicroPlannerMessagePoint),
-                new FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate(TestPoi));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 1, 1, typeof(MicroPlannerMessageArc));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 1, 1, typeof(MicroPlannerMessagePoint),
+                new FiniteStateMachineTransitionCondition<MicroPlannerMessage>.FiniteStateMachineTransitionConditionDelegate(TestNonSignificantTurnNonPoi));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 1, 2, typeof(MicroPlannerMessagePoint),
+                new FiniteStateMachineTransitionCondition<MicroPlannerMessage>.FiniteStateMachineTransitionConditionDelegate(TestPoi));
 
             // return the start automata with intial state.
             return states[0];
@@ -64,9 +65,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
-        private static bool TestNonSignificantTurnNonPoi(object test)
+        private static bool TestNonSignificantTurnNonPoi(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
-            if (!PoiWithTurnMachine.TestPoi(test))
+            if (!PoiWithTurnMachine.TestPoi(machine, test))
             {
                 if (test is MicroPlannerMessagePoint)
                 {
@@ -96,7 +97,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
-        private static bool TestPoi(object test)
+        private static bool TestPoi(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
             if (test is MicroPlannerMessagePoint)
             {
@@ -132,22 +133,6 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             // let the scentence planner generate the correct information.
             this.Planner.SentencePlanner.GeneratePoi(box, pois, direction);
         }
-//<<<<<<< .mine
-        
-//        public override bool Equals(object obj)
-//        {
-//            if (obj is ImmidateTurnMachine)
-//            {
-//                return true;
-//            }
-//            return false;
-//        }
-
-//        public override int GetHashCode()
-//        {
-//            return this.GetType().GetHashCode();
-//        }
-//=======
 
         public override bool Equals(object obj)
         {
@@ -164,6 +149,5 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             // this hashcode will have to be updated.
             return this.GetType().GetHashCode();
         }
-//>>>>>>> .r303
     }
 }

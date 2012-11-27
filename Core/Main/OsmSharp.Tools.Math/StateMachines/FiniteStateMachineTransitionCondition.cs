@@ -19,27 +19,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Math.Automata;
 
 namespace OsmSharp.Tools.Math.StateMachines
 {
-    public class FiniteStateMachineTransitionCondition
+    public class FiniteStateMachineTransitionCondition<EventType>
     {
-        public bool Check(object even)
+        public bool Check(FiniteStateMachine<EventType> machine, object even)
         {
-            if (this.EventType.Equals(even.GetType()))
+            if (this.EventTypeObject.Equals(even.GetType()))
             {
                 if (this.CheckDelegate != null)
                 {
-                    return this.CheckDelegate(even);
+                    return this.CheckDelegate(machine, even);
                 }
                 return true;
             }
             return false;
         }
 
-        public Type EventType { get; set; }
+        public Type EventTypeObject { get; set; }
 
-        public delegate bool FiniteStateMachineTransitionConditionDelegate(object even);
+        public delegate bool FiniteStateMachineTransitionConditionDelegate(FiniteStateMachine<EventType> machine, object even);
 
         public FiniteStateMachineTransitionConditionDelegate CheckDelegate { get; set; }
     }

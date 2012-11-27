@@ -23,6 +23,8 @@ using OsmSharp.Tools.Math.StateMachines;
 using OsmSharp.Tools.Math.Geo.Meta;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.ArcAggregation.Output;
+using OsmSharp.Tools.Math.Automata;
+using OsmSharp.Tools.Core;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {
@@ -41,28 +43,28 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// Initializes this machine.
         /// </summary>
         /// <returns></returns>
-        private static FiniteStateMachineState Initialize()
+        private static FiniteStateMachineState<MicroPlannerMessage> Initialize()
         {
             // generate states.
-            List<FiniteStateMachineState> states = FiniteStateMachineState.Generate(3);
+            List<FiniteStateMachineState<MicroPlannerMessage>> states = FiniteStateMachineState<MicroPlannerMessage>.Generate(3);
 
             // state 2 is final.
             states[2].Final = true;
 
             // 0
-            FiniteStateMachineTransition.Generate(states, 0, 0, typeof(MicroPlannerMessageArc));
-            FiniteStateMachineTransition.Generate(states, 0, 1, typeof(MicroPlannerMessagePoint),
-                new FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate(TestRoundaboutEntry));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 0, 0, typeof(MicroPlannerMessageArc));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 0, 1, typeof(MicroPlannerMessagePoint),
+                new FiniteStateMachineTransitionCondition<MicroPlannerMessage>.FiniteStateMachineTransitionConditionDelegate(TestRoundaboutEntry));
 
             // 1
-            FiniteStateMachineTransition.Generate(states, 1, 1, typeof(MicroPlannerMessagePoint),
-                new FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate(TestNonRoundaboutExit));
-            FiniteStateMachineTransition.Generate(states, 1, 1, typeof(MicroPlannerMessageArc),
-                new FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate(TestRoundaboutArc));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 1, 1, typeof(MicroPlannerMessagePoint),
+                new FiniteStateMachineTransitionCondition<MicroPlannerMessage>.FiniteStateMachineTransitionConditionDelegate(TestNonRoundaboutExit));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 1, 1, typeof(MicroPlannerMessageArc),
+                new FiniteStateMachineTransitionCondition<MicroPlannerMessage>.FiniteStateMachineTransitionConditionDelegate(TestRoundaboutArc));
 
             // 2
-            FiniteStateMachineTransition.Generate(states, 1, 2, typeof(MicroPlannerMessagePoint),
-                new FiniteStateMachineTransitionCondition.FiniteStateMachineTransitionConditionDelegate(TestRoundaboutExit));
+            FiniteStateMachineTransition<MicroPlannerMessage>.Generate(states, 1, 2, typeof(MicroPlannerMessagePoint),
+                new FiniteStateMachineTransitionCondition<MicroPlannerMessage>.FiniteStateMachineTransitionConditionDelegate(TestRoundaboutExit));
 
             // return the start automata with intial state.
             return states[0];
@@ -73,15 +75,15 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
-        private static bool TestRoundaboutEntry(object test)
+        private static bool TestRoundaboutEntry(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
             if (test is MicroPlannerMessagePoint)
             {
                 MicroPlannerMessagePoint point = (test as MicroPlannerMessagePoint);
                 if (point.Point.Next != null)
                 {
-                    OsmSharp.Routing.Core.Roads.Tags.RoadTagsInterpreterBase tags_interpreter = new OsmSharp.Routing.Core.Roads.Tags.RoadTagsInterpreterBase(point.Point.Next.Tags);
-                    if (tags_interpreter.IsRoundabout())
+                    if ((machine as MicroPlannerMachine).Planner.Interpreter.EdgeInterpreter.IsRoundabout(
+                        point.Point.Next.Tags.ConvertFrom()))
                     {
                         return true;
                     }
@@ -95,13 +97,12 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
-        private static bool TestRoundaboutArc(object test)
+        private static bool TestRoundaboutArc(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
             if (test is MicroPlannerMessageArc)
             {
                 MicroPlannerMessageArc arc = (test as MicroPlannerMessageArc);
-                OsmSharp.Routing.Core.Roads.Tags.RoadTagsInterpreterBase tags_interpreter = new OsmSharp.Routing.Core.Roads.Tags.RoadTagsInterpreterBase(arc.Arc.Tags);
-                if (tags_interpreter.IsRoundabout())
+                if ((machine as MicroPlannerMachine).Planner.Interpreter.EdgeInterpreter.IsRoundabout(arc.Arc.Tags.ConvertFrom()))
                 {
                     return true;
                 }
@@ -114,9 +115,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
-        public static bool TestNonRoundaboutExit(object test)
+        public static bool TestNonRoundaboutExit(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
-            return !RoundaboutMachine.TestRoundaboutExit(test);
+            return !RoundaboutMachine.TestRoundaboutExit(machine, test);
         }
 
         /// <summary>
@@ -124,15 +125,14 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// </summary>
         /// <param name="test"></param>
         /// <returns></returns>
-        private static bool TestRoundaboutExit(object test)
+        private static bool TestRoundaboutExit(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
             if (test is MicroPlannerMessagePoint)
             {
                 MicroPlannerMessagePoint point = (test as MicroPlannerMessagePoint);
                 if (point.Point.Next != null)
                 {
-                    OsmSharp.Routing.Core.Roads.Tags.RoadTagsInterpreterBase tags_interpreter = new OsmSharp.Routing.Core.Roads.Tags.RoadTagsInterpreterBase(point.Point.Next.Tags);
-                    if (!tags_interpreter.IsRoundabout())
+                    if ((machine as MicroPlannerMachine).Planner.Interpreter.EdgeInterpreter.IsRoundabout(point.Point.Next.Tags.ConvertFrom()))
                     {
                         return true;
                     }
@@ -150,13 +150,13 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             // count the number of streets in the same turning direction as the turn
             // that was found.
             int count = 0;
-            if (MicroPlannerHelper.IsLeft(latest_point.Angle.Direction))
+            if (MicroPlannerHelper.IsLeft(latest_point.Angle.Direction, this.Planner.Interpreter))
             {
-                count = MicroPlannerHelper.GetLeft(this.FinalMessages);
+                count = MicroPlannerHelper.GetLeft(this.FinalMessages, this.Planner.Interpreter);
             }
-            else if (MicroPlannerHelper.IsRight(latest_point.Angle.Direction))
+            else if (MicroPlannerHelper.IsRight(latest_point.Angle.Direction, this.Planner.Interpreter))
             {
-                count = MicroPlannerHelper.GetRight(this.FinalMessages);
+                count = MicroPlannerHelper.GetRight(this.FinalMessages, this.Planner.Interpreter);
             }
 
             // construct the box indicating the location of the resulting find by this machine.
@@ -170,22 +170,6 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             // let the scentence planner generate the correct information.
             this.Planner.SentencePlanner.GenerateRoundabout(box, count - 1, latest_point.Next.Tags);
         }
-//<<<<<<< .mine
-        
-//        public override bool Equals(object obj)
-//        {
-//            if (obj is ImmidateTurnMachine)
-//            {
-//                return true;
-//            }
-//            return false;
-//        }
-
-//        public override int GetHashCode()
-//        {
-//            return this.GetType().GetHashCode();
-//        }
-//=======
 
         public override bool Equals(object obj)
         {
@@ -202,6 +186,5 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             // this hashcode will have to be updated.
             return this.GetType().GetHashCode();
         }
-//>>>>>>> .r303
     }
 }

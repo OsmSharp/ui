@@ -19,20 +19,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Core.Roads.Tags;
+using OsmSharp.Routing.Core.Interpreter;
 
-namespace OsmSharp.Routing.Core.Resolving
+namespace OsmSharp.Routing.Core
 {
     /// <summary>
     /// Interface used to match a coordinate to a configurable routable position.
     /// </summary>
-    public interface IResolveMatcher
+    public interface IEdgeMatcher
     {
         /// <summary>
-        /// Returns true if the point is a suitable candidate as a point being resolved on the given way.
+        /// Returns true if the edge is a suitable candidate as a target for a point to be resolved on.
         /// </summary>
-        /// <param name="way"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="point_tags"></param>
+        /// <param name="edge_tags"></param>
         /// <returns></returns>
-        bool Match(Roads.Tags.RoadTagsInterpreterBase road_interpreter);
+        bool MatchWithEdge(IDictionary<string, string> point_tags, IDictionary<string, string> edge_tags);
     }
 }

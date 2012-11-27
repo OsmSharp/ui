@@ -55,7 +55,7 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// <returns></returns>
         protected double[][] CalculateManyToManyWeight(ResolvedType[] points)
         {
-            return _router.CalculateManyToManyWeight(points, points);
+            return _router.CalculateManyToManyWeight(VehicleEnum.Car, points, points);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace OsmSharp.Osm.Routing.Core.TSP
             OsmSharpRoute route;
             for (int idx = 0; idx < solution.Count - 1; idx++)
             {
-                route = _router.Calculate(points[solution[idx]],
+                route = _router.Calculate(VehicleEnum.Car, points[solution[idx]],
                     points[solution[idx + 1]]);
                 if (tsp == null)
                 { // first route = start
@@ -185,7 +185,7 @@ namespace OsmSharp.Osm.Routing.Core.TSP
             if (found_solution.IsRound)
             {
                 // concatenate the route from the last to the first point again.
-                route = _router.Calculate(points[solution[solution.Count - 1]],
+                route = _router.Calculate(VehicleEnum.Car, points[solution[solution.Count - 1]],
                             points[solution[0]]);
                 return OsmSharpRoute.Concatenate(tsp, route);
             }

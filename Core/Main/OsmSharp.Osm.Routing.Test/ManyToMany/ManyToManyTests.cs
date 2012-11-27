@@ -47,17 +47,17 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             long ticks_after_reading = DateTime.Now.Ticks;
 
             // resolve the points.
-            RouterPoint[] resolved = router.Resolve(coordinates.ToArray());
+            RouterPoint[] resolved = router.Resolve(VehicleEnum.Car, coordinates.ToArray());
 
             long ticks_after_resolving = DateTime.Now.Ticks;
 
             // check the connectivity.
-            resolved = router.CheckConnectivityAndRemoveInvalid<RouterPoint>(resolved, 30);
+            resolved = router.CheckConnectivityAndRemoveInvalid<RouterPoint>(VehicleEnum.Car, resolved, 30);
 
             long ticks_after_connectivity = DateTime.Now.Ticks;
 
             // calculate the many-to-many.
-            double[][] result = router.CalculateManyToManyWeight(resolved, resolved);
+            double[][] result = router.CalculateManyToManyWeight(VehicleEnum.Car, resolved, resolved);
 
             long ticks_after_calculation = DateTime.Now.Ticks;
 
@@ -106,17 +106,17 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             long ticks_after_reading = DateTime.Now.Ticks;
 
             // resolve the points.
-            RouterPoint[] resolved = router.Resolve(coordinates.ToArray());
+            RouterPoint[] resolved = router.Resolve(VehicleEnum.Car, coordinates.ToArray());
 
             long ticks_after_resolving = DateTime.Now.Ticks;
 
             // check the connectivity.
-            resolved = router.CheckConnectivityAndRemoveInvalid<RouterPoint>(resolved, 30);
+            resolved = router.CheckConnectivityAndRemoveInvalid<RouterPoint>(VehicleEnum.Car, resolved, 30);
 
             long ticks_after_connectivity = DateTime.Now.Ticks;
 
             // calculate the many-to-many.
-            double[][] result = router.CalculateManyToManyWeight(resolved, resolved);
+            double[][] result = router.CalculateManyToManyWeight(VehicleEnum.Car, resolved, resolved);
 
             long ticks_after_calculation = DateTime.Now.Ticks;
 
@@ -124,7 +124,7 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             {
                 for (int y = 0; y < result.Length; y++)
                 {
-                    OsmSharpRoute route = router.Calculate(resolved[x], resolved[y]);
+                    OsmSharpRoute route = router.Calculate(VehicleEnum.Car, resolved[x], resolved[y]);
                     if (route != null && 
                         result[x][y] >= double.MaxValue)
                     {

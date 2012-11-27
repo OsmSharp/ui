@@ -24,7 +24,6 @@ using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
 using OsmSharp.Routing.Core.Router;
-using OsmSharp.Routing.Core.Resolving;
 using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Routing.Core.Graph.Router
@@ -129,7 +128,7 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <param name="matcher"></param>
         /// <returns></returns>
         SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph,
-            GeoCoordinate coordinate, IResolveMatcher matcher, double search_box_size);
+            GeoCoordinate coordinate, IEdgeMatcher matcher, double search_box_size);
     }
 
     /// <summary>

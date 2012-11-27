@@ -178,5 +178,20 @@ namespace OsmSharp.Tools.Core
             }
             return value;
         }
+
+        /// <summary>
+        /// Converts a list of tags to a dictionary of tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public static IDictionary<string, string> ConvertFrom(this List<KeyValuePair<string, string>> tags)
+        {
+            Dictionary<string, string> new_tags = new Dictionary<string, string>();
+            foreach (KeyValuePair<string, string> tag in tags)
+            {
+                new_tags[tag.Key] = tag.Value;
+            }
+            return new_tags;
+        }
     }
 }

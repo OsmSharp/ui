@@ -21,7 +21,6 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Route;
-using OsmSharp.Routing.Core.Resolving;
 using OsmSharp.Tools.Math;
 
 namespace OsmSharp.Routing.Core
@@ -48,60 +47,67 @@ namespace OsmSharp.Routing.Core
         /// <summary>
         /// Calculates a route between two given points.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="source">The source point.</param>
         /// <param name="target">The target point.</param>
         /// <returns></returns>
-        OsmSharpRoute Calculate(ResolvedType source, ResolvedType target);
+        OsmSharpRoute Calculate(VehicleEnum vehicle, ResolvedType source, ResolvedType target);
 
         /// <summary>
         /// Calculates a route between two given points.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="source">The source point.</param>
         /// <param name="target">The target point.</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
         /// <returns></returns>
-        OsmSharpRoute Calculate(ResolvedType source, ResolvedType target, float max);
+        OsmSharpRoute Calculate(VehicleEnum vehicle, ResolvedType source, ResolvedType target, float max);
 
         /// <summary>
         /// Calculates a shortest route from a given point to any of the targets points.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="source">The source point.</param>
         /// <param name="targets">The target point(s).</param>
         /// <returns></returns>
-        OsmSharpRoute CalculateToClosest(ResolvedType source, ResolvedType[] targets);
+        OsmSharpRoute CalculateToClosest(VehicleEnum vehicle, ResolvedType source, ResolvedType[] targets);
 
         /// <summary>
         /// Calculates a shortest route from a given point to any of the targets points.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="source">The source point.</param>
         /// <param name="targets">The target point(s).</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
         /// <returns></returns>
-        OsmSharpRoute CalculateToClosest(ResolvedType source, ResolvedType[] targets, float max);
+        OsmSharpRoute CalculateToClosest(VehicleEnum vehicle, ResolvedType source, ResolvedType[] targets, float max);
 
         /// <summary>
         /// Calculates the weight between two given points.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        double CalculateWeight(ResolvedType source, ResolvedType target);
+        double CalculateWeight(VehicleEnum vehicle, ResolvedType source, ResolvedType target);
 
         /// <summary>
         /// Calculates a route between one source and many target points.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        double[] CalculateOneToManyWeight(ResolvedType source, ResolvedType[] targets);
+        double[] CalculateOneToManyWeight(VehicleEnum vehicle, ResolvedType source, ResolvedType[] targets);
 
         /// <summary>
         /// Calculates all routes between many sources/targets.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        double[][] CalculateManyToManyWeight(ResolvedType[] sources, ResolvedType[] targets);
+        double[][] CalculateManyToManyWeight(VehicleEnum vehicle, ResolvedType[] sources, ResolvedType[] targets);
 
         #endregion
 
@@ -118,10 +124,11 @@ namespace OsmSharp.Routing.Core
         /// <summary>
         /// Returns all points located at a given weight (distance/time) from the orgin.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="orgine"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        HashSet<GeoCoordinate> CalculateRange(ResolvedType orgin, float weight);
+        HashSet<GeoCoordinate> CalculateRange(VehicleEnum vehicle, ResolvedType orgin, float weight);
 
         #endregion
 
@@ -130,18 +137,20 @@ namespace OsmSharp.Routing.Core
         /// <summary>
         /// Returns true if the given point is connected for a radius of at least the given weight.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        bool CheckConnectivity(ResolvedType point, float weight);
+        bool CheckConnectivity(VehicleEnum vehicle, ResolvedType point, float weight);
 
         /// <summary>
         /// Returns true if the given point is connected for a radius of at least the given weight.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        bool[] CheckConnectivity(ResolvedType[] point, float weight);
+        bool[] CheckConnectivity(VehicleEnum vehicle, ResolvedType[] point, float weight);
         
         #endregion
 
@@ -150,40 +159,47 @@ namespace OsmSharp.Routing.Core
         /// <summary>
         /// Resolves a point.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        ResolvedType Resolve(GeoCoordinate coordinate);
+        ResolvedType Resolve(VehicleEnum vehicle, GeoCoordinate coordinate);
 
         /// <summary>
         /// Resolves a point.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="coordinate"></param>
+        /// <param name="matcher"></param>
         /// <returns></returns>
-        ResolvedType Resolve(GeoCoordinate coordinate, IResolveMatcher matcher);
+        ResolvedType Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher);
 
         /// <summary>
         /// Resolves all the given points.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        ResolvedType[] Resolve(GeoCoordinate[] coordinate);
+        ResolvedType[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate);
 
         /// <summary>
         /// Resolves all the given points.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="coordinate"></param>
+        /// <param name="matcher"></param>
         /// <returns></returns>
-        ResolvedType[] Resolve(GeoCoordinate[] coordinate, IResolveMatcher matcher);
+        ResolvedType[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, IEdgeMatcher matcher);
 
         #region Search
 
         /// <summary>
         /// Searches for a closeby link to the road network.
         /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="coordinate"></param>
         /// <returns></returns>
         /// <remarks>Similar to resolve except no resolved point is created.</remarks>
-        GeoCoordinate Search(GeoCoordinate coordinate);
+        GeoCoordinate Search(VehicleEnum vehicle, GeoCoordinate coordinate);
 
         #endregion
 

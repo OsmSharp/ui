@@ -25,7 +25,6 @@ using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Router;
-using OsmSharp.Routing.Core.Resolving;
 using OsmSharp.Tools.Math.Units.Distance;
 using OsmSharp.Routing.Core.Graph.Path;
 using OsmSharp.Routing.Core.Route;
@@ -87,9 +86,9 @@ namespace OsmSharp.Routing.Core
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public OsmSharpRoute Calculate(RouterPoint source, RouterPoint target)
+        public OsmSharpRoute Calculate(VehicleEnum vehicle, RouterPoint source, RouterPoint target)
         {
-            return this.Calculate(source, target, float.MaxValue);
+            return this.Calculate(vehicle, source, target, float.MaxValue);
         }
 
         /// <summary>
@@ -99,7 +98,7 @@ namespace OsmSharp.Routing.Core
         /// <param name="target"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public OsmSharpRoute Calculate(RouterPoint source, RouterPoint target, float max)
+        public OsmSharpRoute Calculate(VehicleEnum vehicle, RouterPoint source, RouterPoint target, float max)
         {
             // calculate the route.
             PathSegment<long> route = _router.Calculate(_data_graph, _interpreter,
@@ -115,9 +114,9 @@ namespace OsmSharp.Routing.Core
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateToClosest(RouterPoint source, RouterPoint[] targets)
+        public OsmSharpRoute CalculateToClosest(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets)
         {
-            return this.CalculateToClosest(source, targets, float.MaxValue);
+            return this.CalculateToClosest(vehicle, source, targets, float.MaxValue);
         }
 
         /// <summary>
@@ -127,7 +126,7 @@ namespace OsmSharp.Routing.Core
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateToClosest(RouterPoint source, RouterPoint[] targets, float max)
+        public OsmSharpRoute CalculateToClosest(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets, float max)
         {
             // calculate the route.
             PathSegment<long> route = _router.CalculateToClosest(_data_graph, _interpreter,
@@ -146,7 +145,7 @@ namespace OsmSharp.Routing.Core
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public double CalculateWeight(RouterPoint source, RouterPoint target)
+        public double CalculateWeight(VehicleEnum vehicle, RouterPoint source, RouterPoint target)
         {
             // calculate the route.
             return _router.CalculateWeight(_data_graph, _interpreter,
@@ -159,7 +158,7 @@ namespace OsmSharp.Routing.Core
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public double[] CalculateOneToManyWeight(RouterPoint source, RouterPoint[] targets)
+        public double[] CalculateOneToManyWeight(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets)
         {
             return _router.CalculateOneToManyWeight(_data_graph, _interpreter, this.RouteResolvedGraph(source),
                 this.RouteResolvedGraph(targets), double.MaxValue);
@@ -171,7 +170,7 @@ namespace OsmSharp.Routing.Core
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(RouterPoint[] sources, RouterPoint[] targets)
+        public double[][] CalculateManyToManyWeight(VehicleEnum vehicle, RouterPoint[] sources, RouterPoint[] targets)
         {
             return _router.CalculateManyToManyWeight(_data_graph, _interpreter, this.RouteResolvedGraph(sources),
                 this.RouteResolvedGraph(targets), double.MaxValue);
@@ -194,7 +193,7 @@ namespace OsmSharp.Routing.Core
         /// <param name="orgin"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public HashSet<GeoCoordinate> CalculateRange(RouterPoint orgin, float weight)
+        public HashSet<GeoCoordinate> CalculateRange(VehicleEnum vehicle, RouterPoint orgin, float weight)
         {
             HashSet<long> objects_at_weight = _router.CalculateRange(_data_graph, _interpreter, this.RouteResolvedGraph(orgin),
                 weight);
@@ -214,7 +213,7 @@ namespace OsmSharp.Routing.Core
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(RouterPoint point, float weight)
+        public bool CheckConnectivity(VehicleEnum vehicle, RouterPoint point, float weight)
         {
             return _router.CheckConnectivity(_data_graph, _interpreter, this.RouteResolvedGraph(point), weight);
         }
@@ -225,12 +224,12 @@ namespace OsmSharp.Routing.Core
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool[] CheckConnectivity(RouterPoint[] point, float weight)
+        public bool[] CheckConnectivity(VehicleEnum vehicle, RouterPoint[] point, float weight)
         {
             bool[] connectivity_array = new bool[point.Length];
             for (int idx = 0; idx < point.Length; idx++)
             {
-                connectivity_array[idx] = this.CheckConnectivity(point[idx], weight);
+                connectivity_array[idx] = this.CheckConnectivity(vehicle, point[idx], weight);
 
                 // report progress.
                 OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.Core.CheckConnectivity",
@@ -318,7 +317,7 @@ namespace OsmSharp.Routing.Core
                 route.Entries = entries;
 
                 // calculate metrics.
-                TimeCalculator calculator = new TimeCalculator();
+                TimeCalculator calculator = new TimeCalculator(_interpreter);
                 Dictionary<string, double> metrics = calculator.Calculate(route);
                 route.TotalDistance = metrics[TimeCalculator.DISTANCE_KEY];
                 route.TotalTime = metrics[TimeCalculator.TIME_KEY];
@@ -543,9 +542,9 @@ namespace OsmSharp.Routing.Core
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(GeoCoordinate coordinate)
+        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate)
         {
-            return this.Resolve(coordinate, null);
+            return this.Resolve(vehicle, coordinate, null);
         }
 
         /// <summary>
@@ -554,7 +553,7 @@ namespace OsmSharp.Routing.Core
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(GeoCoordinate coordinate, IResolveMatcher matcher)
+        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher)
         {
             SearchClosestResult result = _router.SearchClosest(_data_graph, coordinate, matcher, 0.001f); // search the closest routable object.
             if (result.Distance < double.MaxValue)
@@ -582,12 +581,12 @@ namespace OsmSharp.Routing.Core
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(GeoCoordinate[] coordinate)
+        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate)
         {
             RouterPoint[] points = new RouterPoint[coordinate.Length];
             for (int idx = 0; idx < coordinate.Length; idx++)
             {
-                points[idx] = this.Resolve(coordinate[idx]);
+                points[idx] = this.Resolve(vehicle, coordinate[idx]);
             }
             return points;
         }
@@ -598,12 +597,12 @@ namespace OsmSharp.Routing.Core
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(GeoCoordinate[] coordinate, IResolveMatcher matcher)
+        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, IEdgeMatcher matcher)
         {
             RouterPoint[] points = new RouterPoint[coordinate.Length];
             for (int idx = 0; idx < coordinate.Length; idx++)
             {
-                points[idx] = this.Resolve(coordinate[idx], matcher);
+                points[idx] = this.Resolve(vehicle, coordinate[idx], matcher);
             }
             return points;
         }
@@ -613,7 +612,7 @@ namespace OsmSharp.Routing.Core
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
-        public GeoCoordinate Search(GeoCoordinate coordinate)
+        public GeoCoordinate Search(VehicleEnum vehicle, GeoCoordinate coordinate)
         {
             SearchClosestResult result = _router.SearchClosest(_data_graph, coordinate, null, 0.001f); // search the closest routable object.
             if (result.Distance < double.MaxValue)

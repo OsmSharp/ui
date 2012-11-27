@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Routing.Core.Roads.Tags;
 using OsmSharp.Routing.Core.Constraints;
 using OsmSharp.Routing.Core.Interpreter.Roads;
 using OsmSharp.Routing.Core.Constraints.Highways;

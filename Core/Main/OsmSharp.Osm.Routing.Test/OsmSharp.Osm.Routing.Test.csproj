@@ -161,6 +161,9 @@
     <Compile Include="CH\CHVerifiedContractionTests.cs" />
     <Compile Include="Connected\ConnectedTest.cs" />
     <Compile Include="ConsoleProgressReporter.cs" />
+    <Compile Include="Instructions\InstructionTestDykstra.cs" />
+    <Compile Include="Instructions\InstructionTestExecution.cs" />
+    <Compile Include="Instructions\InstructionTests.cs" />
     <Compile Include="ManyToMany\ManyToManyCHTests.cs" />
     <Compile Include="ManyToMany\ManyToManyExecution.cs" />
     <Compile Include="ManyToMany\ManyToManyRawTests.cs" />
@@ -299,6 +302,10 @@
     <ProjectReference Include="..\OsmSharp.Routing.Core.VRP\OsmSharp.Routing.Core.VRP.csproj">
       <Project>{28024A20-1A04-4973-93A3-3D6F53B0386A}</Project>
       <Name>OsmSharp.Routing.Core.VRP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Routing.Instructions\OsmSharp.Routing.Instructions.csproj">
+      <Project>{022CE792-DBDA-4A1E-8C4B-5954F02C4C67}</Project>
+      <Name>OsmSharp.Routing.Instructions</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>

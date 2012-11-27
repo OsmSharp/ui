@@ -23,14 +23,13 @@ using OsmSharp.Tools.Math.Geo.Meta;
 using OsmSharp.Routing.Core.ArcAggregation.Output;
 using OsmSharp.Routing.Core.Interpreter.Roads;
 using OsmSharp.Tools.Math;
+using OsmSharp.Routing.Core.Interpreter;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
     internal class MicroPlannerHelper
     {
-        public static IEdgeInterpreter Interpreter { get; set; }
-
-        public static bool IsLeft(RelativeDirectionEnum direction)
+        public static bool IsLeft(RelativeDirectionEnum direction, IRoutingInterpreter interpreter)
         {
             switch (direction)
             {
@@ -42,7 +41,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             return false;
         }
 
-        public static bool IsRight(RelativeDirectionEnum direction)
+        public static bool IsRight(RelativeDirectionEnum direction, IRoutingInterpreter interpreter)
         {
             switch (direction)
             {
@@ -54,7 +53,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             return false;
         }
 
-        public static bool IsTurn(RelativeDirectionEnum direction)
+        public static bool IsTurn(RelativeDirectionEnum direction, IRoutingInterpreter interpreter)
         {
             switch (direction)
             {
@@ -64,8 +63,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             return true;
         }
 
-
-        public static int GetStraightOn(IEdgeInterpreter interpreter, IList<MicroPlannerMessage> messages)
+        public static int GetStraightOn(IList<MicroPlannerMessage> messages, IRoutingInterpreter interpreter)
         {
             int straight = 0;
             foreach (MicroPlannerMessage message in messages)
@@ -73,22 +71,22 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 if (message is MicroPlannerMessagePoint)
                 {
                     MicroPlannerMessagePoint point = (message as MicroPlannerMessagePoint);
-                    straight = straight + MicroPlannerHelper.GetStraightOn(point);
+                    straight = straight + MicroPlannerHelper.GetStraightOn(point, interpreter);
                 }
             }
             return straight;
         }
 
-        public static int GetStraightOn(MicroPlannerMessagePoint point)
+        public static int GetStraightOn(MicroPlannerMessagePoint point, IRoutingInterpreter interpreter)
         {
             int straight = 0;
             if (point.Point.ArcsNotTaken != null)
             {
                 foreach (KeyValuePair<RelativeDirection, AggregatedArc> arc_pair in point.Point.ArcsNotTaken)
                 {
-                    if (!MicroPlannerHelper.IsTurn(arc_pair.Key.Direction))
+                    if (!MicroPlannerHelper.IsTurn(arc_pair.Key.Direction, interpreter))
                     {
-                        if (MicroPlannerHelper.Interpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
+                        if (interpreter.EdgeInterpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
                         {
                             straight++;
                         }
@@ -98,7 +96,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             return straight;
         }
 
-        public static int GetLeft(IList<MicroPlannerMessage> messages)
+        public static int GetLeft(IList<MicroPlannerMessage> messages, IRoutingInterpreter interpreter)
         {
             int left = 0;
             foreach (MicroPlannerMessage message in messages)
@@ -106,22 +104,22 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 if (message is MicroPlannerMessagePoint)
                 {
                     MicroPlannerMessagePoint point = (message as MicroPlannerMessagePoint);
-                    left = left + MicroPlannerHelper.GetLeft(point);
+                    left = left + MicroPlannerHelper.GetLeft(point, interpreter);
                 }
             }
             return left;
         }
 
-        public static int GetLeft(MicroPlannerMessagePoint point)
+        public static int GetLeft(MicroPlannerMessagePoint point, IRoutingInterpreter interpreter)
         {
             int left = 0;
             if (point.Point.ArcsNotTaken != null)
             {
                 foreach (KeyValuePair<RelativeDirection, AggregatedArc> arc_pair in point.Point.ArcsNotTaken)
                 {
-                    if (MicroPlannerHelper.IsLeft(arc_pair.Key.Direction))
+                    if (MicroPlannerHelper.IsLeft(arc_pair.Key.Direction, interpreter))
                     {
-                        if (MicroPlannerHelper.Interpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
+                        if (interpreter.EdgeInterpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
                         {
                             left++;
                         }
@@ -131,7 +129,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             return left;
         }
 
-        public static int GetRight(IList<MicroPlannerMessage> messages)
+        public static int GetRight(IList<MicroPlannerMessage> messages, IRoutingInterpreter interpreter)
         {
             int right = 0;
             foreach (MicroPlannerMessage message in messages)
@@ -139,22 +137,22 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 if (message is MicroPlannerMessagePoint)
                 {
                     MicroPlannerMessagePoint point = (message as MicroPlannerMessagePoint);
-                    right = right + MicroPlannerHelper.GetRight(point);
+                    right = right + MicroPlannerHelper.GetRight(point, interpreter);
                 }
             }
             return right;
         }
 
-        public static int GetRight(MicroPlannerMessagePoint point)
+        public static int GetRight(MicroPlannerMessagePoint point, IRoutingInterpreter interpreter)
         {
             int right = 0;
             if (point.Point.ArcsNotTaken != null)
             {
                 foreach (KeyValuePair<RelativeDirection, AggregatedArc> arc_pair in point.Point.ArcsNotTaken)
                 {
-                    if (MicroPlannerHelper.IsRight(arc_pair.Key.Direction))
+                    if (MicroPlannerHelper.IsRight(arc_pair.Key.Direction, interpreter))
                     {
-                        if (MicroPlannerHelper.Interpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
+                        if (interpreter.EdgeInterpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
                         {
                             right++;
                         }

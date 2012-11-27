@@ -22,8 +22,8 @@ using System.Text;
 using OsmSharp.Routing.Instructions.MicroPlanning.Machines;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Core.ArcAggregation.Output;
-using OsmSharp.Routing.Core.ArcAggregation.Output;
 using OsmSharp.Routing.Core.Interpreter.Roads;
+using OsmSharp.Routing.Core.Interpreter;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
@@ -33,15 +33,32 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
     internal class MicroPlanner
     {
         /// <summary>
+        /// Holds the routing interpreter.
+        /// </summary>
+        private IRoutingInterpreter _interpreter;
+
+        /// <summary>
         /// Creates a new planner.
         /// </summary>
-        public MicroPlanner(ILanguageGenerator language_generator)
+        public MicroPlanner(ILanguageGenerator language_generator, IRoutingInterpreter interpreter)
         {
-            this.InitializeMachines();
+            _interpreter = interpreter;
 
+            this.InitializeMachines();
             this.InitializeMessagesStack();
 
             this.SentencePlanner = new SentencePlanner(language_generator);
+        }
+
+        /// <summary>
+        /// Returns the routing interpreter.
+        /// </summary>
+        public IRoutingInterpreter Interpreter
+        {
+            get
+            {
+                return _interpreter;
+            }
         }
 
         /// <summary>
@@ -134,7 +151,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             this.Plan(message);
         }
 
-        #region Machines 
+        #region Machines
         
         /// <summary>
         /// Keeps a list of microplanners.

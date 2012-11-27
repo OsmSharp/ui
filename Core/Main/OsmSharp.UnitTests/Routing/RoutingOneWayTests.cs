@@ -20,7 +20,6 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OsmSharp.Routing.Core.Resolving;
 using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Routing.Core.Constraints;
@@ -78,10 +77,10 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(new GeoCoordinate(51.0582205, 3.7192647)); // -52
-            ResolvedType target = router.Resolve(new GeoCoordinate(51.0579530, 3.7196168)); // -56
+            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0582205, 3.7192647)); // -52
+            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0579530, 3.7196168)); // -56
 
-            OsmSharpRoute route = router.Calculate(source, target);
+            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(4, route.Entries.Length);
 
@@ -117,10 +116,10 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(new GeoCoordinate(51.0579530, 3.7196168)); // -56
-            ResolvedType target = router.Resolve(new GeoCoordinate(51.0582205, 3.7192647)); // -52
+            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0579530, 3.7196168)); // -56
+            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0582205, 3.7192647)); // -52
 
-            OsmSharpRoute route = router.Calculate(source, target);
+            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(6, route.Entries.Length);
 
@@ -167,18 +166,18 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
             ResolvedType[] resolved_points = new ResolvedType[3];
-            resolved_points[0] = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
-            resolved_points[1] = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
-            resolved_points[2] = router.Resolve(new GeoCoordinate(51.0581001, 3.7200612));
+            resolved_points[0] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            resolved_points[1] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            resolved_points[2] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0581001, 3.7200612));
 
-            double[][] weights = router.CalculateManyToManyWeight(resolved_points, resolved_points);
+            double[][] weights = router.CalculateManyToManyWeight(VehicleEnum.Car, resolved_points, resolved_points);
 
             for (int x = 0; x < weights.Length; x++)
             {
                 for (int y = 0; y < weights.Length; y++)
                 {
                     double many_to_many = weights[x][y];
-                    double point_to_point = router.CalculateWeight(resolved_points[x], resolved_points[y]);
+                    double point_to_point = router.CalculateWeight(VehicleEnum.Car, resolved_points[x], resolved_points[y]);
 
                     Assert.AreEqual(point_to_point, many_to_many);
                 }
@@ -196,19 +195,19 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
             ResolvedType[] resolved_points = new ResolvedType[3];
-            resolved_points[0] = router.Resolve(new GeoCoordinate(51.0578532, 3.7192229));
-            resolved_points[1] = router.Resolve(new GeoCoordinate(51.0576193, 3.7191801));
-            resolved_points[2] = router.Resolve(new GeoCoordinate(51.0581001, 3.7200612));
+            resolved_points[0] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            resolved_points[1] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            resolved_points[2] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0581001, 3.7200612));
 
             // test connectivity succes.
-            Assert.IsTrue(router.CheckConnectivity(resolved_points[0], 5));
-            Assert.IsTrue(router.CheckConnectivity(resolved_points[1], 5));
-            Assert.IsTrue(router.CheckConnectivity(resolved_points[2], 5));
+            Assert.IsTrue(router.CheckConnectivity(VehicleEnum.Car, resolved_points[0], 5));
+            Assert.IsTrue(router.CheckConnectivity(VehicleEnum.Car, resolved_points[1], 5));
+            Assert.IsTrue(router.CheckConnectivity(VehicleEnum.Car, resolved_points[2], 5));
 
             // test connectivity failiure.
-            Assert.IsFalse(router.CheckConnectivity(resolved_points[0], 1000));
-            Assert.IsFalse(router.CheckConnectivity(resolved_points[1], 1000));
-            Assert.IsFalse(router.CheckConnectivity(resolved_points[2], 1000));
+            Assert.IsFalse(router.CheckConnectivity(VehicleEnum.Car, resolved_points[0], 1000));
+            Assert.IsFalse(router.CheckConnectivity(VehicleEnum.Car, resolved_points[1], 1000));
+            Assert.IsFalse(router.CheckConnectivity(VehicleEnum.Car, resolved_points[2], 1000));
         }
 
         /// <summary>
@@ -228,7 +227,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
                 float latitude, longitude;
                 if (data.GetVertex((uint)idx, out latitude, out longitude))
                 {
-                    ResolvedType point = router.Resolve(new GeoCoordinate(latitude, longitude));
+                    ResolvedType point = router.Resolve(VehicleEnum.Car, new GeoCoordinate(latitude, longitude));
                     Assert.AreEqual(idx, (point as RouterPoint).Id);
                 }
             }

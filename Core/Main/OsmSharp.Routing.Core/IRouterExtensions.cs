@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Core.Resolving;
 
 namespace OsmSharp.Routing.Core
 {
@@ -33,11 +32,12 @@ namespace OsmSharp.Routing.Core
         /// </summary>
         /// <typeparam name="ResolvedType"></typeparam>
         /// <param name="router"></param>
+        /// <param name="vehicle"></param>
         /// <param name="resolved_points"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
         public static ResolvedType[] CheckConnectivityAndRemoveInvalid<ResolvedType>(
-            this IRouter<ResolvedType> router, ResolvedType[] resolved_points, float weight)
+            this IRouter<ResolvedType> router, VehicleEnum vehicle, ResolvedType[] resolved_points, float weight)
                 where ResolvedType : IRouterPoint
         {
             List<ResolvedType> connected_points = new List<ResolvedType>();
@@ -45,7 +45,7 @@ namespace OsmSharp.Routing.Core
             {
                 ResolvedType resolved_point = resolved_points[idx];
                 if (resolved_point != null &&
-                    router.CheckConnectivity(resolved_point, weight))
+                    router.CheckConnectivity(vehicle, resolved_point, weight))
                 { // the point is connected.
                     connected_points.Add(resolved_point);
                 }

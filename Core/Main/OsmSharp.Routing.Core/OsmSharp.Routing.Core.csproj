@@ -173,7 +173,7 @@
     <Compile Include="Graph\Memory\MemoryRouterDataSource.cs" />
     <Compile Include="Router\Router.cs" />
     <Compile Include="IRouterPoint.cs" />
-    <Compile Include="IRouterPointMatcher.cs" />
+    <Compile Include="IEdgeMatcher.cs" />
     <Compile Include="Interpreter\Roads\RoadInterpreter.cs" />
     <Compile Include="Interpreter\Roads\RoadTagsInterpreterBase.cs" />
     <Compile Include="Router\RouterPoint.cs" />

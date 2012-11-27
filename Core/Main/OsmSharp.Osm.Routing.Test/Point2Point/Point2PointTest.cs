@@ -86,19 +86,19 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
 
                 float latitude_first, longitude_first;
                 data.GetVertex(first, out latitude_first, out longitude_first);
-                RouterPoint first_resolved = router.Resolve(
+                RouterPoint first_resolved = router.Resolve(VehicleEnum.Car, 
                     new GeoCoordinate(latitude_first, longitude_first));
 
                 float latitude_second, longitude_second;
                 data.GetVertex(second, out latitude_second, out longitude_second);
-                RouterPoint second_resolved = router.Resolve(
+                RouterPoint second_resolved = router.Resolve(VehicleEnum.Car, 
                     new GeoCoordinate(latitude_second, longitude_second));
 
 
                 if (((second_resolved != null) &&
                     (first_resolved != null)) &&
-                    (router.CheckConnectivity(first_resolved, 30) &&
-                    router.CheckConnectivity(second_resolved, 30)))
+                    (router.CheckConnectivity(VehicleEnum.Car, first_resolved, 30) &&
+                    router.CheckConnectivity(VehicleEnum.Car, second_resolved, 30)))
                 {
                     test_pairs.Add(new KeyValuePair<RouterPoint, RouterPoint>(
                         first_resolved, second_resolved));
@@ -112,7 +112,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             long before = DateTime.Now.Ticks;
             foreach (KeyValuePair<RouterPoint, RouterPoint> pair in test_pairs)
             {
-                OsmSharp.Routing.Core.Route.OsmSharpRoute route = router.Calculate(pair.Key, pair.Value);
+                OsmSharp.Routing.Core.Route.OsmSharpRoute route = router.Calculate(VehicleEnum.Car, pair.Key, pair.Value);
                 if (route != null)
                 {
                     successes++;
@@ -200,18 +200,18 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
 
                 float latitude_first, longitude_first;
                 data.GetVertex(first, out latitude_first, out longitude_first);
-                RouterPoint first_resolved = router.Resolve(
+                RouterPoint first_resolved = router.Resolve(VehicleEnum.Car, 
                     new GeoCoordinate(latitude_first, longitude_first));
 
                 float latitude_second, longitude_second;
                 data.GetVertex(second, out latitude_second, out longitude_second);
-                RouterPoint second_resolved = router.Resolve(
+                RouterPoint second_resolved = router.Resolve(VehicleEnum.Car, 
                     new GeoCoordinate(latitude_second, longitude_second));
 
                 if (((second_resolved != null) &&
-                    (first_resolved != null)) && 
-                    (router.CheckConnectivity(first_resolved, 30) &&
-                    router.CheckConnectivity(second_resolved, 30)))
+                    (first_resolved != null)) &&
+                    (router.CheckConnectivity(VehicleEnum.Car, first_resolved, 30) &&
+                    router.CheckConnectivity(VehicleEnum.Car, second_resolved, 30)))
                 {
                     test_pairs.Add(new KeyValuePair<RouterPoint, RouterPoint>(
                         first_resolved, second_resolved));
@@ -225,7 +225,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             for(int idx = 0; idx < test_pairs.Count; idx++)
             {
                 KeyValuePair<RouterPoint, RouterPoint> pair = test_pairs[idx];
-                router.Calculate(pair.Key, pair.Value);
+                router.Calculate(VehicleEnum.Car, pair.Key, pair.Value);
 
                 OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, test_pairs.Count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
                     "Routing pairs...");
@@ -274,11 +274,10 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                 IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
                 IRouter<RouterPoint> router = this.BuildRouter(data, interpreter, basic_router);
 
-                OsmSharpRoute route = router.Calculate(
-                    router.Resolve(from), router.Resolve(to));
-                OsmSharpRoute route_reference = reference_router.Calculate(
-                    reference_router.Resolve(from), reference_router.Resolve(to));
-
+                OsmSharpRoute route = router.Calculate(VehicleEnum.Car, 
+                    router.Resolve(VehicleEnum.Car, from), router.Resolve(VehicleEnum.Car, to));
+                OsmSharpRoute route_reference = reference_router.Calculate(VehicleEnum.Car, 
+                    reference_router.Resolve(VehicleEnum.Car, from), reference_router.Resolve(VehicleEnum.Car, to));
             }
         }
 
@@ -319,26 +318,26 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
 
                     float latitude_first, longitude_first;
                     data.GetVertex(first, out latitude_first, out longitude_first);
-                    RouterPoint first_resolved = router.Resolve(
+                    RouterPoint first_resolved = router.Resolve(VehicleEnum.Car, 
                         new GeoCoordinate(latitude_first, longitude_first));
-                    RouterPoint first_resolved_reference = reference_router.Resolve(
+                    RouterPoint first_resolved_reference = reference_router.Resolve(VehicleEnum.Car, 
                         new GeoCoordinate(latitude_first, longitude_first));
 
                     float latitude_second, longitude_second;
                     data.GetVertex(second, out latitude_second, out longitude_second);
-                    RouterPoint second_resolved = router.Resolve(
+                    RouterPoint second_resolved = router.Resolve(VehicleEnum.Car, 
                         new GeoCoordinate(latitude_second, longitude_second));
-                    RouterPoint second_resolved_reference = reference_router.Resolve(
+                    RouterPoint second_resolved_reference = reference_router.Resolve(VehicleEnum.Car, 
                         new GeoCoordinate(latitude_second, longitude_second));
 
                     if ((((second_resolved != null) &&
                         (first_resolved != null)) &&
-                        (router.CheckConnectivity(first_resolved, 30) &&
-                        router.CheckConnectivity(second_resolved, 30))) &&
+                        (router.CheckConnectivity(VehicleEnum.Car, first_resolved, 30) &&
+                        router.CheckConnectivity(VehicleEnum.Car, second_resolved, 30))) &&
                         (((second_resolved_reference != null) &&
                             (first_resolved_reference != null)) &&
-                            (reference_router.CheckConnectivity(first_resolved_reference, 30) &&
-                            reference_router.CheckConnectivity(second_resolved_reference, 30))))
+                            (reference_router.CheckConnectivity(VehicleEnum.Car, first_resolved_reference, 30) &&
+                            reference_router.CheckConnectivity(VehicleEnum.Car, second_resolved_reference, 30))))
                     {
                         test_pairs.Add(new KeyValuePair<RouterPoint, RouterPoint>(
                             first_resolved, second_resolved));
@@ -354,9 +353,9 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                 for (int idx = 0; idx < test_pairs.Count; idx++)
                 {
                     KeyValuePair<RouterPoint, RouterPoint> pair = test_pairs[idx];
-                    OsmSharpRoute route = router.Calculate(
+                    OsmSharpRoute route = router.Calculate(VehicleEnum.Car, 
                         test_pairs[idx].Key, test_pairs[idx].Value);
-                    OsmSharpRoute reference_route = reference_router.Calculate(
+                    OsmSharpRoute reference_route = reference_router.Calculate(VehicleEnum.Car, 
                         test_pairs_reference[idx].Key, test_pairs_reference[idx].Value);
 
                     if (reference_route != null)

@@ -59,7 +59,7 @@ namespace OsmSharp.Routing.Core.VRP
         /// <returns></returns>
         protected double[][] CalculateManyToManyWeigth(ResolvedType[] points)
         {
-            return _router.CalculateManyToManyWeight(points, points);
+            return _router.CalculateManyToManyWeight(VehicleEnum.Car, points, points);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace OsmSharp.Routing.Core.VRP
         /// <returns></returns>
         protected OsmSharpRoute Calculate(ResolvedType from, ResolvedType to)
         {
-            return _router.Calculate(from, to);
+            return _router.Calculate(VehicleEnum.Car, from, to);
         }
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace OsmSharp.Routing.Core.VRP
                     OsmSharpRoute tsp = null;
                     OsmSharpRoute route;
                     if (depots != null)
-                        tsp = _router.Calculate(depots[route_idx], clients[vrp_solution[route_idx][0] - depots.Length]);
+                        tsp = _router.Calculate(VehicleEnum.Car, depots[route_idx], clients[vrp_solution[route_idx][0] - depots.Length]);
 
                     for (int idx = 0; idx < vrp_solution[route_idx].Length - 1; idx++)
                     {
@@ -99,7 +99,7 @@ namespace OsmSharp.Routing.Core.VRP
                             vrp_solution[route_idx][idx + 1] - vrp_solution.Length >= clients.Length)
                             continue;
 
-                        route = _router.Calculate(clients[vrp_solution[route_idx][idx] - depots.Length],
+                        route = _router.Calculate(VehicleEnum.Car, clients[vrp_solution[route_idx][idx] - depots.Length],
                             clients[vrp_solution[route_idx][idx + 1] - depots.Length]);
 
                         if (route.Entries != null && route.Entries.Length > 0)
@@ -121,7 +121,7 @@ namespace OsmSharp.Routing.Core.VRP
                         route = null;
                         try
                         {
-                            route = _router.Calculate(clients[vrp_solution[route_idx][vrp_solution[route_idx].Length - 1] - depots.Length],
+                            route = _router.Calculate(VehicleEnum.Car, clients[vrp_solution[route_idx][vrp_solution[route_idx].Length - 1] - depots.Length],
                                         depots[route_idx]);
                         }
                         catch { }
@@ -147,7 +147,7 @@ namespace OsmSharp.Routing.Core.VRP
                     OsmSharpRoute route;
                     for (int idx = 0; idx < vrp_solution[route_idx].Length - 1; idx++)
                     {
-                        route = _router.Calculate(clients[vrp_solution[route_idx][idx]],
+                        route = _router.Calculate(VehicleEnum.Car, clients[vrp_solution[route_idx][idx]],
                             clients[vrp_solution[route_idx][idx + 1]]);
                         if (route.Entries.Length > 0)
                         {
@@ -163,7 +163,7 @@ namespace OsmSharp.Routing.Core.VRP
                     }
 
                     // concatenate the route from the last to the first point again.
-                    route = _router.Calculate(clients[vrp_solution[route_idx][vrp_solution[route_idx].Length - 1]],
+                    route = _router.Calculate(VehicleEnum.Car, clients[vrp_solution[route_idx][vrp_solution[route_idx].Length - 1]],
                                 clients[vrp_solution[route_idx][0]]);
                     if (route.Entries.Length > 0)
                     {

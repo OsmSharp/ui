@@ -192,7 +192,7 @@ namespace OsmSharp.Osm.Routing.Interpreter.Edge
         {
             double distance = from.DistanceEstimate(to).Value;
 
-            return distance / (this.MaxSpeed(tags, vehicle).Value) * 3.6;
+            return distance / (this.MaxSpeed(vehicle, tags).Value) * 3.6;
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace OsmSharp.Osm.Routing.Interpreter.Edge
         /// Returns the maximum speed.
         /// </summary>
         /// <returns></returns>
-        public KilometerPerHour MaxSpeed(IDictionary<string, string> tags, VehicleEnum vehicle)
+        public KilometerPerHour MaxSpeed(VehicleEnum vehicle, IDictionary<string, string> tags)
         {
             // THERE ARE THE MAX SPEEDS FOR BELGIUM. 
             // TODO: Find a way to make this all configurable.
@@ -408,6 +408,45 @@ namespace OsmSharp.Osm.Routing.Interpreter.Edge
                 }
             }
             return names;
+        }
+
+        /// <summary>
+        /// Returns true if the edges with the given properties are equal for the given vehicle.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="tags1"></param>
+        /// <param name="tags2"></param>
+        /// <returns></returns>
+        public bool IsEqualFor(VehicleEnum vehicle, IDictionary<string, string> tags1, Dictionary<string, string> tags2)
+        {
+            if (this.GetName(tags1) != this.GetName(tags2))
+            { // the name have to be equal.
+                return false;
+            }
+
+            // check the road properties relevant for each vehicle.
+            switch (vehicle)
+            {
+                case VehicleEnum.Pedestrian:
+                case VehicleEnum.Bike:
+                case VehicleEnum.Car:
+                case VehicleEnum.Bus:
+
+                    break;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if the edge with the given properties represents a roundabout.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public bool IsRoundabout(IDictionary<string, string> tags)
+        {
+            string junction;
+            return (tags != null && tags.TryGetValue("junction", out junction) &&
+                junction == "roundabout");
         }
     }
 }

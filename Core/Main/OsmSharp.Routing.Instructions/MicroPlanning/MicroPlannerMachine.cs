@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Automata;
 using OsmSharp.Tools.Math.StateMachines;
+using OsmSharp.Routing.Core.Interpreter;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
@@ -40,7 +41,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// Creates a new event machine.
         /// </summary>
         /// <param name="consumer"></param>
-        protected MicroPlannerMachine(FiniteStateMachineState initial, MicroPlanner planner, int priority)
+        protected MicroPlannerMachine(FiniteStateMachineState<MicroPlannerMessage> initial, MicroPlanner planner, int priority)
             :base(initial)
         {
             _planner = planner;
@@ -50,7 +51,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Returns the microplanner.
         /// </summary>
-        protected MicroPlanner Planner
+        internal MicroPlanner Planner
         {
             get
             {
@@ -101,7 +102,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// </summary>
         /// <param name="even"></param>
         /// <param name="state"></param>
-        protected override void RaiseResetEvent(MicroPlannerMessage even, FiniteStateMachineState state)
+        protected override void RaiseResetEvent(MicroPlannerMessage even, FiniteStateMachineState<MicroPlannerMessage> state)
         {
             this.Planner.ReportReset(this);
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.Units.Speed;
 
 namespace OsmSharp.Routing.Core.Interpreter.Roads
 {
@@ -62,5 +63,29 @@ namespace OsmSharp.Routing.Core.Interpreter.Roads
         /// <param name="tags"></param>
         /// <returns></returns>
         Dictionary<string, string> GetNamesInAllLanguages(IDictionary<string, string> tags);
+
+        /// <summary>
+        /// Returns true if the tags (or a subset of) represent the same edge type for the given vehicle.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="tags1"></param>
+        /// <param name="tags2"></param>
+        /// <returns></returns>
+        bool IsEqualFor(VehicleEnum vehicle, IDictionary<string, string> tags1, Dictionary<string, string> tags2);
+
+        /// <summary>
+        /// Returns the maximum possible speed a vehicle can travel on a edge with the given properties.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        KilometerPerHour MaxSpeed(VehicleEnum vehicle, IDictionary<string, string> tags);
+
+        /// <summary>
+        /// Returns true if the edge with given properties is a roundabout.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        bool IsRoundabout(IDictionary<string, string> tags);
     }
 }
