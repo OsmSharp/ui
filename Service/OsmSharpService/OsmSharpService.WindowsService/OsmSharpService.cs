@@ -8,6 +8,7 @@ using System.ServiceProcess;
 using System.Text;
 using OsmSharpService.Core;
 using OsmSharpService.Core.Routing;
+using System.Configuration;
 
 namespace OsmSharpService.WindowsService
 {
@@ -54,7 +55,7 @@ namespace OsmSharpService.WindowsService
             // start the self-hosting.
             _host = new AppHost();
             _host.Init();
-            _host.Start(@"http://localhost:666/");
+            _host.Start(ConfigurationManager.AppSettings["hostname"]);
         }
 
         /// <summary>
