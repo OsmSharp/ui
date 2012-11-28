@@ -60,15 +60,21 @@ namespace RoutingSpeedSample
                 this.mapEditorUserControl1.logControl1);
 
             // define the routable bounding box.
-            //_box = new GeoCoordinateBox( // lebbeke
-            //    new GeoCoordinate(50.97268, 3.91535),
-            //    new GeoCoordinate(51.14149, 4.23653));
+            _box = new GeoCoordinateBox( // lebbeke
+                new GeoCoordinate(50.97268, 3.91535),
+                new GeoCoordinate(51.14149, 4.23653));
             //_box = new GeoCoordinateBox( // eeklo
             //    new GeoCoordinate(51.10800, 3.46400),
             //    new GeoCoordinate(51.24100, 3.67300));
-            _box = new GeoCoordinateBox( // gent
-                new GeoCoordinate(50.93000, 3.48700),
-                new GeoCoordinate(51.12400, 3.90700));
+            //_box = new GeoCoordinateBox( // gent
+            //    new GeoCoordinate(50.93000, 3.48700),
+            //    new GeoCoordinate(51.12400, 3.90700));
+            //_box = new GeoCoordinateBox( // gent
+            //    new GeoCoordinate(50.73298,3.70661),
+            //    new GeoCoordinate(50.93571,4.07355));            
+            //_box = new GeoCoordinateBox( // test network
+            //    new GeoCoordinate(51.0582602,3.7187392),
+            //    new GeoCoordinate(51.0575297,3.7206793));
 
             // create the map and all it's layers.
             OsmSharp.Osm.Map.Map map = new OsmSharp.Osm.Map.Map();
@@ -109,8 +115,10 @@ namespace RoutingSpeedSample
             // get the xml from the embedded resource.
             //Stream stream = new FileInfo(@"c:\OSM\bin\flanders_highway.osm").OpenRead();
             //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.eeklo.osm");
-            //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.lebbeke.osm");
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.matrix_big_area.osm");
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.lebbeke.osm");
+            //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.schendelbeke.osm");
+            //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.test_network.osm");
+            //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.matrix_big_area.osm");
 
             // create the interpreter: interprets the OSM data.
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
@@ -222,16 +230,22 @@ namespace RoutingSpeedSample
         {
             if (_router != null && _latest_location != null)
             {
-                RouterPoint point1 = _router.Resolve(_latest_location);
-                RouterPoint point2 = _router.Resolve(e.Position);
+                RouterPoint point1 = _router.Resolve(VehicleEnum.Car, _latest_location);
+                RouterPoint point2 = _router.Resolve(VehicleEnum.Car, e.Position);
 
                 if (point1 != null && point2 != null)
                 {
-                    OsmSharpRoute route = _router.Calculate(point1, point2);
+                    OsmSharpRoute route = _router.Calculate(VehicleEnum.Car, point1, point2);
 
-                    _route_layer.Clear();
-                    _route_layer.AddRoute(route, Color.Blue);
-                    this.Refresh();
+                    if (route != null)
+                    {
+                        _route_layer.Clear();
+                        _route_layer.AddRoute(route, Color.Blue);
+                        this.Refresh();
+
+                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("Route found: {0}m {1}s",
+                            route.TotalDistance, route.TotalTime));
+                    }
                 }
             }
         }
