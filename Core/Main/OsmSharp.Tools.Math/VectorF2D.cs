@@ -314,6 +314,24 @@ namespace OsmSharp.Tools.Math
         }
 
         /// <summary>
+        /// Multiplies the given vector with the given value.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static VectorF2D operator *(VectorF2D a, double value)
+        {
+            double[] c = new double[2];
+
+            for (int idx = 0; idx < 2; idx++)
+            {
+                c[idx] = a[idx] * value;
+            }
+
+            return new VectorF2D(c);
+        }
+
+        /// <summary>
         /// Returns true if the two vectors represent the same.
         /// </summary>
         /// <param name="a"></param>

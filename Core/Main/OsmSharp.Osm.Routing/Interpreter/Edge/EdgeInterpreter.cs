@@ -234,9 +234,9 @@ namespace OsmSharp.Osm.Routing.Interpreter.Edge
         /// <returns></returns>
         public KilometerPerHour MaxSpeed(VehicleEnum vehicle, IDictionary<string, string> tags)
         {
-            // THERE ARE THE MAX SPEEDS FOR BELGIUM. 
+            // THESE ARE THE MAX SPEEDS FOR BELGIUM. 
             // TODO: Find a way to make this all configurable.
-            KilometerPerHour speed = null;
+            KilometerPerHour speed = 5;
 
             KilometerPerHour pedestrian_speed = 5;
             KilometerPerHour bike_speed = 15;

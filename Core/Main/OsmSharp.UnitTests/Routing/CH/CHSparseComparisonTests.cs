@@ -42,6 +42,11 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
     public class CHSparseComparisonTests : RoutingComparisonTests
     {
         /// <summary>
+        /// Holds the data.
+        /// </summary>
+        private Dictionary<string, MemoryRouterDataSource<CHEdgeData>> _data = null;
+
+        /// <summary>
         /// Returns a new router.
         /// </summary>
         /// <param name="interpreter"></param>
@@ -49,26 +54,35 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <returns></returns>
         public override IRouter<RouterPoint> BuildRouter(IRoutingInterpreter interpreter, string embedded_name)
         {
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            if (_data == null)
+            {
+                _data = new Dictionary<string, MemoryRouterDataSource<CHEdgeData>>();
+            }
+            MemoryRouterDataSource<CHEdgeData> data = null;
+            if (!_data.TryGetValue(embedded_name, out data))
+            {
+                OsmTagsIndex tags_index = new OsmTagsIndex();
 
-            // do the data processing.
-            MemoryRouterDataSource<CHEdgeData> data =
-                new MemoryRouterDataSource<CHEdgeData>(tags_index);
-            CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                data, interpreter, data.TagsIndex);
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(
-                "OsmSharp.UnitTests.{0}", embedded_name)));
-            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+                // do the data processing.
+                data =
+                    new MemoryRouterDataSource<CHEdgeData>(tags_index);
+                CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+                    data, interpreter, data.TagsIndex);
+                XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
+                    Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(
+                    "OsmSharp.UnitTests.{0}", embedded_name)));
+                DataProcessorFilterSort sorter = new DataProcessorFilterSort();
+                sorter.RegisterSource(data_processor_source);
+                target_data.RegisterSource(sorter);
+                target_data.Pull();
 
-            // do the pre-processing part.
-            CHPreProcessor pre_processor = new CHPreProcessor(data,
-                new SparseOrdering(data), new DykstraWitnessCalculator(data));
-            pre_processor.Start();
+                // do the pre-processing part.
+                CHPreProcessor pre_processor = new CHPreProcessor(data,
+                    new SparseOrdering(data), new DykstraWitnessCalculator(data));
+                pre_processor.Start();
 
+                _data[embedded_name] = data;
+            }
             return new Router<CHEdgeData>(data, interpreter, new CHRouter(
                 data));
         }

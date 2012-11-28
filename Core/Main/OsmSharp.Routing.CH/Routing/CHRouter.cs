@@ -489,19 +489,56 @@ namespace OsmSharp.Routing.CH.Routing
             //CHPriorityQueue queue_backward = new CHPriorityQueue();
 
             // add the sources to the forward queue.
+            Dictionary<long, PathSegment<long>> resolved_settles = 
+                new Dictionary<long, PathSegment<long>>();
             foreach (long source_vertex in source.GetVertices())
             {
                 PathSegment<long> path = source.GetPathTo(source_vertex);
                 queue_forward.Enqueue(path, (float)path.Weight);
-                //queue_forward.Push(source.GetPathTo(source_vertex));
+                path = path.From;
+                while (path != null)
+                { // keep looping.
+                    PathSegment<long> existing_source = null;
+                    if (!resolved_settles.TryGetValue(path.VertexId, out existing_source) ||
+                        existing_source.Weight > path.Weight)
+                    { // the new path is better.
+                        resolved_settles[path.VertexId] = path;
+                    }
+                    path = path.From;
+                }
             }
 
-            // add the to(s) vertex to the backward queue.
+            // add the sources to the settled vertices.
+            foreach (KeyValuePair<long, PathSegment<long>> resolved_settled 
+                in resolved_settles)
+            {
+                settled_vertices.AddForward(resolved_settled.Value);
+            }
+
+            // add the to(s) vertex to the backward queue.resolved_settles = 
+            resolved_settles = new Dictionary<long, PathSegment<long>>();
             foreach (long target_vertex in target.GetVertices())
             {
                 PathSegment<long> path = target.GetPathTo(target_vertex);
                 queue_backward.Enqueue(path, (float)path.Weight);
-                //queue_backward.Push(target.GetPathTo(target_vertex));
+                path = path.From;
+                while (path != null)
+                { // keep looping.
+                    PathSegment<long> existing_source = null;
+                    if (!resolved_settles.TryGetValue(path.VertexId, out existing_source) ||
+                        existing_source.Weight > path.Weight)
+                    { // the new path is better.
+                        resolved_settles[path.VertexId] = path;
+                    }
+                    path = path.From;
+                }
+            }
+
+            // add the sources to the settled vertices.
+            foreach (KeyValuePair<long, PathSegment<long>> resolved_settled
+                in resolved_settles)
+            {
+                settled_vertices.AddBackward(resolved_settled.Value);
             }
 
             // keep looping until stopping conditions are met.
@@ -557,7 +594,7 @@ namespace OsmSharp.Routing.CH.Routing
 
             // return forward/backward routes.
             CHResult result = new CHResult();
-            if (best.VertexId <= 0)
+            if (!best.Found)
             {
                 // no route was found!
             }
@@ -584,6 +621,60 @@ namespace OsmSharp.Routing.CH.Routing
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max, int max_settles)
         {
             // TODO: implement switching of from/to when to < from.
+
+
+            //// add the sources to the forward queue.
+            //Dictionary<long, PathSegment<long>> resolved_settles =
+            //    new Dictionary<long, PathSegment<long>>();
+            //foreach (long source_vertex in source.GetVertices())
+            //{
+            //    PathSegment<long> path = source.GetPathTo(source_vertex);
+            //    queue_forward.Enqueue(path, (float)path.Weight);
+            //    path = path.From;
+            //    while (path != null)
+            //    { // keep looping.
+            //        PathSegment<long> existing_source = null;
+            //        if (!resolved_settles.TryGetValue(path.VertexId, out existing_source) ||
+            //            existing_source.Weight > path.Weight)
+            //        { // the new path is better.
+            //            resolved_settles[path.VertexId] = path;
+            //        }
+            //        path = path.From;
+            //    }
+            //}
+
+            //// add the sources to the settled vertices.
+            //foreach (KeyValuePair<long, PathSegment<long>> resolved_settled
+            //    in resolved_settles)
+            //{
+            //    settled_vertices.AddForward(resolved_settled.Value);
+            //}
+
+            //// add the to(s) vertex to the backward queue.resolved_settles = 
+            //resolved_settles = new Dictionary<long, PathSegment<long>>();
+            //foreach (long target_vertex in target.GetVertices())
+            //{
+            //    PathSegment<long> path = target.GetPathTo(target_vertex);
+            //    queue_backward.Enqueue(path, (float)path.Weight);
+            //    path = path.From;
+            //    while (path != null)
+            //    { // keep looping.
+            //        PathSegment<long> existing_source = null;
+            //        if (!resolved_settles.TryGetValue(path.VertexId, out existing_source) ||
+            //            existing_source.Weight > path.Weight)
+            //        { // the new path is better.
+            //            resolved_settles[path.VertexId] = path;
+            //        }
+            //        path = path.From;
+            //    }
+            //}
+
+            //// add the sources to the settled vertices.
+            //foreach (KeyValuePair<long, PathSegment<long>> resolved_settled
+            //    in resolved_settles)
+            //{
+            //    settled_vertices.AddBackward(resolved_settled.Value);
+            //}
 
             // keep a list of distances to the given vertices while performance backward search.
             Dictionary<long, Dictionary<long, double>> buckets = new Dictionary<long, Dictionary<long, double>>();
@@ -814,7 +905,7 @@ namespace OsmSharp.Routing.CH.Routing
 
             // return forward/backward routes.
             CHResult result = new CHResult();
-            if (best.VertexId <= 0)
+            if (!best.Found)
             {
                 // no route was found!
             }
@@ -923,6 +1014,7 @@ namespace OsmSharp.Routing.CH.Routing
                 {
                     best = new CHBest();
                     best.VertexId = vertex.Key;
+                    best.Found = true;
                     best.Weight = weight;
                 }
             }
@@ -943,6 +1035,11 @@ namespace OsmSharp.Routing.CH.Routing
             /// The weight of the best route yet.
             /// </summary>
             public double Weight { get; set; }
+
+            /// <summary>
+            /// The result that was found.
+            /// </summary>
+            public bool Found { get; set; }
         }
 
         /// <summary>

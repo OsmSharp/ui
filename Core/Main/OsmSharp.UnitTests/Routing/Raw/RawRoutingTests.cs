@@ -71,27 +71,36 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         }
 
         /// <summary>
+        /// Holds the data.
+        /// </summary>
+        private IBasicRouterDataSource<OsmEdgeData> _data = null;
+
+        /// <summary>
         /// Builds data source.
         /// </summary>
         /// <param name="interpreter"></param>
         /// <returns></returns>
         public override IBasicRouterDataSource<OsmEdgeData> BuildData(IRoutingInterpreter interpreter)
         {
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            if (_data == null)
+            {
+                OsmTagsIndex tags_index = new OsmTagsIndex();
 
-            // do the data processing.
-            MemoryRouterDataSource<OsmEdgeData> data =
-                new MemoryRouterDataSource<OsmEdgeData>(tags_index);
-            OsmEdgeDataGraphProcessingTarget target_data = new OsmEdgeDataGraphProcessingTarget(
-                data, interpreter, data.TagsIndex);
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
-            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+                // do the data processing.
+                MemoryRouterDataSource<OsmEdgeData> data =
+                    new MemoryRouterDataSource<OsmEdgeData>(tags_index);
+                OsmEdgeDataGraphProcessingTarget target_data = new OsmEdgeDataGraphProcessingTarget(
+                    data, interpreter, data.TagsIndex);
+                XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
+                    Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
+                DataProcessorFilterSort sorter = new DataProcessorFilterSort();
+                sorter.RegisterSource(data_processor_source);
+                target_data.RegisterSource(sorter);
+                target_data.Pull();
 
-            return data;
+                _data = data;
+            }
+            return _data;
         }
 
         /// <summary>
@@ -227,6 +236,33 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         public void TestRawResolveBetweenRouteToSelf()
         {
             this.DoTestResolveBetweenRouteToSelf();
+        }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [TestMethod]
+        public void TestRawResolveBetweenClose()
+        {
+            this.DoTestResolveBetweenClose();
+        }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [TestMethod]
+        public void TestRawResolveCase1()
+        {
+            this.DoTestResolveCase1();
+        }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [TestMethod]
+        public void TestRawResolveCase2()
+        {
+            this.DoTestResolveCase2();
         }
     }
 }

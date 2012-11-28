@@ -510,5 +510,165 @@ namespace OsmSharp.Osm.UnitTests.Routing
             Assert.AreEqual(0, route.TotalDistance);
             Assert.AreEqual(0, route.TotalTime);
         }
+
+        /// <summary>
+        /// Test if routes between two resolved nodes are correctly calculated.
+        /// </summary>
+        protected void DoTestResolveBetweenClose()
+        {
+            // initialize data.
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+
+            GeoCoordinate vertex_20 = new GeoCoordinate(51.0578532, 3.7192229);
+            GeoCoordinate vertex_21 = new GeoCoordinate(51.0578518, 3.7195654);
+            GeoCoordinate vertex_16 = new GeoCoordinate(51.0577299, 3.719745);
+
+            for (double position1 = 0.1; position1 < 0.91; position1 = position1 + 0.1)
+            {
+                PointF2D point = vertex_20 + ((vertex_21 - vertex_20) * position1);
+                GeoCoordinate vertex_20_21 = new GeoCoordinate(point[1], point[0]);
+                for (double position2 = 0.1; position2 < 0.91; position2 = position2 + 0.1)
+                {
+                    point = vertex_21 + ((vertex_16 - vertex_21) * position2);
+                    GeoCoordinate vertex_21_16 = new GeoCoordinate(point[1], point[0]);
+
+                    // calculate route.
+                    IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+                    IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);
+
+                    OsmSharpRoute route = router.Calculate(VehicleEnum.Car, 
+                        router.Resolve(VehicleEnum.Car, vertex_20_21),
+                        router.Resolve(VehicleEnum.Car, vertex_21_16));
+
+                    Assert.AreEqual(3, route.Entries.Length);
+                    Assert.AreEqual(vertex_20_21.Latitude, route.Entries[0].Latitude, 0.0001);
+                    Assert.AreEqual(vertex_20_21.Longitude, route.Entries[0].Longitude, 0.0001);
+
+                    Assert.AreEqual(vertex_21.Latitude, route.Entries[1].Latitude, 0.0001);
+                    Assert.AreEqual(vertex_21.Longitude, route.Entries[1].Longitude, 0.0001);
+
+                    Assert.AreEqual(vertex_21_16.Latitude, route.Entries[2].Latitude, 0.0001);
+                    Assert.AreEqual(vertex_21_16.Longitude, route.Entries[2].Longitude, 0.0001);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Test if routes between two resolved nodes are correctly calculated.
+        /// </summary>
+        protected void DoTestResolveBetweenTwo()
+        {
+            // initialize data.
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+
+            GeoCoordinate vertex_20 = new GeoCoordinate(51.0578532, 3.7192229);
+            GeoCoordinate vertex_21 = new GeoCoordinate(51.0578518, 3.7195654);
+
+            for (double position1 = 0.1; position1 < 0.91; position1 = position1 + 0.1)
+            {
+                PointF2D point = vertex_20 + ((vertex_21 - vertex_20) * position1);
+                GeoCoordinate vertex_20_21 = new GeoCoordinate(point[1], point[0]);
+
+                point = vertex_21 + ((vertex_20 - vertex_21) * position1);
+                GeoCoordinate vertex_21_20 = new GeoCoordinate(point[1], point[0]);
+
+                // calculate route.
+                IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+                IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);
+
+                OsmSharpRoute route = router.Calculate(VehicleEnum.Car,
+                    router.Resolve(VehicleEnum.Car, vertex_20_21),
+                    router.Resolve(VehicleEnum.Car, vertex_21_20));
+
+                Assert.AreEqual(2, route.Entries.Length);
+                Assert.AreEqual(vertex_20_21.Latitude, route.Entries[0].Latitude, 0.0001);
+                Assert.AreEqual(vertex_20_21.Longitude, route.Entries[0].Longitude, 0.0001);
+
+                Assert.AreEqual(vertex_21_20.Latitude, route.Entries[1].Latitude, 0.0001);
+                Assert.AreEqual(vertex_21_20.Longitude, route.Entries[1].Longitude, 0.0001);
+            }
+        }
+
+        /// <summary>
+        /// Test if routes between resolved nodes are correctly calculated.
+        /// 
+        /// 20----x----21----x----16
+        /// </summary>
+        protected void DoTestResolveCase1()
+        {
+            // initialize data.
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+
+            GeoCoordinate vertex_20 = new GeoCoordinate(51.0578532, 3.7192229);
+            GeoCoordinate vertex_21 = new GeoCoordinate(51.0578518, 3.7195654);
+            GeoCoordinate vertex_16 = new GeoCoordinate(51.0577299, 3.719745);
+
+            PointF2D point = vertex_20 + ((vertex_21 - vertex_20) * 0.5);
+            GeoCoordinate vertex_20_21 = new GeoCoordinate(point[1], point[0]);
+
+            point = vertex_21 + ((vertex_16 - vertex_21) * 0.5);
+            GeoCoordinate vertex_21_16 = new GeoCoordinate(point[1], point[0]);
+
+            // calculate route.
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+            IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);
+
+            OsmSharpRoute route = router.Calculate(VehicleEnum.Car,
+                router.Resolve(VehicleEnum.Car, vertex_20_21),
+                router.Resolve(VehicleEnum.Car, vertex_21_16));
+
+            Assert.AreEqual(3, route.Entries.Length);
+            Assert.AreEqual(vertex_20_21.Latitude, route.Entries[0].Latitude, 0.0001);
+            Assert.AreEqual(vertex_20_21.Longitude, route.Entries[0].Longitude, 0.0001);
+
+            Assert.AreEqual(vertex_21.Latitude, route.Entries[1].Latitude, 0.0001);
+            Assert.AreEqual(vertex_21.Longitude, route.Entries[1].Longitude, 0.0001);
+
+            Assert.AreEqual(vertex_21_16.Latitude, route.Entries[2].Latitude, 0.0001);
+            Assert.AreEqual(vertex_21_16.Longitude, route.Entries[2].Longitude, 0.0001);
+        }
+
+        /// <summary>
+        /// Test if routes between resolved nodes are correctly calculated.
+        /// 
+        /// 20--x---x--21---------16
+        /// </summary>
+        protected void DoTestResolveCase2()
+        {
+            // initialize data.
+            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+
+            GeoCoordinate vertex_20 = new GeoCoordinate(51.0578532, 3.7192229);
+            GeoCoordinate vertex_21 = new GeoCoordinate(51.0578518, 3.7195654);
+            GeoCoordinate vertex_16 = new GeoCoordinate(51.0577299, 3.719745);
+
+            PointF2D point = vertex_20 + ((vertex_21 - vertex_20) * 0.25);
+            GeoCoordinate vertex_20_21_1 = new GeoCoordinate(point[1], point[0]);
+
+            point = vertex_20 + ((vertex_21 - vertex_20) * 0.75);
+            GeoCoordinate vertex_20_21_2 = new GeoCoordinate(point[1], point[0]);
+
+            // calculate route.
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+            IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);
+
+            OsmSharpRoute route = router.Calculate(VehicleEnum.Car,
+                router.Resolve(VehicleEnum.Car, vertex_20_21_1),
+                router.Resolve(VehicleEnum.Car, vertex_20_21_2));
+
+            Assert.AreEqual(2, route.Entries.Length);
+            Assert.AreEqual(vertex_20_21_1.Latitude, route.Entries[0].Latitude, 0.0001);
+            Assert.AreEqual(vertex_20_21_1.Longitude, route.Entries[0].Longitude, 0.0001);
+
+            //Assert.AreEqual(vertex_21.Latitude, route.Entries[1].Latitude, 0.0001);
+            //Assert.AreEqual(vertex_21.Longitude, route.Entries[1].Longitude, 0.0001);
+
+            Assert.AreEqual(vertex_20_21_2.Latitude, route.Entries[1].Latitude, 0.0001);
+            Assert.AreEqual(vertex_20_21_2.Longitude, route.Entries[1].Longitude, 0.0001);
+        }
     }
 }

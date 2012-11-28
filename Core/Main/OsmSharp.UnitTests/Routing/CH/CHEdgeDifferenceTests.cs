@@ -40,26 +40,35 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
     public class CHEdgeDifferenceTests
     {
         /// <summary>
+        /// Holds the data.
+        /// </summary>
+        private MemoryRouterDataSource<CHEdgeData> _data = null;
+
+        /// <summary>
         /// Builds the data source.
         /// </summary>
         /// <returns></returns>
         private MemoryRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
         {
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            if (_data == null)
+            {
+                OsmTagsIndex tags_index = new OsmTagsIndex();
 
-            // do the data processing.
-            MemoryRouterDataSource<CHEdgeData> data =
-                new MemoryRouterDataSource<CHEdgeData>(tags_index);
-            CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                data, interpreter, data.TagsIndex);
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
-            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+                // do the data processing.
+                MemoryRouterDataSource<CHEdgeData> data =
+                    new MemoryRouterDataSource<CHEdgeData>(tags_index);
+                CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+                    data, interpreter, data.TagsIndex);
+                XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
+                    Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
+                DataProcessorFilterSort sorter = new DataProcessorFilterSort();
+                sorter.RegisterSource(data_processor_source);
+                target_data.RegisterSource(sorter);
+                target_data.Pull();
 
-            return data;
+                _data = data;
+            }
+            return _data;
         }
 
         /// <summary>

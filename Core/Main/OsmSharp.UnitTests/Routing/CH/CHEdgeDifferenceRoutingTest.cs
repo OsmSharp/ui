@@ -46,6 +46,14 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
     public class CHEdgeDifferenceRoutingTest : SimpleRoutingTests<RouterPoint, CHEdgeData>
     {
         /// <summary>
+        /// Creates an instance of the edge difference tests.
+        /// </summary>
+        public CHEdgeDifferenceRoutingTest()
+        {
+
+        }
+
+        /// <summary>
         /// Returns a new router.
         /// </summary>
         /// <param name="data"></param>
@@ -69,33 +77,42 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         }
 
         /// <summary>
+        /// Holds the data.
+        /// </summary>
+        private IBasicRouterDataSource<CHEdgeData> _data = null;
+
+        /// <summary>
         /// Builds the data.
         /// </summary>
         /// <param name="interpreter"></param>
         /// <returns></returns>
         public override IBasicRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
         {
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            if (_data == null)
+            {
+                OsmTagsIndex tags_index = new OsmTagsIndex();
 
-            // do the data processing.
-            MemoryRouterDataSource<CHEdgeData> data =
-                new MemoryRouterDataSource<CHEdgeData>(tags_index);
-            CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                data, interpreter, data.TagsIndex);
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
-            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+                // do the data processing.
+                MemoryRouterDataSource<CHEdgeData> data =
+                    new MemoryRouterDataSource<CHEdgeData>(tags_index);
+                CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+                    data, interpreter, data.TagsIndex);
+                XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
+                    Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
+                DataProcessorFilterSort sorter = new DataProcessorFilterSort();
+                sorter.RegisterSource(data_processor_source);
+                target_data.RegisterSource(sorter);
+                target_data.Pull();
 
-            // do the pre-processing part.
-            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);
-            CHPreProcessor pre_processor = new CHPreProcessor(data,
-                new EdgeDifference(data, witness_calculator), witness_calculator);
-            pre_processor.Start();
+                // do the pre-processing part.
+                INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);
+                CHPreProcessor pre_processor = new CHPreProcessor(data,
+                    new EdgeDifference(data, witness_calculator), witness_calculator);
+                pre_processor.Start();
 
-            return data;
+                _data = data;
+            }
+            return _data;
         }
 
         /// <summary>
@@ -174,7 +191,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// Test is the raw router can calculate another route.
         /// </summary>
         [TestMethod]
-        public void TestCHEdgeDifferenceShortestResolved1()
+        public void TestCHEdgeDifferenceResolvedShortest1()
         {
             this.DoTestShortestResolved1();
         }
@@ -183,7 +200,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// Test is the raw router can calculate another route.
         /// </summary>
         [TestMethod]
-        public void TestCHEdgeDifferenceShortestResolved2()
+        public void TestCHEdgeDifferenceResolvedShortest2()
         {
             this.DoTestShortestResolved2();
         }
@@ -197,14 +214,14 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
             this.DoTestManyToMany1();
         }
 
-        /// <summary>
-        /// Test if the ch router handles connectivity questions correctly.
-        /// </summary>
-        [TestMethod]
-        public void TestCHEdgeDifferenceConnectivity1()
-        {
-            this.DoTestConnectivity1();
-        }
+        ///// <summary>
+        ///// Test if the ch router handles connectivity questions correctly.
+        ///// </summary>
+        //[TestMethod]
+        //public void TestCHEdgeDifferenceConnectivity1()
+        //{
+        //    this.DoTestConnectivity1();
+        //}
 
         /// <summary>
         /// Tests a simple shortest route calculation.
@@ -222,6 +239,42 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         public void TestCHEdgeDifferenceResolveBetweenNodes()
         {
             this.DoTestResolveBetweenNodes();
+        }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceResolveBetweenClose()
+        {
+            this.DoTestResolveBetweenClose();
+        }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceResolveBetweenTwo()
+        {
+            this.DoTestResolveBetweenTwo();
+        }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceResolveCase1()
+        {
+            this.DoTestResolveCase1();
+        }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [TestMethod]
+        public void TestCHEdgeDifferenceResolveCase2()
+        {
+            this.DoTestResolveCase2();
         }
     }
 }

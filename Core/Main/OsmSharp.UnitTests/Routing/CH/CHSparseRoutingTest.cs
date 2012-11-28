@@ -68,32 +68,41 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         }
 
         /// <summary>
+        /// Holds the data.
+        /// </summary>
+        private IBasicRouterDataSource<CHEdgeData> _data = null;
+
+        /// <summary>
         /// Builds the data.
         /// </summary>
         /// <param name="interpreter"></param>
         /// <returns></returns>
         public override IBasicRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
         {
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            if (_data == null)
+            {
+                OsmTagsIndex tags_index = new OsmTagsIndex();
 
-            // do the data processing.
-            MemoryRouterDataSource<CHEdgeData> data =
-                new MemoryRouterDataSource<CHEdgeData>(tags_index);
-            CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                data, interpreter, data.TagsIndex);
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
-            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
-            
-            // do the pre-processing part.
-            CHPreProcessor pre_processor = new CHPreProcessor(data,
-                new SparseOrdering(data), new DykstraWitnessCalculator(data));
-            pre_processor.Start();
+                // do the data processing.
+                MemoryRouterDataSource<CHEdgeData> data =
+                    new MemoryRouterDataSource<CHEdgeData>(tags_index);
+                CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+                    data, interpreter, data.TagsIndex);
+                XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
+                    Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
+                DataProcessorFilterSort sorter = new DataProcessorFilterSort();
+                sorter.RegisterSource(data_processor_source);
+                target_data.RegisterSource(sorter);
+                target_data.Pull();
 
-            return data;
+                // do the pre-processing part.
+                CHPreProcessor pre_processor = new CHPreProcessor(data,
+                    new SparseOrdering(data), new DykstraWitnessCalculator(data));
+                pre_processor.Start();
+
+                _data = data;
+            }
+            return _data;
         }
 
         /// <summary>
@@ -172,7 +181,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// Test is the raw router can calculate another route.
         /// </summary>
         [TestMethod]
-        public void TestCHSparseShortestResolved1()
+        public void TestCHSparseResolvedShortest1()
         {
             this.DoTestShortestResolved1();
         }
@@ -181,7 +190,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// Test is the raw router can calculate another route.
         /// </summary>
         [TestMethod]
-        public void TestCHSparseShortestResolved2()
+        public void TestCHSparseResolvedShortest2()
         {
             this.DoTestShortestResolved2();
         }
@@ -220,6 +229,42 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         public void TestCHSparseResolveBetweenNodes()
         {
             this.DoTestResolveBetweenNodes();
+        }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [TestMethod]
+        public void TestCHSparseResolveBetweenClose()
+        {
+            this.DoTestResolveBetweenClose();
+        }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [TestMethod]
+        public void TestCHSparseResolveBetweenTwo()
+        {
+            this.DoTestResolveBetweenTwo();
+        }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [TestMethod]
+        public void TestCHSparseResolveCase1()
+        {
+            this.DoTestResolveCase1();
+        }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [TestMethod]
+        public void TestCHSparseResolveCase2()
+        {
+            this.DoTestResolveCase2();
         }
     }
 }
