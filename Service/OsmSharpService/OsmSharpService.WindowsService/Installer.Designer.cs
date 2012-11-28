@@ -46,7 +46,7 @@
             // 
             // serviceInstaller2
             // 
-            this.serviceInstaller2.Description = "Service to start and use for debugger the service process before start.";
+            this.serviceInstaller2.Description = "Service to start the service host process and use for debugging the service process before on start.";
             this.serviceInstaller2.DisplayName = "OsmSharpServiceDebugger";
             this.serviceInstaller2.ServiceName = "OsmSharpServiceDebugger";
             // 
