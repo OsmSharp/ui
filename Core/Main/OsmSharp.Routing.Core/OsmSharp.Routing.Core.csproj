@@ -148,6 +148,8 @@
     <Compile Include="Graph\DynamicGraph\IDynamicGraphEdgeData.cs" />
     <Compile Include="Graph\DynamicGraph\IDynamicGraphReadOnly.cs" />
     <Compile Include="Graph\DynamicGraph\Memory\MemoryDynamicGraph.cs" />
+    <Compile Include="Graph\DynamicGraph\SimpleWeighed\SimpleWeighedDynamicGraph.cs" />
+    <Compile Include="Graph\DynamicGraph\SimpleWeighed\SimpleWeighedEdge.cs" />
     <Compile Include="Graph\Path\PathSegment.cs" />
     <Compile Include="Graph\Path\PathSegmentVisitList.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingBinairyHeap.cs" />

@@ -36,6 +36,7 @@ using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
+using OsmSharp.UnitTests;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH
 {
@@ -77,26 +78,24 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         }
 
         /// <summary>
-        /// Holds the data.
-        /// </summary>
-        private IBasicRouterDataSource<CHEdgeData> _data = null;
-
-        /// <summary>
         /// Builds the data.
         /// </summary>
         /// <param name="interpreter"></param>
         /// <returns></returns>
         public override IBasicRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
         {
-            if (_data == null)
+            string key = "CHEdgeDifference.Routing.IBasicRouterDataSource<CHEdgeData>.OSM";
+            IBasicRouterDataSource<CHEdgeData> data = StaticDictionary.Get<IBasicRouterDataSource<CHEdgeData>>(
+                key);
+            if (data == null)
             {
                 OsmTagsIndex tags_index = new OsmTagsIndex();
 
                 // do the data processing.
-                MemoryRouterDataSource<CHEdgeData> data =
+                MemoryRouterDataSource<CHEdgeData> memory_data =
                     new MemoryRouterDataSource<CHEdgeData>(tags_index);
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                    data, interpreter, data.TagsIndex);
+                    memory_data, interpreter, memory_data.TagsIndex);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
                 DataProcessorFilterSort sorter = new DataProcessorFilterSort();
@@ -105,14 +104,15 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
                 target_data.Pull();
 
                 // do the pre-processing part.
-                INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);
-                CHPreProcessor pre_processor = new CHPreProcessor(data,
-                    new EdgeDifference(data, witness_calculator), witness_calculator);
+                INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(memory_data);
+                CHPreProcessor pre_processor = new CHPreProcessor(memory_data,
+                    new EdgeDifference(memory_data, witness_calculator), witness_calculator);
                 pre_processor.Start();
 
-                _data = data;
+                data = memory_data;
+                StaticDictionary.Add<IBasicRouterDataSource<CHEdgeData>>(key, data);
             }
-            return _data;
+            return data;
         }
 
         /// <summary>

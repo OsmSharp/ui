@@ -239,7 +239,6 @@ namespace OsmSharp.Routing.CH.Routing
             Dictionary<long, PathSegment<long>> settled_vertices =
                 new Dictionary<long, PathSegment<long>>();
             IPriorityQueue<PathSegment<long>> queue = new BinairyHeap<PathSegment<long>>();
-            //CHPriorityQueue queue = new CHPriorityQueue();
             foreach (long vertex in to_visit_list.GetVertices())
             {
                 PathSegment<long> path = to_visit_list.GetPathTo(vertex);
@@ -248,6 +247,29 @@ namespace OsmSharp.Routing.CH.Routing
                     to = path.First().VertexId;
                 }
                 queue.Enqueue(path, (float)path.Weight);
+
+                // also add the from paths.
+                path = path.From;
+                while (path != null)
+                { // keep adding paths.
+                    Dictionary<long, double> bucket = null;
+                    if (buckets.TryGetValue(to.Value, out bucket))
+                    { // an existing bucket was found!
+                        double existing_weight;
+                        if (!bucket.TryGetValue(path.VertexId, out existing_weight) ||
+                            existing_weight > path.Weight)
+                        { // there already exists a weight 
+                            bucket.Add(path.VertexId, path.Weight);
+                        }
+                    }
+                    else
+                    { // add new bucket.
+                        bucket = new Dictionary<long, double>();
+                        bucket.Add(path.VertexId, path.Weight);
+                        buckets.Add(to.Value, bucket);
+                    }
+                    path = path.From; // get the next one.
+                }
             }
 
             // get the current vertex with the smallest weight.
@@ -334,8 +356,43 @@ namespace OsmSharp.Routing.CH.Routing
                 {
                     from = path.First().VertexId;
                 }
-                //queue.Push(path);
                 queue.Enqueue(path, (float)path.Weight);
+
+                // also add the from paths.
+                path = path.From;
+                while (path != null)
+                { // keep adding paths.
+                    // search the bucket.
+                    Dictionary<long, double> bucket;
+                    if (buckets.TryGetValue(path.VertexId, out bucket))
+                    {
+                        // there is a bucket!
+                        foreach (KeyValuePair<long, double> bucket_entry in bucket)
+                        {
+                            double found_distance = bucket_entry.Value + path.Weight;
+                            double tentative_distance;
+                            if (tentative_results.TryGetValue(bucket_entry.Key, out tentative_distance))
+                            {
+                                if (found_distance < tentative_distance)
+                                {
+                                    tentative_results[bucket_entry.Key] = found_distance;
+                                }
+
+                                //if (tentative_distance < current.Weight)
+                                //{
+                                //    tentative_results.Remove(bucket_entry.Key);
+                                //    results[bucket_entry.Key] = tentative_distance;
+                                //}
+                            }
+                            else
+                            { // there was no result yet!
+                                tentative_results[bucket_entry.Key] = found_distance;
+                            }
+                        }
+                    }
+
+                    path = path.From; // get the next one.
+                }
             }
 
             // get the current vertex with the smallest weight.
@@ -352,28 +409,6 @@ namespace OsmSharp.Routing.CH.Routing
                 if (current != null)
                 { // a next vertex was found!
                     k++;
-
-                    //// remove from the tentative results list.
-                    //if (k > 1)
-                    //{
-                    //    HashSet<long> to_remove_set = new HashSet<long>();
-                    //    foreach (KeyValuePair<long, float> result in tentative_results)
-                    //    {
-                    //        if (result.Value < current.Weight)
-                    //        {
-                    //            to_remove_set.Add(result.Key);
-                    //            if (!results.ContainsKey(result.Key))
-                    //            {
-                    //                results.Add(result.Key, result.Value);
-                    //            }
-                    //        }
-                    //    }
-                    //    foreach (long to_remove in to_remove_set)
-                    //    {
-                    //        tentative_results.Remove(to_remove);
-                    //    }
-                    //    k = 0;
-                    //}
 
                     // stop search if all results found.
                     if (results.Count == tos.Length)
@@ -398,7 +433,7 @@ namespace OsmSharp.Routing.CH.Routing
 
                     // search the bucket.
                     Dictionary<long, double> bucket;
-                    if (buckets.TryGetValue(Convert.ToUInt32(current.VertexId), out bucket))
+                    if (buckets.TryGetValue(current.VertexId, out bucket))
                     {
                         // there is a bucket!
                         foreach (KeyValuePair<long, double> bucket_entry in bucket)
@@ -622,61 +657,7 @@ namespace OsmSharp.Routing.CH.Routing
         {
             // TODO: implement switching of from/to when to < from.
 
-
-            //// add the sources to the forward queue.
-            //Dictionary<long, PathSegment<long>> resolved_settles =
-            //    new Dictionary<long, PathSegment<long>>();
-            //foreach (long source_vertex in source.GetVertices())
-            //{
-            //    PathSegment<long> path = source.GetPathTo(source_vertex);
-            //    queue_forward.Enqueue(path, (float)path.Weight);
-            //    path = path.From;
-            //    while (path != null)
-            //    { // keep looping.
-            //        PathSegment<long> existing_source = null;
-            //        if (!resolved_settles.TryGetValue(path.VertexId, out existing_source) ||
-            //            existing_source.Weight > path.Weight)
-            //        { // the new path is better.
-            //            resolved_settles[path.VertexId] = path;
-            //        }
-            //        path = path.From;
-            //    }
-            //}
-
-            //// add the sources to the settled vertices.
-            //foreach (KeyValuePair<long, PathSegment<long>> resolved_settled
-            //    in resolved_settles)
-            //{
-            //    settled_vertices.AddForward(resolved_settled.Value);
-            //}
-
-            //// add the to(s) vertex to the backward queue.resolved_settles = 
-            //resolved_settles = new Dictionary<long, PathSegment<long>>();
-            //foreach (long target_vertex in target.GetVertices())
-            //{
-            //    PathSegment<long> path = target.GetPathTo(target_vertex);
-            //    queue_backward.Enqueue(path, (float)path.Weight);
-            //    path = path.From;
-            //    while (path != null)
-            //    { // keep looping.
-            //        PathSegment<long> existing_source = null;
-            //        if (!resolved_settles.TryGetValue(path.VertexId, out existing_source) ||
-            //            existing_source.Weight > path.Weight)
-            //        { // the new path is better.
-            //            resolved_settles[path.VertexId] = path;
-            //        }
-            //        path = path.From;
-            //    }
-            //}
-
-            //// add the sources to the settled vertices.
-            //foreach (KeyValuePair<long, PathSegment<long>> resolved_settled
-            //    in resolved_settles)
-            //{
-            //    settled_vertices.AddBackward(resolved_settled.Value);
-            //}
-
-            // keep a list of distances to the given vertices while performance backward search.
+            // keep a list of distances to the given vertices while doing backward search.
             Dictionary<long, Dictionary<long, double>> buckets = new Dictionary<long, Dictionary<long, double>>();
             long[] target_ids = new long[sources.Length];
             for (int idx = 0; idx < sources.Length; idx++)

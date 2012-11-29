@@ -30,6 +30,7 @@ using OsmSharp.Osm.Core;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.UnitTests;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH
 {
@@ -40,22 +41,18 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
     public class CHEdgeDifferenceTests
     {
         /// <summary>
-        /// Holds the data.
-        /// </summary>
-        private MemoryRouterDataSource<CHEdgeData> _data = null;
-
-        /// <summary>
         /// Builds the data source.
         /// </summary>
         /// <returns></returns>
         private MemoryRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
         {
-            if (_data == null)
+            MemoryRouterDataSource<CHEdgeData> data = null;
+            if (data == null)
             {
                 OsmTagsIndex tags_index = new OsmTagsIndex();
 
                 // do the data processing.
-                MemoryRouterDataSource<CHEdgeData> data =
+                data =
                     new MemoryRouterDataSource<CHEdgeData>(tags_index);
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                     data, interpreter, data.TagsIndex);
@@ -65,10 +62,8 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
                 sorter.RegisterSource(data_processor_source);
                 target_data.RegisterSource(sorter);
                 target_data.Pull();
-
-                _data = data;
             }
-            return _data;
+            return data;
         }
 
         /// <summary>
