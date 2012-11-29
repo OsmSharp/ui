@@ -27,10 +27,38 @@ namespace OsmSharp.Routing.Core
     /// </summary>
     public enum VehicleEnum
     {
-        Car,
-        Bus,
+        /// <summary>
+        /// A pedestrian.
+        /// </summary>
         Pedestrian,
-        Bike
+        /// <summary>
+        /// A bicycle.
+        /// </summary>
+        Bicycle,
+        /// <summary>
+        /// A moped, small motorbike.
+        /// </summary>
+        Moped,
+        /// <summary>
+        /// A motorcycle, a large motorbike for high speeds.
+        /// </summary>
+        MotorCycle,
+        /// <summary>
+        /// A car.
+        /// </summary>
+        Car,
+        /// <summary>
+        /// A small truck.
+        /// </summary>
+        SmallTruck,
+        /// <summary>
+        /// A big truck.
+        /// </summary>
+        BigTruck,
+        /// <summary>
+        /// A bus.
+        /// </summary>
+        Bus
     }
 
     /// <summary>
@@ -47,7 +75,7 @@ namespace OsmSharp.Routing.Core
         {
             switch (vehicle)
             {
-                case VehicleEnum.Bike:
+                case VehicleEnum.Bicycle:
                 case VehicleEnum.Pedestrian:
                     return false;
             }

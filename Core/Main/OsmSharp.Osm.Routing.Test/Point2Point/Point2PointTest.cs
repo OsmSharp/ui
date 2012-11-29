@@ -274,9 +274,9 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                 IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
                 IRouter<RouterPoint> router = this.BuildRouter(data, interpreter, basic_router);
 
-                OsmSharpRoute route = router.Calculate(VehicleEnum.Car, 
+                OsmSharpRoute route = router.Calculate(VehicleEnum.Car,
                     router.Resolve(VehicleEnum.Car, from), router.Resolve(VehicleEnum.Car, to));
-                OsmSharpRoute route_reference = reference_router.Calculate(VehicleEnum.Car, 
+                OsmSharpRoute route_reference = reference_router.Calculate(VehicleEnum.Car,
                     reference_router.Resolve(VehicleEnum.Car, from), reference_router.Resolve(VehicleEnum.Car, to));
             }
         }
