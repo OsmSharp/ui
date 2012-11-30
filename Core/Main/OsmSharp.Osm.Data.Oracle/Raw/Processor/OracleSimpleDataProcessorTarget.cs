@@ -233,8 +233,8 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
 
                     DataRow tag_row = _node_tags_table.NewRow();
                     tag_row["node_id"] = id;
-                    tag_row["key"] = key.Truncate(510);
-                    tag_row["value"] = value.Truncate(510);
+                    tag_row["key"] = key.Truncate(255);
+                    tag_row["value"] = value.Truncate(255);
 
                     _node_tags_table.Rows.Add(tag_row);
                 }
@@ -297,8 +297,8 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
                     {
                         DataRow tag_row = _way_tags_table.NewRow();
                         tag_row["way_id"] = id;
-                        tag_row["key"] = key.Truncate(510);
-                        tag_row["value"] = value.Truncate(510);
+                        tag_row["key"] = key.Truncate(255);
+                        tag_row["value"] = value.Truncate(255);
 
                         _way_tags_table.Rows.Add(tag_row);
                     }
@@ -375,8 +375,8 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
 
                     DataRow tag_row = _relation_tags_table.NewRow();
                     tag_row["relation_id"] = id;
-                    tag_row["key"] = key.Truncate(510);
-                    tag_row["value"] = value.Truncate(510);
+                    tag_row["key"] = key.Truncate(255);
+                    tag_row["value"] = value.Truncate(255);
 
                     _relation_tags_table.Rows.Add(tag_row);
                 }
