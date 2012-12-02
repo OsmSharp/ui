@@ -28,7 +28,7 @@ namespace OsmSharp.UnitTests.Routing
         /// Tests adding a vertex.
         /// </summary>
         [TestMethod]
-        public void DoTestSimpleWeighedDynamicGraphVertex()
+        public void TestSimpleWeighedDynamicGraphVertex()
         {
             SimpleWeighedDynamicGraph graph = new SimpleWeighedDynamicGraph();
             uint vertex = graph.AddVertex(51, 4);
@@ -47,7 +47,7 @@ namespace OsmSharp.UnitTests.Routing
         /// Tests adding 10000 vertices.
         /// </summary>
         [TestMethod]
-        public void DoTestSimpleWeighedDynamicGraphVertex10000()
+        public void TestSimpleWeighedDynamicGraphVertex10000()
         {
             SimpleWeighedDynamicGraph graph = new SimpleWeighedDynamicGraph();
             int count = 10000;
@@ -67,14 +67,14 @@ namespace OsmSharp.UnitTests.Routing
                 count--;
             }
 
-            Assert.AreEqual(10000, graph.VertexCount);
+            Assert.AreEqual((uint)10000, graph.VertexCount);
         }
 
         /// <summary>
         /// Tests adding an edge.
         /// </summary>
         [TestMethod]
-        public void DoTestSimpleWeighedDynamicGraphEdge()
+        public void TestSimpleWeighedDynamicGraphEdge()
         {
             SimpleWeighedDynamicGraph graph = new SimpleWeighedDynamicGraph();
             uint vertex1 = graph.AddVertex(51, 1);
@@ -102,7 +102,7 @@ namespace OsmSharp.UnitTests.Routing
         /// Tests adding 10000 edges.
         /// </summary>
         [TestMethod]
-        public void DoTestSimpleWeighedDynamicGraphEdge10000()
+        public void TestSimpleWeighedDynamicGraphEdge10000()
         {
             int count = 10000;
             SimpleWeighedDynamicGraph graph = new SimpleWeighedDynamicGraph();
