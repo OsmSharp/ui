@@ -1,0 +1,153 @@
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+using System;
+using System.Text;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using OsmSharp.Tools.Xml;
+using OsmSharp.Tools.Xml.Sources;
+using System.IO;
+using OsmSharp.Tools.Xml.Kml;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm.Data.Raw.XML.KmlSource;
+
+namespace OsmSharp.Osm.Test
+{
+    /// <summary>
+    /// Summary description for KmlDataSourceTest
+    /// </summary>
+    [TestClass]
+    public class KmlDataSourceTest
+    {
+        public KmlDataSourceTest()
+        {
+            //
+            // TODO: Add constructor logic here
+            //
+        }
+
+        private TestContext testContextInstance;
+
+        /// <summary>
+        ///Gets or sets the test context which provides
+        ///information about and functionality for the current test run.
+        ///</summary>
+        public TestContext TestContext
+        {
+            get
+            {
+                return testContextInstance;
+            }
+            set
+            {
+                testContextInstance = value;
+            }
+        }
+
+        #region Additional test attributes
+
+        [ClassInitialize()]
+        public static void MyClassInitialize(TestContext testContext)
+        {
+            OsmGeo.ShapeInterperter = new TestShapeInterpreter();
+        }
+
+        //
+        // Use ClassCleanup to run code after all tests in a class have run
+        // [ClassCleanup()]
+        // public static void MyClassCleanup() { }
+        //
+        // Use TestInitialize to run code before running each test 
+        // [TestInitialize()]
+        // public void MyTestInitialize() { }
+        //
+        // Use TestCleanup to run code after each test has run
+        // [TestCleanup()]
+        // public void MyTestCleanup() { }
+        //
+        #endregion
+
+        [TestMethod]
+        public void Kmlv2_1ReadDataSource()
+        {
+            IXmlSource xml_source = new XmlFileSource(new FileInfo("test.v2.1.kml"));
+            KmlDataSource kml_source = new KmlDataSource(new KmlDocument(xml_source));
+
+            // check the bounding box.
+            GeoCoordinateBox box = kml_source.BoundingBox;
+            Assert.AreEqual(51.0206223f, box.MaxLat);
+            Assert.AreEqual(6.116185f, box.MaxLon);
+            Assert.AreEqual(50.34355f, box.MinLat);
+            Assert.AreEqual(3.94341f, box.MinLon);
+
+            // check the object counts!
+            IList<OsmBase> nodes = kml_source.Get(Filter.Type(OsmType.Node));
+            Assert.AreEqual(832, nodes.Count);
+            IList<OsmBase> ways = kml_source.Get(Filter.Type(OsmType.Way));
+            Assert.AreEqual(23, ways.Count);
+            IList<OsmBase> relations = kml_source.Get(Filter.Type(OsmType.Relation));
+            Assert.AreEqual(5, relations.Count);
+        }
+
+        [TestMethod]
+        public void Kmlv2_0ResponseReadDataSource()
+        {
+            IXmlSource xml_source = new XmlFileSource(new FileInfo("test.v2.0.response.kml"));
+            KmlDataSource kml_source = new KmlDataSource(new KmlDocument(xml_source));
+
+            // check the bounding box.
+            GeoCoordinateBox box = kml_source.BoundingBox;
+            Assert.AreEqual(51.08422f, box.MaxLat);
+            Assert.AreEqual(3.76681614f, box.MaxLon);
+            Assert.AreEqual(50.92977f, box.MinLat);
+            Assert.AreEqual(3.443305f, box.MinLon);
+
+            // check the object counts!
+            IList<OsmBase> nodes = kml_source.Get(Filter.Type(OsmType.Node));
+            Assert.AreEqual(7, nodes.Count);
+            IList<OsmBase> ways = kml_source.Get(Filter.Type(OsmType.Way));
+            Assert.AreEqual(0, ways.Count);
+            IList<OsmBase> relations = kml_source.Get(Filter.Type(OsmType.Relation));
+            Assert.AreEqual(8, relations.Count);
+        }
+
+        [TestMethod]
+        public void Kmlv2_0ReadDataSource()
+        {
+            IXmlSource xml_source = new XmlFileSource(new FileInfo("test.v2.0.kml"));
+            KmlDataSource kml_source = new KmlDataSource(new KmlDocument(xml_source));
+
+            // check the bounding box.
+            GeoCoordinateBox box = kml_source.BoundingBox;
+            Assert.AreEqual(40.7141724f, box.MaxLat);
+            Assert.AreEqual(-74.00639f, box.MaxLon);
+            Assert.AreEqual(40.7141724f, box.MinLat);
+            Assert.AreEqual(-74.00639f, box.MinLon);
+
+            IList<OsmBase> nodes = kml_source.Get(Filter.Type(OsmType.Node));
+            Assert.AreEqual(1, nodes.Count);
+            IList<OsmBase> ways = kml_source.Get(Filter.Type(OsmType.Way));
+            Assert.AreEqual(0, ways.Count);
+            IList<OsmBase> relations = kml_source.Get(Filter.Type(OsmType.Relation));
+            Assert.AreEqual(1, relations.Count);
+        }
+    }
+}

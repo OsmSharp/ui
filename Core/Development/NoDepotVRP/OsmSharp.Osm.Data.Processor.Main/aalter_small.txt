@@ -1,0 +1,4 @@
+lat_max	=	51.0952
+lat_min	=	51.0789
+lon_max	=	3.462
+lon_min	=	3.4316
