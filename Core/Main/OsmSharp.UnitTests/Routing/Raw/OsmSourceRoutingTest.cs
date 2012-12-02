@@ -30,6 +30,7 @@ using OsmSharp.Osm.Routing.Interpreter;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 
 namespace OsmSharp.Osm.UnitTests.Routing.Raw
 {
@@ -37,17 +38,17 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
     /// Does some tests on an OsmSource routing implementation.
     /// </summary>
     [TestClass]
-    public class OsmSourceRoutingTests : SimpleRoutingTests<RouterPoint, OsmEdgeData>
+    public class OsmSourceRoutingTests : SimpleRoutingTests<RouterPoint, SimpleWeighedEdge>
     {
         /// <summary>
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<OsmEdgeData> data, 
-            IRoutingInterpreter interpreter, IBasicRouter<OsmEdgeData> basic_router)
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<SimpleWeighedEdge> data, 
+            IRoutingInterpreter interpreter, IBasicRouter<SimpleWeighedEdge> basic_router)
         {
             // initialize the router.
-            return new Router<OsmEdgeData>(
+            return new Router<SimpleWeighedEdge>(
                     data, interpreter, basic_router);
         }
 
@@ -56,9 +57,9 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IBasicRouter<OsmEdgeData> BuildBasicRouter(IBasicRouterDataSource<OsmEdgeData> data)
+        public override IBasicRouter<SimpleWeighedEdge> BuildBasicRouter(IBasicRouterDataSource<SimpleWeighedEdge> data)
         {
-            return new DykstraRoutingBinairyHeap<OsmEdgeData>(data.TagsIndex);
+            return new DykstraRoutingBinairyHeap<SimpleWeighedEdge>(data.TagsIndex);
         }
 
         /// <summary>
@@ -66,7 +67,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// </summary>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<OsmEdgeData> BuildData(IRoutingInterpreter interpreter)
+        public override IBasicRouterDataSource<SimpleWeighedEdge> BuildData(IRoutingInterpreter interpreter)
         {
             OsmTagsIndex tags_index = new OsmTagsIndex();
             

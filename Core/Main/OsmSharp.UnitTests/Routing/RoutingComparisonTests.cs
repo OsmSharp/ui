@@ -30,6 +30,7 @@ using OsmSharp.Routing.Core.Router;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 
 namespace OsmSharp.Osm.UnitTests.Routing
 {
@@ -48,15 +49,15 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// Builds a raw data source.
         /// </summary>
         /// <returns></returns>
-        public MemoryRouterDataSource<OsmSharp.Osm.Routing.Data.OsmEdgeData> BuildRawDataSource(
+        public MemoryRouterDataSource<SimpleWeighedEdge> BuildRawDataSource(
             IRoutingInterpreter interpreter, string embedded_name)
         {
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<OsmEdgeData> data =
-                new MemoryRouterDataSource<OsmEdgeData>(tags_index);
-            OsmEdgeDataGraphProcessingTarget target_data = new OsmEdgeDataGraphProcessingTarget(
+            MemoryRouterDataSource<SimpleWeighedEdge> data =
+                new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+            SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
                 data, interpreter, data.TagsIndex);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(
@@ -73,11 +74,11 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// Builds a raw router to compare against.
         /// </summary>
         /// <returns></returns>
-        public IRouter<RouterPoint> BuildRawRouter(IBasicRouterDataSource<OsmEdgeData> data, 
-            IRoutingInterpreter interpreter, IBasicRouter<OsmEdgeData> basic_router)
+        public IRouter<RouterPoint> BuildRawRouter(IBasicRouterDataSource<SimpleWeighedEdge> data, 
+            IRoutingInterpreter interpreter, IBasicRouter<SimpleWeighedEdge> basic_router)
         {
             // initialize the router.
-            return new Router<OsmEdgeData>(
+            return new Router<SimpleWeighedEdge>(
                     data, interpreter, basic_router);
         }
 
@@ -90,11 +91,11 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IRoutingInterpreter interpreter = new OsmSharp.Osm.Routing.Interpreter.OsmRoutingInterpreter();
 
             // get the osm data source.
-            IBasicRouterDataSource<OsmEdgeData> data = this.BuildRawDataSource(interpreter, embedded_name);
+            IBasicRouterDataSource<SimpleWeighedEdge> data = this.BuildRawDataSource(interpreter, embedded_name);
 
             // build the reference router.;
             IRouter<RouterPoint> reference_router = this.BuildRawRouter(
-                this.BuildRawDataSource(interpreter, embedded_name), interpreter, new DykstraRoutingBinairyHeap<OsmEdgeData>(data.TagsIndex));
+                this.BuildRawDataSource(interpreter, embedded_name), interpreter, new DykstraRoutingBinairyHeap<SimpleWeighedEdge>(data.TagsIndex));
 
             // build the router to be tested.
             IRouter<RouterPoint> router = this.BuildRouter(interpreter, embedded_name);

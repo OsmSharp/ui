@@ -102,11 +102,11 @@ namespace OsmSharp.UnitTests.Tools
                 Assert.AreEqual(elements.Count + 1, heap.PeekWeight());
 
                 // dequeue.
-                elements.Add(new KeyValuePair<string, float>(heap.DeQueue(), elements.Count + 1));
+                elements.Add(new KeyValuePair<string, float>(heap.Dequeue(), elements.Count + 1));
             }
 
             // try to dequeue again.
-            Assert.AreEqual(null, heap.DeQueue());
+            Assert.AreEqual(null, heap.Dequeue());
 
             // clear the elements list and try again!
             elements.Clear();
@@ -146,11 +146,11 @@ namespace OsmSharp.UnitTests.Tools
                 Assert.AreEqual(elements.Count + 1, heap.PeekWeight());
 
                 // dequeue.
-                elements.Add(new KeyValuePair<string, float>(heap.DeQueue(), elements.Count + 1));
+                elements.Add(new KeyValuePair<string, float>(heap.Dequeue(), elements.Count + 1));
             }
 
             // try to dequeue again.
-            Assert.AreEqual(null, heap.DeQueue());
+            Assert.AreEqual(null, heap.Dequeue());
         }
     }
 }

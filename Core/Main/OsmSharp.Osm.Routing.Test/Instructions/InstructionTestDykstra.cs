@@ -16,20 +16,21 @@ using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 
 namespace OsmSharp.Osm.Routing.Test.Instructions
 {
-    class Point2PointDykstraBinairyHeapTests : InstructionTests<OsmEdgeData>
+    class Point2PointDykstraBinairyHeapTests : InstructionTests<SimpleWeighedEdge>
     {
-        public override IBasicRouterDataSource<OsmEdgeData> BuildData(Stream data_stream, bool pbf,
+        public override IBasicRouterDataSource<SimpleWeighedEdge> BuildData(Stream data_stream, bool pbf,
             IRoutingInterpreter interpreter, GeoCoordinateBox box)
         {
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<OsmEdgeData> osm_data =
-                new MemoryRouterDataSource<OsmEdgeData>(tags_index);
-            OsmEdgeDataGraphProcessingTarget target_data = new OsmEdgeDataGraphProcessingTarget(
+            MemoryRouterDataSource<SimpleWeighedEdge> osm_data =
+                new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+            SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, box);
             DataProcessorSource data_processor_source;
             if (pbf)
@@ -52,15 +53,15 @@ namespace OsmSharp.Osm.Routing.Test.Instructions
             return osm_data;
         }
 
-        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<OsmEdgeData> data,
-            IRoutingInterpreter interpreter, IBasicRouter<OsmEdgeData> router_basic)
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<SimpleWeighedEdge> data,
+            IRoutingInterpreter interpreter, IBasicRouter<SimpleWeighedEdge> router_basic)
         {
-            return new Router<OsmEdgeData>(data, interpreter, router_basic);
+            return new Router<SimpleWeighedEdge>(data, interpreter, router_basic);
         }
 
-        public override IBasicRouter<OsmEdgeData> BuildBasicRouter(IBasicRouterDataSource<OsmEdgeData> data)
+        public override IBasicRouter<SimpleWeighedEdge> BuildBasicRouter(IBasicRouterDataSource<SimpleWeighedEdge> data)
         {
-            return new DykstraRoutingBinairyHeap<OsmEdgeData>(data.TagsIndex);
+            return new DykstraRoutingBinairyHeap<SimpleWeighedEdge>(data.TagsIndex);
         }
     }
 }

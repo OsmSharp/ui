@@ -58,6 +58,6 @@ namespace OsmSharp.Tools.Core.Collections.PriorityQueues
         /// Returns the object with the smallest weight and removes it.
         /// </summary>
         /// <returns></returns>
-        T DeQueue();
+        T Dequeue();
     }
 }

@@ -8,10 +8,11 @@ using OsmSharp.Routing.Core.Interpreter.Roads;
 using OsmSharp.Routing.Core.Graph;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 
 namespace OsmSharp.Osm.Routing.Data.Processing
 {
-    public class OsmEdgeDataGraphProcessingTarget : DynamicGraphDataProcessorTarget<OsmEdgeData>
+    public class SimpleWeighedDataGraphProcessingTarget : DynamicGraphDataProcessorTarget<SimpleWeighedEdge>
     {
         /// <summary>
         /// Creates a new osm edge data processing target.
@@ -20,7 +21,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
         /// <param name="id_transformations"></param>
-        public OsmEdgeDataGraphProcessingTarget(IDynamicGraph<OsmEdgeData> dynamic_graph,
+        public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index)
             : this(dynamic_graph, interpreter, tags_index, new Dictionary<long, uint>())
         {
@@ -34,7 +35,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
         /// <param name="id_transformations"></param>
-        public OsmEdgeDataGraphProcessingTarget(IDynamicGraph<OsmEdgeData> dynamic_graph,
+        public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, IDictionary<long, uint> id_transformations)
             : this(dynamic_graph, interpreter, tags_index, id_transformations, null)
         {
@@ -48,7 +49,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
         /// <param name="id_transformations"></param>
-        public OsmEdgeDataGraphProcessingTarget(IDynamicGraph<OsmEdgeData> dynamic_graph,
+        public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, GeoCoordinateBox box)
             : this(dynamic_graph, interpreter, tags_index, new Dictionary<long, uint>(), box)
         {
@@ -62,7 +63,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
         /// <param name="id_transformations"></param>
-        public OsmEdgeDataGraphProcessingTarget(IDynamicGraph<OsmEdgeData> dynamic_graph,
+        public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, IDictionary<long, uint> id_transformations, GeoCoordinateBox box)
             : base(dynamic_graph, interpreter, tags_index, id_transformations, box)
         {
@@ -77,7 +78,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        protected override OsmEdgeData CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, IDictionary<string, string> tags, 
+        protected override SimpleWeighedEdge CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, IDictionary<string, string> tags, 
             bool direction_forward, GeoCoordinate from, GeoCoordinate to)
         {
             double weight = edge_interpreter.Weight(
@@ -99,7 +100,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
             }
 
             // initialize the edge data.
-            return new OsmEdgeData((float)weight, forward, backward, tags_index.Add(
+            return new SimpleWeighedEdge((float)weight, forward, backward, tags_index.Add(
                 tags));
         }
     }

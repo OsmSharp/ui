@@ -22,7 +22,7 @@ namespace OsmSharp.Routing.Core.Graph.Memory
         /// <summary>
         /// Holds the basic graph.
         /// </summary>
-        private MemoryDynamicGraph<EdgeData> _graph;
+        private IDynamicGraph<EdgeData> _graph;
 
         /// <summary>
         /// Holds the index of vertices per bounding box.
@@ -40,6 +40,17 @@ namespace OsmSharp.Routing.Core.Graph.Memory
         public MemoryRouterDataSource(ITagsIndex tags_index)
         {
             _graph = new MemoryDynamicGraph<EdgeData>();
+            _vertex_index = new LocatedObjectIndexList<GeoCoordinate, uint>();
+
+            _tags_index = tags_index;
+        }
+
+        /// <summary>
+        /// Creates a new osm memory router data source.
+        /// </summary>
+        public MemoryRouterDataSource(IDynamicGraph<EdgeData> graph, ITagsIndex tags_index)
+        {
+            _graph = graph;
             _vertex_index = new LocatedObjectIndexList<GeoCoordinate, uint>();
 
             _tags_index = tags_index;

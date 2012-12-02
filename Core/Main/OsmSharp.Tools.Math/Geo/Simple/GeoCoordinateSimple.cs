@@ -27,19 +27,8 @@ namespace OsmSharp.Tools.Math.Geo.Simple
     /// </summary>
     public struct GeoCoordinateSimple
     {
-        ///// <summary>
-        ///// Holds the coordinates.
-        ///// </summary>
-        //private uint x, y;
+        public float Latitude { get; set; }
 
-        //public GeoCoordinateSimple(double latitude, double longitude)
-        //{
-
-        //}
-
-        //public GeoCoordinate ConvertTo()
-        //{
-
-        //}
+        public float Longitude { get; set; }
     }
 }

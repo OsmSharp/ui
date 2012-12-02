@@ -56,12 +56,12 @@ namespace OsmSharp.Osm.Routing.Test
             //    new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\log.txt"));
 
             //PBF.PBFTest.Execute();
-            //ManyToMany.ManyToManyExecution.Execute();
+            ManyToMany.ManyToManyExecution.Execute();
             //Point2Point.Point2PointExecution.Execute();
             //CHTest.Execute();
             //Tsp.TspTest.Execute();
             //CHVerifiedContractionBaseTests.Execute();
-            Instructions.InstructionTestExecution.Execute();
+            //Instructions.InstructionTestExecution.Execute();
 
             //// initialize the interpreters.
             //OsmRoutingInterpreter interpreter = 
@@ -70,9 +70,9 @@ namespace OsmSharp.Osm.Routing.Test
             //OsmTagsIndex tags_index = new OsmTagsIndex();
 
             //// do the data processing.
-            //MemoryRouterDataSource<OsmEdgeData> data =
-            //    new MemoryRouterDataSource<OsmEdgeData>(tags_index);
-            //OsmEdgeDataGraphProcessingTarget target_data = new OsmEdgeDataGraphProcessingTarget(
+            //MemoryRouterDataSource<SimpleWeighedEdge> data =
+            //    new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+            //SimpleWeighedEdgeGraphProcessingTarget target_data = new SimpleWeighedEdgeGraphProcessingTarget(
             //    data, interpreter, data.TagsIndex);
             //PBFDataProcessorSource data_processor_source = new PBFDataProcessorSource((new FileInfo(
             //    @"c:\OSM\bin\belgium.osm.pbf")).OpenRead());
@@ -85,8 +85,8 @@ namespace OsmSharp.Osm.Routing.Test
             //target_data.Pull();
 
             //// initialize the router.
-            //Router<Osm.Routing.Data.OsmEdgeData> router = 
-            //    new Router<OsmEdgeData>(
+            //Router<Osm.Routing.Data.SimpleWeighedEdge> router = 
+            //    new Router<SimpleWeighedEdge>(
             //        data, interpreter);
 
             //// 51.263634,4.785819: wechel centrum

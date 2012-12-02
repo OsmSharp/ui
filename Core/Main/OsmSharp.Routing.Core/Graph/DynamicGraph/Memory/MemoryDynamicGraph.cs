@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
 {
@@ -37,6 +38,11 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         /// Holds all graph data.
         /// </summary>
         private Vertex[] _vertices;
+
+        /// <summary>
+        /// Holds the coordinates of the vertices.
+        /// </summary>
+        private GeoCoordinateSimple[] _coordinates;
         
         /// <summary>
         /// Creates a new in-memory graph.
@@ -45,6 +51,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         {
             _next_id = 1;
             _vertices = new Vertex[1000];
+            _coordinates = new GeoCoordinateSimple[1000];
         }
 
         /// <summary>
@@ -52,6 +59,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         /// </summary>
         private void IncreaseSize()
         {
+            Array.Resize<GeoCoordinateSimple>(ref _coordinates, _coordinates.Length + 1000);
             Array.Resize<Vertex>(ref _vertices, _vertices.Length + 1000);
         }
 
@@ -72,8 +80,11 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
             // create vertex.
             uint new_id = _next_id;
             _vertices[new_id].Arcs = null;
-            _vertices[new_id].Latitude = latitude;
-            _vertices[new_id].Longitude = longitude;
+            _coordinates[new_id] = new GeoCoordinateSimple()
+            {
+                Latitude = latitude,
+                Longitude = longitude
+            };
             _next_id++; // increase for next vertex.
             return new_id; 
         }
@@ -89,8 +100,8 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         {
             if (_vertices.Length > id)
             {
-                latitude = _vertices[id].Latitude;
-                longitude = _vertices[id].Longitude;
+                latitude = _coordinates[id].Latitude;
+                longitude = _coordinates[id].Longitude;
                 return true;
             }
             latitude = float.MaxValue;
@@ -240,12 +251,12 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
             /// <summary>
             /// Holds the latitude.
             /// </summary>
-            public float Latitude { get; set; }
+            //public float Latitude { get; set; }
 
             /// <summary>
             /// Holds longitude.
             /// </summary>
-            public float Longitude { get; set; }
+            //public float Longitude { get; set; }
 
             /// <summary>
             /// Holds an array of edges starting at this vertex.

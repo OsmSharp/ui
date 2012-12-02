@@ -23,17 +23,17 @@
 //    /// Does some raw routing tests.
 //    /// </summary>
 //    [TestClass]
-//    public class RawRoutingAccessTests : RoutingAccessTests<RouterPoint, OsmEdgeData>
+//    public class RawRoutingAccessTests : RoutingAccessTests<RouterPoint, SimpleWeighedEdge>
 //    {
 //        /// <summary>
 //        /// Builds a router.
 //        /// </summary>
 //        /// <returns></returns>
-//        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<OsmEdgeData> data, IRoutingInterpreter interpreter,
-//            IBasicRouter<OsmEdgeData> basic_router)
+//        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<SimpleWeighedEdge> data, IRoutingInterpreter interpreter,
+//            IBasicRouter<SimpleWeighedEdge> basic_router)
 //        {
 //            // initialize the router.
-//            return new Router<OsmEdgeData>(
+//            return new Router<SimpleWeighedEdge>(
 //                    data, interpreter, basic_router);
 //        }
 
@@ -42,9 +42,9 @@
 //        /// </summary>
 //        /// <param name="data"></param>
 //        /// <returns></returns>
-//        public override IBasicRouter<OsmEdgeData> BuildBasicRouter(IBasicRouterDataSource<OsmEdgeData> data)
+//        public override IBasicRouter<SimpleWeighedEdge> BuildBasicRouter(IBasicRouterDataSource<SimpleWeighedEdge> data)
 //        {
-//            return new DykstraRoutingBinairyHeap<OsmEdgeData>(data.TagsIndex);
+//            return new DykstraRoutingBinairyHeap<SimpleWeighedEdge>(data.TagsIndex);
 //        }
 
 //        /// <summary>
@@ -52,14 +52,14 @@
 //        /// </summary>
 //        /// <param name="interpreter"></param>
 //        /// <returns></returns>
-//        public override IBasicRouterDataSource<OsmEdgeData> BuildData(IRoutingInterpreter interpreter)
+//        public override IBasicRouterDataSource<SimpleWeighedEdge> BuildData(IRoutingInterpreter interpreter)
 //        {
 //            OsmTagsIndex tags_index = new OsmTagsIndex();
 
 //            // do the data processing.
-//            MemoryRouterDataSource<OsmEdgeData> data =
-//                new MemoryRouterDataSource<OsmEdgeData>(tags_index);
-//            OsmEdgeDataGraphProcessingTarget target_data = new OsmEdgeDataGraphProcessingTarget(
+//            MemoryRouterDataSource<SimpleWeighedEdge> data =
+//                new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+//            SimpleWeighedEdgeGraphProcessingTarget target_data = new SimpleWeighedEdgeGraphProcessingTarget(
 //                data, interpreter, data.TagsIndex);
 //            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
 //                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_segments.osm"));

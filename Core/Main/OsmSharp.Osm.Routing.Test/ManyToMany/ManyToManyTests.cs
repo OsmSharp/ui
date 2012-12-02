@@ -67,8 +67,8 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
                 new TimeSpan(ticks_after_router - ticks_start).ToString());
             OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Read CSV: {0}",
                 new TimeSpan(ticks_after_reading - ticks_after_router).ToString());
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Resolve Points: {0}",
-                new TimeSpan(ticks_after_resolving - ticks_after_reading).ToString());
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Resolve Points: {0}:{1}",
+                new TimeSpan(ticks_after_resolving - ticks_after_reading).ToString(), resolved);
             OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Check Connectivity: {0}",
                 new TimeSpan(ticks_after_connectivity - ticks_after_resolving).ToString());
             OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Calculate ManyToMany: {0}",

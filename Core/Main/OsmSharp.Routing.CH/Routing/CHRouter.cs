@@ -276,10 +276,10 @@ namespace OsmSharp.Routing.CH.Routing
             while (queue.Count > 0) // TODO: work on a stopping condition?
             {
                 //PathSegment<long> current = queue.Pop();
-                PathSegment<long> current = queue.DeQueue();
+                PathSegment<long> current = queue.Dequeue();
                 while (current != null && settled_vertices.ContainsKey(current.VertexId))
                 {
-                    current = queue.DeQueue();
+                    current = queue.Dequeue();
                 }
 
                 if (current != null)
@@ -400,10 +400,10 @@ namespace OsmSharp.Routing.CH.Routing
             while (queue.Count > 0) // TODO: work on a stopping condition?
             {
                 //PathSegment<long> current = queue.Pop();
-                PathSegment<long> current = queue.DeQueue();
+                PathSegment<long> current = queue.Dequeue();
                 while (current != null && settled_vertices.ContainsKey(current.VertexId))
                 {
-                    current = queue.DeQueue();
+                    current = queue.Dequeue();
                 }
 
                 if (current != null)
@@ -1034,11 +1034,11 @@ namespace OsmSharp.Routing.CH.Routing
         //                           long exception)
         {
             // get the current vertex with the smallest weight.
-            PathSegment<long> current = queue.DeQueue();
+            PathSegment<long> current = queue.Dequeue();
             while (current != null && settled_queue.Forward.ContainsKey(
                 current.VertexId))
             { // keep trying.
-                current = queue.DeQueue();
+                current = queue.Dequeue();
             }
 
             if (current != null)
@@ -1108,11 +1108,11 @@ namespace OsmSharp.Routing.CH.Routing
         {
             // get the current vertex with the smallest weight.
             //PathSegment<long> current = queue.Pop();
-            PathSegment<long> current = queue.DeQueue();
+            PathSegment<long> current = queue.Dequeue();
             while (current != null && settled_queue.Backward.ContainsKey(
                 current.VertexId))
             { // keep trying.
-                current = queue.DeQueue();
+                current = queue.Dequeue();
             }
 
             if (current != null)
