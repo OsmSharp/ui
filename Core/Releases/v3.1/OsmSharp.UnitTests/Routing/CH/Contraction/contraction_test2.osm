@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<osm generator="Merkaartor 0.17" version="0.6">
+  <node version="0" lon="4.7659960" lat="51.2577806" timestamp="2012-11-20T11:38:32Z" user="" id="-1" actor="0" dirtylevel="1"/>
+  <way version="0" timestamp="2012-11-20T11:38:32Z" user="" id="-2" actor="0" dirtylevel="10">
+    <nd ref="-1"/>
+    <nd ref="-3"/>
+    <nd ref="-5"/>
+    <tag k="highway" v="residential"/>
+    <tag k="oneway" v="yes"/>
+  </way>
+  <node version="0" lon="4.7988408" lat="51.2577806" timestamp="2012-11-20T11:38:32Z" user="" id="-3" actor="0" dirtylevel="1"/>
+  <node version="0" lon="4.8315363" lat="51.2578740" timestamp="2012-11-20T11:38:34Z" user="" id="-5" actor="0" dirtylevel="1"/>
+  <bound box="51.257781,4.765996,51.257874,4.831536" origin="http://www.openstreetmap.org/api/0.6"/>
+</osm>
