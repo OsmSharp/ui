@@ -273,11 +273,14 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                         { // a path is found.
                             // get the existing path if any.
                             PathSegment<long> existing = segments_to_target[idx];
-                            if (existing == null ||
-                                existing.Weight > target_path.Weight + path_from_source.Weight)
-                            { // a new path is found with a lower weight or a path did not exist yet!
+                            if (existing == null)
+                            { // a path did not exist yet!
                                 segments_to_target[idx] = target_path.Reverse().ConcatenateAfter(path_from_source);
                                 found_targets++;
+                            }
+                            else if(existing.Weight > target_path.Weight + path_from_source.Weight)
+                            { // a new path is found with a lower weight.
+                                segments_to_target[idx] = target_path.Reverse().ConcatenateAfter(path_from_source);
                             }
                         }
                         target_path = target_path.From;
