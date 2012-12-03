@@ -46,7 +46,7 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             target_data.Pull();
 
             return new Router<SimpleWeighedEdge>(osm_data, interpreter, 
-                new DykstraRoutingBinairyHeap<SimpleWeighedEdge>(osm_data.TagsIndex));
+                new DykstraRouting<SimpleWeighedEdge>(osm_data.TagsIndex));
         }
     }
 }

@@ -61,7 +61,7 @@ namespace OsmSharp.Osm.Routing.Test.Instructions
 
         public override IBasicRouter<SimpleWeighedEdge> BuildBasicRouter(IBasicRouterDataSource<SimpleWeighedEdge> data)
         {
-            return new DykstraRoutingBinairyHeap<SimpleWeighedEdge>(data.TagsIndex);
+            return new DykstraRouting<SimpleWeighedEdge>(data.TagsIndex);
         }
     }
 }

@@ -69,7 +69,7 @@ namespace OsmSharp.Osm.Routing.Test.Tsp
             target_data.Pull();
 
             IRouter<RouterPoint> router = new Router<SimpleWeighedEdge>(osm_data, interpreter,
-                new DykstraRoutingBinairyHeap<SimpleWeighedEdge>(osm_data.TagsIndex));
+                new DykstraRouting<SimpleWeighedEdge>(osm_data.TagsIndex));
 
             // read the source files.
             int latitude_idx = 2;

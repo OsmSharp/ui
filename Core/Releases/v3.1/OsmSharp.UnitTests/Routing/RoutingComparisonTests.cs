@@ -95,7 +95,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
 
             // build the reference router.;
             IRouter<RouterPoint> reference_router = this.BuildRawRouter(
-                this.BuildRawDataSource(interpreter, embedded_name), interpreter, new DykstraRoutingBinairyHeap<SimpleWeighedEdge>(data.TagsIndex));
+                this.BuildRawDataSource(interpreter, embedded_name), interpreter, new DykstraRouting<SimpleWeighedEdge>(data.TagsIndex));
 
             // build the router to be tested.
             IRouter<RouterPoint> router = this.BuildRouter(interpreter, embedded_name);

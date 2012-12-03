@@ -43,7 +43,7 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <param name="to"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        PathSegment<long> Calculate(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        PathSegment<long> Calculate(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, PathSegmentVisitList target, double max);
 
 
@@ -56,7 +56,7 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <param name="to"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        double CalculateWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        double CalculateWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, PathSegmentVisitList target, double max);
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max);
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max);
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max);
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        HashSet<long> CalculateRange(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        HashSet<long> CalculateRange(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, double weight);
 
         /// <summary>
@@ -117,7 +117,7 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        bool CheckConnectivity(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        bool CheckConnectivity(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, double weight);
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <returns></returns>
-        SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph,
+        SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, VehicleEnum vehicle,
             GeoCoordinate coordinate, IEdgeMatcher matcher, double search_box_size);
     }
 

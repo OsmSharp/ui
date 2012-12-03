@@ -62,7 +62,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
 
         public override IBasicRouter<SimpleWeighedEdge> BuildBasicRouter(IBasicRouterDataSource<SimpleWeighedEdge> data)
         {
-            return new DykstraRoutingBinairyHeap<SimpleWeighedEdge>(data.TagsIndex);
+            return new DykstraRouting<SimpleWeighedEdge>(data.TagsIndex);
         }
 
         public override IRouter<RouterPoint> BuildReferenceRouter(Stream data_stream, bool pbf, IRoutingInterpreter interpreter)

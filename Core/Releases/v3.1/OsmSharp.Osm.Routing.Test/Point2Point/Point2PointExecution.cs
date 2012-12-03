@@ -35,7 +35,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         static void Execute<EdgeData>(Point2PointTest<EdgeData> tester)
             where EdgeData : IDynamicGraphEdgeData
         {
-            int test_count = 50;
+            int test_count = 100;
 
             //tester.ExecuteComparisonTest("matrix", 
             //    new GeoCoordinate(51.01302, 4.005095), new GeoCoordinate(51.01415, 4.006043));
@@ -47,7 +47,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             //tester.ExecuteComparisonTests("moscow", 100);
 
             //tester.ExecuteTest("tiny", test_count);
-            tester.ExecuteTest("matrix", test_count);
+            //tester.ExecuteTest("matrix", test_count);
             //tester.ExecuteTest("eeklo", test_count);
             //tester.ExecuteTest("lebbeke", test_count);
             tester.ExecuteTest("matrix_big_area", test_count);
