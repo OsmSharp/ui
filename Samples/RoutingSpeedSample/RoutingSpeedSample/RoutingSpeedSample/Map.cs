@@ -31,6 +31,7 @@ using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using System.Threading;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 
 namespace RoutingSpeedSample
 {
@@ -120,32 +121,54 @@ namespace RoutingSpeedSample
             //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.test_network.osm");
             //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.matrix_big_area.osm");
 
+            bool ch = false;
+
             // create the interpreter: interprets the OSM data.
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 
             // create the tags index: keeps tags at one location
             OsmTagsIndex tags_index = new OsmTagsIndex();
-            // do the data processing.
-            MemoryRouterDataSource<CHEdgeData> osm_data =
-                new MemoryRouterDataSource<CHEdgeData>(tags_index);
-            CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                osm_data, interpreter, osm_data.TagsIndex);
-            DataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
-            data_processor_source = new ProgressDataProcessorSource(data_processor_source);
-            target_data.RegisterSource(data_processor_source);
-            target_data.Pull();
 
-            // create the contraction hierarchy.
-            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(osm_data);
-            //CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
-            //    new SparseOrdering(osm_data), witness_calculator);
-            CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
-                new EdgeDifferenceContractedSearchSpace(osm_data, witness_calculator), witness_calculator);
-            pre_processor.Start();
+            if (ch)
+            {
+                // do the data processing.
+                MemoryRouterDataSource<CHEdgeData> osm_data =
+                    new MemoryRouterDataSource<CHEdgeData>(tags_index);
+                CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+                    osm_data, interpreter, osm_data.TagsIndex);
+                DataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
+                data_processor_source = new ProgressDataProcessorSource(data_processor_source);
+                target_data.RegisterSource(data_processor_source);
+                target_data.Pull();
 
-            // create the router.
-            _router = new Router<CHEdgeData>(osm_data, interpreter,
-                new CHRouter(osm_data));
+                // create the contraction hierarchy.
+                INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(osm_data);
+                //CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
+                //    new SparseOrdering(osm_data), witness_calculator);
+                CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
+                    new EdgeDifferenceContractedSearchSpace(osm_data, witness_calculator), witness_calculator);
+                pre_processor.Start();
+
+                // create the router.
+                _router = new Router<CHEdgeData>(osm_data, interpreter,
+                    new CHRouter(osm_data));
+            }
+            else
+            {
+                // do the data processing.
+                MemoryRouterDataSource<SimpleWeighedEdge> osm_data =
+                    new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+                SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
+                    osm_data, interpreter, osm_data.TagsIndex);
+                DataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
+                data_processor_source = new ProgressDataProcessorSource(data_processor_source);
+                target_data.RegisterSource(data_processor_source);
+                target_data.Pull();
+
+                // create the router.
+                _router = new Router<SimpleWeighedEdge>(osm_data, interpreter,
+                    new DykstraRoutingLive<SimpleWeighedEdge>(osm_data.TagsIndex));
+            }
 
             // start the timer.
             timer1.Enabled = true;
