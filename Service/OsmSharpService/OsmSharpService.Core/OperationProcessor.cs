@@ -16,6 +16,7 @@ using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Progress;
 using OsmSharpService.Core.Routing.Primitives;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 
 namespace OsmSharpService.Core.Routing
 {
@@ -27,7 +28,7 @@ namespace OsmSharpService.Core.Routing
         /// <summary>
         /// Holds routing data.
         /// </summary>
-        private MemoryRouterDataSource<OsmEdgeData> _data;
+        private MemoryRouterDataSource<SimpleWeighedEdge> _data;
 
         /// <summary>
         /// Holds the routing interpreter.
@@ -61,8 +62,8 @@ namespace OsmSharpService.Core.Routing
             try
             {
                 // resolve the points and do the routing.
-                Router<OsmEdgeData> router = new Router<OsmEdgeData>(
-                    _data, _interpreter, new DykstraRoutingBinairyHeap<OsmEdgeData>(
+                Router<SimpleWeighedEdge> router = new Router<SimpleWeighedEdge>(
+                    _data, _interpreter, new DykstraRoutingLive<SimpleWeighedEdge>(
                         _data.TagsIndex));
 
                 // create the coordinates list.
@@ -180,8 +181,8 @@ namespace OsmSharpService.Core.Routing
             try
             {
                 // resolve the points and do the routing.
-                Router<OsmEdgeData> router = new Router<OsmEdgeData>(
-                    _data, _interpreter, new DykstraRoutingBinairyHeap<OsmEdgeData>(
+                Router<SimpleWeighedEdge> router = new Router<SimpleWeighedEdge>(
+                    _data, _interpreter, new DykstraRoutingLive<SimpleWeighedEdge>(
                         _data.TagsIndex));
 
                 // create the coordinates list.
@@ -291,9 +292,9 @@ namespace OsmSharpService.Core.Routing
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<OsmEdgeData> data =
-                new MemoryRouterDataSource<OsmEdgeData>(tags_index);
-            OsmEdgeDataGraphProcessingTarget target_data = new OsmEdgeDataGraphProcessingTarget(
+            MemoryRouterDataSource<SimpleWeighedEdge> data =
+                new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+            SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
                 data, _interpreter, data.TagsIndex);
             PBFDataProcessorSource data_processor_source = new PBFDataProcessorSource((new FileInfo(
                 file)).OpenRead());
