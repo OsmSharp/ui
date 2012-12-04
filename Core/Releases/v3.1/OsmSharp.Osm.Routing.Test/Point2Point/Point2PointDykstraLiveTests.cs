@@ -18,10 +18,11 @@ using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 
 namespace OsmSharp.Osm.Routing.Test.Point2Point
 {
-    class Point2PointDykstraTests : Point2PointTest<SimpleWeighedEdge>
+    class Point2PointDykstraLiveTests : Point2PointTest<SimpleWeighedEdge>
     {
         public override IBasicRouterDataSource<SimpleWeighedEdge> BuildData(Stream data_stream, bool pbf,
             IRoutingInterpreter interpreter, GeoCoordinateBox box)
@@ -29,6 +30,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
+            //SimpleWeighedDynamicGraph graph = new SimpleWeighedDynamicGraph();
             MemoryRouterDataSource<SimpleWeighedEdge> osm_data =
                 new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
             SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
@@ -54,7 +56,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             return osm_data;
         }
 
-        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<SimpleWeighedEdge> data, 
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<SimpleWeighedEdge> data,
             IRoutingInterpreter interpreter, IBasicRouter<SimpleWeighedEdge> router_basic)
         {
             return new Router<SimpleWeighedEdge>(data, interpreter, router_basic);
@@ -62,12 +64,31 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
 
         public override IBasicRouter<SimpleWeighedEdge> BuildBasicRouter(IBasicRouterDataSource<SimpleWeighedEdge> data)
         {
-            return new DykstraRouting<SimpleWeighedEdge>(data.TagsIndex);
+            return new DykstraRoutingLive(data.TagsIndex);
         }
 
         public override IRouter<RouterPoint> BuildReferenceRouter(Stream data_stream, bool pbf, IRoutingInterpreter interpreter)
         { // no use using a reference router.
-            return null;
+            OsmTagsIndex tags_index = new OsmTagsIndex();
+
+            // do the data processing.
+            MemoryRouterDataSource<PreProcessedEdge> osm_data =
+                new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+            PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
+                osm_data, interpreter, osm_data.TagsIndex);
+            DataProcessorSource data_processor_source;
+            if (pbf)
+            {
+                data_processor_source = new PBFDataProcessorSource(data_stream);
+            }
+            else
+            {
+                data_processor_source = new XmlDataProcessorSource(data_stream);
+            }
+            target_data.RegisterSource(data_processor_source);
+            target_data.Pull();
+
+            return new Router<PreProcessedEdge>(osm_data, interpreter, new DykstraRoutingPreProcessed(osm_data.TagsIndex));
         }
     }
 }

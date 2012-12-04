@@ -28,6 +28,7 @@ using OsmSharp.Routing.Core.Graph.DynamicGraph;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Router;
 using OsmSharp.Tools.Core.Collections.PriorityQueues;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 
 namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
 {
@@ -35,8 +36,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
     /// A class containing a dykstra implementation suitable for a simple graph.
     /// </summary>
     /// <typeparam name="EdgeData"></typeparam>
-    public class DykstraRoutingLive<EdgeData> : IBasicRouter<EdgeData>
-        where EdgeData : IDynamicGraphEdgeData
+    public class DykstraRoutingLive : IBasicRouter<SimpleWeighedEdge>
     {
         /// <summary>
         /// Holds the tags index.
@@ -58,7 +58,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public PathSegment<long> Calculate(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public PathSegment<long> Calculate(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList from, PathSegmentVisitList to, double max)
         {
             return this.CalculateToClosest(graph, interpreter, vehicle, from,
@@ -71,7 +71,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public double CalculateWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public double CalculateWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList from, PathSegmentVisitList to, double max)
         {
             return this.CalculateToClosest(graph, interpreter, vehicle, from,
@@ -87,7 +87,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList from, PathSegmentVisitList[] targets, double max)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
@@ -108,7 +108,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max)
         {
             PathSegment<long>[] many = this.DoCalculation(graph, interpreter, vehicle,
@@ -138,7 +138,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max)
         {
             double[][] results = new double[sources.Length][];
@@ -172,7 +172,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, double weight)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
@@ -194,7 +194,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public bool CheckConnectivity(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, double weight)
         {
             HashSet<long> range = this.CalculateRange(graph, interpreter, vehicle, source, weight);
@@ -215,7 +215,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="stop_at_first"></param>
         /// <param name="return_at_weight"></param>
         /// <returns></returns>
-        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
             bool stop_at_first, bool return_at_weight)
         {
@@ -365,7 +365,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
             }
 
             // start OsmSharp.Routing.
-            KeyValuePair<uint, EdgeData>[] arcs = graph.GetArcs(
+            KeyValuePair<uint, SimpleWeighedEdge>[] arcs = graph.GetArcs(
                 Convert.ToUInt32(current.VertexId));
             chosen_vertices.Add(current.VertexId);
 
@@ -381,13 +381,18 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                 }
 
                 // update the visited nodes.
-                foreach (KeyValuePair<uint, EdgeData> neighbour in arcs)
+                foreach (KeyValuePair<uint, SimpleWeighedEdge> neighbour in arcs)
                 {
                     // check the tags against the interpreter.
                     IDictionary<string, string> tags = _tags_index.Get(neighbour.Value.Tags);
                     if (interpreter.EdgeInterpreter.CanBeTraversedBy(tags, vehicle))
                     { // it's ok; the edge can be traversed by the given vehicle.
-                        if (neighbour.Value.Forward &&
+                        bool? one_way = interpreter.EdgeInterpreter.IsOneWay(tags, vehicle);
+                        bool can_be_traversed_one_way = (!one_way.HasValue) || // bidirectional edge. 
+                            (one_way.Value == neighbour.Value.IsForward); // backward edge has backward restruction, forward edge forward restriction.
+                        if ((current.From == null || 
+                            interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Key)) && // test for turning restrictions.
+                            can_be_traversed_one_way &&
                             !chosen_vertices.Contains(neighbour.Key))
                         { // the neigbour is forward and is not settled yet!
                             // check the labels (if needed).
@@ -523,7 +528,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// </summary>
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, VehicleEnum vehicle,
+        public SearchClosestResult SearchClosest(IBasicRouterDataSource<SimpleWeighedEdge> graph, VehicleEnum vehicle,
             GeoCoordinate coordinate, IEdgeMatcher matcher, double search_box_size)
         {
             // create the search box.
@@ -533,12 +538,12 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                 coordinate.Latitude + search_box_size, coordinate.Longitude + search_box_size));
 
             // get the arcs from the data source.
-            KeyValuePair<uint, KeyValuePair<uint, EdgeData>>[] arcs = graph.GetArcs(search_box);
+            KeyValuePair<uint, KeyValuePair<uint, SimpleWeighedEdge>>[] arcs = graph.GetArcs(search_box);
 
             // loop over all.
             SearchClosestResult closest_with_match = new SearchClosestResult(double.MaxValue, 0);
             SearchClosestResult closest_without_match = new SearchClosestResult(double.MaxValue, 0);
-            foreach (KeyValuePair<uint, KeyValuePair<uint, EdgeData>> arc in arcs)
+            foreach (KeyValuePair<uint, KeyValuePair<uint, SimpleWeighedEdge>> arc in arcs)
             {
                 // test the two points.
                 float from_latitude, from_longitude;

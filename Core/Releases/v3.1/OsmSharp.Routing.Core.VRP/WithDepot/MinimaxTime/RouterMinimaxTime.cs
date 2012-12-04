@@ -49,7 +49,7 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MinimaxTime
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public override OsmSharpRoute[] CalculateDepot(ResolvedType[] clients, ResolvedType[] depots)
+        public override OsmSharpRoute[] CalculateDepot(VehicleEnum vehicle, ResolvedType[] clients, ResolvedType[] depots)
         {
             /// Keeps a local copy of the current calculation points.
             /// 
@@ -63,7 +63,7 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MinimaxTime
 
 
             // first calculate the weights in seconds.
-            double[][] weights = this.CalculateManyToManyWeigth(points);
+            double[][] weights = this.CalculateManyToManyWeigth(vehicle, points);
 
             // create the problem for the genetic algorithm.
             List<int> depotsInt = new List<int>();

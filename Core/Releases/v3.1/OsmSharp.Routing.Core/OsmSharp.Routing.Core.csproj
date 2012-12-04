@@ -148,7 +148,8 @@
     <Compile Include="Graph\DynamicGraph\IDynamicGraphEdgeData.cs" />
     <Compile Include="Graph\DynamicGraph\IDynamicGraphReadOnly.cs" />
     <Compile Include="Graph\DynamicGraph\Memory\MemoryDynamicGraph.cs" />
-    <Compile Include="Graph\DynamicGraph\SimpleWeighed\SimpleWeighedDynamicGraph.cs" />
+    <Compile Include="Graph\DynamicGraph\PreProcessed\PreProcessedDynamicGraph.cs" />
+    <Compile Include="Graph\DynamicGraph\PreProcessed\PreProcessedEdge.cs" />
     <Compile Include="Graph\DynamicGraph\SimpleWeighed\SimpleWeighedEdge.cs" />
     <Compile Include="Graph\Path\PathSegment.cs" />
     <Compile Include="Graph\Path\PathSegmentVisitList.cs" />
@@ -170,7 +171,7 @@
     <Compile Include="IRouterExtensions.cs" />
     <Compile Include="Interpreter\IRoutingInterpreter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Graph\Router\Dykstra\DykstraRouting.cs" />
+    <Compile Include="Graph\Router\Dykstra\DykstraRoutingPreProcessed.cs" />
     <Compile Include="Graph\Router\IBasicRouterDataSource.cs" />
     <Compile Include="Graph\Memory\MemoryRouterDataSource.cs" />
     <Compile Include="Router\Router.cs" />

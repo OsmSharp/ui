@@ -3,24 +3,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Routing.Data;
-using System.IO;
 using OsmSharp.Routing.Core.Router;
+using System.IO;
 using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm.Core;
-using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Routing.Core;
+using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 
-namespace OsmSharp.Osm.Routing.Test.Instructions
+namespace OsmSharp.Osm.Routing.Test.Point2Point
 {
-    class Point2PointDykstraBinairyHeapTests : InstructionTests<PreProcessedEdge>
+    class Point2PointDykstraPreProcessedTests : Point2PointTest<PreProcessedEdge>
     {
         public override IBasicRouterDataSource<PreProcessedEdge> BuildData(Stream data_stream, bool pbf,
             IRoutingInterpreter interpreter, GeoCoordinateBox box)
@@ -33,7 +34,7 @@ namespace OsmSharp.Osm.Routing.Test.Instructions
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, box);
             DataProcessorSource data_processor_source;
-            if (pbf)
+            if(pbf)
             {
                 data_processor_source = new PBFDataProcessorSource(data_stream);
             }
@@ -53,7 +54,7 @@ namespace OsmSharp.Osm.Routing.Test.Instructions
             return osm_data;
         }
 
-        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<PreProcessedEdge> data,
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<PreProcessedEdge> data, 
             IRoutingInterpreter interpreter, IBasicRouter<PreProcessedEdge> router_basic)
         {
             return new Router<PreProcessedEdge>(data, interpreter, router_basic);
@@ -62,6 +63,11 @@ namespace OsmSharp.Osm.Routing.Test.Instructions
         public override IBasicRouter<PreProcessedEdge> BuildBasicRouter(IBasicRouterDataSource<PreProcessedEdge> data)
         {
             return new DykstraRoutingPreProcessed(data.TagsIndex);
+        }
+
+        public override IRouter<RouterPoint> BuildReferenceRouter(Stream data_stream, bool pbf, IRoutingInterpreter interpreter)
+        { // no use using a reference router.
+            return null;
         }
     }
 }

@@ -314,9 +314,16 @@ namespace OsmSharp.Osm.Routing.Interpreter.Edge
         /// Returns true if the edge is one way forward, false if backward, null if bidirectional.
         /// </summary>
         /// <param name="tags"></param>
+        /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool? IsOneWay(IDictionary<string, string> tags)
+        public bool? IsOneWay(IDictionary<string, string> tags, VehicleEnum vehicle)
         {
+            switch (vehicle)
+            {
+                case VehicleEnum.Pedestrian:
+                case VehicleEnum.Bicycle:
+                    return null;
+            }
             string oneway;
             if (tags.TryGetValue("oneway", out oneway))
             {

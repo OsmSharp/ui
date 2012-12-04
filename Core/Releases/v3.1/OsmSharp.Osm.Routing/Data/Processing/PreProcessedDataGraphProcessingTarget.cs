@@ -8,15 +8,11 @@ using OsmSharp.Routing.Core.Interpreter.Roads;
 using OsmSharp.Routing.Core.Graph;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 
 namespace OsmSharp.Osm.Routing.Data.Processing
 {
-    /// <summary>
-    /// A data processing target accepting raw OSM data and converting it into routable data.
-    /// </summary>
-    public class SimpleWeighedDataGraphProcessingTarget : DynamicGraphDataProcessorTarget<SimpleWeighedEdge>
+    public class PreProcessedDataGraphProcessingTarget : DynamicGraphDataProcessorTarget<PreProcessedEdge>
     {
         /// <summary>
         /// Creates a new osm edge data processing target.
@@ -25,7 +21,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
         /// <param name="id_transformations"></param>
-        public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
+        public PreProcessedDataGraphProcessingTarget(IDynamicGraph<PreProcessedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index)
             : this(dynamic_graph, interpreter, tags_index, new Dictionary<long, uint>())
         {
@@ -39,7 +35,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
         /// <param name="id_transformations"></param>
-        public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
+        public PreProcessedDataGraphProcessingTarget(IDynamicGraph<PreProcessedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, IDictionary<long, uint> id_transformations)
             : this(dynamic_graph, interpreter, tags_index, id_transformations, null)
         {
@@ -53,7 +49,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
         /// <param name="id_transformations"></param>
-        public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
+        public PreProcessedDataGraphProcessingTarget(IDynamicGraph<PreProcessedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, GeoCoordinateBox box)
             : this(dynamic_graph, interpreter, tags_index, new Dictionary<long, uint>(), box)
         {
@@ -67,7 +63,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
         /// <param name="id_transformations"></param>
-        public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
+        public PreProcessedDataGraphProcessingTarget(IDynamicGraph<PreProcessedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, IDictionary<long, uint> id_transformations, GeoCoordinateBox box)
             : base(dynamic_graph, interpreter, tags_index, id_transformations, box)
         {
@@ -82,18 +78,30 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        protected override SimpleWeighedEdge CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, IDictionary<string, string> tags,
+        protected override PreProcessedEdge CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, IDictionary<string, string> tags, 
             bool direction_forward, GeoCoordinate from, GeoCoordinate to)
         {
-            // use the distance as weight.
-            double distance = from.DistanceReal(to).Value;
+            double weight = edge_interpreter.Weight(
+                tags, global::OsmSharp.Routing.Core.VehicleEnum.Car, from, to);
+            bool? direction = edge_interpreter.IsOneWay(tags, global::OsmSharp.Routing.Core.VehicleEnum.Car);
+            bool forward = false;
+            bool backward = false;
+            if(!direction.HasValue)
+            { // both directions.
+                forward = true;
+                backward = true;
+            }
+            else
+            { // define back/forward.
+                forward = (direction_forward && direction.Value) || 
+                    (!direction_forward && !direction.Value);
+                backward = (direction_forward && !direction.Value) ||
+                    (!direction_forward && direction.Value);
+            }
 
-            return new SimpleWeighedEdge()
-            {
-                IsForward = direction_forward,
-                Tags = tags_index.Add(tags),
-                Weight = distance
-            };
+            // initialize the edge data.
+            return new PreProcessedEdge((float)weight, forward, backward, tags_index.Add(
+                tags));
         }
     }
 }

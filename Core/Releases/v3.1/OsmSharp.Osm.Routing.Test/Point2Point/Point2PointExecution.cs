@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
 using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 
 namespace OsmSharp.Osm.Routing.Test.Point2Point
@@ -19,10 +20,10 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// </summary>
         public static void Execute()
         {
-            //Point2PointExecution.Execute<OsmSharp.Osm.Routing.Data.SimpleWeighedEdge>(
-            //    new Point2Point.Point2PointDykstraTests());
+            Point2PointExecution.Execute<PreProcessedEdge>(
+                new Point2Point.Point2PointDykstraPreProcessedTests());
             Point2PointExecution.Execute<SimpleWeighedEdge>(
-                new Point2Point.Point2PointDykstraBinairyHeapTests());
+                new Point2Point.Point2PointDykstraLiveTests());
             //Point2PointExecution.Execute<OsmSharp.Routing.CH.PreProcessing.CHEdgeData>(
             //    new Point2Point.Point2PointCHTests());
         }
@@ -50,10 +51,10 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             //tester.ExecuteTest("matrix", test_count);
             //tester.ExecuteTest("eeklo", test_count);
             //tester.ExecuteTest("lebbeke", test_count);
-            tester.ExecuteTest("matrix_big_area", test_count);
+            //tester.ExecuteTest("matrix_big_area", test_count);
             //tester.ExecuteTest("moscow", test_count);
-            //tester.ExecuteTest("flanders_highway", (new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf")).OpenRead(),
-            //    true, 100);
+            tester.ExecuteTest("flanders_highway", (new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf")).OpenRead(),
+                true, 100);
 
             //tester.ExecuteTestIncrementalBoundingBox("eeklo", 100, new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(
             //    new OsmSharp.Tools.Math.Geo.GeoCoordinate(51.10800, 3.46400),

@@ -39,7 +39,7 @@ using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 
 namespace OsmSharp.Osm.UnitTests.Routing.Raw
 {
@@ -47,17 +47,17 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
     /// Does some raw routing tests.
     /// </summary>
     [TestClass]
-    public class RawRoutingTests : SimpleRoutingTests<RouterPoint, SimpleWeighedEdge>
+    public class RawRoutingTests : SimpleRoutingTests<RouterPoint, PreProcessedEdge>
     {
         /// <summary>
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<SimpleWeighedEdge> data, IRoutingInterpreter interpreter,
-            IBasicRouter<SimpleWeighedEdge> basic_router)
+        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<PreProcessedEdge> data, IRoutingInterpreter interpreter,
+            IBasicRouter<PreProcessedEdge> basic_router)
         {
             // initialize the router.
-            return new Router<SimpleWeighedEdge>(
+            return new Router<PreProcessedEdge>(
                     data, interpreter, basic_router);
         }
 
@@ -66,31 +66,31 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IBasicRouter<SimpleWeighedEdge> BuildBasicRouter(IBasicRouterDataSource<SimpleWeighedEdge> data)
+        public override IBasicRouter<PreProcessedEdge> BuildBasicRouter(IBasicRouterDataSource<PreProcessedEdge> data)
         {
-            return new DykstraRouting<SimpleWeighedEdge>(data.TagsIndex);
+            return new DykstraRoutingPreProcessed(data.TagsIndex);
         }
 
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private IBasicRouterDataSource<SimpleWeighedEdge> _data = null;
+        private IBasicRouterDataSource<PreProcessedEdge> _data = null;
 
         /// <summary>
         /// Builds data source.
         /// </summary>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<SimpleWeighedEdge> BuildData(IRoutingInterpreter interpreter)
+        public override IBasicRouterDataSource<PreProcessedEdge> BuildData(IRoutingInterpreter interpreter)
         {
             if (_data == null)
             {
                 OsmTagsIndex tags_index = new OsmTagsIndex();
 
                 // do the data processing.
-                MemoryRouterDataSource<SimpleWeighedEdge> data =
-                    new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
-                SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
+                MemoryRouterDataSource<PreProcessedEdge> data =
+                    new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+                PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                     data, interpreter, data.TagsIndex);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));

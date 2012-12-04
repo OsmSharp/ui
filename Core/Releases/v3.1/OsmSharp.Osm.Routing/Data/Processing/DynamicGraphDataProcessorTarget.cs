@@ -303,13 +303,6 @@ namespace OsmSharp.Osm.Routing.Data.Processing
                 EdgeData edge_data = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tags_index, tags, forward, from_coordinate, to_coordinate);
 
                 _dynamic_graph.AddArc(from, to, edge_data);
-
-                if (edge_data.Forward && edge_data.Backward)
-                {
-                    _dynamic_graph.AddArc(to, from, edge_data);
-
-                    return true;
-                }
             }
             return false;
         }

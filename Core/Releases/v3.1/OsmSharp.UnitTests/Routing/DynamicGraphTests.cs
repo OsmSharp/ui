@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.Memory;
 
@@ -19,9 +19,9 @@ namespace OsmSharp.UnitTests.Routing
         /// Returns a graph.
         /// </summary>
         /// <returns></returns>
-        protected IDynamicGraph<SimpleWeighedEdge> CreateGraph()
+        protected IDynamicGraph<PreProcessedEdge> CreateGraph()
         {
-            return new MemoryDynamicGraph<SimpleWeighedEdge>();
+            return new MemoryDynamicGraph<PreProcessedEdge>();
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace OsmSharp.UnitTests.Routing
         [TestMethod]
         public void TestSimpleWeighedDynamicGraphVertex()
         {
-            SimpleWeighedDynamicGraph graph = new SimpleWeighedDynamicGraph();
+            PreProcessedDynamicGraph graph = new PreProcessedDynamicGraph();
             uint vertex = graph.AddVertex(51, 4);
 
             float latitude, longitude;
@@ -39,7 +39,7 @@ namespace OsmSharp.UnitTests.Routing
             Assert.AreEqual(51, latitude);
             Assert.AreEqual(4, longitude);
 
-            KeyValuePair<uint, SimpleWeighedEdge>[] arcs = graph.GetArcs(vertex);
+            KeyValuePair<uint, PreProcessedEdge>[] arcs = graph.GetArcs(vertex);
             Assert.AreEqual(0, arcs.Length);
         }
 
@@ -49,7 +49,7 @@ namespace OsmSharp.UnitTests.Routing
         [TestMethod]
         public void TestSimpleWeighedDynamicGraphVertex10000()
         {
-            SimpleWeighedDynamicGraph graph = new SimpleWeighedDynamicGraph();
+            PreProcessedDynamicGraph graph = new PreProcessedDynamicGraph();
             int count = 10000;
             while (count > 0)
             {
@@ -61,7 +61,7 @@ namespace OsmSharp.UnitTests.Routing
                 Assert.AreEqual(51, latitude);
                 Assert.AreEqual(4, longitude);
 
-                KeyValuePair<uint, SimpleWeighedEdge>[] arcs = graph.GetArcs(vertex);
+                KeyValuePair<uint, PreProcessedEdge>[] arcs = graph.GetArcs(vertex);
                 Assert.AreEqual(0, arcs.Length);
 
                 count--;
@@ -76,19 +76,19 @@ namespace OsmSharp.UnitTests.Routing
         [TestMethod]
         public void TestSimpleWeighedDynamicGraphEdge()
         {
-            SimpleWeighedDynamicGraph graph = new SimpleWeighedDynamicGraph();
+            PreProcessedDynamicGraph graph = new PreProcessedDynamicGraph();
             uint vertex1 = graph.AddVertex(51, 1);
             uint vertex2 = graph.AddVertex(51, 2);
 
-            graph.AddArc(vertex1, vertex2, new SimpleWeighedEdge(
+            graph.AddArc(vertex1, vertex2, new PreProcessedEdge(
                 100, true, true, 0));
 
-            KeyValuePair<uint, SimpleWeighedEdge>[] arcs = graph.GetArcs(vertex1);
+            KeyValuePair<uint, PreProcessedEdge>[] arcs = graph.GetArcs(vertex1);
             Assert.AreEqual(1, arcs.Length);
             Assert.AreEqual(100, arcs[0].Value.Weight);
             Assert.AreEqual(vertex2, arcs[0].Key);
 
-            graph.AddArc(vertex2, vertex1, new SimpleWeighedEdge(
+            graph.AddArc(vertex2, vertex1, new PreProcessedEdge(
                 200, true, true, 0));
 
             arcs = graph.GetArcs(vertex2);
@@ -105,19 +105,19 @@ namespace OsmSharp.UnitTests.Routing
         public void TestSimpleWeighedDynamicGraphEdge10000()
         {
             int count = 10000;
-            SimpleWeighedDynamicGraph graph = new SimpleWeighedDynamicGraph();
+            PreProcessedDynamicGraph graph = new PreProcessedDynamicGraph();
             uint vertex1 = graph.AddVertex(51, 1);
             while (count > 0)
             {
                 uint vertex2 = graph.AddVertex(51, 1);
 
-                graph.AddArc(vertex1, vertex2, new SimpleWeighedEdge(
+                graph.AddArc(vertex1, vertex2, new PreProcessedEdge(
                     100, true, true, 0));
 
-                KeyValuePair<uint, SimpleWeighedEdge>[] arcs = graph.GetArcs(vertex1);
+                KeyValuePair<uint, PreProcessedEdge>[] arcs = graph.GetArcs(vertex1);
                 Assert.AreEqual(10000 - count + 1, arcs.Length);
 
-                graph.AddArc(vertex2, vertex1, new SimpleWeighedEdge(
+                graph.AddArc(vertex2, vertex1, new PreProcessedEdge(
                     200, true, true, 0));
 
                 arcs = graph.GetArcs(vertex2);

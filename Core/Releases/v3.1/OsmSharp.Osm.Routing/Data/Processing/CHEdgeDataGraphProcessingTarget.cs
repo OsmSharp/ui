@@ -26,7 +26,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         {
             double weight = edge_interpreter.Weight(
                 tags, global::OsmSharp.Routing.Core.VehicleEnum.Car, from, to);
-            bool? direction = edge_interpreter.IsOneWay(tags);
+            bool? direction = edge_interpreter.IsOneWay(tags, global::OsmSharp.Routing.Core.VehicleEnum.Car);
             bool forward = false;
             bool backward = false;
             if (!direction.HasValue)

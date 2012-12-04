@@ -21,7 +21,7 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 
 namespace OsmSharp.Osm.Routing.Test.Point2Point
 {
@@ -107,9 +107,9 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<SimpleWeighedEdge> osm_data =
-                new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
-            SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
+            MemoryRouterDataSource<PreProcessedEdge> osm_data =
+                new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+            PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex);
             DataProcessorSource data_processor_source;
             if (pbf)
@@ -123,7 +123,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             target_data.RegisterSource(data_processor_source);
             target_data.Pull();
 
-            return new Router<SimpleWeighedEdge>(osm_data, interpreter, new DykstraRouting<SimpleWeighedEdge>(osm_data.TagsIndex));
+            return new Router<PreProcessedEdge>(osm_data, interpreter, new DykstraRoutingPreProcessed(osm_data.TagsIndex));
         }
     }
 }

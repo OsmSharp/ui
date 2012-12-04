@@ -20,12 +20,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed
+namespace OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed
 {
     /// <summary>
-    /// An implementation of an in-memory dynamic graph.
+    /// An implementation of an in-memory dynamic graph containing edge with pre-processed weights and directions.
     /// </summary>
-    public class SimpleWeighedDynamicGraph: IDynamicGraph<SimpleWeighedEdge>
+    public class PreProcessedDynamicGraph: IDynamicGraph<PreProcessedEdge>
     {
         /// <summary>
         /// Holds the next id.
@@ -55,7 +55,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed
         /// <summary>
         /// Creates a new in-memory graph.
         /// </summary>
-        public SimpleWeighedDynamicGraph()
+        public PreProcessedDynamicGraph()
         {
             _next_id = 1;
             _vertices = new Vertex[1000];
@@ -143,7 +143,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
-        public void AddArc(uint from, uint to, SimpleWeighedEdge data)
+        public void AddArc(uint from, uint to, PreProcessedEdge data)
         {
             Edge edge;
             if (_vertices.Length > from)
@@ -249,23 +249,23 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, SimpleWeighedEdge>[] GetArcs(uint vertex_id)
+        public KeyValuePair<uint, PreProcessedEdge>[] GetArcs(uint vertex_id)
         {
             if (_vertices.Length > vertex_id)
             {
                 // get the vertex.
                 Vertex vertex = _vertices[vertex_id];
 
-                KeyValuePair<uint, SimpleWeighedEdge>[] arcs = new KeyValuePair<uint, SimpleWeighedEdge>[
+                KeyValuePair<uint, PreProcessedEdge>[] arcs = new KeyValuePair<uint, PreProcessedEdge>[
                     vertex.EdgeCount];
                 // loop over all edges
                 for (int idx = 0; idx < vertex.EdgeCount; idx++)
                 {
                     Edge edge = _edges[(int)vertex.EdgeIndex + idx];
 
-                    arcs[idx] = new KeyValuePair<uint, SimpleWeighedEdge>(
+                    arcs[idx] = new KeyValuePair<uint, PreProcessedEdge>(
                         _edges[(int)vertex.EdgeIndex + idx].VertexId, 
-                            new SimpleWeighedEdge(
+                            new PreProcessedEdge(
                                 edge.Weight,
                                 edge.Forward,
                                 edge.Backward,
@@ -273,7 +273,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed
                 }
                 return arcs;
             }
-            return new KeyValuePair<uint, SimpleWeighedEdge>[0]; // return empty data if the vertex does not exist!
+            return new KeyValuePair<uint, PreProcessedEdge>[0]; // return empty data if the vertex does not exist!
         }
 
         /// <summary>
@@ -289,7 +289,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed
                 // get the vertex.
                 Vertex vertex = _vertices[vertex_id];
 
-                KeyValuePair<uint, SimpleWeighedEdge>[] arcs = new KeyValuePair<uint, SimpleWeighedEdge>[
+                KeyValuePair<uint, PreProcessedEdge>[] arcs = new KeyValuePair<uint, PreProcessedEdge>[
                     vertex.EdgeCount];
                 // loop over all edges
                 for (int idx = 0; idx < vertex.EdgeCount; idx++)
