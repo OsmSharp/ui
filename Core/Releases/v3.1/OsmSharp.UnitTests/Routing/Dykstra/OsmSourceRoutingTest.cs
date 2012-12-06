@@ -32,7 +32,7 @@ using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 
-namespace OsmSharp.Osm.UnitTests.Routing.Raw
+namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
 {
     /// <summary>
     /// Does some tests on an OsmSource routing implementation.

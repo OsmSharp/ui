@@ -30,7 +30,7 @@ namespace OsmSharp.Osm.UnitTests
     /// Does ome raw data memory tests.
     /// </summary>
     [TestClass]
-    public class RawMemoryDataSourceTests
+    public class DykstraMemoryDataSourceTests
     {
         /// <summary>
         /// Tests adding a node to the memory source.

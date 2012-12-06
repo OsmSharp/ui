@@ -49,7 +49,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// Builds a raw data source.
         /// </summary>
         /// <returns></returns>
-        public MemoryRouterDataSource<PreProcessedEdge> BuildRawDataSource(
+        public MemoryRouterDataSource<PreProcessedEdge> BuildDykstraDataSource(
             IRoutingInterpreter interpreter, string embedded_name)
         {
             OsmTagsIndex tags_index = new OsmTagsIndex();
@@ -74,7 +74,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// Builds a raw router to compare against.
         /// </summary>
         /// <returns></returns>
-        public IRouter<RouterPoint> BuildRawRouter(IBasicRouterDataSource<PreProcessedEdge> data, 
+        public IRouter<RouterPoint> BuildDykstraRouter(IBasicRouterDataSource<PreProcessedEdge> data, 
             IRoutingInterpreter interpreter, IBasicRouter<PreProcessedEdge> basic_router)
         {
             // initialize the router.
@@ -91,11 +91,11 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IRoutingInterpreter interpreter = new OsmSharp.Osm.Routing.Interpreter.OsmRoutingInterpreter();
 
             // get the osm data source.
-            IBasicRouterDataSource<PreProcessedEdge> data = this.BuildRawDataSource(interpreter, embedded_name);
+            IBasicRouterDataSource<PreProcessedEdge> data = this.BuildDykstraDataSource(interpreter, embedded_name);
 
             // build the reference router.;
-            IRouter<RouterPoint> reference_router = this.BuildRawRouter(
-                this.BuildRawDataSource(interpreter, embedded_name), interpreter, new DykstraRoutingPreProcessed(data.TagsIndex));
+            IRouter<RouterPoint> reference_router = this.BuildDykstraRouter(
+                this.BuildDykstraDataSource(interpreter, embedded_name), interpreter, new DykstraRoutingPreProcessed(data.TagsIndex));
 
             // build the router to be tested.
             IRouter<RouterPoint> router = this.BuildRouter(interpreter, embedded_name);

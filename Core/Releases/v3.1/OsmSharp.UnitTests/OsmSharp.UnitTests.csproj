@@ -127,18 +127,19 @@
     <Compile Include="Routing\CH\CHSparseRoutingTest.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceRoutingTest.cs" />
     <Compile Include="Routing\CH\CHVerifiedContractionTests.cs" />
+    <Compile Include="Routing\Dykstra\DykstraLiveRoutingTests.cs" />
     <Compile Include="Routing\DynamicGraphTests.cs" />
     <Compile Include="Routing\Interpreter\OsmRoutingInterpreterTests.cs" />
     <Compile Include="Routing\PathSegmentTests.cs" />
-    <Compile Include="Routing\Raw\RawRoutingAccessTests.cs">
+    <Compile Include="Routing\Dykstra\DykstraLiveAccessTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Routing\RoutingAccessTests.cs" />
     <Compile Include="Routing\RoutingOneWayTests.cs" />
     <Compile Include="Routing\OsmSharpRouteTests.cs" />
-    <Compile Include="Routing\Raw\RawRoutingOneWayTests.cs" />
-    <Compile Include="Routing\Raw\OsmSourceRoutingTest.cs" />
-    <Compile Include="Routing\Raw\RawRoutingTests.cs" />
+    <Compile Include="Routing\Dykstra\DykstraPreProcessingRoutingOneWayTests.cs" />
+    <Compile Include="Routing\Dykstra\OsmSourceRoutingTest.cs" />
+    <Compile Include="Routing\Dykstra\DykstraPreProcessingRoutingTests.cs" />
     <Compile Include="Routing\RoutingComparisonTests.cs" />
     <Compile Include="Routing\RoutingTests.cs" />
     <Compile Include="Routing\RoutingInterpreterTests.cs" />

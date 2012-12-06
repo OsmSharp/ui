@@ -41,13 +41,13 @@ using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 
-namespace OsmSharp.Osm.UnitTests.Routing.Raw
+namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
 {
     /// <summary>
     /// Does some raw routing tests testing for oneway constraint.
     /// </summary>
     [TestClass]
-    public class RawRoutingOneWayTests : RoutingOneWayTests<RouterPoint, PreProcessedEdge>
+    public class DykstraPreProcessingRoutingOneWayTests : RoutingOneWayTests<RouterPoint, PreProcessedEdge>
     {
         /// <summary>
         /// Builds a router.
@@ -99,7 +99,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// Tests a simple shortest route calculation.
         /// </summary>
         [TestMethod]
-        public void TestRawOneWayShortestWithDirection()
+        public void TestDykstraPreProcessingOneWayShortestWithDirection()
         {
             this.DoTestShortestWithDirection();
         }
@@ -108,7 +108,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// Tests a simple shortest route calculation.
         /// </summary>
         [TestMethod]
-        public void TestRawOneWayShortestAgainstDirection()
+        public void TestDykstraPreProcessingOneWayShortestAgainstDirection()
         {
             this.DoTestShortestAgainstDirection();
         }
@@ -117,7 +117,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// Test if the raw router many-to-many weights correspond to the point-to-point weights.
         /// </summary>
         [TestMethod]
-        public void TestRawOneWayManyToMany1()
+        public void TestDykstraPreProcessingOneWayManyToMany1()
         {
             this.DoTestManyToMany1();
         }
@@ -126,7 +126,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// Test if the raw router handles connectivity questions correctly.
         /// </summary>
         [TestMethod]
-        public void TestRawOneWayConnectivity1()
+        public void TestDykstraPreProcessingOneWayConnectivity1()
         {
             this.DoTestConnectivity1();
         }
@@ -135,7 +135,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// Tests a simple shortest route calculation.
         /// </summary>
         [TestMethod]
-        public void TestRawOneWayResolveAllNodes()
+        public void TestDykstraPreProcessingOneWayResolveAllNodes()
         {
             this.DoTestResolveAllNodes();
         }
@@ -144,7 +144,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Raw
         /// Tests resolving coordinates to routable points.
         /// </summary>
         [TestMethod]
-        public void TestRawOneWayResolveBetweenNodes()
+        public void TestDykstraPreProcessingOneWayResolveBetweenNodes()
         {
             this.DoTestResolveBetweenNodes();
         }
