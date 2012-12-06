@@ -37,7 +37,7 @@ namespace OsmSharp.Routing.Core.Interpreter
         /// <param name="along"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        bool CanBeTraversed(uint from, uint along, uint to);
+        bool CanBeTraversed(long from, long along, long to);
 
         /// <summary>
         /// Returns the edge interpreter.

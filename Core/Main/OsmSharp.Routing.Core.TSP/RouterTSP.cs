@@ -53,9 +53,9 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        protected double[][] CalculateManyToManyWeight(ResolvedType[] points)
+        protected double[][] CalculateManyToManyWeight(VehicleEnum vehicle, ResolvedType[] points)
         {
-            return _router.CalculateManyToManyWeight(VehicleEnum.Car, points, points);
+            return _router.CalculateManyToManyWeight(vehicle, points, points);
         }
 
         /// <summary>
@@ -65,10 +65,10 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// <param name="first">The point to start from.</param>
         /// <param name="is_round">Return back to the first point or not.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(ResolvedType[] points, int first, bool is_round)
+        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, int first, bool is_round)
         {
             // calculate the weights.
-            double[][] weights = this.CalculateManyToManyWeight(points);
+            double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
 
             // create solver.
             ISolver solver = this.DoCreateSolver(points.Length);
@@ -88,10 +88,10 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// <param name="first">The point to start from.</param>
         /// <param name="last">The point to end at.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(ResolvedType[] points, int first, int last)
+        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, int first, int last)
         {
             // calculate the weights.
-            double[][] weights = this.CalculateManyToManyWeight(points);
+            double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
 
             // create solver.
             ISolver solver = this.DoCreateSolver(points.Length);
@@ -110,10 +110,10 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// <param name="points">The points to travel along.</param>
         /// <param name="is_round">Make the route a round or not.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(ResolvedType[] points, bool is_round)
+        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, bool is_round)
         {
             // calculate the weights.
-            double[][] weights = this.CalculateManyToManyWeight(points);
+            double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
 
             // create solver.
             ISolver solver = null;
@@ -139,9 +139,9 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(ResolvedType[] points)
+        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points)
         {
-            return this.CalculateTSP(points, true);
+            return this.CalculateTSP(vehicle, points, true);
         }
 
         /// <summary>

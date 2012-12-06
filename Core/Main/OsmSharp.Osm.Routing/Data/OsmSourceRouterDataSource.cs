@@ -13,14 +13,14 @@ using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Osm.Data.Core.Processor.ListSource;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 
 namespace OsmSharp.Osm.Routing.Data.Source
 {
     /// <summary>
     /// A Dynamic graph with extended possibilities to allow resolving points.
     /// </summary>
-    public class OsmSourceRouterDataSource : IBasicRouterDataSource<SimpleWeighedEdge>
+    public class OsmSourceRouterDataSource : IBasicRouterDataSource<PreProcessedEdge>
     {
         /// <summary>
         /// Holds the data source.
@@ -30,7 +30,7 @@ namespace OsmSharp.Osm.Routing.Data.Source
         /// <summary>
         /// Holds a cache of data.
         /// </summary>
-        private MemoryRouterDataSource<SimpleWeighedEdge> _data_cache;
+        private MemoryRouterDataSource<PreProcessedEdge> _data_cache;
 
         /// <summary>
         /// Holds the tags index.
@@ -52,7 +52,7 @@ namespace OsmSharp.Osm.Routing.Data.Source
             _tags_index = tags_index;
             _interpreter = interpreter;
 
-            _data_cache = new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+            _data_cache = new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
             _loaded_tiles = new HashSet<Tile>();
             _loaded_vertices = null;
             _use_loaded_set = false;
@@ -65,7 +65,7 @@ namespace OsmSharp.Osm.Routing.Data.Source
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, SimpleWeighedEdge>>[] GetArcs(GeoCoordinateBox box)
+        public KeyValuePair<uint, KeyValuePair<uint, PreProcessedEdge>>[] GetArcs(GeoCoordinateBox box)
         {
             // load if needed.
             this.LoadMissingIfNeeded(box);
@@ -99,7 +99,7 @@ namespace OsmSharp.Osm.Routing.Data.Source
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, SimpleWeighedEdge>[] GetArcs(uint vertex)
+        public KeyValuePair<uint, PreProcessedEdge>[] GetArcs(uint vertex)
         {
             float latitude, longitude;
             if(_data_cache.GetVertex(vertex, out latitude, out longitude))
@@ -122,7 +122,7 @@ namespace OsmSharp.Osm.Routing.Data.Source
         /// <returns></returns>
         public bool HasNeighbour(uint vertex, uint neighbour)
         {
-            foreach (KeyValuePair<uint, SimpleWeighedEdge> arc in this.GetArcs(vertex))
+            foreach (KeyValuePair<uint, PreProcessedEdge> arc in this.GetArcs(vertex))
             {
                 if (arc.Key == neighbour)
                 {
@@ -237,7 +237,7 @@ namespace OsmSharp.Osm.Routing.Data.Source
             IList<OsmGeo> data = _source.Get(box, OsmSharp.Osm.Core.Filters.Filter.Any());
 
             // process the list of data just loaded.
-            SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
+            PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 _data_cache, _interpreter, _tags_index, _id_tranformations);
             OsmGeoListDataProcessorSource data_processor_source =
                 new OsmGeoListDataProcessorSource(data);

@@ -5,6 +5,7 @@ using System.Text;
 using System.IO;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
 using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 
 namespace OsmSharp.Osm.Routing.Test.Point2Point
@@ -19,10 +20,10 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// </summary>
         public static void Execute()
         {
-            //Point2PointExecution.Execute<OsmSharp.Osm.Routing.Data.SimpleWeighedEdge>(
-            //    new Point2Point.Point2PointDykstraTests());
+            //Point2PointExecution.Execute<PreProcessedEdge>(
+            //    new Point2Point.Point2PointDykstraPreProcessedTests());
             Point2PointExecution.Execute<SimpleWeighedEdge>(
-                new Point2Point.Point2PointDykstraBinairyHeapTests());
+                new Point2Point.Point2PointDykstraLiveTests());
             //Point2PointExecution.Execute<OsmSharp.Routing.CH.PreProcessing.CHEdgeData>(
             //    new Point2Point.Point2PointCHTests());
         }
@@ -35,22 +36,22 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         static void Execute<EdgeData>(Point2PointTest<EdgeData> tester)
             where EdgeData : IDynamicGraphEdgeData
         {
-            int test_count = 50;
+            int test_count = 100;
 
             //tester.ExecuteComparisonTest("matrix", 
             //    new GeoCoordinate(51.01302, 4.005095), new GeoCoordinate(51.01415, 4.006043));
 
-            //tester.ExecuteComparisonTests("tiny", test_count);
-            //tester.ExecuteComparisonTests("matrix", 1000);
-            //tester.ExecuteComparisonTests("eeklo", 100);
+            tester.ExecuteComparisonTests("tiny", test_count);
+            tester.ExecuteComparisonTests("matrix", 1000);
+            tester.ExecuteComparisonTests("eeklo", 100);
             //tester.ExecuteComparisonTests("matrix_big_area", 100);
             //tester.ExecuteComparisonTests("moscow", 100);
 
             //tester.ExecuteTest("tiny", test_count);
-            tester.ExecuteTest("matrix", test_count);
+            //tester.ExecuteTest("matrix", test_count);
             //tester.ExecuteTest("eeklo", test_count);
             //tester.ExecuteTest("lebbeke", test_count);
-            tester.ExecuteTest("matrix_big_area", test_count);
+            //tester.ExecuteTest("matrix_big_area", test_count);
             //tester.ExecuteTest("moscow", test_count);
             //tester.ExecuteTest("flanders_highway", (new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf")).OpenRead(),
             //    true, 100);

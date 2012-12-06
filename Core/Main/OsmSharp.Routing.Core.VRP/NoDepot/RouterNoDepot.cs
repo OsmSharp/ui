@@ -46,6 +46,6 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public abstract OsmSharpRoute[] CalculateNoDepot(ResolvedType[] points);
+        public abstract OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, ResolvedType[] points);
     }
 }

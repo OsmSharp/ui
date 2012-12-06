@@ -140,8 +140,8 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
                     for (int arc_idx = 0; arc_idx < arcs.Length; arc_idx++)
                     {
                         if (arcs[arc_idx].Key == to &&
-                            arcs[arc_idx].Value.Backward == data.Backward &&
-                            arcs[arc_idx].Value.Forward == data.Forward &&
+                            //arcs[arc_idx].Value.Backward == data.Backward &&
+                            //arcs[arc_idx].Value.Forward == data.Forward &&
                             arcs[arc_idx].Value.Weight > data.Weight)
                         { // an arc was found that represents the same directional information.
                             arcs[arc_idx] = new KeyValuePair<uint, EdgeData>(

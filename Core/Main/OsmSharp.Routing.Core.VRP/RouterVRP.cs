@@ -57,9 +57,9 @@ namespace OsmSharp.Routing.Core.VRP
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        protected double[][] CalculateManyToManyWeigth(ResolvedType[] points)
+        protected double[][] CalculateManyToManyWeigth(VehicleEnum vehicle, ResolvedType[] points)
         {
-            return _router.CalculateManyToManyWeight(VehicleEnum.Car, points, points);
+            return _router.CalculateManyToManyWeight(vehicle, points, points);
         }
 
         /// <summary>
@@ -68,9 +68,9 @@ namespace OsmSharp.Routing.Core.VRP
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        protected OsmSharpRoute Calculate(ResolvedType from, ResolvedType to)
+        protected OsmSharpRoute Calculate(VehicleEnum vehicle, ResolvedType from, ResolvedType to)
         {
-            return _router.Calculate(VehicleEnum.Car, from, to);
+            return _router.Calculate(vehicle, from, to);
         }
 
         /// <summary>

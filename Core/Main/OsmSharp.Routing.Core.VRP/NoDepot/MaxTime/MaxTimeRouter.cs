@@ -69,7 +69,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public override OsmSharpRoute[] CalculateNoDepot(ResolvedType[] points)
+        public override OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, ResolvedType[] points)
         {        
             /// Keeps a local copy of the current calculation points.
             /// 
@@ -77,7 +77,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
             _points = points;
 
             // first calculate the weights in seconds.
-            double[][] weights = this.CalculateManyToManyWeigth(points);
+            double[][] weights = this.CalculateManyToManyWeigth(vehicle, points);
 
             // convert to ints.
             for (int x = 0; x < weights.Length; x++)

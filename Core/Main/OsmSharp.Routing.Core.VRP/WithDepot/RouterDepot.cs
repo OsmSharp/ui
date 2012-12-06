@@ -46,7 +46,7 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public abstract OsmSharpRoute[] CalculateDepot(ResolvedType[] depots, ResolvedType[] customers);
+        public abstract OsmSharpRoute[] CalculateDepot(VehicleEnum vehicle, ResolvedType[] depots, ResolvedType[] customers);
 
 
     }

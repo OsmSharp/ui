@@ -51,7 +51,7 @@ namespace OsmSharp.Osm.Routing.Interpreter
         /// <param name="along"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public bool CanBeTraversed(uint from, uint along, uint to)
+        public bool CanBeTraversed(long from, long along, long to)
         {
             return true;
         }

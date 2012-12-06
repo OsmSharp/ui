@@ -13,7 +13,7 @@ using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 
 namespace OsmSharp.Osm.Routing.Test.ManyToMany
 {
@@ -35,9 +35,9 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<SimpleWeighedEdge> osm_data =
-                new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
-            SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
+            MemoryRouterDataSource<PreProcessedEdge> osm_data =
+                new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+            PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(data);
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
@@ -45,8 +45,8 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             target_data.RegisterSource(sorter);
             target_data.Pull();
 
-            return new Router<SimpleWeighedEdge>(osm_data, interpreter, 
-                new DykstraRoutingBinairyHeap<SimpleWeighedEdge>(osm_data.TagsIndex));
+            return new Router<PreProcessedEdge>(osm_data, interpreter, 
+                new DykstraRoutingPreProcessed(osm_data.TagsIndex));
         }
     }
 }
