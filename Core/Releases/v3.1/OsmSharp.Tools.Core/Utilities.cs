@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace OsmSharp.Tools.Core
 {
@@ -192,6 +193,187 @@ namespace OsmSharp.Tools.Core
                 new_tags[tag.Key] = tag.Value;
             }
             return new_tags;
+        }
+
+        /// <summary>
+        /// Retuns a string of a fixed length.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        public static string PadRightAndCut(this string s, int length)
+        {
+            return s.ToStringEmptyWhenNull().PadRight(length).Substring(0, length);
+        }
+
+        /// <summary>
+        /// Matches two string that contain a given percentage of the same characters.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="t"></param>
+        /// <param name="percentage"></param>
+        /// <returns></returns>
+        public static bool LevenshteinMatch(this string s, string t, float percentage)
+        {
+            if (s == null || t == null)
+            {
+                return false;
+            }
+            int n = s.Length;
+            int m = t.Length;
+            int[,] d = new int[n + 1, m + 1];
+            int match = -1;
+            int size = System.Math.Max(n, m);
+
+            if (size == 0)
+            { // empty strings cannot be matched.
+                return false;
+            }
+
+            // Step 1
+            if (n == 0)
+            {
+                match = m;
+            }
+
+            if (m == 0)
+            {
+                match = n;
+            }
+
+            // Step 2
+            for (int i = 0; i <= n; d[i, 0] = i++)
+            {
+            }
+
+            for (int j = 0; j <= m; d[0, j] = j++)
+            {
+            }
+
+            // Step 3
+            for (int i = 1; i <= n; i++)
+            {
+                //Step 4
+                for (int j = 1; j <= m; j++)
+                {
+                    // Step 5
+                    int cost = (t[j - 1] == s[i - 1]) ? 0 : 1;
+
+                    // Step 6
+                    d[i, j] = Math.Min(
+                        Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1),
+                        d[i - 1, j - 1] + cost);
+                }
+            }
+            // Step 7
+            match = d[n, m];
+
+            // calculate the percentage.
+            return ((float)(size - match) / (float)size) > (percentage / 100.0);
+        }
+
+        /// <summary>
+        /// Returns a string with init caps.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string InitCap(this string value)
+        {
+            return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(value.ToLower());
+        }
+
+        /// <summary>
+        /// Returns the numeric part of the string for the beginning part of the string only.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string NumericPartFloat(this string value)
+        {
+            string ret_string = string.Empty;
+            if (value != null && value.Length > 0)
+            {
+                StringBuilder numbers = new StringBuilder();
+                for (int c = 1;c <= value.Length;c++)
+                {
+                    float result_never_used;
+                    string value_tested = value.Substring(0, c);
+                    if (float.TryParse(value_tested, out result_never_used))
+                    {
+                        ret_string = value_tested;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return ret_string;
+        }
+
+        /// <summary>
+        /// Returns the numeric part of the string for the beginning part of the string only.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static string NumericPartInt(this string value)
+        {
+            string ret_string = string.Empty;
+            if (value != null && value.Length > 0)
+            {
+                StringBuilder numbers = new StringBuilder();
+                for (int c = 1; c <= value.Length; c++)
+                {
+                    int result_never_used;
+                    string value_tested = value.Substring(0, c);
+                    if (int.TryParse(value_tested, out result_never_used))
+                    {
+                        ret_string = value_tested;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return ret_string;
+        }
+
+        /// <summary>
+        /// Splists this string into parts with sizes given in the array.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="sizes"></param>
+        /// <returns></returns>
+        public static string[] SplitMultiple(this string value,int[] sizes)
+        {
+            string[] result = new string[sizes.Length];
+
+            int position = 0;
+            for (int i = 0; i < sizes.Length; i++)
+            {
+                result[i] = value.Substring(position, sizes[i]);
+
+                position = position + sizes[i];
+            }
+
+            return result;
+        }
+
+
+
+        /// <summary>
+        /// Returns the result of the ToString() method or an empty string
+        /// when the given object is null.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public static string ToStringEmptyWhenNull(this object obj)
+        {
+            if (obj == null)
+            {
+                return string.Empty;
+            }
+            return obj.ToString();
         }
     }
 }
