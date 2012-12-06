@@ -63,7 +63,7 @@ namespace OsmSharpService.Core.Routing
             {
                 // resolve the points and do the routing.
                 Router<SimpleWeighedEdge> router = new Router<SimpleWeighedEdge>(
-                    _data, _interpreter, new DykstraRoutingLive<SimpleWeighedEdge>(
+                    _data, _interpreter, new DykstraRoutingLive(
                         _data.TagsIndex));
 
                 // create the coordinates list.
@@ -118,7 +118,7 @@ namespace OsmSharpService.Core.Routing
                         OsmSharpRoute route = null;
                         for (int idx = 0; idx < routable_points.Count - 1; idx++)
                         {
-                            OsmSharpRoute current = router.Calculate(VehicleEnum.Car, 
+                            OsmSharpRoute current = router.Calculate(operation.Vehicle, 
                                 routable_points[idx], routable_points[idx + 1]);
 
                             if (route == null)
@@ -135,7 +135,7 @@ namespace OsmSharpService.Core.Routing
                     case RoutingOperationType.TSP:
                         RouterTSPAEXGenetic<RouterPoint> tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
                             router, 300, 300);
-                        response.Route = tsp_solver.CalculateTSP(routable_points.ToArray());
+                        response.Route = tsp_solver.CalculateTSP(operation.Vehicle, routable_points.ToArray());
                         break;
                 }
 
@@ -182,7 +182,7 @@ namespace OsmSharpService.Core.Routing
             {
                 // resolve the points and do the routing.
                 Router<SimpleWeighedEdge> router = new Router<SimpleWeighedEdge>(
-                    _data, _interpreter, new DykstraRoutingLive<SimpleWeighedEdge>(
+                    _data, _interpreter, new DykstraRoutingLive(
                         _data.TagsIndex));
 
                 // create the coordinates list.
