@@ -167,7 +167,7 @@ namespace RoutingSpeedSample
 
                 // create the router.
                 _router = new Router<SimpleWeighedEdge>(osm_data, interpreter,
-                    new DykstraRoutingLive<SimpleWeighedEdge>(osm_data.TagsIndex));
+                    new DykstraRoutingLive(osm_data.TagsIndex));
             }
 
             // start the timer.
