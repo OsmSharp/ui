@@ -66,14 +66,16 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// Builds data source.
         /// </summary>
         /// <param name="interpreter"></param>
+        /// <param name="embedded_string"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<PreProcessedEdge> BuildData(IRoutingInterpreter interpreter)
+        public override IBasicRouterDataSource<PreProcessedEdge> BuildData(IRoutingInterpreter interpreter,
+            string embedded_string)
         {
             OsmTagsIndex tags_index = new OsmTagsIndex();
             
             // do the data processing.
             OsmDataSource source = new OsmDataSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string)); // "OsmSharp.UnitTests.test_network.osm"));
             return new OsmSharp.Osm.Routing.Data.Source.OsmSourceRouterDataSource(interpreter,
                 tags_index, source);
         }

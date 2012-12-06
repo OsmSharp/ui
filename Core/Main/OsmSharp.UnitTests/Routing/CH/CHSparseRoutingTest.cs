@@ -72,10 +72,13 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// Builds the data.
         /// </summary>
         /// <param name="interpreter"></param>
+        /// <param name="embedded_string"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
+        public override IBasicRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter,
+            string embedded_string)
         {
-            string key = "CHSparse.IBasicRouterDataSource<CHEdgeData>.OSM";
+            string key = string.Format("CHSparse.IBasicRouterDataSource<CHEdgeData>.OSM.{0}", 
+                embedded_string);
             IBasicRouterDataSource<CHEdgeData> data = StaticDictionary.Get<IBasicRouterDataSource<CHEdgeData>>(
                 key);
             if (data == null)
@@ -88,7 +91,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                     memory_data, interpreter, memory_data.TagsIndex);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                    Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
+                    Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string));
                 DataProcessorFilterSort sorter = new DataProcessorFilterSort();
                 sorter.RegisterSource(data_processor_source);
                 target_data.RegisterSource(sorter);

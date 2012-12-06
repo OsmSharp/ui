@@ -1359,9 +1359,10 @@ namespace OsmSharp.Routing.CH.Routing
         /// </summary>
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, VehicleEnum vehicle,
-            GeoCoordinate coordinate, IEdgeMatcher matcher, double search_box_size)
+        public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+            GeoCoordinate coordinate, IEdgeMatcher matcher, IDictionary<string, string> point_tags)
         {
+            double search_box_size = .001;
             // build the search box.
             GeoCoordinateBox search_box = new GeoCoordinateBox(new GeoCoordinate(
                 coordinate.Latitude - search_box_size, coordinate.Longitude - search_box_size),

@@ -42,7 +42,8 @@ namespace OsmSharp.UnitTests.Routing
         /// Builds the data.
         /// </summary>
         /// <returns></returns>
-        public abstract IBasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter);
+        public abstract IBasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter,
+            string embedded_string);
 
         /// <summary>
         /// Tests access restrictions on all different highway times.
@@ -50,7 +51,7 @@ namespace OsmSharp.UnitTests.Routing
         protected void DoAccessTestsHighways()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, "OsmSharp.UnitTests.test_segments.osm");
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
@@ -58,47 +59,47 @@ namespace OsmSharp.UnitTests.Routing
             double longitude_left = 4.7696568;
             double longitude_right = 4.8283861;
 
-            GeoCoordinate footway_from = new GeoCoordinate(51.279, longitude_left);
-            GeoCoordinate footway_to = new GeoCoordinate(51.279, longitude_right);
+            GeoCoordinate footway_from = new GeoCoordinate(51.2, longitude_left);
+            GeoCoordinate footway_to = new GeoCoordinate(51.2, longitude_right);
 
-            GeoCoordinate cycleway_from = new GeoCoordinate(51.278, longitude_left);
-            GeoCoordinate cycleway_to = new GeoCoordinate(51.278, longitude_right);
+            GeoCoordinate cycleway_from = new GeoCoordinate(51.1, longitude_left);
+            GeoCoordinate cycleway_to = new GeoCoordinate(51.1, longitude_right);
 
-            GeoCoordinate bridleway_from = new GeoCoordinate(51.277, longitude_left);
-            GeoCoordinate bridleway_to = new GeoCoordinate(51.277, longitude_right);
+            GeoCoordinate bridleway_from = new GeoCoordinate(51.0, longitude_left);
+            GeoCoordinate bridleway_to = new GeoCoordinate(51.0, longitude_right);
 
-            GeoCoordinate path_from = new GeoCoordinate(51.276, longitude_left);
-            GeoCoordinate path_to = new GeoCoordinate(51.276, longitude_right);
+            GeoCoordinate path_from = new GeoCoordinate(50.9, longitude_left);
+            GeoCoordinate path_to = new GeoCoordinate(50.9, longitude_right);
 
-            GeoCoordinate pedestrian_from = new GeoCoordinate(51.275, longitude_left);
-            GeoCoordinate pedestrian_to = new GeoCoordinate(51.275, longitude_right);
+            GeoCoordinate pedestrian_from = new GeoCoordinate(50.8, longitude_left);
+            GeoCoordinate pedestrian_to = new GeoCoordinate(50.8, longitude_right);
 
-            GeoCoordinate road_from = new GeoCoordinate(51.274, longitude_left);
-            GeoCoordinate road_to = new GeoCoordinate(51.274, longitude_right);
+            GeoCoordinate road_from = new GeoCoordinate(50.7, longitude_left);
+            GeoCoordinate road_to = new GeoCoordinate(50.7, longitude_right);
 
-            GeoCoordinate living_street_from = new GeoCoordinate(51.273, longitude_left);
-            GeoCoordinate living_street_to = new GeoCoordinate(51.273, longitude_right);
+            GeoCoordinate living_street_from = new GeoCoordinate(50.6, longitude_left);
+            GeoCoordinate living_street_to = new GeoCoordinate(50.6, longitude_right);
 
-            GeoCoordinate residential_from = new GeoCoordinate(51.272, longitude_left);
-            GeoCoordinate residential_to = new GeoCoordinate(51.272, longitude_right);
+            GeoCoordinate residential_from = new GeoCoordinate(50.5, longitude_left);
+            GeoCoordinate residential_to = new GeoCoordinate(50.5, longitude_right);
 
-            GeoCoordinate unclassified_from = new GeoCoordinate(51.271, longitude_left);
-            GeoCoordinate unclassified_to = new GeoCoordinate(51.271, longitude_right);
+            GeoCoordinate unclassified_from = new GeoCoordinate(50.4, longitude_left);
+            GeoCoordinate unclassified_to = new GeoCoordinate(50.4, longitude_right);
 
-            GeoCoordinate tertiary_from = new GeoCoordinate(51.270, longitude_left);
-            GeoCoordinate tertiary_to = new GeoCoordinate(51.270, longitude_right);
+            GeoCoordinate tertiary_from = new GeoCoordinate(50.3, longitude_left);
+            GeoCoordinate tertiary_to = new GeoCoordinate(50.3, longitude_right);
 
-            GeoCoordinate secondary_from = new GeoCoordinate(51.269, longitude_left);
-            GeoCoordinate secondary_to = new GeoCoordinate(51.269, longitude_right);
+            GeoCoordinate secondary_from = new GeoCoordinate(50.2, longitude_left);
+            GeoCoordinate secondary_to = new GeoCoordinate(50.2, longitude_right);
 
-            GeoCoordinate primary_from = new GeoCoordinate(51.268, longitude_left);
-            GeoCoordinate primary_to = new GeoCoordinate(51.268, longitude_right);
+            GeoCoordinate primary_from = new GeoCoordinate(50.1, longitude_left);
+            GeoCoordinate primary_to = new GeoCoordinate(50.1, longitude_right);
 
-            GeoCoordinate trunk_from = new GeoCoordinate(51.267, longitude_left);
-            GeoCoordinate trunk_to = new GeoCoordinate(51.267, longitude_right);
+            GeoCoordinate trunk_from = new GeoCoordinate(50.0, longitude_left);
+            GeoCoordinate trunk_to = new GeoCoordinate(50.0, longitude_right);
 
-            GeoCoordinate motorway_from = new GeoCoordinate(51.266, longitude_left);
-            GeoCoordinate motorway_to = new GeoCoordinate(51.266, longitude_right);
+            GeoCoordinate motorway_from = new GeoCoordinate(49.9, longitude_left);
+            GeoCoordinate motorway_to = new GeoCoordinate(49.9, longitude_right);
 
             // pedestrian
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
@@ -358,8 +359,12 @@ namespace OsmSharp.UnitTests.Routing
             ResolvedType resolved_from = router.Resolve(vehicle, from);
             ResolvedType resolved_to = router.Resolve(vehicle, to);
 
-            OsmSharpRoute route = router.Calculate(vehicle, resolved_from, resolved_to);
-            return route != null;
+            if (resolved_from != null && resolved_to != null)
+            {
+                OsmSharpRoute route = router.Calculate(vehicle, resolved_from, resolved_to);
+                return route != null;
+            }
+            return false;
         }
     }
 }

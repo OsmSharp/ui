@@ -123,12 +123,15 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <summary>
         /// Searches for the closest routable point.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="coordinate"></param>
-        /// <param name="matcher"></param>
+        /// <param name="graph">The graph to search.</param>
+        /// <param name="interpreter">The routing interpreter.</param>
+        /// <param name="vehicle">The vehicle to search for.</param>
+        /// <param name="coordinate">The coordinate to search around.</param>
+        /// <param name="matcher">The matcher to match to edges.</param>
+        /// <param name="point_tags">The properties of the point to match.</param>
         /// <returns></returns>
-        SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, VehicleEnum vehicle,
-            GeoCoordinate coordinate, IEdgeMatcher matcher, double search_box_size);
+        SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+            GeoCoordinate coordinate, IEdgeMatcher matcher, IDictionary<string, string> point_tags);
     }
 
     /// <summary>

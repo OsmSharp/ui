@@ -129,6 +129,7 @@
     <Compile Include="Routing\CH\CHVerifiedContractionTests.cs" />
     <Compile Include="Routing\Dykstra\DykstraLiveRoutingTests.cs" />
     <Compile Include="Routing\DynamicGraphTests.cs" />
+    <Compile Include="Routing\EdgeMatcher\EdgeMatcherTests.cs" />
     <Compile Include="Routing\Interpreter\OsmRoutingInterpreterTests.cs" />
     <Compile Include="Routing\PathSegmentTests.cs" />
     <Compile Include="Routing\Dykstra\DykstraLiveAccessTests.cs">

@@ -555,7 +555,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher)
         {
-            SearchClosestResult result = _router.SearchClosest(_data_graph, vehicle, coordinate, matcher, 0.001f); // search the closest routable object.
+            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, matcher, null); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
@@ -614,7 +614,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public GeoCoordinate Search(VehicleEnum vehicle, GeoCoordinate coordinate)
         {
-            SearchClosestResult result = _router.SearchClosest(_data_graph, vehicle, coordinate, null, 0.001f); // search the closest routable object.
+            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, null, null); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
