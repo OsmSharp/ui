@@ -171,7 +171,7 @@ namespace OsmSharp.Routing.Core
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <returns></returns>
-        ResolvedType Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher);
+        ResolvedType Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher, IDictionary<string, string> point_tags);
 
         /// <summary>
         /// Resolves all the given points.
@@ -188,7 +188,7 @@ namespace OsmSharp.Routing.Core
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <returns></returns>
-        ResolvedType[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, IEdgeMatcher matcher);
+        ResolvedType[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, IEdgeMatcher matcher, IDictionary<string, string>[] point_tags);
 
         #region Search
 

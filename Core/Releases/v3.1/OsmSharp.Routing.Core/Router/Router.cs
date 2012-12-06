@@ -35,7 +35,7 @@ using OsmSharp.Routing.Core.Graph.DynamicGraph;
 namespace OsmSharp.Routing.Core
 {
     /// <summary>
-    /// A class that implements common functionality for a raw routing algorithm.
+    /// A class that implements common functionality for any routing algorithm.
     /// </summary>
     public class Router<EdgeData> : IRouter<RouterPoint>
         where EdgeData : IDynamicGraphEdgeData
@@ -544,7 +544,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate)
         {
-            return this.Resolve(vehicle, coordinate, null);
+            return this.Resolve(vehicle, coordinate, null, null);
         }
 
         /// <summary>
@@ -553,9 +553,10 @@ namespace OsmSharp.Routing.Core
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher)
+        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, 
+            IEdgeMatcher matcher, IDictionary<string, string> point_tags)
         {
-            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, matcher, null); // search the closest routable object.
+            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, matcher, point_tags); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
@@ -597,12 +598,12 @@ namespace OsmSharp.Routing.Core
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, IEdgeMatcher matcher)
+        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, IEdgeMatcher matcher, IDictionary<string, string>[] point_tags)
         {
             RouterPoint[] points = new RouterPoint[coordinate.Length];
             for (int idx = 0; idx < coordinate.Length; idx++)
             {
-                points[idx] = this.Resolve(vehicle, coordinate[idx], matcher);
+                points[idx] = this.Resolve(vehicle, coordinate[idx], matcher, point_tags[idx]);
             }
             return points;
         }
