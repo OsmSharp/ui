@@ -42,7 +42,8 @@ namespace OsmSharp.UnitTests.Routing
         /// Builds the data.
         /// </summary>
         /// <returns></returns>
-        public abstract IBasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter);
+        public abstract IBasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter,
+            string embedded_string);
 
         /// <summary>
         /// Tests access restrictions on all different highway times.
@@ -50,7 +51,7 @@ namespace OsmSharp.UnitTests.Routing
         protected void DoAccessTestsHighways()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter);
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, "OsmSharp.UnitTests.test_segments.osm");
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);

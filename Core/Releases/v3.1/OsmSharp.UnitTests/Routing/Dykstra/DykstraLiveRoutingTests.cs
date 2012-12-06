@@ -40,6 +40,7 @@ using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.UnitTests;
 
 namespace OsmSharp.Osm.UnitTests.Routing.DykstraLive
 {
@@ -72,36 +73,39 @@ namespace OsmSharp.Osm.UnitTests.Routing.DykstraLive
         }
 
         /// <summary>
-        /// Holds the data.
-        /// </summary>
-        private IBasicRouterDataSource<SimpleWeighedEdge> _data = null;
-
-        /// <summary>
         /// Builds data source.
         /// </summary>
         /// <param name="interpreter"></param>
+        /// <param name="embedded_string"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<SimpleWeighedEdge> BuildData(IRoutingInterpreter interpreter)
+        public override IBasicRouterDataSource<SimpleWeighedEdge> BuildData(IRoutingInterpreter interpreter,
+            string embedded_string)
         {
-            if (_data == null)
+            string key = string.Format("Dykstra.Routing.IBasicRouterDataSource<SimpleWeighedEdge>.OSM.{0}",
+                embedded_string);
+            IBasicRouterDataSource<SimpleWeighedEdge> data = StaticDictionary.Get<IBasicRouterDataSource<SimpleWeighedEdge>>(
+                key);
+            if (data == null)
             {
                 OsmTagsIndex tags_index = new OsmTagsIndex();
 
                 // do the data processing.
-                MemoryRouterDataSource<SimpleWeighedEdge> data =
+                MemoryRouterDataSource<SimpleWeighedEdge> memory_data =
                     new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
                 SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
-                    data, interpreter, data.TagsIndex);
+                    memory_data, interpreter, memory_data.TagsIndex);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                    Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
+                    Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string));
                 DataProcessorFilterSort sorter = new DataProcessorFilterSort();
                 sorter.RegisterSource(data_processor_source);
                 target_data.RegisterSource(sorter);
                 target_data.Pull();
 
-                _data = data;
+                data = memory_data;
+                StaticDictionary.Add<IBasicRouterDataSource<SimpleWeighedEdge>>(key,
+                    data);
             }
-            return _data;
+            return data;
         }
 
         /// <summary>
