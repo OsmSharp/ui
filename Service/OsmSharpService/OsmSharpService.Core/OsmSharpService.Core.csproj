@@ -30,6 +30,7 @@
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>..\Output\OsmSharpService.Core.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -50,6 +51,7 @@
     <Compile Include="ResponseStatusEnum.cs" />
     <Compile Include="Routing\Primitives\RoutingHook.cs" />
     <Compile Include="Routing\Primitives\RoutingHookResolved.cs" />
+    <Compile Include="Routing\Primitives\RoutingHookTag.cs" />
     <Compile Include="Routing\RoutingOperation.cs" />
     <Compile Include="OperationProcessor.cs" />
     <Compile Include="Routing\Primitives\RoutingResponse.cs" />

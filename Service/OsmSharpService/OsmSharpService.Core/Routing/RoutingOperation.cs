@@ -37,16 +37,20 @@ namespace OsmSharpService.Core.Routing
     public enum RoutingOperationType
     {
         /// <summary>
-        /// Returns a route along all the points.
+        /// Returns a route along all the points in the given order.
         /// </summary>
         Regular,
         /// <summary>
-        /// Returns a shortest route along all the points.
+        /// Returns a shortest route along all the points using the first point as start point.
         /// </summary>
         TSP,
         /// <summary>
-        /// Returns all the weights between the given points.
+        /// Returns all the weights between the given points indexed the same way as the points given.
         /// </summary>
-        ManyToMany
+        ManyToMany,
+        /// <summary>
+        /// Returns a route between the first given point to the closest point in the rest of the points given.
+        /// </summary>
+        ToClosest
     }
 }

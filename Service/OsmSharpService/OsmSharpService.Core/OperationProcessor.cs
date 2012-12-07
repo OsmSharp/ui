@@ -76,18 +76,7 @@ namespace OsmSharpService.Core.Routing
                 for (int idx = 0; idx < operation.Hooks.Length; idx++)
                 {
                     // routing hook tags.
-                    IDictionary<string, string> tags = new Dictionary<string, string>();
-                    if (operation.Hooks[idx].Name.ToStringEmptyWhenNull().Length > 0)
-                    { // there is a name.
-                        tags["name"] = operation.Hooks[idx].Name;
-                    }
-                    //if (operation.Hooks[idx].Tags != null)
-                    //{ // there are tags!
-                    //    for (int tag_idx = 0; tag_idx < operation.Hooks[idx].Tags.Length; tag_idx++)
-                    //    { // add the tags.
-                    //        tags[operation.Hooks[idx].Tags[tag_idx].Key] = operation.Hooks[idx].Tags[tag_idx].Value;
-                    //    }
-                    //}
+                    IDictionary<string, string> tags = operation.Hooks[idx].Tags.ConvertToDictionary();
                     coordinates[idx] = new GeoCoordinate(
                         operation.Hooks[idx].Latitude, operation.Hooks[idx].Longitude);
 
@@ -95,14 +84,10 @@ namespace OsmSharpService.Core.Routing
                     RouterPoint router_point = router.Resolve(operation.Vehicle, coordinates[idx], matcher, tags);
 
                     // set the result.
-                    if (operation.Hooks[idx].Name.ToStringEmptyWhenNull().Length > 0)
-                    { // there is a name.
-                        tags["name"] = operation.Hooks[idx].Name;
+                    if (router_point != null && operation.Hooks[idx].Tags != null)
+                    { // set the tags.
+                        router_point.Tags = operation.Hooks[idx].Tags.ConvertToList();
                     }
-                    //if (router_point != null && operation.Hooks[idx].Tags != null)
-                    //{ // set the tags.
-                    //    router_point.Tags = operation.Hooks[idx].Tags.ToList();
-                    //}
                     router_points[idx] = router_point;
                 }
 
@@ -147,7 +132,7 @@ namespace OsmSharpService.Core.Routing
                         OsmSharpRoute route = null;
                         for (int idx = 0; idx < routable_points.Count - 1; idx++)
                         {
-                            OsmSharpRoute current = router.Calculate(operation.Vehicle, 
+                            OsmSharpRoute current = router.Calculate(operation.Vehicle,
                                 routable_points[idx], routable_points[idx + 1]);
 
                             if (route == null)
@@ -163,8 +148,26 @@ namespace OsmSharpService.Core.Routing
                         break;
                     case RoutingOperationType.TSP:
                         RouterTSPAEXGenetic<RouterPoint> tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
-                            router, 300, 300);
+                            router, 300, 100);
                         response.Route = tsp_solver.CalculateTSP(operation.Vehicle, routable_points.ToArray());
+                        break;
+                    case RoutingOperationType.ToClosest:
+                        // are there enough points.
+                        if (routable_points.Count > 2)
+                        { // there are enough routable point.
+                            RouterPoint from = routable_points[0];
+                            RouterPoint[] tos = new RouterPoint[routable_points.Count - 1];
+                            for (int idx = 1; idx < routable_points.Count; idx++)
+                            {
+                                tos[idx - 1] = routable_points[idx];
+                            }
+                            response.Route = router.CalculateToClosest(operation.Vehicle, from, tos);
+                        }
+                        else
+                        { // not enough points are routable.
+                            response.Status = OsmSharpServiceResponseStatusEnum.Failed;
+                            response.StatusMessage = "Not enough points are routable!";
+                        }
                         break;
                 }
 
@@ -222,18 +225,7 @@ namespace OsmSharpService.Core.Routing
                 for (int idx = 0; idx < operation.Hooks.Length; idx++)
                 {
                     // routing hook tags.
-                    IDictionary<string, string> tags = new Dictionary<string, string>();
-                    if (operation.Hooks[idx].Name.ToStringEmptyWhenNull().Length > 0)
-                    { // there is a name.
-                        tags["name"] = operation.Hooks[idx].Name;
-                    }
-                    //if (operation.Hooks[idx].Tags != null)
-                    //{ // there are tags!
-                    //    for (int tag_idx = 0; tag_idx < operation.Hooks[idx].Tags.Length; tag_idx++)
-                    //    { // add the tags.
-                    //        tags[operation.Hooks[idx].Tags[tag_idx].Key] = operation.Hooks[idx].Tags[tag_idx].Value;
-                    //    }
-                    //}
+                    IDictionary<string, string> tags = operation.Hooks[idx].Tags.ConvertToDictionary();
 
                     // resolve the point.
                     RouterPoint resolved = router.Resolve(operation.Vehicle, new GeoCoordinate(

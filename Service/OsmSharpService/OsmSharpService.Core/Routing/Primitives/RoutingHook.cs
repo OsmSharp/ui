@@ -28,6 +28,6 @@ namespace OsmSharpService.Core.Routing.Primitives
         /// <summary>
         /// The routing hook tags.
         /// </summary>
-        public string Name { get; set; }
+        public RoutingHookTag[] Tags { get; set; }
     }
 }
