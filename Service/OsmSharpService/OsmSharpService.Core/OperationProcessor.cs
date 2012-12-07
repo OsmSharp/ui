@@ -17,6 +17,7 @@ using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Progress;
 using OsmSharpService.Core.Routing.Primitives;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Tools.Core;
 
 namespace OsmSharpService.Core.Routing
 {
@@ -61,6 +62,9 @@ namespace OsmSharpService.Core.Routing
 
             try
             {
+                // create the default edge matcher.
+                IEdgeMatcher matcher = new LevenshteinEdgeMatcher();
+
                 // resolve the points and do the routing.
                 Router<SimpleWeighedEdge> router = new Router<SimpleWeighedEdge>(
                     _data, _interpreter, new DykstraRoutingLive(
@@ -68,14 +72,39 @@ namespace OsmSharpService.Core.Routing
 
                 // create the coordinates list.
                 GeoCoordinate[] coordinates = new GeoCoordinate[operation.Hooks.Length];
+                RouterPoint[] router_points = new RouterPoint[operation.Hooks.Length];
                 for (int idx = 0; idx < operation.Hooks.Length; idx++)
                 {
+                    // routing hook tags.
+                    IDictionary<string, string> tags = new Dictionary<string, string>();
+                    if (operation.Hooks[idx].Name.ToStringEmptyWhenNull().Length > 0)
+                    { // there is a name.
+                        tags["name"] = operation.Hooks[idx].Name;
+                    }
+                    //if (operation.Hooks[idx].Tags != null)
+                    //{ // there are tags!
+                    //    for (int tag_idx = 0; tag_idx < operation.Hooks[idx].Tags.Length; tag_idx++)
+                    //    { // add the tags.
+                    //        tags[operation.Hooks[idx].Tags[tag_idx].Key] = operation.Hooks[idx].Tags[tag_idx].Value;
+                    //    }
+                    //}
                     coordinates[idx] = new GeoCoordinate(
                         operation.Hooks[idx].Latitude, operation.Hooks[idx].Longitude);
-                }
 
-                // resolve all.
-                RouterPoint[] router_points = router.Resolve(operation.Vehicle, coordinates);
+                    // resolve the point.
+                    RouterPoint router_point = router.Resolve(operation.Vehicle, coordinates[idx], matcher, tags);
+
+                    // set the result.
+                    if (operation.Hooks[idx].Name.ToStringEmptyWhenNull().Length > 0)
+                    { // there is a name.
+                        tags["name"] = operation.Hooks[idx].Name;
+                    }
+                    //if (router_point != null && operation.Hooks[idx].Tags != null)
+                    //{ // set the tags.
+                    //    router_point.Tags = operation.Hooks[idx].Tags.ToList();
+                    //}
+                    router_points[idx] = router_point;
+                }
 
                 // add a tag for each point.
                 List<RoutingHook> unroutable_hooks = new List<RoutingHook>();
@@ -180,6 +209,9 @@ namespace OsmSharpService.Core.Routing
 
             try
             {
+                // create the default edge matcher.
+                IEdgeMatcher matcher = new LevenshteinEdgeMatcher();
+
                 // resolve the points and do the routing.
                 Router<SimpleWeighedEdge> router = new Router<SimpleWeighedEdge>(
                     _data, _interpreter, new DykstraRoutingLive(
@@ -189,8 +221,23 @@ namespace OsmSharpService.Core.Routing
                 response.ResolvedHooks = new RoutingHookResolved[operation.Hooks.Length];
                 for (int idx = 0; idx < operation.Hooks.Length; idx++)
                 {
+                    // routing hook tags.
+                    IDictionary<string, string> tags = new Dictionary<string, string>();
+                    if (operation.Hooks[idx].Name.ToStringEmptyWhenNull().Length > 0)
+                    { // there is a name.
+                        tags["name"] = operation.Hooks[idx].Name;
+                    }
+                    //if (operation.Hooks[idx].Tags != null)
+                    //{ // there are tags!
+                    //    for (int tag_idx = 0; tag_idx < operation.Hooks[idx].Tags.Length; tag_idx++)
+                    //    { // add the tags.
+                    //        tags[operation.Hooks[idx].Tags[tag_idx].Key] = operation.Hooks[idx].Tags[tag_idx].Value;
+                    //    }
+                    //}
+
+                    // resolve the point.
                     RouterPoint resolved = router.Resolve(operation.Vehicle, new GeoCoordinate(
-                        operation.Hooks[idx].Latitude, operation.Hooks[idx].Longitude));
+                        operation.Hooks[idx].Latitude, operation.Hooks[idx].Longitude), matcher, tags);
 
                     if (resolved != null)
                     { // the point was resolved successfully.

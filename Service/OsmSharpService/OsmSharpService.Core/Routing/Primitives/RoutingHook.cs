@@ -24,5 +24,10 @@ namespace OsmSharpService.Core.Routing.Primitives
         /// The longitude
         /// </summary>
         public float Longitude { get; set; }
+
+        /// <summary>
+        /// The routing hook tags.
+        /// </summary>
+        public string Name { get; set; }
     }
 }
