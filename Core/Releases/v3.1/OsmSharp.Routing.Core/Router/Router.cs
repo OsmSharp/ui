@@ -297,7 +297,7 @@ namespace OsmSharp.Routing.Core
                 {
                     entries[0].Points = new RoutePoint[1];
                     entries[0].Points[0] = from;
-                    entries[0].Points[0].Tags = RouteTags.ConvertFrom(from_resolved.Tags);
+                    entries[0].Points[0].Tags = from_resolved.Tags.ConvertFrom();
                 }
 
                 // create the to routing point.
@@ -310,7 +310,7 @@ namespace OsmSharp.Routing.Core
                     //to.Tags = ConvertTo(to_point.Tags);
                     entries[entries.Length - 1].Points = new RoutePoint[1];
                     entries[entries.Length - 1].Points[0] = to;
-                    entries[entries.Length - 1].Points[0].Tags = RouteTags.ConvertFrom(to_resolved.Tags);
+                    entries[entries.Length - 1].Points[0].Tags = to_resolved.Tags.ConvertFrom();
                 }
 
                 // set the routing points.
@@ -382,10 +382,9 @@ namespace OsmSharp.Routing.Core
 
                             side_street.Latitude = (float)neighbour_coordinate.Latitude;
                             side_street.Longitude = (float)neighbour_coordinate.Longitude;
-                            side_street.Tags = RouteTags.ConvertFrom(tags);
+                            side_street.Tags = tags.ConvertFrom();
                             side_street.WayName = _interpreter.EdgeInterpreter.GetName(tags);
-                            side_street.WayNames = RouteTags.ConvertFrom(
-                                _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags));
+                            side_street.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
 
                             side_streets.Add(side_street);
                         }
@@ -398,10 +397,10 @@ namespace OsmSharp.Routing.Core
                 route_entry.Latitude = (float)next_coordinate.Latitude;
                 route_entry.Longitude = (float)next_coordinate.Longitude;
                 route_entry.SideStreets = side_streets.ToArray<RoutePointEntrySideStreet>();
-                route_entry.Tags = RouteTags.ConvertFrom(current_tags);
+                route_entry.Tags = current_tags.ConvertFrom();
                 route_entry.Type = RoutePointEntryType.Along;
                 route_entry.WayFromName = name;
-                route_entry.WayFromNames = RouteTags.ConvertFrom(names);
+                route_entry.WayFromNames = names.ConvertFrom();
                 entries.Add(route_entry);
 
                 // set the previous node.
@@ -419,9 +418,9 @@ namespace OsmSharp.Routing.Core
                 last.Latitude = (float)coordinate.Latitude;
                 last.Longitude = (float)coordinate.Longitude;
                 last.Type = RoutePointEntryType.Stop;
-                last.Tags = RouteTags.ConvertFrom(tags);
+                last.Tags = tags.ConvertFrom();
                 last.WayFromName = _interpreter.EdgeInterpreter.GetName(tags);
-                last.WayFromNames = RouteTags.ConvertFrom(_interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags));
+                last.WayFromNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
 
                 entries.Add(last);
             }
