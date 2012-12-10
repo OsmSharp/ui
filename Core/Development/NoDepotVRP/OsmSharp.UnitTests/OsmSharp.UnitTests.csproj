@@ -115,6 +115,8 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Routes\MultiRouteTest.cs" />
+    <Compile Include="Routes\RouteTest.cs" />
     <Compile Include="Routing\CH\Contraction\CHContractionTests.cs" />
     <Compile Include="Data\NodeTests.cs" />
     <Compile Include="Data\PBFTests.cs" />

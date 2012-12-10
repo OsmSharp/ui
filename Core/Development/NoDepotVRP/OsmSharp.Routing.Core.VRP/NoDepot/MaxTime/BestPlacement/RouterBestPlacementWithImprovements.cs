@@ -103,6 +103,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                 int customer = this.SelectSeed(problem, calculator, solution, customers);
                 customers.Remove(customer);
 
+                MaxTimeSolution current_route_clone = solution.Clone() as MaxTimeSolution;
+
                 // start a route r.
                 double current_route_weight = 0;
                 IRoute current_route = solution.Add(customer);

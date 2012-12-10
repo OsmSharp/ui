@@ -177,6 +177,7 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
                 for (int customer = 0; customer < problem.Size; customer++)
                 {
                     string route_string = route.ToString();
+                    //IRoute previous = route.Clone() as IRoute;
                     if (route.Contains(customer))
                     {
                         // remove customer and keep position.

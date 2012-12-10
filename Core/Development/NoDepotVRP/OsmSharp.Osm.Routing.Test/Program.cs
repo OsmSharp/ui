@@ -42,6 +42,7 @@ using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic;
 using OsmSharp.Routing.Core.Route;
 using OsmSharp.Osm.Data.Core.Processor.Progress;
 using OsmSharp.Osm.Routing.Test.CH;
+using OsmSharp.Osm.Routing.Test.VRP;
 
 namespace OsmSharp.Osm.Routing.Test
 {
@@ -56,12 +57,13 @@ namespace OsmSharp.Osm.Routing.Test
             //    new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\log.txt"));
 
             //PBF.PBFTest.Execute();
-            ManyToMany.ManyToManyExecution.Execute();
+            //ManyToMany.ManyToManyExecution.Execute();
             //Point2Point.Point2PointExecution.Execute();
             //CHTest.Execute();
             //Tsp.TspTest.Execute();
             //CHVerifiedContractionBaseTests.Execute();
             //Instructions.InstructionTestExecution.Execute();
+            NoDepotTest.Execute();
 
             //// initialize the interpreters.
             //OsmRoutingInterpreter interpreter = 
