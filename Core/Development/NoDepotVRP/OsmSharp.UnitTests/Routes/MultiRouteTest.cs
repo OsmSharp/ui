@@ -197,5 +197,58 @@ namespace OsmSharp.UnitTests.Routes
                 }
             }
         }
+
+        /// <summary>
+        /// Tests all enumerations of a route.
+        /// </summary>
+        public void DoTestEnumerateBetween()
+        {
+            int count = 10;
+            int routes = 3;
+
+            IMultiRoute multi_route = this.BuildRoute(true);
+
+            Assert.AreEqual(0, multi_route.Count);
+
+            // test with initializing the routes empty.
+            List<List<int>> customers_per_route = new List<List<int>>();
+            Assert.AreEqual(0, multi_route.Count);
+            IRoute route;
+            for (int route_idx = 0; route_idx < routes; route_idx++)
+            {
+                customers_per_route.Add(new List<int>());
+                int customer_start = (route_idx * count);
+                route = multi_route.Add();
+
+                for (int customer = customer_start; customer < customer_start + count; customer++)
+                {
+                    customers_per_route[route_idx].Add(customer);
+                    route.Insert(customer - 1, customer, -1);
+                }
+            }
+
+            for (int route_to_test = 0; route_to_test < routes; route_to_test++)
+            {
+                route = multi_route.Route(route_to_test);
+
+                for (int from = (route_to_test * count); from < (route_to_test * count) + count; from++)
+                {
+                    for (int to = (route_to_test * count); to < (route_to_test * count) + count; to++)
+                    {
+                        IEnumerator<int> enumerator = route.Between(from, to).GetEnumerator();
+                        for (int customer = from; customer - 1 != to; customer++)
+                        {
+                            if (customer == (route_to_test * count) + count)
+                            {
+                                customer = (route_to_test * count);
+                            }
+
+                            Assert.IsTrue(enumerator.MoveNext());
+                            Assert.AreEqual(customer, enumerator.Current);
+                        }
+                    }
+                }
+            }
+        }
     }
 }

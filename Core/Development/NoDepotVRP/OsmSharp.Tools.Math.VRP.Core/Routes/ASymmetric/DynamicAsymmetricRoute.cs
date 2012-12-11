@@ -217,11 +217,14 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                     if (to < 0) { }
                     else
                     {
-                        _next_array[customer] = to;
+                        if (to != _first)
+                        {
+                            _next_array[customer] = to;
+                        }
                     }
 
                     // update last.
-                    if (_first == to)
+                    if (_first == to && !this.IsRound)
                     {
                         _last = customer;
                     }
@@ -665,7 +668,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         public IEnumerable<int> Between(int from, int to)
         {
-            return new DynamicAsymmetricBetweenEnumerable(_next_array, from, to);
+            return new DynamicAsymmetricBetweenEnumerable(_next_array, from, to, _first);
         }
     }
 }

@@ -202,5 +202,40 @@ namespace OsmSharp.UnitTests.Routes
                 }
             }
         }
+
+        /// <summary>
+        /// Tests all enumerations of a route.
+        /// </summary>
+        protected void DoTestEnumerateBetween()
+        {
+            int count = 10;
+
+            IRoute route = this.BuildRoute(true);
+            if (route != null)
+            { // this part needs testing.
+                for (int customer = 0; customer < count; customer++)
+                {
+                    route.Insert(customer - 1, customer, -1);
+                }
+            }
+
+            for (int from = 0; from < count; from++)
+            {
+                for (int to = 0; to < count; to++)
+                {
+                    IEnumerator<int> enumerator = route.Between(from, to).GetEnumerator();
+                    for (int customer = from; customer - 1 != to; customer++)
+                    {
+                        if (customer == count)
+                        {
+                            customer = 0;
+                        }
+
+                        Assert.IsTrue(enumerator.MoveNext());
+                        Assert.AreEqual(customer, enumerator.Current);
+                    }
+                }
+            }
+        }
     }
 }

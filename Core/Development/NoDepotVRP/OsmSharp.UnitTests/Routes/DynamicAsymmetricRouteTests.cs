@@ -68,5 +68,14 @@ namespace OsmSharp.UnitTests.Routes
         {
             this.DoTestAddRemoveComplete();
         }
+
+        /// <summary>
+        /// Tests a dynamic asymetric route's enumeration functionality.
+        /// </summary>
+        [TestMethod]
+        public void TestDynamicAsymmetricRouteEnumerateBetween()
+        {
+            this.DoTestEnumerateBetween();
+        }
     }
 }

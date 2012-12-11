@@ -28,13 +28,17 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         private int _last;
 
+        private int _first_route;
+
         private int[] _next_array;
 
-        public DynamicAsymmetricBetweenEnumerable(int[] next_array, int first, int last)
+        public DynamicAsymmetricBetweenEnumerable(int[] next_array, int first, int last, int first_route)
         {
             _next_array = next_array;
             _first = first;
             _last = last;
+
+            _first_route = first_route;
         }
 
         private class BetweenEnumerator : IEnumerator<int>
@@ -45,13 +49,17 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
             private int _last;
 
+            private int _first_route;
+
             private int[] _next_array;
 
-            public BetweenEnumerator(int[] next_array, int first, int last)
+            public BetweenEnumerator(int[] next_array, int first, int last, int first_route)
             {
                 _next_array = next_array;
                 _first = first;
                 _last = last;
+
+                _first_route = first_route;
             }
 
             public int Current
@@ -84,6 +92,10 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                     return true;
                 }
                 _current = _next_array[_current];
+                if (_current == -1)
+                {
+                    _current = _first_route;
+                }
                 return true;
             }
 
@@ -95,7 +107,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         public IEnumerator<int> GetEnumerator()
         {
-            return new BetweenEnumerator(_next_array, _first, _last);
+            return new BetweenEnumerator(_next_array, _first, _last, _first_route);
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
