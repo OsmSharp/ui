@@ -624,8 +624,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                             this.Resize(customer);
                         }
 
-                        //// get the to customer.
-                        //int to = _next_array[from];
+                        // get the to customer if needed.
+                        if (to < 0)
+                        {
+                            to = _parent._next_array[from];
+                        }
 
                         // insert customer.
                         _parent._next_array[from] = customer;

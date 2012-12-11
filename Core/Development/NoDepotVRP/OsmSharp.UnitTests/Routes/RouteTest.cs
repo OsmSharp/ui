@@ -168,5 +168,39 @@ namespace OsmSharp.UnitTests.Routes
                 Assert.IsTrue(route.Contains(count - 1, 0));
             }
         }
+
+        /// <summary>
+        /// Test removing adding every customer at every position.
+        /// </summary>
+        public void DoTestAddRemoveComplete()
+        {            
+            // create a new empty route.
+            int count = 10;
+            for (int customer_to_remove = 0; customer_to_remove < count; customer_to_remove++)
+            {
+                for (int customer_to_place_after = 0; customer_to_place_after < count; customer_to_place_after++)
+                {
+                    if (customer_to_remove != customer_to_place_after)
+                    {
+                        IRoute route = this.BuildRoute(true);
+                        if (route != null)
+                        { // this part needs testing.
+                            for (int customer = 0; customer < count; customer++)
+                            {
+                                route.Insert(customer - 1, customer, -1);
+                            }
+                        }
+
+                        route.Remove(customer_to_remove);
+                        route.Insert(customer_to_place_after, customer_to_remove, -1);
+
+                        Assert.IsTrue(route.Contains(customer_to_place_after, customer_to_remove));
+                        Assert.AreEqual(count, route.Count);
+                        HashSet<int> customers_in_route = new HashSet<int>(route);
+                        Assert.AreEqual(customers_in_route.Count, route.Count);
+                    }
+                }
+            }
+        }
     }
 }

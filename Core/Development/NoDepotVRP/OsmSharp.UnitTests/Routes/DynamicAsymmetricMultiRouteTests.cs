@@ -33,7 +33,6 @@ namespace OsmSharp.UnitTests.Routes
             this.DoTestAdd();
         }
 
-
         /// <summary>
         /// Tests adding customers to a multi route.
         /// </summary>
@@ -41,6 +40,15 @@ namespace OsmSharp.UnitTests.Routes
         public void TestDynamicAsymmetricMultiRouteRemove()
         {
             this.DoTestRemove();
+        }
+
+        /// <summary>
+        /// Tests adding/removing customers to a multi route for each route, customer and position.
+        /// </summary>
+        [TestMethod]
+        public void TestDynamicAsymmetricMultiRouteAddRemoveComplete()
+        {
+            this.DoTestAddRemoveComplete();
         }
     }
 }

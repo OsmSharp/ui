@@ -145,5 +145,57 @@ namespace OsmSharp.UnitTests.Routes
                 }
             }
         }
+
+        /// <summary>
+        /// Tests removing adding every customer at every position.
+        /// </summary>
+        public void DoTestAddRemoveComplete()
+        {
+            int count = 10;
+            int routes = 3;
+
+            for (int route_to_test = 0; route_to_test < routes; route_to_test++)
+            {
+                for (int customer_to_remove = (route_to_test * count); customer_to_remove < (route_to_test * count) + count; customer_to_remove++)
+                {
+                    for (int customer_to_place_after = (route_to_test * count); customer_to_place_after < (route_to_test * count) + count; customer_to_place_after++)
+                    {
+                        if (customer_to_remove != customer_to_place_after)
+                        {
+                            IMultiRoute multi_route = this.BuildRoute(true);
+
+                            Assert.AreEqual(0, multi_route.Count);
+
+                            // test with initializing the routes empty.
+                            List<List<int>> customers_per_route = new List<List<int>>();
+                            Assert.AreEqual(0, multi_route.Count);
+                            IRoute route;
+                            for (int route_idx = 0; route_idx < routes; route_idx++)
+                            {
+                                customers_per_route.Add(new List<int>());
+                                int customer_start = (route_idx * count);
+                                route = multi_route.Add();
+
+                                for (int customer = customer_start; customer < customer_start + count; customer++)
+                                {
+                                    customers_per_route[route_idx].Add(customer);
+                                    route.Insert(customer - 1, customer, -1);
+                                }
+                            }
+
+                            route = multi_route.Route(route_to_test);
+
+                            route.Remove(customer_to_remove);
+                            route.Insert(customer_to_place_after, customer_to_remove, -1);
+
+                            Assert.IsTrue(route.Contains(customer_to_place_after, customer_to_remove));
+                            Assert.AreEqual(count, route.Count);
+                            HashSet<int> customers_in_route = new HashSet<int>(route);
+                            Assert.AreEqual(customers_in_route.Count, route.Count);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
