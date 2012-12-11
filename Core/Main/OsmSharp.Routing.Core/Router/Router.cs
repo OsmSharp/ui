@@ -35,7 +35,7 @@ using OsmSharp.Routing.Core.Graph.DynamicGraph;
 namespace OsmSharp.Routing.Core
 {
     /// <summary>
-    /// A class that implements common functionality for a raw routing algorithm.
+    /// A class that implements common functionality for any routing algorithm.
     /// </summary>
     public class Router<EdgeData> : IRouter<RouterPoint>
         where EdgeData : IDynamicGraphEdgeData
@@ -297,7 +297,7 @@ namespace OsmSharp.Routing.Core
                 {
                     entries[0].Points = new RoutePoint[1];
                     entries[0].Points[0] = from;
-                    entries[0].Points[0].Tags = RouteTags.ConvertFrom(from_resolved.Tags);
+                    entries[0].Points[0].Tags = from_resolved.Tags.ConvertFrom();
                 }
 
                 // create the to routing point.
@@ -310,7 +310,7 @@ namespace OsmSharp.Routing.Core
                     //to.Tags = ConvertTo(to_point.Tags);
                     entries[entries.Length - 1].Points = new RoutePoint[1];
                     entries[entries.Length - 1].Points[0] = to;
-                    entries[entries.Length - 1].Points[0].Tags = RouteTags.ConvertFrom(to_resolved.Tags);
+                    entries[entries.Length - 1].Points[0].Tags = to_resolved.Tags.ConvertFrom();
                 }
 
                 // set the routing points.
@@ -382,10 +382,9 @@ namespace OsmSharp.Routing.Core
 
                             side_street.Latitude = (float)neighbour_coordinate.Latitude;
                             side_street.Longitude = (float)neighbour_coordinate.Longitude;
-                            side_street.Tags = RouteTags.ConvertFrom(tags);
+                            side_street.Tags = tags.ConvertFrom();
                             side_street.WayName = _interpreter.EdgeInterpreter.GetName(tags);
-                            side_street.WayNames = RouteTags.ConvertFrom(
-                                _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags));
+                            side_street.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
 
                             side_streets.Add(side_street);
                         }
@@ -398,10 +397,10 @@ namespace OsmSharp.Routing.Core
                 route_entry.Latitude = (float)next_coordinate.Latitude;
                 route_entry.Longitude = (float)next_coordinate.Longitude;
                 route_entry.SideStreets = side_streets.ToArray<RoutePointEntrySideStreet>();
-                route_entry.Tags = RouteTags.ConvertFrom(current_tags);
+                route_entry.Tags = current_tags.ConvertFrom();
                 route_entry.Type = RoutePointEntryType.Along;
                 route_entry.WayFromName = name;
-                route_entry.WayFromNames = RouteTags.ConvertFrom(names);
+                route_entry.WayFromNames = names.ConvertFrom();
                 entries.Add(route_entry);
 
                 // set the previous node.
@@ -419,9 +418,9 @@ namespace OsmSharp.Routing.Core
                 last.Latitude = (float)coordinate.Latitude;
                 last.Longitude = (float)coordinate.Longitude;
                 last.Type = RoutePointEntryType.Stop;
-                last.Tags = RouteTags.ConvertFrom(tags);
+                last.Tags = tags.ConvertFrom();
                 last.WayFromName = _interpreter.EdgeInterpreter.GetName(tags);
-                last.WayFromNames = RouteTags.ConvertFrom(_interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags));
+                last.WayFromNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
 
                 entries.Add(last);
             }
@@ -544,7 +543,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate)
         {
-            return this.Resolve(vehicle, coordinate, null);
+            return this.Resolve(vehicle, coordinate, null, null);
         }
 
         /// <summary>
@@ -553,9 +552,10 @@ namespace OsmSharp.Routing.Core
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher)
+        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, 
+            IEdgeMatcher matcher, IDictionary<string, string> point_tags)
         {
-            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, matcher, null); // search the closest routable object.
+            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, matcher, point_tags); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
@@ -597,12 +597,12 @@ namespace OsmSharp.Routing.Core
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, IEdgeMatcher matcher)
+        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, IEdgeMatcher matcher, IDictionary<string, string>[] point_tags)
         {
             RouterPoint[] points = new RouterPoint[coordinate.Length];
             for (int idx = 0; idx < coordinate.Length; idx++)
             {
-                points[idx] = this.Resolve(vehicle, coordinate[idx], matcher);
+                points[idx] = this.Resolve(vehicle, coordinate[idx], matcher, point_tags[idx]);
             }
             return points;
         }

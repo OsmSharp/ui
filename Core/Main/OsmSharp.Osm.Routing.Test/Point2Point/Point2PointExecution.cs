@@ -36,14 +36,14 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         static void Execute<EdgeData>(Point2PointTest<EdgeData> tester)
             where EdgeData : IDynamicGraphEdgeData
         {
-            int test_count = 100;
+            int test_count = 10000;
 
             //tester.ExecuteComparisonTest("matrix", 
             //    new GeoCoordinate(51.01302, 4.005095), new GeoCoordinate(51.01415, 4.006043));
 
-            tester.ExecuteComparisonTests("tiny", test_count);
-            tester.ExecuteComparisonTests("matrix", 1000);
-            tester.ExecuteComparisonTests("eeklo", 100);
+            //tester.ExecuteComparisonTests("tiny", test_count);
+            //tester.ExecuteComparisonTests("matrix", 1000);
+            //tester.ExecuteComparisonTests("eeklo", 100);
             //tester.ExecuteComparisonTests("matrix_big_area", 100);
             //tester.ExecuteComparisonTests("moscow", 100);
 
@@ -53,8 +53,8 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             //tester.ExecuteTest("lebbeke", test_count);
             //tester.ExecuteTest("matrix_big_area", test_count);
             //tester.ExecuteTest("moscow", test_count);
-            //tester.ExecuteTest("flanders_highway", (new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf")).OpenRead(),
-            //    true, 100);
+            tester.ExecuteTest("flanders_highway", (new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf")).OpenRead(),
+                true, test_count);
 
             //tester.ExecuteTestIncrementalBoundingBox("eeklo", 100, new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(
             //    new OsmSharp.Tools.Math.Geo.GeoCoordinate(51.10800, 3.46400),

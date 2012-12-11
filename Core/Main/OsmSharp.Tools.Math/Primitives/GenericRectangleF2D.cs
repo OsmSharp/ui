@@ -388,6 +388,30 @@ namespace OsmSharp.Tools.Math
             return false;
         }
 
+        /// <summary>
+        /// Returns true if the boxes overlap.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public bool Overlaps(RectangleF2D box)
+        {
+            foreach (PointF2D p in box.Corners)
+            {
+                if (this.IsInside(p))
+                {
+                    return true;
+                }
+            }
+            foreach (PointF2D p in this.Corners)
+            {
+                if (box.IsInside(p))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
 
         #endregion
 

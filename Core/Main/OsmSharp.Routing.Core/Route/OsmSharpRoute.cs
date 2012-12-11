@@ -599,7 +599,34 @@ namespace OsmSharp.Routing.Core.Route
 
         public string Value { get; set; }
 
-        public static RouteTags[] ConvertFrom(IDictionary<string, string> tags)
+        #region ICloneable Members
+
+        /// <summary>
+        /// Returns a clone of this object.
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            RouteTags clone = new RouteTags();
+            clone.Key = this.Key;
+            clone.Value = this.Value;
+            return clone;
+        }
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Contains extensions for route tags.
+    /// </summary>
+    public static class RouteTagsExtensions
+    {
+        /// <summary>
+        /// Converts a dictionary of tags to a RouteTags array.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public static RouteTags[] ConvertFrom(this IDictionary<string, string> tags)
         {
             List<RouteTags> tags_list = new List<RouteTags>();
             foreach (KeyValuePair<string, string> pair in tags)
@@ -612,7 +639,12 @@ namespace OsmSharp.Routing.Core.Route
             return tags_list.ToArray();
         }
 
-        public static RouteTags[] ConvertFrom(List<KeyValuePair<string, string>> tags)
+        /// <summary>
+        /// Converts a list of KeyValuePairs to a RouteTags array.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public static RouteTags[] ConvertFrom(this List<KeyValuePair<string, string>> tags)
         {
             List<RouteTags> tags_list = new List<RouteTags>();
             if (tags != null)
@@ -628,8 +660,12 @@ namespace OsmSharp.Routing.Core.Route
             return tags_list.ToArray();
         }
 
-
-        public static List<KeyValuePair<string, string>> ConvertTo(RouteTags[] tags)
+        /// <summary>
+        /// Converts a RouteTags array to a list of KeyValuePairs.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public static List<KeyValuePair<string, string>> ConvertTo(this RouteTags[] tags)
         {
             List<KeyValuePair<string, string>> tags_list = new List<KeyValuePair<string, string>>();
             if (tags != null)
@@ -642,7 +678,13 @@ namespace OsmSharp.Routing.Core.Route
             return tags_list;
         }
 
-        public static string GetValueFirst(RouteTags[] tags, string key)
+        /// <summary>
+        /// Returns the value of the first tag with the key given.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static string GetValueFirst(this RouteTags[] tags, string key)
         {
             string first_value = null;
             if (tags != null)
@@ -659,7 +701,13 @@ namespace OsmSharp.Routing.Core.Route
             return first_value;
         }
 
-        public static List<string> GetValues(RouteTags[] tags, string key)
+        /// <summary>
+        /// Returns all values for a given key.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public static List<string> GetValues(this RouteTags[] tags, string key)
         {
             List<string> values = new List<string>();
             if (tags != null)
@@ -674,22 +722,6 @@ namespace OsmSharp.Routing.Core.Route
             }
             return values;
         }
-
-        #region ICloneable Members
-
-        /// <summary>
-        /// Returns a clone of this object.
-        /// </summary>
-        /// <returns></returns>
-        public object Clone()
-        {
-            RouteTags clone = new RouteTags();
-            clone.Key = this.Key;
-            clone.Value = this.Value;
-            return clone;
-        }
-
-        #endregion
     }
 
     /// <summary>

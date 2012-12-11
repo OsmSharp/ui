@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Tools.Core;
 
 namespace OsmSharp.Routing.Core
 {
@@ -68,6 +69,41 @@ namespace OsmSharp.Routing.Core
                 edge_tags.TryGetValue("name", out edge_name))
             { // both have names.
                 return (point_name == edge_name);
+            }
+            return false;
+        }
+    }
+
+    /// <summary>
+    /// A Levenshtein matching implementation of the edge matcher.
+    /// </summary>
+    public class LevenshteinEdgeMatcher : IEdgeMatcher
+    {
+        /// <summary>
+        /// Returns true if the edge is a suitable candidate as a target for a point to be resolved on.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="point_tags"></param>
+        /// <param name="edge_tags"></param>
+        /// <returns></returns>
+        public bool MatchWithEdge(VehicleEnum vehicle,
+            IDictionary<string, string> point_tags, IDictionary<string, string> edge_tags)
+        {
+            if (point_tags == null || point_tags.Count == 0)
+            { // when the point has no tags it has no requirements.
+                return true;
+            }
+
+            if (edge_tags == null || edge_tags.Count == 0)
+            { // when the edge has no tags, no way to verify.
+                return false;
+            }
+
+            string point_name, edge_name;
+            if (point_tags.TryGetValue("name", out point_name) &&
+                edge_tags.TryGetValue("name", out edge_name))
+            { // both have names.
+                return (point_name.LevenshteinMatch(edge_name, 90));
             }
             return false;
         }

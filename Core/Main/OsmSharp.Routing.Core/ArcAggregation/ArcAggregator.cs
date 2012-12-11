@@ -115,7 +115,7 @@ namespace OsmSharp.Routing.Core.ArcAggregation
                         {
                             PointPoi poi = new PointPoi();
                             poi.Name = route_point.Name;
-                            poi.Tags = RouteTags.ConvertTo(route_point.Tags);
+                            poi.Tags = route_point.Tags.ConvertTo();
                             poi.Location = new GeoCoordinate(route_point.Latitude, route_point.Longitude);
                             poi.Angle = null; // there is no previous point; no angle is specified.
                             p.Points.Add(poi);
@@ -208,8 +208,8 @@ namespace OsmSharp.Routing.Core.ArcAggregation
             // create the arc.
             AggregatedArc a = new AggregatedArc();
             a.Name = current.Entry.WayFromName;
-            a.Names = RouteTags.ConvertTo(current.Entry.WayFromNames);
-            a.Tags = RouteTags.ConvertTo(current.Entry.Tags);
+            a.Names = current.Entry.WayFromNames.ConvertTo();
+            a.Tags = current.Entry.Tags.ConvertTo();
             if (previous != null)
             {
                 GeoCoordinate previous_coordinate =
@@ -241,8 +241,8 @@ namespace OsmSharp.Routing.Core.ArcAggregation
                 {
                     AggregatedArc side = new AggregatedArc();
                     side.Name = side_street.WayName;
-                    side.Names = RouteTags.ConvertTo(side_street.WayNames);
-                    side.Tags = RouteTags.ConvertTo(side_street.Tags);
+                    side.Names = side_street.WayNames.ConvertTo();
+                    side.Tags = side_street.Tags.ConvertTo();
 
                     RelativeDirection side_direction = null;
                     if (previous != null)
@@ -264,7 +264,7 @@ namespace OsmSharp.Routing.Core.ArcAggregation
                 {
                     PointPoi poi = new PointPoi();
                     poi.Name = route_point.Name;
-                    poi.Tags = RouteTags.ConvertTo(route_point.Tags);
+                    poi.Tags = route_point.Tags.ConvertTo();
                     poi.Location = new GeoCoordinate(route_point.Latitude, route_point.Longitude);
 
                     GeoCoordinate previous_coordinate =

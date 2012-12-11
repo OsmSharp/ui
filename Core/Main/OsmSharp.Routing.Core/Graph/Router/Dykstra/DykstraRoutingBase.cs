@@ -54,7 +54,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             GeoCoordinate coordinate, IEdgeMatcher matcher, IDictionary<string, string> point_tags)
         {
-            double search_box_size = 0.001f;
+            double search_box_size = 0.005f;
             // create the search box.
             GeoCoordinateBox search_box = new GeoCoordinateBox(new GeoCoordinate(
                 coordinate.Latitude - search_box_size, coordinate.Longitude - search_box_size),

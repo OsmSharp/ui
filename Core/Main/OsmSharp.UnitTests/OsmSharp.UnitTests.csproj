@@ -151,6 +151,8 @@
     <Compile Include="Tools\GpxXmlTest.cs" />
     <Compile Include="Tools\KmlXmlTest.cs" />
     <Compile Include="Tools\LambertProjectionTest.cs" />
+    <Compile Include="Tools\LocatedObjectIndexTest.cs" />
+    <Compile Include="Tools\LocatedObjectQTTests.cs" />
     <Compile Include="Tools\MathTest.cs" />
     <Compile Include="Tools\NomatimXmlTest.cs" />
     <Compile Include="Tools\PermutationEnumerationTests.cs" />
