@@ -97,7 +97,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
                         }
                         else
                         { // add the customer.
-                            current_route.Insert(previous, customer, current_route.First);
+                            //current_route.InsertAfterAndRemove(previous, customer, current_route.First);
+                            current_route.InsertAfter(previous, customer);
 
                             // safe the previous customer.
                             previous = customer;
@@ -262,7 +263,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
                 // get the target route and insert.
                 IRoute target_route = solution.Route(target_idx);
                 weights[target_idx] = weights[target_idx] + result.Increase;
-                target_route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                //target_route.InsertAfterAndRemove(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                target_route.InsertAfter(result.CustomerBefore, result.Customer);
                 unplaced.Remove(result.Customer);
 
                 //solution.ToString();

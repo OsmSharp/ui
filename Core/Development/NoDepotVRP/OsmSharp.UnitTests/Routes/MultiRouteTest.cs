@@ -38,7 +38,7 @@ namespace OsmSharp.UnitTests.Routes
                 Assert.AreEqual(true, route.IsRound);
                 for (int customer = customer_start + 1; customer < customer_start + count; customer++)
                 {
-                    route.Insert(customer - 1, customer, -1);
+                    route.InsertAfter(customer - 1, customer);
 
                     Assert.AreEqual(customer - customer_start + 1, route.Count);
                     Assert.AreEqual(false, route.IsEmpty);
@@ -72,7 +72,7 @@ namespace OsmSharp.UnitTests.Routes
                 Assert.AreEqual(true, route.IsRound);
                 for (int customer = customer_start; customer < customer_start + count; customer++)
                 {
-                    route.Insert(customer - 1, customer, -1);
+                    route.InsertAfter(customer - 1, customer);
 
                     Assert.AreEqual(customer - customer_start + 1, route.Count);
                     Assert.AreEqual(false, route.IsEmpty);
@@ -117,7 +117,8 @@ namespace OsmSharp.UnitTests.Routes
                 for (int customer = customer_start; customer < customer_start + count; customer++)
                 {
                     customers_per_route[route_idx].Add(customer);
-                    route.Insert(customer - 1, customer, -1);
+                    route.InsertAfter(customer - 1, customer);
+                    //route.InsertAfterAndRemove(customer - 1, customer, -1);
                 }
             }
 
@@ -179,14 +180,14 @@ namespace OsmSharp.UnitTests.Routes
                                 for (int customer = customer_start; customer < customer_start + count; customer++)
                                 {
                                     customers_per_route[route_idx].Add(customer);
-                                    route.Insert(customer - 1, customer, -1);
+                                    route.InsertAfter(customer - 1, customer);
                                 }
                             }
 
                             route = multi_route.Route(route_to_test);
 
                             route.Remove(customer_to_remove);
-                            route.Insert(customer_to_place_after, customer_to_remove, -1);
+                            route.InsertAfter(customer_to_place_after, customer_to_remove);
 
                             Assert.IsTrue(route.Contains(customer_to_place_after, customer_to_remove));
                             Assert.AreEqual(count, route.Count);
@@ -223,7 +224,8 @@ namespace OsmSharp.UnitTests.Routes
                 for (int customer = customer_start; customer < customer_start + count; customer++)
                 {
                     customers_per_route[route_idx].Add(customer);
-                    route.Insert(customer - 1, customer, -1);
+                    route.InsertAfter(customer - 1, customer);
+                    //route.InsertAfterAndRemove(customer - 1, customer, -1);
                 }
             }
 
@@ -248,6 +250,51 @@ namespace OsmSharp.UnitTests.Routes
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Do get neighbour tests.
+        /// </summary>
+        protected void DoTestGetNeighbours()
+        {
+            int count = 10;
+            int routes = 3;
+
+            IMultiRoute multi_route = this.BuildRoute(true);
+
+            Assert.AreEqual(0, multi_route.Count);
+
+            // test with initializing the routes empty.
+            List<List<int>> customers_per_route = new List<List<int>>();
+            Assert.AreEqual(0, multi_route.Count);
+            IRoute route;
+            for (int route_idx = 0; route_idx < routes; route_idx++)
+            {
+                customers_per_route.Add(new List<int>());
+                int customer_start = (route_idx * count);
+                route = multi_route.Add();
+
+                for (int customer = customer_start; customer < customer_start + count; customer++)
+                {
+                    customers_per_route[route_idx].Add(customer);
+                    route.InsertAfter(customer - 1, customer);
+                    //route.InsertAfterAndRemove(customer - 1, customer, -1);
+                }
+            }
+
+            for (int route_to_test = 0; route_to_test < routes; route_to_test++)
+            {
+                route = multi_route.Route(route_to_test);
+
+                int[] neighbours;
+                for (int customer = (route_to_test * count); customer < (route_to_test * count) + count - 1; customer++)
+                {
+                    neighbours = route.GetNeigbours(customer);
+                    Assert.IsTrue(neighbours[0] == customer + 1);
+                }
+                neighbours = route.GetNeigbours((route_to_test * count) + count - 1);
+                Assert.IsTrue(neighbours[0] == (route_to_test * count));
             }
         }
     }

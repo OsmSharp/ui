@@ -161,7 +161,10 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                 weights[placement_result_idx] = calculator.CalculateOneRouteIncrease(
                     weights[placement_result_idx], placement_result.Increase);
                 selectable_customers.Remove(placement_result.Customer);
-                routes.Route(placement_result_idx).Insert(placement_result.CustomerBefore, placement_result.Customer, placement_result.CustomerAfter);
+                //routes.Route(placement_result_idx).InsertAfterAndRemove(
+                //    placement_result.CustomerBefore, placement_result.Customer, placement_result.CustomerAfter);
+                routes.Route(placement_result_idx).InsertAfter(
+                    placement_result.CustomerBefore, placement_result.Customer);
 
                 if (!routes.IsValid())
                 {

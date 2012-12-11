@@ -94,7 +94,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                     {
                         // insert the customer, it is 
                         customers.Remove(result.Customer);
-                        current_route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                        //current_route.InsertAfterAndRemove(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                        current_route.InsertAfter(result.CustomerBefore, result.Customer);
                         current_route_weight = potential_weight;
 
                         //// improve if needed.

@@ -84,7 +84,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
                     if (potential_weight < problem.Max.Value)
                     {
                         customers.Remove(result.Customer);
-                        current_route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                        //current_route.InsertAfterAndRemove(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                        current_route.InsertAfter(result.CustomerBefore, result.Customer);
                         weight = potential_weight;
                     }
                     else

@@ -588,8 +588,56 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             /// </summary>
             /// <param name="from"></param>
             /// <param name="customer"></param>
+            public void ReplaceEdgeFrom(int from, int customer)
+            {
+                if (customer < 0)
+                { // a new customer cannot be negative!
+                    throw new ArgumentOutOfRangeException("Cannot add customers with a negative index!");
+                }
+                if (this.IsEmpty)
+                { // add the given customer as the first one.
+                    _first = customer;
+                    if (this.IsRound)
+                    { // first is last when round.
+                        _last = _first;
+                    }
+
+                    // resize the array if needed.
+                    if (_parent._next_array.Length <= customer)
+                    { // resize the array.
+                        this.Resize(customer);
+                    }
+                }
+                else
+                { // there are already existing customers.
+                    if (from < 0)
+                    { // a new customer cannot be negative!
+                        throw new ArgumentOutOfRangeException("Cannot add a customer after a customer with a negative index!");
+                    }
+
+                    if (_parent._next_array.Length > from)
+                    { // customers should exist.
+                        // resize the array if needed.
+                        if (_parent._next_array.Length <= customer)
+                        { // resize the array.
+                            this.Resize(customer);
+                        }
+
+                        // insert customer.
+                        _parent._next_array[from] = customer;
+                        return;
+                    }
+                    throw new ArgumentOutOfRangeException("Customer(s) do not exist in this route!");
+                }
+            }
+
+            /// <summary>
+            /// Inserts a customer right after from and before to.
+            /// </summary>
+            /// <param name="from"></param>
+            /// <param name="customer"></param>
             /// <param name="to"></param>
-            public void Insert(int from, int customer, int to)
+            public void InsertAfter(int from, int customer)
             {
                 if (customer < 0)
                 { // a new customer cannot be negative!
@@ -625,10 +673,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                         }
 
                         // get the to customer if needed.
-                        if (to < 0)
-                        {
-                            to = _parent._next_array[from];
-                        }
+                        int to = _parent._next_array[from];
 
                         // insert customer.
                         _parent._next_array[from] = customer;
@@ -675,6 +720,10 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             {
                 int[] neighbour = new int[1];
                 neighbour[0] = _parent._next_array[customer];
+                if (neighbour[0] < 0 && this.IsRound)
+                {
+                    neighbour[0] = this.First;
+                }
                 return neighbour;
             }
 

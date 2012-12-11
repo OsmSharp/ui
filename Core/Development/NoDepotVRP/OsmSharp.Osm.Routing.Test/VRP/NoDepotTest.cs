@@ -58,7 +58,7 @@ namespace OsmSharp.Osm.Routing.Test.VRP
 
             //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded)
 
-            NoDepotTest.MaxTest("21313", "DM852", 3600, 20);
+            NoDepotTest.MaxTest("21313", "DM852", 88000, 20);
             //NoDepotTest.MaxTest("21313", "DM852", 5400, 20);
             //NoDepotTest.MaxTest("21313", "DM852", 5400, 20);
             //NoDepotTest.MaxTest("21313", "DM852", 5400, 20);
@@ -123,7 +123,7 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             System.Data.DataSet data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
                 new FileInfo(points_file), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
             int cnt = -1;
-            int max_count = 100000;
+            int max_count = 10000;
             List<RouterPoint> points = new List<RouterPoint>();
             Dictionary<string, List<RouterPoint>> points_per_route =
                 new Dictionary<string, List<RouterPoint>>();

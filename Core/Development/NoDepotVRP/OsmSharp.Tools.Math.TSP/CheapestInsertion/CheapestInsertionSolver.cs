@@ -137,8 +137,8 @@ namespace OsmSharp.Tools.Math.TSP.CheapestInsertion
                 // place the customer.
                 if (result.CustomerAfter >= 0 && result.CustomerBefore >= 0)
                 {
-                    route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
-
+                    //route.InsertAfterAndRemove(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                    route.InsertAfter(result.CustomerBefore, result.Customer);
                     customers.Remove(result.Customer);
                 }
             }

@@ -37,7 +37,7 @@ namespace OsmSharp.UnitTests.Routes
         /// Tests a dynamic asymmetric route by adding customers.
         /// </summary>
         [TestMethod]
-        public void TestDynamicAsymmetricRouteAdd()
+        public void TestDynamicAsymmetricRouteInsertAfter()
         {
             this.DoTestAdd();
         }
@@ -64,7 +64,7 @@ namespace OsmSharp.UnitTests.Routes
         /// Test a dynamic asymetric route by removing and adding every customer at every position.
         /// </summary>
         [TestMethod]
-        public void TestDynamicAsymmetricRouteAddRemoveComplete()
+        public void TestDynamicAsymmetricRouteInserAfterRemoveComplete()
         {
             this.DoTestAddRemoveComplete();
         }
@@ -76,6 +76,15 @@ namespace OsmSharp.UnitTests.Routes
         public void TestDynamicAsymmetricRouteEnumerateBetween()
         {
             this.DoTestEnumerateBetween();
+        }
+
+        /// <summary>
+        /// Tests a dynamic asymetric route's enumeration functionality.
+        /// </summary>
+        [TestMethod]
+        public void TestDynamicAsymmetricRouteGetNeighbours()
+        {
+            this.DoTestGetNeighbours();
         }
     }
 }

@@ -88,7 +88,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             return false;
         }
 
-        public void Insert(int from, int customer, int to)
+        public void ReplaceEdgeFrom(int from, int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InsertAfter(int from, int customer)
         {
             int idx = _customers.IndexOf(from);
             if (idx < _customers.Count - 1)

@@ -219,7 +219,8 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
             // place the customer.
             if (result.CustomerAfter >= 0 && result.CustomerBefore >= 0)
             {
-                route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                //route.InsertAfterAndRemove(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                route.InsertAfter(result.CustomerBefore, result.Customer);
                 difference = 
                     -(weights.WeightMatrix[result.CustomerBefore][result.CustomerAfter]) +
                      (weights.WeightMatrix[result.CustomerBefore][result.Customer]) +

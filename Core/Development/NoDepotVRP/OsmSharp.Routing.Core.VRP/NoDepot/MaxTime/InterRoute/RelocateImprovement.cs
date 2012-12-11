@@ -103,7 +103,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
                 { // there is a gain in relocating this customer.
                     difference = result.Increase - removal_gain;
 
-                    route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                    //route.InsertAfterAndRemove(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                    route.InsertAfter(result.CustomerBefore, result.Customer);
                 }
             }
             difference = 0;

@@ -281,7 +281,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
             throw new NotImplementedException();
         }
 
-        void IRoute.Insert(int from, int customer, int to)
+        void IRoute.ReplaceEdgeFrom(int from, int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IRoute.InsertAfter(int from, int customer)
         {
             throw new NotImplementedException();
         }
