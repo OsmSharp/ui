@@ -22,6 +22,9 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 {
+    /// <summary>
+    /// A simple asymmetric route represented by a list.
+    /// </summary>
     public class SimpleAsymmetricRoute : IRoute
     {
         private List<int> _customers;
@@ -60,12 +63,29 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         public bool Contains(int from, int to)
         {
-            throw new NotImplementedException();
+            for (int idx = 0; idx < _customers.Count - 1; idx++)
+            {
+                if (_customers[idx] == from && _customers[idx + 1] == to)
+                {
+                    return true;
+                }
+            }
+            if (this.IsRound)
+            {
+                return _customers[0] == to && _customers[_customers.Count - 1] == from;
+            }
+            return false;
         }
 
         public bool Remove(int customer)
         {
-            throw new NotImplementedException();
+            int customer_idx = _customers.IndexOf(customer);
+            if (customer_idx >= 0)
+            {
+                _customers.RemoveAt(customer_idx);
+                return true;
+            }
+            return false;
         }
 
         public void Insert(int from, int customer, int to)
@@ -153,8 +173,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         public int First
         {
             get 
-            { 
-                return _customers[0]; 
+            {
+                if (_customers.Count > 0)
+                {
+                    return _customers[0];
+                }
+                return -1;
             }
         }
 
@@ -162,7 +186,15 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         {
             get
             {
-                return _customers[this.Count - 1];
+                if (_customers.Count > 0)
+                {
+                    if (this.IsRound)
+                    {
+                        return this.First;
+                    }
+                    return _customers[this.Count - 1];
+                }
+                return -1;
             }
         }
 
@@ -173,16 +205,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// <returns></returns>
         public int GetIndexOf(int customer)
         {
-            int idx = 0;
-            foreach (int possible_customer in this)
-            {
-                if (possible_customer == customer)
-                {
-                    return idx;
-                }
-                idx++;
-            }
-            return -1; // customer not found!
+            return _customers.IndexOf(customer);
         }
 
 
@@ -194,7 +217,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         public bool Contains(int customer)
         {
-            throw new NotImplementedException();
+            return _customers.Contains(customer);
         }
 
         public object Clone()
