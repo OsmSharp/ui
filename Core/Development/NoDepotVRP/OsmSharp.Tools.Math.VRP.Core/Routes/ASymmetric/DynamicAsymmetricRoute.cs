@@ -136,6 +136,13 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                 { // edge found.
                     return true;
                 }
+                else if (this.Contains(from) && _next_array[from] == -1)
+                { // the from customer is contained but it does not have a next customer.
+                    if (this.IsRound)
+                    {
+                        return to == _first;
+                    }
+                }
             }
             return false; // array too small.
         }
@@ -149,7 +156,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         {
             if (_next_array.Length > customer)
             {
-                return _next_array[customer] >= 0;
+                if (_next_array[customer] >= 0)
+                { // customer is definetly contained.
+                    return true;
+                }
+                return _next_array.Contains<int>(customer);
             }
             return false;
         }
@@ -172,6 +183,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                 if (this.IsRound)
                 { // first is last when round.
                     _last = _first;
+                }
+
+                // resize the array if needed.
+                if (_next_array.Length <= customer)
+                { // resize the array.
+                    this.Resize(customer);
                 }
             }
             else

@@ -57,7 +57,12 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
         /// <returns></returns>
         public override object Clone()
         {
-            return new MaxTimeSolution(_first.Clone() as int[], _next_array.Clone() as int[], _is_round);
+            int[] first = new int[this.Count];
+            for (int idx = 0; idx < this.Count; idx++)
+            {
+                first[idx] = this.Route(idx).First;
+            }
+            return new MaxTimeSolution(first, _next_array.Clone() as int[], _is_round);
         }
     }
 }

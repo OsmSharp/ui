@@ -133,5 +133,40 @@ namespace OsmSharp.UnitTests.Routes
                 }
             }
         }
+
+        /// <summary>
+        /// Tests if the route containts functions work correctly.
+        /// </summary>
+        public void DoTestContains()
+        {
+            // create a new empty route.
+            int count = 100;
+            IRoute route = this.BuildRoute(true);
+            if (route != null)
+            { // this part needs testing.
+                Assert.AreEqual(0, route.Count);
+                Assert.AreEqual(true, route.IsEmpty);
+                Assert.AreEqual(true, route.IsRound);
+
+                for (int customer = 0; customer < count; customer++)
+                {
+                    route.Insert(customer - 1, customer, -1);
+
+                    Assert.AreEqual(customer + 1, route.Count);
+                    Assert.AreEqual(false, route.IsEmpty);
+                    Assert.AreEqual(true, route.IsRound);
+                    Assert.AreEqual(0, route.First);
+                    Assert.AreEqual(0, route.Last);
+                }
+
+                for (int customer = 0; customer < count - 1; customer++)
+                {
+                    Assert.IsTrue(route.Contains(customer));
+                    Assert.IsTrue(route.Contains(customer, customer + 1));
+                }
+                Assert.IsTrue(route.Contains(count - 1));
+                Assert.IsTrue(route.Contains(count - 1, 0));
+            }
+        }
     }
 }

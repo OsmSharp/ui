@@ -50,5 +50,14 @@ namespace OsmSharp.UnitTests.Routes
         {
             this.DoTestRemove();
         }
+
+        /// <summary>
+        /// Tests a dynamic asymmetric route by removing customers.
+        /// </summary>
+        [TestMethod]
+        public void TestDynamicAsymmetricRouteContains()
+        {
+            this.DoTestContains();
+        }
     }
 }
