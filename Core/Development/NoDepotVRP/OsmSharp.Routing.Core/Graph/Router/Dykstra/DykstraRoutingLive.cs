@@ -28,28 +28,24 @@ using OsmSharp.Routing.Core.Graph.DynamicGraph;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Router;
 using OsmSharp.Tools.Core.Collections.PriorityQueues;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 
 namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
 {
     /// <summary>
-    /// A class containing a fast dykstra implementation.
+    /// A class containing a dykstra implementation suitable for a simple graph.
     /// </summary>
     /// <typeparam name="EdgeData"></typeparam>
-    public class DykstraRoutingBinairyHeap<EdgeData> : IBasicRouter<EdgeData>
-        where EdgeData : IDynamicGraphEdgeData
+    public class DykstraRoutingLive : DykstraRoutingBase<SimpleWeighedEdge>, IBasicRouter<SimpleWeighedEdge>
     {
-        /// <summary>
-        /// Holds the tags index.
-        /// </summary>
-        private ITagsIndex _tags_index;
-
         /// <summary>
         /// Creates a new dykstra routing object.
         /// </summary>
         /// <param name="tags_index"></param>
-        public DykstraRoutingBinairyHeap(ITagsIndex tags_index)
+        public DykstraRoutingLive(ITagsIndex tags_index)
+            : base(tags_index)
         {
-            _tags_index = tags_index;
+
         }
 
         /// <summary>
@@ -58,10 +54,10 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public PathSegment<long> Calculate(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        public PathSegment<long> Calculate(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList from, PathSegmentVisitList to, double max)
         {
-            return this.CalculateToClosest(graph, interpreter, from,
+            return this.CalculateToClosest(graph, interpreter, vehicle, from,
                 new PathSegmentVisitList[] { to }, max);
         }
 
@@ -71,10 +67,10 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public double CalculateWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        public double CalculateWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList from, PathSegmentVisitList to, double max)
         {
-            return this.CalculateToClosest(graph, interpreter, from,
+            return this.CalculateToClosest(graph, interpreter, vehicle, from,
                 new PathSegmentVisitList[] { to }, max).Weight;
         }
 
@@ -87,10 +83,10 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        public PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList from, PathSegmentVisitList[] targets, double max)
         {
-            PathSegment<long>[] result = this.DoCalculation(graph, interpreter,
+            PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
                 from, targets, max, true, false);
             if (result != null && result.Length == 1)
             {
@@ -108,10 +104,10 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, 
+        public double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max)
         {
-            PathSegment<long>[] many = this.DoCalculation(graph, interpreter,
+            PathSegment<long>[] many = this.DoCalculation(graph, interpreter, vehicle,
                    source, targets, max, false, false);
 
             double[] weights = new double[many.Length];
@@ -138,13 +134,13 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, 
+        public double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max)
         {
             double[][] results = new double[sources.Length][];
             for (int idx = 0; idx < sources.Length; idx++)
             {
-                results[idx] = this.CalculateOneToManyWeight(graph, interpreter, sources[idx], targets, max);
+                results[idx] = this.CalculateOneToManyWeight(graph, interpreter, vehicle, sources[idx], targets, max);
 
                 // report progress.
                 OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, sources.Length, "Router.Core.Graph.Router.Dykstra.DykstraRouting<EdgeData>.CalculateManyToManyWeight",
@@ -158,7 +154,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// </summary>
         public bool IsCalculateRangeSupported
         {
-            get 
+            get
             {
                 return true;
             }
@@ -172,10 +168,10 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, double weight)
         {
-            PathSegment<long>[] result = this.DoCalculation(graph, interpreter,
+            PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
                    source, new PathSegmentVisitList[0], weight, false, true);
 
             HashSet<long> result_vertices = new HashSet<long>();
@@ -194,10 +190,10 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
+        public bool CheckConnectivity(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, double weight)
         {
-            HashSet<long> range = this.CalculateRange(graph, interpreter, source, weight);
+            HashSet<long> range = this.CalculateRange(graph, interpreter, vehicle, source, weight);
 
             return range.Count > 0;
         }
@@ -215,8 +211,8 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <param name="stop_at_first"></param>
         /// <param name="return_at_weight"></param>
         /// <returns></returns>
-        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter,
-            PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight, 
+        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+            PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
             bool stop_at_first, bool return_at_weight)
         {
             //  initialize the result data structures.
@@ -248,7 +244,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
 
             // test each target for the source.
             // test each source for any of the targets.
-            Dictionary<long, PathSegment<long>> paths_from_source = new Dictionary<long, PathSegment<long>>(); 
+            Dictionary<long, PathSegment<long>> paths_from_source = new Dictionary<long, PathSegment<long>>();
             foreach (long source_vertex in source.GetVertices())
             { // get the path to the vertex.
                 PathSegment<long> source_path = source.GetPathTo(source_vertex); // get the source path.
@@ -278,7 +274,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                                 segments_to_target[idx] = target_path.Reverse().ConcatenateAfter(path_from_source);
                                 found_targets++;
                             }
-                            else if(existing.Weight > target_path.Weight + path_from_source.Weight)
+                            else if (existing.Weight > target_path.Weight + path_from_source.Weight)
                             { // a new path is found with a lower weight.
                                 segments_to_target[idx] = target_path.Reverse().ConcatenateAfter(path_from_source);
                             }
@@ -365,7 +361,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
             }
 
             // start OsmSharp.Routing.
-            KeyValuePair<uint, EdgeData>[] arcs = graph.GetArcs(
+            KeyValuePair<uint, SimpleWeighedEdge>[] arcs = graph.GetArcs(
                 Convert.ToUInt32(current.VertexId));
             chosen_vertices.Add(current.VertexId);
 
@@ -381,46 +377,56 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                 }
 
                 // update the visited nodes.
-                foreach (KeyValuePair<uint, EdgeData> neighbour in arcs)
+                foreach (KeyValuePair<uint, SimpleWeighedEdge> neighbour in arcs)
                 {
-                    if (neighbour.Value.Forward &&
-                        !chosen_vertices.Contains(neighbour.Key))
-                    { // the neigbour is forward and is not settled yet!
-                        // check the labels (if needed).
-                        bool constraints_ok = true;
-                        if (interpreter.Constraints != null)
-                        { // check if the label is ok.
-                            RoutingLabel neighbour_label = interpreter.Constraints.GetLabelFor(
-                                _tags_index.Get(neighbour.Value.Tags));
+                    // check the tags against the interpreter.
+                    IDictionary<string, string> tags = this.TagsIndex.Get(neighbour.Value.Tags);
+                    if (interpreter.EdgeInterpreter.CanBeTraversedBy(tags, vehicle))
+                    { // it's ok; the edge can be traversed by the given vehicle.
+                        bool? one_way = interpreter.EdgeInterpreter.IsOneWay(tags, vehicle);
+                        bool can_be_traversed_one_way = (!one_way.HasValue) || // bidirectional edge. 
+                            (one_way.Value == neighbour.Value.IsForward); // backward edge has backward restruction, forward edge forward restriction.
+                        if ((current.From == null || 
+                            interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Key)) && // test for turning restrictions.
+                            can_be_traversed_one_way &&
+                            !chosen_vertices.Contains(neighbour.Key))
+                        { // the neigbour is forward and is not settled yet!
+                            // check the labels (if needed).
+                            bool constraints_ok = true;
+                            if (interpreter.Constraints != null)
+                            { // check if the label is ok.
+                                RoutingLabel neighbour_label = interpreter.Constraints.GetLabelFor(
+                                    this.TagsIndex.Get(neighbour.Value.Tags));
 
-                            // only test labels if there is a change.
-                            if (current_labels.Count == 0 || !neighbour_label.Equals(current_labels[current_labels.Count - 1]))
-                            { // labels are different, test them!
-                                constraints_ok = interpreter.Constraints.ForwardSequenceAllowed(current_labels,
-                                    neighbour_label);
+                                // only test labels if there is a change.
+                                if (current_labels.Count == 0 || !neighbour_label.Equals(current_labels[current_labels.Count - 1]))
+                                { // labels are different, test them!
+                                    constraints_ok = interpreter.Constraints.ForwardSequenceAllowed(current_labels,
+                                        neighbour_label);
 
-                                if (constraints_ok)
-                                { // update the labels.
-                                    List<RoutingLabel> neighbour_labels = new List<RoutingLabel>(current_labels);
-                                    neighbour_labels.Add(neighbour_label);
+                                    if (constraints_ok)
+                                    { // update the labels.
+                                        List<RoutingLabel> neighbour_labels = new List<RoutingLabel>(current_labels);
+                                        neighbour_labels.Add(neighbour_label);
 
-                                    labels[neighbour.Key] = neighbour_labels;
+                                        labels[neighbour.Key] = neighbour_labels;
+                                    }
+                                }
+                                else
+                                { // set the same label(s).
+                                    labels[neighbour.Key] = current_labels;
                                 }
                             }
-                            else
-                            { // set the same label(s).
-                                labels[neighbour.Key] = current_labels;
+
+                            if (constraints_ok)
+                            { // all constraints are validated or there are none.
+                                // calculate neighbours weight.
+                                double total_weight = current.Weight + neighbour.Value.Weight;
+
+                                // update the visit list;
+                                PathSegment<long> neighbour_route = new PathSegment<long>(neighbour.Key, total_weight, current);
+                                heap.Enqueue(neighbour_route, (float)neighbour_route.Weight);
                             }
-                        }
-
-                        if (constraints_ok)
-                        { // all constraints are validated or there are none.
-                            // calculate neighbours weight.
-                            double total_weight = current.Weight + neighbour.Value.Weight;
-
-                            // update the visit list;
-                            PathSegment<long> neighbour_route = new PathSegment<long>(neighbour.Key, total_weight, current);
-                            heap.Enqueue(neighbour_route, (float)neighbour_route.Weight);
                         }
                     }
                 }
@@ -431,7 +437,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                 {
                     // choose the next vertex.
                     current = heap.Dequeue();
-                    while (current != null && 
+                    while (current != null &&
                         chosen_vertices.Contains(current.VertexId))
                     { // keep dequeuing.
                         current = heap.Dequeue();
@@ -490,7 +496,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                                     return segments_to_target.ToArray();
                                 }
                             }
-                            else if(segments_to_target[idx].Weight > to_path.Weight)
+                            else if (segments_to_target[idx].Weight > to_path.Weight)
                             { // check if the second, third or later is shorter.
                                 segments_to_target[idx] = to_path;
                             }
@@ -508,108 +514,6 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                 return segments_to_target.ToArray();
             }
             return segments_at_weight.ToArray();
-        }
-
-        #endregion
-
-        #region Search Closest
-        /// <summary>
-        /// Searches the data for a point on an edge closest to the given coordinate.
-        /// </summary>
-        /// <param name="coordinate"></param>
-        /// <param name="matcher"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph,
-            GeoCoordinate coordinate, IEdgeMatcher matcher, double search_box_size)
-        {
-            // create the search box.
-            GeoCoordinateBox search_box = new GeoCoordinateBox(new GeoCoordinate(
-                coordinate.Latitude - search_box_size, coordinate.Longitude - search_box_size),
-                                                               new GeoCoordinate(
-                coordinate.Latitude + search_box_size, coordinate.Longitude + search_box_size));
-
-            // get the arcs from the data source.
-            KeyValuePair<uint, KeyValuePair<uint, EdgeData>>[] arcs = graph.GetArcs(search_box);
-
-            // loop over all.
-            SearchClosestResult closest_with_match = new SearchClosestResult(double.MaxValue, 0);
-            SearchClosestResult closest_without_match = new SearchClosestResult(double.MaxValue, 0);
-            foreach (KeyValuePair<uint, KeyValuePair<uint, EdgeData>> arc in arcs)
-            {
-                // test the two points.
-                float from_latitude, from_longitude;
-                float to_latitude, to_longitude;
-                double distance;
-                if (graph.GetVertex(arc.Key, out from_latitude, out from_longitude) &&
-                    graph.GetVertex(arc.Value.Key, out to_latitude, out to_longitude))
-                { // return the vertex.
-                    GeoCoordinate from_coordinates = new GeoCoordinate(from_latitude, from_longitude);
-                    distance = coordinate.Distance(from_coordinates);
-
-                    if (distance < 0.00001)
-                    { // the distance is smaller than the tolerance value.
-                        closest_without_match = new SearchClosestResult(
-                            distance, arc.Key);
-                        break;
-
-                        // try and match.
-                        //if(matcher.Match(_
-                    }
-
-                    if (distance < closest_without_match.Distance)
-                    { // the distance is smaller.
-                        closest_without_match = new SearchClosestResult(
-                            distance, arc.Key);
-
-                        // try and match.
-                        //if(matcher.Match(_
-                    }
-                    GeoCoordinate to_coordinates = new GeoCoordinate(to_latitude, to_longitude);
-                    distance = coordinate.Distance(to_coordinates);
-
-                    if (distance < closest_without_match.Distance)
-                    { // the distance is smaller.
-                        closest_without_match = new SearchClosestResult(
-                            distance, arc.Value.Key);
-
-                        // try and match.
-                        //if(matcher.Match(_
-                    }
-
-                    // create a line.
-                    double distance_total = from_coordinates.Distance(to_coordinates);
-                    if (distance_total > 0)
-                    { // the from/to are not the same location.
-                        GeoCoordinateLine line = new GeoCoordinateLine(from_coordinates, to_coordinates, true, true);
-                        distance = line.Distance(coordinate);
-
-                        if (distance < closest_without_match.Distance)
-                        { // the distance is smaller.
-                            PointF2D projected_point =
-                                line.ProjectOn(coordinate);
-
-                            // calculate the position.
-                            if (projected_point != null)
-                            { // calculate the distance
-                                double distance_point = from_coordinates.Distance(projected_point);
-                                double position = distance_point / distance_total;
-
-                                closest_without_match = new SearchClosestResult(
-                                    distance, arc.Key, arc.Value.Key, position);
-
-                                // try and match.
-                                //if(matcher.Match(_
-                            }
-                        }
-                    }
-                }
-            }
-
-            // return the best result.
-            if (closest_with_match.Distance < double.MaxValue)
-            {
-                return closest_with_match;
-            }
-            return closest_without_match;
         }
 
         #endregion

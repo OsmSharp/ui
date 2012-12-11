@@ -46,10 +46,10 @@ namespace OsmSharp.Routing.Core.VRP.MTSP
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public OsmSharpRoute[] CalculateMTSP(ResolvedType[] points)
+        public OsmSharpRoute[] CalculateMTSP(VehicleEnum vehicle, ResolvedType[] points)
         {
             // calculate the weights.
-            double[][] weights = this.CalculateManyToManyWeigth(points);
+            double[][] weights = this.CalculateManyToManyWeigth(vehicle, points);
 
             // calculate the MTSP.
             int[][] mtsp_solution = this.CalculateMTSP(weights);
@@ -62,7 +62,7 @@ namespace OsmSharp.Routing.Core.VRP.MTSP
                 OsmSharpRoute tsp = null;
                 for (int idx = 0; idx < mtsp_solution[route_idx].Length - 1; idx++)
                 {
-                    route = this.Calculate(points[mtsp_solution[route_idx][idx]],
+                    route = this.Calculate(vehicle, points[mtsp_solution[route_idx][idx]],
                         points[mtsp_solution[route_idx][idx + 1]]);
                     if (tsp == null)
                     { // first route = start
@@ -75,7 +75,7 @@ namespace OsmSharp.Routing.Core.VRP.MTSP
                 }
 
                 // concatenate the route from the last to the first point again.
-                route = this.Calculate(points[mtsp_solution[route_idx][mtsp_solution[route_idx].Length - 1]],
+                route = this.Calculate(vehicle, points[mtsp_solution[route_idx][mtsp_solution[route_idx].Length - 1]],
                             points[mtsp_solution[route_idx][0]]);
                 tsp = OsmSharpRoute.Concatenate(tsp, route);
 

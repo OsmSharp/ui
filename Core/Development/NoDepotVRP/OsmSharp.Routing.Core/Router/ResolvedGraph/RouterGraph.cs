@@ -203,23 +203,23 @@ namespace OsmSharp.Routing.Core.Router
         /// </summary>
         internal class RouterResolvedGraphEdge : IDynamicGraphEdgeData
         {
-            /// <summary>
-            /// Returns true if the edge can be followed only in the foward direction.
-            /// </summary>
-            public bool Forward
-            {
-                get;
-                set;
-            }
+            ///// <summary>
+            ///// Returns true if the edge can be followed only in the foward direction.
+            ///// </summary>
+            //public bool Forward
+            //{
+            //    get;
+            //    set;
+            //}
 
-            /// <summary>
-            /// Returns true if the edge can be followed only in the backward direction.
-            /// </summary>
-            public bool Backward
-            {
-                get;
-                set;
-            }
+            ///// <summary>
+            ///// Returns true if the edge can be followed only in the backward direction.
+            ///// </summary>
+            //public bool Backward
+            //{
+            //    get;
+            //    set;
+            //}
 
             /// <summary>
             /// Returns the weight of this edge.

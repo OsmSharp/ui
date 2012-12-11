@@ -35,7 +35,7 @@ using OsmSharp.Routing.Core.Graph.DynamicGraph;
 namespace OsmSharp.Routing.Core
 {
     /// <summary>
-    /// A class that implements common functionality for a raw routing algorithm.
+    /// A class that implements common functionality for any routing algorithm.
     /// </summary>
     public class Router<EdgeData> : IRouter<RouterPoint>
         where EdgeData : IDynamicGraphEdgeData
@@ -101,7 +101,7 @@ namespace OsmSharp.Routing.Core
         public OsmSharpRoute Calculate(VehicleEnum vehicle, RouterPoint source, RouterPoint target, float max)
         {
             // calculate the route.
-            PathSegment<long> route = _router.Calculate(_data_graph, _interpreter,
+            PathSegment<long> route = _router.Calculate(_data_graph, _interpreter, vehicle,
                 this.RouteResolvedGraph(source), this.RouteResolvedGraph(target), max);
 
             // convert to an OsmSharpRoute.
@@ -129,7 +129,7 @@ namespace OsmSharp.Routing.Core
         public OsmSharpRoute CalculateToClosest(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets, float max)
         {
             // calculate the route.
-            PathSegment<long> route = _router.CalculateToClosest(_data_graph, _interpreter,
+            PathSegment<long> route = _router.CalculateToClosest(_data_graph, _interpreter, vehicle,
                 this.RouteResolvedGraph(source), this.RouteResolvedGraph(targets), max);
 
             // find the target.
@@ -148,7 +148,7 @@ namespace OsmSharp.Routing.Core
         public double CalculateWeight(VehicleEnum vehicle, RouterPoint source, RouterPoint target)
         {
             // calculate the route.
-            return _router.CalculateWeight(_data_graph, _interpreter,
+            return _router.CalculateWeight(_data_graph, _interpreter, vehicle,
                 this.RouteResolvedGraph(source), this.RouteResolvedGraph(target), float.MaxValue);
         }
 
@@ -160,7 +160,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public double[] CalculateOneToManyWeight(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets)
         {
-            return _router.CalculateOneToManyWeight(_data_graph, _interpreter, this.RouteResolvedGraph(source),
+            return _router.CalculateOneToManyWeight(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(source),
                 this.RouteResolvedGraph(targets), double.MaxValue);
         }
 
@@ -172,7 +172,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public double[][] CalculateManyToManyWeight(VehicleEnum vehicle, RouterPoint[] sources, RouterPoint[] targets)
         {
-            return _router.CalculateManyToManyWeight(_data_graph, _interpreter, this.RouteResolvedGraph(sources),
+            return _router.CalculateManyToManyWeight(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(sources),
                 this.RouteResolvedGraph(targets), double.MaxValue);
         }
 
@@ -195,7 +195,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public HashSet<GeoCoordinate> CalculateRange(VehicleEnum vehicle, RouterPoint orgin, float weight)
         {
-            HashSet<long> objects_at_weight = _router.CalculateRange(_data_graph, _interpreter, this.RouteResolvedGraph(orgin),
+            HashSet<long> objects_at_weight = _router.CalculateRange(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(orgin),
                 weight);
 
             HashSet<GeoCoordinate> locations = new HashSet<GeoCoordinate>();
@@ -215,7 +215,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public bool CheckConnectivity(VehicleEnum vehicle, RouterPoint point, float weight)
         {
-            return _router.CheckConnectivity(_data_graph, _interpreter, this.RouteResolvedGraph(point), weight);
+            return _router.CheckConnectivity(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(point), weight);
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace OsmSharp.Routing.Core
                 {
                     entries[0].Points = new RoutePoint[1];
                     entries[0].Points[0] = from;
-                    entries[0].Points[0].Tags = RouteTags.ConvertFrom(from_resolved.Tags);
+                    entries[0].Points[0].Tags = from_resolved.Tags.ConvertFrom();
                 }
 
                 // create the to routing point.
@@ -310,7 +310,7 @@ namespace OsmSharp.Routing.Core
                     //to.Tags = ConvertTo(to_point.Tags);
                     entries[entries.Length - 1].Points = new RoutePoint[1];
                     entries[entries.Length - 1].Points[0] = to;
-                    entries[entries.Length - 1].Points[0].Tags = RouteTags.ConvertFrom(to_resolved.Tags);
+                    entries[entries.Length - 1].Points[0].Tags = to_resolved.Tags.ConvertFrom();
                 }
 
                 // set the routing points.
@@ -382,10 +382,9 @@ namespace OsmSharp.Routing.Core
 
                             side_street.Latitude = (float)neighbour_coordinate.Latitude;
                             side_street.Longitude = (float)neighbour_coordinate.Longitude;
-                            side_street.Tags = RouteTags.ConvertFrom(tags);
+                            side_street.Tags = tags.ConvertFrom();
                             side_street.WayName = _interpreter.EdgeInterpreter.GetName(tags);
-                            side_street.WayNames = RouteTags.ConvertFrom(
-                                _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags));
+                            side_street.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
 
                             side_streets.Add(side_street);
                         }
@@ -398,10 +397,10 @@ namespace OsmSharp.Routing.Core
                 route_entry.Latitude = (float)next_coordinate.Latitude;
                 route_entry.Longitude = (float)next_coordinate.Longitude;
                 route_entry.SideStreets = side_streets.ToArray<RoutePointEntrySideStreet>();
-                route_entry.Tags = RouteTags.ConvertFrom(current_tags);
+                route_entry.Tags = current_tags.ConvertFrom();
                 route_entry.Type = RoutePointEntryType.Along;
                 route_entry.WayFromName = name;
-                route_entry.WayFromNames = RouteTags.ConvertFrom(names);
+                route_entry.WayFromNames = names.ConvertFrom();
                 entries.Add(route_entry);
 
                 // set the previous node.
@@ -419,9 +418,9 @@ namespace OsmSharp.Routing.Core
                 last.Latitude = (float)coordinate.Latitude;
                 last.Longitude = (float)coordinate.Longitude;
                 last.Type = RoutePointEntryType.Stop;
-                last.Tags = RouteTags.ConvertFrom(tags);
+                last.Tags = tags.ConvertFrom();
                 last.WayFromName = _interpreter.EdgeInterpreter.GetName(tags);
-                last.WayFromNames = RouteTags.ConvertFrom(_interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags));
+                last.WayFromNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
 
                 entries.Add(last);
             }
@@ -481,8 +480,8 @@ namespace OsmSharp.Routing.Core
                     if (arc.Key == vertex1)
                     {
                         RouterResolvedGraph.RouterResolvedGraphEdge edge = new RouterResolvedGraph.RouterResolvedGraphEdge();
-                        edge.Backward = arc.Value.Forward;
-                        edge.Forward = arc.Value.Backward;
+                        //edge.Backward = arc.Value.Forward;
+                        //edge.Forward = arc.Value.Backward;
                         edge.Tags = arc.Value.Tags;
                         edge.Weight = arc.Value.Weight;
                         return edge;
@@ -544,7 +543,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate)
         {
-            return this.Resolve(vehicle, coordinate, null);
+            return this.Resolve(vehicle, coordinate, null, null);
         }
 
         /// <summary>
@@ -553,9 +552,10 @@ namespace OsmSharp.Routing.Core
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher)
+        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, 
+            IEdgeMatcher matcher, IDictionary<string, string> point_tags)
         {
-            SearchClosestResult result = _router.SearchClosest(_data_graph, coordinate, matcher, 0.001f); // search the closest routable object.
+            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, matcher, point_tags); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
@@ -597,12 +597,12 @@ namespace OsmSharp.Routing.Core
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, IEdgeMatcher matcher)
+        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, IEdgeMatcher matcher, IDictionary<string, string>[] point_tags)
         {
             RouterPoint[] points = new RouterPoint[coordinate.Length];
             for (int idx = 0; idx < coordinate.Length; idx++)
             {
-                points[idx] = this.Resolve(vehicle, coordinate[idx], matcher);
+                points[idx] = this.Resolve(vehicle, coordinate[idx], matcher, point_tags[idx]);
             }
             return points;
         }
@@ -614,7 +614,7 @@ namespace OsmSharp.Routing.Core
         /// <returns></returns>
         public GeoCoordinate Search(VehicleEnum vehicle, GeoCoordinate coordinate)
         {
-            SearchClosestResult result = _router.SearchClosest(_data_graph, coordinate, null, 0.001f); // search the closest routable object.
+            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, null, null); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
@@ -737,31 +737,31 @@ namespace OsmSharp.Routing.Core
                         // add the arc (in both directions)
                         RouterResolvedGraph.RouterResolvedGraphEdge resolved_edge_forward = 
                             new RouterResolvedGraph.RouterResolvedGraphEdge();
-                        if (forward)
-                        {
-                            resolved_edge_forward.Backward = arc.Value.Value.Backward;
-                            resolved_edge_forward.Forward = arc.Value.Value.Forward;
-                        }
-                        else
-                        {
-                            resolved_edge_forward.Backward = !arc.Value.Value.Backward;
-                            resolved_edge_forward.Forward = !arc.Value.Value.Forward;
-                        }
+                        //if (forward)
+                        //{
+                        //    resolved_edge_forward.Backward = arc.Value.Value.Backward;
+                        //    resolved_edge_forward.Forward = arc.Value.Value.Forward;
+                        //}
+                        //else
+                        //{
+                        //    resolved_edge_forward.Backward = !arc.Value.Value.Backward;
+                        //    resolved_edge_forward.Forward = !arc.Value.Value.Forward;
+                        //}
                         resolved_edge_forward.Tags = arc.Value.Value.Tags;
                         resolved_edge_forward.Weight = arc.Value.Value.Weight;
                         _resolved_graph.AddArc(vertex1, vertex2, resolved_edge_forward);
                         RouterResolvedGraph.RouterResolvedGraphEdge resolved_edge_backward =
                             new RouterResolvedGraph.RouterResolvedGraphEdge();
-                        if (!forward)
-                        {
-                            resolved_edge_backward.Backward = arc.Value.Value.Backward;
-                            resolved_edge_backward.Forward = arc.Value.Value.Forward;
-                        }
-                        else
-                        {
-                            resolved_edge_backward.Backward = !arc.Value.Value.Backward;
-                            resolved_edge_backward.Forward = !arc.Value.Value.Forward;
-                        }
+                        //if (!forward)
+                        //{
+                        //    resolved_edge_backward.Backward = arc.Value.Value.Backward;
+                        //    resolved_edge_backward.Forward = arc.Value.Value.Forward;
+                        //}
+                        //else
+                        //{
+                        //    resolved_edge_backward.Backward = !arc.Value.Value.Backward;
+                        //    resolved_edge_backward.Forward = !arc.Value.Value.Forward;
+                        //}
                         resolved_edge_backward.Tags = arc.Value.Value.Tags;
                         resolved_edge_backward.Weight = arc.Value.Value.Weight;
                         _resolved_graph.AddArc(vertex2, vertex1, resolved_edge_backward);
@@ -850,15 +850,15 @@ namespace OsmSharp.Routing.Core
                     // add the arcs.
                     RouterResolvedGraph.RouterResolvedGraphEdge from_resolved_edge =
                         new RouterResolvedGraph.RouterResolvedGraphEdge();
-                    from_resolved_edge.Backward = from_to_arc.Value.Value.Backward;
-                    from_resolved_edge.Forward = from_to_arc.Value.Value.Forward;
+                    //from_resolved_edge.Backward = from_to_arc.Value.Value.Backward;
+                    //from_resolved_edge.Forward = from_to_arc.Value.Value.Forward;
                     from_resolved_edge.Tags = from_to_arc.Value.Value.Tags;
                     from_resolved_edge.Weight = from_to_arc.Value.Value.Weight * relative_position;
                     _resolved_graph.AddArc(vertex_from, resolved_vertex, from_resolved_edge);
                     RouterResolvedGraph.RouterResolvedGraphEdge resolved_from_edge =
                         new RouterResolvedGraph.RouterResolvedGraphEdge();
-                    resolved_from_edge.Backward = !from_to_arc.Value.Value.Backward;
-                    resolved_from_edge.Forward = !from_to_arc.Value.Value.Forward;
+                    //resolved_from_edge.Backward = !from_to_arc.Value.Value.Backward;
+                    //resolved_from_edge.Forward = !from_to_arc.Value.Value.Forward;
                     resolved_from_edge.Tags = from_to_arc.Value.Value.Tags;
                     resolved_from_edge.Weight = from_to_arc.Value.Value.Weight * relative_position;
                     _resolved_graph.AddArc(resolved_vertex, vertex_from, resolved_from_edge);
@@ -866,15 +866,15 @@ namespace OsmSharp.Routing.Core
                     // add the new arcs.
                     RouterResolvedGraph.RouterResolvedGraphEdge resolved_to_edge =
                         new RouterResolvedGraph.RouterResolvedGraphEdge();
-                    resolved_to_edge.Backward = from_to_arc.Value.Value.Backward;
-                    resolved_to_edge.Forward = from_to_arc.Value.Value.Forward;
+                    //resolved_to_edge.Backward = from_to_arc.Value.Value.Backward;
+                    //resolved_to_edge.Forward = from_to_arc.Value.Value.Forward;
                     resolved_to_edge.Tags = from_to_arc.Value.Value.Tags;
                     resolved_to_edge.Weight = from_to_arc.Value.Value.Weight * (1.0 - position);
                     _resolved_graph.AddArc(vertex_to, resolved_vertex, resolved_to_edge);
                     RouterResolvedGraph.RouterResolvedGraphEdge to_resolved_edge =
                         new RouterResolvedGraph.RouterResolvedGraphEdge();
-                    to_resolved_edge.Backward = !from_to_arc.Value.Value.Backward;
-                    to_resolved_edge.Forward = !from_to_arc.Value.Value.Forward;
+                    //to_resolved_edge.Backward = !from_to_arc.Value.Value.Backward;
+                    //to_resolved_edge.Forward = !from_to_arc.Value.Value.Forward;
                     to_resolved_edge.Tags = from_to_arc.Value.Value.Tags;
                     to_resolved_edge.Weight = from_to_arc.Value.Value.Weight * (1.0 - position);
                     _resolved_graph.AddArc(resolved_vertex, vertex_to, to_resolved_edge);

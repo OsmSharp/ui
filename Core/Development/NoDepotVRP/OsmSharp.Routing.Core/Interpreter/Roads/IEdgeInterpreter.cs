@@ -24,7 +24,7 @@ namespace OsmSharp.Routing.Core.Interpreter.Roads
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        bool? IsOneWay(IDictionary<string, string> tags);
+        bool? IsOneWay(IDictionary<string, string> tags, VehicleEnum vehicle);
 
         /// <summary>
         /// Returns true if the edge with given tags can be traversed by the given vehicle.

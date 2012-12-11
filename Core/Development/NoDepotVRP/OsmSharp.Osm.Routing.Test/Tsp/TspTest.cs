@@ -38,7 +38,7 @@ using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Osm.Routing.Core.TSP.Genetic;
 using OsmSharp.Routing.Core.Route;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 
 namespace OsmSharp.Osm.Routing.Test.Tsp
 {
@@ -58,9 +58,9 @@ namespace OsmSharp.Osm.Routing.Test.Tsp
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<SimpleWeighedEdge> osm_data =
-                new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
-            SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
+            MemoryRouterDataSource<PreProcessedEdge> osm_data =
+                new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+            PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(data_stream);
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
@@ -68,8 +68,8 @@ namespace OsmSharp.Osm.Routing.Test.Tsp
             target_data.RegisterSource(sorter);
             target_data.Pull();
 
-            IRouter<RouterPoint> router = new Router<SimpleWeighedEdge>(osm_data, interpreter,
-                new DykstraRoutingBinairyHeap<SimpleWeighedEdge>(osm_data.TagsIndex));
+            IRouter<RouterPoint> router = new Router<PreProcessedEdge>(osm_data, interpreter,
+                new DykstraRoutingPreProcessed(osm_data.TagsIndex));
 
             // read the source files.
             int latitude_idx = 2;
@@ -108,7 +108,7 @@ namespace OsmSharp.Osm.Routing.Test.Tsp
             }
 
             RouterTSPGenetic<RouterPoint> tsp_solver = new RouterTSPGenetic<RouterPoint>(router);
-            OsmSharpRoute tsp = tsp_solver.CalculateTSP(points.ToArray());
+            OsmSharpRoute tsp = tsp_solver.CalculateTSP(VehicleEnum.Car, points.ToArray());
             tsp.SaveAsGpx(new FileInfo(@"c:\temp\tsp.gpx"));
 
             double[][] weights = router.CalculateManyToManyWeight(VehicleEnum.Car, points.ToArray(), points.ToArray());

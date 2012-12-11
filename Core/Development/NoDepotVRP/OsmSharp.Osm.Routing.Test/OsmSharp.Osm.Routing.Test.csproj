@@ -165,14 +165,15 @@
     <Compile Include="Instructions\InstructionTestExecution.cs" />
     <Compile Include="Instructions\InstructionTests.cs" />
     <Compile Include="ManyToMany\ManyToManyCHTests.cs" />
+    <Compile Include="ManyToMany\ManyToManyDykstraLiveTests.cs" />
     <Compile Include="ManyToMany\ManyToManyExecution.cs" />
     <Compile Include="ManyToMany\ManyToManyRawTests.cs" />
     <Compile Include="ManyToMany\ManyToManyTests.cs" />
     <Compile Include="PBF\PBFTest.cs" />
-    <Compile Include="Point2Point\Point2PointDykstraBinairyHeapTests.cs" />
+    <Compile Include="Point2Point\Point2PointDykstraLiveTests.cs" />
     <Compile Include="Point2Point\Point2PointCHTests.cs" />
     <Compile Include="Point2Point\Point2PointExecution.cs" />
-    <Compile Include="Point2Point\Point2PointDykstraTests.cs" />
+    <Compile Include="Point2Point\Point2PointDykstraPreProcessedTests.cs" />
     <Compile Include="Point2Point\Point2PointTest.cs" />
     <Compile Include="Redis\RedisTest.cs" />
     <Compile Include="Sparse\SparseTests.cs" />

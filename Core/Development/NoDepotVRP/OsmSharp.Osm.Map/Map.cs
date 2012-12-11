@@ -74,8 +74,11 @@ namespace OsmSharp.Osm.Map
             
             for(int idx = this.Layers.Count-1;idx>=0;idx--)
             {
-                elements.AddRange(
-                    this.Layers[idx].GetElements(box,zoom_factor));
+                if (this.Layers[idx].Visible)
+                { // only add elements from visible layers.
+                    elements.AddRange(
+                        this.Layers[idx].GetElements(box, zoom_factor));
+                }
             }
 
             return new MapQueryResult(box.Center,elements);

@@ -113,9 +113,8 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             IRouter<RouterPoint> router = 
                 new Router<SimpleWeighedEdge>(osm_data, 
                     interpreter, new 
-                        DykstraRoutingBinairyHeap<SimpleWeighedEdge>(osm_data.TagsIndex));
+                        DykstraRoutingLive(osm_data.TagsIndex));
         
-
             // read the source files.
             string points_file = directory + string.Format(@"\{0}.csv", name);
             int latitude_idx = 3;
@@ -178,7 +177,7 @@ namespace OsmSharp.Osm.Routing.Test.VRP
                 OsmSharp.Osm.Routing.Core.TSP.Genetic.RouterTSPAEXGenetic<RouterPoint> tsp_route =
                     new Core.TSP.Genetic.RouterTSPAEXGenetic<RouterPoint>(
                         router);
-                OsmSharpRoute old_route = tsp_route.CalculateTSP(route.Value.ToArray());
+                OsmSharpRoute old_route = tsp_route.CalculateTSP(VehicleEnum.Car, route.Value.ToArray());
                 TimeCalculator time_calculator = new TimeCalculator(interpreter);
                 Dictionary<string, double> metrics = time_calculator.Calculate(old_route);
                 old_route.SaveAsGpx(new FileInfo(directory + string.Format("{0}.{1}.gpx", name, route.Key)));
@@ -231,7 +230,7 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             log.WriteLine("Started Testing: {0}", vrp_router.Name);
 
             double total_time = 0;
-            OsmSharpRoute[] routes = vrp_router.CalculateNoDepot(points);
+            OsmSharpRoute[] routes = vrp_router.CalculateNoDepot(VehicleEnum.Car, points);
             for (int idx = 0; idx < routes.Length; idx++)
             {
                 OsmSharpRoute new_route = routes[idx];
