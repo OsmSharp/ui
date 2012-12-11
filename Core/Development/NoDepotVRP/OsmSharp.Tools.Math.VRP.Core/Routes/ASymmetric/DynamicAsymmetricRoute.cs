@@ -61,6 +61,22 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         }
 
         /// <summary>
+        /// Creates a new dynamic assymmetric route using an initial size.
+        /// </summary>
+        /// <param name="size"></param>
+        public DynamicAsymmetricRoute(int size, bool is_round)
+        {
+            _is_round = is_round;
+            _next_array = new int[size];
+            for (int idx = 0; idx < size; idx++)
+            {
+                _next_array[idx] = -1;
+            }
+            _first = -1;
+            _last = -1;
+        }
+
+        /// <summary>
         /// Creates a new dynamic assymmetric route using an initial size and customer.
         /// </summary>
         /// <param name="size"></param>
@@ -91,7 +107,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         {
             get 
             { 
-                return false; 
+                return _first < 0; 
             }
         }
 
@@ -146,33 +162,53 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// <param name="to"></param>
         public void Insert(int from, int customer, int to)
         {
-            if (_next_array.Length > from)
-            { // customers should exist.
-                // resize the array if needed.
-                if (_next_array.Length <= customer)
-                { // resize the array.
-                    this.Resize(customer);
-                }
-
-                //// get the to customer.
-                //int to = _next_array[from];
-
-                // insert customer.
-                _next_array[from] = customer;
-                if (to < 0) { }
-                else
-                {
-                    _next_array[customer] = to;
-                }
-
-                // update last.
-                if (_first == to)
-                {
-                    _last = customer;
-                }
-                return;
+            if (customer < 0)
+            { // a new customer cannot be negative!
+                throw new ArgumentOutOfRangeException("Cannot add customers with a negative index!");
             }
-            throw new ArgumentOutOfRangeException("Customer(s) do not exist in this route!");
+            if (this.IsEmpty)
+            { // add the given customer as the first one.
+                _first = customer;
+                if (this.IsRound)
+                { // first is last when round.
+                    _last = _first;
+                }
+            }
+            else
+            { // there are already existing customers.
+                if (from < 0)
+                { // a new customer cannot be negative!
+                    throw new ArgumentOutOfRangeException("Cannot add a customer after a customer with a negative index!");
+                }
+
+                if (_next_array.Length > from)
+                { // customers should exist.
+                    // resize the array if needed.
+                    if (_next_array.Length <= customer)
+                    { // resize the array.
+                        this.Resize(customer);
+                    }
+
+                    //// get the to customer.
+                    //int to = _next_array[from];
+
+                    // insert customer.
+                    _next_array[from] = customer;
+                    if (to < 0) { }
+                    else
+                    {
+                        _next_array[customer] = to;
+                    }
+
+                    // update last.
+                    if (_first == to)
+                    {
+                        _last = customer;
+                    }
+                    return;
+                }
+                throw new ArgumentOutOfRangeException("Customer(s) do not exist in this route!");
+            }
         }
 
         /// <summary>
@@ -386,6 +422,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             {
                 _first = _next_array[customer];
                 _next_array[customer] = -1;
+
+
+                if (this.IsRound)
+                { // if this route is a round; changing the first changes the last.
+                    _last = _first;
+                }
             }
             for (int idx = 0; idx < _next_array.Length; idx++)
             {
@@ -446,9 +488,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         private void UpdateLast()
         {
             _last = _first;
-            while (_next_array[_last] >= 0 && _next_array[_last] != _first)
+            if (!this.IsRound)
             {
-                _last = _next_array[_last];
+                while (_next_array[_last] >= 0 && _next_array[_last] != _first)
+                {
+                    _last = _next_array[_last];
+                }
             }
         }
 
@@ -602,6 +647,5 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         {
             return new DynamicAsymmetricBetweenEnumerable(_next_array, from, to);
         }
-
     }
 }

@@ -15,12 +15,22 @@ namespace OsmSharp.UnitTests.Routes
     public class DynamicAsymmetricRouteTests : RouteTest
     {
         /// <summary>
-        /// Builds a dynamic asymmetric route.
+        /// Builds a dynamic route initialized with an initial customer.
         /// </summary>
         /// <returns></returns>
         protected override IRoute BuildRoute(int customer, bool is_round)
         {
             return new DynamicAsymmetricRoute(1, customer, is_round);
+        }
+
+        /// <summary>
+        /// Builds a dynamic route that is empty.
+        /// </summary>
+        /// <param name="is_round"></param>
+        /// <returns></returns>
+        protected override IRoute BuildRoute(bool is_round)
+        {
+            return new DynamicAsymmetricRoute(1, is_round);
         }
 
         /// <summary>

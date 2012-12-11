@@ -13,10 +13,17 @@ namespace OsmSharp.UnitTests.Routes
     public abstract class RouteTest
     {
         /// <summary>
-        /// Creates the IRoute implementation to perform tests on.
+        /// Creates the IRoute implementation to perform tests on with an initial customer.
         /// </summary>
         /// <returns></returns>
         protected abstract IRoute BuildRoute(int customer, bool is_round);
+
+        /// <summary>
+        /// Creates the IRoute implementation to perform tests one but one that is empty.
+        /// </summary>
+        /// <param name="is_round"></param>
+        /// <returns></returns>
+        protected abstract IRoute BuildRoute(bool is_round);
 
         /// <summary>
         /// Some tests on an IRoute.
@@ -25,19 +32,42 @@ namespace OsmSharp.UnitTests.Routes
         {
             // create a new empty route.
             IRoute route = this.BuildRoute(0, true);
-            Assert.AreEqual(1, route.Count);
-            Assert.AreEqual(false, route.IsEmpty);
-            Assert.AreEqual(true, route.IsRound);
-            
-            for (int customer = 1; customer < 100; customer++)
-            {
-                route.Insert(customer - 1, customer, -1);
-
-                Assert.AreEqual(customer + 1, route.Count);
+            if (route != null)
+            { // this part needs testing!
+                Assert.AreEqual(1, route.Count);
                 Assert.AreEqual(false, route.IsEmpty);
                 Assert.AreEqual(true, route.IsRound);
-                Assert.AreEqual(0, route.First);
-                Assert.AreEqual(0, route.Last);
+
+                for (int customer = 1; customer < 100; customer++)
+                {
+                    route.Insert(customer - 1, customer, -1);
+
+                    Assert.AreEqual(customer + 1, route.Count);
+                    Assert.AreEqual(false, route.IsEmpty);
+                    Assert.AreEqual(true, route.IsRound);
+                    Assert.AreEqual(0, route.First);
+                    Assert.AreEqual(0, route.Last);
+                }
+            }
+
+            // create a new empty route.
+            route = this.BuildRoute(true);
+            if (route != null)
+            { // this part needs testing.
+                Assert.AreEqual(0, route.Count);
+                Assert.AreEqual(true, route.IsEmpty);
+                Assert.AreEqual(true, route.IsRound);
+
+                for (int customer = 0; customer < 100; customer++)
+                {
+                    route.Insert(customer - 1, customer, -1);
+
+                    Assert.AreEqual(customer + 1, route.Count);
+                    Assert.AreEqual(false, route.IsEmpty);
+                    Assert.AreEqual(true, route.IsRound);
+                    Assert.AreEqual(0, route.First);
+                    Assert.AreEqual(0, route.Last);
+                }
             }
         }
 
@@ -50,27 +80,57 @@ namespace OsmSharp.UnitTests.Routes
             int count = 100;
             IRoute route = this.BuildRoute(0, true);
             List<int> customers = new List<int>();
-            customers.Add(0);
-            for (int customer = 1; customer < count; customer++)
-            {
-                route.Insert(customer - 1, customer, -1);
-                customers.Add(customer);
+            if (route != null)
+            { // this part needs testing!
+                customers.Add(0);
+                for (int customer = 1; customer < count; customer++)
+                {
+                    route.Insert(customer - 1, customer, -1);
+                    customers.Add(customer);
+                }
+
+                // remove customers.
+                while (customers.Count > 0)
+                {
+                    int customer_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(
+                        customers.Count);
+                    int customer = customers[customer_idx];
+                    customers.RemoveAt(customer_idx);
+
+                    route.Remove(customer);
+
+                    Assert.AreEqual(customers.Count, route.Count);
+                    Assert.AreEqual(customers.Count == 0, route.IsEmpty);
+                    Assert.AreEqual(true, route.IsRound);
+                    Assert.AreEqual(route.Last, route.First);
+                }
             }
 
-            // remove customers.
-            while (customers.Count > 0)
-            {
-                int customer_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(
-                    customers.Count);
-                int customer = customers[customer_idx];
-                customers.RemoveAt(customer_idx);
+            route = this.BuildRoute(true);
+            customers = new List<int>();
+            if (route != null)
+            { // this part needs testing!
+                for (int customer = 0; customer < count; customer++)
+                {
+                    route.Insert(customer - 1, customer, -1);
+                    customers.Add(customer);
+                }
 
-                route.Remove(customer);
+                // remove customers.
+                while (customers.Count > 0)
+                {
+                    int customer_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(
+                        customers.Count);
+                    int customer = customers[customer_idx];
+                    customers.RemoveAt(customer_idx);
 
-                Assert.AreEqual(customers.Count, route.Count);
-                Assert.AreEqual(false, route.IsEmpty);
-                Assert.AreEqual(true, route.IsRound);
-                Assert.AreEqual(route.Last, route.First);
+                    route.Remove(customer);
+
+                    Assert.AreEqual(customers.Count, route.Count);
+                    Assert.AreEqual(customers.Count == 0, route.IsEmpty);
+                    Assert.AreEqual(true, route.IsRound);
+                    Assert.AreEqual(route.Last, route.First);
+                }
             }
         }
     }
