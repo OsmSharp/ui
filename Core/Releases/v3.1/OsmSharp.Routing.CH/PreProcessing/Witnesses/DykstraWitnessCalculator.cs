@@ -23,6 +23,7 @@ using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Core.Graph;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
+using OsmSharp.Tools.Core.Collections.PriorityQueues;
 
 namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
 {
@@ -34,7 +35,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <summary>
         /// Holds the data target.
         /// </summary>
-        private CHRouter _router;
+        private IDynamicGraph<CHEdgeData> _data;
 
         /// <summary>
         /// Creates a new witness calculator.
@@ -42,7 +43,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="data"></param>
         public DykstraWitnessCalculator(IDynamicGraph<CHEdgeData> data)
         {
-            _router = new CHRouter(data);
+            _data = data;
         }
 
         /// <summary>
@@ -55,7 +56,94 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <returns></returns>
         public bool Exists(uint from, uint to, uint via, float weight, int max_settles)
         {
-            return _router.CalculateWeight(from, to, via, weight, max_settles) <= weight;
+            return this.CalculateWeight(from, to, via, weight, max_settles) <= weight;
+        }
+
+        /// <summary>
+        /// Implements a very simple dykstra version.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="via"></param>
+        /// <param name="weight"></param>
+        /// <param name="max_settles"></param>
+        /// <returns></returns>
+        private float CalculateWeight(uint from, uint to, uint via, float max_weight, int max_settles)
+        {
+            float weight = float.MaxValue;
+
+            // creates the settled list.
+            HashSet<uint> settled = new HashSet<uint>();
+            settled.Add(via);
+
+            // creates the priorty queue.
+            BinairyHeap<SettledVertex> heap = new BinairyHeap<SettledVertex>();
+            heap.Push(new SettledVertex(from, 0), 0);
+
+            // keep looping until the queue is empty or the target is found!
+            while (heap.Count > 0)
+            {
+                // pop the first customer.
+                SettledVertex current = heap.Pop();
+                if (!settled.Contains(current.VertexId))
+                { // the current vertex has net been settled.
+                    settled.Add(current.VertexId); // settled the vertex.
+
+                    // test stop conditions.
+                    if (current.VertexId == to)
+                    { // target is found!
+                        return current.Weight;
+                    }
+                    if (settled.Count >= max_settles)
+                    { // do not continue searching.
+                        return float.MaxValue;
+                    }
+
+                    // get the neighbours.
+                    KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(current.VertexId);
+                    for (int idx = 0; idx < neighbours.Length; idx++)
+                    {
+                        if (!settled.Contains(neighbours[idx].Key))
+                        {
+                            SettledVertex neighbour = new SettledVertex(neighbours[idx].Key,
+                                neighbours[idx].Value.Weight + current.Weight);
+                            if (current.Weight < max_weight)
+                            {
+                                heap.Push(neighbour, neighbour.Weight);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return weight;
+        }
+
+        /// <summary>
+        /// Represents a settled vertex.
+        /// </summary>
+        private class SettledVertex
+        {
+            /// <summary>
+            /// Creates a new settled vertex.
+            /// </summary>
+            /// <param name="vertex"></param>
+            /// <param name="weight"></param>
+            public SettledVertex(uint vertex, float weight)
+            {
+                this.VertexId = vertex;
+                this.Weight = weight;
+            }
+
+            /// <summary>
+            /// The vertex that was settled.
+            /// </summary>
+            public uint VertexId { get; set; }
+
+            /// <summary>
+            /// The weight this vertex was settled at.
+            /// </summary>
+            public float Weight { get; set; }
         }
     }
 }

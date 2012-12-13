@@ -51,12 +51,6 @@ namespace OsmSharp.Tools.Core.Output
             {
                 Console.WriteLine();
             }
-            
-            //if (_previous_key != key)
-            //{
-            //    Console.WriteLine(key);
-            //}
-            //_previous_key = key;
 
             Console.Write(string.Format("{0} : {1}%",
                 current_progress_string, System.Math.Round(progress * 100, 2).ToString().PadRight(6), key, message));

@@ -69,6 +69,8 @@ namespace OsmSharp.Osm.Routing.Test.CH
             target_data.RegisterSource(data_processor_source);
             target_data.Pull();
 
+            System.Console.ReadLine();
+
             // do the pre-processing part.
             INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(osm_data);
             CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
