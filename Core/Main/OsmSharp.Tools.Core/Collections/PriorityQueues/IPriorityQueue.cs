@@ -40,7 +40,7 @@ namespace OsmSharp.Tools.Core.Collections.PriorityQueues
         /// </summary>
         /// <param name="item"></param>
         /// <param name="priority"></param>
-        void Enqueue(T item, float priority);
+        void Push(T item, float priority);
 
         /// <summary>
         /// Returns the smallest weight in the queue.
@@ -58,6 +58,6 @@ namespace OsmSharp.Tools.Core.Collections.PriorityQueues
         /// Returns the object with the smallest weight and removes it.
         /// </summary>
         /// <returns></returns>
-        T Dequeue();
+        T Pop();
     }
 }

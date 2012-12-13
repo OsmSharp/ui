@@ -25,6 +25,7 @@ using System.Diagnostics;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Graph;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
+using System.Collections.Concurrent;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -348,11 +349,20 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 if (_misses == _k)
                 { // recalculation.
                     CHPriorityQueue new_queue = new CHPriorityQueue();
-                    foreach (uint vertex in _queue)
+                    ConcurrentBag<KeyValuePair<uint, float>> recalculated_weights = 
+                        new ConcurrentBag<KeyValuePair<uint, float>>();
+                    System.Threading.Tasks.Parallel.ForEach(_queue, vertex =>
                     {
-                        new_queue.Enqueue(vertex, _calculator.Calculate(vertex));
+                        recalculated_weights.Add(
+                            new KeyValuePair<uint,float>(vertex, _calculator.Calculate(vertex)));
+                    });
+                    foreach (KeyValuePair<uint, float> pair in recalculated_weights)
+                    {
+                        new_queue.Enqueue(pair.Key, pair.Value);
                     }
                     _queue = new_queue;
+                    _misses_queue.Clear();
+                    _misses = 0;
                 }
                 else
                 { // no recalculation.
@@ -369,19 +379,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     }
                 }
             }
-
-            //// first check the first of the current queue.
-            //foreach (float weight in _queue.Weights)
-            //{ // get the first vertex and check.
-            //    foreach (uint vertex in new List<uint>(_queue.PeekAtWeight(weight)))
-            //    { // get the first vertex and check.
-            //        if (this.CanBeContracted(vertex))
-            //        { // yet, this vertex can be contracted!
-            //            _queue.Remove(vertex);
-            //            return vertex;
-            //        }
-            //    }
-            //}
 
             // keep going over the enumerator and check.
             while (_all_nodes.MoveNext())

@@ -82,7 +82,7 @@ namespace OsmSharp.Tools.Core.Collections.PriorityQueues
         /// </summary>
         /// <param name="item"></param>
         /// <param name="priority"></param>
-        public void Enqueue(T item, float priority)
+        public void Push(T item, float priority)
         {
             _count++; // another item was added!
 
@@ -143,7 +143,7 @@ namespace OsmSharp.Tools.Core.Collections.PriorityQueues
         /// Returns the object with the smallest weight and removes it.
         /// </summary>
         /// <returns></returns>
-        public T Dequeue()
+        public T Pop()
         {
             if (_count > 0)
             {

@@ -246,7 +246,7 @@ namespace OsmSharp.Routing.CH.Routing
                 {
                     to = path.First().VertexId;
                 }
-                queue.Enqueue(path, (float)path.Weight);
+                queue.Push(path, (float)path.Weight);
 
                 // also add the from paths.
                 path = path.From;
@@ -276,10 +276,10 @@ namespace OsmSharp.Routing.CH.Routing
             while (queue.Count > 0) // TODO: work on a stopping condition?
             {
                 //PathSegment<long> current = queue.Pop();
-                PathSegment<long> current = queue.Dequeue();
+                PathSegment<long> current = queue.Pop();
                 while (current != null && settled_vertices.ContainsKey(current.VertexId))
                 {
-                    current = queue.Dequeue();
+                    current = queue.Pop();
                 }
 
                 if (current != null)
@@ -321,7 +321,7 @@ namespace OsmSharp.Routing.CH.Routing
                             // if not yet settled.
                             PathSegment<long> route_to_neighbour = new PathSegment<long>(
                                 neighbour.Key, current.Weight + neighbour.Value.Weight, current);
-                            queue.Enqueue(route_to_neighbour, (float)route_to_neighbour.Weight);
+                            queue.Push(route_to_neighbour, (float)route_to_neighbour.Weight);
                             //queue.Push(route_to_neighbour);
                         }
                     }
@@ -356,7 +356,7 @@ namespace OsmSharp.Routing.CH.Routing
                 {
                     from = path.First().VertexId;
                 }
-                queue.Enqueue(path, (float)path.Weight);
+                queue.Push(path, (float)path.Weight);
 
                 // also add the from paths.
                 path = path.From;
@@ -400,10 +400,10 @@ namespace OsmSharp.Routing.CH.Routing
             while (queue.Count > 0) // TODO: work on a stopping condition?
             {
                 //PathSegment<long> current = queue.Pop();
-                PathSegment<long> current = queue.Dequeue();
+                PathSegment<long> current = queue.Pop();
                 while (current != null && settled_vertices.ContainsKey(current.VertexId))
                 {
-                    current = queue.Dequeue();
+                    current = queue.Pop();
                 }
 
                 if (current != null)
@@ -476,7 +476,7 @@ namespace OsmSharp.Routing.CH.Routing
                             // if not yet settled.
                             PathSegment<long> route_to_neighbour = new PathSegment<long>(
                                 neighbour.Key, current.Weight + neighbour.Value.Weight, current);
-                            queue.Enqueue(route_to_neighbour, (float)route_to_neighbour.Weight);
+                            queue.Push(route_to_neighbour, (float)route_to_neighbour.Weight);
                             //queue.Push(route_to_neighbour);
                         }
                     }
@@ -529,7 +529,7 @@ namespace OsmSharp.Routing.CH.Routing
             foreach (long source_vertex in source.GetVertices())
             {
                 PathSegment<long> path = source.GetPathTo(source_vertex);
-                queue_forward.Enqueue(path, (float)path.Weight);
+                queue_forward.Push(path, (float)path.Weight);
                 path = path.From;
                 while (path != null)
                 { // keep looping.
@@ -555,7 +555,7 @@ namespace OsmSharp.Routing.CH.Routing
             foreach (long target_vertex in target.GetVertices())
             {
                 PathSegment<long> path = target.GetPathTo(target_vertex);
-                queue_backward.Enqueue(path, (float)path.Weight);
+                queue_backward.Push(path, (float)path.Weight);
                 path = path.From;
                 while (path != null)
                 { // keep looping.
@@ -815,6 +815,10 @@ namespace OsmSharp.Routing.CH.Routing
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
+        /// <param name="exception"></param>
+        /// <param name="max"></param>
+        /// <param name="max_settles"></param>
+        /// <param name="max_hops"></param>
         /// <returns></returns>
         private CHResult CalculateInternal(uint from, uint to, uint exception, double max, int max_settles)
         {
@@ -824,14 +828,12 @@ namespace OsmSharp.Routing.CH.Routing
             // initialize the queues.
             IPriorityQueue<PathSegment<long>> queue_forward = new BinairyHeap<PathSegment<long>>();
             IPriorityQueue<PathSegment<long>> queue_backward = new BinairyHeap<PathSegment<long>>();
-            //CHPriorityQueue queue_forward = new CHPriorityQueue();
-            //CHPriorityQueue queue_backward = new CHPriorityQueue();
 
             // add the from vertex to the forward queue.
-            queue_forward.Enqueue(new PathSegment<long>(from), 0);
+            queue_forward.Push(new PathSegment<long>(from), 0);
 
             // add the from vertex to the backward queue.
-            queue_backward.Enqueue(new PathSegment<long>(to), 0);
+            queue_backward.Push(new PathSegment<long>(to), 0);
 
             // keep looping until stopping conditions are met.
             CHBest best = this.CalculateBest(settled_vertices);
@@ -920,7 +922,7 @@ namespace OsmSharp.Routing.CH.Routing
             foreach (long source_vertex in source.GetVertices())
             {
                 PathSegment<long> path = source.GetPathTo(source_vertex);
-                queue_forward.Enqueue(path, (float)path.Weight);
+                queue_forward.Push(path, (float)path.Weight);
                 //queue_forward.Push(source.GetPathTo(source_vertex));
             }
 
@@ -928,7 +930,7 @@ namespace OsmSharp.Routing.CH.Routing
             foreach (long target_vertex in source.GetVertices())
             {
                 PathSegment<long> path = source.GetPathTo(target_vertex);
-                queue_backward.Enqueue(path, (float)path.Weight);
+                queue_backward.Push(path, (float)path.Weight);
                 //queue_backward.Push(source.GetPathTo(target_vertex));
             }
 
@@ -1034,11 +1036,11 @@ namespace OsmSharp.Routing.CH.Routing
         //                           long exception)
         {
             // get the current vertex with the smallest weight.
-            PathSegment<long> current = queue.Dequeue();
+            PathSegment<long> current = queue.Pop();
             while (current != null && settled_queue.Forward.ContainsKey(
                 current.VertexId))
             { // keep trying.
-                current = queue.Dequeue();
+                current = queue.Pop();
             }
 
             if (current != null)
@@ -1074,7 +1076,7 @@ namespace OsmSharp.Routing.CH.Routing
                         PathSegment<long> route_to_neighbour = new PathSegment<long>(
                             neighbour.Key, current.Weight + neighbour.Value.Weight, current);
                         //queue.Push(route_to_neighbour);
-                        queue.Enqueue(route_to_neighbour, (float)route_to_neighbour.Weight);
+                        queue.Push(route_to_neighbour, (float)route_to_neighbour.Weight);
                     }
                     else if (neighbour.Value.Forward &&
                         (exception == 0 || (exception != neighbour.Key &&
@@ -1089,7 +1091,7 @@ namespace OsmSharp.Routing.CH.Routing
                         {
                             settled_queue.Forward.Remove(neighbour.Key);
                             //queue.Push(route_to_neighbour);
-                            queue.Enqueue(route_to_neighbour, (float)route_to_neighbour.Weight);
+                            queue.Push(route_to_neighbour, (float)route_to_neighbour.Weight);
                         }
                     }
                 }
@@ -1108,11 +1110,11 @@ namespace OsmSharp.Routing.CH.Routing
         {
             // get the current vertex with the smallest weight.
             //PathSegment<long> current = queue.Pop();
-            PathSegment<long> current = queue.Dequeue();
+            PathSegment<long> current = queue.Pop();
             while (current != null && settled_queue.Backward.ContainsKey(
                 current.VertexId))
             { // keep trying.
-                current = queue.Dequeue();
+                current = queue.Pop();
             }
 
             if (current != null)
@@ -1148,7 +1150,7 @@ namespace OsmSharp.Routing.CH.Routing
                         PathSegment<long> route_to_neighbour = new PathSegment<long>(
                             neighbour.Key, current.Weight + neighbour.Value.Weight, current);
                         //queue.Push(route_to_neighbour);
-                        queue.Enqueue(route_to_neighbour, (float)route_to_neighbour.Weight);
+                        queue.Push(route_to_neighbour, (float)route_to_neighbour.Weight);
                     }
                     else if (neighbour.Value.Backward &&
                         (exception == 0 || (exception != neighbour.Key &&
@@ -1162,7 +1164,7 @@ namespace OsmSharp.Routing.CH.Routing
                         if (settled_queue.Backward[neighbour.Key].Weight > route_to_neighbour.Weight)
                         {
                             settled_queue.Backward.Remove(neighbour.Key);
-                            queue.Enqueue(route_to_neighbour, (float)route_to_neighbour.Weight);
+                            queue.Push(route_to_neighbour, (float)route_to_neighbour.Weight);
                             //queue.Push(route_to_neighbour);
                         }
                     }

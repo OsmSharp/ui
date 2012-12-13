@@ -230,16 +230,16 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                 labels[vertex] = new List<RoutingLabel>();
 
                 PathSegment<long> path = source.GetPathTo(vertex);
-                heap.Enqueue(path, (float)path.Weight);
+                heap.Push(path, (float)path.Weight);
             }
 
             // set the from node as the current node and put it in the correct data structures.
             // intialize the source's neighbours.
-            PathSegment<long> current = heap.Dequeue();
+            PathSegment<long> current = heap.Pop();
             while (current != null &&
                 chosen_vertices.Contains(current.VertexId))
             { // keep dequeuing.
-                current = heap.Dequeue();
+                current = heap.Pop();
             }
 
             // test each target for the source.
@@ -425,7 +425,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
 
                                 // update the visit list;
                                 PathSegment<long> neighbour_route = new PathSegment<long>(neighbour.Key, total_weight, current);
-                                heap.Enqueue(neighbour_route, (float)neighbour_route.Weight);
+                                heap.Push(neighbour_route, (float)neighbour_route.Weight);
                             }
                         }
                     }
@@ -436,11 +436,11 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                 if (heap.Count > 0)
                 {
                     // choose the next vertex.
-                    current = heap.Dequeue();
+                    current = heap.Pop();
                     while (current != null &&
                         chosen_vertices.Contains(current.VertexId))
                     { // keep dequeuing.
-                        current = heap.Dequeue();
+                        current = heap.Pop();
                     }
                     if (current != null)
                     {
@@ -455,11 +455,11 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                     }
 
                     // choose the next vertex.
-                    current = heap.Dequeue();
+                    current = heap.Pop();
                     while (current != null &&
                         chosen_vertices.Contains(current.VertexId))
                     { // keep dequeuing.
-                        current = heap.Dequeue();
+                        current = heap.Pop();
                     }
                 }
 
