@@ -58,9 +58,9 @@ namespace OsmSharp.Osm.Routing.Test
             //PBF.PBFTest.Execute();
             //ManyToMany.ManyToManyExecution.Execute();
             //Point2Point.Point2PointExecution.Execute();
-            CHTest.Execute();
+            //CHTest.Execute();
             //Tsp.TspTest.Execute();
-            //CHVerifiedContractionBaseTests.Execute();
+            CHVerifiedContractionBaseTests.Execute();
             //Instructions.InstructionTestExecution.Execute();
             
 

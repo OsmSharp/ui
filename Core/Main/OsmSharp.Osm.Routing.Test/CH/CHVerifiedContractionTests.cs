@@ -21,7 +21,6 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering;
 
 namespace OsmSharp.Osm.Routing.Test.CH
 {
-
     /// <summary>
     /// Executes the CH contractions while verifying each step.
     /// </summary>
@@ -108,8 +107,10 @@ namespace OsmSharp.Osm.Routing.Test.CH
             target_data.Pull();
 
             // do the pre-processing part.
+            //INodeWitnessCalculator witness_calculator = new CHRouterWitnessCalculator(_data);
+            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(_data);
             CHPreProcessor pre_processor = new CHPreProcessor(_data,
-                new SparseOrdering(_data), new DykstraWitnessCalculator(_data));
+                new EdgeDifferenceContractedSearchSpace(_data, witness_calculator), witness_calculator);
             pre_processor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
             pre_processor.OnAfterContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
             pre_processor.Start();

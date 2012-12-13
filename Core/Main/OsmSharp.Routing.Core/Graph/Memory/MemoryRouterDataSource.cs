@@ -149,9 +149,10 @@ namespace OsmSharp.Routing.Core.Graph.Memory
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
-        public void AddArc(uint from, uint to, EdgeData data)
+        /// <param name="comparer"></param>
+        public void AddArc(uint from, uint to, EdgeData data, IDynamicGraphEdgeComparer<EdgeData> comparer)
         {
-            _graph.AddArc(from, to, data);
+            _graph.AddArc(from, to, data, comparer);
         }
 
         /// <summary>
