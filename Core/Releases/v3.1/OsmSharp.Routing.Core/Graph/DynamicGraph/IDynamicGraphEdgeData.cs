@@ -27,22 +27,6 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph
     /// </summary>
     public interface IDynamicGraphEdgeData
     {
-        ///// <summary>
-        ///// Returns true if the edge can be followed only in the foward direction.
-        ///// </summary>
-        //bool Forward
-        //{
-        //    get;
-        //}
-
-        ///// <summary>
-        ///// Returns true if the edge can be followed only in the backward direction.
-        ///// </summary>
-        //bool Backward
-        //{
-        //    get;
-        //}
-
         /// <summary>
         /// Returns the weight of this edge.
         /// </summary>
@@ -58,5 +42,20 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph
         {
             get;
         }
+    }
+
+    /// <summary>
+    /// Abstract a comparer for edges.
+    /// </summary>
+    /// <typeparam name="EdgeData"></typeparam>
+    public interface IDynamicGraphEdgeComparer<EdgeData>
+        where EdgeData: IDynamicGraphEdgeData
+    {
+        /// <summary>
+        /// Returns true if the data in the edge2 is useless if the data in edge1 is present.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        bool Overlaps(EdgeData edge1, EdgeData edge2);
     }
 }

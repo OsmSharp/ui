@@ -65,7 +65,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <param name="id_transformations"></param>
         public PreProcessedDataGraphProcessingTarget(IDynamicGraph<PreProcessedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, IDictionary<long, uint> id_transformations, GeoCoordinateBox box)
-            : base(dynamic_graph, interpreter, tags_index, id_transformations, box)
+            : base(dynamic_graph, interpreter, null, tags_index, id_transformations, box)
         {
 
         }

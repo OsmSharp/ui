@@ -42,7 +42,8 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
-        void AddArc(uint from, uint to, EdgeData data);
+        /// <param name="comparer"></param>
+        void AddArc(uint from, uint to, EdgeData data, IDynamicGraphEdgeComparer<EdgeData> comparer);
 
         /// <summary>
         /// Delete all arcs arc between two vertices.

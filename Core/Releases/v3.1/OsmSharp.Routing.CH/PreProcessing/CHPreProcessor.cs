@@ -40,6 +40,11 @@ namespace OsmSharp.Routing.CH.PreProcessing
         private IDynamicGraph<CHEdgeData> _target;
 
         /// <summary>
+        /// Holds the edge comparer.
+        /// </summary>
+        private CHEdgeDataComparer _comparer;
+
+        /// <summary>
         /// Creates a new pre-processor.
         /// </summary>
         /// <param name="target"></param>
@@ -51,6 +56,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 INodeWitnessCalculator witness_calculator,
                 int max)
         {
+            _comparer = new CHEdgeDataComparer();
+
             _target = target;
 
             _calculator = calculator;
@@ -70,6 +77,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 INodeWeightCalculator calculator,
                 INodeWitnessCalculator witness_calculator)
         {
+            _comparer = new CHEdgeDataComparer();
+
             _target = target;
 
             _calculator = calculator;
@@ -94,7 +103,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Starts pre-processing all nodes
         /// </summary>
-        /// <param name="nodes"></param>
         public void Start()
         {
             _misses_queue = new Queue<bool>();
@@ -102,8 +110,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
             // get all nodes from the source.
             _all_nodes = _target.GetVertices().GetEnumerator();
-
-            System.Threading.Thread.Sleep(10000);
 
             uint total = _target.VertexCount;
             uint current = 1;
@@ -116,8 +122,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     "CHPreProcessor", "Building CH Queue...");
                 current++;
             }
-
-            System.Threading.Thread.Sleep(10000);
 
             // loop over the priority queue until it's empty.
             current = 1;
@@ -188,8 +192,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         (y_edge.Value.Backward && x_edge.Value.Forward))
                     { // there is a connection from x to y and there is no witness path.
 
-                        bool witness_x_to_y = _witness_calculator.Exists(x_edge.Key, y_edge.Key, vertex, weight, 1000);
-                        bool witness_y_to_x = _witness_calculator.Exists(y_edge.Key, x_edge.Key, vertex, weight, 1000);
+                        bool witness_x_to_y = _witness_calculator.Exists(x_edge.Key, y_edge.Key, vertex, weight, int.MaxValue);
+                        bool witness_y_to_x = _witness_calculator.Exists(y_edge.Key, x_edge.Key, vertex, weight, int.MaxValue);
 
                         // create x-to-y data and edge.
                         CHEdgeData data_x_to_y = new CHEdgeData();
@@ -202,7 +206,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         if ((data_x_to_y.Forward || data_x_to_y.Backward) ||
                             !_target.HasNeighbour(x_edge.Key, y_edge.Key))
                         { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
-                            _target.AddArc(x_edge.Key, y_edge.Key, data_x_to_y);
+                            _target.AddArc(x_edge.Key, y_edge.Key, data_x_to_y, _comparer);
                         }
 
                         // create y-to-x data and edge.
@@ -216,7 +220,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         if ((data_y_to_x.Forward || data_y_to_x.Backward) ||
                             !_target.HasNeighbour(y_edge.Key, x_edge.Key))
                         { // add the edge if there is usefull info or if there needs to be a neighbour relationship.
-                            _target.AddArc(y_edge.Key, x_edge.Key, data_y_to_x);
+                            _target.AddArc(y_edge.Key, x_edge.Key, data_y_to_x, _comparer);
                         }
                     }
                 }

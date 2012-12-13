@@ -128,7 +128,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
-        public void AddArc(uint from, uint to, EdgeData data)
+        public void AddArc(uint from, uint to, EdgeData data, IDynamicGraphEdgeComparer<EdgeData> comparer)
         {
             if (_vertices.Length > from)
             {
@@ -140,9 +140,8 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
                     for (int arc_idx = 0; arc_idx < arcs.Length; arc_idx++)
                     {
                         if (arcs[arc_idx].Key == to &&
-                            //arcs[arc_idx].Value.Backward == data.Backward &&
-                            //arcs[arc_idx].Value.Forward == data.Forward &&
-                            arcs[arc_idx].Value.Weight > data.Weight)
+                            arcs[arc_idx].Value.Weight > data.Weight &&
+                            (comparer != null && comparer.Overlaps(arcs[arc_idx].Value, data)))
                         { // an arc was found that represents the same directional information.
                             arcs[arc_idx] = new KeyValuePair<uint, EdgeData>(
                                 to, data);
