@@ -72,7 +72,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
                         if (!_witness_calculator.Exists(from.Key, to.Key, vertex,
-                            (float)from.Value.Weight + (float)to.Value.Weight, int.MaxValue))
+                            (float)from.Value.Weight + (float)to.Value.Weight, 20))
                         { // no witness exists.
                             new_edges++;
                         }

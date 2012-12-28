@@ -272,6 +272,10 @@
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
       <Name>OsmSharp.Osm.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Osm.Data.API\OsmSharp.Osm.Data.API.csproj">
+      <Project>{6F713D01-18D0-43B4-BAD0-4B50E26D0850}</Project>
+      <Name>OsmSharp.Osm.Data.API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Osm.Data.Core\OsmSharp.Osm.Data.Core.csproj">
       <Project>{5BC09D7C-5226-4233-BF54-27BFD838F8F8}</Project>
       <Name>OsmSharp.Osm.Data.Core</Name>

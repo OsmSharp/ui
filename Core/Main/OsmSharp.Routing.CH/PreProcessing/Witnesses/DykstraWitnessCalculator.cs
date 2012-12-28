@@ -68,6 +68,76 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
             return false;
         }
 
+        /// <summary>
+        /// Implements a very simple dykstra version.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="via"></param>
+        /// <param name="weight"></param>
+        /// <param name="max_settles"></param>
+        /// <returns></returns>
+        private float CalculateWeight(uint from, uint to, uint via, float max_weight, int max_settles)
+        {
+            int max_hops = 5;
+            float weight = float.MaxValue;
+
+            // creates the settled list.
+            HashSet<uint> settled = new HashSet<uint>();
+            settled.Add(via);
+
+            // creates the priorty queue.
+            BinairyHeap<SettledVertex> heap = new BinairyHeap<SettledVertex>();
+            heap.Push(new SettledVertex(from, 0, 0), 0);
+
+            // keep looping until the queue is empty or the target is found!
+            while (heap.Count > 0)
+            {
+                // pop the first customer.
+                SettledVertex current = heap.Pop();
+                if (!settled.Contains(current.VertexId))
+                { // the current vertex has net been settled.
+                    settled.Add(current.VertexId); // settled the vertex.
+
+                    // test stop conditions.
+                    if (current.VertexId == to)
+                    { // target is found!
+                        return current.Weight;
+                    }
+
+                    // test the hop count.
+                    if (current.Hops < max_hops)
+                    { // the neighbours will only increase hops!
+                        if (settled.Count >= max_settles)
+                        { // do not continue searching.
+                            return float.MaxValue;
+                        }
+
+                        // get the neighbours.
+                        KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(current.VertexId);
+                        for (int idx = 0; idx < neighbours.Length; idx++)
+                        {
+                            if (neighbours[idx].Value.Forward && (neighbours[idx].Key == to || !settled.Contains(neighbours[idx].Key)))
+                            {
+                                SettledVertex neighbour = new SettledVertex(neighbours[idx].Key,
+                                    neighbours[idx].Value.Weight + current.Weight, current.Hops + 1);
+                                if (neighbour.Weight < max_weight)
+                                {
+                                    if (neighbours[idx].Key == to)
+                                    {
+                                        return neighbour.Weight;
+                                    }
+                                    heap.Push(neighbour, neighbour.Weight);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return weight;
+        }
+
         ///// <summary>
         ///// Implements a very simple dykstra version.
         ///// </summary>
@@ -79,6 +149,18 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         ///// <returns></returns>
         //private float CalculateWeight(uint from, uint to, uint via, float max_weight, int max_settles)
         //{
+        //    Dictionary<uint, float> backward_search = new Dictionary<uint, float>();
+
+        //    // get the neighbours.
+        //    KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(to);
+        //    for (int idx = 0; idx < neighbours.Length; idx++)
+        //    {
+        //        if (neighbours[idx].Value.Backward)
+        //        {
+        //            backward_search[neighbours[idx].Key] = neighbours[idx].Value.Weight;
+        //        }
+        //    }
+
         //    float weight = float.MaxValue;
 
         //    // creates the settled list.
@@ -99,9 +181,11 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         //            settled.Add(current.VertexId); // settled the vertex.
 
         //            // test stop conditions.
-        //            if (current.VertexId == to)
+        //            float backward_weight;
+        //            if(backward_search.TryGetValue(current.VertexId, out backward_weight))
+        //            //if (current.VertexId == to)
         //            { // target is found!
-        //                return current.Weight;
+        //                return current.Weight + backward_weight;
         //            }
         //            if (settled.Count >= max_settles)
         //            { // do not continue searching.
@@ -109,10 +193,10 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         //            }
 
         //            // get the neighbours.
-        //            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(current.VertexId);
+        //            neighbours = _data.GetArcs(current.VertexId);
         //            for (int idx = 0; idx < neighbours.Length; idx++)
         //            {
-        //                if (!settled.Contains(neighbours[idx].Key))
+        //                if (neighbours[idx].Value.Forward && !settled.Contains(neighbours[idx].Key))
         //                {
         //                    SettledVertex neighbour = new SettledVertex(neighbours[idx].Key,
         //                        neighbours[idx].Value.Weight + current.Weight);
@@ -128,65 +212,65 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         //    return weight;
         //}
 
-        /// <summary>
-        /// Implements a very simple dykstra version.
-        /// </summary>
-        /// <param name="from"></param>
-        /// <param name="to"></param>
-        /// <param name="via"></param>
-        /// <param name="weight"></param>
-        /// <param name="max_settles"></param>
-        /// <returns></returns>
-        private float CalculateWeight(uint from, uint to, uint via, float max_weight, int max_settles)
-        {
-            float weight = float.MaxValue;
+        ///// <summary>
+        ///// Implements a very simple dykstra version.
+        ///// </summary>
+        ///// <param name="from"></param>
+        ///// <param name="to"></param>
+        ///// <param name="via"></param>
+        ///// <param name="weight"></param>
+        ///// <param name="max_settles"></param>
+        ///// <returns></returns>
+        //private float CalculateWeight(uint from, uint to, uint via, float max_weight, int max_settles)
+        //{
+        //    float weight = float.MaxValue;
 
-            // creates the settled list.
-            HashSet<uint> settled = new HashSet<uint>();
-            settled.Add(via);
+        //    // creates the settled list.
+        //    HashSet<uint> settled = new HashSet<uint>();
+        //    settled.Add(via);
 
-            // creates the priorty queue.
-            BinairyHeap<OsmSharp.Routing.Core.Graph.Path.PathSegment<uint>> heap = new BinairyHeap<OsmSharp.Routing.Core.Graph.Path.PathSegment<uint>>();
-            heap.Push(new OsmSharp.Routing.Core.Graph.Path.PathSegment<uint>(from), 0);
+        //    // creates the priorty queue.
+        //    BinairyHeap<OsmSharp.Routing.Core.Graph.Path.PathSegment<uint>> heap = new BinairyHeap<OsmSharp.Routing.Core.Graph.Path.PathSegment<uint>>();
+        //    heap.Push(new OsmSharp.Routing.Core.Graph.Path.PathSegment<uint>(from), 0);
 
-            // keep looping until the queue is empty or the target is found!
-            while (heap.Count > 0)
-            {
-                // pop the first customer.
-                OsmSharp.Routing.Core.Graph.Path.PathSegment<uint> current = heap.Pop();
-                if (!settled.Contains(current.VertexId))
-                { // the current vertex has net been settled.
-                    settled.Add(current.VertexId); // settled the vertex.
+        //    // keep looping until the queue is empty or the target is found!
+        //    while (heap.Count > 0)
+        //    {
+        //        // pop the first customer.
+        //        OsmSharp.Routing.Core.Graph.Path.PathSegment<uint> current = heap.Pop();
+        //        if (!settled.Contains(current.VertexId))
+        //        { // the current vertex has net been settled.
+        //            settled.Add(current.VertexId); // settled the vertex.
 
-                    // test stop conditions.
-                    if (current.VertexId == to)
-                    { // target is found!
-                        return (float)current.Weight;
-                    }
-                    if (settled.Count >= max_settles)
-                    { // do not continue searching.
-                        return float.MaxValue;
-                    }
+        //            // test stop conditions.
+        //            if (current.VertexId == to)
+        //            { // target is found!
+        //                return (float)current.Weight;
+        //            }
+        //            if (settled.Count >= max_settles)
+        //            { // do not continue searching.
+        //                return float.MaxValue;
+        //            }
 
-                    // get the neighbours.
-                    KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(current.VertexId);
-                    for (int idx = 0; idx < neighbours.Length; idx++)
-                    {
-                        if (neighbours[idx].Value.Forward && !settled.Contains(neighbours[idx].Key))
-                        {
-                            OsmSharp.Routing.Core.Graph.Path.PathSegment<uint> neighbour = new OsmSharp.Routing.Core.Graph.Path.PathSegment<uint>(neighbours[idx].Key,
-                                neighbours[idx].Value.Weight + current.Weight, current);
-                            if (current.Weight < max_weight)
-                            {
-                                heap.Push(neighbour, (float)neighbour.Weight);
-                            }
-                        }
-                    }
-                }
-            }
+        //            // get the neighbours.
+        //            KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(current.VertexId);
+        //            for (int idx = 0; idx < neighbours.Length; idx++)
+        //            {
+        //                if (neighbours[idx].Value.Forward && !settled.Contains(neighbours[idx].Key))
+        //                {
+        //                    OsmSharp.Routing.Core.Graph.Path.PathSegment<uint> neighbour = new OsmSharp.Routing.Core.Graph.Path.PathSegment<uint>(neighbours[idx].Key,
+        //                        neighbours[idx].Value.Weight + current.Weight, current);
+        //                    if (current.Weight < max_weight)
+        //                    {
+        //                        heap.Push(neighbour, (float)neighbour.Weight);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
 
-            return weight;
-        }
+        //    return weight;
+        //}
 
         /// <summary>
         /// Represents a settled vertex.
@@ -198,10 +282,11 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
             /// </summary>
             /// <param name="vertex"></param>
             /// <param name="weight"></param>
-            public SettledVertex(uint vertex, float weight)
+            public SettledVertex(uint vertex, float weight, uint hops)
             {
                 this.VertexId = vertex;
                 this.Weight = weight;
+                this.Hops = hops;
             }
 
             /// <summary>
@@ -213,6 +298,11 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
             /// The weight this vertex was settled at.
             /// </summary>
             public float Weight { get; set; }
+
+            /// <summary>
+            /// The hop-count of this vertex.
+            /// </summary>
+            public uint Hops { get; set; }
         }
     }
 }
