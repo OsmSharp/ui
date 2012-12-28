@@ -127,6 +127,14 @@ namespace OsmSharpService.Core.Routing
                     case RoutingOperationType.ManyToMany:
                         response.Weights = router.CalculateManyToManyWeight(operation.Vehicle, routable_points.ToArray(),
                             routable_points.ToArray());
+
+                        // set the unroutable hooks.
+                        response.UnroutableHooks = unroutable_hooks.ToArray();
+
+                        // report succes!
+                        response.Status = OsmSharpServiceResponseStatusEnum.Success;
+                        response.StatusMessage = string.Empty;
+
                         break;
                     case RoutingOperationType.Regular:
                         OsmSharpRoute route = null;
@@ -145,11 +153,27 @@ namespace OsmSharpService.Core.Routing
                             }
                         }
                         response.Route = route;
+
+                        // set the unroutable hooks.
+                        response.UnroutableHooks = unroutable_hooks.ToArray();
+
+                        // report succes!
+                        response.Status = OsmSharpServiceResponseStatusEnum.Success;
+                        response.StatusMessage = string.Empty;
+
                         break;
                     case RoutingOperationType.TSP:
                         RouterTSPAEXGenetic<RouterPoint> tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
                             router, 300, 100);
                         response.Route = tsp_solver.CalculateTSP(operation.Vehicle, routable_points.ToArray());
+
+                        // set the unroutable hooks.
+                        response.UnroutableHooks = unroutable_hooks.ToArray();
+
+                        // report succes!
+                        response.Status = OsmSharpServiceResponseStatusEnum.Success;
+                        response.StatusMessage = string.Empty;
+
                         break;
                     case RoutingOperationType.ToClosest:
                         // are there enough points.
@@ -162,6 +186,13 @@ namespace OsmSharpService.Core.Routing
                                 tos[idx - 1] = routable_points[idx];
                             }
                             response.Route = router.CalculateToClosest(operation.Vehicle, from, tos);
+
+                            // set the unroutable hooks.
+                            response.UnroutableHooks = unroutable_hooks.ToArray();
+
+                            // report succes!
+                            response.Status = OsmSharpServiceResponseStatusEnum.Success;
+                            response.StatusMessage = string.Empty;
                         }
                         else
                         { // not enough points are routable.
@@ -170,13 +201,6 @@ namespace OsmSharpService.Core.Routing
                         }
                         break;
                 }
-
-                // set the unroutable hooks.
-                response.UnroutableHooks = unroutable_hooks.ToArray();
-
-                // report succes!
-                response.Status = OsmSharpServiceResponseStatusEnum.Success;
-                response.StatusMessage = string.Empty;
             }
             catch (Exception ex)
             { // any exception was thrown.
