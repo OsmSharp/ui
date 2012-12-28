@@ -70,8 +70,13 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         public double CalculateWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList from, PathSegmentVisitList to, double max)
         {
-            return this.CalculateToClosest(graph, interpreter, vehicle, from,
-                new PathSegmentVisitList[] { to }, max).Weight;
+            PathSegment<long> closest = this.CalculateToClosest(graph, interpreter, vehicle, from,
+                new PathSegmentVisitList[] { to }, max);
+            if (closest != null)
+            {
+                return closest.Weight;
+            }
+            return double.MaxValue;
         }
 
         /// <summary>
@@ -160,6 +165,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
             }
         }
 
+
         /// <summary>
         /// Calculates all points that are at or close to the given weight.
         /// </summary>
@@ -171,8 +177,22 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         public HashSet<long> CalculateRange(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, double weight)
         {
+            return this.CalculateRange(graph, interpreter, vehicle, source, weight, true);
+        }
+
+        /// <summary>
+        /// Calculates all points that are at or close to the given weight.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="source"></param>
+        /// <param name="weight"></param>
+        /// <returns></returns>
+        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+            PathSegmentVisitList source, double weight, bool forward)
+        {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
-                   source, new PathSegmentVisitList[0], weight, false, true);
+                   source, new PathSegmentVisitList[0], weight, false, true, forward);
 
             HashSet<long> result_vertices = new HashSet<long>();
             for (int idx = 0; idx < result.Length; idx++)
@@ -193,12 +213,39 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         public bool CheckConnectivity(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, double weight)
         {
-            HashSet<long> range = this.CalculateRange(graph, interpreter, vehicle, source, weight);
+            HashSet<long> range = this.CalculateRange(graph, interpreter, vehicle, source, weight, true);
 
-            return range.Count > 0;
+            if (range.Count > 0)
+            {
+                range = this.CalculateRange(graph, interpreter, vehicle, source, weight, false);
+                if (range.Count > 0)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         #region Implementation
+
+        /// <summary>
+        /// Does forward dykstra calculation(s) with several options.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="source"></param>
+        /// <param name="targets"></param>
+        /// <param name="weight"></param>
+        /// <param name="stop_at_first"></param>
+        /// <param name="return_at_weight"></param>
+        /// <returns></returns>
+        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+            PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
+            bool stop_at_first, bool return_at_weight)
+        {
+            return this.DoCalculation(graph, interpreter, vehicle, source, targets, weight, stop_at_first, return_at_weight, true);
+        }
 
         /// <summary>
         /// Does dykstra calculation(s) with several options.
@@ -213,7 +260,7 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         /// <returns></returns>
         private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
-            bool stop_at_first, bool return_at_weight)
+            bool stop_at_first, bool return_at_weight, bool forward)
         {
             //  initialize the result data structures.
             List<PathSegment<long>> segments_at_weight = new List<PathSegment<long>>();
@@ -385,7 +432,8 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
                     { // it's ok; the edge can be traversed by the given vehicle.
                         bool? one_way = interpreter.EdgeInterpreter.IsOneWay(tags, vehicle);
                         bool can_be_traversed_one_way = (!one_way.HasValue) || // bidirectional edge. 
-                            (one_way.Value == neighbour.Value.IsForward); // backward edge has backward restruction, forward edge forward restriction.
+                            (forward && (one_way.Value == neighbour.Value.IsForward)) ||
+                            (!forward && (one_way.Value != neighbour.Value.IsForward)); // backward edge has backward restruction, forward edge forward restriction.
                         if ((current.From == null || 
                             interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Key)) && // test for turning restrictions.
                             can_be_traversed_one_way &&

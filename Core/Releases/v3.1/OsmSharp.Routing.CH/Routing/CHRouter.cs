@@ -88,7 +88,11 @@ namespace OsmSharp.Routing.CH.Routing
             // do the basic CH calculations.
             CHResult result = this.DoCalculate(graph, interpreter, source, target, max, int.MaxValue, long.MaxValue);
 
-            return result.Backward.Weight + result.Forward.Weight;
+            if (result.Backward != null && result.Forward != null)
+            {
+                return result.Backward.Weight + result.Forward.Weight;
+            }
+            return double.MaxValue;
         }
 
         /// <summary>
@@ -336,7 +340,7 @@ namespace OsmSharp.Routing.CH.Routing
         /// </summary>
         /// <param name="buckets"></param>
         /// <param name="from"></param>
-        private Dictionary<long, double> SearchForwardFromBucket(Dictionary<long, Dictionary<long, double>> buckets, 
+        private Dictionary<long, double> SearchForwardFromBucket(Dictionary<long, Dictionary<long, double>> buckets,
             PathSegmentVisitList from_visit_list, long[] tos)
         {
             long? from = null;
@@ -449,11 +453,11 @@ namespace OsmSharp.Routing.CH.Routing
                                     tentative_results[bucket_entry.Key] = found_distance;
                                 }
 
-                                //if (tentative_distance < current.Weight)
-                                //{
-                                //    tentative_results.Remove(bucket_entry.Key);
-                                //    results[bucket_entry.Key] = tentative_distance;
-                                //}
+                                if (tentative_distance < current.Weight)
+                                {
+                                    tentative_results.Remove(bucket_entry.Key);
+                                    results[bucket_entry.Key] = tentative_distance;
+                                }
                             }
                             else
                             { // there was no result yet!
@@ -464,7 +468,6 @@ namespace OsmSharp.Routing.CH.Routing
                     }
 
                     // get neighbours.
-                    //CHResolvedPoint vertex = this.GetCHVertex(current.VertexId);
                     KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(Convert.ToUInt32(current.VertexId));
 
                     // add the neighbours to the queue.
@@ -477,28 +480,35 @@ namespace OsmSharp.Routing.CH.Routing
                             PathSegment<long> route_to_neighbour = new PathSegment<long>(
                                 neighbour.Key, current.Weight + neighbour.Value.Weight, current);
                             queue.Push(route_to_neighbour, (float)route_to_neighbour.Weight);
-                            //queue.Push(route_to_neighbour);
                         }
                     }
                 }
 
-                foreach (uint to in tos)
+                //foreach (uint to in tos)
+                //{
+                //    if (!tentative_results.ContainsKey(to))
+                //    {
+                //        if (results.ContainsKey(to))
+                //        {
+                //            tentative_results[to] = results[to];
+                //        }
+                //        else
+                //        {
+                //            tentative_results[to] = double.MaxValue;
+                //        }
+                //    }
+                //}
+            }
+
+            foreach (uint to in tos)
+            {
+                if (!results.ContainsKey(to) && tentative_results.ContainsKey(to))
                 {
-                    if (!tentative_results.ContainsKey(to))
-                    {
-                        if (results.ContainsKey(to))
-                        {
-                            tentative_results[to] = results[to];
-                        }
-                        else
-                        {
-                            tentative_results[to] = double.MaxValue;
-                        }
-                    }
+                    results[to] = tentative_results[to];
                 }
             }
 
-            return tentative_results;
+            return results;
         }
 
         #endregion

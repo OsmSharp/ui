@@ -16,8 +16,6 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
         public static void Execute()
         {
             //ManyToMany.ManyToManyRawTests raw_tests = new ManyToMany.ManyToManyRawTests();
-            //raw_tests.TestForAndCompare("tiny");
-            //raw_tests.TestForAndCompare("matrix");
             //raw_tests.TestFor("tiny");
             //raw_tests.TestFor("matrix");
             //raw_tests.TestFor("matrix_big_area");
@@ -25,21 +23,22 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             //raw_tests.TestFor("lebbeke");
 
             ManyToManyDykstraLiveTests live_tests = new ManyToManyDykstraLiveTests();
-            live_tests.TestForAndCompare("tiny");
-            live_tests.TestForAndCompare("matrix");
-            live_tests.TestForAndCompare("matrix_big_area");
             //live_tests.TestFor("tiny");
             //live_tests.TestFor("matrix");
             //live_tests.TestFor("matrix_big_area");
             //live_tests.TestFor("eeklo");
             //live_tests.TestFor("lebbeke");
+            //live_tests.TestFor("moscow");
 
-            //ManyToMany.ManyToManyCHTests ch_tests = new ManyToMany.ManyToManyCHTests();
+            ManyToMany.ManyToManyCHTests ch_tests = new ManyToMany.ManyToManyCHTests();
+            //ch_tests.TestForAndCompare("tiny");
+            //ch_tests.TestForAndCompare("matrix");
             //ch_tests.TestFor("tiny");
-            //ch_tests.TestFor("matrix");
-            //ch_tests.TestFor("matrix_big_area");
-            //ch_tests.TestFor("eeklo");
-            //ch_tests.TestFor("lebbeke");
+            ch_tests.TestFor("matrix");
+            ch_tests.TestFor("matrix_big_area");
+            ch_tests.TestFor("eeklo");
+            ch_tests.TestFor("lebbeke");
+            ch_tests.TestFor("moscow");
         }
 
         private static void PrintResults(float[][] weights)

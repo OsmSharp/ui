@@ -248,16 +248,6 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         private struct Vertex
         {
             /// <summary>
-            /// Holds the latitude.
-            /// </summary>
-            //public float Latitude { get; set; }
-
-            /// <summary>
-            /// Holds longitude.
-            /// </summary>
-            //public float Longitude { get; set; }
-
-            /// <summary>
             /// Holds an array of edges starting at this vertex.
             /// </summary>
             public KeyValuePair<uint, EdgeData>[] Arcs { get; set; }
