@@ -165,6 +165,9 @@
     <Compile Include="Instructions\InstructionTestExecution.cs" />
     <Compile Include="Instructions\InstructionTests.cs" />
     <Compile Include="ManyToMany\ManyToManyCHTests.cs" />
+    <Compile Include="ManyToMany\ManyToManyCustomCHTests.cs" />
+    <Compile Include="ManyToMany\ManyToManyCustomDykstraLiveTests.cs" />
+    <Compile Include="ManyToMany\ManyToManyCustomTests.cs" />
     <Compile Include="ManyToMany\ManyToManyDykstraLiveTests.cs" />
     <Compile Include="ManyToMany\ManyToManyExecution.cs" />
     <Compile Include="ManyToMany\ManyToManyRawTests.cs" />

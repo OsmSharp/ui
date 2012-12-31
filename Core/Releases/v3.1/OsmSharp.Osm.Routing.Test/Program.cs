@@ -55,18 +55,12 @@ namespace OsmSharp.Osm.Routing.Test
             // register the output stream to the console.
             OsmSharp.Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
                 new OsmSharp.Tools.Core.Output.ConsoleOutputStream());
-
-            //PBFDataProcessorSource source = new PBFDataProcessorSource(new FileInfo(@"C:\OSM\bin\rawdata.osm.pbf").OpenRead());
-            //OsmDataProcessorNodeTarget target = new OsmDataProcessorNodeTarget();
-            //target.RegisterSource(source);
-            //target.Pull();
-
-            //Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
-            //    new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\log.txt"));
+            Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
+                new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\log.txt"));
 
             //PBF.PBFTest.Execute();
-            //ManyToMany.ManyToManyExecution.Execute();
-            Point2Point.Point2PointExecution.Execute();
+            ManyToMany.ManyToManyExecution.Execute();
+            //Point2Point.Point2PointExecution.Execute();
             //CHTest.Execute();
             //Tsp.TspTest.Execute();
             //CHVerifiedContractionBaseTests.Execute();
