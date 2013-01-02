@@ -55,8 +55,8 @@ namespace OsmSharp.Osm.Routing.Test
             // register the output stream to the console.
             OsmSharp.Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
                 new OsmSharp.Tools.Core.Output.ConsoleOutputStream());
-            Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
-                new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\log.txt"));
+            //Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
+            //    new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\log.txt"));
 
             //PBF.PBFTest.Execute();
             ManyToMany.ManyToManyExecution.Execute();
