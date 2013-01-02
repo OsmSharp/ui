@@ -459,7 +459,7 @@ namespace OsmSharp.Routing.CH.Routing
                                     results[bucket_entry.Key] = tentative_distance;
                                 }
                             }
-                            else
+                            else if(!results.ContainsKey(bucket_entry.Key))
                             { // there was no result yet!
                                 tentative_results[bucket_entry.Key] = found_distance;
                             }
