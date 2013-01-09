@@ -85,7 +85,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
                 IRoute current_route = null;
                 foreach (int customer in route)
                 {
-                    //MaxTimeSolution copy = (solution.Clone() as MaxTimeSolution);
+                    MaxTimeSolution copy = (solution.Clone() as MaxTimeSolution);
+                    string solution_string = solution.ToString();
                     if (!solution.Contains(customer))
                     {
                         if (current_route == null)
@@ -94,23 +95,34 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
 
                             // safe the previous customer.
                             previous = customer;
+
+                            if (!solution.IsValid())
+                            {
+                                throw new Exception();
+                            }
                         }
                         else
                         { // add the customer.
+                            string current_route_string = current_route.ToString();
                             //current_route.InsertAfterAndRemove(previous, customer, current_route.First);
                             current_route.InsertAfter(previous, customer);
+                            //current_route.InsertAfter(customer, current_route.First);
+
+                            if (!solution.IsValid())
+                            {
+                                throw new Exception();
+                            }
 
                             // safe the previous customer.
                             previous = customer;
                         }
                     }
-
-                    //solution.ToString();
-                    if (!solution.IsValid())
-                    {
-                        throw new Exception();
-                    }
                 }
+            }
+
+            if (!solution.IsValid())
+            {
+                throw new Exception();
             }
 
             this.FillRoutes(calculator, route1, solution, solver.Problem);
@@ -267,11 +279,11 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.CrossOver
                 target_route.InsertAfter(result.CustomerBefore, result.Customer);
                 unplaced.Remove(result.Customer);
 
-                //solution.ToString();
-                if (!solution.IsValid())
-                {
-                    throw new Exception();
-                }
+                ////solution.ToString();
+                //if (!solution.IsValid())
+                //{
+                //    throw new Exception();
+                //}
             }
             //    }
             //}

@@ -24,6 +24,8 @@ namespace OsmSharp.Tools.Core.Output
 {
     public static class OutputStreamHost
     {
+        private static double _previous_progress;
+
         private static IList<IOutputStream> _output_streams;
 
         private static void InitializeIfNeeded()
@@ -44,6 +46,12 @@ namespace OsmSharp.Tools.Core.Output
         {
             OutputStreamHost.InitializeIfNeeded();
 
+            if (_previous_progress > 0)
+            {
+                _previous_progress = 0;
+                OutputStreamHost.WriteLine();
+            }
+
             foreach (IOutputStream stream in _output_streams)
             {
                 stream.WriteLine(text);
@@ -60,6 +68,12 @@ namespace OsmSharp.Tools.Core.Output
         {
             OutputStreamHost.InitializeIfNeeded();
 
+            if (_previous_progress > 0)
+            {
+                _previous_progress = 0;
+                OutputStreamHost.WriteLine();
+            }
+
             foreach (IOutputStream stream in _output_streams)
             {
                 stream.Write(text);
@@ -75,7 +89,6 @@ namespace OsmSharp.Tools.Core.Output
         public static void ReportProgress(double progress, string key, string message)
         {
             OutputStreamHost.InitializeIfNeeded();
-
             if (progress > 1)
             {
                 progress = 1;
@@ -84,9 +97,18 @@ namespace OsmSharp.Tools.Core.Output
             {
                 progress = 0;
             }
+            _previous_progress = progress;
             foreach (IOutputStream stream in _output_streams)
             {
                 stream.ReportProgress(progress, key, message);
+            }
+            if (_previous_progress == 1)
+            {
+                foreach (IOutputStream stream in _output_streams)
+                {
+                    stream.WriteLine(string.Empty);
+                }
+                _previous_progress = 0;
             }
         }
 
@@ -110,6 +132,5 @@ namespace OsmSharp.Tools.Core.Output
 
             _output_streams.Remove(output_stream);
         }
-        
     }
 }

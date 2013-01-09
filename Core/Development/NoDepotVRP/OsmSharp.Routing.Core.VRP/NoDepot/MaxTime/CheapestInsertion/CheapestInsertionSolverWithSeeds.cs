@@ -27,10 +27,11 @@ using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 using OsmSharp.Tools.Math.VRP.Core.BestPlacement.SeedCustomers;
 using OsmSharp.Routing.Core;
+using OsmSharp.Tools.Math.VRP.Core.BestPlacement.InsertionCosts;
 
-namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
 {
-    public class RouterBestPlacementWithSeeds<ResolvedType> : RouterMaxTime<ResolvedType>
+    public class CheapestInsertionSolverWithSeeds<ResolvedType> : RouterMaxTime<ResolvedType>
         where ResolvedType : IRouterPoint
     {
         /// <summary>
@@ -49,7 +50,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
         /// <param name="router"></param>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public RouterBestPlacementWithSeeds(IRouter<ResolvedType> router, Second max, Second delivery_time, int k)
+        public CheapestInsertionSolverWithSeeds(IRouter<ResolvedType> router, Second max, Second delivery_time, int k)
             : base(router, max, delivery_time)
         {
             _seed_selector = new SimpleSeeds();
@@ -97,10 +98,12 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                 throw new Exception();
             }
 
+            // keep a list of cheapest insertions.
+            IInsertionCosts costs = new BinaryHeapInsertionCosts();
+
             // keep looping until all customers have been placed.
             while (selectable_customers.Count > 0)
             {
-
                 // try and place into every route.
                 CheapestInsertionResult best_result = new CheapestInsertionResult();
                 best_result.Increase = float.MaxValue;
@@ -116,27 +119,27 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
 
                     // choose the next customer.
                     CheapestInsertionResult result =
-                        CheapestInsertionHelper.CalculateBestPlacement(problem, current_route, selectable_customers);
+                        CheapestInsertionHelper.CalculateBestPlacement(problem, current_route, selectable_customers, costs);
                     if (result.Customer == result.CustomerAfter)
                     {
                         throw new Exception();
                     }
                     // get the current weight
                     double weight = weights[route_idx];
-                    if (weight + result.Increase + calculator.DeliveryTime < problem.Max.Value)
-                    { // route will still be inside bounds.
-                        if (result.Increase < best_result.Increase)
-                        {
+                    if (result.Increase < best_result.Increase)
+                    {
+                        if (weight + result.Increase + calculator.DeliveryTime < problem.Max.Value)
+                        { // route will still be inside bounds.
                             best_result = result;
                             best_route_idx = route_idx;
                         }
-                    }
-                    else
-                    { // route will become above max.
-                        if (result.Increase < best_result_above_max.Increase)
-                        {
-                            best_result_above_max = result;
-                            best_route_above_max_idx = route_idx;
+                        else
+                        { // route will become above max.
+                            if (result.Increase < best_result_above_max.Increase)
+                            {
+                                best_result_above_max = result;
+                                best_route_above_max_idx = route_idx;
+                            }
                         }
                     }
                 }
@@ -171,26 +174,6 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                     throw new Exception();
                 }
             }
-
-            StringBuilder builder = new StringBuilder();
-            builder.Append("[");
-            double total_weight = 0;
-            for (int idx = 0; idx < routes.Count; idx++)
-            {
-                //IRoute route = routes.Route(idx);
-                IRoute route = routes.Route(idx);
-                double weight = calculator.CalculateOneRoute(route);
-                builder.Append(" ");
-                builder.Append(weight);
-                builder.Append(" ");
-
-                total_weight = total_weight + weight;
-            }
-            builder.Append("]");
-            builder.Append(total_weight);
-            builder.Append(": ");
-            builder.Append(calculator.Calculate(routes));
-            Console.WriteLine(builder.ToString());
 
             return routes;
         }

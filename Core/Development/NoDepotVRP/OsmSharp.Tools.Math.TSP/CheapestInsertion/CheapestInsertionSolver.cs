@@ -76,7 +76,7 @@ namespace OsmSharp.Tools.Math.TSP.CheapestInsertion
         public IRoute Solve(IProblem problem)
         {
             // build the customer list to place.
-            List<int> customers = new List<int>();
+            HashSet<int> customers = new HashSet<int>();
             for (int customer = 0; customer < problem.Size; customer++)
             {
                 customers.Add(customer);

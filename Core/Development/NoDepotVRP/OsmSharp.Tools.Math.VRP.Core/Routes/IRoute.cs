@@ -134,5 +134,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
         /// <param name="to"></param>
         /// <returns></returns>
         IEnumerable<int> Between(int from, int to);
+
+        /// <summary>
+        /// Returns a enumerable that enumerates all edges in this route.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Edge> Edges();
     }
 }

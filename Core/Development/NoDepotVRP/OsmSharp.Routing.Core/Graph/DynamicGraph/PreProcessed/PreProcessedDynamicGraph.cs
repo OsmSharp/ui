@@ -143,7 +143,8 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
-        public void AddArc(uint from, uint to, PreProcessedEdge data)
+        /// <param name="comparer"></param>
+        public void AddArc(uint from, uint to, PreProcessedEdge data, IDynamicGraphEdgeComparer<PreProcessedEdge> comparer)
         {
             Edge edge;
             if (_vertices.Length > from)

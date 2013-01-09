@@ -197,6 +197,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                     throw new ArgumentOutOfRangeException("Cannot add a customer after a customer with a negative index!");
                 }
 
+                if (customer == _first)
+                { // the next customer is actually the first customer.
+                    // set the next customer of the from customer to -1.
+                    customer = -1;
+                }
+
                 if (_next_array.Length > from)
                 { // customers should exist.
                     // resize the array if needed.
@@ -474,6 +480,16 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        public IEnumerable<int> Between(int from, int to)
+        {
+            return new DynamicAsymmetricBetweenEnumerable(_next_array, from, to, _first);
+        }
+
+        public IEnumerable<Edge> Edges()
+        {
+            return new EdgeEnumerable(this);
+        }
+
         #endregion
 
         /// <summary>
@@ -737,9 +753,5 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         #endregion
 
-        public IEnumerable<int> Between(int from, int to)
-        {
-            return new DynamicAsymmetricBetweenEnumerable(_next_array, from, to, _first);
-        }
     }
 }

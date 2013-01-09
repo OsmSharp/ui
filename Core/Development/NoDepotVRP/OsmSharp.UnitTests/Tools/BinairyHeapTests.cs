@@ -23,7 +23,7 @@ namespace OsmSharp.UnitTests.Tools
             BinairyHeap<string> heap = new BinairyHeap<string>();
 
             // enqueue one item.
-            heap.Enqueue("one", 1);
+            heap.Push("one", 1);
 
             // test the result.
             Assert.AreEqual(1, heap.Count);
@@ -41,12 +41,12 @@ namespace OsmSharp.UnitTests.Tools
             BinairyHeap<string> heap = new BinairyHeap<string>();
 
             // enqueue one item.
-            heap.Enqueue("one", 1);
-            heap.Enqueue("two", 2);
-            heap.Enqueue("three", 3);
-            heap.Enqueue("four", 4);
-            heap.Enqueue("five", 5);
-            heap.Enqueue("six", 6);
+            heap.Push("one", 1);
+            heap.Push("two", 2);
+            heap.Push("three", 3);
+            heap.Push("four", 4);
+            heap.Push("five", 5);
+            heap.Push("six", 6);
 
             // test the result.
             Assert.AreEqual(6, heap.Count);
@@ -87,7 +87,7 @@ namespace OsmSharp.UnitTests.Tools
                 elements.RemoveAt(selected);
 
                 // add to the heap.
-                heap.Enqueue(selected_pair.Key, selected_pair.Value);
+                heap.Push(selected_pair.Key, selected_pair.Value);
             }
 
             // test the result.
@@ -102,11 +102,11 @@ namespace OsmSharp.UnitTests.Tools
                 Assert.AreEqual(elements.Count + 1, heap.PeekWeight());
 
                 // dequeue.
-                elements.Add(new KeyValuePair<string, float>(heap.Dequeue(), elements.Count + 1));
+                elements.Add(new KeyValuePair<string, float>(heap.Pop(), elements.Count + 1));
             }
 
             // try to dequeue again.
-            Assert.AreEqual(null, heap.Dequeue());
+            Assert.AreEqual(null, heap.Pop());
 
             // clear the elements list and try again!
             elements.Clear();
@@ -131,7 +131,7 @@ namespace OsmSharp.UnitTests.Tools
                 elements.RemoveAt(selected);
 
                 // add to the heap.
-                heap.Enqueue(selected_pair.Key, selected_pair.Value);
+                heap.Push(selected_pair.Key, selected_pair.Value);
             }
 
             // test the result.
@@ -146,11 +146,11 @@ namespace OsmSharp.UnitTests.Tools
                 Assert.AreEqual(elements.Count + 1, heap.PeekWeight());
 
                 // dequeue.
-                elements.Add(new KeyValuePair<string, float>(heap.Dequeue(), elements.Count + 1));
+                elements.Add(new KeyValuePair<string, float>(heap.Pop(), elements.Count + 1));
             }
 
             // try to dequeue again.
-            Assert.AreEqual(null, heap.Dequeue());
+            Assert.AreEqual(null, heap.Pop());
         }
     }
 }

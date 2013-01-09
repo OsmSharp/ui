@@ -16,7 +16,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
     {
         public CHEdgeDataGraphProcessingTarget(IDynamicGraph<CHEdgeData> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index)
-            :base(dynamic_graph, interpreter, tags_index)
+            :base(dynamic_graph, interpreter, new CHEdgeDataComparer(), tags_index)
         {
 
         }

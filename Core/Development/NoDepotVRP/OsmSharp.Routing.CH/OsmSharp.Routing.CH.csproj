@@ -161,6 +161,7 @@
     <Compile Include="PreProcessing\Ordering\EdgeDifferenceContracted.cs" />
     <Compile Include="PreProcessing\Ordering\EdgeDifferenceContractedSearchSpace.cs" />
     <Compile Include="PreProcessing\Ordering\LimitedLevelOrdering\SparseOrdering.cs" />
+    <Compile Include="PreProcessing\Witnesses\CHRouterWitnessCalculator.cs" />
     <Compile Include="Processor\CHDataProcessorTarget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />

@@ -239,7 +239,7 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
                 IsForward = true,
                 Tags = tags_index.Add(tags),
                 Weight = 100
-            }); 
+            }, null); 
             tags = new Dictionary<string, string>();
             tags["highway"] = highway;
             tags["name"] = name;
@@ -250,7 +250,7 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
                 IsForward = true,
                 Tags = tags_index.Add(tags),
                 Weight = 100
-            });
+            }, null);
 
             IRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 

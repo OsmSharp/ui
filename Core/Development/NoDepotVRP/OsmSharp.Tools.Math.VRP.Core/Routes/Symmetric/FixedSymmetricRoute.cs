@@ -395,5 +395,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
         {
             throw new NotImplementedException();
         }
+
+
+        public IEnumerable<Edge> Edges()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

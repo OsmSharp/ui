@@ -96,9 +96,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Osm.Routing.Test",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Osm.UI.WinForms.Test", "OsmSharp.Osm.UI.WinForms.Test\OsmSharp.Osm.UI.WinForms.Test.csproj", "{FDFF4E61-7361-4FEC-9AD2-33AA60ECEC00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Osm.Data.API", "OsmSharp.Osm.Data.API\OsmSharp.Osm.Data.API.csproj", "{6F713D01-18D0-43B4-BAD0-4B50E26D0850}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 41
+		SccNumberOfProjects = 42
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs22
 		SccLocalPath0 = .
@@ -257,6 +259,10 @@ Global
 		SccProjectUniqueName40 = OsmSharp.UnitTests\\OsmSharp.UnitTests.csproj
 		SccProjectName40 = OsmSharp.UnitTests
 		SccLocalPath40 = OsmSharp.UnitTests
+		SccProjectUniqueName41 = OsmSharp.Osm.Data.API\\OsmSharp.Osm.Data.API.csproj
+		SccProjectTopLevelParentUniqueName41 = OsmSharp.sln
+		SccProjectName41 = OsmSharp.Osm.Data.API
+		SccLocalPath41 = OsmSharp.Osm.Data.API
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = OsmSharp.vsmdi
@@ -271,7 +277,7 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{CCFAD37B-481E-4A17-8D46-0C6DFA00C166}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CCFAD37B-481E-4A17-8D46-0C6DFA00C166}.Debug|x64.ActiveCfg = Debug|x86
+		{CCFAD37B-481E-4A17-8D46-0C6DFA00C166}.Debug|x64.ActiveCfg = Debug|x64
 		{CCFAD37B-481E-4A17-8D46-0C6DFA00C166}.Debug|x86.ActiveCfg = Debug|x86
 		{CCFAD37B-481E-4A17-8D46-0C6DFA00C166}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCFAD37B-481E-4A17-8D46-0C6DFA00C166}.Release|x64.ActiveCfg = Release|x64
@@ -744,6 +750,16 @@ Global
 		{FDFF4E61-7361-4FEC-9AD2-33AA60ECEC00}.Release|x64.Build.0 = Release|x64
 		{FDFF4E61-7361-4FEC-9AD2-33AA60ECEC00}.Release|x86.ActiveCfg = Release|x86
 		{FDFF4E61-7361-4FEC-9AD2-33AA60ECEC00}.Release|x86.Build.0 = Release|x86
+		{6F713D01-18D0-43B4-BAD0-4B50E26D0850}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{6F713D01-18D0-43B4-BAD0-4B50E26D0850}.Debug|x64.ActiveCfg = Debug|x64
+		{6F713D01-18D0-43B4-BAD0-4B50E26D0850}.Debug|x64.Build.0 = Debug|x64
+		{6F713D01-18D0-43B4-BAD0-4B50E26D0850}.Debug|x86.ActiveCfg = Debug|x86
+		{6F713D01-18D0-43B4-BAD0-4B50E26D0850}.Debug|x86.Build.0 = Debug|x86
+		{6F713D01-18D0-43B4-BAD0-4B50E26D0850}.Release|Any CPU.ActiveCfg = Release|x86
+		{6F713D01-18D0-43B4-BAD0-4B50E26D0850}.Release|x64.ActiveCfg = Release|x64
+		{6F713D01-18D0-43B4-BAD0-4B50E26D0850}.Release|x64.Build.0 = Release|x64
+		{6F713D01-18D0-43B4-BAD0-4B50E26D0850}.Release|x86.ActiveCfg = Release|x86
+		{6F713D01-18D0-43B4-BAD0-4B50E26D0850}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -759,6 +775,7 @@ Global
 		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36} = {9DB942A0-1EDA-44FB-86DE-1A5CF48C7271}
 		{18254C55-15C8-4438-9F92-B3B78E2720F5} = {9DB942A0-1EDA-44FB-86DE-1A5CF48C7271}
 		{5E146436-B64C-4C3A-832E-26A53AA6BA54} = {9DB942A0-1EDA-44FB-86DE-1A5CF48C7271}
+		{6F713D01-18D0-43B4-BAD0-4B50E26D0850} = {9DB942A0-1EDA-44FB-86DE-1A5CF48C7271}
 		{95C32F29-5537-4FB7-8C85-B754BC9903A9} = {D7DED85C-2C6F-4295-9D7F-9E861B1A99F7}
 		{700FC076-57EA-4DA8-ABCD-6CB6C8B012AF} = {D7DED85C-2C6F-4295-9D7F-9E861B1A99F7}
 		{788F70C0-40F2-4AF2-B4FD-439E04BD2236} = {D7DED85C-2C6F-4295-9D7F-9E861B1A99F7}

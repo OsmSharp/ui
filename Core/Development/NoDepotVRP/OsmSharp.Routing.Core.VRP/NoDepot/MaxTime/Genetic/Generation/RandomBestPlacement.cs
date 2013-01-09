@@ -22,7 +22,6 @@ using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
 using OsmSharp.Tools.Math.AI.Genetic;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement;
 using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
 using OsmSharp.Tools.Math.VRP.Core;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;

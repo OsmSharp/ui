@@ -107,13 +107,15 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                 OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(test_pairs.Count, test_count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
                     "Building pairs list...");
             }
+            //Console.ReadLine();
 
             int successes = 0;
             long before = DateTime.Now.Ticks;
             foreach (KeyValuePair<RouterPoint, RouterPoint> pair in test_pairs)
             {
-                OsmSharp.Routing.Core.Route.OsmSharpRoute route = router.Calculate(VehicleEnum.Car, pair.Key, pair.Value);
-                if (route != null)
+                //OsmSharp.Routing.Core.Route.OsmSharpRoute route = router.Calculate(VehicleEnum.Car, pair.Key, pair.Value);
+                double route_weight = router.CalculateWeight(VehicleEnum.Car, pair.Key, pair.Value);
+                if (route_weight < float.MaxValue)
                 {
                     successes++;
                 }

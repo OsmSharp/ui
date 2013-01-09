@@ -272,5 +272,42 @@ namespace OsmSharp.UnitTests.Routes
             neighbours = route.GetNeigbours(count - 1);
             Assert.IsTrue(neighbours[0] == 0);
         }
+
+        /// <summary>
+        /// Tests enumeration all edges.
+        /// </summary>
+        protected void DoTestEnumeratePairs()
+        {            
+            // create a new empty route.
+            IRoute route = this.BuildRoute(0, true);
+
+            // do the enumerable.
+            List<Edge> edges = new List<Edge>(route.Edges());
+            Assert.AreEqual(0, edges.Count);
+
+            if (route != null)
+            { // this part needs testing!
+                Assert.AreEqual(1, route.Count);
+                Assert.AreEqual(false, route.IsEmpty);
+                Assert.AreEqual(true, route.IsRound);
+
+                for (int customer = 1; customer < 100; customer++)
+                {
+                    route.InsertAfter(customer - 1, customer);
+                    //route.InsertAfterAndRemove(customer - 1, customer, -1);
+
+                    edges = new List<Edge>(route.Edges());
+                    Assert.AreEqual(customer + 1, edges.Count);
+
+                    for (int edge_from = 0; edge_from < customer; edge_from++)
+                    {
+                        Assert.AreEqual(edges[edge_from].From, edge_from);
+                        Assert.AreEqual(edges[edge_from].To, edge_from + 1);
+                    }
+                    Assert.AreEqual(edges[edges.Count - 1].From, edges.Count - 1);
+                    Assert.AreEqual(edges[edges.Count - 1].To, 0);
+                }
+            }
+        }
     }
 }

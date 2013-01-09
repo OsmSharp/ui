@@ -26,6 +26,8 @@ namespace OsmSharp.Tools.Core.Output
         public void WriteLine(string text)
         {
             _stream.WriteLine(text);
+
+            _stream.Flush();
         }
 
         public void Write(string text)

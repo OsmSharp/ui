@@ -66,7 +66,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Selectors
                 new Population<GenomeType, ProblemType, WeightType>(true);
 
             int idx = 0;
-            int tournament_size_int = (int)((_tournament_size / 100f) * (double)population.Count);
+            int tournament_size_int = (int)System.Math.Ceiling(((_tournament_size / 100f) * (double)population.Count));
             while (idx < tournament_size_int)
                 //|| idx < population.Count - temp_pop.Count)
             { // keep looping until enough individuals are selected or until no more are available.

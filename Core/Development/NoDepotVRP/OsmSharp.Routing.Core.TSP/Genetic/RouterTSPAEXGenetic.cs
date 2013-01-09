@@ -54,7 +54,7 @@ namespace OsmSharp.Osm.Routing.Core.TSP.Genetic
         public RouterTSPAEXGenetic(IRouter<ResolvedType> router)
             : base(router)
         {
-            _population = 100;
+            _population = 300;
             _stagnation = 100;
         }
 

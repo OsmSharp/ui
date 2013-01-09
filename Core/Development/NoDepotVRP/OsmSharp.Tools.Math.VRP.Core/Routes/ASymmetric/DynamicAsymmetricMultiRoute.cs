@@ -135,7 +135,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             { // resize the array.
                 this.Resize(customer);
             }
-            _next_array[customer] = customer;
+            _next_array[customer] = -1;
 
             // return the new route.
             _sizes = null;
@@ -212,19 +212,23 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             firsts.RemoveAt(route_idx);
             _first = firsts.ToArray();
 
-            if (start >= 0)
-            {
-                int customer = start;
-                do
-                {
-                    int customer_next = _next_array[customer];
-                    _next_array[customer] = -1;
+            //if (start >= 0)
+            //{
+            //    int customer = start;
+            //    do
+            //    {
+            //        int customer_next = _next_array[customer];
+            //        _next_array[customer] = -1;
 
-                    customer = customer_next;
-                }
-                while (customer >= 0 && start != customer);
-            }
+            //        customer = customer_next;
+            //    }
+            //    while (customer >= 0 && start != customer);
+            //}
 
+            //if (!this.IsValid())
+            //{
+            //    throw new Exception();
+            //}
             return true;
         }
 
@@ -306,6 +310,22 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Returns the count of all customers.
+        /// </summary>
+        public int CountCustomers
+        {
+            get
+            {
+                int total = 0;
+                foreach (int count in _sizes)
+                {
+                    total = total + count;
+                }
+                return total;
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -321,7 +341,8 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                 for (int idx = 0; idx < this.Count; idx++)
                 {
                     IRoute route = this.Route(idx);
-                    if (route.Last == customer)
+                    if (route.Contains(customer) && 
+                        route.GetNeigbours(customer)[0] == route.First)
                     {
                         return route.First;
                     }
@@ -336,20 +357,32 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// <returns></returns>
         public bool IsValid()
         {
-            //HashSet<int> unique_customers = new HashSet<int>(_next_array);
-            //unique_customers.Remove(-1);
-            //int count = 0;
-            //foreach (int customer in _next_array)
-            //{
-            //    if (customer >= 0)
-            //    {
-            //        count++;
-            //    }
-            //}
-            //if (unique_customers.Count != count)
-            //{
-            //    return false;
-            //}
+            HashSet<int> unique_customers = new HashSet<int>();
+            int count = 0;
+            foreach (int customer in _next_array)
+            {
+                if (customer >= 0)
+                {
+                    count++;
+
+                    if (unique_customers.Contains(customer))
+                    {
+                        return false;
+                    }
+                    unique_customers.Add(customer);
+                }
+            }
+            if (unique_customers.Count != count)
+            {
+                return false;
+            }
+            foreach (MultiRoutePart first in _first)
+            {
+                if (unique_customers.Contains(first.First))
+                { // first customer cannot be referenced by another customer!
+                    return false;
+                }
+            }
             return true;
         }
 
@@ -417,6 +450,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                     return true;
                 }
             }
+
+            if (!this.IsValid())
+            {
+                throw new Exception();
+            }
             return false;
         }
 
@@ -450,6 +488,21 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             if (_next_array[customer] >= 0)
             {
                 return true;
+            }
+            foreach (IRoute route in _first)
+            {
+                if (route != null &&
+                    route.First == customer)
+                {
+                    return true;
+                }
+            }
+            foreach (int current in _next_array)
+            {
+                if (customer == current)
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -615,6 +668,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                         throw new ArgumentOutOfRangeException("Cannot add a customer after a customer with a negative index!");
                     }
 
+                    if (customer == _first)
+                    { // the next customer is actually the first customer.
+                        // set the next customer of the from customer to -1.
+                        customer = -1;
+                    }
+
                     if (_parent._next_array.Length > from)
                     { // customers should exist.
                         // resize the array if needed.
@@ -695,6 +754,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                     }
                     throw new ArgumentOutOfRangeException("Customer(s) do not exist in this route!");
                 }
+
+
+                if (!this.IsValid())
+                {
+                    throw new Exception();
+                }
             }
 
             /// <summary>
@@ -747,7 +812,9 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                 {
                     throw new Exception("Unique customer count not correct!");
                 }
-                return true;
+
+                return _parent.IsValid();
+                //return true;
             }
 
             #region Enumerators
@@ -820,6 +887,16 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                 }
             }
 
+            public IEnumerable<int> Between(int from, int to)
+            {
+                return new DynamicAsymmetricBetweenEnumerable(_parent._next_array, from, to, _first);
+            }
+
+            public IEnumerable<Edge> Edges()
+            {
+                return new EdgeEnumerable(this);
+            }
+
             #endregion
 
             /// <summary>
@@ -853,7 +930,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                 }
                 
                 // customer is not the first one (anymore)
-                for (int idx = 0; idx < _parent._next_array.Length - 1; idx++)
+                for (int idx = 0; idx < _parent._next_array.Length; idx++)
                 {
                     if (_parent._next_array[idx] == customer)
                     {
@@ -909,11 +986,6 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                     idx++;
                 }
                 return -1; // customer not found!
-            }
-
-            public IEnumerable<int> Between(int from, int to)
-            {
-                return new DynamicAsymmetricBetweenEnumerable(_parent._next_array, from, to, _first);
             }
 
             public bool Contains(int customer)

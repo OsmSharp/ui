@@ -51,4 +51,33 @@ namespace OsmSharp.Routing.CH.PreProcessing
             get { return this.Weight; }
         }
     }
+
+    /// <summary>
+    /// Comparer for CH edges.
+    /// </summary>
+    public class CHEdgeDataComparer : IDynamicGraphEdgeComparer<CHEdgeData>
+    {
+        /// <summary>
+        /// Return true if the existence of edge1 makes edge2 useless.
+        /// </summary>
+        /// <param name="edge1"></param>
+        /// <param name="edge2"></param>
+        /// <returns></returns>
+        public bool Overlaps(CHEdgeData edge1, CHEdgeData edge2)
+        {
+            if (!edge1.Backward && edge2.Backward)
+            {
+                return false;
+            }
+            if (!edge1.Forward && edge1.Forward)
+            {
+                return false;
+            }
+            if (edge1.Weight > edge2.Weight)
+            {
+                return false;
+            }
+            return true;
+        }
+    }
 }

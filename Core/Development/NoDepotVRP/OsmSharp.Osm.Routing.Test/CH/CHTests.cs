@@ -30,14 +30,16 @@ using OsmSharp.Osm.Routing.Interpreter;
 using System.IO;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Osm.Data.Core.Processor.Progress;
+using System;
 namespace OsmSharp.Osm.Routing.Test.CH
 {
     class CHTest
     {
         public static void Execute()
         {
-            CHTest.DoContraction(new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf").OpenRead(), true);
+            //CHTest.DoContraction(new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf").OpenRead(), true);
             //CHTest.DoContraction("OsmSharp.Osm.Routing.Test.TestData.matrix_big_area.osm", false);
+            CHTest.DoContraction("OsmSharp.Osm.Routing.Test.TestData.moscow.osm", false);
         }
 
 
@@ -69,11 +71,19 @@ namespace OsmSharp.Osm.Routing.Test.CH
             target_data.RegisterSource(data_processor_source);
             target_data.Pull();
 
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Finished Loading data!");
+
+            long start = DateTime.Now.Ticks;
+
             // do the pre-processing part.
             INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(osm_data);
             CHPreProcessor pre_processor = new CHPreProcessor(osm_data,
                 new EdgeDifferenceContractedSearchSpace(osm_data, witness_calculator), witness_calculator);
             pre_processor.Start();
+
+            long stop = DateTime.Now.Ticks;
+
+            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Pre-processing time:{0}s for {1} nodes!", (new TimeSpan(stop-start)).TotalSeconds, osm_data.VertexCount);
         }
     }
 }

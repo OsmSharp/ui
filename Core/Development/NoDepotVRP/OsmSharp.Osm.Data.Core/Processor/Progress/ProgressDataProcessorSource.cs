@@ -47,8 +47,8 @@ namespace OsmSharp.Osm.Data.Core.Processor.Progress
                     if ((_node % 10000) == 0)
                     {
                         long stop = DateTime.Now.Ticks;
-                        long seconds = (stop - _start) / TimeSpan.TicksPerSecond;
-                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Node[{0}]: {1}nodes/s", _node, (int)((double)_node / (double)seconds));
+                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
+                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Node[{0}]: {1}nodes/s", _node, (int)((double)_node / seconds));
                     }
                     break;
                 case SimpleOsmGeoType.Relation:
@@ -57,8 +57,8 @@ namespace OsmSharp.Osm.Data.Core.Processor.Progress
                     if ((_relation % 1000) == 0)
                     {
                         long stop = DateTime.Now.Ticks;
-                        long seconds = (stop - _start) / TimeSpan.TicksPerSecond;
-                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Relation[{0}]: {1}relations/s", _relation, (int)((double)_relation / (double)seconds));
+                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
+                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Relation[{0}]: {1}relations/s", _relation, (int)((double)_relation / seconds));
                     }
                     break;
                 case SimpleOsmGeoType.Way:
@@ -67,8 +67,8 @@ namespace OsmSharp.Osm.Data.Core.Processor.Progress
                     if ((_way % 1000) == 0)
                     {
                         long stop = DateTime.Now.Ticks;
-                        long seconds = (stop - _start) / TimeSpan.TicksPerSecond;
-                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Way[{0}]: {1}ways/s", _way, (int)((double)_way / (double)seconds));
+                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
+                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Way[{0}]: {1}ways/s", _way, (int)((double)_way / seconds));
                     }
                     break;
             }

@@ -81,7 +81,7 @@ namespace OsmSharp.UnitTests.Routing
             uint vertex2 = graph.AddVertex(51, 2);
 
             graph.AddArc(vertex1, vertex2, new PreProcessedEdge(
-                100, true, true, 0));
+                100, true, true, 0), null);
 
             KeyValuePair<uint, PreProcessedEdge>[] arcs = graph.GetArcs(vertex1);
             Assert.AreEqual(1, arcs.Length);
@@ -89,7 +89,7 @@ namespace OsmSharp.UnitTests.Routing
             Assert.AreEqual(vertex2, arcs[0].Key);
 
             graph.AddArc(vertex2, vertex1, new PreProcessedEdge(
-                200, true, true, 0));
+                200, true, true, 0), null);
 
             arcs = graph.GetArcs(vertex2);
             Assert.AreEqual(1, arcs.Length);
@@ -112,13 +112,13 @@ namespace OsmSharp.UnitTests.Routing
                 uint vertex2 = graph.AddVertex(51, 1);
 
                 graph.AddArc(vertex1, vertex2, new PreProcessedEdge(
-                    100, true, true, 0));
+                    100, true, true, 0), null);
 
                 KeyValuePair<uint, PreProcessedEdge>[] arcs = graph.GetArcs(vertex1);
                 Assert.AreEqual(10000 - count + 1, arcs.Length);
 
                 graph.AddArc(vertex2, vertex1, new PreProcessedEdge(
-                    200, true, true, 0));
+                    200, true, true, 0), null);
 
                 arcs = graph.GetArcs(vertex2);
                 Assert.AreEqual(1, arcs.Length);

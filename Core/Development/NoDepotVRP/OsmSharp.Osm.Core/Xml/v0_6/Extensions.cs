@@ -329,7 +329,7 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
         /// <returns></returns>
         public static changeset ConvertTo(this ChangeSet changeset)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -562,6 +562,75 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
             xml_obj.lat = dom_obj.Coordinate.Latitude;
             xml_obj.latSpecified = true;
             xml_obj.lon = dom_obj.Coordinate.Longitude;
+            xml_obj.lonSpecified = true;
+
+            return xml_obj;
+        }
+
+        /// <summary>
+        /// Converts an Xml node to an Osm domain model node.
+        /// </summary>
+        /// <param name="dom_obj"></param>
+        /// <returns></returns>
+        public static node ConvertTo(this OsmSharp.Osm.Core.Simple.SimpleNode dom_obj)
+        {
+            node xml_obj = new node();
+
+            // set the changeset.
+            if (dom_obj.ChangeSetId.HasValue)
+            {
+                xml_obj.changeset = dom_obj.ChangeSetId.Value;
+                xml_obj.changesetSpecified = true;
+            }
+
+            // set the id.
+            xml_obj.id = dom_obj.Id.Value;
+            xml_obj.idSpecified = true;
+
+            if (dom_obj.Tags != null)
+            {
+                xml_obj.tag = new tag[dom_obj.Tags.Count];
+                IList<KeyValuePair<string, string>> tags_list = dom_obj.Tags.ToList<KeyValuePair<string, string>>();
+                for (int idx = 0; idx < tags_list.Count; idx++)
+                {
+                    KeyValuePair<string, string> tag_pair = tags_list[idx];
+                    tag t = new tag();
+                    t.k = tag_pair.Key;
+                    t.v = tag_pair.Value;
+                    xml_obj.tag[idx] = t;
+                }
+            }
+
+            // set the timestamp.
+            if (dom_obj.TimeStamp.HasValue)
+            {
+                xml_obj.timestamp = dom_obj.TimeStamp.Value;
+                xml_obj.timestampSpecified = true;
+            }
+
+            // set the user data.
+            if (dom_obj.UserId.HasValue)
+            {
+                xml_obj.uid = dom_obj.UserId.Value;
+                xml_obj.uidSpecified = true;
+            }
+            xml_obj.user = xml_obj.user;
+
+            // set the version.
+            if (dom_obj.Version.HasValue)
+            {
+                xml_obj.version = (ulong)dom_obj.Version.Value;
+                xml_obj.versionSpecified = true;
+            }
+
+            // set the visible.
+            xml_obj.visible = dom_obj.Visible.Value;
+            xml_obj.visibleSpecified = true;
+
+            // set the node-specific properties.
+            xml_obj.lat = dom_obj.Latitude.Value;
+            xml_obj.latSpecified = true;
+            xml_obj.lon = dom_obj.Longitude.Value;
             xml_obj.lonSpecified = true;
 
             return xml_obj;

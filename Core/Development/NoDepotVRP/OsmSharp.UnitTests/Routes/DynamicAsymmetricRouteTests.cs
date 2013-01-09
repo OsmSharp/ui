@@ -86,5 +86,14 @@ namespace OsmSharp.UnitTests.Routes
         {
             this.DoTestGetNeighbours();
         }
+
+        /// <summary>
+        /// Tests a dynamic asymetric route's enumeration functionality.
+        /// </summary>
+        [TestMethod]
+        public void TestDynamicAsymmetricEnumeratePairs()
+        {
+            this.DoTestEnumeratePairs();
+        }
     }
 }
