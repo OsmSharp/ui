@@ -27,9 +27,9 @@ using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 using OsmSharp.Routing.Core;
 
-namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
 {
-    public class RouterBestPlacement<ResolvedType> : RouterMaxTime<ResolvedType>
+    public class CheapestInsertionSolver<ResolvedType> : RouterMaxTime<ResolvedType>
         where ResolvedType : IRouterPoint
     {
         /// <summary>
@@ -38,7 +38,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
         /// <param name="router"></param>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public RouterBestPlacement(IRouter<ResolvedType> router, Second max, Second delivery_time)
+        public CheapestInsertionSolver(IRouter<ResolvedType> router, Second max, Second delivery_time)
             :base(router, max, delivery_time)
         {
 
@@ -94,7 +94,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement
                     {
                         // insert the customer, it is 
                         customers.Remove(result.Customer);
-                        current_route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                        //current_route.InsertAfterAndRemove(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                        current_route.InsertAfter(result.CustomerBefore, result.Customer);
                         current_route_weight = potential_weight;
 
                         //// improve if needed.

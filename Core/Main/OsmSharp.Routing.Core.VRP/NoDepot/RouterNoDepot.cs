@@ -42,10 +42,25 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot
         }
 
         /// <summary>
-        /// Calculates this VRP No Depot.
+        /// Calculates this No-Depot VRP.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, ResolvedType[] points)
+        {
+            // first calculate the weights in seconds.
+            double[][] weights = this.CalculateManyToManyWeigth(vehicle, points);
+
+            // calculate
+            return this.CalculateNoDepot(vehicle, points, weights);
+        }
+
+        /// <summary>
+        /// Calculates this No-Depot VRP.
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public abstract OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, ResolvedType[] points);
+        public abstract OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, ResolvedType[] points, double[][] weights);
     }
 }

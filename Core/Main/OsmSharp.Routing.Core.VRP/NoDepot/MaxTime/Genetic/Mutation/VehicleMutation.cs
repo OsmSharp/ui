@@ -180,7 +180,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
                     }
 
                     // set the next array.
-                    route.Insert(previous, current, route.First);
+                    //route.InsertAfterAndRemove(previous, current, route.First);
+                    route.InsertAfter(previous, current);
                     used[current] = true;
                     previous = current;
                     current_size--;

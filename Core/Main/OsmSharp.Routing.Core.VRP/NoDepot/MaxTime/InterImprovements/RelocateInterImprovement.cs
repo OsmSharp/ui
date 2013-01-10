@@ -21,14 +21,37 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Tools.Math.VRP.Core;
 
-namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
+namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.InterImprovements
 {
     /// <summary>
     /// Relocate heurstic.
     /// </summary>
-    public class RelocateImprovement : IInterRouteImprovement
+    public class RelocateImprovement : IInterImprovement
     {
+        /// <summary>
+        /// Return the name of this improvement.
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return "REL";
+            }
+        }
+
+        /// <summary>
+        /// Returns true if this operation is symmetric.
+        /// </summary>
+        public bool IsSymmetric
+        {
+            get
+            {
+                return true;
+            }
+        }
+
         /// <summary>
         /// Tries to improve the existing routes by re-inserting a customer from one route into another.
         /// </summary>
@@ -37,13 +60,14 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
         /// <param name="route2"></param>
         /// <param name="difference"></param>
         /// <returns></returns>
-        public bool Improve(MaxTimeProblem problem, IRoute route1, IRoute route2, out double difference)
+        public bool Improve(MaxTimeProblem problem, MaxTimeSolution solution,
+            int route1_idx, int route2_idx, double max)
         {
-            if (this.RelocateFromTo(problem, route1, route2, out difference))
+            if (this.RelocateFromTo(problem, solution, route1_idx, route2_idx, max))
             {
                 return true;
             }
-            if (this.RelocateFromTo(problem, route2, route1, out difference))
+            if (this.RelocateFromTo(problem, solution, route2_idx, route1_idx, max))
             {
                 return true;
             }
@@ -58,25 +82,45 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
         /// <param name="route2"></param>
         /// <param name="difference"></param>
         /// <returns></returns>
-        private bool RelocateFromTo(MaxTimeProblem problem, IRoute route1, IRoute route2, out double difference)
+        private bool RelocateFromTo(MaxTimeProblem problem, MaxTimeSolution solution,
+            int route1_idx, int route2_idx, double max)
         {
             int previous = -1;
             int current = -1;
+
+            IRoute route1 = solution.Route(route1_idx);
+            IRoute route2 = solution.Route(route2_idx);
+
+            double route2_weight = solution[route2_idx];
+
             foreach (int next in route1)
             {
                 if (previous >= 0 && current >= 0)
                 { // consider the next customer.
-                    if (this.ConsiderCustomer(problem, route2, previous, current, next, out difference))
+
+                    int count_before1 = route1.Count;
+                    int count_before2 = route2.Count;
+
+                    string route1_string = route1.ToString();
+                    string route2_string = route2.ToString();
+
+                    if (this.ConsiderCustomer(problem, route2, previous, current, next, route2_weight, max))
                     {
-                        route1.Remove(current);
-                        break;
+                        route1.ReplaceEdgeFrom(previous, next);
+
+                        int count_after = route1.Count + route2.Count;
+                        if ((count_before1 + count_before2) != count_after)
+                        {
+                            throw new Exception();
+                        }
+                        return true;
                     }
                 }
 
                 previous = current;
                 current = next;
             }
-            difference = 0;
+
             return false;
         }
 
@@ -89,24 +133,33 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.InterRoute
         /// <param name="current"></param>
         /// <param name="next"></param>
         /// <returns></returns>
-        private bool ConsiderCustomer(MaxTimeProblem problem, IRoute route, int previous, int current, int next, out double difference)
+        private bool ConsiderCustomer(IProblemWeights problem, IRoute route, int previous, int current, int next, double route_weight, double max)
         {
             // calculate the removal gain of the customer.
             double removal_gain = problem.WeightMatrix[previous][current] + problem.WeightMatrix[current][next]
                 - problem.WeightMatrix[previous][next];
-            if (removal_gain > 0)
+            if (removal_gain > 0.0001)
             {
                 // try and place the customer in the next route.
-                CheapestInsertionResult result = 
+                CheapestInsertionResult result =
                     CheapestInsertionHelper.CalculateBestPlacement(problem, route, current);
-                if (result.Increase < removal_gain)
+                if (result.Increase < removal_gain - 0.001 && route_weight + result.Increase < max)
                 { // there is a gain in relocating this customer.
-                    difference = result.Increase - removal_gain;
+                    int count_before = route.Count;
+                    string route_string = route.ToString();
 
-                    route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                    // and the route is still within bounds!
+                    route.ReplaceEdgeFrom(result.CustomerBefore, result.Customer);
+                    route.ReplaceEdgeFrom(result.Customer, result.CustomerAfter);
+
+                    int count_after = route.Count;
+                    if (count_before + 1 != count_after)
+                    {
+                        throw new Exception();
+                    }
+                    return true;
                 }
             }
-            difference = 0;
             return false;
         }
     }

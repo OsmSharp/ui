@@ -149,7 +149,7 @@ namespace OsmSharp.Routing.Core.VRP
                     {
                         route = _router.Calculate(VehicleEnum.Car, clients[vrp_solution[route_idx][idx]],
                             clients[vrp_solution[route_idx][idx + 1]]);
-                        if (route.Entries.Length > 0)
+                        if (route != null && route.Entries.Length > 0)
                         {
                             if (tsp == null)
                             { // first route = start
@@ -171,6 +171,10 @@ namespace OsmSharp.Routing.Core.VRP
                     }
 
                     solution[route_idx] = tsp;
+                    solution[route_idx].Tags = new RouteTags[1];
+                    solution[route_idx].Tags[0] = new RouteTags();
+                    solution[route_idx].Tags[0].Key = "customer_count";
+                    solution[route_idx].Tags[0].Value = vrp_solution[route_idx].Length.ToString();
                 }
                 return solution;
             }

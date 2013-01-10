@@ -22,7 +22,6 @@ using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
 using OsmSharp.Tools.Math.AI.Genetic;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement;
 using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
 using OsmSharp.Tools.Math.VRP.Core;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
@@ -84,7 +83,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation
                     if (potential_weight < problem.Max.Value)
                     {
                         customers.Remove(result.Customer);
-                        current_route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                        //current_route.InsertAfterAndRemove(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                        current_route.InsertAfter(result.CustomerBefore, result.Customer);
                         weight = potential_weight;
                     }
                     else

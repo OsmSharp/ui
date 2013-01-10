@@ -157,7 +157,6 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
             return _customers.Length == cnt;
         }
 
-
         public bool IsValidNew()
         {
             // always begin at zero.
@@ -324,9 +323,6 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
             }
         }
 
-
-
-
         public void Insert(int from, int customer, int to)
         {
             this.Add(from, customer);
@@ -385,6 +381,23 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
 
 
         public bool Contains(int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void ReplaceEdgeFrom(int from, int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void InsertAfter(int from, int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public IEnumerable<Edge> Edges()
         {
             throw new NotImplementedException();
         }

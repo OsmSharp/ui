@@ -76,7 +76,7 @@ namespace OsmSharp.Tools.Math.TSP.CheapestInsertion
         public IRoute Solve(IProblem problem)
         {
             // build the customer list to place.
-            List<int> customers = new List<int>();
+            HashSet<int> customers = new HashSet<int>();
             for (int customer = 0; customer < problem.Size; customer++)
             {
                 customers.Add(customer);
@@ -137,8 +137,8 @@ namespace OsmSharp.Tools.Math.TSP.CheapestInsertion
                 // place the customer.
                 if (result.CustomerAfter >= 0 && result.CustomerBefore >= 0)
                 {
-                    route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
-
+                    //route.InsertAfterAndRemove(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                    route.InsertAfter(result.CustomerBefore, result.Customer);
                     customers.Remove(result.Customer);
                 }
             }

@@ -92,12 +92,20 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
         bool Remove(int customer);
 
         /// <summary>
-        /// Inserts a customer between two others.
+        /// Removes the edge from->unknown and replaces it with the edge from->to.
+        /// 0->1->2:ReplaceEdgeFrom(0, 2):0->2 without resetting the last customer property.
         /// </summary>
         /// <param name="from"></param>
-        /// <param name="customer"></param>
         /// <param name="to"></param>
-        void Insert(int from, int customer, int to);
+        void ReplaceEdgeFrom(int from, int to);
+
+        /// <summary>
+        /// Removes the edge from->unknown and replaces it with the edge from->to->unknown.
+        /// 0->1:InsertAfter(0, 2):0->2-1
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        void InsertAfter(int from, int to);
 
         /// <summary>
         /// Returns the neigbours of a customer.
@@ -126,5 +134,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
         /// <param name="to"></param>
         /// <returns></returns>
         IEnumerable<int> Between(int from, int to);
+
+        /// <summary>
+        /// Returns a enumerable that enumerates all edges in this route.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<Edge> Edges();
     }
 }

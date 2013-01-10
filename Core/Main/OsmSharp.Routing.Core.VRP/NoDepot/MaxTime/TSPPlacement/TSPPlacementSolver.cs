@@ -105,7 +105,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement
                 }
                 else
                 { // just insert the next customer.
-                    route.Insert(previous, next, -1);
+                    route.InsertAfter(previous, next);
+                    //route.InsertAfterAndRemove(previous, next, -1);
                 }
 
                 // set the previous.

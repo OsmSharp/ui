@@ -263,9 +263,9 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
 
                         if (weight - weight_new > _epsilon)
                         { // actually do replace the vertices.
-                            route.Insert(v_1, v_4, -1);
-                            route.Insert(v_3, v_6, -1);
-                            route.Insert(v_5, v_2, -1);
+                            route.ReplaceEdgeFrom(v_1, v_4);
+                            route.ReplaceEdgeFrom(v_3, v_6);
+                            route.ReplaceEdgeFrom(v_5, v_2);
 
                             // set bits.
                             //this.Set(problem, v_1, false);

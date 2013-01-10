@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
         public MaxTimeSolution(int size, bool is_round)
             : base(size, is_round)
         {
-
+            _weights = new List<double>();
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
         protected MaxTimeSolution(int[] first, int[] next_array, bool is_round)
             : base(first, next_array, is_round)
         {
-
+            _weights = new List<double>();
         }
 
         /// <summary>
@@ -57,7 +57,58 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
         /// <returns></returns>
         public override object Clone()
         {
-            return new MaxTimeSolution(_first.Clone() as int[], _next_array.Clone() as int[], _is_round);
+            int[] first = new int[this.Count];
+            for (int idx = 0; idx < this.Count; idx++)
+            {
+                first[idx] = this.Route(idx).First;
+            }
+            return new MaxTimeSolution(first, _next_array.Clone() as int[], _is_round);
         }
+
+        #region Weights
+
+        /// <summary>
+        /// Keeps all the weights of the routes.
+        /// </summary>
+        private List<double> _weights;
+
+        /// <summary>
+        /// Gets/sets the weight of the route at the given index.
+        /// </summary>
+        /// <param name="route_idx"></param>
+        /// <returns></returns>
+        public double this[int route_idx]
+        {
+            get
+            {
+                if (route_idx < _weights.Count)
+                {
+                    return _weights[route_idx];
+                }
+                return 0;
+            }
+            set
+            {
+                while (!(route_idx < _weights.Count))
+                { // add elements recursively.
+                    _weights.Add(0);
+                }
+                _weights[route_idx] = value;
+            }
+        }
+
+        /// <summary>
+        /// Removes the weight for the given route.
+        /// </summary>
+        /// <param name="route_idx"></param>
+        public void RemoveWeight(int route_idx)
+        {
+            if (route_idx < _weights.Count)
+            {
+                _weights.RemoveAt(route_idx);
+            }
+        }
+
+        #endregion
     }
 }

@@ -89,7 +89,8 @@ namespace OsmSharp.Tools.Math.VRP.Core.LocalSearch
                 if (current_cost > other_cost)
                 { // the current cost is better.
                     route.Remove(found_customer);
-                    route.Insert(before, found_customer, after);
+                    //route.InsertAfterAndRemove(before, found_customer, after);
+                    route.InsertAfter(before, found_customer);
                     break;
                 }
                 else
