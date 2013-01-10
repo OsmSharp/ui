@@ -124,7 +124,7 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
             else
             { // the first and last customer can be choosen randomly.
                 is_round = false;
-                first = _customers[0];
+                first = customers[0];
             }
 
             if (problem.Symmetric)
