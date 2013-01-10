@@ -191,7 +191,12 @@
     <Compile Include="WithDepot\MaxTime\Genetic\Problem.cs" />
     <Compile Include="WithDepot\MaxTime\Genetic\RouterGeneticSimple.cs" />
     <Compile Include="WithDepot\MaxTime\IMaxTimeSolver.cs" />
+    <Compile Include="WithDepot\MaxTime\InterImprovements\CrossExchangeinterImprovement.cs" />
+    <Compile Include="WithDepot\MaxTime\InterImprovements\ExchangeInterImprovement.cs" />
     <Compile Include="WithDepot\MaxTime\InterImprovements\IInterImprovements.cs" />
+    <Compile Include="WithDepot\MaxTime\InterImprovements\RelocateExchangeInterImprovement.cs" />
+    <Compile Include="WithDepot\MaxTime\InterImprovements\RelocateInterImprovement.cs" />
+    <Compile Include="WithDepot\MaxTime\InterImprovements\TwoOptInterImprovement.cs" />
     <Compile Include="WithDepot\MaxTime\MaxTimeCalculator.cs" />
     <Compile Include="WithDepot\MaxTime\MaxTimeProblem.cs" />
     <Compile Include="WithDepot\MaxTime\MaxTimeSolution.cs" />
