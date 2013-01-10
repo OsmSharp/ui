@@ -97,7 +97,7 @@ namespace OsmSharp.Tools.Math.TSP
                     weights[n + i][n + j] = M * 100;
                 }
             }
-            return new MatrixProblem(weights, true);
+            return MatrixProblem.CreateSTSP(weights);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace OsmSharp.Tools.Math.TSP
                 }                
             }
 
-            return new MatrixProblem(new_weights, false, 0, 0);
+            return MatrixProblem.CreateATSPOpen(new_weights, 0);
         }
     }
 }

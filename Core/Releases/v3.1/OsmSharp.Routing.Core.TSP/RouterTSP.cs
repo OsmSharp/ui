@@ -51,7 +51,8 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// <summary>
         /// Calculates a weight matrix for the given array of points.
         /// </summary>
-        /// <param name="points"></param>
+        /// <param name="vehicle">The vehicle type.</param>
+        /// <param name="points">The points to travel along.</param>
         /// <returns></returns>
         protected double[][] CalculateManyToManyWeight(VehicleEnum vehicle, ResolvedType[] points)
         {
@@ -61,8 +62,9 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// <summary>
         /// Calculates the shortest route along all given points starting and ending at the given points.
         /// </summary>
+        /// <param name="vehicle">The vehicle type.</param>
         /// <param name="points">The points to travel along.</param>
-        /// <param name="first">The point to start from.</param>
+        /// <param name="first">The index of the point to start from.</param>
         /// <param name="is_round">Return back to the first point or not.</param>
         /// <returns></returns>
         public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, int first, bool is_round)
@@ -84,9 +86,10 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// <summary>
         /// Calculates the shortest route along all given points starting and ending at the given points.
         /// </summary>
+        /// <param name="vehicle">The vehicle type.</param>
         /// <param name="points">The points to travel along.</param>
-        /// <param name="first">The point to start from.</param>
-        /// <param name="last">The point to end at.</param>
+        /// <param name="first">The index of the point to start from.</param>
+        /// <param name="last">The index of the point to end at.</param>
         /// <returns></returns>
         public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, int first, int last)
         {
@@ -105,10 +108,11 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         }
 
         /// <summary>
-        /// Calcculates the shortest route along all given points.
+        /// Calculates the shortest route along all given points.
         /// </summary>
+        /// <param name="vehicle">The vehicle type.</param>
         /// <param name="points">The points to travel along.</param>
-        /// <param name="is_round">Make the route a round or not.</param>
+        /// <param name="is_round">Make the route return to the start-point or not.</param>
         /// <returns></returns>
         public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, bool is_round)
         {
@@ -137,7 +141,8 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// <summary>
         /// Calculates the shortest route along all given points returning back to the first.
         /// </summary>
-        /// <param name="points"></param>
+        /// <param name="vehicle">The vehicle type.</param>
+        /// <param name="points">The points to travel along.</param>
         /// <returns></returns>
         public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points)
         {
@@ -206,27 +211,32 @@ namespace OsmSharp.Osm.Routing.Core.TSP
             {
                 if (last.HasValue)
                 {
-                    return new MatrixProblem(weights, false, first.Value, last.Value);
+                    return MatrixProblem.CreateATSPOpen(weights, first.Value, last.Value);
+                    //return new MatrixProblem(weights, false, first.Value, last.Value);
                 }
                 else
                 {
                     if (is_round)
                     {
-                        return new MatrixProblem(weights, false, first.Value, first.Value);
+                        return MatrixProblem.CreateATSP(weights, first.Value);
+                        //return new MatrixProblem(weights, false, first.Value, first.Value);
                     }
                     else
                     {
-                        return new MatrixProblem(weights, false, first.Value, null);
+                        return MatrixProblem.CreateATSPOpen(weights, first.Value);
+                        //return new MatrixProblem(weights, false, first.Value, null);
                     }
                 }
             }
             if (is_round)
             {
-                return new MatrixProblem(weights, false, 0, 0);
+                return MatrixProblem.CreateATSP(weights);
+                //return new MatrixProblem(weights, false, 0, 0);
             }
             else
             {
-                return new MatrixProblem(weights, false);
+                return MatrixProblem.CreateATSPOpen(weights);
+                //return new MatrixProblem(weights, false);
             }
         }
 

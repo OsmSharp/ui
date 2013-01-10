@@ -54,17 +54,17 @@ namespace OsmSharp.Tools.Math.TSP.Problems
         private int? _last;
 
         /// <summary>
-        /// Creates a new matrix problem.
+        /// Creates a new TSP matrix problem
         /// </summary>
         /// <param name="weights"></param>
         /// <param name="symmetric"></param>
-        public MatrixProblem(double[][] weights
+        protected MatrixProblem(double[][] weights
             , bool symmetric)
         {
             _symmetric = symmetric;
             _weights = weights;
-            //_first = 0;
-            //_last = 0;
+            _first = 0;
+            _last = 0;
             _euclidean = false; // assume false just to be safe.
         }
 
@@ -73,7 +73,7 @@ namespace OsmSharp.Tools.Math.TSP.Problems
         /// </summary>
         /// <param name="weights"></param>
         /// <param name="symmetric"></param>
-        public MatrixProblem(double[][] weights
+        protected MatrixProblem(double[][] weights
             , bool symmetric
             , bool euclidean)
         {
@@ -89,9 +89,9 @@ namespace OsmSharp.Tools.Math.TSP.Problems
         /// </summary>
         /// <param name="weights"></param>
         /// <param name="symmetric"></param>
-        public MatrixProblem(double[][] weights
+        protected MatrixProblem(double[][] weights
             , bool symmetric
-            , int first
+            , int? first
             , int? last)
         {
             _symmetric = symmetric;
@@ -100,25 +100,6 @@ namespace OsmSharp.Tools.Math.TSP.Problems
             _last = last;
             _euclidean = false; // assume false just to be safe.
         }
-
-        /// <summary>
-        /// Creates a new matrix problem.
-        /// </summary>
-        /// <param name="weights"></param>
-        /// <param name="symmetric"></param>
-        public MatrixProblem(double[][] weights
-            , bool symmetric
-            , bool euclidean
-            , int first
-            , int last)
-        {
-            _symmetric = symmetric;
-            _weights = weights;
-            _first = first;
-            _last = last;
-            _euclidean = euclidean;
-        }
-
 
         /// <summary>
         /// Returns the weight between two customers.
@@ -259,5 +240,107 @@ namespace OsmSharp.Tools.Math.TSP.Problems
         }
 
         #endregion
+
+        #region Factory Methods
+
+        /// <summary>
+        /// Creates a regular ATSP that routes along all given customers in the shortest possible way.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public static MatrixProblem CreateATSP(double[][] weights)
+        {
+            return new MatrixProblem(weights, false);
+        }
+
+        /// <summary>
+        /// Creates a regular ATSP that routes along all given customers in the shortest possible way with the first customer (and the last customer) given.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public static MatrixProblem CreateATSP(double[][] weights, int first)
+        {
+            return new MatrixProblem(weights, false, first, first);
+        }
+
+        /// <summary>
+        /// Creates a ATSP that routes along all customers in the shortest possible way but without being a closed route.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public static MatrixProblem CreateATSPOpen(double[][] weights)
+        {
+            return new MatrixProblem(weights, false, null, null);
+        }
+
+        /// <summary>
+        /// Creates a ATSP that routes along all customers in the shortest possible way but without being a closed route and with a fixed first customer.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <param name="first"></param>
+        /// <returns></returns>
+        public static MatrixProblem CreateATSPOpen(double[][] weights, int first)
+        {
+            return new MatrixProblem(weights, false, first, null);
+        }
+
+        /// <summary>
+        /// Creates a ATSP that routes along all customers in the shortest possible way but without being a closed route and with a fixed first and last customer.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <param name="first"></param>
+        /// <param name="last"></param>
+        /// <returns></returns>
+        public static MatrixProblem CreateATSPOpen(double[][] weights, int first, int last)
+        {
+            return new MatrixProblem(weights, false, first, last);
+        }
+
+        /// <summary>
+        /// Creates a regular STSP that routes along all given customers in the shortest possible way.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public static MatrixProblem CreateSTSP(double[][] weights)
+        {
+            return new MatrixProblem(weights, true);
+        }
+
+        /// <summary>
+        /// Creates a STSP that routes along all customers in the shortest possible way but without being a closed route.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <returns></returns>
+        public static MatrixProblem CreateSTSPOpen(double[][] weights)
+        {
+            return new MatrixProblem(weights, true, null, null);
+        }
+
+        /// <summary>
+        /// Creates a STSP that routes along all customers in the shortest possible way but without being a closed route and with a fixed first customer.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <param name="first"></param>
+        /// <returns></returns>
+        public static MatrixProblem CreateSTSPOpen(double[][] weights, int first)
+        {
+            return new MatrixProblem(weights, true, first, null);
+        }
+
+        /// <summary>
+        /// Creates a STSP that routes along all customers in the shortest possible way but without being a closed route and with a fixed first and last customer.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <param name="first"></param>
+        /// <param name="last"></param>
+        /// <returns></returns>
+        public static MatrixProblem CreateSTSPOpen(double[][] weights, int first, int last)
+        {
+            return new MatrixProblem(weights, true, first, last);
+        }
+
+        #endregion
+
+
     }
 }

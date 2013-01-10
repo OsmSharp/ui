@@ -95,7 +95,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
             {
                 customers.Add(customer);
             }
-            MatrixProblem matrix = new MatrixProblem(weights, false);
+            MatrixProblem matrix = MatrixProblem.CreateATSP(weights);
             MaxTimeProblem problem = new MaxTimeProblem(this.Max, this.DeliveryTime, matrix);
             int[][] vrp_solution = this.DoCalculation(problem, customers, this.Max);
 

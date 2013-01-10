@@ -76,7 +76,7 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MinimaxTime
                 custInt.Add(customer);
 
 
-            MatrixProblem matrix = new MatrixProblem(weights, false);
+            MatrixProblem matrix = MatrixProblem.CreateATSP(weights);
             int[][] vrp_solution = this.DoCalculation(matrix, depotsInt, custInt);
 
             // construct and return solution.
