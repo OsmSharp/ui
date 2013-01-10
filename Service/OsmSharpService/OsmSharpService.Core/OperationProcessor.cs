@@ -122,6 +122,7 @@ namespace OsmSharpService.Core.Routing
                 }
 
                 // do the routing.
+                RouterTSPAEXGenetic<RouterPoint> tsp_solver;
                 switch (operation.Type)
                 {
                     case RoutingOperationType.ManyToMany:
@@ -163,9 +164,22 @@ namespace OsmSharpService.Core.Routing
 
                         break;
                     case RoutingOperationType.TSP:
-                        RouterTSPAEXGenetic<RouterPoint> tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
-                            router, 300, 100);
+                        tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
+                            router);
                         response.Route = tsp_solver.CalculateTSP(operation.Vehicle, routable_points.ToArray());
+
+                        // set the unroutable hooks.
+                        response.UnroutableHooks = unroutable_hooks.ToArray();
+
+                        // report succes!
+                        response.Status = OsmSharpServiceResponseStatusEnum.Success;
+                        response.StatusMessage = string.Empty;
+
+                        break;
+                    case RoutingOperationType.OpenTSP:
+                        tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
+                            router);
+                        response.Route = tsp_solver.CalculateTSP(operation.Vehicle, routable_points.ToArray(), false);
 
                         // set the unroutable hooks.
                         response.UnroutableHooks = unroutable_hooks.ToArray();

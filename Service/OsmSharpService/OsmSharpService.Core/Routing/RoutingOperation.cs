@@ -41,9 +41,13 @@ namespace OsmSharpService.Core.Routing
         /// </summary>
         Regular,
         /// <summary>
-        /// Returns a shortest route along all the points using the first point as start point.
+        /// Returns a shortest route along all the points using the first point as start point and end point.
         /// </summary>
         TSP,
+        /// <summary>
+        /// Returns a shortest route along all the points using the first point as start point but the end point is flexible.
+        /// </summary>
+        OpenTSP,
         /// <summary>
         /// Returns all the weights between the given points indexed the same way as the points given.
         /// </summary>
