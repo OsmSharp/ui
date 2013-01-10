@@ -213,7 +213,8 @@ namespace OsmSharp.Tools.Math.TSP
                         // calculate the best placement.
                         CheapestInsertionResult result = CheapestInsertionHelper.CalculateBestPlacement(
                             problem, cut_route, customer);
-                        cut_route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                        //cut_route.InsertAfterAndRemove(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                        cut_route.InsertAfter(result.CustomerBefore, result.Customer);
                         new_weight = new_weight + result.Increase;
 
                         // choose next random customer.

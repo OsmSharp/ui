@@ -281,7 +281,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
             throw new NotImplementedException();
         }
 
-        void IRoute.Insert(int from, int customer, int to)
+        void IRoute.ReplaceEdgeFrom(int from, int customer)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IRoute.InsertAfter(int from, int customer)
         {
             throw new NotImplementedException();
         }
@@ -307,6 +312,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
         }
 
         IEnumerator<int> IEnumerable<int>.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public IEnumerable<Edge> Edges()
         {
             throw new NotImplementedException();
         }

@@ -31,6 +31,14 @@ namespace OsmSharp.Tools.Math.TSP
     public interface IImprovement
     {
         /// <summary>
+        /// Returns the name of the improvement.
+        /// </summary>
+        string Name
+        {
+            get;
+        }
+
+        /// <summary>
         /// Returns true if there was an improvement.
         /// </summary>
         /// <param name="problem"></param>

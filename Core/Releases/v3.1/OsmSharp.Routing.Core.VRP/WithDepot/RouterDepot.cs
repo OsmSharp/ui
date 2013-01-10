@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot
         /// </summary>
         /// <param name="router"></param>
         public RouterDepot(IRouter<ResolvedType> router)
-            :base(router)
+            : base(router)
         {
 
         }
@@ -46,8 +46,7 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public abstract OsmSharpRoute[] CalculateDepot(VehicleEnum vehicle, ResolvedType[] depots, ResolvedType[] customers);
-
-
+        public abstract OsmSharpRoute[] CalculateDepot(VehicleEnum vehicle,
+            ResolvedType[] points, double[][] weights);
     }
 }

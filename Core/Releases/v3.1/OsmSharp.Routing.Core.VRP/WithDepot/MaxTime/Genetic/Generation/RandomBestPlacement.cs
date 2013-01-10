@@ -93,7 +93,8 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MinimaxTime.Genetic.Generation
                     }
                     // calculate the new weight.
                     customers.Remove(result.Customer);
-                    current_route.Insert(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                    //current_route.InsertAfterAndRemove(result.CustomerBefore, result.Customer, result.CustomerAfter);
+                    current_route.InsertAfter(result.CustomerBefore, result.Customer);
                     weights[k] += result.Increase + 15 * 60;
 
                     if (weights[k] == weights.Max())

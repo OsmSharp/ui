@@ -35,9 +35,43 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
         IRoute Route(int idx);
 
         /// <summary>
+        /// Adds a new empty route.
+        /// </summary>
+        /// <returns></returns>
+        IRoute Add();
+
+        /// <summary>
+        /// Adds a new route with an intial customer.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        IRoute Add(int customer);
+
+        /// <summary>
+        /// Adds a new route by copying the given one.
+        /// </summary>
+        /// <param name="route"></param>
+        IRoute Add(IRoute route);
+
+        /// <summary>
+        /// Removes the route at the given index.
+        /// </summary>
+        /// <param name="route_idx"></param>
+        /// <returns></returns>
+        bool Remove(int route_idx);
+
+        /// <summary>
         /// Returns the number of routes.
         /// </summary>
         int Count
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns the current size of this route.
+        /// </summary>
+        int Size
         {
             get;
         }
@@ -56,5 +90,19 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
         /// <param name="customer"></param>
         /// <returns></returns>
         bool Contains(int customer);
+
+        /// <summary>
+        /// Returns the customer next in line.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        int Next(int customer);
+
+        /// <summary>
+        /// Removes the given customer.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
+        bool RemoveCustomer(int customer);
     }
 }

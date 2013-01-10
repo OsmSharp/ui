@@ -145,8 +145,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BestPlacement\BestPlacementHelper.cs" />
-    <Compile Include="BestPlacement\BestPlacementResult.cs" />
+    <Compile Include="BestPlacement\CheapestInsertionHelper.cs" />
+    <Compile Include="BestPlacement\CheapestInsertionResult.cs" />
+    <Compile Include="BestPlacement\InsertionCosts\BinaryHeapInsertionCosts.cs" />
+    <Compile Include="BestPlacement\InsertionCosts\IInsertionCosts.cs" />
     <Compile Include="BestPlacement\SeedCustomers\ISeedCustomerSelector.cs" />
     <Compile Include="BestPlacement\SeedCustomers\SimpleSeeds.cs" />
     <Compile Include="LocalSearch\RePlace1OptHelper.cs" />
@@ -161,8 +163,10 @@
     <Compile Include="Routes\ASymmetric\IASymmetricRoute.cs" />
     <Compile Include="Routes\ASymmetric\SimpleAsymmetricRoute.cs" />
     <Compile Include="Routes\BetweenEnumerator.cs" />
+    <Compile Include="Routes\DepotRoute.cs" />
     <Compile Include="Routes\IMultiRoute.cs" />
     <Compile Include="Routes\IRoute.cs" />
+    <Compile Include="Routes\EdgeEnumerator.cs" />
     <Compile Include="Routes\RouteExtensions.cs" />
     <Compile Include="Routes\Symmetric\DynamicSymmetricRoute.cs" />
     <Compile Include="Routes\Symmetric\FixedSymmetricRoute.cs" />

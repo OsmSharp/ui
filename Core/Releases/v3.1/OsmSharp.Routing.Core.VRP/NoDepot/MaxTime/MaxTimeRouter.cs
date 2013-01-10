@@ -25,6 +25,7 @@ using OsmSharp.Tools.Math.VRP.Core;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.Route;
+using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
 {
@@ -69,15 +70,12 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public override OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, ResolvedType[] points)
+        public override OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, ResolvedType[] points, double[][] weights)
         {        
             /// Keeps a local copy of the current calculation points.
             /// 
             /// TODO: find a better solution to make this thread-safe!
             _points = points;
-
-            // first calculate the weights in seconds.
-            double[][] weights = this.CalculateManyToManyWeigth(vehicle, points);
 
             // convert to ints.
             for (int x = 0; x < weights.Length; x++)
@@ -85,22 +83,61 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
                 double[] weights_x = weights[x];
                 for (int y = 0; y < weights_x.Length; y++)
                 {
-                    weights_x[y] = (int)weights_x[y];
+                    weights_x[y] = weights_x[y];
                 }
             }
 
             // create the problem for the genetic algorithm.
+            MatrixProblem matrix = MatrixProblem.CreateATSP(weights);
+            MaxTimeProblem problem = new MaxTimeProblem(matrix, this.Max, this.DeliveryTime, 10, 1000);
             List<int> customers = new List<int>();
             for (int customer = 0; customer < points.Length; customer++)
             {
                 customers.Add(customer);
+                problem.CustomerPositions.Add(
+                    _points[customer].Location);
             }
-            MatrixProblem matrix = MatrixProblem.CreateATSP(weights);
-            MaxTimeProblem problem = new MaxTimeProblem(this.Max, this.DeliveryTime, matrix);
             int[][] vrp_solution = this.DoCalculation(problem, customers, this.Max);
 
             // construct and return solution.
             return this.ConstructSolution(vrp_solution, null, points);
+        }
+
+        /// <summary>
+        /// Calculates a bounding box.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns></returns>
+        protected GeoCoordinateBox CalculateBox(MaxTimeProblem problem, IRoute route)
+        {
+            HashSet<GeoCoordinate> coordinates = new HashSet<GeoCoordinate>();
+            foreach (int customer in route)
+            {
+                coordinates.Add(problem.CustomerPositions[customer]);
+            }
+            if (coordinates.Count == 0)
+            {
+                return null;
+            }
+            return new GeoCoordinateBox(coordinates.ToArray());
+        }
+
+        /// <summary>
+        /// Returns true if the routes overlap.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <param name="route1"></param>
+        /// <param name="route2"></param>
+        /// <returns></returns>
+        protected bool Overlaps(MaxTimeProblem problem, IRoute route1, IRoute route2)
+        {
+            GeoCoordinateBox route1_box = this.CalculateBox(problem, route1);
+            GeoCoordinateBox route2_box = this.CalculateBox(problem, route2);
+            if (route1_box != null && route2_box != null)
+            {
+                return route1_box.Overlaps(route2_box);
+            }
+            return false;
         }
         
         #region Intermidiate Results
@@ -145,6 +182,9 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
             for (int idx = 0; idx < routes.Count; idx++)
             {
                 IRoute current = routes.Route(idx);
+
+                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Route {0}: {1}s",
+                    idx, routes[idx]);
                 //IRoute current = routes[idx];
                 List<int> route = new List<int>(current);
                 if (current.IsRound)

@@ -117,7 +117,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation
                         int from = route_placement.CustomerBefore;
                         foreach (int customer in part_of_orginal)
                         {
-                            target.Insert(from, customer, -1);
+                            target.InsertAfter(from, customer);
+                            //target.InsertAfterAndRemove(from, customer, -1);
                             from = customer;
                         }
                     }

@@ -100,16 +100,11 @@ namespace OsmSharp.Tools.Benchmark.TSPLIB
             problems.Add(Program.CreateProblem(@"\Problems\ATSP\{0}", "rbg443.atsp", 2720));
 
             List<ISolver> solvers = new List<ISolver>();
-            //solvers.Add(new HillClimbing3OptSolver(false, false));
-            //solvers.Add(new HillClimbing3OptSolver(true, false));
-            //solvers.Add(new HillClimbing3OptSolver(false, true));
             solvers.Add(new HillClimbing3OptSolver(true, true));
-            solvers.Add(new ArbitraryInsertionSolver());
             solvers.Add(new CheapestInsertionSolver());
-
-            Program.DoAddSolvers(solvers, false, true, 100, 20);
-            //Program.DoAddSolvers(solvers, false, true, 200, 20);
-            Program.DoAddSolvers(solvers, false, true, 300, 20);
+            solvers.Add(new ArbitraryInsertionSolver());
+            //Program.DoAddSolvers(solvers, false, true, 100, 20);
+            //Program.DoAddSolvers(solvers, false, true, 300, 20);
 
             TSPLIBTester tester = new TSPLIBTester("log", problems, solvers, 100);
             tester.StartTests();
@@ -209,16 +204,16 @@ namespace OsmSharp.Tools.Benchmark.TSPLIB
                 //      new EdgeAssemblyCrossover(5,
                 //             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
                 //             true)));
-                solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                     new BestPlacementGenerationOperation(),
-                      new EdgeAssemblyCrossover(30,
-                             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
-                             true)));
-                solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
-                     new _3OptGenerationOperation(),
-                      new EdgeAssemblyCrossover(30,
-                             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
-                             false)));
+                //solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
+                //     new BestPlacementGenerationOperation(),
+                //      new EdgeAssemblyCrossover(30,
+                //             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
+                //             true)));
+                //solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
+                //     new _3OptGenerationOperation(),
+                //      new EdgeAssemblyCrossover(30,
+                //             EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
+                //             false)));
                 solvers.Add(new EdgeAssemblyCrossOverSolver(population, stagnation,
                      new _3OptGenerationOperation(),
                       new EdgeAssemblyCrossover(30,

@@ -46,6 +46,44 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
         #region Per Route
 
         /// <summary>
+        /// Calculates the cumulative weights of a route indexed by customer.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns></returns>
+        public double[] CalculateCumulWeights(IRoute route)
+        {
+            // intialize the result array.
+            double[] cumul = new double[route.Count + 1];
+
+            int previous = -1; // the previous customer.
+            double weight = 0; // the current weight.
+            int idx = 0; // the current index.
+            foreach (int customer1 in route)
+            { // loop over all customers.
+                if (previous >= 0)
+                { // there is a previous customer.
+                    // add one customer and the distance to the previous customer.
+                    weight = _problem.MaxTimeCalculator.CalculateOneRouteIncrease(weight,
+                        _problem.WeightMatrix[previous][customer1]);
+                    cumul[idx] = weight;
+                }
+                else
+                { // there is no previous customer, this is the first one.
+                    cumul[idx] = _problem.MaxTimeCalculator.CalculateOneRouteIncrease(weight,
+                        0);
+                }
+
+                idx++; // increase the index.
+                previous = customer1; // prepare for next loop.
+            }
+            // handle the edge last->first.
+            weight = weight +
+                _problem.WeightMatrix[previous][route.First];
+            cumul[idx] = weight;
+            return cumul;
+        }
+
+        /// <summary>
         /// Calculates the new weight when adding one customer to one route.
         /// </summary>
         /// <param name="weight"></param>
@@ -129,7 +167,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
             //fitness.ActualFitness = (vehicles * ((total_above_max) + total));
             //fitness.ActualFitness = (vehicles * ((total_above_max * max) + total));
             //fitness.ActualFitness = (vehicles * ((System.Math.Pow(total_above_max, 1.28)) + total + max));
-            return (vehicles * ((System.Math.Pow(total_above_max, 4)) + total));
+            return (vehicles * System.Math.Pow(total_above_max, 4)) + total;
             ////fitness.ActualFitness = (vehicles * (total + ((total_count_above_max * above_max_factor) * max)));
             ////fitness.ActualFitness = (total + ((total_count_above_max * above_max_factor) * max));
             //fitness.Vehicles = vehicles;

@@ -115,6 +115,11 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Routes\DynamicAsymmetricMultiRouteTests.cs" />
+    <Compile Include="Routes\DynamicAsymmetricRouteTests.cs" />
+    <Compile Include="Routes\MultiRouteTest.cs" />
+    <Compile Include="Routes\RouteTest.cs" />
+    <Compile Include="Routes\SimpleAsymmetricRouteTests.cs" />
     <Compile Include="Routing\CH\Contraction\CHContractionTests.cs" />
     <Compile Include="Data\NodeTests.cs" />
     <Compile Include="Data\PBFTests.cs" />

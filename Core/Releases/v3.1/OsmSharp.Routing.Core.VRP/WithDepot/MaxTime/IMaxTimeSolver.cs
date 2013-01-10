@@ -15,3 +15,31 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
+{
+    /// <summary>
+    /// Represents an abstraction of a max time solver.
+    /// </summary>
+    public interface IMaxTimeSolver
+    {
+        /// <summary>
+        /// Returns the name of this solver.
+        /// </summary>
+        string Name
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Solves the max time problem.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <returns></returns>
+        MaxTimeSolution Solve(MaxTimeProblem problem);
+    }
+}

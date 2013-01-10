@@ -142,9 +142,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MTSP\RouterMTSP.cs" />
-    <Compile Include="NoDepot\MaxTime\BestPlacement\RouterBestPlacement.cs" />
-    <Compile Include="NoDepot\MaxTime\BestPlacement\RouterBestPlacementWithImprovements.cs" />
-    <Compile Include="NoDepot\MaxTime\BestPlacement\RouterBestPlacementWithSeeds.cs" />
+    <Compile Include="NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolver.cs" />
+    <Compile Include="NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolverWithImprovements.cs" />
+    <Compile Include="NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolverWithSeeds.cs" />
     <Compile Include="NoDepot\MaxTime\Genetic\CrossOver\Order1CrossoverOperation.cs" />
     <Compile Include="NoDepot\MaxTime\Genetic\CrossOver\RouteExchangeAndVehicleOperation.cs" />
     <Compile Include="NoDepot\MaxTime\Genetic\CrossOver\RouteExchangeOperation.cs" />
@@ -164,30 +164,43 @@
     <Compile Include="NoDepot\MaxTime\Genetic\RouterGeneticSimple.cs" />
     <Compile Include="NoDepot\MaxTime\IMaxTimeImprovement.cs" />
     <Compile Include="NoDepot\MaxTime\IMaxTimeSolver.cs" />
-    <Compile Include="NoDepot\MaxTime\InterRoute\CrossExchangeImprovement.cs" />
-    <Compile Include="NoDepot\MaxTime\InterRoute\ExchangeImprovement.cs" />
-    <Compile Include="NoDepot\MaxTime\InterRoute\IInterRouteImprovement.cs" />
-    <Compile Include="NoDepot\MaxTime\InterRoute\RelocateImprovement.cs" />
-    <Compile Include="NoDepot\MaxTime\InterRoute\TwoOptImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\InterImprovements\CrossExchangeInterImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\InterImprovements\ExchangeInterImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\InterImprovements\IInterImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\InterImprovements\RelocateExchangeInterImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\InterImprovements\RelocateInterImprovement.cs" />
+    <Compile Include="NoDepot\MaxTime\InterImprovements\TwoOptInterImprovement.cs" />
     <Compile Include="NoDepot\MaxTime\MaxTimeProblem.cs" />
     <Compile Include="NoDepot\MaxTime\MaxTimeSolution.cs" />
     <Compile Include="NoDepot\MaxTime\MaxTimeRouter.cs" />
     <Compile Include="NoDepot\MaxTime\MaxTimeCalculator.cs" />
+    <Compile Include="NoDepot\MaxTime\SavingsHeuristics\SavingsHeuristicSolver.cs" />
     <Compile Include="NoDepot\MaxTime\TSPPlacement\TSPPlacementSolver.cs" />
     <Compile Include="NoDepot\MaxTime\TSPPlacement\TSPProblem.cs" />
-    <Compile Include="NoDepot\MaxTime\VNS\VNSSimple.cs" />
+    <Compile Include="NoDepot\MaxTime\VNS\GuidedVNS.cs" />
     <Compile Include="NoDepot\RouterNoDepot.cs" />
-    <Compile Include="WithDepot\MinimaxTime\Genetic\BestPlacement\RouterBestPlacement.cs" />
-    <Compile Include="WithDepot\MinimaxTime\Genetic\BestPlacement\RouterBestPlacementWithImprovements.cs" />
-    <Compile Include="WithDepot\MinimaxTime\Genetic\CrossOver\RouteExchangeOperation.cs" />
-    <Compile Include="WithDepot\MinimaxTime\Genetic\Fitness.cs" />
-    <Compile Include="WithDepot\MinimaxTime\Genetic\FitnessCalculator.cs" />
-    <Compile Include="WithDepot\MinimaxTime\Genetic\Generation\RandomBestPlacement.cs" />
-    <Compile Include="WithDepot\MinimaxTime\Genetic\Genome.cs" />
-    <Compile Include="WithDepot\MinimaxTime\Genetic\Mutation\RoutePartExchangeMutation.cs" />
-    <Compile Include="WithDepot\MinimaxTime\Genetic\Problem.cs" />
-    <Compile Include="WithDepot\MinimaxTime\Genetic\RouterGeneticSimple.cs" />
-    <Compile Include="WithDepot\MinimaxTime\RouterMinimaxTime.cs" />
+    <Compile Include="WithDepot\MaxTime\CheapestInsertion\CheapestInsertionSolver.cs" />
+    <Compile Include="WithDepot\MaxTime\Genetic\BestPlacement\RouterBestPlacement.cs" />
+    <Compile Include="WithDepot\MaxTime\Genetic\BestPlacement\RouterBestPlacementWithImprovements.cs" />
+    <Compile Include="WithDepot\MaxTime\Genetic\CrossOver\RouteExchangeOperation.cs" />
+    <Compile Include="WithDepot\MaxTime\Genetic\Fitness.cs" />
+    <Compile Include="WithDepot\MaxTime\Genetic\FitnessCalculator.cs" />
+    <Compile Include="WithDepot\MaxTime\Genetic\Generation\RandomBestPlacement.cs" />
+    <Compile Include="WithDepot\MaxTime\Genetic\Genome.cs" />
+    <Compile Include="WithDepot\MaxTime\Genetic\Mutation\RoutePartExchangeMutation.cs" />
+    <Compile Include="WithDepot\MaxTime\Genetic\Problem.cs" />
+    <Compile Include="WithDepot\MaxTime\Genetic\RouterGeneticSimple.cs" />
+    <Compile Include="WithDepot\MaxTime\IMaxTimeSolver.cs" />
+    <Compile Include="WithDepot\MaxTime\InterImprovements\CrossExchangeinterImprovement.cs" />
+    <Compile Include="WithDepot\MaxTime\InterImprovements\ExchangeInterImprovement.cs" />
+    <Compile Include="WithDepot\MaxTime\InterImprovements\IInterImprovements.cs" />
+    <Compile Include="WithDepot\MaxTime\InterImprovements\RelocateExchangeInterImprovement.cs" />
+    <Compile Include="WithDepot\MaxTime\InterImprovements\RelocateInterImprovement.cs" />
+    <Compile Include="WithDepot\MaxTime\InterImprovements\TwoOptInterImprovement.cs" />
+    <Compile Include="WithDepot\MaxTime\MaxTimeCalculator.cs" />
+    <Compile Include="WithDepot\MaxTime\MaxTimeProblem.cs" />
+    <Compile Include="WithDepot\MaxTime\MaxTimeSolution.cs" />
+    <Compile Include="WithDepot\MaxTime\MaxTimeRouter.cs" />
     <Compile Include="WithDepot\RouterDepot.cs" />
     <Compile Include="RouterVRP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -218,6 +231,7 @@
       <Name>OsmSharp.Tools.Math</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
