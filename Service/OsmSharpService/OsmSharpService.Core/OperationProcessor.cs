@@ -165,7 +165,7 @@ namespace OsmSharpService.Core.Routing
                         break;
                     case RoutingOperationType.TSP:
                         tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
-                            router);
+                            router, 300, 100);
                         response.Route = tsp_solver.CalculateTSP(operation.Vehicle, routable_points.ToArray());
 
                         // set the unroutable hooks.
@@ -178,8 +178,8 @@ namespace OsmSharpService.Core.Routing
                         break;
                     case RoutingOperationType.OpenTSP:
                         tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
-                            router);
-                        response.Route = tsp_solver.CalculateTSP(operation.Vehicle, routable_points.ToArray(), false);
+                            router, 300, 100);
+                        response.Route = tsp_solver.CalculateTSP(operation.Vehicle, routable_points.ToArray(), 0, false);
 
                         // set the unroutable hooks.
                         response.UnroutableHooks = unroutable_hooks.ToArray();
