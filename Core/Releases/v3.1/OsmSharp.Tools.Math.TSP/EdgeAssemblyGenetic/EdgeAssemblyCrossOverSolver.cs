@@ -33,7 +33,7 @@ namespace OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic
     /// <summary>
     /// Implements a best-placement solver.
     /// </summary>
-    public class EdgeAssemblyCrossOverSolver : ISolver
+    public class EdgeAssemblyCrossOverSolver : SolverBase
     {
         /// <summary>
         /// Keeps the stopped flag.
@@ -94,7 +94,7 @@ namespace OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic
         /// <summary>
         /// Retuns the name of this solver.
         /// </summary>
-        public string Name
+        public override string Name
         {
             get
             {
@@ -108,7 +108,7 @@ namespace OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic
         /// Returns a solution found using best-placement.
         /// </summary>
         /// <returns></returns>
-        public IRoute Solve(OsmSharp.Tools.Math.TSP.Problems.IProblem problem)
+        protected override IRoute DoSolve(OsmSharp.Tools.Math.TSP.Problems.IProblem problem)
         {
             // create the settings.
             SolverSettings settings = new SolverSettings(
@@ -211,39 +211,9 @@ namespace OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic
         /// <summary>
         /// Stops executiong.
         /// </summary>
-        public void Stop()
+        public override void Stop()
         {
             _stopped = true;
         }
-
-        #region Intermidiate Results
-
-        /// <summary>
-        /// Raised when an intermidiate result is available.
-        /// </summary>
-        public event SolverDelegates.IntermidiateDelegate IntermidiateResult;
-
-        /// <summary>
-        /// Returns true when the event has to be raised.
-        /// </summary>
-        /// <returns></returns>
-        protected bool CanRaiseIntermidiateResult()
-        {
-            return this.IntermidiateResult != null;
-        }
-
-        /// <summary>
-        /// Raises the intermidiate results event.
-        /// </summary>
-        /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(int[] result, float weight)
-        {
-            if (IntermidiateResult != null)
-            {
-                this.IntermidiateResult(result, weight);
-            }
-        }
-
-        #endregion
     }
 }

@@ -12,12 +12,12 @@ namespace OsmSharp.Tools.Math.TSP.BruteForce
     /// <summary>
     /// Implements a brute force solver by checking all possible combinations.
     /// </summary>
-    public class BruteForceSolver : ISolver
+    public class BruteForceSolver : SolverBase
     {
         /// <summary>
         /// Returns a new for this solver.
         /// </summary>
-        public string Name
+        public override string Name
         {
             get
             {
@@ -30,7 +30,7 @@ namespace OsmSharp.Tools.Math.TSP.BruteForce
         /// </summary>
         /// <param name="problem"></param>
         /// <returns></returns>
-        public IRoute Solve(IProblem problem)
+        protected override IRoute DoSolve(IProblem problem)
         {
             // initialize.
             List<int> solution = new List<int>();
@@ -56,18 +56,5 @@ namespace OsmSharp.Tools.Math.TSP.BruteForce
             }
             return new SimpleAsymmetricRoute(best.ToList<int>(), true);
         }
-
-        /// <summary>
-        /// Stops the solver.
-        /// </summary>
-        public void Stop()
-        {
-
-        }
-
-        /// <summary>
-        /// Reports intermidiate results.
-        /// </summary>
-        public event SolverDelegates.IntermidiateDelegate IntermidiateResult;
     }
 }

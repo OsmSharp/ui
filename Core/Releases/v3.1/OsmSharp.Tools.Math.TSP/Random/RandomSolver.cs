@@ -30,7 +30,7 @@ namespace OsmSharp.Tools.Math.TravellingSalesman.Random
     /// <summary>
     /// Just generates random routes.
     /// </summary>
-    public class RandomSolver : ISolver
+    public class RandomSolver : SolverBase
     {
         /// <summary>
         /// Boolean to stop execution.
@@ -45,7 +45,7 @@ namespace OsmSharp.Tools.Math.TravellingSalesman.Random
         /// <summary>
         /// Retuns the name of this solver.
         /// </summary>
-        public string Name
+        public override string Name
         {
             get
             {
@@ -57,9 +57,9 @@ namespace OsmSharp.Tools.Math.TravellingSalesman.Random
         /// Generates a random route.
         /// </summary>
         /// <returns></returns>
-        public IRoute Solve(IProblem problem)
+        protected override IRoute DoSolve(IProblem problem)
         {
-            return RandomSolver.DoSolve(problem);
+            return RandomSolver.DoSolveStatic(problem);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace OsmSharp.Tools.Math.TravellingSalesman.Random
         /// </summary>
         /// <param name="problem"></param>
         /// <returns></returns>
-        public static IRoute DoSolve(IProblem problem)
+        public static IRoute DoSolveStatic(IProblem problem)
         {
             List<int> customers = new List<int>();
             for (int customer = 0; customer < problem.Size; customer++)
@@ -81,7 +81,7 @@ namespace OsmSharp.Tools.Math.TravellingSalesman.Random
         /// <summary>
         /// Stops execution.
         /// </summary>
-        public void Stop()
+        public override void Stop()
         {
 
         }

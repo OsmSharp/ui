@@ -44,6 +44,7 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         private const string TOKEN_EDGE_WEIGHT_SECTION = "EDGE_WEIGHT_SECTION";
         private const string TOKEN_NODE_COORD_SECTION = "NODE_COORD_SECTION";
 
+
         /// <summary>
         /// Parses a TSP-lib file and creates a TSPLIBProblem.
         /// </summary>
@@ -51,7 +52,7 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         /// <returns></returns>
         public static TSPLIBProblem ParseFrom(string path)
         {
-            return TSPLIBProblemParser.ParseFrom(new FileInfo(path));
+            return TSPLIBProblemParser.ParseFrom(path, 0, 0);
         }
 
         /// <summary>
@@ -61,7 +62,7 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         /// <returns></returns>
         public static TSPLIBProblem ParseFrom(FileInfo info)
         {
-            return TSPLIBProblemParser.ParseFrom(info.OpenText());
+            return TSPLIBProblemParser.ParseFrom(info, 0, 0);
         }
 
         /// <summary>
@@ -70,6 +71,36 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         /// <param name="file"></param>
         /// <returns></returns>
         public static TSPLIBProblem ParseFrom(StreamReader reader)
+        {
+            return TSPLIBProblemParser.ParseFrom(reader, 0, 0);
+        }
+
+        /// <summary>
+        /// Parses a TSP-lib file and creates a TSPLIBProblem.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static TSPLIBProblem ParseFrom(string path, int? first, int? last)
+        {
+            return TSPLIBProblemParser.ParseFrom(new FileInfo(path), first, last);
+        }
+
+        /// <summary>
+        /// Parses a TSP-lib file and creates a TSPLIBProblem.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static TSPLIBProblem ParseFrom(FileInfo info, int? first, int? last)
+        {
+            return TSPLIBProblemParser.ParseFrom(info.OpenText(), first, last);
+        }
+
+        /// <summary>
+        /// Parses a TSP-lib file and creates a TSPLIBProblem.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        public static TSPLIBProblem ParseFrom(StreamReader reader, int? first, int? last)
         {
             TSPLIBProblemTypeEnum? problem_type = null;
             TSPLIBProblemWeightTypeEnum? weight_type = null;
@@ -195,7 +226,8 @@ namespace OsmSharp.Tools.TSPLIB.Parser
                 }
             }
 
-            return new TSPLIBProblem(name, comment, size, weights, weight_type.Value, problem_type.Value);
+            return new TSPLIBProblem(name, comment, size, weights, weight_type.Value, problem_type.Value,
+                first, last);
         }
 
         /// <summary>

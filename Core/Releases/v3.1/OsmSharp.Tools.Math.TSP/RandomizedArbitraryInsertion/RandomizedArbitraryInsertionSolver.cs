@@ -30,7 +30,7 @@ namespace OsmSharp.Tools.Math.TSP
     /// <summary>
     /// Solver that uses RAI to solve instances of the TSP.
     /// </summary>
-    public class RandomizedArbitraryInsertionSolver : ISolver
+    public class RandomizedArbitraryInsertionSolver : SolverBase
     {
         /// <summary>
         /// Boolean to stop execution.
@@ -59,7 +59,7 @@ namespace OsmSharp.Tools.Math.TSP
         /// <summary>
         /// Retuns the name of this solver.
         /// </summary>
-        public string Name
+        public override string Name
         {
             get
             {
@@ -71,7 +71,7 @@ namespace OsmSharp.Tools.Math.TSP
         /// Solves the problem.
         /// </summary>
         /// <returns></returns>
-        public IRoute Solve(IProblem problem)
+        protected override IRoute DoSolve(IProblem problem)
         {
             bool is_round;
             int first;
@@ -240,7 +240,7 @@ namespace OsmSharp.Tools.Math.TSP
 
             if (solver != null && solver.CanRaiseIntermidiateResult())
             {
-                solver.RaiseIntermidiateResult(route.ToArray<int>(), weight);
+                solver.RaiseIntermidiateResult(route.ToArray<int>(), (float)weight);
             }
 
             return route;
@@ -249,39 +249,9 @@ namespace OsmSharp.Tools.Math.TSP
         /// <summary>
         /// Stops the solver.
         /// </summary>
-        public void Stop()
+        public override void Stop()
         {
             _stopped = true;
         }
-
-        #region Intermidiate Results
-
-        /// <summary>
-        /// Raised when an intermidiate result is available.
-        /// </summary>
-        public event SolverDelegates.IntermidiateDelegate IntermidiateResult;
-
-        /// <summary>
-        /// Returns true when the event has to be raised.
-        /// </summary>
-        /// <returns></returns>
-        protected bool CanRaiseIntermidiateResult()
-        {
-            return this.IntermidiateResult != null;
-        }
-
-        /// <summary>
-        /// Raises the intermidiate results event.
-        /// </summary>
-        /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(int[] result, double weight)
-        {
-            if (IntermidiateResult != null)
-            {
-                this.IntermidiateResult(result, weight);
-            }
-        }
-
-        #endregion
     }
 }

@@ -93,7 +93,8 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
                     _along = new List<int>();
                     for (int cust = 0; cust < _problem.Size; cust++)
                     {
-                        if (cust != this.First && cust != this.Last)
+                        if ((!_problem.First.HasValue || cust != this.First) &&
+                            (!_problem.Last.HasValue || cust != this.Last))
                         {
                             _along.Add(cust);
                         }

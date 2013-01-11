@@ -31,7 +31,7 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
     /// <summary>
     /// Implements a best-placement solver.
     /// </summary>
-    public class ArbitraryInsertionSolver : ISolver, IImprovement
+    public class ArbitraryInsertionSolver : SolverBase, IImprovement
     {
         /// <summary>
         /// Keeps the stopped flag.
@@ -65,7 +65,7 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
         /// <summary>
         /// Retuns the name of this solver.
         /// </summary>
-        public string Name
+        public override string Name
         {
             get
             {
@@ -77,7 +77,7 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
         /// Returns a solution found using best-placement.
         /// </summary>
         /// <returns></returns>
-        public IRoute Solve(IProblem problem)
+        protected override IRoute DoSolve(IProblem problem)
         {
             // build the customer list to place.
             List<int> customers = null;
@@ -103,33 +103,10 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
 
             // initialize the route based on the problem definition.
             IRoute route = null;
-
-            bool is_round;
-            int first;
-
-            if (problem.First.HasValue)
-            { // the first customer is set.
-                // test if the last customer is the same.
-                if (problem.Last == problem.First)
-                { // the route is a round.
-                    is_round = true;
-                    first = problem.First.Value;
-                }
-                else
-                { // the route is not a round.
-                    is_round = false;
-                    first = problem.First.Value;
-                }
-            }
-            else
-            { // the first and last customer can be choosen randomly.
-                is_round = false;
-                first = customers[0];
-            }
-
+            double weight = double.MaxValue;
             if (problem.Symmetric)
             { // create a symmetric route that is dynamic and can accept new customers.
-                if (is_round)
+                if (problem.First.HasValue && problem.Last.HasValue && problem.First == problem.Last)
                 { // route is a round.
                     route = new DynamicSymmetricRoute(problem.First.Value);
                 }
@@ -140,11 +117,80 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
             }
             else
             { // create a asymmetric route that is dynamic and can accept new customers.
-                route = new DynamicAsymmetricRoute(customers.Count, first, is_round);
-            }
+                if (problem.First.HasValue)
+                { // the first customer is set.
+                    // test if the last customer is the same.
+                    if (!problem.Last.HasValue || 
+                        problem.Last == problem.First)
+                    { // the route is a round.
+                        route = new DynamicAsymmetricRoute(customers.Count, problem.First.Value, true);
 
-            // remove the first customer.
-            customers.Remove(first);
+                        // remove the first customer.
+                        customers.Remove(problem.First.Value);
+
+                        // find the customer that is farthest away and add it.
+                        int to = -1;
+                        weight = double.MinValue;
+                        for (int x = 0; x < customers.Count; x++)
+                        {
+                            if (x != problem.First.Value)
+                            { // only different customers.
+                                double current_weight = problem.WeightMatrix[x][problem.First.Value] +
+                                    problem.WeightMatrix[problem.First.Value][x];
+                                if (current_weight > weight)
+                                { // the current weight is better.
+                                    to = x;
+                                    weight = current_weight;
+                                }
+                            }
+                        }
+                        route.InsertAfter(problem.First.Value, to);
+                        customers.Remove(to);
+                    }
+                    else
+                    { // the route is not a round.
+                        route = new DynamicAsymmetricRoute(customers.Count, problem.First.Value, false);
+                        route.InsertAfter(problem.First.Value, problem.Last.Value);
+
+                        // remove the first customer.
+                        customers.Remove(problem.First.Value);
+                        customers.Remove(problem.Last.Value);
+                    }
+                }
+                else
+                { // the first and last customer can be choosen randomly.
+                    // find two customers close together.
+                    int from = -1;
+                    int to = -1;
+                    for (int x = 0; x < customers.Count; x++)
+                    {
+                        for (int y = 0; y < customers.Count; y++)
+                        {
+                            if (x != y)
+                            { // only different customers.
+                                double current_weight = problem.WeightMatrix[x][y];
+                                if (current_weight < weight)
+                                { // the current weight is better.
+                                    from = x;
+                                    to = y;
+                                    weight = current_weight;
+
+                                    if (weight == 0)
+                                    { // no edge with less weight is going to be found.
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    route = new DynamicAsymmetricRoute(customers.Count, from, false);
+                    route.InsertAfter(from, to);
+
+                    // remove the first customer.
+                    customers.Remove(from);
+                    customers.Remove(to);
+                }
+            }
 
             // insert the rest of the customers.
             while (customers.Count > 0 && !_stopped)
@@ -234,40 +280,9 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
         /// <summary>
         /// Stops executiong.
         /// </summary>
-        public void Stop()
+        public override void Stop()
         {
             _stopped = true;
         }
-
-        #region Intermidiate Results
-
-        /// <summary>
-        /// Raised when an intermidiate result is available.
-        /// </summary>
-        public event SolverDelegates.IntermidiateDelegate IntermidiateResult;
-
-        /// <summary>
-        /// Returns true when the event has to be raised.
-        /// </summary>
-        /// <returns></returns>
-        protected bool CanRaiseIntermidiateResult()
-        {
-            return this.IntermidiateResult != null;
-        }
-
-        /// <summary>
-        /// Raises the intermidiate results event.
-        /// </summary>
-        /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(int[] result, float weight)
-        {
-            if (IntermidiateResult != null)
-            {
-                this.IntermidiateResult(result, weight);
-            }
-        }
-
-        #endregion
-
     }
 }

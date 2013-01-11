@@ -32,7 +32,7 @@ namespace OsmSharp.Tools.Math.TSP.LK
     /// <summary>
     /// A solver that use the Lin-Kernighan heuristic to solve instances of the TSP.
     /// </summary>
-    public class LinKernighanSolver : ISolver
+    public class LinKernighanSolver : SolverBase
     {
         private SparseSet _sparse_set;
 
@@ -50,7 +50,7 @@ namespace OsmSharp.Tools.Math.TSP.LK
         /// <summary>
         /// Retuns the name of this solver.
         /// </summary>
-        public string Name
+        public override string Name
         {
             get
             {
@@ -58,7 +58,7 @@ namespace OsmSharp.Tools.Math.TSP.LK
             }
         }
 
-        public IRoute Solve(IProblem problem)
+        protected override IRoute DoSolve(IProblem problem)
         {
             // convert to a symetric problem if needed.
             IProblem _problem = problem;
@@ -723,39 +723,9 @@ namespace OsmSharp.Tools.Math.TSP.LK
             return best_neighour;
         }
 
-        public void Stop()
+        public override void Stop()
         {
             _stopped = true;
         }
-
-        #region Intermidiate Results
-
-        /// <summary>
-        /// Raised when an intermidiate result is available.
-        /// </summary>
-        public event SolverDelegates.IntermidiateDelegate IntermidiateResult;
-
-        /// <summary>
-        /// Returns true when the event has to be raised.
-        /// </summary>
-        /// <returns></returns>
-        protected bool CanRaiseIntermidiateResult()
-        {
-            return this.IntermidiateResult != null;
-        }
-
-        /// <summary>
-        /// Raises the intermidiate results event.
-        /// </summary>
-        /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(int[] result, double weight)
-        {
-            if (IntermidiateResult != null)
-            {
-                this.IntermidiateResult(result, weight);
-            }
-        }
-
-        #endregion
     }
 }

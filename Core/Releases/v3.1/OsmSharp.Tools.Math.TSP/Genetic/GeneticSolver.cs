@@ -40,7 +40,7 @@ namespace OsmSharp.Tools.Math.TSP.Genetic
     /// <summary>
     /// Solver that uses a Genetic Algorithm to solve instances of the TSP.
     /// </summary>
-    public class GeneticSolver : ISolver
+    public class GeneticSolver : SolverBase
     {
         private Solver<List<int>, GeneticProblem, Fitness> solver;
 
@@ -94,7 +94,7 @@ namespace OsmSharp.Tools.Math.TSP.Genetic
         /// <summary>
         /// Retuns the name of this solver.
         /// </summary>
-        public string Name
+        public override string Name
         {
             get
             {
@@ -111,7 +111,7 @@ namespace OsmSharp.Tools.Math.TSP.Genetic
         /// </summary>
         /// <param name="problem"></param>
         /// <returns></returns>
-        public IRoute Solve(OsmSharp.Tools.Math.TSP.Problems.IProblem problem)
+        protected override IRoute DoSolve(OsmSharp.Tools.Math.TSP.Problems.IProblem problem)
         {
             //int population_size = 10;
             //if (problem.Size < 100)
@@ -205,7 +205,7 @@ namespace OsmSharp.Tools.Math.TSP.Genetic
         {
             if (this.CanRaiseIntermidiateResult())
             {
-                this.RaiseIntermidiateResult(individual.Genomes.ToArray(), individual.Fitness.Weight);
+                this.RaiseIntermidiateResult(individual.Genomes.ToArray(), (float)individual.Fitness.Weight);
             }
         }
 
@@ -233,42 +233,12 @@ namespace OsmSharp.Tools.Math.TSP.Genetic
 
         #endregion
 
-        public void Stop()
+        public override void Stop()
         {
             if (solver != null)
             {
                 solver.Stop();
             }
         }
-
-        #region Intermidiate Results
-
-        /// <summary>
-        /// Raised when an intermidiate result is available.
-        /// </summary>
-        public event SolverDelegates.IntermidiateDelegate IntermidiateResult;
-
-        /// <summary>
-        /// Returns true when the event has to be raised.
-        /// </summary>
-        /// <returns></returns>
-        protected bool CanRaiseIntermidiateResult()
-        {
-            return this.IntermidiateResult != null;
-        }
-
-        /// <summary>
-        /// Raises the intermidiate results event.
-        /// </summary>
-        /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(int[] result, double weight)
-        {
-            if (IntermidiateResult != null)
-            {
-                this.IntermidiateResult(result, weight);
-            }
-        }
-
-        #endregion
     }
 }

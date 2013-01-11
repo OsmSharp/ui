@@ -36,15 +36,22 @@ namespace OsmSharp.Tools.TSPLIB.Problems
 
         private double[][] _weights;
 
+        private int? _first;
+
+        private int? _last;
+
         public TSPLIBProblem(string name, string comment, int size, double[][] weights,
             TSPLIBProblemWeightTypeEnum weight_type,
-            TSPLIBProblemTypeEnum problem_type)
+            TSPLIBProblemTypeEnum problem_type, int? first, int? last)
         {
             this.Name = name;
             this.Type = problem_type;
             this.WeightType = weight_type;
             _weights = weights;
             _size = size;
+
+            _first = first;
+            _last = last;
         }
 
         public TSPLIBProblemTypeEnum Type { get; private set; }
@@ -77,7 +84,7 @@ namespace OsmSharp.Tools.TSPLIB.Problems
         {
             get 
             { 
-                return 0; 
+                return _first; 
             }
         }
 
@@ -85,7 +92,7 @@ namespace OsmSharp.Tools.TSPLIB.Problems
         {
             get 
             { 
-                return 0; 
+                return _last; 
             }
         }
 

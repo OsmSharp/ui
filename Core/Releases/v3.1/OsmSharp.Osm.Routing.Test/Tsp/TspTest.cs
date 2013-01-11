@@ -39,6 +39,7 @@ using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Osm.Routing.Core.TSP.Genetic;
 using OsmSharp.Routing.Core.Route;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Osm.Routing.Core.TSP;
 
 namespace OsmSharp.Osm.Routing.Test.Tsp
 {
@@ -107,17 +108,27 @@ namespace OsmSharp.Osm.Routing.Test.Tsp
                 }
             }
 
-            RouterTSPGenetic<RouterPoint> tsp_solver = new RouterTSPGenetic<RouterPoint>(router);
+            //RouterTSP<RouterPoint> tsp_solver = new RouterTSPGenetic<RouterPoint>(router);
+            //OsmSharpRoute tsp = tsp_solver.CalculateTSP(VehicleEnum.Car, points.ToArray());
+            //tsp.SaveAsGpx(new FileInfo(@"c:\temp\tsp_ga.gpx"));
+            //OsmSharpRoute tsp_open = tsp_solver.CalculateTSP(VehicleEnum.Car, points.ToArray(), 0, false);
+            //tsp_open.SaveAsGpx(new FileInfo(@"c:\temp\tsp_open_ga.gpx"));
+
+            RouterTSP<RouterPoint>  tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(router);
             OsmSharpRoute tsp = tsp_solver.CalculateTSP(VehicleEnum.Car, points.ToArray());
             tsp.SaveAsGpx(new FileInfo(@"c:\temp\tsp.gpx"));
+            OsmSharpRoute tsp_open_first = tsp_solver.CalculateTSP(VehicleEnum.Car, points.ToArray(), 0, false);
+            tsp_open_first.SaveAsGpx(new FileInfo(@"c:\temp\tsp_open_first.gpx"));
+            OsmSharpRoute tsp_open = tsp_solver.CalculateTSP(VehicleEnum.Car, points.ToArray(), false);
+            tsp_open.SaveAsGpx(new FileInfo(@"c:\temp\tsp_open.gpx"));
 
-            double[][] weights = router.CalculateManyToManyWeight(VehicleEnum.Car, points.ToArray(), points.ToArray());
+            //double[][] weights = router.CalculateManyToManyWeight(VehicleEnum.Car, points.ToArray(), points.ToArray());
 
-            router.Calculate(VehicleEnum.Car, points[0], points[1]).SaveAsGpx(new FileInfo(@"c:\temp\fromO_to1.gpx"));
-            router.Calculate(VehicleEnum.Car, points[1], points[0]).SaveAsGpx(new FileInfo(@"c:\temp\from1_to0.gpx"));
-            router.Calculate(VehicleEnum.Car, points[0], points[9]).SaveAsGpx(new FileInfo(@"c:\temp\fromO_to9.gpx"));
-            router.Calculate(VehicleEnum.Car, points[9], points[0]).SaveAsGpx(new FileInfo(@"c:\temp\from9_to0.gpx"));
-            //router.Calculate(points[0], points[1]).SaveAsGpx(new FileInfo("fromO_to1.gpx"));
+            //router.Calculate(VehicleEnum.Car, points[0], points[1]).SaveAsGpx(new FileInfo(@"c:\temp\fromO_to1.gpx"));
+            //router.Calculate(VehicleEnum.Car, points[1], points[0]).SaveAsGpx(new FileInfo(@"c:\temp\from1_to0.gpx"));
+            //router.Calculate(VehicleEnum.Car, points[0], points[9]).SaveAsGpx(new FileInfo(@"c:\temp\fromO_to9.gpx"));
+            //router.Calculate(VehicleEnum.Car, points[9], points[0]).SaveAsGpx(new FileInfo(@"c:\temp\from9_to0.gpx"));
+            ////router.Calculate(points[0], points[1]).SaveAsGpx(new FileInfo("fromO_to1.gpx"));
         }
     }
 }

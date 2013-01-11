@@ -210,6 +210,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RandomizedArbitraryInsertion\RandomizedArbitraryInsertionSolver.cs" />
     <Compile Include="Random\RandomSolver.cs" />
+    <Compile Include="SolverBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">

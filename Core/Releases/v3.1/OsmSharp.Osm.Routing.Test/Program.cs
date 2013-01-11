@@ -56,12 +56,12 @@ namespace OsmSharp.Osm.Routing.Test
             //Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
             //    new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\log.txt"));
 
-            NoDepotTest.Execute();
+            //NoDepotTest.Execute();
             //PBF.PBFTest.Execute();
             //ManyToMany.ManyToManyExecution.Execute();
             //Point2Point.Point2PointExecution.Execute();
             //CHTest.Execute();
-            //Tsp.TspTest.Execute();
+            Tsp.TspTest.Execute();
             //CHVerifiedContractionBaseTests.Execute();
             //Instructions.InstructionTestExecution.Execute();
 

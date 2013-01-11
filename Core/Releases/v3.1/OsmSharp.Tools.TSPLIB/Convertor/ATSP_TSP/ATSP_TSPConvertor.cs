@@ -33,7 +33,7 @@ namespace OsmSharp.Tools.TSPLIB.Convertor.ATSP_TSP
             IProblem symetric = atsp.ConvertToSymmetric();
 
             return new TSPLIBProblem(name, comment, symetric.Size, symetric.WeightMatrix,
-                TSPLIBProblemWeightTypeEnum.Explicit, TSPLIBProblemTypeEnum.TSP);
+                TSPLIBProblemWeightTypeEnum.Explicit, TSPLIBProblemTypeEnum.TSP, 0, 0);
         }
 
         public static TSPLIBProblem Convert(TSPLIBProblem atsp)
@@ -52,7 +52,7 @@ namespace OsmSharp.Tools.TSPLIB.Convertor.ATSP_TSP
             IProblem symetric = atsp.ConvertToSymmetric();
 
             return new TSPLIBProblem(name, comment, symetric.Size, symetric.WeightMatrix,
-                TSPLIBProblemWeightTypeEnum.Explicit, TSPLIBProblemTypeEnum.TSP);
+                TSPLIBProblemWeightTypeEnum.Explicit, TSPLIBProblemTypeEnum.TSP, 0, 0);
         }
     }
 }

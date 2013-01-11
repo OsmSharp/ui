@@ -30,7 +30,7 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
     /// <summary>
     /// Uses the 3-opt local search procedure to generate ATSP solutions.
     /// </summary>
-    public class HillClimbing3OptSolver : ISolver, IImprovement
+    public class HillClimbing3OptSolver : SolverBase, IImprovement
     {
         /// <summary>
         /// Boolean to stop execution.
@@ -71,7 +71,7 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         /// <summary>
         /// Retuns the name of this solver.
         /// </summary>
-        public string Name
+        public override string Name
         {
             get
             {
@@ -97,7 +97,7 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         /// Solves the problem.
         /// </summary>
         /// <returns></returns>
-        public IRoute Solve(IProblem problem)
+        protected override IRoute DoSolve(IProblem problem)
         {
             // generate some random route first.
             //IRoute route = OsmSharp.Tools.Math.TravellingSalesman.Random.RandomSolver.DoSolve(
@@ -163,6 +163,10 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         {
             // get v_2.
             int v_2 = route.GetNeigbours(v_1)[0];
+            if (v_2 < 0)
+            { // there is no neighbour.
+                return false;
+            }
             IEnumerable<int> between_v_2_v_1 = route.Between(v_2, v_1);
             double weight_1_2 = weights[v_1][v_2];
             int v_3 = -1;
@@ -334,16 +338,6 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         }
 
         #endregion
-
-        /// <summary>
-        /// Stops execution.
-        /// </summary>
-        public void Stop()
-        {
-
-        }
-
-        public event SolverDelegates.IntermidiateDelegate IntermidiateResult;
     }
 
     

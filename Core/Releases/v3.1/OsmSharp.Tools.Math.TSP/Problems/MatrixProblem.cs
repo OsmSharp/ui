@@ -281,6 +281,11 @@ namespace OsmSharp.Tools.Math.TSP.Problems
         /// <returns></returns>
         public static MatrixProblem CreateATSPOpen(double[][] weights, int first)
         {
+            //// make all weights returning to the first customer zero and treat this as a regular ATSP returning to start.
+            //for (int idx = 0; idx < weights[first].Length; idx++)
+            //{
+            //    weights[first][idx] = 0;
+            //}
             return new MatrixProblem(weights, false, first, null);
         }
 
