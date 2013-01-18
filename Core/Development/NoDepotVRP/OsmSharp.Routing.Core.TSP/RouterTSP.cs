@@ -77,8 +77,15 @@ namespace OsmSharp.Osm.Routing.Core.TSP
             // calculate the TSP.
             IRoute tsp_solution = solver.Solve(this.GenerateProblem(weights, first, null, is_round));
 
+            // calculate weight
+            double weight = 0;
+            foreach (Edge edge in tsp_solution.Edges())
+            {
+                weight = weight + weights[edge.From][edge.To];
+            }
+
             // concatenate the route(s).
-            return this.BuildRoute(points, tsp_solution);
+            return this.BuildRoute(points, tsp_solution, weight);
         }
 
         /// <summary>
@@ -100,8 +107,15 @@ namespace OsmSharp.Osm.Routing.Core.TSP
             // calculate the TSP.
             IRoute tsp_solution = solver.Solve(this.GenerateProblem(weights, first, last, false));
 
+            // calculate weight
+            double weight = 0;
+            foreach (Edge edge in tsp_solution.Edges())
+            {
+                weight = weight + weights[edge.From][edge.To];
+            }
+
             // concatenate the route(s).
-            return this.BuildRoute(points, tsp_solution);
+            return this.BuildRoute(points, tsp_solution, weight);
         }
 
         /// <summary>
@@ -130,8 +144,15 @@ namespace OsmSharp.Osm.Routing.Core.TSP
             // calculate the TSP.
             IRoute tsp_solution = solver.Solve(this.GenerateProblem(weights, null, null, is_round));
 
+            // calculate weight
+            double weight = 0;
+            foreach (Edge edge in tsp_solution.Edges())
+            {
+                weight = weight + weights[edge.From][edge.To];
+            }
+
             // concatenate the route(s).
-            return this.BuildRoute(points, tsp_solution);
+            return this.BuildRoute(points, tsp_solution, weight);
         }
 
         /// <summary>
@@ -163,7 +184,7 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// <param name="points"></param>
         /// <param name="found_solution"></param>
         /// <returns></returns>
-        public OsmSharpRoute BuildRoute(ResolvedType[] points, IRoute found_solution)
+        public OsmSharpRoute BuildRoute(ResolvedType[] points, IRoute found_solution, double weight)
         {
             List<int> solution = new List<int>(found_solution); // TODO: improve this whole part to loop over the orginal route!
 
@@ -187,8 +208,14 @@ namespace OsmSharp.Osm.Routing.Core.TSP
                 // concatenate the route from the last to the first point again.
                 route = _router.Calculate(VehicleEnum.Car, points[solution[solution.Count - 1]],
                             points[solution[0]]);
-                return OsmSharpRoute.Concatenate(tsp, route);
+                tsp = OsmSharpRoute.Concatenate(tsp, route);
             }
+
+            tsp.Tags = new RouteTags[1];
+            tsp.Tags[0] = new RouteTags();
+            tsp.Tags[0].Key = "internal_weight";
+            tsp.Tags[0].Value = weight.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
             return tsp;
         }
 

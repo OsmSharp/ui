@@ -68,19 +68,19 @@ namespace OsmSharp.Osm.Routing.Test.VRP
 
             NoDepotTest.MaxTest("384-54823", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\384-54823.csv",
                 @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\384-54823.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            NoDepotTest.MaxTest("492-65172", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\492-65172.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\492-65172.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            NoDepotTest.MaxTest("596-64892", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\596-64892.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\596-64892.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            NoDepotTest.MaxTest("1122-66765", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1122-66765.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1122-66765.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            NoDepotTest.MaxTest("1258-10560", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1258-10560.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1258-10560.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
+                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 2500, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("492-65172", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\492-65172.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\492-65172.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("596-64892", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\596-64892.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\596-64892.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("1122-66765", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1122-66765.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1122-66765.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("1258-10560", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1258-10560.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1258-10560.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
             //NoDepotTest.MaxTest("2665-72235", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\2665-72235.csv",
             //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\2665-72235.osm.pbf",
             //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
@@ -201,10 +201,11 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             //        new Core.TSP.Genetic.RouterTSPAEXGenetic<RouterPoint>(
             //            router);
             //    OsmSharpRoute old_route = tsp_route.CalculateTSP(VehicleEnum.Car, route.Value.ToArray());
-            //    TimeCalculator time_calculator = new TimeCalculator(interpreter);
-            //    Dictionary<string, double> metrics = time_calculator.Calculate(old_route);
-            //    old_route.SaveAsGpx(new FileInfo(output + string.Format("{0}.{1}.gpx", name, route.Key)));
-            //    double time = metrics["Time_in_seconds"] + delivery_time.Value * route.Value.Count;
+            //    //TimeCalculator time_calculator = new TimeCalculator(interpreter);
+            //    //Dictionary<string, double> metrics = time_calculator.Calculate(old_route);
+            //    //old_route.SaveAsGpx(new FileInfo(output + string.Format("{0}.{1}.gpx", name, route.Key)));
+            //    double time = double.Parse(old_route.Tags[0].Value, System.Globalization.CultureInfo.InvariantCulture) + 
+            //        delivery_time.Value * route.Value.Count;
             //    total_time = total_time + time;
             //    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Orginal Route [{0}]: {1}s with {2} points",
             //        route.Key, time, route.Value.Count);
@@ -275,50 +276,50 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             //        router, max.Value, delivery_time.Value, 5, 0.05f, true);
             //NoDepotTest.MaxTestRouterMaxTime(output, name + "_seed_cost", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 0);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 0);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 0.1f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.1", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 0.1f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.1", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 0.25f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.25", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 0.25f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.25", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 0.5f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.5", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 0.5f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.5", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 1f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_1", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 1f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_1", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
             vrp_router = new GuidedVNS<RouterPoint>(
                     router, max.Value, delivery_time.Value, 0.10f, 2f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_2", 0),
+            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("", 0),
                 interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 5f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_5", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 5f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_5", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 10f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_10", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 10f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_10", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 100f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_100", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 100f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_100", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
             //vrp_router = new GuidedVNS<RouterPoint>(
             //        router, max.Value, delivery_time.Value, .10f);
@@ -370,13 +371,14 @@ namespace OsmSharp.Osm.Routing.Test.VRP
 
                 double total_time = 0;
                 long ticks_before = DateTime.Now.Ticks;
-                OsmSharpRoute[] routes = vrp_router.CalculateNoDepot(VehicleEnum.Car, points, weights);
-                for (int idx = 0; idx < routes.Length; idx++)
+                OsmSharpRoute[] real_routes = vrp_router.CalculateNoDepot(VehicleEnum.Car, points, weights);
+
+
+                for (int idx = 0; idx < real_routes.Length; idx++)
                 {
-                    OsmSharpRoute new_route = routes[idx];
-                    TimeCalculator time_calculator = new TimeCalculator(interpreter);
-                    Dictionary<string, double> metrics = time_calculator.Calculate(new_route);
-                    double time = metrics["Time_in_seconds"] + (int.Parse(new_route.Tags[0].Value) * delivery_time.Value);
+                    OsmSharpRoute new_route = real_routes[idx];
+                    double time = double.Parse(new_route.Tags[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+                    //double time = metrics["Time_in_seconds"] + (int.Parse(new_route.Tags[0].Value) * delivery_time.Value);
                     new_route.TotalTime = time;
                     total_time = total_time + time;
                 }
@@ -385,7 +387,7 @@ namespace OsmSharp.Osm.Routing.Test.VRP
                 log_stream.WriteLine("Total Time: {0}",
                     total_time);
                 log_stream.WriteLine("Total Vehicles: {0}",
-                    routes.Length);
+                    real_routes.Length);
                 log_stream.WriteLine("Time: {0}", 
                     new TimeSpan(ticks_after - ticks_before).TotalSeconds);
                 log_stream.Flush();
@@ -393,9 +395,9 @@ namespace OsmSharp.Osm.Routing.Test.VRP
                 {
                     best_time = total_time;
 
-                    for (int idx = 0; idx < routes.Length; idx++)
+                    for (int idx = 0; idx < real_routes.Length; idx++)
                     {
-                        OsmSharpRoute new_route = routes[idx];
+                        OsmSharpRoute new_route = real_routes[idx];
                         new_route.SaveAsGpx(new FileInfo(directory + string.Format("{0}.{1}_{2}.gpx", name,
                             vrp_router.Name, idx)));
                         OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Route: {0}: {1} s", idx, new_route.TotalTime);
