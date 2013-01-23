@@ -66,33 +66,33 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             //NoDepotTest.MaxTest("DM101", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\DM101.csv", @"C:\OSM\bin\DM101.osm.pbf",
             //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\", 3600, 10, 3, 4, true);
 
-            NoDepotTest.MaxTest("384-54823", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\384-54823.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\384-54823.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            NoDepotTest.MaxTest("492-65172", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\492-65172.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\492-65172.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            NoDepotTest.MaxTest("596-64892", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\596-64892.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\596-64892.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            NoDepotTest.MaxTest("1122-66765", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1122-66765.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1122-66765.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            NoDepotTest.MaxTest("1258-10560", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1258-10560.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\1258-10560.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            //NoDepotTest.MaxTest("2665-72235", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\2665-72235.csv",
-            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\2665-72235.osm.pbf",
-            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            //NoDepotTest.MaxTest("3280-72301", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\3280-72301.csv",
-            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\3280-72301.osm.pbf",
-            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            //NoDepotTest.MaxTest("4477-71181", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\4477-71181.csv",
-            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\4477-71181.osm.pbf",
-            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
-            //NoDepotTest.MaxTest("11403-70996", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\11403-70996.csv",
-            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\11403-70996.osm.pbf",
-            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\Contracts\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("384-54823", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\384-54823.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\384-54823.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("492-65172", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\492-65172.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\492-65172.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("596-64892", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\596-64892.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\596-64892.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("1122-66765", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\1122-66765.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\1122-66765.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("1258-10560", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\1258-10560.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\1258-10560.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            NoDepotTest.MaxTest("2665-72235", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\2665-72235.csv",
+                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\2665-72235.osm.pbf",
+                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            NoDepotTest.MaxTest("3280-72301", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\3280-72301.csv",
+                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\3280-72301.osm.pbf",
+                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            NoDepotTest.MaxTest("4477-71181", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\4477-71181.csv",
+                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\4477-71181.osm.pbf",
+                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("11403-70996", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\11403-70996.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\11403-70996.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
 
             //Console.ReadLine();
         }
@@ -236,23 +236,23 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             //        router, max.Value, delivery_time.Value, 5);
             //NoDepotTest.MaxTestRouterMaxTime(directory, name, interpreter, vrp_router, points.ToArray(), 2);
 
-            //double elitism_percentage = 1;
-            //double cross_percentage = 97;
-            //double mutation_percentage = 1;
+            double elitism_percentage = 5;
+            double cross_percentage = 80;
+            double mutation_percentage = 10;
 
-            //int population = 300;
-            //int stagnation = 200;
-            //vrp_router = new RouterGeneticSimple<RouterPoint>(
-            //         router, max, delivery_time.Value, population, stagnation, elitism_percentage,
-            //         cross_percentage, mutation_percentage, null);
-            //NoDepotTest.MaxTestRouterMaxTime(output, name, interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            int population = 40;
+            int stagnation = 75;
+            vrp_router = new RouterGeneticSimple<RouterPoint>(
+                     router, max, delivery_time.Value, population, stagnation, elitism_percentage,
+                     cross_percentage, mutation_percentage, null);
+            NoDepotTest.MaxTestRouterMaxTime(output, name, interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
             //vrp_router = new CheapestInsertionSolverWithImprovements<RouterPoint>(
             //        router, max.Value, delivery_time.Value, 5, 0.05f, false, 0, false);
             //NoDepotTest.MaxTestRouterMaxTime(output, name + "_no_seed_cost_zero_threshold", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
             //vrp_router = new CheapestInsertionSolverWithImprovements<RouterPoint>(
-            //        router, max.Value, delivery_time.Value, 5, 0.05f, false, .10f, false, 0);
+            //        router, max.Value, delivery_time.Value, 5, 0.05f, true, .10f, true, 0);
             //NoDepotTest.MaxTestRouterMaxTime(output, name + "_SLCI_000", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
             //vrp_router = new CheapestInsertionSolverWithImprovements<RouterPoint>(
@@ -272,53 +272,77 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             //NoDepotTest.MaxTestRouterMaxTime(output, name + "_SLCI_100", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
             //vrp_router = new CheapestInsertionSolverWithImprovements<RouterPoint>(
-            //        router, max.Value, delivery_time.Value, 5, 0.05f, true);
-            //NoDepotTest.MaxTestRouterMaxTime(output, name + "_seed_cost", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //        router, max.Value, delivery_time.Value, 6, 0.1f, true, 0.25f, true, 5);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + "_k_6", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 0);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new CheapestInsertionSolverWithImprovements<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 7, 0.1f, true, 0.25f, true, 5);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + "_k_7", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 0.1f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.1", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new CheapestInsertionSolverWithImprovements<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 8, 0.1f, true, 0.25f, true, 5);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + "_k_8", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 0.25f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.25", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new CheapestInsertionSolverWithImprovements<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 9, 0.1f, true, 0.25f, true, 5);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + "_k_9", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 0.5f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.5", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new CheapestInsertionSolverWithImprovements<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 10, 0.1f, true, 0.25f, true, 5);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + "_k_10", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 1f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_1", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new CheapestInsertionSolverWithImprovements<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 15, 0.1f, true, 0.25f, true, 5);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + "_k_15", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 2f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_2", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new CheapestInsertionSolverWithImprovements<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 20, 0.1f, true, 0.25f, true, 5);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + "_k_20", interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 5f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_5", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.25f, 5);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name,
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 10f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_10", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 0.1f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.1", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 100f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_100", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 0.25f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.25", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 0.5f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_0.5", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 1f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_1", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 2f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_2", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 5f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_5", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 10f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_10", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 100f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_100", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
             //vrp_router = new GuidedVNS<RouterPoint>(
             //        router, max.Value, delivery_time.Value, .10f);
@@ -370,13 +394,14 @@ namespace OsmSharp.Osm.Routing.Test.VRP
 
                 double total_time = 0;
                 long ticks_before = DateTime.Now.Ticks;
-                OsmSharpRoute[] routes = vrp_router.CalculateNoDepot(VehicleEnum.Car, points, weights);
-                for (int idx = 0; idx < routes.Length; idx++)
+                OsmSharpRoute[] real_routes = vrp_router.CalculateNoDepot(VehicleEnum.Car, points, weights);
+
+
+                for (int idx = 0; idx < real_routes.Length; idx++)
                 {
-                    OsmSharpRoute new_route = routes[idx];
-                    TimeCalculator time_calculator = new TimeCalculator(interpreter);
-                    Dictionary<string, double> metrics = time_calculator.Calculate(new_route);
-                    double time = metrics["Time_in_seconds"] + (int.Parse(new_route.Tags[0].Value) * delivery_time.Value);
+                    OsmSharpRoute new_route = real_routes[idx];
+                    double time = double.Parse(new_route.Tags[1].Value, System.Globalization.CultureInfo.InvariantCulture);
+                    //double time = metrics["Time_in_seconds"] + (int.Parse(new_route.Tags[0].Value) * delivery_time.Value);
                     new_route.TotalTime = time;
                     total_time = total_time + time;
                 }
@@ -385,17 +410,17 @@ namespace OsmSharp.Osm.Routing.Test.VRP
                 log_stream.WriteLine("Total Time: {0}",
                     total_time);
                 log_stream.WriteLine("Total Vehicles: {0}",
-                    routes.Length);
-                log_stream.WriteLine("Time: {0}", 
+                    real_routes.Length);
+                log_stream.WriteLine("Time: {0}",
                     new TimeSpan(ticks_after - ticks_before).TotalSeconds);
                 log_stream.Flush();
                 if (total_time < best_time)
                 {
                     best_time = total_time;
 
-                    for (int idx = 0; idx < routes.Length; idx++)
+                    for (int idx = 0; idx < real_routes.Length; idx++)
                     {
-                        OsmSharpRoute new_route = routes[idx];
+                        OsmSharpRoute new_route = real_routes[idx];
                         new_route.SaveAsGpx(new FileInfo(directory + string.Format("{0}.{1}_{2}.gpx", name,
                             vrp_router.Name, idx)));
                         OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Route: {0}: {1} s", idx, new_route.TotalTime);

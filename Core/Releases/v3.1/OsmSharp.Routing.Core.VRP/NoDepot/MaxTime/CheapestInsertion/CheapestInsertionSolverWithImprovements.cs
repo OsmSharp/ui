@@ -116,6 +116,39 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
         }
 
         /// <summary>
+        /// Creates a new best placement min max no depot vrp router.
+        /// </summary>
+        /// <param name="router"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        public CheapestInsertionSolverWithImprovements(IRouter<ResolvedType> router,
+            Second max, Second delivery_time, int k, float delta_percentage, bool use_seed_cost, 
+            float threshold_precentage, bool use_seed, float lambda, 
+            List<IImprovement> intra_improvements, List<IInterImprovement> inter_improvements)
+            : base(router, max, delivery_time)
+        {
+            _k = k;
+            _delta_percentage = delta_percentage;
+            _use_seed_cost = use_seed_cost;
+            _threshold_percentage = threshold_precentage;
+            _use_seed = use_seed;
+            _lambda = lambda;
+
+            _intra_improvements = new List<IImprovement>();
+            if(intra_improvements != null)
+            {
+                _intra_improvements.AddRange(intra_improvements);
+            }
+
+            _inter_improvements = new List<IInterImprovement>();
+            if (inter_improvements != null)
+            {
+                _inter_improvements.AddRange(inter_improvements);
+            }
+        }
+
+
+        /// <summary>
         /// Returns the name of this solver.
         /// </summary>
         public override string Name
@@ -181,86 +214,90 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
                         }
                     }
                 }
-
+                
                 // select a customer using some heuristic.
-                int customer = -1;
-                if (_use_seed)
-                { // use a seeding heuristic.
-                    customer = this.SelectSeed(problem, problem.MaxTimeCalculator, solution, customers);
-                }
-                else
-                { // just select a random customer.
-                    customer = customers[Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers.Count)];
-                }
-                customers.Remove(customer);
-
-                // start a route r.
-                IRoute current_route = solution.Add(customer);
-                solution[solution.Count - 1] = 0;
-
-                while (customers.Count > 0)
+                if (customers.Count > 0)
                 {
-                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("{0}/{1} placed!",
-                        customers.Count, problem.Size);
-
-                    // calculate the best placement.
-                    CheapestInsertionResult result;
-                    if (_use_seed_cost)
-                    { // use the seed cost; the cost to the seed customer.
-                        result = CheapestInsertionHelper.CalculateBestPlacement(problem, current_route, customers,
-                            customer, _lambda);
-
-                        // calculate the 'real' increase.
-                        result.Increase = (problem.WeightMatrix[result.CustomerBefore][result.Customer] +
-                            problem.WeightMatrix[result.Customer][result.CustomerAfter]) -
-                            problem.WeightMatrix[result.CustomerBefore][result.CustomerAfter];
+                    // select a customer using some heuristic.
+                    int customer = -1;
+                    if (_use_seed)
+                    { // use a seeding heuristic.
+                        customer = this.SelectSeed(problem, problem.MaxTimeCalculator, solution, customers);
                     }
                     else
-                    { // just use cheapest insertion.
-                        result = CheapestInsertionHelper.CalculateBestPlacement(problem, current_route, customers, costs);
+                    { // just select a random customer.
+                        customer = customers[Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers.Count)];
                     }
+                    customers.Remove(customer);
 
-                    // calculate the new weight.
-                    solution[solution.Count - 1] = problem.Time(solution.Route(solution.Count - 1));
-                    double potential_weight = problem.MaxTimeCalculator.CalculateOneRouteIncrease(solution[solution.Count - 1],
-                        result.Increase);
-                    // cram as many customers into one route as possible.
-                    if (potential_weight < max)
+                    // start a route r.
+                    IRoute current_route = solution.Add(customer);
+                    solution[solution.Count - 1] = 0;
+
+                    while (customers.Count > 0)
                     {
-                        // insert the customer, it is 
-                        customers.Remove(result.Customer);
-                        current_route.InsertAfter(result.CustomerBefore, result.Customer);
+                        //OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("{0}/{1} placed!",
+                        //    customers.Count, problem.Size);
 
-                        // free some memory in the costs list.
-                        costs.Remove(result.CustomerBefore, result.CustomerAfter);
+                        // calculate the best placement.
+                        CheapestInsertionResult result;
+                        if (_use_seed_cost)
+                        { // use the seed cost; the cost to the seed customer.
+                            result = CheapestInsertionHelper.CalculateBestPlacement(problem, current_route, customers,
+                                customer, _lambda);
 
-                        // update the cost of the route.
-                        solution[solution.Count - 1] = potential_weight;
-
-                        // improve if needed.
-                        if (((problem.Size - customers.Count) % _k) == 0)
-                        { // an improvement is descided.
-                            // apply the inter-route improvements.
-                            int count_before = solution.Route(solution.Count - 1).Count;
-
-                            solution[solution.Count - 1] = this.ImproveIntraRoute(problem,
-                                current_route, solution[solution.Count - 1]);
-                            if (!solution.IsValid())
-                            {
-                                throw new Exception();
-                            }
-                            int count_after = solution.Route(solution.Count - 1).Count;
-
-                            // also to the inter-improvements.
-                            current_route = this.Improve(problem, solution, max, solution.Count - 1);
+                            // calculate the 'real' increase.
+                            result.Increase = (problem.WeightMatrix[result.CustomerBefore][result.Customer] +
+                                problem.WeightMatrix[result.Customer][result.CustomerAfter]) -
+                                problem.WeightMatrix[result.CustomerBefore][result.CustomerAfter];
                         }
-                    }
-                    else
-                    {// ok we are done!
-                        this.Improve(problem, solution, max, solution.Count - 1);
+                        else
+                        { // just use cheapest insertion.
+                            result = CheapestInsertionHelper.CalculateBestPlacement(problem, current_route, customers, costs);
+                        }
 
-                        // break the route.
-                        break;
+                        // calculate the new weight.
+                        solution[solution.Count - 1] = problem.Time(solution.Route(solution.Count - 1));
+                        double potential_weight = problem.MaxTimeCalculator.CalculateOneRouteIncrease(solution[solution.Count - 1],
+                            result.Increase);
+                        // cram as many customers into one route as possible.
+                        if (potential_weight < max)
+                        {
+                            // insert the customer, it is 
+                            customers.Remove(result.Customer);
+                            current_route.InsertAfter(result.CustomerBefore, result.Customer);
+
+                            // free some memory in the costs list.
+                            costs.Remove(result.CustomerBefore, result.CustomerAfter);
+
+                            // update the cost of the route.
+                            solution[solution.Count - 1] = potential_weight;
+
+                            // improve if needed.
+                            if (((problem.Size - customers.Count) % _k) == 0)
+                            { // an improvement is descided.
+                                // apply the inter-route improvements.
+                                int count_before = solution.Route(solution.Count - 1).Count;
+
+                                solution[solution.Count - 1] = this.ImproveIntraRoute(problem,
+                                    current_route, solution[solution.Count - 1]);
+                                if (!solution.IsValid())
+                                {
+                                    throw new Exception();
+                                }
+                                int count_after = solution.Route(solution.Count - 1).Count;
+
+                                // also to the inter-improvements.
+                                current_route = this.Improve(problem, solution, max, solution.Count - 1);
+                            }
+                        }
+                        else
+                        {// ok we are done!
+                            this.Improve(problem, solution, max, solution.Count - 1);
+
+                            // break the route.
+                            break;
+                        }
                     }
                 }
             }

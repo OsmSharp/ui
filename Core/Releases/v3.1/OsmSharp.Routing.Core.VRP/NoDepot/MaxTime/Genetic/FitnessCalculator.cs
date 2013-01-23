@@ -62,7 +62,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
             double max = -1;
             for (int route_idx = 0; route_idx < multi_route.Count; route_idx++)
             {
-                double weight = this.Fitness(problem, multi_route.Route(
+                double weight = problem.Time(multi_route.Route(
                     route_idx));
                 fitness.Weights.Add(weight);
                 total = total + weight;
@@ -78,12 +78,14 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
                 }
             }
 
-            double above_max_factor = 3;
+            double total_weight = problem.Weight(multi_route);
+
+            //double above_max_factor = 3;
             // multiply with the maximum.
             //fitness.ActualFitness = (vehicles * ((total_above_max) + total));
             //fitness.ActualFitness = (vehicles * ((total_above_max * max) + total));
             //fitness.ActualFitness = (vehicles * ((System.Math.Pow(total_above_max, 1.28)) + total + max));
-            fitness.ActualFitness = (vehicles * ((System.Math.Pow(total_above_max, 4)) + total));
+            fitness.ActualFitness = total_weight;
             //fitness.ActualFitness = (vehicles * (total + ((total_count_above_max * above_max_factor) * max)));
             //fitness.ActualFitness = (total + ((total_count_above_max * above_max_factor) * max));
             fitness.Vehicles = vehicles;

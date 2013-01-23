@@ -230,10 +230,9 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             throw new NotImplementedException();
         }
 
-
         public IEnumerable<Edge> Edges()
         {
-            throw new NotImplementedException();
+            return new EdgeEnumerable(this);
         }
     }
 }

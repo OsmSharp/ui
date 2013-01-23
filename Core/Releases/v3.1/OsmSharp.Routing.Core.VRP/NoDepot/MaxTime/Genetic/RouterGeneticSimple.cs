@@ -34,6 +34,8 @@ using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
 using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation;
+using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation;
+using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion;
 
 namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
 {
@@ -157,8 +159,10 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
                 //new SolverGenerationOperation(new TSPPlacement.TSPPlacementSolver<ResolvedType>(
                 //    this.Router, this.Max, this.DeliveryTime, tsp_solution));
                 new OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation.RandomBestPlacement();
-            //new SolverGenerationOperation(new RouterBestPlacementWithSeeds<ResolvedType>(
-            //    this.Router, this.Max, this.DeliveryTime));
+            //new SolverGenerationOperation(new CheapestInsertionSolverWithImprovements<ResolvedType>(
+            //    this.Router, this.Max, this.DeliveryTime, 5, 0.1f, true, 0.1f, false, 1f, null, null));
+            //new SolverGenerationOperation(new CheapestInsertionSolverWithImprovements<ResolvedType>(
+            //    this.Router, this.Max, this.DeliveryTime, 5, 0.1f, true, 0.1f, true, 1f));
 
             // initialize the crossover.
             ICrossOverOperation<MaxTimeSolution, MaxTimeProblem, Fitness> cross_over =
@@ -170,15 +174,16 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
 
             List<IMutationOperation<MaxTimeSolution, MaxTimeProblem, Fitness>> mutators =
                 new List<IMutationOperation<MaxTimeSolution, MaxTimeProblem, Fitness>>();
-            //mutators.Add(new RoutePartExchangeMutation());
             mutators.Add(new VehicleMutation());
             mutators.Add(new ThreeOptMutation());
             //mutators.Add(new RedivideRouteMutation());
+            mutators.Add(new RoutePartExchangeMutation());
             if (_probabilities == null)
             {
                 _probabilities = new List<double>();
                 _probabilities.Add(0.2);
-                _probabilities.Add(0.8);
+                _probabilities.Add(0.6);
+                _probabilities.Add(0.2);
             }
 
             CombinedMutation<MaxTimeSolution, MaxTimeProblem, Fitness> mutation = new CombinedMutation<MaxTimeSolution, MaxTimeProblem, Fitness>(

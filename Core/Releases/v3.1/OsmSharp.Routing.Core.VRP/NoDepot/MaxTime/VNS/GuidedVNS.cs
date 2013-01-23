@@ -106,7 +106,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
 
             CheapestInsertionSolverWithImprovements<ResolvedType> vrp_router =
                 new CheapestInsertionSolverWithImprovements<ResolvedType>(
-                    _router, problem.Max.Value, problem.DeliveryTime.Value, 5, 0.10f, true, _threshold_percentage, true, 0.75f);
+                    _router, problem.Max.Value, problem.DeliveryTime.Value, 10, 0.10f, true, _threshold_percentage, true, 0.75f);
             MaxTimeSolution original_solution = vrp_router.Solve(
                 problem);
 

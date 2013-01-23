@@ -46,7 +46,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.InterImprovements
         public bool Improve(MaxTimeProblem problem, MaxTimeSolution solution,
             int route1_idx, int route2_idx, double max)
         {
-            int max_window = 5;
+            int max_window = 10;
 
             IRoute route1 = solution.Route(route1_idx);
             IRoute route2 = solution.Route(route2_idx);
