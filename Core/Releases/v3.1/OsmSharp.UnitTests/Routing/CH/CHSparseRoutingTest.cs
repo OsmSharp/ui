@@ -81,8 +81,8 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
                 embedded_string);
             IBasicRouterDataSource<CHEdgeData> data = StaticDictionary.Get<IBasicRouterDataSource<CHEdgeData>>(
                 key);
-            if (data == null)
-            {
+            //if (data == null)
+            //{
                 OsmTagsIndex tags_index = new OsmTagsIndex();
 
                 // do the data processing.
@@ -104,7 +104,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
 
                 data = memory_data;
                 StaticDictionary.Add<IBasicRouterDataSource<CHEdgeData>>(key, data);
-            }
+            //}
             return data;
         }
 
@@ -207,14 +207,14 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
             this.DoTestManyToMany1();
         }
 
-        /// <summary>
-        /// Test if the ch router handles connectivity questions correctly.
-        /// </summary>
-        [TestMethod]
-        public void TestCHSparseConnectivity1()
-        {
-            this.DoTestConnectivity1();
-        }
+        ///// <summary>
+        ///// Test if the ch router handles connectivity questions correctly.
+        ///// </summary>
+        //[TestMethod]
+        //public void TestCHSparseConnectivity1()
+        //{
+        //    this.DoTestConnectivity1();
+        //}
 
         /// <summary>
         /// Tests a simple shortest route calculation.
