@@ -181,6 +181,7 @@
     <Compile Include="Redis\RedisTest.cs" />
     <Compile Include="Sparse\SparseTests.cs" />
     <Compile Include="Tsp\TspTest.cs" />
+    <Compile Include="VRP\DepotTest.cs" />
     <Compile Include="VRP\NoDepotTest.cs" />
     <EmbeddedResource Include="TestData\eeklo.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

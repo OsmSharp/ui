@@ -172,10 +172,10 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// <param name="to"></param>
         public void ReplaceEdgeFrom(int from, int customer)
         {
-            if (customer < 0)
-            { // a new customer cannot be negative!
-                throw new ArgumentOutOfRangeException("Cannot add customers with a negative index!");
-            }
+            //if (customer < 0)
+            //{ // a new customer cannot be negative!
+            //    throw new ArgumentOutOfRangeException("Cannot add customers with a negative index!");
+            //}
             if (this.IsEmpty)
             { // add the given customer as the first one.
                 _first = customer;
@@ -753,5 +753,36 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         #endregion
 
+
+        /// <summary>
+        /// Inserts a new first customer.
+        /// </summary>
+        /// <param name="first"></param>
+        public void InsertFirst(int first)
+        {
+            _next_array[first] = _first;
+            _first = first;
+        }
+
+        /// <summary>
+        /// Replaces the first customer with the given customer.
+        /// </summary>
+        /// <param name="first"></param>
+        public void ReplaceFirst(int first)
+        {
+            int next_first = _next_array[_first];
+            //_next_array[_first] = -1;
+            _next_array[first] = next_first;
+            _first = first;
+        }
+
+        /// <summary>
+        /// Clears out all the customers in this route.
+        /// </summary>
+        public void Clear()
+        {
+            _first = -1;
+            _next_array = new int[0];
+        }
     }
 }

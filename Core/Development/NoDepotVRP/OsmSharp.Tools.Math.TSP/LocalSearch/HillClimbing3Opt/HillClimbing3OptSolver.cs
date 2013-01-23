@@ -163,6 +163,10 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         {
             // get v_2.
             int v_2 = route.GetNeigbours(v_1)[0];
+            if (v_2 < 0)
+            {
+                return false;
+            }
             IEnumerable<int> between_v_2_v_1 = route.Between(v_2, v_1);
             double weight_1_2 = weights[v_1][v_2];
             int v_3 = -1;
@@ -263,10 +267,19 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
 
                         if (weight - weight_new > _epsilon)
                         { // actually do replace the vertices.
+                            int count_before = route.Count;
+                            string route_string = route.ToString();
+
                             route.ReplaceEdgeFrom(v_1, v_4);
                             route.ReplaceEdgeFrom(v_3, v_6);
                             route.ReplaceEdgeFrom(v_5, v_2);
 
+                            int count_after = route.Count;
+
+                            if (count_before != count_after)
+                            {
+                                throw new Exception();
+                            }
                             // set bits.
                             //this.Set(problem, v_1, false);
                             this.Set(problem, v_3, false);

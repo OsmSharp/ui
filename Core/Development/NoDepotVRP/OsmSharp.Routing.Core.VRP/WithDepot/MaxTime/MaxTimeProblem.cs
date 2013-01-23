@@ -70,11 +70,6 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
         }
 
         /// <summary>
-        /// Gets/sets the depot position.
-        /// </summary>
-        public GeoCoordinate DepotPosition { get; set; }
-
-        /// <summary>
         /// Returns the max time calculator.
         /// </summary>
         public MaxTimeCalculator MaxTimeCalculator
@@ -294,19 +289,22 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
         public double Time(IRoute route)
         {
             double time = 0;
-            Edge? first = null;
-            Edge? last = null;
+            //Edge? first = null;
+            //Edge? last = null;
             foreach (Edge edge in route.Edges())
             {
-                if (first.HasValue)
-                {
-                    first = edge;
-                    time = time + this.WeightMatrix[0][edge.From];
-                }
+                //if (!first.HasValue)
+                //{
+                //    first = edge;
+                //    time = time + this.WeightMatrix[0][edge.From];
+                //}
                 time = time + this.WeightMatrix[edge.From][edge.To];
-                last = edge;
+                //last = edge;
             }
-            time = time + this.WeightMatrix[last.Value.To][0];
+            //if (last.HasValue)
+            //{
+            //    time = time + this.WeightMatrix[last.Value.To][0];
+            //}
             return this.Time(time, route.Count);
         }
 

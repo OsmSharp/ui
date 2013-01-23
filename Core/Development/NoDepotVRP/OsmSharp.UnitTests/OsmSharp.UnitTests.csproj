@@ -115,6 +115,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Routes\DepotRouteTests.cs" />
     <Compile Include="Routes\DynamicAsymmetricMultiRouteTests.cs" />
     <Compile Include="Routes\DynamicAsymmetricRouteTests.cs" />
     <Compile Include="Routes\MultiRouteTest.cs" />
@@ -229,6 +230,10 @@
     <ProjectReference Include="..\OsmSharp.Routing.CH\OsmSharp.Routing.CH.csproj">
       <Project>{ABF960CD-353C-4983-BA96-25D001C72F61}</Project>
       <Name>OsmSharp.Routing.CH</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Routing.Core.VRP\OsmSharp.Routing.Core.VRP.csproj">
+      <Project>{28024A20-1A04-4973-93A3-3D6F53B0386A}</Project>
+      <Name>OsmSharp.Routing.Core.VRP</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Routing.Core\OsmSharp.Routing.Core.csproj">
       <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
