@@ -91,17 +91,40 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
             MatrixProblem matrix = new MatrixProblem(weights, false);
             MaxTimeProblem problem = new MaxTimeProblem(matrix, this.Max, this.DeliveryTime, 10, 1000);
             List<int> customers = new List<int>();
-            problem.DepotPosition = _points[0].Location;
-            for (int customer = 1; customer < points.Length; customer++)
+            for (int customer = 0; customer < points.Length; customer++)
             {
                 customers.Add(customer);
                 problem.CustomerPositions.Add(
                     _points[customer].Location);
             }
-            int[][] vrp_solution = this.DoCalculation(problem, customers, this.Max);
+
+            MaxTimeSolution routes = this.DoCalculation(problem, customers, this.Max);
+
+            // convert output.
+            int[][] vrp_solution = new int[routes.Count][];
+            double[] vrp_solution_weights = new double[routes.Count];
+            for (int idx = 0; idx < routes.Count; idx++)
+            {
+                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Route {0}: {1}s",
+                    idx, routes[idx]);
+
+                // get the route.
+                IRoute current = routes.Route(idx);
+
+                // calculate the weight.
+                vrp_solution_weights[idx] = problem.Time(current);
+
+                // convert the route.
+                List<int> route = new List<int>(current);
+                if (current.IsRound)
+                {
+                    route.Add(route[0]);
+                }
+                vrp_solution[idx] = route.ToArray();
+            }
 
             // construct and return solution.
-            return this.ConstructSolution(vrp_solution, null, points);
+            return this.ConstructSolution(vrp_solution, vrp_solution_weights, null, points);
         }
 
         /// <summary>
@@ -158,7 +181,7 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
         {
             if (this.CanRaiseIntermidiateResult())
             {
-                OsmSharpRoute[] result = this.ConstructSolution(vrp_solution, null, _points);
+                OsmSharpRoute[] result = this.ConstructSolution(vrp_solution, null, null, _points);
                 this.RaiseIntermidiateResult(result, null);
             }
         }
@@ -173,28 +196,12 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
         /// <param name="second"></param>
         /// <param name="second_2"></param>
         /// <returns></returns>
-        public int[][] DoCalculation(MaxTimeProblem problem,
+        public MaxTimeSolution DoCalculation(MaxTimeProblem problem,
             ICollection<int> customers, Second max)
         {
             MaxTimeSolution routes = this.Solve(problem);
 
-            // convert output.
-            int[][] solution = new int[routes.Count][];
-            for (int idx = 0; idx < routes.Count; idx++)
-            {
-                IRoute current = routes.Route(idx);
-
-                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Route {0}: {1}s",
-                    idx, routes[idx]);
-                //IRoute current = routes[idx];
-                List<int> route = new List<int>(current);
-                if (current.IsRound)
-                {
-                    route.Add(route[0]);
-                }
-                solution[idx] = route.ToArray();
-            }
-            return solution;
+            return routes;
         }
 
         #region IMaxTimeSolver Implementation

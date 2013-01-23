@@ -78,7 +78,7 @@ namespace OsmSharp.Routing.Core.VRP
         /// </summary>
         /// <param name="vrp_solution"></param>
         /// <returns></returns>
-        protected OsmSharpRoute[] ConstructSolution(int[][] vrp_solution,
+        protected OsmSharpRoute[] ConstructSolution(int[][] vrp_solution, double[] weights,
             ResolvedType[] depots, ResolvedType[] clients)
         {
             if (depots != null)
@@ -134,6 +134,22 @@ namespace OsmSharp.Routing.Core.VRP
                     }
 
                     solution[route_idx] = tsp;
+
+                    List<RouteTags> tags = new List<RouteTags>();
+                    RouteTags customer_count = new RouteTags();
+                    customer_count.Key = "customer_count";
+                    customer_count.Value = vrp_solution[route_idx].Length.ToString();
+                    tags.Add(customer_count);
+
+                    if (weights != null && weights.Length > route_idx)
+                    {
+                        RouteTags weight = new RouteTags();
+                        weight.Key = "internal_weight";
+                        weight.Value = weights[route_idx].ToString(System.Globalization.CultureInfo.InvariantCulture);
+                        tags.Add(weight);
+                    }
+
+                    solution[route_idx].Tags = tags.ToArray();
                 }
                 return solution;
             }
@@ -171,10 +187,22 @@ namespace OsmSharp.Routing.Core.VRP
                     }
 
                     solution[route_idx] = tsp;
-                    solution[route_idx].Tags = new RouteTags[1];
-                    solution[route_idx].Tags[0] = new RouteTags();
-                    solution[route_idx].Tags[0].Key = "customer_count";
-                    solution[route_idx].Tags[0].Value = vrp_solution[route_idx].Length.ToString();
+
+                    List<RouteTags> tags = new List<RouteTags>();
+                    RouteTags customer_count = new RouteTags();
+                    customer_count.Key = "customer_count";
+                    customer_count.Value = vrp_solution[route_idx].Length.ToString();
+                    tags.Add(customer_count);
+
+                    if (weights != null && weights.Length > route_idx)
+                    {
+                        RouteTags weight = new RouteTags();
+                        weight.Key = "internal_weight";
+                        weight.Value = weights[route_idx].ToString(System.Globalization.CultureInfo.InvariantCulture);
+                        tags.Add(weight);
+                    }
+
+                    solution[route_idx].Tags = tags.ToArray();
                 }
                 return solution;
             }
