@@ -66,9 +66,9 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             //NoDepotTest.MaxTest("DM101", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\DM101.csv", @"C:\OSM\bin\DM101.osm.pbf",
             //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\", 3600, 10, 3, 4, true);
 
-            //NoDepotTest.MaxTest("384-54823", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\384-54823.csv",
-            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\384-54823.osm.pbf",
-            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            NoDepotTest.MaxTest("384-54823", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\384-54823.csv",
+                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\384-54823.osm.pbf",
+                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
             //NoDepotTest.MaxTest("492-65172", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\492-65172.csv",
             //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\492-65172.osm.pbf",
             //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
@@ -81,15 +81,15 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             //NoDepotTest.MaxTest("1258-10560", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\1258-10560.csv",
             //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\1258-10560.osm.pbf",
             //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
-            NoDepotTest.MaxTest("2665-72235", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\2665-72235.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\2665-72235.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
-            NoDepotTest.MaxTest("3280-72301", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\3280-72301.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\3280-72301.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
-            NoDepotTest.MaxTest("4477-71181", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\4477-71181.csv",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\4477-71181.osm.pbf",
-                @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("2665-72235", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\2665-72235.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\2665-72235.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("3280-72301", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\3280-72301.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\3280-72301.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
+            //NoDepotTest.MaxTest("4477-71181", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\4477-71181.csv",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\4477-71181.osm.pbf",
+            //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
             //NoDepotTest.MaxTest("11403-70996", @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\11403-70996.csv",
             //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\11403-70996.osm.pbf",
             //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\ContractsGA\", 5400, 10, 3, 4, true);
@@ -224,7 +224,7 @@ namespace OsmSharp.Osm.Routing.Test.VRP
 
             int count = 10;
 
-            RouterMaxTime<RouterPoint> vrp_router;
+            MaxTimeRouterWrapper<RouterPoint> vrp_router;
 
             //// create one router.
             //vrp_router = new RouterBestPlacement<RouterPoint>(
@@ -242,9 +242,9 @@ namespace OsmSharp.Osm.Routing.Test.VRP
 
             int population = 40;
             int stagnation = 75;
-            vrp_router = new RouterGeneticSimple<RouterPoint>(
-                     router, max, delivery_time.Value, population, stagnation, elitism_percentage,
-                     cross_percentage, mutation_percentage, null);
+            vrp_router = new MaxTimeRouterWrapper<RouterPoint>(
+                new RouterGeneticSimple(max, delivery_time.Value, population, stagnation, elitism_percentage,
+                     cross_percentage, mutation_percentage, null), router);
             NoDepotTest.MaxTestRouterMaxTime(output, name, interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
             //vrp_router = new CheapestInsertionSolverWithImprovements<RouterPoint>(
@@ -381,7 +381,7 @@ namespace OsmSharp.Osm.Routing.Test.VRP
         /// <param name="vrp_router"></param>
         /// <param name="points"></param>
         private static void MaxTestRouterMaxTime(string directory, string name, IRoutingInterpreter interpreter,
-            RouterMaxTime<RouterPoint> vrp_router, RouterPoint[] points, double[][] weights, Second delivery_time, int count)
+            MaxTimeRouterWrapper<RouterPoint> vrp_router, RouterPoint[] points, double[][] weights, Second delivery_time, int count)
         {
             TextWriter log_stream = new FileInfo(directory + string.Format("{0}.{1}.log", name,
                             vrp_router.Name)).AppendText();

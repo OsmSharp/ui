@@ -43,17 +43,15 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
     /// Calculates VRP's without a depot with min max time constraints per route using genetic algorithms.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
-    public class RouterGeneticSimple<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public class RouterGeneticSimple : RouterMaxTime
     {
         /// <summary>
         /// Creates a new genetic min max no depot vrp router.
         /// </summary>
-        /// <param name="router"></param>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public RouterGeneticSimple(IRouter<ResolvedType> router, Second max, Second delivery_time)
-            :base(router, max, delivery_time)
+        public RouterGeneticSimple(Second max, Second delivery_time)
+            :base(max, delivery_time)
         {
             _population = 100;
             _stagnation = 2000;
@@ -66,12 +64,11 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
         /// <summary>
         /// Creates a new genetic min max no depot vrp router.
         /// </summary>
-        /// <param name="router"></param>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public RouterGeneticSimple(IRouter<ResolvedType> router, Second max, Second delivery_time, int population, int stagnation,
+        public RouterGeneticSimple(Second max, Second delivery_time, int population, int stagnation,
             double elitism_percentage, double cross_percentage, double mutation_percentage)
-            : base(router, max, delivery_time)
+            : base(max, delivery_time)
         {
             _population = population;
             _stagnation = stagnation;
@@ -88,10 +85,10 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
         /// <param name="router"></param>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public RouterGeneticSimple(IRouter<ResolvedType> router,
+        public RouterGeneticSimple(
             Second max, Second delivery_time, int population, int stagnation,
             double elitism_percentage, double cross_percentage, double mutation_percentage, List<double> probabilities)
-            : base(router, max, delivery_time)
+            : base(max, delivery_time)
         {
             _population = population;
             _stagnation = stagnation;
@@ -321,7 +318,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
                 result[idx] = route.ToArray();
             }
 
-            this.DoIntermidiateResult(result);
+            this.RaiseIntermidiateResult(result);
         }
     }
 }

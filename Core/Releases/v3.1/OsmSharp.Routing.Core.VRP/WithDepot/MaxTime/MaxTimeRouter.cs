@@ -33,26 +33,17 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
     /// Class to solve VRP problems that have no depot but min-max time constraints on routes.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
-    public abstract class RouterMaxTime<ResolvedType> : RouterDepot<ResolvedType>, IMaxTimeSolver
-        where ResolvedType : IRouterPoint
+    public abstract class RouterMaxTime : RouterDepot, IMaxTimeSolver
     {
         /// <summary>
         /// Creates a new min max VRP router.
         /// </summary>
-        /// <param name="router"></param>
-        public RouterMaxTime(IRouter<ResolvedType> router, Second max, Second delivery_time)
-            : base(router)
+        /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
+        public RouterMaxTime(Second max, Second delivery_time)
         {
             this.Max = max;
             this.DeliveryTime = delivery_time;
-        }
-
-        /// <summary>
-        /// Returns the name of this solver.
-        /// </summary>
-        public abstract string Name
-        {
-            get;
         }
 
         /// <summary>
@@ -66,16 +57,17 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
         public Second DeliveryTime { get; private set; }
 
         /// <summary>
-        /// Calculates the actual VRP.
+        /// Caculates the DVRP.
         /// </summary>
-        /// <param name="points"></param>
+        /// <param name="weights"></param>
+        /// <param name="locations"></param>
         /// <returns></returns>
-        public override OsmSharpRoute[] CalculateDepot(VehicleEnum vehicle, ResolvedType[] points, double[][] weights)
+        public override int[][] CalculateDepot(double[][] weights, GeoCoordinate[] locations)
         {
             /// Keeps a local copy of the current calculation points.
             /// 
             /// TODO: find a better solution to make this thread-safe!
-            _points = points;
+            _locations = locations;
 
             // convert to ints.
             for (int x = 0; x < weights.Length; x++)
@@ -91,11 +83,11 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
             MatrixProblem matrix = MatrixProblem.CreateATSP(weights);
             MaxTimeProblem problem = new MaxTimeProblem(matrix, this.Max, this.DeliveryTime, 10, 1000);
             List<int> customers = new List<int>();
-            for (int customer = 0; customer < points.Length; customer++)
+            for (int customer = 0; customer < locations.Length; customer++)
             {
                 customers.Add(customer);
                 problem.CustomerPositions.Add(
-                    _points[customer].Location);
+                    _locations[customer]);
             }
 
             MaxTimeSolution routes = this.DoCalculation(problem, customers, this.Max);
@@ -124,7 +116,7 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
             }
 
             // construct and return solution.
-            return this.ConstructSolution(vrp_solution, vrp_solution_weights, null, points);
+            return vrp_solution;
         }
 
         /// <summary>
@@ -171,20 +163,7 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
         /// 
         /// TODO: find a better solution to make this thread-safe!
         /// </summary>
-        private ResolvedType[] _points;
-
-        /// <summary>
-        /// Called when an intermidiate result is available.
-        /// </summary>
-        /// <param name="vrp_solution"></param>
-        protected void DoIntermidiateResult(int[][] vrp_solution)
-        {
-            if (this.CanRaiseIntermidiateResult())
-            {
-                OsmSharpRoute[] result = this.ConstructSolution(vrp_solution, null, null, _points);
-                this.RaiseIntermidiateResult(result, null);
-            }
-        }
+        private GeoCoordinate[] _locations;
 
         #endregion
 

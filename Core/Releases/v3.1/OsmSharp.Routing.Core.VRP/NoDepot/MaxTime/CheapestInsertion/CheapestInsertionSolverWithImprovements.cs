@@ -36,8 +36,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
     /// Executes a cheapest insertion procedures with improvements following VND strategy.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
-    public class CheapestInsertionSolverWithImprovements<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public class CheapestInsertionSolverWithImprovements : RouterMaxTime
     {
         /// <summary>
         /// The amount of customers to place before applying local improvements.
@@ -85,9 +84,9 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
         /// <param name="router"></param>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public CheapestInsertionSolverWithImprovements(IRouter<ResolvedType> router,
+        public CheapestInsertionSolverWithImprovements(
             Second max, Second delivery_time, int k, float delta_percentage, bool use_seed_cost, float threshold_precentage, bool use_seed, float lambda)
-            :base(router, max, delivery_time)
+            :base(max, delivery_time)
         {
             _k = k;
             _delta_percentage = delta_percentage;
@@ -121,11 +120,11 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
         /// <param name="router"></param>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public CheapestInsertionSolverWithImprovements(IRouter<ResolvedType> router,
+        public CheapestInsertionSolverWithImprovements(
             Second max, Second delivery_time, int k, float delta_percentage, bool use_seed_cost, 
             float threshold_precentage, bool use_seed, float lambda, 
             List<IImprovement> intra_improvements, List<IInterImprovement> inter_improvements)
-            : base(router, max, delivery_time)
+            : base(max, delivery_time)
         {
             _k = k;
             _delta_percentage = delta_percentage;

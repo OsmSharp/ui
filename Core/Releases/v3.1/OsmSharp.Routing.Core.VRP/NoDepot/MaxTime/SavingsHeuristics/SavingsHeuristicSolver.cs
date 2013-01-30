@@ -11,17 +11,15 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.SavingsHeuristics
     /// A heuristic solver based on a construction heuristic inspired on the Clarke-Wright savings heuristic.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
-    public class SavingsHeuristicSolver<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public class SavingsHeuristicSolver : RouterMaxTime
     {
         /// <summary>
         /// Creates a solver based on a construction heuristic.
         /// </summary>
-        /// <param name="router"></param>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public SavingsHeuristicSolver(IRouter<ResolvedType> router, Second max, Second delivery_time)
-            :base(router, max, delivery_time)
+        public SavingsHeuristicSolver(Second max, Second delivery_time)
+            :base(max, delivery_time)
         {
 
         }

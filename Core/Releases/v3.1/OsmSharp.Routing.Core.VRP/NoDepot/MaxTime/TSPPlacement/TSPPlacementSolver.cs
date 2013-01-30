@@ -25,23 +25,22 @@ using OsmSharp.Routing.Core;
 
 namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.TSPPlacement
 {
-    public class TSPPlacementSolver<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public class TSPPlacementSolver : RouterMaxTime
     {
         private OsmSharp.Tools.Math.TSP.ISolver _tsp_solver;
 
         private IRoute _tsp_solution;
 
-        public TSPPlacementSolver(IRouter<ResolvedType> router, Second max, Second delivery_time,
+        public TSPPlacementSolver(Second max, Second delivery_time,
             OsmSharp.Tools.Math.TSP.ISolver tsp_solver)
-            :base(router, max, delivery_time)
+            :base(max, delivery_time)
         {
             _tsp_solver = tsp_solver;
         }
 
-        public TSPPlacementSolver(IRouter<ResolvedType> router, Second max, Second delivery_time,
+        public TSPPlacementSolver(Second max, Second delivery_time,
             IRoute tsp_solution)
-            : base(router, max, delivery_time)
+            : base(max, delivery_time)
         {
             _tsp_solution = tsp_solution;
         }

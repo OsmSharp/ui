@@ -35,14 +35,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
     /// Uses a Variable Neighbourhood Search technique.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
-    public class GuidedVNS<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public class GuidedVNS : RouterMaxTime
     {
-        /// <summary>
-        /// Holds the router.
-        /// </summary>
-        private IRouter<ResolvedType> _router;
-
         /// <summary>
         /// Holds the lambda value.
         /// </summary>
@@ -59,8 +53,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
         /// <param name="router"></param>
         /// <param name="max"></param>
         /// <param name="delivery_time"></param>
-        public GuidedVNS(IRouter<ResolvedType> router, Second max, Second delivery_time, float threshold_precentage, float lambda)
-            : base(router, max, delivery_time)
+        public GuidedVNS(Second max, Second delivery_time, float threshold_precentage, float lambda)
+            : base(max, delivery_time)
         {
             _threshold_percentage = threshold_precentage;
             _lambda = lambda;
@@ -104,9 +98,9 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
         {
             float lambda = _lambda;
 
-            CheapestInsertionSolverWithImprovements<ResolvedType> vrp_router =
-                new CheapestInsertionSolverWithImprovements<ResolvedType>(
-                    _router, problem.Max.Value, problem.DeliveryTime.Value, 10, 0.10f, true, _threshold_percentage, true, 0.75f);
+            CheapestInsertionSolverWithImprovements vrp_router =
+                new CheapestInsertionSolverWithImprovements(
+                    problem.Max.Value, problem.DeliveryTime.Value, 10, 0.10f, true, _threshold_percentage, true, 0.75f);
             MaxTimeSolution original_solution = vrp_router.Solve(
                 problem);
 

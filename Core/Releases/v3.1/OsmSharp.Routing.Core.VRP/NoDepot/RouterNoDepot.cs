@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.Route;
+using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Routing.Core.VRP.NoDepot
 {
@@ -28,15 +29,13 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot
     /// Class to solve for a specific class of VRP problems: VRP problems with any depot.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
-    public abstract class RouterNoDepot<ResolvedType> : RouterVRP<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public abstract class RouterNoDepot : RouterVRP
     {
         /// <summary>
         /// Creates a VRP router without a depot.
         /// </summary>
-        /// <param name="router"></param>
-        public RouterNoDepot(IRouter<ResolvedType> router)
-            :base(router)
+        public RouterNoDepot()
+            :base()
         {
 
         }
@@ -44,23 +43,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot
         /// <summary>
         /// Calculates this No-Depot VRP.
         /// </summary>
-        /// <param name="vehicle"></param>
         /// <param name="points"></param>
         /// <returns></returns>
-        public OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, ResolvedType[] points)
-        {
-            // first calculate the weights in seconds.
-            double[][] weights = this.CalculateManyToManyWeigth(vehicle, points);
-
-            // calculate
-            return this.CalculateNoDepot(vehicle, points, weights);
-        }
-
-        /// <summary>
-        /// Calculates this No-Depot VRP.
-        /// </summary>
-        /// <param name="points"></param>
-        /// <returns></returns>
-        public abstract OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, ResolvedType[] points, double[][] weights);
+        public abstract int[][] CalculateNoDepot(double[][] weights, GeoCoordinate[] locations);
     }
 }

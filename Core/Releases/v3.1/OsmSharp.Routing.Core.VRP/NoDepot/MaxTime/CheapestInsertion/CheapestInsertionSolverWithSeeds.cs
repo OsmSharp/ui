@@ -31,8 +31,7 @@ using OsmSharp.Tools.Math.VRP.Core.BestPlacement.InsertionCosts;
 
 namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
 {
-    public class CheapestInsertionSolverWithSeeds<ResolvedType> : RouterMaxTime<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public class CheapestInsertionSolverWithSeeds : RouterMaxTime
     {
         /// <summary>
         /// Holds the seed selector.
@@ -47,11 +46,10 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
         /// <summary>
         /// Creates a new best placement min max no depot vrp router.
         /// </summary>
-        /// <param name="router"></param>
         /// <param name="min"></param>
         /// <param name="max"></param>
-        public CheapestInsertionSolverWithSeeds(IRouter<ResolvedType> router, Second max, Second delivery_time, int k)
-            : base(router, max, delivery_time)
+        public CheapestInsertionSolverWithSeeds(Second max, Second delivery_time, int k)
+            : base(max, delivery_time)
         {
             _seed_selector = new SimpleSeeds();
 

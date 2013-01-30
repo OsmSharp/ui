@@ -171,6 +171,7 @@
     <Compile Include="NoDepot\MaxTime\InterImprovements\RelocateInterImprovement.cs" />
     <Compile Include="NoDepot\MaxTime\InterImprovements\TwoOptInterImprovement.cs" />
     <Compile Include="NoDepot\MaxTime\MaxTimeProblem.cs" />
+    <Compile Include="NoDepot\MaxTime\MaxTimeRouterWrapper.cs" />
     <Compile Include="NoDepot\MaxTime\MaxTimeSolution.cs" />
     <Compile Include="NoDepot\MaxTime\MaxTimeRouter.cs" />
     <Compile Include="NoDepot\MaxTime\MaxTimeCalculator.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="NoDepot\MaxTime\TSPPlacement\TSPProblem.cs" />
     <Compile Include="NoDepot\MaxTime\VNS\GuidedVNS.cs" />
     <Compile Include="NoDepot\RouterNoDepot.cs" />
+    <Compile Include="RouterVRPWrapper.cs" />
     <Compile Include="WithDepot\MaxTime\CheapestInsertion\CheapestInsertionSolver.cs" />
     <Compile Include="WithDepot\MaxTime\Genetic\BestPlacement\RouterBestPlacement.cs" />
     <Compile Include="WithDepot\MaxTime\Genetic\BestPlacement\RouterBestPlacementWithImprovements.cs" />

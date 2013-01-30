@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.Route;
+using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Routing.Core.VRP.WithDepot
 {
@@ -28,15 +29,12 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot
     /// Class to solve for a specific class of VRP problems: VRP problems with multi depot.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
-    public abstract class RouterDepot<ResolvedType> : RouterVRP<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public abstract class RouterDepot : RouterVRP
     {
         /// <summary>
         /// Creates a VRP router without a depot.
         /// </summary>
-        /// <param name="router"></param>
-        public RouterDepot(IRouter<ResolvedType> router)
-            : base(router)
+        public RouterDepot()
         {
 
         }
@@ -44,9 +42,9 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot
         /// <summary>
         /// Calculates this VRP No Depot.
         /// </summary>
-        /// <param name="points"></param>
+        /// <param name="weights">The weights between all customer pairs incuding the depot.</param>
+        /// <param name="locations">The location between of customers and the depot.</param>
         /// <returns></returns>
-        public abstract OsmSharpRoute[] CalculateDepot(VehicleEnum vehicle,
-            ResolvedType[] points, double[][] weights);
+        public abstract int[][] CalculateDepot(double[][] weights, GeoCoordinate[] locations);
     }
 }
