@@ -25,21 +25,17 @@ using OsmSharp.Tools.Math.TSP;
 using OsmSharp.Tools.Math.TSP.Genetic;
 using OsmSharp.Routing.Core;
 
-namespace OsmSharp.Osm.Routing.Core.TSP.Genetic
+namespace OsmSharp.Routing.Core.TSP.Genetic
 {
     /// <summary>
     /// A TSP router using a genetic algorithm.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
-    public class RouterTSPGenetic<ResolvedType> : RouterTSP<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public class RouterTSPGenetic : RouterTSP
     {
         /// <summary>
         /// Creates a new TSP router;
         /// </summary>
-        /// <param name="router"></param>
-        public RouterTSPGenetic(IRouter<ResolvedType> router)
-            :base(router)
+        public RouterTSPGenetic()
         {
 
         }

@@ -144,6 +144,7 @@
     <Compile Include="RandomizedArbitraryInsertion\RouteTSPRAI.cs" />
     <Compile Include="RouterTSP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RouterTSPWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Routing.Core\OsmSharp.Routing.Core.csproj">

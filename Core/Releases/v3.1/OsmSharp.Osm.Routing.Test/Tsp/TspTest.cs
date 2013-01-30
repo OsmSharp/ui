@@ -36,10 +36,10 @@ using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Osm.Routing.Core.TSP.Genetic;
 using OsmSharp.Routing.Core.Route;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
-using OsmSharp.Osm.Routing.Core.TSP;
+using OsmSharp.Routing.Core.TSP;
+using OsmSharp.Routing.Core.TSP.Genetic;
 
 namespace OsmSharp.Osm.Routing.Test.Tsp
 {
@@ -108,13 +108,8 @@ namespace OsmSharp.Osm.Routing.Test.Tsp
                 }
             }
 
-            //RouterTSP<RouterPoint> tsp_solver = new RouterTSPGenetic<RouterPoint>(router);
-            //OsmSharpRoute tsp = tsp_solver.CalculateTSP(VehicleEnum.Car, points.ToArray());
-            //tsp.SaveAsGpx(new FileInfo(@"c:\temp\tsp_ga.gpx"));
-            //OsmSharpRoute tsp_open = tsp_solver.CalculateTSP(VehicleEnum.Car, points.ToArray(), 0, false);
-            //tsp_open.SaveAsGpx(new FileInfo(@"c:\temp\tsp_open_ga.gpx"));
-
-            RouterTSP<RouterPoint>  tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(router);
+            RouterTSPWrapper<RouterPoint, RouterTSP> tsp_solver = new RouterTSPWrapper<RouterPoint, RouterTSP>(
+                new RouterTSPAEXGenetic(), router);
             OsmSharpRoute tsp = tsp_solver.CalculateTSP(VehicleEnum.Car, points.ToArray());
             tsp.SaveAsGpx(new FileInfo(@"c:\temp\tsp.gpx"));
             OsmSharpRoute tsp_open_first = tsp_solver.CalculateTSP(VehicleEnum.Car, points.ToArray(), 0, false);

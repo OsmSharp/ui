@@ -205,7 +205,7 @@ namespace OsmSharp.Tools.Math.TSP.Genetic
         {
             if (this.CanRaiseIntermidiateResult())
             {
-                this.RaiseIntermidiateResult(individual.Genomes.ToArray(), (float)individual.Fitness.Weight);
+                this.RaiseIntermidiateResult(individual.Genomes.ToArray());
             }
         }
 

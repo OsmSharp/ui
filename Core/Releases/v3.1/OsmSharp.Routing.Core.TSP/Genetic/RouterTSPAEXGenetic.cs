@@ -28,14 +28,12 @@ using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation;
 using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
 using OsmSharp.Routing.Core;
 
-namespace OsmSharp.Osm.Routing.Core.TSP.Genetic
+namespace OsmSharp.Routing.Core.TSP.Genetic
 {
     /// <summary>
     /// A TSP router using a genetic algorithm.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
-    public class RouterTSPAEXGenetic<ResolvedType> : RouterTSP<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public class RouterTSPAEXGenetic : RouterTSP
     {
         /// <summary>
         /// Holds the population count.
@@ -50,9 +48,7 @@ namespace OsmSharp.Osm.Routing.Core.TSP.Genetic
         /// <summary>
         /// Creates a new TSP router;
         /// </summary>
-        /// <param name="router"></param>
-        public RouterTSPAEXGenetic(IRouter<ResolvedType> router)
-            : base(router)
+        public RouterTSPAEXGenetic()
         {
             _population = 300;
             _stagnation = 100;
@@ -61,9 +57,7 @@ namespace OsmSharp.Osm.Routing.Core.TSP.Genetic
         /// <summary>
         /// Creates a new TSP router;
         /// </summary>
-        /// <param name="router"></param>
-        public RouterTSPAEXGenetic(IRouter<ResolvedType> router, int population, int stagnation)
-            : base(router)
+        public RouterTSPAEXGenetic(int population, int stagnation)
         {
             _population = population;
             _stagnation = stagnation;

@@ -240,7 +240,7 @@ namespace OsmSharp.Tools.Math.TSP
 
             if (solver != null && solver.CanRaiseIntermidiateResult())
             {
-                solver.RaiseIntermidiateResult(route.ToArray<int>(), (float)weight);
+                solver.RaiseIntermidiateResult(route.ToArray<int>());
             }
 
             return route;

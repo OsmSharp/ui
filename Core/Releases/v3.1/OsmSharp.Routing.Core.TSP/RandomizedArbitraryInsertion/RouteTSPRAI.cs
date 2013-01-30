@@ -24,21 +24,19 @@ using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.TSP;
 using OsmSharp.Routing.Core;
 
-namespace OsmSharp.Osm.Routing.Core.TSP.RandomizedArbitraryInsertion
+namespace OsmSharp.Routing.Core.TSP.RandomizedArbitraryInsertion
 {
     /// <summary>
     /// A TSP router using a genetic algorithm.
     /// </summary>
     /// <typeparam name="ResolvedType"></typeparam>
-    public class RouteTSPRAI<ResolvedType> : RouterTSP<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public class RouteTSPRAI : RouterTSP
     {
         /// <summary>
         /// Creates a new TSP router;
         /// </summary>
         /// <param name="router"></param>
-        public RouteTSPRAI(IRouter<ResolvedType> router)
-            : base(router)
+        public RouteTSPRAI()
         {
 
         }

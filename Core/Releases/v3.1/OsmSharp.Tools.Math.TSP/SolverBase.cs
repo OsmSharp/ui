@@ -115,11 +115,11 @@ namespace OsmSharp.Tools.Math.TSP
         /// Raises the intermidiate results event.
         /// </summary>
         /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(int[] result, float weight)
+        protected void RaiseIntermidiateResult(int[] result)
         {
             if (IntermidiateResult != null)
             {
-                this.IntermidiateResult(result, weight);
+                this.IntermidiateResult(result);
             }
         }
 

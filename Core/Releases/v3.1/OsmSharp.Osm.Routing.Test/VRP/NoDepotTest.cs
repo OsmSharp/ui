@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Osm.Routing.Core;
 using OsmSharp.Tools.Xml.Sources;
 using OsmSharp.Tools.Math.Units.Time;
 using OsmSharp.Osm.Core;

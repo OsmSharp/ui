@@ -24,204 +24,93 @@ using OsmSharp.Tools.Math.TSP;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.Route;
+using OsmSharp.Tools.Math.Geo;
 
-namespace OsmSharp.Osm.Routing.Core.TSP
+namespace OsmSharp.Routing.Core.TSP
 {
     /// <summary>
     /// Router that calculates TSP solutions.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
-    public abstract class RouterTSP<ResolvedType>
-        where ResolvedType : IRouterPoint
+    public abstract class RouterTSP
     {
-        /// <summary>
-        /// Holds the basic router.
-        /// </summary>
-        private IRouter<ResolvedType> _router;
-
         /// <summary>
         /// Creates a new TSP router.
         /// </summary>
-        /// <param name="router"></param>
-        public RouterTSP(IRouter<ResolvedType> router)
+        public RouterTSP()
         {
-            _router = router;
+
         }
 
         /// <summary>
-        /// Calculates a weight matrix for the given array of points.
+        /// Calculates a solution to the ATSP.
         /// </summary>
-        /// <param name="vehicle">The vehicle type.</param>
-        /// <param name="points">The points to travel along.</param>
+        /// <param name="weights">The weights between all the customers.</param>
+        /// <param name="locations">The locations of all customers.</param>
+        /// <param name="first">The first customer.</param>
+        /// <param name="is_round">Return to the first customer or not.</param>
         /// <returns></returns>
-        protected double[][] CalculateManyToManyWeight(VehicleEnum vehicle, ResolvedType[] points)
+        public IRoute CalculateTSP(double[][] weights, GeoCoordinate[] locations, int first, bool is_round)
         {
-            return _router.CalculateManyToManyWeight(vehicle, points, points);
-        }
-
-        /// <summary>
-        /// Calculates the shortest route along all given points starting and ending at the given points.
-        /// </summary>
-        /// <param name="vehicle">The vehicle type.</param>
-        /// <param name="points">The points to travel along.</param>
-        /// <param name="first">The index of the point to start from.</param>
-        /// <param name="is_round">Return back to the first point or not.</param>
-        /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, int first, bool is_round)
-        {
-            // calculate the weights.
-            double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
-
             // create solver.
-            ISolver solver = this.DoCreateSolver(points.Length);
+            ISolver solver = this.DoCreateSolver(locations.Length);
             solver.IntermidiateResult += new SolverDelegates.IntermidiateDelegate(solver_IntermidiateResult);
 
             // calculate the TSP.
-            IRoute tsp_solution = solver.Solve(this.GenerateProblem(weights, first, null, is_round));
-
-            // calculate weight
-            double weight = 0;
-            foreach (Edge edge in tsp_solution.Edges())
-            {
-                weight = weight + weights[edge.From][edge.To];
-            }
-
-            // concatenate the route(s).
-            return this.BuildRoute(points, tsp_solution, weight);
+            return solver.Solve(this.GenerateProblem(weights, first, null, is_round));
         }
 
         /// <summary>
-        /// Calculates the shortest route along all given points starting and ending at the given points.
+        /// Calculates a solution to the ATSP.
         /// </summary>
-        /// <param name="vehicle">The vehicle type.</param>
-        /// <param name="points">The points to travel along.</param>
+        /// <param name="weights">The weights between all the customers.</param>
+        /// <param name="locations">The locations of all customers.</param>
         /// <param name="first">The index of the point to start from.</param>
         /// <param name="last">The index of the point to end at.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, int first, int last)
+        public IRoute CalculateTSP(double[][] weights, GeoCoordinate[] locations, int first, int last)
         {
-            // calculate the weights.
-            double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
-
             // create solver.
-            ISolver solver = this.DoCreateSolver(points.Length);
+            ISolver solver = this.DoCreateSolver(locations.Length);
             solver.IntermidiateResult += new SolverDelegates.IntermidiateDelegate(solver_IntermidiateResult);
 
             // calculate the TSP.
-            IRoute tsp_solution = solver.Solve(this.GenerateProblem(weights, first, last, false));
-
-            // calculate weight
-            double weight = 0;
-            foreach (Edge edge in tsp_solution.Edges())
-            {
-                weight = weight + weights[edge.From][edge.To];
-            }
-
-            // concatenate the route(s).
-            return this.BuildRoute(points, tsp_solution, weight);
+            return solver.Solve(this.GenerateProblem(weights, first, last, false));
         }
 
         /// <summary>
-        /// Calculates the shortest route along all given points.
+        /// Calculates a solution to the ATSP.
         /// </summary>
-        /// <param name="vehicle">The vehicle type.</param>
-        /// <param name="points">The points to travel along.</param>
+        /// <param name="weights">The weights between all the customers.</param>
+        /// <param name="locations">The locations of all customers.</param>
         /// <param name="is_round">Make the route return to the start-point or not.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, bool is_round)
+        public IRoute CalculateTSP(double[][] weights, GeoCoordinate[] locations, bool is_round)
         {
-            // calculate the weights.
-            double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
-
             // create solver.
             ISolver solver = null;
-            if (points.Length < 6)
+            if (locations.Length < 6)
             { // creates a bute force solver.
                 solver = new OsmSharp.Tools.Math.TSP.BruteForce.BruteForceSolver();
             }
             else
             { // creates a solver for the larger problems.
-                solver = this.DoCreateSolver(points.Length);
+                solver = this.DoCreateSolver(locations.Length);
             }
             solver.IntermidiateResult += new SolverDelegates.IntermidiateDelegate(solver_IntermidiateResult);
 
             // calculate the TSP.
-            IRoute tsp_solution = solver.Solve(this.GenerateProblem(weights, null, null, is_round));
-
-            // calculate weight
-            double weight = 0;
-            foreach (Edge edge in tsp_solution.Edges())
-            {
-                weight = weight + weights[edge.From][edge.To];
-            }
-
-            // concatenate the route(s).
-            return this.BuildRoute(points, tsp_solution, weight);
+            return solver.Solve(this.GenerateProblem(weights, null, null, is_round));
         }
 
         /// <summary>
-        /// Calculates the shortest route along all given points returning back to the first.
+        /// Calculates a solution to the ATSP.
         /// </summary>
-        /// <param name="vehicle">The vehicle type.</param>
-        /// <param name="points">The points to travel along.</param>
+        /// <param name="weights">The weights between all the customers.</param>
+        /// <param name="locations">The locations of all customers.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points)
+        public IRoute CalculateTSP(double[][] weights, GeoCoordinate[] locations)
         {
-            return this.CalculateTSP(vehicle, points, true);
-        }
-
-        /// <summary>
-        /// Raise intermidiate result event.
-        /// </summary>
-        /// <param name="result"></param>
-        /// <param name="weight"></param>
-        void solver_IntermidiateResult(int[] result, double weight)
-        {
-            if (this.CanRaiseIntermidiateResult())
-            {
-                this.RaiseIntermidiateResult(result, weight);
-            }
-        }
-
-        /// <summary>
-        /// Builds an OsmSharRoute.
-        /// </summary>
-        /// <param name="points"></param>
-        /// <param name="found_solution"></param>
-        /// <returns></returns>
-        public OsmSharpRoute BuildRoute(ResolvedType[] points, IRoute found_solution, double weight)
-        {
-            List<int> solution = new List<int>(found_solution); // TODO: improve this whole part to loop over the orginal route!
-
-            OsmSharpRoute tsp = null;
-            OsmSharpRoute route;
-            for (int idx = 0; idx < solution.Count - 1; idx++)
-            {
-                route = _router.Calculate(VehicleEnum.Car, points[solution[idx]],
-                    points[solution[idx + 1]]);
-                if (tsp == null)
-                { // first route = start
-                    tsp = route;
-                }
-                else
-                { // concatenate.
-                    tsp = OsmSharpRoute.Concatenate(tsp, route);
-                }
-            }
-            if (found_solution.IsRound)
-            {
-                // concatenate the route from the last to the first point again.
-                route = _router.Calculate(VehicleEnum.Car, points[solution[solution.Count - 1]],
-                            points[solution[0]]);
-                tsp = OsmSharpRoute.Concatenate(tsp, route);
-            }
-
-            tsp.Tags = new RouteTags[1];
-            tsp.Tags[0] = new RouteTags();
-            tsp.Tags[0].Key = "internal_weight";
-            tsp.Tags[0].Value = weight.ToString(System.Globalization.CultureInfo.InvariantCulture);
-
-            return tsp;
+            return this.CalculateTSP(weights, locations, true);
         }
 
         /// <summary>
@@ -277,10 +166,23 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         #region Intermidiate Results
 
         /// <summary>
+        /// Raise intermidiate result event.
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="weight"></param>
+        void solver_IntermidiateResult(int[] result)
+        {
+            if (this.CanRaiseIntermidiateResult())
+            {
+                this.RaiseIntermidiateResult(result);
+            }
+        }
+
+        /// <summary>
         /// Delegate to pass on an intermidiate solution.
         /// </summary>
         /// <param name="result"></param>
-        public delegate void IntermidiateDelegate(int[] result, double weight);
+        public delegate void IntermidiateDelegate(int[] result);
 
         /// <summary>
         /// Raised when an intermidiate result is available.
@@ -300,11 +202,11 @@ namespace OsmSharp.Osm.Routing.Core.TSP
         /// Raises the intermidiate results event.
         /// </summary>
         /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(int[] result, double weight)
+        protected void RaiseIntermidiateResult(int[] result)
         {
             if (IntermidiateResult != null)
             {
-                this.IntermidiateResult(result, weight);
+                this.IntermidiateResult(result);
             }
         }
 
