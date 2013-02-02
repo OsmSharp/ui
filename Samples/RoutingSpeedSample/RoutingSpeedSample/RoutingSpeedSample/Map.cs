@@ -32,6 +32,7 @@ using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using System.Threading;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Osm.Data.PBF.Raw.Processor;
 
 namespace RoutingSpeedSample
 {
@@ -61,9 +62,9 @@ namespace RoutingSpeedSample
                 this.mapEditorUserControl1.logControl1);
 
             // define the routable bounding box.
-            _box = new GeoCoordinateBox( // lebbeke
-                new GeoCoordinate(50.97268, 3.91535),
-                new GeoCoordinate(51.14149, 4.23653));
+            //_box = new GeoCoordinateBox( // lebbeke
+            //    new GeoCoordinate(50.97268, 3.91535),
+            //    new GeoCoordinate(51.14149, 4.23653));
             //_box = new GeoCoordinateBox( // eeklo
             //    new GeoCoordinate(51.10800, 3.46400),
             //    new GeoCoordinate(51.24100, 3.67300));
@@ -76,6 +77,9 @@ namespace RoutingSpeedSample
             //_box = new GeoCoordinateBox( // test network
             //    new GeoCoordinate(51.0582602,3.7187392),
             //    new GeoCoordinate(51.0575297,3.7206793));
+            _box = new GeoCoordinateBox( // flanders
+                new GeoCoordinate(51.51, 2.54),
+                new GeoCoordinate(50.66, 6.21));
 
             // create the map and all it's layers.
             OsmSharp.Osm.Map.Map map = new OsmSharp.Osm.Map.Map();
@@ -114,20 +118,32 @@ namespace RoutingSpeedSample
         private void StartPreProcessing()
         {
             // get the xml from the embedded resource.
-            //Stream stream = new FileInfo(@"c:\OSM\bin\flanders_highway.osm").OpenRead();
+            Stream stream = new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf").OpenRead();
             //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.eeklo.osm");
-            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.lebbeke.osm");
+            //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.lebbeke.osm");
             //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.schendelbeke.osm");
             //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.test_network.osm");
             //Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RoutingSpeedSample.matrix_big_area.osm");
 
             bool ch = false;
+            bool pbf = true;
 
             // create the interpreter: interprets the OSM data.
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 
             // create the tags index: keeps tags at one location
             OsmTagsIndex tags_index = new OsmTagsIndex();
+
+            // create source.
+            DataProcessorSource data_processor_source;
+            if(pbf)
+            { // the source is on osm pbf format.
+                data_processor_source = new PBFDataProcessorSource(stream);
+            }
+            else
+            { // the source is in osm xml format.
+                data_processor_source = new XmlDataProcessorSource(stream);
+            }
 
             if (ch)
             {
@@ -136,7 +152,6 @@ namespace RoutingSpeedSample
                     new MemoryRouterDataSource<CHEdgeData>(tags_index);
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                     osm_data, interpreter, osm_data.TagsIndex);
-                DataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
                 data_processor_source = new ProgressDataProcessorSource(data_processor_source);
                 target_data.RegisterSource(data_processor_source);
                 target_data.Pull();
@@ -160,7 +175,6 @@ namespace RoutingSpeedSample
                     new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
                 SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
                     osm_data, interpreter, osm_data.TagsIndex);
-                DataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
                 data_processor_source = new ProgressDataProcessorSource(data_processor_source);
                 target_data.RegisterSource(data_processor_source);
                 target_data.Pull();
