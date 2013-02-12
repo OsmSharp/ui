@@ -36,7 +36,7 @@ namespace OsmSharp.Osm.Core.Simple
         }
 
         /// <summary>
-        /// Holds the actual list of changes.
+        /// The changes.
         /// </summary>
         public List<SimpleChange> Changes { get; set; }
     }

@@ -169,6 +169,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\APICapabilities.cs" />
+    <Compile Include="API\APIConnection.cs" />
+    <Compile Include="API\APIException.cs" />
     <Compile Include="DynamicGraph\IDynamicGraph.cs" />
     <Compile Include="DynamicGraph\IDynamicGraphEdgeData.cs" />
     <Compile Include="Processor\ChangeSets\DataProcessorChangeSetFilter.cs" />
@@ -221,6 +224,10 @@
     <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
       <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
       <Name>OsmSharp.Tools.Math</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Tools.Xml\OsmSharp.Tools.Xml.csproj">
+      <Project>{550F62F8-B62F-4E77-AF12-ACFD9378B9A0}</Project>
+      <Name>OsmSharp.Tools.Xml</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

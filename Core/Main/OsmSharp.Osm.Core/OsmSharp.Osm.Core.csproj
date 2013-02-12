@@ -196,6 +196,7 @@
     <Compile Include="SimpleShapeInterpreter.cs" />
     <Compile Include="Simple\SimpleChange.cs" />
     <Compile Include="Simple\SimpleChangeSet.cs" />
+    <Compile Include="Simple\SimpleChangeSetInfo.cs" />
     <Compile Include="Simple\SimpleChangeType.cs" />
     <Compile Include="Simple\SimpleNode.cs" />
     <Compile Include="Simple\SimpleOsmGeo.cs" />
