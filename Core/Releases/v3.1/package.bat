@@ -1,5 +1,8 @@
 mkdir OutputPackaged
 
+REM Prevent existing dll from being used after errors in the merging process.
+del /Q OutputPackaged\*.*
+
 REM Merging OsmSharp.Routing.dll
 REM ilmerge /target:library /log:OutputPackaged/Log.OsmSharp.Routing.log /targetplatform:v4,"C:\Windows\Microsoft.NET\Framework\v4.0.30319" /out:OutputPackaged/OsmSharp.Routing.dll Output/OsmSharp.Routing.Core.dll Output/OsmSharp.Routing.Core.TSP.dll Output/OsmSharp.Routing.Core.VRP.dll Output/OsmSharp.Routing.CH.dll Output/OsmSharp.Routing.Instructions.dll
 

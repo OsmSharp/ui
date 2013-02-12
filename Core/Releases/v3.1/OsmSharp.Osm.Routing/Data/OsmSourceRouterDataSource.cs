@@ -182,8 +182,8 @@ namespace OsmSharp.Osm.Routing.Data.Source
             { // vertex not validated yet!
                 Tile tile1 = Tile.CreateAroundLocation(new GeoCoordinate(latitude, longitude), _zoom);
 
-                TileRange range = new TileRange(tile1.X - 1, tile1.Y - 1,
-                    tile1.X + 1, tile1.Y + 1, tile1.Zoom);
+                TileRange range = new TileRange(tile1.X, tile1.Y,
+                    tile1.X, tile1.Y, tile1.Zoom);
 
                 foreach (Tile tile in range)
                 {
