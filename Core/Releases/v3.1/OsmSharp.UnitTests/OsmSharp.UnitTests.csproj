@@ -115,6 +115,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\APITests.cs" />
     <Compile Include="Routes\DynamicAsymmetricMultiRouteTests.cs" />
     <Compile Include="Routes\DynamicAsymmetricRouteTests.cs" />
     <Compile Include="Routes\MultiRouteTest.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Tools\LocatedObjectQTTests.cs" />
     <Compile Include="Tools\MathTest.cs" />
     <Compile Include="Tools\NomatimXmlTest.cs" />
+    <Compile Include="Tools\OsmApiXmlTest.cs" />
     <Compile Include="Tools\PermutationEnumerationTests.cs" />
     <Compile Include="Tools\SortedSetTest.cs" />
     <Compile Include="Tools\StringTableTests.cs" />
@@ -176,6 +178,7 @@
     <EmbeddedResource Include="api_usedense_false.osm.pbf" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="capabilities.xml" />
     <Content Include="test_network_points.txt" />
     <Content Include="testfiles.txt" />
     <Content Include="test_network.png" />

@@ -15,6 +15,397 @@ using System.Xml.Serialization;
 // 
 namespace OsmSharp.Osm.Core.Xml.v0_6
 {
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    public partial class api
+    {
+        private version versionField;
+
+        private area areaField;
+
+        private tracepoints tracepointsField;
+
+        private waynodes waynodesField;
+
+        private changesets changesetsField;
+
+        private timeout timeoutField;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("timeout")]
+        public timeout timeout
+        {
+            get
+            {
+                return this.timeoutField;
+            }
+            set
+            {
+                this.timeoutField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("changesets")]
+        public changesets changesets
+        {
+            get
+            {
+                return this.changesetsField;
+            }
+            set
+            {
+                this.changesetsField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("waynodes")]
+        public waynodes waynodes
+        {
+            get
+            {
+                return this.waynodesField;
+            }
+            set
+            {
+                this.waynodesField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("tracepoints")]
+        public tracepoints tracepoints
+        {
+            get
+            {
+                return this.tracepointsField;
+            }
+            set
+            {
+                this.tracepointsField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("version")]
+        public version version
+        {
+            get
+            {
+                return this.versionField;
+            }
+            set
+            {
+                this.versionField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("area")]
+        public area area
+        {
+            get
+            {
+                return this.areaField;
+            }
+            set
+            {
+                this.areaField = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    public partial class timeout
+    {
+        private long secondsField;
+
+        private bool secondsFieldSpecified;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public long seconds
+        {
+            get
+            {
+                return this.secondsField;
+            }
+            set
+            {
+                this.secondsField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool secondsSpecified
+        {
+            get
+            {
+                return this.secondsFieldSpecified;
+            }
+            set
+            {
+                this.secondsFieldSpecified = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    public partial class changesets
+    {
+        private long maximum_elementsField;
+
+        private bool maximum_elementsFieldSpecified;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public long maximum_elements
+        {
+            get
+            {
+                return this.maximum_elementsField;
+            }
+            set
+            {
+                this.maximum_elementsField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool maximum_elementsSpecified
+        {
+            get
+            {
+                return this.maximum_elementsFieldSpecified;
+            }
+            set
+            {
+                this.maximum_elementsFieldSpecified = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    public partial class waynodes
+    {
+        private long maximumField;
+
+        private bool maximumFieldSpecified;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public long maximum
+        {
+            get
+            {
+                return this.maximumField;
+            }
+            set
+            {
+                this.maximumField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool maximumSpecified
+        {
+            get
+            {
+                return this.maximumFieldSpecified;
+            }
+            set
+            {
+                this.maximumFieldSpecified = value;
+            }
+        }
+    }
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    public partial class tracepoints
+    {
+        private long per_pageField;
+
+        private bool per_pageFieldSpecified;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public long per_page
+        {
+            get
+            {
+                return this.per_pageField;
+            }
+            set
+            {
+                this.per_pageField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool per_pageSpecified
+        {
+            get
+            {
+                return this.per_pageFieldSpecified;
+            }
+            set
+            {
+                this.per_pageFieldSpecified = value;
+            }
+        }
+    }
+
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    public partial class area
+    {
+        private double maximumField;
+
+        private bool maximumFieldSpecified;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public double maximum
+        {
+            get
+            {
+                return this.maximumField;
+            }
+            set
+            {
+                this.maximumField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool maximumSpecified
+        {
+            get
+            {
+                return this.maximumFieldSpecified;
+            }
+            set
+            {
+                this.maximumFieldSpecified = value;
+            }
+        }
+    }
+
+
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
+    [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
+    public partial class version
+    {
+        private double minimumField;
+
+        private bool minimumFieldSpecified;
+
+        private double maximumField;
+
+        private bool maximumFieldSpecified;
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public double minimum
+        {
+            get
+            {
+                return this.minimumField;
+            }
+            set
+            {
+                this.minimumField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool minimumSpecified
+        {
+            get
+            {
+                return this.minimumFieldSpecified;
+            }
+            set
+            {
+                this.minimumFieldSpecified = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public double maximum
+        {
+            get
+            {
+                return this.maximumField;
+            }
+            set
+            {
+                this.maximumField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool maximumSpecified
+        {
+            get
+            {
+                return this.maximumFieldSpecified;
+            }
+            set
+            {
+                this.maximumFieldSpecified = value;
+            }
+        }
+    }
 
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "2.0.50727.3038")]
@@ -1341,7 +1732,6 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class delete
     {
-
         private node[] nodeField;
 
         private way[] wayField;
@@ -1448,6 +1838,7 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
     [System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
     public partial class osm
     {
+        private api apiField;
 
         private bounds boundsField;
 
@@ -1477,6 +1868,21 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
         }
 
         /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("api")]
+        public api api
+        {
+            get
+            {
+                return this.apiField;
+            }
+            set
+            {
+                this.apiField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("bounds")]
         public bounds bounds
         {
             get
@@ -1491,6 +1897,7 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
 
 
         /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("bound")]
         public bound bound
         {
             get
