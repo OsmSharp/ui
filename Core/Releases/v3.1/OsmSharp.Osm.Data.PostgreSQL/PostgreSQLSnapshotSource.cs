@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -26,22 +26,44 @@ using OsmSharp.Osm.Core.Factory;
 using OsmSharp.Osm.Core.Filters;
 using System.Text.RegularExpressions;
 
-namespace OsmSharp.Osm.Data.PostgreSQL.Raw
+namespace OsmSharp.Osm.Data.PostgreSQL
 {
-    public class PostgreSQLSimpleSource : IDataSourceReadOnly, IDisposable
+    /// <summary>
+    /// Reads data from the OSM PostgreSQL snapshot schema.
+    /// 
+    /// http://wiki.openstreetmap.org/wiki/Osmosis/PostGIS_Setup#Procedure_to_import_data_into_PostgreSQL
+    /// </summary>
+    public class PostgreSQLSnapshotSource : IDataSourceReadOnly, IDisposable
     {
+        /// <summary>
+        /// Holds the connection string.
+        /// </summary>
         private string _connection_string;
 
+        /// <summary>
+        /// The id of this datasource.
+        /// </summary>
         private Guid _id;
 
-        public PostgreSQLSimpleSource(string connection_string)
+        /// <summary>
+        /// Creates a new snapshot datasource.
+        /// </summary>
+        /// <param name="connection_string"></param>
+        public PostgreSQLSnapshotSource(string connection_string)
         {
             _connection_string = connection_string;
             _id = Guid.NewGuid();
         }
 
+        /// <summary>
+        /// Holds the PostgreSQL connection.
+        /// </summary>
         private NpgsqlConnection _connection;
 
+        /// <summary>
+        /// Creates/gets the connection.
+        /// </summary>
+        /// <returns></returns>
         private NpgsqlConnection CreateConnection()
         {
             if (_connection == null)
@@ -52,6 +74,11 @@ namespace OsmSharp.Osm.Data.PostgreSQL.Raw
             return _connection;
         }
 
+        /// <summary>
+        /// Parses tags from hstore.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="target"></param>
         private void ParseTags(string tags,IDictionary<string,string> target)
         {
             if (tags.Length > 0)
@@ -588,6 +615,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL.Raw
 
         #endregion
 
+        /// <summary>
+        /// Closes this datasource.
+        /// </summary>
         public void Close()
         {
             if (_connection != null)

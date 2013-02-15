@@ -172,9 +172,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Raw\PostgreSQLApiSource.cs" />
-    <Compile Include="Raw\PostgreSQLSimpleSource.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="PostgreSQLApiSource.cs" />
+    <Compile Include="SimpleSchema\PostgreSQLSimpleSchemaSource.cs" />
+    <Compile Include="PostgreSQLSnapshotSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SimpleSchema\Processor\PostgreSQLSimpleSchemaDataProcessorTarget.cs" />
+    <Compile Include="SimpleSchema\Processor\TileCalculations.cs" />
+    <Compile Include="SimpleSchema\SchemaTools\PostgreSQLSimpleSchemaTools.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm.Core\OsmSharp.Osm.Core.csproj">
@@ -193,6 +198,9 @@
       <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
       <Name>OsmSharp.Tools.Math</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Raw\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

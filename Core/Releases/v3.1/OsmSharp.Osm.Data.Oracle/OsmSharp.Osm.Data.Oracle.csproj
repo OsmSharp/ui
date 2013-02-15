@@ -174,14 +174,15 @@
     <Compile Include="HH\HighwayHierarchyEnumerator.cs" />
     <Compile Include="HH\HighwayHierarchyLevel0Enumerator.cs" />
     <Compile Include="OracleCommandExtension.cs" />
-    <Compile Include="Raw\OracleSimpleSource.cs" />
+    <Compile Include="SimpleSchema\OracleSimpleSchemaSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Raw\Processor\ChangeSets\OracleSimpleChangeSetApplyTarget.cs" />
+    <Compile Include="SimpleSchema\Processor\ChangeSets\OracleSimpleChangeSetApplyTarget.cs" />
     <Compile Include="Extensions.cs" />
-    <Compile Include="Raw\Processor\OracleSimpleDataProcessorSource.cs" />
-    <Compile Include="Raw\Processor\OracleSimpleDataProcessorTarget.cs" />
-    <Compile Include="Raw\Processor\OracleSimpleDataProcessorTruncateTarget.cs" />
-    <Compile Include="Raw\Processor\TileCalculations.cs" />
+    <Compile Include="SimpleSchema\Processor\OracleSimpleDataProcessorSource.cs" />
+    <Compile Include="SimpleSchema\Processor\OracleSimpleDataProcessorTarget.cs" />
+    <Compile Include="SimpleSchema\Processor\OracleSimpleDataProcessorTruncateTarget.cs" />
+    <Compile Include="SimpleSchema\Processor\TileCalculations.cs" />
+    <Compile Include="SimpleSchema\SchemaTools\OracleSimpleSchemaTools.cs" />
     <Compile Include="Sparse\OracleSparseData.cs" />
     <Compile Include="Sparse\Processor\OracleSparseDataProcessorTarget.cs" />
   </ItemGroup>
@@ -206,8 +207,8 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="HH\create.sql" />
-    <Content Include="Raw\Processor\Scripts\create_db.sql" />
-    <Content Include="Raw\Processor\Scripts\truncate_tables.sql" />
+    <Content Include="SimpleSchema\Processor\Scripts\create_db.sql" />
+    <Content Include="SimpleSchema\Processor\Scripts\truncate_tables.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

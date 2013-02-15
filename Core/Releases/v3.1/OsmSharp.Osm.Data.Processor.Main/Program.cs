@@ -32,6 +32,7 @@ using OsmSharp.Osm.Data.XML.Raw.Processor.ChangeSets;
 using OsmSharp.Osm.Data.Redis.Sparse.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using System.IO;
+using OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor;
 
 namespace OsmSharp.Osm.Data.Processor.Main
 {
@@ -43,133 +44,24 @@ namespace OsmSharp.Osm.Data.Processor.Main
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            //string source_file = @"C:\temp\RU-MOW.osm";
-            //string source_file = @"C:\OSM\bin\belgium.osm.pbf";
-            string source_file = @"\\dm-wks-177\c$\temp\belgium.osm.pbf";
-            //Program.TestImportRedisAndSparsePreProcessing(source_file);
-            Program.TestImportOracleAndSparsePreProcessing(source_file);
-            //var startTime = DateTime.Now;
-            //redis_target.Pull();
-            //var time = DateTime.Now - startTime;
-            //Console.WriteLine(new TimeSpan(time.Days, time.Hours, time.Minutes, time.Seconds).ToString("g"));
-            
+            // register the output stream to the console.
+            OsmSharp.Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
+                new OsmSharp.Tools.Core.Output.ConsoleOutputStream());
 
-            ////OracleSimpleDataProcessorTarget test_oracle_target = new OracleSimpleDataProcessorTarget(connection_string);
-            ////test_oracle_target.RegisterSource(source);
-            ////test_oracle_target.Pull();
+            string source_file = @"c:\OSM\bin\belgium.osm.pbf";
+            string connection_string = 
+                "Server=10.0.0.11;Port=5432;User Id=postgres;Password=mixbeton;Database=osmsharp_test;";
 
-            string connection_string = "Data source=DEV;User Id=OSM;Password=mixbeton;";
-            ////////string source_file = @"drongen.osm";
-            //string source_file = @"\\dm-wks-200\c$\OSM\bin\belgium.osm";
             TestImportBelgium(source_file, connection_string);
-
-
-            //double top = 51.6;
-            //double bottom = 50.5;
-            //double left = 2.3;
-            //double right = 6.3;
-
-            //DummyListener listenere = new DummyListener();
-
-            //int begin_nr = 20282;
-            //while (true)
-            //{
-            //    //Replicator replicator = new Replicator(begin_nr, @"http://planet.openstreetmap.org/minute-replicate", 10000, 100);
-            //    Replicator replicator = new Replicator(begin_nr, @"http://planet.openstreetmap.org/hour-replicate", 100, 100);
-
-            //    DataProcessorChangeSetFilterBoundingBox box_filter = new DataProcessorChangeSetFilterBoundingBox(
-            //        new OracleSimpleSource(connection_string),
-            //        new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(new OsmSharp.Tools.Math.Geo.GeoCoordinate(top, left), new OsmSharp.Tools.Math.Geo.GeoCoordinate(bottom, right)),
-            //        listenere);
-            //    box_filter.RegisterSource(replicator);
-
-            //    OracleSimpleChangeSetApplyTarget change_target = new OracleSimpleChangeSetApplyTarget(connection_string, true);
-            //    change_target.RegisterSource(box_filter);
-            //    change_target.Pull();
-            //    change_target.Close();
-
-            //    replicator.Close();
-
-            //    begin_nr = begin_nr + 99;
-            //}
         }
 
-
-        private static void TestImportOracleAndSparsePreProcessing(string source_file)
+        private static void TestImportBelgium(string source_file, string connection_string)
         {
-            //string source_file = @"drongen.osm";
-            // import data
-            XmlDataProcessorSource source = new XmlDataProcessorSource(source_file, false);
-
-            //OracleSparseDataProcessorTarget redis_target = new OracleSparseDataProcessorTarget(
-            //    "Data source=DEV;User Id=OSM_HH;Password=mixbeton;");
-            ////redis_target.RegisterSource(source);
-            ////redis_target.Pull();
-            //ProgressDataProcessorTarget progress = new ProgressDataProcessorTarget(redis_target);
-            //progress.RegisterSource(source);
-            //progress.Pull();
-
-            //// pre-process.
-            //Osm.Routing.Sparse.Memory.MemorySparseData memory_sparse_data = new OsmSharp.Routing.Sparse.Memory.MemorySparseData();
-            //Osm.Data.Redis.RedisSimpleSource redis_source = new Data.Redis.RedisSimpleSource();
-            //Osm.Routing.Raw.Graphs.Graph raw_graph = new OsmSharp.Routing.Raw.Graphs.Graph(
-            //    new OsmSharp.Osm.Routing.Raw.Graphs.Interpreter.GraphInterpreterTime(redis_source, OsmSharp.Routing.Core.VehicleEnum.Car), redis_source);
-            //Osm.Routing.Sparse.PreProcessor.SparsePreProcessor pre_processor = new OsmSharp.Routing.Sparse.PreProcessor.SparsePreProcessor(
-            //    memory_sparse_data, raw_graph);
-            //pre_processor.Process(redis_target.ProcessedNodes);
-        }
-
-        private static void TestImportRedisAndSparsePreProcessing(string source_file)
-        {
-            //string source_file = @"drongen.osm";
-            // import data
-            XmlDataProcessorSource source = new XmlDataProcessorSource(source_file, false);
-
-            RedisSparseDataProcessorTarget redis_target = new RedisSparseDataProcessorTarget();
-            redis_target.RegisterSource(source);
-            redis_target.Pull();
-            //ProgressDataProcessorTarget progress = new ProgressDataProcessorTarget(redis_target);
-            //progress.RegisterSource(source);
-            //progress.Pull();
-
-            //// pre-process.
-            //Osm.Routing.Sparse.Memory.MemorySparseData memory_sparse_data = new OsmSharp.Routing.Sparse.Memory.MemorySparseData();
-            //Osm.Data.Redis.RedisSimpleSource redis_source = new Data.Redis.RedisSimpleSource();
-            //Osm.Routing.Raw.Graphs.Graph raw_graph = new OsmSharp.Routing.Raw.Graphs.Graph(
-            //    new OsmSharp.Osm.Routing.Raw.Graphs.Interpreter.GraphInterpreterTime(redis_source, OsmSharp.Routing.Core.VehicleEnum.Car), redis_source);
-            //Osm.Routing.Sparse.PreProcessor.SparsePreProcessor pre_processor = 
-            //    new OsmSharp.Routing.Sparse.PreProcessor.SparsePreProcessor(
-            //    memory_sparse_data);
-            //pre_processor.Process(redis_target.ProcessedNodes);
-        }
-
-        private static void TestImportBelgium(string source_file,string connection_string)
-        {
-            // truncate
-            OracleSimpleDataProcessorTruncateTarget truncate_target = new OracleSimpleDataProcessorTruncateTarget(connection_string);
-            DataProcessorSourceEmpty empty_source = new DataProcessorSourceEmpty();
-            truncate_target.RegisterSource(empty_source);
-            truncate_target.Pull();
-            Console.WriteLine("Truncated data!");
-
-            // import data
             PBFDataProcessorSource source = new PBFDataProcessorSource(new FileInfo(source_file).OpenRead());
-
-            //double bottom = 49.35;
-            //double top = 51.6;
-            //double left = 1.99;
-            //double right = 6.71;
-
-            //DataProcessorFilterBoundingBox box_filter = new DataProcessorFilterBoundingBox(new OsmSharp.Tools.Math.Geo.GeoCoordinateBox(new OsmSharp.Tools.Math.Geo.GeoCoordinate(
-            //    top, left), new OsmSharp.Tools.Math.Geo.GeoCoordinate(bottom, right)));
-            //box_filter.RegisterSource(source);
-
-            //RoutingFilter routing_filter = new RoutingFilter();
-            //routing_filter.RegisterSource(source);
-
-            OracleSimpleDataProcessorTarget test_oracle_target = new OracleSimpleDataProcessorTarget(connection_string);
-            test_oracle_target.RegisterSource(source);
-            test_oracle_target.Pull();
+            PostgreSQLSimpleSchemaDataProcessorTarget test_target = new 
+                PostgreSQLSimpleSchemaDataProcessorTarget(connection_string, true);
+            test_target.RegisterSource(source);
+            test_target.Pull();
         }
 
         private static void TestXmlWriter()
