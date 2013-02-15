@@ -60,8 +60,8 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
         /// </summary>
         private bool _create_and_detect_schema;
 
-        int _batch_nodes = 50000;
-        int _batch_ways = 10000;
+        int _batch_nodes = 500000;
+        int _batch_ways = 1;
         int _batch_relations = 5000;
 
         //int _batch_nodes = 1;
@@ -129,10 +129,10 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
             _way_table.Columns.Add(new DataColumn("id", typeof(long)));
             _way_table.Columns.Add(new DataColumn("changeset_id", typeof(long)));
             _way_table.Columns.Add(new DataColumn("timestamp", typeof(DateTime)));
-            _way_table.Columns.Add(new DataColumn("visible", typeof(long)));
-            _way_table.Columns.Add(new DataColumn("version", typeof(long)));
+            _way_table.Columns.Add(new DataColumn("visible", typeof(bool)));
+            _way_table.Columns.Add(new DataColumn("version", typeof(int)));
             _way_table.Columns.Add(new DataColumn("usr", typeof(string)));
-            _way_table.Columns.Add(new DataColumn("usr_id", typeof(long)));
+            _way_table.Columns.Add(new DataColumn("usr_id", typeof(int)));
 
             // create way_tags bulk objects.
             _way_tags_table = new DataTable();
@@ -144,7 +144,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
             _way_nodes_table = new DataTable();
             _way_nodes_table.Columns.Add(new DataColumn("way_id", typeof(long)));
             _way_nodes_table.Columns.Add(new DataColumn("node_id", typeof(long)));
-            _way_nodes_table.Columns.Add(new DataColumn("sequence_id", typeof(long)));
+            _way_nodes_table.Columns.Add(new DataColumn("sequence_id", typeof(int)));
         }
 
         private void CreateRelationTables()
@@ -154,10 +154,10 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
             _relation_table.Columns.Add(new DataColumn("id", typeof(long)));
             _relation_table.Columns.Add(new DataColumn("changeset_id", typeof(long)));
             _relation_table.Columns.Add(new DataColumn("timestamp", typeof(DateTime)));
-            _relation_table.Columns.Add(new DataColumn("visible", typeof(long)));
-            _relation_table.Columns.Add(new DataColumn("version", typeof(long)));
+            _relation_table.Columns.Add(new DataColumn("visible", typeof(bool)));
+            _relation_table.Columns.Add(new DataColumn("version", typeof(int)));
             _relation_table.Columns.Add(new DataColumn("usr", typeof(string)));
-            _relation_table.Columns.Add(new DataColumn("usr_id", typeof(long)));
+            _relation_table.Columns.Add(new DataColumn("usr_id", typeof(int)));
 
             // create relation_tags bulk objects.
             _relation_tags_table = new DataTable();
@@ -171,7 +171,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
             _relation_members_table.Columns.Add(new DataColumn("member_type", typeof(string)));
             _relation_members_table.Columns.Add(new DataColumn("member_id", typeof(long)));
             _relation_members_table.Columns.Add(new DataColumn("member_role", typeof(string)));
-            _relation_members_table.Columns.Add(new DataColumn("sequence_id", typeof(long)));
+            _relation_members_table.Columns.Add(new DataColumn("sequence_id", typeof(int)));
         }
 
         /// <summary>
@@ -230,7 +230,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
                     { // for each row generate the binary data.
                         // write the 16-bit integer count of the number of fields
                         byte[] field_count_data = BitConverter.GetBytes((short)table.Columns.Count);
-                        this.WriteReverse(target, field_count_data);
+                        this.ReverseEndianness(target, field_count_data);
                         //target.Write(field_count_data, 0, field_count_data.Length);
 
                         for (int column_idx = 0; column_idx < table.Columns.Count; column_idx++)
@@ -302,13 +302,13 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
                             // write the length of the field.
                             int length = field_data.Length;
                             byte[] length_data = BitConverter.GetBytes(length);
-                            this.WriteReverse(target, length_data);
+                            this.ReverseEndianness(target, length_data);
                             //target.Write(length_data, 0, length_data.Length);
 
                             // write the data.
                             if (reverse)
                             { // write the data in reverse.
-                                this.WriteReverse(target, field_data);
+                                this.ReverseEndianness(target, field_data);
                             }
                             else
                             { // write the data in order.
@@ -345,16 +345,18 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
         }
 
         /// <summary>
-        /// Writes the bytes in reverse.
+        /// Writes the given bytes after reversing their order.
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="data"></param>
-        private void WriteReverse(Stream stream, byte[] data)
+        private void ReverseEndianness(Stream stream, byte[] data)
         {
+            byte[] data_reverse = new byte[data.Length];
             for (int idx = data.Length - 1; idx >= 0; idx--)
             {
-                stream.WriteByte(data[idx]);
+                data_reverse[data.Length - 1 - idx] = data[idx];
             }
+            stream.Write(data_reverse, 0, data_reverse.Length);
         }
 
         #endregion

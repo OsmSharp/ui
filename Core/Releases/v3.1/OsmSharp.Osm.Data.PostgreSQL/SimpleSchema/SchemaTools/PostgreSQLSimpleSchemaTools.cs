@@ -30,7 +30,8 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
                                                     "    tile          bigint NOT NULL, " +
                                                     "    version       integer NOT NULL, " +
                                                     "    usr           varchar(510), " +
-                                                    "    usr_id        integer " +
+                                                    "    usr_id        integer, " +
+                                                    "    CONSTRAINT    pk_node PRIMARY KEY (id) " +
                                                     " );";
 
         /// <summary>
@@ -54,7 +55,8 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
                                                     "	visible       boolean NOT NULL, " +
                                                     "	version       integer NOT NULL, " +
                                                     "	usr           varchar(510), " +
-                                                    "	usr_id        integer " +
+                                                    "	usr_id        integer, " +
+                                                    "   CONSTRAINT    pk_way PRIMARY KEY (id) " +
                                                     "); ";
 
         /// <summary>
@@ -88,7 +90,8 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
                                                         "	visible       boolean NOT NULL, " +
                                                         "	version       integer NOT NULL, " +
                                                         "	usr           varchar(510), " +
-                                                        "	usr_id        integer " +
+                                                        "	usr_id        integer, " +
+                                                        "   CONSTRAINT    pk_relation PRIMARY KEY (id) " +
                                                         ");";
 
         /// <summary>
