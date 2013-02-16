@@ -283,6 +283,10 @@
       <Project>{5DCC16FB-44D8-4789-9AA0-C939574F0D95}</Project>
       <Name>OsmSharp.Osm.Data.PBF</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Osm.Data.PostgreSQL\OsmSharp.Osm.Data.PostgreSQL.csproj">
+      <Project>{A4D2E373-A9BD-4872-99A0-904E2E90C96E}</Project>
+      <Name>OsmSharp.Osm.Data.PostgreSQL</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Osm.Data.XML\OsmSharp.Osm.Data.XML.csproj">
       <Project>{18254C55-15C8-4438-9F92-B3B78E2720F5}</Project>
       <Name>OsmSharp.Osm.Data.XML</Name>

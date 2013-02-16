@@ -209,10 +209,10 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                             int latitude_int = reader.GetInt32(1);
                             int longitude_int = reader.GetInt32(2);
                             long changeset_id = reader.GetInt64(3);
-                            bool visible = reader.GetInt32(4) == 1;
+                            bool visible = reader.GetBoolean(4);
                             DateTime timestamp = reader.GetDateTime(5);
                             long tile = reader.GetInt64(6);
-                            long version = reader.GetInt64(7);
+                            long version = reader.GetInt32(7);
 
                             if (!nodes.ContainsKey(returned_id))
                             {
@@ -335,8 +335,8 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                             long id = reader.GetInt64(0);
                             long changeset_id = reader.GetInt64(1);
                             DateTime timestamp = reader.GetDateTime(2);
-                            bool visible = reader.GetInt64(3) == 1;
-                            long version = reader.GetInt64(4);
+                            bool visible = reader.GetBoolean(3);
+                            long version = reader.GetInt32(4);
 
                             // create way.
                             way = OsmBaseFactory.CreateWay(id);
@@ -370,7 +370,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                         {
                             long id = reader.GetInt64(0);
                             long node_id = reader.GetInt64(1);
-                            long sequence_id = reader.GetInt64(2);
+                            long sequence_id = reader.GetInt32(2);
 
                             if (nodes == null || !nodes.ContainsKey(node_id))
                             {
@@ -411,7 +411,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                         {
                             long id = reader.GetInt64(0);
                             long node_id = reader.GetInt64(1);
-                            long sequence_id = reader.GetInt64(2);
+                            long sequence_id = reader.GetInt32(2);
 
                             Node way_node;
                             if (way_nodes.TryGetValue(node_id, out way_node))
@@ -492,12 +492,12 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                 NpgsqlConnection con = this.CreateConnection();
 
                 List<long> way_ids = new List<long>();
-                for (int idx_1000 = 0; idx_1000 <= nodes.Count / 1000; idx_1000++)
+                for (int idx_100 = 0; idx_100 <= nodes.Count / 100; idx_100++)
                 {
                     // STEP1: Load ways that exist for the given nodes.
                     string sql = "SELECT * FROM way_nodes WHERE (node_id IN ({0})) ";
-                    int start_idx = idx_1000 * 1000;
-                    int stop_idx = Math.Min((idx_1000 + 1) * 1000, nodes.Count);
+                    int start_idx = idx_100 * 100;
+                    int stop_idx = Math.Min((idx_100 + 1) * 100, nodes.Count);
                     string ids_string = this.ConstructIdList(nodes.Keys.ToList<long>(), start_idx, stop_idx);
                     if (ids_string.Length > 0)
                     {
@@ -515,6 +515,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                             }
                         }
                         reader.Close();
+                        com.Dispose();
                     }
                 }
 
@@ -588,7 +589,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
             // STEP 1: query nodes table.
             //id	latitude	longitude	changeset_id	visible	timestamp	tile	version
             string sql
-                = "SELECT * FROM node WHERE (visible = 1) AND  (tile IN ({4})) AND (latitude BETWEEN {0} AND {1} AND longitude BETWEEN {2} AND {3})";
+                = "SELECT * FROM node WHERE (visible = true) AND  (tile IN ({4})) AND (latitude BETWEEN {0} AND {1} AND longitude BETWEEN {2} AND {3})";
             sql = string.Format(sql,
                     latitude_min.ToString(),
                     latitude_max.ToString(),
@@ -610,10 +611,10 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                 int latitude_int = reader.GetInt32(1);
                 int longitude_int = reader.GetInt32(2);
                 long changeset_id = reader.GetInt64(3);
-                bool visible = reader.GetInt64(4)==1;
+                bool visible = reader.GetBoolean(4);
                 DateTime timestamp = reader.GetDateTime(5);
                 long tile = reader.GetInt64(6);
-                long version = reader.GetInt64(7);
+                long version = reader.GetInt32(7);
 
                 // create node.
                 node = OsmBaseFactory.CreateNode(returned_id);

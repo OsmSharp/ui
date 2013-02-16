@@ -60,8 +60,8 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
         /// </summary>
         private bool _create_and_detect_schema;
 
-        int _batch_nodes = 500000;
-        int _batch_ways = 1;
+        int _batch_nodes = 100000;
+        int _batch_ways = 100000;
         int _batch_relations = 5000;
 
         //int _batch_nodes = 1;
