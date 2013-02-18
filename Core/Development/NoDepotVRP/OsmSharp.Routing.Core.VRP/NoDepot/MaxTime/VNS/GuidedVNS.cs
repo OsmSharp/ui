@@ -39,14 +39,14 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
         where ResolvedType : IRouterPoint
     {
         /// <summary>
-        /// Holds the router.
-        /// </summary>
-        private IRouter<ResolvedType> _router;
-
-        /// <summary>
         /// Holds the lambda value.
         /// </summary>
         private float _lambda;
+
+        /// <summary>
+        /// Holds the sigma value.
+        /// </summary>
+        private float _sigma;
 
         /// <summary>
         /// The threshold percentage.
@@ -59,11 +59,13 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
         /// <param name="router"></param>
         /// <param name="max"></param>
         /// <param name="delivery_time"></param>
-        public GuidedVNS(IRouter<ResolvedType> router, Second max, Second delivery_time, float threshold_precentage, float lambda)
+        public GuidedVNS(IRouter<ResolvedType> router, Second max, Second delivery_time, 
+            float threshold_precentage, float lambda, float sigma)
             : base(router, max, delivery_time)
         {
             _threshold_percentage = threshold_precentage;
             _lambda = lambda;
+            _sigma = sigma;
 
             _intra_improvements = new List<IImprovement>();
             //_intra_improvements.Add(
@@ -106,7 +108,11 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
 
             CheapestInsertionSolverWithImprovements<ResolvedType> vrp_router =
                 new CheapestInsertionSolverWithImprovements<ResolvedType>(
-                    _router, problem.Max.Value, problem.DeliveryTime.Value, 5, 0.10f, true, _threshold_percentage, true, 0.75f);
+                    this.Router, problem.Max.Value, problem.DeliveryTime.Value, 
+                    5, 0.25f, true, _threshold_percentage, true, 0.25f);
+            vrp_router.IntermidiateResult += new OsmSharpRoutesDelegate(vrp_router_IntermidiateResult);
+            vrp_router.Points = this.Points;
+
             MaxTimeSolution original_solution = vrp_router.Solve(
                 problem);
 
@@ -165,6 +171,8 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
                                     // recalculate weights.
                                     solution[round_x] = problem.Time(solution.Route(round_x));
                                     solution[round_y] = problem.Time(solution.Route(round_y));
+
+                                    this.RaiseIntermidiateResult(solution);
                                 }
 
                                 // check customer counts.
@@ -260,6 +268,25 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
                 }
             }
             return original_solution;
+        }
+
+        void vrp_router_IntermidiateResult(Route.OsmSharpRoute[] result, Dictionary<int, List<int>> solution)
+        {
+            if (this.CanRaiseIntermidiateResult())
+            {
+                this.RaiseIntermidiateResult(result, solution);
+            }
+        }
+
+        private void RaiseIntermidiateResult(MaxTimeSolution solution)
+        {
+            int[][] raw_routes = new int[solution.Count][];
+            for (int idx = 0; idx < solution.Count; idx++)
+            {
+                raw_routes[idx] = solution.Route(idx).ToArray<int>();
+            }
+
+            this.DoIntermidiateResult(raw_routes);
         }
 
         #region Improvement Heurstics

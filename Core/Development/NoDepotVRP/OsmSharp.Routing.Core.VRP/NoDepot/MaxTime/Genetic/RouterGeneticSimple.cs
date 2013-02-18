@@ -34,6 +34,8 @@ using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
 using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Mutation;
+using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation;
+using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion;
 
 namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
 {
@@ -156,9 +158,9 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
             IGenerationOperation<MaxTimeSolution, MaxTimeProblem, Fitness> generation =
                 //new SolverGenerationOperation(new TSPPlacement.TSPPlacementSolver<ResolvedType>(
                 //    this.Router, this.Max, this.DeliveryTime, tsp_solution));
-                new OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation.RandomBestPlacement();
-            //new SolverGenerationOperation(new RouterBestPlacementWithSeeds<ResolvedType>(
-            //    this.Router, this.Max, this.DeliveryTime));
+                //new OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic.Generation.RandomBestPlacement();   
+                new SolverGenerationOperation(new CheapestInsertionSolverWithImprovements<ResolvedType>(
+                    this.Router, this.Max, this.DeliveryTime, 10, 0.1f, true, 0.1f, false, 0f, false));
 
             // initialize the crossover.
             ICrossOverOperation<MaxTimeSolution, MaxTimeProblem, Fitness> cross_over =
@@ -170,9 +172,9 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
 
             List<IMutationOperation<MaxTimeSolution, MaxTimeProblem, Fitness>> mutators =
                 new List<IMutationOperation<MaxTimeSolution, MaxTimeProblem, Fitness>>();
-            //mutators.Add(new RoutePartExchangeMutation());
+            mutators.Add(new RoutePartExchangeMutation());
             mutators.Add(new VehicleMutation());
-            mutators.Add(new ThreeOptMutation());
+            //mutators.Add(new ThreeOptMutation());
             //mutators.Add(new RedivideRouteMutation());
             if (_probabilities == null)
             {
@@ -197,7 +199,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic
                 cross_over, // new RouteExchangeOperation(), //new RouteExchangeOperation(), //new RouteExchangeAndVehicleOperation(), // Order1CrossoverOperation()
                 generation, //new RandomBestPlacement(),//new RandomGeneration(), //new RandomBestPlacement(),
                 new FitnessCalculator());
-            //solver.NewFittest += new Solver<MaxTimeSolution, MaxTimeProblem, Fitness>.NewFittestDelegate(solver_NewFittest);
+            solver.NewFittest += new Solver<MaxTimeSolution, MaxTimeProblem, Fitness>.NewFittestDelegate(solver_NewFittest);
             //solver.NewGeneration += new Solver<MaxTimeSolution, Problem, Fitness>.NewGenerationDelegate(solver_NewGeneration);
             Individual<MaxTimeSolution, MaxTimeProblem, Fitness> solution = solver.Start(null);
             //this.solver_NewFittest(solution);

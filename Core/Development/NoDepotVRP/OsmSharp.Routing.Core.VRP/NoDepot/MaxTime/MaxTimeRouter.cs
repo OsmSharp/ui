@@ -173,6 +173,18 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
         /// </summary>
         private ResolvedType[] _points;
 
+        public ResolvedType[] Points
+        {
+            get
+            {
+                return _points;
+            }
+            set
+            {
+                _points = value;
+            }
+        }
+
         /// <summary>
         /// Called when an intermidiate result is available.
         /// </summary>
