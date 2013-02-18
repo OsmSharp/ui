@@ -51,7 +51,6 @@
   <ItemGroup>
     <Compile Include="GpxDocument.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="v1_0\gpx.cs">
       <DependentUpon>gpx.xsd</DependentUpon>
     </Compile>
@@ -72,6 +71,9 @@
       <Project>{7E0B785A-74E0-4392-A434-600C03825E57}</Project>
       <Name>OsmSharp.Tools.Xml.Android</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
 </Project>
