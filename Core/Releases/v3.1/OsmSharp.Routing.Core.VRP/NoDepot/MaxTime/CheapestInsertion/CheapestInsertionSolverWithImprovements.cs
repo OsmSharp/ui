@@ -78,6 +78,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
         /// </summary>
         private float _lambda;
 
+
         /// <summary>
         /// Creates a new best placement min max no depot vrp router.
         /// </summary>
@@ -85,7 +86,23 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
         /// <param name="min"></param>
         /// <param name="max"></param>
         public CheapestInsertionSolverWithImprovements(
-            Second max, Second delivery_time, int k, float delta_percentage, bool use_seed_cost, float threshold_precentage, bool use_seed, float lambda)
+            Second max, Second delivery_time, int k, float delta_percentage, bool use_seed_cost,
+            float threshold_precentage, bool use_seed, float lambda)
+            : this(max, delivery_time, k, delta_percentage, use_seed_cost, threshold_precentage,
+            use_seed, lambda, true)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new best placement min max no depot vrp router.
+        /// </summary>
+        /// <param name="router"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        public CheapestInsertionSolverWithImprovements(
+            Second max, Second delivery_time, int k, float delta_percentage, bool use_seed_cost, 
+            float threshold_precentage, bool use_seed, float lambda, bool use_improvements)
             :base(max, delivery_time)
         {
             _k = k;
@@ -96,22 +113,28 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
             _lambda = lambda;
 
             _intra_improvements = new List<IImprovement>();
-            //_intra_improvements.Add(
-            //    new OsmSharp.Tools.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver());
-            _intra_improvements.Add(
-                new HillClimbing3OptSolver(true, true));
+            if (use_improvements)
+            {
+                //_intra_improvements.Add(
+                //    new OsmSharp.Tools.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver());
+                _intra_improvements.Add(
+                    new HillClimbing3OptSolver(true, true));
+            }
 
             _inter_improvements = new List<IInterImprovement>();
-            _inter_improvements.Add(
-                new ExchangeInterImprovement());
-            _inter_improvements.Add(
-                new RelocateImprovement());
-            //_inter_improvements.Add(
-            //    new TwoOptInterImprovement());
-            _inter_improvements.Add(
-                new RelocateExchangeInterImprovement());
-            _inter_improvements.Add(
-                new CrossExchangeInterImprovement());
+            if (use_improvements)
+            {
+                _inter_improvements.Add(
+                    new ExchangeInterImprovement());
+                _inter_improvements.Add(
+                    new RelocateImprovement());
+                //_inter_improvements.Add(
+                //    new TwoOptInterImprovement());
+                _inter_improvements.Add(
+                    new RelocateExchangeInterImprovement());
+                _inter_improvements.Add(
+                    new CrossExchangeInterImprovement());
+            }
         }
 
         /// <summary>
@@ -298,6 +321,22 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion
                             break;
                         }
                     }
+                    //else
+                    //{// ok we are done!
+                    //    solution[solution.Count - 1] = this.ImproveIntraRoute(problem,
+                    //        current_route, solution[solution.Count - 1]);
+
+                    //    if (!solution.IsValid())
+                    //    {
+                    //        throw new Exception();
+                    //    }
+                    //    int count_after = solution.Route(solution.Count - 1).Count;
+
+                    //    this.Improve(problem, solution, max, solution.Count - 1);
+
+                    //    // break the route.
+                    //    break;
+                    //}
                 }
             }
 

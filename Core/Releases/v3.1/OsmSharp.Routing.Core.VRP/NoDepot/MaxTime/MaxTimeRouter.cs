@@ -152,7 +152,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
             }
             return false;
         }
-        
+
         #region Intermidiate Results
 
         /// <summary>
@@ -161,6 +161,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime
         private GeoCoordinate[] _locations;
 
         #endregion
+
 
         /// <summary>
         /// Implements the actual logic.

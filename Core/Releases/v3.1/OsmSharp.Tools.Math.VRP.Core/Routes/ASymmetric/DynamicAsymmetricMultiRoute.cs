@@ -102,7 +102,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// Adds a new empty route.
         /// </summary>
         /// <returns></returns>
-        public IRoute Add()
+        public virtual IRoute Add()
         {
             // add one element to the first array.
             int route_idx = _first.Length;
@@ -121,7 +121,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// </summary>
         /// <param name="customer"></param>
         /// <returns></returns>
-        public IRoute Add(int customer)
+        public virtual IRoute Add(int customer)
         {
             // add one element to the first array.
             int route_idx = _first.Length;
@@ -146,7 +146,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// Adds a new route by copying the given one.
         /// </summary>
         /// <param name="route"></param>
-        public IRoute Add(IRoute route)
+        public virtual IRoute Add(IRoute route)
         {
             bool first = true;
             int previous = -1;
@@ -194,7 +194,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
-        public IRoute Route(int idx)
+        public virtual IRoute Route(int idx)
         {
             return _first[idx];
         }
@@ -643,10 +643,10 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             /// <param name="customer"></param>
             public void ReplaceEdgeFrom(int from, int customer)
             {
-                if (customer < 0)
-                { // a new customer cannot be negative!
-                    throw new ArgumentOutOfRangeException("Cannot add customers with a negative index!");
-                }
+                //if (customer < 0)
+                //{ // a new customer cannot be negative!
+                //    throw new ArgumentOutOfRangeException("Cannot add customers with a negative index!");
+                //}
                 if (this.IsEmpty)
                 { // add the given customer as the first one.
                     _first = customer;
@@ -668,7 +668,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
                         throw new ArgumentOutOfRangeException("Cannot add a customer after a customer with a negative index!");
                     }
 
-                    if (customer == _first)
+                    if (this.IsRound && customer == _first)
                     { // the next customer is actually the first customer.
                         // set the next customer of the from customer to -1.
                         customer = -1;
@@ -798,6 +798,10 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             /// <returns></returns>
             public bool IsValid()
             {
+                if (_first < 0)
+                { // empty route is always valid.
+                    return true;
+                }
                 HashSet<int> unique_customers = new HashSet<int>(_parent._next_array);
                 int count = 0;
                 foreach (int customer in _parent._next_array)
@@ -1029,7 +1033,41 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             {
                 throw new NotImplementedException();
             }
-        }
 
+            public void InsertFirst(int first)
+            {
+                if (!this.IsEmpty)
+                { // only replace the next customer of the current first customer if 
+                    // there already is one.
+                    _parent._next_array[first] = _first;
+                }
+                _first = first;
+
+                // resize the array if needed.
+                if (_parent._next_array.Length <= first)
+                { // resize the array.
+                    this.Resize(first);
+                }
+            }
+
+            public void ReplaceFirst(int first)
+            {
+                //int next_first = _parent._next_array[_first];
+                ////_parent._next_array[_first] = -1;
+                //_parent._next_array[first] = next_first;
+                _first = first;
+
+                // resize the array if needed.
+                if (_parent._next_array.Length <= first)
+                { // resize the array.
+                    this.Resize(first);
+                }
+            }
+
+            public void Clear()
+            {
+                _first = -1;
+            }
+        }
     }
 }

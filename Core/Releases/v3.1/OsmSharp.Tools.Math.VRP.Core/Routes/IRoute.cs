@@ -100,12 +100,24 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
         void ReplaceEdgeFrom(int from, int to);
 
         /// <summary>
+        /// Replaces the first customer.
+        /// </summary>
+        /// <param name="first"></param>
+        void ReplaceFirst(int first);
+
+        /// <summary>
         /// Removes the edge from->unknown and replaces it with the edge from->to->unknown.
         /// 0->1:InsertAfter(0, 2):0->2-1
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
         void InsertAfter(int from, int to);
+
+        /// <summary>
+        /// Inserst a new first customer.
+        /// </summary>
+        /// <param name="first"></param>
+        void InsertFirst(int first);
 
         /// <summary>
         /// Returns the neigbours of a customer.
@@ -140,5 +152,10 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
         /// </summary>
         /// <returns></returns>
         IEnumerable<Edge> Edges();
+
+        /// <summary>
+        /// Removes all customers in this route.
+        /// </summary>
+        void Clear();
     }
 }

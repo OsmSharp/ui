@@ -61,6 +61,7 @@ namespace OsmSharp.Osm.Routing.Test
             //    new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\log.txt"));
 
             //NoDepotTest.Execute();
+            //DepotTest.Execute();
             //PBF.PBFTest.Execute();
             //ManyToMany.ManyToManyExecution.Execute();
             //Point2Point.Point2PointExecution.Execute();

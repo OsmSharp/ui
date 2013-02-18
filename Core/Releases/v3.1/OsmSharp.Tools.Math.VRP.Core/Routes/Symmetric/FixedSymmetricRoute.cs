@@ -401,5 +401,23 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
         {
             throw new NotImplementedException();
         }
+
+
+        public void InsertFirst(int first)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void ReplaceFirst(int first)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
