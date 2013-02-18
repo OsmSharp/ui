@@ -123,7 +123,7 @@ namespace OsmSharp.UnitTests
             TextReader reader = new StreamReader(stream);
             string osm_string = reader.ReadToEnd();
 
-            Assert.AreEqual(osm_string.Length, 100);
+            Assert.AreEqual(osm_string.Length, 399);
         }
     }
 }

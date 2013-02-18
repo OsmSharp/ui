@@ -1,35 +1,15 @@
-﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
-// 
-// This file is part of OsmSharp.
-// 
-// OsmSharp is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 2 of the License, or
-// (at your option) any later version.
-// 
-// OsmSharp is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.VRP.Core;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion;
 using OsmSharp.Tools.Math.TSP;
-using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.InterImprovements;
+using OsmSharp.Tools.Math.Units.Time;
 using OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt;
-using OsmSharp.Tools.Math.TSP.ArbitraryInsertion;
+using OsmSharp.Routing.Core.VRP.WithDepot.MaxTime.InterImprovements;
+using OsmSharp.Routing.Core.VRP.WithDepot.MaxTime.CheapestInsertion;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
+namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime.VNS
 {
     /// <summary>
     /// Uses a Variable Neighbourhood Search technique.
@@ -39,14 +19,14 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
         where ResolvedType : IRouterPoint
     {
         /// <summary>
+        /// Holds the router.
+        /// </summary>
+        private IRouter<ResolvedType> _router;
+
+        /// <summary>
         /// Holds the lambda value.
         /// </summary>
         private float _lambda;
-
-        /// <summary>
-        /// Holds the sigma value.
-        /// </summary>
-        private float _sigma;
 
         /// <summary>
         /// The threshold percentage.
@@ -59,13 +39,11 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
         /// <param name="router"></param>
         /// <param name="max"></param>
         /// <param name="delivery_time"></param>
-        public GuidedVNS(IRouter<ResolvedType> router, Second max, Second delivery_time, 
-            float threshold_precentage, float lambda, float sigma)
+        public GuidedVNS(IRouter<ResolvedType> router, Second max, Second delivery_time, float threshold_precentage, float lambda)
             : base(router, max, delivery_time)
         {
             _threshold_percentage = threshold_precentage;
             _lambda = lambda;
-            _sigma = sigma;
 
             _intra_improvements = new List<IImprovement>();
             //_intra_improvements.Add(
@@ -108,7 +86,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
 
             CheapestInsertionSolverWithImprovements<ResolvedType> vrp_router =
                 new CheapestInsertionSolverWithImprovements<ResolvedType>(
-                    this.Router, problem.Max.Value, problem.DeliveryTime.Value, 10, 0.10f, true, _threshold_percentage, true, 0.75f);
+                    _router, problem.Max.Value, problem.DeliveryTime.Value, 5, 0.10f, true, _threshold_percentage);
             MaxTimeSolution original_solution = vrp_router.Solve(
                 problem);
 
@@ -167,8 +145,6 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
                                     // recalculate weights.
                                     solution[round_x] = problem.Time(solution.Route(round_x));
                                     solution[round_y] = problem.Time(solution.Route(round_y));
-
-                                    this.RaiseIntermidiateResult(solution);
                                 }
 
                                 // check customer counts.
@@ -188,8 +164,6 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
                                     route1_actual_after < problem.Max.Value && route2_actual_after < problem.Max.Value)
                                 { // there is improvement!
                                     original_solution = solution;
-
-                                    //improvement = true;
 
                                     OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("IMPROVEMENT: {0}->{1}",
                                         route1_actual_before + route2_actual_before, route1_actual_after + route2_actual_after);
@@ -266,25 +240,6 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
             return original_solution;
         }
 
-        void vrp_router_IntermidiateResult(Route.OsmSharpRoute[] result, Dictionary<int, List<int>> solution)
-        {
-            if (this.CanRaiseIntermidiateResult())
-            {
-                this.RaiseIntermidiateResult(result, solution);
-            }
-        }
-
-        private void RaiseIntermidiateResult(MaxTimeSolution solution)
-        {
-            int[][] raw_routes = new int[solution.Count][];
-            for (int idx = 0; idx < solution.Count; idx++)
-            {
-                raw_routes[idx] = solution.Route(idx).ToArray<int>();
-            }
-
-            this.DoIntermidiateResult(raw_routes);
-        }
-
         #region Improvement Heurstics
 
         /// <summary>
@@ -302,7 +257,7 @@ namespace OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS
         /// </summary>
         /// <param name="problem"></param>
         /// <param name="routes"></param>
-        private double ImproveIntraRoute(IProblemWeights problem, IRoute route, double current_weight)
+        private double ImproveIntraRoute(OsmSharp.Tools.Math.VRP.Core.IProblemWeights problem, IRoute route, double current_weight)
         {
             bool improvement = true;
             double new_weight = current_weight;

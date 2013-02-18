@@ -201,6 +201,7 @@
     <Compile Include="WithDepot\MaxTime\MaxTimeProblem.cs" />
     <Compile Include="WithDepot\MaxTime\MaxTimeSolution.cs" />
     <Compile Include="WithDepot\MaxTime\MaxTimeRouter.cs" />
+    <Compile Include="WithDepot\MaxTime\VNS\GuidedVNS.cs" />
     <Compile Include="WithDepot\RouterDepot.cs" />
     <Compile Include="RouterVRP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

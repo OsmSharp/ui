@@ -234,5 +234,23 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         {
             return new EdgeEnumerable(this);
         }
+
+
+        public void InsertFirst(int first)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void ReplaceFirst(int first)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

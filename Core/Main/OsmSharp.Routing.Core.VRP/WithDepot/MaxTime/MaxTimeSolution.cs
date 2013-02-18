@@ -20,21 +20,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
 
 namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
 {
     /// <summary>
     /// Represents a solution to the MaxTime problem.
     /// </summary>
-    public class MaxTimeSolution : DynamicAsymmetricMultiRoute
+    public class MaxTimeSolution : DepotDynamicAsymmetricMultiRoute
     {
         /// <summary>
         /// Creates a new solution in the form of a DynamicAsymmetricMultiRoute.
         /// </summary>
         /// <param name="size"></param>
-        /// <param name="is_round"></param>
-        public MaxTimeSolution(int size, bool is_round)
-            : base(size, is_round)
+        public MaxTimeSolution(int size)
+            : base(size)
         {
             _weights = new List<double>();
         }
@@ -44,15 +44,14 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
         /// </summary>
         /// <param name="first"></param>
         /// <param name="next_array"></param>
-        /// <param name="is_round"></param>
-        protected MaxTimeSolution(int[] first, int[] next_array, bool is_round)
-            : base(first, next_array, is_round)
+        protected MaxTimeSolution(int[] first, int[] next_array)
+            : base(first, next_array)
         {
             _weights = new List<double>();
         }
 
         /// <summary>
-        /// Clones this solution.
+        /// Creates a deep-copy of this solution.
         /// </summary>
         /// <returns></returns>
         public override object Clone()
@@ -60,9 +59,17 @@ namespace OsmSharp.Routing.Core.VRP.WithDepot.MaxTime
             int[] first = new int[this.Count];
             for (int idx = 0; idx < this.Count; idx++)
             {
-                first[idx] = this.Route(idx).First;
+                IRoute route = this.Route(idx);
+                if (route.Count > 1)
+                {
+                    first[idx] = route.ElementAt<int>(1);
+                }
+                else
+                {
+                    first[idx] = -1;
+                }
             }
-            return new MaxTimeSolution(first, _next_array.Clone() as int[], _is_round);
+            return new MaxTimeSolution(first, _next_array.Clone() as int[]);
         }
 
         #region Weights
