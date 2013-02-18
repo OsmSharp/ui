@@ -301,10 +301,10 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_lambda_1", 0),
             //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            vrp_router = new GuidedVNS<RouterPoint>(
-                    router, max.Value, delivery_time.Value, 0.10f, 2f);
-            NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("", 0),
-                interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
+            //vrp_router = new GuidedVNS<RouterPoint>(
+            //        router, max.Value, delivery_time.Value, 0.10f, 2f);
+            //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("", 0),
+            //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
             //vrp_router = new GuidedVNS<RouterPoint>(
             //        router, max.Value, delivery_time.Value, 0.10f, 5f);
