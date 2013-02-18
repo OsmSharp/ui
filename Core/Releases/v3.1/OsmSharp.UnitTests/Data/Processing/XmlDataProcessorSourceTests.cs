@@ -20,7 +20,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.XML.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Default;
 

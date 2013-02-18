@@ -62,12 +62,20 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <summary>
         /// SQL to create way nodes table.
         /// </summary>
-        private const string TABLE_WAY_NODES_CREATION =  "CREATE TABLE way_nodes " +
+        private const string TABLE_WAY_NODES_CREATION = "CREATE TABLE way_nodes " +
                                                         "( " +
                                                         "    way_id       bigint NOT NULL, " +
                                                         "    node_id      bigint NOT NULL, " +
-	                                                    "    sequence_id  integer NOT NULL " +
-                                                        ");";
+                                                        "    sequence_id  integer NOT NULL " +
+                                                        "); " +
+                                                        "CREATE INDEX way_nodes_node_idx " +
+                                                        " ON way_nodes " +
+                                                        " USING btree " +
+                                                        " (node_id); " +
+                                                        "CREATE INDEX way_nodes_way_idx " +
+                                                        " ON way_nodes " +
+                                                        " USING btree " +
+                                                        " (way_id);";
 
         /// <summary>
         /// SQL to create way tags table.

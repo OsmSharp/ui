@@ -33,7 +33,6 @@ using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Osm.Routing.Interpreter;
 using System.Reflection;
@@ -46,6 +45,7 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion;
 using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS;
+using OsmSharp.Osm.Data.XML.Processor;
 
 namespace OsmSharp.Osm.Routing.Test.VRP
 {

@@ -67,5 +67,27 @@ namespace OsmSharp.Osm.Data.Core.Processor
         {
             get;
         }
+
+        #region Pull Command
+
+        /// <summary>
+        /// Pulls all objects from this source into a collection.
+        /// </summary>
+        /// <returns></returns>
+        public ICollection<SimpleOsmGeo> PullToCollection()
+        {
+            // create collection.
+            List<SimpleOsmGeo> collection = new List<SimpleOsmGeo>();
+
+            // create the collection target and pull the data into it.
+            List.CollectionDataProcessorTarget collection_target = new List.CollectionDataProcessorTarget(
+                collection);
+            collection_target.RegisterSource(this);
+            collection_target.Pull();
+
+            return collection;
+        }
+
+        #endregion
     }
 }

@@ -19,7 +19,6 @@ using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OsmSharp.Osm.Core;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Osm.Routing.Data;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Routing.Core;
@@ -31,6 +30,7 @@ using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Osm.Data.XML.Processor;
 
 namespace OsmSharp.Osm.UnitTests.Routing
 {

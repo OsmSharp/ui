@@ -13,7 +13,7 @@ using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Osm.Core;
 using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.XML.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;

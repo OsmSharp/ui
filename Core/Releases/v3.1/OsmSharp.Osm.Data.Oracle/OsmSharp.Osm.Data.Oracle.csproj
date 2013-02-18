@@ -168,11 +168,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CH\OracleCHData.cs" />
-    <Compile Include="HH\GraphVertexEnumerable.cs" />
-    <Compile Include="HH\HighwayHierarchy.cs" />
-    <Compile Include="HH\HighwayHierarchyEnumerator.cs" />
-    <Compile Include="HH\HighwayHierarchyLevel0Enumerator.cs" />
     <Compile Include="OracleCommandExtension.cs" />
     <Compile Include="SimpleSchema\OracleSimpleSchemaSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -183,8 +178,6 @@
     <Compile Include="SimpleSchema\Processor\OracleSimpleDataProcessorTruncateTarget.cs" />
     <Compile Include="SimpleSchema\Processor\TileCalculations.cs" />
     <Compile Include="SimpleSchema\SchemaTools\OracleSimpleSchemaTools.cs" />
-    <Compile Include="Sparse\OracleSparseData.cs" />
-    <Compile Include="Sparse\Processor\OracleSparseDataProcessorTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm.Core\OsmSharp.Osm.Core.csproj">
@@ -206,7 +199,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="HH\create.sql" />
     <Content Include="SimpleSchema\Processor\Scripts\create_db.sql" />
     <Content Include="SimpleSchema\Processor\Scripts\truncate_tables.sql" />
   </ItemGroup>

@@ -22,9 +22,9 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Reflection;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using OsmSharp.Osm.Data.Core.Raw.Memory;
 using OsmSharp.Osm.Core;
 using OsmSharp.Osm.Data;
+using OsmSharp.Osm.Data.Core.Memory;
 
 namespace OsmSharp.Osm.UnitTests.Data
 {

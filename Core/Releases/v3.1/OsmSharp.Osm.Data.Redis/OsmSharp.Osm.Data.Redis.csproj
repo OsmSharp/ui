@@ -159,22 +159,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CH\CHPrimitiveExtensions.cs" />
     <Compile Include="GeoHash.cs" />
-    <Compile Include="HH\HighwayHierachy.cs" />
-    <Compile Include="CH\RedisCHData.cs" />
     <Compile Include="OsmHash.cs" />
     <Compile Include="PrimitiveExtensions.cs" />
-    <Compile Include="Raw\Processor\Primitives\OsmMember.cs" />
-    <Compile Include="Raw\Processor\Primitives\OsmNode.cs" />
-    <Compile Include="Raw\Processor\Primitives\OsmRelation.cs" />
-    <Compile Include="Raw\Processor\Primitives\OsmTag.cs" />
-    <Compile Include="Raw\Processor\Primitives\OsmWay.cs" />
-    <Compile Include="Raw\Processor\RedisDataProcessorTarget.cs" />
-    <Compile Include="Raw\RedisSimpleSource.cs" />
+    <Compile Include="SimpleSchema\Processor\Primitives\OsmMember.cs" />
+    <Compile Include="SimpleSchema\Processor\Primitives\OsmNode.cs" />
+    <Compile Include="SimpleSchema\Processor\Primitives\OsmRelation.cs" />
+    <Compile Include="SimpleSchema\Processor\Primitives\OsmTag.cs" />
+    <Compile Include="SimpleSchema\Processor\Primitives\OsmWay.cs" />
+    <Compile Include="SimpleSchema\Processor\RedisDataProcessorTarget.cs" />
+    <Compile Include="SimpleSchema\RedisSimpleSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sparse\Processor\RedisSparseDataProcessorTarget.cs" />
-    <Compile Include="Sparse\RedisSparseData.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm.Core\OsmSharp.Osm.Core.csproj">

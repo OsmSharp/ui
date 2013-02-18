@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.XML.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Core;

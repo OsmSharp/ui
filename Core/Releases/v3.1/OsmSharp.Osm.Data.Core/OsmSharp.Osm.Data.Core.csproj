@@ -191,21 +191,23 @@
     <Compile Include="Processor\Filter\BoundingBox\LongIndex\LongIndexLeaf.cs" />
     <Compile Include="Processor\Filter\BoundingBox\LongIndex\LongIndexNode.cs" />
     <Compile Include="Processor\Filter\Sort\DataProcessorFilterSort.cs" />
-    <Compile Include="Processor\ListSource\OsmGeoListDataProcessorSource.cs" />
+    <Compile Include="Processor\List\CollectionDataProcessorSource.cs" />
+    <Compile Include="Processor\List\CollectionDataProcessorTarget.cs" />
+    <Compile Include="Processor\List\OsmGeoListDataProcessorSource.cs" />
     <Compile Include="Processor\Progress\ProgressDataProcessorSource.cs" />
     <Compile Include="Processor\Progress\ProgressDataProcessorTarget.cs" />
     <Compile Include="Processor\SimpleSource\ISimpleSourceData.cs" />
     <Compile Include="Processor\SimpleSource\SimpleMemoryData.cs" />
-    <Compile Include="Raw\Cache\DataSourceCache.cs" />
-    <Compile Include="Raw\Cache\DataSourceQuadTree.cs" />
-    <Compile Include="Raw\Cache\DataSourceQuadTreeNode.cs" />
-    <Compile Include="Raw\IApi.cs" />
-    <Compile Include="Raw\IDataSource.cs" />
-    <Compile Include="Raw\IDataSourceReadOnly.cs" />
-    <Compile Include="Raw\KeyGenerator.cs" />
+    <Compile Include="Cache\DataSourceCache.cs" />
+    <Compile Include="Cache\DataSourceQuadTree.cs" />
+    <Compile Include="Cache\DataSourceQuadTreeNode.cs" />
+    <Compile Include="IApi.cs" />
+    <Compile Include="IDataSource.cs" />
+    <Compile Include="IDataSourceReadOnly.cs" />
+    <Compile Include="KeyGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Raw\Memory\MemoryDataSource.cs" />
-    <Compile Include="Raw\Memory\MemoryDataSourceProcessorTarget.cs" />
+    <Compile Include="Memory\MemoryDataSource.cs" />
+    <Compile Include="Memory\MemoryDataSourceProcessorTarget.cs" />
     <Compile Include="Sparse\ISparseData.cs" />
     <Compile Include="Sparse\Primitives\SimpleVertex.cs" />
     <Compile Include="Sparse\Primitives\SimpleArc.cs" />
@@ -230,7 +232,9 @@
       <Name>OsmSharp.Tools.Xml</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Raw\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

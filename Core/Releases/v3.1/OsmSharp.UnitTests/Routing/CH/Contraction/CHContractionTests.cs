@@ -9,7 +9,7 @@ using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Osm.Routing.Interpreter;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.XML.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using System.Reflection;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;

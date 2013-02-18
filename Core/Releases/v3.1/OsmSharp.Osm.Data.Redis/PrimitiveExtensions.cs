@@ -20,8 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Core.Simple;
-using OsmSharp.Osm.Data.Redis.Raw.Primitives;
-using OsmSharp.Osm.Data.Core.Sparse.Primitives;
+using OsmSharp.Osm.Data.Redis.SimpleSchema.Processort.Primitives;
 
 namespace OsmSharp.Osm.Data.Redis
 {
@@ -65,40 +64,40 @@ namespace OsmSharp.Osm.Data.Redis
             return new_tags;
         }
 
-        public static string BuildRedisKey(this SparseVertex vertex)
-        {
-            return PrimitiveExtensions.BuildRedisKeySparseVertex(vertex.Id);
-        }
+        //public static string BuildRedisKey(this SparseVertex vertex)
+        //{
+        //    return PrimitiveExtensions.BuildRedisKeySparseVertex(vertex.Id);
+        //}
 
         public static string BuildRedisKeySparseVertex(long id)
         {
             return "sparse:" + id;
         }
 
-        public static string BuildRedisKey(this SparseSimpleVertex vertex)
-        {
-            return PrimitiveExtensions.BuildRedisKeySparseSimpleVertex(vertex.Id);
-        }
+        //public static string BuildRedisKey(this SparseSimpleVertex vertex)
+        //{
+        //    return PrimitiveExtensions.BuildRedisKeySparseSimpleVertex(vertex.Id);
+        //}
 
         public static string BuildRedisKeySparseSimpleVertex(long id)
         {
             return "sparse_simple:" + id;
         }
 
-        public static string BuildRedisKey(this SimpleVertex vertex)
-        {
-            return PrimitiveExtensions.BuildRedisKeySimpleVertex(vertex.Id);
-        }
+        //public static string BuildRedisKey(this SimpleVertex vertex)
+        //{
+        //    return PrimitiveExtensions.BuildRedisKeySimpleVertex(vertex.Id);
+        //}
 
         public static string BuildRedisKeySimpleVertex(long id)
         {
             return "vertex:" + id;
         }
 
-        public static string BuildRedisKey(this SimpleArc arc)
-        {
-            return PrimitiveExtensions.BuildRedisKeySimpleArc(arc.Id);
-        }
+        //public static string BuildRedisKey(this SimpleArc arc)
+        //{
+        //    return PrimitiveExtensions.BuildRedisKeySimpleArc(arc.Id);
+        //}
 
         public static string BuildRedisKeySimpleArc(long id)
         {

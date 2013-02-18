@@ -12,11 +12,11 @@ using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Osm.Data.XML.Processor;
 
 namespace OsmSharp.Osm.Routing.Test.Instructions
 {

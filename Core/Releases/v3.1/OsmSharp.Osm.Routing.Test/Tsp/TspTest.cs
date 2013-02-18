@@ -34,12 +34,12 @@ using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Osm.Routing.Data;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Routing.Core.Route;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 using OsmSharp.Routing.Core.TSP;
 using OsmSharp.Routing.Core.TSP.Genetic;
+using OsmSharp.Osm.Data.XML.Processor;
 
 namespace OsmSharp.Osm.Routing.Test.Tsp
 {

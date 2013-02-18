@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.XML.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

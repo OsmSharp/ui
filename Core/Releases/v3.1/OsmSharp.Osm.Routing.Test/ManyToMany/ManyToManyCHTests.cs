@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Osm.Core;
 using OsmSharp.Routing.Core.Interpreter;
@@ -16,6 +15,7 @@ using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
+using OsmSharp.Osm.Data.XML.Processor;
 
 namespace OsmSharp.Osm.Routing.Test.ManyToMany
 {

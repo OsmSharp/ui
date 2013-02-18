@@ -13,7 +13,6 @@ using OsmSharp.Osm.Core;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.Core.Graph.Memory;
@@ -22,6 +21,7 @@ using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Osm.Data.XML.Processor;
 
 namespace OsmSharp.Osm.Routing.Test.Point2Point
 {

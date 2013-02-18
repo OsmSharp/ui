@@ -21,7 +21,6 @@ using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
@@ -31,6 +30,7 @@ using System.IO;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Osm.Data.Core.Processor.Progress;
 using System;
+using OsmSharp.Osm.Data.XML.Processor;
 namespace OsmSharp.Osm.Routing.Test.CH
 {
     class CHTest

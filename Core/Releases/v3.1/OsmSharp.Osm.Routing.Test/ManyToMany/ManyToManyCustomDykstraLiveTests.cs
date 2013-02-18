@@ -9,11 +9,11 @@ using OsmSharp.Osm.Core;
 using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
+using OsmSharp.Osm.Data.XML.Processor;
 
 namespace OsmSharp.Osm.Routing.Test.ManyToMany
 {

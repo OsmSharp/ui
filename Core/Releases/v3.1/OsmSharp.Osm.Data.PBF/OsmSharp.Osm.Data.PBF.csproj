@@ -133,9 +133,11 @@
       <DependentUpon>osmformat.proto</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Raw\Processor\PBFDataProcessorSource.cs" />
+    <Compile Include="Processor\PBFDataProcessorSource.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Raw\" />
+  </ItemGroup>
   <ItemGroup>
     <None Include="fileformat.proto">
       <Generator>ProtoBufTool</Generator>

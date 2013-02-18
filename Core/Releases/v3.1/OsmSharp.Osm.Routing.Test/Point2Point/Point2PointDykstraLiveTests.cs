@@ -8,7 +8,6 @@ using System.IO;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Osm.Core;
 using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Core;
 using OsmSharp.Tools.Math.Geo;
@@ -19,6 +18,7 @@ using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Osm.Data.XML.Processor;
 
 namespace OsmSharp.Osm.Routing.Test.Point2Point
 {

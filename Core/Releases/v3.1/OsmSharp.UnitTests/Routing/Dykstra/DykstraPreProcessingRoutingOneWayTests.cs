@@ -31,7 +31,7 @@ using System.Xml;
 using OsmSharp.Osm.Routing.Interpreter;
 using OsmSharp.Osm.Routing.Data;
 using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
+using OsmSharp.Osm.Data.XML.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Core.Router;
 using OsmSharp.Osm.Core;

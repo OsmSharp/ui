@@ -8,7 +8,6 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Osm.Routing.Interpreter;
 using OsmSharp.Osm.Core;
 using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
@@ -18,6 +17,7 @@ using OsmSharp.Routing.CH.Routing;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
+using OsmSharp.Osm.Data.XML.Processor;
 
 namespace OsmSharp.Osm.Routing.Test.CH
 {

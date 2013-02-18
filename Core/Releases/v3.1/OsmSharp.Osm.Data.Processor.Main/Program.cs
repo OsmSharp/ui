@@ -21,18 +21,16 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Data.Oracle;
 using OsmSharp.Osm.Data.Core.Processor.Filter;
-using OsmSharp.Osm.Data.XML.Raw.Processor.Replication;
 using OsmSharp.Osm.Data.Oracle.Raw;
 using OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Osm.Data.Oracle.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Default;
-using OsmSharp.Osm.Data.XML.Raw.Processor.ChangeSets;
-using OsmSharp.Osm.Data.Redis.Sparse.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using System.IO;
 using OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor;
+using OsmSharp.Osm.Data.XML.Processor;
+using OsmSharp.Osm.Data.XML.Processor.ChangeSets;
 
 namespace OsmSharp.Osm.Data.Processor.Main
 {

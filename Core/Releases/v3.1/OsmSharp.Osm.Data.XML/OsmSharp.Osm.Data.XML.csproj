@@ -167,17 +167,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Raw\ApiSource\ApiDataSource.cs" />
-    <Compile Include="Raw\GpxSource\GpxDataSource.cs" />
-    <Compile Include="Raw\KmlSource\KmlDataSource.cs" />
-    <Compile Include="Raw\OsmSource\OsmDataSource.cs" />
+    <Compile Include="GpxSource\GpxDataSource.cs" />
+    <Compile Include="KmlSource\KmlDataSource.cs" />
+    <Compile Include="OsmSource\OsmDataSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Raw\Processor\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
-    <Compile Include="Raw\Processor\XmlDataProcessorSource.cs" />
-    <Compile Include="Raw\Processor\XmlDataProcessorTarget.cs" />
-    <Compile Include="Raw\Processor\XmlFragmentWriter.cs" />
-    <Compile Include="Raw\Processor\XmlSimpleConverter.cs" />
-    <Compile Include="Raw\Processor\Replication\Replicator.cs" />
+    <Compile Include="Processor\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
+    <Compile Include="Processor\XmlDataProcessorSource.cs" />
+    <Compile Include="Processor\XmlDataProcessorTarget.cs" />
+    <Compile Include="Processor\XmlFragmentWriter.cs" />
+    <Compile Include="Processor\XmlSimpleConverter.cs" />
+    <Compile Include="Processor\Replication\Replicator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm.Core\OsmSharp.Osm.Core.csproj">
@@ -208,6 +207,9 @@
       <Project>{550F62F8-B62F-4E77-AF12-ACFD9378B9A0}</Project>
       <Name>OsmSharp.Tools.Xml</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Raw\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

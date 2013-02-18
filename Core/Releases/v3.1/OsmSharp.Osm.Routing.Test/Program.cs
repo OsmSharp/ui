@@ -30,7 +30,6 @@ using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Osm.Routing.Interpreter;
-using OsmSharp.Osm.Data.XML.Raw.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Osm.Routing.Data;
@@ -45,6 +44,9 @@ using OsmSharp.Osm.Routing.Test.CH;
 using OsmSharp.Osm.Routing.Test.VRP;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 using OsmSharp.Routing.Core.Graph.Router.Dykstra;
+using System.Net;
+using OsmSharp.Osm.Data.XML.Processor;
+using OsmSharp.Osm.Core.Simple;
 
 namespace OsmSharp.Osm.Routing.Test
 {
@@ -57,7 +59,6 @@ namespace OsmSharp.Osm.Routing.Test
                 new OsmSharp.Tools.Core.Output.ConsoleOutputStream());
             //Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
             //    new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\log.txt"));
-
 
             //NoDepotTest.Execute();
             //PBF.PBFTest.Execute();
