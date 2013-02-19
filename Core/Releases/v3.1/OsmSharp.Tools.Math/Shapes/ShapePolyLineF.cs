@@ -29,7 +29,6 @@ namespace OsmSharp.Tools.Math.Shapes
     /// </summary>
     /// <typeparam name="PointType"></typeparam>
     /// <typeparam name="BoxType"></typeparam>
-    [Serializable]
     public class ShapePolyLineF<PointType, RectangleType, LineType> : ShapeF<PointType, RectangleType, LineType>
         where PointType : PointF2D
         where RectangleType : GenericRectangleF2D<PointType>

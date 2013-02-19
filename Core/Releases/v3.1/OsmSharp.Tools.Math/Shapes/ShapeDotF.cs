@@ -27,7 +27,6 @@ namespace OsmSharp.Tools.Math.Shapes
     /// <summary>
     /// Dot shape class; represents a point with a certain thickness.
     /// </summary>
-    [Serializable]
     public class ShapeDotF<PointType, RectangleType, LineType> : ShapeF<PointType, RectangleType, LineType>
         where PointType : PointF2D
         where RectangleType : GenericRectangleF2D<PointType>

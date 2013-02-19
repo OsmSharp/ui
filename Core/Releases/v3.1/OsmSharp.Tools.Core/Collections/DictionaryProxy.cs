@@ -20,7 +20,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Xml.Serialization;
 using System.IO;
-using System.IO.Compression;
+//using System.IO.Compression;
 
 namespace OsmSharp.Tools.Core.Collections
 {

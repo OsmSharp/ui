@@ -27,7 +27,6 @@ namespace OsmSharp.Tools.Math.Shapes
     /// <summary>
     /// Polygon Shape class; represents a polygon, the last point is connected to the first.
     /// </summary>
-    [Serializable]
     public class ShapePolyGonF<PointType, RectangleType, LineType> : ShapeF<PointType, RectangleType, LineType>
         where PointType : PointF2D
         where RectangleType : GenericRectangleF2D<PointType>

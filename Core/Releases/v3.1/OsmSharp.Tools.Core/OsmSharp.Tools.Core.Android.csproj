@@ -65,7 +65,6 @@
     <Compile Include="DelimitedFiles\DelimiterType.cs" />
     <Compile Include="DelimitedFiles\IDelimitedFormat.cs" />
     <Compile Include="Enumerations\PermutationEnumerator.cs" />
-    <Compile Include="Performance\PerformanceCounter.cs" />
     <Compile Include="Progress\EmptyProgressReporter.cs" />
     <Compile Include="Progress\IProgressEnabled.cs" />
     <Compile Include="Progress\IProgressReporter.cs" />
@@ -77,5 +76,4 @@
     <Compile Include="Output\IOutputStream.cs" />
     <Compile Include="Output\OutputStreamHost.cs" />
   </ItemGroup>
-  <ItemGroup />
 </Project>

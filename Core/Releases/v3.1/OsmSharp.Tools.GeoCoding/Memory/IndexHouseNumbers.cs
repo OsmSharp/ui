@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.Structures.StringTrees;
 using OsmSharp.Tools.Math.Geo;
 
-namespace OsmSharp.Tools.GeoCoding.Custom.Memory
+namespace OsmSharp.Tools.GeoCoding.Memory
 {
     internal class IndexHouseNumbers : StringTreeDictionary<GeoCoordinate>
     {

@@ -28,7 +28,6 @@ namespace OsmSharp.Tools.Math.Shapes
     /// Represents a shape.
     /// </summary>
     /// <typeparam name="PointType"></typeparam>
-    [Serializable]
     public abstract class ShapeF<PointType, RectangleType, LineType>
         where PointType : PointF2D
         where RectangleType : GenericRectangleF2D<PointType>

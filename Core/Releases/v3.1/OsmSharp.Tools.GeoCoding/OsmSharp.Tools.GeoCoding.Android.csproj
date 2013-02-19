@@ -54,6 +54,11 @@
     <Compile Include="Facade.cs" />
     <Compile Include="IGeoCoder.cs" />
     <Compile Include="IGeoCoderResult.cs" />
+    <Compile Include="Memory\IndexCommunes.cs" />
+    <Compile Include="Memory\IndexHouseNumbers.cs" />
+    <Compile Include="Memory\IndexPostalCodes.cs" />
+    <Compile Include="Memory\IndexStreets.cs" />
+    <Compile Include="Memory\InMemoryGeoCoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

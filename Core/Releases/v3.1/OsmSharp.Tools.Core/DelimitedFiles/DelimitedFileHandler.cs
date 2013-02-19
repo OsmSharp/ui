@@ -30,6 +30,7 @@ namespace OsmSharp.Tools.Core.DelimitedFiles
     /// </summary>
     public static class DelimitedFileHandler
     {
+#if !WINDOWS_PHONE
         public static DataSet ReadDelimitedFile(
             IProgressReporter reporter, 
             FileInfo file, 
@@ -379,5 +380,6 @@ namespace OsmSharp.Tools.Core.DelimitedFiles
             writer.Flush();
             writer.Close();
         }
+#endif
     }
 }

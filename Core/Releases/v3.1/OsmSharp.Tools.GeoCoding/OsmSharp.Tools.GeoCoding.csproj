@@ -164,7 +164,22 @@
     <Compile Include="Facade.cs" />
     <Compile Include="IGeoCoder.cs" />
     <Compile Include="IGeoCoderResult.cs" />
+    <Compile Include="Memory\IndexCommunes.cs" />
+    <Compile Include="Memory\IndexHouseNumbers.cs" />
+    <Compile Include="Memory\IndexPostalCodes.cs" />
+    <Compile Include="Memory\IndexStreets.cs" />
+    <Compile Include="Memory\InMemoryGeoCoder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>OsmSharp.Tools.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
+      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
+      <Name>OsmSharp.Tools.Math</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

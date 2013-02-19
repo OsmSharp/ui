@@ -35,6 +35,35 @@ namespace OsmSharp.Tools.GeoCoding
         private static Dictionary<string, IGeoCoder> _coders;
 
         /// <summary>
+        /// Registers a geocoder under it's given name.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="code"></param>
+        public static void RegisterGeoCoder(string name, IGeoCoder code)
+        {
+            // create and cache the coder class.
+            if (_coders == null)
+            {
+                _coders = new Dictionary<string, IGeoCoder>();
+            }
+
+            _coders[name] = code;
+        }
+
+        /// <summary>
+        /// Unregister a geocoder with the given name.
+        /// </summary>
+        /// <param name="name"></param>
+        public static void UnregisterGeoCoder(string name)
+        {
+            // create and cache the coder class.
+            if (_coders != null)
+            {
+                _coders.Remove(name);
+            }
+        }
+
+        /// <summary>
         /// Geocodes the given address and returns the result.
         /// </summary>
         /// <param name="coder"></param>
@@ -45,7 +74,7 @@ namespace OsmSharp.Tools.GeoCoding
         /// <param name="house_number"></param>
         /// <returns></returns>
         public static IGeoCoderResult Code(
-            string coder_assembly,
+            string coder_name,
             string country,
             string postal_code,
             string commune,
@@ -59,16 +88,10 @@ namespace OsmSharp.Tools.GeoCoding
             {
                 _coders = new Dictionary<string, IGeoCoder>();
             }
-            if (!_coders.TryGetValue(coder_assembly, out coder_instance))
+            if (!_coders.TryGetValue(coder_name, out coder_instance))
             {
-                Assembly assembly = Assembly.LoadFile(
-                    string.Format(@"{0}\{1}.dll",
-                    new FileInfo(Assembly.GetExecutingAssembly().Location).DirectoryName,
-                    coder_assembly));
-                coder_instance = assembly.CreateInstance(coder_assembly + ".GeoCoder") as IGeoCoder;
-
-
-                _coders.Add(coder_assembly, coder_instance);
+                throw new InvalidOperationException(string.Format(
+                    "No geocoder registered with name: {0}", coder_name));
             }
 
             return coder_instance.Code(

@@ -31,7 +31,6 @@ namespace OsmSharp.Tools.Math
     /// <remarks>
     /// A vector is not a primitive, it can only be represented relative to real primitives.
     /// </remarks>
-    [Serializable]
     public class VectorF2D
     {
         /// <summary>
