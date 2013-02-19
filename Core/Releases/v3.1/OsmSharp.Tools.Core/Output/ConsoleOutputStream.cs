@@ -45,7 +45,11 @@ namespace OsmSharp.Tools.Core.Output
             string current_progress_string = message;//string.Format("{0}:{1}", key, message);
             if (current_progress_string == _previous_progress_string)
             {
-                Console.SetCursorPosition(0, Console.CursorTop);
+#if __ANDROID__
+                Console.WriteLine(); // resetting cursor position not support in Mono for Android!
+#else
+				Console.SetCursorPosition(0, Console.CursorTop);
+#endif
             }
             else
             {
