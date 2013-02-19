@@ -25,7 +25,6 @@ namespace OsmSharp.Tools.Math
     /// <summary>
     /// An abstract class serving as the base-type for all primitives.
     /// </summary>
-    [Serializable]
     public abstract class PrimitiveF2D<PointType> : PrimitiveSimpleF2D
         where PointType : PointF2D
     {

@@ -25,7 +25,6 @@ namespace OsmSharp.Tools.Math.Geo
     /// <summary>
     /// Class reprenting a polygon made out of geo coordinate points.
     /// </summary>
-    [Serializable]
     public class GeoCoordinatePolygon : GenericPolygonF2D<GeoCoordinate>
     {
         /// <summary>

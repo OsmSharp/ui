@@ -25,7 +25,6 @@ namespace OsmSharp.Tools.Math.Geo
     /// <summary>
     /// Class representing a geo coordinate line.
     /// </summary>
-    [Serializable]
     public class GeoCoordinateLine : GenericLineF2D<GeoCoordinate>
     {
         /// <summary>

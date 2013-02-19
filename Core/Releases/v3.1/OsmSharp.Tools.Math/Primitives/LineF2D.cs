@@ -22,7 +22,6 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math
 {
-    [Serializable]
     public class LineF2D : GenericLineF2D<PointF2D>
     {
         /// <summary>

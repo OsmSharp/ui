@@ -25,7 +25,6 @@ namespace OsmSharp.Tools.Math
     /// <summary>
     /// Class representing a retangular box.
     /// </summary>
-    [Serializable]
     public class RectangleF2D : GenericRectangleF2D<PointF2D>
     {
         /// <summary>

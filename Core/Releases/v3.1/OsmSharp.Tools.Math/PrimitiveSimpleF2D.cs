@@ -25,7 +25,6 @@ namespace OsmSharp.Tools.Math
     /// <summary>
     /// Class representing a simple primitive.
     /// </summary>
-    [Serializable]
     public abstract class PrimitiveSimpleF2D
     {
 

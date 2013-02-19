@@ -27,7 +27,6 @@ namespace OsmSharp.Tools.Math
     /// 
     /// A line is immutable.
     /// </summary>
-    [Serializable]
     public abstract class GenericLineF2D<PointType> : PrimitiveF2D<PointType>
         where PointType : PointF2D
     {
@@ -345,15 +344,56 @@ namespace OsmSharp.Tools.Math
                     && line.B == this.B
                     && line.C == this.C)
             { // if the lines equal in direction and position; return the smallest segment.
-                SortedList<double, PointType> points = new SortedList<double, PointType>();
-                points.Add(0, this.Point1);
-                points.Add(this.Point1.Distance(this.Point2), this.Point2);
-                points.Add(this.Point1.Distance(line.Point1), line.Point1);
-                points.Add(this.Point1.Distance(line.Point2), line.Point2);
+                KeyValuePair<double, PointType> point1 = new KeyValuePair<double, PointType>(
+                    0, this.Point1); 
+
+                KeyValuePair<double, PointType> point2 = new KeyValuePair<double, PointType>(
+                     this.Point1.Distance(this.Point2), this.Point2);
+
+                // sort.
+                KeyValuePair<double, PointType> temp;
+                if (point2.Key < point1.Key)
+                { // point2 smaller than point1.
+                    temp = point2;
+                    point2 = point1;
+                    point1 = temp;
+                }
+
+                KeyValuePair<double, PointType> point = new KeyValuePair<double, PointType>(
+                     this.Point1.Distance(line.Point1), line.Point1);
+
+                if (point.Key < point2.Key) // sort.
+                { // point smaller than point2.
+                    temp = point;
+                    point = point2;
+                    point2 = temp;
+                }
+                if (point2.Key < point1.Key)
+                { // point2 smaller than point1.
+                    temp = point2;
+                    point2 = point1;
+                    point1 = temp;
+                }
+
+                point = new KeyValuePair<double, PointType>(
+                     this.Point1.Distance(line.Point2), line.Point2);
+
+                if (point.Key < point2.Key) // sort.
+                { // point smaller than point2.
+                    temp = point;
+                    point = point2;
+                    point2 = temp;
+                }
+                if (point2.Key < point1.Key)
+                { // point2 smaller than point1.
+                    temp = point2;
+                    point2 = point1;
+                    point1 = temp;
+                }
 
                 return this.CreateLine(
-                    points[1],
-                    points[2],
+                    point1.Value,
+                    point2.Value,
                     true);
             }
             else

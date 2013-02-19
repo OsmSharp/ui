@@ -28,7 +28,6 @@ namespace OsmSharp.Tools.Math.Geo
     /// 0: longitude.
     /// 1: latitude.
     /// </summary>
-    [Serializable]
     public class GeoCoordinateBox : GenericRectangleF2D<GeoCoordinate>
     {
         /// <summary>

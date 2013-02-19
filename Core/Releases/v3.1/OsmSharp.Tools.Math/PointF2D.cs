@@ -27,7 +27,6 @@ namespace OsmSharp.Tools.Math
     /// 
     /// A point is immutable.
     /// </summary>
-    [Serializable]
     public class PointF2D : PrimitiveSimpleF2D, IPointF2D
     {
         /// <summary>

@@ -22,7 +22,6 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math
 {
-    [Serializable]
     public class PolygonF2D : GenericPolygonF2D<PointF2D>
     {
         /// <summary>

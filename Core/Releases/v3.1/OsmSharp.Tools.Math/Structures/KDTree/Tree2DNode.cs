@@ -167,7 +167,7 @@ namespace OsmSharp.Tools.Math.Structures.KDTree
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        public PointType SearchNearestNeighbour(PointType point, HashSet<PointType> exceptions)
+        public PointType SearchNearestNeighbour(PointType point, ICollection<PointType> exceptions)
         {
             // keeps the result.
             PointType result = default(PointType);

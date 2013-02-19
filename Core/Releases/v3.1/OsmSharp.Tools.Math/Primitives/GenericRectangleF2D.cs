@@ -27,7 +27,6 @@ namespace OsmSharp.Tools.Math
     /// <summary>
     /// Represents an n-dimensional bounding box.
     /// </summary>
-    [Serializable]
     public abstract class GenericRectangleF2D<PointType> : PrimitiveF2D<PointType>, ILineList<PointType>, IPointList<PointType>
         where PointType : PointF2D
     {

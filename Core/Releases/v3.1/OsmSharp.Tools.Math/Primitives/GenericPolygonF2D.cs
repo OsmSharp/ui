@@ -31,7 +31,6 @@ namespace OsmSharp.Tools.Math
     /// Polygon is immutable.
     /// </summary>
     /// <typeparam name="PointType"></typeparam>
-    [Serializable]
     public abstract class GenericPolygonF2D<PointType> : PrimitiveF2D<PointType>, ILineList<PointType>, IPointList<PointType>
         where PointType : PointF2D
     {
