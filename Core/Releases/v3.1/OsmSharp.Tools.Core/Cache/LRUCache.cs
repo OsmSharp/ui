@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+#if !WINDOWS_PHONE
 using System;
 using System.Linq;
 using System.Text;
@@ -72,7 +73,7 @@ namespace OsmSharp.Tools.Core.Cache
             _last_id = _id;
             _id = long.MinValue;
         }
-        
+
         public void Remove(TKey id)
         {
             CacheEntry<TValue> entry;
@@ -119,3 +120,4 @@ namespace OsmSharp.Tools.Core.Cache
         }
     }
 }
+#endif
