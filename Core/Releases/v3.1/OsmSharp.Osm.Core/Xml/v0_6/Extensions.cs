@@ -63,10 +63,10 @@ namespace OsmSharp.Osm.Core.Xml.v0_6
             {
                 string[] bounds = bound.box.Split(',');
                 return new GeoCoordinateBox(
-                    new GeoCoordinate(double.Parse(bounds[0], CultureInfo.InstalledUICulture), 
-                        double.Parse(bounds[1], CultureInfo.InstalledUICulture)),
-                    new GeoCoordinate(double.Parse(bounds[2], CultureInfo.InstalledUICulture),
-                        double.Parse(bounds[3], CultureInfo.InstalledUICulture)));
+                    new GeoCoordinate(double.Parse(bounds[0], CultureInfo.InvariantCulture),
+                        double.Parse(bounds[1], CultureInfo.InvariantCulture)),
+                    new GeoCoordinate(double.Parse(bounds[2], CultureInfo.InvariantCulture),
+                        double.Parse(bounds[3], CultureInfo.InvariantCulture)));
             }
             return null;
         }
