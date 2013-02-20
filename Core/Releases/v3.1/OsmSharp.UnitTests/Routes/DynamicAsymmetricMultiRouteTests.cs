@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
@@ -11,7 +11,7 @@ namespace OsmSharp.UnitTests.Routes
     /// <summary>
     /// Contains test function for the dynamic asymmetric multi route.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class DynamicAsymmetricMultiRouteTests : MultiRouteTest
     {
         /// <summary>
@@ -27,7 +27,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests adding customers to a multi route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricMultiRouteInsertAfter()
         {
             this.DoTestAdd();
@@ -36,7 +36,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests adding customers to a multi route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricMultiRouteRemove()
         {
             this.DoTestRemove();
@@ -45,7 +45,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests adding/removing customers to a multi route for each route, customer and position.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricMultiRouteInsertAfterRemoveComplete()
         {
             this.DoTestAddRemoveComplete();
@@ -54,7 +54,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests adding/removing customers to a multi route for each route, customer and position.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricMultiRouteEnumerateBetween()
         {
             this.DoTestEnumerateBetween();
@@ -63,7 +63,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests 
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricMultiRouteGetNeighbours()
         {
             this.DoTestGetNeighbours();

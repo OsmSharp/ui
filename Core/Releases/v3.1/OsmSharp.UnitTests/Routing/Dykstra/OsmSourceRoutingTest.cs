@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Routing.Core.Router;
 using OsmSharp.Routing.Core;
 using OsmSharp.Osm.Routing.Data;
@@ -37,7 +37,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
     /// <summary>
     /// Does some tests on an OsmSource routing implementation.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class OsmSourceRoutingTests : SimpleRoutingTests<RouterPoint, PreProcessedEdge>
     {
         /// <summary>
@@ -83,7 +83,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Tests a simple shortest route calculation.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmSourceShortedDefault()
         {
             this.DoTestShortestDefault();
@@ -92,7 +92,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Tests if the raw router preserves tags.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmSourceResolvedTags()
         {
             this.DoTestResolvedTags();
@@ -101,7 +101,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Tests if the raw router preserves tags on arcs/ways.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmSourceArcTags()
         {
             this.DoTestArcTags();
@@ -110,7 +110,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Test is the raw router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmSourceShortest1()
         {
             this.DoTestShortest1();
@@ -119,7 +119,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Test is the raw router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmSourceShortest2()
         {
             this.DoTestShortest2();
@@ -128,7 +128,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Test is the raw router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmSourceShortest3()
         {
             this.DoTestShortest3();
@@ -137,7 +137,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Test is the raw router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmSourceShortest4()
         {
             this.DoTestShortest4();
@@ -146,7 +146,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Test is the raw router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmSourceShortest5()
         {
             this.DoTestShortest5();
@@ -155,7 +155,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Test is the raw router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmSourceShortestResolved1()
         {
             this.DoTestShortestResolved1();
@@ -164,7 +164,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Test if the raw router many-to-many weights correspond to the point-to-point weights.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmSourceManyToMany1()
         {
             this.DoTestManyToMany1();
@@ -173,7 +173,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Test if the raw router handles connectivity questions correctly.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmSourceConnectivity1()
         {
             this.DoTestConnectivity1();

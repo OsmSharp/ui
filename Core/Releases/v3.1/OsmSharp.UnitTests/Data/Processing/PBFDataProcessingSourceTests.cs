@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Default;
@@ -29,13 +29,13 @@ namespace OsmSharp.Osm.UnitTests.Data.Processing
     /// <summary>
     /// Summary description for PBFDataProcessorSourceTests
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class PBFDataProcessorSourceTests
     {
         /// <summary>
         /// A regression test on resetting a PBF data processor.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void PBFDataProcessorSourceReset()
         {
             // generate the source.

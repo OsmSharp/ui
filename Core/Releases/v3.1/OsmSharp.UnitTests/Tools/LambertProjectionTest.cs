@@ -19,7 +19,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Geo.Lambert;
 using OsmSharp.Tools.Math.Geo.Lambert.Ellipsoids;
@@ -31,7 +31,7 @@ namespace OsmSharp.UnitTests
     /// <summary>
     /// Summary description for LambertProjectionTest
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class LambertProjectionTest
     {
         private TestContext testContextInstance;
@@ -77,7 +77,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Test a lamber coordinate conversion.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestConversion()
         {
             double x = 180246.6;

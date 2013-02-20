@@ -19,7 +19,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Xml.Sources;
 using System.IO;
 using OsmSharp.Tools.Xml.Nomatim.Search;
@@ -29,7 +29,7 @@ namespace OsmSharp.UnitTests
     /// <summary>
     /// Summary description for NomatimXmlTest
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class NomatimXmlTest
     {
         private TestContext testContextInstance;
@@ -78,7 +78,7 @@ namespace OsmSharp.UnitTests
         ///// <summary>
         ///// Reads a v2.0 kml.
         ///// </summary>
-        //[TestMethod]
+        //[Test]
         //public void NomatimSearchReadTestv1()
         //{
         //    // instantiate and load the gpx test document.

@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Osm.Data.Core.API;
 using OsmSharp.Osm.Core.Simple;
 using OsmSharp.Tools.Math.Geo;
@@ -32,13 +32,13 @@ namespace OsmSharp.UnitTests.API
     /// <remarks>
     /// Make sure the API test-instance is online and 
     /// </remarks>
-    [TestClass]
+    [TestFixture]
     public class APITests
     {
         /// <summary>
         /// Tries a simple connection test.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestConnectionAndCapabilities()
         {
             // intialize the connection.
@@ -61,7 +61,7 @@ namespace OsmSharp.UnitTests.API
         /// <summary>
         /// Tries to open/close/get a changeset.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestChangeSetOpenCloseGet()
         {
             // intialize the connection.
@@ -91,7 +91,7 @@ namespace OsmSharp.UnitTests.API
         /// <summary>
         /// Tries a simple node creation/get.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestNodeCreateGet()
         {
             // intialize the connection.
@@ -134,7 +134,7 @@ namespace OsmSharp.UnitTests.API
         /// <summary>
         /// Tries a simple node creation/get/update.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestNodeCreateGetUpdate()
         {
             // intialize the connection.
@@ -186,7 +186,7 @@ namespace OsmSharp.UnitTests.API
         /// <summary>
         /// Tries a simple node creation/get/update.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestNodeCreateGetDelete()
         {
             // intialize the connection.
@@ -236,7 +236,7 @@ namespace OsmSharp.UnitTests.API
         /// <summary>
         /// Tries a simple way creation/get.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestWayCreateGet()
         {
             // intialize the connection.
@@ -297,7 +297,7 @@ namespace OsmSharp.UnitTests.API
         /// <summary>
         /// Tries a simple way creation/get/update.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestWayCreateGetUpdate()
         {
             // intialize the connection.
@@ -366,7 +366,7 @@ namespace OsmSharp.UnitTests.API
         /// <summary>
         /// Tries a simple way creation/get/update.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestWayCreateGetDelete()
         {
             // intialize the connection.
@@ -434,7 +434,7 @@ namespace OsmSharp.UnitTests.API
         /// <summary>
         /// Tries a simple relation creation/get.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestRelationCreateGet()
         {
             // intialize the connection.
@@ -509,7 +509,7 @@ namespace OsmSharp.UnitTests.API
         /// <summary>
         /// Tries a simple relation creation/get/update.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestRelationCreateGetUpdate()
         {
             // intialize the connection.
@@ -588,7 +588,7 @@ namespace OsmSharp.UnitTests.API
         /// <summary>
         /// Tries a simple relation creation/get/update.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestRelationCreateGetDelete()
         {
             // intialize the connection.
@@ -665,7 +665,7 @@ namespace OsmSharp.UnitTests.API
         /// <summary>
         /// Tries to delete everything inside a boundingbox.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void APITestDeleteBoundingBox()
         {
             // intialize the connection.

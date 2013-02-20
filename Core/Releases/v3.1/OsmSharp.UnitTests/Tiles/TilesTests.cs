@@ -19,7 +19,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Osm.Core;
 using OsmSharp.Tools.Math.Geo;
 
@@ -28,13 +28,13 @@ namespace OsmSharp.Osm.UnitTests.Tiles
     /// <summary>
     /// Does some tests on the tile calculations.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class TilesTests
     {
         /// <summary>
         /// Tests creating a tile.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestTileCreation()
         {
             // 51.27056&lon=4.78849
@@ -50,7 +50,7 @@ namespace OsmSharp.Osm.UnitTests.Tiles
         /// <summary>
         /// Tests a tile box.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestTileBox()
         {
             Tile tile = new Tile(33639, 21862, 16);
@@ -74,7 +74,7 @@ namespace OsmSharp.Osm.UnitTests.Tiles
         /// <summary>
         /// Tests a tile range enumeration.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestTileRangeEnumerator()
         {
             TileRange range = new TileRange(0, 0, 1, 1, 16);

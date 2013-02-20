@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Xml.Gpx;
 using OsmSharp.Tools.Xml.Sources;
 using System.Reflection;
@@ -31,13 +31,13 @@ namespace OsmSharp.UnitTests
     /// <summary>
     /// Summary description for UnitTest1
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class OsmApiXmlTest
     {
         /// <summary>
         /// Test reads an embedded file.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void OsmApiDeserializeTest()
         {
             Stream capabilities =
@@ -80,7 +80,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Test writes an osm api file.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void OsmApiSerializeTest()
         {
             OsmSharp.Osm.Core.Xml.v0_6.osm osm = new OsmSharp.Osm.Core.Xml.v0_6.osm();

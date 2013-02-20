@@ -19,7 +19,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.Reflection;
 using OsmSharp.Osm.Data.XML.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
@@ -43,7 +43,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
     /// <summary>
     /// Tests the sparse node ordering CH.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class CHEdgeDifferenceRoutingTest : SimpleRoutingTests<RouterPoint, CHEdgeData>
     {
         /// <summary>
@@ -121,7 +121,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Tests a simple shortest route calculation.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceShortedDefault()
         {
             this.DoTestShortestDefault();
@@ -130,7 +130,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Tests if the raw router preserves tags.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceResolvedTags()
         {
             this.DoTestResolvedTags();
@@ -139,7 +139,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Tests if the raw router preserves tags on arcs/ways.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceArcTags()
         {
             this.DoTestArcTags();
@@ -148,7 +148,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Test is the CH router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceShortest1()
         {
             this.DoTestShortest1();
@@ -157,7 +157,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Test is the CH router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceShortest2()
         {
             this.DoTestShortest2();
@@ -166,7 +166,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Test is the CH router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceShortest3()
         {
             this.DoTestShortest3();
@@ -175,7 +175,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Test is the CH router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceShortest4()
         {
             this.DoTestShortest4();
@@ -184,7 +184,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Test is the CH router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceShortest5()
         {
             this.DoTestShortest5();
@@ -193,7 +193,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Test is the raw router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceResolvedShortest1()
         {
             this.DoTestShortestResolved1();
@@ -202,7 +202,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Test is the raw router can calculate another route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceResolvedShortest2()
         {
             this.DoTestShortestResolved2();
@@ -211,7 +211,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Test if the ch router many-to-many weights correspond to the point-to-point weights.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceManyToMany1()
         {
             this.DoTestManyToMany1();
@@ -220,7 +220,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         ///// <summary>
         ///// Test if the ch router handles connectivity questions correctly.
         ///// </summary>
-        //[TestMethod]
+        //[Test]
         //public void TestCHEdgeDifferenceConnectivity1()
         //{
         //    this.DoTestConnectivity1();
@@ -229,7 +229,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Tests a simple shortest route calculation.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceResolveAllNodes()
         {
             this.DoTestResolveAllNodes();
@@ -238,7 +238,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Tests a simple shortest route calculation.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceResolveBetweenNodes()
         {
             this.DoTestResolveBetweenNodes();
@@ -247,7 +247,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Tests routing when resolving points.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceResolveBetweenClose()
         {
             this.DoTestResolveBetweenClose();
@@ -256,7 +256,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Tests routing when resolving points.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceResolveBetweenTwo()
         {
             this.DoTestResolveBetweenTwo();
@@ -265,7 +265,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Tests routing when resolving points.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceResolveCase1()
         {
             this.DoTestResolveCase1();
@@ -274,7 +274,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Tests routing when resolving points.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceResolveCase2()
         {
             this.DoTestResolveCase2();

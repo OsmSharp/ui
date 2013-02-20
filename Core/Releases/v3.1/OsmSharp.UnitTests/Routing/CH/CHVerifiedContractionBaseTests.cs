@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Routing.Interpreter;
 using System.IO;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Core.Interpreter;
@@ -23,7 +23,7 @@ namespace OsmSharp.UnitTests.Routing.CH
     /// <summary>
     /// Executes the CH contractions while verifying each step.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class CHVerifiedContractionBaseTests
     {
         /// <summary>

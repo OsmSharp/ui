@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Routing.Interpreter;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Routing.Core;
 
 namespace OsmSharp.UnitTests.Routing.Interpreter
@@ -11,13 +11,13 @@ namespace OsmSharp.UnitTests.Routing.Interpreter
     /// <summary>
     /// Tests the OsmRoutingInterpreter.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class OsmRoutingInterpreterTests
     {
         /// <summary>
         /// Tests the CanBeTraversedBy function.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestOsmRoutingInterpreterCanBeTraversedBy()
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();

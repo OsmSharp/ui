@@ -19,7 +19,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Osm.Data.XML.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Default;
@@ -29,13 +29,13 @@ namespace OsmSharp.Osm.UnitTests.Data.Processing
     /// <summary>
     /// Summary description for XmlDataProcessorSourceTests
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class XmlDataProcessorSourceTests
     {
         /// <summary>
         /// A regression test in resetting and XML data source.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void XmlDataProcessorSourceReset()
         {
             // generate the source.

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Core.Enumerations;
 
 namespace OsmSharp.UnitTests.Tools
@@ -10,13 +10,13 @@ namespace OsmSharp.UnitTests.Tools
     /// <summary>
     /// Contains tests for the Permutation Enumeration class.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class PermutationEnumerationTests
     {
         /// <summary>
         /// Tests the permutation counts.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestPermutationCount()
         {
             int[] test_sequence = new int[] { 1, 2 };
@@ -48,7 +48,7 @@ namespace OsmSharp.UnitTests.Tools
         /// <summary>
         /// Tests the permutation contents.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestPermutationContent()
         {
             int[] test_sequence = new int[] { 1, 2 };

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
@@ -11,7 +11,7 @@ namespace OsmSharp.UnitTests.Routes
     /// <summary>
     /// Contains testing code for a simple asymmetric route.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class SimpleAsymmetricRouteTests : RouteTest
     {
         /// <summary>
@@ -39,7 +39,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests a dynamic asymmetric route by adding customers.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestSimpleAsymmetricRouteAdd()
         {
             this.DoTestAdd();
@@ -48,7 +48,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests a dynamic asymmetric route by removing customers.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestSimpleAsymmetricRouteRemove()
         {
             this.DoTestRemove();

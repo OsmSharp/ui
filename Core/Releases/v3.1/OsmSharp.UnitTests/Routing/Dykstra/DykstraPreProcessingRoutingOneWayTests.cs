@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Routing.Core;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 using OsmSharp.Routing.Core.Interpreter;
@@ -46,7 +46,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
     /// <summary>
     /// Does some raw routing tests testing for oneway constraint.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class DykstraPreProcessingRoutingOneWayTests : RoutingOneWayTests<RouterPoint, PreProcessedEdge>
     {
         /// <summary>
@@ -98,7 +98,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Tests a simple shortest route calculation.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDykstraPreProcessingOneWayShortestWithDirection()
         {
             this.DoTestShortestWithDirection();
@@ -107,7 +107,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Tests a simple shortest route calculation.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDykstraPreProcessingOneWayShortestAgainstDirection()
         {
             this.DoTestShortestAgainstDirection();
@@ -116,7 +116,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Test if the raw router many-to-many weights correspond to the point-to-point weights.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDykstraPreProcessingOneWayManyToMany1()
         {
             this.DoTestManyToMany1();
@@ -125,7 +125,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Test if the raw router handles connectivity questions correctly.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDykstraPreProcessingOneWayConnectivity1()
         {
             this.DoTestConnectivity1();
@@ -134,7 +134,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Tests a simple shortest route calculation.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDykstraPreProcessingOneWayResolveAllNodes()
         {
             this.DoTestResolveAllNodes();
@@ -143,7 +143,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// <summary>
         /// Tests resolving coordinates to routable points.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDykstraPreProcessingOneWayResolveBetweenNodes()
         {
             this.DoTestResolveBetweenNodes();

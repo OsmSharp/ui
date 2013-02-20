@@ -19,7 +19,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Math.Structures.StringTrees;
 using OsmSharp.Tools.Core;
 
@@ -28,13 +28,13 @@ namespace OsmSharp.UnitTests
     /// <summary>
     /// Does some string dictionary tests.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class StringTreeDictionaryTest
     {
         /// <summary>
         /// Tests adding a single string to a string dictionary.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestStringTreeDictionaryAddSingle()
         {
             StringTreeDictionary<string> dictionary = new StringTreeDictionary<string>();
@@ -47,7 +47,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Tests adding two strings to the string dictionary.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestStringTreeDictionaryAddMultiple()
         {
             StringTreeDictionary<string> dictionary = new StringTreeDictionary<string>();
@@ -62,7 +62,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Tests adding random strings to the string dictionary.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestStringTreeDictionaryRandom()
         {
             StringTreeDictionary<string> dictionary = new StringTreeDictionary<string>();
@@ -87,7 +87,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Tests adding alot for random strings to the string dictionary.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestStringTreeDictionaryRandomBig()
         {
             StringTreeDictionary<string> dictionary = new StringTreeDictionary<string>();

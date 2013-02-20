@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Routing.Core;
 using OsmSharp.Osm.Core;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
@@ -18,13 +18,13 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
     /// <summary>
     /// Tests the OsmRoutingInterpreter.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class EdgeMatcherTests
     {
         /// <summary>
         /// Tests the edge matcher function.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestEdgeMatcher()
         {
             IEdgeMatcher matcher = new DefaultEdgeMatcher();
@@ -58,7 +58,7 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
         /// <summary>
         /// Tests the edge matcher in combination with dykstra routing.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestEdgeMatcherDykstra()
         {
             string name = "Ben Abelshausen Boulevard";

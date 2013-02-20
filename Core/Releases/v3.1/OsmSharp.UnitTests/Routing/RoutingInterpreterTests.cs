@@ -23,7 +23,7 @@
 //using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 //using OsmSharp.Osm.Core;
 //using OsmSharp.Tools.Math.Geo;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
+//using NUnit.Framework;
 
 //namespace OsmSharp.Osm.UnitTests.Routing
 //{

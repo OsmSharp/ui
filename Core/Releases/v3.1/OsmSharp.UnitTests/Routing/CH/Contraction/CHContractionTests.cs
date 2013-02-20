@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Osm.Core;
 using System.IO;
 using OsmSharp.Routing.Core.Graph.Memory;
@@ -21,13 +21,13 @@ namespace OsmSharp.UnitTests.Routing.CH.Contraction
     /// <summary>
     /// Contains regression tests on the contraction code.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class CHContractionTests
     {
         /// <summary>
         /// Tests contraction of one node.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHContractionTest1()
         {
             // 
@@ -72,7 +72,7 @@ namespace OsmSharp.UnitTests.Routing.CH.Contraction
         /// <summary>
         /// Tests contraction of one node.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHContractionTest2()
         {
             // 
@@ -117,7 +117,7 @@ namespace OsmSharp.UnitTests.Routing.CH.Contraction
         /// <summary>
         /// Tests contraction of one node.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHContractionTest3()
         {
             // build the data.

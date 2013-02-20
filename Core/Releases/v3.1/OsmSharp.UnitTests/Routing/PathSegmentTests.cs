@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Routing.Core.Graph.Path;
 
 namespace OsmSharp.UnitTests.Routing
@@ -10,13 +10,13 @@ namespace OsmSharp.UnitTests.Routing
     /// <summary>
     /// Does tests on the path segment class.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class PathSegmentTests
     {
         /// <summary>
         /// Tests path segment equality.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestPathSegmentEqualityOperator()
         {
             PathSegment<long> segment1 = new PathSegment<long>(1);
@@ -47,7 +47,7 @@ namespace OsmSharp.UnitTests.Routing
         /// 
         /// Regression Test: Concatenation returns weight of the second route only not their sum.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestPathSegmentConcatenation()
         {
             PathSegment<long> segment12 = new PathSegment<long>(2, 10, new PathSegment<long>(1)); // 1 -> 2

@@ -19,7 +19,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using System.Reflection;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Osm.Core;
@@ -31,13 +31,13 @@ namespace OsmSharp.Osm.UnitTests.Data
     /// <summary>
     /// Containts tests for the PBF format.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class PBFTests
     {
         /// <summary>
         /// Tests reading PBF data from a Stream.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestPBFReaderDefault()
         {
             this.TestReadPBF("OsmSharp.UnitTests.api.osm.pbf");
@@ -46,7 +46,7 @@ namespace OsmSharp.Osm.UnitTests.Data
         /// <summary>
         /// Tests reading PBF data from a Stream.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestPBFReaderNoMeta()
         {
             this.TestReadPBF("OsmSharp.UnitTests.api_omitmetadata_true.osm.pbf");
@@ -55,7 +55,7 @@ namespace OsmSharp.Osm.UnitTests.Data
         /// <summary>
         /// Tests reading PBF data from a Stream.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestPBFReaderNoCompress()
         {
             this.TestReadPBF("OsmSharp.UnitTests.api_compress_none.osm.pbf");
@@ -64,7 +64,7 @@ namespace OsmSharp.Osm.UnitTests.Data
         /// <summary>
         /// Tests reading PBF data from a Stream.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestPBFReaderUseDense()
         {
             this.TestReadPBF("OsmSharp.UnitTests.api_usedense_false.osm.pbf");

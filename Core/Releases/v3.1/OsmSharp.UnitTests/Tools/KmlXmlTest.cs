@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Xml.Kml;
 using OsmSharp.Tools.Xml.Sources;
 using System.Reflection;
@@ -30,7 +30,7 @@ namespace OsmSharp.UnitTests
     /// <summary>
     /// Summary description for UnitTest1
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class KmlXmlTest
     {
         private TestContext testContextInstance;
@@ -78,7 +78,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Reads a v2.0 kml.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void KmlReadTestv2_0()
         {
             // instantiate and load the gpx test document.
@@ -93,7 +93,7 @@ namespace OsmSharp.UnitTests
 
                 // test the gpx test file content.
                 Assert.IsNotNull(kml_type.Item, "No item was found!");
-                Assert.IsInstanceOfType(kml_type.Item, typeof(OsmSharp.Tools.Xml.Kml.v2_0.Placemark), "Incorrect item type!");
+                Assert.IsInstanceOf<OsmSharp.Tools.Xml.Kml.v2_0.Placemark>(kml_type.Item, "Incorrect item type!");
 
                 OsmSharp.Tools.Xml.Kml.v2_0.Placemark type = (kml_type.Item as OsmSharp.Tools.Xml.Kml.v2_0.Placemark);
                 Assert.AreEqual(type.Items.Length, 3, "Incorrect number of items in folder!");
@@ -110,7 +110,7 @@ namespace OsmSharp.UnitTests
         ///// <summary>
         ///// Write a v2.0 kml.
         ///// </summary>
-        //[TestMethod]
+        //[Test]
         //public void KmlWriteTestv2_0()
         //{
         //    // instantiate and load the gpx test document.
@@ -188,7 +188,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Reads a v2.0 response kml.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void KmlReadTestv2_0_response()
         {
             // instantiate and load the gpx test document.
@@ -203,7 +203,7 @@ namespace OsmSharp.UnitTests
 
                 // test the gpx test file content.
                 Assert.IsNotNull(kml_type.Item, "No item was found!");
-                Assert.IsInstanceOfType(kml_type.Item, typeof(OsmSharp.Tools.Xml.Kml.v2_0_response.Response), "Incorrect item type!");
+                Assert.IsInstanceOf<OsmSharp.Tools.Xml.Kml.v2_0_response.Response>(kml_type.Item, "Incorrect item type!");
 
                 OsmSharp.Tools.Xml.Kml.v2_0_response.Response type = (kml_type.Item as OsmSharp.Tools.Xml.Kml.v2_0_response.Response);
                 Assert.AreEqual(type.Items.Length, 8, "Incorrect number of items in response!");
@@ -220,7 +220,7 @@ namespace OsmSharp.UnitTests
         ///// <summary>
         ///// Write a v2.0 response kml.
         ///// </summary>
-        //[TestMethod]
+        //[Test]
         //public void KmlWriteTestv2_0_response()
         //{
         //    // instantiate and load the gpx test document.
@@ -296,7 +296,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Reads a v2.1 kml.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void KmlReadTestv2_1()
         {
             // instantiate and load the gpx test document.
@@ -311,7 +311,7 @@ namespace OsmSharp.UnitTests
 
                 // test the gpx test file content.
                 Assert.IsNotNull(kml_type.Item, "No item was found!");
-                Assert.IsInstanceOfType(kml_type.Item, typeof(OsmSharp.Tools.Xml.Kml.v2_1.FolderType), "Incorrect item type!");
+                Assert.IsInstanceOf<OsmSharp.Tools.Xml.Kml.v2_1.FolderType>(kml_type.Item, "Incorrect item type!");
 
                 OsmSharp.Tools.Xml.Kml.v2_1.FolderType type = (kml_type.Item as OsmSharp.Tools.Xml.Kml.v2_1.FolderType);
                 Assert.AreEqual(type.Items1.Length, 10, "Incorrect number of items in folder!");
@@ -329,7 +329,7 @@ namespace OsmSharp.UnitTests
         ///// <summary>
         ///// Write a v2.1 kml.
         ///// </summary>
-        //[TestMethod]
+        //[Test]
         //public void KmlWriteTestv2_1()
         //{
         //    // instantiate and load the gpx test document.

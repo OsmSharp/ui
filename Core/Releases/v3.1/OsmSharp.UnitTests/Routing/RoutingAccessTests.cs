@@ -10,7 +10,7 @@ using OsmSharp.Routing.Core.Graph.Router;
 using OsmSharp.Osm.Routing.Interpreter;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Core.Route;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace OsmSharp.UnitTests.Routing
 {

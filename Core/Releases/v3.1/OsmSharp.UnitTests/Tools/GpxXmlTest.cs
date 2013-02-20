@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Xml.Gpx;
 using OsmSharp.Tools.Xml.Sources;
 using System.Reflection;
@@ -30,7 +30,7 @@ namespace OsmSharp.UnitTests
     /// <summary>
     /// Summary description for UnitTest1
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class GpxXmlTest
     {
         private TestContext testContextInstance;
@@ -56,7 +56,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Test reads an embedded file.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void GpxReadv1_0Test()
         {
             // instantiate and load the gpx test document.
@@ -85,7 +85,7 @@ namespace OsmSharp.UnitTests
         ///// <summary>
         ///// Test writes an embedded file.
         ///// </summary>
-        //[TestMethod]
+        //[Test]
         //public void GpxWritev1_0Test()
         //{
         //    // instantiate and load the gpx test document.
@@ -150,7 +150,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Test reads an embedded file.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void GpxReadv1_1Test()
         {
             // instantiate and load the gpx test document.
@@ -179,7 +179,7 @@ namespace OsmSharp.UnitTests
         ///// <summary>
         ///// Test writes an embedded file.
         ///// </summary>
-        //[TestMethod]
+        //[Test]
         //public void GpxWritev1_1Test()
         //{
         //    // instantiate and load the gpx test document.

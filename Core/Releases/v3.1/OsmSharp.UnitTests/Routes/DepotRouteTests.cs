@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 using OsmSharp.Routing.Core.VRP.WithDepot.MaxTime;
@@ -12,13 +12,13 @@ namespace OsmSharp.UnitTests.Routes
     /// <summary>
     /// Tests the depot route wrapper.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class DepotRouteTests
     {
         /// <summary>
         /// Tests an empty route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDepotDynamicAsymmetricRouteEmpty()
         {
             DepotRoute route = new DepotRoute(
@@ -34,7 +34,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests insert after on a depot route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDepotDynamicAsymmetricRouteInsertAfter()
         {
             DepotRoute route = new DepotRoute(
@@ -74,7 +74,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests replace edge on a depot route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDepotDynamicAsymmetricRouteReplaceEdge()
         {
             DepotRoute route = new DepotRoute(
@@ -118,7 +118,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Regression test of the multi dynamic asymetric depot wrapper simulating an exchange of parts of the routes.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDepotDynamicAsymmetricMultiRouteExchanges()
         {
             // create two routes.

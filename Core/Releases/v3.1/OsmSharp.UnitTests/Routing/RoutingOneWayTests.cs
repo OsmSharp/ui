@@ -19,7 +19,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Routing.Core;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Routing.Core.Constraints;

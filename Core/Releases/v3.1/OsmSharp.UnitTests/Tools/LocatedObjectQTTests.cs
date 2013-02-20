@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Math.Structures;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Structures.QTree;
@@ -12,13 +12,13 @@ namespace OsmSharp.UnitTests.Tools
     /// <summary>
     /// Contains tests for a QuadTree index.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class LocatedObjectQTTests : LocatedObjectIndexTest
     {
         /// <summary>
         /// Tests a quad tree implementation of the located QT index.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestLocatedObjectQTSimple()
         {
             this.DoTestSimple();
@@ -27,7 +27,7 @@ namespace OsmSharp.UnitTests.Tools
         /// <summary>
         /// Tests a quad tree implementation of the located QT index.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestLocatedObjectQTIndex()
         {
             this.DoTestAddingRandom(1000);

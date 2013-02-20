@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.TSPLIB.Parser;
 using System.Reflection;
 using System.IO;
@@ -14,13 +14,13 @@ namespace OsmSharp.UnitTests.TSP
     /// <summary>
     /// A small TSP test.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class BruteForceTSPTest
     {
         /// <summary>
         /// Tests a small TSP 5.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestBruteForceTSP5()
         {
             // load the problem.
@@ -42,7 +42,7 @@ namespace OsmSharp.UnitTests.TSP
         /// <summary>
         /// Tests a small TSP 6.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestBruteForceTSP6()
         {
             // load the problem.

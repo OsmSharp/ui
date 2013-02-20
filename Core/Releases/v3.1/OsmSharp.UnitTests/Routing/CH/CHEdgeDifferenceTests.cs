@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Osm.Data.XML.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
@@ -37,7 +37,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
     /// <summary>
     /// Tests the EdgeDifference calculator.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class CHEdgeDifferenceTests
     {
         /// <summary>
@@ -99,7 +99,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Tests all the edge difference calculations on the uncontracted test network.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceNonContracted()
         {
             IRoutingInterpreter interpreter = new OsmSharp.Osm.Routing.Interpreter.OsmRoutingInterpreter();
@@ -133,7 +133,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Tests all the edge difference calculations on the uncontracted test network.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHEdgeDifferenceContractions()
         {
             IRoutingInterpreter interpreter = new OsmSharp.Osm.Routing.Interpreter.OsmRoutingInterpreter();

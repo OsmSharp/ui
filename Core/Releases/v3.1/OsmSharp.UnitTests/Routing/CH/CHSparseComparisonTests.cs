@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Osm.Data.XML.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
@@ -38,7 +38,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
     /// <summary>
     /// Tests the CH Sparse routing against a reference implementation.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class CHSparseComparisonTests : RoutingComparisonTests
     {
         /// <summary>
@@ -90,7 +90,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Compares all routes possible against a reference implementation.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHSparseAgainstReference()
         {
             this.TestCompareAll("test_network.osm");
@@ -99,7 +99,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Compares all routes possible against a reference implementation.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHSparseOneWayAgainstReference()
         {
             this.TestCompareAll("test_network_oneway.osm");
@@ -108,7 +108,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         ///// <summary>
         ///// Compares all routes possible against a reference implementation.
         ///// </summary>
-        //[TestMethod]
+        //[Test]
         //public void TestCHSparseAgainstReferenceRealNetwork()
         //{
         //    this.TestCompareAll("test_network_real1.osm");

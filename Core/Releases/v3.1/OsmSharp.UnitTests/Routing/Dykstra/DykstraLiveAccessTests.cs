@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Osm.UnitTests.Routing;
 using OsmSharp.Routing.Core;
 using OsmSharp.Osm.Routing.Data;
@@ -23,7 +23,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
     /// <summary>
     /// Does some raw routing tests.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class DykstraLiveAccessTests : RoutingAccessTests<RouterPoint, SimpleWeighedEdge>
     {
         /// <summary>
@@ -101,7 +101,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         /// <summary>
         /// Test access restrictions.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDykstraLiveAccessHighways()
         {
             this.DoAccessTestsHighways();

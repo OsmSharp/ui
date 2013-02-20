@@ -2,7 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Core.Collections;
 
 namespace OsmSharp.UnitTests
@@ -10,13 +10,13 @@ namespace OsmSharp.UnitTests
     /// <summary>
     /// Summary description for StringTableTests
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class StringTableTests
     {
         /// <summary>
         /// Tests adding strings to a string table.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestStringTable_AddStrings()
         {
             ObjectTable<string> table = new ObjectTable<string>(false);
@@ -58,7 +58,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Tests adding strings twice to a string table.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestStringTable_AddStringsTwice()
         {
             ObjectTable<string> table = new ObjectTable<string>(false);

@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Osm.Core;
 using OsmSharp.Osm.Core.Factory;
 
@@ -28,13 +28,13 @@ namespace OsmSharp.Osm.UnitTests.Data
     /// <summary>
     /// Contains some regression tests on nodes.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class NodeTests
     {
         /// <summary>
         /// Regression test for bug in ToString() for a node without coordinates.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void NodeToStringTests()
         {
             Node test_node = OsmBaseFactory.CreateNode(-1);

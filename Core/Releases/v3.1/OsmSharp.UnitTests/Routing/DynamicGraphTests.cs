@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
 using OsmSharp.Routing.Core.Graph.DynamicGraph;
 using OsmSharp.Routing.Core.Graph.DynamicGraph.Memory;
@@ -12,7 +12,7 @@ namespace OsmSharp.UnitTests.Routing
     /// <summary>
     /// Tests a simple weighed dynamic graph.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class SimpleWeighedDynamicGraphTests
     {
         /// <summary>
@@ -27,7 +27,7 @@ namespace OsmSharp.UnitTests.Routing
         /// <summary>
         /// Tests adding a vertex.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestSimpleWeighedDynamicGraphVertex()
         {
             PreProcessedDynamicGraph graph = new PreProcessedDynamicGraph();
@@ -46,7 +46,7 @@ namespace OsmSharp.UnitTests.Routing
         /// <summary>
         /// Tests adding 10000 vertices.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestSimpleWeighedDynamicGraphVertex10000()
         {
             PreProcessedDynamicGraph graph = new PreProcessedDynamicGraph();
@@ -73,7 +73,7 @@ namespace OsmSharp.UnitTests.Routing
         /// <summary>
         /// Tests adding an edge.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestSimpleWeighedDynamicGraphEdge()
         {
             PreProcessedDynamicGraph graph = new PreProcessedDynamicGraph();
@@ -101,7 +101,7 @@ namespace OsmSharp.UnitTests.Routing
         /// <summary>
         /// Tests adding 10000 edges.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestSimpleWeighedDynamicGraphEdge10000()
         {
             int count = 10000;

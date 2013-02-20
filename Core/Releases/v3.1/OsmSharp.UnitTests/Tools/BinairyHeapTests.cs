@@ -3,20 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Core.Collections.PriorityQueues;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace OsmSharp.UnitTests.Tools
 {
     /// <summary>
     /// Tests against the binairy heap.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class BinairyHeapTests
     {
         /// <summary>
         /// Tests adding one element to the heap.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestBinairyHeapQueueOneElement()
         {
             // creates a new binairy heap.
@@ -34,7 +34,7 @@ namespace OsmSharp.UnitTests.Tools
         /// <summary>
         /// Tests adding one element to the heap.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestBinairyHeapQueueMultipleElements()
         {
             // creates a new binairy heap.
@@ -57,7 +57,7 @@ namespace OsmSharp.UnitTests.Tools
         /// <summary>
         /// Tests adding one element to the heap.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestBinairyHeapQueueDeQueueRandom()
         {
             // the elements.

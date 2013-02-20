@@ -3,20 +3,20 @@
 //using System.Linq;
 //using System.Text;
 //using OsmSharp.Tools.Core.Collections.PriorityQueues;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
+//using NUnit.Framework;
 
 //namespace OsmSharp.UnitTests.Tools
 //{
 //    /// <summary>
 //    /// Tests against the fibonaci heap.
 //    /// </summary>
-//    [TestClass]
+//    [TestFixture]
 //    public class FibonacciHeapTests
 //    {
 //        /// <summary>
 //        /// Tests adding one element to the heap.
 //        /// </summary>
-//        [TestMethod]
+//        [Test]
 //        public void TestFibonacciHeapQueueOneElement()
 //        {
 //            // creates a new binairy heap.
@@ -34,7 +34,7 @@
 //        /// <summary>
 //        /// Tests adding one element to the heap.
 //        /// </summary>
-//        [TestMethod]
+//        [Test]
 //        public void TestFibonacciHeapQueueMultipleElements()
 //        {
 //            // creates a new binairy heap.
@@ -57,7 +57,7 @@
 //        /// <summary>
 //        /// Tests adding one element to the heap.
 //        /// </summary>
-//        [TestMethod]
+//        [Test]
 //        public void TestFibonacciHeapQueueDeQueueRandom()
 //        {
 //            // the elements.

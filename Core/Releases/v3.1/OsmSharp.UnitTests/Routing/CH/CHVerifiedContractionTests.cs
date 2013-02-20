@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Osm.Core;
 using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.CH.PreProcessing;
@@ -21,13 +21,13 @@ namespace OsmSharp.UnitTests.Routing.CH
     /// <summary>
     /// Executes the CH contractions while verifying each step.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class CHVerifiedContractionTests : CHVerifiedContractionBaseTests
     {
         /// <summary>
         /// Executes the CH contractions while verifying each step.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHVerifiedContractionTestNetwork()
         {
             this.DoTestCHSparseVerifiedContraction(
@@ -37,7 +37,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <summary>
         /// Executes the CH contractions while verifying each step.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHVerifiedContractionTestNetworkReal()
         {
             this.DoTestCHSparseVerifiedContraction(
@@ -47,7 +47,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <summary>
         /// Executes the CH contractions while verifying each step.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestCHVerifiedContractionTestNetworkOneWay()
         {
             this.DoTestCHSparseVerifiedContraction(

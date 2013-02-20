@@ -9,7 +9,6 @@ using OsmSharp.Routing.Core;
 using OsmSharp.Osm.Routing.Interpreter;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Routing.Core.Route;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace OsmSharp.Osm.Routing.Test.ManyToMany
 {

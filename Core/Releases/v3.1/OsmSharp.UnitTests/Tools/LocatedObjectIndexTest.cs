@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Structures;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace OsmSharp.UnitTests.Tools
 {

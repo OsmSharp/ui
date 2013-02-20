@@ -19,7 +19,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Routing.Core.Route;
 
 namespace OsmSharp.Osm.UnitTests
@@ -27,13 +27,13 @@ namespace OsmSharp.Osm.UnitTests
     /// <summary>
     /// Does some unittesting on the OsmSharpRoute data format.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class OsmSharpRouteTests
     {
         /// <summary>
         /// Tests the presence of tags in a calculated route.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void RouteConcatenateTagsTest()
         {
             OsmSharpRoute route1 = new OsmSharpRoute();

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
@@ -11,7 +11,7 @@ namespace OsmSharp.UnitTests.Routes
     /// <summary>
     /// Contains testing code for a dynamic asymmetric route.
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class DynamicAsymmetricRouteTests : RouteTest
     {
         /// <summary>
@@ -36,7 +36,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests a dynamic asymmetric route by adding customers.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricRouteInsertAfter()
         {
             this.DoTestAdd();
@@ -45,7 +45,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests a dynamic asymmetric route by removing customers.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricRouteRemove()
         {
             this.DoTestRemove();
@@ -54,7 +54,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests a dynamic asymmetric route by removing customers.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricRouteContains()
         {
             this.DoTestContains();
@@ -63,7 +63,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Test a dynamic asymetric route by removing and adding every customer at every position.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricRouteInserAfterRemoveComplete()
         {
             this.DoTestAddRemoveComplete();
@@ -72,7 +72,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests a dynamic asymetric route's enumeration functionality.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricRouteEnumerateBetween()
         {
             this.DoTestEnumerateBetween();
@@ -81,7 +81,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests a dynamic asymetric route's enumeration functionality.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricRouteGetNeighbours()
         {
             this.DoTestGetNeighbours();
@@ -90,7 +90,7 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Tests a dynamic asymetric route's enumeration functionality.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void TestDynamicAsymmetricEnumeratePairs()
         {
             this.DoTestEnumeratePairs();

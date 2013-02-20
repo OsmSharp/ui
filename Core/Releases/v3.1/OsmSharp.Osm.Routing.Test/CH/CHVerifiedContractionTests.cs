@@ -14,17 +14,17 @@ using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.Core.Graph.Path;
 using OsmSharp.Routing.CH.Routing;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Osm.Data.XML.Processor;
+using NUnit.Framework;
 
 namespace OsmSharp.Osm.Routing.Test.CH
 {
     /// <summary>
     /// Executes the CH contractions while verifying each step.
     /// </summary>
-    [TestClass]
+    //[TestClass]
     public class CHVerifiedContractionBaseTests
     {
         /// <summary>

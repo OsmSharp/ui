@@ -19,7 +19,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 using OsmSharp.Tools.Math;
 
 namespace OsmSharp.UnitTests
@@ -27,7 +27,7 @@ namespace OsmSharp.UnitTests
     /// <summary>
     /// Summary description for MathTest
     /// </summary>
-    [TestClass]
+    [TestFixture]
     public class MathTest
     {
         private TestContext testContextInstance;
@@ -73,7 +73,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Tests if the line position test is correct.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void LinePosition2DTest()
         {
             PointF2D a = new PointF2D(0, 0);
@@ -90,7 +90,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Tests if the line-point distance is correct.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void LineDistance2DTest()
         {
             double delta = 0.000000000000001;
@@ -151,7 +151,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Tests if the line-point distance is correct.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void LineDistance2DSegmentTest()
         {
             double delta = 0.000000000000001;
@@ -218,7 +218,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Tests the functionalities of the point object.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void Point2DTest()
         {
             // create the test cases.
@@ -244,7 +244,7 @@ namespace OsmSharp.UnitTests
         /// <summary>
         /// Tests the functionalities of the vector object.
         /// </summary>
-        [TestMethod]
+        [Test]
         public void Vector2DTest()
         {
             // create the test cases.
