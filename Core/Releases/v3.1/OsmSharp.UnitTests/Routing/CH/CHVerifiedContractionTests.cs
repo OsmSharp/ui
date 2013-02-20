@@ -15,7 +15,6 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.Core.Graph.Path;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Osm.Routing.Test.CH;
 
 namespace OsmSharp.UnitTests.Routing.CH
 {

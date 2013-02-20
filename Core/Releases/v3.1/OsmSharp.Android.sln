@@ -231,4 +231,10 @@ Global
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = OsmSharp.Tools.Core\OsmSharp.Tools.Core.Android.csproj
 	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = OsmSharp.Tools.Core\OsmSharp.Tools.Core.Android.csproj
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = OsmSharp.Tools.Core\OsmSharp.Tools.Core.Android.csproj
+	EndGlobalSection
 EndGlobal

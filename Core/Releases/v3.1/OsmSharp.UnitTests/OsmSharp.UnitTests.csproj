@@ -122,6 +122,7 @@
     <Compile Include="Routes\MultiRouteTest.cs" />
     <Compile Include="Routes\RouteTest.cs" />
     <Compile Include="Routes\SimpleAsymmetricRouteTests.cs" />
+    <Compile Include="Routing\CH\CHVerifiedContractionBaseTests.cs" />
     <Compile Include="Routing\CH\Contraction\CHContractionTests.cs" />
     <Compile Include="Data\NodeTests.cs" />
     <Compile Include="Data\PBFTests.cs" />
@@ -164,7 +165,6 @@
     <Compile Include="Tools\NomatimXmlTest.cs" />
     <Compile Include="Tools\OsmApiXmlTest.cs" />
     <Compile Include="Tools\PermutationEnumerationTests.cs" />
-    <Compile Include="Tools\SortedSetTest.cs" />
     <Compile Include="Tools\StringTableTests.cs" />
     <Compile Include="Tools\StringTreeDictionaryTest.cs" />
     <Compile Include="TSP\BruteForceTSPTest.cs" />
@@ -221,10 +221,6 @@
     <ProjectReference Include="..\OsmSharp.Osm.Data.XML\OsmSharp.Osm.Data.XML.csproj">
       <Project>{18254C55-15C8-4438-9F92-B3B78E2720F5}</Project>
       <Name>OsmSharp.Osm.Data.XML</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm.Routing.Test\OsmSharp.Osm.Routing.Test.csproj">
-      <Project>{BB016754-882F-49EB-8965-561E5F413498}</Project>
-      <Name>OsmSharp.Osm.Routing.Test</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Osm.Routing\OsmSharp.Osm.Routing.csproj">
       <Project>{5E146436-B64C-4C3A-832E-26A53AA6BA54}</Project>
