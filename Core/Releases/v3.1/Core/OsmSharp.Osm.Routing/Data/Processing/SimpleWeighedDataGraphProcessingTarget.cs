@@ -88,6 +88,15 @@ namespace OsmSharp.Osm.Routing.Data.Processing
             // use the distance as weight.
             double distance = from.DistanceReal(to).Value;
 
+            if (tags_index == null)
+            {
+                return new SimpleWeighedEdge()
+                {
+                    IsForward = direction_forward,
+                    //Tags = tags_index.Add(tags),
+                    Weight = distance
+                };
+            }
             return new SimpleWeighedEdge()
             {
                 IsForward = direction_forward,

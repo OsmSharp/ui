@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Core.Simple;
+using System.Diagnostics;
 
 namespace OsmSharp.Osm.Data.Core.Processor.Progress
 {
@@ -46,9 +47,11 @@ namespace OsmSharp.Osm.Data.Core.Processor.Progress
 
                     if ((_node % 10000) == 0)
                     {
+                        Process p = Process.GetCurrentProcess();
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
-                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Node[{0}]: {1}nodes/s", _node, (int)((double)_node / seconds));
+                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Node[{0}]: {1}nodes/s @ {2}",
+                            _node, (int)((double)_node / seconds), p.PrivateMemorySize64 / 1024 / 1024);
                     }
                     break;
                 case SimpleOsmGeoType.Relation:
@@ -56,9 +59,11 @@ namespace OsmSharp.Osm.Data.Core.Processor.Progress
 
                     if ((_relation % 1000) == 0)
                     {
+                        Process p = Process.GetCurrentProcess();
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
-                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Relation[{0}]: {1}relations/s", _relation, (int)((double)_relation / seconds));
+                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Relation[{0}]: {1}relations/s @ {2}",
+                            _relation, (int)((double)_relation / seconds), p.PrivateMemorySize64 / 1024 / 1024);
                     }
                     break;
                 case SimpleOsmGeoType.Way:
@@ -66,9 +71,11 @@ namespace OsmSharp.Osm.Data.Core.Processor.Progress
 
                     if ((_way % 1000) == 0)
                     {
+                        Process p = Process.GetCurrentProcess();
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
-                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Way[{0}]: {1}ways/s", _way, (int)((double)_way / seconds));
+                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Way[{0}]: {1}ways/s @ {2}",
+                            _way, (int)((double)_way / seconds), p.PrivateMemorySize64 / 1024 / 1024);
                     }
                     break;
             }

@@ -37,7 +37,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         /// <summary>
         /// Holds all graph data.
         /// </summary>
-        private Vertex[] _vertices;
+        private KeyValuePair<uint, EdgeData>[][] _vertices;
 
         /// <summary>
         /// Holds the coordinates of the vertices.
@@ -50,7 +50,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         public MemoryDynamicGraph()
         {
             _next_id = 1;
-            _vertices = new Vertex[1000];
+            _vertices = new KeyValuePair<uint, EdgeData>[1000][];
             _coordinates = new GeoCoordinateSimple[1000];
         }
 
@@ -60,7 +60,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         private void IncreaseSize()
         {
             Array.Resize<GeoCoordinateSimple>(ref _coordinates, _coordinates.Length + 1000);
-            Array.Resize<Vertex>(ref _vertices, _vertices.Length + 1000);
+            Array.Resize<KeyValuePair<uint, EdgeData>[]>(ref _vertices, _vertices.Length + 1000);
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
 
             // create vertex.
             uint new_id = _next_id;
-            _vertices[new_id].Arcs = null;
+            _vertices[new_id] = null;
             _coordinates[new_id] = new GeoCoordinateSimple()
             {
                 Latitude = latitude,
@@ -133,7 +133,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
             if (_vertices.Length > from)
             {
                 KeyValuePair<uint, EdgeData>[] arcs =
-                    _vertices[from].Arcs;
+                    _vertices[from];
                 int idx = -1;
                 if (arcs != null)
                 { // check for an existing edge first.
@@ -152,13 +152,13 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
                     // if here: there did not exist an edge yet!
                     idx = arcs.Length;
                     Array.Resize<KeyValuePair<uint, EdgeData>>(ref arcs, arcs.Length + 1);
-                    _vertices[from].Arcs = arcs;
+                    _vertices[from] = arcs;
                 }
                 else
                 { // create an arcs array.
                     arcs = new KeyValuePair<uint, EdgeData>[1];
                     idx = 0;
-                    _vertices[from].Arcs = arcs;
+                    _vertices[from] = arcs;
                 }
 
                 // set the arc.
@@ -180,7 +180,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
             if (_vertices.Length > from)
             {
                 KeyValuePair<uint, EdgeData>[] arcs =
-                    _vertices[from].Arcs;
+                    _vertices[from];
                 if (arcs != null && arcs.Length > 0)
                 {
                     List<KeyValuePair<uint, EdgeData>> arcs_list =
@@ -192,7 +192,7 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
                             arcs_list.Remove(arc);
                         }
                     }
-                    _vertices[from].Arcs = arcs_list.ToArray();
+                    _vertices[from] = arcs_list.ToArray();
                 }
                 return;
             }
@@ -208,11 +208,11 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         {
             if (_vertices.Length > vertex)
             {
-                if (_vertices[vertex].Arcs == null)
+                if (_vertices[vertex] == null)
                 {
                     return new KeyValuePair<uint, EdgeData>[0];
                 }
-                return _vertices[vertex].Arcs;
+                return _vertices[vertex];
             }
             return new KeyValuePair<uint, EdgeData>[0]; // return empty data if the vertex does not exist!
         }
@@ -227,11 +227,11 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         {
             if (_vertices.Length > vertex)
             {
-                if (_vertices[vertex].Arcs == null)
+                if (_vertices[vertex] == null)
                 {
                     return false;
                 }
-                foreach(KeyValuePair<uint, EdgeData> arc in  _vertices[vertex].Arcs)
+                foreach(KeyValuePair<uint, EdgeData> arc in  _vertices[vertex])
                 {
                     if (arc.Key == neighbour)
                     {
@@ -242,16 +242,16 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
             return false;
         }
 
-        /// <summary>
-        /// Represents a simple vertex.
-        /// </summary>
-        private struct Vertex
-        {
-            /// <summary>
-            /// Holds an array of edges starting at this vertex.
-            /// </summary>
-            public KeyValuePair<uint, EdgeData>[] Arcs { get; set; }
-        }
+        ///// <summary>
+        ///// Represents a simple vertex.
+        ///// </summary>
+        //private struct Vertex
+        //{
+        //    /// <summary>
+        //    /// Holds an array of edges starting at this vertex.
+        //    /// </summary>
+        //    public KeyValuePair<uint, EdgeData>[] Arcs { get; set; }
+        //}
 
         /// <summary>
         /// Returns the number of vertices in this graph.

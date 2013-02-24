@@ -36,6 +36,7 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             if (_osm_data == null)
             {
                 OsmTagsIndex tags_index = new OsmTagsIndex();
+                //OsmTagsIndex tags_index = null;
 
                 // do the data processing.
                 _osm_data =
@@ -51,6 +52,10 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
                 {
                     source = new XmlDataProcessorSource(data);
                 }
+
+                // report progress.
+                source = new OsmSharp.Osm.Data.Core.Processor.Progress.ProgressDataProcessorSource(source);
+
                 DataProcessorFilterSort sorter = new DataProcessorFilterSort();
                 sorter.RegisterSource(source);
                 target_data.RegisterSource(sorter);

@@ -153,7 +153,7 @@ namespace OsmSharp.Osm.Data.PBF.Raw.Processor
 
                 SimpleWay simple_way = new SimpleWay();
                 simple_way.Id = way.id;
-                simple_way.Nodes = new List<long>();
+                simple_way.Nodes = new List<long>(way.refs.Count);
                 long node_id = 0;
                 for (int node_idx = 0; node_idx < way.refs.Count; node_idx++)
                 {

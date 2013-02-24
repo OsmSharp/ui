@@ -63,7 +63,7 @@ namespace OsmSharp.Osm.Routing.Test
             //NoDepotTest.Execute();
             //DepotTest.Execute();
             //PBF.PBFTest.Execute();
-            //ManyToMany.ManyToManyExecution.Execute();
+            ManyToMany.ManyToManyExecution.Execute();
             //Point2Point.Point2PointExecution.Execute();
             //CHTest.Execute();
             //Tsp.TspTest.Execute();
