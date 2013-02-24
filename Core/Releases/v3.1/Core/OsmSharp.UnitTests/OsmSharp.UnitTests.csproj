@@ -158,6 +158,7 @@
     <Compile Include="Tools\BinairyHeapTests.cs" />
     <Compile Include="Tools\FibonacciHeapTests.cs" />
     <Compile Include="Tools\GpxXmlTest.cs" />
+    <Compile Include="Tools\HugeDictionaryTests.cs" />
     <Compile Include="Tools\KmlXmlTest.cs" />
     <Compile Include="Tools\LambertProjectionTest.cs" />
     <Compile Include="Tools\LocatedObjectIndexTest.cs" />

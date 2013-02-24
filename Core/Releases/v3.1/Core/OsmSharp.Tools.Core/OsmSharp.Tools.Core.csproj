@@ -170,6 +170,7 @@
     <Compile Include="Cache\LRUCache.cs" />
     <Compile Include="Collections\DictionaryProxy.cs" />
     <Compile Include="Collections\DictionaryWithEvents.cs" />
+    <Compile Include="Collections\HugeDictionary.cs" />
     <Compile Include="Collections\LimitedStack.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeap.cs" />
     <Compile Include="Collections\PriorityQueues\IPriorityQueue.cs" />

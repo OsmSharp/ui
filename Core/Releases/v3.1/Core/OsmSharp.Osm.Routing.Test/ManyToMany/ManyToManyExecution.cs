@@ -17,7 +17,7 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
         public static void Execute()
         {
             ManyToManyCustomTests tests = new ManyToManyCustomDykstraLiveTests();
-            tests.Execute((new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf")).OpenRead(),
+            tests.Execute((new FileInfo(@"c:\OSM\bin\england.osm.pbf")).OpenRead(),
                 @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\DM101.csv", true);
             //tests.Execute((new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf")).OpenRead(),
             //    @"C:\PRIVATE\Dropbox\Ugent\Thesis\Test Cases\Deltamedia\DM103.csv", true);

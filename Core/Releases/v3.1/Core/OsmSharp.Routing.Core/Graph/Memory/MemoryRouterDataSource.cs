@@ -41,7 +41,7 @@ namespace OsmSharp.Routing.Core.Graph.Memory
         public MemoryRouterDataSource(ITagsIndex tags_index)
         {
             _graph = new MemoryDynamicGraph<EdgeData>();
-            _vertex_index = new QuadTree<GeoCoordinate, uint>();
+            //_vertex_index = new QuadTree<GeoCoordinate, uint>();
             //_vertex_index = new LocatedObjectIndexList<GeoCoordinate, uint>();
 
             _tags_index = tags_index;
@@ -53,7 +53,7 @@ namespace OsmSharp.Routing.Core.Graph.Memory
         public MemoryRouterDataSource(IDynamicGraph<EdgeData> graph, ITagsIndex tags_index)
         {
             _graph = graph;
-            _vertex_index = new QuadTree<GeoCoordinate, uint>();
+            //_vertex_index = new QuadTree<GeoCoordinate, uint>();
             //_vertex_index = new LocatedObjectIndexList<GeoCoordinate, uint>();
 
             _tags_index = tags_index;
@@ -138,8 +138,8 @@ namespace OsmSharp.Routing.Core.Graph.Memory
         public uint AddVertex(float latitude, float longitude)
         {
             uint vertex = _graph.AddVertex(latitude, longitude);
-            _vertex_index.Add(new GeoCoordinate(latitude, longitude),
-                vertex);
+            //_vertex_index.Add(new GeoCoordinate(latitude, longitude),
+            //    vertex);
             return vertex;
         }
 

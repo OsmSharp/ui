@@ -141,7 +141,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// <summary>
         /// Holds the coordinates.
         /// </summary>
-        private Dictionary<long, float[]> _coordinates;
+        private OsmSharp.Tools.Core.Collections.Huge.HugeDictionary<long, float[]> _coordinates;
 
         /// <summary>
         /// Holds the index of all relevant nodes.
@@ -158,7 +158,7 @@ namespace OsmSharp.Osm.Routing.Data.Processing
         /// </summary>
         public override void Initialize()
         {
-            _coordinates = new Dictionary<long, float[]>();
+            _coordinates = new OsmSharp.Tools.Core.Collections.Huge.HugeDictionary<long, float[]>();
         }
 
         /// <summary>
