@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ED2721C5-8884-4E4D-990A-EEF8CE44D3FF}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>OsmSharp.Tools.Math.VRP.Core</RootNamespace>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AssemblyName>OsmSharp.Tools.Math.VRP.Core</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>..\OutputAndroid\</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <NoWarn>..\OutputAndroid\</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>..\OutputAndroid\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <NoWarn>..\OutputAndroid\</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="BestPlacement\InsertionCosts\BinaryHeapInsertionCosts.cs" />
+    <Compile Include="BestPlacement\InsertionCosts\IInsertionCosts.cs" />
+    <Compile Include="BestPlacement\SeedCustomers\ISeedCustomerSelector.cs" />
+    <Compile Include="BestPlacement\SeedCustomers\SimpleSeeds.cs" />
+    <Compile Include="BestPlacement\CheapestInsertionHelper.cs" />
+    <Compile Include="BestPlacement\CheapestInsertionResult.cs" />
+    <Compile Include="LocalSearch\RePlace1OptHelper.cs" />
+    <Compile Include="LocalSearch\RePlace2OptHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Routes\ASymmetric\AsymmetricCycles.cs" />
+    <Compile Include="Routes\ASymmetric\DepotDynamicAsymmetricMultiRoute.cs" />
+    <Compile Include="Routes\ASymmetric\DynamicAsymmetricBetweenEnumerable.cs" />
+    <Compile Include="Routes\ASymmetric\DynamicAsymmetricMultiRoute.cs" />
+    <Compile Include="Routes\ASymmetric\DynamicAsymmetricRoute.cs" />
+    <Compile Include="Routes\ASymmetric\IASymmetricRoute.cs" />
+    <Compile Include="Routes\ASymmetric\SimpleAsymmetricRoute.cs" />
+    <Compile Include="Routes\Symmetric\DynamicSymmetricRoute.cs" />
+    <Compile Include="Routes\Symmetric\FixedSymmetricRoute.cs" />
+    <Compile Include="Routes\Symmetric\ISymmetricRoute.cs" />
+    <Compile Include="Routes\BetweenEnumerator.cs" />
+    <Compile Include="Routes\DepotRoute.cs" />
+    <Compile Include="Routes\EdgeEnumerator.cs" />
+    <Compile Include="Routes\IMultiRoute.cs" />
+    <Compile Include="Routes\IRoute.cs" />
+    <Compile Include="Routes\RouteExtensions.cs" />
+    <Compile Include="TwoOpt\TwoOptHelper.cs" />
+    <Compile Include="TwoOpt\TwoOptResult.cs" />
+    <Compile Include="IProblemWeights.cs" />
+    <Compile Include="NearestNeighbours10.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.Android.csproj">
+      <Project>{D4D55F20-ECAD-49CA-8160-3EF9516EC54B}</Project>
+      <Name>OsmSharp.Tools.Core.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.Android.csproj">
+      <Project>{36994A8E-4974-4165-99CA-0F24FBEB2519}</Project>
+      <Name>OsmSharp.Tools.Math.Android</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>
