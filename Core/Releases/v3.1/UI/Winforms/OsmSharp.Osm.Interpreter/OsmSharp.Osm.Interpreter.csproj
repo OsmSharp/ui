@@ -3,13 +3,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B076C8ED-B40F-4BAB-B91A-0673BB753C06}</ProjectGuid>
+    <ProjectGuid>{30CCEC5D-49C1-4A5F-986D-8CE14EBDE666}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OsmSharp.Osm.Map</RootNamespace>
-    <AssemblyName>OsmSharp.Osm.Map</AssemblyName>
+    <RootNamespace>OsmSharp.Osm.Interpreter</RootNamespace>
+    <AssemblyName>OsmSharp.Osm.Interpreter</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>SAK</SccProjectName>
@@ -29,7 +29,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\OsmSharp.Osm.Map.xml</DocumentationFile>
+    <DocumentationFile>..\Output\OsmSharp.Osm.Interpreter.xml</DocumentationFile>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -38,78 +39,81 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>bin\x86\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>..\Output\OsmSharp.Osm.Map.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Osm.Interpreter.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisLogFile>..\Output\Osm.Map.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>..\Output\Osm.Interpreter.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>bin\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisLogFile>..\Output\Osm.Map.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>..\Output\Osm.Interpreter.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\OsmSharp.Osm.Map.xml</DocumentationFile>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|AnyCPU'">
     <OutputPath>bin\Release x64\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <CodeAnalysisLogFile>..\Output\Osm.Map.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <PlatformTarget>x86</PlatformTarget>
+    <CodeAnalysisLogFile>..\Output\Osm.Interpreter.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|x86'">
     <OutputPath>bin\x86\Release x64\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>..\Output\Osm.Map.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
-    <CodeAnalysisLogFile>..\Output\Osm.Map.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>..\Output\Osm.Interpreter.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\Output\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>..\Output\OsmSharp.Osm.Map.xml</DocumentationFile>
+    <DocumentationFile>..\Output\OsmSharp.Osm.Interpreter.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
-    <CodeAnalysisLogFile>..\Output\Osm.Map.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>..\Output\Osm.Interpreter.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
@@ -125,14 +129,16 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
-    <CodeAnalysisLogFile>..\Output\Osm.Map.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>..\Output\Osm.Interpreter.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\OsmSharp.Osm.Map.xml</DocumentationFile>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <DocumentationFile>..\Output\OsmSharp.Osm.Interpreter.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|x64'">
     <OutputPath>..\Output\</OutputPath>
@@ -140,21 +146,24 @@
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
-    <CodeAnalysisLogFile>..\Output\Osm.Map.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
+    <CodeAnalysisLogFile>..\Output\Osm.Interpreter.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
+    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\OsmSharp.Osm.Map.xml</DocumentationFile>
+    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
+    <DocumentationFile>..\Output\OsmSharp.Osm.Interpreter.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="OsmSharp">
+      <HintPath>..\Lib\OsmSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System">
     </Reference>
     <Reference Include="System.Core">
-    </Reference>
-    <Reference Include="System.Drawing">
     </Reference>
     <Reference Include="System.Xml.Linq">
     </Reference>
@@ -164,67 +173,48 @@
     </Reference>
     <Reference Include="System.Xml">
     </Reference>
-    <Reference Include="System.Configuration">
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Elements\ElementBase.cs" />
-    <Compile Include="Elements\ElementDot.cs" />
-    <Compile Include="Elements\ElementEllipse.cs" />
-    <Compile Include="Elements\ElementImage.cs" />
-    <Compile Include="Elements\ElementLine.cs" />
-    <Compile Include="Elements\ElementPolygon.cs" />
-    <Compile Include="Elements\ElementText.cs" />
-    <Compile Include="Elements\IElement.cs" />
-    <Compile Include="Elements\LineStyle.cs" />
-    <Compile Include="Layers\Custom\CustomAbstractBoxedLayer.cs" />
-    <Compile Include="Layers\Custom\CustomAbstractLayer.cs" />
-    <Compile Include="Layers\Custom\CustomLayer.cs" />
-    <Compile Include="Layers\DataSourceChangesLayer.cs" />
-    <Compile Include="Layers\DataSourceLayer.cs" />
-    <Compile Include="Layers\DataSourceSubLayer.cs" />
-    <Compile Include="Layers\ILayer.cs" />
-    <Compile Include="Layers\Routing\OsmSharpRouteLayer.cs" />
-    <Compile Include="Layers\Tiles\BingSateliteTilesLayer.cs" />
-    <Compile Include="Layers\Tiles\TilesLayer.cs" />
-    <Compile Include="Map.cs" />
-    <Compile Include="MapQueryResult.cs" />
+    <Compile Include="Features\Feature.cs" />
+    <Compile Include="Features\IFeatureClient.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\AdministrativeFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Border\BorderFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\PlaceFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\CityFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\HamletFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\MunicipalityFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\SuburbFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\TownFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\VillageFeature.cs" />
+    <Compile Include="Features\Tree\Map\ExistenceFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\ArtificialWay\ArtificialWayFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\LandWater\LandWaterFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\Field\FieldFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\LandFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\ManMade\ManMadeFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\ManMade\Parking\ParkingFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\ManMade\PlaceOfWorship\PlaceOfWorshipFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\ManMade\PublicTransport\PublicTransportFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\ManMade\Utilities\UtilitiesFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\Nature\Forest\ForestFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\Nature\NatureFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\Urban\Residential\ResidentialFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\Urban\UrbanFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\PhysicalFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Water\WaterArea\WaterAreaFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Water\WaterFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Water\WaterWay\WaterWayFeature.cs" />
+    <Compile Include="Interpreter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Renderer\DefaultTweakers\DefaultTweak.cs" />
-    <Compile Include="Renderer\DefaultTweakers\Tweak.cs" />
-    <Compile Include="Renderer\ITarget.cs" />
-    <Compile Include="Renderer\Renderer.cs" />
-    <Compile Include="Renderer\View.cs" />
-    <Compile Include="Styles\OsmStyle.cs" />
-    <Compile Include="Styles\OsmStyleInterpreter.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Osm.Core\OsmSharp.Osm.Core.csproj">
-      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
-      <Name>OsmSharp.Osm.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm.Data.Core\OsmSharp.Osm.Data.Core.csproj">
-      <Project>{5BC09D7C-5226-4233-BF54-27BFD838F8F8}</Project>
-      <Name>OsmSharp.Osm.Data.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm.Interpreter\OsmSharp.Osm.Interpreter.csproj">
-      <Project>{30CCEC5D-49C1-4A5F-986D-8CE14EBDE666}</Project>
-      <Name>OsmSharp.Osm.Interpreter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Routing.Core\OsmSharp.Routing.Core.csproj">
-      <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
-      <Name>OsmSharp.Routing.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
-      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
-      <Name>OsmSharp.Tools.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
-      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
-      <Name>OsmSharp.Tools.Math</Name>
-    </ProjectReference>
+    <None Include="Features\Xml\Features.xsd" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Features\Tree\Gpx\" />
+    <Folder Include="Features\Tree\Kml\" />
+    <Folder Include="Features\Tree\Selection\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
