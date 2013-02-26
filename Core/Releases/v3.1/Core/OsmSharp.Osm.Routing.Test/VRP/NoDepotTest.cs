@@ -141,16 +141,17 @@ namespace OsmSharp.Osm.Routing.Test.VRP
 
             // read the source files.
             string points_file = file;
-            System.Data.DataSet data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
-                new FileInfo(points_file), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
+            string[][] data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(
+                null, new FileInfo(points_file), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true);
             int cnt = -1;
             int max_count = 100000;
             int between = 1;
             List<RouterPoint> points = new List<RouterPoint>();
             Dictionary<string, List<RouterPoint>> points_per_route =
                 new Dictionary<string, List<RouterPoint>>();
-            foreach (System.Data.DataRow row in data.Tables[0].Rows)
+            for(int row_idx = 0; row_idx < data.Length; row_idx++)
             {
+                string[]row = data[row_idx];
                 cnt++;
                 if (cnt < max_count && (cnt % between) == 0)
                 {
@@ -185,7 +186,7 @@ namespace OsmSharp.Osm.Routing.Test.VRP
                     }
 
                     OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(
-                        data.Tables[0].Rows.IndexOf(row), data.Tables[0].Rows.Count, "NoDepotTest", "Processing points...");
+                        row_idx+1, data.Length, "NoDepotTest", "Processing points...");
                 }
             }
             OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("Started {0}:", name));

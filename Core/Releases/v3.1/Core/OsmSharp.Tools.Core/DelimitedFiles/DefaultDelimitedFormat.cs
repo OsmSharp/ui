@@ -30,12 +30,12 @@ namespace OsmSharp.Tools.Core.DelimitedFiles
     {
         #region IDelimitedFormat Members
 
-        public string ConvertValue(string field, object value)
+        public string ConvertValue(int index, object value)
         {
             return value.ToString();
         }
 
-        public bool DoExport(int index, string name)
+        public bool DoExport(int index)
         {
             return true;
         }

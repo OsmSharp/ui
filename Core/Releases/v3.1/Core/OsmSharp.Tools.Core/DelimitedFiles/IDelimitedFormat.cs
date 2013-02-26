@@ -33,7 +33,7 @@ namespace OsmSharp.Tools.Core.DelimitedFiles
         /// <param name="field"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        string ConvertValue(string field, object value);
+        string ConvertValue(int index, object value);
 
         /// <summary>
         /// Returns true if the column has to be exported.
@@ -41,6 +41,6 @@ namespace OsmSharp.Tools.Core.DelimitedFiles
         /// <param name="index"></param>
         /// <param name="name"></param>
         /// <returns></returns>
-        bool DoExport(int index, string name);
+        bool DoExport(int index);
     }
 }
