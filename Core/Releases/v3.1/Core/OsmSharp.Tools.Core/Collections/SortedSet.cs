@@ -20,8 +20,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Core.Collections
+namespace OsmSharp
 {
+#if WINDOWS_PHONE
     /// <summary>
     /// Represents a strongly typed list of objects that will be sorted using the IComparable interface.
     /// </summary>
@@ -40,6 +41,14 @@ namespace OsmSharp.Tools.Core.Collections
         public SortedSet()
         {
             _elements = new List<T>();
+        }
+
+        /// <summary>
+        /// Creates a new sorted set.
+        /// </summary>
+        public SortedSet(IEnumerable<T> enumerable)
+        {
+            _elements = new List<T>(enumerable);
         }  
 
         #region ICollection<T> Members
@@ -184,4 +193,5 @@ namespace OsmSharp.Tools.Core.Collections
 
         #endregion
     }
+#endif
 }

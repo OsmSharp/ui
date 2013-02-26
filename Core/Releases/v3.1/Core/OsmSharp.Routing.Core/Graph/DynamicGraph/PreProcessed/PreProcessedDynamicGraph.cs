@@ -70,6 +70,12 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed
             Array.Resize<Vertex>(ref _vertices, _vertices.Length + 1000);
         }
 
+
+        public uint AddVertex(float latitude, float longitude, byte neighbours_estimate)
+        {
+            return this.AddVertex(latitude, longitude);
+        }
+
         /// <summary>
         /// Adds a new vertex.
         /// </summary>

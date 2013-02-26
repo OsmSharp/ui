@@ -150,6 +150,7 @@
     <Compile Include="Graph\DynamicGraph\Memory\MemoryDynamicGraph.cs" />
     <Compile Include="Graph\DynamicGraph\PreProcessed\PreProcessedDynamicGraph.cs" />
     <Compile Include="Graph\DynamicGraph\PreProcessed\PreProcessedEdge.cs" />
+    <Compile Include="Graph\DynamicGraph\SimpleWeighed\MemoryDynamicGraphSimpleWeighed.cs" />
     <Compile Include="Graph\DynamicGraph\SimpleWeighed\SimpleWeighedEdge.cs" />
     <Compile Include="Graph\Path\PathSegment.cs" />
     <Compile Include="Graph\Path\PathSegmentVisitList.cs" />

@@ -40,6 +40,6 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Selectors
         Individual<GenomeType, ProblemType, WeightType> Select(
             Solver<GenomeType, ProblemType, WeightType> solver,
             Population<GenomeType, ProblemType, WeightType> population,
-            HashSet<Individual<GenomeType, ProblemType, WeightType>> do_not_select_list);
+            ICollection<Individual<GenomeType, ProblemType, WeightType>> do_not_select_list);
     }
 }

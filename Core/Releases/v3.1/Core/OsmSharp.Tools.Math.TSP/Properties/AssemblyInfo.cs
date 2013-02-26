@@ -22,11 +22,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Tools.Math.TSP")]
+[assembly: AssemblyTitle("OsmSharp.Tools.Math.TSP")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ben Abelshausen")]
-[assembly: AssemblyProduct("Tools.Math.TSP")]
+[assembly: AssemblyProduct("OsmSharp.Tools.Math.TSP")]
 [assembly: AssemblyCopyright("Copyright © Ben Abelshausen 2011")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -37,6 +37,14 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph
         uint AddVertex(float latitude, float longitude);
 
         /// <summary>
+        /// Adds a vertex.
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <returns></returns>
+        uint AddVertex(float latitude, float longitude, byte neighbours_estimate);
+
+        /// <summary>
         /// Adds an arc with associated data.
         /// </summary>
         /// <param name="from"></param>

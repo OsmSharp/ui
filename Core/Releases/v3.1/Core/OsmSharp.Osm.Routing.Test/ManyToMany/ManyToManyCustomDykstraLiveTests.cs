@@ -39,8 +39,17 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
                 //OsmTagsIndex tags_index = null;
 
                 // do the data processing.
+                //_osm_data =
+                //    new MemoryRouterDataSource<SimpleWeighedEdge>(
+                //        tags_index);
                 _osm_data =
-                    new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+                    new MemoryRouterDataSource<SimpleWeighedEdge>(
+                        new MemoryDynamicGraphSimpleWeighed(),
+                        tags_index);
+                //_osm_data =
+                //    new MemoryRouterDataSource<SimpleWeighedEdge>(
+                //        new OsmSharp.Routing.Core.Graph.DynamicGraph.Memory.MemoryDynamicGraphIncidenceArray<SimpleWeighedEdge>(),
+                //        tags_index);
                 SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
                     _osm_data, interpreter, _osm_data.TagsIndex);
                 DataProcessorSource source;
@@ -53,12 +62,14 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
                     source = new XmlDataProcessorSource(data);
                 }
 
-                // report progress.
-                source = new OsmSharp.Osm.Data.Core.Processor.Progress.ProgressDataProcessorSource(source);
-
                 DataProcessorFilterSort sorter = new DataProcessorFilterSort();
                 sorter.RegisterSource(source);
-                target_data.RegisterSource(sorter);
+
+                // report progress.
+                source = new OsmSharp.Osm.Data.Core.Processor.Progress.ProgressDataProcessorSource(sorter);
+
+                //target_data.RegisterSource(sorter);
+                target_data.RegisterSource(source);
                 target_data.Pull();
             }
 

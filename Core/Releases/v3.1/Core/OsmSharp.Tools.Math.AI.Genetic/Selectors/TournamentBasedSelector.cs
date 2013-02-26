@@ -46,7 +46,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Selectors
         public Individual<GenomeType, ProblemType, WeightType> Select(
             Solver<GenomeType, ProblemType, WeightType> solver,
             Population<GenomeType, ProblemType, WeightType> population,
-            HashSet<Individual<GenomeType, ProblemType, WeightType>> do_not_select_list)
+            ICollection<Individual<GenomeType, ProblemType, WeightType>> do_not_select_list)
         {
             Individual<GenomeType, ProblemType, WeightType> selected = null;
             while (selected == null)
@@ -59,7 +59,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Selectors
         private Individual<GenomeType, ProblemType, WeightType> DoSelect(
             Solver<GenomeType, ProblemType, WeightType> solver,
             Population<GenomeType, ProblemType, WeightType> population,
-            HashSet<Individual<GenomeType, ProblemType, WeightType>> do_not_select_list)
+            ICollection<Individual<GenomeType, ProblemType, WeightType>> do_not_select_list)
         {
             do_not_select_list = null;
             Population<GenomeType, ProblemType, WeightType> temp_pop =

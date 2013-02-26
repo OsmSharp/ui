@@ -33,12 +33,7 @@ namespace OsmSharp.Tools.Math.Structures
         /// <returns></returns>
         public IEnumerable<DataType> GetInside(GenericRectangleF2D<PointType> box)
         {
-#if WINDOWS_PHONE
-            // use a custom hashset implementation when using Windows Phone.
-            OsmSharp.Tools.Core.Collections.HashSet<DataType> dataset = new OsmSharp.Tools.Core.Collections.HashSet<DataType>();
-#else
             HashSet<DataType> dataset = new HashSet<DataType>();
-#endif
             foreach (KeyValuePair<PointType, DataType> data in _data)
             {
                 if (box.IsInside(data.Key))

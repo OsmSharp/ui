@@ -505,13 +505,8 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
                 Individual<GenomeType, ProblemType, WeightType> individual2 = _selector.Select(
                     this, 
                     population,
-#if WINDOWS_PHONE
-                    new OsmSharp.Tools.Core.Collections.HashSet<Individual<GenomeType, ProblemType, WeightType>>(
-                        new Individual<GenomeType, ProblemType, WeightType>[] { individual1 }));
-#else
                     new HashSet<Individual<GenomeType, ProblemType, WeightType>>(
                         new Individual<GenomeType, ProblemType, WeightType>[] { individual1 }));
-#endif
 
                 // cross-over.
                 Individual<GenomeType, ProblemType, WeightType> new_individual =

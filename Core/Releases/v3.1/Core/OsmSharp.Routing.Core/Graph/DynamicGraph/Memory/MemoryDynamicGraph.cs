@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -61,6 +61,12 @@ namespace OsmSharp.Routing.Core.Graph.DynamicGraph.Memory
         {
             Array.Resize<GeoCoordinateSimple>(ref _coordinates, _coordinates.Length + 1000);
             Array.Resize<KeyValuePair<uint, EdgeData>[]>(ref _vertices, _vertices.Length + 1000);
+        }
+
+
+        public uint AddVertex(float latitude, float longitude, byte neighbours_estimate)
+        {
+            return this.AddVertex(latitude, longitude);
         }
 
         /// <summary>

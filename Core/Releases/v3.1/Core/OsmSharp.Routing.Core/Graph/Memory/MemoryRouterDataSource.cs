@@ -129,6 +129,14 @@ namespace OsmSharp.Routing.Core.Graph.Memory
         }
 
 
+        public uint AddVertex(float latitude, float longitude, byte neighbours_estimate)
+        {
+            uint vertex = _graph.AddVertex(latitude, longitude, neighbours_estimate);
+            _vertex_index.Add(new GeoCoordinate(latitude, longitude),
+                vertex);
+            return vertex;
+        }
+
         /// <summary>
         /// Adds a new vertex.
         /// </summary>
