@@ -31,6 +31,7 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Osm.Data.Core.Processor.Progress;
 using System;
 using OsmSharp.Osm.Data.XML.Processor;
+using OsmSharp.Routing.Core;
 namespace OsmSharp.Osm.Routing.Test.CH
 {
     class CHTest
@@ -57,7 +58,7 @@ namespace OsmSharp.Osm.Routing.Test.CH
             MemoryRouterDataSource<CHEdgeData> osm_data =
                 new MemoryRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                osm_data, interpreter, osm_data.TagsIndex);
+                osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             DataProcessorSource data_processor_source;
             if (pbf)
             {

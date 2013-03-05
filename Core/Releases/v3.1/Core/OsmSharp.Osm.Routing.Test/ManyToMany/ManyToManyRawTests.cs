@@ -38,7 +38,7 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             MemoryRouterDataSource<PreProcessedEdge> osm_data =
                 new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
-                osm_data, interpreter, osm_data.TagsIndex);
+                osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(data);
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
             sorter.RegisterSource(data_processor_source);

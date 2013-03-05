@@ -93,7 +93,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.DykstraLive
                 MemoryRouterDataSource<SimpleWeighedEdge> memory_data =
                     new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
                 SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
-                    memory_data, interpreter, memory_data.TagsIndex);
+                    memory_data, interpreter, memory_data.TagsIndex, VehicleEnum.Car);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string));
                 DataProcessorFilterSort sorter = new DataProcessorFilterSort();

@@ -98,7 +98,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
                 MemoryRouterDataSource<CHEdgeData> memory_data =
                     new MemoryRouterDataSource<CHEdgeData>(tags_index);
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                    memory_data, interpreter, memory_data.TagsIndex);
+                    memory_data, interpreter, memory_data.TagsIndex, VehicleEnum.Car);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string));
                 DataProcessorFilterSort sorter = new DataProcessorFilterSort();

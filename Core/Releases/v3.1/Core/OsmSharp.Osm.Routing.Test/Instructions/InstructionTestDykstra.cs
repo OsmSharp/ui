@@ -31,7 +31,7 @@ namespace OsmSharp.Osm.Routing.Test.Instructions
             MemoryRouterDataSource<PreProcessedEdge> osm_data =
                 new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
-                osm_data, interpreter, osm_data.TagsIndex, box);
+                osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car, box);
             DataProcessorSource data_processor_source;
             if (pbf)
             {

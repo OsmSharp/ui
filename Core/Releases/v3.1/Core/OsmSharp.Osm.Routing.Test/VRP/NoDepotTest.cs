@@ -115,7 +115,7 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             MemoryRouterDataSource<CHEdgeData> osm_data =
                 new MemoryRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                osm_data, interpreter, osm_data.TagsIndex);
+                osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             DataProcessorSource data_processor_source;
             if (pbf)
             {

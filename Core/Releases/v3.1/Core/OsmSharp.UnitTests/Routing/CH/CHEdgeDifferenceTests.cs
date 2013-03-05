@@ -31,6 +31,7 @@ using OsmSharp.Osm.Routing.Data.Processing;
 using OsmSharp.Routing.Core.Interpreter;
 using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.UnitTests;
+using OsmSharp.Routing.Core;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH
 {
@@ -55,7 +56,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
                 data =
                     new MemoryRouterDataSource<CHEdgeData>(tags_index);
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                    data, interpreter, data.TagsIndex);
+                    data, interpreter, data.TagsIndex, VehicleEnum.Car);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
                 DataProcessorFilterSort sorter = new DataProcessorFilterSort();
