@@ -105,7 +105,7 @@ namespace OsmSharp.Routing.Core
                 this.RouteResolvedGraph(source), this.RouteResolvedGraph(target), max);
 
             // convert to an OsmSharpRoute.
-            return this.ConstructRoute(route, source, target);
+            return this.ConstructRoute(vehicle, route, source, target);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace OsmSharp.Routing.Core
             RouterPoint target = targets.First<RouterPoint>(x => x.Id == route.VertexId);
 
             // convert to an OsmSharpRoute.
-            return this.ConstructRoute(route, source, target);
+            return this.ConstructRoute(vehicle, route, source, target);
         }
 
         /// <summary>
@@ -247,14 +247,14 @@ namespace OsmSharp.Routing.Core
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        private OsmSharpRoute ConstructRoute(PathSegment<long> route, RouterPoint source, RouterPoint target)
+        private OsmSharpRoute ConstructRoute(VehicleEnum vehicle, PathSegment<long> route, RouterPoint source, RouterPoint target)
         {
             if (route != null)
             {
                 long[] vertices = route.ToArray();
 
                 // construct the actual graph route.
-                return this.Generate(source, target, vertices);
+                return this.Generate(vehicle, source, target, vertices);
             }
             return null; // calculation failed!
         }
@@ -262,11 +262,13 @@ namespace OsmSharp.Routing.Core
         /// <summary>
         /// Generates an osm sharp route from a graph route.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="from_point"></param>
         /// <param name="to_point"></param>
         /// <param name="route_list"></param>
         /// <returns></returns>
         internal OsmSharpRoute Generate(
+            VehicleEnum vehicle, 
             RouterPoint from_resolved,
             RouterPoint to_resolved,
             long[] vertices)
@@ -322,6 +324,9 @@ namespace OsmSharp.Routing.Core
                 route.TotalDistance = metrics[TimeCalculator.DISTANCE_KEY];
                 route.TotalTime = metrics[TimeCalculator.TIME_KEY];
             }
+
+            // set the vehicle.
+            route.Vehicle = vehicle;
 
             return route;
         }
