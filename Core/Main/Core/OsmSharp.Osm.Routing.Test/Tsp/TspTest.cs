@@ -62,7 +62,7 @@ namespace OsmSharp.Osm.Routing.Test.Tsp
             MemoryRouterDataSource<PreProcessedEdge> osm_data =
                 new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
-                osm_data, interpreter, osm_data.TagsIndex);
+                osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(data_stream);
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
             sorter.RegisterSource(data_processor_source);

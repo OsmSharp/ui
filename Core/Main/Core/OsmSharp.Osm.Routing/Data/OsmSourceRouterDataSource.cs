@@ -238,7 +238,7 @@ namespace OsmSharp.Osm.Routing.Data.Source
 
             // process the list of data just loaded.
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
-                _data_cache, _interpreter, _tags_index, _id_tranformations);
+                _data_cache, _interpreter, _tags_index, OsmSharp.Routing.Core.VehicleEnum.Car, _id_tranformations);
             OsmGeoListDataProcessorSource data_processor_source =
                 new OsmGeoListDataProcessorSource(data);
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();

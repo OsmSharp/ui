@@ -51,7 +51,7 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
                 //        new OsmSharp.Routing.Core.Graph.DynamicGraph.Memory.MemoryDynamicGraphIncidenceArray<SimpleWeighedEdge>(),
                 //        tags_index);
                 SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
-                    _osm_data, interpreter, _osm_data.TagsIndex);
+                    _osm_data, interpreter, _osm_data.TagsIndex, VehicleEnum.Car);
                 DataProcessorSource source;
                 if (pbf)
                 {

@@ -40,7 +40,7 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             MemoryRouterDataSource<CHEdgeData> data =
                 new MemoryRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                data, interpreter, data.TagsIndex);
+                data, interpreter, data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(data_stream);
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
             sorter.RegisterSource(data_processor_source);

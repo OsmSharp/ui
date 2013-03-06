@@ -58,7 +58,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
             MemoryRouterDataSource<PreProcessedEdge> data =
                 new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
-                data, interpreter, data.TagsIndex);
+                data, interpreter, data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(
                 "OsmSharp.UnitTests.{0}", embedded_name)));

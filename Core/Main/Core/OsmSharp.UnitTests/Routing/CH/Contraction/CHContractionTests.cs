@@ -15,6 +15,7 @@ using System.Reflection;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.Core;
 
 namespace OsmSharp.UnitTests.Routing.CH.Contraction
 {
@@ -172,7 +173,7 @@ namespace OsmSharp.UnitTests.Routing.CH.Contraction
             MemoryRouterDataSource<CHEdgeData> data =
                 new MemoryRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                data, interpreter, data.TagsIndex);
+                data, interpreter, data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
             sorter.RegisterSource(data_processor_source);

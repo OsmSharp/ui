@@ -59,7 +59,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             MemoryRouterDataSource<CHEdgeData> osm_data =
                 new MemoryRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                osm_data, interpreter, osm_data.TagsIndex);
+                osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             DataProcessorSource data_processor_source;
             if (pbf)
             {
@@ -110,7 +110,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             MemoryRouterDataSource<PreProcessedEdge> osm_data =
                 new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
-                osm_data, interpreter, osm_data.TagsIndex);
+                osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             DataProcessorSource data_processor_source;
             if (pbf)
             {
