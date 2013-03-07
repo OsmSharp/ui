@@ -185,7 +185,7 @@ namespace OsmSharp.Routing.Core.ArcAggregation
             {
                 next_tags_dic.Add(pair.Key, pair.Value);
             }
-            if (_interpreter.EdgeInterpreter.IsEqualFor(vehicle, previous_tags_dic, next_tags_dic))
+            if (!_interpreter.EdgeInterpreter.IsEqualFor(vehicle, previous_tags_dic, next_tags_dic))
             { // the previous and the next edge do not represent a change for the given vehicle.
                 //RoadTagsInterpreterBase previous_interpreter = new RoadTagsInterpreterBase(previous_tags_dic);
                 //RoadTagsInterpreterBase next_interpreter = new RoadTagsInterpreterBase(next_tags_dic);
