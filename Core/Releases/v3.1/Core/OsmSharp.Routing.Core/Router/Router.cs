@@ -140,6 +140,44 @@ namespace OsmSharp.Routing.Core
         }
 
         /// <summary>
+        /// Calculates all the routes between the source and all given targets.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="source"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public OsmSharpRoute[] CalculateOneToMany(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets)
+        {
+            return this.CalculateManyToMany(vehicle, new RouterPoint[] { source }, targets)[0];
+        }
+
+        /// <summary>
+        /// Calculates all the routes between all the sources and all the targets.
+        /// </summary>
+        /// <param name="sources"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        public OsmSharpRoute[][] CalculateManyToMany(VehicleEnum vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        {
+            PathSegment<long>[][] routes = _router.CalculateManyToMany(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(sources),
+                this.RouteResolvedGraph(targets), double.MaxValue);
+
+            OsmSharpRoute[][] constructed_routes = new OsmSharpRoute[sources.Length][];
+            for (int x = 0; x < sources.Length; x++)
+            {
+                constructed_routes[x] = new OsmSharpRoute[targets.Length];
+                for (int y = 0; y < targets.Length; y++)
+                {
+                    constructed_routes[x][y] =
+                        this.ConstructRoute(vehicle, routes[x][y], sources[x], targets[y]);
+                }
+            }
+
+            return constructed_routes;
+        }
+
+
+        /// <summary>
         /// Calculates the weight from source to target.
         /// </summary>
         /// <param name="source"></param>
@@ -280,6 +318,9 @@ namespace OsmSharp.Routing.Core
             {
                 route = new OsmSharpRoute();
 
+                // set the vehicle.
+                route.Vehicle = vehicle;
+
                 RoutePointEntry[] entries;
                 if (vertices.Length > 0)
                 {
@@ -324,9 +365,6 @@ namespace OsmSharp.Routing.Core
                 route.TotalDistance = metrics[TimeCalculator.DISTANCE_KEY];
                 route.TotalTime = metrics[TimeCalculator.TIME_KEY];
             }
-
-            // set the vehicle.
-            route.Vehicle = vehicle;
 
             return route;
         }

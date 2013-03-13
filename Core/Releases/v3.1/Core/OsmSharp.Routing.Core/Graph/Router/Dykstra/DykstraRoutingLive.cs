@@ -62,6 +62,28 @@ namespace OsmSharp.Routing.Core.Graph.Router.Dykstra
         }
 
         /// <summary>
+        /// Calculates the shortest path from all sources to all targets.
+        /// </summary>
+        /// <param name="_data_graph"></param>
+        /// <param name="_interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="sources"></param>
+        /// <param name="targets"></param>
+        /// <param name="max_search"></param>
+        /// <returns></returns>
+        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle, 
+            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max_search)
+        {
+            PathSegment<long>[][] results = new PathSegment<long>[sources.Length][];
+            for (int source_idx = 0; source_idx < sources.Length; source_idx++)
+            {
+                results[source_idx] = this.DoCalculation(graph, interpreter, vehicle,
+                   sources[source_idx], targets, max_search, false, false);
+            }
+            return results;
+        }
+
+        /// <summary>
         /// Calculates the shortest path from the given vertex to the given vertex given the weights in the graph.
         /// </summary>
         /// <param name="from"></param>

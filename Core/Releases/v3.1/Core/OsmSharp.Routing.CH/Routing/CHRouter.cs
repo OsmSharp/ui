@@ -72,6 +72,33 @@ namespace OsmSharp.Routing.CH.Routing
             return this.ExpandBestResult(result);
         }
 
+        /// <summary>
+        /// Calculates all routes between all sources and targets.
+        /// </summary>
+        /// <param name="_data_graph"></param>
+        /// <param name="_interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="sources"></param>
+        /// <param name="targets"></param>
+        /// <param name="max_search"></param>
+        /// <returns></returns>
+        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle, 
+            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max_search)
+        {
+            PathSegment<long>[][] results = new PathSegment<long>[sources.Length][];
+            for (int source_idx = 0; source_idx < sources.Length; source_idx++)
+            {
+                results[source_idx] = new PathSegment<long>[targets.Length];
+                for (int target_idx = 0; target_idx < targets.Length; target_idx++)
+                {
+                    results[source_idx][target_idx] =
+                        this.Calculate(graph, interpreter, vehicle, sources[source_idx], targets[target_idx], max_search);
+                }
+            }
+
+            return results;
+        }
+
 
         /// <summary>
         /// Calculates the weight of shortest path from the given vertex to the given vertex given the weights in the graph.
@@ -1516,5 +1543,6 @@ namespace OsmSharp.Routing.CH.Routing
         }
 
         #endregion
+
     }
 }

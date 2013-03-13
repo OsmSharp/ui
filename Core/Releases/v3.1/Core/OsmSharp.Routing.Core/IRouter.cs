@@ -83,6 +83,24 @@ namespace OsmSharp.Routing.Core
         OsmSharpRoute CalculateToClosest(VehicleEnum vehicle, ResolvedType source, ResolvedType[] targets, float max);
 
         /// <summary>
+        /// Calculates all routes between one source and many target points.
+        /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
+        /// <param name="source"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        OsmSharpRoute[] CalculateOneToMany(VehicleEnum vehicle, ResolvedType source, ResolvedType[] targets);
+
+        /// <summary>
+        /// Calculates all routes between many sources/targets.
+        /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
+        /// <param name="sources"></param>
+        /// <param name="targets"></param>
+        /// <returns></returns>
+        OsmSharpRoute[][] CalculateManyToMany(VehicleEnum vehicle, ResolvedType[] sources, ResolvedType[] targets);
+
+        /// <summary>
         /// Calculates the weight between two given points.
         /// </summary>
         /// <param name="vehicle">The vehicle profile.</param>

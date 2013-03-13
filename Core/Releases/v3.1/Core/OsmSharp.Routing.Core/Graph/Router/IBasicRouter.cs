@@ -46,6 +46,19 @@ namespace OsmSharp.Routing.Core.Graph.Router
         PathSegment<long> Calculate(IDynamicGraphReadOnly<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, PathSegmentVisitList target, double max);
 
+        /// <summary>
+        /// Calculates all routes between all source and all target vertices.
+        /// </summary>
+        /// <param name="_data_graph"></param>
+        /// <param name="_interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="pathSegmentVisitList"></param>
+        /// <param name="pathSegmentVisitList_2"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
+        PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<EdgeData> _data_graph, IRoutingInterpreter _interpreter,
+            VehicleEnum vehicle, PathSegmentVisitList[] sources,
+            PathSegmentVisitList[] targets, double max_search);
 
         /// <summary>
         /// Calculates the weight of the shortest path between two given vertices.
@@ -132,6 +145,7 @@ namespace OsmSharp.Routing.Core.Graph.Router
         /// <returns></returns>
         SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             GeoCoordinate coordinate, IEdgeMatcher matcher, IDictionary<string, string> point_tags);
+
     }
 
     /// <summary>
