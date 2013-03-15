@@ -75,5 +75,20 @@ namespace OsmSharp.Routing.Core
             get;
             set;
         }
+
+        /// <summary>
+        /// Returns a description of this router point.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if (this.Location == null)
+            {
+                return string.Format("{0}",
+                                     this.Id);
+            }
+            return string.Format("{0} {1}",
+                                 this.Id, this.Location.ToString());
+        }
     }
 }

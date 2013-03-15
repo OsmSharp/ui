@@ -152,12 +152,40 @@ namespace OsmSharp.Tools.Math.Geo
 
         #endregion
 
-
+        /// <summary>
+        /// Returns a description of this coordinate.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("[{0},{1}]",
                 this.Latitude,
                 this.Longitude);
+        }
+
+        /// <summary>
+        /// Returns the hash code for this instance.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return this.Latitude.GetHashCode() ^
+                   this.Longitude.GetHashCode();
+        }
+
+        /// <summary>
+        /// Returns true if both objects are equal in value.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is GeoCoordinate)
+            {
+                return (obj as GeoCoordinate).Latitude.Equals(this.Latitude) &&
+                       (obj as GeoCoordinate).Longitude.Equals(this.Longitude);
+            }
+            return false;
         }
     }
 }

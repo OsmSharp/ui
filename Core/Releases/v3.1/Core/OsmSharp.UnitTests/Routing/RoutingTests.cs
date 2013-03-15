@@ -670,5 +670,47 @@ namespace OsmSharp.Osm.UnitTests.Routing
             Assert.AreEqual(vertex_20_21_2.Latitude, route.Entries[1].Latitude, 0.0001);
             Assert.AreEqual(vertex_20_21_2.Longitude, route.Entries[1].Longitude, 0.0001);
         }
+
+        /// <summary>
+        /// Resolves coordinates at the same locations and checks tag preservation.
+        /// </summary>
+        protected void DoTestResolveSameLocation()
+        {
+            //var vertex_20 = new GeoCoordinate(51.0578532, 3.7192229);
+            //var vertex_21 = new GeoCoordinate(51.0578518, 3.7195654);
+            var vertex_16 = new GeoCoordinate(51.0577299, 3.719745);
+
+            // initialize data.
+            var interpreter = new OsmRoutingInterpreter();
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, "OsmSharp.UnitTests.test_network.osm");
+
+            // create router.
+            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
+            IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);
+
+            // define test tags.
+            var tags1 = new Dictionary<string, string>();
+            tags1.Add("test1", "yes");
+            var tags2 = new Dictionary<string, string>();
+            tags2.Add("test2", "yes");
+
+            // resolve points.
+            ResolvedType point1 = router.Resolve(VehicleEnum.Car, vertex_16);
+            point1.Tags.Add(new KeyValuePair<string, string>("test1","yes"));
+
+            // test presence of tags.
+            Assert.AreEqual(1, point1.Tags.Count);
+            Assert.AreEqual("test1", point1.Tags[0].Key);
+            Assert.AreEqual("yes", point1.Tags[0].Value);
+
+            // resolve point again.
+            ResolvedType point2 = router.Resolve(VehicleEnum.Car, vertex_16);
+
+            // the tags should be here still!
+            Assert.AreEqual(1, point2.Tags.Count);
+            Assert.AreEqual("test1", point2.Tags[0].Key);
+            Assert.AreEqual("yes", point2.Tags[0].Value);
+
+        }
     }
 }

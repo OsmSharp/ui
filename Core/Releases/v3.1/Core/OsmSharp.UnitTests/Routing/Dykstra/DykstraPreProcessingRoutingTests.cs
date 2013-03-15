@@ -269,5 +269,14 @@ namespace OsmSharp.Osm.UnitTests.Routing.DykstraPreProcessing
         {
             this.DoTestResolveCase2();
         }
+
+        /// <summary>
+        /// Tests routing when resolving points.
+        /// </summary>
+        [Test]
+        public void TestDykstraPreProcessingResolveSameLocation()
+        {
+            this.DoTestResolveSameLocation();
+        }
     }
 }

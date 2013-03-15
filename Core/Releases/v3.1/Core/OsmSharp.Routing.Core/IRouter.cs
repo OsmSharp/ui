@@ -178,7 +178,7 @@ namespace OsmSharp.Routing.Core
         /// Resolves a point.
         /// </summary>
         /// <param name="vehicle">The vehicle profile.</param>
-        /// <param name="coordinate"></param>
+        /// <param name="coordinate">The location of the point to resolve.</param>
         /// <returns></returns>
         ResolvedType Resolve(VehicleEnum vehicle, GeoCoordinate coordinate);
 
@@ -186,16 +186,18 @@ namespace OsmSharp.Routing.Core
         /// Resolves a point.
         /// </summary>
         /// <param name="vehicle">The vehicle profile.</param>
-        /// <param name="coordinate"></param>
-        /// <param name="matcher"></param>
+        /// <param name="coordinate">The location of the point to resolve.</param>
+        /// <param name="matcher">The matcher containing some matching algorithm.</param>
+        /// <param name="matching_tags">Extra matching data.</param>
         /// <returns></returns>
-        ResolvedType Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher, IDictionary<string, string> point_tags);
+        ResolvedType Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, 
+            IEdgeMatcher matcher, IDictionary<string, string> matching_tags);
 
         /// <summary>
         /// Resolves all the given points.
         /// </summary>
         /// <param name="vehicle">The vehicle profile.</param>
-        /// <param name="coordinate"></param>
+        /// <param name="coordinate">The location of the point to resolve.</param>
         /// <returns></returns>
         ResolvedType[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate);
 
@@ -203,10 +205,12 @@ namespace OsmSharp.Routing.Core
         /// Resolves all the given points.
         /// </summary>
         /// <param name="vehicle">The vehicle profile.</param>
-        /// <param name="coordinate"></param>
-        /// <param name="matcher"></param>
+        /// <param name="coordinates">The location of the points to resolve.</param>
+        /// <param name="matcher">The matcher containing some matching algorithm.</param>
+        /// <param name="matching_tags">Extra matching data.</param>
         /// <returns></returns>
-        ResolvedType[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, IEdgeMatcher matcher, IDictionary<string, string>[] point_tags);
+        ResolvedType[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinates,
+            IEdgeMatcher matcher, IDictionary<string, string>[] matching_tags);
 
         #region Search
 
