@@ -132,9 +132,13 @@ namespace OsmSharp.Osm.Data.PBF.Raw.Processor
                 simple_node.Tags = new Dictionary<string, string>();
                 for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
                 {
-                    simple_node.Tags.Add(new KeyValuePair<string, string>(
-                        ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.keys[tag_idx]]),
-                        ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.vals[tag_idx]])));
+                    string key = Encoding.ASCII.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
+                    string value = Encoding.ASCII.GetString(block.stringtable.s[(int)node.vals[tag_idx]]);
+
+                    if (!simple_node.Tags.ContainsKey(key))
+                    {
+                        simple_node.Tags.Add(new KeyValuePair<string, string>(key, value));
+                    }
                 }
                 simple_node.TimeStamp = OsmSharp.Tools.Core.Utilities.FromUnixTime((long)node.info.timestamp * 
                     (long)block.date_granularity);
@@ -163,9 +167,13 @@ namespace OsmSharp.Osm.Data.PBF.Raw.Processor
                 simple_way.Tags = new Dictionary<string, string>();
                 for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
                 {
-                    simple_way.Tags.Add(new KeyValuePair<string, string>(
-                        ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.keys[tag_idx]]),
-                        ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.vals[tag_idx]])));
+                    string key = Encoding.ASCII.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
+                    string value = Encoding.ASCII.GetString(block.stringtable.s[(int)way.vals[tag_idx]]);
+                    
+                    if (!simple_way.Tags.ContainsKey(key))
+                    {
+                        simple_way.Tags.Add(new KeyValuePair<string, string>(key, value));
+                    }
                 }
                 if (way.info != null)
                 { // add the metadata if any.
@@ -214,9 +222,13 @@ namespace OsmSharp.Osm.Data.PBF.Raw.Processor
                 simple_relation.Tags = new Dictionary<string, string>();
                 for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
                 {
-                    simple_relation.Tags.Add(new KeyValuePair<string, string>(
-                        ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]),
-                        ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.vals[tag_idx]])));
+                    string key = Encoding.ASCII.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
+                    string value = Encoding.ASCII.GetString(block.stringtable.s[(int)relation.vals[tag_idx]]);
+
+                    if (!simple_relation.Tags.ContainsKey(key))
+                    {
+                        simple_relation.Tags.Add(new KeyValuePair<string, string>(key, value));
+                    }
                 }
                 if (relation.info != null)
                 { // read metadata if any.
