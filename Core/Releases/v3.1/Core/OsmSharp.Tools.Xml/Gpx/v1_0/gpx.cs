@@ -1532,7 +1532,7 @@ namespace OsmSharp.Tools.Xml.Gpx.v1_0
 
         private string numberField;
 
-        private System.Xml.XmlElement[] anyField;
+        private XmlElement[] anyField;
 
         private gpxTrkTrksegTrkpt[] trksegField;
 

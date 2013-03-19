@@ -184,10 +184,6 @@
       <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
       <Name>OsmSharp.Tools.Math</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Xml.Nomatim\OsmSharp.Tools.Xml.Nomatim.csproj">
-      <Project>{10DE529F-7AFD-4EE9-B748-3F34B03E35F9}</Project>
-      <Name>OsmSharp.Tools.Xml.Nomatim</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Tools.Xml\OsmSharp.Tools.Xml.csproj">
       <Project>{550F62F8-B62F-4E77-AF12-ACFD9378B9A0}</Project>
       <Name>OsmSharp.Tools.Xml</Name>

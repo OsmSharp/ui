@@ -158,12 +158,70 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gpx\GpxDocument.cs" />
+    <Compile Include="Gpx\v1_0\gpx.cs">
+      <DependentUpon>gpx.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Gpx\v1_1\gpx.cs">
+      <DependentUpon>gpx.xsd</DependentUpon>
+    </Compile>
     <Compile Include="IXmlSource.cs" />
+    <Compile Include="Kml\KmlDocument.cs" />
+    <Compile Include="Kml\v2_0\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Kml\v2_0_response\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Kml\v2_1\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Nominatim\Reverse\v1\reverse.cs">
+      <DependentUpon>reverse.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Nominatim\Search\SearchDocument.cs" />
+    <Compile Include="Nominatim\Search\v1\search.cs">
+      <DependentUpon>search.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Nominatim\Search\v1\search.Designer.cs">
+      <DependentUpon>search.xsd</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sources\XmlFileSource.cs" />
     <Compile Include="Sources\XmlReaderSource.cs" />
     <Compile Include="Sources\XmlStreamSource.cs" />
     <Compile Include="Sources\XmlStringSource.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gpx\v1_0\gpx.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Gpx\v1_1\gpx.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Kml\v2_0\kml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Kml\v2_0_response\kml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Kml\v2_1\kml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nominatim\Reverse\v1\reverse.xsd" />
+    <None Include="Nominatim\Search\v1\search.xsc">
+      <DependentUpon>search.xsd</DependentUpon>
+    </None>
+    <None Include="Nominatim\Search\v1\search.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>search.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Nominatim\Search\v1\search.xss">
+      <DependentUpon>search.xsd</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
