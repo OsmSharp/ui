@@ -15,13 +15,11 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
 
-namespace OsmSharp.Tools.GeoCoding.Nomatim
+using System.Text;
+using System.Configuration;
+
+namespace OsmSharp.Tools.GeoCoding.Nominatim
 {
     public class GeoCoderQuery
     {
