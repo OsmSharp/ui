@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{3F713AF5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Tools.Core.Android", "OsmSharp.Tools.Core\OsmSharp.Tools.Core.Android.csproj", "{D4D55F20-ECAD-49CA-8160-3EF9516EC54B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Tools.Xml.Kml.Android", "OsmSharp.Tools.Xml.Kml\OsmSharp.Tools.Xml.Kml.Android.csproj", "{8B419841-1910-49AA-9F52-E2161D8DDFE5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Tools.GeoCoding.Android", "OsmSharp.Tools.GeoCoding\OsmSharp.Tools.GeoCoding.Android.csproj", "{C0CE0AA5-88FD-4543-A4CD-2287FF19E8AC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Tools.Math.AI.Genetic.Android", "OsmSharp.Tools.Math.AI.Genetic\OsmSharp.Tools.Math.AI.Genetic.Android.csproj", "{7DBDED1D-6DC6-485E-9D3B-730B08479C3A}"
@@ -30,8 +28,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Tools.Math.VRP.MultiSalesman.Android", "OsmSharp.Tools.Math.VRP.MultiSalesman\OsmSharp.Tools.Math.VRP.MultiSalesman.Android.csproj", "{94E94EA4-0958-40BB-A77D-80426E09B290}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Tools.Xml.Android", "OsmSharp.Tools.Xml\OsmSharp.Tools.Xml.Android.csproj", "{7E0B785A-74E0-4392-A434-600C03825E57}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Tools.Xml.Gpx.Android", "OsmSharp.Tools.Xml.Gpx\OsmSharp.Tools.Xml.Gpx.Android.csproj", "{322418C0-DD69-4F3B-A000-5EB45D87C952}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Routing", "Routing", "{8A48B55B-B005-4349-86F3-D712C9910B92}"
 EndProject
@@ -47,7 +43,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Routing.Instructio
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 20
+		SccNumberOfProjects = 18
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs22
 		SccLocalPath0 = .
@@ -115,18 +111,10 @@ Global
 		SccProjectTopLevelParentUniqueName16 = OsmSharp.Android.sln
 		SccProjectName16 = OsmSharp.Tools.Math
 		SccLocalPath16 = OsmSharp.Tools.Math
-		SccProjectUniqueName17 = OsmSharp.Tools.Xml.Gpx\\OsmSharp.Tools.Xml.Gpx.Android.csproj
+		SccProjectUniqueName17 = OsmSharp.Tools.Xml\\OsmSharp.Tools.Xml.Android.csproj
 		SccProjectTopLevelParentUniqueName17 = OsmSharp.Android.sln
-		SccProjectName17 = OsmSharp.Tools.Xml.Gpx
-		SccLocalPath17 = OsmSharp.Tools.Xml.Gpx
-		SccProjectUniqueName18 = OsmSharp.Tools.Xml.Kml\\OsmSharp.Tools.Xml.Kml.Android.csproj
-		SccProjectTopLevelParentUniqueName18 = OsmSharp.Android.sln
-		SccProjectName18 = OsmSharp.Tools.Xml.Kml
-		SccLocalPath18 = OsmSharp.Tools.Xml.Kml
-		SccProjectUniqueName19 = OsmSharp.Tools.Xml\\OsmSharp.Tools.Xml.Android.csproj
-		SccProjectTopLevelParentUniqueName19 = OsmSharp.Android.sln
-		SccProjectName19 = OsmSharp.Tools.Xml
-		SccLocalPath19 = OsmSharp.Tools.Xml
+		SccProjectName17 = OsmSharp.Tools.Xml
+		SccLocalPath17 = OsmSharp.Tools.Xml
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -152,10 +140,6 @@ Global
 		{D4D55F20-ECAD-49CA-8160-3EF9516EC54B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4D55F20-ECAD-49CA-8160-3EF9516EC54B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4D55F20-ECAD-49CA-8160-3EF9516EC54B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8B419841-1910-49AA-9F52-E2161D8DDFE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8B419841-1910-49AA-9F52-E2161D8DDFE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8B419841-1910-49AA-9F52-E2161D8DDFE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8B419841-1910-49AA-9F52-E2161D8DDFE5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C0CE0AA5-88FD-4543-A4CD-2287FF19E8AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C0CE0AA5-88FD-4543-A4CD-2287FF19E8AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C0CE0AA5-88FD-4543-A4CD-2287FF19E8AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -177,9 +161,6 @@ Global
 		{7E0B785A-74E0-4392-A434-600C03825E57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7E0B785A-74E0-4392-A434-600C03825E57}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E0B785A-74E0-4392-A434-600C03825E57}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{322418C0-DD69-4F3B-A000-5EB45D87C952}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{322418C0-DD69-4F3B-A000-5EB45D87C952}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{322418C0-DD69-4F3B-A000-5EB45D87C952}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE27CB1F-873A-4971-9C84-A81C7DAD04CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BE27CB1F-873A-4971-9C84-A81C7DAD04CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BE27CB1F-873A-4971-9C84-A81C7DAD04CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -210,7 +191,6 @@ Global
 		{0B62BAD9-02C7-4F0F-B8D1-F7DB4CF2AF05} = {2D0EED20-AFBF-43ED-ADF2-9A5323299DD0}
 		{DDC8A324-390E-4C8F-ACA6-BD9143379DB8} = {2D0EED20-AFBF-43ED-ADF2-9A5323299DD0}
 		{D4D55F20-ECAD-49CA-8160-3EF9516EC54B} = {3F713AF5-4667-41DF-A890-C62C81C74CBA}
-		{8B419841-1910-49AA-9F52-E2161D8DDFE5} = {3F713AF5-4667-41DF-A890-C62C81C74CBA}
 		{C0CE0AA5-88FD-4543-A4CD-2287FF19E8AC} = {3F713AF5-4667-41DF-A890-C62C81C74CBA}
 		{7DBDED1D-6DC6-485E-9D3B-730B08479C3A} = {3F713AF5-4667-41DF-A890-C62C81C74CBA}
 		{36994A8E-4974-4165-99CA-0F24FBEB2519} = {3F713AF5-4667-41DF-A890-C62C81C74CBA}
@@ -218,7 +198,6 @@ Global
 		{ED2721C5-8884-4E4D-990A-EEF8CE44D3FF} = {3F713AF5-4667-41DF-A890-C62C81C74CBA}
 		{94E94EA4-0958-40BB-A77D-80426E09B290} = {3F713AF5-4667-41DF-A890-C62C81C74CBA}
 		{7E0B785A-74E0-4392-A434-600C03825E57} = {3F713AF5-4667-41DF-A890-C62C81C74CBA}
-		{322418C0-DD69-4F3B-A000-5EB45D87C952} = {3F713AF5-4667-41DF-A890-C62C81C74CBA}
 		{BE27CB1F-873A-4971-9C84-A81C7DAD04CD} = {8A48B55B-B005-4349-86F3-D712C9910B92}
 		{6EED55D5-BA9B-42FF-8B11-81DB7A02C4D9} = {8A48B55B-B005-4349-86F3-D712C9910B92}
 		{9E4C2AF7-6AEA-451E-8FC6-8216282D2F29} = {8A48B55B-B005-4349-86F3-D712C9910B92}

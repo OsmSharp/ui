@@ -118,10 +118,6 @@
       <Project>{36994A8E-4974-4165-99CA-0F24FBEB2519}</Project>
       <Name>OsmSharp.Tools.Math.Android</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Xml.Gpx\OsmSharp.Tools.Xml.Gpx.Android.csproj">
-      <Project>{322418C0-DD69-4F3B-A000-5EB45D87C952}</Project>
-      <Name>OsmSharp.Tools.Xml.Gpx.Android</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Tools.Xml\OsmSharp.Tools.Xml.Android.csproj">
       <Project>{7E0B785A-74E0-4392-A434-600C03825E57}</Project>
       <Name>OsmSharp.Tools.Xml.Android</Name>

@@ -56,5 +56,27 @@
     <Compile Include="Sources\XmlStreamSource.cs" />
     <Compile Include="Sources\XmlStringSource.cs" />
     <Compile Include="IXmlSource.cs" />
+    <Compile Include="Gpx\v1_0\gpx.cs" />
+    <Compile Include="Gpx\v1_1\gpx.cs" />
+    <Compile Include="Gpx\GpxDocument.cs" />
+    <Compile Include="Kml\v2_0\kml.cs" />
+    <Compile Include="Kml\v2_0_response\kml.cs" />
+    <Compile Include="Kml\v2_1\kml.cs" />
+    <Compile Include="Kml\KmlDocument.cs" />
+    <Compile Include="Nominatim\Reverse\v1\reverse.cs" />
+    <Compile Include="Nominatim\Search\v1\search.cs" />
+    <Compile Include="Nominatim\Search\v1\search.Designer.cs" />
+    <Compile Include="Nominatim\Search\SearchDocument.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Gpx\v1_0\gpx.xsd" />
+    <None Include="Gpx\v1_1\gpx.xsd" />
+    <None Include="Kml\v2_0\kml.xsd" />
+    <None Include="Kml\v2_0_response\kml.xsd" />
+    <None Include="Kml\v2_1\kml.xsd" />
+    <None Include="Nominatim\Reverse\v1\reverse.xsd" />
+    <None Include="Nominatim\Search\v1\search.xsc" />
+    <None Include="Nominatim\Search\v1\search.xsd" />
+    <None Include="Nominatim\Search\v1\search.xss" />
   </ItemGroup>
 </Project>
