@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiledDataService", "TiledDataService\TiledDataService.csproj", "{8AADA3E2-25D3-43AD-A7BA-DF83ED837B16}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TileDataServiceService", "TileDataServiceService\TileDataServiceService.csproj", "{001406EC-0620-4005-9963-078995D75D14}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 3
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs22
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = TileDataServiceService\\TileDataServiceService.csproj
+		SccProjectName1 = TileDataServiceService
+		SccLocalPath1 = TileDataServiceService
+		SccProjectUniqueName2 = TiledDataService\\TiledDataService.csproj
+		SccProjectName2 = TiledDataService
+		SccLocalPath2 = TiledDataService
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8AADA3E2-25D3-43AD-A7BA-DF83ED837B16}.Debug|x86.ActiveCfg = Debug|x86
+		{8AADA3E2-25D3-43AD-A7BA-DF83ED837B16}.Debug|x86.Build.0 = Debug|x86
+		{8AADA3E2-25D3-43AD-A7BA-DF83ED837B16}.Release|x86.ActiveCfg = Release|x86
+		{8AADA3E2-25D3-43AD-A7BA-DF83ED837B16}.Release|x86.Build.0 = Release|x86
+		{001406EC-0620-4005-9963-078995D75D14}.Debug|x86.ActiveCfg = Debug|x86
+		{001406EC-0620-4005-9963-078995D75D14}.Debug|x86.Build.0 = Debug|x86
+		{001406EC-0620-4005-9963-078995D75D14}.Release|x86.ActiveCfg = Release|x86
+		{001406EC-0620-4005-9963-078995D75D14}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
