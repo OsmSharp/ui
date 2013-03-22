@@ -41,16 +41,17 @@
     <DocumentationFile>..\Output\TiledDataService.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OsmSharp.Osm, Version=3.1.4829.25785, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="OsmSharp.Osm, Version=3.1.4831.33887, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.3.1.4830\lib\OsmSharp.Osm.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.3.1.4831\lib\OsmSharp.Osm.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Routing">
-      <HintPath>..\packages\OsmSharp.3.1.4830\lib\OsmSharp.Routing.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Tools, Version=3.1.4829.25784, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="OsmSharp.Routing, Version=3.1.4831.33888, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\OsmSharp.3.1.4830\lib\OsmSharp.Tools.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.3.1.4831\lib\OsmSharp.Routing.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Tools, Version=3.1.4831.33877, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\OsmSharp.3.1.4831\lib\OsmSharp.Tools.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.621, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <HintPath>..\packages\protobuf-net.2.0.0.621\lib\net40\protobuf-net.dll</HintPath>
