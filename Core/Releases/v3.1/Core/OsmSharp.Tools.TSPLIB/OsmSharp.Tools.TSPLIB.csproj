@@ -167,41 +167,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Convertor\ATSP_TSP\ATSP_TSPConvertor.cs" />
-    <Compile Include="Parser\Primitives\Point.cs" />
-    <Compile Include="Parser\TSPLIBProblemGenerator.cs" />
-    <Compile Include="Parser\TSPLIBProblemParser.cs" />
-    <Compile Include="Problems\TSPLIBProblem.cs" />
-    <Compile Include="Problems\TSPLIBProblemTypeEnum.cs" />
-    <Compile Include="Problems\TSPLIBProblemWeightTypeEnum.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
+    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
-      <Name>OsmSharp.Tools.Core</Name>
+      <Name>OsmSharp.Tools</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math.TSP\OsmSharp.Tools.Math.TSP.csproj">
-      <Project>{F12D6C89-D3E2-410C-9D74-55694A05C1BE}</Project>
-      <Name>OsmSharp.Tools.Math.TSP</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math.VRP.Core\OsmSharp.Tools.Math.VRP.Core.csproj">
-      <Project>{EE35732E-984C-4C40-9C4F-FEF012A9B6C9}</Project>
-      <Name>OsmSharp.Tools.Math.VRP.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
-      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
-      <Name>OsmSharp.Tools.Math</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="br17.atsp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="ft70.atsp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

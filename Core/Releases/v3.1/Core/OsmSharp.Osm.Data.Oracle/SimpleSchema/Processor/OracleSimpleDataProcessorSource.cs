@@ -20,13 +20,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Oracle.DataAccess.Client;
-using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor;
 
 namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
 {
+    /// <summary>
+    /// A data processor source starting from an oracle database.
+    /// </summary>
     public class OracleSimpleDataProcessorSource : DataProcessorSource
     {
+        /// <summary>
+        /// Holds the connection.
+        /// </summary>
         private OracleConnection _connection;
 
         private SimpleOsmGeoType _current_type;
@@ -35,11 +41,18 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
 
         private string _connection_string;
 
+        /// <summary>
+        /// Creates a new oracle simple source.
+        /// </summary>
+        /// <param name="connection_string"></param>
         public OracleSimpleDataProcessorSource(string connection_string)
         {
             _connection_string = connection_string;
         }
 
+        /// <summary>
+        /// Initialiers this oracle source.
+        /// </summary>
         public override void Initialize()
         {
             _connection = new OracleConnection(_connection_string);
@@ -63,6 +76,10 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
         private OracleDataReader _relation_tag_reader;
         private OracleDataReader _relation_member_reader;
 
+        /// <summary>
+        /// Move to the next object.
+        /// </summary>
+        /// <returns></returns>
         public override bool MoveNext()
         {
             bool next = false;
@@ -471,11 +488,18 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
             }
         }
 
+        /// <summary>
+        /// Returns the current object.
+        /// </summary>
+        /// <returns></returns>
         public override SimpleOsmGeo Current()
         {
             return _current;
         }
 
+        /// <summary>
+        /// Resets the current source.
+        /// </summary>
         public override void Reset()
         {
             _current = null;
@@ -495,6 +519,9 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
             }
         }
 
+        /// <summary>
+        /// Returns true if this source can be reset.
+        /// </summary>
         public override bool CanReset
         {
             get { return true; }

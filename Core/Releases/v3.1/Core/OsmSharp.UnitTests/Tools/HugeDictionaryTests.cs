@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Core.Collections.Huge;
+using OsmSharp.Tools.Collections.Huge;
 using NUnit.Framework;
 
 namespace OsmSharp.UnitTests.Tools

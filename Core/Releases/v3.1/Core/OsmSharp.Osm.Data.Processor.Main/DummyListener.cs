@@ -30,7 +30,7 @@ namespace OsmSharp.Osm.Data.Processor.Main
 
         public void ReportChangeDetected(OsmSharp.Tools.Math.Geo.GeoCoordinateBox box)
         {
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(box.ToString());
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(box.ToString());
         }
 
         #endregion

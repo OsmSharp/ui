@@ -145,41 +145,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BestPlacement\CheapestInsertionHelper.cs" />
-    <Compile Include="BestPlacement\CheapestInsertionResult.cs" />
-    <Compile Include="BestPlacement\InsertionCosts\BinaryHeapInsertionCosts.cs" />
-    <Compile Include="BestPlacement\InsertionCosts\IInsertionCosts.cs" />
-    <Compile Include="BestPlacement\SeedCustomers\ISeedCustomerSelector.cs" />
-    <Compile Include="BestPlacement\SeedCustomers\SimpleSeeds.cs" />
-    <Compile Include="LocalSearch\RePlace1OptHelper.cs" />
-    <Compile Include="LocalSearch\RePlace2OptHelper.cs" />
-    <Compile Include="IProblemWeights.cs" />
-    <Compile Include="NearestNeighbours10.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Routes\ASymmetric\AsymmetricCycles.cs" />
-    <Compile Include="Routes\ASymmetric\DepotDynamicAsymmetricMultiRoute.cs" />
-    <Compile Include="Routes\ASymmetric\DynamicAsymmetricBetweenEnumerable.cs" />
-    <Compile Include="Routes\ASymmetric\DynamicAsymmetricMultiRoute.cs" />
-    <Compile Include="Routes\ASymmetric\DynamicAsymmetricRoute.cs" />
-    <Compile Include="Routes\ASymmetric\IASymmetricRoute.cs" />
-    <Compile Include="Routes\ASymmetric\SimpleAsymmetricRoute.cs" />
-    <Compile Include="Routes\BetweenEnumerator.cs" />
-    <Compile Include="Routes\DepotRoute.cs" />
-    <Compile Include="Routes\IMultiRoute.cs" />
-    <Compile Include="Routes\IRoute.cs" />
-    <Compile Include="Routes\EdgeEnumerator.cs" />
-    <Compile Include="Routes\RouteExtensions.cs" />
-    <Compile Include="Routes\Symmetric\DynamicSymmetricRoute.cs" />
-    <Compile Include="Routes\Symmetric\FixedSymmetricRoute.cs" />
-    <Compile Include="Routes\Symmetric\ISymmetricRoute.cs" />
-    <Compile Include="TwoOpt\TwoOptHelper.cs" />
-    <Compile Include="TwoOpt\TwoOptResult.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
-      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
-      <Name>OsmSharp.Tools.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
       <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
       <Name>OsmSharp.Tools.Math</Name>

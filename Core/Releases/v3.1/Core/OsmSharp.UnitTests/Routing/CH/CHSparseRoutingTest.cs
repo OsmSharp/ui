@@ -23,18 +23,18 @@ using NUnit.Framework;
 using System.Reflection;
 using OsmSharp.Osm.Data.XML.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Router;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Osm.Core;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Router;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Data;
+using OsmSharp.Routing.Osm.Data.Processing;
+using OsmSharp.Osm;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.Routing;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Routing.Graph.Memory;
+using OsmSharp.Routing.Graph.Router;
 using OsmSharp.UnitTests;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH

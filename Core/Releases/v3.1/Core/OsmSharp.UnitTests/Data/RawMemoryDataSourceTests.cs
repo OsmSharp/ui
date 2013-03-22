@@ -21,8 +21,8 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Osm.Data.Core.Memory;
-using OsmSharp.Osm.Core.Factory;
-using OsmSharp.Osm.Core;
+using OsmSharp.Osm.Factory;
+using OsmSharp.Osm;
 
 namespace OsmSharp.Osm.UnitTests
 {

@@ -23,15 +23,15 @@ using NUnit.Framework;
 using OsmSharp.Osm.Data.XML.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.Routing;
-using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Routing.Graph.Memory;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH
 {

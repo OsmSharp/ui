@@ -24,31 +24,31 @@ using OsmSharp.Tools.Math.Geo;
 using System.Data;
 using OsmSharp.Osm.Data;
 using OsmSharp.Tools.Xml.Sources;
-using OsmSharp.Osm.Core.Xml;
+using OsmSharp.Osm.Xml;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 using System.Reflection;
-using OsmSharp.Routing.Core;
-using OsmSharp.Osm.Routing.Interpreter;
-using OsmSharp.Osm.Core;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Graph.Memory;
+using OsmSharp.Routing.Osm.Data;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Routing.Core.Route;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
-using OsmSharp.Routing.Core.TSP;
-using OsmSharp.Routing.Core.TSP.Genetic;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Route;
+using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing.TSP;
+using OsmSharp.Routing.TSP.Genetic;
 using OsmSharp.Osm.Data.XML.Processor;
 
-namespace OsmSharp.Osm.Routing.Test.Tsp
+namespace OsmSharp.Routing.Osm.Test.Tsp
 {
     class TspTest
     {
         public static void Execute()
         {
             TspTest.Test("schendelbeke",
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Osm.Routing.Test.TestData.schendelbeke.osm"),
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Routing.Osm.Test.TestData.schendelbeke.osm"),
                 false);
         }
 
@@ -75,9 +75,9 @@ namespace OsmSharp.Osm.Routing.Test.Tsp
             // read the source files.
             int latitude_idx = 2;
             int longitude_idx = 3;
-            string[][] point_strings = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(@"OsmSharp.Osm.Routing.Test.TestData.{0}.csv", name)),
-                Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated);
+            string[][] point_strings = OsmSharp.Tools.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(@"OsmSharp.Routing.Osm.Test.TestData.{0}.csv", name)),
+                Tools.DelimitedFiles.DelimiterType.DotCommaSeperated);
             List<RouterPoint> points = new List<RouterPoint>();
             int cnt = 10;
             foreach (string[] line in point_strings)

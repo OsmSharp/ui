@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Osm.Routing.Test.Instructions
+namespace OsmSharp.Routing.Osm.Test.Instructions
 {
     public class InstructionTestExecution
     {

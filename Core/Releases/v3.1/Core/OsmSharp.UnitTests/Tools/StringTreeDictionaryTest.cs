@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Tools.Math.Structures.StringTrees;
-using OsmSharp.Tools.Core;
+using OsmSharp.Tools;
 
 namespace OsmSharp.UnitTests
 {

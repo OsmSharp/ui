@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using OsmSharp.Routing.Core.Graph.DynamicGraph;
+using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
 
-namespace OsmSharp.Osm.Routing.Test.Point2Point
+namespace OsmSharp.Routing.Osm.Test.Point2Point
 {
     /// <summary>
     /// Executes the many-to-many tests.

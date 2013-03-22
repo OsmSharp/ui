@@ -20,17 +20,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using OsmSharp.Routing.Core.Router;
-using OsmSharp.Routing.Core;
-using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Osm.Core;
+using OsmSharp.Routing.Router;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Osm.Data;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 using System.Reflection;
-using OsmSharp.Osm.Routing.Interpreter;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Routing.Core.Graph.Router;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
 
 namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
 {
@@ -76,7 +76,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
             // do the data processing.
             OsmDataSource source = new OsmDataSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string)); // "OsmSharp.UnitTests.test_network.osm"));
-            return new OsmSharp.Osm.Routing.Data.Source.OsmSourceRouterDataSource(interpreter,
+            return new OsmSharp.Routing.Osm.Data.Source.OsmSourceRouterDataSource(interpreter,
                 tags_index, source);
         }
 

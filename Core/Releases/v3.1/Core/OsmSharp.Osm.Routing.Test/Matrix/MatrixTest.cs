@@ -24,12 +24,12 @@
 //using System.Data;
 //using System.IO;
 //using OsmSharp.Tools.Math.Geo;
-//using OsmSharp.Osm.Routing.Raw;
+//using OsmSharp.Routing.Osm.Raw;
 //using OsmSharp.Osm.Data.Raw.XML.OsmSource;
-//using OsmSharp.Osm.Core.Xml;
+//using OsmSharp.Osm.Xml;
 //using OsmSharp.Tools.TSPLIB.Problems;
 
-//namespace OsmSharp.Osm.Routing.Test.Matrix
+//namespace OsmSharp.Routing.Osm.Test.Matrix
 //{
 //    class MatrixTest
 //    {
@@ -73,8 +73,8 @@
 
 //            // read matrix points.
 //            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
-//            DataSet data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null, 
-//                new System.IO.FileInfo(info.FullName + string.Format("\\Matrix\\{0}.csv",name)), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
+//            DataSet data = OsmSharp.Tools.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null, 
+//                new System.IO.FileInfo(info.FullName + string.Format("\\Matrix\\{0}.csv",name)), OsmSharp.Tools.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
 //            foreach (DataRow row in data.Tables[0].Rows)
 //            {
 //                // be carefull with the parsing and the number formatting for different cultures.
@@ -133,9 +133,9 @@
 
 //            // read matrix points.
 //            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
-//            DataSet data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
+//            DataSet data = OsmSharp.Tools.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
 //                new System.IO.FileInfo(file_name), 
-//                OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
+//                OsmSharp.Tools.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
 //            foreach (DataRow row in data.Tables[0].Rows)
 //            {
 //                // be carefull with the parsing and the number formatting for different cultures.

@@ -142,37 +142,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Genetic\RouterTSPGenetic.cs" />
-    <Compile Include="Genetic\RouterTSPAEXGenetic.cs" />
-    <Compile Include="RandomizedArbitraryInsertion\RouteTSPRAI.cs" />
-    <Compile Include="RouterTSP.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RouterTSPWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Routing.Core\OsmSharp.Routing.Core.csproj">
-      <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
-      <Name>OsmSharp.Routing.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
+    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
-      <Name>OsmSharp.Tools.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math.AI.Genetic\OsmSharp.Tools.Math.AI.Genetic.csproj">
-      <Project>{FC226E3D-F4B5-462A-82BB-09D53F8C6DC2}</Project>
-      <Name>OsmSharp.Tools.Math.AI.Genetic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math.TSP\OsmSharp.Tools.Math.TSP.csproj">
-      <Project>{F12D6C89-D3E2-410C-9D74-55694A05C1BE}</Project>
-      <Name>OsmSharp.Tools.Math.TSP</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math.VRP.Core\OsmSharp.Tools.Math.VRP.Core.csproj">
-      <Project>{EE35732E-984C-4C40-9C4F-FEF012A9B6C9}</Project>
-      <Name>OsmSharp.Tools.Math.VRP.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
-      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
-      <Name>OsmSharp.Tools.Math</Name>
+      <Name>OsmSharp.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

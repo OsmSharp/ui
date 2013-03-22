@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 using System.Data.SQLite;
-using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor;
 using System;
 using System.Collections.Generic;

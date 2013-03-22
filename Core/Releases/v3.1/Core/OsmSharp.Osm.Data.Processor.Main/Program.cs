@@ -43,8 +43,8 @@ namespace OsmSharp.Osm.Data.Processor.Main
         static void Main(string[] args)
         {
             // register the output stream to the console.
-            OsmSharp.Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
-                new OsmSharp.Tools.Core.Output.ConsoleOutputStream());
+            OsmSharp.Tools.Output.OutputStreamHost.RegisterOutputStream(
+                new OsmSharp.Tools.Output.ConsoleOutputStream());
 
             string source_file = @"c:\OSM\bin\belgium.osm.pbf";
             string connection_string = 

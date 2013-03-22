@@ -19,28 +19,48 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Data.OracleClient;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Osm;
+using OsmSharp.Osm.Factory;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm.Filters;
+using Oracle.DataAccess.Client;
 
 namespace OsmSharp.Osm.Data.Oracle.Raw
 {
+    /// <summary>
+    /// A simple data source that can read data imported into an oracle database.
+    /// </summary>
     public class OracleSimpleSource : IDataSourceReadOnly, IDisposable
     {
+        /// <summary>
+        /// The connection string.
+        /// </summary>
         private string _connection_string;
 
+        /// <summary>
+        /// The connection id.
+        /// </summary>
         private Guid _id;
 
+        /// <summary>
+        /// Creates a new oracle data source.
+        /// </summary>
+        /// <param name="connection_string"></param>
         public OracleSimpleSource(string connection_string)
         {
             _connection_string = connection_string;
             _id = Guid.NewGuid();
         }
 
+        /// <summary>
+        /// Holds the connection.
+        /// </summary>
         private OracleConnection _connection;
 
+        /// <summary>
+        /// Gets/creates the connection.
+        /// </summary>
+        /// <returns></returns>
         private OracleConnection CreateConnection()
         {
             if (_connection == null)
@@ -53,6 +73,9 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
 
         #region IDataSourceReadOnly Members
 
+        /// <summary>
+        /// Returns the bounding box.
+        /// </summary>
         public GeoCoordinateBox BoundingBox
         {
             get
@@ -61,6 +84,9 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
             }
         }
 
+        /// <summary>
+        /// The name of this source.
+        /// </summary>
         public string Name
         {
             get
@@ -69,6 +95,9 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
             }
         }
 
+        /// <summary>
+        /// Returns the id of this data source.
+        /// </summary>
         public Guid Id
         {
             get
@@ -77,6 +106,9 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
             }
         }
 
+        /// <summary>
+        /// Returns true if there is a bounding box.
+        /// </summary>
         public bool HasBoundinBox
         {
             get
@@ -85,6 +117,9 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
             }
         }
 
+        /// <summary>
+        /// Returns true if this data source is readonly.
+        /// </summary>
         public bool IsReadOnly
         {
             get
@@ -93,6 +128,11 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
             }
         }
 
+        /// <summary>
+        /// Returns the node with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Node GetNode(long id)
         {
             IList<Node> nodes = this.GetNodes(new List<long>(new long[] { id }));
@@ -103,6 +143,11 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
             return null;
         }
 
+        /// <summary>
+        /// Returns all nodes with the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Node> GetNodes(IList<long> ids)
         {
             IList<Node> return_list = new List<Node>();
@@ -170,24 +215,44 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
             return return_list;
         }
 
+        /// <summary>
+        /// Returns the relation with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Relation GetRelation(long id)
         {
             // TODO: implement this
             return null;
         }
 
+        /// <summary>
+        /// Returns all relations with the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Relation> GetRelations(IList<long> ids)
         {
             // TODO: implement this
             return new List<Relation>();
         }
 
-        public IList<Relation> GetRelationsFor(Osm.Core.OsmBase obj)
+        /// <summary>
+        /// Returns all relation containing the given object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public IList<Relation> GetRelationsFor(Osm.OsmBase obj)
         {
             // TODO: implement this
             return new List<Relation>();
         }
 
+        /// <summary>
+        /// Returns the way with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Way GetWay(long id)
         {
             IList<Way> ways = this.GetWays(new List<long>(new long[] { id }));
@@ -198,11 +263,22 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
             return null;
         }
 
+        /// <summary>
+        /// Returns all the ways with the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Way> GetWays(IList<long> ids)
         {
             return this.GetWays(ids, null);
         }
 
+        /// <summary>
+        /// Returns all ways containing the given nodes.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
         private IList<Way> GetWays(IList<long> ids,Dictionary<long,Node> nodes)
         {
             if (ids.Count > 0)
@@ -366,6 +442,11 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
             return new List<Way>();
         }
 
+        /// <summary>
+        /// Returns all ways containing the given node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public IList<Way> GetWaysFor(Node node)
         {
             Dictionary<long,Node> nodes = new Dictionary<long,Node>();
@@ -373,6 +454,11 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
             return this.GetWaysForNodes(nodes);
         }
 
+        /// <summary>
+        /// Returns all ways that have the given nodes in them.
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
         public IList<Way> GetWaysForNodes(Dictionary<long,Node> nodes)
         {
             if (nodes.Count > 0)
@@ -439,6 +525,12 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
 
         #endregion
 
+        /// <summary>
+        /// Returns all objects in the given bounding box that are valid according to the given filter.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
             // initialize connection.
@@ -589,6 +681,9 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
 
         #endregion
 
+        /// <summary>
+        /// Closes the source.
+        /// </summary>
         public void Close()
         {
             if (_connection != null)
@@ -600,6 +695,9 @@ namespace OsmSharp.Osm.Data.Oracle.Raw
 
         #region IDisposable Members
 
+        /// <summary>
+        /// Releases all resources.
+        /// </summary>
         public void Dispose()
         {
             _connection.Close();

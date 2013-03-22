@@ -169,61 +169,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArbitraryInsertion\ArbitraryInsertionSolver.cs" />
-    <Compile Include="BruteForce\BruteForceSolver.cs" />
-    <Compile Include="CheapestInsertion\CheapestInsertionSolver.cs" />
-    <Compile Include="EdgeAssemblyGenetic\EdgeAssemblyCrossOverSolver.cs" />
-    <Compile Include="Genetic\GeneticSolver.cs" />
-    <Compile Include="Genetic\Solver\Fitness.cs" />
-    <Compile Include="Genetic\Solver\FitnessCalculator.cs" />
-    <Compile Include="Genetic\Solver\GeneticProblem.cs" />
-    <Compile Include="Genetic\Solver\Individual.cs" />
-    <Compile Include="Genetic\Solver\Operations\CrossOver\BestDetailedPlacementCrossOverOperation.cs" />
-    <Compile Include="Genetic\Solver\Operations\CrossOver\BestPlacementCrossOverOperation.cs" />
-    <Compile Include="Genetic\Solver\Operations\CrossOver\DefaultCrossOverOperation.cs" />
-    <Compile Include="Genetic\Solver\Operations\CrossOver\EdgeAssemblyCrossover.cs" />
-    <Compile Include="Genetic\Solver\Operations\CrossOver\EdgeAssemblyCrossoverNaive.cs" />
-    <Compile Include="Genetic\Solver\Operations\CrossOver\EdgeRecombinationCrossOverOperation.cs" />
-    <Compile Include="Genetic\Solver\Operations\CrossOver\Helpers\AsymmetricAlternatingCycles.cs" />
-    <Compile Include="Genetic\Solver\Operations\CrossOver\SequentialContructiveCrossoverOperator.cs" />
-    <Compile Include="Genetic\Solver\Operations\Generation\3OptGenerationOperation.cs" />
-    <Compile Include="Genetic\Solver\Operations\Generation\BestPlacementGenerationOperation.cs" />
-    <Compile Include="Genetic\Solver\Operations\Generation\LKGenerationOperation.cs" />
-    <Compile Include="Genetic\Solver\Operations\Generation\RandomGenerationOperation.cs" />
-    <Compile Include="Genetic\Solver\Operations\Helpers\BestPlacementHelper.cs" />
-    <Compile Include="Genetic\Solver\Operations\Mutation\BestDetailedPlacementMutationOperator.cs" />
-    <Compile Include="Genetic\Solver\Operations\Mutation\BestPlacementMutationOperation.cs" />
-    <Compile Include="Genetic\Solver\Operations\Mutation\DefaultMutationOperation.cs" />
-    <Compile Include="Genetic\Solver\Solver.cs" />
-    <Compile Include="IImprovement.cs" />
-    <Compile Include="ISolver.cs" />
-    <Compile Include="LocalSearch\HillClimbing3Opt\HillClimbing3OptSolver.cs" />
-    <Compile Include="Problems\ProblemExtensions.cs" />
-    <Compile Include="LinKernighan\Edge.cs" />
-    <Compile Include="LinKernighan\EdgeList.cs" />
-    <Compile Include="LinKernighan\EdgeSet.cs" />
-    <Compile Include="LinKernighan\LinKernighanSolver.cs" />
-    <Compile Include="LinKernighan\SparseSets\SparseSet.cs" />
-    <Compile Include="LinKernighan\SparseSets\SparseSetHelper.cs" />
-    <Compile Include="Problems\IProblem.cs" />
-    <Compile Include="Problems\MatrixProblem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RandomizedArbitraryInsertion\RandomizedArbitraryInsertionSolver.cs" />
-    <Compile Include="Random\RandomSolver.cs" />
-    <Compile Include="SolverBase.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
-      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
-      <Name>OsmSharp.Tools.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Tools.Math.AI.Genetic\OsmSharp.Tools.Math.AI.Genetic.csproj">
       <Project>{FC226E3D-F4B5-462A-82BB-09D53F8C6DC2}</Project>
       <Name>OsmSharp.Tools.Math.AI.Genetic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math.VRP.Core\OsmSharp.Tools.Math.VRP.Core.csproj">
-      <Project>{EE35732E-984C-4C40-9C4F-FEF012A9B6C9}</Project>
-      <Name>OsmSharp.Tools.Math.VRP.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
       <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>

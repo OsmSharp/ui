@@ -275,61 +275,17 @@
     <None Include="Matrix\matrix.csv" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Osm.Core\OsmSharp.Osm.Core.csproj">
+    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
-      <Name>OsmSharp.Osm.Core</Name>
+      <Name>OsmSharp.Osm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm.Data.Core\OsmSharp.Osm.Data.Core.csproj">
-      <Project>{5BC09D7C-5226-4233-BF54-27BFD838F8F8}</Project>
-      <Name>OsmSharp.Osm.Data.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm.Data.PBF\OsmSharp.Osm.Data.PBF.csproj">
-      <Project>{5DCC16FB-44D8-4789-9AA0-C939574F0D95}</Project>
-      <Name>OsmSharp.Osm.Data.PBF</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm.Data.PostgreSQL\OsmSharp.Osm.Data.PostgreSQL.csproj">
-      <Project>{A4D2E373-A9BD-4872-99A0-904E2E90C96E}</Project>
-      <Name>OsmSharp.Osm.Data.PostgreSQL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm.Data.XML\OsmSharp.Osm.Data.XML.csproj">
-      <Project>{18254C55-15C8-4438-9F92-B3B78E2720F5}</Project>
-      <Name>OsmSharp.Osm.Data.XML</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm.Routing\OsmSharp.Osm.Routing.csproj">
-      <Project>{5E146436-B64C-4C3A-832E-26A53AA6BA54}</Project>
-      <Name>OsmSharp.Osm.Routing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Routing.CH\OsmSharp.Routing.CH.csproj">
-      <Project>{ABF960CD-353C-4983-BA96-25D001C72F61}</Project>
-      <Name>OsmSharp.Routing.CH</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Routing.Core.TSP\OsmSharp.Routing.Core.TSP.csproj">
-      <Project>{494BE919-7256-431F-9D94-8B438129D93E}</Project>
-      <Name>OsmSharp.Routing.Core.TSP</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Routing.Core\OsmSharp.Routing.Core.csproj">
+    <ProjectReference Include="..\OsmSharp.Routing\OsmSharp.Routing.csproj">
       <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
-      <Name>OsmSharp.Routing.Core</Name>
+      <Name>OsmSharp.Routing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Routing.Core.VRP\OsmSharp.Routing.Core.VRP.csproj">
-      <Project>{28024A20-1A04-4973-93A3-3D6F53B0386A}</Project>
-      <Name>OsmSharp.Routing.Core.VRP</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Routing.Instructions\OsmSharp.Routing.Instructions.csproj">
-      <Project>{022CE792-DBDA-4A1E-8C4B-5954F02C4C67}</Project>
-      <Name>OsmSharp.Routing.Instructions</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
+    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
-      <Name>OsmSharp.Tools.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
-      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
-      <Name>OsmSharp.Tools.Math</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Xml\OsmSharp.Tools.Xml.csproj">
-      <Project>{550F62F8-B62F-4E77-AF12-ACFD9378B9A0}</Project>
-      <Name>OsmSharp.Tools.Xml</Name>
+      <Name>OsmSharp.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

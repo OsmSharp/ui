@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using OsmSharp.Osm.Data.Core.API;
-using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Simple;
 using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.UnitTests.API

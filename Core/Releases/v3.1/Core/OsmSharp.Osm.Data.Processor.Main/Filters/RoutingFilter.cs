@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor;
 
 namespace OsmSharp.Osm.Data.Processor.Main.Filters

@@ -21,9 +21,9 @@ using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Core.Factory;
-using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm;
+using OsmSharp.Osm.Factory;
+using OsmSharp.Osm.Filters;
 using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Osm.Data.SQLite.Raw
@@ -245,7 +245,7 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			return new List<Relation>();
 		}
 
-		public IList<Relation> GetRelationsFor(Osm.Core.OsmBase obj)
+		public IList<Relation> GetRelationsFor(Osm.OsmBase obj)
 		{
 			// TODO: implement this
 			return new List<Relation>();

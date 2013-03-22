@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using OsmSharp.Routing.Core;
-using OsmSharp.Osm.Core;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Osm.Routing.Interpreter;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Routing;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Graph.Memory;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Router.Dykstra;
 
 namespace OsmSharp.UnitTests.Routing.EdgeMatcher
 {

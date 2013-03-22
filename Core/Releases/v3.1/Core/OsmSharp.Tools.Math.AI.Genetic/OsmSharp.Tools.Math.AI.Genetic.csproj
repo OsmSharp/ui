@@ -169,31 +169,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fitness\IFitnessCalculator.cs" />
-    <Compile Include="Individual.cs" />
-    <Compile Include="IProblem.cs" />
-    <Compile Include="Operations\Generation\IGenerationOperator.cs" />
-    <Compile Include="Operations\Mutations\CombinedMutation.cs" />
-    <Compile Include="Selectors\ISelector.cs" />
-    <Compile Include="Operations\CombinedOperation.cs" />
-    <Compile Include="Operations\CrossOver\ICrossOverOperation.cs" />
-    <Compile Include="Operations\IOperation.cs" />
-    <Compile Include="Operations\Mutations\IMutationOperation.cs" />
-    <Compile Include="Population.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Selectors\RandomSelector.cs" />
-    <Compile Include="Selectors\TournamentBasedSelector.cs" />
-    <Compile Include="Solvers\Solver.cs" />
-    <Compile Include="Solvers\SolverSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
-      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
-      <Name>OsmSharp.Tools.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
       <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
       <Name>OsmSharp.Tools.Math</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>OsmSharp.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

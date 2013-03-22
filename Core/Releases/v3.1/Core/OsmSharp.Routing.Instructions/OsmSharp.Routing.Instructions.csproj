@@ -167,38 +167,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Instruction.cs" />
-    <Compile Include="InstructionGenerator.cs" />
-    <Compile Include="LanguageGeneration\Defaults\SimpleDutchLanguageGenerator.cs" />
-    <Compile Include="LanguageGeneration\Defaults\SimpleEnglishLanguageGenerator.cs" />
-    <Compile Include="LanguageGeneration\SentencePlanner.cs" />
-    <Compile Include="LanguageGeneration\ILanguageGenerator.cs" />
-    <Compile Include="MicroPlanning\Machines\PoiWithTurnMachine.cs" />
-    <Compile Include="MicroPlanning\MicroPlannerHelper.cs" />
-    <Compile Include="MicroPlanning\Machines\ImmidiateTurnMachine.cs" />
-    <Compile Include="MicroPlanning\Machines\PoiMachine.cs" />
-    <Compile Include="MicroPlanning\Machines\RoundaboutMachine.cs" />
-    <Compile Include="MicroPlanning\Machines\TurnMachine.cs" />
-    <Compile Include="MicroPlanning\MicroPlanner.cs" />
-    <Compile Include="MicroPlanning\MicroPlannerException.cs" />
-    <Compile Include="MicroPlanning\MicroPlannerMachine.cs" />
-    <Compile Include="MicroPlanning\MicroPlannerMessage.cs" />
-    <Compile Include="MicroPlanning\MicroPlannerMessageArc.cs" />
-    <Compile Include="MicroPlanning\MicroPlannerMessagePoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Routing.Core\OsmSharp.Routing.Core.csproj">
-      <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
-      <Name>OsmSharp.Routing.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
+    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
-      <Name>OsmSharp.Tools.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
-      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
-      <Name>OsmSharp.Tools.Math</Name>
+      <Name>OsmSharp.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Routing.Data;
+using OsmSharp.Routing.Osm.Data;
 using System.IO;
-using OsmSharp.Routing.Core.Router;
-using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Router;
+using OsmSharp.Routing.Interpreter;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Osm.Core;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Graph.Memory;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Graph.Router;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
 using OsmSharp.Osm.Data.XML.Processor;
 
-namespace OsmSharp.Osm.Routing.Test.Instructions
+namespace OsmSharp.Routing.Osm.Test.Instructions
 {
     class Point2PointDykstraBinairyHeapTests : InstructionTests<PreProcessedEdge>
     {

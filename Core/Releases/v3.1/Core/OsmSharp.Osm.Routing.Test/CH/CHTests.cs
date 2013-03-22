@@ -16,31 +16,31 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Osm.Core;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Graph.Memory;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using System.Reflection;
-using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Interpreter;
 using System.IO;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Osm.Data.Core.Processor.Progress;
 using System;
 using OsmSharp.Osm.Data.XML.Processor;
-using OsmSharp.Routing.Core;
-namespace OsmSharp.Osm.Routing.Test.CH
+using OsmSharp.Routing;
+namespace OsmSharp.Routing.Osm.Test.CH
 {
     class CHTest
     {
         public static void Execute()
         {
             //CHTest.DoContraction(new FileInfo(@"c:\OSM\bin\flanders_highway.osm.pbf").OpenRead(), true);
-            //CHTest.DoContraction("OsmSharp.Osm.Routing.Test.TestData.matrix_big_area.osm", false);
-            CHTest.DoContraction("OsmSharp.Osm.Routing.Test.TestData.moscow.osm", false);
+            //CHTest.DoContraction("OsmSharp.Routing.Osm.Test.TestData.matrix_big_area.osm", false);
+            CHTest.DoContraction("OsmSharp.Routing.Osm.Test.TestData.moscow.osm", false);
         }
 
 
@@ -72,7 +72,7 @@ namespace OsmSharp.Osm.Routing.Test.CH
             target_data.RegisterSource(data_processor_source);
             target_data.Pull();
 
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Finished Loading data!");
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Finished Loading data!");
 
             long start = DateTime.Now.Ticks;
 
@@ -84,7 +84,7 @@ namespace OsmSharp.Osm.Routing.Test.CH
 
             long stop = DateTime.Now.Ticks;
 
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Pre-processing time:{0}s for {1} nodes!", (new TimeSpan(stop-start)).TotalSeconds, osm_data.VertexCount);
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Pre-processing time:{0}s for {1} nodes!", (new TimeSpan(stop-start)).TotalSeconds, osm_data.VertexCount);
         }
     }
 }

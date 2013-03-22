@@ -132,8 +132,8 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <returns></returns>
         private static bool DetectTable(NpgsqlConnection connection, string name)
         {
-            NpgsqlCommand command = new NpgsqlCommand(TABLE_DETECTION_SQL);
-            command.Parameters.Add("table_name", name); // use lower case lettering everywhere!
+            var command = new NpgsqlCommand(TABLE_DETECTION_SQL);
+            command.Parameters.Add(new NpgsqlParameter("table_name", name)); // use lower case lettering everywhere!
             command.Connection = connection;
 
             // execute the query.

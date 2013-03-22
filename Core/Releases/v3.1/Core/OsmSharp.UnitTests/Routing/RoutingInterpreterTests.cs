@@ -19,9 +19,9 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using OsmSharp.Osm.Routing.Core.Interpreter;
+//using OsmSharp.Routing.Osm.Core.Interpreter;
 //using OsmSharp.Osm.Data.Raw.XML.OsmSource;
-//using OsmSharp.Osm.Core;
+//using OsmSharp.Osm;
 //using OsmSharp.Tools.Math.Geo;
 //using NUnit.Framework;
 

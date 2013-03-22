@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Osm.Core;
+using OsmSharp.Osm;
 using Npgsql;
-using OsmSharp.Osm.Core.Factory;
-using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm.Factory;
+using OsmSharp.Osm.Filters;
 using System.Text.RegularExpressions;
 
 namespace OsmSharp.Osm.Data.PostgreSQL
@@ -115,6 +115,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
 
         #region IDataSourceReadOnly Members
 
+        /// <summary>
+        /// Returns the bounding box of the data.
+        /// </summary>
         public GeoCoordinateBox BoundingBox
         {
             get 
@@ -123,6 +126,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             }
         }
 
+        /// <summary>
+        /// Returns the name of this data source.
+        /// </summary>
         public string Name
         {
             get 
@@ -131,6 +137,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             }
         }
 
+        /// <summary>
+        /// Returns the id of the datasource.
+        /// </summary>
         public Guid Id
         {
             get 
@@ -139,6 +148,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             }
         }
 
+        /// <summary>
+        /// Returns true if there is a bounding box.
+        /// </summary>
         public bool HasBoundinBox
         {
             get 
@@ -147,6 +159,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             }
         }
 
+        /// <summary>
+        /// Returns true if the data is readonly.
+        /// </summary>
         public bool IsReadOnly
         {
             get 
@@ -155,6 +170,11 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             }
         }
 
+        /// <summary>
+        /// Returns the node with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Node GetNode(long id)
         {
             NpgsqlConnection con = this.CreateConnection();
@@ -193,6 +213,11 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             return node;
         }
 
+        /// <summary>
+        /// Returns all the nodes with all the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Node> GetNodes(IList<long> ids)
         {
             List<Node> nodes = new List<Node>();
@@ -234,22 +259,42 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             return nodes;
         }
 
+        /// <summary>
+        /// Returns the relation with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Relation GetRelation(long id)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns all relations with the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Relation> GetRelations(IList<long> ids)
         {
             throw new NotImplementedException();
         }
 
-        public IList<Relation> GetRelationsFor(Osm.Core.OsmBase obj)
+        /// <summary>
+        /// Returns all relations containing the given object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public IList<Relation> GetRelationsFor(Osm.OsmBase obj)
         {
             // TODO: implement this
             return new List<Relation>();
         }
 
+        /// <summary>
+        /// Returns the way with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Way GetWay(long id)
         {
             NpgsqlConnection con = this.CreateConnection();
@@ -319,6 +364,11 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             return way;
         }
 
+        /// <summary>
+        /// Returns all ways with the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Way> GetWays(IList<long> ids)
         {
             List<Way> ways = new List<Way>();
@@ -393,6 +443,11 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             return ways;
         }
 
+        /// <summary>
+        /// Returns all the ways with the given node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public IList<Way> GetWaysFor(Node node)
         {
             string sql
@@ -474,6 +529,12 @@ namespace OsmSharp.Osm.Data.PostgreSQL
 
         }
 
+        /// <summary>
+        /// Returns all objects within the given bounding box and that are valid according to the given filter.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
             NpgsqlConnection con = this.CreateConnection();
@@ -629,6 +690,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
 
         #region IDisposable Members
 
+        /// <summary>
+        /// Releases all resources.
+        /// </summary>
         public void Dispose()
         {
             _connection.Close();

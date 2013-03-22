@@ -22,7 +22,7 @@ using System.Linq;
 using NUnit.Framework;
 using System.Reflection;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using OsmSharp.Osm.Core;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data;
 using OsmSharp.Osm.Data.Core.Memory;
 

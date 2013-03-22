@@ -20,7 +20,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using OsmSharp.Routing.Core.Route;
+using OsmSharp.Routing.Route;
 
 namespace OsmSharp.Osm.UnitTests
 {

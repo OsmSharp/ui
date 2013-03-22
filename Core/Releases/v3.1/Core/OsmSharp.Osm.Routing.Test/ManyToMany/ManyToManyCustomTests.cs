@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing;
 using System.IO;
-using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Interpreter;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Interpreter;
 
-namespace OsmSharp.Osm.Routing.Test.ManyToMany
+namespace OsmSharp.Routing.Osm.Test.ManyToMany
 {
     /// <summary>
     /// Does some custom many-to-many tests.
@@ -21,7 +21,7 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
         /// <param name="csv_export"></param>
         public void Execute(Stream data, string csv_export, bool pbf)
         {
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Started: {0}",
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Started: {0}",
                 csv_export);
 
             // read files.
@@ -84,7 +84,7 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
                 long after_round = DateTime.Now.Ticks;
                 ticks_per_round.Add(resolved_points_pair.Key, after_round - before_round);
 
-                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Round {0}: {1}s",
+                OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Round {0}: {1}s",
                     resolved_points_pair.Key, new TimeSpan(after_round - before_round).TotalSeconds);
             }
             long after = DateTime.Now.Ticks;
@@ -105,11 +105,11 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
                 double max_meter = System.Math.Max(x_meter, y_meter);
                 double surface = max_meter * max_meter;
 
-                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("{0};{1};{2};{3}",
+                OsmSharp.Tools.Output.OutputStreamHost.WriteLine("{0};{1};{2};{3}",
                     round_id, ticks, customers, surface);
             }
             double total_seconds = new TimeSpan(after - before).TotalSeconds;
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("TOTAL: {0} rounds with {1} customers in {2}s",
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("TOTAL: {0} rounds with {1} customers in {2}s",
                 resolved_points.Keys.Count, total_boxes, total_seconds);
         }
 
@@ -125,8 +125,8 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             Stream csv_export_data = (new FileInfo(csv_export)).OpenRead();
 
             // read matrix points.
-            string[][] lines = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
-                csv_export_data, OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated);
+            string[][] lines = OsmSharp.Tools.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
+                csv_export_data, OsmSharp.Tools.DelimitedFiles.DelimiterType.DotCommaSeperated);
             foreach (string[] row in lines)
             {
                 // get the round_id.

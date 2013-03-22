@@ -21,44 +21,44 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Data;
 using OsmSharp.Tools.Xml.Sources;
-using OsmSharp.Osm.Core.Xml;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Osm.Xml;
+using OsmSharp.Osm;
+using OsmSharp.Osm.Factory;
 using System.IO;
-using OsmSharp.Osm.Routing.Data.Source;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Data.Source;
+using OsmSharp.Routing.Graph.Memory;
+using OsmSharp.Routing.Osm.Data.Processing;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Interpreter;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Osm.Data;
+using OsmSharp.Routing;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic;
-using OsmSharp.Routing.Core.Route;
+using OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic;
+using OsmSharp.Routing.Route;
 using OsmSharp.Osm.Data.Core.Processor.Progress;
-using OsmSharp.Osm.Routing.Test.CH;
-using OsmSharp.Osm.Routing.Test.VRP;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
+using OsmSharp.Routing.Osm.Test.CH;
+using OsmSharp.Routing.Osm.Test.VRP;
+using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing.Graph.Router.Dykstra;
 using System.Net;
 using OsmSharp.Osm.Data.XML.Processor;
-using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Simple;
 
-namespace OsmSharp.Osm.Routing.Test
+namespace OsmSharp.Routing.Osm.Test
 {
     class Program
     {
         static void Main(string[] args)
         {
             // register the output stream to the console.
-            OsmSharp.Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
-                new OsmSharp.Tools.Core.Output.ConsoleOutputStream());
+            OsmSharp.Tools.Output.OutputStreamHost.RegisterOutputStream(
+                new OsmSharp.Tools.Output.ConsoleOutputStream());
             //Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
-            //    new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\log.txt"));
+            //    new OsmSharp.Tools.Output.FileOutputStream(@"c:\temp\log.txt"));
 
             //NoDepotTest.Execute();
             //DepotTest.Execute();
@@ -72,7 +72,7 @@ namespace OsmSharp.Osm.Routing.Test
 
             //// initialize the interpreters.
             //OsmRoutingInterpreter interpreter = 
-            //    new OsmSharp.Osm.Routing.Interpreter.OsmRoutingInterpreter();
+            //    new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
 
             //OsmTagsIndex tags_index = new OsmTagsIndex();
 
@@ -135,8 +135,8 @@ namespace OsmSharp.Osm.Routing.Test
         {
             // read matrix points.
             List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
-            string[][] lines = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
-                data, OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated);
+            string[][] lines = OsmSharp.Tools.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFileFromStream(
+                data, OsmSharp.Tools.DelimitedFiles.DelimiterType.DotCommaSeperated);
             foreach (string[] row in lines)
             {
                 // be carefull with the parsing and the number formatting for different cultures.

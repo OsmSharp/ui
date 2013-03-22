@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using OsmSharp.Routing.Core.Graph.Path;
+using OsmSharp.Routing.Graph.Path;
 
 namespace OsmSharp.UnitTests.Routing
 {

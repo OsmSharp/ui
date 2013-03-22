@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing;
 using System.IO;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Osm.Core;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Graph.Memory;
+using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Osm.Data.XML.Processor;
 
-namespace OsmSharp.Osm.Routing.Test.ManyToMany
+namespace OsmSharp.Routing.Osm.Test.ManyToMany
 {
     /// <summary>
     /// Does some tests on the many to many calculations of the dykstra live variant.

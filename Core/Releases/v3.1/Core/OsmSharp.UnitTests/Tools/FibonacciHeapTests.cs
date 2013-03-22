@@ -2,7 +2,7 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using OsmSharp.Tools.Core.Collections.PriorityQueues;
+//using OsmSharp.Tools.Collections.PriorityQueues;
 //using NUnit.Framework;
 
 //namespace OsmSharp.UnitTests.Tools

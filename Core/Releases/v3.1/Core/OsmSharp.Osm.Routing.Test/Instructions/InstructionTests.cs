@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Core.Graph.DynamicGraph;
+using OsmSharp.Routing.Graph.DynamicGraph;
 using System.Reflection;
 using System.IO;
-using OsmSharp.Osm.Routing.Interpreter;
-using OsmSharp.Routing.Core.Router;
-using OsmSharp.Routing.Core.Graph.Router;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Router;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Interpreter;
 
-namespace OsmSharp.Osm.Routing.Test.Instructions
+namespace OsmSharp.Routing.Osm.Test.Instructions
 {
     internal abstract class InstructionTests<EdgeData>
         where EdgeData : IDynamicGraphEdgeData
@@ -24,7 +24,7 @@ namespace OsmSharp.Osm.Routing.Test.Instructions
         /// <param name="test_count"></param>
         public void ExecuteTest(string name, int test_count)
         {
-            string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
+            string xml_embedded = string.Format("OsmSharp.Routing.Osm.Test.TestData.{0}.osm", name);
 
             this.ExecuteTest(name, Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded), false, test_count);
         }
@@ -38,7 +38,7 @@ namespace OsmSharp.Osm.Routing.Test.Instructions
         /// <param name="test_count"></param>
         public void ExecuteTest(string name, Stream data_stream, bool pbf, int test_count)
         {
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Test {0} -> {1}x", name, test_count);
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Test {0} -> {1}x", name, test_count);
 
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(data_stream, pbf,
@@ -78,13 +78,13 @@ namespace OsmSharp.Osm.Routing.Test.Instructions
                         first_resolved, second_resolved));
                 }
 
-                OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(test_pairs.Count, test_count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
+                OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(test_pairs.Count, test_count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
                     "Building pairs list...");
             }
 
             foreach (KeyValuePair<RouterPoint, RouterPoint> pair in test_pairs)
             {
-                OsmSharp.Routing.Core.Route.OsmSharpRoute route = router.Calculate(VehicleEnum.Car, pair.Key, pair.Value);
+                OsmSharp.Routing.Route.OsmSharpRoute route = router.Calculate(VehicleEnum.Car, pair.Key, pair.Value);
                 if (route != null)
                 {
                     OsmSharp.Routing.Instructions.InstructionGenerator generator = new OsmSharp.Routing.Instructions.InstructionGenerator();

@@ -20,7 +20,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using OsmSharp.Osm.Core;
+using OsmSharp.Osm;
 using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Osm.UnitTests.Tiles

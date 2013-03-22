@@ -23,22 +23,22 @@ using System.IO;
 using OsmSharp.Tools.Math.Geo;
 using System.Data;
 using OsmSharp.Osm.Data;
-using OsmSharp.Osm.Core.Xml;
+using OsmSharp.Osm.Xml;
 using OsmSharp.Tools.Xml.Sources;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Routing.Core.Router;
-using OsmSharp.Routing.Core.Graph;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Router;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Osm.Interpreter;
 using System.Reflection;
 using System.Diagnostics;
-using OsmSharp.Routing.Core.Graph.DynamicGraph;
-using OsmSharp.Routing.Core.Route;
-using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Routing.Graph.DynamicGraph;
+using OsmSharp.Routing.Route;
+using OsmSharp.Routing.Graph.Router;
 
-namespace OsmSharp.Osm.Routing.Test.Point2Point
+namespace OsmSharp.Routing.Osm.Test.Point2Point
 {
     internal abstract class Point2PointTest<EdgeData> 
         where EdgeData : IDynamicGraphEdgeData
@@ -50,7 +50,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// <param name="test_count"></param>
         public void ExecuteTest(string name, int test_count)
         {
-            string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
+            string xml_embedded = string.Format("OsmSharp.Routing.Osm.Test.TestData.{0}.osm", name);
 
             this.ExecuteTest(name, Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded), false, test_count);
         }
@@ -64,7 +64,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// <param name="test_count"></param>
         public void ExecuteTest(string name, Stream data_stream, bool pbf, int test_count)
         {
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Test {0} -> {1}x", name, test_count);
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Test {0} -> {1}x", name, test_count);
 
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(data_stream, pbf,
@@ -104,7 +104,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                         first_resolved, second_resolved));
                 }
 
-                OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(test_pairs.Count, test_count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
+                OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(test_pairs.Count, test_count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
                     "Building pairs list...");
             }
             //Console.ReadLine();
@@ -113,7 +113,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             long before = DateTime.Now.Ticks;
             foreach (KeyValuePair<RouterPoint, RouterPoint> pair in test_pairs)
             {
-                //OsmSharp.Routing.Core.Route.OsmSharpRoute route = router.Calculate(VehicleEnum.Car, pair.Key, pair.Value);
+                //OsmSharp.Routing.Route.OsmSharpRoute route = router.Calculate(VehicleEnum.Car, pair.Key, pair.Value);
                 double route_weight = router.CalculateWeight(VehicleEnum.Car, pair.Key, pair.Value);
                 if (route_weight < float.MaxValue)
                 {
@@ -121,8 +121,8 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                 }
             }
             long after = DateTime.Now.Ticks;
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("Average calculation time for {0} random routes: {1}ms with {2} successes",
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine();
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(string.Format("Average calculation time for {0} random routes: {1}ms with {2} successes",
                 test_count, (new TimeSpan((after - before) / test_count)).TotalMilliseconds.ToString(), successes));
         }
 
@@ -133,7 +133,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// <param name="test_count"></param>
         public void ExecuteTestIncrementalBoundingBox(string name, int test_count, GeoCoordinateBox outer_box)
         {
-            string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
+            string xml_embedded = string.Format("OsmSharp.Routing.Osm.Test.TestData.{0}.osm", name);
 
             this.ExecuteTestIncrementalBoundingBox(name, Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded), false, test_count,
                 outer_box);
@@ -149,7 +149,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// <param name="outer_box"></param>
         public void ExecuteTestIncrementalBoundingBox(string name, Stream data_stream, bool pbf, int test_count, GeoCoordinateBox outer_box)
         {
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Incremental Test {0} -> {1}x", name, test_count);
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Incremental Test {0} -> {1}x", name, test_count);
 
             int box_count = 20;
             for (int idx = 1; idx < box_count; idx++)
@@ -163,7 +163,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                     outer_box.Center.Longitude + ((outer_box.DeltaLon / (float)box_count) * (float)idx)));
 
                 OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Testing for a box with total surface of {0}m²",
+                OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Testing for a box with total surface of {0}m²",
                     box.Corners[0].DistanceReal(box.Corners[1]).Value * box.Corners[0].DistanceReal(box.Corners[2]).Value);
                 IBasicRouterDataSource<EdgeData> data = this.BuildData(data_stream, pbf,
                     interpreter, box);
@@ -182,7 +182,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         {
             if (data.VertexCount == 0)
             {
-                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("0 vertices in data source!");
+                OsmSharp.Tools.Output.OutputStreamHost.WriteLine("0 vertices in data source!");
                 return;
             }
 
@@ -219,7 +219,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                         first_resolved, second_resolved));
                 }
 
-                OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(test_pairs.Count, test_count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
+                OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(test_pairs.Count, test_count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
                     "Building pairs list...");
             }
 
@@ -229,12 +229,12 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                 KeyValuePair<RouterPoint, RouterPoint> pair = test_pairs[idx];
                 router.Calculate(VehicleEnum.Car, pair.Key, pair.Value);
 
-                OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, test_pairs.Count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
+                OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(idx, test_pairs.Count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
                     "Routing pairs...");
             }
             long after = DateTime.Now.Ticks;
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("Average calculation time for {0} random routes: {1}ms",
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine();
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(string.Format("Average calculation time for {0} random routes: {1}ms",
                 test_count, (new TimeSpan((after - before) / test_count)).TotalMilliseconds.ToString()));
         }
 
@@ -245,7 +245,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// <param name="test_count"></param>
         public void ExecuteComparisonTests(string name, int test_count)
         {
-            string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
+            string xml_embedded = string.Format("OsmSharp.Routing.Osm.Test.TestData.{0}.osm", name);
 
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             this.ExecuteComparisionTests(name,
@@ -260,7 +260,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         /// <param name="to"></param>
         public void ExecuteComparisonTest(string name, GeoCoordinate from, GeoCoordinate to)
         {
-            string xml_embedded = string.Format("OsmSharp.Osm.Routing.Test.TestData.{0}.osm", name);
+            string xml_embedded = string.Format("OsmSharp.Routing.Osm.Test.TestData.{0}.osm", name);
             Stream data_stream =
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(xml_embedded);
 
@@ -292,7 +292,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
         private void ExecuteComparisionTests(string name, Stream data_stream, bool pbf,
             IRoutingInterpreter interpreter, int test_count)
         {
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Comparison Test {0}: {1}x", name, test_count);
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Comparison Test {0}: {1}x", name, test_count);
 
             // build the reference router.
             IRouter<RouterPoint> reference_router = this.BuildReferenceRouter(data_stream, pbf,
@@ -347,7 +347,7 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                             first_resolved, second_resolved));
                     }
 
-                    OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(test_pairs.Count, test_count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
+                    OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(test_pairs.Count, test_count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
                         "Building pairs list...");
                 }
 
@@ -364,8 +364,8 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                     { // the reference route was found!
                         if (route == null)
                         { // the other routes does not exist!
-                            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
-                            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(
+                            OsmSharp.Tools.Output.OutputStreamHost.WriteLine();
+                            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(
                                 "Route does not exist:{0} {1}m", reference_route.Entries.Length,
                                     reference_route.TotalDistance);
 
@@ -374,8 +374,8 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                         }
                         else if (System.Math.Abs(route.TotalDistance - reference_route.TotalDistance) > 0.00001)
                         { // the routes are not equal.
-                            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
-                            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(
+                            OsmSharp.Tools.Output.OutputStreamHost.WriteLine();
+                            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(
                                 "Routes do not match:{0} with {1}m difference", reference_route.Entries.Length,
                                     route.TotalDistance - reference_route.TotalDistance);
 
@@ -391,10 +391,10 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
                         }
                     }
 
-                    OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(idx, test_pairs.Count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
+                    OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(idx, test_pairs.Count, "Osm.Routing.Test.Point2Point.Point2PointTest<EdgeData>.Execute",
                         "Routing pairs...");
                 }
-                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
+                OsmSharp.Tools.Output.OutputStreamHost.WriteLine();
             }
         }
 

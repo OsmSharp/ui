@@ -158,81 +158,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Algorithms\ConvexHull.cs" />
-    <Compile Include="Geo\Extensions.cs" />
-    <Compile Include="Geo\Factory\PrimitiveGeoFactory.cs" />
-    <Compile Include="Geo\GeoCoordinatePolygon.cs" />
-    <Compile Include="Geo\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
-    <Compile Include="Geo\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
-    <Compile Include="Geo\Lambert\International\Belgium\Belgium1972LambertProjection.cs" />
-    <Compile Include="Geo\Lambert\LambertCoordinate.cs" />
-    <Compile Include="Geo\Lambert\LambertEllipsoid.cs" />
-    <Compile Include="Geo\Lambert\LambertProjectionBase.cs" />
-    <Compile Include="Geo\Meta\DirectionCalculator.cs" />
-    <Compile Include="Geo\Meta\DirectionEnum.cs" />
-    <Compile Include="Geo\Meta\RelativeDirection.cs" />
-    <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
-    <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
-    <Compile Include="Geo\Simple\GeoCoordinateCompact.cs" />
-    <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
-    <Compile Include="ILocationObject.cs" />
-    <Compile Include="IPointF2D.cs" />
-    <Compile Include="ITaggedObject.cs" />
-    <Compile Include="ITagsIndex.cs" />
-    <Compile Include="PrimitiveF2D.cs" />
-    <Compile Include="PrimitiveSimpleF2D.cs" />
-    <Compile Include="Primitives\Enumerators\Lines\ILineList.cs" />
-    <Compile Include="Primitives\Enumerators\Lines\LineEnumerable.cs" />
-    <Compile Include="Primitives\Enumerators\Points\IPointList.cs" />
-    <Compile Include="Primitives\Enumerators\Lines\LineEnumerator.cs" />
-    <Compile Include="Primitives\Enumerators\Points\PointEnumerable.cs" />
-    <Compile Include="Primitives\Enumerators\Points\PointEnumerator.cs" />
-    <Compile Include="Primitives\Factory\PrimitiveFactory.cs" />
-    <Compile Include="Primitives\LineF2D.cs" />
-    <Compile Include="Primitives\RectangleF2D.cs" />
-    <Compile Include="Primitives\GenericRectangleF2D.cs" />
-    <Compile Include="Geo\Constants.cs" />
-    <Compile Include="Geo\GeoCoordinate.cs" />
-    <Compile Include="Geo\GeoCoordinateBox.cs" />
-    <Compile Include="Geo\GeoCoordinateLine.cs" />
-    <Compile Include="Primitives\GenericLineF2D.cs" />
-    <Compile Include="PointF2D.cs" />
-    <Compile Include="Primitives\GenericPolygonF2D.cs" />
-    <Compile Include="Primitives\PolygonF2D.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Random\IRandomGenerator.cs" />
-    <Compile Include="Random\RandomGenerator.cs" />
-    <Compile Include="Random\StaticRandomGenerator.cs" />
-    <Compile Include="Shapes\Factory\ShapesFactory.cs" />
-    <Compile Include="Shapes\PrimitivesFactory\IPrimitivesFactory.cs" />
-    <Compile Include="Shapes\ResultHelpers\DistanceResult.cs" />
-    <Compile Include="Shapes\ShapeCombinedF.cs" />
-    <Compile Include="Shapes\ShapeDotF.cs" />
-    <Compile Include="Shapes\ShapePolyGonF.cs" />
-    <Compile Include="Shapes\ShapePolyLineF.cs" />
-    <Compile Include="Shapes\ShapeF.cs" />
-    <Compile Include="StateMachines\FiniteStateMachine.cs" />
-    <Compile Include="StateMachines\FiniteStateMachineState.cs" />
-    <Compile Include="StateMachines\FiniteStateMachineTransition.cs" />
-    <Compile Include="StateMachines\FiniteStateMachineTransitionCondition.cs" />
-    <Compile Include="Structures\ILocatedObjectIndex.cs" />
-    <Compile Include="Structures\KDTree\Tree2D.cs" />
-    <Compile Include="Structures\KDTree\Tree2DNode.cs" />
-    <Compile Include="Structures\LocatedObjectIndexList.cs" />
-    <Compile Include="Structures\QTree\QuadTree.cs" />
-    <Compile Include="Structures\StringTrees\StringTreeDictionary.cs" />
-    <Compile Include="Units\Angle\Degree.cs" />
-    <Compile Include="Units\Angle\Radian.cs" />
-    <Compile Include="Units\Distance\Kilometer.cs" />
-    <Compile Include="Units\Distance\Meter.cs" />
-    <Compile Include="Units\Speed\KilometerPerHour.cs" />
-    <Compile Include="Units\Speed\MeterPerSecond.cs" />
-    <Compile Include="Units\Time\Hour.cs" />
-    <Compile Include="Units\Time\Second.cs" />
-    <Compile Include="Units\Unit.cs" />
-    <Compile Include="Units\Weight\Gram.cs" />
-    <Compile Include="Units\Weight\Kilogram.cs" />
-    <Compile Include="VectorF2D.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>OsmSharp.Tools</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

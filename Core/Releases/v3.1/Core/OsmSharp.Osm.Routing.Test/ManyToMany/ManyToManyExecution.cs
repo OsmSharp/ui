@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace OsmSharp.Osm.Routing.Test.ManyToMany
+namespace OsmSharp.Routing.Osm.Test.ManyToMany
 {
     /// <summary>
     /// Executes the many-to-many tests.
@@ -153,10 +153,10 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             {
                 for (int y = 0; y < weights[x].Length; y++)
                 {
-                    OsmSharp.Tools.Core.Output.OutputStreamHost.Write(weights[x][y].ToString().PadRight(15));
-                    OsmSharp.Tools.Core.Output.OutputStreamHost.Write(" ");
+                    OsmSharp.Tools.Output.OutputStreamHost.Write(weights[x][y].ToString().PadRight(15));
+                    OsmSharp.Tools.Output.OutputStreamHost.Write(" ");
                 }
-                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine();
+                OsmSharp.Tools.Output.OutputStreamHost.WriteLine();
             }
         }
     }

@@ -2,28 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing.Osm.Data;
+using OsmSharp.Routing;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.Core.Router;
-using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Router;
+using OsmSharp.Routing.Interpreter;
 using System.IO;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
-using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.CH.Routing;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
 using OsmSharp.Osm.Data.XML.Processor;
 
-namespace OsmSharp.Osm.Routing.Test.Point2Point
+namespace OsmSharp.Routing.Osm.Test.Point2Point
 {
     /// <summary>
     /// Facilitaters CH tests.

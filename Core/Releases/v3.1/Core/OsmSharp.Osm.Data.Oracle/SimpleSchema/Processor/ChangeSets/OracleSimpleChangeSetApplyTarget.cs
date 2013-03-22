@@ -21,23 +21,41 @@ using System.Linq;
 using System.Text;
 using Oracle.DataAccess.Client;
 using System.Data;
-using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor.ChangeSets;
 
 namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
 {
+    /// <summary>
+    /// A changeset apply target to apply changesets to an oracle database.
+    /// </summary>
     public class OracleSimpleChangeSetApplyTarget : DataProcessorChangeSetTarget
     {
+        /// <summary>
+        /// Holds the connection.
+        /// </summary>
         private OracleConnection _connection;
 
+        /// <summary>
+        /// Does pragmatic changes.
+        /// </summary>
         private bool _pragmatic;
         
+        /// <summary>
+        /// Creates a new changeset target.
+        /// </summary>
+        /// <param name="connection_string"></param>
+        /// <param name="pragmatic"></param>
         public OracleSimpleChangeSetApplyTarget(string connection_string, bool pragmatic)
         {
             _connection = new OracleConnection(connection_string);
             _pragmatic = pragmatic;
         }
 
+        /// <summary>
+        /// Apply the given changeset.
+        /// </summary>
+        /// <param name="change_set"></param>
         public override void ApplyChange(SimpleChangeSet change_set)
         {
             if (change_set != null && change_set.Changes != null)
@@ -56,17 +74,17 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     if (geo is SimpleNode)
                                     {
                                         this.Create(geo as SimpleNode);
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("+(n:{0})", geo.Id.Value);
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("+(n:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleWay)
                                     {
                                         this.Create(geo as SimpleWay);
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("+(w:{0})", geo.Id.Value);
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("+(w:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleRelation)
                                     {
                                         this.Create(geo as SimpleRelation);
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("+(r:{0})", geo.Id.Value);
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("+(r:{0})", geo.Id.Value);
                                     }
                                     trans.Commit();
                                 }
@@ -79,7 +97,7 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     }
                                     else
                                     {
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("+(E:{0}-{1})", geo.Id.Value,geo.Type.ToString());
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("+(E:{0}-{1})", geo.Id.Value,geo.Type.ToString());
                                     }
                                 }
                             }
@@ -94,17 +112,17 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     if (geo is SimpleNode)
                                     {
                                         this.Delete(geo as SimpleNode);
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("-(n:{0})", geo.Id.Value);
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("-(n:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleWay)
                                     {
                                         this.Delete(geo as SimpleWay);
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("-(w:{0})", geo.Id.Value);
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("-(w:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleRelation)
                                     {
                                         this.Delete(geo as SimpleRelation);
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("-(r:{0})", geo.Id.Value);
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("-(r:{0})", geo.Id.Value);
                                     }
                                     trans.Commit();
                                 }
@@ -117,7 +135,7 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     }
                                     else
                                     {
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("-(E:{0}-{1})", geo.Id.Value, geo.Type.ToString());
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("-(E:{0}-{1})", geo.Id.Value, geo.Type.ToString());
                                     }
                                 }
                             }
@@ -132,17 +150,17 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     if (geo is SimpleNode)
                                     {
                                         this.Modify(geo as SimpleNode);
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("/(n:{0})", geo.Id.Value);
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("/(n:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleWay)
                                     {
                                         this.Modify(geo as SimpleWay);
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("/(w:{0})", geo.Id.Value);
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("/(w:{0})", geo.Id.Value);
                                     }
                                     else if (geo is SimpleRelation)
                                     {
                                         this.Modify(geo as SimpleRelation);
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("/(r:{0})", geo.Id.Value);
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("/(r:{0})", geo.Id.Value);
                                     }
                                     trans.Commit();
                                 }
@@ -155,7 +173,7 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
                                     }
                                     else
                                     {
-                                        OsmSharp.Tools.Core.Output.OutputStreamHost.Write("/(E:{0}-{1})", geo.Id.Value, geo.Type.ToString());
+                                        OsmSharp.Tools.Output.OutputStreamHost.Write("/(E:{0}-{1})", geo.Id.Value, geo.Type.ToString());
                                     }
                                 }
                             }
@@ -175,6 +193,10 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
 
         #region Modify
 
+        /// <summary>
+        /// Modifies the given node.
+        /// </summary>
+        /// <param name="node"></param>
         private void Modify(SimpleNode node)
         {
             OracleCommand command;
@@ -239,6 +261,10 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
             this.RaiseChange(SimpleChangeType.Modify, SimpleOsmGeoType.Node, node.Id.Value);
         }
 
+        /// <summary>
+        /// Modifies the given way.
+        /// </summary>
+        /// <param name="way"></param>
         private void Modify(SimpleWay way)
         {
             OracleCommand command;
@@ -686,7 +712,7 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
                 }
                 catch(Exception ex)
                 {
-                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Could not insert way_nodes record for way {0} and node {1}:{2}",
+                    OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Could not insert way_nodes record for way {0} and node {1}:{2}",
                         id, nodes[idx],
                         ex.Message);
                 }
@@ -768,6 +794,13 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
             }
         }
 
+        /// <summary>
+        /// Creates the tags in the given table.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="new_tags"></param>
+        /// <param name="table"></param>
+        /// <param name="ref_column"></param>
         public void CreateTags(long id, IDictionary<string, string> new_tags, string table, string ref_column)
         {
             OracleCommand command;
@@ -857,6 +890,9 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
 
         #endregion
 
+        /// <summary>
+        /// Closes this changeset target.
+        /// </summary>
         public override void Close()
         {
             base.Close();
@@ -868,6 +904,9 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
             }
         }
 
+        /// <summary>
+        /// Initializes this change set apply target.
+        /// </summary>
         public override void Initialize()
         {
             _connection.Open();
@@ -881,7 +920,8 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
         /// Delegate for raising changes to objects.
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="changed_object"></param>
+        /// <param name="object_type"></param>
+        /// <param name="id"></param>
         public delegate void ChangeDelegate(SimpleChangeType type, SimpleOsmGeoType object_type, long id);
 
         /// <summary>
@@ -893,7 +933,8 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor.ChangeSets
         /// Raises the chance event.
         /// </summary>
         /// <param name="type"></param>
-        /// <param name="changed_object"></param>
+        /// <param name="object_type"></param>
+        /// <param name="id"></param>
         private void RaiseChange(SimpleChangeType type, SimpleOsmGeoType object_type, long id)
         {
             if (Change != null)

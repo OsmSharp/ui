@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Interpreter;
 using NUnit.Framework;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing;
 
 namespace OsmSharp.UnitTests.Routing.Interpreter
 {

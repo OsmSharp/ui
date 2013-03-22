@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Core.Graph.DynamicGraph;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Routing.Core.Router;
-using OsmSharp.Routing.Core.Graph.Router;
-using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Graph.DynamicGraph;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Router;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Routing.Core.Route;
+using OsmSharp.Routing.Route;
 using NUnit.Framework;
 
 namespace OsmSharp.UnitTests.Routing
