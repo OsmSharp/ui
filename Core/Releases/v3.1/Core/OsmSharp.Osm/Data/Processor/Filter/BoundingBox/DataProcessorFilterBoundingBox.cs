@@ -89,6 +89,12 @@ namespace OsmSharp.Osm.Data.Core.Processor.Filter
                             break;
                         }
                     }
+
+                    if (finished)
+                    {
+                        return false;
+                    }
+
                     while (this.Current().Type == _current_type && !is_in)
                     {
                         SimpleOsmGeo current = this.Source.Current();

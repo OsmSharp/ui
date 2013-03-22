@@ -227,6 +227,7 @@
     <Compile Include="Data\Processor\Filter\BoundingBox\LongIndex\LongIndex.cs" />
     <Compile Include="Data\Processor\Filter\BoundingBox\LongIndex\LongIndexLeaf.cs" />
     <Compile Include="Data\Processor\Filter\BoundingBox\LongIndex\LongIndexNode.cs" />
+    <Compile Include="Data\Processor\Filter\DataProcessorFilterWithEvents.cs" />
     <Compile Include="Data\Processor\Filter\Sort\DataProcessorFilterSort.cs" />
     <Compile Include="Data\Processor\List\CollectionDataProcessorSource.cs" />
     <Compile Include="Data\Processor\List\CollectionDataProcessorTarget.cs" />
