@@ -55,6 +55,16 @@ namespace OsmSharp.Osm.Data.XML.Processor
         }
 
         /// <summary>
+        /// Creates a new Xml data processor target.
+        /// </summary>
+        /// <param name="text_writer"></param>
+        public XmlDataProcessorTarget(TextWriter text_writer)
+            : base()
+        {
+            _text_writer = text_writer;
+        }
+
+        /// <summary>
         /// Initializes this target.
         /// </summary>
         public override void Initialize()
@@ -68,11 +78,16 @@ namespace OsmSharp.Osm.Data.XML.Processor
             settings.ConformanceLevel = ConformanceLevel.Fragment;
             settings.Encoding = Encoding.ASCII;
 
-            _text_writer = File.CreateText(_file_name);
+            if (_text_writer == null)
+            {
+                _text_writer = File.CreateText(_file_name);
+            }
+
             _text_writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
             _text_writer.WriteLine("<osm version=\"0.6\" generator=\"OsmSharp\">");
 
             _writer = new XmlFragmentWriter(_text_writer);
+
         }
 
         /// <summary>
@@ -153,7 +168,14 @@ namespace OsmSharp.Osm.Data.XML.Processor
 
             // set tags.
             nd.tag = this.ConvertToXmlTags(node_to_add.Tags);
-            
+
+            // set version.
+            if (node_to_add.Version.HasValue)
+            {
+                nd.version = node_to_add.Version.Value;
+                nd.versionSpecified = true;
+            }
+
             // write to output.
             string node_string = string.Empty;
 
@@ -227,6 +249,13 @@ namespace OsmSharp.Osm.Data.XML.Processor
                     nd.@ref = way_to_add.Nodes[idx];
                     wa.nd[idx] = nd;
                 }
+            }
+
+            // set version.
+            if (way_to_add.Version.HasValue)
+            {
+                wa.version = way_to_add.Version.Value;
+                wa.versionSpecified = true;
             }
 
             // serialize way.
@@ -328,6 +357,13 @@ namespace OsmSharp.Osm.Data.XML.Processor
 
                     re.member[idx] = mem;
                 }
+            }
+
+            // set version.
+            if (relation_to_add.Version.HasValue)
+            {
+                re.version = relation_to_add.Version.Value;
+                re.versionSpecified = true;
             }
 
             // serialize relation.
