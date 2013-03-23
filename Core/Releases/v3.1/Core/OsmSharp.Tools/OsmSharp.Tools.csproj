@@ -427,11 +427,6 @@
     <Compile Include="Xml\Nominatim\Search\v1\search.cs">
       <DependentUpon>search.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Xml\Nominatim\Search\v1\search.Designer.cs">
-      <DependentUpon>search.xsd</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <Compile Include="Xml\Sources\XmlFileSource.cs" />
     <Compile Include="Xml\Sources\XmlReaderSource.cs" />
     <Compile Include="Xml\Sources\XmlStreamSource.cs" />

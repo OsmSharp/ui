@@ -23,11 +23,10 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
 {
     public class GeoCoderQuery
     {
-		/// <summary>
-		/// The url of the nomatim service.
-		/// </summary>
-		//private static string _GEOCODER_URL = "http://nominatim.openstreetmap.org/search?q={0}&format=xml&polygon=1&addressdetails=1";
-		private static string _GEOCODER_URL = ConfigurationManager.AppSettings["NomatimAddress"] + "&format=xml&polygon=1&addressdetails=1";
+        /// <summary>
+        /// The url of the nomatim service.
+        /// </summary>
+        private string _geocoding_url; // = ConfigurationManager.AppSettings["NomatimAddress"] + ;
 
         private string _country;
         private string _postal_code;
@@ -46,6 +45,8 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
             _commune = commune;
             _street = street;
             _house_number = house_number;
+
+            //_geocoding_url = geocoding_url;
         }
 
         #region IGeoCoderQuery Members
@@ -65,7 +66,8 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
                 builder.Append(" ");
                 builder.Append(_country);
                 builder.Append(" ");
-				return string.Format(System.Globalization.CultureInfo.InvariantCulture, _GEOCODER_URL, builder);
+				return string.Format(System.Globalization.CultureInfo.InvariantCulture, 
+                    _geocoding_url + "&format=xml&polygon=1&addressdetails=1", builder);
             }
         }
 
