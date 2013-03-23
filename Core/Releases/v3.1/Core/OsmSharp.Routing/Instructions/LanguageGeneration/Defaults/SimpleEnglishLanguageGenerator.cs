@@ -24,7 +24,10 @@ using OsmSharp.Routing.ArcAggregation.Output;
 
 namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
 {
-    internal class SimpleEnglishLanguageGenerator : ILanguageGenerator
+    /// <summary>
+    /// A simple instruction generator, translating instructions into the english language.
+    /// </summary>
+    public class SimpleEnglishLanguageGenerator : ILanguageGenerator
     {
         private string TurnDirection(RelativeDirectionEnum direction)
         {
@@ -46,6 +49,15 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
 
         #region ILanguageGenerator Members
 
+        /// <summary>
+        /// Generates an instruction for a direct turn.
+        /// </summary>
+        /// <param name="instruction"></param>
+        /// <param name="street_count_before_turn"></param>
+        /// <param name="street_to"></param>
+        /// <param name="direction"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public Instruction GenerateDirectTurn(Instruction instruction, int street_count_before_turn,
             List<KeyValuePair<string, string>> street_to, RelativeDirectionEnum direction, List<PointPoi> list)
         {
@@ -67,6 +79,16 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
             return instruction;
         }
 
+        /// <summary>
+        /// Generates an instruction for an indirect turn.
+        /// </summary>
+        /// <param name="instruction"></param>
+        /// <param name="street_count_turn"></param>
+        /// <param name="street_count_before_turn"></param>
+        /// <param name="street_to"></param>
+        /// <param name="direction"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public Instruction GenerateIndirectTurn(Instruction instruction, int street_count_turn, int street_count_before_turn,
             List<KeyValuePair<string, string>> street_to, RelativeDirectionEnum direction, List<PointPoi> list)
         {
@@ -79,6 +101,13 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
             return instruction;
         }
 
+        /// <summary>
+        /// Generates an instruction for a POI.
+        /// </summary>
+        /// <param name="instruction"></param>
+        /// <param name="list"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
         public Instruction GeneratePoi(Instruction instruction, List<PointPoi> list, RelativeDirectionEnum? direction)
         {
             if (direction == null)
@@ -94,6 +123,15 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
             return instruction;
         }
 
+        /// <summary>
+        /// Generates an instruction for a turn followed by another turn.
+        /// </summary>
+        /// <param name="instruction"></param>
+        /// <param name="street_count_before_turn"></param>
+        /// <param name="street_to"></param>
+        /// <param name="direction"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public Instruction GenerateDirectFollowTurn(Instruction instruction, int street_count_before_turn, List<KeyValuePair<string, string>> street_to, 
             RelativeDirectionEnum direction, List<PointPoi> list)
         {
@@ -115,6 +153,16 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
             return instruction;
         }
 
+        /// <summary>
+        /// Generates an instruction for an indirect turn.
+        /// </summary>
+        /// <param name="instruction"></param>
+        /// <param name="street_count_turn"></param>
+        /// <param name="street_count_before_turn"></param>
+        /// <param name="street_to"></param>
+        /// <param name="direction"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
         public Instruction GenerateIndirectFollowTurn(Instruction instruction, int street_count_turn, int street_count_before_turn, List<KeyValuePair<string, string>> street_to, 
             RelativeDirectionEnum direction, List<PointPoi> list)
         {
@@ -136,6 +184,16 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
             return instruction;
         }
 
+        /// <summary>
+        /// Generates an instruction for an immidiate turn.
+        /// </summary>
+        /// <param name="instruction"></param>
+        /// <param name="first_street_count_to"></param>
+        /// <param name="first_street_to"></param>
+        /// <param name="first_direction"></param>
+        /// <param name="second_street_to"></param>
+        /// <param name="second_direction"></param>
+        /// <returns></returns>
         public Instruction GenerateImmidiateTurn(Instruction instruction, int first_street_count_to, List<KeyValuePair<string, string>> first_street_to,
             RelativeDirection first_direction, List<KeyValuePair<string, string>> second_street_to, RelativeDirection second_direction)
         {
@@ -161,6 +219,13 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
             return instruction;
         }
 
+        /// <summary>
+        /// Generates an instruction for a roundabout.
+        /// </summary>
+        /// <param name="instruction"></param>
+        /// <param name="count"></param>
+        /// <param name="next_street"></param>
+        /// <returns></returns>
         public Instruction GenerateRoundabout(Instruction instruction, int count, List<KeyValuePair<string, string>> next_street)
         {
             instruction.Text = string.Format("Take the {0}d at the next roundabout on the {1}.",
@@ -171,6 +236,12 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
             return instruction;
         }
 
+        /// <summary>
+        /// Generates an instruction for a simple turn.
+        /// </summary>
+        /// <param name="instruction"></param>
+        /// <param name="direction"></param>
+        /// <returns></returns>
         public Instruction GenerateSimpleTurn(Instruction instruction, RelativeDirectionEnum direction)
         {
             instruction.Text = string.Format("Turn {0}", this.TurnDirection(direction));
