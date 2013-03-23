@@ -20,11 +20,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+#if !WINDOWS_PHONE
 using OsmSharp.Tools.Xml.Gpx;
 using OsmSharp.Tools.Xml.Gpx.v1_1;
 using OsmSharp.Tools.Xml.Sources;
 
-#if !WINDOWS_PHONE
 namespace OsmSharp.Routing.Route.Gpx
 {
     /// <summary>
