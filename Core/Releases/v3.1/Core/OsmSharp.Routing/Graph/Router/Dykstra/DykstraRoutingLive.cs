@@ -29,6 +29,7 @@ using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Router;
 using OsmSharp.Tools.Collections.PriorityQueues;
 using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing.Graph.Router.Dykstra
 {

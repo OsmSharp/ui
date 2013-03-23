@@ -15,14 +15,12 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace OsmSharp.Tools.Xml.Nomatim.Search
+namespace OsmSharp.Tools.Xml.Nominatim.Search
 {
     public class SearchDocument
     {
@@ -116,7 +114,7 @@ namespace OsmSharp.Tools.Xml.Nomatim.Search
         private void FindVersionFromObject()
         {
             _version = SearchVersion.Unknown;
-            if (_search_object is OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults)
+            if (_search_object is OsmSharp.Tools.Xml.Nominatim.Search.v1.searchresults)
             {
                 _version = SearchVersion.Searchv1;
             }
@@ -162,7 +160,7 @@ namespace OsmSharp.Tools.Xml.Nomatim.Search
                 switch (_version)
                 {
                     case SearchVersion.Searchv1:
-                        version_type = typeof(OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults);
+                        version_type = typeof(OsmSharp.Tools.Xml.Nominatim.Search.v1.searchresults);
                         break;
                     case SearchVersion.Unknown:
                         throw new XmlException("Version could not be determined!");
@@ -187,7 +185,7 @@ namespace OsmSharp.Tools.Xml.Nomatim.Search
                 switch (_version)
                 {
                     case SearchVersion.Searchv1:
-                        version_type = typeof(OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults);
+                        version_type = typeof(OsmSharp.Tools.Xml.Nominatim.Search.v1.searchresults);
                         break;
                     case SearchVersion.Unknown:
                         throw new XmlException("Version could not be determined!");

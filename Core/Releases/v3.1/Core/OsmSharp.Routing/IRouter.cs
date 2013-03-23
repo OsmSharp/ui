@@ -22,6 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Route;
 using OsmSharp.Tools.Math;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing
 {
@@ -146,7 +147,7 @@ namespace OsmSharp.Routing
         /// <param name="orgine"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        HashSet<GeoCoordinate> CalculateRange(VehicleEnum vehicle, ResolvedType orgin, float weight);
+        HashSet<GeoCoordinate> CalculateRange(VehicleEnum vehicle, ResolvedType orgine, float weight);
 
         #endregion
 

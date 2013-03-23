@@ -16,12 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Net;
 using OsmSharp.Tools.Xml;
-using OsmSharp.Tools.Xml.Nomatim.Reverse.v1;
+using OsmSharp.Tools.Xml.Nominatim.Reverse.v1;
 using OsmSharp.Tools.Xml.Sources;
-using OsmSharp.Tools.Xml.Nomatim.Search;
-using OsmSharp.Tools.Xml.Nomatim.Search.v1;
+using OsmSharp.Tools.Xml.Nominatim.Search;
+using OsmSharp.Tools.Xml.Nominatim.Search.v1;
 
 namespace OsmSharp.Tools.GeoCoding.Nominatim
 {
@@ -66,20 +67,23 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
             GeoCoderResult res = new GeoCoderResult();
             res.Accuracy = AccuracyEnum.UnkownLocationLevel;
 
-            if (search_doc.Search is OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults)
+            if (search_doc.Search is OsmSharp.Tools.Xml.Nominatim.Search.v1.searchresults)
             {
-                searchresults result_v1 = search_doc.Search as OsmSharp.Tools.Xml.Nomatim.Search.v1.searchresults;
+                searchresults result_v1 = search_doc.Search as OsmSharp.Tools.Xml.Nominatim.Search.v1.searchresults;
                 if (result_v1.place != null && result_v1.place.Length > 0)
                 {
                     double latitude;
                     double longitude;
 
-                    if(double.TryParse(result_v1.place[0].lat, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture,out latitude)
-                        && double.TryParse(result_v1.place[0].lon, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out longitude))
+                    if (double.TryParse(result_v1.place[0].lat, System.Globalization.NumberStyles.Float,
+                                        System.Globalization.CultureInfo.InvariantCulture, out latitude)
+                        &&
+                        double.TryParse(result_v1.place[0].lon, System.Globalization.NumberStyles.Float,
+                                        System.Globalization.CultureInfo.InvariantCulture, out longitude))
                     {
                         res.Latitude = latitude;
                         res.Longitude = longitude;
-                    		res.Text = result_v1.place[0].display_name;
+                        res.Text = result_v1.place[0].display_name;
 
                         switch (result_v1.place[0].@class)
                         {
@@ -104,24 +108,27 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
                     }
                 }
             }
-						else if (search_doc.Search is OsmSharp.Tools.Xml.Nomatim.Reverse.v1.reversegeocode)
-						{
-							reversegeocode result_v1 = search_doc.Search as OsmSharp.Tools.Xml.Nomatim.Reverse.v1.reversegeocode;
-							if (result_v1.result != null && result_v1.result.Length > 0)
-							{
-								double latitude;
-								double longitude;
+            else if (search_doc.Search is OsmSharp.Tools.Xml.Nominatim.Reverse.v1.reversegeocode)
+            {
+                reversegeocode result_v1 = search_doc.Search as OsmSharp.Tools.Xml.Nominatim.Reverse.v1.reversegeocode;
+                if (result_v1.result != null && result_v1.result.Length > 0)
+                {
+                    double latitude;
+                    double longitude;
 
-								if (double.TryParse(result_v1.result[0].lat, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out latitude)
-										&& double.TryParse(result_v1.result[0].lon, System.Globalization.NumberStyles.Float, System.Globalization.CultureInfo.InvariantCulture, out longitude))
-								{
-									res.Latitude = latitude;
-									res.Longitude = longitude;
-									res.Text = result_v1.result[0].Value;
-									res.Accuracy = AccuracyEnum.UnkownLocationLevel;
-								}
-							}
-						}
+                    if (double.TryParse(result_v1.result[0].lat, System.Globalization.NumberStyles.Float,
+                                        System.Globalization.CultureInfo.InvariantCulture, out latitude)
+                        &&
+                        double.TryParse(result_v1.result[0].lon, System.Globalization.NumberStyles.Float,
+                                        System.Globalization.CultureInfo.InvariantCulture, out longitude))
+                    {
+                        res.Latitude = latitude;
+                        res.Longitude = longitude;
+                        res.Text = result_v1.result[0].Value;
+                        res.Accuracy = AccuracyEnum.UnkownLocationLevel;
+                    }
+                }
+            }
 
             return res;
         }
@@ -164,7 +171,8 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
 
             try
             { // try to download the string.
-                return _web_client.DownloadString(url);
+                return (new AsyncStringDownloader()).DownloadString(_web_client, url);
+                //return _web_client.DownloadStringAsync(url);
             }
             catch (WebException)
             {
@@ -173,5 +181,28 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
         }
 
         #endregion
+
+        private class AsyncStringDownloader
+        {
+            private string _result = null;
+
+            private bool _result_available;
+
+            public string DownloadString(WebClient client, string url)
+            {
+                client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(client_DownloadStringCompleted);
+                client.DownloadStringAsync(new Uri(url));
+
+                while (!_result_available) { } 
+                return _result;
+            }
+
+            void client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+            {
+                _result = e.Result;
+
+                _result_available = true;
+            }
+        }
     }
 }

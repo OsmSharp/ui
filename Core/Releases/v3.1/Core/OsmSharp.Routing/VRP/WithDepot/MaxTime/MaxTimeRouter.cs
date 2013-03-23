@@ -26,6 +26,7 @@ using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Route;
 using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
 {

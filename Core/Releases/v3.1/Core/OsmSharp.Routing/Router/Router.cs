@@ -31,6 +31,7 @@ using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Metrics.Time;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Graph.DynamicGraph;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing
 {

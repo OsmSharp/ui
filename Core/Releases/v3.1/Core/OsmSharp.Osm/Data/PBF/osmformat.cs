@@ -13,7 +13,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"HeaderBlock")]
+  [global::ProtoBuf.ProtoContract(Name=@"HeaderBlock")]
   public partial class HeaderBlock : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -85,7 +85,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"HeaderBBox")]
+  [global::ProtoBuf.ProtoContract(Name=@"HeaderBBox")]
   public partial class HeaderBBox : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -141,7 +141,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PrimitiveBlock")]
+  [global::ProtoBuf.ProtoContract(Name=@"PrimitiveBlock")]
   public partial class PrimitiveBlock : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -225,7 +225,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PrimitiveGroup")]
+  [global::ProtoBuf.ProtoContract(Name=@"PrimitiveGroup")]
   public partial class PrimitiveGroup : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -293,7 +293,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"StringTable")]
+  [global::ProtoBuf.ProtoContract(Name=@"StringTable")]
   public partial class StringTable : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -319,7 +319,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Info")]
+  [global::ProtoBuf.ProtoContract(Name=@"Info")]
   public partial class Info : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -395,7 +395,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"DenseInfo")]
+  [global::ProtoBuf.ProtoContract(Name=@"DenseInfo")]
   public partial class DenseInfo : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -461,7 +461,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ChangeSet")]
+  [global::ProtoBuf.ProtoContract(Name=@"ChangeSet")]
   public partial class ChangeSet : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -563,7 +563,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Node")]
+  [global::ProtoBuf.ProtoContract(Name=@"Node")]
   public partial class Node : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -641,7 +641,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"DenseNodes")]
+  [global::ProtoBuf.ProtoContract(Name=@"DenseNodes")]
   public partial class DenseNodes : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -709,7 +709,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Way")]
+  [global::ProtoBuf.ProtoContract(Name=@"Way")]
   public partial class Way : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -777,7 +777,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Relation")]
+  [global::ProtoBuf.ProtoContract(Name=@"Relation")]
   public partial class Relation : global::ProtoBuf.IExtensible
   {
     /// <summary>

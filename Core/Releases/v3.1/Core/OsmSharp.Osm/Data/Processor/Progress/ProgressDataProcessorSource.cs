@@ -65,12 +65,21 @@ namespace OsmSharp.Osm.Data.Core.Processor.Progress
 
                     if ((_node % 10000) == 0)
                     {
+#if !WINDOWS_PHONE
                         Process p = Process.GetCurrentProcess();
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
                         if ((_node % 1000000) == 0) { GC.Collect(); }
-                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Node[{0}]: {1}nodes/s @ {2}",
+                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Node[{0}]: {1}nodes/s @ {2}MB",
                             _node, (int)((double)_node / seconds), p.PrivateMemorySize64 / 1024 / 1024);
+#endif
+#if WINDOWS_PHONE
+                        long stop = DateTime.Now.Ticks;
+                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
+                        if ((_node % 1000000) == 0) { GC.Collect(); }
+                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Node[{0}]: {1}nodes/s",
+                            _node, (int)((double)_node / seconds));
+#endif
                     }
                     break;
                 case SimpleOsmGeoType.Relation:
@@ -78,12 +87,21 @@ namespace OsmSharp.Osm.Data.Core.Processor.Progress
 
                     if ((_relation % 1000) == 0)
                     {
+#if !WINDOWS_PHONE
                         Process p = Process.GetCurrentProcess();
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
                         if ((_relation % 10000) == 0) { GC.Collect(); }
                         OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Relation[{0}]: {1}relations/s @ {2}MB",
                             _relation, (int)((double)_relation / seconds), p.PrivateMemorySize64 / 1024 / 1024);
+#endif
+#if WINDOWS_PHONE
+                        long stop = DateTime.Now.Ticks;
+                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
+                        if ((_relation % 10000) == 0) { GC.Collect(); }
+                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Relation[{0}]: {1}relations/s",
+                            _relation, (int)((double)_relation / seconds));
+#endif
                     }
                     break;
                 case SimpleOsmGeoType.Way:
@@ -91,12 +109,21 @@ namespace OsmSharp.Osm.Data.Core.Processor.Progress
 
                     if ((_way % 10000) == 0)
                     {
+#if !WINDOWS_PHONE
                         Process p = Process.GetCurrentProcess();
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
                         if ((_way % 100000) == 0) { GC.Collect(); }
                         OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Way[{0}]: {1}ways/s @ {2}MB",
                             _way, (int)((double)_way / seconds), p.PrivateMemorySize64 / 1024 / 1024);
+#endif
+#if WINDOWS_PHONE
+                        long stop = DateTime.Now.Ticks;
+                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
+                        if ((_way % 100000) == 0) { GC.Collect(); }
+                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Way[{0}]: {1}ways/s",
+                            _way, (int)((double)_way / seconds));
+#endif
                     }
                     break;
             }

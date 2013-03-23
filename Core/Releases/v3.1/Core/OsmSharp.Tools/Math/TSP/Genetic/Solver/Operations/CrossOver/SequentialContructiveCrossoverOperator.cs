@@ -22,6 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
 using OsmSharp.Tools.Math.AI.Genetic;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {

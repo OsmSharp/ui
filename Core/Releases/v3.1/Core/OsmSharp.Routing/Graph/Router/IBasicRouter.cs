@@ -25,6 +25,7 @@ using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Routing.Router;
 using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing.Graph.Router
 {

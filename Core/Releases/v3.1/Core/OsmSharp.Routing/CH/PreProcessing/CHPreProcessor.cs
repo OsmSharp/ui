@@ -25,7 +25,8 @@ using System.Diagnostics;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.DynamicGraph;
-using System.Collections.Concurrent;
+using OsmSharp.Tools.Collections;
+//using System.Collections.Concurrent;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -111,6 +112,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
             uint total = _target.VertexCount;
             uint current = 1;
 
+#if !WINDOWS_PHONE
             System.Threading.Tasks.Parallel.ForEach(_target.GetVertices(), current_vertex =>
             {
                 float priority = _calculator.Calculate(current_vertex);
@@ -127,7 +129,25 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     current++;
                 }
             });
+#endif
+#if WINDOWS_PHONE
+            foreach (uint current_vertex in _target.GetVertices())
+            {
+                float priority = _calculator.Calculate(current_vertex);
+                lock (_queue)
+                {
+                    _queue.Enqueue(current_vertex, priority);
 
+                    if (current % 1000 == 0)
+                    {
+                        Tools.Output.OutputStreamHost.ReportProgress(current, total,
+                            "CHPreProcessor", "Building CH Queue...");
+                    }
+
+                    current++;
+                }  
+            }
+#endif
             //while (_all_nodes.MoveNext())
             //{ // keep enqueuing until the last node, or until no more nodes are left.
             //    this.ReQueue(_all_nodes.Current);
@@ -364,13 +384,24 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 if (_misses == _k)
                 { // recalculation.
                     CHPriorityQueue new_queue = new CHPriorityQueue();
-                    ConcurrentBag<KeyValuePair<uint, float>> recalculated_weights = 
-                        new ConcurrentBag<KeyValuePair<uint, float>>();
+#if !WINDOWS_PHONE
+                    System.Collections.Concurrent.ConcurrentBag<KeyValuePair<uint, float>> recalculated_weights = 
+                        new System.Collections.Concurrent.ConcurrentBag<KeyValuePair<uint, float>>();
                     System.Threading.Tasks.Parallel.ForEach(_queue, vertex =>
                     {
                         recalculated_weights.Add(
                             new KeyValuePair<uint,float>(vertex, _calculator.Calculate(vertex)));
                     });
+#endif
+#if WINDOWS_PHONE
+                    HashSet<KeyValuePair<uint, float>> recalculated_weights =
+                        new HashSet<KeyValuePair<uint, float>>();
+                    foreach (uint vertex in _queue)
+                    {
+                        recalculated_weights.Add(
+                            new KeyValuePair<uint, float>(vertex, _calculator.Calculate(vertex)));
+                    }
+#endif
                     foreach (KeyValuePair<uint, float> pair in recalculated_weights)
                     {
                         new_queue.Enqueue(pair.Key, pair.Value);

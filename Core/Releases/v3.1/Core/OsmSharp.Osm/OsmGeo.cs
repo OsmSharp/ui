@@ -30,7 +30,6 @@ namespace OsmSharp.Osm
     /// 
     /// Nodes, Ways and Relations
     /// </summary>
-    [Serializable]
     public abstract class OsmGeo : OsmBase
     {
         /// <summary>

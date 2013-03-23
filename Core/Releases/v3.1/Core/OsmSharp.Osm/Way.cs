@@ -29,7 +29,6 @@ namespace OsmSharp.Osm
     /// <summary>
     /// Way class.
     /// </summary>
-    [Serializable]
     public class Way : OsmGeo
     {
         /// <summary>

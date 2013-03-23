@@ -27,7 +27,6 @@ namespace OsmSharp.Osm
     /// <summary>
     /// Relation class.
     /// </summary>
-    [Serializable]
     public class Relation : OsmGeo
     {
         /// <summary>

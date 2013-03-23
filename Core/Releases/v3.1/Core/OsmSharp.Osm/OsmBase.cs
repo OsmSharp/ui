@@ -29,7 +29,6 @@ namespace OsmSharp.Osm
     /// 
     /// ChangeSets, Nodes, Ways and Relations.
     /// </summary>   
-    [Serializable]
     public abstract class OsmBase : IEquatable<OsmBase>
     {
         /// <summary>

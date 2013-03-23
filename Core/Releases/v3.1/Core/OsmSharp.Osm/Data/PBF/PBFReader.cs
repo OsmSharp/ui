@@ -18,8 +18,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using Ionic.Zlib;
 using ProtoBuf;
-using zlib;
 
 namespace OsmSharp.Osm.Data.PBF
 {
@@ -120,7 +120,7 @@ namespace OsmSharp.Osm.Data.PBF
                     else
                     { // construct a compressed stream.
                         var ms = new MemoryStream(blob.zlib_data);
-                        source_stream = new ZLibStream(ms);
+                        source_stream = new ZLibStreamWrapper(ms);
                     }
 
                     // use the stream to read the block.
@@ -210,12 +210,12 @@ namespace OsmSharp.Osm.Data.PBF
             throw new NotImplementedException();
         }
     }
-    class ZLibStream : InputStream
-    {   // uses ZLIB.NET: http://www.componentace.com/download/download.php?editionid=25
-        private ZInputStream reader; // seriously, why isn't this a stream?
-        public ZLibStream(Stream stream)
+    class ZLibStreamWrapper : InputStream
+    { 
+        private ZlibStream reader; 
+        public ZLibStreamWrapper(Stream stream)
         {
-            reader = new ZInputStream(stream);
+            reader = new ZlibStream(stream, CompressionMode.Decompress);
         }
         public override void Close()
         {
@@ -224,8 +224,7 @@ namespace OsmSharp.Osm.Data.PBF
         }
         protected override int ReadNextBlock(byte[] buffer, int offset, int count)
         {
-            // OMG! reader.Read is the base-stream, reader.read is decompressed! yeuch
-            return reader.read(buffer, offset, count);
+            return reader.Read(buffer, offset, count);
         }
 
     }

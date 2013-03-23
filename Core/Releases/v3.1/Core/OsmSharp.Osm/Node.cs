@@ -28,7 +28,6 @@ namespace OsmSharp.Osm
     /// <summary>
     /// Node class.
     /// </summary>
-    [Serializable]
     public class Node : OsmGeo, IEquatable<Node>
     {
         /// <summary>

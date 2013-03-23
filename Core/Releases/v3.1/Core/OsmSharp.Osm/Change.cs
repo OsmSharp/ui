@@ -25,7 +25,6 @@ namespace OsmSharp.Osm
     /// <summary>
     /// Represents a change in a change set.
     /// </summary>
-    [Serializable]
     public class Change
     {
         /// <summary>

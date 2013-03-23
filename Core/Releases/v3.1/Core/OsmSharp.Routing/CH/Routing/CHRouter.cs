@@ -32,6 +32,7 @@ using OsmSharp.Routing.Router;
 using OsmSharp.Tools.Math;
 using OsmSharp.Tools.Collections.PriorityQueues;
 using OsmSharp.Routing;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing.CH.Routing
 {

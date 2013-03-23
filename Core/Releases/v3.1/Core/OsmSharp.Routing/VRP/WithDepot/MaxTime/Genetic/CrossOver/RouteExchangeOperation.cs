@@ -26,6 +26,7 @@ using OsmSharp.Tools.Math.AI.Genetic;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic.CrossOver
 {

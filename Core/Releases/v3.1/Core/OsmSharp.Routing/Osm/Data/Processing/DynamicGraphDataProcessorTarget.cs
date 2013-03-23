@@ -30,6 +30,7 @@ using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Graph.DynamicGraph;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing.Osm.Data.Processing
 {

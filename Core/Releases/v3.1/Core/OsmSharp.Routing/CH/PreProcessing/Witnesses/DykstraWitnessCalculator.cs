@@ -24,6 +24,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Tools.Collections.PriorityQueues;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
 {

@@ -56,7 +56,7 @@ namespace OsmSharp.Tools.DelimitedFiles
 	            //Add the table               'Read the delimited file
 
 	            System.Text.Encoding enc = null;
-	            enc = System.Text.Encoding.GetEncoding(1252);
+                enc = System.Text.Encoding.GetEncoding("iso-8859-1");
 	            FileStream fileStream = new FileStream(file.FullName, 
                     FileMode.Open, FileAccess.Read, FileShare.Read);
 	            StringBuilder strBuild = new StringBuilder(Convert.ToInt32(fileStream.Length));
@@ -69,8 +69,10 @@ namespace OsmSharp.Tools.DelimitedFiles
      
                 reporter.Report(status);
 
-	            for (int i = 0; i <= Convert.ToInt32(fileStream.Length) - 1; i++) {
-		            strBuild.Append(enc.GetString(new byte[] { Convert.ToByte(fileStream.ReadByte()) }));
+	            for (int i = 0; i <= Convert.ToInt32(fileStream.Length) - 1; i++)
+	            {
+	                byte[] bytes = new byte[] {Convert.ToByte(fileStream.ReadByte())};
+                    strBuild.Append(enc.GetString(bytes, 0, bytes.Length));
 	            }
 
 	            fileStream.Close();

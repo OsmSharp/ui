@@ -22,6 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor.ChangeSets;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Osm.Data.Core.Processor.Filter
 {

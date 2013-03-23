@@ -27,6 +27,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Selectors;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
 using OsmSharp.Tools.Math.AI.Genetic.Fitness;
 using OsmSharp.Tools.Progress;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
 {

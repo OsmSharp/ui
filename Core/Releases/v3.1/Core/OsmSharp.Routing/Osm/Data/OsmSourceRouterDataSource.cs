@@ -14,6 +14,7 @@ using OsmSharp.Osm.Data.Core.Processor.ListSource;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing.Osm.Data.Source
 {

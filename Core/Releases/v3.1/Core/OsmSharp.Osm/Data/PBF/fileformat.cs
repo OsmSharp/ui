@@ -13,7 +13,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"Blob")]
+  [global::ProtoBuf.ProtoContract(Name=@"Blob")]
   public partial class Blob : global::ProtoBuf.IExtensible
   {
     /// <summary>
@@ -89,7 +89,7 @@ namespace OsmSharp.Osm.Data.PBF
   /// <summary>
   /// 
   /// </summary>
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"BlockHeader")]
+  [global::ProtoBuf.ProtoContract(Name=@"BlockHeader")]
   public partial class BlockHeader : global::ProtoBuf.IExtensible
   {
     /// <summary>

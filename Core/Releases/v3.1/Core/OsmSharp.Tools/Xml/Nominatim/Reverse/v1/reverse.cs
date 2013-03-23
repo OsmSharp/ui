@@ -10,7 +10,7 @@
 
 using System.Xml.Serialization;
 
-namespace OsmSharp.Tools.Xml.Nomatim.Reverse.v1
+namespace OsmSharp.Tools.Xml.Nominatim.Reverse.v1
 {
 
 // 
@@ -20,9 +20,9 @@ namespace OsmSharp.Tools.Xml.Nomatim.Reverse.v1
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+    //[System.SerializableAttribute()]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
+    //[System.ComponentModel.DesignerCategoryAttribute("code")]
 	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
 	[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
 	public partial class reversegeocode
@@ -81,9 +81,9 @@ namespace OsmSharp.Tools.Xml.Nomatim.Reverse.v1
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+    //[System.SerializableAttribute()]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
+    //[System.ComponentModel.DesignerCategoryAttribute("code")]
 	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
 	public partial class reversegeocodeResult
 	{
@@ -151,9 +151,9 @@ namespace OsmSharp.Tools.Xml.Nomatim.Reverse.v1
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+    //[System.SerializableAttribute()]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
+    //[System.ComponentModel.DesignerCategoryAttribute("code")]
 	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
 	public partial class reversegeocodeAddressparts
 	{
@@ -261,9 +261,9 @@ namespace OsmSharp.Tools.Xml.Nomatim.Reverse.v1
 
 	/// <remarks/>
 	[System.CodeDom.Compiler.GeneratedCodeAttribute("xsd", "4.0.30319.1")]
-	[System.SerializableAttribute()]
+    //[System.SerializableAttribute()]
 	[System.Diagnostics.DebuggerStepThroughAttribute()]
-	[System.ComponentModel.DesignerCategoryAttribute("code")]
+    //[System.ComponentModel.DesignerCategoryAttribute("code")]
 	[System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
 	[System.Xml.Serialization.XmlRootAttribute(Namespace = "", IsNullable = false)]
 	public partial class NewDataSet

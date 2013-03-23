@@ -25,7 +25,6 @@ namespace OsmSharp.Osm
     /// <summary>
     /// Represents a relationmember.
     /// </summary>
-    [Serializable]
     public class RelationMember
     {
         /// <summary>

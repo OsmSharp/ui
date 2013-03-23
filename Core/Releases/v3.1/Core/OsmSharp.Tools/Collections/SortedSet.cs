@@ -16,24 +16,32 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections;
 
-namespace OsmSharp
-{
 #if WINDOWS_PHONE
+// ReSharper disable CheckNamespace
+namespace OsmSharp
+// ReSharper restore CheckNamespace
+{
     /// <summary>
     /// Represents a strongly typed list of objects that will be sorted using the IComparable interface.
     /// </summary>
     /// <typeparam name="T">The type of the elements in the list.</typeparam>
-    public class SortedSet<T> : ICollection<T>
-        where T : IComparable<T>
+    public class SortedSet<T> : ISet<T>, ICollection<T>, IEnumerable<T>, ICollection, IEnumerable
     {
         /// <summary>
         /// The list containing the elements.
         /// </summary>
-        private List<T> _elements;
+        private readonly List<T> _elements;
+
+        /// <summary>
+        /// Holds the comparer for this set.
+        /// </summary>
+        private readonly IComparer<T> _comparer;
 
         /// <summary>
         /// Creates a new sorted set.
@@ -41,6 +49,7 @@ namespace OsmSharp
         public SortedSet()
         {
             _elements = new List<T>();
+            _comparer = Comparer<T>.Default;
         }
 
         /// <summary>
@@ -48,8 +57,80 @@ namespace OsmSharp
         /// </summary>
         public SortedSet(IEnumerable<T> enumerable)
         {
-            _elements = new List<T>(enumerable);
-        }  
+            _elements = new List<T>();
+            _comparer = Comparer<T>.Default;
+
+            foreach (T item in enumerable)
+            {
+                this.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new sorted set.
+        /// </summary>
+        public SortedSet(IEnumerable<T> enumerable, IComparer<T> comparer)
+        {
+            _elements = new List<T>();
+            _comparer = comparer;
+
+            foreach (T item in enumerable)
+            {
+                this.Add(item);
+            }
+        }
+
+        /// <summary>
+        /// Creates a new sorted set.
+        /// </summary>
+        public SortedSet(IComparer<T> comparer)
+        {
+            _elements = new List<T>();
+            _comparer = comparer;
+        }
+
+
+        /// <summary>
+        ///     Gets the System.Collections.Generic.IEqualityComparer<T> object that is used
+        ///     to determine equality for the values in the System.Collections.Generic.SortedSet<T>.
+        /// </summary>
+        public IComparer<T> Comparer
+        {
+            get
+            {
+                return _comparer;
+            }
+        }
+
+        //
+        // Summary:
+        //     Gets the maximum value in the System.Collections.Generic.SortedSet<T>, as
+        //     defined by the comparer.
+        //
+        // Returns:
+        //     The maximum value in the set.
+        public T Max 
+        { 
+            get
+            {
+                return _elements[_elements.Count - 1];
+            }
+        }
+
+        //
+        // Summary:
+        //     Gets the minimum value in the System.Collections.Generic.SortedSet<T>, as
+        //     defined by the comparer.
+        //
+        // Returns:
+        //     The minimum value in the set.
+        public T Min
+        {
+            get
+            {
+                return _elements[0];
+            }
+        }
 
         #region ICollection<T> Members
 
@@ -76,7 +157,7 @@ namespace OsmSharp
                     idx_to_test = (window_size / 2) + idx_lower;
 
                     // test the element at the given index.
-                    up = _elements[idx_to_test].CompareTo(item) < 0;
+                    up = _comparer.Compare(_elements[idx_to_test], item) < 0;
 
                     // update the index
                     if (up)
@@ -123,9 +204,10 @@ namespace OsmSharp
         /// <param name="arrayIndex">The zero-based index in array at which copying begins.</param>
         public void CopyTo(T[] array, int arrayIndex)
         {
-            for (int idx = 0; idx < this.Count; idx++)
+            foreach (T item in this)
             {
-                array[idx + arrayIndex] = _elements[idx];
+                array[arrayIndex] = item;
+                arrayIndex++;
             }
         }
 
@@ -192,6 +274,235 @@ namespace OsmSharp
         }
 
         #endregion
+
+        #region ICollection Members
+
+        /// <summary>
+        /// Copies all objects to the given array starting at the given location.
+        /// </summary>
+        /// <param name="array"></param>
+        /// <param name="index"></param>
+        public void CopyTo(Array array, int index)
+        {
+            foreach (T item in this)
+            {
+                array.SetValue(item, index);
+                index++;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether access to the System.Collections.ICollection is synchronized (thread safe).
+        /// </summary>
+        public bool IsSynchronized
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Gets an object that can be used to synchronize access to the System.Collections.ICollection.
+        /// </summary>
+        public object SyncRoot
+        {
+            get { return this; }
+        }
+
+        #endregion
+
+        #region ISet<T> Members 
+
+        /// <summary>
+        /// Removes all elements in the specified collection.
+        /// </summary>
+        /// <param name="other"></param>
+        public void ExceptWith(IEnumerable<T> other)
+        {
+            foreach (T item in other)
+            {
+                this.Remove(item);
+            }
+        }
+
+        /// <summary>
+        /// Keeps only the elements that are in the given collection and in this set.
+        /// </summary>
+        /// <param name="other"></param>
+        public void IntersectWith(IEnumerable<T> other)
+        {
+            // calculate intersection.
+            var intersection = new HashSet<T>();
+            foreach (T item in other)
+            {
+                if (this.Contains(item))
+                {
+                    intersection.Add(item);
+                }
+            }
+
+            // clear this set.
+            this.Clear();
+            this.UnionWith(intersection);
+        }
+
+        /// <summary>
+        /// Returns true if all elements in the given collection are contained in this set.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool IsProperSubsetOf(IEnumerable<T> other)
+        {
+            // TODO: very naive implementation for now!
+            var other_set = new HashSet<T>(other);
+            foreach (T item in this)
+            {
+                if (!other_set.Contains(item))
+                {
+                    return false;
+                }
+            }
+            // make sure this is proper.
+            foreach (T item in other)
+            {
+                if (!this.Contains(item))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if all elements in this set are also in the given collection. 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool IsProperSupersetOf(IEnumerable<T> other)
+        {
+            foreach (T item in other)
+            {
+                if (!this.Contains(item))
+                {
+                    return false;
+                }
+            }
+            // make sure this is proper.
+            // TODO: very naive implementation for now!
+            var other_set = new HashSet<T>(other);
+            foreach (T item in this)
+            {
+                if (!other_set.Contains(item))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool IsSubsetOf(IEnumerable<T> other)
+        {
+            // TODO: very naive implementation for now!
+            var other_set = new HashSet<T>(other);
+            foreach (T item in this)
+            {
+                if (!other_set.Contains(item))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool IsSupersetOf(IEnumerable<T> other)
+        {
+            foreach (T item in other)
+            {
+                if (!this.Contains(item))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if this collection and the other share at least one element.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Overlaps(IEnumerable<T> other)
+        {
+            foreach (T item in other)
+            {
+                if (this.Contains(item))
+                {
+                    return true;
+                }
+            }
+            // TODO: very naive implementation for now!
+            var other_set = new HashSet<T>(other);
+            foreach (T item in this)
+            {
+                if (other_set.Contains(item))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the two sets contain the same elements.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool SetEquals(IEnumerable<T> other)
+        {
+            var other_set = new HashSet<T>(other);
+            foreach (T item in this)
+            {
+                other_set.Remove(item);
+            }
+            return other_set.Count == 0;
+        }
+
+        /// <summary>
+        /// Keeps only items that are in one set or the other but not in both.
+        /// </summary>
+        /// <param name="other"></param>
+        public void SymmetricExceptWith(IEnumerable<T> other)
+        {
+            foreach (T item in this.Intersect(other))
+            {
+                this.Remove(item);
+            }
+        }
+
+        /// <summary>
+        /// Adds all items in other too.
+        /// </summary>
+        /// <param name="other"></param>
+        public void UnionWith(IEnumerable<T> other)
+        {
+            foreach (T item in other)
+            {
+                if (!this.Contains(item))
+                {
+                    this.Add(item);
+                }
+            }
+        }
+
+        #endregion
     }
-#endif
 }
+#endif

@@ -26,6 +26,7 @@ using OsmSharp.Tools.Math.TSP.ArbitraryInsertion;
 using OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Tools.Math.TSP.LK
 {
