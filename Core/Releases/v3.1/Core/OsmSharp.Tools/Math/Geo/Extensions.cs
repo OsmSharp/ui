@@ -22,8 +22,18 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.Geo
 {
+    /// <summary>
+    /// Contains generic extensions.
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Estimates distance.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <param name="start"></param>
+        /// <param name="lenght"></param>
+        /// <returns></returns>
         public static double DistanceEstimate(this GeoCoordinate[] coordinates, int start, int lenght)
         {
             double distance = 0;

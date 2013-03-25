@@ -22,10 +22,16 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.Random
 {
+    /// <summary>
+    /// Random number generator.
+    /// </summary>
     public class RandomGenerator : IRandomGenerator
     {
         private System.Random _random;
 
+        /// <summary>
+        /// Creates a new random generator.
+        /// </summary>
         public RandomGenerator()
         {
             _random = new System.Random();
@@ -33,11 +39,21 @@ namespace OsmSharp.Tools.Math.Random
 
         #region IRandomGenerator Members
 
+        /// <summary>
+        /// Generates a random number.
+        /// </summary>
+        /// <param name="max"></param>
+        /// <returns></returns>
         public int Generate(int max)
         {
             return _random.Next(max);
         }
 
+        /// <summary>
+        /// Generates a random number.
+        /// </summary>
+        /// <param name="max"></param>
+        /// <returns></returns>
         public double Generate(double max)
         {
             return _random.NextDouble() * max;

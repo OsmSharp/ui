@@ -23,6 +23,10 @@ using OsmSharp.Tools.Math.Primitives.Enumerators.Lines;
 
 namespace OsmSharp.Tools.Math.Primitives.Enumerators.Points
 {
+    /// <summary>
+    /// An enurable for a line.
+    /// </summary>
+    /// <typeparam name="PointType"></typeparam>
     public sealed class LineEnumerable<PointType> : IEnumerable<GenericLineF2D<PointType>>
         where PointType : PointF2D
     {
@@ -35,6 +39,10 @@ namespace OsmSharp.Tools.Math.Primitives.Enumerators.Points
 
         #region IEnumerable<PointType> Members
 
+        /// <summary>
+        /// Creates the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<GenericLineF2D<PointType>> GetEnumerator()
         {
             return _enumerator;
@@ -44,6 +52,10 @@ namespace OsmSharp.Tools.Math.Primitives.Enumerators.Points
 
         #region IEnumerable Members
 
+        /// <summary>
+        /// Creates the enumerator.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return _enumerator;

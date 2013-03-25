@@ -28,16 +28,22 @@ namespace OsmSharp.Osm.Data.Core.Processor.Filter.LongIndex
     public class LongIndex
     {
         /// <summary>
-        /// The root.
+        /// The root of the positive ids.
         /// </summary>
-        private LongIndexNode _root;
+        private LongIndexNode _rootPositive;
+
+        /// <summary>
+        /// The root of the negative ids.
+        /// </summary>
+        private LongIndexNode _rootNegative;
 
         /// <summary>
         /// Creates a new longindex.
         /// </summary>
         public LongIndex()
         {
-            _root = new LongIndexNode(1);
+            _rootPositive = new LongIndexNode(1);
+            _rootNegative = new LongIndexNode(1);
         }
 
         /// <summary>
@@ -46,14 +52,14 @@ namespace OsmSharp.Osm.Data.Core.Processor.Filter.LongIndex
         /// <param name="number"></param>
         public void Add(long number)
         {
-            while (number >= LongIndexNode.CalculateBaseNumber((short)(_root.Base + 1)))
+            if (number >= 0)
             {
-                LongIndexNode old_root = _root;
-                _root = new LongIndexNode((short)(_root.Base + 1));
-                _root.has_0 = old_root;
+                this.PositiveAdd(number);
             }
-
-            _root.Add(number);
+            else
+            {
+                this.NegativeAdd(-number);
+            }
         }
 
         /// <summary>
@@ -62,9 +68,13 @@ namespace OsmSharp.Osm.Data.Core.Processor.Filter.LongIndex
         /// <param name="number"></param>
         public void Remove(long number)
         {
-            if (number < LongIndexNode.CalculateBaseNumber((short)(_root.Base + 1)))
+            if (number >= 0)
             {
-                _root.Remove(number);
+                this.PositiveRemove(number);
+            }
+            else
+            {
+                this.NegativeAdd(-number);
             }
         }
 
@@ -75,19 +85,115 @@ namespace OsmSharp.Osm.Data.Core.Processor.Filter.LongIndex
         /// <returns></returns>
         public bool Contains(long number)
         {
-            if (number < LongIndexNode.CalculateBaseNumber((short)(_root.Base + 1)))
+            if (number >= 0)
             {
-                return _root.Contains(number);
+                return this.PositiveContains(number);
+            }
+            else
+            {
+                return this.NegativeContains(-number);
+            }
+        }
+
+        #region Positive
+
+        /// <summary>
+        /// Adds an id.
+        /// </summary>
+        /// <param name="number"></param>
+        private void PositiveAdd(long number)
+        {
+            while (number >= LongIndexNode.CalculateBaseNumber((short)(_rootPositive.Base + 1)))
+            {
+                LongIndexNode oldRoot = _rootPositive;
+                _rootPositive = new LongIndexNode((short)(_rootPositive.Base + 1));
+                _rootPositive.has_0 = oldRoot;
+            }
+
+            _rootPositive.Add(number);
+        }
+
+        /// <summary>
+        /// Removes an id.
+        /// </summary>
+        /// <param name="number"></param>
+        private void PositiveRemove(long number)
+        {
+            if (number < LongIndexNode.CalculateBaseNumber((short)(_rootPositive.Base + 1)))
+            {
+                _rootPositive.Remove(number);
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the id is there.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        private bool PositiveContains(long number)
+        {
+            if (number < LongIndexNode.CalculateBaseNumber((short)(_rootPositive.Base + 1)))
+            {
+                return _rootPositive.Contains(number);
             }
             return false;
         }
+
+        #endregion
+
+        #region Negative
+
+        /// <summary>
+        /// Adds an id.
+        /// </summary>
+        /// <param name="number"></param>
+        private void NegativeAdd(long number)
+        {
+            while (number >= LongIndexNode.CalculateBaseNumber((short)(_rootNegative.Base + 1)))
+            {
+                LongIndexNode oldRoot = _rootNegative;
+                _rootNegative = new LongIndexNode((short)(_rootNegative.Base + 1));
+                _rootNegative.has_0 = oldRoot;
+            }
+
+            _rootNegative.Add(number);
+        }
+
+        /// <summary>
+        /// Removes an id.
+        /// </summary>
+        /// <param name="number"></param>
+        private void NegativeRemove(long number)
+        {
+            if (number < LongIndexNode.CalculateBaseNumber((short)(_rootNegative.Base + 1)))
+            {
+                _rootNegative.Remove(number);
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the id is there.
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        private bool NegativeContains(long number)
+        {
+            if (number < LongIndexNode.CalculateBaseNumber((short)(_rootNegative.Base + 1)))
+            {
+                return _rootNegative.Contains(number);
+            }
+            return false;
+        }
+
+        #endregion
 
         /// <summary>
         /// Clears this index.
         /// </summary>
         public void Clear()
         {
-            _root = new LongIndexNode(1);
+            _rootPositive = new LongIndexNode(1);
+            _rootNegative = new LongIndexNode(1);
         }    
     }
 }

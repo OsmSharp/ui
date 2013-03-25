@@ -174,6 +174,10 @@ namespace OsmSharp.Tools.Math.Shapes
         }
     }
 
+    /// <summary>
+    /// Represents the result of a projection of a point onto a line.
+    /// </summary>
+    /// <typeparam name="PointType"></typeparam>
     public class LineProjectionResult<PointType> : DistanceResult<PointType>
         where PointType : PointF2D
     {
@@ -182,6 +186,9 @@ namespace OsmSharp.Tools.Math.Shapes
 
         }
 
+        /// <summary>
+        /// The index.
+        /// </summary>
         public int Idx { get; internal set; }
     }
 }

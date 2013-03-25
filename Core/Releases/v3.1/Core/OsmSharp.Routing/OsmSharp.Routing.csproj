@@ -43,6 +43,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <DocumentationFile>..\Output\OsmSharp.Routing.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\Output\</OutputPath>
@@ -237,14 +238,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingPreProcessed.cs" />
     <Compile Include="Graph\Router\IBasicRouterDataSource.cs" />
-    <Compile Include="Graph\Memory\MemoryRouterDataSource.cs" />
+    <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
     <Compile Include="Router\Router.cs" />
     <Compile Include="IRouterPoint.cs" />
     <Compile Include="IEdgeMatcher.cs" />
     <Compile Include="Interpreter\Roads\RoadInterpreter.cs" />
     <Compile Include="Interpreter\Roads\RoadTagsInterpreterBase.cs" />
     <Compile Include="Router\RouterPoint.cs" />
-    <Compile Include="Router\ResolvedGraph\RouterGraph.cs" />
+    <Compile Include="Router\RouterGraph.cs" />
     <Compile Include="Route\Gpx\OsmSharpRouteGpx.cs" />
     <Compile Include="Route\Kml\OsmSharpRouteKml.cs" />
     <Compile Include="Route\Metrics\OsmSharpRouteMetricCalculator.cs" />
@@ -326,7 +327,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interpreter\Roads\Tags\" />
-    <Folder Include="Resolving\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">

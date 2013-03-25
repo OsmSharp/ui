@@ -51,6 +51,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <param name="point_tags"></param>
+        /// <param name="interpreter"></param>
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             GeoCoordinate coordinate, IEdgeMatcher matcher, IDictionary<string, string> point_tags)
         {

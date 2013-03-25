@@ -22,15 +22,42 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.Geo.Meta
 {
+    /// <summary>
+    /// Relative direction enumeration.
+    /// </summary>
     public enum RelativeDirectionEnum
     {
+        /// <summary>
+        /// Left
+        /// </summary>
         Left,
+        /// <summary>
+        /// Sharpleft.
+        /// </summary>
         SharpLeft,
+        /// <summary>
+        /// Slightlyleft.
+        /// </summary>
         SlightlyLeft,
+        /// <summary>
+        /// Right.
+        /// </summary>
         Right,
+        /// <summary>
+        /// Sharpright.
+        /// </summary>
         SharpRight,
+        /// <summary>
+        /// Slightlyright.
+        /// </summary>
         SlightlyRight,
+        /// <summary>
+        /// Straighton.
+        /// </summary>
         StraightOn,
+        /// <summary>
+        /// Turnback.
+        /// </summary>
         TurnBack
     }
 }

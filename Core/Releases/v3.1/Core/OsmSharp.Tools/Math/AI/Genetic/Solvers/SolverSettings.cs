@@ -27,6 +27,15 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
     /// </summary>
     public class SolverSettings
     {
+        /// <summary>
+        /// Creates new solver settings.
+        /// </summary>
+        /// <param name="stagnation_count"></param>
+        /// <param name="population_size"></param>
+        /// <param name="max_generations"></param>
+        /// <param name="elitism_percentage"></param>
+        /// <param name="cross_percentage"></param>
+        /// <param name="mutation_percentage"></param>
         public SolverSettings(
             int stagnation_count,
             int population_size,

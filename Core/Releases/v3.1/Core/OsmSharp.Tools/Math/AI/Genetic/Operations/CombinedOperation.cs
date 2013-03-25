@@ -56,6 +56,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations
         /// </summary>
         /// <param name="mutation_operator"></param>
         /// <param name="cross_over_operator"></param>
+        /// <param name="generator"></param>
         public CombinedOperation(
             IMutationOperation<GenomeType, ProblemType, WeightType> mutation_operator,
             ICrossOverOperation<GenomeType, ProblemType, WeightType> cross_over_operator,
@@ -66,6 +67,9 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations
             _generation_operation = generator;
         }
 
+        /// <summary>
+        /// Returns the name of this operation.
+        /// </summary>
         public string Name
         {
             get

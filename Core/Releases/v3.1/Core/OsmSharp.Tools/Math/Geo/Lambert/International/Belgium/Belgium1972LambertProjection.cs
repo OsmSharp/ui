@@ -27,6 +27,9 @@ namespace OsmSharp.Tools.Math.Geo.Lambert.International.Belgium
     /// </summary>
     public class Belgium1972LambertProjection : LambertProjectionBase
     {
+        /// <summary>
+        /// Creates a new lambert projection.
+        /// </summary>
         public Belgium1972LambertProjection()
             : base("Belgium 1972 Projection",
             LambertEllipsoid.Hayford1924Ellipsoid,

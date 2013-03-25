@@ -22,6 +22,9 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math
 {
+    /// <summary>
+    /// Represents a line.
+    /// </summary>
     public class LineF2D : GenericLineF2D<PointF2D>
     {
         /// <summary>

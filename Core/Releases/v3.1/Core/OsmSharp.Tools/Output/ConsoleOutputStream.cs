@@ -49,6 +49,8 @@ namespace OsmSharp.Tools.Output
                 Console.WriteLine(); // resetting cursor position not support in Mono for Android!
 #elif WINDOWS_PHONE
                 Console.WriteLine(); // resetting cursor position not support in Mono for Android!
+#elif IOS
+				Console.WriteLine(); // resetting cursor position not supported in Monotouch!
 #else
 				Console.SetCursorPosition(0, Console.CursorTop);
 #endif

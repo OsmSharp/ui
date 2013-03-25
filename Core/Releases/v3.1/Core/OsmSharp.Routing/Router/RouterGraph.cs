@@ -47,6 +47,7 @@ namespace OsmSharp.Routing.Router
         /// </summary>
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         public void AddVertex(long id, float latitude, float longitude)
         {

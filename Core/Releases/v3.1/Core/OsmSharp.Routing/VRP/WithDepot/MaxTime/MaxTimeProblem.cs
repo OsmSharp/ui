@@ -39,6 +39,14 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
 
         private double _cost_per_vehicle;
 
+        /// <summary>
+        /// Creates a new max time problem.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
+        /// <param name="cost_per_second"></param>
+        /// <param name="cost_per_vehicle"></param>
         public MaxTimeProblem(IProblemWeights weights, Second max, Second delivery_time,
             double cost_per_second, double cost_per_vehicle)
         {
@@ -107,6 +115,9 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
         /// </summary>
         public Second DeliveryTime { get; private set; }
 
+        /// <summary>
+        /// Returns the size.
+        /// </summary>
         public int Size
         {
             get
@@ -115,6 +126,9 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
             }
         }
 
+        /// <summary>
+        /// Returns the weights.
+        /// </summary>
         public IProblemWeights Weights
         {
             get
@@ -123,11 +137,20 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
             }
         }
 
+        /// <summary>
+        /// Returns the weight between two customers.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public double Weight(int from, int to)
         {
             return _weights.Weight(from, to);
         }
 
+        /// <summary>
+        /// Returns true if the problem is symmetric.
+        /// </summary>
         public bool Symmetric
         {
             get
@@ -136,6 +159,9 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
             }
         }
 
+        /// <summary>
+        /// Returns true if the problem is euclidean.
+        /// </summary>
         public bool Euclidean
         {
             get
@@ -144,6 +170,9 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
             }
         }
 
+        /// <summary>
+        /// Returns the weight matrix.
+        /// </summary>
         public double[][] WeightMatrix
         {
             get
@@ -211,7 +240,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
         /// <summary>
         /// Generate the nearest neighbour list.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="v"></param>
         /// <returns></returns>
         public NearestNeighbours10 Get10NearestNeighbours(int v)
         {
@@ -311,8 +340,8 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
         /// <summary>
         /// Calculates the time of one route given the travel time and the amount of customers.
         /// </summary>
-        /// <param name="route1_weight"></param>
-        /// <param name="p"></param>
+        /// <param name="travel_time"></param>
+        /// <param name="customers"></param>
         /// <returns></returns>
         public double Time(double travel_time, int customers)
         {

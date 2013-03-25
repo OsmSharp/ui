@@ -29,8 +29,8 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
         /// Calculates the solution to the No-depot DVRP starting from the raw data.
         /// </summary>
         /// <param name="vehicle"></param>
-        /// <param name="?"></param>
-        /// <param name="?"></param>
+        /// <param name="points"></param>
+        /// <param name="weights"></param>
         /// <returns></returns>
         public OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, ResolvedType[] points, double[][] weights)
         {

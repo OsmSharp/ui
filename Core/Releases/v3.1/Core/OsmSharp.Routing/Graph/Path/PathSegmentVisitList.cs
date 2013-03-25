@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.Graph.Path
         /// Holds all visited vertices.
         /// </summary>
         private Dictionary<long, double> _visited;
-        private PathSegmentVisitList source;
+        //private PathSegmentVisitList source;
 
         /// <summary>
         /// Creates a new visit list.
@@ -75,8 +75,7 @@ namespace OsmSharp.Routing.Graph.Path
         /// <summary>
         /// Updates a vertex in this visit list.
         /// </summary>
-        /// <param name="vertex"></param>
-        /// <param name="weight"></param>
+        /// <param name="route"></param>
         public void UpdateVertex(PathSegment<long> route)
         {
             double current_weight;

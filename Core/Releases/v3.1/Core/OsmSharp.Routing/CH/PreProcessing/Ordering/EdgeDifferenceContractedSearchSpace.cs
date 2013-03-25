@@ -52,7 +52,8 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Creates a new edge difference calculator.
         /// </summary>
-        /// <param name="graph"></param>
+        /// <param name="data"></param>
+        /// <param name="witness_calculator"></param>
         public EdgeDifferenceContractedSearchSpace(IDynamicGraph<CHEdgeData> data, INodeWitnessCalculator witness_calculator)
         {
             _data = data;
@@ -64,7 +65,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Calculates the edge-difference if u would be contracted.
         /// </summary>
-        /// <param name="u"></param>
+        /// <param name="vertex"></param>
         /// <returns></returns>
         public float Calculate(uint vertex)
         {
@@ -105,7 +106,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Notifies this calculator that the vertex was contracted.
         /// </summary>
-        /// <param name="vertex_id"></param>
+        /// <param name="vertex"></param>
         public void NotifyContracted(uint vertex)
         {
             // removes the contractions count.

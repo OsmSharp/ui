@@ -38,18 +38,18 @@ namespace OsmSharp.Routing
     /// <summary>
     /// A class that implements common functionality for any routing algorithm.
     /// </summary>
-    public class Router<EdgeData> : IRouter<RouterPoint>
-        where EdgeData : IDynamicGraphEdgeData
+    public class Router<TEdgeData> : IRouter<RouterPoint>
+        where TEdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
         /// Holds the graph object containing the routable network.
         /// </summary>
-        private IBasicRouterDataSource<EdgeData> _data_graph;
+        private IBasicRouterDataSource<TEdgeData> _data_graph;
 
         /// <summary>
         /// Holds the basic router that works on the dynamic graph.
         /// </summary>
-        private IBasicRouter<EdgeData> _router;
+        private IBasicRouter<TEdgeData> _router;
 
         /// <summary>
         /// Interpreter for the routing network.
@@ -61,8 +61,9 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
-        public Router(IBasicRouterDataSource<EdgeData> graph, IRoutingInterpreter interpreter,
-            IBasicRouter<EdgeData> router)
+        /// <param name="router"></param>
+        public Router(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter,
+            IBasicRouter<TEdgeData> router)
         {
             _data_graph = graph;
             _interpreter = interpreter;
@@ -85,6 +86,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Calculates a route from source to target.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
@@ -96,6 +98,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Calculates a route from source to target but does not search more than max around source or target location.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <param name="max"></param>
@@ -113,6 +116,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Calculates a route from source to the closest target point.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
@@ -124,6 +128,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Calculates a route from source to the closest target point but does not search more than max around source location.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <param name="max"></param>
@@ -156,6 +161,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Calculates all the routes between all the sources and all the targets.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
@@ -182,6 +188,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Calculates the weight from source to target.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
@@ -195,6 +202,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Calculates all the weights from source to all the targets.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
@@ -207,6 +215,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Calculates all the weights between all the sources and all the targets.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
@@ -230,6 +239,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Calculates the locations around the origin that have a given weight.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="orgin"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
@@ -250,6 +260,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Returns true if the given source is at least connected to vertices with at least a given weight.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
@@ -261,6 +272,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Returns an array of connectivity check results.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
@@ -283,6 +295,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Converts a linked route to an OsmSharpRoute.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="route"></param>
         /// <param name="source"></param>
         /// <param name="target"></param>
@@ -303,9 +316,9 @@ namespace OsmSharp.Routing
         /// Generates an osm sharp route from a graph route.
         /// </summary>
         /// <param name="vehicle"></param>
-        /// <param name="from_point"></param>
-        /// <param name="to_point"></param>
-        /// <param name="route_list"></param>
+        /// <param name="from_resolved"></param>
+        /// <param name="to_resolved"></param>
+        /// <param name="vertices"></param>
         /// <returns></returns>
         internal OsmSharpRoute Generate(
             VehicleEnum vehicle, 
@@ -374,9 +387,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Generates a list of entries.
         /// </summary>
-        /// <param name="interpreter"></param>
-        /// <param name="graph_route"></param>
-        /// <param name="graph"></param>
+        /// <param name="vertices"></param>
         /// <returns></returns>
         private RoutePointEntry[] GenerateEntries(long[] vertices)
         {
@@ -484,8 +495,8 @@ namespace OsmSharp.Routing
             Dictionary<long, IDynamicGraphEdgeData> neighbours = new Dictionary<long, IDynamicGraphEdgeData>();
             if (vertex1 > 0)
             {
-                KeyValuePair<uint, EdgeData>[] arcs = _data_graph.GetArcs(Convert.ToUInt32(vertex1));
-                foreach (KeyValuePair<uint, EdgeData> arc in arcs)
+                KeyValuePair<uint, TEdgeData>[] arcs = _data_graph.GetArcs(Convert.ToUInt32(vertex1));
+                foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
                 {
                     neighbours[arc.Key] = arc.Value;
                 }
@@ -511,8 +522,8 @@ namespace OsmSharp.Routing
         {
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
-                KeyValuePair<uint, EdgeData>[] arcs = _data_graph.GetArcs(Convert.ToUInt32(vertex1));
-                foreach (KeyValuePair<uint, EdgeData> arc in arcs)
+                KeyValuePair<uint, TEdgeData>[] arcs = _data_graph.GetArcs(Convert.ToUInt32(vertex1));
+                foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
                 {
                     if (arc.Key == vertex2)
                     {
@@ -520,7 +531,7 @@ namespace OsmSharp.Routing
                     }
                 }         
                 arcs = _data_graph.GetArcs(Convert.ToUInt32(vertex2));
-                foreach (KeyValuePair<uint, EdgeData> arc in arcs)
+                foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
                 {
                     if (arc.Key == vertex1)
                     {
@@ -552,7 +563,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Returns the coordinate of the given vertex.
         /// </summary>
-        /// <param name="p"></param>
+        /// <param name="vertex"></param>
         /// <returns></returns>
         private GeoCoordinate GetCoordinate(long vertex)
         {
@@ -681,6 +692,7 @@ namespace OsmSharp.Routing
         /// <param name="vehicle"></param>
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
+        /// <param name="point_tags"></param>
         /// <returns></returns>
         public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, 
             IEdgeMatcher matcher, IDictionary<string, string>[] point_tags)
@@ -750,7 +762,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="vertex1"></param>
         /// <param name="vertex2"></param>
-        /// <param name="edge"></param>
+        /// <param name="position"></param>
         /// <returns></returns>
         private RouterPoint AddResolvedPoint(uint vertex1, uint vertex2, double position)
         {
@@ -791,9 +803,8 @@ namespace OsmSharp.Routing
                         }
 
                         // find the arc(s).
-                        KeyValuePair<uint, EdgeData>? arc = null;
-                        bool forward = true;
-                        KeyValuePair<uint, EdgeData>[] arcs = _data_graph.GetArcs(vertex1);
+                        KeyValuePair<uint, TEdgeData>? arc = null;
+                        KeyValuePair<uint, TEdgeData>[] arcs = _data_graph.GetArcs(vertex1);
                         for (int idx = 0; idx < arcs.Length; idx++)
                         {
                             if (arcs[idx].Key == vertex2)
@@ -804,7 +815,6 @@ namespace OsmSharp.Routing
                         // find backward arc if needed.
                         if (!arc.HasValue)
                         {
-                            forward = true;
                             arcs = _data_graph.GetArcs(vertex2);
                             for (int idx = 0; idx < arcs.Length; idx++)
                             {
@@ -983,8 +993,6 @@ namespace OsmSharp.Routing
         /// Calculates all routes from a given resolved point to the routable graph.
         /// </summary>
         /// <param name="resolved_point"></param>
-        /// <param name="resolved_points"></param>
-        /// <param name="visit_list"></param>
         /// <returns></returns>
         private PathSegmentVisitList RouteResolvedGraph(RouterPoint resolved_point)
         {

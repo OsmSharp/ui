@@ -33,6 +33,10 @@ namespace OsmSharp.Routing.ArcAggregation.Output
         /// </summary>
         public AggregatedPoint Next { get; set; }
 
+        /// <summary>
+        /// Returns the next aggregated.
+        /// </summary>
+        /// <returns></returns>
         public override Aggregated GetNext()
         {
             return this.Next;

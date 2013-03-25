@@ -31,6 +31,9 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
     /// </summary>
     public class MaxTimeProblem : OsmSharp.Tools.Math.AI.Genetic.IProblem, IProblemWeights
     {
+        /// <summary>
+        /// Holds the weights.
+        /// </summary>
         private IProblemWeights _weights;
 
         private MaxTimeCalculator _calculator;
@@ -39,6 +42,14 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
 
         private double _cost_per_vehicle;
 
+        /// <summary>
+        /// Creates a new max time problem.
+        /// </summary>
+        /// <param name="weights"></param>
+        /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
+        /// <param name="cost_per_second"></param>
+        /// <param name="cost_per_vehicle"></param>
         public MaxTimeProblem(IProblemWeights weights, Second max, Second delivery_time, 
             double cost_per_second, double cost_per_vehicle)
         {
@@ -68,7 +79,10 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
                 return _customer_positions;
             }
         }
-
+        
+        /// <summary>
+        /// The max time calculator.
+        /// </summary>
         public MaxTimeCalculator MaxTimeCalculator
         {
             get
@@ -94,10 +108,19 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
             }
         }
 
+        /// <summary>
+        /// The maximum time.
+        /// </summary>
         public Second Max { get; private set; }
 
+        /// <summary>
+        /// The delivery time.
+        /// </summary>
         public Second DeliveryTime { get; private set; }
 
+        /// <summary>
+        /// The size of the problem.
+        /// </summary>
         public int Size
         {
             get
@@ -106,6 +129,9 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
             }
         }
 
+        /// <summary>
+        /// The weights.
+        /// </summary>
         public IProblemWeights Weights
         {
             get
@@ -114,11 +140,20 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
             }
         }
 
+        /// <summary>
+        /// Returns the weight between two customers.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public double Weight(int from, int to)
         {
             return _weights.Weight(from, to);
         }
 
+        /// <summary>
+        /// Returns true if the problem is symmetric.
+        /// </summary>
         public bool Symmetric
         {
             get
@@ -127,6 +162,9 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
             }
         }
 
+        /// <summary>
+        /// Returns true if the problem is euclidean.
+        /// </summary>
         public bool Euclidean
         {
             get
@@ -134,7 +172,10 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
                 return false;
             }
         }
-
+        
+        /// <summary>
+        /// The weight matrix.
+        /// </summary>
         public double[][] WeightMatrix
         {
             get
@@ -202,7 +243,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <summary>
         /// Generate the nearest neighbour list.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="v"></param>
         /// <returns></returns>
         public NearestNeighbours10 Get10NearestNeighbours(int v)
         {
@@ -290,8 +331,8 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <summary>
         /// Calculates the time of one route given the travel time and the amount of customers.
         /// </summary>
-        /// <param name="route1_weight"></param>
-        /// <param name="p"></param>
+        /// <param name="travel_time"></param>
+        /// <param name="customers"></param>
         /// <returns></returns>
         public double Time(double travel_time, int customers)
         {

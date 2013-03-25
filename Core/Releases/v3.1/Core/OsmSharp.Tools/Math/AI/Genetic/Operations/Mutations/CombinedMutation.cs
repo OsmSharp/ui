@@ -24,6 +24,12 @@ using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
 namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations
 {
+    /// <summary>
+    /// A combined mutation.
+    /// </summary>
+    /// <typeparam name="GenomeType"></typeparam>
+    /// <typeparam name="ProblemType"></typeparam>
+    /// <typeparam name="WeightType"></typeparam>
     public class CombinedMutation<GenomeType, ProblemType, WeightType> : IMutationOperation<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
         where GenomeType : class
@@ -35,6 +41,12 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations
 
         private IRandomGenerator _generator;
 
+        /// <summary>
+        /// Creates a new combined mutation.
+        /// </summary>
+        /// <param name="generator"></param>
+        /// <param name="operations"></param>
+        /// <param name="probabilities"></param>
         public CombinedMutation(
             IRandomGenerator generator,
             IList<IMutationOperation<GenomeType, ProblemType, WeightType>> operations,
@@ -45,6 +57,9 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations
             _generator = generator;
         }
 
+        /// <summary>
+        /// Returns the probabilities.
+        /// </summary>
         protected IList<double> Probabilities
         {
             get
@@ -57,6 +72,9 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations
             }
         }
 
+        /// <summary>
+        /// The name of this mutation.
+        /// </summary>
         public string Name
         {
             get
@@ -65,6 +83,12 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations
             }
         }
 
+        /// <summary>
+        /// Executes the mutation.
+        /// </summary>
+        /// <param name="solver"></param>
+        /// <param name="mutating"></param>
+        /// <returns></returns>
         public virtual Individual<GenomeType, ProblemType, WeightType> Mutate(
             Solver<GenomeType, ProblemType, WeightType> solver, Individual<GenomeType, ProblemType, WeightType> mutating)
         {

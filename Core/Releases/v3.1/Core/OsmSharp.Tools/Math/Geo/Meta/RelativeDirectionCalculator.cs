@@ -23,8 +23,18 @@ using OsmSharp.Tools.Math.Units.Angle;
 
 namespace OsmSharp.Tools.Math.Geo.Meta
 {
+    /// <summary>
+    /// Relative direction calculator.
+    /// </summary>
     public static class RelativeDirectionCalculator
     {
+        /// <summary>
+        /// Calculates the relative direction.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="along"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static RelativeDirection Calculate(GeoCoordinate from, GeoCoordinate along, GeoCoordinate to)
         {
             RelativeDirection direction = new RelativeDirection();

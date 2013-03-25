@@ -23,12 +23,14 @@ namespace OsmSharp.Routing.Interpreter.Roads
         /// Returns true if the tags represent a oneway edge, false if oneway reverse and null if none.
         /// </summary>
         /// <param name="tags"></param>
+        /// <param name="vehicle"></param>
         /// <returns></returns>
         bool? IsOneWay(IDictionary<string, string> tags, VehicleEnum vehicle);
 
         /// <summary>
         /// Returns true if the edge with given tags can be traversed by the given vehicle.
         /// </summary>
+        /// <param name="tags"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
         bool CanBeTraversedBy(IDictionary<string, string> tags, VehicleEnum vehicle);
@@ -43,6 +45,7 @@ namespace OsmSharp.Routing.Interpreter.Roads
         /// <summary>
         /// Returns the weight between two points on the given edge.
         /// </summary>
+        /// <param name="tags"></param>
         /// <param name="vehicle"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>

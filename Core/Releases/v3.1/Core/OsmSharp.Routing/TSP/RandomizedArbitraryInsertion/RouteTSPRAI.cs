@@ -29,13 +29,11 @@ namespace OsmSharp.Routing.TSP.RandomizedArbitraryInsertion
     /// <summary>
     /// A TSP router using a genetic algorithm.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
     public class RouteTSPRAI : RouterTSP
     {
         /// <summary>
         /// Creates a new TSP router;
         /// </summary>
-        /// <param name="router"></param>
         public RouteTSPRAI()
         {
 
@@ -44,7 +42,7 @@ namespace OsmSharp.Routing.TSP.RandomizedArbitraryInsertion
         /// <summary>
         /// Creates a solver.
         /// </summary>
-        /// <param name="problem"></param>
+        /// <param name="size"></param>
         /// <returns></returns>
         internal override ISolver DoCreateSolver(int size)
         {

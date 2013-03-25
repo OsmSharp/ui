@@ -22,10 +22,17 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.Random
 {
+    /// <summary>
+    /// A static random generator.
+    /// </summary>
     public static class StaticRandomGenerator
     {
         private static IRandomGenerator _generator;
 
+        /// <summary>
+        /// Returns a random number generator.
+        /// </summary>
+        /// <returns></returns>
         public static IRandomGenerator Get()
         {
             if (_generator == null)

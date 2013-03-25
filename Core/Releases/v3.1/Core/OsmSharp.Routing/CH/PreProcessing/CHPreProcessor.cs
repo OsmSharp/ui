@@ -183,7 +183,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Contracts the given vertex.
         /// </summary>
-        /// <param name="vertex_id"></param>
+        /// <param name="vertex"></param>
         public void Contract(uint vertex)
         {
             if (_contracted.Length > vertex && _contracted[vertex])
@@ -596,8 +596,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Notifies an arc removal.
         /// </summary>
-        /// <param name="from_id"></param>
-        /// <param name="to_id"></param>
+        /// <param name="vertex"></param>
+        /// <param name="edges"></param>
         private void OnBeforeContraction(uint vertex, KeyValuePair<uint, CHEdgeData>[] edges)
         {
             if (this.OnBeforeContractionEvent != null)
@@ -614,8 +614,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Notifies an arc removal.
         /// </summary>
-        /// <param name="from_id"></param>
-        /// <param name="to_id"></param>
+        /// <param name="vertex"></param>
+        /// <param name="edges"></param>
         private void OnAfterContraction(uint vertex, KeyValuePair<uint, CHEdgeData>[] edges)
         {
             if (this.OnAfterContractionEvent != null)

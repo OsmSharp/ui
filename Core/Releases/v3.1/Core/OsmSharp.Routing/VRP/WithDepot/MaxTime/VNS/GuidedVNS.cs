@@ -39,9 +39,12 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
         /// <param name="router"></param>
         /// <param name="max"></param>
         /// <param name="delivery_time"></param>
+        /// <param name="threshold_precentage"></param>
+        /// <param name="lambda"></param>
         public GuidedVNS(IRouter<ResolvedType> router, Second max, Second delivery_time, float threshold_precentage, float lambda)
             : base(max, delivery_time)
         {
+            _router = router;
             _threshold_percentage = threshold_precentage;
             _lambda = lambda;
 
@@ -245,22 +248,24 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
         /// <summary>
         /// Holds the intra-route improvements;
         /// </summary>
-        private List<IImprovement> _intra_improvements;
+        private readonly List<IImprovement> _intra_improvements;
 
         /// <summary>
         /// Holds the inter-route improvements.
         /// </summary>
-        private List<IInterImprovement> _inter_improvements;
+        private readonly List<IInterImprovement> _inter_improvements;
 
         /// <summary>
         /// Apply some improvements within one route.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="routes"></param>
-        private double ImproveIntraRoute(OsmSharp.Tools.Math.VRP.Core.IProblemWeights problem, IRoute route, double current_weight)
+        /// <param name="route"></param>
+        /// <param name="currentWeight"></param>
+        private double ImproveIntraRoute(OsmSharp.Tools.Math.VRP.Core.IProblemWeights problem, IRoute route, 
+            double currentWeight)
         {
             bool improvement = true;
-            double new_weight = current_weight;
+            double new_weight = currentWeight;
             while (improvement)
             { // keep trying while there are still improvements.
                 improvement = false;
@@ -353,15 +358,17 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
         //    return global_improvement;
         //}
 
-
-
         /// <summary>
         /// Apply some improvements between the given routes and returns the resulting weight.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="route"></param>
+        /// <param name="solution"></param>
+        /// <param name="route2_idx"></param>
+        /// <param name="max"></param>
+        /// <param name="route1_idx"></param>
         /// <returns></returns>
-        private bool ImproveInterRoute(MaxTimeProblem problem, MaxTimeSolution solution, int route1_idx, int route2_idx, double max)
+        private bool ImproveInterRoute(MaxTimeProblem problem, MaxTimeSolution solution, 
+            int route1_idx, int route2_idx, double max)
         {
             // get the routes.
             IRoute route1 = solution.Route(route1_idx);

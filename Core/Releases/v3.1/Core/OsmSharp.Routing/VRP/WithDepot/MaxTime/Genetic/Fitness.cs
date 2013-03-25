@@ -22,10 +22,21 @@ using System.Text;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic
 {
+    /// <summary>
+    /// A fitness representation.
+    /// </summary>
     public class Fitness : IComparable
     {
+        /// <summary>
+        /// The actual fitness value.
+        /// </summary>
         public double ActualFitness { get; set; }
 
+        /// <summary>
+        /// Compares this fitness to another.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public int CompareTo(object obj)
         {
             if (obj is Fitness)
@@ -35,14 +46,30 @@ namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic
             return -1;
         }
 
+        /// <summary>
+        /// The maximum weight.
+        /// </summary>
         public double MaxWeight { get; set; }
 
+        /// <summary>
+        /// The weights of each route.
+        /// </summary>
         public List<double> Weights { get; set; }
 
+        /// <summary>
+        /// The vehicles.
+        /// </summary>
         public int Vehicles { get; set; }
 
+        /// <summary>
+        /// The total time.
+        /// </summary>
         public double TotalTime { get; set; }
 
+        /// <summary>
+        /// Returns a description of this fitness.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
@@ -58,6 +85,9 @@ namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic
                 this.ActualFitness, this.TotalTime, this.Vehicles, this.Range, builder.ToString());
         }
 
+        /// <summary>
+        /// Returns the range.
+        /// </summary>
         public double Range { get; set; }
     }
 }

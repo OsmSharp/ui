@@ -15,30 +15,34 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Routing.Graph;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Graph.DynamicGraph;
 
-namespace OsmSharp.Routing.Router
+namespace OsmSharp.Routing.Graph.Router
 {
     /// <summary>
     /// Abstracts a data source of a router that is a dynamic graph with an extra lookup function.
     /// </summary>
-    /// <typeparam name="EdgeData"></typeparam>
-    public interface IBasicRouterDataSource<EdgeData> : IDynamicGraphReadOnly<EdgeData>
-        where EdgeData : IDynamicGraphEdgeData
+    /// <typeparam name="TEdgeData"></typeparam>
+    public interface IBasicRouterDataSource<TEdgeData> : IDynamicGraphReadOnly<TEdgeData>
+        where TEdgeData : IDynamicGraphEdgeData
     {
+        /// <summary>
+        /// Returns true if the given vehicle profile is supported by the the data in this data source.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <returns></returns>
+        bool SupportsProfile(VehicleEnum vehicle);
+
         /// <summary>
         /// Returns a list of edges inside or intersecting with the given bounding box.
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        KeyValuePair<uint, KeyValuePair<uint, EdgeData>>[] GetArcs(GeoCoordinateBox box);
+        KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetArcs(GeoCoordinateBox box);
 
         /// <summary>
         /// Returns the tags index.

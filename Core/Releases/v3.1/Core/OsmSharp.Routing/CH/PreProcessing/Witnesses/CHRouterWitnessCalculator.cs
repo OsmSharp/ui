@@ -33,6 +33,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="to"></param>
         /// <param name="via"></param>
         /// <param name="weight"></param>
+        /// <param name="max_settles"></param>
         /// <returns></returns>
         public bool Exists(uint from, uint to, uint via, float weight, int max_settles)
         {

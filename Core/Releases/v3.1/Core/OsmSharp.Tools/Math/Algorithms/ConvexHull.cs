@@ -23,6 +23,12 @@ using OsmSharp.Tools.Math.Shapes.PrimitivesFactory;
 
 namespace OsmSharp.Tools.Math.Algorithms
 {
+    /// <summary>
+    /// A convex hull algorithm implementation.
+    /// </summary>
+    /// <typeparam name="PointType"></typeparam>
+    /// <typeparam name="RectangleType"></typeparam>
+    /// <typeparam name="LineType"></typeparam>
     public static class ConvexHull<PointType, RectangleType, LineType>
         where PointType : PointF2D
         where RectangleType : GenericRectangleF2D<PointType>

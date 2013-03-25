@@ -23,6 +23,13 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// </summary>
         private VehicleEnum _vehicle;
 
+        /// <summary>
+        /// Creates a CH data processing target.
+        /// </summary>
+        /// <param name="dynamic_graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="tags_index"></param>
+        /// <param name="vehicle"></param>
         public CHEdgeDataGraphProcessingTarget(IDynamicGraph<CHEdgeData> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle)
             :base(dynamic_graph, interpreter, new CHEdgeDataComparer(), tags_index)

@@ -27,6 +27,9 @@ namespace OsmSharp.Tools.Math.Geo.Lambert.Ellipsoids
     /// </summary>
     public class Hayford1924Ellipsoid : LambertEllipsoid
     {
+        /// <summary>
+        /// Creates a new hayford ellipsoid.
+        /// </summary>
         public Hayford1924Ellipsoid()
             : base(6378388f, 1.0f / 297f)
         {

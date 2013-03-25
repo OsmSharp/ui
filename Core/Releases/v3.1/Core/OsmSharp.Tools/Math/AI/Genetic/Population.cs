@@ -44,6 +44,10 @@ namespace OsmSharp.Tools.Math.AI.Genetic
         /// </summary>
         private List<Individual<GenomeType, ProblemType, WeightType>> _individuals;
 
+        /// <summary>
+        /// Initializes a new population.
+        /// </summary>
+        /// <param name="accept_twins"></param>
         public Population(
             bool accept_twins)
         {
@@ -51,6 +55,11 @@ namespace OsmSharp.Tools.Math.AI.Genetic
             _individuals = new List<Individual<GenomeType, ProblemType, WeightType>>();
         }
 
+        /// <summary>
+        /// Initializes a new population.
+        /// </summary>
+        /// <param name="individuals"></param>
+        /// <param name="accept_twins"></param>
         public Population(
             IEnumerable<Individual<GenomeType, ProblemType, WeightType>> individuals,
             bool accept_twins)
@@ -241,11 +250,19 @@ namespace OsmSharp.Tools.Math.AI.Genetic
 
         #region Enumerator
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<Individual<GenomeType, ProblemType, WeightType>> GetEnumerator()
         {
             return new EnumeratorGeneric(this);
         }
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return new EnumeratorGeneric(this);

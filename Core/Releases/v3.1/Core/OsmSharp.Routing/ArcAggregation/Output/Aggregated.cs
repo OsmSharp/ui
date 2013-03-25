@@ -22,8 +22,15 @@ using System.Text;
 
 namespace OsmSharp.Routing.ArcAggregation.Output
 {
+    /// <summary>
+    /// An aggregated abstract.
+    /// </summary>
     public abstract class Aggregated
     {
+        /// <summary>
+        /// Returns the next.
+        /// </summary>
+        /// <returns></returns>
         public abstract Aggregated GetNext();
     }
 }

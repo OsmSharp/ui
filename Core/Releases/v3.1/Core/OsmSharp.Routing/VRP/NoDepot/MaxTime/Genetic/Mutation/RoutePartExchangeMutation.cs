@@ -34,7 +34,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.Mutation
     internal class RoutePartExchangeMutation :
         IMutationOperation<MaxTimeSolution, MaxTimeProblem, Fitness>
     {
-        private float _max_selection = 0.5f;
+        //private float _max_selection = 0.5f;
 
         public string Name
         {

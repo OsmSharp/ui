@@ -26,15 +26,28 @@ using OsmSharp.Tools.Math.VRP.Core;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
 {
+    /// <summary>
+    /// Calculates fitness
+    /// </summary>
     public class MaxTimeCalculator
     {
+        /// <summary>
+        /// The problem.
+        /// </summary>
         private MaxTimeProblem _problem;
 
+        /// <summary>
+        /// Creates a new maxtime calculator.
+        /// </summary>
+        /// <param name="problem"></param>
         public MaxTimeCalculator(MaxTimeProblem problem)
         {
             _problem = problem;
         }
 
+        /// <summary>
+        /// Returns the delivery time.
+        /// </summary>
         public float DeliveryTime 
         {
             get
@@ -97,7 +110,6 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <summary>
         /// Calculates the weight of one route.
         /// </summary>
-        /// <param name="problem"></param>
         /// <param name="route"></param>
         /// <returns></returns>
         public double CalculateOneRoute(IRoute route)
@@ -131,7 +143,6 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <summary>
         /// Calculates the tot weight of one solution.
         /// </summary>
-        /// <param name="problem"></param>
         /// <param name="solution"></param>
         /// <returns></returns>
         public double Calculate(MaxTimeSolution solution)
@@ -162,7 +173,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
                 }
             }
 
-            double above_max_factor = 3;
+            //double above_max_factor = 3;
             // multiply with the maximum.
             //fitness.ActualFitness = (vehicles * ((total_above_max) + total));
             //fitness.ActualFitness = (vehicles * ((total_above_max * max) + total));

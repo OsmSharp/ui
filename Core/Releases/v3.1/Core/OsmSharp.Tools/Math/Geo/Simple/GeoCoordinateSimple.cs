@@ -27,8 +27,14 @@ namespace OsmSharp.Tools.Math.Geo.Simple
     /// </summary>
     public struct GeoCoordinateSimple
     {
+        /// <summary>
+        /// Latitude.
+        /// </summary>
         public float Latitude { get; set; }
 
+        /// <summary>
+        /// Longitude.
+        /// </summary>
         public float Longitude { get; set; }
     }
 }

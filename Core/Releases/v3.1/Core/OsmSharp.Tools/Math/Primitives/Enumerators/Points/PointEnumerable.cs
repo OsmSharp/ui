@@ -22,6 +22,10 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.Primitives.Enumerators.Points
 {
+    /// <summary>
+    /// An enumerable for a point.
+    /// </summary>
+    /// <typeparam name="PointType"></typeparam>
     public sealed class PointEnumerable<PointType> : IEnumerable<PointType>
         where PointType : PointF2D
     {
@@ -34,6 +38,10 @@ namespace OsmSharp.Tools.Math.Primitives.Enumerators.Points
 
         #region IEnumerable<PointType> Members
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<PointType> GetEnumerator()
         {
             return _enumerator;
@@ -43,6 +51,10 @@ namespace OsmSharp.Tools.Math.Primitives.Enumerators.Points
 
         #region IEnumerable Members
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return _enumerator;

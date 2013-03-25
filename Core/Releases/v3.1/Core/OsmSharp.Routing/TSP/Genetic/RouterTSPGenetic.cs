@@ -43,7 +43,7 @@ namespace OsmSharp.Routing.TSP.Genetic
         /// <summary>
         /// Creates a genetic solver.
         /// </summary>
-        /// <param name="problem"></param>
+        /// <param name="size"></param>
         /// <returns></returns>
         internal override ISolver DoCreateSolver(int size)
         {

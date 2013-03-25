@@ -35,7 +35,6 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
     /// <summary>
     /// Executes a cheapest insertion procedures with improvements following VND strategy.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
     public class CheapestInsertionSolverWithImprovements : RouterMaxTime
     {
         /// <summary>
@@ -82,9 +81,14 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
         /// <summary>
         /// Creates a new best placement min max no depot vrp router.
         /// </summary>
-        /// <param name="router"></param>
-        /// <param name="min"></param>
         /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
+        /// <param name="k"></param>
+        /// <param name="delta_percentage"></param>
+        /// <param name="use_seed_cost"></param>
+        /// <param name="threshold_precentage"></param>
+        /// <param name="use_seed"></param>
+        /// <param name="lambda"></param>
         public CheapestInsertionSolverWithImprovements(
             Second max, Second delivery_time, int k, float delta_percentage, bool use_seed_cost,
             float threshold_precentage, bool use_seed, float lambda)
@@ -97,9 +101,15 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
         /// <summary>
         /// Creates a new best placement min max no depot vrp router.
         /// </summary>
-        /// <param name="router"></param>
-        /// <param name="min"></param>
         /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
+        /// <param name="k"></param>
+        /// <param name="delta_percentage"></param>
+        /// <param name="use_seed_cost"></param>
+        /// <param name="threshold_precentage"></param>
+        /// <param name="use_seed"></param>
+        /// <param name="lambda"></param>
+        /// <param name="use_improvements"></param>
         public CheapestInsertionSolverWithImprovements(
             Second max, Second delivery_time, int k, float delta_percentage, bool use_seed_cost, 
             float threshold_precentage, bool use_seed, float lambda, bool use_improvements)
@@ -140,9 +150,16 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
         /// <summary>
         /// Creates a new best placement min max no depot vrp router.
         /// </summary>
-        /// <param name="router"></param>
-        /// <param name="min"></param>
         /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
+        /// <param name="k"></param>
+        /// <param name="delta_percentage"></param>
+        /// <param name="use_seed_cost"></param>
+        /// <param name="threshold_precentage"></param>
+        /// <param name="use_seed"></param>
+        /// <param name="lambda"></param>
+        /// <param name="intra_improvements"></param>
+        /// <param name="inter_improvements"></param>
         public CheapestInsertionSolverWithImprovements(
             Second max, Second delivery_time, int k, float delta_percentage, bool use_seed_cost, 
             float threshold_precentage, bool use_seed, float lambda, 
@@ -496,9 +513,13 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
         /// Apply some improvements between the given routes and returns the resulting weight.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="route"></param>
+        /// <param name="solution"></param>
+        /// <param name="route1_idx"></param>
+        /// <param name="route2_idx"></param>
+        /// <param name="max"></param>
         /// <returns></returns>
-        private bool ImproveInterRoute(MaxTimeProblem problem, MaxTimeSolution solution, int route1_idx, int route2_idx, double max)
+        private bool ImproveInterRoute(MaxTimeProblem problem, MaxTimeSolution solution, 
+            int route1_idx, int route2_idx, double max)
         {
             // get the routes.
             IRoute route1 = solution.Route(route1_idx);

@@ -22,6 +22,9 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.Random
 {
+    /// <summary>
+    /// A representation of generic random generator functions
+    /// </summary>
     public interface IRandomGenerator
     {
         /// <summary>

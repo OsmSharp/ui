@@ -44,11 +44,11 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
         {
             _data = data;
         }
+
         /// <summary>
         /// Calculates the ordering.
         /// </summary>
-        /// <param name="level"></param>
-        /// <param name="u"></param>
+        /// <param name="vertex"></param>
         /// <returns></returns>
         public float Calculate(uint vertex)
         {

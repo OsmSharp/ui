@@ -458,17 +458,28 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
             return fittest;
         }
 
+        /// <summary>
+        /// Creates a generation operation.
+        /// </summary>
+        /// <returns></returns>
         protected virtual IGenerationOperation<GenomeType, ProblemType, WeightType> CreateGenerationOperation()
         {
             return _generation_operation;
         }
 
-
+        /// <summary>
+        /// Creates a mutation operation.
+        /// </summary>
+        /// <returns></returns>
         protected virtual IMutationOperation<GenomeType, ProblemType, WeightType> CreateMutationOperation()
         {
             return _mutation_operation;
         }
 
+        /// <summary>
+        /// Creates a crossover operation.
+        /// </summary>
+        /// <returns></returns>
         protected virtual ICrossOverOperation<GenomeType, ProblemType, WeightType> CreateCrossoverOperation()
         {
             return _cross_over_operation;
@@ -699,11 +710,17 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
 
         #endregion
 
+        /// <summary>
+        /// Stops the solver.
+        /// </summary>
         public void Stop()
         {
             this.Stopped = true;
         }
 
-        public bool Stopped { get; set; }
+        /// <summary>
+        /// Returns true if the solver has stopped.
+        /// </summary>
+        public bool Stopped { get; private set; }
     }
 }

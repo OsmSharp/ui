@@ -23,13 +23,25 @@ using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
 namespace OsmSharp.Tools.Math.AI.Genetic.Selectors
 {
+    /// <summary>
+    /// A selector to select random individuals from a population.
+    /// </summary>
+    /// <typeparam name="GenomeType"></typeparam>
+    /// <typeparam name="ProblemType"></typeparam>
+    /// <typeparam name="WeightType"></typeparam>
     public class RandomSelector<GenomeType, ProblemType, WeightType> :
         ISelector<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
         where GenomeType : class
         where WeightType : IComparable
     {
-
+        /// <summary>
+        /// Selects an individual from the given population.
+        /// </summary>
+        /// <param name="solver"></param>
+        /// <param name="population"></param>
+        /// <param name="do_not_select_list"></param>
+        /// <returns></returns>
         public Individual<GenomeType, ProblemType, WeightType> Select(Solver<GenomeType, ProblemType, WeightType> solver, 
             Population<GenomeType, ProblemType, WeightType> population, 
             ICollection<Individual<GenomeType, ProblemType, WeightType>> do_not_select_list)

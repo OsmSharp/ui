@@ -28,7 +28,6 @@ namespace OsmSharp.Routing.VRP.WithDepot
     /// <summary>
     /// Class to solve for a specific class of VRP problems: VRP problems with multi depot.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
     public abstract class RouterDepot : RouterVRP
     {
         /// <summary>

@@ -40,6 +40,7 @@ namespace OsmSharp.Routing.Constraints
         /// Returns true if a given (forward) sequence of labels is allowed under these constraints.
         /// </summary>
         /// <param name="sequence"></param>
+        /// <param name="latest"></param>
         /// <returns></returns>
         bool ForwardSequenceAllowed(IList<RoutingLabel> sequence, RoutingLabel latest);
 
@@ -47,6 +48,7 @@ namespace OsmSharp.Routing.Constraints
         /// Returns true if a given (backward) sequence of labels is allowed under these constraints.
         /// </summary>
         /// <param name="sequence"></param>
+        /// <param name="latest"></param>
         /// <returns></returns>
         bool BackwardSequenceAllowed(IList<RoutingLabel> sequence, RoutingLabel latest);
     }

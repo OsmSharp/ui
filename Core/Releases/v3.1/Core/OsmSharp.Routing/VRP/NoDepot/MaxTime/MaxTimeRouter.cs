@@ -62,9 +62,9 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <returns></returns>
         public override int[][] CalculateNoDepot(double[][] weights, GeoCoordinate[] locations)
         {        
-            /// Keeps a local copy of the current calculation points.
-            /// 
-            /// TODO: find a better solution to make this thread-safe!
+            // Keeps a local copy of the current calculation points.
+            // 
+            // TODO: find a better solution to make this thread-safe!
             _locations = locations;
 
             // convert to ints.
@@ -120,6 +120,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <summary>
         /// Calculates a bounding box.
         /// </summary>
+        /// <param name="problem"></param>
         /// <param name="route"></param>
         /// <returns></returns>
         protected GeoCoordinateBox CalculateBox(MaxTimeProblem problem, IRoute route)
@@ -167,10 +168,9 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <summary>
         /// Implements the actual logic.
         /// </summary>
-        /// <param name="matrix"></param>
+        /// <param name="problem"></param>
         /// <param name="customers"></param>
-        /// <param name="second"></param>
-        /// <param name="second_2"></param>
+        /// <param name="max"></param>
         /// <returns></returns>
         public MaxTimeSolution DoCalculation(MaxTimeProblem problem,
             ICollection<int> customers, Second max)

@@ -44,24 +44,36 @@ namespace OsmSharp.Tools.Math.Geo.Lambert
         /// The first standard parallel in decimal degrees.
         /// </summary>
         private double _standard_parallel_1;
+        /// <summary>
+        /// The first standard parallel in radians.
+        /// </summary>
         public double _standard_parallel_1_radians;
 
         /// <summary>
         /// The second standard parallel in decimal degrees.
         /// </summary>
         private double _standard_parallel_2;
+        /// <summary>
+        /// The second standard parallell in radians.
+        /// </summary>
         public double _standard_parallel_2_radians;
 
         /// <summary>
         /// The latitude of the origin.
         /// </summary>
         private double _latitude_origin;
+        /// <summary>
+        /// THe latitude of the orgine in radians.
+        /// </summary>
         public double _latitude_origin_radians;
 
         /// <summary>
         /// The longitude of the origin.
         /// </summary>
         private double _longitude_origin;
+        /// <summary>
+        /// The longitude of the orgin.
+        /// </summary>
         public double _longitude_origin_radians;
 
         /// <summary>
@@ -95,6 +107,7 @@ namespace OsmSharp.Tools.Math.Geo.Lambert
         /// Creates a new lambert projection.
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="ellipsoid"></param>
         /// <param name="standard_parallel_1"></param>
         /// <param name="standard_parallel_2"></param>
         /// <param name="latitude_origin_1"></param>
@@ -259,17 +272,17 @@ namespace OsmSharp.Tools.Math.Geo.Lambert
             double sin_z_angle = System.Math.Sin(z_angle);
             double cos_z_angle = System.Math.Cos(z_angle);
             // rotate around x.
-            X_89 = X_89;
+            //X_89 = X_89;
             Y_89 = Y_89 * cos_x_angle - Z_89 * sin_x_angle;
             Z_89 = Y_89 * sin_x_angle + Z_89 * cos_x_angle;
             // rotate around y.
             X_89 = X_89 * cos_y_angle + Z_89 * sin_y_angle;
-            Y_89 = Y_89;
+            //Y_89 = Y_89;
             Z_89 = X_89 * (-sin_y_angle) + Z_89 * cos_y_angle;
             // rotate around Z.
             X_89 = X_89 * cos_z_angle - Y_89 * sin_z_angle;
             Y_89 = X_89 * sin_z_angle + Y_89 * cos_z_angle;
-            Z_89 = Z_89;
+            //Z_89 = Z_89;
 
             Wgs1984Ellipsoid wgs1984 = new Wgs1984Ellipsoid();
 

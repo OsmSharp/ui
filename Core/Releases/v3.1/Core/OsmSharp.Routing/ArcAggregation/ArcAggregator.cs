@@ -163,6 +163,7 @@ namespace OsmSharp.Routing.ArcAggregation
         /// </summary>
         /// <param name="previous_arc"></param>
         /// <param name="next_arc"></param>
+        /// <param name="vehicle"></param>
         /// <returns></returns>
         private bool IsSignificant(VehicleEnum vehicle, AggregatedArc previous_arc, AggregatedArc next_arc)
         {

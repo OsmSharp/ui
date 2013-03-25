@@ -27,8 +27,17 @@ namespace OsmSharp.Tools.DelimitedFiles
     /// </summary>
     public enum DelimiterType
     {
+        /// <summary>
+        /// Tab seperated type.
+        /// </summary>
         TabSeperated,
+        /// <summary>
+        /// Comma seperated type.
+        /// </summary>
         CommaSeperated,
+        /// <summary>
+        /// Do seperated type.
+        /// </summary>
         DotCommaSeperated
     }
 }

@@ -29,7 +29,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="dynamic_graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
-        /// <param name="id_transformations"></param>
+        /// <param name="vehicle"></param>
         public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle)
             : this(dynamic_graph, interpreter, tags_index, vehicle, new Dictionary<long, uint>())
@@ -43,6 +43,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="dynamic_graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
+        /// <param name="vehicle"></param>
         /// <param name="id_transformations"></param>
         public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle, IDictionary<long, uint> id_transformations)
@@ -57,7 +58,8 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="dynamic_graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
-        /// <param name="id_transformations"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="box"></param>
         public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle, GeoCoordinateBox box)
             : this(dynamic_graph, interpreter, tags_index, vehicle, new Dictionary<long, uint>(), box)
@@ -71,9 +73,12 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="dynamic_graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
+        /// <param name="vehicle"></param>
         /// <param name="id_transformations"></param>
+        /// <param name="box"></param>
         public SimpleWeighedDataGraphProcessingTarget(IDynamicGraph<SimpleWeighedEdge> dynamic_graph,
-            IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle, IDictionary<long, uint> id_transformations, GeoCoordinateBox box)
+            IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle, IDictionary<long, uint> id_transformations, 
+            GeoCoordinateBox box)
             : base(dynamic_graph, interpreter, null, tags_index, id_transformations, box)
         {
             _vehicle = vehicle;
@@ -82,10 +87,12 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Calculates edge data.
         /// </summary>
+        /// <param name="tags_index"></param>
         /// <param name="tags"></param>
         /// <param name="direction_forward"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
+        /// <param name="edge_interpreter"></param>
         /// <returns></returns>
         protected override SimpleWeighedEdge CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, IDictionary<string, string> tags,
             bool direction_forward, GeoCoordinate from, GeoCoordinate to)

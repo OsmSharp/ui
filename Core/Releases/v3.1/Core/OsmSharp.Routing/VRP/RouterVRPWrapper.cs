@@ -30,6 +30,7 @@ namespace OsmSharp.Routing.VRP
         /// Creates a router VRP wrapper.
         /// </summary>
         /// <param name="router_vrp"></param>
+        /// <param name="router"></param>
         public RouterVRPWrapper(RouterVRPType router_vrp, IRouter<ResolvedType> router)
         {
             _router = router;
@@ -75,6 +76,7 @@ namespace OsmSharp.Routing.VRP
         /// Converts a simple VRP solution into a solution containing the actual routes.
         /// </summary>
         /// <param name="solution"></param>
+        /// <param name="points"></param>
         protected OsmSharpRoute[] ConvertSolution(int[][] solution, ResolvedType[] points)
         {
             OsmSharpRoute[] routes = new OsmSharpRoute[solution.Length];

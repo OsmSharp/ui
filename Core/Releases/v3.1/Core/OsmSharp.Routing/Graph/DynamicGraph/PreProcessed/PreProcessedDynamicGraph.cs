@@ -70,7 +70,13 @@ namespace OsmSharp.Routing.Graph.DynamicGraph.PreProcessed
             Array.Resize<Vertex>(ref _vertices, _vertices.Length + 1000);
         }
 
-
+        /// <summary>
+        /// Adds a vertex to this graph.
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <param name="neighbours_estimate"></param>
+        /// <returns></returns>
         public uint AddVertex(float latitude, float longitude, byte neighbours_estimate)
         {
             return this.AddVertex(latitude, longitude);
@@ -254,7 +260,7 @@ namespace OsmSharp.Routing.Graph.DynamicGraph.PreProcessed
         /// <summary>
         /// Returns all arcs starting at the given vertex.
         /// </summary>
-        /// <param name="vertex"></param>
+        /// <param name="vertex_id"></param>
         /// <returns></returns>
         public KeyValuePair<uint, PreProcessedEdge>[] GetArcs(uint vertex_id)
         {
@@ -286,7 +292,7 @@ namespace OsmSharp.Routing.Graph.DynamicGraph.PreProcessed
         /// <summary>
         /// Returns true if the given vertex has neighbour as a neighbour.
         /// </summary>
-        /// <param name="vertex"></param>
+        /// <param name="vertex_id"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
         public bool HasNeighbour(uint vertex_id, uint neighbour)

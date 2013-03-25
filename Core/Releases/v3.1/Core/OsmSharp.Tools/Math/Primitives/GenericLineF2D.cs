@@ -521,8 +521,17 @@ namespace OsmSharp.Tools.Math
     /// </summary>
     public enum LinePointPosition
     {
+        /// <summary>
+        /// Left.
+        /// </summary>
         Left,
+        /// <summary>
+        /// Right.
+        /// </summary>
         Right,
+        /// <summary>
+        /// On.
+        /// </summary>
         On
     }
 }

@@ -74,6 +74,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// Returns true if the given test object is a very short arc!
         /// </summary>
         /// <param name="test"></param>
+        /// <param name="machine"></param>
         /// <returns></returns>
         private static bool TestVeryShortArc(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
@@ -88,6 +89,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// <summary>
         /// Tests if the given turn is significant.
         /// </summary>
+        /// <param name="machine"></param>
         /// <param name="test"></param>
         /// <returns></returns>
         private static bool TestNonSignificantTurn(FiniteStateMachine<MicroPlannerMessage> machine, object test)
@@ -102,6 +104,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// <summary>
         /// Tests if the given turn is significant.
         /// </summary>
+        /// <param name="machine"></param>
         /// <param name="test"></param>
         /// <returns></returns>
         private static bool TestSignificantTurn(FiniteStateMachine<MicroPlannerMessage> machine, object test)

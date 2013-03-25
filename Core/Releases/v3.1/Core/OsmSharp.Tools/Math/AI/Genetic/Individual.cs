@@ -34,16 +34,20 @@ namespace OsmSharp.Tools.Math.AI.Genetic
         where GenomeType : class
         where WeightType : IComparable
     {
-        //public Individual()
-        //{
-
-        //}
-
+        /// <summary>
+        /// Creates a new individual.
+        /// </summary>
+        /// <param name="genomes"></param>
         public Individual(GenomeType genomes)
         {
             _genomes = genomes;
         }
 
+        /// <summary>
+        /// Creates a new individual.
+        /// </summary>
+        /// <param name="fitness_calculated"></param>
+        /// <param name="fitness"></param>
         protected Individual(bool fitness_calculated, 
             WeightType fitness)
         {
@@ -119,6 +123,8 @@ namespace OsmSharp.Tools.Math.AI.Genetic
         /// Calculates the fitness for this individual.
         /// </summary>
         /// <param name="op"></param>
+        /// <param name="problem"></param>
+        /// <param name="validate"></param>
         public void CalculateFitness(
             ProblemType problem,
             IFitnessCalculator<GenomeType, ProblemType, WeightType> op,
@@ -128,6 +134,10 @@ namespace OsmSharp.Tools.Math.AI.Genetic
             _fitness = op.Fitness(problem, this, validate);
         }
 
+        /// <summary>
+        /// Calculates fitness.
+        /// </summary>
+        /// <param name="fitness"></param>
         public void CalculateFitness(
             WeightType fitness)
         {
@@ -268,6 +278,10 @@ namespace OsmSharp.Tools.Math.AI.Genetic
 
         //#endregion
 
+        /// <summary>
+        /// Validates.
+        /// </summary>
+        /// <param name="problem"></param>
         public virtual void Validate(ProblemType problem)
         {
 

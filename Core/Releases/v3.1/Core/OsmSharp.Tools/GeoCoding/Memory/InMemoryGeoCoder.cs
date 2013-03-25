@@ -24,10 +24,16 @@ using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Tools.GeoCoding.Memory
 {
+    /// <summary>
+    /// An in-memory geocoder.
+    /// </summary>
     public class InMemoryGeoCoder : IGeoCoder
     {
         private IndexPostalCodes _index;
 
+        /// <summary>
+        /// Creates this geocoder.
+        /// </summary>
         public InMemoryGeoCoder()
         {
             _index = new IndexPostalCodes();

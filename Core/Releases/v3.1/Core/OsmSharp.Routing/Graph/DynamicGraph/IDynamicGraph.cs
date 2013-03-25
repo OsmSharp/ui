@@ -25,8 +25,8 @@ namespace OsmSharp.Routing.Graph.DynamicGraph
     /// <summary>
     /// Abstracts a graph implementation.
     /// </summary>
-    public interface IDynamicGraph<EdgeData> : IDynamicGraphReadOnly<EdgeData>
-        where EdgeData : IDynamicGraphEdgeData
+    public interface IDynamicGraph<TEdgeData> : IDynamicGraphReadOnly<TEdgeData>
+        where TEdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
         /// Adds a vertex.
@@ -41,6 +41,7 @@ namespace OsmSharp.Routing.Graph.DynamicGraph
         /// </summary>
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
+        /// <param name="neighbours_estimate"></param>
         /// <returns></returns>
         uint AddVertex(float latitude, float longitude, byte neighbours_estimate);
 
@@ -51,7 +52,7 @@ namespace OsmSharp.Routing.Graph.DynamicGraph
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <param name="comparer"></param>
-        void AddArc(uint from, uint to, EdgeData data, IDynamicGraphEdgeComparer<EdgeData> comparer);
+        void AddArc(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer);
 
         /// <summary>
         /// Delete all arcs arc between two vertices.

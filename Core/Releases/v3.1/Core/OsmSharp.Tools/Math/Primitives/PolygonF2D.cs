@@ -22,6 +22,9 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math
 {
+    /// <summary>
+    /// Represents a polyfon.
+    /// </summary>
     public class PolygonF2D : GenericPolygonF2D<PointF2D>
     {
         /// <summary>

@@ -10,14 +10,13 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.SavingsHeuristics
     /// <summary>
     /// A heuristic solver based on a construction heuristic inspired on the Clarke-Wright savings heuristic.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
     public class SavingsHeuristicSolver : RouterMaxTime
     {
         /// <summary>
         /// Creates a solver based on a construction heuristic.
         /// </summary>
-        /// <param name="min"></param>
         /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
         public SavingsHeuristicSolver(Second max, Second delivery_time)
             :base(max, delivery_time)
         {
@@ -147,11 +146,14 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.SavingsHeuristics
         /// <summary>
         /// Try and merge route2 into route1.
         /// </summary>
-        /// <param name="route1"></param>
-        /// <param name="route2"></param>
+        /// <param name="problem"></param>
+        /// <param name="solution"></param>
+        /// <param name="route1_idx"></param>
+        /// <param name="route2_idx"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        private MergeResult TryMerge(MaxTimeProblem problem, MaxTimeSolution solution, int route1_idx, int route2_idx, double max)
+        private MergeResult TryMerge(MaxTimeProblem problem, MaxTimeSolution solution, 
+            int route1_idx, int route2_idx, double max)
         {
             // get the route weights.
             double route1_weight = solution[route1_idx];

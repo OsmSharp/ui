@@ -23,18 +23,33 @@ using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
+    /// <summary>
+    /// CH priority queue.
+    /// </summary>
     public class CHPriorityQueue : IEnumerable<uint>
     {
+        /// <summary>
+        /// Holds the weights.
+        /// </summary>
         private Dictionary<uint, float> _weights;
 
+        /// <summary>
+        /// Holds the sorted vertices.
+        /// </summary>
         private SortedList<float, HashSet<uint>> _sorted_weights;
 
+        /// <summary>
+        /// Creates a new queue.
+        /// </summary>
         public CHPriorityQueue()
         {
             _weights = new Dictionary<uint, float>();
             _sorted_weights = new SortedList<float, HashSet<uint>>();
         }
 
+        /// <summary>
+        /// Returns the number of vertices.
+        /// </summary>
         public int Count
         {
             get
@@ -43,11 +58,21 @@ namespace OsmSharp.Routing.CH.PreProcessing
             }
         }
 
+        /// <summary>
+        /// Returns true if the given vertex is in this queue.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public bool Contains(uint id)
         {
             return _weights.ContainsKey(id);
         }
 
+        /// <summary>
+        /// Enqueues the given vertex with the given weight.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="weight"></param>
         public void Enqueue(uint id, float weight)
         {
             HashSet<uint> queue;
@@ -76,6 +101,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
             _weights.Add(id, weight);
         }
 
+        /// <summary>
+        /// Pops and returns the vertex with the smallest weight.
+        /// </summary>
+        /// <returns></returns>
         public uint Pop()
         {
             float weight = _sorted_weights.Keys[0];
@@ -93,6 +122,11 @@ namespace OsmSharp.Routing.CH.PreProcessing
             return vertex_id;
         }
 
+        /// <summary>
+        /// Removes the given vertex.
+        /// </summary>
+        /// <param name="vertex_id"></param>
+        /// <returns></returns>
         public bool Remove(uint vertex_id)
         {
             // remove the vertex.
@@ -111,6 +145,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
             return false;
         }
 
+        /// <summary>
+        /// Peeks at the vertex with the lowest weight.
+        /// </summary>
+        /// <returns></returns>
         public uint Peek()
         {
             float weight = _sorted_weights.Keys[0];
@@ -120,12 +158,19 @@ namespace OsmSharp.Routing.CH.PreProcessing
             return vertex_id;
         }
 
+        /// <summary>
+        /// Peeks to all the vertices with the lowest weight.
+        /// </summary>
+        /// <returns></returns>
         public HashSet<uint> PeekAll()
         {
             float weight = _sorted_weights.Keys[0];
             return _sorted_weights[weight];
         }
 
+        /// <summary>
+        /// Enumerates all the weights.
+        /// </summary>
         public IEnumerable<float> Weights
         {
             get
@@ -134,11 +179,21 @@ namespace OsmSharp.Routing.CH.PreProcessing
             }
         }
 
+        /// <summary>
+        /// Peeks at the vertices with a given weight.
+        /// </summary>
+        /// <param name="weight"></param>
+        /// <returns></returns>
         public HashSet<uint> PeekAtWeight(float weight)
         {
             return _sorted_weights[weight];
         }
 
+        /// <summary>
+        /// Returns the weight for the given vertex.
+        /// </summary>
+        /// <param name="current_id"></param>
+        /// <returns></returns>
         public float Weight(uint current_id)
         {
             float weight;
@@ -148,11 +203,19 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
         #region IEnumerator<uint> Implementation
 
+        /// <summary>
+        /// Returns the enumerator for this queue.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<uint> GetEnumerator()
         {
             return _weights.Keys.GetEnumerator();
         }
 
+        /// <summary>
+        /// Returns the enumerator for this queue.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return _weights.Keys.GetEnumerator();

@@ -22,10 +22,21 @@ using System.Text;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
 {
+    /// <summary>
+    /// Fitness representation.
+    /// </summary>
     public class Fitness : IComparable
     {
+        /// <summary>
+        /// The actual fitness value.
+        /// </summary>
         public double ActualFitness { get; set; }
 
+        /// <summary>
+        /// Compares this fitness to another.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public int CompareTo(object obj)
         {
             if (obj is Fitness)
@@ -35,14 +46,30 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
             return -1;
         }
 
+        /// <summary>
+        /// The max weight.
+        /// </summary>
         public double MaxWeight { get; set; }
 
+        /// <summary>
+        /// The weights.
+        /// </summary>
         public List<double> Weights { get; set; }
 
+        /// <summary>
+        /// The vehicle count.
+        /// </summary>
         public int Vehicles { get; set; }
 
+        /// <summary>
+        /// The total time.
+        /// </summary>
         public double TotalTime { get; set; }
 
+        /// <summary>
+        /// Returns a description of the fitness.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             StringBuilder builder = new StringBuilder();
@@ -58,6 +85,9 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
                 this.ActualFitness, this.TotalTime, this.Vehicles, this.TotalAboveMax, builder.ToString());
         }
 
+        /// <summary>
+        /// Returns the total above max.
+        /// </summary>
         public double TotalAboveMax { get; set; }
     }
 }

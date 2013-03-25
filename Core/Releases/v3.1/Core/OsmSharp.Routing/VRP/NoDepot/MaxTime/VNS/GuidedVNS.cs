@@ -34,7 +34,6 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
     /// <summary>
     /// Uses a Variable Neighbourhood Search technique.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
     public class GuidedVNS : RouterMaxTime
     {
         /// <summary>
@@ -58,6 +57,9 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
         /// <param name="router"></param>
         /// <param name="max"></param>
         /// <param name="delivery_time"></param>
+        /// <param name="threshold_precentage"></param>
+        /// <param name="lambda"></param>
+        /// <param name="sigma"></param>
         public GuidedVNS(IRouter<RouterPoint> router, Second max, Second delivery_time, 
             float threshold_precentage, float lambda, float sigma)
             : base(max, delivery_time)
@@ -278,7 +280,8 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
         /// Apply some improvements within one route.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="routes"></param>
+        /// <param name="route"></param>
+        /// <param name="current_weight"></param>
         private double ImproveIntraRoute(IProblemWeights problem, IRoute route, double current_weight)
         {
             bool improvement = true;
@@ -381,9 +384,13 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
         /// Apply some improvements between the given routes and returns the resulting weight.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="route"></param>
+        /// <param name="solution"></param>
+        /// <param name="route1_idx"></param>
+        /// <param name="route2_idx"></param>
+        /// <param name="max"></param>
         /// <returns></returns>
-        private bool ImproveInterRoute(MaxTimeProblem problem, MaxTimeSolution solution, int route1_idx, int route2_idx, double max)
+        private bool ImproveInterRoute(MaxTimeProblem problem, MaxTimeSolution solution, 
+            int route1_idx, int route2_idx, double max)
         {
             // get the routes.
             IRoute route1 = solution.Route(route1_idx);

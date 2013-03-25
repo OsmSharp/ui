@@ -25,12 +25,21 @@ using OsmSharp.Routing;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement
 {
+    /// <summary>
+    /// A solver bases on TSP placement.
+    /// </summary>
     public class TSPPlacementSolver : RouterMaxTime
     {
         private OsmSharp.Tools.Math.TSP.ISolver _tsp_solver;
 
         private IRoute _tsp_solution;
 
+        /// <summary>
+        /// Creates a new TSP placement solver.
+        /// </summary>
+        /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
+        /// <param name="tsp_solver"></param>
         public TSPPlacementSolver(Second max, Second delivery_time,
             OsmSharp.Tools.Math.TSP.ISolver tsp_solver)
             :base(max, delivery_time)
@@ -38,6 +47,12 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement
             _tsp_solver = tsp_solver;
         }
 
+        /// <summary>
+        /// Creates a new TSP placement solver.
+        /// </summary>
+        /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
+        /// <param name="tsp_solution"></param>
         public TSPPlacementSolver(Second max, Second delivery_time,
             IRoute tsp_solution)
             : base(max, delivery_time)

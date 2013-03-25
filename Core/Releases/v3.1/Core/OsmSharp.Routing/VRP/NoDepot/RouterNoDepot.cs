@@ -28,7 +28,6 @@ namespace OsmSharp.Routing.VRP.NoDepot
     /// <summary>
     /// Class to solve for a specific class of VRP problems: VRP problems with any depot.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
     public abstract class RouterNoDepot : RouterVRP
     {
         /// <summary>
@@ -43,7 +42,8 @@ namespace OsmSharp.Routing.VRP.NoDepot
         /// <summary>
         /// Calculates this No-Depot VRP.
         /// </summary>
-        /// <param name="points"></param>
+        /// <param name="weights"></param>
+        /// <param name="locations"></param>
         /// <returns></returns>
         public abstract int[][] CalculateNoDepot(double[][] weights, GeoCoordinate[] locations);
     }

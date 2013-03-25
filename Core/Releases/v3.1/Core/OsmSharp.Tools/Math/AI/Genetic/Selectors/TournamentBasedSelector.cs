@@ -23,6 +23,12 @@ using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
 namespace OsmSharp.Tools.Math.AI.Genetic.Selectors
 {
+    /// <summary>
+    /// A selector selecting individial using a tournament base selection.
+    /// </summary>
+    /// <typeparam name="GenomeType"></typeparam>
+    /// <typeparam name="ProblemType"></typeparam>
+    /// <typeparam name="WeightType"></typeparam>
     public class TournamentBasedSelector<GenomeType, ProblemType, WeightType> : 
         ISelector<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
@@ -33,6 +39,11 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Selectors
 
         private double _tournament_probability;
 
+        /// <summary>
+        /// Creates a new tournament base selector.
+        /// </summary>
+        /// <param name="tournament_size"></param>
+        /// <param name="tournament_probility"></param>
         public TournamentBasedSelector(
             double tournament_size,
             double tournament_probility)
@@ -43,6 +54,13 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Selectors
 
         #region ISelector<GenomeType> Members
 
+        /// <summary>
+        /// Selects an individual from the given population.
+        /// </summary>
+        /// <param name="solver"></param>
+        /// <param name="population"></param>
+        /// <param name="do_not_select_list"></param>
+        /// <returns></returns>
         public Individual<GenomeType, ProblemType, WeightType> Select(
             Solver<GenomeType, ProblemType, WeightType> solver,
             Population<GenomeType, ProblemType, WeightType> population,

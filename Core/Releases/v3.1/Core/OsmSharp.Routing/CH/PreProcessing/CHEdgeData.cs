@@ -24,14 +24,29 @@ using OsmSharp.Routing.Graph.DynamicGraph;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
+    /// <summary>
+    /// Represents the data on a CH edge.
+    /// </summary>
     public class CHEdgeData : IDynamicGraphEdgeData
     {
+        /// <summary>
+        /// Forward flag.
+        /// </summary>
         public bool Forward { get; set; }
 
+        /// <summary>
+        /// Backward flag.
+        /// </summary>
         public bool Backward { get; set; }
 
+        /// <summary>
+        /// Weight.
+        /// </summary>
         public float Weight { get; set; }
 
+        /// <summary>
+        /// Returns true if this edge is a shortcut.
+        /// </summary>
         public bool HasContractedVertex
         {
             get
@@ -40,12 +55,24 @@ namespace OsmSharp.Routing.CH.PreProcessing
             }
         }
 
+        /// <summary>
+        /// The vertex contracted by this edge.
+        /// </summary>
         public uint ContractedVertexId { get; set; }
 
+        /// <summary>
+        /// Returns true if this edge has tags.
+        /// </summary>
         public bool HasTags { get; set; }
 
+        /// <summary>
+        /// Returns the tags.
+        /// </summary>
         public uint Tags { get; set; }
 
+        /// <summary>
+        /// Returns the weight.
+        /// </summary>
         double IDynamicGraphEdgeData.Weight
         {
             get { return this.Weight; }

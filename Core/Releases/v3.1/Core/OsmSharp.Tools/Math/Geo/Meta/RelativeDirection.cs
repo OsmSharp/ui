@@ -23,10 +23,19 @@ using OsmSharp.Tools.Math.Units.Angle;
 
 namespace OsmSharp.Tools.Math.Geo.Meta
 {
+    /// <summary>
+    /// Represents a relative direction.
+    /// </summary>
     public class RelativeDirection
     {
+        /// <summary>
+        /// The relative direction.
+        /// </summary>
         public RelativeDirectionEnum Direction { get; set; }
 
+        /// <summary>
+        /// The angle.
+        /// </summary>
         public Degree Angle { get; set; }
     }
 }

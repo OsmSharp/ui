@@ -40,7 +40,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Creates a new edge difference calculator.
         /// </summary>
-        /// <param name="graph"></param>
+        /// <param name="witness_calculator"></param>
         public EdgeDifferenceContracted(INodeWitnessCalculator witness_calculator)
         {
             _witness_calculator = witness_calculator;
@@ -82,7 +82,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Notifies this calculator that the vertex was contracted.
         /// </summary>
-        /// <param name="vertex_id"></param>
+        /// <param name="vertex"></param>
         public void NotifyContracted(uint vertex)
         {
             //_contraction_count.Remove(vertex.Id);

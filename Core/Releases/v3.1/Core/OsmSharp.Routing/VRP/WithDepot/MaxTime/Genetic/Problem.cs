@@ -103,7 +103,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic
         /// <summary>
         /// Generate the nearest neighbour list.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="v"></param>
         /// <returns></returns>
         public NearestNeighbours10 Get10NearestNeighbours(int v)
         {

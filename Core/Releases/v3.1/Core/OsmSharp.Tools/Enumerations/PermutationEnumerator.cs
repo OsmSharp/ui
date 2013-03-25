@@ -27,11 +27,19 @@ namespace OsmSharp.Tools.Enumerations
             _sequence = sequence;
         }
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<T[]> GetEnumerator()
         {
             return new PermutationEnumerator<T>(_sequence);
         }
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return new PermutationEnumerator<T>(_sequence);

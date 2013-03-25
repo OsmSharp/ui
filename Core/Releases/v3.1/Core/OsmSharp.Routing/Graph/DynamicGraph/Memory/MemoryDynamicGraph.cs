@@ -63,7 +63,13 @@ namespace OsmSharp.Routing.Graph.DynamicGraph.Memory
             Array.Resize<KeyValuePair<uint, EdgeData>[]>(ref _vertices, _vertices.Length + 1000);
         }
 
-
+        /// <summary>
+        /// Adds a new vertex to this graph.
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <param name="neighbours_estimate"></param>
+        /// <returns></returns>
         public uint AddVertex(float latitude, float longitude, byte neighbours_estimate)
         {
             return this.AddVertex(latitude, longitude);
@@ -134,6 +140,7 @@ namespace OsmSharp.Routing.Graph.DynamicGraph.Memory
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
+        /// <param name="comparer"></param>
         public void AddArc(uint from, uint to, EdgeData data, IDynamicGraphEdgeComparer<EdgeData> comparer)
         {
             if (_vertices.Length > from)

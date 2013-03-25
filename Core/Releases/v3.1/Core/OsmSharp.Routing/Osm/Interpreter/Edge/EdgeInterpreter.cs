@@ -22,7 +22,6 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// <summary>
         /// Creates a new edge interpreter.
         /// </summary>
-        /// <param name="vehicle"></param>
         public EdgeInterpreter()
         {
             _access_restrictions = new Dictionary<string, Dictionary<VehicleEnum, bool>>();

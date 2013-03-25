@@ -26,14 +26,19 @@ using OsmSharp.Tools.Xml.Nominatim.Search.v1;
 
 namespace OsmSharp.Tools.GeoCoding.Nominatim
 {
+    /// <summary>
+    /// Creates this geocoder.
+    /// </summary>
     public class GeoCoder : IGeoCoder
     {
-
         /// <summary>
         /// Holds the web client used to access the nomatim service.
         /// </summary>
         private WebClient _web_client;
 
+        /// <summary>
+        /// Creates a new geocoder.
+        /// </summary>
         public GeoCoder()
         {
 

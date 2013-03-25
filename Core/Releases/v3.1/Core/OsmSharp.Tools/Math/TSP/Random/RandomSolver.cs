@@ -85,7 +85,5 @@ namespace OsmSharp.Tools.Math.TravellingSalesman.Random
         {
 
         }
-
-        public event SolverDelegates.IntermidiateDelegate IntermidiateResult;
     }
 }

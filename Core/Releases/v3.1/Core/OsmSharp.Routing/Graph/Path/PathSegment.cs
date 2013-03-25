@@ -17,7 +17,6 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace OsmSharp.Routing.Graph.Path
@@ -25,15 +24,15 @@ namespace OsmSharp.Routing.Graph.Path
     /// <summary>
     /// Linked list of routed vertices.
     /// </summary>
-    public class PathSegment<IdType>
+    public class PathSegment<TIdType>
     {
         /// <summary>
         /// Creates a vertex not linked to any others.
         /// </summary>
-        /// <param name="vertex_id"></param>
-        public PathSegment(IdType vertex_id)
+        /// <param name="vertexId"></param>
+        public PathSegment(TIdType vertexId)
         {
-            this.VertexId = vertex_id;
+            this.VertexId = vertexId;
             this.Weight = 0;
             this.From = null;
         }
@@ -41,12 +40,12 @@ namespace OsmSharp.Routing.Graph.Path
         /// <summary>
         /// Creates a new linked vertex.
         /// </summary>
-        /// <param name="vertex_id"></param>
+        /// <param name="vertexId"></param>
         /// <param name="weight"></param>
         /// <param name="from"></param>
-        public PathSegment(IdType vertex_id, double weight, PathSegment<IdType> from)
+        public PathSegment(TIdType vertexId, double weight, PathSegment<TIdType> from)
         {
-            this.VertexId = vertex_id;
+            this.VertexId = vertexId;
             this.Weight = weight;
             this.From = from;
         }
@@ -54,7 +53,7 @@ namespace OsmSharp.Routing.Graph.Path
         /// <summary>
         /// The id of this vertex.
         /// </summary>
-        public IdType VertexId { get; private set; }
+        public TIdType VertexId { get; private set; }
 
         /// <summary>
         /// The weight from the source vertex.
@@ -64,19 +63,19 @@ namespace OsmSharp.Routing.Graph.Path
         /// <summary>
         /// The vertex that came before this one.
         /// </summary>
-        public PathSegment<IdType> From { get; private set; }
+        public PathSegment<TIdType> From { get; private set; }
 
         /// <summary>
         /// Returns the reverse of this path segment.
         /// </summary>
         /// <returns></returns>
-        public PathSegment<IdType> Reverse()
+        public PathSegment<TIdType> Reverse()
         {
-            PathSegment<IdType> route = new PathSegment<IdType>(this.VertexId);
-            PathSegment<IdType> next = this;
+            var route = new PathSegment<TIdType>(this.VertexId);
+            PathSegment<TIdType> next = this;
             while (next.From != null)
             {
-                route = new PathSegment<IdType>(next.From.VertexId,
+                route = new PathSegment<TIdType>(next.From.VertexId,
                     next.Weight + route.Weight, route);
                 next = next.From;
             }
@@ -87,9 +86,9 @@ namespace OsmSharp.Routing.Graph.Path
         /// Returns the first vertex.
         /// </summary>
         /// <returns></returns>
-        public PathSegment<IdType> First()
+        public PathSegment<TIdType> First()
         {
-            PathSegment<IdType> next = this;
+            PathSegment<TIdType> next = this;
             while (next.From != null)
             {
                 next = next.From;
@@ -104,7 +103,7 @@ namespace OsmSharp.Routing.Graph.Path
         public int Length()
         {
             int length = 1;
-            PathSegment<IdType> next = this;
+            PathSegment<TIdType> next = this;
             while (next.From != null)
             {
                 length++;
@@ -118,13 +117,13 @@ namespace OsmSharp.Routing.Graph.Path
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        public PathSegment<IdType> ConcatenateAfter(PathSegment<IdType> path)
+        public PathSegment<TIdType> ConcatenateAfter(PathSegment<TIdType> path)
         {
-            PathSegment<IdType> clone = this.Clone();
-            PathSegment<IdType> first = clone.First();
-            PathSegment<IdType> path_clone = path.Clone();
+            PathSegment<TIdType> clone = this.Clone();
+            PathSegment<TIdType> first = clone.First();
+            PathSegment<TIdType> pathClone = path.Clone();
 
-            PathSegment<IdType> current = clone;
+            PathSegment<TIdType> current = clone;
             current.Weight = path.Weight + current.Weight;
             while (current.From != null)
             {
@@ -134,8 +133,8 @@ namespace OsmSharp.Routing.Graph.Path
 
             if (first.VertexId.Equals(path.VertexId))
             {
-                first.Weight = path_clone.Weight;
-                first.From = path_clone.From;
+                first.Weight = pathClone.Weight;
+                first.From = pathClone.From;
                 return clone;
             }
             throw new ArgumentException("Paths must share beginning and end vertices to concatenate!");
@@ -145,16 +144,16 @@ namespace OsmSharp.Routing.Graph.Path
         /// Returns an exact copy of this path segment.
         /// </summary>
         /// <returns></returns>
-        public PathSegment<IdType> Clone()
+        public PathSegment<TIdType> Clone()
         {
             if (this.From == null)
             { // cloning this case is easy!
-                return new PathSegment<IdType>(this.VertexId);
+                return new PathSegment<TIdType>(this.VertexId);
             }
             else
             { // recursively clone the from segments.
-                PathSegment<IdType> from = this.From.Clone();
-                return new PathSegment<IdType>(this.VertexId, this.Weight, from);
+                PathSegment<TIdType> from = this.From.Clone();
+                return new PathSegment<TIdType>(this.VertexId, this.Weight, from);
             }
         }
 
@@ -164,11 +163,11 @@ namespace OsmSharp.Routing.Graph.Path
         /// <returns></returns>
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
-            PathSegment<IdType> next = this;
+            var builder = new StringBuilder();
+            PathSegment<TIdType> next = this;
             while (next.From != null)
             {
-                builder.Insert(0, string.Format("-> {0}", next.VertexId.ToString()));
+                builder.Insert(0, string.Format("-> {0}", next.VertexId));
                 next = next.From;
             }
             builder.Insert(0, string.Format("{0}", next.VertexId));
@@ -179,10 +178,10 @@ namespace OsmSharp.Routing.Graph.Path
         /// Returns all the vertices in an array.
         /// </summary>
         /// <returns></returns>
-        public IdType[] ToArray()
+        public TIdType[] ToArray()
         {
-            List<IdType> vertices = new List<IdType>();
-            PathSegment<IdType> next = this;
+            var vertices = new List<TIdType>();
+            PathSegment<TIdType> next = this;
             while (next.From != null)
             {
                 vertices.Add(next.VertexId);
@@ -199,7 +198,7 @@ namespace OsmSharp.Routing.Graph.Path
         /// <param name="segment1"></param>
         /// <param name="segment2"></param>
         /// <returns></returns>
-        public static bool operator ==(PathSegment<IdType> segment1, PathSegment<IdType> segment2)
+        public static bool operator ==(PathSegment<TIdType> segment1, PathSegment<TIdType> segment2)
         {
             if ((object)segment1 != null && (object)segment2 != null)
             {
@@ -227,9 +226,47 @@ namespace OsmSharp.Routing.Graph.Path
         /// <param name="segment1"></param>
         /// <param name="segment2"></param>
         /// <returns></returns>
-        public static bool operator !=(PathSegment<IdType> segment1, PathSegment<IdType> segment2)
+        public static bool operator !=(PathSegment<TIdType> segment1, PathSegment<TIdType> segment2)
         {
             return !(segment2 == segment1);
+        }
+
+        /// <summary>
+        /// Returns true if the given object equals this one.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        protected bool Equals(PathSegment<TIdType> other)
+        {
+            return EqualityComparer<TIdType>.Default.Equals(VertexId, other.VertexId) && Weight.Equals(other.Weight) && Equals(From, other.From);
+        }
+
+        /// <summary>
+        /// Returns true if the given object equals this one.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((PathSegment<TIdType>)obj);
+        }
+
+        /// <summary>
+        /// Returns the hashcode for this object.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = EqualityComparer<TIdType>.Default.GetHashCode(VertexId);
+                hashCode = (hashCode * 397) ^ Weight.GetHashCode();
+                hashCode = (hashCode * 397) ^ (From != null ? From.GetHashCode() : 0);
+                return hashCode;
+            }
         }
     }
 }

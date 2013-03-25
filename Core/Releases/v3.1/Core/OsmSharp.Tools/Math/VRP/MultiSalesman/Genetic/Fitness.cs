@@ -262,5 +262,35 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
         }
 
         #endregion
+
+        protected bool Equals(Fitness other)
+        {
+            return Vehicles == other.Vehicles && SmallestRoundCategory == other.SmallestRoundCategory && LargestRoundCategory == other.LargestRoundCategory && TotalTime.Equals(other.TotalTime) && MinimumTime.Equals(other.MinimumTime) && MaximumTime.Equals(other.MaximumTime) && Equals(LargestRoundCategories, other.LargestRoundCategories) && Equals(SmallestRoundCategories, other.SmallestRoundCategories) && Feasable.Equals(other.Feasable);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Fitness)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = Vehicles;
+                hashCode = (hashCode * 397) ^ SmallestRoundCategory;
+                hashCode = (hashCode * 397) ^ LargestRoundCategory;
+                hashCode = (hashCode * 397) ^ TotalTime.GetHashCode();
+                hashCode = (hashCode * 397) ^ MinimumTime.GetHashCode();
+                hashCode = (hashCode * 397) ^ MaximumTime.GetHashCode();
+                hashCode = (hashCode * 397) ^ (LargestRoundCategories != null ? LargestRoundCategories.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ (SmallestRoundCategories != null ? SmallestRoundCategories.GetHashCode() : 0);
+                hashCode = (hashCode * 397) ^ Feasable.GetHashCode();
+                return hashCode;
+            }
+        }
     }
 }

@@ -42,14 +42,13 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
     /// <summary>
     /// Calculates VRP's without a depot with min max time constraints per route using genetic algorithms.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
     public class RouterGeneticSimple : RouterMaxTime
     {
         /// <summary>
         /// Creates a new genetic min max no depot vrp router.
         /// </summary>
-        /// <param name="min"></param>
         /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
         public RouterGeneticSimple(Second max, Second delivery_time)
             :base(max, delivery_time)
         {
@@ -64,8 +63,13 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
         /// <summary>
         /// Creates a new genetic min max no depot vrp router.
         /// </summary>
-        /// <param name="min"></param>
         /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
+        /// <param name="population"></param>
+        /// <param name="stagnation"></param>
+        /// <param name="elitism_percentage"></param>
+        /// <param name="cross_percentage"></param>
+        /// <param name="mutation_percentage"></param>
         public RouterGeneticSimple(Second max, Second delivery_time, int population, int stagnation,
             double elitism_percentage, double cross_percentage, double mutation_percentage)
             : base(max, delivery_time)
@@ -78,16 +82,21 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
             _mutation_percentage = mutation_percentage;
         }
 
-
         /// <summary>
         /// Creates a new genetic min max no depot vrp router.
         /// </summary>
-        /// <param name="router"></param>
-        /// <param name="min"></param>
         /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
+        /// <param name="population"></param>
+        /// <param name="stagnation"></param>
+        /// <param name="elitism_percentage"></param>
+        /// <param name="cross_percentage"></param>
+        /// <param name="mutation_percentage"></param>
+        /// <param name="probabilities"></param>
         public RouterGeneticSimple(
             Second max, Second delivery_time, int population, int stagnation,
-            double elitism_percentage, double cross_percentage, double mutation_percentage, List<double> probabilities)
+            double elitism_percentage, double cross_percentage, double mutation_percentage, 
+            List<double> probabilities)
             : base(max, delivery_time)
         {
             _population = population;

@@ -36,7 +36,6 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
     /// <summary>
     /// A class containing a dykstra implementation suitable for a simple graph.
     /// </summary>
-    /// <typeparam name="EdgeData"></typeparam>
     public class DykstraRoutingPreProcessed : DykstraRoutingBase<PreProcessedEdge>, IBasicRouter<PreProcessedEdge>
     {
         /// <summary>
@@ -52,8 +51,12 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <summary>
         /// Calculates the shortest path from the given vertex to the given vertex given the weights in the graph.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="max"></param>
         /// <returns></returns>
         public PathSegment<long> Calculate(IDynamicGraphReadOnly<PreProcessedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList from, PathSegmentVisitList to, double max)
@@ -65,8 +68,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <summary>
         /// Calculates the shortest path from all sources to all targets.
         /// </summary>
-        /// <param name="_data_graph"></param>
-        /// <param name="_interpreter"></param>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
         /// <param name="sources"></param>
         /// <param name="targets"></param>
@@ -87,8 +90,12 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <summary>
         /// Calculates the shortest path from the given vertex to the given vertex given the weights in the graph.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="max"></param>
         /// <returns></returns>
         public double CalculateWeight(IDynamicGraphReadOnly<PreProcessedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList from, PathSegmentVisitList to, double max)
@@ -101,13 +108,14 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// Calculates a shortest path between the source vertex and any of the targets and returns the shortest.
         /// </summary>
         /// <param name="graph"></param>
-        /// <param name="_interpreter"></param>
-        /// <param name="source"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="from"></param>
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<PreProcessedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            PathSegmentVisitList from, PathSegmentVisitList[] targets, double max)
+        public PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<PreProcessedEdge> graph, IRoutingInterpreter interpreter, 
+            VehicleEnum vehicle, PathSegmentVisitList from, PathSegmentVisitList[] targets, double max)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
                 from, targets, max, true, false);
@@ -123,6 +131,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <param name="max"></param>
@@ -153,6 +162,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <param name="max"></param>
@@ -188,6 +198,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
@@ -210,6 +221,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
@@ -228,6 +240,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <param name="weight"></param>

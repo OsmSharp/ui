@@ -29,13 +29,16 @@ using OsmSharp.Routing;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
 {
+    /// <summary>
+    /// Solves the maxtime problem just using cheapest insertion.
+    /// </summary>
     public class CheapestInsertionSolver : RouterMaxTime
     {
         /// <summary>
         /// Creates a new best placement min max no depot vrp router.
         /// </summary>
-        /// <param name="min"></param>
         /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
         public CheapestInsertionSolver(Second max, Second delivery_time)
             :base(max, delivery_time)
         {

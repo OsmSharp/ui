@@ -159,7 +159,7 @@ namespace OsmSharp.Routing.TSP
         /// <summary>
         /// Generates a solver in function of the size of the problem.
         /// </summary>
-        /// <param name="problem"></param>
+        /// <param name="size"></param>
         /// <returns></returns>
         internal abstract ISolver DoCreateSolver(int size);
 
@@ -169,7 +169,6 @@ namespace OsmSharp.Routing.TSP
         /// Raise intermidiate result event.
         /// </summary>
         /// <param name="result"></param>
-        /// <param name="weight"></param>
         void solver_IntermidiateResult(int[] result)
         {
             if (this.CanRaiseIntermidiateResult())

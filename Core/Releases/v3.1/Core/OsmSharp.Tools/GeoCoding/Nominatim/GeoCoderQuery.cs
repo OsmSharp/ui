@@ -21,12 +21,15 @@ using System.Configuration;
 
 namespace OsmSharp.Tools.GeoCoding.Nominatim
 {
+    /// <summary>
+    /// A geocoder query.
+    /// </summary>
     public class GeoCoderQuery
     {
         /// <summary>
         /// The url of the nomatim service.
         /// </summary>
-        private string _geocoding_url; // = ConfigurationManager.AppSettings["NomatimAddress"] + ;
+        //private string _geocoding_url; // = ConfigurationManager.AppSettings["NomatimAddress"] + ;
 
         private string _country;
         private string _postal_code;
@@ -34,6 +37,14 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
         private string _street;
         private string _house_number;
 
+        /// <summary>
+        /// Creates a new geocoder query.
+        /// </summary>
+        /// <param name="country"></param>
+        /// <param name="postal_code"></param>
+        /// <param name="commune"></param>
+        /// <param name="street"></param>
+        /// <param name="house_number"></param>
         public GeoCoderQuery(string country,
             string postal_code,
             string commune,
@@ -51,6 +62,9 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
 
         #region IGeoCoderQuery Members
 
+        /// <summary>
+        /// The query string.
+        /// </summary>
         public string Query
         {
             get
@@ -67,7 +81,7 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
                 builder.Append(_country);
                 builder.Append(" ");
 				return string.Format(System.Globalization.CultureInfo.InvariantCulture, 
-                    _geocoding_url + "&format=xml&polygon=1&addressdetails=1", builder);
+                    "TODO" + "&format=xml&polygon=1&addressdetails=1", builder);
             }
         }
 

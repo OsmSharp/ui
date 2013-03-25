@@ -23,8 +23,17 @@ using OsmSharp.Tools.Math.Units.Angle;
 
 namespace OsmSharp.Tools.Math.Geo.Meta
 {
+    /// <summary>
+    /// Direction calculator.
+    /// </summary>
     public static class DirectionCalculator
     {
+        /// <summary>
+        /// Calculates the direction.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static DirectionEnum Calculate(GeoCoordinate from, GeoCoordinate to)
         {
             double offset = 0.01;

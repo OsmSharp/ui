@@ -22,6 +22,10 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.Shapes.ResultHelpers
 {
+    /// <summary>
+    /// Represents the result of a projection.
+    /// </summary>
+    /// <typeparam name="PointType"></typeparam>
     public class DistanceResult<PointType>
         where PointType : PointF2D
     {
@@ -30,8 +34,14 @@ namespace OsmSharp.Tools.Math.Shapes.ResultHelpers
 
         }
 
+        /// <summary>
+        /// The distance.
+        /// </summary>
         public double Distance { get; internal set; }
 
+        /// <summary>
+        /// Returns the closest primitive.
+        /// </summary>
         public PrimitiveSimpleF2D ClosestPrimitive { get; internal set; }
     }
 }

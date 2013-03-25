@@ -27,6 +27,9 @@ namespace OsmSharp.Tools.Math.Geo.Lambert.Ellipsoids
     /// </summary>
     public class Wgs1984Ellipsoid : LambertEllipsoid
     {
+        /// <summary>
+        /// Creates a ned WSG 1984 ellipsoid.
+        /// </summary>
         public Wgs1984Ellipsoid()
             : base(6378137, 1 / 298.257223563)
         {

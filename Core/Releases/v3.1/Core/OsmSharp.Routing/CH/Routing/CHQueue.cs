@@ -23,14 +23,29 @@ using OsmSharp.Routing.Graph.Path;
 
 namespace OsmSharp.Routing.CH.Routing
 {
+    /// <summary>
+    /// A CH queue.
+    /// </summary>
     public class CHQueue
     {
+        /// <summary>
+        /// The forward queue.
+        /// </summary>
         private Dictionary<long, PathSegment<long>> _forward;
 
+        /// <summary>
+        /// The backward queue.
+        /// </summary>
         private Dictionary<long, PathSegment<long>> _backward;
 
+        /// <summary>
+        /// The backward-forward intersection.
+        /// </summary>
         private Dictionary<long, double> _intersection;
 
+        /// <summary>
+        /// Creates a new CH queue.
+        /// </summary>
         public CHQueue()
         {
             _intersection = new Dictionary<long, double>();
@@ -39,6 +54,9 @@ namespace OsmSharp.Routing.CH.Routing
             _backward = new Dictionary<long, PathSegment<long>>();
         }
 
+        /// <summary>
+        /// Returns the intersection.
+        /// </summary>
         public Dictionary<long, double> Intersection
         {
             get
@@ -47,6 +65,9 @@ namespace OsmSharp.Routing.CH.Routing
             }
         }
 
+        /// <summary>
+        /// Returns the forward queue.
+        /// </summary>
         public Dictionary<long, PathSegment<long>> Forward
         {
             get
@@ -55,6 +76,9 @@ namespace OsmSharp.Routing.CH.Routing
             }
         }
 
+        /// <summary>
+        /// Returns the backward queue.
+        /// </summary>
         public Dictionary<long, PathSegment<long>> Backward
         {
             get
@@ -63,6 +87,10 @@ namespace OsmSharp.Routing.CH.Routing
             }
         }
 
+        /// <summary>
+        /// Adds a path segment to the forward queue.
+        /// </summary>
+        /// <param name="segment"></param>
         public void AddForward(PathSegment<long> segment)
         {
             _forward[segment.VertexId] = segment;
@@ -74,6 +102,10 @@ namespace OsmSharp.Routing.CH.Routing
             }
         }
 
+        /// <summary>
+        /// Adds a path segment to the backward queue.
+        /// </summary>
+        /// <param name="segment"></param>
         public void AddBackward(PathSegment<long> segment)
         {
             _backward[segment.VertexId] = segment;

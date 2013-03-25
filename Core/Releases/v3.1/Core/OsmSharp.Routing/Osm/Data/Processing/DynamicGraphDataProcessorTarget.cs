@@ -75,6 +75,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// </summary>
         /// <param name="dynamic_graph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
+        /// <param name="edge_comparer"></param>
         public DynamicGraphDataProcessorTarget(IDynamicGraph<EdgeData> dynamic_graph,
             IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edge_comparer)
             : this(dynamic_graph, interpreter, edge_comparer, new OsmTagsIndex(), new Dictionary<long, uint>())
@@ -87,20 +88,26 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// </summary>
         /// <param name="dynamic_graph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
+        /// <param name="edge_comparer"></param>
+        /// <param name="tags_index"></param>
         public DynamicGraphDataProcessorTarget(IDynamicGraph<EdgeData> dynamic_graph,
             IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edge_comparer, ITagsIndex tags_index)
             : this(dynamic_graph, interpreter, edge_comparer, tags_index, new Dictionary<long, uint>())
         {
 
         }
-        
+
         /// <summary>
         /// Creates a new processor target.
         /// </summary>
         /// <param name="dynamic_graph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
+        /// <param name="edge_comparer"></param>
+        /// <param name="tags_index"></param>
+        /// <param name="id_transformations"></param>
         public DynamicGraphDataProcessorTarget(IDynamicGraph<EdgeData> dynamic_graph,
-            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edge_comparer, ITagsIndex tags_index, IDictionary<long, uint> id_transformations)
+            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edge_comparer, ITagsIndex tags_index, 
+            IDictionary<long, uint> id_transformations)
             : this(dynamic_graph, interpreter, edge_comparer, tags_index, id_transformations, null)
         {
 
@@ -111,6 +118,10 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// </summary>
         /// <param name="dynamic_graph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
+        /// <param name="edge_comparer"></param>
+        /// <param name="tags_index"></param>
+        /// <param name="id_transformations"></param>
+        /// <param name="box"></param>
         public DynamicGraphDataProcessorTarget(
             IDynamicGraph<EdgeData> dynamic_graph, IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edge_comparer, 
             ITagsIndex tags_index, IDictionary<long, uint> id_transformations,
@@ -288,8 +299,10 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Adds an edge.
         /// </summary>
+        /// <param name="forward"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
+        /// <param name="tags"></param>
         private bool AddRoadEdge(IDictionary<string, string> tags, bool forward, uint from, uint to)
         {
             float latitude;
@@ -330,6 +343,9 @@ namespace OsmSharp.Routing.Osm.Data.Processing
 
         }
 
+        /// <summary>
+        /// Closes this target.
+        /// </summary>
         public override void Close()
         {
             if (_pre_index_mode)

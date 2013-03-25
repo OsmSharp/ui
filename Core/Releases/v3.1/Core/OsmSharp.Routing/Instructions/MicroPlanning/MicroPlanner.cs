@@ -319,7 +319,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Reports a final state to this microplanner when some machine reaches it.
         /// </summary>
-        /// <param name="microPlannerMachine"></param>
+        /// <param name="machine"></param>
         /// <param name="messages"></param>
         internal void ReportFinal(MicroPlannerMachine machine, IList<MicroPlannerMessage> messages)
         {
@@ -345,7 +345,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Reports when a machine resets (meaning it reached an invalid state).
         /// </summary>
-        /// <param name="microPlannerMachine"></param>
+        /// <param name="machine"></param>
         internal void ReportReset(MicroPlannerMachine machine)
         {
             // the machine cannot be used anymore until a reset occurs.

@@ -24,8 +24,16 @@ using OsmSharp.Routing.ArcAggregation.Output;
 
 namespace OsmSharp.Routing.ArcAggregation
 {
+    /// <summary>
+    /// Contains some helper functions for arc aggregation.
+    /// </summary>
     public class AggregatedHelper
     {
+        /// <summary>
+        /// Returns true if the given direction is left.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
         public static bool IsLeft(RelativeDirectionEnum direction)
         {
             switch (direction)
@@ -38,6 +46,11 @@ namespace OsmSharp.Routing.ArcAggregation
             return false;
         }
 
+        /// <summary>
+        /// Returns true if the given direction is right.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
         public static bool IsRight(RelativeDirectionEnum direction)
         {
             switch (direction)
@@ -50,6 +63,11 @@ namespace OsmSharp.Routing.ArcAggregation
             return false;
         }
 
+        /// <summary>
+        /// Returns true if the given direction is a turn.
+        /// </summary>
+        /// <param name="direction"></param>
+        /// <returns></returns>
         public static bool IsTurn(RelativeDirectionEnum direction)
         {
             switch (direction)

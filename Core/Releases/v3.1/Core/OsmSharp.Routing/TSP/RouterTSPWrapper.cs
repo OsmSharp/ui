@@ -210,6 +210,7 @@ namespace OsmSharp.Routing.TSP
         /// Delegate to pass on an intermidiate solution.
         /// </summary>
         /// <param name="result"></param>
+        /// <param name="weight"></param>
         public delegate void IntermidiateDelegate(OsmSharpRoute result, double weight);
 
         /// <summary>
@@ -230,6 +231,7 @@ namespace OsmSharp.Routing.TSP
         /// Raises the intermidiate results event.
         /// </summary>
         /// <param name="result"></param>
+        /// <param name="weight"></param>
         protected void RaiseIntermidiateResult(OsmSharpRoute result, double weight)
         {
             if (IntermidiateResult != null)

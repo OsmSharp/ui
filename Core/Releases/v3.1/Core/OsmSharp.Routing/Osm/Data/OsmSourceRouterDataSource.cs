@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OsmSharp.Osm.Data;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Router;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math;
 using OsmSharp.Osm;
-using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Osm.Data.Core.Processor.ListSource;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
-using OsmSharp.Tools.Collections;
 
-namespace OsmSharp.Routing.Osm.Data.Source
+namespace OsmSharp.Routing.Osm.Data
 {
     /// <summary>
     /// A Dynamic graph with extended possibilities to allow resolving points.
@@ -26,39 +24,59 @@ namespace OsmSharp.Routing.Osm.Data.Source
         /// <summary>
         /// Holds the data source.
         /// </summary>
-        private IDataSourceReadOnly _source;
+        private readonly IDataSourceReadOnly _source;
 
         /// <summary>
         /// Holds a cache of data.
         /// </summary>
-        private MemoryRouterDataSource<PreProcessedEdge> _data_cache;
+        private readonly DynamicGraphRouterDataSource<PreProcessedEdge> _dataCache;
 
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private ITagsIndex _tags_index;
+        private readonly ITagsIndex _tagsIndex;
 
         /// <summary>
         /// Holds the edge interpreter.
         /// </summary>
-        private IRoutingInterpreter _interpreter;
+        private readonly IRoutingInterpreter _interpreter;
+
+        /// <summary>
+        /// Holds the supported vehicle profile.
+        /// </summary>
+        private readonly VehicleEnum _vehicle;
 
         /// <summary>
         /// Creates a OSM dynamic graph.
         /// </summary>
-        /// <param name="source"></param>
-        public OsmSourceRouterDataSource(IRoutingInterpreter interpreter, ITagsIndex tags_index, IDataSourceReadOnly source)
+        /// <param name="tagsIndex">The tags index.</param>
+        /// <param name="source">The OSM data source.</param>
+        /// <param name="interpreter">The routing interpreter.</param>
+        /// <param name="vehicle">The vehicle profile being targetted.</param>
+        public OsmSourceRouterDataSource(IRoutingInterpreter interpreter, ITagsIndex tagsIndex, 
+            IDataSourceReadOnly source, VehicleEnum vehicle)
         {
             _source = source;
-            _tags_index = tags_index;
+            _vehicle = vehicle;
+            _tagsIndex = tagsIndex;
             _interpreter = interpreter;
 
-            _data_cache = new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
-            _loaded_tiles = new HashSet<Tile>();
-            _loaded_vertices = null;
-            _use_loaded_set = false;
+            _dataCache = new DynamicGraphRouterDataSource<PreProcessedEdge>(tagsIndex);
+            _loadedTiles = new HashSet<Tile>();
+            _loadedVertices = null;
+            _useLoadedSet = false;
             _zoom = 14;
-            _id_tranformations = new Dictionary<long, uint>();
+            _idTranformations = new Dictionary<long, uint>();
+        }
+
+        /// <summary>
+        /// Returns true if the given vehicle profile is supported.
+        /// </summary>
+        /// <param name="vehicle">The vehicle profile.</param>
+        /// <returns></returns>
+        public bool SupportsProfile(VehicleEnum vehicle)
+        {
+            return vehicle == _vehicle;
         }
 
         /// <summary>
@@ -71,7 +89,7 @@ namespace OsmSharp.Routing.Osm.Data.Source
             // load if needed.
             this.LoadMissingIfNeeded(box);
 
-            return _data_cache.GetArcs(box);
+            return _dataCache.GetArcs(box);
         }
 
         /// <summary>
@@ -83,7 +101,7 @@ namespace OsmSharp.Routing.Osm.Data.Source
         /// <returns></returns>
         public bool GetVertex(uint id, out float latitude, out float longitude)
         {
-            return _data_cache.GetVertex(id, out latitude, out longitude);
+            return _dataCache.GetVertex(id, out latitude, out longitude);
         }
 
         /// <summary>
@@ -103,13 +121,13 @@ namespace OsmSharp.Routing.Osm.Data.Source
         public KeyValuePair<uint, PreProcessedEdge>[] GetArcs(uint vertex)
         {
             float latitude, longitude;
-            if(_data_cache.GetVertex(vertex, out latitude, out longitude))
+            if(_dataCache.GetVertex(vertex, out latitude, out longitude))
             {
                 // load if needed.
                 this.LoadMissingIfNeeded(vertex, latitude, longitude);
 
                 // load the arcs.
-                return _data_cache.GetArcs(vertex);
+                return _dataCache.GetArcs(vertex);
             }
             throw new Exception(string.Format("Vertex with id {0} not found!",
                     vertex));
@@ -123,14 +141,7 @@ namespace OsmSharp.Routing.Osm.Data.Source
         /// <returns></returns>
         public bool HasNeighbour(uint vertex, uint neighbour)
         {
-            foreach (KeyValuePair<uint, PreProcessedEdge> arc in this.GetArcs(vertex))
-            {
-                if (arc.Key == neighbour)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return this.GetArcs(vertex).Any(arc => arc.Key == neighbour);
         }
 
 
@@ -141,7 +152,7 @@ namespace OsmSharp.Routing.Osm.Data.Source
         {
             get 
             {
-                return _tags_index;
+                return _tagsIndex;
             }
         }
 
@@ -150,57 +161,59 @@ namespace OsmSharp.Routing.Osm.Data.Source
         /// <summary>
         /// The zoom level to cache at.
         /// </summary>
-        private int _zoom;
+        private readonly int _zoom;
 
         /// <summary>
         /// When true uses a hashset to prevent duplicate calculations.
         /// </summary>
-        private bool _use_loaded_set;
+        private readonly bool _useLoadedSet;
 
         /// <summary>
         /// Holds an index of all loaded tiles.
         /// </summary>
-        private HashSet<Tile> _loaded_tiles;
+        private readonly HashSet<Tile> _loadedTiles;
 
         /// <summary>
         /// Holds an index of all vertices that have been validated with loaded tiles.
         /// </summary>
-        private HashSet<long> _loaded_vertices;
+        private readonly HashSet<long> _loadedVertices;
 
         /// <summary>
         /// Holds the id tranformations.
         /// </summary>
-        private IDictionary<long, uint> _id_tranformations;
+        private readonly IDictionary<long, uint> _idTranformations;
 
         /// <summary>
         /// Load the missing tile this vertex is in if needed.
         /// </summary>
         /// <param name="vertex"></param>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
         private void LoadMissingIfNeeded(long vertex, float latitude, float longitude)
         {
-            if (_loaded_vertices == null || 
-                !_loaded_vertices.Contains(vertex))
+            if (_loadedVertices == null || 
+                !_loadedVertices.Contains(vertex))
             { // vertex not validated yet!
                 Tile tile1 = Tile.CreateAroundLocation(new GeoCoordinate(latitude, longitude), _zoom);
 
-                TileRange range = new TileRange(tile1.X, tile1.Y,
+                var range = new TileRange(tile1.X, tile1.Y,
                     tile1.X, tile1.Y, tile1.Zoom);
 
                 foreach (Tile tile in range)
                 {
-                    if (!_loaded_tiles.Contains(tile))
+                    if (!_loadedTiles.Contains(tile))
                     { // the tile need to be loaded!
                         this.LoadTile(tile);
 
                         // add the tile to the loaded tiles index.
-                        _loaded_tiles.Add(tile);
+                        _loadedTiles.Add(tile);
                     }
                 }
 
                 // add the vertex (if needed)
-                if (_loaded_vertices != null && _use_loaded_set)
+                if (_loadedVertices != null && _useLoadedSet)
                 {
-                    _loaded_vertices.Add(vertex);
+                    _loadedVertices.Add(vertex);
                 }
             }
         }
@@ -212,17 +225,17 @@ namespace OsmSharp.Routing.Osm.Data.Source
         private void LoadMissingIfNeeded(GeoCoordinateBox box)
         {
             // calculate the tile range.
-            TileRange tile_range = TileRange.CreateAroundBoundingBox(box, _zoom);
+            TileRange tileRange = TileRange.CreateAroundBoundingBox(box, _zoom);
 
             // load all the needed tiles.
-            foreach (Tile tile in tile_range)
+            foreach (Tile tile in tileRange)
             {
-                if (!_loaded_tiles.Contains(tile))
+                if (!_loadedTiles.Contains(tile))
                 { // the tile need to be loaded!
                     this.LoadTile(tile);
 
                     // add the tile to the loaded tiles index.
-                    _loaded_tiles.Add(tile);
+                    _loadedTiles.Add(tile);
                 }
             }
         }
@@ -238,14 +251,15 @@ namespace OsmSharp.Routing.Osm.Data.Source
             IList<OsmGeo> data = _source.Get(box, OsmSharp.Osm.Filters.Filter.Any());
 
             // process the list of data just loaded.
-            PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
-                _data_cache, _interpreter, _tags_index, OsmSharp.Routing.VehicleEnum.Car, _id_tranformations);
-            OsmGeoListDataProcessorSource data_processor_source =
+            // TODO: fix this vehicle profile mess!
+            var targetData = new PreProcessedDataGraphProcessingTarget(
+                _dataCache, _interpreter, _tagsIndex, OsmSharp.Routing.VehicleEnum.Car, _idTranformations);
+            var dataProcessorSource =
                 new OsmGeoListDataProcessorSource(data);
-            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+            var sorter = new DataProcessorFilterSort();
+            sorter.RegisterSource(dataProcessorSource);
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
         }
 
         #endregion
@@ -255,7 +269,7 @@ namespace OsmSharp.Routing.Osm.Data.Source
         /// </summary>
         public uint VertexCount
         {
-            get { return _data_cache.VertexCount; }
+            get { return _dataCache.VertexCount; }
         }
     }
 }

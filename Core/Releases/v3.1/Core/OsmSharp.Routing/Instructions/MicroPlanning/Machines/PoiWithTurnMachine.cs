@@ -64,6 +64,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// Tests if the given turn is significant.
         /// </summary>
         /// <param name="test"></param>
+        /// <param name="machine"></param>
         /// <returns></returns>
         private static bool TestNonSignificantTurnNonPoi(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
@@ -96,6 +97,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// Tests if the given point is a poi.
         /// </summary>
         /// <param name="test"></param>
+        /// <param name="machine"></param>
         /// <returns></returns>
         private static bool TestPoi(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {

@@ -22,15 +22,42 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.Geo.Meta
 {
+    /// <summary>
+    /// Direction types.
+    /// </summary>
     public enum DirectionEnum
     {
+        /// <summary>
+        /// North.
+        /// </summary>
         North,
+        /// <summary>
+        /// Northeast.
+        /// </summary>
         NorthEast,
+        /// <summary>
+        /// East.
+        /// </summary>
         East,
+        /// <summary>
+        /// Southeast.
+        /// </summary>
         SouthEast,
+        /// <summary>
+        /// South.
+        /// </summary>
         South,
+        /// <summary>
+        /// Southwest.
+        /// </summary>
         SouthWest,
+        /// <summary>
+        /// West.
+        /// </summary>
         West,
+        /// <summary>
+        /// Northwest.
+        /// </summary>
         NorhtWest,
     }
 }

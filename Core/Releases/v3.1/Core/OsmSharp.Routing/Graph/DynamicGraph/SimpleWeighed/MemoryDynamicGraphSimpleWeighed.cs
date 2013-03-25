@@ -81,12 +81,18 @@ namespace OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed
         /// <summary>
         /// Increases the size of the edges array.
         /// </summary>
-        /// <param name="delta"></param>
         private void IncreaseSizeEdges()
         {
             Array.Resize<SimpleWeighedEdgeStruct>(ref _arcs, _arcs.Length + 1000);
         }
 
+        /// <summary>
+        /// Adds a new vertex this this graph.
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <param name="neighbours_estimate"></param>
+        /// <returns></returns>
         public uint AddVertex(float latitude, float longitude, byte neighbours_estimate)
         {
             return this.AddVertex(latitude, longitude);
@@ -167,6 +173,7 @@ namespace OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="data"></param>
+        /// <param name="comparer"></param>
         public void AddArc(uint from, uint to, SimpleWeighedEdge data, 
             IDynamicGraphEdgeComparer<SimpleWeighedEdge> comparer)
         {
@@ -256,7 +263,7 @@ namespace OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed
         /// <summary>
         /// Returns all arcs starting at the given vertex.
         /// </summary>
-        /// <param name="vertex"></param>
+        /// <param name="vertex_id"></param>
         /// <returns></returns>
         public KeyValuePair<uint, SimpleWeighedEdge>[] GetArcs(uint vertex_id)
         {
@@ -283,7 +290,7 @@ namespace OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed
         /// <summary>
         /// Returns true if the given vertex has neighbour as a neighbour.
         /// </summary>
-        /// <param name="vertex"></param>
+        /// <param name="vertex_id"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
         public bool HasNeighbour(uint vertex_id, uint neighbour)

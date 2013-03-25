@@ -18,24 +18,39 @@
 
 namespace OsmSharp.Tools.GeoCoding.Nominatim
 {
+    /// <summary>
+    /// Represents a geocoding result.
+    /// </summary>
     public class GeoCoderResult : IGeoCoderResult
     {
         #region IGeoCoderResult Members
 
+        /// <summary>
+        /// Latitude.
+        /// </summary>
         public double Latitude
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// Longitude.
+        /// </summary>
         public double Longitude
         {
             get;
             set;
         }
 
-    		public string Text { get; set;  }
+        /// <summary>
+        /// The query text.
+        /// </summary>
+    	public string Text { get; set;  }
 
+        /// <summary>
+        /// The accuracy.
+        /// </summary>
         public AccuracyEnum Accuracy
         {
             get;

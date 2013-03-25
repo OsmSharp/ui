@@ -29,14 +29,6 @@ namespace OsmSharp.Tools.Math.TSP.Problems
     public interface IProblem : IProblemWeights
     {
         /// <summary>
-        /// Returns the size of the problem.
-        /// </summary>
-        int Size
-        {
-            get;
-        }
-
-        /// <summary>
         /// Returns the first customer.
         /// </summary>
         int? First

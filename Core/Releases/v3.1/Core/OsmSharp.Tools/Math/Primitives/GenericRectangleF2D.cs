@@ -214,6 +214,9 @@ namespace OsmSharp.Tools.Math
             }
         }
 
+        /// <summary>
+        /// Returns the size of the surface of this rectangle.
+        /// </summary>
         public double Surface
         {
             get

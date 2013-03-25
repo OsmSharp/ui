@@ -73,6 +73,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// <summary>
         /// Tests if the given turn is a turn onto a roundabout.
         /// </summary>
+        /// <param name="machine"></param>
         /// <param name="test"></param>
         /// <returns></returns>
         private static bool TestRoundaboutEntry(FiniteStateMachine<MicroPlannerMessage> machine, object test)
@@ -91,10 +92,11 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             }
             return false;
         }
-        
+
         /// <summary>
         /// Returns true if the given object is an arc of a roundabout.
         /// </summary>
+        /// <param name="machine"></param>
         /// <param name="test"></param>
         /// <returns></returns>
         private static bool TestRoundaboutArc(FiniteStateMachine<MicroPlannerMessage> machine, object test)
@@ -114,6 +116,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// Tests if the given turn is a turn out of a roundabout.
         /// </summary>
         /// <param name="test"></param>
+        /// <param name="machine"></param>
         /// <returns></returns>
         public static bool TestNonRoundaboutExit(FiniteStateMachine<MicroPlannerMessage> machine, object test)
         {
@@ -123,6 +126,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// <summary>
         /// Tests if the given turn is a turn out of a roundabout.
         /// </summary>
+        /// <param name="machine"></param>
         /// <param name="test"></param>
         /// <returns></returns>
         private static bool TestRoundaboutExit(FiniteStateMachine<MicroPlannerMessage> machine, object test)

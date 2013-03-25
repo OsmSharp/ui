@@ -29,6 +29,14 @@ namespace OsmSharp.Tools.DelimitedFiles
     /// </summary>
     public static class DelimitedFileHandler
     {
+        /// <summary>
+        /// Reads a delimited file.
+        /// </summary>
+        /// <param name="reporter"></param>
+        /// <param name="file"></param>
+        /// <param name="delimiter"></param>
+        /// <param name="firstRowHasHeaders"></param>
+        /// <returns></returns>
         public static string[][] ReadDelimitedFile(
             IProgressReporter reporter, 
             FileInfo file, 

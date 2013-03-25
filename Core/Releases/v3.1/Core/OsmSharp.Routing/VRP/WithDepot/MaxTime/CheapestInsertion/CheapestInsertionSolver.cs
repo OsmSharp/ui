@@ -73,10 +73,15 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
         /// Creates a new best placement min max no depot vrp router.
         /// </summary>
         /// <param name="router"></param>
-        /// <param name="min"></param>
         /// <param name="max"></param>
+        /// <param name="delivery_time"></param>
+        /// <param name="k"></param>
+        /// <param name="delta_percentage"></param>
+        /// <param name="use_seed_cost"></param>
+        /// <param name="threshold_precentage"></param>
         public CheapestInsertionSolverWithImprovements(IRouter<ResolvedType> router,
-            Second max, Second delivery_time, int k, float delta_percentage, bool use_seed_cost, float threshold_precentage)
+            Second max, Second delivery_time, int k, float delta_percentage, bool use_seed_cost, 
+            float threshold_precentage)
             : base(max, delivery_time)
         {
             _k = k;
@@ -369,9 +374,13 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
         /// Apply some improvements between the given routes and returns the resulting weight.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="route"></param>
+        /// <param name="solution"></param>
+        /// <param name="route1_idx"></param>
+        /// <param name="route2_idx"></param>
+        /// <param name="max"></param>
         /// <returns></returns>
-        private bool ImproveInterRoute(MaxTimeProblem problem, MaxTimeSolution solution, int route1_idx, int route2_idx, double max)
+        private bool ImproveInterRoute(MaxTimeProblem problem, MaxTimeSolution solution, 
+            int route1_idx, int route2_idx, double max)
         {
             // get the routes.
             IRoute route1 = solution.Route(route1_idx);

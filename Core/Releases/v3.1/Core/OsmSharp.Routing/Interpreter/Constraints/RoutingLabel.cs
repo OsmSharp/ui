@@ -31,6 +31,7 @@ namespace OsmSharp.Routing.Constraints
         /// Creates a new routing label.
         /// </summary>
         /// <param name="label"></param>
+        /// <param name="description"></param>
         internal RoutingLabel(char label, string description)
         {
             this.Label = label;
@@ -63,15 +64,32 @@ namespace OsmSharp.Routing.Constraints
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if ((object)obj == null)
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((RoutingLabel) obj);
+        }
+
+        /// <summary>
+        /// Returns true if the given object equals this object in content.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        protected bool Equals(RoutingLabel other)
+        {
+            return Label == other.Label && string.Equals(Description, other.Description);
+        }
+
+        /// <summary>
+        /// Returns the hashcode for this object.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            unchecked
             {
-                return false;
+                return (Label.GetHashCode() * 397) ^ (Description != null ? Description.GetHashCode() : 0);
             }
-            else if (obj is RoutingLabel)
-            {
-                return (obj as RoutingLabel).Label == this.Label;
-            }
-            return false;
         }
     }
 
@@ -99,6 +117,7 @@ namespace OsmSharp.Routing.Constraints
         /// Constructs a string out of a list of labels and one extra label.
         /// </summary>
         /// <param name="labels"></param>
+        /// <param name="extra"></param>
         /// <returns></returns>
         public static string CreateString(this IList<RoutingLabel> labels, RoutingLabel extra)
         {

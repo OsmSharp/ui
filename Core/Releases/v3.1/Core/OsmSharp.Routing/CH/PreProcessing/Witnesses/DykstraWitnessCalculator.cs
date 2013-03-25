@@ -54,6 +54,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="to"></param>
         /// <param name="via"></param>
         /// <param name="weight"></param>
+        /// <param name="max_settles"></param>
         /// <returns></returns>
         public bool Exists(uint from, uint to, uint via, float weight, int max_settles)
         {
@@ -75,7 +76,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="via"></param>
-        /// <param name="weight"></param>
+        /// <param name="max_weight"></param>
         /// <param name="max_settles"></param>
         /// <returns></returns>
         private float CalculateWeight(uint from, uint to, uint via, float max_weight, int max_settles)
@@ -283,6 +284,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
             /// </summary>
             /// <param name="vertex"></param>
             /// <param name="weight"></param>
+            /// <param name="hops"></param>
             public SettledVertex(uint vertex, float weight, uint hops)
             {
                 this.VertexId = vertex;

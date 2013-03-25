@@ -36,7 +36,6 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// <summary>
         /// Creates a new turn machine.
         /// </summary>
-        /// <param name="interpreter"></param>
         /// <param name="planner"></param>
         public TurnMachine(MicroPlanner planner)
             : base(TurnMachine.Initialize(), planner, 100)
@@ -74,6 +73,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// <summary>
         /// Tests if the given turn is significant.
         /// </summary>
+        /// <param name="machine"></param>
         /// <param name="test"></param>
         /// <returns></returns>
         private static bool TestNonSignificantTurn(FiniteStateMachine<MicroPlannerMessage> machine, object test)
@@ -88,6 +88,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         /// <summary>
         /// Tests if the given turn is significant.
         /// </summary>
+        /// <param name="machine"></param>
         /// <param name="test"></param>
         /// <returns></returns>
         private static bool TestSignificantTurn(FiniteStateMachine<MicroPlannerMessage> machine, object test)

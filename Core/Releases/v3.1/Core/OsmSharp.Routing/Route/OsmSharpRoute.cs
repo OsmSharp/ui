@@ -151,6 +151,10 @@ namespace OsmSharp.Routing.Route
 
         #region Gpx
 
+        /// <summary>
+        /// Save the route as GPX.
+        /// </summary>
+        /// <param name="file"></param>
         public void SaveAsGpx(FileInfo file)
         {
             OsmSharp.Routing.Route.Gpx.OsmSharpRouteGpx.Save(file, this);
@@ -160,6 +164,10 @@ namespace OsmSharp.Routing.Route
 
         #region Kml
 
+        /// <summary>
+        /// Saves the route as KML.
+        /// </summary>
+        /// <param name="file"></param>
         public void SaveAsKml(FileInfo file)
         {
             OsmSharp.Routing.Route.Kml.OsmSharpRouteKml.Save(file, this);
@@ -187,6 +195,7 @@ namespace OsmSharp.Routing.Route
         /// </summary>
         /// <param name="route1"></param>
         /// <param name="route2"></param>
+        /// <param name="clone"></param>
         /// <returns></returns>
         public static OsmSharpRoute Concatenate(OsmSharpRoute route1, OsmSharpRoute route2, bool clone)
         {
@@ -200,7 +209,7 @@ namespace OsmSharp.Routing.Route
             RoutePointEntry start = route2.Entries[0];
 
             // only do all this if the routes are 'concatenable'.
-            if (true || end.Latitude == start.Latitude &&
+            if (end.Latitude == start.Latitude &&
                 end.Longitude == start.Longitude)
             {
                 // construct the new route.
@@ -517,11 +526,23 @@ namespace OsmSharp.Routing.Route
     /// </summary>
     public enum RoutePointEntryType
     {
+        /// <summary>
+        /// Start type.
+        /// </summary>
         Start,
+        /// <summary>
+        /// Along type.
+        /// </summary>
         Along,
+        /// <summary>
+        /// Stop type.
+        /// </summary>
         Stop
     }
 
+    /// <summary>
+    /// Route point entry.
+    /// </summary>
     public class RoutePointEntrySideStreet : ICloneable
     {
         /// <summary>
@@ -592,8 +613,14 @@ namespace OsmSharp.Routing.Route
     /// </summary>
     public class RouteTags : ICloneable
     {
+        /// <summary>
+        /// The key.
+        /// </summary>
         public string Key { get; set; }
 
+        /// <summary>
+        /// The value.
+        /// </summary>
         public string Value { get; set; }
 
         #region ICloneable Members
@@ -726,10 +753,21 @@ namespace OsmSharp.Routing.Route
     /// </summary>
     public class RouteMetric : ICloneable
     {
+        /// <summary>
+        /// The key.
+        /// </summary>
         public string Key { get; set; }
 
+        /// <summary>
+        /// The value.
+        /// </summary>
         public double Value { get; set; }
 
+        /// <summary>
+        /// Convert from a regular tag dictionary.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
         public static RouteMetric[] ConvertFrom(IDictionary<string, double> tags)
         {
             List<RouteMetric> tags_list = new List<RouteMetric>();
@@ -743,6 +781,11 @@ namespace OsmSharp.Routing.Route
             return tags_list.ToArray();
         }
 
+        /// <summary>
+        /// Converts to regular tags list.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
         public static List<KeyValuePair<string, double>> ConvertTo(RouteMetric[] tags)
         {
             List<KeyValuePair<string, double>> tags_list = new List<KeyValuePair<string, double>>();

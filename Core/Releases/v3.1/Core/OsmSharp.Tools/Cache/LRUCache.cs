@@ -24,6 +24,11 @@ using System.Collections.Generic;
 
 namespace OsmSharp.Tools.Cache
 {
+    /// <summary>
+    /// Generic LRU cache implementation.
+    /// </summary>
+    /// <typeparam name="TKey"></typeparam>
+    /// <typeparam name="TValue"></typeparam>
     public class LRUCache<TKey, TValue>
     {
         private ConcurrentDictionary<TKey, CacheEntry<TValue>> _data;
@@ -32,6 +37,10 @@ namespace OsmSharp.Tools.Cache
 
         private long _last_id;
 
+        /// <summary>
+        /// Initializes this cache.
+        /// </summary>
+        /// <param name="capacity"></param>
         public LRUCache(int capacity)
         {
             _id = long.MinValue;
@@ -40,8 +49,16 @@ namespace OsmSharp.Tools.Cache
             this.Capacity = capacity;
         }
 
+        /// <summary>
+        /// Capacity.
+        /// </summary>
         public int Capacity { get; set; }
 
+        /// <summary>
+        /// Adds a new value for the given key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
         public void Add(TKey key, TValue value)
         {
             _id++;
@@ -55,6 +72,11 @@ namespace OsmSharp.Tools.Cache
             this.ResizeCache();
         }
 
+        /// <summary>
+        /// Returns the value for this given key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
         public TValue Get(TKey key)
         {
             CacheEntry<TValue> value;
@@ -67,6 +89,9 @@ namespace OsmSharp.Tools.Cache
             return default(TValue);
         }
 
+        /// <summary>
+        /// Clears this cache.
+        /// </summary>
         public void Clear()
         {
             _data.Clear();
@@ -74,6 +99,10 @@ namespace OsmSharp.Tools.Cache
             _id = long.MinValue;
         }
 
+        /// <summary>
+        /// Removes the value for the given key.
+        /// </summary>
+        /// <param name="id"></param>
         public void Remove(TKey id)
         {
             CacheEntry<TValue> entry;

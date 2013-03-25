@@ -22,6 +22,9 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.Geo
 {
+    /// <summary>
+    /// Contains generic constants.
+    /// </summary>
     public static class Constants
     {
         /// <summary>

@@ -59,7 +59,7 @@ namespace OsmSharp.Routing.Constraints.Highways
         /// <summary>
         /// Returns a label for different categories of highways.
         /// </summary>
-        /// <param name="tagged_object"></param>
+        /// <param name="tags"></param>
         /// <returns></returns>
         public RoutingLabel GetLabelFor(IDictionary<string, string> tags)
         {

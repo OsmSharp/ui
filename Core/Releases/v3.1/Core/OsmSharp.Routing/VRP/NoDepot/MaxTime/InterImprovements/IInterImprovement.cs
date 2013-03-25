@@ -32,8 +32,10 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.InterImprovements
         /// Returns true if there was an improvement.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="route1"></param>
-        /// <param name="route2"></param>
+        /// <param name="solution"></param>
+        /// <param name="route1_idx"></param>
+        /// <param name="route2_idx"></param>
+        /// <param name="max"></param>
         /// <returns></returns>
         bool Improve(MaxTimeProblem problem, MaxTimeSolution solution,
             int route1_idx, int route2_idx, double max);

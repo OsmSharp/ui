@@ -54,7 +54,8 @@ namespace OsmSharp.Routing.Graph.DynamicGraph
         /// <summary>
         /// Returns true if the data in the edge2 is useless if the data in edge1 is present.
         /// </summary>
-        /// <param name="data"></param>
+        /// <param name="edge1"></param>
+        /// <param name="edge2"></param>
         /// <returns></returns>
         bool Overlaps(EdgeData edge1, EdgeData edge2);
     }

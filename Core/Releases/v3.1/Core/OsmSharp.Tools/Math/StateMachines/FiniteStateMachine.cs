@@ -168,8 +168,10 @@ namespace OsmSharp.Tools.Math.Automata
         /// Notify listeners an event was consumed.
         /// </summary>
         /// <param name="even"></param>
-        /// <param name="_current_state"></param>
-        private void NotifyConsumption(EventType even, FiniteStateMachineState<EventType> new_state, FiniteStateMachineState<EventType> old_state)
+        /// <param name="new_state"></param>
+        /// <param name="old_state"></param>
+        private void NotifyConsumption(EventType even, 
+            FiniteStateMachineState<EventType> new_state, FiniteStateMachineState<EventType> old_state)
         {
             if (ConsumptionEvent != null)
             {
@@ -178,7 +180,14 @@ namespace OsmSharp.Tools.Math.Automata
             this.RaiseConsumptionEvent(even, new_state, old_state);
         }
 
-        protected virtual void RaiseConsumptionEvent(EventType even, FiniteStateMachineState<EventType> new_state, FiniteStateMachineState<EventType> old_state)
+        /// <summary>
+        /// Raizes the comsumption event.
+        /// </summary>
+        /// <param name="even"></param>
+        /// <param name="newState"></param>
+        /// <param name="old_state"></param>
+        protected virtual void RaiseConsumptionEvent(EventType even, FiniteStateMachineState<EventType> 
+            newState, FiniteStateMachineState<EventType> old_state)
         {
 
         }
@@ -201,6 +210,10 @@ namespace OsmSharp.Tools.Math.Automata
             this.RaiseFinalStateEvent(events);
         }
 
+        /// <summary>
+        /// Raizes the final state event.
+        /// </summary>
+        /// <param name="events"></param>
         protected virtual void RaiseFinalStateEvent(IList<EventType> events)
         {
 
@@ -215,7 +228,7 @@ namespace OsmSharp.Tools.Math.Automata
         /// 
         /// </summary>
         /// <param name="even"></param>
-        /// <param name="_current_state"></param>
+        /// <param name="state"></param>
         private void NotifyReset(EventType even, FiniteStateMachineState<EventType> state)
         {
             if (ResetEvent != null)
@@ -225,6 +238,11 @@ namespace OsmSharp.Tools.Math.Automata
             this.RaiseResetEvent(even, state);
         }
 
+        /// <summary>
+        /// Raises the reset event.
+        /// </summary>
+        /// <param name="even"></param>
+        /// <param name="state"></param>
         protected virtual void RaiseResetEvent(EventType even, FiniteStateMachineState<EventType> state)
         {
 
@@ -249,6 +267,11 @@ namespace OsmSharp.Tools.Math.Automata
             this.RaiseStateTransitionEvent(even, state);
         }
 
+        /// <summary>
+        /// Raizes the state transition event.
+        /// </summary>
+        /// <param name="even"></param>
+        /// <param name="state"></param>
         protected virtual void RaiseStateTransitionEvent(EventType even, FiniteStateMachineState<EventType> state)
         {
 
@@ -256,6 +279,10 @@ namespace OsmSharp.Tools.Math.Automata
 
         #endregion
 
+        /// <summary>
+        /// Returns a description of this machine.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             if (_current_state != null)

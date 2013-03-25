@@ -33,6 +33,11 @@ namespace OsmSharp.Tools.Collections
     public class DictionaryProxy<K, V>
     {
         #region Construction and Initialization
+
+        /// <summary>
+        /// Creates a new dictionary proxy.
+        /// </summary>
+        /// <param name="original"></param>
         public DictionaryProxy(IDictionary<K, V> original)
         {
             Original = original;
@@ -59,8 +64,14 @@ namespace OsmSharp.Tools.Collections
         [XmlRoot("Pair")]
         public class KeyAndValue
         {
+            /// <summary>
+            /// The key.
+            /// </summary>
             [XmlElement("k")]
             public K Key { get; set; }
+            /// <summary>
+            /// The value.
+            /// </summary>
             [XmlElement("v")]
             public V Value { get; set; }
         }
@@ -111,6 +122,10 @@ namespace OsmSharp.Tools.Collections
 
         #region Serialize/Deserialize
 
+        /// <summary>
+        /// Converts this to bytearray.
+        /// </summary>
+        /// <returns></returns>
         public byte[] ConvertToByteArray()
         {
             //Create our own namespaces for the output
@@ -133,6 +148,11 @@ namespace OsmSharp.Tools.Collections
             }
         }
 
+        /// <summary>
+        /// Reads a dictionary from a byte array.
+        /// </summary>
+        /// <param name="bytes"></param>
+        /// <returns></returns>
         public static DictionaryProxy<K, V> FromByteArray(byte[] bytes)
         {
             XmlSerializer serializer = new XmlSerializer(typeof(DictionaryProxy<K, V>), string.Empty);

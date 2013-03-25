@@ -28,6 +28,10 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement
     /// </summary>
     public class TSPProblem : OsmSharp.Tools.Math.TSP.Problems.IProblem
     {
+        /// <summary>
+        /// Creates a new TSP problem.
+        /// </summary>
+        /// <param name="vrp"></param>
         public TSPProblem(MaxTimeProblem vrp)
         {
             this.Size = vrp.Size;
@@ -38,42 +42,66 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement
             this.WeightMatrix = vrp.WeightMatrix;
         }
 
+        /// <summary>
+        /// Returns the size.
+        /// </summary>
         public int Size
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Returns the first if any.
+        /// </summary>
         public int? First
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Returns the last if any.
+        /// </summary>
         public int? Last
         {
             get;
             private set;
         }
-
+        
+        /// <summary>
+        /// Returns the symmetric flag.
+        /// </summary>
         public bool Symmetric
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Returns true if the problem is euclidean.
+        /// </summary>
         public bool Euclidean
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Returns the weight matrix.
+        /// </summary>
         public double[][] WeightMatrix
         {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Returns the weight between two customers.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public double Weight(int from, int to)
         {
             return this.WeightMatrix[from][to];
@@ -89,7 +117,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement
         /// <summary>
         /// Generate the nearest neighbour list.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="v"></param>
         /// <returns></returns>
         public NearestNeighbours10 Get10NearestNeighbours(int v)
         {
