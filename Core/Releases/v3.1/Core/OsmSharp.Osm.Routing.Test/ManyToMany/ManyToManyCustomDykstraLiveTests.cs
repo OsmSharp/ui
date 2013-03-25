@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing;
 using System.IO;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Osm;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
@@ -22,7 +22,7 @@ namespace OsmSharp.Routing.Osm.Test.ManyToMany
     /// </summary>
     public class ManyToManyCustomDykstraLiveTests : ManyToManyCustomTests
     {
-        private MemoryRouterDataSource<SimpleWeighedEdge> _osm_data;
+        private DynamicGraphRouterDataSource<SimpleWeighedEdge> _osm_data;
 
         /// <summary>
         /// Creates a router.
@@ -40,14 +40,14 @@ namespace OsmSharp.Routing.Osm.Test.ManyToMany
 
                 // do the data processing.
                 //_osm_data =
-                //    new MemoryRouterDataSource<SimpleWeighedEdge>(
+                //    new DynamicGraphRouterDataSource<SimpleWeighedEdge>(
                 //        tags_index);
                 _osm_data =
-                    new MemoryRouterDataSource<SimpleWeighedEdge>(
+                    new DynamicGraphRouterDataSource<SimpleWeighedEdge>(
                         new MemoryDynamicGraphSimpleWeighed(),
                         tags_index);
                 //_osm_data =
-                //    new MemoryRouterDataSource<SimpleWeighedEdge>(
+                //    new DynamicGraphRouterDataSource<SimpleWeighedEdge>(
                 //        new OsmSharp.Routing.Graph.DynamicGraph.Memory.MemoryDynamicGraphIncidenceArray<SimpleWeighedEdge>(),
                 //        tags_index);
                 SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(

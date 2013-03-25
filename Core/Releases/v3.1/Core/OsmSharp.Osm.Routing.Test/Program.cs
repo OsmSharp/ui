@@ -25,8 +25,6 @@ using OsmSharp.Osm.Xml;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Factory;
 using System.IO;
-using OsmSharp.Routing.Osm.Data.Source;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Interpreter;
@@ -77,8 +75,8 @@ namespace OsmSharp.Routing.Osm.Test
             //OsmTagsIndex tags_index = new OsmTagsIndex();
 
             //// do the data processing.
-            //MemoryRouterDataSource<SimpleWeighedEdge> data =
-            //    new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+            //DynamicGraphRouterDataSource<SimpleWeighedEdge> data =
+            //    new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
             //SimpleWeighedEdgeGraphProcessingTarget target_data = new SimpleWeighedEdgeGraphProcessingTarget(
             //    data, interpreter, data.TagsIndex);
             //PBFDataProcessorSource data_processor_source = new PBFDataProcessorSource((new FileInfo(

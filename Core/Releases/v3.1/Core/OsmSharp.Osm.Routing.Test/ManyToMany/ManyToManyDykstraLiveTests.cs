@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing;
 using System.IO;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Osm;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
@@ -32,8 +32,8 @@ namespace OsmSharp.Routing.Osm.Test.ManyToMany
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<SimpleWeighedEdge> osm_data =
-                new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+            DynamicGraphRouterDataSource<SimpleWeighedEdge> osm_data =
+                new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
             SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(data);

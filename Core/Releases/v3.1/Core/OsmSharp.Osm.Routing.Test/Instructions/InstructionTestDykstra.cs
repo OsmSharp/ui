@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Data;
 using System.IO;
 using OsmSharp.Routing.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
@@ -28,8 +28,8 @@ namespace OsmSharp.Routing.Osm.Test.Instructions
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<PreProcessedEdge> osm_data =
-                new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+            DynamicGraphRouterDataSource<PreProcessedEdge> osm_data =
+                new DynamicGraphRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car, box);
             DataProcessorSource data_processor_source;

@@ -5,8 +5,8 @@ using System.Text;
 using NUnit.Framework;
 using OsmSharp.Osm;
 using System.IO;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Osm.Data.XML.Processor;
@@ -36,7 +36,7 @@ namespace OsmSharp.UnitTests.Routing.CH.Contraction
             //
 
             // build the data.
-            MemoryRouterDataSource<CHEdgeData> data = this.BuildData(
+            DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 "OsmSharp.UnitTests.Routing.CH.Contraction.contraction_test1.osm"));
 
@@ -81,7 +81,7 @@ namespace OsmSharp.UnitTests.Routing.CH.Contraction
             //
 
             // build the data.
-            MemoryRouterDataSource<CHEdgeData> data = this.BuildData(
+            DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 "OsmSharp.UnitTests.Routing.CH.Contraction.contraction_test2.osm"));
 
@@ -122,7 +122,7 @@ namespace OsmSharp.UnitTests.Routing.CH.Contraction
         public void TestCHContractionTest3()
         {
             // build the data.
-            MemoryRouterDataSource<CHEdgeData> data = this.BuildData(
+            DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 "OsmSharp.UnitTests.Routing.CH.Contraction.contraction_test3.osm"));
 
@@ -164,14 +164,14 @@ namespace OsmSharp.UnitTests.Routing.CH.Contraction
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        private MemoryRouterDataSource<CHEdgeData> BuildData(Stream stream)
+        private DynamicGraphRouterDataSource<CHEdgeData> BuildData(Stream stream)
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<CHEdgeData> data =
-                new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            DynamicGraphRouterDataSource<CHEdgeData> data =
+                new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                 data, interpreter, data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);

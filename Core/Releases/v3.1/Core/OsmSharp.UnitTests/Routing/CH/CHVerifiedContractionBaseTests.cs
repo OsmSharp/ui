@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using System.IO;
 using NUnit.Framework;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Interpreter;
 using System.Reflection;
@@ -69,7 +69,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private MemoryRouterDataSource<CHEdgeData> _data;
+        private DynamicGraphRouterDataSource<CHEdgeData> _data;
 
         /// <summary>
         /// Holds the interpreter.
@@ -97,7 +97,7 @@ namespace OsmSharp.UnitTests.Routing.CH
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            _data = new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            _data = new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                 _data, _interpreter, _data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
@@ -137,7 +137,7 @@ namespace OsmSharp.UnitTests.Routing.CH
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            _data = new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            _data = new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                 _data, _interpreter, _data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);

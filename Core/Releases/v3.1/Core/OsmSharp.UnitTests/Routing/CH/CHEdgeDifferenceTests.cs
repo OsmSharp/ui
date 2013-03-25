@@ -27,9 +27,9 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Osm;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.UnitTests;
 using OsmSharp.Routing;
 
@@ -45,16 +45,16 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// Builds the data source.
         /// </summary>
         /// <returns></returns>
-        private MemoryRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
+        private DynamicGraphRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
         {
-            MemoryRouterDataSource<CHEdgeData> data = null;
+            DynamicGraphRouterDataSource<CHEdgeData> data = null;
             if (data == null)
             {
                 OsmTagsIndex tags_index = new OsmTagsIndex();
 
                 // do the data processing.
                 data =
-                    new MemoryRouterDataSource<CHEdgeData>(tags_index);
+                    new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                     data, interpreter, data.TagsIndex, VehicleEnum.Car);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
@@ -72,7 +72,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// </summary>
         private EdgeDifference BuildEdgeDifference(IRoutingInterpreter interpreter)
         {
-            MemoryRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
+            DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
 
             // do the pre-processing part.
             INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);
@@ -85,7 +85,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// </summary>
         private CHPreProcessor BuildCHPreProcessor(IRoutingInterpreter interpreter)
         {
-            MemoryRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
+            DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
 
             // do the pre-processing part.
             INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);

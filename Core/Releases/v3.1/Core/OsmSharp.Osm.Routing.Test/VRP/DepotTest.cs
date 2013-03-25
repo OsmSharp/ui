@@ -25,6 +25,7 @@ using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.CH.PreProcessing;
@@ -33,7 +34,6 @@ using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Metrics.Time;
@@ -114,8 +114,8 @@ namespace OsmSharp.Routing.Osm.Test.VRP
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<CHEdgeData> osm_data =
-                new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            DynamicGraphRouterDataSource<CHEdgeData> osm_data =
+                new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             DataProcessorSource data_processor_source;

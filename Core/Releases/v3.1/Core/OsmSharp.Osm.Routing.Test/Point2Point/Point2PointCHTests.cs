@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Data;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH.PreProcessing;
@@ -15,7 +16,6 @@ using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.CH.Routing;
@@ -56,8 +56,8 @@ namespace OsmSharp.Routing.Osm.Test.Point2Point
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<CHEdgeData> osm_data =
-                new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            DynamicGraphRouterDataSource<CHEdgeData> osm_data =
+                new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             DataProcessorSource data_processor_source;
@@ -107,8 +107,8 @@ namespace OsmSharp.Routing.Osm.Test.Point2Point
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<PreProcessedEdge> osm_data =
-                new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+            DynamicGraphRouterDataSource<PreProcessedEdge> osm_data =
+                new DynamicGraphRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             DataProcessorSource data_processor_source;

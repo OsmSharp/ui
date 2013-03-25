@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
 using System.IO;
 using OsmSharp.Osm;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
@@ -24,7 +24,7 @@ namespace OsmSharp.Routing.Osm.Test.ManyToMany
     /// </summary>
     public class ManyToManyCustomCHTests : ManyToManyCustomTests
     {
-        private MemoryRouterDataSource<CHEdgeData> _data;
+        private DynamicGraphRouterDataSource<CHEdgeData> _data;
 
         /// <summary>
         /// Creates a raw router.
@@ -42,7 +42,7 @@ namespace OsmSharp.Routing.Osm.Test.ManyToMany
 
                 // do the data processing.
                 _data =
-                    new MemoryRouterDataSource<CHEdgeData>(tags_index);
+                    new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                     _data, interpreter, _data.TagsIndex, VehicleEnum.Car);
                 DataProcessorSource source;

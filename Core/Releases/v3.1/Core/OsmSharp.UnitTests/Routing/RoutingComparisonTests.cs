@@ -19,10 +19,10 @@ using System.Reflection;
 using NUnit.Framework;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Data;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Router;
@@ -49,14 +49,14 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// Builds a raw data source.
         /// </summary>
         /// <returns></returns>
-        public MemoryRouterDataSource<PreProcessedEdge> BuildDykstraDataSource(
+        public DynamicGraphRouterDataSource<PreProcessedEdge> BuildDykstraDataSource(
             IRoutingInterpreter interpreter, string embedded_name)
         {
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<PreProcessedEdge> data =
-                new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+            DynamicGraphRouterDataSource<PreProcessedEdge> data =
+                new DynamicGraphRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 data, interpreter, data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(

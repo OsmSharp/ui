@@ -5,8 +5,8 @@ using System.Text;
 using NUnit.Framework;
 using OsmSharp.Routing;
 using OsmSharp.Osm;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
-using OsmSharp.Routing.Graph.Memory;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Router;
@@ -230,8 +230,8 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<SimpleWeighedEdge> data =
-                new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+            DynamicGraphRouterDataSource<SimpleWeighedEdge> data =
+                new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
             uint vertex_noname1 = data.AddVertex((float)from_noname.Latitude, (float)from_noname.Longitude);
             uint vertex_noname2 = data.AddVertex((float)to_noname.Latitude, (float)to_noname.Longitude);
             data.AddArc(vertex_noname1, vertex_noname2, new SimpleWeighedEdge()

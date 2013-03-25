@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Osm;
-using OsmSharp.Routing.Graph.Memory;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
@@ -32,6 +32,7 @@ using OsmSharp.Osm.Data.Core.Processor.Progress;
 using System;
 using OsmSharp.Osm.Data.XML.Processor;
 using OsmSharp.Routing;
+
 namespace OsmSharp.Routing.Osm.Test.CH
 {
     class CHTest
@@ -55,8 +56,8 @@ namespace OsmSharp.Routing.Osm.Test.CH
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<CHEdgeData> osm_data =
-                new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            DynamicGraphRouterDataSource<CHEdgeData> osm_data =
+                new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             DataProcessorSource data_processor_source;
