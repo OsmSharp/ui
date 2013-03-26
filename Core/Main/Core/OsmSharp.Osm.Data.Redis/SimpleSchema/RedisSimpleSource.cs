@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Core;
+using OsmSharp.Osm;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm.Filters;
 using ServiceStack.Redis;
 using ServiceStack.Redis.Generic;
-using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Osm.Factory;
 using OsmSharp.Osm.Data.Redis.SimpleSchema.Processort.Primitives;
 
 namespace OsmSharp.Osm.Data.Redis.SimpleSchema

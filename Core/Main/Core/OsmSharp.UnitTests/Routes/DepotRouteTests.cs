@@ -5,7 +5,7 @@ using System.Text;
 using NUnit.Framework;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
-using OsmSharp.Routing.Core.VRP.WithDepot.MaxTime;
+using OsmSharp.Routing.VRP.WithDepot.MaxTime;
 
 namespace OsmSharp.UnitTests.Routes
 {

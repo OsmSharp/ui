@@ -19,35 +19,35 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Xml.Sources;
 using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Osm.Core;
+using OsmSharp.Osm;
 using System.IO;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Route;
-using OsmSharp.Routing.Core.Metrics.Time;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Route;
+using OsmSharp.Routing.Metrics.Time;
+using OsmSharp.Routing.Osm.Data.Processing;
+using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Osm.Interpreter;
 using System.Reflection;
-using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.Genetic;
+using OsmSharp.Routing.VRP.NoDepot.MaxTime;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.Routing;
-using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.CheapestInsertion;
-using OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.VNS;
+using OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion;
+using OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS;
 using OsmSharp.Osm.Data.XML.Processor;
 
-namespace OsmSharp.Osm.Routing.Test.VRP
+namespace OsmSharp.Routing.Osm.Test.VRP
 {
     public static class NoDepotTest
     {
@@ -112,8 +112,8 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<CHEdgeData> osm_data =
-                new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            DynamicGraphRouterDataSource<CHEdgeData> osm_data =
+                new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             DataProcessorSource data_processor_source;
@@ -141,8 +141,8 @@ namespace OsmSharp.Osm.Routing.Test.VRP
 
             // read the source files.
             string points_file = file;
-            string[][] data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(
-                null, new FileInfo(points_file), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true);
+            string[][] data = OsmSharp.Tools.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(
+                null, new FileInfo(points_file), OsmSharp.Tools.DelimitedFiles.DelimiterType.DotCommaSeperated, true);
             int cnt = -1;
             int max_count = 100000;
             int between = 1;
@@ -185,19 +185,19 @@ namespace OsmSharp.Osm.Routing.Test.VRP
                         }
                     }
 
-                    OsmSharp.Tools.Core.Output.OutputStreamHost.ReportProgress(
+                    OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(
                         row_idx+1, data.Length, "NoDepotTest", "Processing points...");
                 }
             }
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("Started {0}:", name));
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(string.Format("{0} points", points.Count));
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(string.Format("Started {0}:", name));
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(string.Format("{0} points", points.Count));
 
             //// calculate the old route distances.
             //TextWriter log_stream = new StreamWriter(new FileInfo(output + string.Format("{0}.before.log", name)).OpenWrite());
             //double total_time = 0;
             //foreach (KeyValuePair<string, List<RouterPoint>> route in points_per_route)
             //{
-            //    OsmSharp.Osm.Routing.Core.TSP.Genetic.RouterTSPAEXGenetic<RouterPoint> tsp_route =
+            //    OsmSharp.Routing.Osm.Core.TSP.Genetic.RouterTSPAEXGenetic<RouterPoint> tsp_route =
             //        new Core.TSP.Genetic.RouterTSPAEXGenetic<RouterPoint>(
             //            router);
             //    OsmSharpRoute old_route = tsp_route.CalculateTSP(VehicleEnum.Car, route.Value.ToArray());
@@ -206,20 +206,20 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             //    old_route.SaveAsGpx(new FileInfo(output + string.Format("{0}.{1}.gpx", name, route.Key)));
             //    double time = metrics["Time_in_seconds"] + delivery_time.Value * route.Value.Count;
             //    total_time = total_time + time;
-            //    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Orginal Route [{0}]: {1}s with {2} points",
+            //    OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Orginal Route [{0}]: {1}s with {2} points",
             //        route.Key, time, route.Value.Count);
             //    log_stream.WriteLine("{0};{1};{2}", route.Key, time, route.Value.Count);
             //}
-            //OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Orginal Routes Total: {0} s", total_time);
+            //OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Orginal Routes Total: {0} s", total_time);
             //log_stream.WriteLine("Total: {0}", total_time);
             //log_stream.Flush();
 
             // pre-calculate the weights 
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Calculating weights...");
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Calculating weights...");
             double[][] weights = router.CalculateManyToManyWeight(VehicleEnum.Car,
                 points.ToArray(), points.ToArray());
 
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Started testing VRP solvers:");
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Started testing VRP solvers:");
             long before_vrp_ticks = DateTime.Now.Ticks;
 
             int count = 10;
@@ -364,14 +364,14 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             //NoDepotTest.MaxTestRouterMaxTime(output, name + string.Format("_ex_{0}", "inf"),
             //    interpreter, vrp_router, points.ToArray(), weights, delivery_time, 1);
 
-            //vrp_router = new OsmSharp.Routing.Core.VRP.NoDepot.MaxTime.SavingsHeuristics.SavingsHeuristicSolver<RouterPoint>(
+            //vrp_router = new OsmSharp.Routing.VRP.NoDepot.MaxTime.SavingsHeuristics.SavingsHeuristicSolver<RouterPoint>(
             //        router, max.Value, delivery_time.Value);
             //NoDepotTest.MaxTestRouterMaxTime(directory, name, interpreter, vrp_router, points.ToArray(), 2);
 
 
             long after_vrp_ticks = DateTime.Now.Ticks;
 
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Solved in {0}!", 
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Solved in {0}!", 
                 (new TimeSpan(after_vrp_ticks - before_vrp_ticks)).ToString());
         }
 
@@ -390,12 +390,11 @@ namespace OsmSharp.Osm.Routing.Test.VRP
             int total_count = count;
             while (count > 0)
             {
-                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Started Testing: {0} {1}/{2}", vrp_router.Name, total_count - count + 1, total_count);
+                OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Started Testing: {0} {1}/{2}", vrp_router.Name, total_count - count + 1, total_count);
 
                 double total_time = 0;
                 long ticks_before = DateTime.Now.Ticks;
                 OsmSharpRoute[] real_routes = vrp_router.CalculateNoDepot(VehicleEnum.Car, points, weights);
-
 
                 for (int idx = 0; idx < real_routes.Length; idx++)
                 {
@@ -423,9 +422,9 @@ namespace OsmSharp.Osm.Routing.Test.VRP
                         OsmSharpRoute new_route = real_routes[idx];
                         new_route.SaveAsGpx(new FileInfo(directory + string.Format("{0}.{1}_{2}.gpx", name,
                             vrp_router.Name, idx)));
-                        OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Route: {0}: {1} s", idx, new_route.TotalTime);
+                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Route: {0}: {1} s", idx, new_route.TotalTime);
                     }
-                    OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Routes Total: {0} s", total_time);
+                    OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Routes Total: {0} s", total_time);
                 }
                 count--;
             }
@@ -474,7 +473,7 @@ namespace OsmSharp.Osm.Routing.Test.VRP
         //    //    max, 20, matrix);
 
         //    //Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithSeeds<ResolvedType> vrp_router
-        //    //    = new OsmSharp.Osm.Routing.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithSeeds<ResolvedType>(
+        //    //    = new OsmSharp.Routing.Osm.Core.VRP.NoDepot.MaxTime.BestPlacement.RouterBestPlacementWithSeeds<ResolvedType>(
         //    //        router, max.Value, delivery_time.Value);
         //    //Osm.Routing.Core.VRP.NoDepot.MaxTime.Genetic.RouterGeneticSimple<ResolvedType> vrp_router
         //    //     = new Core.VRP.NoDepot.MaxTime.Genetic.RouterGeneticSimple<ResolvedType>(

@@ -4,19 +4,19 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using OsmSharp.Osm.UnitTests.Routing;
-using OsmSharp.Routing.Core;
-using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Routing.Core.Router;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Routing.Core.Graph.Router;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Osm.Core;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Data;
+using OsmSharp.Routing.Router;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.XML.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
 
 namespace OsmSharp.UnitTests.Routing.Dykstra
 {
@@ -66,8 +66,8 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
                 OsmTagsIndex tags_index = new OsmTagsIndex();
 
                 // do the data processing.
-                MemoryRouterDataSource<SimpleWeighedEdge> memory_data =
-                    new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+                DynamicGraphRouterDataSource<SimpleWeighedEdge> memory_data =
+                    new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
                 SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
                     memory_data, interpreter, memory_data.TagsIndex, VehicleEnum.Car);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
@@ -85,8 +85,8 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
             //OsmTagsIndex tags_index = new OsmTagsIndex();
 
             //// do the data processing.
-            //MemoryRouterDataSource<SimpleWeighedEdge> data =
-            //    new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+            //DynamicGraphRouterDataSource<SimpleWeighedEdge> data =
+            //    new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
             //SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
             //    data, interpreter, data.TagsIndex, VehicleEnum.Car);
             //XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(

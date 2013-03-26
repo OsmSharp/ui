@@ -22,8 +22,17 @@ using System.Text;
 
 namespace OsmSharp.Osm.Data.Oracle
 {
+    /// <summary>
+    /// Extension methods.
+    /// </summary>
     public static class Extensions
     {
+        /// <summary>
+        /// Converts a nullable to a database value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nullable"></param>
+        /// <returns></returns>
         public static object ConvertToDBValue<T>(this Nullable<T> nullable) where T : struct
         {
             if (nullable.HasValue)
@@ -36,6 +45,11 @@ namespace OsmSharp.Osm.Data.Oracle
             }
         }
 
+        /// <summary>
+        /// Returns the ToString() value of string.Empty when the given object is null.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static string ToStringEmptyWhenNull(this object obj)
         {
             if (obj == null)

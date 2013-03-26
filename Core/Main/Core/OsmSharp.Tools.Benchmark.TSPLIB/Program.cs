@@ -46,7 +46,7 @@ namespace OsmSharp.Tools.Benchmark.TSPLIB
         {
             DoTests();
 
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine("Finished!");
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Finished!");
             Console.ReadLine();
         }
 
@@ -54,10 +54,10 @@ namespace OsmSharp.Tools.Benchmark.TSPLIB
         {
             bool ga = false;
             bool eax = true;
-            OsmSharp.Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
-                new OsmSharp.Tools.Core.Output.ConsoleOutputStream());
-            OsmSharp.Tools.Core.Output.OutputStreamHost.RegisterOutputStream(
-                new OsmSharp.Tools.Core.Output.FileOutputStream(@"c:\temp\results_x64.txt"));
+            OsmSharp.Tools.Output.OutputStreamHost.RegisterOutputStream(
+                new OsmSharp.Tools.Output.ConsoleOutputStream());
+            OsmSharp.Tools.Output.OutputStreamHost.RegisterOutputStream(
+                new OsmSharp.Tools.Output.FileOutputStream(@"c:\temp\results_x64.txt"));
 
             List<TSPLIBProblem> problems = new List<TSPLIBProblem>();
 

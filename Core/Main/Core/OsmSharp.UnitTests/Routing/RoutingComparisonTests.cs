@@ -17,19 +17,19 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 using System.Reflection;
 using NUnit.Framework;
-using OsmSharp.Osm.Core;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Routing.Core.Route;
-using OsmSharp.Routing.Core.Router;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Data;
+using OsmSharp.Routing.Osm.Data.Processing;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Route;
+using OsmSharp.Routing.Router;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Routing.Core.Graph.Router;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
 using OsmSharp.Osm.Data.XML.Processor;
 
 namespace OsmSharp.Osm.UnitTests.Routing
@@ -49,14 +49,14 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// Builds a raw data source.
         /// </summary>
         /// <returns></returns>
-        public MemoryRouterDataSource<PreProcessedEdge> BuildDykstraDataSource(
+        public DynamicGraphRouterDataSource<PreProcessedEdge> BuildDykstraDataSource(
             IRoutingInterpreter interpreter, string embedded_name)
         {
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<PreProcessedEdge> data =
-                new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+            DynamicGraphRouterDataSource<PreProcessedEdge> data =
+                new DynamicGraphRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 data, interpreter, data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
@@ -88,7 +88,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         public void TestCompareAll(string embedded_name)
         {
             // build the routing settings.
-            IRoutingInterpreter interpreter = new OsmSharp.Osm.Routing.Interpreter.OsmRoutingInterpreter();
+            IRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
 
             // get the osm data source.
             IBasicRouterDataSource<PreProcessedEdge> data = this.BuildDykstraDataSource(interpreter, embedded_name);

@@ -20,26 +20,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Routing.Core.Constraints;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Constraints;
 using System.IO;
 using System.Reflection;
-using OsmSharp.Osm.Core.Xml;
+using OsmSharp.Osm.Xml;
 using System.Xml;
-using OsmSharp.Osm.Routing.Interpreter;
-using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Osm.Data;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.XML.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Routing.Core.Router;
-using OsmSharp.Osm.Core;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Routing.Core.Graph.Router;
+using OsmSharp.Routing.Router;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Tools.Math;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
 
 namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
 {
@@ -81,8 +81,8 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<PreProcessedEdge> data =
-                new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+            DynamicGraphRouterDataSource<PreProcessedEdge> data =
+                new DynamicGraphRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 data, interpreter, data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(

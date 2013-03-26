@@ -21,9 +21,9 @@ using System.Linq;
 using System.Text;
 using ServiceStack.Redis;
 using ServiceStack.Redis.Generic;
-using OsmSharp.Osm.Core.Simple;
-using OsmSharp.Osm.Data.Core.Processor;
+using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Redis.SimpleSchema.Processort.Primitives;
+using OsmSharp.Osm.Data.Core.Processor;
 
 namespace OsmSharp.Osm.Data.Redis.SimpleSchema.Processor
 {

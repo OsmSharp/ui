@@ -20,23 +20,38 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Oracle.DataAccess.Client;
-using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor;
 
 namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
 {
+    /// <summary>
+    /// A data processor target that truncates all data in the database.
+    /// </summary>
     public class OracleSimpleDataProcessorTruncateTarget : DataProcessorTarget
     {
+        /// <summary>
+        /// Holds the oracle connection.
+        /// </summary>
         private OracleConnection _connection;
         
+        /// <summary>
+        /// Holds the connection string.
+        /// </summary>
         private string _connection_string;
 
+        /// <summary>
+        /// Creates a new oracle truncate target.
+        /// </summary>
+        /// <param name="connection_string"></param>
         public OracleSimpleDataProcessorTruncateTarget(string connection_string)
         {
             _connection_string = connection_string;
         }
 
-
+        /// <summary>
+        /// Initializes this target.
+        /// </summary>
         public override void Initialize()
         {
             _connection = new OracleConnection(_connection_string);
@@ -131,26 +146,45 @@ namespace OsmSharp.Osm.Data.Oracle.Raw.Processor
             reader.Dispose();
         }
 
+        /// <summary>
+        /// Applies a change.
+        /// </summary>
+        /// <param name="change"></param>
         public override void ApplyChange(SimpleChangeSet change)
         {
 
         }
 
+        /// <summary>
+        /// Adds a node.
+        /// </summary>
+        /// <param name="node"></param>
         public override void AddNode(SimpleNode node)
         {
 
         }
 
+        /// <summary>
+        /// Adds a way.
+        /// </summary>
+        /// <param name="way"></param>
         public override void AddWay(SimpleWay way)
         {
 
         }
 
+        /// <summary>
+        /// Adds a relation.
+        /// </summary>
+        /// <param name="relation"></param>
         public override void AddRelation(SimpleRelation relation)
         {
 
         }
 
+        /// <summary>
+        /// Closes this target.
+        /// </summary>
         public override void Close()
         {
             _connection.Close();

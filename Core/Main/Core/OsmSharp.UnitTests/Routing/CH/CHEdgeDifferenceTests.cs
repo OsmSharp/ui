@@ -26,12 +26,12 @@ using NUnit.Framework;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Data.Processing;
+using OsmSharp.Routing.Interpreter;
 using OsmSharp.UnitTests;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH
 {
@@ -45,16 +45,16 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// Builds the data source.
         /// </summary>
         /// <returns></returns>
-        private MemoryRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
+        private DynamicGraphRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
         {
-            MemoryRouterDataSource<CHEdgeData> data = null;
+            DynamicGraphRouterDataSource<CHEdgeData> data = null;
             if (data == null)
             {
                 OsmTagsIndex tags_index = new OsmTagsIndex();
 
                 // do the data processing.
                 data =
-                    new MemoryRouterDataSource<CHEdgeData>(tags_index);
+                    new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                     data, interpreter, data.TagsIndex, VehicleEnum.Car);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
@@ -72,7 +72,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// </summary>
         private EdgeDifference BuildEdgeDifference(IRoutingInterpreter interpreter)
         {
-            MemoryRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
+            DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
 
             // do the pre-processing part.
             INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);
@@ -85,7 +85,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// </summary>
         private CHPreProcessor BuildCHPreProcessor(IRoutingInterpreter interpreter)
         {
-            MemoryRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
+            DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
 
             // do the pre-processing part.
             INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);
@@ -103,7 +103,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         [Test]
         public void TestCHEdgeDifferenceNonContracted()
         {
-            IRoutingInterpreter interpreter = new OsmSharp.Osm.Routing.Interpreter.OsmRoutingInterpreter();
+            IRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
             EdgeDifference edge_difference = this.BuildEdgeDifference(interpreter);
 
             Assert.AreEqual(1, edge_difference.Calculate(1)); // witness paths from 2<->4.
@@ -137,7 +137,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         [Test]
         public void TestCHEdgeDifferenceContractions()
         {
-            IRoutingInterpreter interpreter = new OsmSharp.Osm.Routing.Interpreter.OsmRoutingInterpreter();
+            IRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
             CHPreProcessor processor = this.BuildCHPreProcessor(interpreter);
             //processor.InitializeQueue();
             INodeWeightCalculator edge_difference = processor.NodeWeightCalculator;

@@ -24,11 +24,11 @@
 //using System.Data;
 //using OsmSharp.Osm.Data;
 //using OsmSharp.Tools.Xml.Sources;
-//using OsmSharp.Osm.Routing.Raw;
+//using OsmSharp.Routing.Osm.Raw;
 //using OsmSharp.Osm.Data.Raw.XML.OsmSource;
-//using OsmSharp.Osm.Core.Xml;
+//using OsmSharp.Osm.Xml;
 
-//namespace OsmSharp.Osm.Routing.Test.Connected
+//namespace OsmSharp.Routing.Osm.Test.Connected
 //{
 //    class ConnectedTest
 //    {
@@ -54,8 +54,8 @@
 //            // read matrix points.
 //            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
 //            string csv_path = Path.Combine(info.FullName, "Connected",string.Format("{0}.csv",name));
-//            DataSet data = OsmSharp.Tools.Core.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
-//                new System.IO.FileInfo(csv_path), OsmSharp.Tools.Core.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
+//            DataSet data = OsmSharp.Tools.DelimitedFiles.DelimitedFileHandler.ReadDelimitedFile(null,
+//                new System.IO.FileInfo(csv_path), OsmSharp.Tools.DelimitedFiles.DelimiterType.DotCommaSeperated, true, true);
 //            foreach (DataRow row in data.Tables[0].Rows)
 //            {
 //                // be carefull with the parsing and the number formatting for different cultures.

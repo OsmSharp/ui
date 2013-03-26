@@ -3,18 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using OsmSharp.Osm.Core;
-using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Osm;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Interpreter;
 using System.Reflection;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
-using OsmSharp.Routing.Core.Graph.Path;
+using OsmSharp.Routing.Graph.Path;
 using OsmSharp.Routing.CH.Routing;
-using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Interpreter;
 
 namespace OsmSharp.UnitTests.Routing.CH
 {

@@ -22,7 +22,7 @@ using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Tools.Xml.Sources;
 using System.IO;
-using OsmSharp.Tools.Xml.Nomatim.Search;
+using OsmSharp.Tools.Xml.Nominatim.Search;
 
 namespace OsmSharp.UnitTests
 {

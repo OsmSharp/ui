@@ -20,10 +20,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Osm.Core;
+using OsmSharp.Osm;
 using Npgsql;
-using OsmSharp.Osm.Core.Factory;
-using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm.Factory;
+using OsmSharp.Osm.Filters;
 using System.Text.RegularExpressions;
 
 namespace OsmSharp.Osm.Data.PostgreSQL
@@ -76,6 +76,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
 
         #region IDataSourceReadOnly Members
 
+        /// <summary>
+        /// Returns the bounding box of the data in this rouce.
+        /// </summary>
         public GeoCoordinateBox BoundingBox
         {
             get
@@ -84,6 +87,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             }
         }
 
+        /// <summary>
+        /// The name of this data source.
+        /// </summary>
         public string Name
         {
             get
@@ -92,6 +98,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             }
         }
 
+        /// <summary>
+        /// The id of this data source.
+        /// </summary>
         public Guid Id
         {
             get
@@ -100,6 +109,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             }
         }
 
+        /// <summary>
+        /// Return true if there is a boundingbox.
+        /// </summary>
         public bool HasBoundinBox
         {
             get
@@ -108,6 +120,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             }
         }
 
+        /// <summary>
+        /// Returns true if readonly.
+        /// </summary>
         public bool IsReadOnly
         {
             get
@@ -116,6 +131,11 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             }
         }
 
+        /// <summary>
+        /// Returns the node with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Node GetNode(long id)
         {
             IList<Node> nodes = this.GetNodes(new List<long>(new long[] { id }));
@@ -126,6 +146,11 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             return null;
         }
 
+        /// <summary>
+        /// Returns all nodes with the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Node> GetNodes(IList<long> ids)
         {
             IList<Node> return_list = new List<Node>();
@@ -180,24 +205,44 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             return return_list;
         }
 
+        /// <summary>
+        /// Returns the relation with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Relation GetRelation(long id)
         {
             // TODO: implement this
             return null;
         }
 
+        /// <summary>
+        /// Returns all relations with the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Relation> GetRelations(IList<long> ids)
         {
             // TODO: implement this
             return new List<Relation>();
         }
 
-        public IList<Relation> GetRelationsFor(Osm.Core.OsmBase obj)
+        /// <summary>
+        /// Returns all relations for the given ids.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public IList<Relation> GetRelationsFor(Osm.OsmBase obj)
         {
             // TODO: implement this
             return new List<Relation>();
         }
 
+        /// <summary>
+        /// Returns the way with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Way GetWay(long id)
         {
             IList<Way> ways = this.GetWays(new List<long>(new long[] { id }));
@@ -208,11 +253,22 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             return null;
         }
 
+        /// <summary>
+        /// Returns all ways with the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Way> GetWays(IList<long> ids)
         {
             return this.GetWays(ids, null);
         }
 
+        /// <summary>
+        /// Returns all ways that have the given nodes.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
         private IList<Way> GetWays(IList<long> ids,Dictionary<long,Node> nodes)
         {
             if (ids.Count > 0)
@@ -313,6 +369,11 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             return new List<Way>();
         }
 
+        /// <summary>
+        /// Returns all ways that have the given node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public IList<Way> GetWaysFor(Node node)
         {
             Dictionary<long,Node> nodes = new Dictionary<long,Node>();
@@ -320,6 +381,11 @@ namespace OsmSharp.Osm.Data.PostgreSQL
             return this.GetWaysForNodes(nodes);
         }
 
+        /// <summary>
+        /// Returns all ways that have the given nodes.
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
         public IList<Way> GetWaysForNodes(Dictionary<long,Node> nodes)
         {
             if (nodes.Count > 0)
@@ -377,6 +443,12 @@ namespace OsmSharp.Osm.Data.PostgreSQL
 
         #endregion
 
+        /// <summary>
+        /// Returns all objects withing the given bounding box and the objects that are valid according to the filter.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
             // initialize connection.
@@ -509,6 +581,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL
 
         #region IDisposable Members
 
+        /// <summary>
+        /// Releases all resources.
+        /// </summary>
         public void Dispose()
         {
             _connection.Close();

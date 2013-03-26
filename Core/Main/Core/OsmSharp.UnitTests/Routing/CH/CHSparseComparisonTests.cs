@@ -23,15 +23,15 @@ using NUnit.Framework;
 using OsmSharp.Osm.Data.XML.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.Routing;
-using OsmSharp.Routing.Core.Graph.Memory;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH
 {
@@ -44,7 +44,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private Dictionary<string, MemoryRouterDataSource<CHEdgeData>> _data = null;
+        private Dictionary<string, DynamicGraphRouterDataSource<CHEdgeData>> _data = null;
 
         /// <summary>
         /// Returns a new router.
@@ -56,16 +56,16 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         {
             if (_data == null)
             {
-                _data = new Dictionary<string, MemoryRouterDataSource<CHEdgeData>>();
+                _data = new Dictionary<string, DynamicGraphRouterDataSource<CHEdgeData>>();
             }
-            MemoryRouterDataSource<CHEdgeData> data = null;
+            DynamicGraphRouterDataSource<CHEdgeData> data = null;
             if (!_data.TryGetValue(embedded_name, out data))
             {
                 OsmTagsIndex tags_index = new OsmTagsIndex();
 
                 // do the data processing.
                 data =
-                    new MemoryRouterDataSource<CHEdgeData>(tags_index);
+                    new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                     data, interpreter, data.TagsIndex, VehicleEnum.Car);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(

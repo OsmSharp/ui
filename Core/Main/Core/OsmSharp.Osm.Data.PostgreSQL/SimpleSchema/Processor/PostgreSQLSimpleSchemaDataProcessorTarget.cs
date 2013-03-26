@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
-using OsmSharp.Tools.Core;
-using OsmSharp.Osm.Core.Simple;
+using OsmSharp.Tools;
+using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor;
 using Npgsql;
 using System.IO;
@@ -70,19 +70,30 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
 
         private string _connection_string;
 
+        /// <summary>
+        /// Creates a new target.
+        /// </summary>
+        /// <param name="connection_string"></param>
         public PostgreSQLSimpleSchemaDataProcessorTarget(string connection_string)
         {
             _connection_string = connection_string;
             _create_and_detect_schema = false;
         }
 
+        /// <summary>
+        /// Creates a new target.
+        /// </summary>
+        /// <param name="connection_string"></param>
+        /// <param name="create_schema"></param>
         public PostgreSQLSimpleSchemaDataProcessorTarget(string connection_string, bool create_schema)
         {
             _connection_string = connection_string;
             _create_and_detect_schema = create_schema;
         }
 
-
+        /// <summary>
+        /// Initializes this target.
+        /// </summary>
         public override void Initialize()
         {
             _connection = new NpgsqlConnection(_connection_string);
@@ -339,7 +350,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
                     cin.End();
                 }
 
-                OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(
+                OsmSharp.Tools.Output.OutputStreamHost.WriteLine(
                     "Inserted {0} records into {1}!", table.Rows.Count, table_name);
             }
         }
@@ -361,11 +372,19 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
 
         #endregion
 
+        /// <summary>
+        /// Applies the given change.
+        /// </summary>
+        /// <param name="change"></param>
         public override void ApplyChange(SimpleChangeSet change)
         {
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Adds a node.
+        /// </summary>
+        /// <param name="node"></param>
         public override void AddNode(SimpleNode node)
         {
             DataRow node_row = _node_table.NewRow();
@@ -434,6 +453,10 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
             }
         }
 
+        /// <summary>
+        /// Adds a way.
+        /// </summary>
+        /// <param name="way"></param>
         public override void AddWay(SimpleWay way)
         {
             DataRow way_row = _way_table.NewRow();
@@ -517,6 +540,10 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
             }
         }
 
+        /// <summary>
+        /// Adds a relation.
+        /// </summary>
+        /// <param name="relation"></param>
         public override void AddRelation(SimpleRelation relation)
         {
             DataRow relation_row = _relation_table.NewRow();
@@ -597,6 +624,9 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor
             }
         }
 
+        /// <summary>
+        /// Closes this target.
+        /// </summary>
         public override void Close()
         {
             if (_connection != null)

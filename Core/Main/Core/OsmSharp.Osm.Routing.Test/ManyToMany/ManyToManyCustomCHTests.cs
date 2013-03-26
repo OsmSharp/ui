@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Interpreter;
 using System.IO;
-using OsmSharp.Osm.Core;
-using OsmSharp.Routing.Core.Graph.Memory;
+using OsmSharp.Osm;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
@@ -17,14 +17,14 @@ using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Osm.Data.XML.Processor;
 
-namespace OsmSharp.Osm.Routing.Test.ManyToMany
+namespace OsmSharp.Routing.Osm.Test.ManyToMany
 {
     /// <summary>
     /// Executes many-to-many calculation performance tests using the CH data format.
     /// </summary>
     public class ManyToManyCustomCHTests : ManyToManyCustomTests
     {
-        private MemoryRouterDataSource<CHEdgeData> _data;
+        private DynamicGraphRouterDataSource<CHEdgeData> _data;
 
         /// <summary>
         /// Creates a raw router.
@@ -42,7 +42,7 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
 
                 // do the data processing.
                 _data =
-                    new MemoryRouterDataSource<CHEdgeData>(tags_index);
+                    new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                     _data, interpreter, _data.TagsIndex, VehicleEnum.Car);
                 DataProcessorSource source;

@@ -23,8 +23,19 @@ using Oracle.DataAccess.Client;
 
 namespace OsmSharp.Osm.Data.Oracle
 {
+    /// <summary>
+    /// Extensions for the oracle command.
+    /// </summary>
     public static class OracleCommandExtension
     {
+        /// <summary>
+        /// Adds a list of parameters to the given oracle command.
+        /// </summary>
+        /// <typeparam name="TValue"></typeparam>
+        /// <param name="command"></param>
+        /// <param name="name"></param>
+        /// <param name="collection"></param>
+        /// <returns></returns>
         public static OracleCommand AddParameterCollection<TValue>(this OracleCommand command, string name, IEnumerable<TValue> collection)
         {
             var oraParams = new List<OracleParameter>();

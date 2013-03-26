@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using OsmSharp.Tools.Core.Enumerations;
+using OsmSharp.Tools.Enumerations;
 
 namespace OsmSharp.UnitTests.Tools
 {

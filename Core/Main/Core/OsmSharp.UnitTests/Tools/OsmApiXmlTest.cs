@@ -44,11 +44,11 @@ namespace OsmSharp.UnitTests
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.capabilities.xml");
 
             XmlSerializer capabilities_serializer = new XmlSerializer(typeof(
-                OsmSharp.Osm.Core.Xml.v0_6.osm));
+                OsmSharp.Osm.Xml.v0_6.osm));
 
-            OsmSharp.Osm.Core.Xml.v0_6.osm osm =
-                (capabilities_serializer.Deserialize(capabilities) as OsmSharp.Osm.Core.Xml.v0_6.osm);
-            OsmSharp.Osm.Core.Xml.v0_6.api api = osm.api;
+            OsmSharp.Osm.Xml.v0_6.osm osm =
+                (capabilities_serializer.Deserialize(capabilities) as OsmSharp.Osm.Xml.v0_6.osm);
+            OsmSharp.Osm.Xml.v0_6.api api = osm.api;
 
             Assert.IsNotNull(api.area);
             Assert.IsTrue(api.area.maximumSpecified);
@@ -83,37 +83,37 @@ namespace OsmSharp.UnitTests
         [Test]
         public void OsmApiSerializeTest()
         {
-            OsmSharp.Osm.Core.Xml.v0_6.osm osm = new OsmSharp.Osm.Core.Xml.v0_6.osm();
-            osm.api = new Osm.Core.Xml.v0_6.api();
+            OsmSharp.Osm.Xml.v0_6.osm osm = new OsmSharp.Osm.Xml.v0_6.osm();
+            osm.api = new Osm.Xml.v0_6.api();
 
-            osm.api.area = new Osm.Core.Xml.v0_6.area();
+            osm.api.area = new Osm.Xml.v0_6.area();
             osm.api.area.maximumSpecified = true;
             osm.api.area.maximum = 0.25;
 
-            osm.api.changesets = new Osm.Core.Xml.v0_6.changesets();
+            osm.api.changesets = new Osm.Xml.v0_6.changesets();
             osm.api.changesets.maximum_elementsSpecified = true;
             osm.api.changesets.maximum_elements = 50000;
 
-            osm.api.timeout = new Osm.Core.Xml.v0_6.timeout();
+            osm.api.timeout = new Osm.Xml.v0_6.timeout();
             osm.api.timeout.secondsSpecified = true;
             osm.api.timeout.seconds = 300;
 
-            osm.api.tracepoints = new Osm.Core.Xml.v0_6.tracepoints();
+            osm.api.tracepoints = new Osm.Xml.v0_6.tracepoints();
             osm.api.tracepoints.per_pageSpecified = true;
             osm.api.tracepoints.per_page = 5000;
 
-            osm.api.version = new Osm.Core.Xml.v0_6.version();
+            osm.api.version = new Osm.Xml.v0_6.version();
             osm.api.version.maximumSpecified = true;
             osm.api.version.maximum = 0.6;
             osm.api.version.minimumSpecified = true;
             osm.api.version.minimum = 0.6;
 
-            osm.api.waynodes = new Osm.Core.Xml.v0_6.waynodes();
+            osm.api.waynodes = new Osm.Xml.v0_6.waynodes();
             osm.api.waynodes.maximumSpecified = true;
             osm.api.waynodes.maximum = 2000;
 
             XmlSerializer capabilities_serializer = new XmlSerializer(typeof(
-                OsmSharp.Osm.Core.Xml.v0_6.osm));
+                OsmSharp.Osm.Xml.v0_6.osm));
 
             Stream stream = new MemoryStream();
             capabilities_serializer.Serialize(stream, osm);

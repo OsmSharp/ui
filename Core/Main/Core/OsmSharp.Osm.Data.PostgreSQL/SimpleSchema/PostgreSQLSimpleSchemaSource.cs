@@ -21,9 +21,9 @@ using System.Linq;
 using System.Text;
 using Npgsql;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Core.Factory;
-using OsmSharp.Osm.Core.Filters;
+using OsmSharp.Osm;
+using OsmSharp.Osm.Factory;
+using OsmSharp.Osm.Filters;
 using OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools;
 
 namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
@@ -268,7 +268,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public IList<Relation> GetRelationsFor(Osm.Core.OsmBase obj)
+        public IList<Relation> GetRelationsFor(Osm.OsmBase obj)
         {
             // TODO: implement this
             return new List<Relation>();

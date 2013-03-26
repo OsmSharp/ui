@@ -2,25 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Routing.Core.Router;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Data;
+using OsmSharp.Routing.Router;
 using System.IO;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Routing.Core.Graph.Router;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
 using OsmSharp.Osm.Data.XML.Processor;
 
-namespace OsmSharp.Osm.Routing.Test.Point2Point
+namespace OsmSharp.Routing.Osm.Test.Point2Point
 {
     class Point2PointDykstraLiveTests : Point2PointTest<SimpleWeighedEdge>
     {
@@ -31,8 +31,8 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
 
             // do the data processing.
             //SimpleWeighedDynamicGraph graph = new SimpleWeighedDynamicGraph();
-            MemoryRouterDataSource<SimpleWeighedEdge> osm_data =
-                new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
+            DynamicGraphRouterDataSource<SimpleWeighedEdge> osm_data =
+                new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
             SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car, box);
             DataProcessorSource data_processor_source;
@@ -72,8 +72,8 @@ namespace OsmSharp.Osm.Routing.Test.Point2Point
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<PreProcessedEdge> osm_data =
-                new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+            DynamicGraphRouterDataSource<PreProcessedEdge> osm_data =
+                new DynamicGraphRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             DataProcessorSource data_processor_source;

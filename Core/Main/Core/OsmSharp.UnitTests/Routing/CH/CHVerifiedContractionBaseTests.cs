@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Routing.Interpreter;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Interpreter;
 using System.IO;
 using NUnit.Framework;
-using OsmSharp.Routing.Core.Graph.Memory;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.Core.Interpreter;
+using OsmSharp.Routing.Interpreter;
 using System.Reflection;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.XML.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.Core.Graph.Path;
+using OsmSharp.Routing.Graph.Path;
 using OsmSharp.Routing.CH.Routing;
-using OsmSharp.Routing.Core;
+using OsmSharp.Routing;
 
 namespace OsmSharp.UnitTests.Routing.CH
 {
@@ -32,12 +32,12 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// </summary>
         public static void Execute()
         {
-            //CHVerifiedContractionBaseTests.ExecuteSparse("OsmSharp.Osm.Routing.Test.TestData.matrix.osm");
-            CHVerifiedContractionBaseTests.ExecuteEdgeDifference("OsmSharp.Osm.Routing.Test.TestData.matrix.osm");
-            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Osm.Routing.Test.TestData.matrix_big_area.osm");
-            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Osm.Routing.Test.TestData.lebbeke.osm");
-            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Osm.Routing.Test.TestData.eeklo.osm");
-            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Osm.Routing.Test.TestData.moscow.osm");
+            //CHVerifiedContractionBaseTests.ExecuteSparse("OsmSharp.Routing.Osm.Test.TestData.matrix.osm");
+            CHVerifiedContractionBaseTests.ExecuteEdgeDifference("OsmSharp.Routing.Osm.Test.TestData.matrix.osm");
+            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Routing.Osm.Test.TestData.matrix_big_area.osm");
+            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Routing.Osm.Test.TestData.lebbeke.osm");
+            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Routing.Osm.Test.TestData.eeklo.osm");
+            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Routing.Osm.Test.TestData.moscow.osm");
         }
 
         /// <summary>
@@ -46,7 +46,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <param name="xml"></param>
         private static void ExecuteEdgeDifference(string xml)
         {
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(xml);
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(xml);
 
             CHVerifiedContractionBaseTests tester = new CHVerifiedContractionBaseTests();
             tester.DoTestCHEdgeDifferenceVerifiedContraction(xml);
@@ -58,7 +58,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <param name="xml"></param>
         private static void ExecuteSparse(string xml)
         {
-            OsmSharp.Tools.Core.Output.OutputStreamHost.WriteLine(xml);
+            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(xml);
 
             CHVerifiedContractionBaseTests tester = new CHVerifiedContractionBaseTests();
             tester.DoTestCHSparseVerifiedContraction(xml);
@@ -69,7 +69,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private MemoryRouterDataSource<CHEdgeData> _data;
+        private DynamicGraphRouterDataSource<CHEdgeData> _data;
 
         /// <summary>
         /// Holds the interpreter.
@@ -97,7 +97,7 @@ namespace OsmSharp.UnitTests.Routing.CH
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            _data = new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            _data = new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                 _data, _interpreter, _data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
@@ -137,7 +137,7 @@ namespace OsmSharp.UnitTests.Routing.CH
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            _data = new MemoryRouterDataSource<CHEdgeData>(tags_index);
+            _data = new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
                 _data, _interpreter, _data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
@@ -187,7 +187,7 @@ namespace OsmSharp.UnitTests.Routing.CH
                     to_list.UpdateVertex(new PathSegment<long>(to.Key));
 
                     // calculate the route.
-                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Core.VehicleEnum.Car, from_list, to_list, double.MaxValue);
+                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.VehicleEnum.Car, from_list, to_list, double.MaxValue);
                     if ((from_dic[to.Key] == null && route != null) ||
                         (from_dic[to.Key] != null && route == null) ||
                         ((from_dic[to.Key] != null && route != null) && from_dic[to.Key] != route))
@@ -227,7 +227,7 @@ namespace OsmSharp.UnitTests.Routing.CH
                     to_list.UpdateVertex(new PathSegment<long>(to.Key));
 
                     // calculate the route.
-                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Core.VehicleEnum.Car, from_list, to_list, double.MaxValue);
+                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.VehicleEnum.Car, from_list, to_list, double.MaxValue);
                     from_dic[to.Key] = route;
                 }
             }

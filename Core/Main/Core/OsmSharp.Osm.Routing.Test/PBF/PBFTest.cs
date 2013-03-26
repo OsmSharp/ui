@@ -26,7 +26,7 @@ using OsmSharp.Osm.Data.Core.Processor.Default;
 using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Osm.Data.Core.Processor.Progress;
 
-namespace OsmSharp.Osm.Routing.Test.PBF
+namespace OsmSharp.Routing.Osm.Test.PBF
 {
     public static class PBFTest
     {

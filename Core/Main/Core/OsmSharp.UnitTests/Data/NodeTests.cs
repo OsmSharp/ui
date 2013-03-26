@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Core.Factory;
+using OsmSharp.Osm;
+using OsmSharp.Osm.Factory;
 
 namespace OsmSharp.Osm.UnitTests.Data
 {

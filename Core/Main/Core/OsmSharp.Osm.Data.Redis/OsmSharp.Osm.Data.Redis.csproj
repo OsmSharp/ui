@@ -132,23 +132,21 @@
     <DocumentationFile>..\Output\OsmSharp.Osm.Data.Redis.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ServiceStack">
-      <HintPath>..\Lib\ServiceStack.dll</HintPath>
+    <Reference Include="ServiceStack.Common, Version=3.9.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Common.3.9.42\lib\net35\ServiceStack.Common.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Common">
-      <HintPath>..\Lib\ServiceStack.Common.dll</HintPath>
+    <Reference Include="ServiceStack.Interfaces, Version=3.9.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Common.3.9.42\lib\net35\ServiceStack.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Interfaces">
-      <HintPath>..\Lib\ServiceStack.Interfaces.dll</HintPath>
+    <Reference Include="ServiceStack.Redis, Version=3.9.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Redis.3.9.42\lib\net35\ServiceStack.Redis.dll</HintPath>
     </Reference>
-    <Reference Include="ServiceStack.Redis">
-      <HintPath>..\Lib\ServiceStack.Redis.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.ServiceInterface">
-      <HintPath>..\Lib\ServiceStack.ServiceInterface.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Text">
-      <HintPath>..\Lib\ServiceStack.Text.dll</HintPath>
+    <Reference Include="ServiceStack.Text, Version=3.9.42.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ServiceStack.Text.3.9.42\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -172,22 +170,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Osm.Core\OsmSharp.Osm.Core.csproj">
+    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
-      <Name>OsmSharp.Osm.Core</Name>
+      <Name>OsmSharp.Osm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm.Data.Core\OsmSharp.Osm.Data.Core.csproj">
-      <Project>{5BC09D7C-5226-4233-BF54-27BFD838F8F8}</Project>
-      <Name>OsmSharp.Osm.Data.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Core\OsmSharp.Tools.Core.csproj">
+    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
-      <Name>OsmSharp.Tools.Core</Name>
+      <Name>OsmSharp.Tools</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools.Math\OsmSharp.Tools.Math.csproj">
-      <Project>{DE9AC5D5-0548-4B79-AEDD-801B1351B89D}</Project>
-      <Name>OsmSharp.Tools.Math</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

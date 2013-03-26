@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
-using OsmSharp.Routing.Core.Graph.DynamicGraph;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.Memory;
+using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing.Graph.DynamicGraph;
+using OsmSharp.Routing.Graph.DynamicGraph.Memory;
 
 namespace OsmSharp.UnitTests.Routing
 {

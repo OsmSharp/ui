@@ -4,18 +4,18 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Interpreter;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Osm.Routing.Data.Processing;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Osm.Data;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
 using OsmSharp.Osm.Data.XML.Processor;
 
-namespace OsmSharp.Osm.Routing.Test.ManyToMany
+namespace OsmSharp.Routing.Osm.Test.ManyToMany
 {
     /// <summary>
     /// Executes many-to-many calculation performance tests using the raw data format.
@@ -35,8 +35,8 @@ namespace OsmSharp.Osm.Routing.Test.ManyToMany
             OsmTagsIndex tags_index = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<PreProcessedEdge> osm_data =
-                new MemoryRouterDataSource<PreProcessedEdge>(tags_index);
+            DynamicGraphRouterDataSource<PreProcessedEdge> osm_data =
+                new DynamicGraphRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
                 osm_data, interpreter, osm_data.TagsIndex, VehicleEnum.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(data);
