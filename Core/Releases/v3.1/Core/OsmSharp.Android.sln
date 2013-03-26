@@ -13,15 +13,15 @@ Global
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs22
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = OsmSharp.Tools\\OsmSharp.Tools.Android.csproj
-		SccProjectName1 = OsmSharp.Tools
-		SccLocalPath1 = OsmSharp.Tools
-		SccProjectUniqueName2 = OsmSharp.Osm\\OsmSharp.Osm.Android.csproj
-		SccProjectName2 = OsmSharp.Osm
-		SccLocalPath2 = OsmSharp.Osm
-		SccProjectUniqueName3 = OsmSharp.Routing\\OsmSharp.Routing.Android.csproj
-		SccProjectName3 = OsmSharp.Routing
-		SccLocalPath3 = OsmSharp.Routing
+		SccProjectUniqueName1 = OsmSharp.Osm\\OsmSharp.Osm.Android.csproj
+		SccProjectName1 = OsmSharp.Osm
+		SccLocalPath1 = OsmSharp.Osm
+		SccProjectUniqueName2 = OsmSharp.Routing\\OsmSharp.Routing.Android.csproj
+		SccProjectName2 = OsmSharp.Routing
+		SccLocalPath2 = OsmSharp.Routing
+		SccProjectUniqueName3 = OsmSharp.Tools\\OsmSharp.Tools.Android.csproj
+		SccProjectName3 = OsmSharp.Tools
+		SccLocalPath3 = OsmSharp.Tools
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
