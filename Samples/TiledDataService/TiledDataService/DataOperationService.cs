@@ -49,13 +49,16 @@ namespace TiledDataService
             var xml_file = new FileInfo(data_path + request.File);
 
             DataProcessorSource source = null;
+            FileStream source_stream = null;
             if (pbf_file.Exists)
             { // create PBF source.
-                source = new PBFDataProcessorSource(pbf_file.OpenRead());
+                source_stream = pbf_file.OpenRead();
+                source = new PBFDataProcessorSource(source_stream);
             }
             else if (xml_file.Exists)
             { // create XML source.
-                source = new XmlDataProcessorSource(xml_file.OpenRead());
+                source_stream = xml_file.OpenRead();
+                source = new XmlDataProcessorSource(source_stream);
             }
             else 
             { // oeps! file not found!
@@ -76,8 +79,9 @@ namespace TiledDataService
             filter.RegisterSource(source);
             target.Pull();
 
-            //// close the target.
-            //target.Close();
+            // close the source stream.
+            source_stream.Close();
+            source_stream.Dispose();
 
             return result.ToString();
         }
