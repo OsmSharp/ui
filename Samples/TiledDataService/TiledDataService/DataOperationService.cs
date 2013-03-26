@@ -77,6 +77,11 @@ namespace TiledDataService
 
                 // create the filter.
                 var tile = new Tile(x, y, zoom);
+
+                // invert the y-coordinate, system of HOT-tasking manager is inverted.
+                tile = tile.InvertY();
+
+                // create the filter.
                 DataProcessorFilter filter = new DataProcessorFilterBoundingBox(tile.Box);
 
                 // create the target.
