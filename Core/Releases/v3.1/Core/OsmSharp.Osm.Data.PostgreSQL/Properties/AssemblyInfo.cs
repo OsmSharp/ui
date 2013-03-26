@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Osm.Data.PostgreSQL")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("Ben Abelshausen 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -27,7 +27,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ben Abelshausen")]
 [assembly: AssemblyProduct("Osm.Data.Oracle")]
-[assembly: AssemblyCopyright("")]
+[assembly: AssemblyCopyright("Ben Abelshausen 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
