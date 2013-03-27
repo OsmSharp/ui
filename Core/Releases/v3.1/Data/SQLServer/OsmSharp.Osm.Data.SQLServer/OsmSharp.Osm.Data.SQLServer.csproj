@@ -54,16 +54,6 @@
   <ItemGroup>
     <Content Include="SimpleSchema\SchemaTools\SimpleSchemaDDL.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
-      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
-      <Name>OsmSharp.Osm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.csproj">
-      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
-      <Name>OsmSharp.Tools</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
