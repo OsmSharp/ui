@@ -118,6 +118,7 @@
     <Compile Include="Data\Processor\SimpleSource\SimpleMemoryData.cs" />
     <Compile Include="Factory\OsmBaseFactory.cs" />
     <Compile Include="Filters\Filter.cs" />
+    <Compile Include="Filters\FilterAny.cs" />
     <Compile Include="Filters\FilterBox.cs" />
     <Compile Include="Filters\FilterCombined.cs" />
     <Compile Include="Filters\FilterTag.cs" />
