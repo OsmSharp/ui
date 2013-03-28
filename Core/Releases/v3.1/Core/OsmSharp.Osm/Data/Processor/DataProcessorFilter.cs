@@ -45,7 +45,7 @@ namespace OsmSharp.Osm.Data.Core.Processor
         /// Registers a source as the source to filter.
         /// </summary>
         /// <param name="source"></param>
-        public void RegisterSource(DataProcessorSource source)
+        public virtual void RegisterSource(DataProcessorSource source)
         {
             _source = source;
         }

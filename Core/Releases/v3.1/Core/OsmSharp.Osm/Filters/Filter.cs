@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Filters.Tags;
+using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Filters
 {
@@ -33,8 +34,24 @@ namespace OsmSharp.Osm.Filters
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public abstract bool Evaluate(OsmBase obj);
-        
+        public bool Evaluate(OsmGeo obj)
+        {
+            return this.Evaluate(obj.ToSimple());
+        }
+
+        /// <summary>
+        /// Evaluates the filter against the osm object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public abstract bool Evaluate(SimpleOsmGeo obj);
+
+        /// <summary>
+        /// Returns description of this filter.
+        /// </summary>
+        /// <returns></returns>
+        public abstract override string ToString();
+
         #region Operators
 
         /// <summary>
@@ -78,7 +95,7 @@ namespace OsmSharp.Osm.Filters
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static Filter Type(OsmType type)
+        public static Filter Type(SimpleOsmGeoType type)
         {
             return new FilterType(type);
         }
@@ -89,26 +106,26 @@ namespace OsmSharp.Osm.Filters
         /// <returns></returns>
         public static Filter Any()
         {
-            return new FilterTagCount();
+            return new FilterAny();
         }
 
-        /// <summary>
-        /// Returns a filter that matches objects with at least the number of tags given.
-        /// </summary>
-        /// <returns></returns>
-        public static Filter MoreThan(int count)
-        {
-            return new FilterTagCount(count);
-        }
+        ///// <summary>
+        ///// Returns a filter that matches objects with at least the number of tags given.
+        ///// </summary>
+        ///// <returns></returns>
+        //public static Filter MoreThan(int count)
+        //{
+        //    return new FilterTagCount(count);
+        //}
 
-        /// <summary>
-        /// Returns a filter that matches objects with the exact number of tags given.
-        /// </summary>
-        /// <returns></returns>
-        public static Filter Exact(int count)
-        {
-            return new FilterTagCount(count, true);
-        }
+        ///// <summary>
+        ///// Returns a filter that matches objects with the exact number of tags given.
+        ///// </summary>
+        ///// <returns></returns>
+        //public static Filter Exact(int count)
+        //{
+        //    return new FilterTagCount(count, true);
+        //}
 
         /// <summary>
         /// Returns a filter that matches one tag.

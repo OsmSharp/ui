@@ -19,21 +19,47 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Filters
 {
+    /// <summary>
+    /// A filter that filters on types of OSM objects.
+    /// </summary>
     internal class FilterType : Filter
     {
-        private OsmType _type;
+        /// <summary>
+        /// Holds the type to filter on.
+        /// </summary>
+        private SimpleOsmGeoType _type;
 
-        public FilterType(OsmType type)
+        /// <summary>
+        /// Creates a new filter type.
+        /// </summary>
+        /// <param name="type"></param>
+        internal FilterType(SimpleOsmGeoType type)
         {
             _type = type;
         }
 
-        public override bool Evaluate(OsmBase obj)
+        /// <summary>
+        /// Returns true if this object pass through this filter.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Evaluate(SimpleOsmGeo obj)
         {
             return obj.Type == _type;
+        }
+
+        /// <summary>
+        /// Returns a description of this filter.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("istype:{0}",
+                                 _type.ToString());
         }
     }
 }

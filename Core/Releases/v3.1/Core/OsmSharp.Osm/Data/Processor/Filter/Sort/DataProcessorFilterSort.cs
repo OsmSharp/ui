@@ -47,6 +47,10 @@ namespace OsmSharp.Osm.Data.Core.Processor.Filter.Sort
         /// </summary>
         public override void Initialize()
         {
+            if (this.Source == null)
+            {
+                throw new Exception("No source registered!");
+            }
             // no intialisation this filter does the same thing every time.
             this.Source.Initialize();
         }
