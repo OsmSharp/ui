@@ -1,64 +1,64 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Tools.Math.Geo;
+using System.Linq;
+using System.Text;
+using OsmSharp.Routing.Graph;
+﻿using OsmSharp.Routing.Graph.Router;
+﻿using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Structures;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Routing.Graph.DynamicGraph.Memory;
+using OsmSharp.Routing.Router;
 using OsmSharp.Tools.Math.Structures.QTree;
 
-namespace OsmSharp.Routing.Graph
+namespace OsmSharp.Routing.Graph.Memory
 {
     /// <summary>
-    /// A router data source that uses a IDynamicGraph as it's main datasource.
+    /// A memory data source.
     /// </summary>
-    /// <typeparam name="TEdgeData"></typeparam>
-    public class DynamicGraphRouterDataSource<TEdgeData> : IBasicRouterDataSource<TEdgeData>, IDynamicGraph<TEdgeData>
-        where TEdgeData : IDynamicGraphEdgeData
+    /// <typeparam name="EdgeData"></typeparam>
+    [Obsolete("This class has become obsolete use OsmSharp.Routing.Graph.DynamicGraphRouterDataSource instead!")]
+    public class MemoryRouterDataSource<EdgeData> : IBasicRouterDataSource<EdgeData>, IDynamicGraph<EdgeData>
+        where EdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
         /// Holds the basic graph.
         /// </summary>
-        private readonly IDynamicGraph<TEdgeData> _graph;
+        private IDynamicGraph<EdgeData> _graph;
 
         /// <summary>
         /// Holds the index of vertices per bounding box.
         /// </summary>
-        private readonly ILocatedObjectIndex<GeoCoordinate, uint> _vertexIndex;
+        private ILocatedObjectIndex<GeoCoordinate, uint> _vertex_index;
 
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private readonly ITagsIndex _tagsIndex;
+        private ITagsIndex _tags_index;
 
         /// <summary>
         /// Creates a new osm memory router data source.
         /// </summary>
-        /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(ITagsIndex tagsIndex)
+        public MemoryRouterDataSource(ITagsIndex tags_index)
         {
-            if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
+            _graph = new MemoryDynamicGraph<EdgeData>();
+            _vertex_index = new QuadTree<GeoCoordinate, uint>();
+            //_vertex_index = new LocatedObjectIndexList<GeoCoordinate, uint>();
 
-            _graph = new MemoryDynamicGraph<TEdgeData>();
-            _vertexIndex = new QuadTree<GeoCoordinate, uint>();
-            _tagsIndex = tagsIndex;
+            _tags_index = tags_index;
         }
 
         /// <summary>
         /// Creates a new osm memory router data source.
         /// </summary>
-        /// <param name="graph"></param>
-        /// <param name="tagsIndex"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(IDynamicGraph<TEdgeData> graph, ITagsIndex tagsIndex)
+        public MemoryRouterDataSource(IDynamicGraph<EdgeData> graph, ITagsIndex tags_index)
         {
-            if (graph == null) throw new ArgumentNullException("graph");
-            if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
-
             _graph = graph;
-            _vertexIndex = new QuadTree<GeoCoordinate, uint>();
-            _tagsIndex = tagsIndex;
+            _vertex_index = new QuadTree<GeoCoordinate, uint>();
+            //_vertex_index = new LocatedObjectIndexList<GeoCoordinate, uint>();
+
+            _tags_index = tags_index;
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         public bool SupportsProfile(VehicleEnum vehicle)
         {
-            return true; // for backwards compatibility.
+            return true; // for backward compatibility.
         }
 
         /// <summary>
@@ -76,22 +76,23 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] GetArcs(
+        public KeyValuePair<uint, KeyValuePair<uint, EdgeData>>[] GetArcs(
             GeoCoordinateBox box)
         {
             // get all the vertices in the given box.
-            IEnumerable<uint> vertices = _vertexIndex.GetInside(
+            IEnumerable<uint> vertices = _vertex_index.GetInside(
                 box);
 
             // loop over all vertices and get the arcs.
-            var arcs = new List<KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>>();
+            List<KeyValuePair<uint, KeyValuePair<uint, EdgeData>>> arcs =
+                new List<KeyValuePair<uint, KeyValuePair<uint, EdgeData>>>();
             foreach (uint vertex in vertices)
             {
-                KeyValuePair<uint, TEdgeData>[] localArcs = this.GetArcs(vertex);
-                foreach (KeyValuePair<uint, TEdgeData> localArc in localArcs)
+                KeyValuePair<uint, EdgeData>[] local_arcs = this.GetArcs(vertex);
+                foreach (KeyValuePair<uint, EdgeData> local_arc in local_arcs)
                 {
-                    arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>(
-                        vertex, localArc));
+                    arcs.Add(new KeyValuePair<uint, KeyValuePair<uint, EdgeData>>(
+                        vertex, local_arc));
                 }
             }
             return arcs.ToArray();
@@ -123,7 +124,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vertex"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, TEdgeData>[] GetArcs(uint vertex)
+        public KeyValuePair<uint, EdgeData>[] GetArcs(uint vertex)
         {
             return _graph.GetArcs(vertex);
         }
@@ -140,7 +141,7 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Adds a new vertex to this graph.
+        /// Adds a new vertex.
         /// </summary>
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
@@ -149,7 +150,7 @@ namespace OsmSharp.Routing.Graph
         public uint AddVertex(float latitude, float longitude, byte neighbours_estimate)
         {
             uint vertex = _graph.AddVertex(latitude, longitude, neighbours_estimate);
-            _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
+            _vertex_index.Add(new GeoCoordinate(latitude, longitude),
                 vertex);
             return vertex;
         }
@@ -163,7 +164,7 @@ namespace OsmSharp.Routing.Graph
         public uint AddVertex(float latitude, float longitude)
         {
             uint vertex = _graph.AddVertex(latitude, longitude);
-            _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
+            _vertex_index.Add(new GeoCoordinate(latitude, longitude),
                 vertex);
             return vertex;
         }
@@ -175,7 +176,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="to"></param>
         /// <param name="data"></param>
         /// <param name="comparer"></param>
-        public void AddArc(uint from, uint to, TEdgeData data, IDynamicGraphEdgeComparer<TEdgeData> comparer)
+        public void AddArc(uint from, uint to, EdgeData data, IDynamicGraphEdgeComparer<EdgeData> comparer)
         {
             _graph.AddArc(from, to, data, comparer);
         }
@@ -197,7 +198,7 @@ namespace OsmSharp.Routing.Graph
         {
             get
             {
-                return _tagsIndex;
+                return _tags_index;
             }
         }
 
