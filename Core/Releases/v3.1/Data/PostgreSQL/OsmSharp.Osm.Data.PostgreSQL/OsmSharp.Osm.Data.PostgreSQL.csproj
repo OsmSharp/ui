@@ -157,8 +157,20 @@
     <Reference Include="Npgsql">
       <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\Npgsql.dll</HintPath>
     </Reference>
+    <Reference Include="OsmSharp.Osm">
+      <HintPath>..\packages\OsmSharp.3.1.4835\lib\OsmSharp.Osm.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Routing">
+      <HintPath>..\packages\OsmSharp.3.1.4835\lib\OsmSharp.Routing.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Tools">
+      <HintPath>..\packages\OsmSharp.3.1.4835\lib\OsmSharp.Tools.dll</HintPath>
+    </Reference>
     <Reference Include="policy.2.0.Npgsql">
       <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\policy.2.0.Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System">
     </Reference>
@@ -172,6 +184,9 @@
     </Reference>
     <Reference Include="System.Xml">
     </Reference>
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
@@ -182,16 +197,6 @@
     <Compile Include="SimpleSchema\Processor\PostgreSQLSimpleSchemaDataProcessorTarget.cs" />
     <Compile Include="SimpleSchema\Processor\TileCalculations.cs" />
     <Compile Include="SimpleSchema\SchemaTools\PostgreSQLSimpleSchemaTools.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
-      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
-      <Name>OsmSharp.Osm</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.csproj">
-      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
-      <Name>OsmSharp.Tools</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
