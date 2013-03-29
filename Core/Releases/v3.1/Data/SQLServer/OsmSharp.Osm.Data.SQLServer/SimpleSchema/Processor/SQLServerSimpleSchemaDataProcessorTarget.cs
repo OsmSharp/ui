@@ -1,7 +1,7 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
 //
 // Copyright (C) 2013 Abelshausen Ben
-//                    Alexander Sinitsin
+//                    Alexander Sinitsyn
 // 
 // This file is part of OsmSharp.
 // 
