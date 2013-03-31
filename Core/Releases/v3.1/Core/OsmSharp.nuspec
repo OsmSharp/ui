@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>OsmSharp</id>
-        <version>3.1.4835</version>
+        <version>$version$</version>
         <title>OsmSharp - OpenStreetMap Libary &amp; Tools!</title>
         <authors>Ben Abelshausen</authors>
         <owners>Ben Abelshausen</owners>
