@@ -20,11 +20,11 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="lib\sl4-wp71\OsmSharp.Osm.dll" target="lib\sl4-wp71\OsmSharp.Osm.dll" />
-        <file src="lib\sl4-wp71\OsmSharp.Routing.dll" target="lib\sl4-wp71\OsmSharp.Routing.dll" />
-        <file src="lib\sl4-wp71\OsmSharp.Tools.dll" target="lib\sl4-wp71\OsmSharp.Tools.dll" />
-        <file src="lib\OsmSharp.Osm.dll" target="lib\OsmSharp.Osm.dll" />
-        <file src="lib\OsmSharp.Routing.dll" target="lib\OsmSharp.Routing.dll" />
-        <file src="lib\OsmSharp.Tools.dll" target="lib\OsmSharp.Tools.dll" />
+        <file src="OutputWindowsPhone\OsmSharp.Osm.dll" target="lib\sl4-wp71\OsmSharp.Osm.dll" />
+        <file src="OutputWindowsPhone\OsmSharp.Routing.dll" target="lib\sl4-wp71\OsmSharp.Routing.dll" />
+        <file src="OutputWindowsPhone\OsmSharp.Tools.dll" target="lib\sl4-wp71\OsmSharp.Tools.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Osm.dll" target="lib\OsmSharp.Osm.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Routing.dll" target="lib\OsmSharp.Routing.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Tools.dll" target="lib\OsmSharp.Tools.dll" />
     </files>
 </package>
