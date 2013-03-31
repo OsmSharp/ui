@@ -201,6 +201,7 @@
     <Compile Include="Data\KeyGenerator.cs" />
     <Compile Include="Data\Memory\MemoryDataSource.cs" />
     <Compile Include="Data\Memory\MemoryDataSourceProcessorTarget.cs" />
+    <Compile Include="Data\PBF\Dense\Compressor.cs" />
     <Compile Include="Data\PBF\Dense\Decompressor.cs" />
     <Compile Include="Data\PBF\fileformat.cs">
       <DependentUpon>fileformat.proto</DependentUpon>
@@ -217,7 +218,11 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Data\PBF\PBFReader.cs" />
+    <Compile Include="Data\PBF\PBFWriter.cs" />
     <Compile Include="Data\PBF\Processor\PBFDataProcessorSource.cs" />
+    <Compile Include="Data\PBF\Processor\PBFDataProcessorTarget.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Processor\ChangeSets\DataProcessorChangeSetFilter.cs" />
     <Compile Include="Data\Processor\ChangeSets\DataProcessorChangeSetSource.cs" />
     <Compile Include="Data\Processor\ChangeSets\DataProcessorChangeSetTarget.cs" />

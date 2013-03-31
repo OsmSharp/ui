@@ -30,7 +30,7 @@ namespace OsmSharp.Osm.Data.PBF
         /// <summary>
         /// The stream containing the PBF data.
         /// </summary>
-        private Stream _stream;
+        private readonly Stream _stream;
 
         /// <summary>
         /// Creates a new PBF reader.
