@@ -23,8 +23,6 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
     /// </summary>
     public class GeoCoderResult : IGeoCoderResult
     {
-        #region IGeoCoderResult Members
-
         /// <summary>
         /// Latitude.
         /// </summary>
@@ -56,7 +54,5 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
             get;
             set;
         }
-
-        #endregion
     }
 }
