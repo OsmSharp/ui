@@ -150,12 +150,12 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="interpreter">The routing interpreter.</param>
         /// <param name="vehicle">The vehicle to search for.</param>
         /// <param name="coordinate">The coordinate to search around.</param>
+        /// <param name="delta">The size of the box to search in.</param>
         /// <param name="matcher">The matcher to match to edges.</param>
-        /// <param name="point_tags">The properties of the point to match.</param>
+        /// <param name="pointTags">The properties of the point to match.</param>
         /// <returns></returns>
         SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            GeoCoordinate coordinate, IEdgeMatcher matcher, IDictionary<string, string> point_tags);
-
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, IDictionary<string, string> pointTags);
     }
 
     /// <summary>

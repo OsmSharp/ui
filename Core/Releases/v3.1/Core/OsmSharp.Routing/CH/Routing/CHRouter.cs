@@ -1416,14 +1416,15 @@ namespace OsmSharp.Routing.CH.Routing
         /// </summary>
         /// <param name="vehicle"></param>
         /// <param name="coordinate"></param>
+        /// <param name="delta"></param>
         /// <param name="matcher"></param>
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
-        /// <param name="point_tags"></param>
+        /// <param name="pointTags"></param>
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            GeoCoordinate coordinate, IEdgeMatcher matcher, IDictionary<string, string> point_tags)
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, IDictionary<string, string> pointTags)
         {
-            double search_box_size = .01;
+            double search_box_size = delta;
             // build the search box.
             GeoCoordinateBox search_box = new GeoCoordinateBox(new GeoCoordinate(
                 coordinate.Latitude - search_box_size, coordinate.Longitude - search_box_size),
