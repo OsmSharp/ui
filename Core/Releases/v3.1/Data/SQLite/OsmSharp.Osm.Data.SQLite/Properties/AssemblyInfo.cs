@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("OsmSharp")]
 [assembly: AssemblyProduct("OsmSharp")]
-[assembly: AssemblyCopyright("Ben Abelshausen")]
+[assembly: AssemblyCopyright("Ben Abelshausen 2013")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
