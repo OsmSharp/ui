@@ -16,18 +16,17 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Osm.Data.SQLite")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("OsmSharp.Osm.Data.SQLite")]
+[assembly: AssemblyDescription("A data provider for OsmSharp using SQLite.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("HP")]
-[assembly: AssemblyProduct("Osm.Data.SQLite")]
-[assembly: AssemblyCopyright("Copyright © HP 2012")]
+[assembly: AssemblyCompany("OsmSharp")]
+[assembly: AssemblyProduct("OsmSharp")]
+[assembly: AssemblyCopyright("Ben Abelshausen")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -48,6 +47,4 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("3.1.*")]
-// [assembly: AssemblyVersion("1.0.0.0")]
-// [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.1.*")] // using sematic versioning.

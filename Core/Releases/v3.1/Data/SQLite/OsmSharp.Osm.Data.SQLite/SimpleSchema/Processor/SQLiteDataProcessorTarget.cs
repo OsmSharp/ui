@@ -15,22 +15,28 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.Data.SQLite;
+using OsmSharp.Osm.Data.SQLite.Raw.Processor;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using OsmSharp.Tools;
 
-namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
+namespace OsmSharp.Osm.Data.SQLite.SimpleSchema.Processor
 {
+	/// <summary>
+	/// Data processor target for SQLite.
+	/// </summary>
 	public class SQLiteDataProcessorTarget : DataProcessorTarget
 	{
-		private int _batch_nodes = 500000;
-		private int _batch_ways = 100000;
-		private int _batch_relations = 50000;
-		private SQLiteConnection _connection;
-		private string _connection_string;
+	    private const int BatchNodes = 500000;
+	    private const int BatchWays = 100000;
+	    private const int BatchRelations = 50000;
+	    private SQLiteConnection _connection;
+		private readonly string _connectionString;
 		private SQLiteCommand _insertNodeCmd;
 		private SQLiteCommand _insertNodeTagsCmd;
 		private SQLiteCommand _insertWayCmd;
@@ -43,19 +49,26 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 		private int _waycount = 0;
 		private int _relationcount = 0;
 
-		public SQLiteDataProcessorTarget(string connection_string)
+        /// <summary>
+        /// Creates a new SQLite target.
+        /// </summary>
+        /// <param name="connectionString">The connection string.</param>
+		public SQLiteDataProcessorTarget(string connectionString)
 		{
-			_connection_string = connection_string;
+			_connectionString = connectionString;
 		}
 
+        /// <summary>
+        /// Initializes this target.
+        /// </summary>
 		public override void Initialize()
 		{
-			_connection = new SQLiteConnection(_connection_string);
+			_connection = new SQLiteConnection(_connectionString);
 			_connection.Open();
 
-			using (SQLiteCommand sqlite_cmd = _connection.CreateCommand())
+			using (SQLiteCommand sqliteCmd = _connection.CreateCommand())
 			{
-				sqlite_cmd.CommandText =
+				sqliteCmd.CommandText =
 					@"CREATE TABLE IF NOT EXISTS [node] ([id] INTEGER  NOT NULL PRIMARY KEY,[latitude] INTEGER  NULL,[longitude] INTEGER NULL,[changeset_id] INTEGER NULL,[visible] INTEGER NULL,[timestamp] datetime NULL,[tile] INTEGER NULL,[version] INTEGER NULL,[usr] varchar(100) NULL,[usr_id] INTEGER NULL); " +
 					@"CREATE TABLE IF NOT EXISTS [node_tags] ([node_id] INTEGER  NOT NULL,[key] varchar(100) NOT NULL,[value] varchar(500) NULL, PRIMARY KEY ([node_id],[key])); " +
 					@"CREATE TABLE IF NOT EXISTS [way] ([id] INTEGER  NOT NULL PRIMARY KEY,[changeset_id] INTEGER NULL,[visible] INTEGER NULL,[timestamp] datetime NULL,[version] INTEGER NULL,[usr] varchar(100) NULL,[usr_id] INTEGER NULL); " +
@@ -68,7 +81,7 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 					@"CREATE INDEX [IDX_WAY_NODES_NODE] ON [way_nodes]([node_id]  ASC); " +
 					@"CREATE INDEX [IDX_WAY_NODES_WAY_SEQUENCE] ON [way_nodes]([way_id]  ASC,[sequence_id]  ASC); " +
 					@"";
-				sqlite_cmd.ExecuteNonQuery();
+				sqliteCmd.ExecuteNonQuery();
 			}
 
 			_insertNodeCmd = _connection.CreateCommand();
@@ -145,48 +158,72 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 			_insertRelationMembersCmd.Parameters.Add(new SQLiteParameter(@"sequence_id", DbType.Int64));
 		}
 
-
+        /// <summary>
+        /// Applies changesets to this target.
+        /// </summary>
+        /// <param name="change">The change to apply.</param>[Obsolete("This class has become obsolete use OsmSharp.Routing.Graph.DynamicGraphRouterDataSource instead!")]
+    
 		public override void ApplyChange(SimpleChangeSet change)
 		{
 			throw new NotSupportedException();
 		}
 
-		public override void AddNode(SimpleNode node)
-    {
-			long? id = node.Id;
-			double? lat = node.Latitude;
-			double? lon = node.Longitude;
-			bool? visible = node.Visible;
-			_insertNodeCmd.Parameters[0].Value = id;
-			_insertNodeCmd.Parameters[1].Value = (lat.HasValue ? (int)(lat.GetValueOrDefault() * 10000000.0) : (int?)null).ConvertToDBValue();
-			_insertNodeCmd.Parameters[2].Value = (lon.HasValue ? (int)(lon.GetValueOrDefault() * 10000000.0) : (int?)null).ConvertToDBValue();
-			_insertNodeCmd.Parameters[3].Value = node.ChangeSetId.ConvertToDBValue();
-			_insertNodeCmd.Parameters[4].Value = visible.HasValue && visible.Value? 1: 0;
-			_insertNodeCmd.Parameters[5].Value = node.TimeStamp.ConvertToDBValue();
-			_insertNodeCmd.Parameters[6].Value = TileCalculations.xy2tile((uint) TileCalculations.lon2x(lon.Value), (uint) TileCalculations.lat2y(lat.Value));
-			_insertNodeCmd.Parameters[7].Value = node.Version.ConvertToDBValue();
-			_insertNodeCmd.Parameters[8].Value = node.UserName.ToStringEmptyWhenNull();
-			_insertNodeCmd.Parameters[9].Value = node.UserId.ConvertToDBValue();
-			_insertNodeCmd.ExecuteNonQuery();
+	    /// <summary>
+	    /// Adds a node to this target.
+	    /// </summary>
+	    /// <param name="node"></param>
+	    public override void AddNode(SimpleNode node)
+	    {
+	        if (!node.Latitude.HasValue || !node.Longitude.HasValue)
+	        {
+	            // cannot insert nodes without lat/lon.
+	            throw new ArgumentOutOfRangeException("node", "Cannot insert nodes without lat/lon.");
+	        }
 
-      if (node.Tags != null)
-      {
-        foreach (KeyValuePair<string, string> keyValuePair in node.Tags)
-        {
-        	_insertNodeTagsCmd.Parameters[0].Value = id;
-        	_insertNodeTagsCmd.Parameters[1].Value = keyValuePair.Key;
-        	_insertNodeTagsCmd.Parameters[2].Value = keyValuePair.Value;
-        	_insertNodeTagsCmd.ExecuteNonQuery();
-        }
-      }
-			_nodecount++;
-      if (_nodecount < _batch_nodes)
-        return;
+            // insert the node.
+	        _insertNodeCmd.Parameters[0].Value = node.Id;
+	        _insertNodeCmd.Parameters[1].Value =
+	            (node.Latitude.HasValue ? (int) (node.Latitude.GetValueOrDefault()*10000000.0) : (int?) null)
+	                .ConvertToDBValue();
+	        _insertNodeCmd.Parameters[2].Value =
+	            (node.Latitude.HasValue ? (int) (node.Latitude.GetValueOrDefault()*10000000.0) : (int?) null)
+	                .ConvertToDBValue();
+	        _insertNodeCmd.Parameters[3].Value = node.ChangeSetId.ConvertToDBValue();
+	        _insertNodeCmd.Parameters[4].Value = node.Visible.HasValue && node.Visible.Value ? 1 : 0;
+	        _insertNodeCmd.Parameters[5].Value = node.TimeStamp.ConvertToDBValue();
+	        _insertNodeCmd.Parameters[6].Value = TileCalculations.xy2tile((uint) TileCalculations.lon2x(node.Longitude.Value),
+	                                                                      (uint) TileCalculations.lat2y(node.Latitude.Value));
+	        _insertNodeCmd.Parameters[7].Value = node.Version.ConvertToDBValue();
+	        _insertNodeCmd.Parameters[8].Value = node.UserName.ToStringEmptyWhenNull();
+	        _insertNodeCmd.Parameters[9].Value = node.UserId.ConvertToDBValue();
+	        _insertNodeCmd.ExecuteNonQuery();
 
-			_insertNodeCmd.Transaction.Commit();
-			_insertNodeTagsCmd.Transaction = _insertNodeCmd.Transaction = _connection.BeginTransaction();
-    }
+            // insert the tags.
+	        if (node.Tags != null)
+	        {
+	            foreach (KeyValuePair<string, string> keyValuePair in node.Tags)
+	            {
+	                _insertNodeTagsCmd.Parameters[0].Value = node.Id;
+	                _insertNodeTagsCmd.Parameters[1].Value = keyValuePair.Key;
+	                _insertNodeTagsCmd.Parameters[2].Value = keyValuePair.Value;
+	                _insertNodeTagsCmd.ExecuteNonQuery();
+	            }
+	        }
 
+            // commit nodes in batch.
+	        _nodecount++;
+	        if (_nodecount < BatchNodes)
+	            return;
+
+	        _insertNodeCmd.Transaction.Commit();
+	        _insertNodeTagsCmd.Transaction = 
+                _insertNodeCmd.Transaction = _connection.BeginTransaction();
+	    }
+
+	    /// <summary>
+        /// Adds a way to this target.
+        /// </summary>
+        /// <param name="way"></param>
 		public override void AddWay(SimpleWay way)
 		{
 			long? id = way.Id;
@@ -224,13 +261,17 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 				}
 			}
 			_waycount++;
-			if (_waycount < _batch_ways)
+			if (_waycount < BatchWays)
 				return;
 
 			_insertWayCmd.Transaction.Commit();
 			_insertWayTagsCmd.Transaction = _insertWayNodesCmd.Transaction = _insertWayCmd.Transaction = _connection.BeginTransaction();
 		}
 
+        /// <summary>
+        /// Adds a relation to this target.
+        /// </summary>
+        /// <param name="relation"></param>
 		public override void AddRelation(SimpleRelation relation)
 		{
 			long? id = relation.Id;
@@ -267,12 +308,15 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 				}
 			}
 			_relationcount++;
-			if (_relationcount < _batch_relations)
+			if (_relationcount < BatchRelations)
 				return;
 			_insertRelationCmd.Transaction.Commit();
 			_insertRelationTagsCmd.Transaction = _insertRelationMembersCmd.Transaction = _insertRelationCmd.Transaction = _connection.BeginTransaction();
 		}
 
+        /// <summary>
+        /// Closes this target.
+        /// </summary>
 		public override void Close()
 		{
 			if (_connection != null)
@@ -287,16 +331,20 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 		}
 	}
 
+    /// <summary>
+    /// Common database extensions.
+    /// </summary>
 	public static class Extensions
 	{
+        /// <summary>
+        /// Converts the given value into a proper db value.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nullable"></param>
+        /// <returns></returns>
 		public static object ConvertToDBValue<T>(this T? nullable) where T : struct
 		{
 			return nullable.HasValue ? (object) nullable.Value : DBNull.Value;
-		}
-
-		public static string ToStringEmptyWhenNull(this object obj)
-		{
-			return obj == null ? string.Empty : obj.ToString();
 		}
 	}
 }

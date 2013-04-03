@@ -15,56 +15,70 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Linq;
-using System.Text;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor;
 
-namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
+namespace OsmSharp.Osm.Data.SQLite.SimpleSchema.Processor
 {
+    /// <summary>
+    /// An SQLite data processor source.
+    /// </summary>
     public class SQLiteSimpleDataProcessorSource : DataProcessorSource
     {
+        /// <summary>
+        /// Holds the connection.
+        /// </summary>
         private SQLiteConnection _connection;
 
-        private SimpleOsmGeoType _current_type;
+        /// <summary>
+        /// Holds the current type.
+        /// </summary>
+        private SimpleOsmGeoType _currentType;
 
+        /// <summary>
+        /// Holds the current object.
+        /// </summary>
         private SimpleOsmGeo _current;
 
-        private string _connection_string;
+        /// <summary>
+        /// Holds the connection string.
+        /// </summary>
+        private readonly string _connectionString;
 
-				public SQLiteSimpleDataProcessorSource(string connection_string)
+        /// <summary>
+        /// Initializes a new SQLite data processor source.
+        /// </summary>
+        /// <param name="connectionString">The connection string.</param>
+        public SQLiteSimpleDataProcessorSource(string connectionString)
         {
-            _connection_string = connection_string;
+            _connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Initializes this source.
+        /// </summary>
         public override void Initialize()
         {
-            _connection = new SQLiteConnection(_connection_string);
+            _connection = new SQLiteConnection(_connectionString);
             _connection.Open();
 
             _current = null;
-            _current_type = SimpleOsmGeoType.Node;
+            _currentType = SimpleOsmGeoType.Node;
 
-            _node_reader = null;
+            _nodeReader = null;
         }
 
-        private SQLiteDataReader _node_reader;
-
-        private SQLiteDataReader _way_reader;
-        private SQLiteDataReader _way_tag_reader;
-        private SQLiteDataReader _way_node_reader;
-
-        private SQLiteDataReader _relation_reader;
-        private SQLiteDataReader _relation_tag_reader;
-        private SQLiteDataReader _relation_member_reader;
-
+        /// <summary>
+        /// Moves to the next object.
+        /// </summary>
+        /// <returns>True if successfull.</returns>
         public override bool MoveNext()
         {
-            bool next = false;
-            switch (_current_type)
+            switch (_currentType)
             {
                 case SimpleOsmGeoType.Node:
                     if (this.MoveNextNode())
@@ -81,103 +95,112 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
                 case SimpleOsmGeoType.Relation:
                     return this.MoveNextRelation();
             }
-            return next;
+            return false;
         }
+
+        #region MoveNext fuctions
+
+        private SQLiteDataReader _nodeReader;
+        private SQLiteDataReader _wayReader;
+        private SQLiteDataReader _wayTagReader;
+        private SQLiteDataReader _wayNodeReader;
+        private SQLiteDataReader _relationReader;
+        private SQLiteDataReader _relationTagReader;
+        private SQLiteDataReader _relationMemberReader;
 
         private bool MoveNextRelation()
         {
-            if (_relation_reader == null)
+            if (_relationReader == null)
             {
-                SQLiteCommand relation_command = new SQLiteCommand("select * from relation order by id");
-                relation_command.Connection = _connection;
-                _relation_reader = relation_command.ExecuteReader();
-                if (!_relation_reader.Read())
+                var relationCommand = new SQLiteCommand("select * from relation order by id", _connection);
+                _relationReader = relationCommand.ExecuteReader();
+                if (!_relationReader.Read())
                 {
-                    _relation_reader.Close();
+                    _relationReader.Close();
                 }
-                SQLiteCommand relation_tag_command = new SQLiteCommand("select * from relation_tags order by relation_id");
-                relation_tag_command.Connection = _connection;
-                _relation_tag_reader = relation_tag_command.ExecuteReader();
-                if (!_relation_tag_reader.IsClosed && !_relation_tag_reader.Read())
+                var relationTagCommand = new SQLiteCommand("select * from relation_tags order by relation_id", _connection);
+                _relationTagReader = relationTagCommand.ExecuteReader();
+                if (!_relationTagReader.IsClosed && !_relationTagReader.Read())
                 {
-                    _relation_tag_reader.Close();
+                    _relationTagReader.Close();
                 }
-                SQLiteCommand relation_node_command = new SQLiteCommand("select * from relation_members order by relation_id,sequence_id");
-                relation_node_command.Connection = _connection;
-                _relation_member_reader = relation_node_command.ExecuteReader();
-                if (!_relation_member_reader.IsClosed && !_relation_member_reader.Read())
+                var relationNodeCommand = new SQLiteCommand("select * from relation_members order by relation_id,sequence_id", _connection);
+                _relationMemberReader = relationNodeCommand.ExecuteReader();
+                if (!_relationMemberReader.IsClosed && !_relationMemberReader.Read())
                 {
-                    _relation_member_reader.Close();
+                    _relationMemberReader.Close();
                 }
             }
 
             // read next relation.
-            if (!_relation_reader.IsClosed)
+            if (!_relationReader.IsClosed)
             {
                 // load/parse data.
-                long id = _relation_reader.GetInt64(0);
-                long changeset_id = _relation_reader.GetInt64(1);
-								bool visible = _relation_reader.GetInt64(2) == 1;
-								DateTime timestamp = _relation_reader.IsDBNull(3)? DateTime.MinValue : _relation_reader.GetDateTime(3);
-                long version = _relation_reader.GetInt64(4);
-                string user = _relation_reader.GetString(5);
-                long uid = _relation_reader.GetInt64(6);
-                SimpleRelation relation = new SimpleRelation();
-                relation.Id = id;
-                relation.ChangeSetId = changeset_id;
-                relation.TimeStamp = timestamp;
-                relation.UserId = null;
-                relation.UserName = null;
-                relation.Version = (ulong)version;
-                relation.Visible = visible;
+                long id = _relationReader.GetInt64(0);
+                long changesetId = _relationReader.GetInt64(1);
+				bool visible = _relationReader.GetInt64(2) == 1;
+				DateTime timestamp = _relationReader.IsDBNull(3)? DateTime.MinValue : _relationReader.GetDateTime(3);
+                long version = _relationReader.GetInt64(4);
+                string user = _relationReader.GetString(5);
+                long uid = _relationReader.GetInt64(6);
+                var relation = new SimpleRelation
+                                   {
+                                       Id = id,
+                                       ChangeSetId = changesetId,
+                                       TimeStamp = timestamp,
+                                       UserId = null,
+                                       UserName = null,
+                                       Version = (ulong) version,
+                                       Visible = visible
+                                   };
                 relation.UserName = user;
                 relation.UserId = uid;
 
-                if (!_relation_tag_reader.IsClosed)
+                if (!_relationTagReader.IsClosed)
                 {
-                    long returned_id = _relation_tag_reader.GetInt64(0);
-                    while (returned_id == relation.Id.Value)
+                    long returnedId = _relationTagReader.GetInt64(0);
+                    while (returnedId == relation.Id.Value)
                     {
                         if (relation.Tags == null)
                         {
                             relation.Tags = new Dictionary<string, string>();
                         }
-                        string key = _relation_tag_reader.GetString(1);
-                        string value = _relation_tag_reader.GetString(2);
+                        string key = _relationTagReader.GetString(1);
+                        string value = _relationTagReader.GetString(2);
 
                         relation.Tags.Add(key, value);
 
-                        if (!_relation_tag_reader.Read())
+                        if (!_relationTagReader.Read())
                         {
-                            _relation_tag_reader.Close();
-                            returned_id = -1;
+                            _relationTagReader.Close();
+                            returnedId = -1;
                         }
                         else
                         {
-                            returned_id = _relation_tag_reader.GetInt64(0);
+                            returnedId = _relationTagReader.GetInt64(0);
                         }
                     }
                 }
-                if (!_relation_member_reader.IsClosed)
+                if (!_relationMemberReader.IsClosed)
                 {
-                    long returned_id = _relation_member_reader.GetInt64(0);
-                    while (returned_id == relation.Id.Value)
+                    long returnedId = _relationMemberReader.GetInt64(0);
+                    while (returnedId == relation.Id.Value)
                     {
                         if (relation.Members == null)
                         {
                             relation.Members = new List<SimpleRelationMember>();
                         }
-                        string member_type = _relation_member_reader.GetString(1);
-                        long member_id = _relation_member_reader.GetInt64(2);
-                        object member_role = _relation_member_reader.GetValue(3);
+                        string memberType = _relationMemberReader.GetString(1);
+                        long memberId = _relationMemberReader.GetInt64(2);
+                        object memberRole = _relationMemberReader.GetValue(3);
 
-                        SimpleRelationMember member = new SimpleRelationMember();
-                        member.MemberId = member_id;
-                        if (member_role != DBNull.Value)
+                        var member = new SimpleRelationMember();
+                        member.MemberId = memberId;
+                        if (memberRole != DBNull.Value)
                         {
-                            member.MemberRole = member_role as string;
+                            member.MemberRole = memberRole as string;
                         }
-                        switch (member_type)
+                        switch (memberType)
                         {
                             case "Node":
                                 member.MemberType = SimpleRelationMemberType.Node;
@@ -192,14 +215,14 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 
                         relation.Members.Add(member);
 
-                        if (!_relation_member_reader.Read())
+                        if (!_relationMemberReader.Read())
                         {
-                            _relation_member_reader.Close();
-                            returned_id = -1;
+                            _relationMemberReader.Close();
+                            returnedId = -1;
                         }
                         else
                         {
-                            returned_id = _relation_member_reader.GetInt64(0);
+                            returnedId = _relationMemberReader.GetInt64(0);
                         }
                     }
                 }
@@ -208,31 +231,31 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
                 _current = relation;
 
                 // advance the reader(s).
-                if (!_relation_reader.Read())
+                if (!_relationReader.Read())
                 {
-                    _relation_reader.Close();
+                    _relationReader.Close();
                 }
-                if (!_relation_tag_reader.IsClosed && !_relation_tag_reader.Read())
+                if (!_relationTagReader.IsClosed && !_relationTagReader.Read())
                 {
-                    _relation_tag_reader.Close();
+                    _relationTagReader.Close();
                 }
-                if (!_relation_member_reader.IsClosed && !_relation_member_reader.Read())
+                if (!_relationMemberReader.IsClosed && !_relationMemberReader.Read())
                 {
-                    _relation_member_reader.Close();
+                    _relationMemberReader.Close();
                 }
                 return true;
             }
             else
             {
-                _relation_reader.Close();
-                _relation_reader.Dispose();
-                _relation_reader = null;
+                _relationReader.Close();
+                _relationReader.Dispose();
+                _relationReader = null;
 
-                _relation_tag_reader.Close();
-                _relation_tag_reader.Dispose();
-                _relation_tag_reader = null;
+                _relationTagReader.Close();
+                _relationTagReader.Dispose();
+                _relationTagReader = null;
 
-                _current_type = SimpleOsmGeoType.Relation;
+                _currentType = SimpleOsmGeoType.Relation;
 
                 return false;
             }
@@ -240,32 +263,32 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 
         private bool MoveNextNode()
         {
-        	if (_node_reader == null)
+        	if (_nodeReader == null)
         	{
         		SQLiteCommand node_command = new SQLiteCommand("select * from node left join node_tags on node_tags.node_id = node.id order by node.id");
         		node_command.Connection = _connection;
-        		_node_reader = node_command.ExecuteReader();
-        		if (!_node_reader.Read())
-        			_node_reader.Close();
+        		_nodeReader = node_command.ExecuteReader();
+        		if (!_nodeReader.Read())
+        			_nodeReader.Close();
         	}
 
         	// read next node.
-        	if (!_node_reader.IsClosed)
+        	if (!_nodeReader.IsClosed)
         	{
         		// load/parse data.
         		SimpleNode node = new SimpleNode();
-        		node.Id = _node_reader.GetInt64(0);
-        		node.Latitude = _node_reader.GetInt64(1)/10000000.0;
-        		node.Longitude = _node_reader.GetInt64(2)/10000000.0;
-        		node.ChangeSetId = _node_reader.GetInt64(3);
-        		node.TimeStamp = _node_reader.GetDateTime(5);
-        		node.Version = (ulong) _node_reader.GetInt64(7);
-        		node.Visible = _node_reader.GetInt64(4) == 1;
+        		node.Id = _nodeReader.GetInt64(0);
+        		node.Latitude = _nodeReader.GetInt64(1)/10000000.0;
+        		node.Longitude = _nodeReader.GetInt64(2)/10000000.0;
+        		node.ChangeSetId = _nodeReader.GetInt64(3);
+        		node.TimeStamp = _nodeReader.GetDateTime(5);
+        		node.Version = (ulong) _nodeReader.GetInt64(7);
+        		node.Visible = _nodeReader.GetInt64(4) == 1;
         		//node.UserName = _node_reader.GetString(8);
         		//node.UserId = _node_reader.IsDBNull(9) ? -1 : _node_reader.GetInt64(9);
 
 						//Has tags?
-        		if (!_node_reader.IsDBNull(10))
+        		if (!_nodeReader.IsDBNull(10))
         		{
 							//if (node.Tags == null)
 								//node.Tags = new Dictionary<string, string>();
@@ -275,112 +298,112 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
 								//string key = _node_reader.GetString(11);
 								//string value = _node_reader.GetString(12);
 								//node.Tags.Add(key, value);
-								if (!_node_reader.Read())
+								if (!_nodeReader.Read())
 								{
-									_node_reader.Close();
+									_nodeReader.Close();
 									break;
 								}
-								currentnode = _node_reader.GetInt64(0);
+								currentnode = _nodeReader.GetInt64(0);
 							}
-        		}else if (!_node_reader.Read())
-        			_node_reader.Close();
+        		}else if (!_nodeReader.Read())
+        			_nodeReader.Close();
 						// set the current variable!
         		_current = node;
         		return true;
         	}
-        	_node_reader.Close();
-        	_node_reader.Dispose();
-        	_node_reader = null;
-        	_current_type = SimpleOsmGeoType.Way;
+        	_nodeReader.Close();
+        	_nodeReader.Dispose();
+        	_nodeReader = null;
+        	_currentType = SimpleOsmGeoType.Way;
         	return false;
         }
 
     	private bool MoveNextWay()
         {
-					if (_way_reader == null)
+					if (_wayReader == null)
 					{
 						SQLiteCommand way_command = new SQLiteCommand("select * from way where id > 26478817 order by id");
 						way_command.Connection = _connection;
-						_way_reader = way_command.ExecuteReader();
-						if (!_way_reader.Read())
+						_wayReader = way_command.ExecuteReader();
+						if (!_wayReader.Read())
 						{
-							_way_reader.Close();
+							_wayReader.Close();
 						}
 						SQLiteCommand way_tag_command = new SQLiteCommand("select * from way_tags where way_id > 26478817 order by way_id");
 						way_tag_command.Connection = _connection;
-						_way_tag_reader = way_tag_command.ExecuteReader();
-						if (!_way_tag_reader.IsClosed && !_way_tag_reader.Read())
+						_wayTagReader = way_tag_command.ExecuteReader();
+						if (!_wayTagReader.IsClosed && !_wayTagReader.Read())
 						{
-							_way_tag_reader.Close();
+							_wayTagReader.Close();
 						}
 						SQLiteCommand way_node_command = new SQLiteCommand("select * from way_nodes where way_id > 26478817 order by way_id,sequence_id");
 						way_node_command.Connection = _connection;
-						_way_node_reader = way_node_command.ExecuteReader();
-						if (!_way_node_reader.IsClosed && !_way_node_reader.Read())
+						_wayNodeReader = way_node_command.ExecuteReader();
+						if (!_wayNodeReader.IsClosed && !_wayNodeReader.Read())
 						{
-							_way_node_reader.Close();
+							_wayNodeReader.Close();
 						}
 					}
 
             // read next way.
-            if (!_way_reader.IsClosed)
+            if (!_wayReader.IsClosed)
             {
 
                 SimpleWay way = new SimpleWay();
-								way.Id = _way_reader.GetInt64(0);
-								way.ChangeSetId = _way_reader.GetInt64(1);
-								way.TimeStamp = _way_reader.IsDBNull(3) ? DateTime.MinValue : _way_reader.GetDateTime(3);
+								way.Id = _wayReader.GetInt64(0);
+								way.ChangeSetId = _wayReader.GetInt64(1);
+								way.TimeStamp = _wayReader.IsDBNull(3) ? DateTime.MinValue : _wayReader.GetDateTime(3);
 								//way.UserId = _way_reader.GetInt64(6);
 								//way.UserName = _way_reader.GetString(5);
-								way.Version = (ulong)_way_reader.GetInt64(4);
-								way.Visible = _way_reader.GetInt64(2) == 1;
+								way.Version = (ulong)_wayReader.GetInt64(4);
+								way.Visible = _wayReader.GetInt64(2) == 1;
 
-                if (!_way_tag_reader.IsClosed)
+                if (!_wayTagReader.IsClosed)
                 {
-                    long returned_id = _way_tag_reader.GetInt64(_way_tag_reader.GetOrdinal("way_id"));
+                    long returned_id = _wayTagReader.GetInt64(_wayTagReader.GetOrdinal("way_id"));
                     while (returned_id == way.Id.Value)
                     {
                         if (way.Tags == null)
                         {
                             way.Tags = new Dictionary<string, string>();
                         }
-                        string key = _way_tag_reader.GetString(1);
-                        string value = _way_tag_reader.GetString(2);
+                        string key = _wayTagReader.GetString(1);
+                        string value = _wayTagReader.GetString(2);
 
                         way.Tags.Add(key, value);
 
-                        if (!_way_tag_reader.Read())
+                        if (!_wayTagReader.Read())
                         {
-                            _way_tag_reader.Close();
+                            _wayTagReader.Close();
                             returned_id = -1;
                         }
                         else
                         {
-                            returned_id = _way_tag_reader.GetInt64(0);
+                            returned_id = _wayTagReader.GetInt64(0);
                         }
                     }
                 }
-                if (!_way_node_reader.IsClosed)
+                if (!_wayNodeReader.IsClosed)
                 {
-                    long returned_id = _way_node_reader.GetInt64(_way_node_reader.GetOrdinal("way_id"));
+                    long returned_id = _wayNodeReader.GetInt64(_wayNodeReader.GetOrdinal("way_id"));
                     while (returned_id == way.Id.Value)
                     {
                         if (way.Nodes == null)
                         {
                             way.Nodes = new List<long>();
                         }
-                        long node_id = _way_node_reader.GetInt64(1);
+                        long node_id = _wayNodeReader.GetInt64(1);
 
                         way.Nodes.Add(node_id);
 
-                        if (!_way_node_reader.Read())
+                        if (!_wayNodeReader.Read())
                         {
-                            _way_node_reader.Close();
+                            _wayNodeReader.Close();
                             returned_id = -1;
                         }
                         else
                         {
-                            returned_id = _way_node_reader.GetInt64(0);
+                            returned_id = _wayNodeReader.GetInt64(0);
                         }
                     }
                 }
@@ -389,54 +412,66 @@ namespace OsmSharp.Osm.Data.SQLite.Raw.Processor
                 _current = way;
 
                 // advance the reader(s).
-                if (!_way_reader.Read())
+                if (!_wayReader.Read())
                 {
-                    _way_reader.Close();
+                    _wayReader.Close();
                 }
-                if (!_way_tag_reader.IsClosed && !_way_tag_reader.Read())
+                if (!_wayTagReader.IsClosed && !_wayTagReader.Read())
                 {
-                    _way_tag_reader.Close();
+                    _wayTagReader.Close();
                 }
-                if (!_way_node_reader.IsClosed && !_way_node_reader.Read())
+                if (!_wayNodeReader.IsClosed && !_wayNodeReader.Read())
                 {
-                    _way_node_reader.Close();
+                    _wayNodeReader.Close();
                 }
                 return true;
             }
             else
             {
-                _way_reader.Close();
-                _way_reader.Dispose();
-                _way_reader = null;
+                _wayReader.Close();
+                _wayReader.Dispose();
+                _wayReader = null;
 
-                _way_tag_reader.Close();
-                _way_tag_reader.Dispose();
-                _way_tag_reader = null;
+                _wayTagReader.Close();
+                _wayTagReader.Dispose();
+                _wayTagReader = null;
 
-                _current_type = SimpleOsmGeoType.Relation;
+                _currentType = SimpleOsmGeoType.Relation;
 
                 return false;
             }
         }
 
+        #endregion
+
+        /// <summary>
+        /// Returns the current object.
+        /// </summary>
+        /// <returns></returns>
         public override SimpleOsmGeo Current()
         {
             return _current;
         }
 
+        /// <summary>
+        /// Resets this source.
+        /// </summary>
         public override void Reset()
         {
             _current = null;
-            _current_type = SimpleOsmGeoType.Node;
+            _currentType = SimpleOsmGeoType.Node;
 
-            if (_node_reader != null)
+            if (_nodeReader != null)
             {
-                _node_reader.Close();
-                _node_reader.Dispose();
-                _node_reader = null;
+                _nodeReader.Close();
+                _nodeReader.Dispose();
+                _nodeReader = null;
             }
         }
 
+        /// <summary>
+        /// Returns a value that indicates if this source can be reset or not.
+        /// </summary>
         public override bool CanReset
         {
             get { return true; }

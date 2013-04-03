@@ -15,50 +15,51 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using OsmSharp.Osm;
 using OsmSharp.Osm.Factory;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Tools.Math.Geo;
 
-namespace OsmSharp.Osm.Data.SQLite.Raw
+namespace OsmSharp.Osm.Data.SQLite.SimpleSchema
 {
-	class CachedNode
-	{
-		public CachedNode(Node node)
-		{
-			Node = node;
-		}
-
-		public Node Node { get; set; }
-		public List<Way> Ways { get; set; }
-	}
-
+    /// <summary>
+    /// A SQLite simple data source.
+    /// </summary>
 	public class SQLiteSimpleSource : IDataSourceReadOnly, IDisposable
 	{
-		private readonly string _connection_string;
-		private Guid _id;
-		private const int max_cache_nodes = 1000;
-		private readonly Dictionary<long, CachedNode> cache_nodes = new Dictionary<long, CachedNode>(max_cache_nodes);
+		private readonly string _connectionString;
+		private readonly Guid _id;
+		private const int MaxCacheNodes = 1000;
+		private readonly Dictionary<long, CachedNode> _cacheNodes = new Dictionary<long, CachedNode>(MaxCacheNodes);
 
-		public SQLiteSimpleSource(string connection_string)
+        /// <summary>
+        /// Creates a new SQLite simple data source.
+        /// </summary>
+        /// <param name="connectionString"></param>
+		public SQLiteSimpleSource(string connectionString)
 		{
-			_connection_string = connection_string;
+			_connectionString = connectionString;
 			_id = Guid.NewGuid();
 		}
 
+        /// <summary>
+        /// Holds the connection.
+        /// </summary>
 		private SQLiteConnection _connection;
 
+        /// <summary>
+        /// Creates/get the connection.
+        /// </summary>
+        /// <returns></returns>
 		private SQLiteConnection CreateConnection()
 		{
 			if (_connection == null)
 			{
-				_connection = new SQLiteConnection(_connection_string);
+				_connection = new SQLiteConnection(_connectionString);
 				_connection.Open();
 			}
 			return _connection;
@@ -66,6 +67,9 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 
 		#region IDataSourceReadOnly Members
 
+        /// <summary>
+        /// Returns the boundingbox of this data if any.
+        /// </summary>
 		public GeoCoordinateBox BoundingBox
 		{
 			get
@@ -74,6 +78,9 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			}
 		}
 
+        /// <summary>
+        /// Returns the name of this data source.
+        /// </summary>
 		public string Name
 		{
 			get
@@ -82,6 +89,9 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			}
 		}
 
+        /// <summary>
+        /// Returns the id of this data source.
+        /// </summary>
 		public Guid Id
 		{
 			get
@@ -90,6 +100,9 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			}
 		}
 
+        /// <summary>
+        /// Returns a value that indicates if the boundingbox is available or not.
+        /// </summary>
 		public bool HasBoundinBox
 		{
 			get
@@ -98,6 +111,9 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			}
 		}
 
+        /// <summary>
+        /// Returns a value that indicates if this data is readonly or not.
+        /// </summary>
 		public bool IsReadOnly
 		{
 			get
@@ -106,6 +122,11 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			}
 		}
 
+        /// <summary>
+        /// Returns the node for the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
 		public Node GetNode(long id)
 		{
 			IList<Node> nodes = this.GetNodes(new List<long>(new long[] { id }));
@@ -116,9 +137,14 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			return null;
 		}
 
+        /// <summary>
+        /// Returns all the nodes for the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
 		public IList<Node> GetNodes(IList<long> ids)
 		{
-			IList<Node> return_list = new List<Node>();
+			IList<Node> returnList = new List<Node>();
 			if (ids.Count > 0)
 			{
 				// initialize connection.
@@ -129,7 +155,7 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 				Dictionary<long, Node> nodes = GetCachedNodes(ids);
 				if (nodes.Count > 0)
 					if (nodes.Count < ids.Count)
-						ids = new List<long>(ids.Where(x => !cache_nodes.ContainsKey(x)));
+						ids = new List<long>(ids.Where(x => !_cacheNodes.ContainsKey(x)));
 					else
 						return nodes.Values.ToList();
 
@@ -190,29 +216,29 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 				// STEP2: Load all node tags.
 				//this.LoadNodeTags(nodes);
 
-				return_list = nodes.Values.ToList();
+				returnList = nodes.Values.ToList();
 			}
-			return return_list;
+			return returnList;
 		}
 
 		private CachedNode AddCachedNode(Node node)
 		{
 			CachedNode cachedNode;
-			if (cache_nodes.TryGetValue(node.Id, out cachedNode))
+			if (_cacheNodes.TryGetValue(node.Id, out cachedNode))
 				return cachedNode; //exists
 
-			if (cache_nodes.Count > max_cache_nodes)
-				cache_nodes.Remove(cache_nodes.First().Key);
+			if (_cacheNodes.Count > MaxCacheNodes)
+				_cacheNodes.Remove(_cacheNodes.First().Key);
 
 			cachedNode = new CachedNode(node);
-			cache_nodes.Add(node.Id, cachedNode);
+			_cacheNodes.Add(node.Id, cachedNode);
 			return cachedNode;
 		}
 
 		private void AddCachedWay(Node node, Way way)
 		{
 			CachedNode cached;
-			if (!cache_nodes.TryGetValue(node.Id, out cached))
+			if (!_cacheNodes.TryGetValue(node.Id, out cached))
 			{
 				AddCachedNode(node);
 				return;
@@ -224,33 +250,52 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 
 		private Dictionary<long, Node> GetCachedNodes(IList<long> ids)
 		{
-			return cache_nodes.Where(x => ids.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value.Node);
+			return _cacheNodes.Where(x => ids.Contains(x.Key)).ToDictionary(x => x.Key, x => x.Value.Node);
 		}
-
 
 		private Dictionary<long, Way> GetCachedWays(Dictionary<long, Node> nodes)
 		{
-			return cache_nodes.Where(n => nodes.ContainsKey(n.Key) && n.Value.Ways != null && n.Value.Ways.Count > 0).SelectMany(cn => cn.Value.Ways).Distinct().ToDictionary(way => way.Id, way => way);
+			return _cacheNodes.Where(n => nodes.ContainsKey(n.Key) && n.Value.Ways != null && n.Value.Ways.Count > 0).SelectMany(cn => cn.Value.Ways).Distinct().ToDictionary(way => way.Id, way => way);
 		}
 
+        /// <summary>
+        /// Returns the relation for the given if.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
 		public Relation GetRelation(long id)
 		{
 			// TODO: implement this
 			return null;
 		}
 
+        /// <summary>
+        /// Returns the relations for the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
 		public IList<Relation> GetRelations(IList<long> ids)
 		{
 			// TODO: implement this
 			return new List<Relation>();
 		}
 
+        /// <summary>
+        /// Returns all relations that contain the given object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
 		public IList<Relation> GetRelationsFor(Osm.OsmBase obj)
 		{
 			// TODO: implement this
 			return new List<Relation>();
 		}
 
+        /// <summary>
+        /// Returns the way for the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
 		public Way GetWay(long id)
 		{
 			IList<Way> ways = this.GetWays(new List<long>(new long[] { id }));
@@ -261,6 +306,11 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			return null;
 		}
 
+        /// <summary>
+        /// Returns the ways for the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
 		public IList<Way> GetWays(IList<long> ids)
 		{
 			return this.GetWays(ids, null);
@@ -429,6 +479,11 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			return new List<Way>();
 		}
 
+        /// <summary>
+        /// Returns all the ways that contain the given node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
 		public IList<Way> GetWaysFor(Node node)
 		{
 			Dictionary<long, Node> nodes = new Dictionary<long, Node>();
@@ -436,9 +491,13 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			return this.GetWaysForNodes(nodes);
 		}
 
+        /// <summary>
+        /// Returns all the ways that contain any of the given nodes.
+        /// </summary>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
 		public IList<Way> GetWaysForNodes(Dictionary<long, Node> nodes)
 		{
-
 			if (nodes.Count > 0)
 			{
 				SQLiteConnection con = CreateConnection();
@@ -447,7 +506,7 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 				List<long> ids = nodes.Keys.ToList();
 				if (ways.Count > 0)
 				{
-					ids = ids.Where(id => !cache_nodes.ContainsKey(id) || cache_nodes[id].Ways == null).ToList();
+					ids = ids.Where(id => !_cacheNodes.ContainsKey(id) || _cacheNodes[id].Ways == null).ToList();
 					if (ids.Count == 0)
 						return ways.Values.ToList();
 				}
@@ -569,13 +628,6 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 		private static SQLiteDataReader ExecuteReader(SQLiteCommand com)
 		{
 			return com.ExecuteReader();
-			Stopwatch timer = new Stopwatch();
-			//timer.Start();
-			var re = com.ExecuteReader();
-			//timer.Stop();
-			//Debug.WriteLine(timer.Elapsed);
-			//Debug.WriteLine(com.CommandText);
-			return re;
 		}
 
 		#region Tile Calculations
@@ -606,6 +658,12 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 
 		#endregion
 
+        /// <summary>
+        /// Returns all objects with the given bounding box and valid for the given filter;
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
 		{
 			// initialize connection.
@@ -646,30 +704,30 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 							this.ConstructIdList(boxes));
 
 			// TODO: parameters.
-			SQLiteCommand com = new SQLiteCommand(sql);
+			var com = new SQLiteCommand(sql);
 			com.Connection = con;
 			SQLiteDataReader reader = ExecuteReader(com);
 			Node node = null;
-			Dictionary<long, Node> nodes = new Dictionary<long, Node>();
+			var nodes = new Dictionary<long, Node>();
 			while (reader.Read())
 			{
 				// load/parse data.
-				long returned_id = reader.GetInt64(0);
-				int latitude_int = reader.GetInt32(1);
-				int longitude_int = reader.GetInt32(2);
-				long changeset_id = reader.GetInt64(3);
+				long returnedId = reader.GetInt64(0);
+				int latitudeInt = reader.GetInt32(1);
+				int longitudeInt = reader.GetInt32(2);
+				long changesetId = reader.GetInt64(3);
 				//bool visible = reader.GetInt64(4) == 1;
 				DateTime timestamp = reader.GetDateTime(5);
 				//long tile = reader.GetInt64(6);
 				long version = reader.GetInt64(7);
 
 				// create node.
-				node = OsmBaseFactory.CreateNode(returned_id);
+				node = OsmBaseFactory.CreateNode(returnedId);
 				node.Version = version;
 				//node.UserId = user_id;
 				node.TimeStamp = timestamp;
-				node.ChangeSetId = changeset_id;
-				node.Coordinate = new GeoCoordinate(latitude_int / 10000000.0, longitude_int / 10000000.0);
+				node.ChangeSetId = changesetId;
+				node.Coordinate = new GeoCoordinate(latitudeInt / 10000000.0, longitudeInt / 10000000.0);
 
 				nodes.Add(node.Id, node);
 			}
@@ -681,12 +739,10 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			// STEP3: Load all ways for the given nodes.
 			IList<Way> ways = this.GetWaysForNodes(nodes);
 
-
-
 			// Add all objects to the base list.
-			foreach (Node node_result in nodes.Values.ToList<Node>())
+			foreach (Node nodeResult in nodes.Values.ToList<Node>())
 			{
-				base_list.Add(node_result);
+				base_list.Add(nodeResult);
 			}
 			foreach (Way way in ways)
 			{
@@ -695,18 +751,30 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			return base_list;
 		}
 
+        /// <summary>
+        /// Constructs a list of ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
 		private string ConstructIdList(IList<long> ids)
 		{
 			return this.ConstructIdList(ids, 0, ids.Count);
 		}
 
-		private string ConstructIdList(IList<long> ids, int start_idx, int end_idx)
+        /// <summary>
+        /// Constructs a list of ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <param name="startIdx"></param>
+        /// <param name="endIdx"></param>
+        /// <returns></returns>
+		private string ConstructIdList(IList<long> ids, int startIdx, int endIdx)
 		{
 			string return_string = string.Empty;
-			if (ids.Count > 0 && ids.Count > start_idx)
+			if (ids.Count > 0 && ids.Count > startIdx)
 			{
-				return_string = return_string + ids[start_idx].ToString();
-				for (int i = start_idx + 1; i < end_idx; i++)
+				return_string = return_string + ids[startIdx].ToString();
+				for (int i = startIdx + 1; i < endIdx; i++)
 				{
 					return_string = return_string + "," + ids[i].ToString();
 				}
@@ -714,26 +782,30 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 			return return_string;
 		}
 
+        /// <summary>
+        /// Loads all tags for all given nodes.
+        /// </summary>
+        /// <param name="nodes"></param>
 		private void LoadNodeTags(Dictionary<long, Node> nodes)
 		{
 			if (nodes.Count > 0)
 			{
-				for (int idx_1000 = 0; idx_1000 <= nodes.Count / 1000; idx_1000++)
+				for (int idx1000 = 0; idx1000 <= nodes.Count / 1000; idx1000++)
 				{
 					string sql = "SELECT * FROM node_tags WHERE (node_id IN ({0})) ";
-					int start_idx = idx_1000 * 1000;
-					int stop_idx = Math.Min((idx_1000 + 1) * 1000, nodes.Count);
-					string ids = this.ConstructIdList(nodes.Keys.ToList<long>(), start_idx, stop_idx);
+					int startIdx = idx1000 * 1000;
+					int stopIdx = Math.Min((idx1000 + 1) * 1000, nodes.Count);
+					string ids = this.ConstructIdList(nodes.Keys.ToList<long>(), startIdx, stopIdx);
 					if (ids.Length > 0)
 					{
 						sql = string.Format(sql, ids);
 						SQLiteConnection con = this.CreateConnection();
-						SQLiteCommand com = new SQLiteCommand(sql);
+						var com = new SQLiteCommand(sql);
 						com.Connection = con;
 						SQLiteDataReader reader = ExecuteReader(com);
 						while (reader.Read())
 						{
-							long returned_id = reader.GetInt64(0);
+							long returnedId = reader.GetInt64(0);
 							string key = reader.GetString(1);
 							object val = reader.GetValue(2);
 							string value = string.Empty;
@@ -742,7 +814,7 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 								value = val as string;
 							}
 
-							nodes[returned_id].Tags.Add(key, value);
+							nodes[returnedId].Tags.Add(key, value);
 
 						}
 						reader.Close();
@@ -753,6 +825,9 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 
 		#endregion
 
+        /// <summary>
+        /// Closes this source.
+        /// </summary>
 		public void Close()
 		{
 			if (_connection != null)
@@ -764,6 +839,9 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 
 		#region IDisposable Members
 
+        /// <summary>
+        /// Disposes all resources.
+        /// </summary>
 		public void Dispose()
 		{
 			_connection.Close();
@@ -772,5 +850,30 @@ namespace OsmSharp.Osm.Data.SQLite.Raw
 		}
 
 		#endregion
+
+        /// <summary>
+        /// Represents a cached node.
+        /// </summary>
+        class CachedNode
+        {
+            /// <summary>
+            /// Creates a new cached node.
+            /// </summary>
+            /// <param name="node"></param>
+            public CachedNode(Node node)
+            {
+                Node = node;
+            }
+
+            /// <summary>
+            /// Gets/sets the node.
+            /// </summary>
+            public Node Node { get; set; }
+
+            /// <summary>
+            /// Gets/sets the ways.
+            /// </summary>
+            public List<Way> Ways { get; set; }
+        }
 	}
 }
