@@ -62,8 +62,9 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
         /// <summary>
         /// Calculates the fitness of one individual.
         /// </summary>
-        /// <param name="solver"></param>
+        /// <param name="problem"></param>
         /// <param name="individual"></param>
+        /// <param name="validate"></param>
         /// <returns></returns>
         public Fitness Fitness(
             Problem problem,
@@ -80,7 +81,7 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
         /// <summary>
         /// Calculates the fitness of one individual based on it's genomes.
         /// </summary>
-        /// <param name="solver"></param>
+        /// <param name="problem"></param>
         /// <param name="genomes"></param>
         /// <returns></returns>
         public Fitness Fitness(
@@ -97,8 +98,10 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
         /// <summary>
         /// Calculates the increase of fitness when one round is increased/descreased in weights.
         /// </summary>
+        /// <param name="fitness"></param>
         /// <param name="round"></param>
         /// <param name="increase"></param>
+        /// <param name="problem"></param>
         /// <returns></returns>
         public Fitness Adjust(
             Problem problem,
@@ -119,6 +122,7 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
         /// <summary>
         /// Calculates the times 
         /// </summary>
+        /// <param name="problem"></param>
         /// <param name="genomes"></param>
         /// <returns></returns>
         private List<double> CalculateTimes(
@@ -173,6 +177,7 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
         /// <summary>
         /// Calculates the rest of the fitness indicators using the times per round.
         /// </summary>
+        /// <param name="problem"></param>
         /// <param name="times"></param>
         /// <returns></returns>
         private Fitness Calculate(

@@ -23,13 +23,22 @@ using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Tools.Math.VRP.Core
 {
+    /// <summary>
+    /// A collection of nearest neighbours.
+    /// </summary>
     public class NearestNeighbours10 : HashSet<int>
     {
+        /// <summary>
+        /// Creates a new nearest neighbour collection.
+        /// </summary>
         public NearestNeighbours10()
         {
 
         }
 
+        /// <summary>
+        /// The max.
+        /// </summary>
         public double Max { get; set; }
     }
 }

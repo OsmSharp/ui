@@ -43,6 +43,7 @@ namespace OsmSharp.Tools.Math.TSP
         /// </summary>
         /// <param name="problem"></param>
         /// <param name="route"></param>
+        /// <param name="difference"></param>
         /// <returns></returns>
         bool Improve(IProblemWeights problem, IRoute route, out double difference);
     }

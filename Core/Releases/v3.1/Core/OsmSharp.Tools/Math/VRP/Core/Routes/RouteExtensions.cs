@@ -61,6 +61,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
         /// Calculates the weight of the route given the weights.
         /// </summary>
         /// <param name="route"></param>
+        /// <param name="is_round"></param>
         /// <param name="weights"></param>
         public static double CalculateWeight(this int[] route, bool is_round, IProblemWeights weights)
         {

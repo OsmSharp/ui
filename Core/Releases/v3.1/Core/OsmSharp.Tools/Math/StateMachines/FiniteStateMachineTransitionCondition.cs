@@ -23,8 +23,18 @@ using OsmSharp.Tools.Math.Automata;
 
 namespace OsmSharp.Tools.Math.StateMachines
 {
+    /// <summary>
+    /// Represents a finite state machine condition.
+    /// </summary>
+    /// <typeparam name="EventType"></typeparam>
     public class FiniteStateMachineTransitionCondition<EventType>
     {
+        /// <summary>
+        /// Returns true if the event make the machine reach an end state.
+        /// </summary>
+        /// <param name="machine"></param>
+        /// <param name="even"></param>
+        /// <returns></returns>
         public bool Check(FiniteStateMachine<EventType> machine, object even)
         {
             if (this.EventTypeObject.Equals(even.GetType()))
@@ -37,11 +47,23 @@ namespace OsmSharp.Tools.Math.StateMachines
             }
             return false;
         }
-
+        
+        /// <summary>
+        /// The event type object.
+        /// </summary>
         public Type EventTypeObject { get; set; }
 
+        /// <summary>
+        /// The delegate code.
+        /// </summary>
+        /// <param name="machine"></param>
+        /// <param name="even"></param>
+        /// <returns></returns>
         public delegate bool FiniteStateMachineTransitionConditionDelegate(FiniteStateMachine<EventType> machine, object even);
 
+        /// <summary>
+        /// Checks the actual condition.
+        /// </summary>
         public FiniteStateMachineTransitionConditionDelegate CheckDelegate { get; set; }
     }
 }

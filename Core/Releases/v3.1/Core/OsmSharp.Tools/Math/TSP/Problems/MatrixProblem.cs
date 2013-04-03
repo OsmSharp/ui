@@ -73,6 +73,7 @@ namespace OsmSharp.Tools.Math.TSP.Problems
         /// </summary>
         /// <param name="weights"></param>
         /// <param name="symmetric"></param>
+        /// <param name="euclidean"></param>
         protected MatrixProblem(double[][] weights
             , bool symmetric
             , bool euclidean)
@@ -89,6 +90,8 @@ namespace OsmSharp.Tools.Math.TSP.Problems
         /// </summary>
         /// <param name="weights"></param>
         /// <param name="symmetric"></param>
+        /// <param name="first"></param>
+        /// <param name="last"></param>
         protected MatrixProblem(double[][] weights
             , bool symmetric
             , int? first
@@ -188,7 +191,7 @@ namespace OsmSharp.Tools.Math.TSP.Problems
         /// <summary>
         /// Generate the nearest neighbour list.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="v"></param>
         /// <returns></returns>
         public NearestNeighbours10 Get10NearestNeighbours(int v)
         {
@@ -257,6 +260,7 @@ namespace OsmSharp.Tools.Math.TSP.Problems
         /// Creates a regular ATSP that routes along all given customers in the shortest possible way with the first customer (and the last customer) given.
         /// </summary>
         /// <param name="weights"></param>
+        /// <param name="first"></param>
         /// <returns></returns>
         public static MatrixProblem CreateATSP(double[][] weights, int first)
         {

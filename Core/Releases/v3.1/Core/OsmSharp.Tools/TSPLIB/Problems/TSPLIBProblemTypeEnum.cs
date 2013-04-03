@@ -27,7 +27,13 @@ namespace OsmSharp.Tools.TSPLIB.Problems
     /// </summary>
     public enum TSPLIBProblemTypeEnum
     {
+        /// <summary>
+        /// TSP.
+        /// </summary>
         TSP,
+        /// <summary>
+        /// ATSP.
+        /// </summary>
         ATSP
     }
 }

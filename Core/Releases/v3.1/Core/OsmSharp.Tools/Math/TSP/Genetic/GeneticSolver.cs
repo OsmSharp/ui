@@ -60,6 +60,9 @@ namespace OsmSharp.Tools.Math.TSP.Genetic
 
         private int _stagnation_count = 100;
 
+        /// <summary>
+        /// Creates a genetic solver.
+        /// </summary>
         public GeneticSolver()
         {
             _mutation_operation = new BestDetailedPlacementMutationOperation();
@@ -74,6 +77,17 @@ namespace OsmSharp.Tools.Math.TSP.Genetic
             _stagnation_count = 100;
         }
 
+        /// <summary>
+        /// Creates a genetic solver.
+        /// </summary>
+        /// <param name="population"></param>
+        /// <param name="stagnation"></param>
+        /// <param name="elitism"></param>
+        /// <param name="mutation_operation"></param>
+        /// <param name="mutation"></param>
+        /// <param name="cross_over_operation"></param>
+        /// <param name="cross_over"></param>
+        /// <param name="generation_operation"></param>
         public GeneticSolver(int population, int stagnation, int elitism,
             IMutationOperation<List<int>, GeneticProblem, Fitness> mutation_operation, int mutation,
             ICrossOverOperation<List<int>, GeneticProblem, Fitness> cross_over_operation, int cross_over,
@@ -213,11 +227,18 @@ namespace OsmSharp.Tools.Math.TSP.Genetic
 
         private IProgressReporter _registered_progress_reporter;
 
+        /// <summary>
+        /// Registers a given progress reporter.
+        /// </summary>
+        /// <param name="reporter"></param>
         public void RegisterProgressReporter(IProgressReporter reporter)
         {
             _registered_progress_reporter = reporter;
         }
 
+        /// <summary>
+        /// Unregisters progress reporter.
+        /// </summary>
         public void UnregisterProgressReporter()
         {
             _registered_progress_reporter = null;
@@ -233,6 +254,9 @@ namespace OsmSharp.Tools.Math.TSP.Genetic
 
         #endregion
 
+        /// <summary>
+        /// Stops the solver.
+        /// </summary>
         public override void Stop()
         {
             if (solver != null)

@@ -22,6 +22,9 @@ using System.Text;
 
 namespace OsmSharp.Tools.Output
 {
+    /// <summary>
+    /// Output stream host.
+    /// </summary>
     public static class OutputStreamHost
     {
         private static double _previous_progress;
@@ -37,11 +40,18 @@ namespace OsmSharp.Tools.Output
             }
         }
 
+        /// <summary>
+        /// Writes a line.
+        /// </summary>
         public static void WriteLine()
         {
             OutputStreamHost.WriteLine(string.Empty);
         }
 
+        /// <summary>
+        /// Writes a line.
+        /// </summary>
+        /// <param name="text"></param>
         public static void WriteLine(string text)
         {
             OutputStreamHost.InitializeIfNeeded();
@@ -58,12 +68,21 @@ namespace OsmSharp.Tools.Output
             }
         }
 
+        /// <summary>
+        /// Writes a line.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="arg"></param>
         public static void WriteLine(string format, params object[] arg)
         {
             OutputStreamHost.WriteLine(
                 string.Format(format, arg));
         }
 
+        /// <summary>
+        /// Writes text.
+        /// </summary>
+        /// <param name="text"></param>
         public static void Write(string text)
         {
             OutputStreamHost.InitializeIfNeeded();
@@ -80,12 +99,23 @@ namespace OsmSharp.Tools.Output
             }
         }
 
+        /// <summary>
+        /// Writes text.
+        /// </summary>
+        /// <param name="format"></param>
+        /// <param name="arg"></param>
         public static void Write(string format, params object[] arg)
         {
             OutputStreamHost.Write(
                 string.Format(format, arg));
         }
 
+        /// <summary>
+        /// Reports progress.
+        /// </summary>
+        /// <param name="progress"></param>
+        /// <param name="key"></param>
+        /// <param name="message"></param>
         public static void ReportProgress(double progress, string key, string message)
         {
             OutputStreamHost.InitializeIfNeeded();
@@ -112,11 +142,22 @@ namespace OsmSharp.Tools.Output
             }
         }
 
+        /// <summary>
+        /// Report progress.
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="total"></param>
+        /// <param name="key"></param>
+        /// <param name="message"></param>
         public static void ReportProgress(long current, long total, string key, string message)
         {
             OutputStreamHost.ReportProgress((double)current / (double)total, key, message);
         }
 
+        /// <summary>
+        /// Register output stream.
+        /// </summary>
+        /// <param name="output_stream"></param>
         public static void RegisterOutputStream(
             IOutputStream output_stream)
         {
@@ -125,6 +166,10 @@ namespace OsmSharp.Tools.Output
             _output_streams.Add(output_stream);
         }
 
+        /// <summary>
+        /// Register output stream.
+        /// </summary>
+        /// <param name="output_stream"></param>
         public static void UnRegisterOutputStream(
             IOutputStream output_stream)
         {

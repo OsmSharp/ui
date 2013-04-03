@@ -27,8 +27,6 @@ namespace OsmSharp.Tools.Math.Shapes
     /// <summary>
     /// Polyline shape: represents a line with multiple segments.
     /// </summary>
-    /// <typeparam name="PointType"></typeparam>
-    /// <typeparam name="BoxType"></typeparam>
     public class ShapePolyLineF<PointType, RectangleType, LineType> : ShapeF<PointType, RectangleType, LineType>
         where PointType : PointF2D
         where RectangleType : GenericRectangleF2D<PointType>
@@ -42,6 +40,7 @@ namespace OsmSharp.Tools.Math.Shapes
         /// <summary>
         /// Creates a new polyline.
         /// </summary>
+        /// <param name="primitives_factory"></param>
         /// <param name="points"></param>
         public ShapePolyLineF(
             IPrimitivesFactory<PointType, RectangleType, LineType> primitives_factory,

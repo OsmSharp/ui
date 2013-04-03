@@ -27,6 +27,9 @@ using OsmSharp.Tools.TSPLIB.Parser.Primitives;
 
 namespace OsmSharp.Tools.TSPLIB.Parser
 {
+    /// <summary>
+    /// Parses TSP LIB problems.
+    /// </summary>
     public class TSPLIBProblemParser
     {
         private const string TOKEN_NAME = "NAME:";
@@ -58,7 +61,7 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         /// <summary>
         /// Parses a TSP-lib file and creates a TSPLIBProblem.
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="info"></param>
         /// <returns></returns>
         public static TSPLIBProblem ParseFrom(FileInfo info)
         {
@@ -68,7 +71,7 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         /// <summary>
         /// Parses a TSP-lib file and creates a TSPLIBProblem.
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="reader"></param>
         /// <returns></returns>
         public static TSPLIBProblem ParseFrom(StreamReader reader)
         {
@@ -79,6 +82,8 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         /// Parses a TSP-lib file and creates a TSPLIBProblem.
         /// </summary>
         /// <param name="path"></param>
+        /// <param name="first"></param>
+        /// <param name="last"></param>
         /// <returns></returns>
         public static TSPLIBProblem ParseFrom(string path, int? first, int? last)
         {
@@ -88,7 +93,9 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         /// <summary>
         /// Parses a TSP-lib file and creates a TSPLIBProblem.
         /// </summary>
-        /// <param name="path"></param>
+        /// <param name="info"></param>
+        /// <param name="first"></param>
+        /// <param name="last"></param>
         /// <returns></returns>
         public static TSPLIBProblem ParseFrom(FileInfo info, int? first, int? last)
         {
@@ -98,7 +105,9 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         /// <summary>
         /// Parses a TSP-lib file and creates a TSPLIBProblem.
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="reader"></param>
+        /// <param name="first"></param>
+        /// <param name="last"></param>
         /// <returns></returns>
         public static TSPLIBProblem ParseFrom(StreamReader reader, int? first, int? last)
         {

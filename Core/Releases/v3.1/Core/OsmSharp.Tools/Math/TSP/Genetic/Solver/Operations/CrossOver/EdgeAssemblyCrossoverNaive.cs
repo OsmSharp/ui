@@ -25,6 +25,9 @@ using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
 namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
+    /// <summary>
+    /// An edge assembly operation.
+    /// </summary>
     public class EdgeAssemblyCrossoverNaive :
         ICrossOverOperation<List<int>, GeneticProblem, Fitness>
     {
@@ -34,6 +37,12 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
         private bool _nn;
 
+        /// <summary>
+        /// Creates a new edge assembly operation.
+        /// </summary>
+        /// <param name="max_offspring"></param>
+        /// <param name="strategy"></param>
+        /// <param name="nn"></param>
         public EdgeAssemblyCrossoverNaive(int max_offspring,
             EdgeAssemblyCrossoverSelectionStrategyEnum strategy,
             bool nn)
@@ -43,6 +52,9 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
             _nn = nn;
         }
 
+        /// <summary>
+        /// Returns the name of this operation.
+        /// </summary>
         public string Name
         {
             get
@@ -66,9 +78,18 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
             }
         }
 
+        /// <summary>
+        /// An enumeration of types.
+        /// </summary>
         public enum EdgeAssemblyCrossoverSelectionStrategyEnum
         {
+            /// <summary>
+            /// Single random type.
+            /// </summary>
             SingleRandom, // EAX-1AB
+            /// <summary>
+            /// Multiple random type.
+            /// </summary>
             MultipleRandom
         }
 
@@ -76,6 +97,13 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
         #region ICrossOverOperation<int,Problem> Members
 
+        /// <summary>
+        /// Applies this operation.
+        /// </summary>
+        /// <param name="solver"></param>
+        /// <param name="parent1"></param>
+        /// <param name="parent2"></param>
+        /// <returns></returns>
         public Individual<List<int>, GeneticProblem, Fitness> CrossOver(
             Solver<List<int>, GeneticProblem, Fitness> solver,
             Individual<List<int>, GeneticProblem, Fitness> parent1,

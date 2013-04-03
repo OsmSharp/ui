@@ -33,8 +33,7 @@ namespace OsmSharp.Tools.Math.Geo
         /// <summary>
         /// Creates a new box.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
+        /// <param name="points"></param>
         public GeoCoordinateBox(IList<GeoCoordinate> points)
             : base(points)
         {
@@ -44,8 +43,7 @@ namespace OsmSharp.Tools.Math.Geo
         /// <summary>
         /// Creates a new box.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
+        /// <param name="points"></param>
         public GeoCoordinateBox(GeoCoordinate[] points)
             : base(points)
         {

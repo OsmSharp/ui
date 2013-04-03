@@ -54,6 +54,9 @@ namespace OsmSharp.Tools.Math.TSP
         event SolverDelegates.IntermidiateDelegate IntermidiateResult;
     }
 
+    /// <summary>
+    /// Contains solver delegates.
+    /// </summary>
     public static class SolverDelegates
     {
         /// <summary>

@@ -7,7 +7,7 @@ using OsmSharp.Tools.Collections;
 namespace OsmSharp.Tools.Math.Structures
 {
     /// <summary>
-    /// A naive reference implementation of the ILocatedObjectIndex<PointType, DataType> interface.
+    /// A naive reference implementation of the ILocatedObjectIndex interface.
     /// </summary>
     /// <typeparam name="PointType"></typeparam>
     /// <typeparam name="DataType"></typeparam>

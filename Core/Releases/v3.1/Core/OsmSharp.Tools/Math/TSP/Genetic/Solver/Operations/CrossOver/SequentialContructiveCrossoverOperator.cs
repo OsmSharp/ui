@@ -32,6 +32,9 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
     public class SequentialContructiveCrossoverOperator :
         ICrossOverOperation<List<int>, GeneticProblem, Fitness>
     {
+        /// <summary>
+        /// Returns the name of this operation.
+        /// </summary>
         public string Name
         {
             get
@@ -42,6 +45,13 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
         #region ICrossOverOperation<int,Problem> Members
 
+        /// <summary>
+        /// Crosses over the two indivduals using sequantial contructive crossover.
+        /// </summary>
+        /// <param name="solver"></param>
+        /// <param name="parent1"></param>
+        /// <param name="parent2"></param>
+        /// <returns></returns>
         public Individual<List<int>, GeneticProblem, Fitness> CrossOver(
             Solver<List<int>, GeneticProblem, Fitness> solver,
             Individual<List<int>, GeneticProblem, Fitness> parent1,

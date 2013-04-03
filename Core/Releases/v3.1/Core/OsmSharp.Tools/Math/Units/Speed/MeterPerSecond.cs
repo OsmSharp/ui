@@ -24,8 +24,14 @@ using OsmSharp.Tools.Math.Units.Time;
 
 namespace OsmSharp.Tools.Math.Units.Speed
 {
+    /// <summary>
+    /// Represents a speed in meters/seconds.
+    /// </summary>
     public class MeterPerSecond : Unit
     {
+        /// <summary>
+        /// Creates a new meter per second.
+        /// </summary>
         public MeterPerSecond()
             :base(0.0d)
         {
@@ -40,6 +46,11 @@ namespace OsmSharp.Tools.Math.Units.Speed
 
         #region Conversions
 
+        /// <summary>
+        /// Converts a value to meters per second.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static implicit operator MeterPerSecond(double value)
         {
             MeterPerSecond sec = new MeterPerSecond(value);
@@ -48,6 +59,10 @@ namespace OsmSharp.Tools.Math.Units.Speed
 
         #endregion
 
+        /// <summary>
+        /// Returns a description of this speed.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return this.Value.ToString() + "m/s";

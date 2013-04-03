@@ -246,8 +246,17 @@ namespace OsmSharp.Tools.Xml.Gpx
     /// </summary>
     public enum GpxVersion
     {
+        /// <summary>
+        /// Gpx v1.0
+        /// </summary>
         Gpxv1_0,
+        /// <summary>
+        /// Gpx v1.1
+        /// </summary>
         Gpxv1_1,
+        /// <summary>
+        /// Uknown.
+        /// </summary>
         Unknown
     }
 }

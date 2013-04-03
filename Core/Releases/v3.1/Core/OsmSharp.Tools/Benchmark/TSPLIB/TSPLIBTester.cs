@@ -57,6 +57,7 @@ namespace OsmSharp.Tools.Benchmark.TSPLIB
         /// <summary>
         /// Creates a new tester.
         /// </summary>
+        /// <param name="name"></param>
         /// <param name="problems"></param>
         /// <param name="solvers"></param>
         public TSPLIBTester(string name, IList<TSPLIBProblem> problems, IList<ISolver> solvers)
@@ -65,6 +66,7 @@ namespace OsmSharp.Tools.Benchmark.TSPLIB
         /// <summary>
         /// Creates a new tester.
         /// </summary>
+        /// <param name="name"></param>
         /// <param name="problems"></param>
         /// <param name="solvers"></param>
         /// <param name="test_count"></param>

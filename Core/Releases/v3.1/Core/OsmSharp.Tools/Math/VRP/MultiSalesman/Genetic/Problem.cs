@@ -27,9 +27,14 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
     /// <summary>
     /// Class representing a problem.
     /// </summary>
-    /// <typeparam name="Fitness"></typeparam>
     internal abstract class Problem : IProblem
     {
+        /// <summary>
+        /// Creates a new problem.
+        /// </summary>
+        /// <param name="cities"></param>
+        /// <param name="minimum"></param>
+        /// <param name="maximum"></param>
         public Problem(int cities,
             Second minimum,
             Second maximum)
@@ -74,7 +79,7 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
         /// Returns the weight between city1 and city2.
         /// </summary>
         /// <param name="city1"></param>
-        /// <param name="city1"></param>
+        /// <param name="city2"></param>
         /// <returns></returns>
         public abstract double Weight(int city1, int city2);
     }

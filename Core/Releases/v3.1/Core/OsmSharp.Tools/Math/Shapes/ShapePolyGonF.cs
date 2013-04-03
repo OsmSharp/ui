@@ -40,6 +40,7 @@ namespace OsmSharp.Tools.Math.Shapes
         /// <summary>
         /// Creates a new polygon.
         /// </summary>
+        /// <param name="primitives_factory"></param>
         /// <param name="points"></param>
         public ShapePolyGonF(
             IPrimitivesFactory<PointType, RectangleType, LineType> primitives_factory, 

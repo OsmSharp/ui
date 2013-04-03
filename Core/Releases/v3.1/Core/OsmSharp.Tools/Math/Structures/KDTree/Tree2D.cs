@@ -36,23 +36,23 @@ namespace OsmSharp.Tools.Math.Structures.KDTree
         /// <summary>
         /// Delegate to calculate the distance between two points.
         /// </summary>
-        /// <typeparam name="PointType"></typeparam>
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public delegate double Distance<in PointType>(PointType x, PointType y);
+        public delegate double Distance(PointType x, PointType y);
 
         /// <summary>
         /// Holds the distance delegate.
         /// </summary>
-        private Distance<PointType> _distance_delegate;
+        private Distance _distance_delegate;
 
         /// <summary>
         /// Creates a new 2-dimensional k-d tree.
         /// </summary>
         /// <param name="points"></param>
+        /// <param name="distance_delegate"></param>
         public Tree2D(IEnumerable<PointType> points,
-            Distance<PointType> distance_delegate)
+            Distance distance_delegate)
         {
             // set the distance delegate.
             _distance_delegate = distance_delegate;
@@ -103,6 +103,7 @@ namespace OsmSharp.Tools.Math.Structures.KDTree
         /// Returns the nearest neighbours for the given point but exclude any of the points in the exceptions list.
         /// </summary>
         /// <param name="point"></param>
+        /// <param name="exceptions"></param>
         /// <returns></returns>
         public PointType SearchNearestNeighbour(PointType point, ICollection<PointType> exceptions)
         {

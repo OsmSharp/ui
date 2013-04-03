@@ -45,6 +45,8 @@ namespace OsmSharp.Tools.Math.Geo
         /// </summary>
         /// <param name="point1"></param>
         /// <param name="point2"></param>
+        /// <param name="is_segment1"></param>
+        /// <param name="is_segment2"></param>
         public GeoCoordinateLine(
             GeoCoordinate point1,
             GeoCoordinate point2,

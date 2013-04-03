@@ -31,6 +31,7 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers
         /// <summary>
         /// Places all the cities in the next individual starting with the city that makes the individual best or least worst.
         /// </summary>
+        /// <param name="problem"></param>
         /// <param name="calculator"></param>
         /// <param name="individual"></param>
         /// <param name="cities_to_place"></param>
@@ -42,41 +43,49 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers
             List<int> cities_to_place)
         {
             // initialize the best placement result.
-            BestPlacementResult result = null;
+            //BestPlacementResult result = null;
 
             // create the new individual.
-            Individual new_individual = null;
+            //Individual new_individual = null;
             throw new NotImplementedException();
-            cities_to_place = new List<int>(cities_to_place);
-            while (cities_to_place.Count > 0)
-            {
-                // calculates the next best position for placement.
-                result = BestPlacementHelper.CalculateBestPlacementInIndividual(
-                    problem,
-                    calculator,
-                    individual,
-                    cities_to_place);
+            //cities_to_place = new List<int>(cities_to_place);
+            //while (cities_to_place.Count > 0)
+            //{
+            //    // calculates the next best position for placement.
+            //    result = BestPlacementHelper.CalculateBestPlacementInIndividual(
+            //        problem,
+            //        calculator,
+            //        individual,
+            //        cities_to_place);
 
-                // calculate the new individual using the result.
-                List<int> round = new_individual.Genomes[result.RoundIdx];
-                if (round.Count == result.CityIdx)
-                {
-                    round.Add(result.City);
-                }
-                else
-                {
-                    round.Insert(result.CityIdx, result.City);
-                }
-                new_individual.CalculateFitness(problem, calculator);
+            //    // calculate the new individual using the result.
+            //    List<int> round = new_individual.Genomes[result.RoundIdx];
+            //    if (round.Count == result.CityIdx)
+            //    {
+            //        round.Add(result.City);
+            //    }
+            //    else
+            //    {
+            //        round.Insert(result.CityIdx, result.City);
+            //    }
+            //    new_individual.CalculateFitness(problem, calculator);
 
-                // remove the placed city.
-                cities_to_place.Remove(result.City);
-            }
+            //    // remove the placed city.
+            //    cities_to_place.Remove(result.City);
+            //}
 
-            // return the result.
-            return new_individual;
+            //// return the result.
+            //return new_individual;
         }
 
+        /// <summary>
+        /// DoFast.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <param name="calculator"></param>
+        /// <param name="individual"></param>
+        /// <param name="cities_to_place"></param>
+        /// <returns></returns>
         public static Individual DoFast(
             Problem problem,
             FitnessCalculator calculator,
@@ -84,42 +93,42 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers
             List<int> cities_to_place)
         {
             // initialize the best placement result.
-            BestPlacementResult result = null;
+            //BestPlacementResult result = null;
 
             // create the new individual.
-            Individual new_individual = null;// (individual.Copy() as Individual);
+            //Individual new_individual = null;// (individual.Copy() as Individual);
             throw new NotImplementedException();
-            cities_to_place = new List<int>(cities_to_place);
-            while (cities_to_place.Count > 0)
-            {
-                int city_to_place = cities_to_place[cities_to_place.Count - 1];
-                cities_to_place.RemoveAt(cities_to_place.Count - 1);
+            //cities_to_place = new List<int>(cities_to_place);
+            //while (cities_to_place.Count > 0)
+            //{
+            //    int city_to_place = cities_to_place[cities_to_place.Count - 1];
+            //    cities_to_place.RemoveAt(cities_to_place.Count - 1);
 
-                // calculates the next best position for placement.
-                result = BestPlacementHelper.CalculateBestPlacementInGenomes(
-                    problem,
-                    calculator,
-                    individual.Genomes,
-                    city_to_place);
+            //    // calculates the next best position for placement.
+            //    result = BestPlacementHelper.CalculateBestPlacementInGenomes(
+            //        problem,
+            //        calculator,
+            //        individual.Genomes,
+            //        city_to_place);
 
-                // calculate the new individual using the result.
-                List<int> round = new_individual.Genomes[result.RoundIdx];
-                if (round.Count == result.CityIdx)
-                {
-                    round.Add(result.City);
-                }
-                else
-                {
-                    round.Insert(result.CityIdx, result.City);
-                }
-                new_individual.CalculateFitness(problem, calculator, false);
+            //    // calculate the new individual using the result.
+            //    List<int> round = new_individual.Genomes[result.RoundIdx];
+            //    if (round.Count == result.CityIdx)
+            //    {
+            //        round.Add(result.City);
+            //    }
+            //    else
+            //    {
+            //        round.Insert(result.CityIdx, result.City);
+            //    }
+            //    new_individual.CalculateFitness(problem, calculator, false);
 
-                // remove the placed city.
-                cities_to_place.Remove(result.City);
-            }
+            //    // remove the placed city.
+            //    cities_to_place.Remove(result.City);
+            //}
 
-            // return the result.
-            return new_individual;
+            //// return the result.
+            //return new_individual;
         }
 
 
@@ -363,8 +372,9 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers
                         city);
 
                 // check current result
-                if (result.Increase == null ||
-                    current_result.Increase < result.Increase)
+                //if (result.Increase == null ||
+                //    current_result.Increase < result.Increase)
+                if (current_result.Increase < result.Increase)
                 {
                     result = current_result;
                 }
@@ -397,7 +407,7 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers
         /// </summary>
         /// <param name="problem"></param>
         /// <param name="calculator"></param>
-        /// <param name="individual"></param>
+        /// <param name="genomes"></param>
         /// <param name="cities_to_place"></param>
         /// <returns></returns>
         public static BestPlacementResult CalculateBestPlacementInGenomes(
@@ -483,7 +493,8 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers
                         // calculate the difference to know the increase.
                         double new_increase =
                             new_weights - old_weight;
-                        if (increase == null || new_increase < increase)
+                        //if (increase == null || new_increase < increase)
+                        if (new_increase < increase)
                         {
                             // set the new increase.
                             increase = new_increase;

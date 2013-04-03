@@ -34,9 +34,11 @@ using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
 
 namespace OsmSharp.Tools.Math.VRP.MultiSalesman
 {
+    /// <summary>
+    /// Facade.
+    /// </summary>
     public static class Facade
     {
-
         private class LocalProblem : Problem
         {
             private OsmSharp.Tools.Math.VRP.Core.IProblemWeights _problem;
@@ -53,6 +55,14 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman
                 return _problem.Weight(city1, city2);
             }
         }
+
+        /// <summary>
+        /// Calculates solution to the given problem.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
         public static int[][] Calculate(OsmSharp.Tools.Math.VRP.Core.IProblemWeights problem,
             Second min, Second max)
         {

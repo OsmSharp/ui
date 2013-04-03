@@ -27,6 +27,8 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Selectors
     /// Interface abstracting the implementation of selection of individuals.
     /// </summary>
     /// <typeparam name="GenomeType"></typeparam>
+    /// <typeparam name="ProblemType"></typeparam>
+    /// <typeparam name="WeightType"></typeparam>
     public interface ISelector<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
         where GenomeType : class
@@ -35,7 +37,9 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Selectors
         /// <summary>
         /// Selects an individual from the population to use for cross-over.
         /// </summary>
+        /// <param name="solver"></param>
         /// <param name="population"></param>
+        /// <param name="do_not_select_list"></param>
         /// <returns></returns>
         Individual<GenomeType, ProblemType, WeightType> Select(
             Solver<GenomeType, ProblemType, WeightType> solver,

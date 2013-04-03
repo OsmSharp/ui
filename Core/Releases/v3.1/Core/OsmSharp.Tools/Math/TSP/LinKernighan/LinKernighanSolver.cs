@@ -39,7 +39,7 @@ namespace OsmSharp.Tools.Math.TSP.LK
 
         private bool _was_asym;
 
-        private bool _stopped;
+        //private bool _stopped;
 
         private IList<int> _customers;
 
@@ -59,6 +59,11 @@ namespace OsmSharp.Tools.Math.TSP.LK
             }
         }
 
+        /// <summary>
+        /// Does the actual solving.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <returns></returns>
         protected override IRoute DoSolve(IProblem problem)
         {
             // convert to a symetric problem if needed.
@@ -629,7 +634,7 @@ namespace OsmSharp.Tools.Math.TSP.LK
             int from = x.Last.To;
 
             // search an edge with weight smaller than g.
-            float best_priority = float.MinValue;
+            //float best_priority = float.MinValue;
             int? best_customer = null;
             foreach (Edge edge in _sparse_set.GetFor(from))
             {
@@ -724,9 +729,12 @@ namespace OsmSharp.Tools.Math.TSP.LK
             return best_neighour;
         }
 
+        /// <summary>
+        /// Stops this solver.
+        /// </summary>
         public override void Stop()
         {
-            _stopped = true;
+            //_stopped = true;
         }
     }
 }

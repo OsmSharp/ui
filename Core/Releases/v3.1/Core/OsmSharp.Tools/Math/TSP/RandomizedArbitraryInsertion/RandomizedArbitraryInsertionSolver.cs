@@ -32,10 +32,10 @@ namespace OsmSharp.Tools.Math.TSP
     /// </summary>
     public class RandomizedArbitraryInsertionSolver : SolverBase
     {
-        /// <summary>
-        /// Boolean to stop execution.
-        /// </summary>
-        private bool _stopped = false;
+        ///// <summary>
+        ///// Boolean to stop execution.
+        ///// </summary>
+        //private bool _stopped = false;
 
         /// <summary>
         /// The route this solver was initialized with.
@@ -131,7 +131,7 @@ namespace OsmSharp.Tools.Math.TSP
         /// Executes the RAI.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="route"></param>
+        /// <param name="initial_route"></param>
         /// <returns></returns>
         public static IRoute DoSolve(IProblem problem, IRoute initial_route)
         {
@@ -142,7 +142,8 @@ namespace OsmSharp.Tools.Math.TSP
         /// Executes the RAI.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="route"></param>
+        /// <param name="solver"></param>
+        /// <param name="initial_route"></param>
         /// <returns></returns>
         private static IRoute DoSolve(RandomizedArbitraryInsertionSolver solver, IProblem problem, IRoute initial_route)
         {
@@ -251,7 +252,7 @@ namespace OsmSharp.Tools.Math.TSP
         /// </summary>
         public override void Stop()
         {
-            _stopped = true;
+            //_stopped = true;
         }
     }
 }

@@ -28,6 +28,8 @@ namespace OsmSharp.Tools.Math.AI.Genetic
     /// A class representing a population of individuals.
     /// </summary>
     /// <typeparam name="GenomeType"></typeparam>
+    /// <typeparam name="ProblemType"></typeparam>
+    /// <typeparam name="WeightType"></typeparam>
     public sealed class Population<GenomeType, ProblemType, WeightType> :
         IEnumerable<Individual<GenomeType, ProblemType, WeightType>>
         where ProblemType : IProblem
@@ -92,6 +94,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic
         /// <summary>
         /// Sorts the population according to 
         /// </summary>
+        /// <param name="solver"></param>
         /// <param name="op"></param>
         public void Sort(
             Solver<GenomeType, ProblemType, WeightType> solver,
@@ -122,6 +125,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic
             /// <summary>
             /// Creates a new fitness operator.
             /// </summary>
+            /// <param name="solver"></param>
             /// <param name="op"></param>
             public FitnessComparer(
                 Solver<GenomeType, ProblemType, WeightType> solver,
@@ -229,7 +233,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic
         /// <summary>
         /// Returns true if the individual is contained in the population.
         /// </summary>
-        /// <param name="selected_individual"></param>
+        /// <param name="individual"></param>
         /// <returns></returns>
         public bool Contains(Individual<GenomeType, ProblemType, WeightType> individual)
         {

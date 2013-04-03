@@ -87,6 +87,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// Creates a new dynamic assymmetric route using an initial size and customer.
         /// </summary>
         /// <param name="size"></param>
+        /// <param name="is_round"></param>
         public DynamicAsymmetricMultiRoute(int size, bool is_round)
         {
             _is_round = is_round;
@@ -554,6 +555,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             /// <summary>
             /// Creates a new dynamic route.
             /// </summary>
+            /// <param name="parent"></param>
             /// <param name="first"></param>
             /// <param name="is_round"></param>
             internal MultiRoutePart(DynamicAsymmetricMultiRoute parent, 
@@ -696,7 +698,6 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             /// </summary>
             /// <param name="from"></param>
             /// <param name="customer"></param>
-            /// <param name="to"></param>
             public void InsertAfter(int from, int customer)
             {
                 if (customer < 0)

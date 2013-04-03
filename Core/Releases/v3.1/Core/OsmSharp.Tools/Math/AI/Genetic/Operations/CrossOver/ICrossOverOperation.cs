@@ -27,6 +27,8 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver
     /// Interface abstracting the implementation of crossing over individuals.
     /// </summary>
     /// <typeparam name="GenomeType"></typeparam>
+    /// <typeparam name="ProblemType"></typeparam>
+    /// <typeparam name="WeightType"></typeparam>
     public interface ICrossOverOperation<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
         where GenomeType : class
@@ -43,6 +45,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver
         /// <summary>
         /// Executes a cross-over using the two given parents.
         /// </summary>
+        /// <param name="solver"></param>
         /// <param name="parent1"></param>
         /// <param name="parent2"></param>
         /// <returns></returns>

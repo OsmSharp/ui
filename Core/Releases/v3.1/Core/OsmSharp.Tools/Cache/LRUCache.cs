@@ -31,7 +31,7 @@ namespace OsmSharp.Tools.Cache
     /// <typeparam name="TValue"></typeparam>
     public class LRUCache<TKey, TValue>
     {
-        private ConcurrentDictionary<TKey, CacheEntry<TValue>> _data;
+        private ConcurrentDictionary<TKey, CacheEntry> _data;
 
         private long _id;
 
@@ -45,7 +45,7 @@ namespace OsmSharp.Tools.Cache
         {
             _id = long.MinValue;
             _last_id = _id;
-            _data = new ConcurrentDictionary<TKey, CacheEntry<TValue>>();
+            _data = new ConcurrentDictionary<TKey, CacheEntry>();
             this.Capacity = capacity;
         }
 
@@ -62,7 +62,7 @@ namespace OsmSharp.Tools.Cache
         public void Add(TKey key, TValue value)
         {
             _id++;
-            CacheEntry<TValue> entry = new CacheEntry<TValue>
+            CacheEntry entry = new CacheEntry
             {
                 Id = _id,
                 Value = value
@@ -79,7 +79,7 @@ namespace OsmSharp.Tools.Cache
         /// <returns></returns>
         public TValue Get(TKey key)
         {
-            CacheEntry<TValue> value;
+            CacheEntry value;
             _id++;
             if (_data.TryGetValue(key, out value))
             {
@@ -105,7 +105,7 @@ namespace OsmSharp.Tools.Cache
         /// <param name="id"></param>
         public void Remove(TKey id)
         {
-            CacheEntry<TValue> entry;
+            CacheEntry entry;
             _data.TryRemove(id, out entry);
         }
 
@@ -118,14 +118,14 @@ namespace OsmSharp.Tools.Cache
                 // loop over and remove all with smallest id's.
                 long id = _id - new_capacity;
                 List<TKey> keys = new List<TKey>(this.Capacity - new_capacity);
-                foreach (KeyValuePair<TKey, CacheEntry<TValue>> pair in _data)
+                foreach (KeyValuePair<TKey, CacheEntry> pair in _data)
                 {
                     if (pair.Value.Id < id)
                     {
                         keys.Add(pair.Key);
                     }
                 }
-                CacheEntry<TValue> entry;
+                CacheEntry entry;
                 foreach (TKey key in keys)
                 {
                     _data.TryRemove(key, out entry);
@@ -135,7 +135,7 @@ namespace OsmSharp.Tools.Cache
             }
         }
 
-        private struct CacheEntry<TValue>
+        private struct CacheEntry
         {
             /// <summary>
             /// The id of the object.

@@ -30,6 +30,8 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations
     /// Class combining the genetic operators.
     /// </summary>
     /// <typeparam name="GenomeType"></typeparam>
+    /// <typeparam name="ProblemType"></typeparam>
+    /// <typeparam name="WeightType"></typeparam>
     public class CombinedOperation<GenomeType, ProblemType, WeightType>
         : IOperation<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
@@ -83,6 +85,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations
         /// <summary>
         /// Executes the cross over of two individuals.
         /// </summary>
+        /// <param name="solver"></param>
         /// <param name="parent1"></param>
         /// <param name="parent2"></param>
         /// <returns></returns>
@@ -103,6 +106,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations
         /// <summary>
         /// Executes the mutation of an individual.
         /// </summary>
+        /// <param name="solver"></param>
         /// <param name="mutating"></param>
         /// <returns></returns>
         public Individual<GenomeType, ProblemType, WeightType> Mutate(

@@ -22,6 +22,9 @@ using System.Xml.Serialization;
 
 namespace OsmSharp.Tools.Xml.Nominatim.Search
 {
+    /// <summary>
+    /// Search document.
+    /// </summary>
     public class SearchDocument
     {
         /// <summary>
@@ -205,6 +208,9 @@ namespace OsmSharp.Tools.Xml.Nominatim.Search
         }
         #endregion
 
+        /// <summary>
+        /// Closes this search document.
+        /// </summary>
         public void Close()
         {
             _search_object = null;
@@ -217,7 +223,13 @@ namespace OsmSharp.Tools.Xml.Nominatim.Search
     /// </summary>
     public enum SearchVersion
     {
+        /// <summary>
+        /// Version 1
+        /// </summary>
         Searchv1,
+        /// <summary>
+        /// Uknown.
+        /// </summary>
         Unknown
     }
 }

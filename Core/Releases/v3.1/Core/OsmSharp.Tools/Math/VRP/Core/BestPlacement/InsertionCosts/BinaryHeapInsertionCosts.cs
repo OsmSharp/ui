@@ -94,8 +94,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement.InsertionCosts
         /// </summary>
         /// <param name="customer_from"></param>
         /// <param name="customer_to"></param>
-        /// <param name="customer"></param>
-        /// <param name="cost"></param>
+        /// <param name="costs"></param>
         /// <returns></returns>
         public void Add(int customer_from, int customer_to, IEnumerable<InsertionCost> costs)
         {

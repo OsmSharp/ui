@@ -29,10 +29,12 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation
     /// <summary>
     /// Generates a random individual.
     /// </summary>
-    /// <typeparam name="GenomeType"></typeparam>
     public class RandomGenerationOperation :
         IGenerationOperation<List<int>, GeneticProblem, Fitness>
     {
+        /// <summary>
+        /// Returns the name of this operation.
+        /// </summary>
         public string Name
         {
             get

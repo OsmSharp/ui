@@ -147,7 +147,7 @@ namespace OsmSharp.Tools
         /// <summary>
         /// Converts a number of milliseconds from 1/1/1970 into a standard DateTime.
         /// </summary>
-        /// <param name="unixTime"></param>
+        /// <param name="milliseconds"></param>
         /// <returns></returns>
         public static DateTime FromUnixTime(this long milliseconds)
         {

@@ -42,6 +42,9 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
             _problem = problem;
         }
 
+        /// <summary>
+        /// Returns the base problem.
+        /// </summary>
         public OsmSharp.Tools.Math.TSP.Problems.IProblem BaseProblem
         {
             get
@@ -54,7 +57,7 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
         /// Returns the weight between city1 and city2.
         /// </summary>
         /// <param name="city1"></param>
-        /// <param name="city1"></param>
+        /// <param name="city2"></param>
         /// <returns></returns>
         public double Weight(int city1, int city2)
         {
@@ -84,6 +87,10 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
         }
 
         private List<int> _along;
+
+        /// <summary>
+        /// Returns the 'along' customers.
+        /// </summary>
         public List<int> Along 
         {
             get

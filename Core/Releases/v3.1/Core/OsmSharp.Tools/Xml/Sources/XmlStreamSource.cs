@@ -7,6 +7,9 @@ using System.Xml;
 
 namespace OsmSharp.Tools.Xml.Sources
 {
+    /// <summary>
+    /// XML stream source.
+    /// </summary>
     public class XmlStreamSource : IXmlSource
     {
         /// <summary>
@@ -17,7 +20,7 @@ namespace OsmSharp.Tools.Xml.Sources
         /// <summary>
         /// Creates a new xml file source.
         /// </summary>
-        /// <param name="filename"></param>
+        /// <param name="stream"></param>
         public XmlStreamSource(Stream stream)
         {
             _stream = stream;

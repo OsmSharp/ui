@@ -25,6 +25,9 @@ using OsmSharp.Tools.TSPLIB.Problems;
 
 namespace OsmSharp.Tools.TSPLIB.Parser
 {
+    /// <summary>
+    /// TSPLIB problem generator.
+    /// </summary>
     public class TSPLIBProblemGenerator
     {
         private const string TOKEN_NAME = "NAME:";
@@ -42,6 +45,11 @@ namespace OsmSharp.Tools.TSPLIB.Parser
         private const string TOKEN_EDGE_WEIGHT_SECTION = "EDGE_WEIGHT_SECTION";
         private const string TOKEN_NODE_COORD_SECTION = "NODE_COORD_SECTION";
 
+        /// <summary>
+        /// Generate.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="problem"></param>
         public static void Generate(FileInfo file, TSPLIBProblem problem)
         {
             StreamWriter writer = new StreamWriter(file.OpenWrite());
@@ -49,6 +57,11 @@ namespace OsmSharp.Tools.TSPLIB.Parser
             TSPLIBProblemGenerator.Generate(writer, problem);
         }
 
+        /// <summary>
+        /// Generate.
+        /// </summary>
+        /// <param name="writer"></param>
+        /// <param name="problem"></param>
         public static void Generate(StreamWriter writer, TSPLIBProblem problem)
         {
             if (problem.Symmetric)

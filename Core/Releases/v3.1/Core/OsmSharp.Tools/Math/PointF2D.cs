@@ -37,7 +37,8 @@ namespace OsmSharp.Tools.Math
         /// <summary>
         /// Creates a new point.
         /// </summary>
-        /// <param name="values"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         public PointF2D(double x, double y)
         {
             _values = new double[] { x, y };

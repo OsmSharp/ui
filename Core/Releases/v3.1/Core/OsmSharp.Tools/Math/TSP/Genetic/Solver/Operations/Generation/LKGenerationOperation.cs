@@ -27,9 +27,15 @@ using OsmSharp.Tools.Math.TSP.LK;
 
 namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation
 {
+    /// <summary>
+    /// A LK generation operation.
+    /// </summary>
     public class LKGenerationOperation :
         IGenerationOperation<List<int>, GeneticProblem, Fitness>
     {
+        /// <summary>
+        /// Returns the name of this operation.
+        /// </summary>
         public string Name
         {
             get

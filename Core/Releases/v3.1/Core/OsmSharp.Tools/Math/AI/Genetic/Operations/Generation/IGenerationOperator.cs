@@ -27,6 +27,8 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Generation
     /// Interface abstracting the implementation of the generation of new individuals.
     /// </summary>
     /// <typeparam name="GenomeType"></typeparam>
+    /// <typeparam name="ProblemType"></typeparam>
+    /// <typeparam name="WeightType"></typeparam>
     public interface IGenerationOperation<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
         where GenomeType : class

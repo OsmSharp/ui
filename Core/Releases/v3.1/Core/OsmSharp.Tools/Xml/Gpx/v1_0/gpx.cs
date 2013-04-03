@@ -62,6 +62,7 @@ namespace OsmSharp.Tools.Xml.Gpx.v1_0
 
         private string creatorField;
 
+        /// <remarks/>
         public gpx()
         {
             this.versionField = "1.0";

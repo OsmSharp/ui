@@ -51,8 +51,8 @@ namespace OsmSharp.Tools.Benchmark.TSPLIB
 
         static void DoTests()
         {
-            bool ga = false;
-            bool eax = true;
+            //bool ga = false;
+            //bool eax = true;
             OsmSharp.Tools.Output.OutputStreamHost.RegisterOutputStream(
                 new OsmSharp.Tools.Output.ConsoleOutputStream());
             OsmSharp.Tools.Output.OutputStreamHost.RegisterOutputStream(

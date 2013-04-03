@@ -470,6 +470,9 @@ namespace OsmSharp.Tools.Xml.Nominatim.Search.v1
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true)]
     public partial class NewDataSet

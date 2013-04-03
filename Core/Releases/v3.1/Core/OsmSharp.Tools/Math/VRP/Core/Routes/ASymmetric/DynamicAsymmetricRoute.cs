@@ -23,6 +23,9 @@ using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 {
+    /// <summary>
+    /// A dynamic asymmetric route.
+    /// </summary>
     public class DynamicAsymmetricRoute : IASymmetricRoute
     {
         /// <summary>
@@ -49,7 +52,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// Creates a new dynamic route by creating shallow copy of the array(s) given.
         /// </summary>
         /// <param name="first"></param>
-        /// <param name="_next_array"></param>
+        /// <param name="next_array"></param>
         /// <param name="is_round"></param>
         private DynamicAsymmetricRoute(int first, int[] next_array, bool is_round)
         {
@@ -65,6 +68,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// Creates a new dynamic assymmetric route using an initial size.
         /// </summary>
         /// <param name="size"></param>
+        /// <param name="is_round"></param>
         public DynamicAsymmetricRoute(int size, bool is_round)
         {
             _is_round = is_round;
@@ -81,6 +85,8 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// Creates a new dynamic assymmetric route using an initial size and customer.
         /// </summary>
         /// <param name="size"></param>
+        /// <param name="customer"></param>
+        /// <param name="is_round"></param>
         public DynamicAsymmetricRoute(int size, int customer, bool is_round)
         {
             _is_round = is_round;
@@ -170,7 +176,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// Inserts a customer right after from and before to.
         /// </summary>
         /// <param name="from"></param>
-        /// <param name="to"></param>
+        /// <param name="customer"></param>
         public void ReplaceEdgeFrom(int from, int customer)
         {
             //if (customer < 0)
@@ -225,7 +231,6 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// </summary>
         /// <param name="from"></param>
         /// <param name="customer"></param>
-        /// <param name="to"></param>
         public void InsertAfter(int from, int customer)
         {
             if (customer < 0)
@@ -308,7 +313,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// Cuts out a part of the route and returns the customers contained.
         /// </summary>
         /// <param name="start"></param>
-        /// <param name="lenght"></param>
+        /// <param name="length"></param>
         /// <returns></returns>
         public int[] CutAndRemove(int start, int length)
         {
@@ -403,11 +408,19 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         #region Enumerators
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<int> GetEnumerator()
         {
             return new Enumerator(_first, _next_array);
         }
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return new Enumerator(_first, _next_array);
@@ -481,11 +494,21 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Returns an enumerable between.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public IEnumerable<int> Between(int from, int to)
         {
             return new DynamicAsymmetricBetweenEnumerable(_next_array, from, to, _first);
         }
 
+        /// <summary>
+        /// Enumerates all the edges.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Edge> Edges()
         {
             return new EdgeEnumerable(this);
@@ -600,6 +623,10 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Returns a description of this route.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             int previous = -1;
@@ -636,6 +663,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// Creates a dynamic route from an enumerable collection of customers.
         /// </summary>
         /// <param name="customers"></param>
+        /// <param name="is_round"></param>
         /// <returns></returns>
         public static DynamicAsymmetricRoute CreateFrom(IEnumerable<int> customers, bool is_round)
         {
@@ -678,13 +706,14 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         #endregion
 
         #region Specific Cut/Paste/Inserts
-        
+
         /// <summary>
         /// Cuts out a part of the route and returns the customers contained.
         /// </summary>
-        /// <param name="route"></param>
+        /// <param name="weights"></param>
         /// <param name="start"></param>
-        /// <param name="lenght"></param>
+        /// <param name="weight"></param>
+        /// <param name="length"></param>
         /// <returns></returns>
         public CutResult CutAndRemove(IProblemWeights weights, double weight, int start, int length)
         {
@@ -743,12 +772,24 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             return result;
         }
 
+        /// <summary>
+        /// A cut result.
+        /// </summary>
         public struct CutResult
         {
+            /// <summary>
+            /// The weight of the cut.
+            /// </summary>
             public double Weight { get; set; }
 
+            /// <summary>
+            /// The route.
+            /// </summary>
             public DynamicAsymmetricRoute Route { get; set; }
-
+            
+            /// <summary>
+            /// The cut part.
+            /// </summary>
             public List<int> CutPart { get; set; }
         }
 

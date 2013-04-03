@@ -33,7 +33,6 @@ namespace OsmSharp.Tools.Math.VRP.Core.TwoOpt
         /// </summary>
         /// <param name="problem"></param>
         /// <param name="route"></param>
-        /// <param name="customers"></param>
         /// <returns></returns>
         public static TwoOptResult CalculateBestPlacement(
             IProblemWeights problem,

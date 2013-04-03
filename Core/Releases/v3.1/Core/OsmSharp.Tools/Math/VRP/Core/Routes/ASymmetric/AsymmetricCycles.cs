@@ -22,12 +22,19 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 {
+    /// <summary>
+    /// Asymmetric cycles.
+    /// </summary>
     public class AsymmetricCycles
     {
         private int[] _next_array;
 
         private Dictionary<int, int> _cycles;
 
+        /// <summary>
+        /// Creates a new collection of asymmetric cylces.
+        /// </summary>
+        /// <param name="length"></param>
         public AsymmetricCycles(int length)
         {
             _next_array = new int[length];
@@ -46,6 +53,9 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             _cycles = cycles;
         }
 
+        /// <summary>
+        /// Returns the nextarray.
+        /// </summary>
         public int[] NextArray
         {
             get
@@ -54,6 +64,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Returns the next customer.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <returns></returns>
         public int this[int from]
         {
             get
@@ -62,6 +77,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Adds a new edge.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
         public void AddEdge(int from, int to)
         {
             _cycles = null;
@@ -69,6 +89,9 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             _next_array[from] = to;
         }
 
+        /// <summary>
+        /// Returns cycles.
+        /// </summary>
         public Dictionary<int, int> Cycles
         {
             get
@@ -119,12 +142,19 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Clones this asymmetric cycles.
+        /// </summary>
+        /// <returns></returns>
         public AsymmetricCycles Clone()
         {
 
             return new AsymmetricCycles(_next_array.Clone() as int[], null);
         }
 
+        /// <summary>
+        /// Returns the length.
+        /// </summary>
         public int Length
         {
             get

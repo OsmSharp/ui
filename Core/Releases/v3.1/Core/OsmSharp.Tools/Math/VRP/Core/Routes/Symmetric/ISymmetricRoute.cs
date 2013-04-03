@@ -23,6 +23,9 @@ using OsmSharp.Tools.Math.VRP.Core;
 
 namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
 {
+    /// <summary>
+    /// Represents a symmetric route.
+    /// </summary>
     public interface ISymmetricRoute : IRoute
     {
 

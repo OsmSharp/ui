@@ -22,19 +22,34 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
 {
+    /// <summary>
+    /// Genome baseclass.
+    /// </summary>
     public class Genome : List<int>, IEquatable<Genome>
     {
+        /// <summary>
+        /// Creates a new genome.
+        /// </summary>
         public Genome()
         {
 
         }
 
+        /// <summary>
+        /// Creates a new genome.
+        /// </summary>
+        /// <param name="collection"></param>
         public Genome(IEnumerable<int> collection)
             : base(collection)
         {
 
         }
 
+        /// <summary>
+        /// Returns true if equal.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Genome other)
         {
             if (this.Count != other.Count)

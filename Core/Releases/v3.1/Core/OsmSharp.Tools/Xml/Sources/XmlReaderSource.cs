@@ -36,7 +36,7 @@ namespace OsmSharp.Tools.Xml.Sources
         /// <summary>
         /// Creates a new xml reader source.
         /// </summary>
-        /// <param name="source"></param>
+        /// <param name="reader"></param>
         public XmlReaderSource(XmlReader reader)
         {
             _reader = reader;
@@ -60,6 +60,9 @@ namespace OsmSharp.Tools.Xml.Sources
             return null;
         }
 
+        /// <summary>
+        /// Returns true if readonly.
+        /// </summary>
         public bool IsReadOnly
         {
             get
@@ -68,6 +71,9 @@ namespace OsmSharp.Tools.Xml.Sources
             }
         }
 
+        /// <summary>
+        /// Returns true if contains data.
+        /// </summary>
         public bool HasData
         {
             get
@@ -76,6 +82,9 @@ namespace OsmSharp.Tools.Xml.Sources
             }
         }
 
+        /// <summary>
+        /// Returns the name of this source.
+        /// </summary>
         public string Name
         {
             get
@@ -84,6 +93,9 @@ namespace OsmSharp.Tools.Xml.Sources
             }
         }
 
+        /// <summary>
+        /// Closes this source.
+        /// </summary>
         public void Close()
         {
             _reader.Close();
