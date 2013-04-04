@@ -71,14 +71,17 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OsmSharp.Osm">
-      <HintPath>..\packages\OsmSharp.3.1.4835\lib\OsmSharp.Osm.dll</HintPath>
+    <Reference Include="OsmSharp.Osm, Version=3.1.4834.33937, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Core\Releases\v3.1\Core\Output\Debug\Any CPU\OsmSharp.Osm.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Routing">
-      <HintPath>..\packages\OsmSharp.3.1.4835\lib\OsmSharp.Routing.dll</HintPath>
+    <Reference Include="OsmSharp.Routing, Version=3.1.4834.33938, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Core\Releases\v3.1\Core\Output\Debug\Any CPU\OsmSharp.Routing.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Tools">
-      <HintPath>..\packages\OsmSharp.3.1.4835\lib\OsmSharp.Tools.dll</HintPath>
+    <Reference Include="OsmSharp.Tools, Version=3.1.4834.33936, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Core\Releases\v3.1\Core\Output\Debug\Any CPU\OsmSharp.Tools.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.621, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

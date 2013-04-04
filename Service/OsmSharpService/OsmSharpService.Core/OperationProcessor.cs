@@ -211,9 +211,14 @@ namespace OsmSharpService.Core
                 // add the closest point tags.
                 routePoint.Latitude = pointClosest.Latitude;
                 routePoint.Longitude = pointClosest.Longitude;
-                routePoint.Tags = pointClosest.Tags.ConvertToList().ConvertFrom();
+                List<KeyValuePair<string, string>> tags = pointClosest.Tags.ConvertToList();
+                tags.Add(new KeyValuePair<string, string>("id", pointClosest.Id.ToString())); // add the id-tag.
+                routePoint.Tags = tags.ConvertFrom();
 
                 response.Route = route;
+
+                // set the response as successfull.
+                response.Status = OsmSharpServiceResponseStatusEnum.Success;
             }
 
             return response;
@@ -340,6 +345,11 @@ namespace OsmSharpService.Core
                     route = OsmSharpRoute.Concatenate(route, edgeRoute);
                 }
             }
+
+            response.Route = route;
+
+            // set the response as successfull.
+            response.Status = OsmSharpServiceResponseStatusEnum.Success;
 
             return response;
         }
