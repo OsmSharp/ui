@@ -1,13 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EE9DED81-D411-4369-9CA5-B212E64A5C1C}"
-	ProjectSection(SolutionItems) = preProject
-		Local.testsettings = Local.testsettings
-		OsmSharp.vsmdi = OsmSharp.vsmdi
-		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Tools", "OsmSharp.Tools\OsmSharp.Tools.csproj", "{95C32F29-5537-4FB7-8C85-B754BC9903A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Osm", "OsmSharp.Osm\OsmSharp.Osm.csproj", "{249DCEC1-615D-40AA-93FF-BCE2178DFF83}"
