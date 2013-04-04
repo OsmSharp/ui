@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace OsmSharpService.Core.Routing.Primitives
+﻿namespace OsmSharpService.Core.Routing.Primitives
 {
     /// <summary>
     /// A resolved routing hook; a point route from/to that was resolved to the closest connecting road.

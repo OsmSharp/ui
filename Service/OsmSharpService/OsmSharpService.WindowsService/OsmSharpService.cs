@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.ServiceProcess;
-using System.Text;
 using OsmSharpService.Core;
-using OsmSharpService.Core.Routing;
 using System.Configuration;
 
 namespace OsmSharpService.WindowsService
@@ -20,7 +13,7 @@ namespace OsmSharpService.WindowsService
         /// <summary>
         /// Holds the list of processes.
         /// </summary>
-        private List<IProcessor> _processors;
+        private readonly List<IProcessor> _processors;
 
         /// <summary>
         /// Holds the services host.

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace OsmSharpService.Core.Routing.Primitives
 {
@@ -33,11 +30,11 @@ namespace OsmSharpService.Core.Routing.Primitives
         /// <returns></returns>
         public static RoutingHookTag[] ConvertToRoutingHookTags(this IDictionary<string, string> tags)
         {
-            RoutingHookTag[] hook_tags = new RoutingHookTag[tags.Count];
+            var hookTags = new RoutingHookTag[tags.Count];
             int idx = 0;
             foreach (KeyValuePair<string, string> tag in tags)
             { // loop over all the tags.
-                hook_tags[idx] = new RoutingHookTag()
+                hookTags[idx] = new RoutingHookTag()
                 {
                     Key = tag.Key,
                     Value = tag.Value
@@ -45,22 +42,22 @@ namespace OsmSharpService.Core.Routing.Primitives
 
                 idx++;
             }
-            return hook_tags;
+            return hookTags;
         }
 
         /// <summary>
         /// Converts the RoutingHookTags to a regular tags dictionary.
         /// </summary>
-        /// <param name="hook_tags"></param>
+        /// <param name="hookTags"></param>
         /// <returns></returns>
-        public static IDictionary<string, string> ConvertToDictionary(this RoutingHookTag[] hook_tags)
+        public static IDictionary<string, string> ConvertToDictionary(this RoutingHookTag[] hookTags)
         {
             IDictionary<string, string> tags = new Dictionary<string, string>();
-            if (hook_tags != null)
+            if (hookTags != null)
             {
-                for (int idx = 0; idx < hook_tags.Length; idx++)
+                for (int idx = 0; idx < hookTags.Length; idx++)
                 {
-                    tags[hook_tags[idx].Key] = hook_tags[idx].Value;
+                    tags[hookTags[idx].Key] = hookTags[idx].Value;
                 }
             }
             return tags;
@@ -69,16 +66,16 @@ namespace OsmSharpService.Core.Routing.Primitives
         /// <summary>
         /// Converts the RoutingHookTags to a regular tags dictionary.
         /// </summary>
-        /// <param name="hook_tags"></param>
+        /// <param name="hookTags"></param>
         /// <returns></returns>
-        public static List<KeyValuePair<string, string>> ConvertToList(this RoutingHookTag[] hook_tags)
+        public static List<KeyValuePair<string, string>> ConvertToList(this RoutingHookTag[] hookTags)
         {
-            List<KeyValuePair<string, string>> tags = new List<KeyValuePair<string, string>>();
-            if (hook_tags != null)
+            var tags = new List<KeyValuePair<string, string>>();
+            if (hookTags != null)
             {
-                for (int idx = 0; idx < hook_tags.Length; idx++)
+                for (int idx = 0; idx < hookTags.Length; idx++)
                 {
-                    tags.Add(new KeyValuePair<string, string>(hook_tags[idx].Key, hook_tags[idx].Value));
+                    tags.Add(new KeyValuePair<string, string>(hookTags[idx].Key, hookTags[idx].Value));
                 }
             }
             return tags;

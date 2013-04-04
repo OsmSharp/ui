@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
 using System.Configuration.Install;
 using System.Collections;
 using System.Reflection;

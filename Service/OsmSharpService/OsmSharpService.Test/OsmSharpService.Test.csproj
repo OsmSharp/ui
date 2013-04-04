@@ -71,8 +71,18 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OsmSharp">
-      <HintPath>..\Lib\OsmSharp.dll</HintPath>
+    <Reference Include="OsmSharp.Osm">
+      <HintPath>..\packages\OsmSharp.3.1.4835\lib\OsmSharp.Osm.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Routing">
+      <HintPath>..\packages\OsmSharp.3.1.4835\lib\OsmSharp.Routing.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Tools">
+      <HintPath>..\packages\OsmSharp.3.1.4835\lib\OsmSharp.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net, Version=2.0.0.621, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="ServiceStack">
       <HintPath>..\packages\ServiceStack.3.9.25\lib\net35\ServiceStack.dll</HintPath>
@@ -96,6 +106,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />

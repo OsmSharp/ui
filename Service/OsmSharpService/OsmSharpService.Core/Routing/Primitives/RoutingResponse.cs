@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Routing.Core.Route;
+﻿using OsmSharp.Routing.Route;
 
 namespace OsmSharpService.Core.Routing.Primitives
 {

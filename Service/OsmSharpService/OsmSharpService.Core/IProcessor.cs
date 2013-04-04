@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace OsmSharpService.Core
+﻿namespace OsmSharpService.Core
 {
     /// <summary>
     /// Interface implemented on a request processor.

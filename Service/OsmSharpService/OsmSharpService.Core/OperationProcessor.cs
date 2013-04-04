@@ -1,25 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
-using OsmSharp.Routing.Core.Graph.Memory;
-using OsmSharp.Osm.Routing.Interpreter;
-using OsmSharp.Osm.Routing.Data;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Routing.Core;
-using OsmSharp.Routing.Core.Route;
-using OsmSharp.Osm.Routing.Core.TSP.Genetic;
-using OsmSharp.Routing.Core.Graph.Router.Dykstra;
-using OsmSharp.Osm.Core;
-using OsmSharp.Osm.Routing.Data.Processing;
-using OsmSharp.Osm.Data.PBF.Raw.Processor;
+using System.Linq;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Core.Processor.Progress;
+using OsmSharp.Osm.Data.PBF.Raw.Processor;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Osm.Data.Processing;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Route;
+using OsmSharp.Routing.TSP.Genetic;
+using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharpService.Core.Routing;
 using OsmSharpService.Core.Routing.Primitives;
-using OsmSharp.Routing.Core.Graph.DynamicGraph.SimpleWeighed;
-using OsmSharp.Tools.Core;
 
-namespace OsmSharpService.Core.Routing
+namespace OsmSharpService.Core
 {
     /// <summary>
     /// Processes routing service requests.
@@ -29,7 +28,7 @@ namespace OsmSharpService.Core.Routing
         /// <summary>
         /// Holds routing data.
         /// </summary>
-        private MemoryRouterDataSource<SimpleWeighedEdge> _data;
+        private DynamicGraphRouterDataSource<SimpleWeighedEdge> _data;
 
         /// <summary>
         /// Holds the routing interpreter.
@@ -44,19 +43,27 @@ namespace OsmSharpService.Core.Routing
         public object ProcessRoutingOperation(RoutingOperation operation)
         {
             // create the response object.
-            RoutingResponse response = new RoutingResponse();
+            RoutingResponse response;
 
             if (!this.IsReady())
             { // return that the service is not ready.
-                response.Status = OsmSharpServiceResponseStatusEnum.Failed;
-                response.StatusMessage = "Service is not ready!";
+                response = new RoutingResponse
+                               {
+                                   Status = OsmSharpServiceResponseStatusEnum.Failed,
+                                   StatusMessage = "Service is not ready!"
+                               };
+
                 return response;
             }
 
             if (operation.Hooks == null || operation.Hooks.Length == 0)
             { // there are no hooks!
-                response.Status = OsmSharpServiceResponseStatusEnum.Failed;
-                response.StatusMessage = "No hooks found!";
+                response = new RoutingResponse
+                               {
+                                   Status = OsmSharpServiceResponseStatusEnum.Failed,
+                                   StatusMessage = "No hooks found!"
+                               };
+
                 return response;
             }
 
@@ -65,162 +72,408 @@ namespace OsmSharpService.Core.Routing
                 // create the default edge matcher.
                 IEdgeMatcher matcher = new LevenshteinEdgeMatcher();
 
-                // resolve the points and do the routing.
-                Router<SimpleWeighedEdge> router = new Router<SimpleWeighedEdge>(
+                // create the router.
+                var router = new Router<SimpleWeighedEdge>(
                     _data, _interpreter, new DykstraRoutingLive(
                         _data.TagsIndex));
 
-                // create the coordinates list.
-                GeoCoordinate[] coordinates = new GeoCoordinate[operation.Hooks.Length];
-                RouterPoint[] router_points = new RouterPoint[operation.Hooks.Length];
-                for (int idx = 0; idx < operation.Hooks.Length; idx++)
-                {
-                    // routing hook tags.
-                    IDictionary<string, string> tags = operation.Hooks[idx].Tags.ConvertToDictionary();
-                    coordinates[idx] = new GeoCoordinate(
-                        operation.Hooks[idx].Latitude, operation.Hooks[idx].Longitude);
-
-                    // resolve the point.
-                    RouterPoint router_point = router.Resolve(operation.Vehicle, coordinates[idx], matcher, tags);
-
-                    // set the result.
-                    if (router_point != null && operation.Hooks[idx].Tags != null)
-                    { // set the tags.
-                        router_point.Tags = operation.Hooks[idx].Tags.ConvertToList();
-                    }
-                    router_points[idx] = router_point;
-                }
-
-                // add a tag for each point.
-                List<RoutingHook> unroutable_hooks = new List<RoutingHook>();
-                for (int idx = 0; idx < operation.Hooks.Length; idx++)
-                {
-                    if (router_points[idx] != null)
-                    {
-                        router_points[idx].Tags.Add(new KeyValuePair<string, string>(
-                            "id", operation.Hooks[idx].Id.ToString()));
-                    }
-                    else
-                    { // the point is not connected, add to the unroutable hooks.
-                        unroutable_hooks.Add(operation.Hooks[idx]);
-                    }
-                }
-
-                // check connectivity.
-                List<RouterPoint> routable_points = new List<RouterPoint>();
-                for (int idx = 0; idx < operation.Hooks.Length; idx++)
-                {
-                    if (router_points[idx] != null &&
-                        router.CheckConnectivity(operation.Vehicle, router_points[idx], 200))
-                    { // the point is connected.
-                        routable_points.Add(router_points[idx]);
-                    }
-                    else
-                    { // the point is not connected, add to the unroutable hooks.
-                        unroutable_hooks.Add(operation.Hooks[idx]);
-                    }
-                }
-
-                // do the routing.
-                RouterTSPAEXGenetic<RouterPoint> tsp_solver;
+                // execute the requested operation.
                 switch (operation.Type)
                 {
                     case RoutingOperationType.ManyToMany:
-                        response.Weights = router.CalculateManyToManyWeight(operation.Vehicle, routable_points.ToArray(),
-                            routable_points.ToArray());
-
-                        // set the unroutable hooks.
-                        response.UnroutableHooks = unroutable_hooks.ToArray();
-
-                        // report succes!
-                        response.Status = OsmSharpServiceResponseStatusEnum.Success;
-                        response.StatusMessage = string.Empty;
-
+                        response = this.DoManyToMany(operation, router, matcher);
                         break;
                     case RoutingOperationType.Regular:
-                        OsmSharpRoute route = null;
-                        for (int idx = 0; idx < routable_points.Count - 1; idx++)
-                        {
-                            OsmSharpRoute current = router.Calculate(operation.Vehicle,
-                                routable_points[idx], routable_points[idx + 1]);
-
-                            if (route == null)
-                            {
-                                route = current;
-                            }
-                            else
-                            {
-                                route = OsmSharpRoute.Concatenate(route, current);
-                            }
-                        }
-                        response.Route = route;
-
-                        // set the unroutable hooks.
-                        response.UnroutableHooks = unroutable_hooks.ToArray();
-
-                        // report succes!
-                        response.Status = OsmSharpServiceResponseStatusEnum.Success;
-                        response.StatusMessage = string.Empty;
-
+                        response = this.DoRegular(operation, router, matcher);
                         break;
                     case RoutingOperationType.TSP:
-                        tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
-                            router, 300, 100);
-                        response.Route = tsp_solver.CalculateTSP(operation.Vehicle, routable_points.ToArray());
-
-                        // set the unroutable hooks.
-                        response.UnroutableHooks = unroutable_hooks.ToArray();
-
-                        // report succes!
-                        response.Status = OsmSharpServiceResponseStatusEnum.Success;
-                        response.StatusMessage = string.Empty;
-
+                        response = this.DoTSP(operation, router, matcher, false);
                         break;
                     case RoutingOperationType.OpenTSP:
-                        tsp_solver = new RouterTSPAEXGenetic<RouterPoint>(
-                            router, 300, 100);
-                        response.Route = tsp_solver.CalculateTSP(operation.Vehicle, routable_points.ToArray(), 0, false);
-
-                        // set the unroutable hooks.
-                        response.UnroutableHooks = unroutable_hooks.ToArray();
-
-                        // report succes!
-                        response.Status = OsmSharpServiceResponseStatusEnum.Success;
-                        response.StatusMessage = string.Empty;
-
+                        response = this.DoTSP(operation, router, matcher, true);
                         break;
                     case RoutingOperationType.ToClosest:
-                        // are there enough points.
-                        if (routable_points.Count > 2)
-                        { // there are enough routable point.
-                            RouterPoint from = routable_points[0];
-                            RouterPoint[] tos = new RouterPoint[routable_points.Count - 1];
-                            for (int idx = 1; idx < routable_points.Count; idx++)
-                            {
-                                tos[idx - 1] = routable_points[idx];
-                            }
-                            response.Route = router.CalculateToClosest(operation.Vehicle, from, tos);
-
-                            // set the unroutable hooks.
-                            response.UnroutableHooks = unroutable_hooks.ToArray();
-
-                            // report succes!
-                            response.Status = OsmSharpServiceResponseStatusEnum.Success;
-                            response.StatusMessage = string.Empty;
-                        }
-                        else
-                        { // not enough points are routable.
-                            response.Status = OsmSharpServiceResponseStatusEnum.Failed;
-                            response.StatusMessage = "Not enough points are routable!";
-                        }
+                        response = this.DoToClosest(operation, router, matcher);
                         break;
+                    default:
+                        throw new Exception(string.Format("Invalid operation type:{0}", 
+                            operation.Type));
                 }
             }
             catch (Exception ex)
             { // any exception was thrown.
-                response.Status = OsmSharpServiceResponseStatusEnum.Failed;
-                response.StatusMessage = ex.Message;
+                // create the response.
+                response = new RoutingResponse
+                               {
+                                   Status = OsmSharpServiceResponseStatusEnum.Failed,
+                                   StatusMessage = ex.Message
+                               };
             }
+            return response;
+        }
+
+        /// <summary>
+        /// Calculates the route from the source to the closest point.
+        /// </summary>
+        /// <param name="operation">The operation request.</param>
+        /// <param name="router">The router.</param>
+        /// <param name="matcher">Contains an algorithm to match points to the route network.</param>
+        /// <returns></returns>
+        private RoutingResponse DoToClosest(
+            RoutingOperation operation, Router<SimpleWeighedEdge> router, IEdgeMatcher matcher)
+        {
+            // create the response.
+            var response = new RoutingResponse();
+
+            // resolve the points and do the routing.
+            var hooksPerRouterPoints = new Dictionary<RouterPoint, List<RoutingHook>>();
+            var routerPoints = new List<RouterPoint>();
+            var unroutableHooks = new List<RoutingHook>(); // save the unroutable hooks.
+            for (int idx = 0; idx < operation.Hooks.Length; idx++)
+            {
+                // routing hook tags.
+                IDictionary<string, string> tags = operation.Hooks[idx].Tags.ConvertToDictionary();
+
+                // resolve the point.
+                RouterPoint routerPoint = router.Resolve(operation.Vehicle, new GeoCoordinate(
+                    operation.Hooks[idx].Latitude, operation.Hooks[idx].Longitude), matcher, tags);
+
+                // check the result.
+                if (routerPoint == null)
+                { // this hook is not routable.
+                    if (idx == 0)
+                    { // the first point has to be valid!
+                        throw new Exception("Cannot resolve source point of a CalculateToClosest() operation.");
+                    }
+                    unroutableHooks.Add(operation.Hooks[idx]);
+                }
+                else
+                { // a point to hook on was found!
+                    List<RoutingHook> hooksAtPoint;
+                    if (!hooksPerRouterPoints.TryGetValue(routerPoint, out hooksAtPoint))
+                    { // the router point does not exist yet.
+                        // check if the router point is routable.
+                        if (router.CheckConnectivity(operation.Vehicle, routerPoint, 200))
+                        {// the point is routable.
+                            // create the hooks list at this point.
+                            hooksAtPoint = new List<RoutingHook>();
+                            hooksPerRouterPoints.Add(routerPoint, hooksAtPoint);
+
+                            // add the new router point to the list.
+                            routerPoint.Tags.Add(new KeyValuePair<string, string>("id", routerPoints.Count.ToString(
+                                System.Globalization.CultureInfo.InvariantCulture)));
+                            routerPoint.Tags.Add(new KeyValuePair<string, string>("idx", idx.ToString(
+                                System.Globalization.CultureInfo.InvariantCulture)));
+                            routerPoints.Add(routerPoint);
+
+                            // add the hook.
+                            hooksAtPoint.Add(operation.Hooks[idx]);
+                        }
+                        else
+                        {// this hook is not routable.
+                            if (idx == 0)
+                            { // the first point has to be valid!
+                                throw new Exception("Cannot resolve source point of a CalculateToClosest() operation.");
+                            }
+                            unroutableHooks.Add(operation.Hooks[idx]);
+                        }
+                    }
+                    else
+                    {
+                        // add the hook.
+                        hooksAtPoint.Add(operation.Hooks[idx]);
+                    }
+                }
+            }
+
+            // add the unroutable hooks.
+            response.UnroutableHooks = unroutableHooks.ToArray();
+
+            // extract the first point.
+            RouterPoint first = routerPoints[0];
+            routerPoints.RemoveAt(0);
+
+            // calculate all the weights.
+            OsmSharpRoute route = router.CalculateToClosest(operation.Vehicle, first, routerPoints.ToArray());
+
+            if (route != null)
+            {
+                // add the routerpoint tags.
+                string idxClosestString = route.Entries[route.Entries.Length - 1].Points[0].Tags[1].Value;
+                int idxClosest = int.Parse(idxClosestString);
+
+                // get the closest point.
+                RoutingHook pointClosest = operation.Hooks[idxClosest];
+
+                // get the routerpoint.
+                RoutePoint routePoint = route.Entries[route.Entries.Length - 1].Points[0];
+
+                // add the closest point tags.
+                routePoint.Latitude = pointClosest.Latitude;
+                routePoint.Longitude = pointClosest.Longitude;
+                routePoint.Tags = pointClosest.Tags.ConvertToList().ConvertFrom();
+
+                response.Route = route;
+            }
+
+            return response;
+        }
+
+        /// <summary>
+        /// Calculates the TSP.
+        /// </summary>
+        /// <param name="operation">The operation request.</param>
+        /// <param name="router">The router.</param>
+        /// <param name="matcher">Contains an algorithm to match points to the route network.</param>
+        /// <param name="open">Flag indicating the type of TSP problem, open or not.</param>
+        /// <returns></returns>
+        private RoutingResponse DoTSP(
+            RoutingOperation operation, Router<SimpleWeighedEdge> router, IEdgeMatcher matcher, bool open)
+        {
+            // create the response.
+            var response = new RoutingResponse();
+
+            // resolve the points and do the routing.
+            var hooksPerRouterPoints = new Dictionary<RouterPoint, List<RoutingHook>>();
+            var routerPoints = new List<RouterPoint>();
+            var unroutableHooks = new List<RoutingHook>(); // save the unroutable hooks.
+            for (int idx = 0; idx < operation.Hooks.Length; idx++)
+            {
+                // routing hook tags.
+                IDictionary<string, string> tags = operation.Hooks[idx].Tags.ConvertToDictionary();
+
+                // resolve the point.
+                RouterPoint routerPoint = router.Resolve(operation.Vehicle, new GeoCoordinate(
+                    operation.Hooks[idx].Latitude, operation.Hooks[idx].Longitude), matcher, tags);
+
+                // check the result.
+                if (routerPoint == null)
+                { // this hook is not routable.
+                    unroutableHooks.Add(operation.Hooks[idx]);
+                }
+                else
+                { // a point to hook on was found!
+                    List<RoutingHook> hooksAtPoint;
+                    if (!hooksPerRouterPoints.TryGetValue(routerPoint, out hooksAtPoint))
+                    { // the router point does not exist yet.
+                        // check if the router point is routable.
+                        if (router.CheckConnectivity(operation.Vehicle, routerPoint, 200))
+                        {// the point is routable.
+                            // create the hooks list at this point.
+                            hooksAtPoint = new List<RoutingHook>();
+                            hooksPerRouterPoints.Add(routerPoint, hooksAtPoint);
+
+                            // add the new router point to the list.
+                            routerPoint.Tags.Add(new KeyValuePair<string, string>("id", routerPoints.Count.ToString(
+                                System.Globalization.CultureInfo.InvariantCulture)));  
+                            routerPoints.Add(routerPoint);
+                                
+                            // add the hook.
+                            hooksAtPoint.Add(operation.Hooks[idx]);
+                        }
+                        else
+                        {// this hook is not routable.
+                            unroutableHooks.Add(operation.Hooks[idx]);
+                        }
+                    }
+                    else
+                    {
+                        // add the hook.
+                        hooksAtPoint.Add(operation.Hooks[idx]);
+                    }
+                }
+            }
+
+            // add the unroutable hooks.
+            response.UnroutableHooks = unroutableHooks.ToArray();
+
+            // calculate all the weights.
+            double[][] weights = router.CalculateManyToManyWeight(operation.Vehicle, routerPoints.ToArray(), routerPoints.ToArray());
+
+            // calculate the TSP.
+            var tspSolver = new RouterTSPAEXGenetic(300, 100);
+            IRoute tspRoute = tspSolver.CalculateTSP(weights, routerPoints.Select(x => x.Location).ToArray(), !open);
+            
+            // calculate the actual route.
+            OsmSharpRoute route = null;
+            foreach (Edge edge in tspRoute.Edges())
+            {
+                // calculate the actual edge-route.
+                OsmSharpRoute edgeRoute = router.Calculate(operation.Vehicle,
+                                                            routerPoints[edge.From], routerPoints[edge.To]);
+
+                // add the routing hook tags.
+                List<RoutingHook> fromHooks = hooksPerRouterPoints[routerPoints[edge.From]];
+                edgeRoute.Entries[0].Points = new RoutePoint[fromHooks.Count];
+                for (int hookIdx = 0; hookIdx < fromHooks.Count; hookIdx++)
+                {
+                    var hookPoint = new RoutePoint
+                                        {
+                                            Latitude = fromHooks[hookIdx].Latitude,
+                                            Longitude = fromHooks[hookIdx].Longitude,
+                                            Tags = fromHooks[hookIdx].Tags.ConvertToList().ConvertFrom()
+                                        };
+
+                    edgeRoute.Entries[0].Points[hookIdx] = hookPoint;
+                }
+                List<RoutingHook> toHooks = hooksPerRouterPoints[routerPoints[edge.To]];
+                edgeRoute.Entries[edgeRoute.Entries.Length - 1].Points = new RoutePoint[toHooks.Count];
+                for (int hookIdx = 0; hookIdx < toHooks.Count; hookIdx++)
+                {
+                    var hookPoint = new RoutePoint
+                                        {
+                                            Latitude = toHooks[hookIdx].Latitude,
+                                            Longitude = toHooks[hookIdx].Longitude,
+                                            Tags = toHooks[hookIdx].Tags.ConvertToList().ConvertFrom()
+                                        };
+
+                    edgeRoute.Entries[edgeRoute.Entries.Length - 1].Points[hookIdx] = hookPoint;
+                }
+
+                // concatenate routes.
+                if (route == null)
+                {
+                    route = edgeRoute;
+                }
+                else
+                {
+                    route = OsmSharpRoute.Concatenate(route, edgeRoute);
+                }
+            }
+
+            return response;
+        }
+        
+        /// <summary>
+        /// Calculates a regular route.
+        /// </summary>
+        /// <param name="operation">The operation request.</param>
+        /// <param name="router">The router.</param>
+        /// <param name="matcher">Contains an algorithm to match points to the route network.</param>
+        /// <returns></returns>
+        private RoutingResponse DoRegular(
+            RoutingOperation operation, Router<SimpleWeighedEdge> router, IEdgeMatcher matcher)
+        {
+            // create the response.
+            var response = new RoutingResponse();
+
+            OsmSharpRoute route = null;
+            RouterPoint previous = null;
+            var unroutableHooks = new List<RoutingHook>(); // keep a list of unroutable hooks.
+            for (int idx = 0; idx < operation.Hooks.Length - 1; idx++)
+            {
+                // resolve the next point.
+                RouterPoint next = router.Resolve(operation.Vehicle,
+                                                  new GeoCoordinate(operation.Hooks[idx].Latitude,
+                                                                    operation.Hooks[idx].Longitude), matcher,
+                                                  operation.Hooks[idx].Tags.ConvertToDictionary());
+
+                // check the routability.
+                if (next != null &&
+                    router.CheckConnectivity(operation.Vehicle, next, 200))
+                { // the next point is routable.
+                    if (previous != null)
+                    {
+                        // calculate the next part of the route.
+                        OsmSharpRoute routePart = router.Calculate(operation.Vehicle,
+                                                                 previous, next);
+                        // concatenate the route part.
+                        if (route == null)
+                        {
+                            route = routePart;
+                        }
+                        else
+                        {
+                            route = OsmSharpRoute.Concatenate(route, routePart);
+                        }
+                    }
+
+                    // set the next to the previous.
+                    previous = next;
+                }
+                else
+                { // add the hook to the unroutable hooks list.
+                   unroutableHooks.Add(operation.Hooks[idx]);
+                }
+            }
+
+            // add the unroutable hooks.
+            response.UnroutableHooks = unroutableHooks.ToArray();
+
+            // set the response route.
+            response.Route = route;
+
+            // report succes!
+            response.Status = OsmSharpServiceResponseStatusEnum.Success;
+            response.StatusMessage = string.Empty;
+
+            return response;
+        }
+       
+        /// <summary>
+        /// Calculates a matrix of weights between all given points.
+        /// </summary>
+        /// <param name="operation">The operation request.</param>
+        /// <param name="router">The router.</param>
+        /// <param name="matcher">Contains an algorithm to match points to the route network.</param>
+        /// <returns></returns>
+        private RoutingResponse DoManyToMany(
+            RoutingOperation operation, Router<SimpleWeighedEdge> router, IEdgeMatcher matcher)
+        {
+            // create the response.
+            var response = new RoutingResponse();
+
+            // resolve the points and do the routing.
+            var routerPoints = new List<RouterPoint>();
+            var unroutableHooks = new List<RoutingHook>(); // save the unroutable hooks.
+            for (int idx = 0; idx < operation.Hooks.Length; idx++)
+            {
+                // routing hook tags.
+                IDictionary<string, string> tags = operation.Hooks[idx].Tags.ConvertToDictionary();
+
+                // resolve the point.
+                RouterPoint routerPoint = router.Resolve(operation.Vehicle, new GeoCoordinate(
+                    operation.Hooks[idx].Latitude, operation.Hooks[idx].Longitude), matcher, tags);
+
+                // check the result.
+                if (routerPoint == null)
+                {
+                    // this hook is not routable.
+                    unroutableHooks.Add(operation.Hooks[idx]);
+                }
+                else
+                {
+                    // a point to hook on was found!
+                    // check if the router point is routable.
+                    if (router.CheckConnectivity(operation.Vehicle, routerPoint, 200))
+                    {
+                        // the point is routable.
+
+                        // add the new router point to the list.
+                        routerPoint.Tags.Add(new KeyValuePair<string, string>("id", routerPoints.Count.ToString(
+                            System.Globalization.CultureInfo.InvariantCulture)));
+                        routerPoints.Add(routerPoint);
+                    }
+                    else
+                    {
+                        // this hook is not routable.
+                        unroutableHooks.Add(operation.Hooks[idx]);
+                    }
+                }
+            }
+
+            // add the unroutable hooks.
+            response.UnroutableHooks = unroutableHooks.ToArray();
+
+
+            // calculate and fill the response.
+            response.Weights = router.CalculateManyToManyWeight(operation.Vehicle, routerPoints.ToArray(),
+                routerPoints.ToArray());
+
+            // report succes!
+            response.Status = OsmSharpServiceResponseStatusEnum.Success;
+            response.StatusMessage = string.Empty;
+
             return response;
         }
 
@@ -232,7 +485,7 @@ namespace OsmSharpService.Core.Routing
         public object ProcessResolveResource(ResolveOperation operation)
         {
             // create the response object.
-            ResolveResponse response = new ResolveResponse();
+            var response = new ResolveResponse();
 
             if (!this.IsReady())
             { // return that the service is not ready.
@@ -254,7 +507,7 @@ namespace OsmSharpService.Core.Routing
                 IEdgeMatcher matcher = new LevenshteinEdgeMatcher();
 
                 // resolve the points and do the routing.
-                Router<SimpleWeighedEdge> router = new Router<SimpleWeighedEdge>(
+                var router = new Router<SimpleWeighedEdge>(
                     _data, _interpreter, new DykstraRoutingLive(
                         _data.TagsIndex));
 
@@ -271,7 +524,7 @@ namespace OsmSharpService.Core.Routing
 
                     if (resolved != null)
                     { // the point was resolved successfully.
-                        response.ResolvedHooks[idx] = new RoutingHookResolved()
+                        response.ResolvedHooks[idx] = new RoutingHookResolved
                         {
                             Id = operation.Hooks[idx].Id,
                             Latitude = (float)resolved.Location.Latitude,
@@ -281,7 +534,7 @@ namespace OsmSharpService.Core.Routing
                     }
                     else
                     { // the hook was unsuccessfully resolved.
-                        response.ResolvedHooks[idx] = new RoutingHookResolved()
+                        response.ResolvedHooks[idx] = new RoutingHookResolved
                         {
                             Id = operation.Hooks[idx].Id,
                             Succes = false
@@ -329,8 +582,8 @@ namespace OsmSharpService.Core.Routing
         /// <returns></returns>
         public bool Start()
         {
-            System.Threading.Thread thread = new System.Threading.Thread(
-                new System.Threading.ThreadStart(PrepareRouter));
+            var thread = new System.Threading.Thread(
+                PrepareRouter);
             thread.Start();
 
             return true;
@@ -366,18 +619,17 @@ namespace OsmSharpService.Core.Routing
 
             string file = System.Configuration.ConfigurationManager.AppSettings["pbf_file"];
 
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            var tagsIndex = new OsmTagsIndex();
 
             // do the data processing.
-            MemoryRouterDataSource<SimpleWeighedEdge> data =
-                new MemoryRouterDataSource<SimpleWeighedEdge>(tags_index);
-            SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
-                data, _interpreter, data.TagsIndex);
-            PBFDataProcessorSource data_processor_source = new PBFDataProcessorSource((new FileInfo(
+            var data = new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tagsIndex);
+            var targetData = new SimpleWeighedDataGraphProcessingTarget(
+                data, _interpreter, data.TagsIndex, VehicleEnum.Car);
+            var dataProcessorSource = new PBFDataProcessorSource((new FileInfo(
                 file)).OpenRead());
-            ProgressDataProcessorSource progress_source = new ProgressDataProcessorSource(data_processor_source);
-            target_data.RegisterSource(progress_source);
-            target_data.Pull();
+            var progressSource = new ProgressDataProcessorSource(dataProcessorSource);
+            targetData.RegisterSource(progressSource);
+            targetData.Pull();
 
             _data = data; // only set the data property here now after pre-processing!
         }

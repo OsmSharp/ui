@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Serialization;
+﻿using OsmSharp.Routing;
 using ServiceStack.ServiceHost;
-using OsmSharp.Routing.Core;
 using OsmSharpService.Core.Routing.Primitives;
 
 namespace OsmSharpService.Core.Routing
