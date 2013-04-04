@@ -96,17 +96,17 @@
     <Compile Include="Routing\ResolveRestService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="OsmSharp.Osm, Version=3.1.4834.33937, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="OsmSharp.Osm, Version=3.1.4836.48, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Core\Releases\v3.1\Core\Output\Debug\Any CPU\OsmSharp.Osm.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.3.1.4836.48\lib\net40\OsmSharp.Osm.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Routing, Version=3.1.4834.33938, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="OsmSharp.Routing, Version=3.1.4836.48, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Core\Releases\v3.1\Core\Output\Debug\Any CPU\OsmSharp.Routing.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.3.1.4836.48\lib\net40\OsmSharp.Routing.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Tools, Version=3.1.4834.33936, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="OsmSharp.Tools, Version=3.1.4836.48, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Core\Releases\v3.1\Core\Output\Debug\Any CPU\OsmSharp.Tools.dll</HintPath>
+      <HintPath>..\packages\OsmSharp.3.1.4836.48\lib\net40\OsmSharp.Tools.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net, Version=2.0.0.621, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
