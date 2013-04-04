@@ -53,7 +53,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="matcher"></param>
         /// <param name="point_tags"></param>
         /// <param name="interpreter"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, IDictionary<string, string> point_tags)
         {
             double search_box_size = delta;
@@ -72,7 +72,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             foreach (KeyValuePair<uint, KeyValuePair<uint, EdgeData>> arc in arcs)
             {
                 IDictionary<string, string> arc_tags = _tags_index.Get(arc.Value.Value.Tags);
-                bool can_be_traversed = interpreter.EdgeInterpreter.CanBeTraversedBy(arc_tags, vehicle);
+                bool can_be_traversed = vehicle.CanTraverse(arc_tags);
                 if (can_be_traversed)
                 { // the edge can be traversed.
                     // test the two points.

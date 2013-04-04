@@ -87,7 +87,7 @@ namespace OsmSharp.Routing.VRP
                 OsmSharpRoute route;
                 for (int idx = 0; idx < solution[route_idx].Length - 1; idx++)
                 {
-                    route = _router.Calculate(VehicleEnum.Car, points[solution[route_idx][idx]],
+                    route = _router.Calculate(Vehicle.Car, points[solution[route_idx][idx]],
                         points[solution[route_idx][idx + 1]]);
                     if (route != null && route.Entries.Length > 0)
                     {
@@ -103,7 +103,7 @@ namespace OsmSharp.Routing.VRP
                 }
 
                 // concatenate the route from the last to the first point again.
-                route = _router.Calculate(VehicleEnum.Car, points[solution[route_idx][solution[route_idx].Length - 1]],
+                route = _router.Calculate(Vehicle.Car, points[solution[route_idx][solution[route_idx].Length - 1]],
                             points[solution[route_idx][0]]);
                 if (route.Entries.Length > 0)
                 {

@@ -40,7 +40,7 @@ namespace OsmSharp.Routing.Route
         /// <summary>
         /// The vehicle type this route was created for.
         /// </summary>
-        public VehicleEnum Vehicle { get; set; }
+        public Vehicle Vehicle { get; set; }
 
         /// <summary>
         /// Tags for this route.

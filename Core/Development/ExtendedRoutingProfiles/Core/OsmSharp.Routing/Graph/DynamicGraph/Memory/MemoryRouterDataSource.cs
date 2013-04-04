@@ -66,7 +66,7 @@ namespace OsmSharp.Routing.Graph.Memory
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool SupportsProfile(VehicleEnum vehicle)
+        public bool SupportsProfile(Vehicle vehicle)
         {
             return true; // for backward compatibility.
         }

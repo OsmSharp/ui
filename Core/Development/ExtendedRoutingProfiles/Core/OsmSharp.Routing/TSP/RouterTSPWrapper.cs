@@ -45,7 +45,7 @@ namespace OsmSharp.Routing.TSP
         /// <param name="vehicle">The vehicle type.</param>
         /// <param name="points">The points to travel along.</param>
         /// <returns></returns>
-        protected double[][] CalculateManyToManyWeight(VehicleEnum vehicle, ResolvedType[] points)
+        protected double[][] CalculateManyToManyWeight(Vehicle vehicle, ResolvedType[] points)
         {
             return _router.CalculateManyToManyWeight(vehicle, points, points);
         }
@@ -58,7 +58,7 @@ namespace OsmSharp.Routing.TSP
         /// <param name="first">The index of the point to start from.</param>
         /// <param name="is_round">Return back to the first point or not.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, int first, bool is_round)
+        public OsmSharpRoute CalculateTSP(Vehicle vehicle, ResolvedType[] points, int first, bool is_round)
         {
             // calculate the weights.
             double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
@@ -92,7 +92,7 @@ namespace OsmSharp.Routing.TSP
         /// <param name="first">The index of the point to start from.</param>
         /// <param name="last">The index of the point to end at.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, int first, int last)
+        public OsmSharpRoute CalculateTSP(Vehicle vehicle, ResolvedType[] points, int first, int last)
         {
             // calculate the weights.
             double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
@@ -125,7 +125,7 @@ namespace OsmSharp.Routing.TSP
         /// <param name="points">The points to travel along.</param>
         /// <param name="is_round">Make the route return to the start-point or not.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points, bool is_round)
+        public OsmSharpRoute CalculateTSP(Vehicle vehicle, ResolvedType[] points, bool is_round)
         {
             // calculate the weights.
             double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
@@ -157,7 +157,7 @@ namespace OsmSharp.Routing.TSP
         /// <param name="vehicle">The vehicle type.</param>
         /// <param name="points">The points to travel along.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(VehicleEnum vehicle, ResolvedType[] points)
+        public OsmSharpRoute CalculateTSP(Vehicle vehicle, ResolvedType[] points)
         {
             return this.CalculateTSP(vehicle, points, true);
         }
@@ -177,7 +177,7 @@ namespace OsmSharp.Routing.TSP
             OsmSharpRoute route;
             for (int idx = 0; idx < solution.Length - 1; idx++)
             {
-                route = _router.Calculate(VehicleEnum.Car, points[solution[idx]],
+                route = _router.Calculate(Vehicle.Car, points[solution[idx]],
                     points[solution[idx + 1]]);
                 if (tsp == null)
                 { // first route = start
@@ -191,7 +191,7 @@ namespace OsmSharp.Routing.TSP
             if (tsp_solution.IsRound)
             {
                 // concatenate the route from the last to the first point again.
-                route = _router.Calculate(VehicleEnum.Car, points[solution[solution.Length - 1]],
+                route = _router.Calculate(Vehicle.Car, points[solution[solution.Length - 1]],
                             points[solution[0]]);
                 tsp = OsmSharpRoute.Concatenate(tsp, route);
             }

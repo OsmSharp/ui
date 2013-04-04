@@ -60,7 +60,7 @@ namespace OsmSharp.Routing.Metrics.Time
         /// <param name="vehicle"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public override Dictionary<string, double> Calculate(VehicleEnum vehicle, AggregatedPoint p)
+        public override Dictionary<string, double> Calculate(Vehicle vehicle, AggregatedPoint p)
         {
             Dictionary<string, double> result = new Dictionary<string, double>();
             result.Add(DISTANCE_KEY, 0);
@@ -92,7 +92,7 @@ namespace OsmSharp.Routing.Metrics.Time
         /// <param name="vehicle"></param>
         /// <param name="result"></param>
         /// <param name="point"></param>
-        private void CalculatePointMetrics(VehicleEnum vehicle, Dictionary<string, double> result, AggregatedPoint point)
+        private void CalculatePointMetrics(Vehicle vehicle, Dictionary<string, double> result, AggregatedPoint point)
         {
             if (point.Angle != null)
             {
@@ -143,17 +143,17 @@ namespace OsmSharp.Routing.Metrics.Time
         /// <param name="vehicle"></param>
         /// <param name="result"></param>
         /// <param name="arc"></param>
-        private void CalculateArcMetrics(VehicleEnum vehicle, Dictionary<string, double> result, AggregatedArc arc)
+        private void CalculateArcMetrics(Vehicle vehicle, Dictionary<string, double> result, AggregatedArc arc)
         {
             // update the distance.
             result[DISTANCE_KEY] = result[DISTANCE_KEY] + arc.Distance.Value;
 
             // update the time.
-            KilometerPerHour speed = this.Interpreter.EdgeInterpreter.MaxSpeed(vehicle, arc.Tags.ConvertFrom());
+            KilometerPerHour speed = vehicle.MaxSpeed(arc.Tags.ConvertFrom());
             Second time = arc.Distance / speed;
 
             // FOR NOW USE A METRIC OF 75% MAX SPEED.
-            // TODO: improve this for a more realistic estimated based on the type of road.
+            // TODO: improve this for a more realistic estimate based on the type of road.
             result[TIME_KEY] = result[TIME_KEY] + time.Value;
         }
     }

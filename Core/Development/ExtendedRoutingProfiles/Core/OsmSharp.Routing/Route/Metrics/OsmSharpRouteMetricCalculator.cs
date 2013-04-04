@@ -76,6 +76,6 @@ namespace OsmSharp.Routing.Metrics
         /// <param name="vehicle"></param>
         /// <param name="p"></param>
         /// <returns></returns>
-        public abstract Dictionary<string, double> Calculate(VehicleEnum vehicle, AggregatedPoint p);
+        public abstract Dictionary<string, double> Calculate(Vehicle vehicle, AggregatedPoint p);
     }
 }

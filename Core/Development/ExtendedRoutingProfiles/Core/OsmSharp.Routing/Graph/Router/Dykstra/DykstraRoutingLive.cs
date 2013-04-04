@@ -58,7 +58,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="interpreter"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public PathSegment<long> Calculate(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public PathSegment<long> Calculate(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList from, PathSegmentVisitList to, double max)
         {
             return this.CalculateToClosest(graph, interpreter, vehicle, from,
@@ -75,7 +75,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max_search"></param>
         /// <returns></returns>
-        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle, 
+        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle, 
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max_search)
         {
             PathSegment<long>[][] results = new PathSegment<long>[sources.Length][];
@@ -97,7 +97,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="interpreter"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double CalculateWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public double CalculateWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList from, PathSegmentVisitList to, double max)
         {
             PathSegment<long> closest = this.CalculateToClosest(graph, interpreter, vehicle, from,
@@ -119,8 +119,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, 
-            VehicleEnum vehicle, PathSegmentVisitList from, PathSegmentVisitList[] targets, double max)
+        public PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, PathSegmentVisitList from, PathSegmentVisitList[] targets, double max)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
                 from, targets, max, true, false);
@@ -141,7 +141,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max)
         {
             PathSegment<long>[] many = this.DoCalculation(graph, interpreter, vehicle,
@@ -172,7 +172,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max)
         {
             double[][] results = new double[sources.Length][];
@@ -208,7 +208,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight)
         {
             return this.CalculateRange(graph, interpreter, vehicle, source, weight, true);
@@ -224,7 +224,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="weight"></param>
         /// <param name="forward"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight, bool forward)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
@@ -247,7 +247,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public bool CheckConnectivity(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight)
         {
             HashSet<long> range = this.CalculateRange(graph, interpreter, vehicle, source, weight, true);
@@ -277,7 +277,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="stop_at_first"></param>
         /// <param name="return_at_weight"></param>
         /// <returns></returns>
-        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
             bool stop_at_first, bool return_at_weight)
         {
@@ -297,7 +297,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="return_at_weight"></param>
         /// <param name="forward"></param>
         /// <returns></returns>
-        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
             bool stop_at_first, bool return_at_weight, bool forward)
         {
@@ -467,9 +467,9 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 {
                     // check the tags against the interpreter.
                     IDictionary<string, string> tags = this.TagsIndex.Get(neighbour.Value.Tags);
-                    if (interpreter.EdgeInterpreter.CanBeTraversedBy(tags, vehicle))
+                    if (vehicle.CanTraverse(tags))
                     { // it's ok; the edge can be traversed by the given vehicle.
-                        bool? one_way = interpreter.EdgeInterpreter.IsOneWay(tags, vehicle);
+                        bool? one_way = vehicle.IsOneWay(tags);
                         bool can_be_traversed_one_way = (!one_way.HasValue) || // bidirectional edge. 
                             (forward && (one_way.Value == neighbour.Value.IsForward)) ||
                             (!forward && (one_way.Value != neighbour.Value.IsForward)); // backward edge has backward restruction, forward edge forward restriction.

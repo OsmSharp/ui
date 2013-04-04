@@ -37,7 +37,7 @@ namespace OsmSharp.Routing
         /// <param name="weight"></param>
         /// <returns></returns>
         public static ResolvedType[] CheckConnectivityAndRemoveInvalid<ResolvedType>(
-            this IRouter<ResolvedType> router, VehicleEnum vehicle, ResolvedType[] resolved_points, float weight)
+            this IRouter<ResolvedType> router, Vehicle vehicle, ResolvedType[] resolved_points, float weight)
                 where ResolvedType : IRouterPoint
         {
             List<ResolvedType> connected_points = new List<ResolvedType>();

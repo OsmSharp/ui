@@ -45,7 +45,7 @@ namespace OsmSharp.Routing.Osm.Data
         /// <summary>
         /// Holds the supported vehicle profile.
         /// </summary>
-        private readonly VehicleEnum _vehicle;
+        private readonly Vehicle _vehicle;
 
         /// <summary>
         /// Creates a OSM dynamic graph.
@@ -55,7 +55,7 @@ namespace OsmSharp.Routing.Osm.Data
         /// <param name="interpreter">The routing interpreter.</param>
         /// <param name="vehicle">The vehicle profile being targetted.</param>
         public OsmSourceRouterDataSource(IRoutingInterpreter interpreter, ITagsIndex tagsIndex, 
-            IDataSourceReadOnly source, VehicleEnum vehicle)
+            IDataSourceReadOnly source, Vehicle vehicle)
         {
             _source = source;
             _vehicle = vehicle;
@@ -75,7 +75,7 @@ namespace OsmSharp.Routing.Osm.Data
         /// </summary>
         /// <param name="vehicle">The vehicle profile.</param>
         /// <returns></returns>
-        public bool SupportsProfile(VehicleEnum vehicle)
+        public bool SupportsProfile(Vehicle vehicle)
         {
             return vehicle == _vehicle;
         }
@@ -254,7 +254,7 @@ namespace OsmSharp.Routing.Osm.Data
             // process the list of data just loaded.
             // TODO: fix this vehicle profile mess!
             var targetData = new PreProcessedDataGraphProcessingTarget(
-                _dataCache, _interpreter, _tagsIndex, OsmSharp.Routing.VehicleEnum.Car, _idTranformations);
+                _dataCache, _interpreter, _tagsIndex, OsmSharp.Routing.Vehicle.Car, _idTranformations);
             var dataProcessorSource =
                 new OsmGeoListDataProcessorSource(data);
             var sorter = new DataProcessorFilterSort();

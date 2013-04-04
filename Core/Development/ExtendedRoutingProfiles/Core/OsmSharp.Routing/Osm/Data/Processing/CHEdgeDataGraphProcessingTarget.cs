@@ -21,7 +21,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Holds the vehicle profile this pre-processing target is for.
         /// </summary>
-        private VehicleEnum _vehicle;
+        private Vehicle _vehicle;
 
         /// <summary>
         /// Creates a CH data processing target.
@@ -31,7 +31,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="tags_index"></param>
         /// <param name="vehicle"></param>
         public CHEdgeDataGraphProcessingTarget(IDynamicGraph<CHEdgeData> dynamic_graph,
-            IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle)
+            IRoutingInterpreter interpreter, ITagsIndex tags_index, Vehicle vehicle)
             :base(dynamic_graph, interpreter, new CHEdgeDataComparer(), tags_index)
         {
             _vehicle = vehicle;
@@ -50,32 +50,34 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, 
             IDictionary<string, string> tags, bool direction_forward, GeoCoordinate from, GeoCoordinate to)
         {
-            double weight = edge_interpreter.Weight(
-                tags, _vehicle, from, to);
-            bool? direction = edge_interpreter.IsOneWay(tags, _vehicle);
-            bool forward = false;
-            bool backward = false;
+            var weight = _vehicle.Weight(
+                tags, from, to);
+            var direction = _vehicle.IsOneWay(tags);
+            var forward = false;
+            var backward = false;
             if (!direction.HasValue)
-            { // both directions.
+            {
+                // both directions.
                 forward = true;
                 backward = true;
             }
             else
-            { // define back/forward.
+            {
+                // define back/forward.
                 forward = (direction_forward && direction.Value) ||
-                    (!direction_forward && !direction.Value);
+                         (!direction_forward && !direction.Value);
                 backward = (direction_forward && !direction.Value) ||
-                    (!direction_forward && direction.Value);
+                          (!direction_forward && direction.Value);
             }
 
             // initialize the edge data.
-            return new CHEdgeData()
+            return new CHEdgeData
             {
-                Weight = (float)weight, 
-                Forward = forward, 
-                Backward = backward, 
+                Weight = (float)weight,
+                Forward = forward,
+                Backward = backward,
                 Tags = tags_index.Add(
-                tags),
+                    tags),
                 ContractedVertexId = 0
             };
         }
