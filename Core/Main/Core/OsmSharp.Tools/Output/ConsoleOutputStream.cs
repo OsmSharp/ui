@@ -22,15 +22,26 @@ using System.Text;
 
 namespace OsmSharp.Tools.Output
 {
+    /// <summary>
+    /// Writes the output to console.
+    /// </summary>
     public class ConsoleOutputStream : IOutputStream
     {
         #region IOutputTextStream Members
 
+        /// <summary>
+        /// Writes text.
+        /// </summary>
+        /// <param name="text"></param>
         public void WriteLine(string text)
         {
             Console.WriteLine(text);
         }
 
+        /// <summary>
+        /// Writes text.
+        /// </summary>
+        /// <param name="text"></param>
         public void Write(string text)
         {
             Console.Write(text);
@@ -40,6 +51,12 @@ namespace OsmSharp.Tools.Output
 
         //private string _previous_key;
 
+        /// <summary>
+        /// Reports progress.
+        /// </summary>
+        /// <param name="progress"></param>
+        /// <param name="key"></param>
+        /// <param name="message"></param>
         public void ReportProgress(double progress, string key, string message)
         {
             string current_progress_string = message;//string.Format("{0}:{1}", key, message);
@@ -66,7 +83,5 @@ namespace OsmSharp.Tools.Output
         }
 
         #endregion
-
-
     }
 }

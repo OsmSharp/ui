@@ -28,24 +28,52 @@ namespace OsmSharp.Tools.Progress
     public class ProgressStatus
     {
         private int _totalItemsNumber;
+
+        /// <summary>
+        /// Returns total number.
+        /// </summary>
         public int TotalNumber
         {
             get { return _totalItemsNumber; }
             set { _totalItemsNumber = value; }
         }
-
+        
+        /// <summary>
+        /// Returns the message.
+        /// </summary>
         public string Message { get; set; }
 
+        /// <summary>
+        /// Progress status enum.
+        /// </summary>
         public enum ProgressStatusEnum
         {
+            /// <summary>
+            /// Failed.
+            /// </summary>
             Failed,
+            /// <summary>
+            /// Querying.
+            /// </summary>
             Querying,
+            /// <summary>
+            /// Succeeded.
+            /// </summary>
             Succeeded,
+            /// <summary>
+            /// Down.
+            /// </summary>
             Down,
+            /// <summary>
+            /// Busy.
+            /// </summary>
             Busy
         }
 
         private ProgressStatusEnum _status;
+        /// <summary>
+        /// Status.
+        /// </summary>
         public ProgressStatusEnum Status
         {
             get { return _status; }
@@ -53,6 +81,9 @@ namespace OsmSharp.Tools.Progress
         }
 
         private int _currentNumber;
+        /// <summary>
+        /// Current number.
+        /// </summary>
         public int CurrentNumber
         {
             get { return _currentNumber; }
@@ -61,6 +92,9 @@ namespace OsmSharp.Tools.Progress
 
 
         private object _ent;
+        /// <summary>
+        /// Current entity.
+        /// </summary>
         public object CurrentEntity
         {
             get { return _ent; }
@@ -68,6 +102,9 @@ namespace OsmSharp.Tools.Progress
         }
 
         private DateTime _timeRemaining;
+        /// <summary>
+        /// Time remaining.
+        /// </summary>
         public DateTime TimeRemaining
         {
             get { return _timeRemaining; }
@@ -75,11 +112,18 @@ namespace OsmSharp.Tools.Progress
         }
 
         private DateTime _timePassed;
+        /// <summary>
+        /// Time passed.
+        /// </summary>
         public DateTime TimePassed
         {
             get { return _timePassed; }
             set { _timePassed = value; }
         }
+
+        /// <summary>
+        /// Time passed string.
+        /// </summary>
         public string TimePassedString
         {
             get
@@ -96,6 +140,10 @@ namespace OsmSharp.Tools.Progress
                 return str + this.TimePassed.TimeOfDay.Minutes + "min " + this.TimePassed.TimeOfDay.Seconds + "s";
             }
         }
+
+        /// <summary>
+        /// Time remaining string.
+        /// </summary>
         public string TimeRemainingString
         {
             get
@@ -113,6 +161,9 @@ namespace OsmSharp.Tools.Progress
             }
         }
 
+        /// <summary>
+        /// Progress percentage.
+        /// </summary>
         public double ProgressPercentage
         {
             get
@@ -134,6 +185,5 @@ namespace OsmSharp.Tools.Progress
                 return 0;
             }
         }
-
     } 
 }

@@ -24,6 +24,9 @@ using OsmSharp.Tools.Math.Random;
 
 namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers
 {
+    /// <summary>
+    /// Individual helper.
+    /// </summary>
     public class IndividualHelper
     {
         internal static Genome GetSmallest(Individual<List<Genome>, Problem, Fitness> indivdual)
@@ -144,6 +147,12 @@ namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers
             return false;
         }
 
+        /// <summary>
+        /// Returns true if there is overlap.
+        /// </summary>
+        /// <param name="genomes"></param>
+        /// <param name="city"></param>
+        /// <returns></returns>
         public static bool Overlaps(List<Genome> genomes, int city)
         {
             foreach (Genome source_genome in genomes)

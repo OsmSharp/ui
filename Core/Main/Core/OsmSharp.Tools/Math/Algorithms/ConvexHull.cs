@@ -37,6 +37,7 @@ namespace OsmSharp.Tools.Math.Algorithms
         /// <summary>
         /// Calculates a polygon out of a list of points. The resulting polygon the convex hull of all points.
         /// </summary>
+        /// <param name="factory"></param>
         /// <param name="points"></param>
         /// <returns></returns>
         public static IList<PointType> Calculate(IPrimitivesFactory<PointType, RectangleType, LineType> factory, IList<PointType> points)

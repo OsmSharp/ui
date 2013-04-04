@@ -28,14 +28,23 @@ using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
 
 namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
+    /// <summary>
+    /// A best placement operation.
+    /// </summary>
     public class BestPlacementCrossOverOperation :
         ICrossOverOperation<List<int>, GeneticProblem, Fitness>
     {
+        /// <summary>
+        /// Creates a new best placement operation.
+        /// </summary>
         public BestPlacementCrossOverOperation()
         {
 
         }
 
+        /// <summary>
+        /// Returns the name of this operation.
+        /// </summary>
         public string Name
         {
             get
@@ -46,6 +55,13 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
         #region ICrossOverOperation<int,Problem> Members
 
+        /// <summary>
+        /// Applies this crossover operation.
+        /// </summary>
+        /// <param name="solver"></param>
+        /// <param name="parent1"></param>
+        /// <param name="parent2"></param>
+        /// <returns></returns>
         public Individual<List<int>, GeneticProblem, Fitness>
             CrossOver(Solver<List<int>, GeneticProblem, Fitness> solver,
             Individual<List<int>, GeneticProblem, Fitness> parent1,

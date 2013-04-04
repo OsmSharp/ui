@@ -27,7 +27,13 @@ namespace OsmSharp.Tools.TSPLIB.Problems
     /// </summary>
     public enum TSPLIBProblemWeightTypeEnum
     {
+        /// <summary>
+        /// Euclidian 2D.
+        /// </summary>
         Euclidian2D,
+        /// <summary>
+        /// Explicit.
+        /// </summary>
         Explicit
     }
 }

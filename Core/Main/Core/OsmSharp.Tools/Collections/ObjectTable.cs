@@ -44,6 +44,7 @@ namespace OsmSharp.Tools.Collections
         /// Creates a new string table.
         /// </summary>
         /// <param name="reverse_index">The reverse index is enable if true.</param>
+        /// <param name="init_capacity"></param>
         public ObjectTable(bool reverse_index, int init_capacity)
         {
             _strings = new Type[init_capacity];

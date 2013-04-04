@@ -25,27 +25,30 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Debug\Any CPU\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\OsmSharp.Osm.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\Any CPU\OsmSharp.Osm.XML</DocumentationFile>
     <PlatformTarget>x86</PlatformTarget>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Release\Any CPU\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x86</PlatformTarget>
+    <DocumentationFile>..\Output\Release\Any CPU\OsmSharp.Osm.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Debug\x86\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>..\Output\OsmSharp.Osm.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\x86\OsmSharp.Osm.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisLogFile>..\Output\Osm.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -60,7 +63,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Release\x86\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -75,7 +78,8 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-    <DocumentationFile>..\Output\OsmSharp.Osm.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Release\x86\OsmSharp.Osm.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|AnyCPU'">
     <OutputPath>bin\Release x64\</OutputPath>
@@ -112,9 +116,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Debug\x64\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>..\Output\OsmSharp.Osm.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\x64\OsmSharp.Osm.xml</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <CodeAnalysisLogFile>..\Output\Osm.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -124,9 +128,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Release\x64\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -141,10 +146,11 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-    <DocumentationFile>..\Output\OsmSharp.Osm.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Release\x64\OsmSharp.Osm.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|x64'">
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Debug\x64\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -156,7 +162,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\OsmSharp.Osm.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\x64\OsmSharp.Osm.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="protobuf-net, Version=2.0.0.621, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
@@ -195,6 +201,7 @@
     <Compile Include="Data\KeyGenerator.cs" />
     <Compile Include="Data\Memory\MemoryDataSource.cs" />
     <Compile Include="Data\Memory\MemoryDataSourceProcessorTarget.cs" />
+    <Compile Include="Data\PBF\Dense\Compressor.cs" />
     <Compile Include="Data\PBF\Dense\Decompressor.cs" />
     <Compile Include="Data\PBF\fileformat.cs">
       <DependentUpon>fileformat.proto</DependentUpon>
@@ -211,7 +218,11 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Data\PBF\PBFReader.cs" />
+    <Compile Include="Data\PBF\PBFWriter.cs" />
     <Compile Include="Data\PBF\Processor\PBFDataProcessorSource.cs" />
+    <Compile Include="Data\PBF\Processor\PBFDataProcessorTarget.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Data\Processor\ChangeSets\DataProcessorChangeSetFilter.cs" />
     <Compile Include="Data\Processor\ChangeSets\DataProcessorChangeSetSource.cs" />
     <Compile Include="Data\Processor\ChangeSets\DataProcessorChangeSetTarget.cs" />
@@ -229,6 +240,7 @@
     <Compile Include="Data\Processor\Filter\BoundingBox\LongIndex\LongIndexNode.cs" />
     <Compile Include="Data\Processor\Filter\DataProcessorFilterWithEvents.cs" />
     <Compile Include="Data\Processor\Filter\Sort\DataProcessorFilterSort.cs" />
+    <Compile Include="Data\Processor\Filter\Tags\TagsDataProcessorFilter.cs" />
     <Compile Include="Data\Processor\List\CollectionDataProcessorSource.cs" />
     <Compile Include="Data\Processor\List\CollectionDataProcessorTarget.cs" />
     <Compile Include="Data\Processor\List\OsmGeoListDataProcessorSource.cs" />
@@ -252,6 +264,7 @@
     <Compile Include="Data\Xml\Processor\XmlSimpleConverter.cs" />
     <Compile Include="Factory\OsmBaseFactory.cs" />
     <Compile Include="Filters\Filter.cs" />
+    <Compile Include="Filters\FilterAny.cs" />
     <Compile Include="Filters\FilterBox.cs" />
     <Compile Include="Filters\FilterCombined.cs" />
     <Compile Include="Filters\FilterTag.cs" />

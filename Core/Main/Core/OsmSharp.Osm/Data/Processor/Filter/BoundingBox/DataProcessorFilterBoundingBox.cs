@@ -40,14 +40,39 @@ namespace OsmSharp.Osm.Data.Core.Processor.Filter
         /// </summary>
         private bool _include_extra_mode = false;
 
+        /// <summary>
+        /// The box to filter against.
+        /// </summary>
         private GeoCoordinateBox _box;
 
+        /// <summary>
+        /// An index of the actual nodes inside the bounding box.
+        /// </summary>
         private LongIndex.LongIndex _nodes_in = new LongIndex.LongIndex();
+
+        /// <summary>
+        /// An index of the actual ways inside the bounding box.
+        /// </summary>
         private HashSet<long> _ways_in = new HashSet<long>();
+
+        /// <summary>
+        /// An index of the actual relations inside the bounding box.
+        /// </summary>
         private HashSet<long> _relation_in = new HashSet<long>();
 
+        /// <summary>
+        /// An index of extra nodes to include.
+        /// </summary>
         private LongIndex.LongIndex _nodes_to_include = new LongIndex.LongIndex();
+
+        /// <summary>
+        /// An index of extra ways to include.
+        /// </summary>
         private HashSet<long> _relations_to_include = new HashSet<long>();
+
+        /// <summary>
+        /// An index of extra relations to include.
+        /// </summary>
         private HashSet<long> _ways_to_include = new HashSet<long>();
 
         /// <summary>
@@ -91,49 +116,50 @@ namespace OsmSharp.Osm.Data.Core.Processor.Filter
                         }
                     }
 
-                    if (finished)
+                    if (!finished)
                     {
-                        return false;
-                    }
-
-                    while (this.Current().Type == _current_type && !is_in)
-                    {
-                        SimpleOsmGeo current = this.Source.Current();
-                        is_in = this.IsInBB(current);
-                        if (is_in)
+                        while (this.Current().Type == _current_type && !is_in)
                         {
-                            switch (current.Type)
+                            SimpleOsmGeo current = this.Source.Current();
+                            is_in = this.IsInBB(current); // check and keep the extras.
+                            if (is_in)
                             {
-                                case SimpleOsmGeoType.Node:
-                                    _nodes_in.Add(current.Id.Value);
-                                    break;
-                                case SimpleOsmGeoType.Way:
-                                    _ways_in.Add(current.Id.Value);
-                                    break;
-                                case SimpleOsmGeoType.Relation:
-                                    _relation_in.Add(current.Id.Value);
-                                    break;
+                                // add to the actual in-boundingbox indexes.
+                                switch (current.Type)
+                                {
+                                    case SimpleOsmGeoType.Node:
+                                        _nodes_in.Add(current.Id.Value);
+                                        break;
+                                    case SimpleOsmGeoType.Way:
+                                        _ways_in.Add(current.Id.Value);
+                                        break;
+                                    case SimpleOsmGeoType.Relation:
+                                        _relation_in.Add(current.Id.Value);
+                                        break;
+                                }
+                                break;
                             }
-                            break;
-                        }
 
-                        // move to the next object of the current type.
-                        if (!this.Source.MoveNext())
-                        {
-                            finished = true;
-                            break;
-                        }
-                        while (this.Current().Type != _current_type)
-                        {
+                            // move to the next object of the current type.
                             if (!this.Source.MoveNext())
                             {
                                 finished = true;
                                 break;
                             }
-                        }
-                        if (finished)
-                        {
-                            break;
+                            while (this.Current().Type != _current_type)
+                            {
+                                if (!this.Source.MoveNext())
+                                {
+                                    finished = true;
+                                    break;
+                                }
+                            }
+
+                            // stop when finished.
+                            if (finished)
+                            {
+                                break;
+                            }
                         }
                     }
 
@@ -143,6 +169,7 @@ namespace OsmSharp.Osm.Data.Core.Processor.Filter
                     }
                 }
 
+                // switch to the next mode.
                 switch (_current_type)
                 {
                     case SimpleOsmGeoType.Node:
@@ -194,7 +221,7 @@ namespace OsmSharp.Osm.Data.Core.Processor.Filter
                             }
                             break;
                     }
-                    this.Source.MoveNext();
+                    //this.Source.MoveNext();
                 }
                 return false;
             }

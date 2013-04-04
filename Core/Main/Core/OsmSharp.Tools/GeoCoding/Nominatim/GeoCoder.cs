@@ -18,6 +18,8 @@
 
 using System;
 using System.Net;
+using System.Text;
+using System.Threading;
 using OsmSharp.Tools.Xml;
 using OsmSharp.Tools.Xml.Nominatim.Reverse.v1;
 using OsmSharp.Tools.Xml.Sources;
@@ -32,16 +34,38 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
     public class GeoCoder : IGeoCoder
     {
         /// <summary>
-        /// Holds the web client used to access the nomatim service.
+        /// The url of the nomatim service.
         /// </summary>
-        private WebClient _web_client;
+        private string _geocodingUrl; // = ConfigurationManager.AppSettings["NomatimAddress"] + ;
 
         /// <summary>
-        /// Creates a new geocoder.
+        /// The default timeout.
         /// </summary>
-        public GeoCoder()
-        {
+        private int _timeOut = 10000;
 
+        /// <summary>
+        /// Holds the web client used to access the nomatim service.
+        /// </summary>
+        private WebClient _webClient;
+
+        /// <summary>
+        /// Creates a new nominatim geocoder.
+        /// </summary>
+        /// <param name="geocodingUrl">The nominatim API URL. (ex: "http://nominatim.openstreetmap.org/search?q={0}")</param>
+        public GeoCoder(string geocodingUrl)
+        {
+            _geocodingUrl = geocodingUrl;
+        }
+
+        /// <summary>
+        /// Creates a new nominatim geocoder.
+        /// </summary>
+        /// <param name="geocodingUrl">The nominatim API URL. (ex: "http://nominatim.openstreetmap.org/search?q={0}")</param>
+        /// <param name="timeOut">The maximum time-out allowed for the request to complete.</param>
+        public GeoCoder(string geocodingUrl, int timeOut)
+        {
+            _geocodingUrl = geocodingUrl;
+            _timeOut = timeOut;
         }
 
         #region IGeoCoder Members
@@ -49,27 +73,42 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
         /// <summary>
         /// Geocodes and returns the result.
         /// </summary>
-        /// <param name="query"></param>
+        /// <param name="street"></param>
+        /// <param name="houseNumber"></param>
+        /// <param name="country"></param>
+        /// <param name="postalCode"></param>
+        /// <param name="commune"></param>
         /// <returns></returns>
         public IGeoCoderResult Code(
             string country,
-            string postal_code,
+            string postalCode,
             string commune,
             string street,
-            string house_number)
+            string houseNumber)
         {
-            GeoCoderQuery query = new GeoCoderQuery(country, postal_code, commune, street, house_number);
-            // the request url.
-            string url = query.Query;
+            // build the request url.        
+            var builder = new StringBuilder();
+            builder.Append(street);
+            builder.Append(" ");
+            builder.Append(houseNumber);
+            builder.Append(" ");
+            builder.Append(postalCode);
+            builder.Append(" ");
+            builder.Append(commune);
+            builder.Append(" ");
+            builder.Append(country);
+            builder.Append(" ");
+            string url = string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                _geocodingUrl + "&format=xml&polygon=1&addressdetails=1", builder);
 
             // create the source and get the xml.
             IXmlSource source = this.DownloadXml(url);
 
             // create the kml.
-            SearchDocument search_doc = new SearchDocument(source);
+            var search_doc = new SearchDocument(source);
 
             // check if there are responses.
-            GeoCoderResult res = new GeoCoderResult();
+            var res = new GeoCoderResult();
             res.Accuracy = AccuracyEnum.UnkownLocationLevel;
 
             if (search_doc.Search is OsmSharp.Tools.Xml.Nominatim.Search.v1.searchresults)
@@ -154,11 +193,66 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
 
             // parse the xml if it exists.
             IXmlSource source = null;
-            if (xml != null && xml.Length > 0)
+            if (!string.IsNullOrEmpty(xml))
             {
                 source = new XmlStringSource(xml);
             }
             return source;
+        }
+
+        /// <summary>
+        /// Async geocoding result downloader.
+        /// </summary>
+        private class AsyncStringDownloader
+        {
+            /// <summary>
+            /// Holds the result when available.
+            /// </summary>
+            private string _result = null;
+
+            /// <summary>
+            /// Thread-waiting functionality!
+            /// </summary>
+            private AutoResetEvent _autoResetEvent;
+
+            /// <summary>
+            /// Do the sync download using the async functionality on webclient.
+            /// </summary>
+            /// <param name="client">The webclient object to use.</param>
+            /// <param name="url">The url to download from.</param>
+            /// <param name="timeOut">The timeout in milliseconds.</param>
+            /// <returns></returns>
+            public string DownloadString(WebClient client, string url, int timeOut)
+            {
+                // initialize the reset-event.
+                _autoResetEvent = new AutoResetEvent(false);
+
+                // make the call!
+                client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(ClientDownloadStringCompleted);
+                client.DownloadStringAsync(new Uri(url));
+
+                // keep waiting until result or time-out.
+                if (!_autoResetEvent.WaitOne(timeOut))
+                { // oeps! the flag was not set!
+                    throw new TimeoutException(string.Format("Request could not be completed in allowed timeout: {0}!",
+                        timeOut));
+                }
+
+                return _result;
+            }
+
+            /// <summary>
+            /// Event handler when result is available.
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            void ClientDownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+            {
+                _result = e.Result;
+
+                // signal the other thread the result is available.
+                _autoResetEvent.Set();
+            }
         }
 
         /// <summary>
@@ -169,15 +263,14 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
         private string DownloadString(string url)
         {
             // create the webclient if needed.
-            if (_web_client == null)
+            if (_webClient == null)
             {
-                _web_client = new WebClient();
+                _webClient = new WebClient();
             }
 
             try
             { // try to download the string.
-                return (new AsyncStringDownloader()).DownloadString(_web_client, url);
-                //return _web_client.DownloadStringAsync(url);
+                return (new AsyncStringDownloader()).DownloadString(_webClient, url, 10000);
             }
             catch (WebException)
             {
@@ -186,28 +279,5 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
         }
 
         #endregion
-
-        private class AsyncStringDownloader
-        {
-            private string _result = null;
-
-            private bool _result_available;
-
-            public string DownloadString(WebClient client, string url)
-            {
-                client.DownloadStringCompleted += new DownloadStringCompletedEventHandler(client_DownloadStringCompleted);
-                client.DownloadStringAsync(new Uri(url));
-
-                while (!_result_available) { } 
-                return _result;
-            }
-
-            void client_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
-            {
-                _result = e.Result;
-
-                _result_available = true;
-            }
-        }
     }
 }

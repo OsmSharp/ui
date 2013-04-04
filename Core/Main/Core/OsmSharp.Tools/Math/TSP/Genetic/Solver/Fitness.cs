@@ -22,15 +22,25 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
 {
+    /// <summary>
+    /// Represents a fitness.
+    /// </summary>
     public class Fitness : IComparable
     {
         private double _weight;
 
+        /// <summary>
+        /// Creates a new fitness.
+        /// </summary>
+        /// <param name="weigth"></param>
         public Fitness(double weigth)
         {
             _weight = weigth;
         }
 
+        /// <summary>
+        /// The weight.
+        /// </summary>
         public double Weight 
         {
             get
@@ -39,6 +49,11 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
             }
         }
 
+        /// <summary>
+        /// Compares fitness.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public int CompareTo(object obj)
         {
             if (obj == null)
@@ -52,6 +67,10 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
             throw new InvalidCastException();
         }
 
+        /// <summary>
+        /// Returns a description of this weight.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("{0}",Weight);

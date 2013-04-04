@@ -27,6 +27,8 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations
     /// Interface abstracting the usage of a specific mutation implementation.
     /// </summary>
     /// <typeparam name="GenomeType"></typeparam>
+    /// <typeparam name="ProblemType"></typeparam>
+    /// <typeparam name="WeightType"></typeparam>
     public interface IMutationOperation<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
         where GenomeType : class
@@ -43,6 +45,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations
         /// <summary>
         /// Executes a mutation operation.
         /// </summary>
+        /// <param name="solver"></param>
         /// <param name="mutating"></param>
         /// <returns></returns>
         Individual<GenomeType, ProblemType, WeightType> Mutate(

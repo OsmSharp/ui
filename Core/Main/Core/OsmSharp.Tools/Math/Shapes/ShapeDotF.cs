@@ -40,6 +40,7 @@ namespace OsmSharp.Tools.Math.Shapes
         /// <summary>
         /// Creates a new dot shape.
         /// </summary>
+        /// <param name="primitives_factory"></param>
         /// <param name="point"></param>
         public ShapeDotF(
             IPrimitivesFactory<PointType, RectangleType, LineType> primitives_factory,

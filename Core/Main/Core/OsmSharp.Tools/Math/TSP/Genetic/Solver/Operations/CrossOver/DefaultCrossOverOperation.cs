@@ -26,9 +26,15 @@ using OsmSharp.Tools.Math.TSP.Genetic.Solver;
 
 namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
+    /// <summary>
+    /// A default crossover operation.
+    /// </summary>
     public class DefaultCrossOverOperation :
         ICrossOverOperation<List<int>, GeneticProblem, Fitness>
     {
+        /// <summary>
+        /// Returns the name of this operation.
+        /// </summary>
         public string Name
         {
             get
@@ -39,6 +45,13 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
 
         #region ICrossOverOperation<int,Problem> Members
 
+        /// <summary>
+        /// Applies this operation.
+        /// </summary>
+        /// <param name="solver"></param>
+        /// <param name="parent1"></param>
+        /// <param name="parent2"></param>
+        /// <returns></returns>
         public Individual<List<int>, GeneticProblem, Fitness> CrossOver(
             Solver<List<int>, GeneticProblem, Fitness> solver,
             Individual<List<int>, GeneticProblem, Fitness> parent1,

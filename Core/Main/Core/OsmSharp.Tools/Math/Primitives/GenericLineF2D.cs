@@ -73,6 +73,7 @@ namespace OsmSharp.Tools.Math
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
+        /// <param name="is_segment"></param>
         public GenericLineF2D(PointType a, PointType b, bool is_segment)
         {
             _a = a;
@@ -89,6 +90,8 @@ namespace OsmSharp.Tools.Math
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
+        /// <param name="is_segment1"></param>
+        /// <param name="is_segment2"></param>
         public GenericLineF2D(PointType a, PointType b, bool is_segment1, bool is_segment2)
         {
             _a = a;
@@ -162,7 +165,6 @@ namespace OsmSharp.Tools.Math
         /// <summary>
         /// Returns true if the first point is the end of the line.
         /// </summary>
-        /// <param name="idx"></param>
         /// <returns></returns>
         public bool IsSegment1
         {
@@ -175,7 +177,6 @@ namespace OsmSharp.Tools.Math
         /// <summary>
         /// Returns true if the second point is the end of the line.
         /// </summary>
-        /// <param name="idx"></param>
         /// <returns></returns>
         public bool IsSegment2
         {
@@ -333,6 +334,7 @@ namespace OsmSharp.Tools.Math
         /// Calculates and returns the line intersection.
         /// </summary>
         /// <param name="line"></param>
+        /// <param name="do_segment"></param>
         /// <returns></returns>
         public PrimitiveSimpleF2D Intersection(GenericLineF2D<PointType> line, bool do_segment)
         {

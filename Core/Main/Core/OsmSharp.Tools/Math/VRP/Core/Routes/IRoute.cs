@@ -54,7 +54,6 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
         /// <summary>
         /// Returns the first customer.
         /// </summary>
-        /// <param name="index"></param>
         /// <returns></returns>
         int First
         {

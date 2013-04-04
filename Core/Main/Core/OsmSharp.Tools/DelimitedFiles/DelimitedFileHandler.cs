@@ -51,7 +51,7 @@ namespace OsmSharp.Tools.DelimitedFiles
             char delimiterChar = DelimitedFileHandler.GetDelimiterChar(delimiter);
 
             List<string[]> delimited_data_set;
-            int iCounter = 0;
+            //int iCounter = 0;
             ProgressStatus status;
             if (!file.Exists) 
             {
@@ -139,7 +139,6 @@ namespace OsmSharp.Tools.DelimitedFiles
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="delimiter"></param>
-        /// <param name="firstRowHasHeaders"></param>
         /// <param name="ignoreHeader"></param>
         /// <returns></returns>
         public static string[][] ReadDelimitedFileFromStream(
@@ -199,7 +198,6 @@ namespace OsmSharp.Tools.DelimitedFiles
         /// <param name="data"></param>
         /// <param name="writer"></param>
         /// <param name="delimiter_type"></param>
-        /// <param name="first_row_as_header"></param>
         /// <param name="format"></param>
         public static void WriteDelimitedFile(
             IProgressReporter reporter,
@@ -299,7 +297,6 @@ namespace OsmSharp.Tools.DelimitedFiles
         /// <param name="data"></param>
         /// <param name="writer"></param>
         /// <param name="delimiter_type"></param>
-        /// <param name="first_row_as_header"></param>
         public static void WriteDelimitedFile(
             IProgressReporter reporter,
             string[][] data,
@@ -314,9 +311,8 @@ namespace OsmSharp.Tools.DelimitedFiles
         /// </summary>
         /// <param name="reporter"></param>
         /// <param name="data"></param>
-        /// <param name="writer"></param>
+        /// <param name="file"></param>
         /// <param name="delimiter_type"></param>
-        /// <param name="first_row_as_header"></param>
         public static void WriteDelimitedFile(
             IProgressReporter reporter,
             string[][] data,

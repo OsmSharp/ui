@@ -174,7 +174,8 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers
                     // calculate the difference to know the increase.
                     new_increase =
                         new_weights - (old_weight);
-                    if (increase == null || new_increase < increase)
+                    //if (increase == null || new_increase < increase)
+                    if (new_increase < increase)
                     {
                         // set the new increase.
                         increase = new_increase;
@@ -197,7 +198,8 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers
                 // calculate the difference to know the increase.
                 new_increase =
                     new_weights - (old_weight);
-                if (increase == null || new_increase < increase)
+                //if (increase == null || new_increase < increase)
+                if (new_increase < increase)
                 {
                     // set the new increase.
                     increase = new_increase;

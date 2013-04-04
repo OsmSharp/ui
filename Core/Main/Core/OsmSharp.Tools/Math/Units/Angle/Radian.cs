@@ -22,6 +22,9 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.Units.Angle
 {
+    /// <summary>
+    /// Represents an angle in radians.
+    /// </summary>
     public class Radian : Unit
     {
         private Radian()
@@ -30,6 +33,10 @@ namespace OsmSharp.Tools.Math.Units.Angle
 
         }
 
+        /// <summary>
+        /// Creates a new angle in radians.
+        /// </summary>
+        /// <param name="radians"></param>
         public Radian(double radians)
             : base(radians)
         {
@@ -38,11 +45,21 @@ namespace OsmSharp.Tools.Math.Units.Angle
 
         #region Conversion
 
+        /// <summary>
+        /// Converts the given value to radians.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static implicit operator Radian(double value)
         {
             return new Radian(value);
         }
 
+        /// <summary>
+        /// Converts the given value to radians.
+        /// </summary>
+        /// <param name="deg"></param>
+        /// <returns></returns>
         public static implicit operator Radian(Degree deg)
         {
             double value = (deg.Value / 180d) * System.Math.PI;
@@ -51,6 +68,12 @@ namespace OsmSharp.Tools.Math.Units.Angle
 
         #endregion
 
+        /// <summary>
+        /// Subtracts two radians.
+        /// </summary>
+        /// <param name="rad1"></param>
+        /// <param name="rad2"></param>
+        /// <returns></returns>
         public static Radian operator -(Radian rad1, Radian rad2)
         {
             return rad1.Value - rad2.Value;

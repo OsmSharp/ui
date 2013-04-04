@@ -29,17 +29,28 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
     {
         IList<int> _customers = null;
 
+        /// <summary>
+        /// Creates a new dynamic symmetric route.
+        /// </summary>
+        /// <param name="customer"></param>
         public DynamicSymmetricRoute(int customer)
         {
             _customers = new List<int>();
             _customers.Add(customer);
         }
 
+        /// <summary>
+        /// Creates a new dynamic symmetric route.
+        /// </summary>
+        /// <param name="customers"></param>
         public DynamicSymmetricRoute(IList<int> customers)
         {
             _customers = new List<int>(customers);
         }
 
+        /// <summary>
+        /// Returns true as the route is empty.
+        /// </summary>
         public bool IsEmpty
         {
             get 
@@ -48,6 +59,9 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
             }
         }
 
+        /// <summary>
+        /// Returns true if the route is a round.
+        /// </summary>
         public bool IsRound
         {
             get 
@@ -56,6 +70,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
             }
         }
 
+        /// <summary>
+        /// Returns true if the customers are contained in the given order.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public bool Contains(int from, int to)
         {
             for (int idx = 0; idx < _customers.Count - 1; idx++)
@@ -83,6 +103,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
             return false;
         }
 
+        /// <summary>
+        /// Inserts a new edge.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="customer"></param>
+        /// <param name="to"></param>
         public void Insert(int from, int customer, int to)
         {
             for (int idx = 0; idx < _customers.Count - 1; idx++)
@@ -115,6 +141,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
                 from, to, customer));
         }
 
+        /// <summary>
+        /// Returns the neighbours.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public int[] GetNeigbours(int customer)
         {
             int before = -1;
@@ -157,16 +188,27 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
             return neighbours;
         }
 
+        /// <summary>
+        /// Returns true if this route is valid.
+        /// </summary>
+        /// <returns></returns>
         public bool IsValid()
         {
             return true;
         }
 
+        /// <summary>
+        /// Clones this route.
+        /// </summary>
+        /// <returns></returns>
         public object Clone()
         {
             return new DynamicSymmetricRoute(_customers);
         }
         
+        /// <summary>
+        /// Returns the count of the customers.
+        /// </summary>
         public int Count
         {
             get
@@ -175,6 +217,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
             }
         }
 
+        /// <summary>
+        /// Removes the customer.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public bool Remove(int customer)
         {
             for (int idx = 0; idx < _customers.Count - 1; idx++)
@@ -189,22 +236,35 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
             return false;
         }
 
+        /// <summary>
+        /// Returns an enumerator for the route.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<int> GetEnumerator()
         {
             return _customers.GetEnumerator();
         }
 
+        /// <summary>
+        /// Returns an enumerator for the route.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }
 
-
+        /// <summary>
+        /// Returns the first symmetric route.
+        /// </summary>
         public int First
         {
             get { throw new NotImplementedException(); }
         }
-
+        
+        /// <summary>
+        /// Returns the last symmetric route.
+        /// </summary>
         public int Last
         {
             get { throw new NotImplementedException(); }
@@ -229,112 +289,197 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
             return -1; // customer not found!
         }
 
-
+        /// <summary>
+        /// Returns a enumerator between two customers.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public IEnumerable<int> Between(int from, int to)
         {
             return new BetweenEnumerable(this, from, to);
         }
 
-
+        /// <summary>
+        /// Returns true if the customer is in this route.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public bool Contains(int customer)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns true if the route is empty.
+        /// </summary>
         bool IRoute.IsEmpty
         {
             get { throw new NotImplementedException(); }
         }
 
+        /// <summary>
+        /// Returns true if the route is round.
+        /// </summary>
         bool IRoute.IsRound
         {
             get { throw new NotImplementedException(); }
         }
 
+        /// <summary>
+        /// Returns the count of this route.
+        /// </summary>
         int IRoute.Count
         {
             get { throw new NotImplementedException(); }
         }
-
+        
+        /// <summary>
+        /// Returns the first customer.
+        /// </summary>
         int IRoute.First
         {
             get { throw new NotImplementedException(); }
         }
 
+        /// <summary>
+        /// Returns the last customer.
+        /// </summary>
         int IRoute.Last
         {
             get { throw new NotImplementedException(); }
         }
 
+        /// <summary>
+        /// Returns true if the two customers are in this route.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         bool IRoute.Contains(int from, int to)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns true if the customer is in this route.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         bool IRoute.Contains(int customer)
         {
             throw new NotImplementedException();
         }
-
+        
+        /// <summary>
+        /// Removes the customers.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         bool IRoute.Remove(int customer)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Replaces an edge.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="customer"></param>
         void IRoute.ReplaceEdgeFrom(int from, int customer)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Insert a customer after.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="customer"></param>
         void IRoute.InsertAfter(int from, int customer)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns the neigbours.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         int[] IRoute.GetNeigbours(int customer)
         {
             throw new NotImplementedException();
         }
-
+        
+        /// <summary>
+        /// Returns the index of a given customers.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         int IRoute.GetIndexOf(int customer)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Returns true if the route is valid.
+        /// </summary>
+        /// <returns></returns>
         bool IRoute.IsValid()
         {
             throw new NotImplementedException();
         }
-
+        
+        /// <summary>
+        /// Returns an enumeration between two customers.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         IEnumerable<int> IRoute.Between(int from, int to)
         {
             throw new NotImplementedException();
         }
-
+        
+        /// <summary>
+        /// Returns an enumeration.
+        /// </summary>
+        /// <returns></returns>
         IEnumerator<int> IEnumerable<int>.GetEnumerator()
         {
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// Returns an enumerator of all edges.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Edge> Edges()
         {
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// Inserts a new first customer.
+        /// </summary>
+        /// <param name="first"></param>
         public void InsertFirst(int first)
         {
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// Replaces the first customer.
+        /// </summary>
+        /// <param name="first"></param>
         public void ReplaceFirst(int first)
         {
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// Clears all customers.
+        /// </summary>
         public void Clear()
         {
             throw new NotImplementedException();

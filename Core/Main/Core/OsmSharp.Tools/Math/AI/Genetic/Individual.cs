@@ -29,6 +29,8 @@ namespace OsmSharp.Tools.Math.AI.Genetic
     /// Class representing an individual in the population.
     /// </summary>
     /// <typeparam name="GenomeType"></typeparam>
+    /// <typeparam name="ProblemType"></typeparam>
+    /// <typeparam name="WeightType"></typeparam>
     public class Individual<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
         where GenomeType : class
@@ -111,6 +113,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic
         /// <summary>
         /// Calculates the fitness for this individual.
         /// </summary>
+        /// <param name="problem"></param>
         /// <param name="op"></param>
         public void CalculateFitness(
             ProblemType problem,

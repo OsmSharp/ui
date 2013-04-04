@@ -205,11 +205,21 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
             return _route.IsValid() && !_route.Contains(0);
         }
 
+        /// <summary>
+        /// Returns an enumerator between two customers.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public IEnumerable<int> Between(int from, int to)
         {
             return new BetweenEnumerable(this, from, to);
         }
 
+        /// <summary>
+        /// Returns an edge enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Edge> Edges()
         {
             if (_route == null)
@@ -219,11 +229,19 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
             return new EdgeEnumerable(this);
         }
 
+        /// <summary>
+        /// Returns an enumerator of all customers.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<int> GetEnumerator()
         {
             return new DepotRouteEnumerator(_route.GetEnumerator());
         }
 
+        /// <summary>
+        /// Returns an enumerator of all customers.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return new DepotRouteEnumerator(_route.GetEnumerator());
@@ -239,7 +257,10 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
             return new DepotRoute(cloned_route);
         }
 
-
+        /// <summary>
+        /// Returns a description of this depot route.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             int previous = -1;
@@ -337,16 +358,27 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
             }
         }
 
+        /// <summary>
+        /// Inserts a new first customer.
+        /// </summary>
+        /// <param name="first"></param>
         public void InsertFirst(int first)
         {
             throw new NotSupportedException("The first customer in a depot route cannot be changed, it always is the depot!");
         }
 
+        /// <summary>
+        /// Replaces the first customer.
+        /// </summary>
+        /// <param name="first"></param>
         public void ReplaceFirst(int first)
         {
             throw new NotSupportedException("The first customer in a depot route cannot be changed, it always is the depot!");
         }
 
+        /// <summary>
+        /// Clears all customer.
+        /// </summary>
         public void Clear()
         {
             throw new NotSupportedException("A depot route cannot be cleared. It always contains at least the depot!");

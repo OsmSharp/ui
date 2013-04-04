@@ -58,9 +58,9 @@ namespace OsmSharp.Tools.Math.Automata
 
         #region Consumption/Reset
 
-        /// <summary>
-        /// Boolean indicating re-consumption.
-        /// </summary>
+        ///// <summary>
+        ///// Boolean indicating re-consumption.
+        ///// </summary>
         //private bool _reconsuming;
 
         /// <summary>
@@ -145,13 +145,15 @@ namespace OsmSharp.Tools.Math.Automata
         /// <param name="even"></param>
         /// <param name="state"></param>
         public delegate void EventStateDelegate(EventType even, FiniteStateMachineState<EventType> state);
-        
+
         /// <summary>
         /// Delegate containing an event object and it's associated state.
         /// </summary>
         /// <param name="even"></param>
-        /// <param name="state"></param>
-        public delegate void EventStatesDelegate(EventType even, FiniteStateMachineState<EventType> new_state, FiniteStateMachineState<EventType> old_state);
+        /// <param name="new_state"></param>
+        /// <param name="old_state"></param>
+        public delegate void EventStatesDelegate(EventType even, FiniteStateMachineState<EventType> new_state, 
+            FiniteStateMachineState<EventType> old_state);
         
         /// <summary>
         /// Delegate containing an event object list.

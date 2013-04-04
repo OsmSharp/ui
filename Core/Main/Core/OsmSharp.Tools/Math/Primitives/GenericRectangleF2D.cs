@@ -269,8 +269,7 @@ namespace OsmSharp.Tools.Math
         /// <summary>
         /// Returns true if the point lies inside this box.
         /// </summary>
-        /// <param name="latitude"></param>
-        /// <param name="longitude"></param>
+        /// <param name="a"></param>
         /// <returns></returns>
         public bool IsInside(PointF2D a)
         {
@@ -486,7 +485,8 @@ namespace OsmSharp.Tools.Math
         /// <summary>
         /// Returns true if the line intersects with this bounding box.
         /// </summary>
-        /// <param name="line"></param>
+        /// <param name="point1"></param>
+        /// <param name="point2"></param>
         /// <returns></returns>
         public bool Intersects(PointType point1, PointType point2)
         {

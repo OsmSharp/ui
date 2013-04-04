@@ -14,7 +14,6 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// Creates a new solution in the form of a DynamicAsymmetricMultiRoute.
         /// </summary>
         /// <param name="size"></param>
-        /// <param name="is_round"></param>
         public DepotDynamicAsymmetricMultiRoute(int size)
             : base(size, false)
         {
@@ -26,7 +25,6 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
         /// </summary>
         /// <param name="first"></param>
         /// <param name="next_array"></param>
-        /// <param name="is_round"></param>
         protected DepotDynamicAsymmetricMultiRoute(int[] first, int[] next_array)
             : base(first, next_array, false)
         {

@@ -26,65 +26,46 @@ namespace OsmSharp.Tools.GeoCoding.Nominatim
     /// </summary>
     public class GeoCoderQuery
     {
-        /// <summary>
-        /// The url of the nomatim service.
-        /// </summary>
-        //private string _geocoding_url; // = ConfigurationManager.AppSettings["NomatimAddress"] + ;
-
         private string _country;
-        private string _postal_code;
+        private string _postalCode;
         private string _commune;
         private string _street;
-        private string _house_number;
+        private string _houseNumber;
 
         /// <summary>
         /// Creates a new geocoder query.
         /// </summary>
         /// <param name="country"></param>
-        /// <param name="postal_code"></param>
+        /// <param name="postalCode"></param>
         /// <param name="commune"></param>
         /// <param name="street"></param>
-        /// <param name="house_number"></param>
+        /// <param name="houseNumber"></param>
         public GeoCoderQuery(string country,
-            string postal_code,
+            string postalCode,
             string commune,
             string street,
-            string house_number)
+            string houseNumber)
         {
             _country = country;
-            _postal_code = postal_code;
+            _postalCode = postalCode;
             _commune = commune;
             _street = street;
-            _house_number = house_number;
-
-            //_geocoding_url = geocoding_url;
+            _houseNumber = houseNumber;
         }
 
-        #region IGeoCoderQuery Members
+        //#region IGeoCoderQuery Members
 
-        /// <summary>
-        /// The query string.
-        /// </summary>
-        public string Query
-        {
-            get
-            {
-                StringBuilder builder = new StringBuilder();
-                builder.Append(_street);
-                builder.Append(" ");
-                builder.Append(_house_number);
-                builder.Append(" ");
-                builder.Append(_postal_code);
-                builder.Append(" ");
-                builder.Append(_commune);
-                builder.Append(" ");
-                builder.Append(_country);
-                builder.Append(" ");
-				return string.Format(System.Globalization.CultureInfo.InvariantCulture, 
-                    "TODO" + "&format=xml&polygon=1&addressdetails=1", builder);
-            }
-        }
+        ///// <summary>
+        ///// The query string.
+        ///// </summary>
+        //public string Query
+        //{
+        //    get
+        //    {
 
-        #endregion
+        //    }
+        //}
+
+        //#endregion
     }
 }

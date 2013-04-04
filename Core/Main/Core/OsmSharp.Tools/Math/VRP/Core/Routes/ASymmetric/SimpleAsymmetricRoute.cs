@@ -31,12 +31,20 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         private bool _is_round;
 
+        /// <summary>
+        /// Creates a new simple asymmetric route.
+        /// </summary>
+        /// <param name="customers"></param>
+        /// <param name="is_round"></param>
         public SimpleAsymmetricRoute(List<int> customers, bool is_round)
         {
             _customers = customers;
             _is_round = is_round;
         }
         
+        /// <summary>
+        /// Returns true if this route is empty.
+        /// </summary>
         public bool IsEmpty
         {
             get
@@ -45,6 +53,9 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Returns true if this route is round.
+        /// </summary>
         public bool IsRound
         {
             get 
@@ -53,6 +64,9 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Returns the customer count.
+        /// </summary>
         public int Count
         {
             get
@@ -61,6 +75,12 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Returns true if the customers are contained in this route.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public bool Contains(int from, int to)
         {
             for (int idx = 0; idx < _customers.Count - 1; idx++)
@@ -77,6 +97,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             return false;
         }
 
+        /// <summary>
+        /// Removes a given customer.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public bool Remove(int customer)
         {
             int customer_idx = _customers.IndexOf(customer);
@@ -88,11 +113,21 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             return false;
         }
 
+        /// <summary>
+        /// Replaces an edge.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="customer"></param>
         public void ReplaceEdgeFrom(int from, int customer)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Inserts after.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="customer"></param>
         public void InsertAfter(int from, int customer)
         {
             int idx = _customers.IndexOf(from);
@@ -106,6 +141,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Returns the neighbours.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public int[] GetNeigbours(int customer)
         {
             int[] neighbours;
@@ -153,6 +193,10 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             return neighbours;
         }
 
+        /// <summary>
+        /// Returns true if this route is valid.
+        /// </summary>
+        /// <returns></returns>
         public bool IsValid()
         {
             return true;
@@ -161,11 +205,19 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         #region Enumerators
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<int> GetEnumerator()
         {
             return _customers.GetEnumerator();
         }
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return _customers.GetEnumerator();
@@ -173,8 +225,9 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         #endregion
 
-
-
+        /// <summary>
+        /// Returns the first customer in this route.
+        /// </summary>
         public int First
         {
             get 
@@ -187,6 +240,9 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Returns the last customer in this route.
+        /// </summary>
         public int Last
         {
             get
@@ -213,41 +269,66 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             return _customers.IndexOf(customer);
         }
 
-
+        /// <summary>
+        /// Returns a enumerable between.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public IEnumerable<int> Between(int from, int to)
         {
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// Returns true if the route contains the given customer.
+        /// </summary>
+        /// <param name="customer"></param>
+        /// <returns></returns>
         public bool Contains(int customer)
         {
             return _customers.Contains(customer);
         }
 
+        /// <summary>
+        /// Clones this route.
+        /// </summary>
+        /// <returns></returns>
         public object Clone()
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Enumerates all edges.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<Edge> Edges()
         {
             return new EdgeEnumerable(this);
         }
 
-
+        /// <summary>
+        /// Inserts a new first customer.
+        /// </summary>
+        /// <param name="first"></param>
         public void InsertFirst(int first)
         {
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// Replaces the first customer.
+        /// </summary>
+        /// <param name="first"></param>
         public void ReplaceFirst(int first)
         {
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// Clears all customers.
+        /// </summary>
         public void Clear()
         {
             throw new NotImplementedException();

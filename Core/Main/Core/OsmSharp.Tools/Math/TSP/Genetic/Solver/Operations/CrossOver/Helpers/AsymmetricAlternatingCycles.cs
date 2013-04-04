@@ -23,12 +23,19 @@ using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.Helpers
 {
+    /// <summary>
+    /// A collection of asymmetric alternating cycles.
+    /// </summary>
     public class AsymmetricAlternatingCycles
     {
         private KeyValuePair<int, int>[] _next_array;
 
         private Dictionary<int, int> _cycles;
 
+        /// <summary>
+        /// Create a new collection of asymmetric alternating cycles.
+        /// </summary>
+        /// <param name="length"></param>
         public AsymmetricAlternatingCycles(int length)
         {
             _next_array = new KeyValuePair<int, int>[length];
@@ -41,12 +48,21 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.Helpers
             }
         }
 
+        /// <summary>
+        /// Adds an edge.
+        /// </summary>
+        /// <param name="from_a"></param>
+        /// <param name="to"></param>
+        /// <param name="from_b"></param>
         public void AddEdge(int from_a, int to, int from_b)
         {
             _cycles = null;
             _next_array[from_a] = new KeyValuePair<int, int>(to, from_b);
         }
 
+        /// <summary>
+        /// Returns the cycles.
+        /// </summary>
         public Dictionary<int, int> Cycles
         {
             get

@@ -19,25 +19,60 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Filters.Tags
 {
+    /// <summary>
+    /// Filter that filters matching tags.
+    /// </summary>
     internal class FilterTagMatch : FilterTag
     {
-        private string _tag;
+        /// <summary>
+        /// The key to filter on.
+        /// </summary>
+        private readonly string _key;
 
-        private string _value;
+        /// <summary>
+        /// The value to filter on.
+        /// </summary>
+        private readonly string _value;
 
-        public FilterTagMatch(string tag, string value)
+        /// <summary>
+        /// Creates a new tag filter.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        public FilterTagMatch(string key, string value)
         {
-            _tag = tag;
+            _key = key;
             _value = value;
         }
 
-        public override bool Evaluate(OsmBase obj)
+        /// <summary>
+        /// Returns true if the object passes through this filter.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Evaluate(SimpleOsmGeo obj)
         {
-            return obj.Tags.ContainsKey(_tag)
-                && obj.Tags[_tag] == _value;
+            string value;
+            if (obj.Tags != null &&
+                obj.Tags.TryGetValue(_key, out value))
+            {
+                return value == _value;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns a description of this filter.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("hastag:key={0} and value={1}",
+                                 _key, _value);
         }
     }
 }

@@ -38,7 +38,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
         /// <summary>
         /// The root node of this quad tree.
         /// </summary>
-        private QuadTreeNode<PointType, DataType> _root;
+        private QuadTreeNode _root;
 
         /// <summary>
         /// Creates a rootless quad tree.
@@ -57,7 +57,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
         public QuadTree(
             int dept, GenericRectangleF2D<PointType> bounds)
         {
-            _root = new QuadTreeNode<PointType, DataType>(dept, bounds);
+            _root = new QuadTreeNode(dept, bounds);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
         public QuadTree(
             int dept, double min_0, double min_1, double max_0, double max_1)
         {
-            _root = new QuadTreeNode<PointType,DataType>(dept, min_0, min_1, max_0, max_1);
+            _root = new QuadTreeNode(dept, min_0, min_1, max_0, max_1);
         }
 
         /// <summary>
@@ -80,11 +80,11 @@ namespace OsmSharp.Tools.Math.Structures.QTree
         /// </summary>
         /// <param name="point"></param>
         /// <returns></returns>
-        private QuadTreeNode<PointType, DataType> GetOrCreateAt(PointType point)
+        private QuadTreeNode GetOrCreateAt(PointType point)
         {
             if (_root == null)
             { // create a default root.
-                _root = new QuadTreeNode<PointType, DataType>(0,
+                _root = new QuadTreeNode(0,
                     point[0] - 0.01, point[1] - 0.01, point[0] + 0.01, point[1] + 0.01);
             }
 
@@ -95,7 +95,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
                     // descide to the minimum or maximum.
                     if (point[1] < _root.Min1)
                     { // expand towards the minimum.
-                        _root = new QuadTreeNode<PointType, DataType>(true, true,
+                        _root = new QuadTreeNode(true, true,
                             _root);
 
                         // recursive call to the quad tree.
@@ -103,7 +103,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
                     }
                     else
                     { // expand towards the maximum.
-                        _root = new QuadTreeNode<PointType, DataType>(true, false,
+                        _root = new QuadTreeNode(true, false,
                             _root);
 
                         // recursive call to the quad tree.
@@ -115,7 +115,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
                     // descide to the minimum or maximum.
                     if (point[1] < _root.Min1)
                     { // expand towards the minimum.
-                        _root = new QuadTreeNode<PointType, DataType>(false, true,
+                        _root = new QuadTreeNode(false, true,
                             _root);
 
                         // recursive call to the quad tree.
@@ -123,7 +123,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
                     }
                     else
                     { // expand towards the maximum.
-                        _root = new QuadTreeNode<PointType, DataType>(false, false,
+                        _root = new QuadTreeNode(false, false,
                             _root);
 
                         // recursive call to the quad tree.
@@ -133,7 +133,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
                 if (point[1] < _root.Min1)
                 { // expand towards the minimum.
                     // expand towards the maximum.
-                    _root = new QuadTreeNode<PointType, DataType>(false, true,
+                    _root = new QuadTreeNode(false, true,
                         _root);
 
                     // recursive call to the quad tree.
@@ -141,7 +141,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
                 }
                 if (point[1] > _root.Max1)
                 { // expand towards the maximum.// expand towards the maximum.
-                    _root = new QuadTreeNode<PointType, DataType>(false, false,
+                    _root = new QuadTreeNode(false, false,
                         _root);
 
                     // recursive call to the quad tree.
@@ -171,7 +171,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
         /// <param name="data"></param>
         public void Add(PointType location, DataType data)
         {
-            QuadTreeNode<PointType, DataType> leaf_node = this.GetOrCreateAt(
+            QuadTreeNode leaf_node = this.GetOrCreateAt(
                 location);
 
             leaf_node.AddData(location, data);
@@ -180,28 +180,27 @@ namespace OsmSharp.Tools.Math.Structures.QTree
         /// <summary>
         /// An implementation of a quad tree.
         /// </summary>
-        private class QuadTreeNode<PointType, DataType>
-            where PointType : PointF2D
+        private class QuadTreeNode
         {
             /// <summary>
             /// The bottom left child quad tree.
             /// </summary>
-            private QuadTreeNode<PointType, DataType> _min_min;
+            private QuadTreeNode _min_min;
 
             /// <summary>
             /// The bottom right child quad tree.
             /// </summary>
-            private QuadTreeNode<PointType, DataType> _min_max;
+            private QuadTreeNode _min_max;
 
             /// <summary>
             /// The top right child quad tree.
             /// </summary>
-            private QuadTreeNode<PointType, DataType> _max_min;
+            private QuadTreeNode _max_min;
 
             /// <summary>
             /// The top left child quad tree.
             /// </summary>
-            private QuadTreeNode<PointType, DataType> _max_max;
+            private QuadTreeNode _max_max;
 
             /// <summary>
             /// The bounds of this node.
@@ -231,7 +230,8 @@ namespace OsmSharp.Tools.Math.Structures.QTree
             /// <summary>
             /// Creates a quad tree with given bounds.
             /// </summary>
-            /// <param name="box"></param>
+            /// <param name="dept"></param>
+            /// <param name="bounds"></param>
             public QuadTreeNode(int dept, GenericRectangleF2D<PointType> bounds)
             {
                 _depth = dept;
@@ -257,7 +257,11 @@ namespace OsmSharp.Tools.Math.Structures.QTree
             /// <summary>
             /// Creates a quad tree with given bounds.
             /// </summary>
-            /// <param name="box"></param>
+            /// <param name="dept"></param>
+            /// <param name="min_0"></param>
+            /// <param name="min_1"></param>
+            /// <param name="max_0"></param>
+            /// <param name="max_1"></param>
             public QuadTreeNode(int dept, double min_0, double min_1, double max_0, double max_1)
             {
                 _depth = dept;
@@ -287,7 +291,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
             /// <param name="min1"></param>
             /// <param name="node"></param>
             public QuadTreeNode(bool min0, bool min1,
-                QuadTreeNode<PointType, DataType> node)
+                QuadTreeNode node)
             {
                 _depth = node.Depth + 1;
 
@@ -354,7 +358,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
             /// </summary>
             /// <param name="point"></param>
             /// <returns></returns>
-            public QuadTreeNode<PointType, DataType> GetOrCreateAt(PointType point)
+            public QuadTreeNode GetOrCreateAt(PointType point)
             {
                 // return this tree if this one is at dimension 0.
                 if (_depth == 0)
@@ -368,7 +372,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
                     { // small side of dimension 1.
                         if (_min_min == null)
                         {
-                            _min_min = new QuadTreeNode<PointType,DataType>(_depth - 1,
+                            _min_min = new QuadTreeNode(_depth - 1,
                                 this.Min0, this.Min1, _middle_0, _middle_1);
                         }
                         return _min_min.GetOrCreateAt(point);
@@ -377,7 +381,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
                     { // large side of dimension 1.
                         if (_min_max == null)
                         {
-                            _min_max = new QuadTreeNode<PointType, DataType>(_depth - 1,
+                            _min_max = new QuadTreeNode(_depth - 1,
                                 this.Min0, _middle_1, _middle_0, this.Max1);
                         }
                         return _min_max.GetOrCreateAt(point);
@@ -389,7 +393,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
                     { // small side of dimension 1.
                         if (_max_min == null)
                         {
-                            _max_min = new QuadTreeNode<PointType, DataType>(_depth - 1,
+                            _max_min = new QuadTreeNode(_depth - 1,
                                 _middle_0, this.Min1, this.Max0, _middle_1);
                         }
                         return _max_min.GetOrCreateAt(point);
@@ -399,7 +403,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
                     { // large side of dimension 1.
                         if (_max_max == null)
                         {
-                            _max_max = new QuadTreeNode<PointType, DataType>(_depth - 1,
+                            _max_max = new QuadTreeNode(_depth - 1,
                                 _middle_0, _middle_1, this.Max0, this.Max1);
                         }
                         return _max_max.GetOrCreateAt(point);
@@ -413,7 +417,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
             /// <param name="data"></param>
             /// <param name="node"></param>
             /// <param name="box"></param>
-            public void AddInsideAtNode(IList<DataType> data, QuadTreeNode<PointType, DataType> node, GenericRectangleF2D<PointType> box)
+            public void AddInsideAtNode(IList<DataType> data, QuadTreeNode node, GenericRectangleF2D<PointType> box)
             {
                 if (box.Overlaps(_bounds))
                 { // ok there is an overlap.
@@ -507,7 +511,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
             /// <summary>
             /// The minmin node.
             /// </summary>
-            public QuadTreeNode<PointType, DataType> MinMin
+            public QuadTreeNode MinMin
             {
                 get
                 {
@@ -518,7 +522,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
             /// <summary>
             /// The minmax node.
             /// </summary>
-            public QuadTreeNode<PointType, DataType> MinMax
+            public QuadTreeNode MinMax
             {
                 get
                 {
@@ -529,7 +533,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
             /// <summary>
             /// The maxmin node.
             /// </summary>
-            public QuadTreeNode<PointType, DataType> MaxMin
+            public QuadTreeNode MaxMin
             {
                 get
                 {
@@ -540,7 +544,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
             /// <summary>
             /// The maxmax node.
             /// </summary>
-            public QuadTreeNode<PointType, DataType> MaxMax
+            public QuadTreeNode MaxMax
             {
                 get
                 {
@@ -551,6 +555,7 @@ namespace OsmSharp.Tools.Math.Structures.QTree
             /// <summary>
             /// Adds data to this node.
             /// </summary>
+            /// <param name="point"></param>
             /// <param name="data"></param>
             internal void AddData(PointType point, DataType data)
             {

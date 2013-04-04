@@ -26,26 +26,28 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Debug\Any CPU\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\OsmSharp.Tools.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\Any CPU\OsmSharp.Tools.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Release\Any CPU\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\OsmSharp.Tools.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Release\Any CPU\OsmSharp.Tools.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Debug\x86\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>..\Output\OsmSharp.Tools.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\x86\OsmSharp.Tools.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <CodeAnalysisLogFile>..\Output\Tools.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -55,10 +57,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Release\x86\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -70,7 +72,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\OsmSharp.Tools.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Release\x86\OsmSharp.Tools.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|AnyCPU'">
     <OutputPath>..\Output\</OutputPath>
@@ -108,9 +111,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Debug\x64\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>..\Output\OsmSharp.Tools.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\x64\OsmSharp.Tools.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <CodeAnalysisLogFile>..\Output\Tools.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -120,9 +123,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\Output\</OutputPath>
+    <OutputPath>..\Output\Release\x64\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -134,7 +138,8 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\OsmSharp.Tools.xml</DocumentationFile>
+    <DocumentationFile>..\Output\Release\x64\OsmSharp.Tools.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release x64|x64'">
     <OutputPath>..\Output\</OutputPath>
@@ -167,6 +172,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmark\TSPLIB\DemoForm.cs" />
+    <Compile Include="Benchmark\TSPLIB\DemoForm.Designer.cs">
+      <DependentUpon>DemoForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Benchmark\TSPLIB\Program.cs" />
+    <Compile Include="Benchmark\TSPLIB\TSPLIBTester.cs" />
     <Compile Include="Cache\LRUCache.cs" />
     <Compile Include="Collections\DictionaryProxy.cs" />
     <Compile Include="Collections\DictionaryWithEvents.cs" />
@@ -434,12 +445,150 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="TSPLIB\br17.atsp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="TSPLIB\ft70.atsp">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Benchmark\TSPLIB\app.config" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\br17.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ft53.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ft70.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ftv170.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ftv33.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ftv35.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ftv38.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ftv44.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ftv47.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ftv55.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ftv64.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ftv70.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\kro124p.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\p43.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\rbg323.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\rbg358.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\rbg403.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\rbg443.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\ATSP\ry48p.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\DM\031_K1040-06.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\DM\036_K1210-01.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\DM\061_K3511.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\DM\072_K3510.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\DM\098_K3089.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\DM\122_K4052.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\DM\151_K7537.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\DM\168_K2160.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\DM\181_K4207.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\DM\209_K2125.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\DM\254_K3504.atsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\a280.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\ali535.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\att48.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\att532.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\bayg29.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\bays29.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\berlin52.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\bier127.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\brazil58.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\brd14051.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\brg180.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\burma14.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\ch130.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\ch150.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\d1291.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\d15112.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\d1655.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\d18512.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\d198.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\d2103.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\d493.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\d657.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\dantzig42.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\dsj1000.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\eil101.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\eil51.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\eil76.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\fl1400.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\fl1577.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\fl3795.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\fl417.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\fnl4461.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\fri26.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gil262.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gr120.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gr137.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gr17.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gr202.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gr21.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gr229.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gr24.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gr431.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gr48.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gr666.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\gr96.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\hk48.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\kroA100.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\kroA150.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\kroA200.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\kroB100.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\kroB150.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\kroB200.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\kroC100.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\kroD100.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\kroE100.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\lin105.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\lin318.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\linhp318.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\nrw1379.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\p654.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pa561.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pcb1173.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pcb3038.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pcb442.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pla33810.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pla7397.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pla85900.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr1002.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr107.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr124.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr136.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr144.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr152.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr226.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr2392.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr264.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr299.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr439.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\pr76.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rat195.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rat575.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rat783.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rat99.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rd100.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rd400.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rl11849.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rl1304.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rl1323.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rl1889.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rl5915.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\rl5934.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\si1032.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\si175.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\si535.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\st70.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\swiss42.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\ts225.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\tsp225.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\u1060.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\u1432.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\u159.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\u1817.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\u2152.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\u2319.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\u574.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\u724.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\ulysses16.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\ulysses22.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\usa13509.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\vm1084.tsp" />
+    <None Include="Benchmark\TSPLIB\Problems\TSP\vm1748.tsp" />
+    <None Include="TSPLIB\br17.atsp" />
+    <None Include="TSPLIB\ft70.atsp" />
     <None Include="Xml\Gpx\v1_0\gpx.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -467,6 +616,11 @@
     <None Include="Xml\Nominatim\Search\v1\search.xss">
       <DependentUpon>search.xsd</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Benchmark\TSPLIB\DemoForm.resx">
+      <DependentUpon>DemoForm.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

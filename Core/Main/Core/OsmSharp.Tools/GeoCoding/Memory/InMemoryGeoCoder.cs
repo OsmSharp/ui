@@ -43,18 +43,19 @@ namespace OsmSharp.Tools.GeoCoding.Memory
         /// Adds a new entry.
         /// </summary>
         /// <param name="country"></param>
-        /// <param name="postal_code"></param>
+        /// <param name="postalCode"></param>
         /// <param name="commune"></param>
         /// <param name="street"></param>
-        /// <param name="house_number"></param>
+        /// <param name="houseNumber"></param>
         /// <param name="value"></param>
-        public void Add(string country, string postal_code, string commune, string street, string house_number, GeoCoordinate value)
+        public void Add(string country, string postalCode, string commune, string street, 
+            string houseNumber, GeoCoordinate value)
         {
-            IndexCommunes communes = _index.SearchExact(postal_code);
+            IndexCommunes communes = _index.SearchExact(postalCode);
             if (communes == null)
             {
                 communes = new IndexCommunes();
-                _index.Add(postal_code, communes);
+                _index.Add(postalCode, communes);
             }
             IndexStreets streets = communes.SearchExact(commune);
             if (streets == null)
@@ -68,20 +69,20 @@ namespace OsmSharp.Tools.GeoCoding.Memory
                 numbers = new IndexHouseNumbers();
                 streets.Add(street, numbers);
             }
-            numbers.Add(house_number, value);
+            numbers.Add(houseNumber, value);
         }
 
         /// <summary>
         /// Does the actual geocoding.
         /// </summary>
         /// <param name="country"></param>
-        /// <param name="postal_code"></param>
+        /// <param name="postalCode"></param>
         /// <param name="commune"></param>
         /// <param name="street"></param>
-        /// <param name="house_number"></param>
+        /// <param name="houseNumber"></param>
         /// <returns></returns>
-        public IGeoCoderResult Code(string country, string postal_code, 
-            string commune, string street, string house_number)
+        public IGeoCoderResult Code(string country, string postalCode, 
+            string commune, string street, string houseNumber)
         {
             throw new NotImplementedException();
         }

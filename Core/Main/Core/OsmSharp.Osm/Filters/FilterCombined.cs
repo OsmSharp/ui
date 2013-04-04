@@ -19,15 +19,36 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Filters
 {
+    /// <summary>
+    /// Filter that combines two other filters.
+    /// </summary>
     internal class FilterCombined : Filter
     {
+        /// <summary>
+        /// Holds the left filter;
+        /// </summary>
         private Filter _filter1;
+
+        /// <summary>
+        /// Holds the combine operator enum.
+        /// </summary>
         private FilterCombineOperatorEnum _op;
+
+        /// <summary>
+        /// Holds the right filter.
+        /// </summary>
         private Filter _filter2;
 
+        /// <summary>
+        /// Creates a new combined filter.
+        /// </summary>
+        /// <param name="filter1"></param>
+        /// <param name="op"></param>
+        /// <param name="filter2"></param>
         public FilterCombined(Filter filter1, FilterCombineOperatorEnum op, Filter filter2)
         {
             _op = op;
@@ -35,7 +56,12 @@ namespace OsmSharp.Osm.Filters
             _filter2 = filter2;
         }
 
-        public override bool Evaluate(OsmBase obj)
+        /// <summary>
+        /// Returns true if this object pass through this filter.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Evaluate(SimpleOsmGeo obj)
         {
             switch (_op)
             {
@@ -48,8 +74,29 @@ namespace OsmSharp.Osm.Filters
             }
             return false;
         }
+
+        /// <summary>
+        /// Returns a description of this filter.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if (_op == FilterCombineOperatorEnum.Not)
+            {
+                return string.Format("(not {0})",
+                                 _filter1.ToString());
+            }
+            return string.Format("({0} {1} {2})",
+                                 _filter1.ToString(),
+                                 _op.ToString(),
+                                 _filter2.ToString());
+
+        }
     }
 
+    /// <summary>
+    /// Possible filter combinations.
+    /// </summary>
     internal enum FilterCombineOperatorEnum
     {
         And,

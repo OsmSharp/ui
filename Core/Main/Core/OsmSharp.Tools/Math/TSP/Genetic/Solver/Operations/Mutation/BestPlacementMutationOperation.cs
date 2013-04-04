@@ -27,14 +27,23 @@ using OsmSharp.Tools.Math.TSP.Genetic.Solver;
 
 namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Mutation
 {
+    /// <summary>
+    /// A best placement mutation operation.
+    /// </summary>
     public class BestPlacementMutationOperation :
         IMutationOperation<List<int>, GeneticProblem, Fitness>
-    {        
+    {       
+        /// <summary>
+        /// Creates a best placement mutation.
+        /// </summary>
         public BestPlacementMutationOperation()
         {
 
         }
 
+        /// <summary>
+        /// Returns the name of this operation.
+        /// </summary>
         public string Name
         {
             get
@@ -45,6 +54,12 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Mutation
 
         #region IMutationOperation<int,Problem> Members
 
+        /// <summary>
+        /// Mutates a given individual.
+        /// </summary>
+        /// <param name="solver"></param>
+        /// <param name="mutating"></param>
+        /// <returns></returns>
         public Individual<List<int>, GeneticProblem, Fitness> Mutate(
             Solver<List<int>, GeneticProblem, Fitness> solver,
             Individual<List<int>, GeneticProblem, Fitness> mutating)

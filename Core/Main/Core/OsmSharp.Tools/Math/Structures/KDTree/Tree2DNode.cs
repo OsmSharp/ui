@@ -51,14 +51,15 @@ namespace OsmSharp.Tools.Math.Structures.KDTree
         /// <summary>
         /// Keeps the distance calculation delegate.
         /// </summary>
-        private Tree2D<PointType>.Distance<PointType> _distance_delegate;
+        private Tree2D<PointType>.Distance _distance_delegate;
 
         /// <summary>
         /// Creates a 2D tree.
         /// </summary>
+        /// <param name="distance_delegate"></param>
         /// <param name="value"></param>
         /// <param name="dimension"></param>
-        public Tree2DNode(Tree2D<PointType>.Distance<PointType> distance_delegate, PointType value, int dimension)
+        public Tree2DNode(Tree2D<PointType>.Distance distance_delegate, PointType value, int dimension)
         {
             // set the distance delegate.
             _distance_delegate = distance_delegate;
@@ -70,8 +71,10 @@ namespace OsmSharp.Tools.Math.Structures.KDTree
         /// <summary>
         /// Creates a 2D tree in a balanced way.
         /// </summary>
+        /// <param name="distance_delegate"></param>
         /// <param name="sorted_points"></param>
-        public Tree2DNode(Tree2D<PointType>.Distance<PointType> distance_delegate, List<PointType>[] sorted_points, int dimension)
+        /// <param name="dimension"></param>
+        public Tree2DNode(Tree2D<PointType>.Distance distance_delegate, List<PointType>[] sorted_points, int dimension)
         {
             // set the distance delegate.
             _distance_delegate = distance_delegate;
@@ -161,11 +164,12 @@ namespace OsmSharp.Tools.Math.Structures.KDTree
                 }
             }
         }
-        
+
         /// <summary>
         /// Returns the nearest neighbours for the given point.
         /// </summary>
         /// <param name="point"></param>
+        /// <param name="exceptions"></param>
         /// <returns></returns>
         public PointType SearchNearestNeighbour(PointType point, ICollection<PointType> exceptions)
         {

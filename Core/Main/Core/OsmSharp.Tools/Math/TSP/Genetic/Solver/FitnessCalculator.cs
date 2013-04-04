@@ -25,13 +25,22 @@ using OsmSharp.Tools.Math.AI.Genetic;
 
 namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
 {
+    /// <summary>
+    /// A fintness calculator.
+    /// </summary>
     public class FitnessCalculator :
         IFitnessCalculator<List<int>, GeneticProblem, Fitness>
     {
+        /// <summary>
+        /// Comparison epsilon.
+        /// </summary>
         public static double EPSILON = 1;
 
         #region IFitnessCalculator<int,Problem> Members
 
+        /// <summary>
+        /// Returns the comparison epsilon.
+        /// </summary>
         public double Epsilon
         {
             get 
@@ -40,6 +49,12 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
             }
         }
 
+        /// <summary>
+        /// Calculates the fitness of the given individual.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <param name="individual"></param>
+        /// <returns></returns>
         public Fitness Fitness(
             GeneticProblem problem,
             Individual<List<int>, GeneticProblem, Fitness> individual)
@@ -47,6 +62,13 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
             return this.Fitness(problem, individual.Genomes);
         }
 
+        /// <summary>
+        /// Calculates the fitness of the given individual.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <param name="individual"></param>
+        /// <param name="validate"></param>
+        /// <returns></returns>
         public Fitness Fitness(
             GeneticProblem problem,
             Individual<List<int>, GeneticProblem, Fitness> individual, bool validate)
@@ -54,6 +76,12 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
             return this.Fitness(problem, individual.Genomes);
         }
 
+        /// <summary>
+        /// Calculates the fitness of the given individual.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <param name="genomes"></param>
+        /// <returns></returns>
         public Fitness Fitness(
             GeneticProblem problem,
             List<int> genomes)
@@ -121,6 +149,12 @@ namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
 
         #endregion
 
+        /// <summary>
+        /// Returns the average fitness.
+        /// </summary>
+        /// <param name="problem"></param>
+        /// <param name="population"></param>
+        /// <returns></returns>
         public Fitness AverageFitness(GeneticProblem problem, IEnumerable<Individual<List<int>, GeneticProblem, Fitness>> population)
         {
             throw new NotImplementedException();

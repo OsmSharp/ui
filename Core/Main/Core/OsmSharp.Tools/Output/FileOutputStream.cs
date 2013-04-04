@@ -6,16 +6,27 @@ using System.IO;
 
 namespace OsmSharp.Tools.Output
 {
+    /// <summary>
+    /// Writes output to stream.
+    /// </summary>
     public class FileOutputStream : IOutputStream
     {
         private TextWriter _stream;
 
+        /// <summary>
+        /// Creates output stream.
+        /// </summary>
+        /// <param name="file"></param>
         public FileOutputStream(string file)
             :this((new FileInfo(file)).OpenWrite())
         {
 
         }
 
+        /// <summary>
+        /// Creates output stream.
+        /// </summary>
+        /// <param name="stream"></param>
         public FileOutputStream(Stream stream)
         {
             _stream = new StreamWriter(stream);
@@ -23,6 +34,10 @@ namespace OsmSharp.Tools.Output
 
         #region IOutputTextStream Members
 
+        /// <summary>
+        /// Writes line.
+        /// </summary>
+        /// <param name="text"></param>
         public void WriteLine(string text)
         {
             _stream.WriteLine(text);
@@ -30,15 +45,23 @@ namespace OsmSharp.Tools.Output
             _stream.Flush();
         }
 
+        /// <summary>
+        /// Writes text.
+        /// </summary>
+        /// <param name="text"></param>
         public void Write(string text)
         {
             _stream.Write(text);
         }
 
-        private string _previous_progress_string;
+        //private string _previous_progress_string;
 
-        //private string _previous_key;
-
+        /// <summary>
+        /// Report progress.
+        /// </summary>
+        /// <param name="progress"></param>
+        /// <param name="key"></param>
+        /// <param name="message"></param>
         public void ReportProgress(double progress, string key, string message)
         {
             //string current_progress_string = message;//string.Format("{0}:{1}", key, message);

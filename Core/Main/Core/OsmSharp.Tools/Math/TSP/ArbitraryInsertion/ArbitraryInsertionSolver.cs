@@ -46,7 +46,6 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        /// <param name="problem"></param>
         public ArbitraryInsertionSolver()
         {
             _stopped = false;
@@ -55,7 +54,7 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        /// <param name="problem"></param>
+        /// <param name="customers"></param>
         public ArbitraryInsertionSolver(IList<int> customers)
         {
             _stopped = false;
@@ -211,6 +210,7 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
         /// </summary>
         /// <param name="problem"></param>
         /// <param name="route"></param>
+        /// <param name="difference"></param>
         /// <returns></returns>
         public bool Improve(IProblemWeights problem, IRoute route, out double difference)
         {
@@ -248,12 +248,14 @@ namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
             }
             return improvement;
         }
-        
+
         /// <summary>
         /// Re-inserts a customer in the route.
         /// </summary>
         /// <param name="weights"></param>
         /// <param name="route"></param>
+        /// <param name="customer"></param>
+        /// <param name="difference"></param>
         /// <returns></returns>
         public static bool InsertOne(IProblemWeights weights, IRoute route, int customer,
             out double difference)

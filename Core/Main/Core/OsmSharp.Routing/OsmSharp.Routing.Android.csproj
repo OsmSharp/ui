@@ -82,6 +82,7 @@
     <Compile Include="Graph\DynamicGraph\IDynamicGraphEdgeData.cs" />
     <Compile Include="Graph\DynamicGraph\IDynamicGraphReadOnly.cs" />
     <Compile Include="Graph\DynamicGraph\Memory\MemoryDynamicGraph.cs" />
+    <Compile Include="Graph\DynamicGraph\Memory\MemoryRouterDataSource.cs" />
     <Compile Include="Graph\DynamicGraph\PreProcessed\PreProcessedDynamicGraph.cs" />
     <Compile Include="Graph\DynamicGraph\PreProcessed\PreProcessedEdge.cs" />
     <Compile Include="Graph\DynamicGraph\SimpleWeighed\SimpleWeighedEdge.cs" />

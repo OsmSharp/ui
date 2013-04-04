@@ -68,7 +68,7 @@ namespace OsmSharp.Routing.Graph
         /// <returns></returns>
         public bool SupportsProfile(VehicleEnum vehicle)
         {
-            throw new NotImplementedException();
+            return true; // for backwards compatibility.
         }
 
         /// <summary>

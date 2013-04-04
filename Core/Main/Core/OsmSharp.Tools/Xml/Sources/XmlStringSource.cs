@@ -65,6 +65,9 @@ namespace OsmSharp.Tools.Xml.Sources
             return null;
         }
 
+        /// <summary>
+        /// Returns true if this source is readonly.
+        /// </summary>
         public bool IsReadOnly
         {
             get
@@ -73,6 +76,9 @@ namespace OsmSharp.Tools.Xml.Sources
             }
         }
 
+        /// <summary>
+        /// Returns true if this source has data.
+        /// </summary>
         public bool HasData
         {
             get
@@ -81,6 +87,9 @@ namespace OsmSharp.Tools.Xml.Sources
             }
         }
 
+        /// <summary>
+        /// Returns the name of this source.
+        /// </summary>
         public string Name
         {
             get
@@ -89,6 +98,9 @@ namespace OsmSharp.Tools.Xml.Sources
             }
         }
         
+        /// <summary>
+        /// Closes this source.
+        /// </summary>
         public void Close()
         {
             _source = null;

@@ -51,7 +51,8 @@ namespace OsmSharp.Tools.Math.StateMachines
         /// <summary>
         /// Returns true if the given event triggers a response in this transition.
         /// </summary>
-        /// <param name="incoming"></param>
+        /// <param name="machine"></param>
+        /// <param name="even"></param>
         /// <returns></returns>
         internal bool Match(FiniteStateMachine<EventType> machine, object even)
         {
@@ -98,7 +99,6 @@ namespace OsmSharp.Tools.Math.StateMachines
         /// <param name="states"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        /// <param name="inverted"></param>
         /// <param name="event_type"></param>
         /// <param name="check_delegate"></param>
         /// <returns></returns>
@@ -115,7 +115,9 @@ namespace OsmSharp.Tools.Math.StateMachines
         /// <param name="states"></param>
         /// <param name="start"></param>
         /// <param name="end"></param>
-        /// <param name="event_types"></param>        
+        /// <param name="inverted"></param>
+        /// <param name="event_type"></param>
+        /// <param name="check_delegate"></param>
         /// <returns></returns>
         public static FiniteStateMachineTransition<EventType> Generate(
             List<FiniteStateMachineState<EventType>> states, int start, int end, bool inverted, Type event_type,

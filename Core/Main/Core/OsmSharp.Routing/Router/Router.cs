@@ -42,19 +42,24 @@ namespace OsmSharp.Routing
         where TEdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
+        /// The default search delta.
+        /// </summary>
+        private const float DefaultSearchDelta = .01f;
+
+        /// <summary>
         /// Holds the graph object containing the routable network.
         /// </summary>
-        private IBasicRouterDataSource<TEdgeData> _data_graph;
+        private readonly IBasicRouterDataSource<TEdgeData> _data_graph;
 
         /// <summary>
         /// Holds the basic router that works on the dynamic graph.
         /// </summary>
-        private IBasicRouter<TEdgeData> _router;
+        private readonly IBasicRouter<TEdgeData> _router;
 
         /// <summary>
         /// Interpreter for the routing network.
         /// </summary>
-        private IRoutingInterpreter _interpreter;
+        private readonly IRoutingInterpreter _interpreter;
 
         /// <summary>
         /// Creates a new router.
@@ -621,7 +626,19 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate)
         {
-            return this.Resolve(vehicle, coordinate, null, null);
+            return this.Resolve(vehicle, Router<TEdgeData>.DefaultSearchDelta, coordinate, null, null);
+        }
+
+        /// <summary>
+        /// Resolves the given coordinate to the closest routable point.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="delta"></param>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public RouterPoint Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate)
+        {
+            return this.Resolve(vehicle, delta, coordinate, null, null);
         }
 
         /// <summary>
@@ -629,11 +646,24 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="vehicle"></param>
         /// <param name="coordinate"></param>
-        /// <param name="point_tags"></param>
+        /// <param name="pointTags"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IDictionary<string, string> point_tags)
+        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IDictionary<string, string> pointTags)
         {
-            return this.Resolve(vehicle, coordinate, null, point_tags);
+            return this.Resolve(vehicle, Router<TEdgeData>.DefaultSearchDelta, coordinate, pointTags);
+        }
+
+        /// <summary>
+        /// Resolves the given coordinate to the closest routable point.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="delta"></param>
+        /// <param name="coordinate"></param>
+        /// <param name="pointTags"></param>
+        /// <returns></returns>
+        public RouterPoint Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate, IDictionary<string, string> pointTags)
+        {
+            return this.Resolve(vehicle, delta, coordinate, null, pointTags);
         }
 
         /// <summary>
@@ -642,12 +672,29 @@ namespace OsmSharp.Routing
         /// <param name="vehicle"></param>
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
-        /// <param name="matching_tags"></param>
+        /// <param name="matchingTags"></param>
         /// <returns></returns>
         public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, 
-            IEdgeMatcher matcher, IDictionary<string, string> matching_tags)
+            IEdgeMatcher matcher, IDictionary<string, string> matchingTags)
         {
-            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, matcher, matching_tags); // search the closest routable object.
+            return this.Resolve(vehicle, Router<TEdgeData>.DefaultSearchDelta, coordinate,
+                                matcher, matchingTags);
+        }
+
+        /// <summary>
+        /// Resolves the given coordinate to the closest routable point.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="delta"></param>
+        /// <param name="coordinate"></param>
+        /// <param name="matcher"></param>
+        /// <param name="matchingTags"></param>
+        /// <returns></returns>
+        public RouterPoint Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate,
+                                   IEdgeMatcher matcher, IDictionary<string, string> matchingTags)
+        {
+            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, 
+                vehicle, coordinate, delta, matcher, matchingTags); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
@@ -678,10 +725,22 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate)
         {
+            return this.Resolve(vehicle, Router<TEdgeData>.DefaultSearchDelta, coordinate);
+        }
+
+        /// <summary>
+        /// Resolves the given coordinates to the closest routable points.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="delta"></param>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public RouterPoint[] Resolve(VehicleEnum vehicle, float delta, GeoCoordinate[] coordinate)
+        {
             var points = new RouterPoint[coordinate.Length];
             for (int idx = 0; idx < coordinate.Length; idx++)
             {
-                points[idx] = this.Resolve(vehicle, coordinate[idx]);
+                points[idx] = this.Resolve(vehicle, delta, coordinate[idx]);
             }
             return points;
         }
@@ -692,15 +751,31 @@ namespace OsmSharp.Routing
         /// <param name="vehicle"></param>
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
-        /// <param name="point_tags"></param>
+        /// <param name="matchingTags"></param>
         /// <returns></returns>
         public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, 
-            IEdgeMatcher matcher, IDictionary<string, string>[] point_tags)
+            IEdgeMatcher matcher, IDictionary<string, string>[] matchingTags)
+        {
+            return this.Resolve(vehicle, Router<TEdgeData>.DefaultSearchDelta, coordinate,
+                                matcher, matchingTags);
+        }
+
+        /// <summary>
+        /// Resolves the given coordinates to the closest routable points.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="delta"></param>
+        /// <param name="coordinate"></param>
+        /// <param name="matcher"></param>
+        /// <param name="matchingTags"></param>
+        /// <returns></returns>
+        public RouterPoint[] Resolve(VehicleEnum vehicle, float delta, GeoCoordinate[] coordinate,
+                                     IEdgeMatcher matcher, IDictionary<string, string>[] matchingTags)
         {
             var points = new RouterPoint[coordinate.Length];
             for (int idx = 0; idx < coordinate.Length; idx++)
             {
-                points[idx] = this.Resolve(vehicle, coordinate[idx], matcher, point_tags[idx]);
+                points[idx] = this.Resolve(vehicle, delta, coordinate[idx], matcher, matchingTags[idx]);
             }
             return points;
         }
@@ -713,7 +788,20 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public GeoCoordinate Search(VehicleEnum vehicle, GeoCoordinate coordinate)
         {
-            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, null, null); // search the closest routable object.
+            return this.Search(vehicle, Router<TEdgeData>.DefaultSearchDelta, coordinate);
+        }
+
+        /// <summary>
+        /// Find the coordinates of the closest routable point.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="delta"></param>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public GeoCoordinate Search(VehicleEnum vehicle, float delta, GeoCoordinate coordinate)
+        {
+            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, 
+                delta, null, null); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)

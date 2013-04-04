@@ -27,9 +27,15 @@ using OsmSharp.Tools.Math.VRP.Core.Routes;
 
 namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation
 {
+    /// <summary>
+    /// A 3-opt operation.
+    /// </summary>
     public class _3OptGenerationOperation :
         IGenerationOperation<List<int>, GeneticProblem, Fitness>
     {
+        /// <summary>
+        /// Returns the name of this operation.
+        /// </summary>
         public string Name
         {
             get

@@ -25,8 +25,18 @@ using OsmSharp.Tools.Math.TSP.Problems;
 
 namespace OsmSharp.Tools.TSPLIB.Convertor.ATSP_TSP
 {
+    /// <summary>
+    /// ATSP-TSP convertor.
+    /// </summary>
     public static class ATSP_TSPConvertor
     {
+        /// <summary>
+        /// Converts a problem.
+        /// </summary>
+        /// <param name="atsp"></param>
+        /// <param name="name"></param>
+        /// <param name="comment"></param>
+        /// <returns></returns>
         public static TSPLIBProblem Convert(IProblem atsp, string name, string comment)
         {
             // convert the problem to a symetric one.
@@ -36,6 +46,11 @@ namespace OsmSharp.Tools.TSPLIB.Convertor.ATSP_TSP
                 TSPLIBProblemWeightTypeEnum.Explicit, TSPLIBProblemTypeEnum.TSP, 0, 0);
         }
 
+        /// <summary>
+        /// Converts problem.
+        /// </summary>
+        /// <param name="atsp"></param>
+        /// <returns></returns>
         public static TSPLIBProblem Convert(TSPLIBProblem atsp)
         {
             // check if the problem is not already symmetric.

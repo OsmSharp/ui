@@ -22,6 +22,9 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 {
+    /// <summary>
+    /// A dynamic asymmetric between enumerable.
+    /// </summary>
     public class DynamicAsymmetricBetweenEnumerable : IEnumerable<int>
     {
         private int _first;
@@ -32,6 +35,13 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
 
         private int[] _next_array;
 
+        /// <summary>
+        /// Creates a new between enumerable.
+        /// </summary>
+        /// <param name="next_array"></param>
+        /// <param name="first"></param>
+        /// <param name="last"></param>
+        /// <param name="first_route"></param>
         public DynamicAsymmetricBetweenEnumerable(int[] next_array, int first, int last, int first_route)
         {
             _next_array = next_array;
@@ -105,11 +115,19 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
             }
         }
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<int> GetEnumerator()
         {
             return new BetweenEnumerator(_next_array, _first, _last, _first_route);
         }
 
+        /// <summary>
+        /// Returns the enumerator.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();

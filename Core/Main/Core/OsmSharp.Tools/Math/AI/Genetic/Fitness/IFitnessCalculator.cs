@@ -42,6 +42,7 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Fitness
         /// <summary>
         /// Executes a fitness calculation.
         /// </summary>
+        /// <param name="problem"></param>
         /// <param name="individual"></param>
         /// <returns></returns>
         WeightType Fitness(
@@ -51,7 +52,9 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Fitness
         /// <summary>
         /// Executes a fitness calculation.
         /// </summary>
+        /// <param name="problem"></param>
         /// <param name="individual"></param>
+        /// <param name="validate"></param>
         /// <returns></returns>
         WeightType Fitness(
             ProblemType problem,
@@ -60,7 +63,8 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Fitness
         /// <summary>
         /// Executes a fitness calculation.
         /// </summary>
-        /// <param name="individual"></param>
+        /// <param name="problem"></param>
+        /// <param name="genomes"></param>
         /// <returns></returns>
         WeightType Fitness(
             ProblemType problem,

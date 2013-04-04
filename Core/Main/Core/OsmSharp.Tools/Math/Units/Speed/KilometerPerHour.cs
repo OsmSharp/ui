@@ -24,6 +24,9 @@ using OsmSharp.Tools.Math.Units.Time;
 
 namespace OsmSharp.Tools.Math.Units.Speed
 {
+    /// <summary>
+    /// Represents a speed in kilometer per hours.
+    /// </summary>
     public class KilometerPerHour : Unit
     {
         private KilometerPerHour()
@@ -32,6 +35,10 @@ namespace OsmSharp.Tools.Math.Units.Speed
 
         }
 
+        /// <summary>
+        /// Creates a new kilometers per hour.
+        /// </summary>
+        /// <param name="value"></param>
         public KilometerPerHour(double value)
             : base(value)
         {
@@ -40,11 +47,21 @@ namespace OsmSharp.Tools.Math.Units.Speed
 
         #region Conversions
 
+        /// <summary>
+        /// Converts a given value to kilometers per hour.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static implicit operator KilometerPerHour(double value)
         {
             return new KilometerPerHour(value);
         }
 
+        /// <summary>
+        /// Converts a given value to kilometers per hour.
+        /// </summary>
+        /// <param name="meter_per_sec"></param>
+        /// <returns></returns>
         public static implicit operator KilometerPerHour(MeterPerSecond meter_per_sec)
         {
             return meter_per_sec.Value / 3.6d;
@@ -52,6 +69,10 @@ namespace OsmSharp.Tools.Math.Units.Speed
 
         #endregion
 
+        /// <summary>
+        /// Returns a description of this speed.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return this.Value.ToString() + "Km/h";

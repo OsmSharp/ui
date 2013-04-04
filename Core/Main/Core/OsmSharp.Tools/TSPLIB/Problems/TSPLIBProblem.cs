@@ -40,6 +40,17 @@ namespace OsmSharp.Tools.TSPLIB.Problems
 
         private int? _last;
 
+        /// <summary>
+        /// Creates a new TSP LIB problem.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="comment"></param>
+        /// <param name="size"></param>
+        /// <param name="weights"></param>
+        /// <param name="weight_type"></param>
+        /// <param name="problem_type"></param>
+        /// <param name="first"></param>
+        /// <param name="last"></param>
         public TSPLIBProblem(string name, string comment, int size, double[][] weights,
             TSPLIBProblemWeightTypeEnum weight_type,
             TSPLIBProblemTypeEnum problem_type, int? first, int? last)
@@ -54,10 +65,19 @@ namespace OsmSharp.Tools.TSPLIB.Problems
             _last = last;
         }
 
+        /// <summary>
+        /// Returns type of TSP.
+        /// </summary>
         public TSPLIBProblemTypeEnum Type { get; private set; }
 
+        /// <summary>
+        /// Returns weight.
+        /// </summary>
         public TSPLIBProblemWeightTypeEnum WeightType { get; private set; }
 
+        /// <summary>
+        /// Returns weight matrix.
+        /// </summary>
         public double[][] WeightMatrix
         {
             get 
@@ -66,6 +86,9 @@ namespace OsmSharp.Tools.TSPLIB.Problems
             }
         }
 
+        /// <summary>
+        /// Returns the size.
+        /// </summary>
         public int Size
         {
             get 
@@ -74,12 +97,20 @@ namespace OsmSharp.Tools.TSPLIB.Problems
             }
         }
 
+        /// <summary>
+        /// Returns the weight between two customers.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public double Weight(int from, int to)
         {
             return _weights[from][to];
         }
 
-
+        /// <summary>
+        /// Returns first customer.
+        /// </summary>
         public int? First
         {
             get 
@@ -88,6 +119,9 @@ namespace OsmSharp.Tools.TSPLIB.Problems
             }
         }
 
+        /// <summary>
+        /// Returns last customer.
+        /// </summary>
         public int? Last
         {
             get 
@@ -96,6 +130,9 @@ namespace OsmSharp.Tools.TSPLIB.Problems
             }
         }
 
+        /// <summary>
+        /// Returns symmetric flag.
+        /// </summary>
         public bool Symmetric
         {
             get 
@@ -104,6 +141,9 @@ namespace OsmSharp.Tools.TSPLIB.Problems
             }
         }
 
+        /// <summary>
+        /// Returns euclidean.
+        /// </summary>
         public bool Euclidean
         {
             get 
@@ -112,10 +152,19 @@ namespace OsmSharp.Tools.TSPLIB.Problems
             }
         }
 
+        /// <summary>
+        /// Returns the best value.
+        /// </summary>
         public double Best { get; set; }
 
+        /// <summary>
+        /// Returns the name of the problem.
+        /// </summary>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// Returns the comment of the problems.
+        /// </summary>
         public string Comment { get; private set; }
 
 
@@ -129,7 +178,7 @@ namespace OsmSharp.Tools.TSPLIB.Problems
         /// <summary>
         /// Generate the nearest neighbour list.
         /// </summary>
-        /// <param name="customer"></param>
+        /// <param name="v"></param>
         /// <returns></returns>
         public NearestNeighbours10 Get10NearestNeighbours(int v)
         {

@@ -22,6 +22,9 @@ using System.Text;
 
 namespace OsmSharp.Tools.Math.Units.Angle
 {
+    /// <summary>
+    /// Represents an angle in degress.
+    /// </summary>
     public class Degree : Unit
     {
         private Degree()
@@ -30,6 +33,10 @@ namespace OsmSharp.Tools.Math.Units.Angle
 
         }
 
+        /// <summary>
+        /// Creates a new angle in degrees.
+        /// </summary>
+        /// <param name="value"></param>
         public Degree(double value)
             :base(Degree.Normalize(value))
         {
@@ -44,11 +51,21 @@ namespace OsmSharp.Tools.Math.Units.Angle
 
         #region Conversion
 
+        /// <summary>
+        /// Converts the given value to degrees.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
         public static implicit operator Degree(double value)
         {
             return new Degree(value);
         }
 
+        /// <summary>
+        /// Converts the given value to degrees.
+        /// </summary>
+        /// <param name="rad"></param>
+        /// <returns></returns>
         public static implicit operator Degree(Radian rad)
         {
             double value = (rad.Value / System.Math.PI) * 180d;
@@ -59,31 +76,65 @@ namespace OsmSharp.Tools.Math.Units.Angle
 
         #region Operators
 
+        /// <summary>
+        /// Subtracts two angles.
+        /// </summary>
+        /// <param name="deg1"></param>
+        /// <param name="deg2"></param>
+        /// <returns></returns>
         public static Degree operator -(Degree deg1, Degree deg2)
         {
             return deg1.Value - deg2.Value;
         }
 
+        /// <summary>
+        /// Returns the absolute value of the angle.
+        /// </summary>
+        /// <returns></returns>
         public Degree Abs()
         {
             return System.Math.Abs(this.Value);
         }
 
+        /// <summary>
+        /// Returns true if one angle is greater than the other.
+        /// </summary>
+        /// <param name="deg1"></param>
+        /// <param name="deg2"></param>
+        /// <returns></returns>
         public static bool operator >(Degree deg1,Degree deg2)
         {
             return deg1.Value > deg2.Value;
         }
 
+        /// <summary>
+        /// Returns true if one angle is smaller than the other.
+        /// </summary>
+        /// <param name="deg1"></param>
+        /// <param name="deg2"></param>
+        /// <returns></returns>
         public static bool operator <(Degree deg1, Degree deg2)
         {
             return deg1.Value < deg2.Value;
         }
 
+        /// <summary>
+        /// Returns true if one angle is greater or equal than the other.
+        /// </summary>
+        /// <param name="deg1"></param>
+        /// <param name="deg2"></param>
+        /// <returns></returns>
         public static bool operator >=(Degree deg1, Degree deg2)
         {
             return deg1.Value >= deg2.Value;
         }
 
+        /// <summary>
+        /// Returns true if one angle is smaller or equal than the other.
+        /// </summary>
+        /// <param name="deg1"></param>
+        /// <param name="deg2"></param>
+        /// <returns></returns>
         public static bool operator <=(Degree deg1, Degree deg2)
         {
             return deg1.Value <= deg2.Value;

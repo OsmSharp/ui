@@ -45,6 +45,8 @@ namespace OsmSharp.Tools.Math.Geo
         /// </summary>
         /// <param name="point1"></param>
         /// <param name="point2"></param>
+        /// <param name="is_segment1"></param>
+        /// <param name="is_segment2"></param>
         public GeoCoordinateLine(
             GeoCoordinate point1,
             GeoCoordinate point2,
@@ -105,5 +107,34 @@ namespace OsmSharp.Tools.Math.Geo
         }
 
         #endregion
+
+        /// <summary>
+        /// Serves as a hash function for a particular type.
+        /// </summary>
+        /// <returns></returns>
+        public override int GetHashCode()
+        {
+            return this.Point1.GetHashCode() ^
+                   this.Point2.GetHashCode() ^
+                   this.IsSegment1.GetHashCode() ^
+                   this.IsSegment2.GetHashCode();
+        }
+
+        /// <summary>
+        /// Determines whether the specified object is equal to the current object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is GeoCoordinateLine)
+            {
+                return this.Point1.Equals((obj as GeoCoordinateLine).Point1) &&
+                       this.Point2.Equals((obj as GeoCoordinateLine).Point2) &&
+                       this.IsSegment1.Equals((obj as GeoCoordinateLine).IsSegment1) &&
+                       this.IsSegment2.Equals((obj as GeoCoordinateLine).IsSegment2);
+            }
+            return false;
+        }
     }
 }

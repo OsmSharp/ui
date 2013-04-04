@@ -87,7 +87,8 @@ namespace OsmSharp.Tools.Math.Geo.Factory
         /// <summary>
         /// Creates a new geocoordinate line.
         /// </summary>
-        /// <param name="points"></param>
+        /// <param name="point1"></param>
+        /// <param name="point2"></param>
         /// <returns></returns>
         public GeoCoordinateLine CreateLine(GeoCoordinate point1, GeoCoordinate point2)
         {

@@ -22,33 +22,78 @@ using System.Text;
 
 namespace OsmSharp.Tools
 {
+    /// <summary>
+    /// Range.
+    /// </summary>
     public static class Range
     {
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<sbyte> SByte(sbyte from, sbyte to, int step)
         {
             return Range.Int32(from, to, step).Select(i => (sbyte)i);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<byte> Byte(byte from, byte to, int step)
         {
             return Range.Int32(from, to, step).Select(i => (byte)i);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<char> Char(char from, char to, int step)
         {
             return Range.Int32(from, to, step).Select(i => (char)i);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<short> Int16(short from, short to, int step)
         {
             return Range.Int32(from, to, step).Select(i => (short)i);
         }
 
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<ushort> UInt16(ushort from, ushort to, int step)        
         {
             return Range.Int32(from, to, step).Select(i => (ushort)i);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<int> Int32(int from, int to, int step)
         {
             if (step <= 0) step = (step == 0) ? 1 : -step;
@@ -62,6 +107,13 @@ namespace OsmSharp.Tools
             }
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<uint> UInt32(uint from, uint to, uint step)
         {
             if (step == 0U) step = 1U; 
@@ -75,6 +127,13 @@ namespace OsmSharp.Tools
             }
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<long> Int64(long from, long to, long step)
         {
             if (step <= 0L) step = (step == 0L) ? 1L : -step;
@@ -89,6 +148,13 @@ namespace OsmSharp.Tools
             }
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<ulong> UInt64(ulong from, ulong to, ulong step)
         {
             if (step == 0UL) step = 1UL;
@@ -103,6 +169,13 @@ namespace OsmSharp.Tools
             }
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<float> Single(float from, float to, float step)
         {
             if (step <= 0.0f) step = (step == 0.0f) ? 1.0f : -step;
@@ -117,6 +190,13 @@ namespace OsmSharp.Tools
             }
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<double> Double(double from, double to, double step)
         {
             if (step <= 0.0) step = (step == 0.0) ? 1.0 : -step;
@@ -131,6 +211,13 @@ namespace OsmSharp.Tools
             }
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<decimal> Decimal(decimal from, decimal to, decimal step)
         {
             if (step <= 0.0m) step = (step == 0.0m) ? 1.0m : -step;
@@ -145,6 +232,13 @@ namespace OsmSharp.Tools
             }
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <param name="step"></param>
+        /// <returns></returns>
         public static IEnumerable<DateTime> DateTime(DateTime from, DateTime to, double step)
         {
             if (step <= 0.0) step = (step == 0.0) ? 1.0 : -step;
@@ -159,66 +253,144 @@ namespace OsmSharp.Tools
             }
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<sbyte> SByte(sbyte from, sbyte to)
         {
             return Range.SByte(from, to, 1);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<byte> Byte(byte from, byte to)
         {
             return Range.Byte(from, to, 1);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<char> Char(char from, char to)
         {
             return Range.Char(from, to, 1);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<short> Int16(short from, short to)
         {
             return Range.Int16(from, to, 1);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<ushort> UInt16(ushort from, ushort to)
         {
             return Range.UInt16(from, to, 1);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<int> Int32(int from, int to)
         {
             return Range.Int32(from, to, 1);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<uint> UInt32(uint from, uint to)
         {
             return Range.UInt32(from, to, 1U);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<long> Int64(long from, long to)
         {
             return Range.Int64(from, to, 1L);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<ulong> UInt64(ulong from, ulong to)
         {
             return Range.UInt64(from, to, 1UL);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<float> Single(float from, float to)
         {
             return Range.Single(from, to, 1.0f);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<double> Double(double from, double to)
         {
             return Range.Double(from, to, 1.0);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<decimal> Decimal(decimal from, decimal to)
         {
             return Range.Decimal(from, to, 1.0m);
         }
  
+        /// <summary>
+        /// Range enumerator.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        /// <returns></returns>
         public static IEnumerable<DateTime> DateTime(DateTime from, DateTime to)
         {
             return Range.DateTime(from, to, 1.0);

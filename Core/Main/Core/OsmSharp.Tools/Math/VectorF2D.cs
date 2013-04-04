@@ -55,9 +55,7 @@ namespace OsmSharp.Tools.Math
         /// <summary>
         /// Creates a new vector.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <param name="c"></param>
+        /// <param name="values"></param>
         public VectorF2D(double[] values)
         {
             _values = values;

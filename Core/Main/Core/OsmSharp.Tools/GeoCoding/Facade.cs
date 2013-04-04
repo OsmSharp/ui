@@ -66,40 +66,40 @@ namespace OsmSharp.Tools.GeoCoding
         /// <summary>
         /// Geocodes the given address and returns the result.
         /// </summary>
-        /// <param name="coder"></param>
+        /// <param name="coderName"></param>
         /// <param name="country"></param>
-        /// <param name="postal_code"></param>
+        /// <param name="postalCode"></param>
         /// <param name="commune"></param>
         /// <param name="street"></param>
-        /// <param name="house_number"></param>
+        /// <param name="houseNumber"></param>
         /// <returns></returns>
         public static IGeoCoderResult Code(
-            string coder_name,
+            string coderName,
             string country,
-            string postal_code,
+            string postalCode,
             string commune,
             string street,
-            string house_number)
+            string houseNumber)
         {
-            IGeoCoder coder_instance = null;
+            IGeoCoder coderInstance = null;
 
             // create and cache the coder class.
             if (_coders == null)
             {
                 _coders = new Dictionary<string, IGeoCoder>();
             }
-            if (!_coders.TryGetValue(coder_name, out coder_instance))
+            if (!_coders.TryGetValue(coderName, out coderInstance))
             {
                 throw new InvalidOperationException(string.Format(
-                    "No geocoder registered with name: {0}", coder_name));
+                    "No geocoder registered with name: {0}", coderName));
             }
 
-            return coder_instance.Code(
+            return coderInstance.Code(
                 country,
-                postal_code,
+                postalCode,
                 commune,
                 street,
-                house_number);
+                houseNumber);
         }
     }
 }

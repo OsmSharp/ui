@@ -259,6 +259,9 @@ namespace OsmSharp.Tools.Xml.Kml
         }
         #endregion
 
+        /// <summary>
+        /// Closes this data source.
+        /// </summary>
         public void Close()
         {
             _kml_object = null;
@@ -271,9 +274,21 @@ namespace OsmSharp.Tools.Xml.Kml
     /// </summary>
     public enum KmlVersion
     {
+        /// <summary>
+        /// Kml v2.1
+        /// </summary>
         Kmlv2_1,
+        /// <summary>
+        /// Kml v2.0
+        /// </summary>
         Kmlv2_0,
+        /// <summary>
+        /// Kml v2.0 response.
+        /// </summary>
         Kmlv2_0_response,
+        /// <summary>
+        /// Unknown.
+        /// </summary>
         Unknown
     }
 }

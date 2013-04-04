@@ -12,6 +12,10 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
     {
         private IRoute _route;
 
+        /// <summary>
+        /// Creates a new edge enumerable.
+        /// </summary>
+        /// <param name="route"></param>
         public EdgeEnumerable(IRoute route)
         {
             _route = route;
@@ -104,6 +108,10 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
             }
         }
 
+        /// <summary>
+        /// Returns an enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<Edge> GetEnumerator()
         {
             if (_route.IsRound)
@@ -113,19 +121,26 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
             return new EdgeEnumerator(_route.GetEnumerator(), -1);
         }
 
+        /// <summary>
+        /// Returns an enumerator.
+        /// </summary>
+        /// <returns></returns>
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
         }
     }
 
+    /// <summary>
+    /// Represents an edge.
+    /// </summary>
     public struct Edge
     {
-        //public Edge()
-        //{
-
-        //}
-
+        /// <summary>
+        /// Creates a new edge.
+        /// </summary>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
         public Edge(int from, int to)
             :this()
         {
@@ -133,21 +148,40 @@ namespace OsmSharp.Tools.Math.VRP.Core.Routes
             this.To = to;
         }
 
+        /// <summary>
+        /// Returns the from customer.
+        /// </summary>
         public int From { get; set; }
 
+        /// <summary>
+        /// Returns the to customer.
+        /// </summary>
         public int To { get; set; }
 
+        /// <summary>
+        /// Returns a description of this edge.
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format("{0} -> {1}", this.From, this.To);
         }
 
+        /// <summary>
+        /// Returns a hashcode.
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             return this.From.GetHashCode() ^
                 this.To.GetHashCode();
         }
 
+        /// <summary>
+        /// Returns true if the other object is equal.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is Edge)

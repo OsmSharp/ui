@@ -32,15 +32,15 @@ namespace OsmSharp.Tools.GeoCoding
         /// Does the actual geocoding.
         /// </summary>
         /// <param name="country"></param>
-        /// <param name="postal_code"></param>
+        /// <param name="postalCode"></param>
         /// <param name="commune"></param>
         /// <param name="street"></param>
-        /// <param name="house_number"></param>
+        /// <param name="houseNumber"></param>
         /// <returns></returns>
         IGeoCoderResult Code(string country,
-            string postal_code,
+            string postalCode,
             string commune,
             string street,
-            string house_number);
+            string houseNumber);
     }
 }

@@ -52,6 +52,7 @@ namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement
         /// <param name="problem"></param>
         /// <param name="route"></param>
         /// <param name="customers"></param>
+        /// <param name="costs"></param>
         /// <returns></returns>
         public static CheapestInsertionResult CalculateBestPlacement(
             IProblemWeights problem,
@@ -184,6 +185,8 @@ namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement
         /// <param name="problem"></param>
         /// <param name="route"></param>
         /// <param name="customers"></param>
+        /// <param name="seed_customer"></param>
+        /// <param name="seed_customer_ratio"></param>
         /// <returns></returns>
         public static CheapestInsertionResult CalculateBestPlacement(
             IProblemWeights problem,
@@ -323,9 +326,8 @@ namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement
         /// Searches for the best place to insert the given customer.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="calculator"></param>
-        /// <param name="genomes"></param>
-        /// <param name="city_to_place"></param>
+        /// <param name="route"></param>
+        /// <param name="customer"></param>
         /// <returns></returns>
         public static CheapestInsertionResult CalculateBestPlacement(
             IProblemWeights problem,
@@ -432,9 +434,9 @@ namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement
         /// Searches for the best place to insert the given two customers abstracting the distance between them.
         /// </summary>
         /// <param name="problem"></param>
-        /// <param name="calculator"></param>
-        /// <param name="genomes"></param>
-        /// <param name="city_to_place"></param>
+        /// <param name="route"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
         /// <returns></returns>
         public static CheapestInsertionResult CalculateBestPlacement(
             IProblemWeights problem,

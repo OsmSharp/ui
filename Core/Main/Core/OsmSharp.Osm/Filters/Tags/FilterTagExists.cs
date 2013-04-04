@@ -19,21 +19,46 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Filters.Tags
 {
+    /// <summary>
+    /// Filters on the existence of a tag.
+    /// </summary>
     internal class FilterTagExists : FilterTag
     {
+        /// <summary>
+        /// The tag that needs to exist.
+        /// </summary>
         private string _tag;
 
+        /// <summary>
+        /// Creates a new tag existance filter.
+        /// </summary>
+        /// <param name="tag"></param>
         public FilterTagExists(string tag)
         {
             _tag = tag;
         }
 
-        public override bool Evaluate(OsmBase obj)
+        /// <summary>
+        /// Returns true if the object passed through the filter.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public override bool Evaluate(SimpleOsmGeo obj)
         {
             return obj.Tags.ContainsKey(_tag);
+        }
+
+        /// <summary>
+        /// Returns a description of this filter.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("hastag:key={0}", _tag);
         }
     }
 }

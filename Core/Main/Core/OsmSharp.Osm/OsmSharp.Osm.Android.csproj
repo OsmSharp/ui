@@ -109,6 +109,7 @@
     <Compile Include="Data\Xml\Processor\XmlSimpleConverter.cs" />
     <Compile Include="Factory\OsmBaseFactory.cs" />
     <Compile Include="Filters\Filter.cs" />
+    <Compile Include="Filters\FilterAny.cs" />
     <Compile Include="Filters\FilterBox.cs" />
     <Compile Include="Filters\FilterCombined.cs" />
     <Compile Include="Filters\FilterTag.cs" />

@@ -35,10 +35,10 @@ namespace OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic
     /// </summary>
     public class EdgeAssemblyCrossOverSolver : SolverBase
     {
-        /// <summary>
-        /// Keeps the stopped flag.
-        /// </summary>
-        private bool _stopped = false;
+        ///// <summary>
+        ///// Keeps the stopped flag.
+        ///// </summary>
+        //private bool _stopped = false;
 
         /// <summary>
         /// Keeps an orginal list of customers.
@@ -68,12 +68,15 @@ namespace OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        /// <param name="problem"></param>
+        /// <param name="population_size"></param>
+        /// <param name="stagnation"></param>
+        /// <param name="generation_operation"></param>
+        /// <param name="cross_over_operation"></param>
         public EdgeAssemblyCrossOverSolver(int population_size, int stagnation,
             IGenerationOperation<List<int>, GeneticProblem, Fitness> generation_operation,
             ICrossOverOperation<List<int>, GeneticProblem, Fitness> cross_over_operation)
         {
-            _stopped = false;
+            //_stopped = false;
             _stagnation = stagnation;
             _population_size = population_size;
 
@@ -85,9 +88,10 @@ namespace OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic
         /// Creates a new solver.
         /// </summary>
         /// <param name="problem"></param>
+        /// <param name="customers"></param>
         public EdgeAssemblyCrossOverSolver(OsmSharp.Tools.Math.TSP.Problems.IProblem problem, IList<int> customers)
         {
-            _stopped = false;
+            //_stopped = false;
             _customers = customers;
         }
 
@@ -213,7 +217,7 @@ namespace OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic
         /// </summary>
         public override void Stop()
         {
-            _stopped = true;
+            //_stopped = true;
         }
     }
 }

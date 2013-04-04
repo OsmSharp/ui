@@ -12,6 +12,16 @@ namespace OsmSharp.Osm
     /// </summary>
     public class Tile
     {
+        ///// <summary>
+        ///// Flag indicating where the y-tiles start.
+        ///// </summary>
+        //private readonly bool _y_is_top;
+
+        ///// <summary>
+        ///// Flag indicating where the x-tiles start.
+        ///// </summary>
+        //private readonly bool _x_is_left;
+
         /// <summary>
         /// Creates a new tile.
         /// </summary>
@@ -24,7 +34,29 @@ namespace OsmSharp.Osm
             this.Y = y;
 
             this.Zoom = zoom;
+
+            //_y_is_top = true;
+            //_x_is_left = true;
         }
+
+        ///// <summary>
+        ///// Creates a new tile.
+        ///// </summary>
+        ///// <param name="x"></param>
+        ///// <param name="y"></param>
+        ///// <param name="zoom"></param>
+        ///// <param name="y_is_top"></param>
+        ///// <param name="x_is_left"></param>
+        //private void Tile(int x, int y, int zoom, bool y_is_top, bool x_is_left)
+        //{
+        //    this.X = x;
+        //    this.Y = y;
+
+        //    this.Zoom = zoom;
+
+        //    //_y_is_top = true;
+        //    //_x_is_left = true;
+        //}
 
         /// <summary>
         /// The X position of the tile.
@@ -48,7 +80,9 @@ namespace OsmSharp.Osm
         public override int GetHashCode()
         {
             return this.X.GetHashCode() ^
-                this.Y.GetHashCode();
+                   this.Y.GetHashCode(); // ^
+                   //_x_is_left.GetHashCode() ^
+                   //_y_is_top.GetHashCode();
         }
 
         /// <summary>
@@ -142,6 +176,28 @@ namespace OsmSharp.Osm
                 / System.Math.PI) / 2f * (double)n);
 
             return new Tile(x, y, zoom);
+        }
+
+        /// <summary>
+        /// Inverts the X-coordinate.
+        /// </summary>
+        /// <returns></returns>
+        public Tile InvertX()
+        {
+            int n = (int)System.Math.Floor(System.Math.Pow(2, this.Zoom));
+
+            return new Tile(n - this.X - 1, this.Y, this.Zoom);
+        }
+
+        /// <summary>
+        /// Inverts the Y-coordinate.
+        /// </summary>
+        /// <returns></returns>
+        public Tile InvertY()
+        {
+            int n = (int)System.Math.Floor(System.Math.Pow(2, this.Zoom));
+
+            return new Tile(this.X, n - this.Y - 1, this.Zoom);
         }
 
         #endregion

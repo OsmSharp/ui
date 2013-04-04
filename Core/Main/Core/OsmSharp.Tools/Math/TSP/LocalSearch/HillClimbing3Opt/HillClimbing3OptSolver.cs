@@ -32,10 +32,10 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
     /// </summary>
     public class HillClimbing3OptSolver : SolverBase, IImprovement
     {
-        /// <summary>
-        /// Boolean to stop execution.
-        /// </summary>
-        private bool _stopped = false;
+        ///// <summary>
+        ///// Boolean to stop execution.
+        ///// </summary>
+        //private bool _stopped = false;
 
         /// <summary>
         /// Only check nearest neighbours.
@@ -47,10 +47,10 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         /// </summary>
         private bool _dont_look = false;
 
-        /// <summary>
-        /// The route this solver was initialized with.
-        /// </summary>
-        private IRoute _route;
+        ///// <summary>
+        ///// The route this solver was initialized with.
+        ///// </summary>
+        //private IRoute _route;
 
         /// <summary>
         /// The minium difference to register improvement(s).
@@ -156,39 +156,40 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         /// Tries all 3Opt Moves for the neighbourhood of v_1.
         /// </summary>
         /// <param name="problem"></param>
+        /// <param name="weights"></param>
         /// <param name="route"></param>
-        /// <param name="v_1"></param>
+        /// <param name="v1"></param>
         /// <returns></returns>
-        public bool Try3OptMoves(IProblemWeights problem, double[][] weights, IRoute route, int v_1)
+        public bool Try3OptMoves(IProblemWeights problem, double[][] weights, IRoute route, int v1)
         {
             // get v_2.
-            int v_2 = route.GetNeigbours(v_1)[0];
+            int v_2 = route.GetNeigbours(v1)[0];
             if (v_2 < 0)
             {
                 return false;
             }
-            IEnumerable<int> between_v_2_v_1 = route.Between(v_2, v_1);
-            double weight_1_2 = weights[v_1][v_2];
+            IEnumerable<int> between_v_2_v_1 = route.Between(v_2, v1);
+            double weight_1_2 = weights[v1][v_2];
             int v_3 = -1;
             NearestNeighbours10 neighbours = null;
             if (_nearest_neighbours)
             {
-                neighbours = problem.Get10NearestNeighbours(v_1);
+                neighbours = problem.Get10NearestNeighbours(v1);
             }
 
             foreach (int v_4 in between_v_2_v_1)
             {
-                if (v_3 >= 0 && v_3 != v_1)
+                if (v_3 >= 0 && v_3 != v1)
                 { 
                     //if (!_nearest_neighbours ||
                     //    neighbours.Max <= weight_1_4) 
                     if (!_nearest_neighbours ||
                         neighbours.Contains(v_4))
                     {
-                        double weight_1_4 = weights[v_1][v_4];
+                        double weight_1_4 = weights[v1][v_4];
                         double weight_1_2_plus_3_4 = weight_1_2 + weights[v_3][v_4];
                         double[] weights_3 = weights[v_3];
-                        if (this.Try3OptMoves(problem, weights, route, v_1, v_2, v_3, weights_3, v_4, weight_1_2_plus_3_4, weight_1_4))
+                        if (this.Try3OptMoves(problem, weights, route, v1, v_2, v_3, weights_3, v_4, weight_1_2_plus_3_4, weight_1_4))
                         {
                             return true;
                         }
@@ -203,32 +204,41 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <param name="problem"></param>
+        /// <param name="weights"></param>
         /// <param name="route"></param>
-        /// <param name="v_1"></param>
+        /// <param name="v1"></param>
+        /// <param name="v_2"></param>
+        /// <param name="weight_1_2"></param>
+        /// <param name="v_3"></param>
         /// <returns></returns>
         public bool Try3OptMoves(IProblemWeights problem, double[][] weights, IRoute route,
-            int v_1, int v_2, double weight_1_2,
+            int v1, int v_2, double weight_1_2,
             int v_3)
         {
             // get v_4.
             int v_4 = route.GetNeigbours(v_3)[0];
             double weight_1_2_plus_3_4 = weight_1_2 + weights[v_3][v_4];
-            double weight_1_4 = weights[v_1][v_4];
+            double weight_1_4 = weights[v1][v_4];
             double[] weights_3 = weights[v_3];
-            return this.Try3OptMoves(problem, weights, route, v_1, v_2, v_3, weights_3, v_4, weight_1_2_plus_3_4, weight_1_4);
+            return this.Try3OptMoves(problem, weights, route, v1, v_2, v_3, weights_3, v_4, weight_1_2_plus_3_4, weight_1_4);
         }
 
         /// <summary>
         /// Tries all 3Opt Moves for the neighbourhood of v_1 containing v_3.
         /// </summary>
         /// <param name="problem"></param>
+        /// <param name="weights"></param>
         /// <param name="route"></param>
-        /// <param name="v_1"></param>
+        /// <param name="v1"></param>
         /// <param name="v_2"></param>
         /// <param name="v_3"></param>
+        /// <param name="weights_3"></param>
+        /// <param name="v_4"></param>
+        /// <param name="weight_1_2_plus_3_4"></param>
+        /// <param name="weight_1_4"></param>
         /// <returns></returns>
         public bool Try3OptMoves(IProblemWeights problem, double[][] weights, IRoute route,
-            int v_1, int v_2, int v_3, double[] weights_3, int v_4, double weight_1_2_plus_3_4, double weight_1_4)
+            int v1, int v_2, int v_3, double[] weights_3, int v_4, double weight_1_2_plus_3_4, double weight_1_4)
         {
             //IEnumerable<int> between_v_4_v_1 = route.Between(v_4, v_1);
             //foreach (int v_5 in between_v_4_v_1)
@@ -243,11 +253,11 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
             //}
             //return false;
 
-            IEnumerator<int> between_v_4_v_1_enumerator = route.Between(v_4, v_1).GetEnumerator();
+            IEnumerator<int> between_v_4_v_1_enumerator = route.Between(v_4, v1).GetEnumerator();
             if (between_v_4_v_1_enumerator.MoveNext())
             {
                 int v_5 = between_v_4_v_1_enumerator.Current;
-                if (v_5 != v_1)
+                if (v_5 != v1)
                 {
                     while (between_v_4_v_1_enumerator.MoveNext())
                     {
@@ -270,7 +280,7 @@ namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
                             int count_before = route.Count;
                             string route_string = route.ToString();
 
-                            route.ReplaceEdgeFrom(v_1, v_4);
+                            route.ReplaceEdgeFrom(v1, v_4);
                             route.ReplaceEdgeFrom(v_3, v_6);
                             route.ReplaceEdgeFrom(v_5, v_2);
 

@@ -27,6 +27,9 @@ using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
 
 namespace OsmSharp.Tools.Math.TSP.CheapestInsertion
 {
+    /// <summary>
+    /// Cheapest insertion solver.
+    /// </summary>
     public class CheapestInsertionSolver : SolverBase
     {
         /// <summary>
@@ -42,7 +45,6 @@ namespace OsmSharp.Tools.Math.TSP.CheapestInsertion
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        /// <param name="problem"></param>
         public CheapestInsertionSolver()
         {
             _stopped = false;
@@ -52,6 +54,7 @@ namespace OsmSharp.Tools.Math.TSP.CheapestInsertion
         /// Creates a new solver.
         /// </summary>
         /// <param name="problem"></param>
+        /// <param name="customers"></param>
         public CheapestInsertionSolver(IProblem problem, IList<int> customers)
         {
             _stopped = false;

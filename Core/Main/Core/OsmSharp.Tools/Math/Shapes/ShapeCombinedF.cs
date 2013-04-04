@@ -29,8 +29,6 @@ namespace OsmSharp.Tools.Math.Shapes
     /// 
     /// This shape can be multiple combined shapes.
     /// </summary>
-    /// <typeparam name="PointType"></typeparam>
-    /// <typeparam name="BoxType"></typeparam>
     public class ShapeCombinedF<PointType, RectangleType, LineType> : ShapeF<PointType, RectangleType, LineType>
         where PointType : PointF2D
         where RectangleType : GenericRectangleF2D<PointType>
@@ -44,6 +42,7 @@ namespace OsmSharp.Tools.Math.Shapes
         /// <summary>
         /// Creates a new combined shape.
         /// </summary>
+        /// <param name="primitives_factory"></param>
         /// <param name="shapes"></param>
         public ShapeCombinedF(
             IPrimitivesFactory<PointType, RectangleType, LineType> primitives_factory,

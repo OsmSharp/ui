@@ -30,8 +30,7 @@ namespace OsmSharp.Tools.Math.Geo
         /// <summary>
         /// Creates a geo coordinate polygon.
         /// </summary>
-        /// <param name="point1"></param>
-        /// <param name="point2"></param>
+        /// <param name="points"></param>
         public GeoCoordinatePolygon(
             GeoCoordinate[] points)
             :base(points)

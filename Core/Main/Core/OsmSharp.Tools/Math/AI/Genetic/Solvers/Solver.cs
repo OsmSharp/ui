@@ -38,7 +38,6 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
     ///     - mutation
     /// by using operators for each of these steps.
     /// </summary>
-    /// <typeparam name="GenomeType"></typeparam>
     public class Solver<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
         where GenomeType : class
@@ -102,8 +101,13 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        /// <param name="population"></param>
-        /// <param name="op"></param>
+        /// <param name="problem"></param>
+        /// <param name="settings"></param>
+        /// <param name="selector"></param>
+        /// <param name="mutation"></param>
+        /// <param name="cross_over"></param>
+        /// <param name="generation"></param>
+        /// <param name="fitness_calculator"></param>
         public Solver(
             ProblemType problem,
             SolverSettings settings,
@@ -125,8 +129,15 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
         /// <summary>
         /// Creates a new solver.
         /// </summary>
-        /// <param name="population"></param>
-        /// <param name="op"></param>
+        /// <param name="problem"></param>
+        /// <param name="settings"></param>
+        /// <param name="selector"></param>
+        /// <param name="mutation"></param>
+        /// <param name="cross_over"></param>
+        /// <param name="generation"></param>
+        /// <param name="fitness_calculator"></param>
+        /// <param name="accept_only_better_cross_over"></param>
+        /// <param name="accept_only_better_mutation"></param>
         public Solver(
             ProblemType problem,
             SolverSettings settings,
@@ -151,8 +162,11 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
         /// <summary>
         /// Creates a new solver.
         /// </summary>
+        /// <param name="settings"></param>
         /// <param name="selector"></param>
         /// <param name="combined_operation"></param>
+        /// <param name="problem"></param>
+        /// <param name="fitness_calculator"></param>
         public Solver(
             ProblemType problem,
             SolverSettings settings,
@@ -657,8 +671,11 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
         /// <summary>
         /// New generation delegate for the new generation event.
         /// </summary>
-        /// <param name="individual"></param>
-        public delegate void NewGenerationDelegate(int generation,int stagnation_count, Population<GenomeType, ProblemType, WeightType> population);
+        /// <param name="generation"></param>
+        /// <param name="stagnation_count"></param>
+        /// <param name="population"></param>
+        public delegate void NewGenerationDelegate(int generation,int stagnation_count, 
+            Population<GenomeType, ProblemType, WeightType> population);
         
         /// <summary>
         /// New generation event.
@@ -668,8 +685,11 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
         /// <summary>
         /// Raises the new generation event.
         /// </summary>
-        /// <param name="individual"></param>
-        private void RaiseNewGeneration(int generation, int stagnation_count, Population<GenomeType, ProblemType, WeightType> population)
+        /// <param name="generation"></param>
+        /// <param name="stagnation_count"></param>
+        /// <param name="population"></param>
+        private void RaiseNewGeneration(int generation, int stagnation_count, 
+            Population<GenomeType, ProblemType, WeightType> population)
         {
             if (NewGeneration != null)
             {
@@ -694,7 +714,8 @@ namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
         /// Reports a new message.
         /// </summary>
         /// <param name="message"></param>
-        /// <param name="stagnation_count"></param>
+        /// <param name="current"></param>
+        /// <param name="max"></param>
         private void ReportNew(string message,int current, int max)
         {
             if(this.ProgressReporter != null)

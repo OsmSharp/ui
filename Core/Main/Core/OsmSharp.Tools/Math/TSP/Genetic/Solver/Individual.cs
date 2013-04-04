@@ -23,14 +23,26 @@ using OsmSharp.Tools.Math.AI.Genetic;
 
 namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
 {
+    /// <summary>
+    /// Represents an individual.
+    /// </summary>
     public class Individual : Individual<List<int>, GeneticProblem, Fitness>
     {
+        /// <summary>
+        /// Creates an individual.
+        /// </summary>
+        /// <param name="genomes"></param>
         public Individual(List<int> genomes)
             :base(genomes)
         {
 
         }
-
+        
+        /// <summary>
+        /// Creates an individual.
+        /// </summary>
+        /// <param name="fitness_calculated"></param>
+        /// <param name="fitness"></param>
         protected Individual(bool fitness_calculated, Fitness fitness)
             : base(fitness_calculated, fitness)
         {

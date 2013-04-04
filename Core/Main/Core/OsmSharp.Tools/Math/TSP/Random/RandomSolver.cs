@@ -32,15 +32,15 @@ namespace OsmSharp.Tools.Math.TravellingSalesman.Random
     /// </summary>
     public class RandomSolver : SolverBase
     {
-        /// <summary>
-        /// Boolean to stop execution.
-        /// </summary>
-        private bool _stopped = false;
+        ///// <summary>
+        ///// Boolean to stop execution.
+        ///// </summary>
+        //private bool _stopped = false;
 
-        /// <summary>
-        /// The route this solver was initialized with.
-        /// </summary>
-        private IRoute _route;
+        ///// <summary>
+        ///// The route this solver was initialized with.
+        ///// </summary>
+        //private IRoute _route;
 
         /// <summary>
         /// Retuns the name of this solver.

@@ -27,10 +27,11 @@ namespace OsmSharp.Tools.Math.VRP.Core.LocalSearch
     /// Responsible for an local search strategy doing best-placement.
     /// </summary>
     public class RePlace2OptHelper
-    {       
+    {
         /// <summary>
         /// Applies a local search strategy.
         /// </summary>
+        /// <param name="problem"></param>
         /// <param name="route"></param>
         /// <returns></returns>
         public static void CalculateRePlaceOptHelper(

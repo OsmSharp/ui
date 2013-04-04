@@ -181,18 +181,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Osm.Data.Oracle\OsmSharp.Osm.Data.Oracle.csproj">
-      <Project>{060B01E7-9314-41DD-BC17-65ED9E6A54FE}</Project>
-      <Name>OsmSharp.Osm.Data.Oracle</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm.Data.PostgreSQL\OsmSharp.Osm.Data.PostgreSQL.csproj">
-      <Project>{A4D2E373-A9BD-4872-99A0-904E2E90C96E}</Project>
-      <Name>OsmSharp.Osm.Data.PostgreSQL</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Osm.Data.Redis\OsmSharp.Osm.Data.Redis.csproj">
-      <Project>{9152A85F-61AC-486F-B5F6-E2C969132738}</Project>
-      <Name>OsmSharp.Osm.Data.Redis</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
       <Name>OsmSharp.Osm</Name>

@@ -31,7 +31,7 @@ namespace OsmSharp.Tools.Math
         /// Creates a new line.
         /// </summary>
         /// <param name="a"></param>
-        /// <param name="b"></param>
+        /// <param name="v"></param>
         public LineF2D(VectorF2D v, PointF2D a)
             : base(a, a + v)
         {
@@ -42,7 +42,9 @@ namespace OsmSharp.Tools.Math
         /// Creates a new line.
         /// </summary>
         /// <param name="a"></param>
-        /// <param name="b"></param>
+        /// <param name="v"></param>
+        /// <param name="is_segment1"></param>
+        /// <param name="is_segment2"></param>
         public LineF2D(VectorF2D v, PointF2D a,bool is_segment1, bool is_segment2)
             : base(a, a + v,is_segment1,is_segment2)
         {
@@ -65,6 +67,8 @@ namespace OsmSharp.Tools.Math
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
+        /// <param name="is_segment1"></param>
+        /// <param name="is_segment2"></param>
         public LineF2D(PointF2D a, PointF2D b, bool is_segment1, bool is_segment2)
             : base(a, b, is_segment1, is_segment2)
         {

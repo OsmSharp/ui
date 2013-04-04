@@ -26,6 +26,8 @@ namespace OsmSharp.Tools.Math.Shapes.PrimitivesFactory
     /// Interface used to encapsulate the creation of primitive types for usage in shapes.
     /// </summary>
     /// <typeparam name="PointType"></typeparam>
+    /// <typeparam name="RectangleType"></typeparam>
+    /// <typeparam name="LineType"></typeparam>
     public interface IPrimitivesFactory<PointType,RectangleType,LineType>
         where PointType : PointF2D
         where RectangleType : GenericRectangleF2D<PointType> 
