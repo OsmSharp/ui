@@ -1,0 +1,106 @@
+﻿//// OsmSharp - OpenStreetMap tools & library.
+//// Copyright (C) 2012 Abelshausen Ben
+//// 
+//// This file is part of OsmSharp.
+//// 
+//// OsmSharp is free software: you can redistribute it and/or modify
+//// it under the terms of the GNU General Public License as published by
+//// the Free Software Foundation, either version 2 of the License, or
+//// (at your option) any later version.
+//// 
+//// OsmSharp is distributed in the hope that it will be useful,
+//// but WITHOUT ANY WARRANTY; without even the implied warranty of
+//// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//// GNU General Public License for more details.
+//// 
+//// You should have received a copy of the GNU General Public License
+//// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Text;
+
+//namespace OsmSharp.Routing.Interpreter
+//{
+//    /// <summary>
+//    /// Interpreters the raw OSM data for routing purposes.
+//    /// </summary>
+//    /// <remarks>
+//    /// All the routing configurations should be behind this class. This is the one-entry point for routing configurations, no matter
+//    /// what routing technique will be used.
+//    /// </remarks>
+//    public abstract class RoutingInterpreterBase
+//    {
+//        /// <summary>
+//        /// Returns true if this node has a weight.
+//        /// </summary>
+//        /// <param name="node"></param>
+//        /// <returns></returns>
+//        public abstract bool HasWeight(Node node);
+
+//        /// <summary>
+//        /// Returns the weight between two given nodes.
+//        /// </summary>
+//        /// <param name="edge"></param>
+//        /// <param name="from_vertex"></param>
+//        /// <param name="to_vertex"></param>
+//        /// <returns></returns>
+//        public abstract float Weight(Way edge, Node from_vertex, Node to_vertex);
+
+//        #region Traversable
+
+//        /// <summary>
+//        /// Returns true if the way can be traversed.
+//        /// </summary>
+//        /// <param name="way"></param>
+//        /// <returns></returns>
+//        public bool CanBeTraversed(Way way)
+//        {
+//            return this.GetWayInterpretation(way.Tags).CanBeTraversed();
+//        }
+
+//        /// <summary>
+//        /// Returns true if the way can be traversed from the given node to the given node.
+//        /// </summary>
+//        /// <param name="way"></param>
+//        /// <param name="from"></param>
+//        /// <param name="to"></param>
+//        /// <returns></returns>
+//        /// <remarks>from and to need to be neighbours</remarks>
+//        public bool CanBeTraversed(Way way, Node from, Node to)
+//        {
+//            return this.GetWayInterpretation(way.Tags).CanBeTraversed(from, to);
+//        }
+
+//        /// <summary>
+//        /// Returns true if the node can be traversed coming from the given node along the given way to the given node along the given way.
+//        /// </summary>
+//        /// <param name="from"></param>
+//        /// <param name="edge_from"></param>
+//        /// <param name="along"></param>
+//        /// <param name="edge_to"></param>
+//        /// <param name="to"></param>
+//        /// <returns></returns>
+//        public abstract bool CanBeTraversed(Node from, Way edge_from, Node along, Way edge_to, Node to);
+
+//        /// <summary>
+//        /// Returns true if a location on this way can serve as a starting or end point.
+//        /// </summary>
+//        /// <param name="way"></param>
+//        /// <returns></returns>
+//        public abstract bool CanBeStoppedOn(Way way);
+
+//        #endregion
+
+//        #region Way Tag Interpretations
+
+//        /// <summary>
+//        /// Returns a way interpretation.
+//        /// </summary>
+//        /// <param name="way"></param>
+//        /// <returns></returns>
+//        public abstract RoutingWayInterperterBase GetWayInterpretation(IDictionary<string, string> tags);
+
+//        #endregion
+//    }
+//}

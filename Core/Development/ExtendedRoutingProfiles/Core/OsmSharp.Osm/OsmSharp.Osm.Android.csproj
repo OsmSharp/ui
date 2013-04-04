@@ -1,0 +1,175 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E881DC2A-6738-4F9D-A047-0DF201544C1B}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>OsmSharp.Osm</RootNamespace>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AssemblyName>OsmSharp.Osm</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>..\OutputAndroid\</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>None</AndroidLinkMode>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>..\OutputAndroid\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>..\..\..\..\..\..\..\..\..\..\Program Files (x86)\protobuf-net\protobuf-net-VS9\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Change.cs" />
+    <Compile Include="ChangeSet.cs" />
+    <Compile Include="Data\API\APICapabilities.cs" />
+    <Compile Include="Data\API\APIConnection.cs" />
+    <Compile Include="Data\API\APIException.cs" />
+    <Compile Include="Data\Cache\DataSourceCache.cs" />
+    <Compile Include="Data\Cache\DataSourceQuadTree.cs" />
+    <Compile Include="Data\Cache\DataSourceQuadTreeNode.cs" />
+    <Compile Include="Data\DynamicGraph\IDynamicGraph.cs" />
+    <Compile Include="Data\DynamicGraph\IDynamicGraphEdgeData.cs" />
+    <Compile Include="Data\IApi.cs" />
+    <Compile Include="Data\IDataSource.cs" />
+    <Compile Include="Data\IDataSourceReadOnly.cs" />
+    <Compile Include="Data\KeyGenerator.cs" />
+    <Compile Include="Data\Memory\MemoryDataSource.cs" />
+    <Compile Include="Data\Memory\MemoryDataSourceProcessorTarget.cs" />
+    <Compile Include="Data\Processor\ChangeSets\DataProcessorChangeSetFilter.cs" />
+    <Compile Include="Data\Processor\ChangeSets\DataProcessorChangeSetSource.cs" />
+    <Compile Include="Data\Processor\ChangeSets\DataProcessorChangeSetTarget.cs" />
+    <Compile Include="Data\Processor\DataProcessorFilter.cs" />
+    <Compile Include="Data\Processor\DataProcessorSource.cs" />
+    <Compile Include="Data\Processor\DataProcessorTarget.cs" />
+    <Compile Include="Data\Processor\Default\DataProcessorSourceEmpty.cs" />
+    <Compile Include="Data\Processor\Default\DataProcessorTargetEmpty.cs" />
+    <Compile Include="Data\Processor\Filter\BoundingBox\DataProcessorChangeSetFilterBoundingBox.cs" />
+    <Compile Include="Data\Processor\Filter\BoundingBox\DataProcessorFilterBoundingBox.cs" />
+    <Compile Include="Data\Processor\Filter\BoundingBox\IChangeSetFilterListener.cs" />
+    <Compile Include="Data\Processor\Filter\BoundingBox\LongIndex\ILongIndexNode.cs" />
+    <Compile Include="Data\Processor\Filter\BoundingBox\LongIndex\LongIndex.cs" />
+    <Compile Include="Data\Processor\Filter\BoundingBox\LongIndex\LongIndexLeaf.cs" />
+    <Compile Include="Data\Processor\Filter\BoundingBox\LongIndex\LongIndexNode.cs" />
+    <Compile Include="Data\Processor\Filter\DataProcessorFilterWithEvents.cs" />
+    <Compile Include="Data\Processor\Filter\Sort\DataProcessorFilterSort.cs" />
+    <Compile Include="Data\Processor\List\CollectionDataProcessorSource.cs" />
+    <Compile Include="Data\Processor\List\CollectionDataProcessorTarget.cs" />
+    <Compile Include="Data\Processor\List\OsmGeoListDataProcessorSource.cs" />
+    <Compile Include="Data\Processor\Progress\ProgressDataProcessorSource.cs" />
+    <Compile Include="Data\Processor\Progress\ProgressDataProcessorTarget.cs" />
+    <Compile Include="Data\Processor\SimpleSource\ISimpleSourceData.cs" />
+    <Compile Include="Data\Processor\SimpleSource\SimpleMemoryData.cs" />
+    <Compile Include="Data\Sparse\ISparseData.cs" />
+    <Compile Include="Data\Sparse\Primitives\SimpleArc.cs" />
+    <Compile Include="Data\Sparse\Primitives\SimpleVertex.cs" />
+    <Compile Include="Data\Sparse\Primitives\SparseSimpleVertex.cs" />
+    <Compile Include="Data\Sparse\Primitives\SparseVertex.cs" />
+    <Compile Include="Data\Xml\GpxSource\GpxDataSource.cs" />
+    <Compile Include="Data\Xml\KmlSource\KmlDataSource.cs" />
+    <Compile Include="Data\Xml\OsmSource\OsmDataSource.cs" />
+    <Compile Include="Data\Xml\Processor\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
+    <Compile Include="Data\Xml\Processor\Replication\Replicator.cs" />
+    <Compile Include="Data\Xml\Processor\XmlDataProcessorSource.cs" />
+    <Compile Include="Data\Xml\Processor\XmlDataProcessorTarget.cs" />
+    <Compile Include="Data\Xml\Processor\XmlFragmentWriter.cs" />
+    <Compile Include="Data\Xml\Processor\XmlSimpleConverter.cs" />
+    <Compile Include="Factory\OsmBaseFactory.cs" />
+    <Compile Include="Filters\Filter.cs" />
+    <Compile Include="Filters\FilterAny.cs" />
+    <Compile Include="Filters\FilterBox.cs" />
+    <Compile Include="Filters\FilterCombined.cs" />
+    <Compile Include="Filters\FilterTag.cs" />
+    <Compile Include="Filters\FilterType.cs" />
+    <Compile Include="Filters\Tags\FilterTagCount.cs" />
+    <Compile Include="Filters\Tags\FilterTagExists.cs" />
+    <Compile Include="Filters\Tags\FilterTagMatch.cs" />
+    <Compile Include="IShapeInterpreter.cs" />
+    <Compile Include="Node.cs" />
+    <Compile Include="OsmBase.cs" />
+    <Compile Include="OsmBaseIdGenerator.cs" />
+    <Compile Include="OsmGeo.cs" />
+    <Compile Include="OsmGeoType.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Relation.cs" />
+    <Compile Include="RelationMember.cs" />
+    <Compile Include="SimpleShapeInterpreter.cs" />
+    <Compile Include="Simple\SimpleChange.cs" />
+    <Compile Include="Simple\SimpleChangeSet.cs" />
+    <Compile Include="Simple\SimpleChangeSetInfo.cs" />
+    <Compile Include="Simple\SimpleChangeType.cs" />
+    <Compile Include="Simple\SimpleNode.cs" />
+    <Compile Include="Simple\SimpleOsmGeo.cs" />
+    <Compile Include="Simple\SimpleOsmGeoType.cs" />
+    <Compile Include="Simple\SimpleRelation.cs" />
+    <Compile Include="Simple\SimpleRelationMember.cs" />
+    <Compile Include="Simple\SimpleRelationMemberType.cs" />
+    <Compile Include="Simple\SimpleWay.cs" />
+    <Compile Include="Sources\INodeSource.cs" />
+    <Compile Include="Sources\IRelationSource.cs" />
+    <Compile Include="Sources\IWaySource.cs" />
+    <Compile Include="Tags\OsmTagsIndex.cs" />
+    <Compile Include="Tiles\Tile.cs" />
+    <Compile Include="Tiles\TileRange.cs" />
+    <Compile Include="User.cs" />
+    <Compile Include="Way.cs" />
+    <Compile Include="Xml\OsmDocument.cs" />
+    <Compile Include="Xml\v0_6\Extensions.cs" />
+    <Compile Include="Xml\v0_6\osm.cs">
+      <DependentUpon>osm.xsd</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Xml\v0_6\osm.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.Android.csproj">
+      <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
+      <Name>OsmSharp.Tools.Android</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Memory\Memory\" />
+    <Folder Include="Data\Xml\GpxSource\GpxSource\" />
+    <Folder Include="Data\Xml\KmlSource\KmlSource\" />
+    <Folder Include="Data\Xml\OsmSource\OsmSource\" />
+    <Folder Include="Data\Xml\Processor\Processor\ChangeSets\" />
+    <Folder Include="Data\Xml\Processor\Processor\Replication\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+</Project>
