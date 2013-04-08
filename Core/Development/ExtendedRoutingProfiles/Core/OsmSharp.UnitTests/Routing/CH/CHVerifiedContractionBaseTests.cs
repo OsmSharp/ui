@@ -99,7 +99,7 @@ namespace OsmSharp.UnitTests.Routing.CH
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                _data, _interpreter, _data.TagsIndex, VehicleEnum.Car);
+                _data, _interpreter, _data.TagsIndex, Vehicle.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
             sorter.RegisterSource(data_processor_source);
@@ -139,7 +139,7 @@ namespace OsmSharp.UnitTests.Routing.CH
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
             CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                _data, _interpreter, _data.TagsIndex, VehicleEnum.Car);
+                _data, _interpreter, _data.TagsIndex, Vehicle.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
             sorter.RegisterSource(data_processor_source);
@@ -187,7 +187,7 @@ namespace OsmSharp.UnitTests.Routing.CH
                     to_list.UpdateVertex(new PathSegment<long>(to.Key));
 
                     // calculate the route.
-                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.VehicleEnum.Car, from_list, to_list, double.MaxValue);
+                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, from_list, to_list, double.MaxValue);
                     if ((from_dic[to.Key] == null && route != null) ||
                         (from_dic[to.Key] != null && route == null) ||
                         ((from_dic[to.Key] != null && route != null) && from_dic[to.Key] != route))
@@ -227,7 +227,7 @@ namespace OsmSharp.UnitTests.Routing.CH
                     to_list.UpdateVertex(new PathSegment<long>(to.Key));
 
                     // calculate the route.
-                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.VehicleEnum.Car, from_list, to_list, double.MaxValue);
+                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, from_list, to_list, double.MaxValue);
                     from_dic[to.Key] = route;
                 }
             }

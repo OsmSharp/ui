@@ -93,7 +93,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.DykstraPreProcessing
                 DynamicGraphRouterDataSource<PreProcessedEdge> memory_data =
                     new DynamicGraphRouterDataSource<PreProcessedEdge>(tags_index);
                 PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
-                    memory_data, interpreter, memory_data.TagsIndex, VehicleEnum.Car);
+                    memory_data, interpreter, memory_data.TagsIndex, Vehicle.Car);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string));
                 DataProcessorFilterSort sorter = new DataProcessorFilterSort();

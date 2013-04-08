@@ -77,7 +77,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
             OsmDataSource source = new OsmDataSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string)); // "OsmSharp.UnitTests.test_network.osm"));
             return new OsmSharp.Routing.Osm.Data.OsmSourceRouterDataSource(interpreter,
-                tags_index, source, VehicleEnum.Car);
+                tags_index, source, Vehicle.Car);
         }
 
         /// <summary>

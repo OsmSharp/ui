@@ -77,10 +77,10 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0578532, 3.7192229));
-            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            ResolvedType source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            ResolvedType target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
@@ -121,12 +121,12 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            ResolvedType source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
             source.Tags.Add(new KeyValuePair<string, string>("name", "source"));
-            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            ResolvedType target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
             target.Tags.Add(new KeyValuePair<string, string>("name", "target"));
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
@@ -158,12 +158,12 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            ResolvedType source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
             source.Tags.Add(new KeyValuePair<string, string>("name", "source"));
-            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            ResolvedType target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
             target.Tags.Add(new KeyValuePair<string, string>("name", "target"));
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
@@ -187,10 +187,10 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0578532, 3.7192229));
-            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0579235, 3.7199811));
+            ResolvedType source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            ResolvedType target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(6, route.Entries.Length);
         }
@@ -205,10 +205,10 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0579235, 3.7199811));
-            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            ResolvedType source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
+            ResolvedType target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(6, route.Entries.Length);
         }
@@ -223,10 +223,10 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576193, 3.7191801));
-            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0579235, 3.7199811));
+            ResolvedType source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            ResolvedType target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(6, route.Entries.Length);
         }
@@ -241,10 +241,10 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0579235, 3.7199811));
-            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            ResolvedType source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
+            ResolvedType target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(6, route.Entries.Length);
         }
@@ -259,10 +259,10 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576193, 3.7191801));
-            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0581001, 3.7200612));
+            ResolvedType source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            ResolvedType target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0581001, 3.7200612));
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(7, route.Entries.Length);
         }
@@ -277,10 +277,10 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0578153, 3.7193937));
-            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0582408, 3.7194636));
+            ResolvedType source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578153, 3.7193937));
+            ResolvedType target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0582408, 3.7194636));
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(10, route.Entries.Length);
         }
@@ -295,10 +295,10 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0581843, 3.7201209)); // between 2 - 3
-            ResolvedType target = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0581484, 3.7194957)); // between 9 - 8
+            ResolvedType source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0581843, 3.7201209)); // between 2 - 3
+            ResolvedType target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0581484, 3.7194957)); // between 9 - 8
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
         }
@@ -314,18 +314,18 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
             ResolvedType[] resolved_points = new ResolvedType[3];
-            resolved_points[0] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0578532, 3.7192229));
-            resolved_points[1] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576193, 3.7191801));
-            resolved_points[2] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0581001, 3.7200612));
+            resolved_points[0] = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            resolved_points[1] = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            resolved_points[2] = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0581001, 3.7200612));
 
-            double[][] weights = router.CalculateManyToManyWeight(VehicleEnum.Car, resolved_points, resolved_points);
+            double[][] weights = router.CalculateManyToManyWeight(Vehicle.Car, resolved_points, resolved_points);
 
             for (int x = 0; x < weights.Length; x++)
             {
                 for (int y = 0; y < weights.Length; y++)
                 {
                     double many_to_many = weights[x][y];
-                    double point_to_point = router.CalculateWeight(VehicleEnum.Car, resolved_points[x], resolved_points[y]);
+                    double point_to_point = router.CalculateWeight(Vehicle.Car, resolved_points[x], resolved_points[y]);
 
                     Assert.AreEqual(point_to_point, many_to_many);
                 }
@@ -343,19 +343,19 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IRouter<ResolvedType> router = this.BuildRouter(
                 data, interpreter, basic_router);
             ResolvedType[] resolved_points = new ResolvedType[3];
-            resolved_points[0] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0578532, 3.7192229));
-            resolved_points[1] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576193, 3.7191801));
-            resolved_points[2] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0581001, 3.7200612));
+            resolved_points[0] = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
+            resolved_points[1] = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            resolved_points[2] = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0581001, 3.7200612));
 
             // test connectivity succes.
-            Assert.IsTrue(router.CheckConnectivity(VehicleEnum.Car, resolved_points[0], 5));
-            //Assert.IsTrue(router.CheckConnectivity(VehicleEnum.Car, resolved_points[1], 5));
-            Assert.IsTrue(router.CheckConnectivity(VehicleEnum.Car, resolved_points[2], 5));
+            Assert.IsTrue(router.CheckConnectivity(Vehicle.Car, resolved_points[0], 5));
+            //Assert.IsTrue(router.CheckConnectivity(Vehicle.Car, resolved_points[1], 5));
+            Assert.IsTrue(router.CheckConnectivity(Vehicle.Car, resolved_points[2], 5));
 
             // test connectivity failiure.
-            Assert.IsFalse(router.CheckConnectivity(VehicleEnum.Car, resolved_points[0], 1000));
-            Assert.IsFalse(router.CheckConnectivity(VehicleEnum.Car, resolved_points[1], 1000));
-            Assert.IsFalse(router.CheckConnectivity(VehicleEnum.Car, resolved_points[2], 1000));
+            Assert.IsFalse(router.CheckConnectivity(Vehicle.Car, resolved_points[0], 1000));
+            Assert.IsFalse(router.CheckConnectivity(Vehicle.Car, resolved_points[1], 1000));
+            Assert.IsFalse(router.CheckConnectivity(Vehicle.Car, resolved_points[2], 1000));
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
                 float latitude, longitude;
                 if (data.GetVertex((uint)idx, out latitude, out longitude))
                 {
-                    ResolvedType point = router.Resolve(VehicleEnum.Car, new GeoCoordinate(latitude, longitude));
+                    ResolvedType point = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
                     Assert.AreEqual(idx, (point as RouterPoint).Id);
                 }
             }
@@ -392,82 +392,82 @@ namespace OsmSharp.Osm.UnitTests.Routing
 
            float delta = 0.001f;
             SearchClosestResult result;
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0578761, 3.7193972), delta, null, null); //,-103,  -4,  -8
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0578761, 3.7193972), delta, null, null); //,-103,  -4,  -8
             Assert.IsTrue((result.Vertex1 == 20 && result.Vertex2 == 21) ||
                 (result.Vertex1 == 21 && result.Vertex2 == 20));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0576510, 3.7194124), delta, null, null); //,-104, -14, -12
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0576510, 3.7194124), delta, null, null); //,-104, -14, -12
             Assert.IsTrue((result.Vertex1 == 22 && result.Vertex2 == 23) ||
                 (result.Vertex1 == 23 && result.Vertex2 == 22));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0576829, 3.7196791), delta, null, null); //,-105, -12, -10
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0576829, 3.7196791), delta, null, null); //,-105, -12, -10
             Assert.IsTrue((result.Vertex1 == 22 && result.Vertex2 == 16) ||
                 (result.Vertex1 == 16 && result.Vertex2 == 22));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0577819, 3.7196308), delta, null, null); //,-106, -10,  -8
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0577819, 3.7196308), delta, null, null); //,-106, -10,  -8
             Assert.IsTrue((result.Vertex1 == 21 && result.Vertex2 == 16) ||
                 (result.Vertex1 == 16 && result.Vertex2 == 21));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0577516, 3.7198975), delta, null, null); //,-107, -10, -18
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0577516, 3.7198975), delta, null, null); //,-107, -10, -18
             Assert.IsTrue((result.Vertex1 == 17 && result.Vertex2 == 16) ||
                 (result.Vertex1 == 16 && result.Vertex2 == 17));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0578218, 3.7200626), delta, null, null); //,-108, -18, -20
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0578218, 3.7200626), delta, null, null); //,-108, -18, -20
             Assert.IsTrue((result.Vertex1 == 17 && result.Vertex2 == 7) ||
                 (result.Vertex1 == 7 && result.Vertex2 == 17));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0578170, 3.7202480), delta, null, null); //,-109, -20, -76
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0578170, 3.7202480), delta, null, null); //,-109, -20, -76
             Assert.IsTrue((result.Vertex1 == 6 && result.Vertex2 == 7) ||
                 (result.Vertex1 == 7 && result.Vertex2 == 6));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0577580, 3.7204004), delta, null, null); //,-110, -76, -74
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0577580, 3.7204004), delta, null, null); //,-110, -76, -74
             Assert.IsTrue((result.Vertex1 == 5 && result.Vertex2 == 6) ||
                 (result.Vertex1 == 6 && result.Vertex2 == 5));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0579032, 3.7204258), delta, null, null); //,-111, -74, -72
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0579032, 3.7204258), delta, null, null); //,-111, -74, -72
             Assert.IsTrue((result.Vertex1 == 1 && result.Vertex2 == 5) ||
                 (result.Vertex1 == 5 && result.Vertex2 == 1));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0580453, 3.7204614), delta, null, null); //,-112, -72, -70
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580453, 3.7204614), delta, null, null); //,-112, -72, -70
             Assert.IsTrue((result.Vertex1 == 4 && result.Vertex2 == 1) ||
                 (result.Vertex1 == 1 && result.Vertex2 == 4));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0581938, 3.7203953), delta, null, null); //,-113, -70, -68
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581938, 3.7203953), delta, null, null); //,-113, -70, -68
             Assert.IsTrue((result.Vertex1 == 3 && result.Vertex2 == 4) ||
                 (result.Vertex1 == 4 && result.Vertex2 == 3));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0581826, 3.7201413), delta, null, null); //,-114, -46, -68
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581826, 3.7201413), delta, null, null); //,-114, -46, -68
             Assert.IsTrue((result.Vertex1 == 3 && result.Vertex2 == 2) ||
                 (result.Vertex1 == 2 && result.Vertex2 == 3));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0580310, 3.7201998), delta, null, null); //,-115, -46, -72
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580310, 3.7201998), delta, null, null); //,-115, -46, -72
             Assert.IsTrue((result.Vertex1 == 2 && result.Vertex2 == 1) ||
                 (result.Vertex1 == 1 && result.Vertex2 == 2));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0579208, 3.7200525), delta, null, null); //,-116, -20, -22
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0579208, 3.7200525), delta, null, null); //,-116, -20, -22
             Assert.IsTrue((result.Vertex1 == 11 && result.Vertex2 == 7) ||
                 (result.Vertex1 == 7 && result.Vertex2 == 11));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0580134, 3.7199966), delta, null, null); //,-117, -46, -22
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580134, 3.7199966), delta, null, null); //,-117, -46, -22
             Assert.IsTrue((result.Vertex1 == 2 && result.Vertex2 == 11) ||
                 (result.Vertex1 == 11 && result.Vertex2 == 2));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0581251, 3.7198950), delta, null, null); //,-118, -46, -48
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581251, 3.7198950), delta, null, null); //,-118, -46, -48
             Assert.IsTrue((result.Vertex1 == 18 && result.Vertex2 == 2) ||
                 (result.Vertex1 == 2 && result.Vertex2 == 18));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0579479, 3.7197985), delta, null, null); //,-119, -22, -56
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0579479, 3.7197985), delta, null, null); //,-119, -22, -56
             Assert.IsTrue((result.Vertex1 == 10 && result.Vertex2 == 11) ||
                 (result.Vertex1 == 11 && result.Vertex2 == 10));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0580166, 3.7195496), delta, null, null); //,-120, -56, -65
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580166, 3.7195496), delta, null, null); //,-120, -56, -65
             Assert.IsTrue((result.Vertex1 == 10 && result.Vertex2 == 9) ||
                 (result.Vertex1 == 9 && result.Vertex2 == 10));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0581299, 3.7195673), delta, null, null); //,-121, -65, -50
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581299, 3.7195673), delta, null, null); //,-121, -65, -50
             Assert.IsTrue((result.Vertex1 == 8 && result.Vertex2 == 9) ||
                 (result.Vertex1 == 9 && result.Vertex2 == 8));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0581651, 3.7196664), delta, null, null); //,-122, -50, -48
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581651, 3.7196664), delta, null, null); //,-122, -50, -48
             Assert.IsTrue((result.Vertex1 == 8 && result.Vertex2 == 18) ||
                 (result.Vertex1 == 18 && result.Vertex2 == 8));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0582050, 3.7194505), delta, null, null); //,-123, -50, -52
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0582050, 3.7194505), delta, null, null); //,-123, -50, -52
             Assert.IsTrue((result.Vertex1 == 19 && result.Vertex2 == 8) ||
                 (result.Vertex1 == 8 && result.Vertex2 == 19));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0582082, 3.7191330), delta, null, null); //,-124, -52, -54
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0582082, 3.7191330), delta, null, null); //,-124, -52, -54
             Assert.IsTrue((result.Vertex1 == 15 && result.Vertex2 == 19) ||
                 (result.Vertex1 == 19 && result.Vertex2 == 15));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0581651, 3.7189628), delta, null, null); //,-125, -54, -62
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0581651, 3.7189628), delta, null, null); //,-125, -54, -62
             Assert.IsTrue((result.Vertex1 == 15 && result.Vertex2 == 14) ||
                 (result.Vertex1 == 14 && result.Vertex2 == 15));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0580725, 3.7189781), delta, null, null); //,-126, -62, -60
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580725, 3.7189781), delta, null, null); //,-126, -62, -60
             Assert.IsTrue((result.Vertex1 == 14 && result.Vertex2 == 13) ||
                 (result.Vertex1 == 13 && result.Vertex2 == 14));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0580006, 3.7191305), delta, null, null); //,-127, -60, -58
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0580006, 3.7191305), delta, null, null); //,-127, -60, -58
             Assert.IsTrue((result.Vertex1 == 13 && result.Vertex2 == 12) ||
                 (result.Vertex1 == 12 && result.Vertex2 == 13));
-            result = basic_router.SearchClosest(data, interpreter, VehicleEnum.Car, new GeoCoordinate(51.0579783, 3.7194149), delta, null, null); //,-128, -58, -56
+            result = basic_router.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0579783, 3.7194149), delta, null, null); //,-128, -58, -56
             Assert.IsTrue((result.Vertex1 == 10 && result.Vertex2 == 12) ||
                 (result.Vertex1 == 12 && result.Vertex2 == 10));
         }
@@ -485,27 +485,27 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);
             
             // first test a non-between node.
-            ResolvedType resolved = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576193, 3.7191801));
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, resolved, resolved);
+            ResolvedType resolved = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, resolved, resolved);
             Assert.AreEqual(1, route.Entries.Length);
             Assert.AreEqual(0, route.TotalDistance);
             Assert.AreEqual(0, route.TotalTime);
 
-            resolved = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0578761, 3.7193972)); //,-103,  -4,  -8
-            route = router.Calculate(VehicleEnum.Car, resolved, resolved);
+            resolved = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578761, 3.7193972)); //,-103,  -4,  -8
+            route = router.Calculate(Vehicle.Car, resolved, resolved);
             Assert.AreEqual(1, route.Entries.Length);
             Assert.AreEqual(0, route.TotalDistance);
             Assert.AreEqual(0, route.TotalTime);
 
 
-            resolved = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576510, 3.7194124)); //,-104, -14, -12
-            route = router.Calculate(VehicleEnum.Car, resolved, resolved);
+            resolved = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576510, 3.7194124)); //,-104, -14, -12
+            route = router.Calculate(Vehicle.Car, resolved, resolved);
             Assert.AreEqual(1, route.Entries.Length);
             Assert.AreEqual(0, route.TotalDistance);
             Assert.AreEqual(0, route.TotalTime);
 
-            resolved = router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.0576829, 3.7196791)); //,-105, -12, -10
-            route = router.Calculate(VehicleEnum.Car, resolved, resolved);
+            resolved = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576829, 3.7196791)); //,-105, -12, -10
+            route = router.Calculate(Vehicle.Car, resolved, resolved);
             Assert.AreEqual(1, route.Entries.Length);
             Assert.AreEqual(0, route.TotalDistance);
             Assert.AreEqual(0, route.TotalTime);
@@ -537,9 +537,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
                     IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
                     IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);
 
-                    OsmSharpRoute route = router.Calculate(VehicleEnum.Car, 
-                        router.Resolve(VehicleEnum.Car, vertex_20_21),
-                        router.Resolve(VehicleEnum.Car, vertex_21_16));
+                    OsmSharpRoute route = router.Calculate(Vehicle.Car, 
+                        router.Resolve(Vehicle.Car, vertex_20_21),
+                        router.Resolve(Vehicle.Car, vertex_21_16));
 
                     Assert.AreEqual(3, route.Entries.Length);
                     Assert.AreEqual(vertex_20_21.Latitude, route.Entries[0].Latitude, 0.0001);
@@ -578,9 +578,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
                 IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
                 IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);
 
-                OsmSharpRoute route = router.Calculate(VehicleEnum.Car,
-                    router.Resolve(VehicleEnum.Car, vertex_20_21),
-                    router.Resolve(VehicleEnum.Car, vertex_21_20));
+                OsmSharpRoute route = router.Calculate(Vehicle.Car,
+                    router.Resolve(Vehicle.Car, vertex_20_21),
+                    router.Resolve(Vehicle.Car, vertex_21_20));
 
                 if (vertex_20_21.Latitude != vertex_21_20.Latitude &&
                     vertex_20_21.Longitude != vertex_21_20.Longitude)
@@ -620,9 +620,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car,
-                router.Resolve(VehicleEnum.Car, vertex_20_21),
-                router.Resolve(VehicleEnum.Car, vertex_21_16));
+            OsmSharpRoute route = router.Calculate(Vehicle.Car,
+                router.Resolve(Vehicle.Car, vertex_20_21),
+                router.Resolve(Vehicle.Car, vertex_21_16));
 
             Assert.AreEqual(3, route.Entries.Length);
             Assert.AreEqual(vertex_20_21.Latitude, route.Entries[0].Latitude, 0.0001);
@@ -660,9 +660,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
             IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data);
             IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);
 
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car,
-                router.Resolve(VehicleEnum.Car, vertex_20_21_1),
-                router.Resolve(VehicleEnum.Car, vertex_20_21_2));
+            OsmSharpRoute route = router.Calculate(Vehicle.Car,
+                router.Resolve(Vehicle.Car, vertex_20_21_1),
+                router.Resolve(Vehicle.Car, vertex_20_21_2));
 
             Assert.AreEqual(2, route.Entries.Length);
             Assert.AreEqual(vertex_20_21_1.Latitude, route.Entries[0].Latitude, 0.0001);
@@ -699,7 +699,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
             tags2.Add("test2", "yes");
 
             // resolve points.
-            ResolvedType point1 = router.Resolve(VehicleEnum.Car, vertex_16);
+            ResolvedType point1 = router.Resolve(Vehicle.Car, vertex_16);
             point1.Tags.Add(new KeyValuePair<string, string>("test1","yes"));
 
             // test presence of tags.
@@ -708,7 +708,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
             Assert.AreEqual("yes", point1.Tags[0].Value);
 
             // resolve point again.
-            ResolvedType point2 = router.Resolve(VehicleEnum.Car, vertex_16);
+            ResolvedType point2 = router.Resolve(Vehicle.Car, vertex_16);
 
             // the tags should be here still!
             Assert.AreEqual(1, point2.Tags.Count);

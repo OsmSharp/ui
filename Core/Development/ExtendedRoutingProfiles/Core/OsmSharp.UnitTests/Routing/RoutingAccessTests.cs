@@ -102,243 +102,243 @@ namespace OsmSharp.UnitTests.Routing
             GeoCoordinate motorway_to = new GeoCoordinate(49.9, longitude_right);
 
             // pedestrian
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 footway_from, footway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Pedestrian,
                 cycleway_from, cycleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Pedestrian,
                 bridleway_from, bridleway_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 path_from, path_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 pedestrian_from, pedestrian_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 road_from, road_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 living_street_from, living_street_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 residential_from, residential_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 unclassified_from, unclassified_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 tertiary_from, tertiary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 secondary_from, secondary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 primary_from, primary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 trunk_from, trunk_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Pedestrian,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Pedestrian,
                 motorway_from, motorway_to, interpreter, basic_router, data));
 
             // bicycle
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Bicycle,
                 footway_from, footway_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
                 cycleway_from, cycleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Bicycle,
                 bridleway_from, bridleway_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
                 path_from, path_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Bicycle,
                 pedestrian_from, pedestrian_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
                 road_from, road_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
                 living_street_from, living_street_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
                 residential_from, residential_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
                 unclassified_from, unclassified_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
                 tertiary_from, tertiary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
                 secondary_from, secondary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
                 primary_from, primary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
                 trunk_from, trunk_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bicycle,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Bicycle,
                 motorway_from, motorway_to, interpreter, basic_router, data));
 
             // moped
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Moped,
                 footway_from, footway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Moped,
                 cycleway_from, cycleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Moped,
                 bridleway_from, bridleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Moped,
                 path_from, path_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Moped,
                 pedestrian_from, pedestrian_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Moped,
                 road_from, road_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Moped,
                 living_street_from, living_street_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Moped,
                 residential_from, residential_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Moped,
                 unclassified_from, unclassified_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Moped,
                 tertiary_from, tertiary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Moped,
                 secondary_from, secondary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Moped,
                 primary_from, primary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Moped,
                 trunk_from, trunk_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Moped,
                 motorway_from, motorway_to, interpreter, basic_router, data));
 
             // moped
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.MotorCycle,
                 footway_from, footway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.MotorCycle,
                 cycleway_from, cycleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.MotorCycle,
                 bridleway_from, bridleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.MotorCycle,
                 path_from, path_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.MotorCycle,
                 pedestrian_from, pedestrian_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.MotorCycle,
                 road_from, road_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.MotorCycle,
                 living_street_from, living_street_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.MotorCycle,
                 residential_from, residential_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.MotorCycle,
                 unclassified_from, unclassified_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.MotorCycle,
                 tertiary_from, tertiary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.MotorCycle,
                 secondary_from, secondary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.MotorCycle,
                 primary_from, primary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.MotorCycle,
                 trunk_from, trunk_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.MotorCycle,
                 motorway_from, motorway_to, interpreter, basic_router, data));
 
             // car
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Car,
                 footway_from, footway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Car,
                 cycleway_from, cycleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Car,
                 bridleway_from, bridleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Car,
                 path_from, path_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Car,
                 pedestrian_from, pedestrian_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Car,
                 road_from, road_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Car,
                 living_street_from, living_street_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Car,
                 residential_from, residential_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Car,
                 unclassified_from, unclassified_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Car,
                 tertiary_from, tertiary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Car,
                 secondary_from, secondary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Car,
                 primary_from, primary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Car,
                 trunk_from, trunk_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Car,
                 motorway_from, motorway_to, interpreter, basic_router, data));
 
             // small truck
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.SmallTruck,
                 footway_from, footway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.SmallTruck,
                 cycleway_from, cycleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.SmallTruck,
                 bridleway_from, bridleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.SmallTruck,
                 path_from, path_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.SmallTruck,
                 pedestrian_from, pedestrian_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.SmallTruck,
                 road_from, road_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.SmallTruck,
                 living_street_from, living_street_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.SmallTruck,
                 residential_from, residential_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.SmallTruck,
                 unclassified_from, unclassified_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.SmallTruck,
                 tertiary_from, tertiary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.SmallTruck,
                 secondary_from, secondary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.SmallTruck,
                 primary_from, primary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.SmallTruck,
                 trunk_from, trunk_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.SmallTruck,
                 motorway_from, motorway_to, interpreter, basic_router, data));
 
             // big truck
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.BigTruck,
                 footway_from, footway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.BigTruck,
                 cycleway_from, cycleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.BigTruck,
                 bridleway_from, bridleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.BigTruck,
                 path_from, path_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.BigTruck,
                 pedestrian_from, pedestrian_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.BigTruck,
                 road_from, road_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.BigTruck,
                 living_street_from, living_street_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.BigTruck,
                 residential_from, residential_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.BigTruck,
                 unclassified_from, unclassified_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.BigTruck,
                 tertiary_from, tertiary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.BigTruck,
                 secondary_from, secondary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.BigTruck,
                 primary_from, primary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.BigTruck,
                 trunk_from, trunk_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.BigTruck,
                 motorway_from, motorway_to, interpreter, basic_router, data));
 
             // bus
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Bus,
                 footway_from, footway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Bus,
                 cycleway_from, cycleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Bus,
                 bridleway_from, bridleway_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Bus,
                 path_from, path_to, interpreter, basic_router, data));
-            Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Bus,
                 pedestrian_from, pedestrian_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bus,
                 road_from, road_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bus,
                 living_street_from, living_street_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bus,
                 residential_from, residential_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bus,
                 unclassified_from, unclassified_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bus,
                 tertiary_from, tertiary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bus,
                 secondary_from, secondary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bus,
                 primary_from, primary_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bus,
                 trunk_from, trunk_to, interpreter, basic_router, data));
-            Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bus,
                 motorway_from, motorway_to, interpreter, basic_router, data));
         }
 
@@ -351,7 +351,7 @@ namespace OsmSharp.UnitTests.Routing
         /// <param name="interpreter"></param>
         /// <param name="basic_router"></param>
         /// <param name="data"></param>
-        protected bool DoTestForVehicle(VehicleEnum vehicle, GeoCoordinate from, GeoCoordinate to,
+        protected bool DoTestForVehicle(Vehicle vehicle, GeoCoordinate from, GeoCoordinate to,
             IRoutingInterpreter interpreter, IBasicRouter<EdgeData> basic_router, IBasicRouterDataSource<EdgeData> data)
         {
             IRouter<ResolvedType> router = this.BuildRouter(data, interpreter, basic_router);

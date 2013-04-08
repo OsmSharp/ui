@@ -58,7 +58,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
             DynamicGraphRouterDataSource<PreProcessedEdge> data =
                 new DynamicGraphRouterDataSource<PreProcessedEdge>(tags_index);
             PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
-                data, interpreter, data.TagsIndex, VehicleEnum.Car);
+                data, interpreter, data.TagsIndex, Vehicle.Car);
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(
                 "OsmSharp.UnitTests.{0}", embedded_name)));
@@ -108,8 +108,8 @@ namespace OsmSharp.Osm.UnitTests.Routing
                 float latitude, longitude;
                 if(data.GetVertex(idx, out latitude, out longitude))
                 {
-                    resolved_reference[idx - 1] = reference_router.Resolve(VehicleEnum.Car, new GeoCoordinate(latitude, longitude));
-                    resolved[idx - 1] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(latitude, longitude));
+                    resolved_reference[idx - 1] = reference_router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+                    resolved[idx - 1] = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
                 }
 
                 Assert.IsNotNull(resolved_reference[idx - 1]);
@@ -126,9 +126,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
             {
                 for (int to_idx = 0; to_idx < resolved.Length; to_idx++)
                 {
-                    OsmSharpRoute reference_route = reference_router.Calculate(VehicleEnum.Car, 
+                    OsmSharpRoute reference_route = reference_router.Calculate(Vehicle.Car, 
                         resolved_reference[from_idx], resolved_reference[to_idx]);
-                    OsmSharpRoute route = router.Calculate(VehicleEnum.Car, 
+                    OsmSharpRoute route = router.Calculate(Vehicle.Car, 
                         resolved[from_idx], resolved[to_idx]);
 
                     Assert.IsNotNull(reference_route);

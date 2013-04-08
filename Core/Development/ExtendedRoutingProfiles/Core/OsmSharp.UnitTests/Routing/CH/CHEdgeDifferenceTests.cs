@@ -56,7 +56,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
                 data =
                     new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
                 CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                    data, interpreter, data.TagsIndex, VehicleEnum.Car);
+                    data, interpreter, data.TagsIndex, Vehicle.Car);
                 XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
                 DataProcessorFilterSort sorter = new DataProcessorFilterSort();
