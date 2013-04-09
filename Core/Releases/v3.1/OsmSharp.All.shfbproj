@@ -35,12 +35,8 @@
     <HelpTitle>OsmSharp Class Library</HelpTitle>
     <ContentPlacement>AboveNamespaces</ContentPlacement>
     <DocumentationSources>
-      <DocumentationSource sourceFile="Data\Oracle\OsmSharp.Oracle.sln" />
-<DocumentationSource sourceFile="Data\PostgreSQL\OsmSharp.PostgreSQL.sln" />
-<DocumentationSource sourceFile="Data\Redis\OsmSharp.Redis.sln" />
-<DocumentationSource sourceFile="Core\OsmSharp.sln" />
-<DocumentationSource sourceFile="Data\SQLite\OsmSharp.SQLite.sln" />
-<DocumentationSource sourceFile="Data\SQLServer\OsmSharp.SQLServer.sln" /></DocumentationSources>
+      <DocumentationSource sourceFile="Core\OsmSharp.sln" />
+    </DocumentationSources>
     <BuildLogFile />
     <HtmlHelp1xCompilerPath />
     <HtmlHelp2xCompilerPath />
