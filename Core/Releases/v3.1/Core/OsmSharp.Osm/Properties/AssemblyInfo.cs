@@ -49,4 +49,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("3.1.4837.9999")] // semantic versioning Major.Minor.Patch.Build (9999 will be updated by CI server)
-[assembly: AssemblyInformationalVersion("Local Build Version")] // do not change this; build server replace this automatically.
+[assembly: AssemblyInformationalVersion("Local Build Version")] // d o not change this; build server replace this automatically.
