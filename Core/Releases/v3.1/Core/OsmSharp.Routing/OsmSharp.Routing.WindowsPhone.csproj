@@ -130,8 +130,6 @@
     <Compile Include="Interpreter\Roads\RoadInterpreter.cs" />
     <Compile Include="Interpreter\Roads\RoadTagsInterpreterBase.cs" />
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
-    <Compile Include="Interpreter\RoutingInterpreterBase.cs" />
-    <Compile Include="Interpreter\RoutingWayInterperterBase.cs" />
     <Compile Include="Interpreter\Vehicles\RoutingVehicleBase.cs" />
     <Compile Include="Interpreter\Vehicles\RoutingVehicleSimple.cs" />
     <Compile Include="IRouter.cs" />
