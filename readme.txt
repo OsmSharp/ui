@@ -1,0 +1,1 @@
+What happens when you upload a readme to codeplex??
