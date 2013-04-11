@@ -119,5 +119,18 @@ namespace OsmSharp.Routing.Osm.Data.Processing
             return new PreProcessedEdge((float)weight, forward, backward, tags_index.Add(
                 tags));
         }
+
+        /// <summary>
+        /// Returns true if the edge is traversable.
+        /// </summary>
+        /// <param name="edge_interpreter"></param>
+        /// <param name="tags_index"></param>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        protected override bool CalculateIsTraversable(IEdgeInterpreter edge_interpreter,
+            ITagsIndex tags_index, IDictionary<string, string> tags)
+        {
+            return edge_interpreter.CanBeTraversedBy(tags, _vehicle);
+        }
     }
 }

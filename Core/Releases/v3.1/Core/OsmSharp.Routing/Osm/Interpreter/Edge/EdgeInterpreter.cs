@@ -202,6 +202,14 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                             return false;
                         }
                     }
+
+                    // check conditional constrains.
+                    if (tags.ContainsKey("motor_vehicle:conditional"))
+                    { // TODO: these conditional tags cannot be checked yet.
+                        // TODO: add facilities and parameters to calculations to allow
+                        // these tags to be checked.
+                        return true;
+                    }
                 }
 
                 // do the designated tags.
@@ -389,9 +397,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                             case VehicleEnum.Pedestrian:
                                 speed = pedestrian_speed;
                                 break;
+                                // TODO: improve speed calculations when using access tags.
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
-                                speed = pedestrian_speed;
+                                speed = 30;
                                 break;
                         }
                         break;
@@ -426,7 +435,6 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         }
                         break;
                     case "motorway":
-                    case "motorway_link":
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
@@ -438,6 +446,21 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
                                 speed = 120;
+                                break;
+                        }
+                        break;
+                    case "motorway_link":
+                        switch (vehicle)
+                        {
+                            case VehicleEnum.Bicycle:
+                                speed = bike_speed;
+                                break;
+                            case VehicleEnum.Pedestrian:
+                                speed = pedestrian_speed;
+                                break;
+                            case VehicleEnum.Car:
+                            case VehicleEnum.Bus:
+                                speed = 90;
                                 break;
                         }
                         break;
@@ -468,10 +491,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                             case VehicleEnum.Pedestrian:
                                 speed = pedestrian_speed;
                                 break;
-                            case VehicleEnum.Car:
-                            case VehicleEnum.Bus:
-                                speed = 70;
-                                break;
+                            //case VehicleEnum.Car:
+                            //case VehicleEnum.Bus:
+                            //    speed = 70;
+                            //    break;
                         }
                         break;
                 }

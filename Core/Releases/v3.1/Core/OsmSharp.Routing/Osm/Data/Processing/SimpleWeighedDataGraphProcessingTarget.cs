@@ -116,5 +116,18 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                 Weight = distance
             };
         }
+
+        /// <summary>
+        /// Returns true if the edge is traversable.
+        /// </summary>
+        /// <param name="edge_interpreter"></param>
+        /// <param name="tags_index"></param>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        protected override bool CalculateIsTraversable(IEdgeInterpreter edge_interpreter,
+            ITagsIndex tags_index, IDictionary<string, string> tags)
+        {
+            return edge_interpreter.CanBeTraversedBy(tags, _vehicle);
+        }
     }
 }

@@ -55,47 +55,33 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         /// <param name="embedded_string"></param>
         /// <returns></returns>
         public override IBasicRouterDataSource<SimpleWeighedEdge> BuildData(IRoutingInterpreter interpreter,
-            string embedded_string)
+                                                                            string embedded_string, VehicleEnum vehicle)
         {
             string key = string.Format("Dykstra.Routing.IBasicRouterDataSource<SimpleWeighedEdge>.OSM.{0}",
-                embedded_string);
-            IBasicRouterDataSource<SimpleWeighedEdge> data = StaticDictionary.Get<IBasicRouterDataSource<SimpleWeighedEdge>>(
-                key);
-            if (data == null)
-            {
-                OsmTagsIndex tags_index = new OsmTagsIndex();
+                                       embedded_string);
+            IBasicRouterDataSource<SimpleWeighedEdge> data = StaticDictionary
+                .Get<IBasicRouterDataSource<SimpleWeighedEdge>>(
+                    key);
 
-                // do the data processing.
-                DynamicGraphRouterDataSource<SimpleWeighedEdge> memory_data =
-                    new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
-                SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
-                    memory_data, interpreter, memory_data.TagsIndex, VehicleEnum.Car);
-                XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                    Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string));
-                DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-                sorter.RegisterSource(data_processor_source);
-                target_data.RegisterSource(sorter);
-                target_data.Pull();
+            OsmTagsIndex tags_index = new OsmTagsIndex();
 
-                data = memory_data;
-                StaticDictionary.Add<IBasicRouterDataSource<SimpleWeighedEdge>>(key,
-                    data);
-            }
+            // do the data processing.
+            DynamicGraphRouterDataSource<SimpleWeighedEdge> memory_data =
+                new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
+            SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
+                memory_data, interpreter, memory_data.TagsIndex, vehicle);
+            ;
+            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string));
+            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
+            sorter.RegisterSource(data_processor_source);
+            target_data.RegisterSource(sorter);
+            target_data.Pull();
+
+            data = memory_data;
+            StaticDictionary.Add<IBasicRouterDataSource<SimpleWeighedEdge>>(key,
+                                                                            data);
             return data;
-            //OsmTagsIndex tags_index = new OsmTagsIndex();
-
-            //// do the data processing.
-            //DynamicGraphRouterDataSource<SimpleWeighedEdge> data =
-            //    new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
-            //SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
-            //    data, interpreter, data.TagsIndex, VehicleEnum.Car);
-            //XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-            //    Assembly.GetExecutingAssembly().GetManifestResourceStream());
-            //DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            //sorter.RegisterSource(data_processor_source);
-            //target_data.RegisterSource(sorter);
-            //target_data.Pull();
-            //return data;
         }
 
         /// <summary>

@@ -249,12 +249,16 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                             { // the to-node.
                                 uint? to = this.AddRoadNode(way.Nodes[idx]);
 
-                                // add the edge(s).
-                                if (from.HasValue && to.HasValue)
-                                { // 
-                                    if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value))
+                                if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _tags_index, way.Tags))
+                                { // the edge is traversable, add the edges.
+                                    // add the edge(s).
+                                    if (from.HasValue && to.HasValue)
                                     {
-                                        this.AddRoadEdge(way.Tags, false, to.Value, from.Value);
+                                        // 
+                                        if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value))
+                                        {
+                                            this.AddRoadEdge(way.Tags, false, to.Value, from.Value);
+                                        }
                                     }
                                 }
 
@@ -333,6 +337,16 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <returns></returns>
         protected abstract EdgeData CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, IDictionary<string, string> tags,
             bool direction_forward, GeoCoordinate from, GeoCoordinate to);
+
+        /// <summary>
+        /// Returns true if the edge can be traversed.
+        /// </summary>
+        /// <param name="edge_interpreter"></param>
+        /// <param name="tags_index"></param>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        protected abstract bool CalculateIsTraversable(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index,
+                                              IDictionary<string, string> tags);
 
         /// <summary>
         /// Adds a given relation.
