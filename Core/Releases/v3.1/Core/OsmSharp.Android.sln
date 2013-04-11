@@ -8,21 +8,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Routing.Android", "OsmSharp.Routing\OsmSharp.Routing.Android.csproj", "{BE27CB1F-873A-4971-9C84-A81C7DAD04CD}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 4
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs22
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = OsmSharp.Osm\\OsmSharp.Osm.Android.csproj
-		SccProjectName1 = OsmSharp.Osm
-		SccLocalPath1 = OsmSharp.Osm
-		SccProjectUniqueName2 = OsmSharp.Routing\\OsmSharp.Routing.Android.csproj
-		SccProjectName2 = OsmSharp.Routing
-		SccLocalPath2 = OsmSharp.Routing
-		SccProjectUniqueName3 = OsmSharp.Tools\\OsmSharp.Tools.Android.csproj
-		SccProjectName3 = OsmSharp.Tools
-		SccLocalPath3 = OsmSharp.Tools
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
