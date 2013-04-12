@@ -38,14 +38,21 @@ namespace OsmSharp.UnitTests.Tools
             {
                 SomeData = point2.ToString()
             };
-
-            // try point1.
-            index.Add(point1, point1_data);
+            
             GeoCoordinateBox location_box = new GeoCoordinateBox(
                 new GeoCoordinate(point1.Latitude - 0.0001, point1.Longitude - 0.0001),
                 new GeoCoordinate(point1.Latitude + 0.0001, point1.Longitude + 0.0001));
 
-            IEnumerable<LocatedObjectData> location_box_data = index.GetInside(
+            // try and get data from empty index.
+            // regression test for issue: https://osmsharp.codeplex.com/workitem/1244
+            IEnumerable<LocatedObjectData> location_box_data = index.GetInside(location_box);
+            Assert.IsNotNull(location_box_data);
+            Assert.AreEqual(0, location_box_data.Count());
+
+            // try point1.
+            index.Add(point1, point1_data);
+
+            location_box_data = index.GetInside(
                 location_box);
             Assert.IsNotNull(location_box_data);
 

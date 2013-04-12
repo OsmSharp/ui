@@ -159,6 +159,13 @@ namespace OsmSharp.Tools.Math.Structures.QTree
         /// <returns></returns>
         public IEnumerable<DataType> GetInside(GenericRectangleF2D<PointType> box)
         {
+            if (_root == null)
+            { // this can only mean not data was added yet to this index.
+                // return an empty enumerable.
+                return new List<DataType>();
+            }
+
+            // there is data!
             List<DataType> data = new List<DataType>();
             _root.AddInsideAtNode(data, _root, box);
             return data;
