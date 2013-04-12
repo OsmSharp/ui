@@ -378,8 +378,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                             case VehicleEnum.Pedestrian:
                                 speed = pedestrian_speed;
                                 break;
-                            case VehicleEnum.Car:
-                            case VehicleEnum.Bus:
+                            default:
                                 speed = pedestrian_speed;
                                 break;
                         }
@@ -389,6 +388,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                     case "steps":
                     case "path":
                     case "footway":
+                    case "living_street":
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
@@ -420,6 +420,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         }
                         break;
                     case "residential":
+                    case "road":
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
@@ -478,7 +479,53 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
-                                speed = 90;
+                                speed = 80;
+                                break;
+                        }
+                        break;
+                    case "secondary":
+                    case "secondary_link":
+                        switch (vehicle)
+                        {
+                            case VehicleEnum.Bicycle:
+                                speed = bike_speed;
+                                break;
+                            case VehicleEnum.Pedestrian:
+                                speed = pedestrian_speed;
+                                break;
+                            case VehicleEnum.Car:
+                            case VehicleEnum.Bus:
+                                speed = 70;
+                                break;
+                        }
+                        break;
+                    case "tertiary":
+                        switch (vehicle)
+                        {
+                            case VehicleEnum.Bicycle:
+                                speed = bike_speed;
+                                break;
+                            case VehicleEnum.Pedestrian:
+                                speed = pedestrian_speed;
+                                break;
+                            case VehicleEnum.Car:
+                            case VehicleEnum.Bus:
+                                speed = 60;
+                                break;
+                        }
+                        break;
+                    case "unclassified":
+                        switch (vehicle)
+                        {
+                            case VehicleEnum.Bicycle:
+                                speed = bike_speed;
+                                break;
+                            case VehicleEnum.Pedestrian:
+                                speed = pedestrian_speed;
+                                break;
+                            case VehicleEnum.Car:
+                            case VehicleEnum.Bus:
+                                speed = 40;
                                 break;
                         }
                         break;
@@ -491,10 +538,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                             case VehicleEnum.Pedestrian:
                                 speed = pedestrian_speed;
                                 break;
-                            //case VehicleEnum.Car:
-                            //case VehicleEnum.Bus:
-                            //    speed = 70;
-                            //    break;
+                            case VehicleEnum.Car:
+                            case VehicleEnum.Bus:
+                                speed = 70;
+                                break;
                         }
                         break;
                 }
