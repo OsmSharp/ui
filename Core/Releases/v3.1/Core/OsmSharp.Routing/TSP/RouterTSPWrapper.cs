@@ -81,7 +81,7 @@ namespace OsmSharp.Routing.TSP
             }
 
             // concatenate the route(s).
-            return this.BuildRoute(points, tsp_solution, weight);
+            return this.BuildRoute(vehicle, points, tsp_solution, weight);
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace OsmSharp.Routing.TSP
             }
 
             // concatenate the route(s).
-            return this.BuildRoute(points, tsp_solution, weight);
+            return this.BuildRoute(vehicle, points, tsp_solution, weight);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace OsmSharp.Routing.TSP
             }
 
             // concatenate the route(s).
-            return this.BuildRoute(points, tsp_solution, weight);
+            return this.BuildRoute(vehicle, points, tsp_solution, weight);
         }
 
         /// <summary>
@@ -165,11 +165,12 @@ namespace OsmSharp.Routing.TSP
         /// <summary>
         /// Builds an OsmSharRoute.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="points"></param>
         /// <param name="tsp_solution"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public OsmSharpRoute BuildRoute(ResolvedType[] points, IRoute tsp_solution, double weight)
+        public OsmSharpRoute BuildRoute(VehicleEnum vehicle, ResolvedType[] points, IRoute tsp_solution, double weight)
         {
             int[] solution = tsp_solution.ToArray();
 
@@ -200,6 +201,8 @@ namespace OsmSharp.Routing.TSP
             tsp.Tags[0] = new RouteTags();
             tsp.Tags[0].Key = "internal_weight";
             tsp.Tags[0].Value = weight.ToString(System.Globalization.CultureInfo.InvariantCulture);
+
+            tsp.Vehicle = vehicle; // set the correct vehicle type.
 
             return tsp;
         }

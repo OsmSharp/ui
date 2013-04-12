@@ -75,9 +75,10 @@ namespace OsmSharp.Routing.VRP
         /// <summary>
         /// Converts a simple VRP solution into a solution containing the actual routes.
         /// </summary>
+        /// <param name="vehicle"></param>
         /// <param name="solution"></param>
         /// <param name="points"></param>
-        protected OsmSharpRoute[] ConvertSolution(int[][] solution, ResolvedType[] points)
+        protected OsmSharpRoute[] ConvertSolution(VehicleEnum vehicle, int[][] solution, ResolvedType[] points)
         {
             OsmSharpRoute[] routes = new OsmSharpRoute[solution.Length];
             for (int route_idx = 0; route_idx < solution.Length; route_idx++)
@@ -103,23 +104,30 @@ namespace OsmSharp.Routing.VRP
                 }
 
                 // concatenate the route from the last to the first point again.
-                route = _router.Calculate(VehicleEnum.Car, points[solution[route_idx][solution[route_idx].Length - 1]],
+                route = _router.Calculate(vehicle, points[solution[route_idx][solution[route_idx].Length - 1]],
                             points[solution[route_idx][0]]);
                 if (route.Entries.Length > 0)
                 {
                     tsp = OsmSharpRoute.Concatenate(tsp, route);
                 }
 
+                // set the result.
                 routes[route_idx] = tsp;
 
-                List<RouteTags> tags = new List<RouteTags>();
-                RouteTags customer_count = new RouteTags();
-                customer_count.Key = "customer_count";
-                customer_count.Value = solution[route_idx].Length.ToString();
-                tags.Add(customer_count);
+                if (routes[route_idx] != null)
+                { // route exists!
+                    List<RouteTags> tags = new List<RouteTags>();
+                    RouteTags customer_count = new RouteTags();
+                    customer_count.Key = "customer_count";
+                    customer_count.Value = solution[route_idx].Length.ToString();
+                    tags.Add(customer_count);
+                    routes[route_idx].Tags = tags.ToArray();
 
-                routes[route_idx].Tags = tags.ToArray();
+                    // set the correct vehicle type.
+                    routes[route_idx].Vehicle = vehicle;
+                }
             }
+
             return routes;
         }
 

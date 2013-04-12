@@ -45,7 +45,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
             int[][] solution = this.RouterVRP.CalculateDepot(weights, locations);
 
             // convert the solution.
-            return this.ConvertSolution(solution, points);
+            return this.ConvertSolution(vehicle, solution, points);
         }
     }
 }
