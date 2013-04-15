@@ -224,15 +224,18 @@ namespace OsmSharp.Routing.Osm.Data.Processing
             { // the way is a road.
                 if (_pre_index_mode)
                 { // index only relevant nodes.
-                    foreach(long node in way.Nodes)
+                    if (way.Nodes != null)
                     {
-                        if (_pre_index.Contains(node))
+                        foreach (long node in way.Nodes)
                         {
-                            _used_twice_or_more.Add(node);
-                        }
-                        else
-                        {
-                            _pre_index.Add(node); // node is relevant.
+                            if (_pre_index.Contains(node))
+                            {
+                                _used_twice_or_more.Add(node);
+                            }
+                            else
+                            {
+                                _pre_index.Add(node); // node is relevant.
+                            }
                         }
                     }
                 }
@@ -242,7 +245,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                 //if (!interpreter.IsOneWayReverse())
                     if (true) // add backward edges too!
                     { // loop over all edges.
-                        if (way.Nodes.Count > 1)
+                        if (way.Nodes != null && way.Nodes.Count > 1)
                         { // way has at least two nodes.
                             uint? from = this.AddRoadNode(way.Nodes[0]);
                             for (int idx = 1; idx < way.Nodes.Count; idx++)

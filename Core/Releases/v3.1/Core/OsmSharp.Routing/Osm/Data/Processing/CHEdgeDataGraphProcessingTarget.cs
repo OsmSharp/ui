@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Tools.Math;
 using OsmSharp.Tools.Math.Geo;
@@ -24,17 +25,34 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         private VehicleEnum _vehicle;
 
         /// <summary>
+        /// Holds the data source.
+        /// </summary>
+        private IDynamicGraphRouterDataSource<CHEdgeData> _dynamic_data_source;
+
+        /// <summary>
         /// Creates a CH data processing target.
         /// </summary>
         /// <param name="dynamic_graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="tags_index"></param>
         /// <param name="vehicle"></param>
-        public CHEdgeDataGraphProcessingTarget(IDynamicGraph<CHEdgeData> dynamic_graph,
+        public CHEdgeDataGraphProcessingTarget(IDynamicGraphRouterDataSource<CHEdgeData> dynamic_graph,
             IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle)
             :base(dynamic_graph, interpreter, new CHEdgeDataComparer(), tags_index)
         {
             _vehicle = vehicle;
+            _dynamic_data_source = dynamic_graph;
+        }
+
+
+        /// <summary>
+        /// Initializes this target.
+        /// </summary>
+        public override void Initialize()
+        {
+            base.Initialize();
+
+            _dynamic_data_source.AddSupportedProfile(_vehicle);
         }
         
         /// <summary>

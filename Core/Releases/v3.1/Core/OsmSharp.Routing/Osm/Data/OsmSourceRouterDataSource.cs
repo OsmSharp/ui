@@ -81,6 +81,15 @@ namespace OsmSharp.Routing.Osm.Data
         }
 
         /// <summary>
+        /// Adds one more supported profile.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        public void AddSupportedProfile(VehicleEnum vehicle)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
         /// Returns all arcs with a given bounding box.
         /// </summary>
         /// <param name="box"></param>

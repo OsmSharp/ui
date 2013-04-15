@@ -170,6 +170,17 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
             highway_dic.Add(VehicleEnum.Bus, true);
 
             highway_dic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("motorway_link", highway_dic);
+            highway_dic.Add(VehicleEnum.Pedestrian, false);
+            highway_dic.Add(VehicleEnum.Bicycle, false);
+            highway_dic.Add(VehicleEnum.Moped, false);
+            highway_dic.Add(VehicleEnum.MotorCycle, true);
+            highway_dic.Add(VehicleEnum.Car, true);
+            highway_dic.Add(VehicleEnum.SmallTruck, true);
+            highway_dic.Add(VehicleEnum.BigTruck, true);
+            highway_dic.Add(VehicleEnum.Bus, true);
+
+            highway_dic = new Dictionary<VehicleEnum, bool>();
             _access_restrictions.Add("motorway", highway_dic);
             highway_dic.Add(VehicleEnum.Pedestrian, false);
             highway_dic.Add(VehicleEnum.Bicycle, false);
@@ -479,7 +490,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
-                                speed = 80;
+                                speed = 75;
                                 break;
                         }
                         break;
@@ -540,7 +551,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
-                                speed = 70;
+                                speed = 50;
                                 break;
                         }
                         break;

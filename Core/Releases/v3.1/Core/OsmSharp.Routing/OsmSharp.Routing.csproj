@@ -145,6 +145,7 @@
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingLive.cs" />
     <Compile Include="Graph\Router\IBasicRouter.cs" />
+    <Compile Include="Graph\Router\IDynamicGraphRouterDataSource.cs" />
     <Compile Include="Instructions\Instruction.cs" />
     <Compile Include="Instructions\InstructionGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\Defaults\SimpleDutchLanguageGenerator.cs" />

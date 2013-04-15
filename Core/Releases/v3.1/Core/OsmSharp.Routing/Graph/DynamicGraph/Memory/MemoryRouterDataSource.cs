@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph;
 ﻿using OsmSharp.Routing.Graph.Router;
+﻿using OsmSharp.Tools.Collections;
 ﻿using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Structures;
 using OsmSharp.Tools.Math;
@@ -19,7 +20,7 @@ namespace OsmSharp.Routing.Graph.Memory
     /// </summary>
     /// <typeparam name="EdgeData"></typeparam>
     [Obsolete("This class has become obsolete use OsmSharp.Routing.Graph.DynamicGraphRouterDataSource instead!")]
-    public class MemoryRouterDataSource<EdgeData> : IBasicRouterDataSource<EdgeData>, IDynamicGraph<EdgeData>
+    public class MemoryRouterDataSource<EdgeData> : IDynamicGraphRouterDataSource<EdgeData>
         where EdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
@@ -38,6 +39,11 @@ namespace OsmSharp.Routing.Graph.Memory
         private ITagsIndex _tags_index;
 
         /// <summary>
+        /// Holds the supported vehicle profiles.
+        /// </summary>
+        private readonly HashSet<VehicleEnum> _supportedVehicles; 
+
+        /// <summary>
         /// Creates a new osm memory router data source.
         /// </summary>
         public MemoryRouterDataSource(ITagsIndex tags_index)
@@ -47,6 +53,8 @@ namespace OsmSharp.Routing.Graph.Memory
             //_vertex_index = new LocatedObjectIndexList<GeoCoordinate, uint>();
 
             _tags_index = tags_index;
+
+            _supportedVehicles = new HashSet<VehicleEnum>();
         }
 
         /// <summary>
@@ -59,6 +67,8 @@ namespace OsmSharp.Routing.Graph.Memory
             //_vertex_index = new LocatedObjectIndexList<GeoCoordinate, uint>();
 
             _tags_index = tags_index;
+
+            _supportedVehicles = new HashSet<VehicleEnum>();
         }
 
         /// <summary>
@@ -68,7 +78,16 @@ namespace OsmSharp.Routing.Graph.Memory
         /// <returns></returns>
         public bool SupportsProfile(VehicleEnum vehicle)
         {
-            return true; // for backward compatibility.
+            return _supportedVehicles.Contains(vehicle); // for backwards compatibility.
+        }
+
+        /// <summary>
+        /// Adds one more supported profile.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        public void AddSupportedProfile(VehicleEnum vehicle)
+        {
+            _supportedVehicles.Add(vehicle);
         }
 
         /// <summary>

@@ -38,6 +38,12 @@ namespace OsmSharp.Routing.Graph.Router
         bool SupportsProfile(VehicleEnum vehicle);
 
         /// <summary>
+        /// Adds a supported vehicle profile.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        void AddSupportedProfile(VehicleEnum vehicle);
+
+        /// <summary>
         /// Returns a list of edges inside or intersecting with the given bounding box.
         /// </summary>
         /// <param name="box"></param>

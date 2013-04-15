@@ -85,7 +85,7 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public bool SupportsVehicle(VehicleEnum vehicle)
         {
-            return true;
+            return _data_graph.SupportsProfile(vehicle);
         }
 
         /// <summary>
@@ -110,6 +110,13 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public OsmSharpRoute Calculate(VehicleEnum vehicle, RouterPoint source, RouterPoint target, float max)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             // calculate the route.
             PathSegment<long> route = _router.Calculate(_data_graph, _interpreter, vehicle,
                 this.RouteResolvedGraph(source), this.RouteResolvedGraph(target), max);
@@ -140,6 +147,13 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public OsmSharpRoute CalculateToClosest(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets, float max)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             // calculate the route.
             PathSegment<long> route = _router.CalculateToClosest(_data_graph, _interpreter, vehicle,
                 this.RouteResolvedGraph(source), this.RouteResolvedGraph(targets), max);
@@ -172,6 +186,13 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public OsmSharpRoute[][] CalculateManyToMany(VehicleEnum vehicle, RouterPoint[] sources, RouterPoint[] targets)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             PathSegment<long>[][] routes = _router.CalculateManyToMany(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(sources),
                 this.RouteResolvedGraph(targets), double.MaxValue);
 
@@ -199,6 +220,13 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public double CalculateWeight(VehicleEnum vehicle, RouterPoint source, RouterPoint target)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             // calculate the route.
             return _router.CalculateWeight(_data_graph, _interpreter, vehicle,
                 this.RouteResolvedGraph(source), this.RouteResolvedGraph(target), float.MaxValue);
@@ -213,6 +241,13 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public double[] CalculateOneToManyWeight(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             return _router.CalculateOneToManyWeight(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(source),
                 this.RouteResolvedGraph(targets), double.MaxValue);
         }
@@ -226,6 +261,13 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public double[][] CalculateManyToManyWeight(VehicleEnum vehicle, RouterPoint[] sources, RouterPoint[] targets)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             return _router.CalculateManyToManyWeight(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(sources),
                 this.RouteResolvedGraph(targets), double.MaxValue);
         }
@@ -250,6 +292,13 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public HashSet<GeoCoordinate> CalculateRange(VehicleEnum vehicle, RouterPoint orgin, float weight)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             HashSet<long> objects_at_weight = _router.CalculateRange(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(orgin),
                 weight);
 
@@ -271,6 +320,13 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public bool CheckConnectivity(VehicleEnum vehicle, RouterPoint point, float weight)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             return _router.CheckConnectivity(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(point), weight);
         }
 
@@ -283,6 +339,13 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public bool[] CheckConnectivity(VehicleEnum vehicle, RouterPoint[] point, float weight)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             bool[] connectivity_array = new bool[point.Length];
             for (int idx = 0; idx < point.Length; idx++)
             {
@@ -693,6 +756,13 @@ namespace OsmSharp.Routing
         public RouterPoint Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate,
                                    IEdgeMatcher matcher, IDictionary<string, string> matchingTags)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, 
                 vehicle, coordinate, delta, matcher, matchingTags); // search the closest routable object.
             if (result.Distance < double.MaxValue)
@@ -788,6 +858,13 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public GeoCoordinate Search(VehicleEnum vehicle, GeoCoordinate coordinate)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             return this.Search(vehicle, Router<TEdgeData>.DefaultSearchDelta, coordinate);
         }
 
@@ -800,6 +877,13 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public GeoCoordinate Search(VehicleEnum vehicle, float delta, GeoCoordinate coordinate)
         {
+            // check routing profiles.
+            if (!this.SupportsVehicle(vehicle))
+            {
+                throw new ArgumentOutOfRangeException("vehicle", string.Format("Routing profile {0} not supported by this router!",
+                    vehicle.ToString()));
+            }
+
             SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, 
                 delta, null, null); // search the closest routable object.
             if (result.Distance < double.MaxValue)

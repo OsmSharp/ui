@@ -93,6 +93,7 @@
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingPreProcessed.cs" />
     <Compile Include="Graph\Router\IBasicRouter.cs" />
     <Compile Include="Graph\Router\IBasicRouterDataSource.cs" />
+    <Compile Include="Graph\Router\IDynamicGraphRouterDataSource.cs" />
     <Compile Include="IEdgeMatcher.cs" />
     <Compile Include="Instructions\Instruction.cs" />
     <Compile Include="Instructions\InstructionGenerator.cs" />

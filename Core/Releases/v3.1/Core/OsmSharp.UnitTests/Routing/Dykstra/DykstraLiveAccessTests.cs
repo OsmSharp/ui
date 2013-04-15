@@ -70,7 +70,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
                 new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
             SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
                 memory_data, interpreter, memory_data.TagsIndex, vehicle);
-            ;
+            
             XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string));
             DataProcessorFilterSort sorter = new DataProcessorFilterSort();
