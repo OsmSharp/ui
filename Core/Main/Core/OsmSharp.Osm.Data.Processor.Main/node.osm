@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<osm version="0.6" generator="CGImap 0.0.2">
- <node id="22312023" lat="51.0208810" lon="3.9653310" user="vassloff" uid="5080" visible="true" version="1" changeset="175959" timestamp="2006-12-30T15:58:46Z">
-  <tag k="created_by" v="almien_coastlines"/>
-  <tag k="source" v="PGS(could be inacurately)"/>
- </node>
-</osm>
