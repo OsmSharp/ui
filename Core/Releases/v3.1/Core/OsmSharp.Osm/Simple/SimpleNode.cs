@@ -51,6 +51,10 @@ namespace OsmSharp.Osm.Simple
         /// <returns></returns>
         public override string ToString()
         {
+            if (!this.Id.HasValue)
+            {
+                return "Node[null]";
+            }
             return string.Format("Node[{0}]", this.Id.Value);
         }
     }
