@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Shapes;
-using OsmSharp.Osm.Core;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Geo.Factory;
 

@@ -26,7 +26,7 @@ using System.Windows.Forms;
 
 namespace OsmSharp.Osm.UI.WinForms.EditorUserControl.Controls
 {
-    public partial class LogControl : UserControl, Tools.Core.Output.IOutputStream
+    public partial class LogControl : UserControl, Tools.Output.IOutputStream
     {
         public LogControl()
         {

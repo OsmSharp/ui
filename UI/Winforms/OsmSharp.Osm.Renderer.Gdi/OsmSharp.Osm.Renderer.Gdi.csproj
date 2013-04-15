@@ -147,9 +147,17 @@
     <DocumentationFile>..\Output\OsmSharp.Osm.Renderer.Gdi.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OsmSharp, Version=3.1.4798.33728, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Lib\OsmSharp.dll</HintPath>
+    <Reference Include="OsmSharp.Osm">
+      <HintPath>..\..\packages\OsmSharp.3.1.4839.74\lib\net40\OsmSharp.Osm.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Routing">
+      <HintPath>..\..\packages\OsmSharp.3.1.4839.74\lib\net40\OsmSharp.Routing.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Tools">
+      <HintPath>..\..\packages\OsmSharp.3.1.4839.74\lib\net40\OsmSharp.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\..\packages\protobuf-net.2.0.0.621\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System">
     </Reference>
@@ -166,6 +174,9 @@
     <Reference Include="System.Data">
     </Reference>
     <Reference Include="System.Xml">
+    </Reference>
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -189,7 +200,7 @@
     <Compile Include="Targets\UserControlTarget\UserControlTargetEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Osm.Map\OsmSharp.Osm.Map.csproj">
+    <ProjectReference Include="..\..\OsmSharp.UI.Map\OsmSharp.UI.Map.csproj">
       <Project>{B076C8ED-B40F-4BAB-B91A-0673BB753C06}</Project>
       <Name>OsmSharp.Osm.Map</Name>
     </ProjectReference>
@@ -206,6 +217,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\cardinal_image_small.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

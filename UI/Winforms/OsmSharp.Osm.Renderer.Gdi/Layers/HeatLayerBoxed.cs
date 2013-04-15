@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Units.Angle;
-using OsmSharp.Tools.Core.Collections;
 using System.Threading;
+using OsmSharp.Tools.Math.Units.Angle;
 
 namespace OsmSharp.Osm.Renderer.Gdi.Layers
 {
