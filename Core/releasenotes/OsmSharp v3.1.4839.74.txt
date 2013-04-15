@@ -1,0 +1,6 @@
+Contains all builds for Mono/.NET/Mono for Android/Monotouch/Windows Phone.
+
+- Fixed Any CPU build configuration. Any CPU is now really built using Any CPU not x86.
+- Fixed issue http://osmsharp.codeplex.com/workitem/1245: The vehicle type in the OsmSharpRoute object is incorrect after calculating TSP/VRP.
+- Fixed issue http://osmsharp.codeplex.com/workitem/1173: Supported vehicle profiles are not kept
+- Fixed issue http://osmsharp.codeplex.com/workitem/1242: Routing over motorways sometimes over exits

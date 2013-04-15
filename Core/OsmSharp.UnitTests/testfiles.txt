@@ -1,0 +1,8 @@
+﻿An overview of the embedded test files; modifying these files can cause tests to fail.
+
+api.osm: an extract from a very small region of OSM data taken from the OSM api.
+api.osm.pbf: api.osm converted to PBF with osmosis with all default options.
+api_compress_none.osm.pbf: api.osm converted to PBF with osmosis with the option compress=none
+api_omitmetadata_true.osm.pbf: api.osm converted to PBF with osmosis with the option omitmetadata=true
+api_usedense_false.osm.pbf: api.osm converted to PBF with osmosis with the option usedense=false
+test_network.osm: a small routing test network.

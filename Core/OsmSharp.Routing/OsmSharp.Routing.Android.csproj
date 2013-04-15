@@ -1,0 +1,252 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BE27CB1F-873A-4971-9C84-A81C7DAD04CD}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>OsmSharp.Routing</RootNamespace>
+    <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
+    <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
+    <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
+    <AndroidResgenClass>Resource</AndroidResgenClass>
+    <AssemblyName>OsmSharp.Routing</AssemblyName>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>..\OutputAndroid\</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>None</AndroidLinkMode>
+    <NoWarn>..\OutputAndroid\</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>..\OutputAndroid\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+    <ConsolePause>False</ConsolePause>
+    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <NoWarn>..\OutputAndroid\</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Mono.Android" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ArcAggregation\AggregatedHelper.cs" />
+    <Compile Include="ArcAggregation\ArcAggregator.cs" />
+    <Compile Include="ArcAggregation\Output\Aggregated.cs" />
+    <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
+    <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
+    <Compile Include="CH\Facade.cs" />
+    <Compile Include="CH\PreProcessing\CHEdgeData.cs" />
+    <Compile Include="CH\PreProcessing\CHLocalCache.cs" />
+    <Compile Include="CH\PreProcessing\CHPreProcessor.cs" />
+    <Compile Include="CH\PreProcessing\CHPriorityQueue.cs" />
+    <Compile Include="CH\PreProcessing\INodeWeightCalculator.cs" />
+    <Compile Include="CH\PreProcessing\INodeWitnessCalculator.cs" />
+    <Compile Include="CH\PreProcessing\Ordering\EdgeDifference.cs" />
+    <Compile Include="CH\PreProcessing\Ordering\EdgeDifferenceContracted.cs" />
+    <Compile Include="CH\PreProcessing\Ordering\EdgeDifferenceContractedSearchSpace.cs" />
+    <Compile Include="CH\PreProcessing\Ordering\LimitedLevelOrdering\SparseOrdering.cs" />
+    <Compile Include="CH\PreProcessing\Witnesses\CHRouterWitnessCalculator.cs" />
+    <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
+    <Compile Include="CH\Processor\CHDataProcessorTarget.cs" />
+    <Compile Include="CH\Routing\CHDataSource.cs" />
+    <Compile Include="CH\Routing\CHPathSegment.cs" />
+    <Compile Include="CH\Routing\CHPriorityQueue.cs" />
+    <Compile Include="CH\Routing\CHQueue.cs" />
+    <Compile Include="CH\Routing\CHResolvedPoint.cs" />
+    <Compile Include="CH\Routing\CHRouter.cs" />
+    <Compile Include="CH\Routing\ICHVertexMatcher.cs" />
+    <Compile Include="CH\Routing\Router.cs" />
+    <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
+    <Compile Include="Graph\DynamicGraph\DynamicGraphExtensions.cs" />
+    <Compile Include="Graph\DynamicGraph\IDynamicGraph.cs" />
+    <Compile Include="Graph\DynamicGraph\IDynamicGraphEdgeData.cs" />
+    <Compile Include="Graph\DynamicGraph\IDynamicGraphReadOnly.cs" />
+    <Compile Include="Graph\DynamicGraph\Memory\MemoryDynamicGraph.cs" />
+    <Compile Include="Graph\DynamicGraph\Memory\MemoryRouterDataSource.cs" />
+    <Compile Include="Graph\DynamicGraph\PreProcessed\PreProcessedDynamicGraph.cs" />
+    <Compile Include="Graph\DynamicGraph\PreProcessed\PreProcessedEdge.cs" />
+    <Compile Include="Graph\DynamicGraph\SimpleWeighed\SimpleWeighedEdge.cs" />
+    <Compile Include="Graph\Path\PathSegment.cs" />
+    <Compile Include="Graph\Path\PathSegmentVisitList.cs" />
+    <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />
+    <Compile Include="Graph\Router\Dykstra\DykstraRoutingLive.cs" />
+    <Compile Include="Graph\Router\Dykstra\DykstraRoutingPreProcessed.cs" />
+    <Compile Include="Graph\Router\IBasicRouter.cs" />
+    <Compile Include="Graph\Router\IBasicRouterDataSource.cs" />
+    <Compile Include="Graph\Router\IDynamicGraphRouterDataSource.cs" />
+    <Compile Include="IEdgeMatcher.cs" />
+    <Compile Include="Instructions\Instruction.cs" />
+    <Compile Include="Instructions\InstructionGenerator.cs" />
+    <Compile Include="Instructions\LanguageGeneration\Defaults\SimpleDutchLanguageGenerator.cs" />
+    <Compile Include="Instructions\LanguageGeneration\Defaults\SimpleEnglishLanguageGenerator.cs" />
+    <Compile Include="Instructions\LanguageGeneration\ILanguageGenerator.cs" />
+    <Compile Include="Instructions\LanguageGeneration\SentencePlanner.cs" />
+    <Compile Include="Instructions\MicroPlanning\Machines\ImmidiateTurnMachine.cs" />
+    <Compile Include="Instructions\MicroPlanning\Machines\PoiMachine.cs" />
+    <Compile Include="Instructions\MicroPlanning\Machines\PoiWithTurnMachine.cs" />
+    <Compile Include="Instructions\MicroPlanning\Machines\RoundaboutMachine.cs" />
+    <Compile Include="Instructions\MicroPlanning\Machines\TurnMachine.cs" />
+    <Compile Include="Instructions\MicroPlanning\MicroPlanner.cs" />
+    <Compile Include="Instructions\MicroPlanning\MicroPlannerException.cs" />
+    <Compile Include="Instructions\MicroPlanning\MicroPlannerHelper.cs" />
+    <Compile Include="Instructions\MicroPlanning\MicroPlannerMachine.cs" />
+    <Compile Include="Instructions\MicroPlanning\MicroPlannerMessage.cs" />
+    <Compile Include="Instructions\MicroPlanning\MicroPlannerMessageArc.cs" />
+    <Compile Include="Instructions\MicroPlanning\MicroPlannerMessagePoint.cs" />
+    <Compile Include="Interpreter\Constraints\Cars\DefaultCarConstraints.cs" />
+    <Compile Include="Interpreter\Constraints\Highways\DefaultHighwayConstraints.cs" />
+    <Compile Include="Interpreter\Constraints\IRoutingConstraints.cs" />
+    <Compile Include="Interpreter\Constraints\RoutingLabel.cs" />
+    <Compile Include="Interpreter\Default\DefaultVehicleInterpreter.cs" />
+    <Compile Include="Interpreter\Default\DefaultWayInterpreter.cs" />
+    <Compile Include="Interpreter\IRoutingInterpreter.cs" />
+    <Compile Include="Interpreter\Roads\IEdgeInterpreter.cs" />
+    <Compile Include="Interpreter\Roads\RoadInterpreter.cs" />
+    <Compile Include="Interpreter\Roads\RoadTagsInterpreterBase.cs" />
+    <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
+    <Compile Include="Interpreter\Vehicles\RoutingVehicleBase.cs" />
+    <Compile Include="Interpreter\Vehicles\RoutingVehicleSimple.cs" />
+    <Compile Include="IRouter.cs" />
+    <Compile Include="IRouterExtensions.cs" />
+    <Compile Include="IRouterPoint.cs" />
+    <Compile Include="Osm\Data\OsmEdgeData.cs" />
+    <Compile Include="Osm\Data\OsmMemoryRouterDataSource.cs" />
+    <Compile Include="Osm\Data\OsmSourceRouterDataSource.cs" />
+    <Compile Include="Osm\Data\Processing\CHEdgeDataGraphProcessingTarget.cs" />
+    <Compile Include="Osm\Data\Processing\DynamicGraphDataProcessorTarget.cs" />
+    <Compile Include="Osm\Data\Processing\PreProcessedDataGraphProcessingTarget.cs" />
+    <Compile Include="Osm\Data\Processing\SimpleWeighedDataGraphProcessingTarget.cs" />
+    <Compile Include="Osm\Dykstra\DykstraRouting.cs" />
+    <Compile Include="Osm\Graphs\Bounded\BoundedGraph.cs" />
+    <Compile Include="Osm\Graphs\Graph.cs" />
+    <Compile Include="Osm\Graphs\GraphDataSource.cs" />
+    <Compile Include="Osm\Graphs\GraphVertex.cs" />
+    <Compile Include="Osm\Graphs\Interpreter\GraphInterpreterBase.cs" />
+    <Compile Include="Osm\Graphs\Interpreter\GraphInterpreterTime.cs" />
+    <Compile Include="Osm\Graphs\Resolver\IGraphResolverMatcher.cs" />
+    <Compile Include="Osm\Graphs\Resolver\SimpleGraphResolver.cs" />
+    <Compile Include="Osm\Graphs\SimpleShapeInterpreter.cs" />
+    <Compile Include="Osm\Graphs\VertexAlongEdge.cs" />
+    <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
+    <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
+    <Compile Include="Osm\IRoutingProgressConsumer.cs" />
+    <Compile Include="Osm\Router.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Router\Router.cs" />
+    <Compile Include="Router\RouterGraph.cs" />
+    <Compile Include="Router\RouterPoint.cs" />
+    <Compile Include="Route\Gpx\OsmSharpRouteGpx.cs" />
+    <Compile Include="Route\Kml\OsmSharpRouteKml.cs" />
+    <Compile Include="Route\Metrics\OsmSharpRouteMetricCalculator.cs" />
+    <Compile Include="Route\Metrics\Time\TimeCalculator.cs" />
+    <Compile Include="Route\OsmSharpRoute.cs" />
+    <Compile Include="Route\OsmSharpRouteGenerator.cs" />
+    <Compile Include="TSP\Genetic\RouterTSPAEXGenetic.cs" />
+    <Compile Include="TSP\Genetic\RouterTSPGenetic.cs" />
+    <Compile Include="TSP\RandomizedArbitraryInsertion\RouteTSPRAI.cs" />
+    <Compile Include="TSP\RouterTSP.cs" />
+    <Compile Include="TSP\RouterTSPWrapper.cs" />
+    <Compile Include="VehicleEnum.cs" />
+    <Compile Include="VRP\MTSP\RouterMTSP.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolver.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolverWithImprovements.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolverWithSeeds.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\CrossOver\Order1CrossoverOperation.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\CrossOver\RouteExchangeAndVehicleOperation.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\CrossOver\RouteExchangeOperation.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\CrossOver\RouteExchangeOperationSimple.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\Fitness.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\FitnessCalculator.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\Generation\RandomBestPlacement.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\Generation\RandomGeneration.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\Generation\SolverGenerationOperation.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\Genome.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\Mutation\RedivideRouteMutation.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\Mutation\RelocateMutation.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\Mutation\RoutePartExchangeMutation.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\Mutation\ThreeOptMutation.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\Mutation\VehicleMutation.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\Problem.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\Genetic\RouterGeneticSimple.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\IMaxTimeImprovement.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\IMaxTimeSolver.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\InterImprovements\CrossExchangeInterImprovement.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\InterImprovements\ExchangeInterImprovement.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\InterImprovements\IInterImprovement.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\InterImprovements\RelocateExchangeInterImprovement.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\InterImprovements\RelocateInterImprovement.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\InterImprovements\TwoOptInterImprovement.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\MaxTimeCalculator.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\MaxTimeProblem.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\MaxTimeRouter.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\MaxTimeRouterWrapper.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\MaxTimeSolution.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\SavingsHeuristics\SavingsHeuristicSolver.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\TSPPlacement\TSPPlacementSolver.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\TSPPlacement\TSPProblem.cs" />
+    <Compile Include="VRP\NoDepot\MaxTime\VNS\GuidedVNS.cs" />
+    <Compile Include="VRP\NoDepot\RouterNoDepot.cs" />
+    <Compile Include="VRP\RouterVRP.cs" />
+    <Compile Include="VRP\RouterVRPWrapper.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\CheapestInsertion\CheapestInsertionSolver.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\Genetic\BestPlacement\RouterBestPlacement.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\Genetic\BestPlacement\RouterBestPlacementWithImprovements.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\Genetic\CrossOver\RouteExchangeOperation.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\Genetic\Fitness.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\Genetic\FitnessCalculator.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\Genetic\Generation\RandomBestPlacement.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\Genetic\Genome.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\Genetic\Mutation\RoutePartExchangeMutation.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\Genetic\Problem.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\Genetic\RouterGeneticSimple.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\IMaxTimeSolver.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\InterImprovements\CrossExchangeinterImprovement.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\InterImprovements\ExchangeInterImprovement.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\InterImprovements\IInterImprovements.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\InterImprovements\RelocateExchangeInterImprovement.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\InterImprovements\RelocateInterImprovement.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\InterImprovements\TwoOptInterImprovement.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\MaxTimeCalculator.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\MaxTimeProblem.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\MaxTimeRouter.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\MaxTimeRouterWrapper.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\MaxTimeSolution.cs" />
+    <Compile Include="VRP\WithDepot\MaxTime\VNS\GuidedVNS.cs" />
+    <Compile Include="VRP\WithDepot\RouterDepot.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interpreter\Roads\Tags\" />
+    <Folder Include="Resolving\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.Android.csproj">
+      <Project>{E881DC2A-6738-4F9D-A047-0DF201544C1B}</Project>
+      <Name>OsmSharp.Osm.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.Android.csproj">
+      <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
+      <Name>OsmSharp.Tools.Android</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+</Project>

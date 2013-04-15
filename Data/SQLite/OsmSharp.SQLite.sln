@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Osm.Data.SQLite", "OsmSharp.Osm.Data.SQLite\OsmSharp.Osm.Data.SQLite.csproj", "{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs22
+		SccProjectUniqueName0 = OsmSharp.Osm.Data.SQLite\\OsmSharp.Osm.Data.SQLite.csproj
+		SccProjectTopLevelParentUniqueName0 = OsmSharp.SQLite.sln
+		SccProjectName0 = OsmSharp.Osm.Data.SQLite
+		SccLocalPath0 = OsmSharp.Osm.Data.SQLite
+		SccLocalPath1 = .
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = OsmSharp.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release x64|Any CPU = Release x64|Any CPU
+		Release x64|x64 = Release x64|x64
+		Release x64|x86 = Release x64|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Debug|x64.ActiveCfg = Debug|x64
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Debug|x64.Build.0 = Debug|x64
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Debug|x86.ActiveCfg = Debug|x86
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Debug|x86.Build.0 = Debug|x86
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Release x64|Any CPU.ActiveCfg = Release|x86
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Release x64|x64.ActiveCfg = Release|x86
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Release x64|x86.ActiveCfg = Release|x86
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Release x64|x86.Build.0 = Release|x86
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Release|x64.ActiveCfg = Release|x64
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Release|x64.Build.0 = Release|x64
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Release|x86.ActiveCfg = Release|x86
+		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Osm.Routing.Test\Osm.Routing.Test.csproj
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
+	EndGlobalSection
+EndGlobal

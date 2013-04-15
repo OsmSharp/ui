@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Osm.Data.Redis", "OsmSharp.Osm.Data.Redis\OsmSharp.Osm.Data.Redis.csproj", "{9152A85F-61AC-486F-B5F6-E2C969132738}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 2
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs22
+		SccProjectUniqueName0 = OsmSharp.Osm.Data.Redis\\OsmSharp.Osm.Data.Redis.csproj
+		SccProjectTopLevelParentUniqueName0 = OsmSharp.Redis.sln
+		SccProjectName0 = OsmSharp.Osm.Data.Redis
+		SccLocalPath0 = OsmSharp.Osm.Data.Redis
+		SccLocalPath1 = .
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = OsmSharp.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release x64|Any CPU = Release x64|Any CPU
+		Release x64|x64 = Release x64|x64
+		Release x64|x86 = Release x64|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Debug|x64.ActiveCfg = Debug|x64
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Debug|x64.Build.0 = Debug|x64
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Debug|x86.ActiveCfg = Debug|x86
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Debug|x86.Build.0 = Debug|x86
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release x64|Any CPU.ActiveCfg = Release x64|Any CPU
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release x64|Any CPU.Build.0 = Release x64|Any CPU
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release x64|x64.ActiveCfg = Release x64|x64
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release x64|x64.Build.0 = Release x64|x64
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release x64|x86.ActiveCfg = Release x64|x86
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release x64|x86.Build.0 = Release x64|x86
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release|x64.ActiveCfg = Release|x64
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release|x64.Build.0 = Release|x64
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release|x86.ActiveCfg = Release|x86
+		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Osm.Routing.Test\Osm.Routing.Test.csproj
+		Policies = $0
+		$0.DotNetNamingPolicy = $1
+		$1.DirectoryNamespaceAssociation = None
+		$1.ResourceNamePolicy = FileFormatDefault
+	EndGlobalSection
+EndGlobal
