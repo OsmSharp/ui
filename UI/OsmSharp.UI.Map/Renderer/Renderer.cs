@@ -23,7 +23,7 @@ using OsmSharp.Osm.Map.Layers;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm.Map.Elements;
 using OsmSharp.Osm.Renderer.Tweakers;
-using System.Drawing.Drawing2D;
+using LineCap = OsmSharp.Osm.Map.Drawing2D.LineCap;
 
 namespace OsmSharp.Osm.Renderer
 {
@@ -170,18 +170,18 @@ namespace OsmSharp.Osm.Renderer
             {
                 return;
             }
-            if (element is ElementImage)
-            {
-                ElementImage el_image = (element as ElementImage);
-                if (el_image.Box != null)
-                {
-                    this.DrawImage(view, el_image.Image, el_image.Box, null);
-                }
-                else
-                {
-                    this.DrawImage(view, el_image.Image, el_image.Center, null);
-                }
-            }
+            //if (element is ElementImage)
+            //{
+            //    ElementImage el_image = (element as ElementImage);
+            //    if (el_image.Box != null)
+            //    {
+            //        this.DrawImage(view, el_image.Image, el_image.Box, null);
+            //    }
+            //    else
+            //    {
+            //        this.DrawImage(view, el_image.Image, el_image.Center, null);
+            //    }
+            //}
             else if (element is ElementDot)
             {
                 ElementDot el_dot = (element as ElementDot);
@@ -218,11 +218,11 @@ namespace OsmSharp.Osm.Renderer
                     this.DrawPolygon(view, el_polygon.Color, el_polygon.Polygon.Points, (float)el_polygon.Width,el_polygon.FixedWidth, null);
                 }
             }
-            else if (element is ElementText)
-            {
-                ElementText el_text = element as ElementText;
-                this.DrawText(view, el_text.Color, el_text.Center, el_text.Font, el_text.Text, null);
-            }
+            //else if (element is ElementText)
+            //{
+            //    ElementText el_text = element as ElementText;
+            //    this.DrawText(view, el_text.Color, el_text.Center, el_text.Font, el_text.Text, null);
+            //}
             else if (element is ElementEllipse)
             {
                 ElementEllipse el_ellipse = element as ElementEllipse;
@@ -486,50 +486,50 @@ namespace OsmSharp.Osm.Renderer
 
 
 
-        /// <summary>
-        /// Draws text.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="argb"></param>
-        /// <param name="point"></param>
-        /// <param name="font"></param>
-        /// <param name="text"></param>
-        public void DrawText(View view, int argb,
-            GeoCoordinate point, System.Drawing.Font font, string text,
-            Tweak tweak)
-        {
-            if (tweak == null)
-            {
-                tweak = DefaultTweak.Instance;
-            }
-            this.DoDrawText(view,
-                tweak.TweakColor(view.ZoomFactor, argb),
-                point,
-                new System.Drawing.Font(font.FontFamily, tweak.TweakFontSize(view.ZoomFactor, font.Size)),
-                text);
-        }
+        ///// <summary>
+        ///// Draws text.
+        ///// </summary>
+        ///// <param name="view"></param>
+        ///// <param name="argb"></param>
+        ///// <param name="point"></param>
+        ///// <param name="font"></param>
+        ///// <param name="text"></param>
+        //public void DrawText(View view, int argb,
+        //    GeoCoordinate point, System.Drawing.Font font, string text,
+        //    Tweak tweak)
+        //{
+        //    if (tweak == null)
+        //    {
+        //        tweak = DefaultTweak.Instance;
+        //    }
+        //    this.DoDrawText(view,
+        //        tweak.TweakColor(view.ZoomFactor, argb),
+        //        point,
+        //        new System.Drawing.Font(font.FontFamily, tweak.TweakFontSize(view.ZoomFactor, font.Size)),
+        //        text);
+        //}
 
-        /// <summary>
-        /// Draws text.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="argb"></param>
-        /// <param name="point"></param>
-        /// <param name="font"></param>
-        /// <param name="text"></param>
-        protected abstract void DoDrawText(View view, int argb,
-            GeoCoordinate point, System.Drawing.Font font, string text);
+        ///// <summary>
+        ///// Draws text.
+        ///// </summary>
+        ///// <param name="view"></param>
+        ///// <param name="argb"></param>
+        ///// <param name="point"></param>
+        ///// <param name="font"></param>
+        ///// <param name="text"></param>
+        //protected abstract void DoDrawText(View view, int argb,
+        //    GeoCoordinate point, System.Drawing.Font font, string text);
 
-        /// <summary>
-        /// Draws text.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="argb"></param>
-        /// <param name="point"></param>
-        /// <param name="font"></param>
-        /// <param name="text"></param>
-        protected abstract void DoDrawTextFixed(View view, int argb,
-            GeoCoordinate point, System.Drawing.Font font, string text);
+        ///// <summary>
+        ///// Draws text.
+        ///// </summary>
+        ///// <param name="view"></param>
+        ///// <param name="argb"></param>
+        ///// <param name="point"></param>
+        ///// <param name="font"></param>
+        ///// <param name="text"></param>
+        //protected abstract void DoDrawTextFixed(View view, int argb,
+        //    GeoCoordinate point, System.Drawing.Font font, string text);
 
         /// <summary>
         /// Draws a rectangle.
@@ -566,87 +566,87 @@ namespace OsmSharp.Osm.Renderer
         protected abstract void DoDrawRectangle(View view, int argb,
             GeoCoordinate top_left, float size, float width);
 
-        /// <summary>
-        /// Draws an image.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="image"></param>
-        /// <param name="top_left"></param>
-        /// <param name="size"></param>
-        public void DrawImage(View view,
-            System.Drawing.Image image, GeoCoordinate top_left, float size,
-            Tweak tweak)
-        {
-            if (tweak == null)
-            {
-                tweak = DefaultTweak.Instance;
-            }
-            this.DoDrawImage(view, image, top_left, tweak.TweakWidth(view.ZoomFactor, size));
-        }
+        ///// <summary>
+        ///// Draws an image.
+        ///// </summary>
+        ///// <param name="view"></param>
+        ///// <param name="image"></param>
+        ///// <param name="top_left"></param>
+        ///// <param name="size"></param>
+        //public void DrawImage(View view,
+        //    System.Drawing.Image image, GeoCoordinate top_left, float size,
+        //    Tweak tweak)
+        //{
+        //    if (tweak == null)
+        //    {
+        //        tweak = DefaultTweak.Instance;
+        //    }
+        //    this.DoDrawImage(view, image, top_left, tweak.TweakWidth(view.ZoomFactor, size));
+        //}
 
-        /// <summary>
-        /// Draws an image.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="image"></param>
-        /// <param name="top_left"></param>
-        /// <param name="size"></param>
-        protected abstract void DoDrawImage(View view,
-            System.Drawing.Image image, GeoCoordinate top_left, float size);
+        ///// <summary>
+        ///// Draws an image.
+        ///// </summary>
+        ///// <param name="view"></param>
+        ///// <param name="image"></param>
+        ///// <param name="top_left"></param>
+        ///// <param name="size"></param>
+        //protected abstract void DoDrawImage(View view,
+        //    System.Drawing.Image image, GeoCoordinate top_left, float size);
 
-        /// <summary>
-        /// Draws an image.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="image"></param>
-        /// <param name="top_left"></param>
-        /// <param name="size"></param>
-        public void DrawImage(View view,
-            System.Drawing.Image image, GeoCoordinateBox box, Tweak tweak)
-        {
-            if (tweak == null)
-            {
-                tweak = DefaultTweak.Instance;
-            }
-            this.DoDrawImage(view, image, box);
-        }
+        ///// <summary>
+        ///// Draws an image.
+        ///// </summary>
+        ///// <param name="view"></param>
+        ///// <param name="image"></param>
+        ///// <param name="top_left"></param>
+        ///// <param name="size"></param>
+        //public void DrawImage(View view,
+        //    System.Drawing.Image image, GeoCoordinateBox box, Tweak tweak)
+        //{
+        //    if (tweak == null)
+        //    {
+        //        tweak = DefaultTweak.Instance;
+        //    }
+        //    this.DoDrawImage(view, image, box);
+        //}
 
-        /// <summary>
-        /// Draws an image.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="image"></param>
-        /// <param name="box"></param>
-        protected abstract void DoDrawImage(View view, System.Drawing.Image image, GeoCoordinateBox box);
+        ///// <summary>
+        ///// Draws an image.
+        ///// </summary>
+        ///// <param name="view"></param>
+        ///// <param name="image"></param>
+        ///// <param name="box"></param>
+        //protected abstract void DoDrawImage(View view, System.Drawing.Image image, GeoCoordinateBox box);
 
 
-        /// <summary>
-        /// Draws an image.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="image"></param>
-        /// <param name="top_left"></param>
-        /// <param name="size"></param>
-        public void DrawImage(View view,
-            System.Drawing.Image image, GeoCoordinate center,
-            Tweak tweak)
-        {
-            if (tweak == null)
-            {
-                tweak = DefaultTweak.Instance;
-            }
-            this.DoDrawImage(view, image, center);
-        }       
+        ///// <summary>
+        ///// Draws an image.
+        ///// </summary>
+        ///// <param name="view"></param>
+        ///// <param name="image"></param>
+        ///// <param name="top_left"></param>
+        ///// <param name="size"></param>
+        //public void DrawImage(View view,
+        //    System.Drawing.Image image, GeoCoordinate center,
+        //    Tweak tweak)
+        //{
+        //    if (tweak == null)
+        //    {
+        //        tweak = DefaultTweak.Instance;
+        //    }
+        //    this.DoDrawImage(view, image, center);
+        //}       
         
-        /// <summary>
-        /// Draws an image.
-        /// </summary>
-        /// <param name="view"></param>
-        /// <param name="image"></param>
-        /// <param name="top_left"></param>
-        /// <param name="size"></param>
-        protected abstract void DoDrawImage(View view,
-            System.Drawing.Image image, GeoCoordinate center);
+        ///// <summary>
+        ///// Draws an image.
+        ///// </summary>
+        ///// <param name="view"></param>
+        ///// <param name="image"></param>
+        ///// <param name="top_left"></param>
+        ///// <param name="size"></param>
+        //protected abstract void DoDrawImage(View view,
+        //    System.Drawing.Image image, GeoCoordinate center);
 
         #endregion
 

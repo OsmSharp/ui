@@ -23,7 +23,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using OsmSharp.Osm.Map.Layers.Tiles;
 using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Osm.UI.WinForms.Test
@@ -40,7 +39,7 @@ namespace OsmSharp.Osm.UI.WinForms.Test
             base.OnLoad(e);
 
             OsmSharp.Osm.Map.Map map = new OsmSharp.Osm.Map.Map();
-            map.Layers.Add(new TilesLayer());
+            //map.Layers.Add(new TilesLayer());
 
             double latitude_center = 51.024154f;
             double longitude_center = 4.003801f;

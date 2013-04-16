@@ -24,7 +24,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using OsmSharp.Osm.Map.Layers.Custom;
-using OsmSharp.Osm.Map.Layers.Tiles;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm.Renderer.Gdi.Targets.UserControlTarget;
 using System.IO;

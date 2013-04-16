@@ -19,218 +19,217 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
 using OsmSharp.Tools.Math.Shapes;
 using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Osm.Map.Elements
 {
-    public class ElementImage : ElementBase
-    {
-        private Image _image;
+    //public class ElementImage : ElementBase
+    //{
+    //    private Image _image;
 
-        private GeoCoordinateBox _box;
+    //    private GeoCoordinateBox _box;
 
-        private GeoCoordinate _center;
+    //    private GeoCoordinate _center;
 
-        /// <summary>
-        /// Creates an image that scales.
-        /// </summary>
-        /// <param name="top"></param>
-        /// <param name="bottom"></param>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <param name="image"></param>
-        public ElementImage(
-            double top,
-            double bottom,
-            double left,
-            double right,
-            Image image,
-            double? min_zoom,
-            double? max_zoom)
-            : base(min_zoom, max_zoom)
-        {
-            _image = image;
-            GeoCoordinate top_left = new GeoCoordinate(top, left);
-            GeoCoordinate bottom_right = new GeoCoordinate(bottom, right);
-            _box = new GeoCoordinateBox(top_left, bottom_right);
-        }
+    //    /// <summary>
+    //    /// Creates an image that scales.
+    //    /// </summary>
+    //    /// <param name="top"></param>
+    //    /// <param name="bottom"></param>
+    //    /// <param name="left"></param>
+    //    /// <param name="right"></param>
+    //    /// <param name="image"></param>
+    //    public ElementImage(
+    //        double top,
+    //        double bottom,
+    //        double left,
+    //        double right,
+    //        Image image,
+    //        double? min_zoom,
+    //        double? max_zoom)
+    //        : base(min_zoom, max_zoom)
+    //    {
+    //        _image = image;
+    //        GeoCoordinate top_left = new GeoCoordinate(top, left);
+    //        GeoCoordinate bottom_right = new GeoCoordinate(bottom, right);
+    //        _box = new GeoCoordinateBox(top_left, bottom_right);
+    //    }
 
-        /// <summary>
-        /// Creates an image that scales.
-        /// </summary>
-        /// <param name="top"></param>
-        /// <param name="bottom"></param>
-        /// <param name="left"></param>
-        /// <param name="right"></param>
-        /// <param name="image"></param>
-        public ElementImage(
-            double top,
-            double bottom,
-            double left,
-            double right,
-            Image image)
-        {
-            _image = image;
-            GeoCoordinate top_left = new GeoCoordinate(top, left);
-            GeoCoordinate bottom_right = new GeoCoordinate(bottom, right);
-            _box = new GeoCoordinateBox(top_left, bottom_right);
-        }
-
-
-        /// <summary>
-        /// Creates an image that scales.
-        /// </summary>
-        /// <param name="top_left"></param>
-        /// <param name="bottom_right"></param>
-        /// <param name="image"></param>
-        public ElementImage(
-            GeoCoordinate top_left,
-            GeoCoordinate bottom_right,
-            Image image)
-        {
-            _image = image;
-            _box = new GeoCoordinateBox(top_left, bottom_right);
-        }
-
-        /// <summary>
-        /// Creates an image that scales.
-        /// </summary>
-        /// <param name="top_left"></param>
-        /// <param name="bottom_right"></param>
-        /// <param name="image"></param>
-        public ElementImage(
-            GeoCoordinate top_left,
-            GeoCoordinate bottom_right,
-            Image image,
-            double? min_zoom,
-            double? max_zoom)
-            : base(min_zoom, max_zoom)
-        {
-            _image = image;
-            _box = new GeoCoordinateBox(top_left, bottom_right);
-        }
-
-        /// <summary>
-        /// Creates a new image at a given position that does not scale.
-        /// </summary>
-        /// <param name="center"></param>
-        /// <param name="image"></param>
-        public ElementImage(
-            GeoCoordinate center,
-            Image image)
-        {
-            _image = image;
-            _center = center;
-        }
-
-        public ElementImage SubTile(bool xTop, bool yTop)
-        {
-            Image im = new Bitmap(_image.Width >> 1, Image.Height >> 1);
-            Graphics g = Graphics.FromImage(im);
+    //    /// <summary>
+    //    /// Creates an image that scales.
+    //    /// </summary>
+    //    /// <param name="top"></param>
+    //    /// <param name="bottom"></param>
+    //    /// <param name="left"></param>
+    //    /// <param name="right"></param>
+    //    /// <param name="image"></param>
+    //    public ElementImage(
+    //        double top,
+    //        double bottom,
+    //        double left,
+    //        double right,
+    //        Image image)
+    //    {
+    //        _image = image;
+    //        GeoCoordinate top_left = new GeoCoordinate(top, left);
+    //        GeoCoordinate bottom_right = new GeoCoordinate(bottom, right);
+    //        _box = new GeoCoordinateBox(top_left, bottom_right);
+    //    }
 
 
-            Rectangle rec = new Rectangle(
-                xTop ? _image.Width >> 1 : 0,
-                yTop ? _image.Height >> 1 : 0,
-                _image.Width >> 1,
-                _image.Height >> 1);
+    //    /// <summary>
+    //    /// Creates an image that scales.
+    //    /// </summary>
+    //    /// <param name="top_left"></param>
+    //    /// <param name="bottom_right"></param>
+    //    /// <param name="image"></param>
+    //    public ElementImage(
+    //        GeoCoordinate top_left,
+    //        GeoCoordinate bottom_right,
+    //        Image image)
+    //    {
+    //        _image = image;
+    //        _box = new GeoCoordinateBox(top_left, bottom_right);
+    //    }
 
-            g.DrawImage(_image, 0, 0, rec, GraphicsUnit.Pixel);
+    //    /// <summary>
+    //    /// Creates an image that scales.
+    //    /// </summary>
+    //    /// <param name="top_left"></param>
+    //    /// <param name="bottom_right"></param>
+    //    /// <param name="image"></param>
+    //    public ElementImage(
+    //        GeoCoordinate top_left,
+    //        GeoCoordinate bottom_right,
+    //        Image image,
+    //        double? min_zoom,
+    //        double? max_zoom)
+    //        : base(min_zoom, max_zoom)
+    //    {
+    //        _image = image;
+    //        _box = new GeoCoordinateBox(top_left, bottom_right);
+    //    }
 
-            double bott = this.Box.MinLat;
-            double left = this.Box.MinLon;
-            double h = (this.Box.MaxLat - this.Box.MinLat) / 2;
-            double w = (this.Box.MaxLon - this.Box.MinLon) / 2;
+    //    /// <summary>
+    //    /// Creates a new image at a given position that does not scale.
+    //    /// </summary>
+    //    /// <param name="center"></param>
+    //    /// <param name="image"></param>
+    //    public ElementImage(
+    //        GeoCoordinate center,
+    //        Image image)
+    //    {
+    //        _image = image;
+    //        _center = center;
+    //    }
 
-            if (xTop) left += w;
-            if (!yTop) bott += h;
-
-            ElementImage tile = new ElementImage(bott + h, bott, left, left + w, im);
-
-            return tile;
-        }
+    //    public ElementImage SubTile(bool xTop, bool yTop)
+    //    {
+    //        Image im = new Bitmap(_image.Width >> 1, Image.Height >> 1);
+    //        Graphics g = Graphics.FromImage(im);
 
 
-        public static ElementImage Merge4Tiles(ElementImage[] tiles)
-        {
-            if (tiles.Length == 0) return null;
+    //        Rectangle rec = new Rectangle(
+    //            xTop ? _image.Width >> 1 : 0,
+    //            yTop ? _image.Height >> 1 : 0,
+    //            _image.Width >> 1,
+    //            _image.Height >> 1);
 
-            Image im = new Bitmap(tiles[0].Image.Width << 1, tiles[0].Image.Height << 1);
-            Graphics g = Graphics.FromImage(im);
+    //        g.DrawImage(_image, 0, 0, rec, GraphicsUnit.Pixel);
 
-            double bott = tiles.Min(t => t.Box.MinLat);
-            double left = tiles.Min(t => t.Box.MinLon);
-            double h = tiles.Max(t => t.Box.MaxLat) - bott;
-            double w = tiles.Max(t => t.Box.MaxLon) - left;
+    //        double bott = this.Box.MinLat;
+    //        double left = this.Box.MinLon;
+    //        double h = (this.Box.MaxLat - this.Box.MinLat) / 2;
+    //        double w = (this.Box.MaxLon - this.Box.MinLon) / 2;
 
-            for (int i = 0; i < tiles.Length; i++)
-            {
-                Point pt = new Point();
+    //        if (xTop) left += w;
+    //        if (!yTop) bott += h;
 
-                int x = Convert.ToInt32((tiles[i].Box.MinLon - left) / w * im.Width);
-                int y = Convert.ToInt32((tiles[i].Box.MinLat - bott) / h * im.Width);
+    //        ElementImage tile = new ElementImage(bott + h, bott, left, left + w, im);
 
-                pt.X = x;
-                pt.Y = im.Height >> 1 - y;
+    //        return tile;
+    //    }
 
-                g.DrawImageUnscaled(tiles[i].Image, pt);
-            }
 
-            ElementImage tile = new ElementImage(bott + h, bott, left, left + w, im);
-            return tile;
+    //    public static ElementImage Merge4Tiles(ElementImage[] tiles)
+    //    {
+    //        if (tiles.Length == 0) return null;
 
-        }
+    //        Image im = new Bitmap(tiles[0].Image.Width << 1, tiles[0].Image.Height << 1);
+    //        Graphics g = Graphics.FromImage(im);
 
-        public Image Image
-        {
-            get
-            {
-                return _image;
-            }
-        }
+    //        double bott = tiles.Min(t => t.Box.MinLat);
+    //        double left = tiles.Min(t => t.Box.MinLon);
+    //        double h = tiles.Max(t => t.Box.MaxLat) - bott;
+    //        double w = tiles.Max(t => t.Box.MaxLon) - left;
 
-        public GeoCoordinate Center
-        {
-            get
-            {
-                return _center;
-            }
-        }
+    //        for (int i = 0; i < tiles.Length; i++)
+    //        {
+    //            Point pt = new Point();
 
-        public GeoCoordinateBox Box
-        {
-            get
-            {
-                return _box;
-            }
-        }
+    //            int x = Convert.ToInt32((tiles[i].Box.MinLon - left) / w * im.Width);
+    //            int y = Convert.ToInt32((tiles[i].Box.MinLat - bott) / h * im.Width);
 
-        /// <summary>
-        /// Returns true if the element is visible inside the given box.
-        /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-        public override bool IsVisibleIn(GeoCoordinateBox box)
-        {
-            if (_box != null)
-            {
-                return box.Overlaps(_box);
-            }
-            else
-            {
-                return box.IsInside(_center);
-            }
-        }
+    //            pt.X = x;
+    //            pt.Y = im.Height >> 1 - y;
 
-        public override double ShortestDistanceTo(GeoCoordinate coordinate)
-        {
-            if (_box != null)
-            {
-                return coordinate.Distance(this.Box.Center);
-            }
-            return coordinate.Distance(this.Center);
-        }
-    }
+    //            g.DrawImageUnscaled(tiles[i].Image, pt);
+    //        }
+
+    //        ElementImage tile = new ElementImage(bott + h, bott, left, left + w, im);
+    //        return tile;
+
+    //    }
+
+    //    public Image Image
+    //    {
+    //        get
+    //        {
+    //            return _image;
+    //        }
+    //    }
+
+    //    public GeoCoordinate Center
+    //    {
+    //        get
+    //        {
+    //            return _center;
+    //        }
+    //    }
+
+    //    public GeoCoordinateBox Box
+    //    {
+    //        get
+    //        {
+    //            return _box;
+    //        }
+    //    }
+
+    //    /// <summary>
+    //    /// Returns true if the element is visible inside the given box.
+    //    /// </summary>
+    //    /// <param name="box"></param>
+    //    /// <returns></returns>
+    //    public override bool IsVisibleIn(GeoCoordinateBox box)
+    //    {
+    //        if (_box != null)
+    //        {
+    //            return box.Overlaps(_box);
+    //        }
+    //        else
+    //        {
+    //            return box.IsInside(_center);
+    //        }
+    //    }
+
+    //    public override double ShortestDistanceTo(GeoCoordinate coordinate)
+    //    {
+    //        if (_box != null)
+    //        {
+    //            return coordinate.Distance(this.Box.Center);
+    //        }
+    //        return coordinate.Distance(this.Center);
+    //    }
+    //}
 }

@@ -23,7 +23,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using OsmSharp.Osm.Map.Layers.Tiles;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm.Map.Layers.Custom;
 using OsmSharp.Tools.GeoCoding;
@@ -42,7 +41,7 @@ namespace OsmSharp.Osm.UI.WinForms.Test
             base.OnLoad(e);
 
             OsmSharp.Osm.Map.Map map = new OsmSharp.Osm.Map.Map();
-            map.Layers.Add(new TilesLayer());
+            //map.Layers.Add(new TilesLayer());
 
 
             // do some small geocoding test here! 

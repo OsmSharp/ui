@@ -13,3 +13,4 @@ _ReSharper.*
 Ankh.NoLoad
 Core/Output*/
 UI/Output*/
+UI/WinForms/Output*/

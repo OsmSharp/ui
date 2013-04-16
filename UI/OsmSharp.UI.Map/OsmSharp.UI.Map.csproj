@@ -12,10 +12,14 @@
     <AssemblyName>OsmSharp.Osm.Map</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -169,8 +173,6 @@
     </Reference>
     <Reference Include="System.Core">
     </Reference>
-    <Reference Include="System.Drawing">
-    </Reference>
     <Reference Include="System.Xml.Linq">
     </Reference>
     <Reference Include="System.Data.DataSetExtensions">
@@ -186,6 +188,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Drawing2D\LineCap.cs" />
     <Compile Include="Elements\ElementBase.cs" />
     <Compile Include="Elements\ElementDot.cs" />
     <Compile Include="Elements\ElementEllipse.cs" />
@@ -220,6 +223,10 @@
     <ProjectReference Include="..\OsmSharp.UI.Interpreter\OsmSharp.UI.Interpreter.csproj">
       <Project>{30CCEC5D-49C1-4A5F-986D-8CE14EBDE666}</Project>
       <Name>OsmSharp.UI.Interpreter</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
+      <Project>{76BD9027-A67C-4D1B-8439-BE25E533C50D}</Project>
+      <Name>OsmSharp.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

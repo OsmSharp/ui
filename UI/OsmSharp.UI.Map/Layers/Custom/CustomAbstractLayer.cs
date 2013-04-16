@@ -21,7 +21,6 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Map.Elements;
 using OsmSharp.Tools.Math.Geo;
-using System.Drawing;
 using OsmSharp.Tools.Math.Geo.Factory;
 using OsmSharp.Tools.Math.Shapes;
 using System.Threading;
@@ -220,7 +219,7 @@ namespace OsmSharp.Osm.Map.Layers.Custom
         public ElementDot AddDot(GeoCoordinate dot)
         {
             ElementDot element = new ElementDot(
-                Color.Black.ToArgb(),
+                0,
                 0.0002f,
                 new OsmSharp.Tools.Math.Shapes.ShapeDotF<GeoCoordinate, GeoCoordinateBox, GeoCoordinateLine>(PrimitiveGeoFactory.Instance, dot),
                 false);
@@ -257,7 +256,7 @@ namespace OsmSharp.Osm.Map.Layers.Custom
             // create the line element.
             ElementLine element = new ElementLine(
                 line,
-                Color.Black.ToArgb(),
+                0,
                 0.0002f,
                 true);
 
@@ -345,7 +344,7 @@ namespace OsmSharp.Osm.Map.Layers.Custom
             // create the line element.
             ElementLine element = new ElementLine(
                 polyline,
-                Color.Black.ToArgb(),
+                0,
                 0.0002f,
                 true);
 
@@ -394,19 +393,19 @@ namespace OsmSharp.Osm.Map.Layers.Custom
             }
         }
 
-        public ElementImage AddImage(
-            Image image,
-            GeoCoordinate coordinate)
-        {
-            ElementImage image_element =
-                new ElementImage(coordinate, image);
-            lock (_elements)
-            {
-                _elements.Add(image_element);
-            }
+        //public ElementImage AddImage(
+        //    Image image,
+        //    GeoCoordinate coordinate)
+        //{
+        //    ElementImage image_element =
+        //        new ElementImage(coordinate, image);
+        //    lock (_elements)
+        //    {
+        //        _elements.Add(image_element);
+        //    }
 
-            return image_element;
-        }
+        //    return image_element;
+        //}
 
         #endregion
 

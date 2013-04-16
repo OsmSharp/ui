@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Shapes;
-using System.Drawing.Drawing2D;
+using LineCap = OsmSharp.Osm.Map.Drawing2D.LineCap;
 
 namespace OsmSharp.Osm.Map.Elements
 {

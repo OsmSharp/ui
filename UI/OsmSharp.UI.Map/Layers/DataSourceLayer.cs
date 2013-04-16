@@ -24,7 +24,6 @@ using OsmSharp.Osm.Map.Styles;
 using OsmSharp.Osm.Map.Elements;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Shapes;
-using System.Drawing;
 using OsmSharp.Tools.Math.Geo.Factory;
 
 namespace OsmSharp.Osm.Map.Layers
@@ -67,7 +66,7 @@ namespace OsmSharp.Osm.Map.Layers
         /// <summary>
         /// The default color of this layer.
         /// </summary>
-        private Color _default;
+        private int _default;
 
         /// <summary>
         /// Creates a new data source.
@@ -83,7 +82,7 @@ namespace OsmSharp.Osm.Map.Layers
 
             // TODO: Add modification event.
             // _source.
-            _default = Color.Blue;
+            //_default = Color.Blue;
 
             this.MinZoom = -1;
             this.MaxZoom = -1;
@@ -96,7 +95,7 @@ namespace OsmSharp.Osm.Map.Layers
         /// <param name="default_color"></param>
         public DataSourceLayer(
             IDataSourceReadOnly source,
-            Color default_color)
+            int default_color)
             : this(source)
         {
             _default = default_color;
@@ -208,12 +207,12 @@ namespace OsmSharp.Osm.Map.Layers
                         ElementLine line;
                         if (w.Tags.ContainsKey("metadata_name"))
                         {
-                            Color transparent_color = Color.FromArgb(230,_default);
+                            int transparent_color = 0; // Color.FromArgb(230, _default);
                             line = new ElementLine(
                                 new ShapePolyLineF<GeoCoordinate, GeoCoordinateBox, GeoCoordinateLine>(
                                     PrimitiveGeoFactory.Instance,
                                     w.GetCoordinates().ToArray<GeoCoordinate>()),
-                                transparent_color.ToArgb(),
+                                transparent_color,
                                 4f,
                                 true);
                             elements.Add(line);

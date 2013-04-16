@@ -94,8 +94,8 @@ namespace OsmSharp.Osm.Renderer.Gdi
             GeoCoordinate[] coordinates,
             float width,
             LineStyle style,
-            LineCap start_cap,
-            LineCap end_cap)
+            OsmSharp.Osm.Map.Drawing2D.LineCap start_cap,
+            OsmSharp.Osm.Map.Drawing2D.LineCap end_cap)
         {
             if (coordinates.Length > 1)
             {
@@ -119,8 +119,8 @@ namespace OsmSharp.Osm.Renderer.Gdi
                         this.Target.Pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Solid;
                         break;
                 }
-                this.Target.Pen.StartCap = start_cap;
-                this.Target.Pen.EndCap = end_cap;
+                this.Target.Pen.StartCap = start_cap.ConvertToGDI();
+                this.Target.Pen.EndCap = end_cap.ConvertToGDI();
                 Color col = Color.FromArgb(argb);
                 this.Target.Pen.Color = col;
                 this.Target.Pen.Width = view.ConvertToTargetXSize(
@@ -144,8 +144,8 @@ namespace OsmSharp.Osm.Renderer.Gdi
         protected override void DoDrawLineFixed(View view, int argb,
             GeoCoordinate[] coordinates, float width,
             LineStyle style,
-            LineCap start_cap,
-            LineCap end_cap)
+            OsmSharp.Osm.Map.Drawing2D.LineCap start_cap,
+            OsmSharp.Osm.Map.Drawing2D.LineCap end_cap)
         {
             if (coordinates.Length > 1)
             {
@@ -172,8 +172,8 @@ namespace OsmSharp.Osm.Renderer.Gdi
                 Color col = Color.FromArgb(argb);
                 this.Target.Pen.Color = col;
                 this.Target.Pen.Width = width;
-                this.Target.Pen.EndCap = end_cap;
-                this.Target.Pen.StartCap = start_cap;
+                this.Target.Pen.EndCap = end_cap.ConvertToGDI();
+                this.Target.Pen.StartCap = start_cap.ConvertToGDI();
 
                 try
                 { 
@@ -263,40 +263,40 @@ namespace OsmSharp.Osm.Renderer.Gdi
             }
         }
 
-        protected override void DoDrawText(View view, int argb, GeoCoordinate point, Font font, string text)
-        {
-            float size = view.ConvertToTargetXSize(this.Target, font.Size / 10000);
-            PointF target_point = view.ConvertToTargetCoordinates(this.Target, point).ConvertToDrawing();
-            Font target_font = new Font(font.FontFamily, size);
-            Brush brush = new SolidBrush(Color.FromArgb(argb));
+        //protected override void DoDrawText(View view, int argb, GeoCoordinate point, Font font, string text)
+        //{
+        //    float size = view.ConvertToTargetXSize(this.Target, font.Size / 10000);
+        //    PointF target_point = view.ConvertToTargetCoordinates(this.Target, point).ConvertToDrawing();
+        //    Font target_font = new Font(font.FontFamily, size);
+        //    Brush brush = new SolidBrush(Color.FromArgb(argb));
 
-            try
-            { 
-                this.Target.Graphics.DrawString(text, target_font, brush, target_point);
-            }
-            catch (Exception)
-            {
-                // nasty GDI-bug!
-                //http://blog.lavablast.com/post/2007/11/The-Mysterious-Parameter-Is-Not-Valid-Exception.aspx
-            }
-        }
+        //    try
+        //    { 
+        //        this.Target.Graphics.DrawString(text, target_font, brush, target_point);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        // nasty GDI-bug!
+        //        //http://blog.lavablast.com/post/2007/11/The-Mysterious-Parameter-Is-Not-Valid-Exception.aspx
+        //    }
+        //}
 
-        protected override void DoDrawTextFixed(View view, int argb, GeoCoordinate point, Font font, string text)
-        {
-            PointF target_point = view.ConvertToTargetCoordinates(this.Target, point).ConvertToDrawing();
-            Font target_font = font;
-            Brush brush = new SolidBrush(Color.FromArgb(argb));
+        //protected override void DoDrawTextFixed(View view, int argb, GeoCoordinate point, Font font, string text)
+        //{
+        //    PointF target_point = view.ConvertToTargetCoordinates(this.Target, point).ConvertToDrawing();
+        //    Font target_font = font;
+        //    Brush brush = new SolidBrush(Color.FromArgb(argb));
 
-            try
-            {
-                this.Target.Graphics.DrawString(text, target_font, brush, target_point);
-            }
-            catch (Exception)
-            {
-                // nasty GDI-bug!
-                //http://blog.lavablast.com/post/2007/11/The-Mysterious-Parameter-Is-Not-Valid-Exception.aspx
-            }
-        }
+        //    try
+        //    {
+        //        this.Target.Graphics.DrawString(text, target_font, brush, target_point);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        // nasty GDI-bug!
+        //        //http://blog.lavablast.com/post/2007/11/The-Mysterious-Parameter-Is-Not-Valid-Exception.aspx
+        //    }
+        //}
 
         protected override void DoDrawRectangle(View view, int argb, GeoCoordinate top_left, float size, float width)
         {
@@ -320,59 +320,59 @@ namespace OsmSharp.Osm.Renderer.Gdi
             }
         }
 
-        protected override void DoDrawImage(View view, Image image, GeoCoordinate top_left, float size)
-        {
-            PointF target_top_left = view.ConvertToTargetCoordinates(this.Target, top_left).ConvertToDrawing();
-            float target_size_x = view.ConvertToTargetXSize(this.Target, size);
-            float target_size_y = view.ConvertToTargetYSize(this.Target, size);
+        //protected override void DoDrawImage(View view, Image image, GeoCoordinate top_left, float size)
+        //{
+        //    PointF target_top_left = view.ConvertToTargetCoordinates(this.Target, top_left).ConvertToDrawing();
+        //    float target_size_x = view.ConvertToTargetXSize(this.Target, size);
+        //    float target_size_y = view.ConvertToTargetYSize(this.Target, size);
             
-            try
-            {
-                this.Target.Graphics.DrawImage(image, new RectangleF(target_top_left, new SizeF(target_size_x, target_size_y)));
-            }
-            catch (Exception)
-            {
-                // nasty GDI-bug!
-                //http://blog.lavablast.com/post/2007/11/The-Mysterious-Parameter-Is-Not-Valid-Exception.aspx
-            }
-        }
+        //    try
+        //    {
+        //        this.Target.Graphics.DrawImage(image, new RectangleF(target_top_left, new SizeF(target_size_x, target_size_y)));
+        //    }
+        //    catch (Exception)
+        //    {
+        //        // nasty GDI-bug!
+        //        //http://blog.lavablast.com/post/2007/11/The-Mysterious-Parameter-Is-Not-Valid-Exception.aspx
+        //    }
+        //}
 
-        protected override void DoDrawImage(View view, Image image, GeoCoordinateBox box)
-        {
-            PointF target_top_left = view.ConvertToTargetCoordinates(this.Target, new GeoCoordinate(box.MaxLat, box.MinLon)).ConvertToDrawing();
-            PointF target_bottom_right = view.ConvertToTargetCoordinates(this.Target, new GeoCoordinate(box.MinLat, box.MaxLon)).ConvertToDrawing();
+        //protected override void DoDrawImage(View view, Image image, GeoCoordinateBox box)
+        //{
+        //    PointF target_top_left = view.ConvertToTargetCoordinates(this.Target, new GeoCoordinate(box.MaxLat, box.MinLon)).ConvertToDrawing();
+        //    PointF target_bottom_right = view.ConvertToTargetCoordinates(this.Target, new GeoCoordinate(box.MinLat, box.MaxLon)).ConvertToDrawing();
             
-            try
-            {
-                this.Target.Graphics.DrawImage(image, new RectangleF(target_top_left,
-                    new SizeF(target_bottom_right.X - target_top_left.X + 1f, target_bottom_right.Y - target_top_left.Y + 1f)));
-            }
-            catch (Exception)
-            {
-                // nasty GDI-bug!
-                //http://blog.lavablast.com/post/2007/11/The-Mysterious-Parameter-Is-Not-Valid-Exception.aspx
-            }
-        }
+        //    try
+        //    {
+        //        this.Target.Graphics.DrawImage(image, new RectangleF(target_top_left,
+        //            new SizeF(target_bottom_right.X - target_top_left.X + 1f, target_bottom_right.Y - target_top_left.Y + 1f)));
+        //    }
+        //    catch (Exception)
+        //    {
+        //        // nasty GDI-bug!
+        //        //http://blog.lavablast.com/post/2007/11/The-Mysterious-Parameter-Is-Not-Valid-Exception.aspx
+        //    }
+        //}
 
-        protected override void DoDrawImage(View view, Image image, GeoCoordinate center)
-        {
-            PointF center_point = view.ConvertToTargetCoordinates(this.Target, center).ConvertToDrawing();
+        //protected override void DoDrawImage(View view, Image image, GeoCoordinate center)
+        //{
+        //    PointF center_point = view.ConvertToTargetCoordinates(this.Target, center).ConvertToDrawing();
 
-            PointF top_left = new PointF(
-                center_point.X - (image.Width / 2),
-                center_point.Y - (image.Height / 2));
+        //    PointF top_left = new PointF(
+        //        center_point.X - (image.Width / 2),
+        //        center_point.Y - (image.Height / 2));
 
-            try
-            {
-                this.Target.Graphics.DrawImage(image, new RectangleF(top_left,
-                    image.Size));
-            }
-            catch (Exception)
-            {
-                // nasty GDI-bug!
-                //http://blog.lavablast.com/post/2007/11/The-Mysterious-Parameter-Is-Not-Valid-Exception.aspx
-            }
-        }
+        //    try
+        //    {
+        //        this.Target.Graphics.DrawImage(image, new RectangleF(top_left,
+        //            image.Size));
+        //    }
+        //    catch (Exception)
+        //    {
+        //        // nasty GDI-bug!
+        //        //http://blog.lavablast.com/post/2007/11/The-Mysterious-Parameter-Is-Not-Valid-Exception.aspx
+        //    }
+        //}
 
         protected override void DoFillPolygon(View view, int argb, GeoCoordinate[] coordinates)
         {
