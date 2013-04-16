@@ -14,3 +14,8 @@ Ankh.NoLoad
 Core/Output*/
 UI/Output*/
 UI/WinForms/Output*/
+Data/Oracle/Output*/
+Data/PostgreSQL/Output*/
+Data/Redis/Output*/
+Data/SQLServer/Output*/
+Data/SQLite/Output*/
