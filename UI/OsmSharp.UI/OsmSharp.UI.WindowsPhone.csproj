@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{4058F400-8BA9-459D-8338-2618BE074A8C}</ProjectGuid>
+    <ProjectGuid>{E3BB9FEF-3728-4944-9229-CD486C19BDD5}</ProjectGuid>
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PhoneClassLibrary3</RootNamespace>
-    <AssemblyName>PhoneClassLibrary3</AssemblyName>
+    <RootNamespace>PhoneClassLibrary2</RootNamespace>
+    <AssemblyName>PhoneClassLibrary2</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <TargetFrameworkProfile>WindowsPhone71</TargetFrameworkProfile>
@@ -41,67 +41,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OsmSharp.Osm">
-      <HintPath>..\packages\OsmSharp.3.1.4839.74\lib\sl4-wp71\OsmSharp.Osm.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Routing">
-      <HintPath>..\packages\OsmSharp.3.1.4839.74\lib\sl4-wp71\OsmSharp.Routing.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Tools">
-      <HintPath>..\packages\OsmSharp.3.1.4839.74\lib\sl4-wp71\OsmSharp.Tools.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\sl4-windowsphone71\protobuf-net.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="mscorlib.extensions" />
-    <Reference Include="Zlib.Portable">
-      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Drawing2D\LineCap.cs" />
-    <Compile Include="Elements\ElementBase.cs" />
-    <Compile Include="Elements\ElementDot.cs" />
-    <Compile Include="Elements\ElementEllipse.cs" />
-    <Compile Include="Elements\ElementImage.cs" />
-    <Compile Include="Elements\ElementLine.cs" />
-    <Compile Include="Elements\ElementPolygon.cs" />
-    <Compile Include="Elements\ElementText.cs" />
-    <Compile Include="Elements\IElement.cs" />
-    <Compile Include="Elements\LineStyle.cs" />
-    <Compile Include="Layers\Custom\CustomAbstractBoxedLayer.cs" />
-    <Compile Include="Layers\Custom\CustomAbstractLayer.cs" />
-    <Compile Include="Layers\Custom\CustomLayer.cs" />
-    <Compile Include="Layers\DataSourceChangesLayer.cs" />
-    <Compile Include="Layers\DataSourceLayer.cs" />
-    <Compile Include="Layers\DataSourceSubLayer.cs" />
-    <Compile Include="Layers\ILayer.cs" />
-    <Compile Include="Layers\Routing\OsmSharpRouteLayer.cs" />
-    <Compile Include="Layers\Tiles\BingSateliteTilesLayer.cs" />
-    <Compile Include="Layers\Tiles\TilesLayer.cs" />
-    <Compile Include="Map.cs" />
-    <Compile Include="MapQueryResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Renderer\DefaultTweakers\DefaultTweak.cs" />
-    <Compile Include="Renderer\DefaultTweakers\Tweak.cs" />
-    <Compile Include="Renderer\ITarget.cs" />
-    <Compile Include="Renderer\Renderer.cs" />
-    <Compile Include="Renderer\View.cs" />
-    <Compile Include="Styles\OsmStyle.cs" />
-    <Compile Include="Styles\OsmStyleInterpreter.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.UI.Interpreter\OsmSharp.UI.Interpreter.WindowsPhone.csproj">
-      <Project>{4B670555-BEB2-4DC3-80A4-0E8AE333156B}</Project>
-      <Name>OsmSharp.UI.Interpreter.WindowsPhone</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
