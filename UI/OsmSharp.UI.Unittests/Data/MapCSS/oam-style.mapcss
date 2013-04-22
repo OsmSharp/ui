@@ -1,0 +1,41 @@
+/*
+  OAM core stylesheet
+*/
+
+meta {
+    author: "Morten Olsen Lysgaard";
+    title: "OpenAviationMap styling of aviation related data.";
+    shorttitle: "OpenAviationMap";
+    description: "OpenAviationMap styling of aviation related data.";
+    shortdescription: "OpenAviationMap";
+    link: "http://openaviationmap.org";
+    version: "0.0.2";
+    icon: "dialogs/mappaint/pl2_small.png";
+}
+
+canvas {
+    background-color: #ffffea;
+}
+
+node, area {
+    text-color: black;
+}
+
+way[airspace=yes]:closed { color: blue; fill-color: blue; fill-opacity: 0.2; width: 1; dashes: 2, 2; }
+
+node[obstacle=yes] { icon-image:"http://openaviationmap.org/icons/obstacle.svg"; icon-width:32; icon-height:32; }
+
+node[navaid=yes] { icon-image:"http://openaviationmap.org/icons/navaid.svg"; icon-width:32; icon-height:32; }
+
+
+node[navaid=yes][navaid:dme] { icon-image:"http://openaviationmap.org/icons/dme.svg"; icon-width:32; icon-height:32; }
+node[navaid=yes][navaid:ndb] { icon-image:"http://openaviationmap.org/icons/ndb.svg"; icon-width:32; icon-height:32; }
+node[navaid=yes][navaid:tacan] { icon-image:"http://openaviationmap.org/icons/tacan.svg"; icon-width:32; icon-height:32; }
+
+node[navaid=yes][navaid:vor][!navaid:dme][!navaid:tacan] { icon-image:"http://openaviationmap.org/icons/vor.svg"; icon-width:32; icon-height:32; }
+node[navaid=yes][navaid:vor][navaid:dme] { icon-image:"http://openaviationmap.org/icons/vor_dme.svg"; icon-width:32; icon-height:32; }
+node[navaid=yes][navaid:vor][navaid:tacan] { icon-image:"http://openaviationmap.org/icons/vor_tacan.svg"; icon-width:32; icon-height:32; }
+
+node[aerodrome=yes] { icon-image:"http://openaviationmap.org/icons/aerodrome.svg"; icon-width:32; icon-height:32; }
+
+node[vfrreportingpoint=yes] { icon-image:"http://openaviationmap.org/icons/vfrreportingpoint.svg"; icon-width:32; icon-height:32; }

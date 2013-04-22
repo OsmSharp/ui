@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{76BD9027-A67C-4D1B-8439-BE25E533C50D}</ProjectGuid>
+    <ProjectGuid>{0739A23C-1D40-477F-AE7C-38518B499567}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OsmSharp.UI</RootNamespace>
-    <AssemblyName>OsmSharp.UI</AssemblyName>
+    <RootNamespace>OsmSharp.UI.Unittests</RootNamespace>
+    <AssemblyName>OsmSharp.UI.Unittests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -42,8 +42,8 @@
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.3\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Osm">
-      <HintPath>..\..\Core\Output\Debug\Any CPU\OsmSharp.Osm.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -54,41 +54,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KnownColor.cs" />
+    <Compile Include="MapCSSDomainParserTests.cs" />
+    <Compile Include="MapCSSParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationFontStyle.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationFontVariant.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationFontWeight.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationLineJoin.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\Declaration.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationAntiAliasing.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationDashes.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationFloat.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationInt.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationLineCap.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationString.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationTextDecoration.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationTextPosition.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationTextTransform.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\DeclarationURL.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\MapCSSFile.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\Rule.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\Selector.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\SelectorRule.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\SelectorTypeEnum.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\Domain\SelectorZoom.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\MapCSSDomainParser.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\MapCSSLexer.cs" />
-    <Compile Include="Rendering\MapCSS\v0_2\MapCSSParser.cs" />
-    <Compile Include="SimpleColor.cs" />
+    <Compile Include="SimpleColorTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Data\MapCSS\coloured-addresses.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\default.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\gisrussa.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\Hide_nodes.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\landuses.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\oam-style.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\opencyclemap.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\openstreetinfo.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\osmosnimki-hybrid.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\potlatch2.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\sport_styles.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\trivial.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\color-named.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\color-short.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\color.mapcss" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Antlr3 Include="Rendering\MapCSS\v0_2\MapCSS.g">
-      <Generator>MSBuild:Compile</Generator>
-    </Antlr3>
+    <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
+      <Project>{76BD9027-A67C-4D1B-8439-BE25E533C50D}</Project>
+      <Name>OsmSharp.UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

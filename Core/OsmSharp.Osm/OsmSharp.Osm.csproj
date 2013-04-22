@@ -301,6 +301,7 @@
     <Compile Include="Sources\IRelationSource.cs" />
     <Compile Include="Sources\IWaySource.cs" />
     <Compile Include="Tags\OsmTagsIndex.cs" />
+    <Compile Include="Tags\TagTools.cs" />
     <Compile Include="Tiles\Tile.cs" />
     <Compile Include="Tiles\TileRange.cs" />
     <Compile Include="User.cs" />

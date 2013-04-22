@@ -1,0 +1,14 @@
+meta {
+    title: "Hide nodes";
+    description: "Simple style to hide nodes in JOSM (may be handy to observe objects on low levels)";
+    version: "1";
+    author: "Felis Pimeja";
+    link: url("https://dl.dropbox.com/u/8010189/Forum%20attachments/Hide_nodes.mapcss") ; 
+}
+
+/* control node size at lower zoom levels */
+node|z1-17 { symbol-shape: square; symbol-fill-opacity: 0; symbol-size: 1; z-index:-1}
+node|z18 { symbol-shape: square; symbol-stroke-color: navy; symbol-fill-color: rosybrown; symbol-size:5;  z-index:1}
+node|z19- { symbol-shape: square; symbol-stroke-color: navy; symbol-fill-color: rosybrown; symbol-size:6;  z-index:1}
+
+

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Antlr3.Runtime.PCL</id>
+    <version>3.5.0.3</version>
+    <title>Antlr3 Portable</title>
+    <authors>Ben Abelshausen</authors>
+    <owners>Ben Abelshausen</owners>
+    <licenseUrl>https://github.com/xivk/antlr3.pcl/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>http://github.com/xivk/antlr3.pcl</projectUrl>
+    <iconUrl>http://raw.github.com/xivk/antlr3.pcl/master/antlr64.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A version of the Antlr3 library that can built as a Portable Class Library. This makes Antlr available on various platforms.
+
+Used in OsmSharp (http://www.osmsharp.com) to parse MapCSS.
+
+Based on a quick and dirty port of Jint (http://jint.codeplex.com/) to the Windows Phone environment. More info here: http://codecube.net/2011/10/javascript-engine-for-windows-phone/</description>
+    <summary>A version of the Antlr3 library that can built as a Portable Class Library. This makes Antlr available on various platforms.</summary>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <tags>antlr</tags>
+  </metadata>
+</package>

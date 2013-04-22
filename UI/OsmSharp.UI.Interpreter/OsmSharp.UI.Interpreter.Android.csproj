@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BD098688-D4D7-45DB-8A17-AAD82D8E0CA9}</ProjectGuid>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OsmSharp.UI.Interpreter</RootNamespace>
+    <AssemblyName>OsmSharp.UI.Interpreter</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Android" />
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Features\Feature.cs" />
+    <Compile Include="Features\IFeatureClient.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\AdministrativeFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Border\BorderFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\PlaceFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\CityFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\HamletFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\MunicipalityFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\SuburbFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\TownFeature.cs" />
+    <Compile Include="Features\Tree\Map\Administrative\Place\Places\VillageFeature.cs" />
+    <Compile Include="Features\Tree\Map\ExistenceFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\ArtificialWay\ArtificialWayFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\LandWater\LandWaterFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\Field\FieldFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\LandFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\ManMade\ManMadeFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\ManMade\Parking\ParkingFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\ManMade\PlaceOfWorship\PlaceOfWorshipFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\ManMade\PublicTransport\PublicTransportFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\ManMade\Utilities\UtilitiesFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\Nature\Forest\ForestFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\Nature\NatureFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\Urban\Residential\ResidentialFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Land\Urban\UrbanFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\PhysicalFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Water\WaterArea\WaterAreaFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Water\WaterFeature.cs" />
+    <Compile Include="Features\Tree\Map\Physical\Water\WaterWay\WaterWayFeature.cs" />
+    <Compile Include="Interpreter.cs" />
+    <Compile Include="Resources\Resource.Designer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Features\Xml\Features.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Resources\AboutResources.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\Values\Strings.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\Tree\Gpx\" />
+    <Folder Include="Features\Tree\Kml\" />
+    <Folder Include="Features\Tree\Selection\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
