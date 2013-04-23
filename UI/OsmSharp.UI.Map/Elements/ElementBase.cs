@@ -99,9 +99,9 @@ namespace OsmSharp.Osm.Map.Elements
         /// <summary>
         /// Returns true if the element in visible at the given zoom level.
         /// </summary>
-        /// <param name="zoom_factor"></param>
+        /// <param name="zoomFactor"></param>
         /// <returns></returns>
-        public bool IsVisibleAt(double zoom_factor)
+        public bool IsVisibleAt(double zoomFactor)
         {
             if (!_min_zoom.HasValue
                 && !_max_zoom.HasValue)
@@ -114,16 +114,16 @@ namespace OsmSharp.Osm.Map.Elements
                 if (_min_zoom.HasValue &&
                     _max_zoom.HasValue)
                 {
-                    return _min_zoom.Value < zoom_factor
-                        && _max_zoom.Value >= zoom_factor;
+                    return _min_zoom.Value < zoomFactor
+                        && _max_zoom.Value >= zoomFactor;
                 }
                 else if (_min_zoom.HasValue)
                 {
-                    return _min_zoom.Value < zoom_factor;
+                    return _min_zoom.Value < zoomFactor;
                 }
                 else
                 {
-                    return _max_zoom.Value >= zoom_factor;
+                    return _max_zoom.Value >= zoomFactor;
                 }
             }
         }

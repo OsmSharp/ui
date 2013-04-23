@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using OsmSharp.Osm;
+
+namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
+{
+    /// <summary>
+    /// Enumeration of MapCSS types.
+    /// </summary>
+    public enum MapCSSTypes
+    {
+        /// <summary>
+        /// A node.
+        /// </summary>
+        Node,
+
+        /// <summary>
+        /// A way.
+        /// </summary>
+        Way,
+
+        /// <summary>
+        /// A relation.
+        /// </summary>
+        Relation,
+
+        /// <summary>
+        /// A line (A way where the start and finish nodes are not the same node, or area=no has been set).
+        /// </summary>
+        Line,
+
+        /// <summary>
+        /// An area (A way where the start and finish nodes are the same node, or area=yes has been set).
+        /// </summary>
+        Area
+    }
+
+    /// <summary>
+    /// Contains MapCSS extensions.
+    /// </summary>
+    public static class MapCSSTypesExtensions
+    {
+        /// <summary>
+        /// Returns true if the given object is of the given type.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <param name="types"></param>
+        /// <returns></returns>
+        public static bool IsOfType(this OsmGeo osmGeo, MapCSSTypes types)
+        {
+            switch (types)
+            {
+                case MapCSSTypes.Node:
+                    return osmGeo.Type == OsmType.Node;
+                case MapCSSTypes.Way:
+                    return osmGeo.Type == OsmType.Way;
+                case MapCSSTypes.Relation:
+                    return osmGeo.Type == OsmType.Relation;
+                case MapCSSTypes.Line:
+                    if (osmGeo.Type == OsmType.Way)
+                    { // the type is way way. now check for a line.
+                        var way = (osmGeo as Way);
+                        if (way != null &&
+                            way.Nodes[0] == way.Nodes[way.Nodes.Count - 1])
+                        { // first node is the same as the last one.
+                            string area = string.Empty;
+                            if (way.Tags != null &&
+                                way.Tags.TryGetValue("area", out area) &&
+                                area == "yes")
+                            { // oeps, an area.
+                                return false;
+                            }
+                            return true;
+                        }
+                        else
+                        { // first node is different from the last one.
+                            return true; // even if there is an area=yes tag this cannot be an area.
+                        }
+                    }
+                    return false;
+                case MapCSSTypes.Area:
+                    if (osmGeo.Type == OsmType.Way)
+                    {
+                        // the type is way, if it is not a line it is an area.
+                        return !osmGeo.IsOfType(MapCSSTypes.Line);
+                    }
+                    return false;
+                default:
+                    throw new ArgumentOutOfRangeException("types");
+            }
+            return false;
+        }
+    }
+}

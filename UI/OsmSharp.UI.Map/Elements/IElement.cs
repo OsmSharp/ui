@@ -45,9 +45,9 @@ namespace OsmSharp.Osm.Map.Elements
         /// <summary>
         /// Returns true if the element in visible at the given zoom level.
         /// </summary>
-        /// <param name="zoom_factor"></param>
+        /// <param name="zoomFactor"></param>
         /// <returns></returns>
-        bool IsVisibleAt(double zoom_factor);
+        bool IsVisibleAt(double zoomFactor);
 
         /// <summary>
         /// Returns a dictionary containing descriptive tags for this element.

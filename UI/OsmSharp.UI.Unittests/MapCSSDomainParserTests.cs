@@ -1,10 +1,9 @@
 ﻿using System.IO;
 using System.Reflection;
 using Antlr.Runtime;
-using Antlr.Runtime.Tree;
 using NUnit.Framework;
-using OsmSharp.UI.Rendering.MapCSS.v0_2;
-using OsmSharp.UI.Rendering.MapCSS.v0_2.Domain;
+using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
+using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 
 namespace OsmSharp.UI.Unittests
 {
