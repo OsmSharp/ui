@@ -35,6 +35,7 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.UnitTests;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH
@@ -83,7 +84,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
                 key);
             //if (data == null)
             //{
-                OsmTagsIndex tags_index = new OsmTagsIndex();
+                SimpleTagsIndex tags_index = new SimpleTagsIndex();
 
                 // do the data processing.
                 DynamicGraphRouterDataSource<CHEdgeData> memory_data =

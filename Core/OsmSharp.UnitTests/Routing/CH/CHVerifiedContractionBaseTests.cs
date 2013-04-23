@@ -18,6 +18,7 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.Graph.Path;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing;
+using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.UnitTests.Routing.CH
 {
@@ -94,7 +95,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         {
             _interpreter = new OsmRoutingInterpreter();
 
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            SimpleTagsIndex tags_index = new SimpleTagsIndex();
 
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
@@ -134,7 +135,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         {
             _interpreter = new OsmRoutingInterpreter();
 
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            SimpleTagsIndex tags_index = new SimpleTagsIndex();
 
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);

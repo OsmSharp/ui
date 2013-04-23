@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Shapes;
 using OsmSharp.Tools.Math.Geo.Factory;
@@ -1422,7 +1423,7 @@ namespace OsmSharp.Routing.CH.Routing
         /// <param name="interpreter"></param>
         /// <param name="pointTags"></param>
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, IDictionary<string, string> pointTags)
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags)
         {
             double search_box_size = delta;
             // build the search box.

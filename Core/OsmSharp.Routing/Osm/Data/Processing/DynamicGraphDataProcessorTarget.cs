@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Graph;
@@ -78,7 +79,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="edge_comparer"></param>
         public DynamicGraphDataProcessorTarget(IDynamicGraph<EdgeData> dynamic_graph,
             IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edge_comparer)
-            : this(dynamic_graph, interpreter, edge_comparer, new OsmTagsIndex(), new Dictionary<long, uint>())
+            : this(dynamic_graph, interpreter, edge_comparer, new SimpleTagsIndex(), new Dictionary<long, uint>())
         {
 
         }
@@ -136,7 +137,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
             _id_transformations = id_transformations;
             _pre_index_mode = true;
             _pre_index = new HashSet<long>();
-            _used_twice_or_more = new HashSet<long>();
+            _usedTwiceOrMore = new HashSet<long>();
         }
 
         /// <summary>
@@ -211,7 +212,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Holds a list of nodes used twice or more.
         /// </summary>
-        private HashSet<long> _used_twice_or_more;
+        private readonly HashSet<long> _usedTwiceOrMore;
 
         /// <summary>
         /// Adds a given way.
@@ -230,7 +231,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                         {
                             if (_pre_index.Contains(node))
                             {
-                                _used_twice_or_more.Add(node);
+                                _usedTwiceOrMore.Add(node);
                             }
                             else
                             {
@@ -292,7 +293,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                         coordinates[0], coordinates[1]);
                     _coordinates.Remove(node_id); // free the memory again!
 
-                    if (_used_twice_or_more.Contains(node_id))
+                    if (_usedTwiceOrMore.Contains(node_id))
                     {
                         _id_transformations[node_id] = id;
                     }
@@ -310,7 +311,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="tags"></param>
-        private bool AddRoadEdge(IDictionary<string, string> tags, bool forward, uint from, uint to)
+        private bool AddRoadEdge(TagsCollection tags, bool forward, uint from, uint to)
         {
             float latitude;
             float longitude;
@@ -338,18 +339,18 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// Calculates the edge data.
         /// </summary>
         /// <returns></returns>
-        protected abstract EdgeData CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, IDictionary<string, string> tags,
+        protected abstract EdgeData CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, TagsCollection tags,
             bool direction_forward, GeoCoordinate from, GeoCoordinate to);
 
         /// <summary>
         /// Returns true if the edge can be traversed.
         /// </summary>
-        /// <param name="edge_interpreter"></param>
-        /// <param name="tags_index"></param>
+        /// <param name="edgeInterpreter"></param>
+        /// <param name="tagsIndex"></param>
         /// <param name="tags"></param>
         /// <returns></returns>
-        protected abstract bool CalculateIsTraversable(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index,
-                                              IDictionary<string, string> tags);
+        protected abstract bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex,
+                                              TagsCollection tags);
 
         /// <summary>
         /// Adds a given relation.

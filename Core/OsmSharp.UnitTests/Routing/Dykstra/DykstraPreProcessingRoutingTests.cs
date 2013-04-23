@@ -37,6 +37,7 @@ using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Router;
 using OsmSharp.Osm;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
@@ -87,7 +88,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.DykstraPreProcessing
                 key);
             if (data == null)
             {
-                OsmTagsIndex tags_index = new OsmTagsIndex();
+                SimpleTagsIndex tags_index = new SimpleTagsIndex();
 
                 // do the data processing.
                 DynamicGraphRouterDataSource<PreProcessedEdge> memory_data =

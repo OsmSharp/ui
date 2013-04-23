@@ -17,6 +17,7 @@ using OsmSharp.Osm.Data.XML.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.UnitTests.Routing.Dykstra
 {
@@ -63,7 +64,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
                 .Get<IBasicRouterDataSource<SimpleWeighedEdge>>(
                     key);
 
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            SimpleTagsIndex tags_index = new SimpleTagsIndex();
 
             // do the data processing.
             DynamicGraphRouterDataSource<SimpleWeighedEdge> memory_data =

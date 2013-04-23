@@ -23,6 +23,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Path;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Constraints;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Tools.Math.Geo;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Units.Speed;
 
@@ -26,170 +27,170 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         {
             _access_restrictions = new Dictionary<string, Dictionary<VehicleEnum, bool>>();
 
-            Dictionary<VehicleEnum, bool> highway_dic = new Dictionary<VehicleEnum,bool>();
-            _access_restrictions.Add("footway", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, true);
-            highway_dic.Add(VehicleEnum.Bicycle, false);
-            highway_dic.Add(VehicleEnum.Moped, false);
-            highway_dic.Add(VehicleEnum.MotorCycle, false);
-            highway_dic.Add(VehicleEnum.Car, false);
-            highway_dic.Add(VehicleEnum.SmallTruck, false);
-            highway_dic.Add(VehicleEnum.BigTruck, false);
-            highway_dic.Add(VehicleEnum.Bus, false);
+            var highwayDic = new Dictionary<VehicleEnum,bool>();
+            _access_restrictions.Add("footway", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, true);
+            highwayDic.Add(VehicleEnum.Bicycle, false);
+            highwayDic.Add(VehicleEnum.Moped, false);
+            highwayDic.Add(VehicleEnum.MotorCycle, false);
+            highwayDic.Add(VehicleEnum.Car, false);
+            highwayDic.Add(VehicleEnum.SmallTruck, false);
+            highwayDic.Add(VehicleEnum.BigTruck, false);
+            highwayDic.Add(VehicleEnum.Bus, false);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("cycleway", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, false);
-            highway_dic.Add(VehicleEnum.Bicycle, true);
-            highway_dic.Add(VehicleEnum.Moped, false);
-            highway_dic.Add(VehicleEnum.MotorCycle, false);
-            highway_dic.Add(VehicleEnum.Car, false);
-            highway_dic.Add(VehicleEnum.SmallTruck, false);
-            highway_dic.Add(VehicleEnum.BigTruck, false);
-            highway_dic.Add(VehicleEnum.Bus, false);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("cycleway", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, false);
+            highwayDic.Add(VehicleEnum.Bicycle, true);
+            highwayDic.Add(VehicleEnum.Moped, false);
+            highwayDic.Add(VehicleEnum.MotorCycle, false);
+            highwayDic.Add(VehicleEnum.Car, false);
+            highwayDic.Add(VehicleEnum.SmallTruck, false);
+            highwayDic.Add(VehicleEnum.BigTruck, false);
+            highwayDic.Add(VehicleEnum.Bus, false);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("bridleway", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, false);
-            highway_dic.Add(VehicleEnum.Bicycle, false);
-            highway_dic.Add(VehicleEnum.Moped, false);
-            highway_dic.Add(VehicleEnum.MotorCycle, false);
-            highway_dic.Add(VehicleEnum.Car, false);
-            highway_dic.Add(VehicleEnum.SmallTruck, false);
-            highway_dic.Add(VehicleEnum.BigTruck, false);
-            highway_dic.Add(VehicleEnum.Bus, false);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("bridleway", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, false);
+            highwayDic.Add(VehicleEnum.Bicycle, false);
+            highwayDic.Add(VehicleEnum.Moped, false);
+            highwayDic.Add(VehicleEnum.MotorCycle, false);
+            highwayDic.Add(VehicleEnum.Car, false);
+            highwayDic.Add(VehicleEnum.SmallTruck, false);
+            highwayDic.Add(VehicleEnum.BigTruck, false);
+            highwayDic.Add(VehicleEnum.Bus, false);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("path", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, true);
-            highway_dic.Add(VehicleEnum.Bicycle, true);
-            highway_dic.Add(VehicleEnum.Moped, false);
-            highway_dic.Add(VehicleEnum.MotorCycle, false);
-            highway_dic.Add(VehicleEnum.Car, false);
-            highway_dic.Add(VehicleEnum.SmallTruck, false);
-            highway_dic.Add(VehicleEnum.BigTruck, false);
-            highway_dic.Add(VehicleEnum.Bus, false);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("path", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, true);
+            highwayDic.Add(VehicleEnum.Bicycle, true);
+            highwayDic.Add(VehicleEnum.Moped, false);
+            highwayDic.Add(VehicleEnum.MotorCycle, false);
+            highwayDic.Add(VehicleEnum.Car, false);
+            highwayDic.Add(VehicleEnum.SmallTruck, false);
+            highwayDic.Add(VehicleEnum.BigTruck, false);
+            highwayDic.Add(VehicleEnum.Bus, false);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("pedestrian", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, true);
-            highway_dic.Add(VehicleEnum.Bicycle, false);
-            highway_dic.Add(VehicleEnum.Moped, false);
-            highway_dic.Add(VehicleEnum.MotorCycle, false);
-            highway_dic.Add(VehicleEnum.Car, false);
-            highway_dic.Add(VehicleEnum.SmallTruck, false);
-            highway_dic.Add(VehicleEnum.BigTruck, false);
-            highway_dic.Add(VehicleEnum.Bus, false);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("pedestrian", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, true);
+            highwayDic.Add(VehicleEnum.Bicycle, false);
+            highwayDic.Add(VehicleEnum.Moped, false);
+            highwayDic.Add(VehicleEnum.MotorCycle, false);
+            highwayDic.Add(VehicleEnum.Car, false);
+            highwayDic.Add(VehicleEnum.SmallTruck, false);
+            highwayDic.Add(VehicleEnum.BigTruck, false);
+            highwayDic.Add(VehicleEnum.Bus, false);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("road", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, true);
-            highway_dic.Add(VehicleEnum.Bicycle, true);
-            highway_dic.Add(VehicleEnum.Moped, true);
-            highway_dic.Add(VehicleEnum.MotorCycle, true);
-            highway_dic.Add(VehicleEnum.Car, true);
-            highway_dic.Add(VehicleEnum.SmallTruck, true);
-            highway_dic.Add(VehicleEnum.BigTruck, true);
-            highway_dic.Add(VehicleEnum.Bus, true);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("road", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, true);
+            highwayDic.Add(VehicleEnum.Bicycle, true);
+            highwayDic.Add(VehicleEnum.Moped, true);
+            highwayDic.Add(VehicleEnum.MotorCycle, true);
+            highwayDic.Add(VehicleEnum.Car, true);
+            highwayDic.Add(VehicleEnum.SmallTruck, true);
+            highwayDic.Add(VehicleEnum.BigTruck, true);
+            highwayDic.Add(VehicleEnum.Bus, true);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("living_street", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, true);
-            highway_dic.Add(VehicleEnum.Bicycle, true);
-            highway_dic.Add(VehicleEnum.Moped, true);
-            highway_dic.Add(VehicleEnum.MotorCycle, true);
-            highway_dic.Add(VehicleEnum.Car, true);
-            highway_dic.Add(VehicleEnum.SmallTruck, true);
-            highway_dic.Add(VehicleEnum.BigTruck, true);
-            highway_dic.Add(VehicleEnum.Bus, true);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("living_street", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, true);
+            highwayDic.Add(VehicleEnum.Bicycle, true);
+            highwayDic.Add(VehicleEnum.Moped, true);
+            highwayDic.Add(VehicleEnum.MotorCycle, true);
+            highwayDic.Add(VehicleEnum.Car, true);
+            highwayDic.Add(VehicleEnum.SmallTruck, true);
+            highwayDic.Add(VehicleEnum.BigTruck, true);
+            highwayDic.Add(VehicleEnum.Bus, true);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("residential", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, true);
-            highway_dic.Add(VehicleEnum.Bicycle, true);
-            highway_dic.Add(VehicleEnum.Moped, true);
-            highway_dic.Add(VehicleEnum.MotorCycle, true);
-            highway_dic.Add(VehicleEnum.Car, true);
-            highway_dic.Add(VehicleEnum.SmallTruck, true);
-            highway_dic.Add(VehicleEnum.BigTruck, true);
-            highway_dic.Add(VehicleEnum.Bus, true);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("residential", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, true);
+            highwayDic.Add(VehicleEnum.Bicycle, true);
+            highwayDic.Add(VehicleEnum.Moped, true);
+            highwayDic.Add(VehicleEnum.MotorCycle, true);
+            highwayDic.Add(VehicleEnum.Car, true);
+            highwayDic.Add(VehicleEnum.SmallTruck, true);
+            highwayDic.Add(VehicleEnum.BigTruck, true);
+            highwayDic.Add(VehicleEnum.Bus, true);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("unclassified", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, true);
-            highway_dic.Add(VehicleEnum.Bicycle, true);
-            highway_dic.Add(VehicleEnum.Moped, true);
-            highway_dic.Add(VehicleEnum.MotorCycle, true);
-            highway_dic.Add(VehicleEnum.Car, true);
-            highway_dic.Add(VehicleEnum.SmallTruck, true);
-            highway_dic.Add(VehicleEnum.BigTruck, true);
-            highway_dic.Add(VehicleEnum.Bus, true);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("unclassified", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, true);
+            highwayDic.Add(VehicleEnum.Bicycle, true);
+            highwayDic.Add(VehicleEnum.Moped, true);
+            highwayDic.Add(VehicleEnum.MotorCycle, true);
+            highwayDic.Add(VehicleEnum.Car, true);
+            highwayDic.Add(VehicleEnum.SmallTruck, true);
+            highwayDic.Add(VehicleEnum.BigTruck, true);
+            highwayDic.Add(VehicleEnum.Bus, true);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("tertiary", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, true);
-            highway_dic.Add(VehicleEnum.Bicycle, true);
-            highway_dic.Add(VehicleEnum.Moped, true);
-            highway_dic.Add(VehicleEnum.MotorCycle, true);
-            highway_dic.Add(VehicleEnum.Car, true);
-            highway_dic.Add(VehicleEnum.SmallTruck, true);
-            highway_dic.Add(VehicleEnum.BigTruck, true);
-            highway_dic.Add(VehicleEnum.Bus, true);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("tertiary", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, true);
+            highwayDic.Add(VehicleEnum.Bicycle, true);
+            highwayDic.Add(VehicleEnum.Moped, true);
+            highwayDic.Add(VehicleEnum.MotorCycle, true);
+            highwayDic.Add(VehicleEnum.Car, true);
+            highwayDic.Add(VehicleEnum.SmallTruck, true);
+            highwayDic.Add(VehicleEnum.BigTruck, true);
+            highwayDic.Add(VehicleEnum.Bus, true);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("secondary", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, true);
-            highway_dic.Add(VehicleEnum.Bicycle, true);
-            highway_dic.Add(VehicleEnum.Moped, true);
-            highway_dic.Add(VehicleEnum.MotorCycle, true);
-            highway_dic.Add(VehicleEnum.Car, true);
-            highway_dic.Add(VehicleEnum.SmallTruck, true);
-            highway_dic.Add(VehicleEnum.BigTruck, true);
-            highway_dic.Add(VehicleEnum.Bus, true);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("secondary", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, true);
+            highwayDic.Add(VehicleEnum.Bicycle, true);
+            highwayDic.Add(VehicleEnum.Moped, true);
+            highwayDic.Add(VehicleEnum.MotorCycle, true);
+            highwayDic.Add(VehicleEnum.Car, true);
+            highwayDic.Add(VehicleEnum.SmallTruck, true);
+            highwayDic.Add(VehicleEnum.BigTruck, true);
+            highwayDic.Add(VehicleEnum.Bus, true);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("primary", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, true);
-            highway_dic.Add(VehicleEnum.Bicycle, true);
-            highway_dic.Add(VehicleEnum.Moped, true);
-            highway_dic.Add(VehicleEnum.MotorCycle, true);
-            highway_dic.Add(VehicleEnum.Car, true);
-            highway_dic.Add(VehicleEnum.SmallTruck, true);
-            highway_dic.Add(VehicleEnum.BigTruck, true);
-            highway_dic.Add(VehicleEnum.Bus, true);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("primary", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, true);
+            highwayDic.Add(VehicleEnum.Bicycle, true);
+            highwayDic.Add(VehicleEnum.Moped, true);
+            highwayDic.Add(VehicleEnum.MotorCycle, true);
+            highwayDic.Add(VehicleEnum.Car, true);
+            highwayDic.Add(VehicleEnum.SmallTruck, true);
+            highwayDic.Add(VehicleEnum.BigTruck, true);
+            highwayDic.Add(VehicleEnum.Bus, true);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("trunk", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, true);
-            highway_dic.Add(VehicleEnum.Bicycle, true);
-            highway_dic.Add(VehicleEnum.Moped, true);
-            highway_dic.Add(VehicleEnum.MotorCycle, true);
-            highway_dic.Add(VehicleEnum.Car, true);
-            highway_dic.Add(VehicleEnum.SmallTruck, true);
-            highway_dic.Add(VehicleEnum.BigTruck, true);
-            highway_dic.Add(VehicleEnum.Bus, true);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("trunk", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, true);
+            highwayDic.Add(VehicleEnum.Bicycle, true);
+            highwayDic.Add(VehicleEnum.Moped, true);
+            highwayDic.Add(VehicleEnum.MotorCycle, true);
+            highwayDic.Add(VehicleEnum.Car, true);
+            highwayDic.Add(VehicleEnum.SmallTruck, true);
+            highwayDic.Add(VehicleEnum.BigTruck, true);
+            highwayDic.Add(VehicleEnum.Bus, true);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("motorway_link", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, false);
-            highway_dic.Add(VehicleEnum.Bicycle, false);
-            highway_dic.Add(VehicleEnum.Moped, false);
-            highway_dic.Add(VehicleEnum.MotorCycle, true);
-            highway_dic.Add(VehicleEnum.Car, true);
-            highway_dic.Add(VehicleEnum.SmallTruck, true);
-            highway_dic.Add(VehicleEnum.BigTruck, true);
-            highway_dic.Add(VehicleEnum.Bus, true);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("motorway_link", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, false);
+            highwayDic.Add(VehicleEnum.Bicycle, false);
+            highwayDic.Add(VehicleEnum.Moped, false);
+            highwayDic.Add(VehicleEnum.MotorCycle, true);
+            highwayDic.Add(VehicleEnum.Car, true);
+            highwayDic.Add(VehicleEnum.SmallTruck, true);
+            highwayDic.Add(VehicleEnum.BigTruck, true);
+            highwayDic.Add(VehicleEnum.Bus, true);
 
-            highway_dic = new Dictionary<VehicleEnum, bool>();
-            _access_restrictions.Add("motorway", highway_dic);
-            highway_dic.Add(VehicleEnum.Pedestrian, false);
-            highway_dic.Add(VehicleEnum.Bicycle, false);
-            highway_dic.Add(VehicleEnum.Moped, false);
-            highway_dic.Add(VehicleEnum.MotorCycle, true);
-            highway_dic.Add(VehicleEnum.Car, true);
-            highway_dic.Add(VehicleEnum.SmallTruck, true);
-            highway_dic.Add(VehicleEnum.BigTruck, true);
-            highway_dic.Add(VehicleEnum.Bus, true);
+            highwayDic = new Dictionary<VehicleEnum, bool>();
+            _access_restrictions.Add("motorway", highwayDic);
+            highwayDic.Add(VehicleEnum.Pedestrian, false);
+            highwayDic.Add(VehicleEnum.Bicycle, false);
+            highwayDic.Add(VehicleEnum.Moped, false);
+            highwayDic.Add(VehicleEnum.MotorCycle, true);
+            highwayDic.Add(VehicleEnum.Car, true);
+            highwayDic.Add(VehicleEnum.SmallTruck, true);
+            highwayDic.Add(VehicleEnum.BigTruck, true);
+            highwayDic.Add(VehicleEnum.Bus, true);
         }
 
         /// <summary>
@@ -198,7 +199,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// <param name="tags"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool CanBeTraversedBy(IDictionary<string, string> tags, VehicleEnum vehicle)
+        public bool CanBeTraversedBy(TagsCollection tags, VehicleEnum vehicle)
         {
             string highway = string.Empty;
             if (tags.TryGetValue("highway", out highway))
@@ -206,12 +207,9 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                 // remove the motorized vehicles.
                 if (vehicle.IsMotorVehicle())
                 {
-                    if (tags.ContainsKey("motor_vehicle"))
+                    if (tags.ContainsKeyValue("motor_vehicle", "no"))
                     {
-                        if (tags["motor_vehicle"] == "no")
-                        {
-                            return false;
-                        }
+                        return false;
                     }
 
                     // check conditional constrains.
@@ -279,7 +277,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public bool IsOnlyLocalAccessible(IDictionary<string, string> tags)
+        public bool IsOnlyLocalAccessible(TagsCollection tags)
         {
             if (tags.ContainsKey("highway")) // TODO: use trygetvalue!
             {
@@ -307,7 +305,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public double Weight(IDictionary<string, string> tags, VehicleEnum vehicle, GeoCoordinate from, GeoCoordinate to)
+        public double Weight(TagsCollection tags, VehicleEnum vehicle, GeoCoordinate from, GeoCoordinate to)
         {
             double distance = from.DistanceEstimate(to).Value;
 
@@ -319,7 +317,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public bool IsRoutable(IDictionary<string, string> tags)
+        public bool IsRoutable(TagsCollection tags)
         {
             if (tags != null && tags.Count > 0)
             {
@@ -334,7 +332,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// <param name="tags"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool? IsOneWay(IDictionary<string, string> tags, VehicleEnum vehicle)
+        public bool? IsOneWay(TagsCollection tags, VehicleEnum vehicle)
         {
             switch (vehicle)
             {
@@ -358,39 +356,39 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// Returns the maximum speed.
         /// </summary>
         /// <returns></returns>
-        public KilometerPerHour MaxSpeed(VehicleEnum vehicle, IDictionary<string, string> tags)
+        public KilometerPerHour MaxSpeed(VehicleEnum vehicle, TagsCollection tags)
         {
             // THESE ARE THE MAX SPEEDS FOR BELGIUM. 
             // TODO: Find a way to make this all configurable.
             KilometerPerHour speed = 5;
 
-            KilometerPerHour pedestrian_speed = 5;
-            KilometerPerHour bike_speed = 15;
+            KilometerPerHour pedestrianSpeed = 5;
+            KilometerPerHour bikeSpeed = 15;
 
             // get max-speed tag if any.
-            double? max_speed_value = tags.GetNumericValue("maxspeed");
-            if (max_speed_value.HasValue)
+            double? maxSpeedValue = tags.GetNumericValue("maxspeed");
+            if (maxSpeedValue.HasValue)
             {
-                return max_speed_value.Value;
+                return maxSpeedValue.Value;
             }
 
-            string highway_type;
-            if (tags.TryGetValue("highway", out highway_type))
+            string highwayType;
+            if (tags.TryGetValue("highway", out highwayType))
             {
-                switch (highway_type)
+                switch (highwayType)
                 {
                     case "services":
                     case "proposed":
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                             case VehicleEnum.Pedestrian:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                             default:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                         }
                         break;
@@ -403,10 +401,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
-                                speed = bike_speed;
+                                speed = bikeSpeed;
                                 break;
                             case VehicleEnum.Pedestrian:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                                 // TODO: improve speed calculations when using access tags.
                             case VehicleEnum.Car:
@@ -419,10 +417,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
-                                speed = bike_speed;
+                                speed = bikeSpeed;
                                 break;
                             case VehicleEnum.Pedestrian:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
@@ -435,10 +433,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
-                                speed = bike_speed;
+                                speed = bikeSpeed;
                                 break;
                             case VehicleEnum.Pedestrian:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
@@ -450,10 +448,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
-                                speed = bike_speed;
+                                speed = bikeSpeed;
                                 break;
                             case VehicleEnum.Pedestrian:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
@@ -465,10 +463,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
-                                speed = bike_speed;
+                                speed = bikeSpeed;
                                 break;
                             case VehicleEnum.Pedestrian:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
@@ -483,10 +481,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
-                                speed = bike_speed;
+                                speed = bikeSpeed;
                                 break;
                             case VehicleEnum.Pedestrian:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
@@ -499,10 +497,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
-                                speed = bike_speed;
+                                speed = bikeSpeed;
                                 break;
                             case VehicleEnum.Pedestrian:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
@@ -514,10 +512,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
-                                speed = bike_speed;
+                                speed = bikeSpeed;
                                 break;
                             case VehicleEnum.Pedestrian:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
@@ -529,10 +527,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
-                                speed = bike_speed;
+                                speed = bikeSpeed;
                                 break;
                             case VehicleEnum.Pedestrian:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
@@ -544,10 +542,10 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
                         switch (vehicle)
                         {
                             case VehicleEnum.Bicycle:
-                                speed = bike_speed;
+                                speed = bikeSpeed;
                                 break;
                             case VehicleEnum.Pedestrian:
-                                speed = pedestrian_speed;
+                                speed = pedestrianSpeed;
                                 break;
                             case VehicleEnum.Car:
                             case VehicleEnum.Bus:
@@ -566,7 +564,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public string GetName(IDictionary<string, string> tags)
+        public string GetName(TagsCollection tags)
         {
             string name = string.Empty;
             if (tags.ContainsKey("name"))
@@ -581,12 +579,12 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public Dictionary<string, string> GetNamesInAllLanguages(IDictionary<string, string> tags)
+        public Dictionary<string, string> GetNamesInAllLanguages(TagsCollection tags)
         {
             Dictionary<string, string> names = new Dictionary<string, string>();
             if (tags != null)
             {
-                foreach (KeyValuePair<string, string> pair in tags)
+                foreach (Tag pair in tags)
                 {
                     System.Text.RegularExpressions.Match m = System.Text.RegularExpressions.Regex.Match(pair.Key, "name:[a-zA-Z]");
                     if (m.Success)
@@ -605,7 +603,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// <param name="tags1"></param>
         /// <param name="tags2"></param>
         /// <returns></returns>
-        public bool IsEqualFor(VehicleEnum vehicle, IDictionary<string, string> tags1, Dictionary<string, string> tags2)
+        public bool IsEqualFor(VehicleEnum vehicle, TagsCollection tags1, TagsCollection tags2)
         {
             if (this.GetName(tags1) != this.GetName(tags2))
             { // the name have to be equal.
@@ -630,7 +628,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public bool IsRoundabout(IDictionary<string, string> tags)
+        public bool IsRoundabout(TagsCollection tags)
         {
             string junction;
             return (tags != null && tags.TryGetValue("junction", out junction) &&

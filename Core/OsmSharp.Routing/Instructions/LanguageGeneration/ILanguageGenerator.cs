@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo.Meta;
 
 namespace OsmSharp.Routing.Instructions.LanguageGeneration
@@ -37,7 +38,8 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <param name="direction"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        Instruction GenerateDirectTurn(Instruction instruction, int street_count_before_turn, List<KeyValuePair<string, string>> street_to, RelativeDirectionEnum direction, List<Routing.ArcAggregation.Output.PointPoi> list);
+        Instruction GenerateDirectTurn(Instruction instruction, int street_count_before_turn,
+            TagsCollection street_to, RelativeDirectionEnum direction, List<Routing.ArcAggregation.Output.PointPoi> list);
 
         /// <summary>
         /// Generates an indirect turn instruction.
@@ -49,7 +51,8 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <param name="direction"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        Instruction GenerateIndirectTurn(Instruction instruction, int street_count_turn, int street_count_before_turn, List<KeyValuePair<string, string>> street_to, RelativeDirectionEnum direction, List<Routing.ArcAggregation.Output.PointPoi> list);
+        Instruction GenerateIndirectTurn(Instruction instruction, int street_count_turn, int street_count_before_turn, 
+            TagsCollection street_to, RelativeDirectionEnum direction, List<Routing.ArcAggregation.Output.PointPoi> list);
 
         /// <summary>
         /// Generates a POI instruction.
@@ -69,7 +72,8 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <param name="relativeDirectionEnum"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        Instruction GenerateDirectFollowTurn(Instruction instruction, int street_count_before_turn, List<KeyValuePair<string, string>> street_to, RelativeDirectionEnum relativeDirectionEnum, List<Routing.ArcAggregation.Output.PointPoi> list);
+        Instruction GenerateDirectFollowTurn(Instruction instruction, int street_count_before_turn, 
+             TagsCollection street_to, RelativeDirectionEnum relativeDirectionEnum, List<Routing.ArcAggregation.Output.PointPoi> list);
 
         /// <summary>
         /// Generates and indirect turn instruction.
@@ -81,7 +85,8 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <param name="relativeDirectionEnum"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        Instruction GenerateIndirectFollowTurn(Instruction instruction, int street_count_turn, int street_count_before_turn, List<KeyValuePair<string, string>> street_to, RelativeDirectionEnum relativeDirectionEnum, List<Routing.ArcAggregation.Output.PointPoi> list);
+        Instruction GenerateIndirectFollowTurn(Instruction instruction, int street_count_turn, int street_count_before_turn,
+            TagsCollection street_to, RelativeDirectionEnum relativeDirectionEnum, List<Routing.ArcAggregation.Output.PointPoi> list);
 
         /// <summary>
         /// Generates an immidiate turn instruction.
@@ -93,7 +98,9 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <param name="second_street_to"></param>
         /// <param name="second_direction"></param>
         /// <returns></returns>
-        Instruction GenerateImmidiateTurn(Instruction instruction, int first_street_count_to, List<KeyValuePair<string, string>> first_street_to, RelativeDirection first_direction, List<KeyValuePair<string, string>> second_street_to, RelativeDirection second_direction);
+        Instruction GenerateImmidiateTurn(Instruction instruction, int first_street_count_to, 
+            TagsCollection first_street_to, RelativeDirection first_direction, TagsCollection second_street_to, 
+            RelativeDirection second_direction);
 
         /// <summary>
         /// Generates a roundabout instruction.
@@ -102,7 +109,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <param name="count"></param>
         /// <param name="next_street"></param>
         /// <returns></returns>
-        Instruction GenerateRoundabout(Instruction instruction, int count, List<KeyValuePair<string, string>> next_street);
+        Instruction GenerateRoundabout(Instruction instruction, int count, TagsCollection next_street);
 
         /// <summary>
         /// Generates a simple turn instructions.

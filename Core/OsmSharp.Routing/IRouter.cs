@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Route;
 using OsmSharp.Tools.Math;
@@ -200,8 +201,8 @@ namespace OsmSharp.Routing
         /// <param name="matcher">The matcher containing some matching algorithm.</param>
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
-        TResolvedType Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, 
-            IEdgeMatcher matcher, IDictionary<string, string> matchingTags);
+        TResolvedType Resolve(VehicleEnum vehicle, GeoCoordinate coordinate,
+            IEdgeMatcher matcher, TagsCollection matchingTags);
 
         /// <summary>
         /// Resolves a point.
@@ -213,7 +214,7 @@ namespace OsmSharp.Routing
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
         TResolvedType Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate,
-            IEdgeMatcher matcher, IDictionary<string, string> matchingTags);
+            IEdgeMatcher matcher, TagsCollection matchingTags);
 
         /// <summary>
         /// Resolves all the given points.
@@ -241,7 +242,7 @@ namespace OsmSharp.Routing
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
         TResolvedType[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinates,
-            IEdgeMatcher matcher, IDictionary<string, string>[] matchingTags);
+            IEdgeMatcher matcher, TagsCollection[] matchingTags);
 
         /// <summary>
         /// Resolves all the given points.
@@ -253,7 +254,7 @@ namespace OsmSharp.Routing
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
         TResolvedType[] Resolve(VehicleEnum vehicle, float delta, GeoCoordinate[] coordinates,
-            IEdgeMatcher matcher, IDictionary<string, string>[] matchingTags);
+            IEdgeMatcher matcher, TagsCollection[] matchingTags);
 
         #region Search
 

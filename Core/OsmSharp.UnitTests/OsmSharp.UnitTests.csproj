@@ -175,6 +175,8 @@
     <Compile Include="Tools\PermutationEnumerationTests.cs" />
     <Compile Include="Tools\StringTableTests.cs" />
     <Compile Include="Tools\StringTreeDictionaryTest.cs" />
+    <Compile Include="Tools\Tags\SimpleTagsCollectionTests.cs" />
+    <Compile Include="Tools\Tags\TagsCollectionTests.cs" />
     <Compile Include="TSP\BruteForceTSPTest.cs" />
   </ItemGroup>
   <ItemGroup>

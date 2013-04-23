@@ -21,6 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph.Path;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Routing.Router;
@@ -155,7 +156,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="pointTags">The properties of the point to match.</param>
         /// <returns></returns>
         SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, IDictionary<string, string> pointTags);
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags);
     }
 
     /// <summary>

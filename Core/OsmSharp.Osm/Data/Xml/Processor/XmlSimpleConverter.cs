@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Simple;
+using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.Osm.Data.XML.Processor
 {
@@ -382,12 +383,12 @@ namespace OsmSharp.Osm.Data.XML.Processor
             return relation;
         }
 
-        private static IDictionary<string, string> ConvertToTags(Osm.Xml.v0_6.tag[] tag)
+        private static TagsCollection ConvertToTags(Osm.Xml.v0_6.tag[] tag)
         {
-            Dictionary<string, string> tags = null;
+            TagsCollection tags = null;
             if (tag != null && tag.Length > 0)
             {
-                tags = new Dictionary<string, string>();
+                tags = new SimpleTagsCollection();
                 foreach (Osm.Xml.v0_6.tag t in tag)
                 {
                     tags.Add(t.k, t.v);

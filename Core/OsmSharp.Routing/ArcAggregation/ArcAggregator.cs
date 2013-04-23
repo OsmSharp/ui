@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.ArcAggregation.Output;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Units.Angle;
 using OsmSharp.Tools.Math.Geo.Meta;
@@ -176,17 +177,17 @@ namespace OsmSharp.Routing.ArcAggregation
                 return true;
             }
             // create tag interpreters for arcs to try and work out if the arcs are different for the given vehicle.
-            Dictionary<string, string> previous_tags_dic = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, string> pair in previous_arc.Tags)
+            TagsCollection previousTagsDic = new SimpleTagsCollection();
+            foreach (Tag pair in previous_arc.Tags)
             {
-                previous_tags_dic.Add(pair.Key, pair.Value);
+                previousTagsDic.Add(pair.Key, pair.Value);
             }
-            Dictionary<string, string> next_tags_dic = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, string> pair in next_arc.Tags)
+            var nextTagsDic = new SimpleTagsCollection();
+            foreach (Tag pair in next_arc.Tags)
             {
-                next_tags_dic.Add(pair.Key, pair.Value);
+                nextTagsDic.Add(pair.Key, pair.Value);
             }
-            if (!_interpreter.EdgeInterpreter.IsEqualFor(vehicle, previous_tags_dic, next_tags_dic))
+            if (!_interpreter.EdgeInterpreter.IsEqualFor(vehicle, previousTagsDic, nextTagsDic))
             { // the previous and the next edge do not represent a change for the given vehicle.
                 //RoadTagsInterpreterBase previous_interpreter = new RoadTagsInterpreterBase(previous_tags_dic);
                 //RoadTagsInterpreterBase next_interpreter = new RoadTagsInterpreterBase(next_tags_dic);
@@ -210,7 +211,7 @@ namespace OsmSharp.Routing.ArcAggregation
             AggregatedArc a = new AggregatedArc();
             a.Name = current.Entry.WayFromName;
             a.Names = current.Entry.WayFromNames.ConvertTo();
-            a.Tags = current.Entry.Tags.ConvertTo();
+            a.Tags = current.Entry.Tags.ConvertToTagsCollection();
             if (previous != null)
             {
                 GeoCoordinate previous_coordinate =
@@ -243,7 +244,7 @@ namespace OsmSharp.Routing.ArcAggregation
                     AggregatedArc side = new AggregatedArc();
                     side.Name = side_street.WayName;
                     side.Names = side_street.WayNames.ConvertTo();
-                    side.Tags = side_street.Tags.ConvertTo();
+                    side.Tags = side_street.Tags.ConvertToTagsCollection();
 
                     RelativeDirection side_direction = null;
                     if (previous != null)

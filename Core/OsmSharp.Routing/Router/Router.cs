@@ -15,25 +15,20 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Tools.Math;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Routing.Router;
-using OsmSharp.Tools.Math.Units.Distance;
 using OsmSharp.Routing.Graph.Path;
 using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Metrics.Time;
-using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Graph.DynamicGraph;
-using OsmSharp.Tools.Collections;
 
-namespace OsmSharp.Routing
+namespace OsmSharp.Routing.Router
 {
     /// <summary>
     /// A class that implements common functionality for any routing algorithm.
@@ -49,7 +44,7 @@ namespace OsmSharp.Routing
         /// <summary>
         /// Holds the graph object containing the routable network.
         /// </summary>
-        private readonly IBasicRouterDataSource<TEdgeData> _data_graph;
+        private readonly IBasicRouterDataSource<TEdgeData> _dataGraph;
 
         /// <summary>
         /// Holds the basic router that works on the dynamic graph.
@@ -70,7 +65,7 @@ namespace OsmSharp.Routing
         public Router(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter,
             IBasicRouter<TEdgeData> router)
         {
-            _data_graph = graph;
+            _dataGraph = graph;
             _interpreter = interpreter;
             _router = router;
 
@@ -85,7 +80,7 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public bool SupportsVehicle(VehicleEnum vehicle)
         {
-            return _data_graph.SupportsProfile(vehicle);
+            return _dataGraph.SupportsProfile(vehicle);
         }
 
         /// <summary>
@@ -118,7 +113,7 @@ namespace OsmSharp.Routing
             }
 
             // calculate the route.
-            PathSegment<long> route = _router.Calculate(_data_graph, _interpreter, vehicle,
+            PathSegment<long> route = _router.Calculate(_dataGraph, _interpreter, vehicle,
                 this.RouteResolvedGraph(source), this.RouteResolvedGraph(target), max);
 
             // convert to an OsmSharpRoute.
@@ -155,7 +150,7 @@ namespace OsmSharp.Routing
             }
 
             // calculate the route.
-            PathSegment<long> route = _router.CalculateToClosest(_data_graph, _interpreter, vehicle,
+            PathSegment<long> route = _router.CalculateToClosest(_dataGraph, _interpreter, vehicle,
                 this.RouteResolvedGraph(source), this.RouteResolvedGraph(targets), max);
 
             // find the target.
@@ -193,7 +188,7 @@ namespace OsmSharp.Routing
                     vehicle.ToString()));
             }
 
-            PathSegment<long>[][] routes = _router.CalculateManyToMany(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(sources),
+            PathSegment<long>[][] routes = _router.CalculateManyToMany(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(sources),
                 this.RouteResolvedGraph(targets), double.MaxValue);
 
             OsmSharpRoute[][] constructed_routes = new OsmSharpRoute[sources.Length][];
@@ -228,7 +223,7 @@ namespace OsmSharp.Routing
             }
 
             // calculate the route.
-            return _router.CalculateWeight(_data_graph, _interpreter, vehicle,
+            return _router.CalculateWeight(_dataGraph, _interpreter, vehicle,
                 this.RouteResolvedGraph(source), this.RouteResolvedGraph(target), float.MaxValue);
         }
 
@@ -248,7 +243,7 @@ namespace OsmSharp.Routing
                     vehicle.ToString()));
             }
 
-            return _router.CalculateOneToManyWeight(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(source),
+            return _router.CalculateOneToManyWeight(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(source),
                 this.RouteResolvedGraph(targets), double.MaxValue);
         }
 
@@ -268,7 +263,7 @@ namespace OsmSharp.Routing
                     vehicle.ToString()));
             }
 
-            return _router.CalculateManyToManyWeight(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(sources),
+            return _router.CalculateManyToManyWeight(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(sources),
                 this.RouteResolvedGraph(targets), double.MaxValue);
         }
 
@@ -299,7 +294,7 @@ namespace OsmSharp.Routing
                     vehicle.ToString()));
             }
 
-            HashSet<long> objects_at_weight = _router.CalculateRange(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(orgin),
+            HashSet<long> objects_at_weight = _router.CalculateRange(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(orgin),
                 weight);
 
             HashSet<GeoCoordinate> locations = new HashSet<GeoCoordinate>();
@@ -327,7 +322,7 @@ namespace OsmSharp.Routing
                     vehicle.ToString()));
             }
 
-            return _router.CheckConnectivity(_data_graph, _interpreter, vehicle, this.RouteResolvedGraph(point), weight);
+            return _router.CheckConnectivity(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(point), weight);
         }
 
         /// <summary>
@@ -485,7 +480,7 @@ namespace OsmSharp.Routing
                 // FIRST CALCULATE ALL THE ENTRY METRICS!
 
                 // STEP1: Get the names.
-                IDictionary<string, string> current_tags = _data_graph.TagsIndex.Get(edge.Tags);
+                TagsCollection current_tags = _dataGraph.TagsIndex.Get(edge.Tags);
                 string name = _interpreter.EdgeInterpreter.GetName(current_tags);
                 Dictionary<string, string> names = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(current_tags);
 
@@ -502,7 +497,7 @@ namespace OsmSharp.Routing
                             RoutePointEntrySideStreet side_street = new RoutePointEntrySideStreet();
 
                             GeoCoordinate neighbour_coordinate = this.GetCoordinate(neighbour.Key);
-                            IDictionary<string, string> tags = _data_graph.TagsIndex.Get(neighbour.Value.Tags);
+                            TagsCollection tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
 
                             side_street.Latitude = (float)neighbour_coordinate.Latitude;
                             side_street.Longitude = (float)neighbour_coordinate.Longitude;
@@ -516,16 +511,16 @@ namespace OsmSharp.Routing
                 }
 
                 // create the route entry.
-                GeoCoordinate next_coordinate = this.GetCoordinate(node_next);
-                RoutePointEntry route_entry = new RoutePointEntry();
-                route_entry.Latitude = (float)next_coordinate.Latitude;
-                route_entry.Longitude = (float)next_coordinate.Longitude;
-                route_entry.SideStreets = side_streets.ToArray<RoutePointEntrySideStreet>();
-                route_entry.Tags = current_tags.ConvertFrom();
-                route_entry.Type = RoutePointEntryType.Along;
-                route_entry.WayFromName = name;
-                route_entry.WayFromNames = names.ConvertFrom();
-                entries.Add(route_entry);
+                GeoCoordinate nextCoordinate = this.GetCoordinate(node_next);
+                RoutePointEntry routeEntry = new RoutePointEntry();
+                routeEntry.Latitude = (float)nextCoordinate.Latitude;
+                routeEntry.Longitude = (float)nextCoordinate.Longitude;
+                routeEntry.SideStreets = side_streets.ToArray<RoutePointEntrySideStreet>();
+                routeEntry.Tags = current_tags.ConvertFrom();
+                routeEntry.Type = RoutePointEntryType.Along;
+                routeEntry.WayFromName = name;
+                routeEntry.WayFromNames = names.ConvertFrom();
+                entries.Add(routeEntry);
 
                 // set the previous node.
                 node_previous = node_current;
@@ -536,7 +531,7 @@ namespace OsmSharp.Routing
             {
                 int last_idx = vertices.Length - 1;
                 IDynamicGraphEdgeData edge = this.GetEdgeData(vertices[last_idx - 1], vertices[last_idx]);
-                IDictionary<string, string> tags = _data_graph.TagsIndex.Get(edge.Tags);
+                TagsCollection tags = _dataGraph.TagsIndex.Get(edge.Tags);
                 coordinate = this.GetCoordinate(vertices[last_idx]);
                 RoutePointEntry last = new RoutePointEntry();
                 last.Latitude = (float)coordinate.Latitude;
@@ -563,7 +558,7 @@ namespace OsmSharp.Routing
             Dictionary<long, IDynamicGraphEdgeData> neighbours = new Dictionary<long, IDynamicGraphEdgeData>();
             if (vertex1 > 0)
             {
-                KeyValuePair<uint, TEdgeData>[] arcs = _data_graph.GetArcs(Convert.ToUInt32(vertex1));
+                KeyValuePair<uint, TEdgeData>[] arcs = _dataGraph.GetArcs(Convert.ToUInt32(vertex1));
                 foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
                 {
                     neighbours[arc.Key] = arc.Value;
@@ -590,7 +585,7 @@ namespace OsmSharp.Routing
         {
             if (vertex1 > 0 && vertex2 > 0)
             { // none of the vertixes was a resolved vertex.
-                KeyValuePair<uint, TEdgeData>[] arcs = _data_graph.GetArcs(Convert.ToUInt32(vertex1));
+                KeyValuePair<uint, TEdgeData>[] arcs = _dataGraph.GetArcs(Convert.ToUInt32(vertex1));
                 foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
                 {
                     if (arc.Key == vertex2)
@@ -598,7 +593,7 @@ namespace OsmSharp.Routing
                         return arc.Value;
                     }
                 }         
-                arcs = _data_graph.GetArcs(Convert.ToUInt32(vertex2));
+                arcs = _dataGraph.GetArcs(Convert.ToUInt32(vertex2));
                 foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
                 {
                     if (arc.Key == vertex1)
@@ -646,7 +641,7 @@ namespace OsmSharp.Routing
             }
             else
             { // the vertex should be in the data graph.
-                if(!_data_graph.GetVertex(Convert.ToUInt32(vertex), out latitude, out longitude))
+                if(!_dataGraph.GetVertex(Convert.ToUInt32(vertex), out latitude, out longitude))
                 {
                     throw new Exception(string.Format("Vertex with id {0} not found in graph!",
                         vertex));
@@ -711,7 +706,7 @@ namespace OsmSharp.Routing
         /// <param name="coordinate"></param>
         /// <param name="pointTags"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IDictionary<string, string> pointTags)
+        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, TagsCollection pointTags)
         {
             return this.Resolve(vehicle, Router<TEdgeData>.DefaultSearchDelta, coordinate, pointTags);
         }
@@ -724,7 +719,7 @@ namespace OsmSharp.Routing
         /// <param name="coordinate"></param>
         /// <param name="pointTags"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate, IDictionary<string, string> pointTags)
+        public RouterPoint Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate, TagsCollection pointTags)
         {
             return this.Resolve(vehicle, delta, coordinate, null, pointTags);
         }
@@ -737,8 +732,8 @@ namespace OsmSharp.Routing
         /// <param name="matcher"></param>
         /// <param name="matchingTags"></param>
         /// <returns></returns>
-        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, 
-            IEdgeMatcher matcher, IDictionary<string, string> matchingTags)
+        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate,
+            IEdgeMatcher matcher, TagsCollection matchingTags)
         {
             return this.Resolve(vehicle, Router<TEdgeData>.DefaultSearchDelta, coordinate,
                                 matcher, matchingTags);
@@ -754,7 +749,7 @@ namespace OsmSharp.Routing
         /// <param name="matchingTags"></param>
         /// <returns></returns>
         public RouterPoint Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate,
-                                   IEdgeMatcher matcher, IDictionary<string, string> matchingTags)
+                                   IEdgeMatcher matcher, TagsCollection matchingTags)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -763,14 +758,14 @@ namespace OsmSharp.Routing
                     vehicle.ToString()));
             }
 
-            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, 
+            SearchClosestResult result = _router.SearchClosest(_dataGraph, _interpreter, 
                 vehicle, coordinate, delta, matcher, matchingTags); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
                 { // the result was a single vertex.
                     float latitude, longitude;
-                    if (!_data_graph.GetVertex(result.Vertex1.Value, out latitude, out longitude))
+                    if (!_dataGraph.GetVertex(result.Vertex1.Value, out latitude, out longitude))
                     { // the vertex exists.
                         throw new Exception(string.Format("Vertex with id {0} not found!",
                             result.Vertex1.Value));
@@ -823,8 +818,8 @@ namespace OsmSharp.Routing
         /// <param name="matcher"></param>
         /// <param name="matchingTags"></param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate, 
-            IEdgeMatcher matcher, IDictionary<string, string>[] matchingTags)
+        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate,
+            IEdgeMatcher matcher, TagsCollection[] matchingTags)
         {
             return this.Resolve(vehicle, Router<TEdgeData>.DefaultSearchDelta, coordinate,
                                 matcher, matchingTags);
@@ -840,7 +835,7 @@ namespace OsmSharp.Routing
         /// <param name="matchingTags"></param>
         /// <returns></returns>
         public RouterPoint[] Resolve(VehicleEnum vehicle, float delta, GeoCoordinate[] coordinate,
-                                     IEdgeMatcher matcher, IDictionary<string, string>[] matchingTags)
+                                     IEdgeMatcher matcher, TagsCollection[] matchingTags)
         {
             var points = new RouterPoint[coordinate.Length];
             for (int idx = 0; idx < coordinate.Length; idx++)
@@ -884,14 +879,14 @@ namespace OsmSharp.Routing
                     vehicle.ToString()));
             }
 
-            SearchClosestResult result = _router.SearchClosest(_data_graph, _interpreter, vehicle, coordinate, 
+            SearchClosestResult result = _router.SearchClosest(_dataGraph, _interpreter, vehicle, coordinate, 
                 delta, null, null); // search the closest routable object.
             if (result.Distance < double.MaxValue)
             { // a routable object was found.
                 if (!result.Vertex2.HasValue)
                 { // the result was a single vertex.
                     float latitude, longitude;
-                    if (!_data_graph.GetVertex(result.Vertex1.Value, out latitude, out longitude))
+                    if (!_dataGraph.GetVertex(result.Vertex1.Value, out latitude, out longitude))
                     { // the vertex exists.
                         throw new Exception(string.Format("Vertex with id {0} not found!",
                             result.Vertex1.Value));
@@ -949,8 +944,8 @@ namespace OsmSharp.Routing
             if (vertices.Length == 0 || 
                 (vertices[0] == vertex1 && vertices[vertices.Length - 1] == vertex2))
             { // the vertices match.
-                if (_data_graph.GetVertex(vertex1, out latitude1, out longitude1) &&
-                   _data_graph.GetVertex(vertex2, out latitude2, out longitude2))
+                if (_dataGraph.GetVertex(vertex1, out latitude1, out longitude1) &&
+                   _dataGraph.GetVertex(vertex2, out latitude2, out longitude2))
                 { // the two vertices are contained in the home graph.
                     GeoCoordinate vertex1_coordinate = new GeoCoordinate(
                         latitude1, longitude1);
@@ -976,7 +971,7 @@ namespace OsmSharp.Routing
 
                         // find the arc(s).
                         KeyValuePair<uint, TEdgeData>? arc = null;
-                        KeyValuePair<uint, TEdgeData>[] arcs = _data_graph.GetArcs(vertex1);
+                        KeyValuePair<uint, TEdgeData>[] arcs = _dataGraph.GetArcs(vertex1);
                         for (int idx = 0; idx < arcs.Length; idx++)
                         {
                             if (arcs[idx].Key == vertex2)
@@ -987,7 +982,7 @@ namespace OsmSharp.Routing
                         // find backward arc if needed.
                         if (!arc.HasValue)
                         {
-                            arcs = _data_graph.GetArcs(vertex2);
+                            arcs = _dataGraph.GetArcs(vertex2);
                             for (int idx = 0; idx < arcs.Length; idx++)
                             {
                                 if (arcs[idx].Key == vertex1)

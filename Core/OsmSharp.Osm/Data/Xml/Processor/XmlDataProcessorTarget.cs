@@ -24,6 +24,7 @@ using System.Xml.Serialization;
 using System.IO;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor;
+using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.Osm.Data.XML.Processor
 {
@@ -372,14 +373,14 @@ namespace OsmSharp.Osm.Data.XML.Processor
             _text_writer.Write(_text_writer.NewLine);
         }
 
-        private OsmSharp.Osm.Xml.v0_6.tag[] ConvertToXmlTags(IDictionary<string, string> tags)
+        private OsmSharp.Osm.Xml.v0_6.tag[] ConvertToXmlTags(TagsCollection tags)
         {
             if (tags != null)
             {
                 OsmSharp.Osm.Xml.v0_6.tag[] xml_tags = new OsmSharp.Osm.Xml.v0_6.tag[tags.Count];
 
                 int idx = 0;
-                foreach (KeyValuePair<string, string> pair in tags)
+                foreach (Tag pair in tags)
                 {
                     xml_tags[idx] = new OsmSharp.Osm.Xml.v0_6.tag();
                     xml_tags[idx].k = pair.Key;

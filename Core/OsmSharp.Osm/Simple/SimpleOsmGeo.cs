@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.Osm.Simple
 {
@@ -40,7 +41,7 @@ namespace OsmSharp.Osm.Simple
         /// <summary>
         /// The tags.
         /// </summary>
-        public IDictionary<string,string> Tags { get; set; }
+        public TagsCollection Tags { get; set; }
 
         /// <summary>
         /// The changeset id.

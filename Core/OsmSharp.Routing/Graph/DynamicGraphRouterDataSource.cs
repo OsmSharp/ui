@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Tools.Collections;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Structures;
 using OsmSharp.Tools.Math;

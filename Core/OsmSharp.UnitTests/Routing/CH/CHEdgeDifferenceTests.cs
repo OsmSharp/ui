@@ -30,6 +30,7 @@ using OsmSharp.Osm;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.UnitTests;
 using OsmSharp.Routing;
 
@@ -50,7 +51,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
             DynamicGraphRouterDataSource<CHEdgeData> data = null;
             if (data == null)
             {
-                OsmTagsIndex tags_index = new OsmTagsIndex();
+                SimpleTagsIndex tags_index = new SimpleTagsIndex();
 
                 // do the data processing.
                 data =

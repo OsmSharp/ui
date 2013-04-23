@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Interpreter.Roads;
@@ -111,7 +112,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="to"></param>
         /// <param name="edge_interpreter"></param>
         /// <returns></returns>
-        protected override SimpleWeighedEdge CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, IDictionary<string, string> tags,
+        protected override SimpleWeighedEdge CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, TagsCollection tags,
             bool direction_forward, GeoCoordinate from, GeoCoordinate to)
         {
             // use the distance as weight.
@@ -137,14 +138,14 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Returns true if the edge is traversable.
         /// </summary>
-        /// <param name="edge_interpreter"></param>
-        /// <param name="tags_index"></param>
+        /// <param name="edgeInterpreter"></param>
+        /// <param name="tagsIndex"></param>
         /// <param name="tags"></param>
         /// <returns></returns>
-        protected override bool CalculateIsTraversable(IEdgeInterpreter edge_interpreter,
-            ITagsIndex tags_index, IDictionary<string, string> tags)
+        protected override bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter,
+            ITagsIndex tagsIndex, TagsCollection tags)
         {
-            return edge_interpreter.CanBeTraversedBy(tags, _vehicle);
+            return edgeInterpreter.CanBeTraversedBy(tags, _vehicle);
         }
     }
 }

@@ -22,6 +22,7 @@ using System.Text;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Tools.Collections;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Osm.Factory
@@ -84,7 +85,7 @@ namespace OsmSharp.Osm.Factory
             node.Coordinate = new GeoCoordinate(simple_node.Latitude.Value, simple_node.Longitude.Value);
             if (simple_node.Tags != null)
             {
-                foreach (KeyValuePair<string, string> pair in simple_node.Tags)
+                foreach (Tag pair in simple_node.Tags)
                 {
                     node.Tags.Add(pair);
                 }
@@ -112,7 +113,7 @@ namespace OsmSharp.Osm.Factory
             node.Coordinate = new GeoCoordinate(simple_node.Latitude.Value, simple_node.Longitude.Value);
             if (simple_node.Tags != null)
             {
-                foreach (KeyValuePair<string, string> pair in simple_node.Tags)
+                foreach (Tag pair in simple_node.Tags)
                 {
                     node.Tags.Add(pair);
                 }
@@ -156,7 +157,7 @@ namespace OsmSharp.Osm.Factory
             Way way = OsmBaseFactory.CreateWay(simple_way.Id.Value);
 
             way.ChangeSetId = simple_way.ChangeSetId;
-            foreach (KeyValuePair<string, string> pair in simple_way.Tags)
+            foreach (Tag pair in simple_way.Tags)
             {
                 way.Tags.Add(pair);
             }
@@ -215,7 +216,7 @@ namespace OsmSharp.Osm.Factory
             Way way = OsmBaseFactory.CreateWay(table, simple_way.Id.Value);
 
             way.ChangeSetId = simple_way.ChangeSetId;
-            foreach (KeyValuePair<string, string> pair in simple_way.Tags)
+            foreach (Tag pair in simple_way.Tags)
             {
                 way.Tags.Add(pair);
             }
@@ -276,7 +277,7 @@ namespace OsmSharp.Osm.Factory
             Relation relation = OsmBaseFactory.CreateRelation(simple_relation.Id.Value);
 
             relation.ChangeSetId = simple_relation.ChangeSetId;
-            foreach (KeyValuePair<string, string> pair in simple_relation.Tags)
+            foreach (Tag pair in simple_relation.Tags)
             {
                 relation.Tags.Add(pair);
             }
@@ -372,7 +373,7 @@ namespace OsmSharp.Osm.Factory
             Relation relation = OsmBaseFactory.CreateRelation(table, simple_relation.Id.Value);
 
             relation.ChangeSetId = simple_relation.ChangeSetId;
-            foreach (KeyValuePair<string, string> pair in simple_relation.Tags)
+            foreach (Tag pair in simple_relation.Tags)
             {
                 relation.Tags.Add(pair);
             }

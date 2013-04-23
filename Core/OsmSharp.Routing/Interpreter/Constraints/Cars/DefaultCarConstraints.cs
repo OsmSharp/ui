@@ -15,15 +15,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using OsmSharp.Tools.Math;
-using OsmSharp.Routing.Interpreter.Roads;
 
-namespace OsmSharp.Routing.Constraints.Cars
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+using OsmSharp.Routing.Constraints;
+using OsmSharp.Routing.Interpreter.Roads;
+using OsmSharp.Tools.Collections.Tags;
+
+namespace OsmSharp.Routing.Interpreter.Constraints.Cars
 {
     /// <summary>
     /// Handles default highway constraints.
@@ -49,7 +48,7 @@ namespace OsmSharp.Routing.Constraints.Cars
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public RoutingLabel GetLabelFor(IDictionary<string, string> tags)
+        public RoutingLabel GetLabelFor(TagsCollection tags)
         {
             if (_edge_intepreter.IsOnlyLocalAccessible(tags))
             {

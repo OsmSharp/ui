@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math;
 
 namespace OsmSharp.Routing.Constraints
@@ -34,7 +35,7 @@ namespace OsmSharp.Routing.Constraints
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        RoutingLabel GetLabelFor(IDictionary<string, string> tags);
+        RoutingLabel GetLabelFor(TagsCollection tags);
 
         /// <summary>
         /// Returns true if a given (forward) sequence of labels is allowed under these constraints.

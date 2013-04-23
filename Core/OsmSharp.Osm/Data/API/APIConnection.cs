@@ -23,6 +23,7 @@ using System.Net;
 using System.IO;
 using OsmSharp.Osm.Xml.v0_6;
 using OsmSharp.Osm.Simple;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Xml.Sources;
 using OsmSharp.Osm.Xml;
 using System.Xml;
@@ -709,7 +710,7 @@ namespace OsmSharp.Osm.Data.Core.API
 
             if (xml_node.tag != null)
             {
-                node.Tags = new Dictionary<string, string>();
+                node.Tags = new SimpleTagsCollection();
                 foreach (Osm.Xml.v0_6.tag xml_tag in xml_node.tag)
                 {
                     node.Tags.Add(xml_tag.k, xml_tag.v);
@@ -738,7 +739,7 @@ namespace OsmSharp.Osm.Data.Core.API
 
             if (xml_way.tag != null)
             {
-                way.Tags = new Dictionary<string, string>();
+                way.Tags = new SimpleTagsCollection();
                 foreach (Osm.Xml.v0_6.tag xml_tag in xml_way.tag)
                 {
                     way.Tags.Add(xml_tag.k, xml_tag.v);
@@ -776,7 +777,7 @@ namespace OsmSharp.Osm.Data.Core.API
 
             if (xml_relation.tag != null)
             {
-                relation.Tags = new Dictionary<string, string>();
+                relation.Tags = new SimpleTagsCollection();
                 foreach (Osm.Xml.v0_6.tag xml_tag in xml_relation.tag)
                 {
                     relation.Tags.Add(xml_tag.k, xml_tag.v);

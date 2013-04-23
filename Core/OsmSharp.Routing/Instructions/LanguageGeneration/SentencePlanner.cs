@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo.Meta;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.ArcAggregation.Output;
@@ -52,9 +53,9 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         internal void GenerateTurn(GeoCoordinateBox box,
             RelativeDirection direction, 
             int street_count_turn,
-            int street_count_before_turn, 
-            List<KeyValuePair<string, string>> street_from,
-            List<KeyValuePair<string, string>> street_to, 
+            int street_count_before_turn,
+            TagsCollection street_from,
+            TagsCollection street_to, 
             List<PointPoi> list)
         {
             // create a new instruction first.
@@ -132,8 +133,8 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         }
 
         internal void GenerateImmidiateTurn(GeoCoordinateBox box,
-            List<KeyValuePair<string, string>> before_name, RelativeDirection first_direction, int first_street_count_to,
-            RelativeDirection second_direction, List<KeyValuePair<string, string>> first_street_to, List<KeyValuePair<string, string>> second_street_to, List<PointPoi> list)
+            TagsCollection before_name, RelativeDirection first_direction, int first_street_count_to,
+            RelativeDirection second_direction, TagsCollection first_street_to, TagsCollection second_street_to, List<PointPoi> list)
         {
             // create a new instruction first.
             Instruction instruction = new Instruction(box);
@@ -146,7 +147,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
             _instructions.Add(instruction);
         }
 
-        internal void GenerateRoundabout(GeoCoordinateBox box, int count, List<KeyValuePair<string, string>> next_street)
+        internal void GenerateRoundabout(GeoCoordinateBox box, int count, TagsCollection next_street)
         {
             // create a new instruction first.
             Instruction instruction = new Instruction(box);

@@ -5,7 +5,6 @@ using System.Text;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Constraints;
 using OsmSharp.Routing.Interpreter.Roads;
-using OsmSharp.Routing.Constraints.Highways;
 
 namespace OsmSharp.Routing.Osm.Interpreter
 {

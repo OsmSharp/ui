@@ -23,6 +23,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Path;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Constraints;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Tools.Math.Geo;
@@ -466,7 +467,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 foreach (KeyValuePair<uint, SimpleWeighedEdge> neighbour in arcs)
                 {
                     // check the tags against the interpreter.
-                    IDictionary<string, string> tags = this.TagsIndex.Get(neighbour.Value.Tags);
+                    TagsCollection tags = this.TagsIndex.Get(neighbour.Value.Tags);
                     if (interpreter.EdgeInterpreter.CanBeTraversedBy(tags, vehicle))
                     { // it's ok; the edge can be traversed by the given vehicle.
                         bool? one_way = interpreter.EdgeInterpreter.IsOneWay(tags, vehicle);

@@ -22,6 +22,7 @@ using System.Text;
 using NUnit.Framework;
 using OsmSharp.Osm.Data.Core.API;
 using OsmSharp.Osm.Simple;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.UnitTests.API
@@ -105,7 +106,7 @@ namespace OsmSharp.UnitTests.API
             SimpleNode node = new SimpleNode();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode");
             node.Visible = true;
 
@@ -148,7 +149,7 @@ namespace OsmSharp.UnitTests.API
             SimpleNode node = new SimpleNode();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode");
             node.Visible = true;
 
@@ -200,7 +201,7 @@ namespace OsmSharp.UnitTests.API
             SimpleNode node = new SimpleNode();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode");
             node.Visible = true;
 
@@ -248,7 +249,7 @@ namespace OsmSharp.UnitTests.API
 
             // initialize the way.
             SimpleWay way = new SimpleWay();
-            way.Tags = new Dictionary<string, string>();
+            way.Tags = new SimpleTagsCollection();
             way.Tags.Add("type", "testway");
             way.Nodes = new List<long>();
             way.Visible = true;
@@ -257,7 +258,7 @@ namespace OsmSharp.UnitTests.API
             SimpleNode node = new SimpleNode();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode1");
             node.Visible = true;
             node = api_instance.NodeCreate(node);
@@ -265,7 +266,7 @@ namespace OsmSharp.UnitTests.API
             node = new SimpleNode();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode2");
             node.Visible = true;
             node = api_instance.NodeCreate(node);
@@ -309,7 +310,7 @@ namespace OsmSharp.UnitTests.API
 
             // initialize the way.
             SimpleWay way = new SimpleWay();
-            way.Tags = new Dictionary<string, string>();
+            way.Tags = new SimpleTagsCollection();
             way.Tags.Add("type", "testway");
             way.Nodes = new List<long>();
             way.Visible = true;
@@ -318,7 +319,7 @@ namespace OsmSharp.UnitTests.API
             SimpleNode node = new SimpleNode();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode1");
             node.Visible = true;
             node = api_instance.NodeCreate(node);
@@ -326,7 +327,7 @@ namespace OsmSharp.UnitTests.API
             node = new SimpleNode();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode2");
             node.Visible = true;
             node = api_instance.NodeCreate(node);
@@ -378,7 +379,7 @@ namespace OsmSharp.UnitTests.API
 
             // initialize the way.
             SimpleWay way = new SimpleWay();
-            way.Tags = new Dictionary<string, string>();
+            way.Tags = new SimpleTagsCollection();
             way.Tags.Add("type", "testway");
             way.Nodes = new List<long>();
             way.Visible = true;
@@ -387,7 +388,7 @@ namespace OsmSharp.UnitTests.API
             SimpleNode node = new SimpleNode();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode1");
             node.Visible = true;
             node = api_instance.NodeCreate(node);
@@ -395,7 +396,7 @@ namespace OsmSharp.UnitTests.API
             node = new SimpleNode();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode2");
             node.Visible = true;
             node = api_instance.NodeCreate(node);
@@ -446,7 +447,7 @@ namespace OsmSharp.UnitTests.API
 
             // initialize the relation.
             SimpleRelation relation = new SimpleRelation();
-            relation.Tags = new Dictionary<string, string>();
+            relation.Tags = new SimpleTagsCollection();
             relation.Tags.Add("type", "testrelation");
             relation.Members = new List<SimpleRelationMember>();
             relation.Visible = true;
@@ -455,7 +456,7 @@ namespace OsmSharp.UnitTests.API
             SimpleNode node = new SimpleNode();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode1");
             node.Visible = true;
             node = api_instance.NodeCreate(node);
@@ -468,7 +469,7 @@ namespace OsmSharp.UnitTests.API
             node = new SimpleNode();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode2");
             node.Visible = true;
             node = api_instance.NodeCreate(node);
@@ -521,7 +522,7 @@ namespace OsmSharp.UnitTests.API
 
             // initialize the relation.
             SimpleRelation relation = new SimpleRelation();
-            relation.Tags = new Dictionary<string, string>();
+            relation.Tags = new SimpleTagsCollection();
             relation.Tags.Add("type", "testrelation");
             relation.Members = new List<SimpleRelationMember>();
             relation.Visible = true;
@@ -530,7 +531,7 @@ namespace OsmSharp.UnitTests.API
             SimpleNode node = new SimpleNode();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode1");
             node.Visible = true;
             node = api_instance.NodeCreate(node);
@@ -543,7 +544,7 @@ namespace OsmSharp.UnitTests.API
             node = new SimpleNode();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode2");
             node.Visible = true;
             node = api_instance.NodeCreate(node);
@@ -600,7 +601,7 @@ namespace OsmSharp.UnitTests.API
 
             // initialize the relation.
             SimpleRelation relation = new SimpleRelation();
-            relation.Tags = new Dictionary<string, string>();
+            relation.Tags = new SimpleTagsCollection();
             relation.Tags.Add("type", "testrelation");
             relation.Members = new List<SimpleRelationMember>();
             relation.Visible = true;
@@ -609,7 +610,7 @@ namespace OsmSharp.UnitTests.API
             SimpleNode node = new SimpleNode();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode1");
             node.Visible = true;
             node = api_instance.NodeCreate(node);
@@ -622,7 +623,7 @@ namespace OsmSharp.UnitTests.API
             node = new SimpleNode();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
-            node.Tags = new Dictionary<string, string>();
+            node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode2");
             node.Visible = true;
             node = api_instance.NodeCreate(node);

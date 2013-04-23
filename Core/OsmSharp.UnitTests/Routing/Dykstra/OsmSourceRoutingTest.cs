@@ -31,6 +31,7 @@ using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
 {
@@ -71,7 +72,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         public override IBasicRouterDataSource<PreProcessedEdge> BuildData(IRoutingInterpreter interpreter,
             string embedded_string)
         {
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            SimpleTagsIndex tags_index = new SimpleTagsIndex();
             
             // do the data processing.
             OsmDataSource source = new OsmDataSource(

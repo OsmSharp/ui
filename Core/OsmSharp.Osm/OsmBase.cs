@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Collections;
 
@@ -49,19 +50,19 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new base object with a string table for the tags.
         /// </summary>
-        /// <param name="string_table"></param>
+        /// <param name="stringTable"></param>
         /// <param name="id"></param>
-        internal OsmBase(ObjectTable<string> string_table, long id)
+        internal OsmBase(ObjectTable<string> stringTable, long id)
         {
             _id = id;
 
-            if (string_table != null)
+            if (stringTable != null)
             {
-                _tags = new StringTableDictionary<string>(string_table);
+                this.Tags = new StringTableTagsCollection(stringTable);
             }
             else
             {
-                _tags = new Dictionary<string, string>();
+                this.Tags = new SimpleTagsCollection();
             }
         }
 
@@ -128,30 +129,11 @@ namespace OsmSharp.Osm
             set;
         }
 
-
-        #region Tags
-
-        /// <summary>
-        /// Contains the tags of this osm geo object.
-        /// </summary>
-        private IDictionary<string, string> _tags;
         /// <summary>
         /// Returns the tags dictionary.
         /// </summary>
-        public IDictionary<string, string> Tags
-        {
-            get
-            {
-                return _tags;
-            }
-            protected set
-            {
-                _tags = value;
-            }
-        }
+        public TagsCollection Tags { get; protected set; }
 
-        #endregion    
-            
         /// <summary>
         /// Returns true if a and b represent the same object.
         /// </summary>

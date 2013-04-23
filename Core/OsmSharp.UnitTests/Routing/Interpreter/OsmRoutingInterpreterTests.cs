@@ -5,6 +5,7 @@ using System.Text;
 using OsmSharp.Routing.Osm.Interpreter;
 using NUnit.Framework;
 using OsmSharp.Routing;
+using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.UnitTests.Routing.Interpreter
 {
@@ -22,7 +23,7 @@ namespace OsmSharp.UnitTests.Routing.Interpreter
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 
-            Dictionary<string, string> tags = new Dictionary<string, string>();
+            TagsCollection tags = new SimpleTagsCollection();
             tags["highway"] = "footway";
             Assert.IsTrue(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, VehicleEnum.Pedestrian));
             Assert.IsFalse(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, VehicleEnum.Bicycle));

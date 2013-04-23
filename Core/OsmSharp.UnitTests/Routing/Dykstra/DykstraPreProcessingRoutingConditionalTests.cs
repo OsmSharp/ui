@@ -16,6 +16,8 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Data.Processing;
+using OsmSharp.Routing.Router;
+using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.UnitTests.Routing.Dykstra
 {
@@ -57,7 +59,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         public override IBasicRouterDataSource<PreProcessedEdge> BuildData(IRoutingInterpreter interpreter, VehicleEnum vehicle, 
             List<KeyValuePair<string, string>> access_tags)
         {
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            SimpleTagsIndex tags_index = new SimpleTagsIndex();
 
             // do the data processing.
             DynamicGraphRouterDataSource<PreProcessedEdge> data =
@@ -96,7 +98,8 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
 
                 foreach (var keyValuePair in access_tags)
                 {
-                    simple_osm_geo.Tags.Add(keyValuePair);
+                    simple_osm_geo.Tags.Add(
+                        new Tag(keyValuePair.Key, keyValuePair.Value));
                 }
             }
         }

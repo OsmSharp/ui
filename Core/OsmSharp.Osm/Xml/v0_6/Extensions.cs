@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Factory;
@@ -355,14 +356,14 @@ namespace OsmSharp.Osm.Xml.v0_6
             if (dom_obj.Tags != null)
             {
                 xml_obj.tag = new tag[dom_obj.Tags.Count];
-                IList<KeyValuePair<string, string>> tags_list = dom_obj.Tags.ToList<KeyValuePair<string, string>>();
-                for (int idx = 0; idx < tags_list.Count; idx++)
+                int idx = 0;
+                foreach (var tag in dom_obj.Tags)
                 {
-                    KeyValuePair<string, string> tag_pair = tags_list[idx];
                     tag t = new tag();
-                    t.k = tag_pair.Key;
-                    t.v = tag_pair.Value;
+                    t.k = tag.Key;
+                    t.v = tag.Value;
                     xml_obj.tag[idx] = t;
+                    idx++;
                 }
             }
 
@@ -448,14 +449,14 @@ namespace OsmSharp.Osm.Xml.v0_6
             if (dom_obj.Tags != null)
             {
                 xml_obj.tag = new tag[dom_obj.Tags.Count];
-                IList<KeyValuePair<string, string>> tags_list = dom_obj.Tags.ToList<KeyValuePair<string, string>>();
-                for (int idx = 0; idx < tags_list.Count; idx++)
+                int idx = 0;
+                foreach (var tag in dom_obj.Tags)
                 {
-                    KeyValuePair<string, string> tag_pair = tags_list[idx];
                     tag t = new tag();
-                    t.k = tag_pair.Key;
-                    t.v = tag_pair.Value;
+                    t.k = tag.Key;
+                    t.v = tag.Value;
                     xml_obj.tag[idx] = t;
+                    idx++;
                 }
             }
 
@@ -521,14 +522,14 @@ namespace OsmSharp.Osm.Xml.v0_6
             if (dom_obj.Tags != null)
             {
                 xml_obj.tag = new tag[dom_obj.Tags.Count];
-                IList<KeyValuePair<string, string>> tags_list = dom_obj.Tags.ToList<KeyValuePair<string, string>>();
-                for(int idx = 0;idx < tags_list.Count;idx++)
+                int idx = 0;
+                foreach (var tag in dom_obj.Tags)
                 {
-                    KeyValuePair<string, string> tag_pair = tags_list[idx];
                     tag t = new tag();
-                    t.k = tag_pair.Key;
-                    t.v = tag_pair.Value;
+                    t.k = tag.Key;
+                    t.v = tag.Value;
                     xml_obj.tag[idx] = t;
+                    idx++;
                 }
             }
 
@@ -593,14 +594,14 @@ namespace OsmSharp.Osm.Xml.v0_6
             if (dom_obj.Tags != null)
             {
                 xml_obj.tag = new tag[dom_obj.Tags.Count];
-                IList<KeyValuePair<string, string>> tags_list = dom_obj.Tags.ToList<KeyValuePair<string, string>>();
-                for (int idx = 0; idx < tags_list.Count; idx++)
+                int idx = 0;
+                foreach (var tag in dom_obj.Tags)
                 {
-                    KeyValuePair<string, string> tag_pair = tags_list[idx];
                     tag t = new tag();
-                    t.k = tag_pair.Key;
-                    t.v = tag_pair.Value;
+                    t.k = tag.Key;
+                    t.v = tag.Value;
                     xml_obj.tag[idx] = t;
+                    idx++;
                 }
             }
 
@@ -669,14 +670,14 @@ namespace OsmSharp.Osm.Xml.v0_6
             if (dom_obj.Tags != null)
             {
                 xml_obj.tag = new tag[dom_obj.Tags.Count];
-                IList<KeyValuePair<string, string>> tags_list = dom_obj.Tags.ToList<KeyValuePair<string, string>>();
-                for (int idx = 0; idx < tags_list.Count; idx++)
+                int idx = 0;
+                foreach (var tag in dom_obj.Tags)
                 {
-                    KeyValuePair<string, string> tag_pair = tags_list[idx];
                     tag t = new tag();
-                    t.k = tag_pair.Key;
-                    t.v = tag_pair.Value;
+                    t.k = tag.Key;
+                    t.v = tag.Value;
                     xml_obj.tag[idx] = t;
+                    idx++;
                 }
             }
 
@@ -756,14 +757,14 @@ namespace OsmSharp.Osm.Xml.v0_6
             if (dom_obj.Tags != null)
             {
                 xml_obj.tag = new tag[dom_obj.Tags.Count];
-                IList<KeyValuePair<string, string>> tags_list = dom_obj.Tags.ToList<KeyValuePair<string, string>>();
-                for (int idx = 0; idx < tags_list.Count; idx++)
+                int idx = 0;
+                foreach (var tag in dom_obj.Tags)
                 {
-                    KeyValuePair<string, string> tag_pair = tags_list[idx];
                     tag t = new tag();
-                    t.k = tag_pair.Key;
-                    t.v = tag_pair.Value;
+                    t.k = tag.Key;
+                    t.v = tag.Value;
                     xml_obj.tag[idx] = t;
+                    idx++;
                 }
             }
 

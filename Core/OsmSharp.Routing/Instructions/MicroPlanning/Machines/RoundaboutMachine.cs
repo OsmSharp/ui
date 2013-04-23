@@ -84,7 +84,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
                 if (point.Point.Next != null)
                 {
                     if ((machine as MicroPlannerMachine).Planner.Interpreter.EdgeInterpreter.IsRoundabout(
-                        point.Point.Next.Tags.ConvertFrom()))
+                        point.Point.Next.Tags))
                     {
                         return true;
                     }
@@ -104,7 +104,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             if (test is MicroPlannerMessageArc)
             {
                 MicroPlannerMessageArc arc = (test as MicroPlannerMessageArc);
-                if ((machine as MicroPlannerMachine).Planner.Interpreter.EdgeInterpreter.IsRoundabout(arc.Arc.Tags.ConvertFrom()))
+                if ((machine as MicroPlannerMachine).Planner.Interpreter.EdgeInterpreter.IsRoundabout(arc.Arc.Tags))
                 {
                     return true;
                 }
@@ -136,7 +136,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
                 MicroPlannerMessagePoint point = (test as MicroPlannerMessagePoint);
                 if (point.Point.Next != null)
                 {
-                    if ((machine as MicroPlannerMachine).Planner.Interpreter.EdgeInterpreter.IsRoundabout(point.Point.Next.Tags.ConvertFrom()))
+                    if ((machine as MicroPlannerMachine).Planner.Interpreter.EdgeInterpreter.IsRoundabout(point.Point.Next.Tags))
                     {
                         return true;
                     }

@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo.Meta;
 using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Routing.Interpreter.Roads;
@@ -86,7 +87,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 {
                     if (!MicroPlannerHelper.IsTurn(arc_pair.Key.Direction, interpreter))
                     {
-                        if (interpreter.EdgeInterpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
+                        if (interpreter.EdgeInterpreter.IsRoutable(arc_pair.Value.Tags))
                         {
                             straight++;
                         }
@@ -119,7 +120,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 {
                     if (MicroPlannerHelper.IsLeft(arc_pair.Key.Direction, interpreter))
                     {
-                        if (interpreter.EdgeInterpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
+                        if (interpreter.EdgeInterpreter.IsRoutable(arc_pair.Value.Tags))
                         {
                             left++;
                         }
@@ -152,7 +153,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                 {
                     if (MicroPlannerHelper.IsRight(arc_pair.Key.Direction, interpreter))
                     {
-                        if (interpreter.EdgeInterpreter.IsRoutable(arc_pair.Value.Tags.ConvertToDictionary()))
+                        if (interpreter.EdgeInterpreter.IsRoutable(arc_pair.Value.Tags))
                         {
                             right++;
                         }

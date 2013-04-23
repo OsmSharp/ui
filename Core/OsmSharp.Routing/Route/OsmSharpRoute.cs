@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 //using OsmSharp.Osm;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Routing.Route
@@ -644,7 +645,43 @@ namespace OsmSharp.Routing.Route
     /// Contains extensions for route tags.
     /// </summary>
     public static class RouteTagsExtensions
-    {
+    {        
+        /// <summary>
+        /// Converts a dictionary of tags to a RouteTags array.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public static RouteTags[] ConvertFrom(this TagsCollection tags)
+        {
+            var tagsList = new List<RouteTags>();
+            foreach (Tag pair in tags)
+            {
+                var tag = new RouteTags();
+                tag.Key = pair.Key;
+                tag.Value = pair.Value;
+                tagsList.Add(tag);
+            }
+            return tagsList.ToArray();
+        }
+
+        /// <summary>
+        /// Converts a RouteTags array to a list of KeyValuePairs.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public static TagsCollection ConvertToTagsCollection(this RouteTags[] tags)
+        {
+            var tagsList = new SimpleTagsCollection();
+            if (tags != null)
+            {
+                foreach (RouteTags pair in tags)
+                {
+                    tagsList.Add(new Tag(pair.Key, pair.Value));
+                }
+            }
+            return tagsList;
+        }
+
         /// <summary>
         /// Converts a dictionary of tags to a RouteTags array.
         /// </summary>

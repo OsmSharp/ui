@@ -16,6 +16,7 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing;
+using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.UnitTests.Routing.CH.Contraction
 {
@@ -167,7 +168,7 @@ namespace OsmSharp.UnitTests.Routing.CH.Contraction
         private DynamicGraphRouterDataSource<CHEdgeData> BuildData(Stream stream)
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            SimpleTagsIndex tags_index = new SimpleTagsIndex();
 
             // do the data processing.
             DynamicGraphRouterDataSource<CHEdgeData> data =

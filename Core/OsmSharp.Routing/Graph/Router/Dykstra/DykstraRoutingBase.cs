@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Routing.Router;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math;
 using OsmSharp.Routing.Interpreter;
@@ -54,7 +55,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="point_tags"></param>
         /// <param name="interpreter"></param>
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, IDictionary<string, string> point_tags)
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection point_tags)
         {
             double search_box_size = delta;
             // create the search box.
@@ -71,7 +72,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             SearchClosestResult closest_without_match = new SearchClosestResult(double.MaxValue, 0);
             foreach (KeyValuePair<uint, KeyValuePair<uint, EdgeData>> arc in arcs)
             {
-                IDictionary<string, string> arc_tags = _tags_index.Get(arc.Value.Value.Tags);
+                TagsCollection arc_tags = _tags_index.Get(arc.Value.Value.Tags);
                 bool can_be_traversed = interpreter.EdgeInterpreter.CanBeTraversedBy(arc_tags, vehicle);
                 if (can_be_traversed)
                 { // the edge can be traversed.

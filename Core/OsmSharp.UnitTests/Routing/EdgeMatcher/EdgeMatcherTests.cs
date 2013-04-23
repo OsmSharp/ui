@@ -10,6 +10,7 @@ using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 
@@ -30,29 +31,29 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
             IEdgeMatcher matcher = new DefaultEdgeMatcher();
 
             // create edge tags.
-            Dictionary<string, string> edge_tags = new Dictionary<string, string>();
+            var edgeTags = new SimpleTagsCollection();
             //edge_tags["highway"] = "footway";
 
             // create point tags.
-            Dictionary<string, string> point_tags = new Dictionary<string, string>();
+            var pointTags = new SimpleTagsCollection();
             //point_tags["highway"] = "footway";
 
             // test with empty point tags.
             Assert.IsTrue(matcher.MatchWithEdge(VehicleEnum.Car, null, null));
-            Assert.IsTrue(matcher.MatchWithEdge(VehicleEnum.Car, point_tags, null));
+            Assert.IsTrue(matcher.MatchWithEdge(VehicleEnum.Car, pointTags, null));
 
             // test with empty edge tags.
-            point_tags["name"] = "Ben Abelshausen Boulevard";
-            Assert.IsFalse(matcher.MatchWithEdge(VehicleEnum.Car, point_tags, null));
-            Assert.IsFalse(matcher.MatchWithEdge(VehicleEnum.Car, point_tags, edge_tags));
+            pointTags["name"] = "Ben Abelshausen Boulevard";
+            Assert.IsFalse(matcher.MatchWithEdge(VehicleEnum.Car, pointTags, null));
+            Assert.IsFalse(matcher.MatchWithEdge(VehicleEnum.Car, pointTags, edgeTags));
 
             // test with matching name.
-            edge_tags["name"] = "Ben Abelshausen Boulevard";
-            Assert.IsTrue(matcher.MatchWithEdge(VehicleEnum.Car, point_tags, edge_tags));
+            edgeTags["name"] = "Ben Abelshausen Boulevard";
+            Assert.IsTrue(matcher.MatchWithEdge(VehicleEnum.Car, pointTags, edgeTags));
 
             // test with none-matching name.
-            edge_tags["name"] = "Jorieke Vyncke Boulevard";
-            Assert.IsFalse(matcher.MatchWithEdge(VehicleEnum.Car, point_tags, edge_tags));
+            edgeTags["name"] = "Jorieke Vyncke Boulevard";
+            Assert.IsFalse(matcher.MatchWithEdge(VehicleEnum.Car, pointTags, edgeTags));
         }
 
         /// <summary>
@@ -220,14 +221,14 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
             GeoCoordinate from_noname = new GeoCoordinate(51.0, 4.0007);
             GeoCoordinate to_noname = new GeoCoordinate(51.0, 4.0008);
 
-            Dictionary<string, string> point_tags = new Dictionary<string, string>();
+            TagsCollection point_tags = new SimpleTagsCollection();
             point_tags["name"] = point_name;
 
-            Dictionary<string, string> tags = new Dictionary<string, string>();
+            TagsCollection tags = new SimpleTagsCollection();
             tags["highway"] = highway;
             //tags["name"] = name;
 
-            OsmTagsIndex tags_index = new OsmTagsIndex();
+            SimpleTagsIndex tags_index = new SimpleTagsIndex();
 
             // do the data processing.
             DynamicGraphRouterDataSource<SimpleWeighedEdge> data =
@@ -239,8 +240,8 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
                 IsForward = true,
                 Tags = tags_index.Add(tags),
                 Weight = 100
-            }, null); 
-            tags = new Dictionary<string, string>();
+            }, null);
+            tags = new SimpleTagsCollection();
             tags["highway"] = highway;
             tags["name"] = name;
             uint vertex_name1 = data.AddVertex((float)from_name.Latitude, (float)from_name.Longitude);

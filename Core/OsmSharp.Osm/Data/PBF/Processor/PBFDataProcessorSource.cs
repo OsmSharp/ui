@@ -22,6 +22,7 @@ using OsmSharp.Osm.Data.Core.Processor;
 using System.IO;
 using OsmSharp.Osm.Data.PBF.Dense;
 using OsmSharp.Osm.Simple;
+using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.Osm.Data.PBF.Raw.Processor
 {
@@ -129,7 +130,7 @@ namespace OsmSharp.Osm.Data.PBF.Raw.Processor
                     + ((double)block.granularity * (double)node.lat));
                 simple_node.Longitude = .000000001 * ((double)block.lon_offset
                     + ((double)block.granularity * (double)node.lon));
-                simple_node.Tags = new Dictionary<string, string>();
+                simple_node.Tags = new SimpleTagsCollection();
                 for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
                 {
                     string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
@@ -137,7 +138,7 @@ namespace OsmSharp.Osm.Data.PBF.Raw.Processor
 
                     if (!simple_node.Tags.ContainsKey(key))
                     {
-                        simple_node.Tags.Add(new KeyValuePair<string, string>(key, value));
+                        simple_node.Tags.Add(new Tag() { Key = key, Value = value });
                     }
                 }
                 simple_node.TimeStamp = OsmSharp.Tools.Utilities.FromUnixTime((long)node.info.timestamp * 
@@ -164,7 +165,7 @@ namespace OsmSharp.Osm.Data.PBF.Raw.Processor
                     node_id = node_id + way.refs[node_idx];
                     simple_way.Nodes.Add(node_id);
                 }
-                simple_way.Tags = new Dictionary<string, string>();
+                simple_way.Tags = new SimpleTagsCollection();
                 for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
                 {
                     string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
@@ -172,7 +173,7 @@ namespace OsmSharp.Osm.Data.PBF.Raw.Processor
                     
                     if (!simple_way.Tags.ContainsKey(key))
                     {
-                        simple_way.Tags.Add(new KeyValuePair<string, string>(key, value));
+                        simple_way.Tags.Add(new Tag(key, value));
                     }
                 }
                 if (way.info != null)
@@ -219,7 +220,7 @@ namespace OsmSharp.Osm.Data.PBF.Raw.Processor
 
                     simple_relation.Members.Add(member);
                 }
-                simple_relation.Tags = new Dictionary<string, string>();
+                simple_relation.Tags = new SimpleTagsCollection();
                 for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
                 {
                     string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
@@ -227,7 +228,7 @@ namespace OsmSharp.Osm.Data.PBF.Raw.Processor
 
                     if (!simple_relation.Tags.ContainsKey(key))
                     {
-                        simple_relation.Tags.Add(new KeyValuePair<string, string>(key, value));
+                        simple_relation.Tags.Add(new Tag(key, value));
                     }
                 }
                 if (relation.info != null)

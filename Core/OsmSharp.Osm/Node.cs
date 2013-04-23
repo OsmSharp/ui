@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Collections;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm.Simple;
 
@@ -126,7 +127,7 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public void CopyTo(Node n)
         {
-            foreach (KeyValuePair<string, string> tag in this.Tags)
+            foreach (Tag tag in this.Tags)
             {
                 n.Tags.Add(tag.Key, tag.Value);
             }

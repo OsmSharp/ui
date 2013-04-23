@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.StateMachines;
 using OsmSharp.Tools.Math.Geo.Meta;
 using OsmSharp.Tools.Math.Geo;
@@ -156,9 +157,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
                 new GeoCoordinate(point1.Latitude + 0.001f, point1.Longitude + 0.001f));
 
             // get all the names/direction/counts.
-            List<KeyValuePair<string, string>> next_name = latest_point.Next.Tags;
-            List<KeyValuePair<string, string>> between_name = latest_arc.Tags;
-            List<KeyValuePair<string, string>> before_name = second_latest_arc.Tags;
+            TagsCollection nextName = latest_point.Next.Tags;
+            TagsCollection betweenName = latest_arc.Tags;
+            TagsCollection beforeName = second_latest_arc.Tags;
 
             int first_count = count;
 
@@ -166,7 +167,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             RelativeDirection second_turn = latest_point.Angle;
             
             // let the scentence planner generate the correct information.
-            this.Planner.SentencePlanner.GenerateImmidiateTurn(box, before_name, first_turn, first_count, second_turn, between_name, next_name, latest_point.Points);
+            this.Planner.SentencePlanner.GenerateImmidiateTurn(box, beforeName, first_turn, first_count, second_turn, betweenName, nextName, latest_point.Points);
         }
 
         public override bool Equals(object obj)
