@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
+using OsmSharp.Tools.Collections;
 using OsmSharp.UI.Map.Elements;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 

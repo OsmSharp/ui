@@ -42,7 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="protobuf-net">
-      <HintPath>..\..\..\..\..\..\..\..\..\..\Program Files (x86)\protobuf-net\protobuf-net-VS9\protobuf-net.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\..\Program Files %28x86%29\protobuf-net\protobuf-net-VS9\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
@@ -141,7 +141,6 @@
     <Compile Include="Sources\INodeSource.cs" />
     <Compile Include="Sources\IRelationSource.cs" />
     <Compile Include="Sources\IWaySource.cs" />
-    <Compile Include="Tags\OsmTagsIndex.cs" />
     <Compile Include="Tiles\Tile.cs" />
     <Compile Include="Tiles\TileRange.cs" />
     <Compile Include="User.cs" />
@@ -158,12 +157,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.Android.csproj">
-      <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
-      <Name>OsmSharp.Tools.Android</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Data\Memory\Memory\" />
     <Folder Include="Data\Xml\GpxSource\GpxSource\" />
     <Folder Include="Data\Xml\KmlSource\KmlSource\" />
@@ -172,4 +165,10 @@
     <Folder Include="Data\Xml\Processor\Processor\Replication\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.Android.csproj">
+      <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
+      <Name>OsmSharp.Tools.Android</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

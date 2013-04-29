@@ -55,6 +55,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         /// </summary>
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
+        /// <param name="access_tags"></param>
         /// <returns></returns>
         public override IBasicRouterDataSource<PreProcessedEdge> BuildData(IRoutingInterpreter interpreter, VehicleEnum vehicle, 
             List<KeyValuePair<string, string>> access_tags)
@@ -88,6 +89,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         /// 
         /// </summary>
         /// <param name="simple_osm_geo"></param>
+        /// <param name="param"></param>
         void events_filter_MovedToNextEvent(Osm.Simple.SimpleOsmGeo simple_osm_geo, object param)
         {
             List<KeyValuePair<string, string>> access_tags = param as List<KeyValuePair<string, string>>;

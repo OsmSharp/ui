@@ -70,6 +70,12 @@
     <Compile Include="Collections\SortedDictionary.cs" />
     <Compile Include="Collections\SortedList.cs" />
     <Compile Include="Collections\SortedSet.cs" />
+    <Compile Include="Collections\Tags\ITagsIndex.cs" />
+    <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
+    <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />
+    <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
+    <Compile Include="Collections\Tags\Tag.cs" />
+    <Compile Include="Collections\Tags\TagsCollection.cs" />
     <Compile Include="DelimitedFiles\DefaultDelimitedFormat.cs" />
     <Compile Include="DelimitedFiles\DelimitedFileHandler.cs" />
     <Compile Include="DelimitedFiles\DelimiterType.cs" />
@@ -116,7 +122,6 @@
     <Compile Include="Math\ILocationObject.cs" />
     <Compile Include="Math\IPointF2D.cs" />
     <Compile Include="Math\ITaggedObject.cs" />
-    <Compile Include="Math\ITagsIndex.cs" />
     <Compile Include="Math\PointF2D.cs" />
     <Compile Include="Math\PrimitiveF2D.cs" />
     <Compile Include="Math\PrimitiveSimpleF2D.cs" />

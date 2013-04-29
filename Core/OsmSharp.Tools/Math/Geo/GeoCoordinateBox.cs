@@ -161,6 +161,38 @@ namespace OsmSharp.Tools.Math.Geo
         }
 
         /// <summary>
+        /// Returns the topleft coordinate.
+        /// </summary>
+        public GeoCoordinate TopLeft
+        {
+            get { return new GeoCoordinate(this.MinLon, this.MaxLat); }
+        }
+
+        /// <summary>
+        /// Returns the topleft coordinate.
+        /// </summary>
+        public GeoCoordinate TopRight
+        {
+            get { return new GeoCoordinate(this.MaxLon, this.MaxLat); }
+        }
+
+        /// <summary>
+        /// Returns the topleft coordinate.
+        /// </summary>
+        public GeoCoordinate BottomLeft
+        {
+            get { return new GeoCoordinate(this.MinLon, this.MinLat); }
+        }
+
+        /// <summary>
+        /// Returns the topleft coordinate.
+        /// </summary>
+        public GeoCoordinate BottomRight
+        {
+            get { return new GeoCoordinate(this.MaxLon, this.MinLat); }
+        }
+
+        /// <summary>
         /// Returns the width on this box.
         /// </summary>
         public double DeltaLon

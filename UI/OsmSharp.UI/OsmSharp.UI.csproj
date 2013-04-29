@@ -33,21 +33,34 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Release\</OutputPath>
+    <DebugType>none</DebugType>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.3\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
-    </Reference>
     <Reference Include="OsmSharp.Osm">
       <HintPath>..\..\Core\Output\Debug\Any CPU\OsmSharp.Osm.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Tools, Version=3.1.4839.74, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Output\OsmSharp.Tools.dll</HintPath>
+    <Reference Include="OsmSharp.Routing">
+      <HintPath>..\..\Core\Output\Debug\Any CPU\OsmSharp.Routing.dll</HintPath>
+    </Reference>
+    <Reference Include="OsmSharp.Tools">
+      <HintPath>..\..\Core\Output\Debug\Any CPU\OsmSharp.Tools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -56,20 +69,19 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=null">
+      <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.3\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="KnownColor.cs" />
-    <Compile Include="Map\Elements\DataStructures\IElementDataStructure.cs" />
-    <Compile Include="Map\Elements\ElementBase.cs" />
-    <Compile Include="Map\Elements\ElementMultiLine.cs" />
-    <Compile Include="Map\Elements\ElementPoint.cs" />
-    <Compile Include="Map\Elements\IElement.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
     <Compile Include="Map\Layers\LayerElements.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSInterpreter.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSTypes.cs" />
     <Compile Include="Map\Styles\StyleInterpreter.cs" />
+    <Compile Include="Map\View.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFontStyle.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFontVariant.cs" />
@@ -96,6 +108,18 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSLexer.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParser.cs" />
     <Compile Include="SimpleColor.cs" />
+    <Compile Include="Elements\DataStructures\IElementDataStructure.cs" />
+    <Compile Include="Elements\ElementBase.cs" />
+    <Compile Include="Elements\ElementMultiLine.cs" />
+    <Compile Include="Elements\ElementPoint.cs" />
+    <Compile Include="Elements\IElement.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitive.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Line2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Point2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Polygon2D.cs" />
+    <Compile Include="Renderer\Renderer2D.cs" />
+    <Compile Include="Renderer\Scene2D.cs" />
+    <Compile Include="Renderer\View2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

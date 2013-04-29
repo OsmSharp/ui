@@ -1065,7 +1065,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
             { // the color is defined as an integer? this cannot happen??
                 return valueInt;
             }
+#if!WINDOWS_PHONE
             else if (Enum.TryParse<KnownColor>(colorTree.Text, true, out namedColor))
+#else
+            else if (EnumHelper.TryParse<KnownColor>(colorTree.Text, true, out namedColor))
+#endif
             { // the color was named.
                 return SimpleColor.FromKnownColor(namedColor).Value;
             }

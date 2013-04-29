@@ -50,6 +50,12 @@
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Collections\HugeDictionary.cs" />
+    <Compile Include="Collections\Tags\ITagsIndex.cs" />
+    <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
+    <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />
+    <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
+    <Compile Include="Collections\Tags\Tag.cs" />
+    <Compile Include="Collections\Tags\TagsCollection.cs" />
     <Compile Include="GeoCoding\AccuracyEnum.cs" />
     <Compile Include="GeoCoding\Facade.cs" />
     <Compile Include="GeoCoding\IGeoCoder.cs" />
@@ -101,7 +107,6 @@
     <Compile Include="Math\ILocationObject.cs" />
     <Compile Include="Math\IPointF2D.cs" />
     <Compile Include="Math\ITaggedObject.cs" />
-    <Compile Include="Math\ITagsIndex.cs" />
     <Compile Include="Math\PointF2D.cs" />
     <Compile Include="Math\PrimitiveF2D.cs" />
     <Compile Include="Math\PrimitiveSimpleF2D.cs" />
@@ -305,6 +310,9 @@
     <Compile Include="Xml\Sources\XmlReaderSource.cs" />
     <Compile Include="Xml\Sources\XmlStreamSource.cs" />
     <Compile Include="Xml\Sources\XmlStringSource.cs" />
+    <Compile Include="Math\Geo\Projections\IProjection.cs" />
+    <Compile Include="Math\Geo\Projections\SphericalMercator.cs" />
+    <Compile Include="Math\Geo\Projections\EllipticalMercator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Xml\Gpx\v1_0\gpx.xsd">
@@ -336,5 +344,8 @@
     <None Include="Xml\Nominatim\Search\v1\search.xss">
       <DependentUpon>search.xsd</DependentUpon>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Math\Geo\Projections\" />
   </ItemGroup>
 </Project>

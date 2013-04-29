@@ -34,9 +34,7 @@ namespace OsmSharp.Osm.UI.WinForms.Test
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new MapViewerForm());
             Application.Run(new MapEditorForm());
-            //Application.Run(new BrowserEditorForm());
         }
     }
 }

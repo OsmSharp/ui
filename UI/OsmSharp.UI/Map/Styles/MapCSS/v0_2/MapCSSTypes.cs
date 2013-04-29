@@ -79,7 +79,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             return true; // even if there is an area=yes tag this cannot be an area.
                         }
                     }
-                    return false;
+					break;
                 case MapCSSTypes.Area:
                     if (osmGeo.Type == OsmType.Way)
                     {

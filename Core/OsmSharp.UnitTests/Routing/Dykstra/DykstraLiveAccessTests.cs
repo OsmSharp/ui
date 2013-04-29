@@ -54,6 +54,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         /// </summary>
         /// <param name="interpreter"></param>
         /// <param name="embedded_string"></param>
+        /// <param name="vehicle"></param>
         /// <returns></returns>
         public override IBasicRouterDataSource<SimpleWeighedEdge> BuildData(IRoutingInterpreter interpreter,
                                                                             string embedded_string, VehicleEnum vehicle)

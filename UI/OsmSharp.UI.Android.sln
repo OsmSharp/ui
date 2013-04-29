@@ -1,42 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.UI.Android", "OsmSharp.UI\OsmSharp.UI.Android.csproj", "{967870CC-4BA0-4318-A3BB-34F30EA7C02A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.UI.Interpreter.Android", "OsmSharp.UI.Interpreter\OsmSharp.UI.Interpreter.Android.csproj", "{BD098688-D4D7-45DB-8A17-AAD82D8E0CA9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.UI.Map.Android", "OsmSharp.UI.Map\OsmSharp.UI.Map.Android.csproj", "{64BF02FA-34D1-4B18-9E08-82780378BF24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.UI.Android", "OsmSharp.UI\OsmSharp.UI.Android.csproj", "{87AF65F0-A706-4145-9779-E810A717AD5A}"
 EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = OsmSharp.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{967870CC-4BA0-4318-A3BB-34F30EA7C02A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{967870CC-4BA0-4318-A3BB-34F30EA7C02A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{967870CC-4BA0-4318-A3BB-34F30EA7C02A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{967870CC-4BA0-4318-A3BB-34F30EA7C02A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BD098688-D4D7-45DB-8A17-AAD82D8E0CA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BD098688-D4D7-45DB-8A17-AAD82D8E0CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BD098688-D4D7-45DB-8A17-AAD82D8E0CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BD098688-D4D7-45DB-8A17-AAD82D8E0CA9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{64BF02FA-34D1-4B18-9E08-82780378BF24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64BF02FA-34D1-4B18-9E08-82780378BF24}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64BF02FA-34D1-4B18-9E08-82780378BF24}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64BF02FA-34D1-4B18-9E08-82780378BF24}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
+		{87AF65F0-A706-4145-9779-E810A717AD5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87AF65F0-A706-4145-9779-E810A717AD5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87AF65F0-A706-4145-9779-E810A717AD5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87AF65F0-A706-4145-9779-E810A717AD5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Osm.Routing.Test\Osm.Routing.Test.csproj
+		StartupItem = OsmSharp.UI\OsmSharp.UI.Android.csproj
 		Policies = $0
 		$0.DotNetNamingPolicy = $1
 		$1.DirectoryNamespaceAssociation = None
 		$1.ResourceNamePolicy = FileFormatDefault
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = OsmSharp.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

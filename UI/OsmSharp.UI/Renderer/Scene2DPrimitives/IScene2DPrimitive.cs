@@ -1,0 +1,21 @@
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace OsmSharp.UI.Renderer.Scene2DPrimitives
+{
+	/// <summary>
+	/// Abstract representation of a Scene2D primitive.
+	/// </summary>
+	public interface IScene2DPrimitive
+	{
+		/// <summary>
+		/// Returns true if the object is visible on the view.
+		/// </summary>
+		/// <returns><c>true</c> if this instance is visible in the specified view; otherwise, <c>false</c>.</returns>
+		/// <param name="view">View.</param>
+		bool IsVisibleIn(View2D view);
+	}
+}

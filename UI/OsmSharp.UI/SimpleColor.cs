@@ -95,22 +95,22 @@ namespace OsmSharp.UI
             if ((alpha > 255) || (alpha < 0))
             {
                 // alpha out of range!
-                throw new ArgumentOutOfRangeException("alpha", alpha, "Value has to be in the range 0-255!");
+                throw new ArgumentOutOfRangeException("alpha", "Value has to be in the range 0-255!");
             }
             if ((red > 255) || (red < 0))
             {
                 // red out of range!
-                throw new ArgumentOutOfRangeException("red", red, "Value has to be in the range 0-255!");
+                throw new ArgumentOutOfRangeException("red", "Value has to be in the range 0-255!");
             }
             if ((green > 255) || (green < 0))
             {
                 // green out of range!
-                throw new ArgumentOutOfRangeException("green", green, "Value has to be in the range 0-255!");
+                throw new ArgumentOutOfRangeException("green", "Value has to be in the range 0-255!");
             }
             if ((blue > 255) || (blue < 0))
             {
                 // red out of range!
-                throw new ArgumentOutOfRangeException("blue", blue, "Value has to be in the range 0-255!");
+                throw new ArgumentOutOfRangeException("blue", "Value has to be in the range 0-255!");
             }
             return new SimpleColor()
                        {
