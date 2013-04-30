@@ -22,7 +22,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         FillColor,
         ZIndex,
         Color,
-        CasingWidth,
+        CasingColor,
         Extrude,
         ExtrudeEdgeColor,
         ExtrudeFaceColor,

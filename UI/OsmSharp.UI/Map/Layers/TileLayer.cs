@@ -6,9 +6,9 @@ using System.Text;
 namespace OsmSharp.UI.Map.Layers
 {
     /// <summary>
-    /// Represents a layer containing map elements.
+    /// A tile layer.
     /// </summary>
-    public class LayerElements
+    public class TileLayer
     {
 
     }

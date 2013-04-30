@@ -46,17 +46,35 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MapControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MapControl.Designer.cs">
+      <DependentUpon>MapControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\GraphicsRenderer2D.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\OsmSharp.Tools\OsmSharp.Tools.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>OsmSharp.Tools</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\OsmSharp.UI\OsmSharp.UI.csproj">
       <Project>{76BD9027-A67C-4D1B-8439-BE25E533C50D}</Project>
       <Name>OsmSharp.UI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="MapControl.resx">
+      <DependentUpon>MapControl.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -20,9 +20,9 @@ using KnownColor = System.Drawing.KnownColor;
 
 namespace OsmSharp.WinForms.UI.Sample
 {
-    public partial class MainForm : Form
+    public partial class SampleControlForm : Form
     {
-        public MainForm()
+        public SampleControlForm()
         {
             InitializeComponent();
         }
@@ -41,6 +41,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // initialize a test-scene.
             var scene2D = new Scene2D();
+            scene2D.BackColor = Color.White.ToArgb();
             scene2D.AddPoint(0, 0, Color.Blue.ToArgb(), 1);
 
             bool fill = false;

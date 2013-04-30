@@ -33,12 +33,18 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <param name="zoom">The current zoom level.</param>
         /// <param name="osmGeo">The object to 'select'.</param>
         /// <returns></returns>
-        public virtual List<OsmGeo> Selects(int zoom, OsmGeo osmGeo)
+        public virtual Dictionary<SelectorTypeEnum, OsmGeo> Selects(int zoom, OsmGeo osmGeo)
         {
             // osm geo list.
-            var osmGeos = new List<OsmGeo>();
+            var osmGeos = new Dictionary<SelectorTypeEnum, OsmGeo>();
 
-            if (!this.Zoom.Select(zoom))
+            if (this.Zoom != null && !this.Zoom.Select(zoom))
+            { // oeps: the zoom was not valid.
+                return osmGeos;
+            }
+
+            // check rule.
+            if (!this.SelectorRule.Selects(osmGeo))
             { // oeps: the zoom was not valid.
                 return osmGeos;
             }
@@ -51,7 +57,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                     { // this can be an area.
                         if (osmGeo.IsOfType(MapCSSTypes.Area))
                         {
-                            osmGeos.Add(osmGeo);
+                            osmGeos.Add(SelectorTypeEnum.Area, osmGeo);
                         }
                     }
                     else if (osmGeo.Type == OsmType.Relation)
@@ -67,7 +73,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                     { // this can be a line.
                         if (osmGeo.IsOfType(MapCSSTypes.Line))
                         {
-                            osmGeos.Add(osmGeo);
+                            osmGeos.Add(SelectorTypeEnum.Line, osmGeo);
                         }
                     }
                     else if (osmGeo.Type == OsmType.Relation)
@@ -78,22 +84,22 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                 case SelectorTypeEnum.Node:
                     if (osmGeo.Type == OsmType.Node)
                     {
-                        osmGeos.Add(osmGeo);
+                        osmGeos.Add(SelectorTypeEnum.Node, osmGeo);
                     }
                     break;
                 case SelectorTypeEnum.Star:
-                    osmGeos.Add(osmGeo);
+                    osmGeos.Add(SelectorTypeEnum.Star, osmGeo);
                     break;
                 case SelectorTypeEnum.Way:
                     if (osmGeo.Type == OsmType.Way)
                     {
-                        osmGeos.Add(osmGeo);
+                        osmGeos.Add(SelectorTypeEnum.Way, osmGeo);
                     }
                     break;
                 case SelectorTypeEnum.Relation:
                     if (osmGeo.Type == OsmType.Relation)
                     {
-                        osmGeos.Add(osmGeo);
+                        osmGeos.Add(SelectorTypeEnum.Relation, osmGeo);
                     }
                     break;
             }

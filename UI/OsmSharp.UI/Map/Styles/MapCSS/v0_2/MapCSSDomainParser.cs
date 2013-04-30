@@ -896,11 +896,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             rule.Declarations.Add(iconHeight);
                             break;
                         case "casing-width":
-                            var casingWidth = new DeclarationInt();
-                            casingWidth.Qualifier = DeclarationIntEnum.CasingWidth;
-                            if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                            var casingWidth = new DeclarationFloat();
+                            casingWidth.Qualifier = DeclarationFloatEnum.CasingWidth;
+                            if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
                             {
-                                casingWidth.Value = valueInt;
+                                casingWidth.Value = valueFloat;
                             }
                             else
                             { // value could not be parsed.
@@ -913,7 +913,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             break;
                         case "casing-color":
                             var casingColor = new DeclarationInt();
-                            casingColor.Qualifier = DeclarationIntEnum.CasingWidth;
+                            casingColor.Qualifier = DeclarationIntEnum.CasingColor;
                             casingColor.Value = MapCSSDomainParser.ParseColor(
                                 declarationTree.Children[1] as CommonTree);
 
@@ -957,29 +957,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "dashes":
                             var dashes = new DeclarationDashes();
                             dashes.Qualifier = DeclarationDashesEnum.Dashes;
-
-                            strings = valueString.Split(',');
-                            dashes.Value = new int[strings.Length];
-                            for (int idx = 0; idx < strings.Length; idx++)
-                            {
-                                if (int.TryParse(strings[idx], NumberStyles.Any, 
-                                    System.Globalization.CultureInfo.InvariantCulture, out valueInt))
-                                {
-                                    dashes.Value[idx] = valueInt;
-                                }
-                                else
-                                { // value could not be parsed.
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
-                                } 
-                            }
+                            dashes.Value = MapCSSDomainParser.ParseDashes(declarationTree.Children[1]);
 
                             // add declaration.
                             rule.Declarations.Add(dashes);
                             break;
                         case "casing-dashes":
                             var casingDashes = new DeclarationDashes();
-                            casingDashes.Qualifier = DeclarationDashesEnum.Dashes;
+                            casingDashes.Qualifier = DeclarationDashesEnum.CasingDashes;
                             casingDashes.Value = MapCSSDomainParser.ParseDashes(declarationTree.Children[1]);
 
                             // add declaration.

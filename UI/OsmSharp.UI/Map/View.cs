@@ -137,4 +137,3 @@ namespace OsmSharp.UI.Map
 		#endregion
 	}
 }
-

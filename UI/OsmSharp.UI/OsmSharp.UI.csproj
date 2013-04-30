@@ -76,8 +76,10 @@
   <ItemGroup>
     <Compile Include="KnownColor.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
-    <Compile Include="Map\Layers\LayerElements.cs" />
+    <Compile Include="Map\Layers\OsmRawLayer.cs" />
+    <Compile Include="Map\Layers\TileLayer.cs" />
     <Compile Include="Map\Map.cs" />
+    <Compile Include="Map\MapRenderer.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSInterpreter.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSTypes.cs" />
     <Compile Include="Map\Styles\StyleInterpreter.cs" />
@@ -108,11 +110,6 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSLexer.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParser.cs" />
     <Compile Include="SimpleColor.cs" />
-    <Compile Include="Elements\DataStructures\IElementDataStructure.cs" />
-    <Compile Include="Elements\ElementBase.cs" />
-    <Compile Include="Elements\ElementMultiLine.cs" />
-    <Compile Include="Elements\ElementPoint.cs" />
-    <Compile Include="Elements\IElement.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitive.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Line2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Point2D.cs" />

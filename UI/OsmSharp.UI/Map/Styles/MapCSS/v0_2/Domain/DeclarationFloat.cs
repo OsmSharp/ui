@@ -22,12 +22,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         Width,
         FillOpacity,
         Opacity,
-        FillColor,
         CasingOpacity,
         ExtrudeEdgeOpacity,
         ExtrudeFaceOpacity,
         ExtrudeEdgeWidth,
         IconOpacity,
-        TextOpacity
+        TextOpacity,
+        CasingWidth
     }
 }

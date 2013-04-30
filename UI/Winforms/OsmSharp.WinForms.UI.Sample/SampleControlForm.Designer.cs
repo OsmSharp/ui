@@ -1,6 +1,6 @@
 ﻿namespace OsmSharp.WinForms.UI.Sample
 {
-    partial class MainForm
+    partial class SampleControlForm
     {
         /// <summary>
         /// Required designer variable.

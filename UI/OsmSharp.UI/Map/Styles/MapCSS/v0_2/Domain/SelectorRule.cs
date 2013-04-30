@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 
@@ -8,7 +9,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// <summary>
     /// Represents a selector rule for a MapCSS v0.2 Selector class.
     /// </summary>
-    public class SelectorRule
+    public abstract class SelectorRule
     {
         /// <summary>
         /// Invert this rule or not.
@@ -46,6 +47,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                 Right = right
             };
         }
+
+        /// <summary>
+        /// Returns true if the given object is selected by this selector rule.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        internal abstract bool Selects(Osm.OsmGeo osmGeo);
     }
 
     /// <summary>
@@ -82,6 +90,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// The right rule.
         /// </summary>
         public SelectorRule Right { get; set; }
+        
+        /// <summary>
+        /// Returns true if the given object is selected by this selector rule.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        internal override bool Selects(Osm.OsmGeo osmGeo)
+        {
+            switch (this.Operator)
+            {
+                case SelectorRuleOperator.And:
+                    return this.Left.Selects(osmGeo) && this.Right.Selects(osmGeo);
+                case SelectorRuleOperator.Or:
+                    return this.Left.Selects(osmGeo) || this.Right.Selects(osmGeo);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
         /// <summary>
         /// Returns a description of the selector rule.
@@ -105,6 +131,20 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// The tag that has to be present.
         /// </summary>
         public string Tag { get; set; }
+
+        /// <summary>
+        /// Returns true if the given object is selected by this selector rule.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        internal override bool Selects(Osm.OsmGeo osmGeo)
+        {
+            if (osmGeo.Tags != null)
+            {
+                return osmGeo.Tags.ContainsKey(this.Tag);
+            }
+            return false;
+        }
 
         /// <summary>
         /// Returns a description of the selector rule.
@@ -132,6 +172,63 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// The value of the tag or the regular expression matching it.
         /// </summary>
         public SelectorRuleTagValueComparisonEnum Comparator { get; set; }
+
+        /// <summary>
+        /// Returns true if the given object is selected by this selector rule.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        internal override bool Selects(Osm.OsmGeo osmGeo)
+        {
+            if (osmGeo.Tags != null)
+            {
+                string tagValue;
+                if (osmGeo.Tags.TryGetValue(this.Tag, out tagValue))
+                {
+                    double valueDouble;
+                    double tagValueDouble;
+                    switch (this.Comparator)
+                    {
+                        case SelectorRuleTagValueComparisonEnum.Equal:
+                            return tagValue == this.Value;
+                        case SelectorRuleTagValueComparisonEnum.NotEqual:
+                            return tagValue != this.Value;
+                        case SelectorRuleTagValueComparisonEnum.GreaterThan:
+                            if(double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                                (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                            {
+                                return tagValueDouble > valueDouble;
+                            }
+                            break;
+                        case SelectorRuleTagValueComparisonEnum.GreaterThanOrEqual:
+                            if(double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                                (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                            {
+                                return tagValueDouble >= valueDouble;
+                            }
+                            break;
+                        case SelectorRuleTagValueComparisonEnum.SmallerThan:
+                            if(double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                                (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                            {
+                                return tagValueDouble < valueDouble;
+                            }
+                            break;
+                        case SelectorRuleTagValueComparisonEnum.SmallerThanOrEqual:
+                            if(double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                                (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                            {
+                                return tagValueDouble <= valueDouble;
+                            }
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    return osmGeo.Tags.ContainsKey(this.Tag);
+                }
+            }
+            return false;
+        }
 
         /// <summary>
         /// Returns a description of the selector rule.

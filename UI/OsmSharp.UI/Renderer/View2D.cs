@@ -196,7 +196,7 @@ namespace OsmSharp.UI.Renderer
 		/// <returns><c>true</c> if this instance is in the specified x y; otherwise, <c>false</c>.</returns>
 		/// <param name="x">The x coordinate.</param>
 		/// <param name="y">The y coordinate.</param>
-		public bool IsIn (float x, float y)
+		public bool Contains (float x, float y)
 		{
 			if(y > this.Top || y < this.Bottom || 
 			   x < this.Left || x > this.Right)

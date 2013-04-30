@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
-using OsmSharp.UI.Map.Elements;
+using OsmSharp.UI.Renderer;
+using OsmSharp.Tools;
 
 namespace OsmSharp.UI.Map.Styles
 {
@@ -19,11 +20,13 @@ namespace OsmSharp.UI.Map.Styles
         public abstract SimpleColor? GetCanvasColor();
 
         /// <summary>
-        /// Translates the given object into corresponding elements.
+        /// Translates the given OSM objects into corresponding geometries.
         /// </summary>
-        /// <param name="zoom"></param>
-        /// <param name="osmGeo"></param>
+        /// <param name="projection">The projection to use.</param>
+        /// <param name="zoom">The zoom factor.</param>
+        /// <param name="osmGeo">The osm object.</param>
+        /// <param name="scene">The scene to fill with the resulting geometries.</param>
         /// <returns></returns>
-        public abstract IEnumerable<ElementBase> Translate(int zoom, OsmGeo osmGeo);
+        public abstract void Translate(Scene2D scene, IProjection projection, float zoom, OsmGeo osmGeo);
     }
 }

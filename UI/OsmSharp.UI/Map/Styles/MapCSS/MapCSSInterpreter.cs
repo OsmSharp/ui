@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
+using OsmSharp.Tools;
 using OsmSharp.Tools.Collections;
-using OsmSharp.UI.Map.Elements;
+using OsmSharp.Tools.Collections.Tags;
+using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
+using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene2DPrimitives;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {
@@ -20,12 +25,42 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         private readonly MapCSSFile _mapCSSFile;
 
         /// <summary>
+        /// Holds the fill layer offset.
+        /// </summary>
+        private const int FillLayerOffset = 10;
+
+        /// <summary>
+        /// Holds the casing layer offset.
+        /// </summary>
+        private const int CasingLayerOffset = 20;
+
+        /// <summary>
+        /// Holds the stroke layer offset.
+        /// </summary>
+        private const int StrokeLayerOffset = 30;
+
+        /// <summary>
+        /// Holds the icon/test layer offset.
+        /// </summary>
+        private const int IconTextLayerOffset = 40;
+
+
+        /// <summary>
         /// Creates a new MapCSS interpreter.
         /// </summary>
         /// <param name="mapCSSFile"></param>
         public MapCSSInterpreter(MapCSSFile mapCSSFile)
         {
             _mapCSSFile = mapCSSFile;
+        }
+
+        /// <summary>
+        /// Creates a new MapCSS interpreter from a stream.
+        /// </summary>
+        /// <param name="stream"></param>
+        public MapCSSInterpreter(Stream stream)
+        {
+            _mapCSSFile = MapCSSFile.FromStream(stream);
         }
 
         /// <summary>
@@ -47,35 +82,572 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <summary>
         /// Translates OSM objects into basic renderable primitives.
         /// </summary>
-        /// <param name="zoom"></param>
-        /// <param name="osmGeo"></param>
+        /// <param name="projection">The projection to use.</param>
+        /// <param name="zoom">The zoom factor.</param>
+        /// <param name="osmGeo">The osm object.</param>
+        /// <param name="scene">The scene to fill with the resulting geometries.</param>
         /// <returns></returns>
-        public override IEnumerable<ElementBase> Translate(int zoom, OsmGeo osmGeo)
+        public override void Translate(Scene2D scene, IProjection projection, float zoom, OsmGeo osmGeo)
         {
-            // instantiate the elements list.
-            var elements = new List<ElementBase>();
+            switch (osmGeo.Type)
+            {
+                case OsmType.Node:
+                    this.TranslateNode(scene, projection, zoom, osmGeo as Node);
+                    break;
+                case OsmType.Way:
+                    this.TranslateWay(scene, projection, zoom, osmGeo as Way);
+                    break;
+                case OsmType.Relation:
+                    break;
+                case OsmType.ChangeSet:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            //// interpret all rules on-by-one.
+            //foreach (var rule in _mapCSSFile.Rules)
+            //{
+            //    // select all elements.
+            //    var selectedObjects = new Dictionary<SelectorTypeEnum, OsmGeo>();
+            //    foreach (var selector in rule.Selectors)
+            //    {
+            //        // add elements that are selected.
+            //        foreach (var selectedObjectPair in selector.Selects((int) zoom, osmGeo))
+            //        {
+            //            selectedObjects[selectedObjectPair.Key] = selectedObjectPair.Value;
+            //        }
+            //    }
+
+            //    if (selectedObjects.Count > 0)
+            //    {
+            //        // the object was selected.
+            //        foreach (var selectedObjectPair in selectedObjects)
+            //        {
+            //            Way way;
+            //            switch (selectedObjectPair.Key)
+            //            {
+            //                case SelectorTypeEnum.Node:
+            //                    // translate it.
+            //                    foreach (var declaration in rule.Declarations)
+            //                    {
+
+            //                    }
+            //                    break;
+            //                case SelectorTypeEnum.Way:
+            //                    // convert way to line2D.
+            //                    way = (selectedObjectPair.Value as Way);
+            //                    if (way != null)
+            //                    {
+            //                        // the object is a way.					
+            //                        var x = new List<float>();
+            //                        var y = new List<float>();
+            //                        for (int idx = 0; idx < way.Nodes.Count; idx++)
+            //                        {
+            //                            x.Add((float) projection.LongitudeToX(way.Nodes[idx].Coordinate.Longitude));
+            //                            y.Add((float) projection.LatitudeToY(way.Nodes[idx].Coordinate.Latitude));
+            //                        }
+            //                        int color = SimpleColor.FromArgb(0, 255, 255, 255).Value;
+            //                        float width = 1;
+            //                        foreach (var declaration in rule.Declarations)
+            //                        {
+            //                            if (declaration is DeclarationInt)
+            //                            {
+            //                                var declarationInt = (declaration as DeclarationInt);
+            //                                if (declarationInt.Qualifier == DeclarationIntEnum.Color)
+            //                                {
+            //                                    color = declarationInt.Value;
+            //                                }
+            //                            }
+            //                            else if (declaration is DeclarationFloat)
+            //                            {
+            //                                var declarationFloat = (declaration as DeclarationFloat);
+            //                                if (declarationFloat.Qualifier == DeclarationFloatEnum.Width)
+            //                                {
+            //                                    width = declarationFloat.Value;
+            //                                }
+            //                            }
+            //                        }
+            //                        scene.AddLine(x.ToArray(), y.ToArray(), color, width);
+            //                    }
+            //                    break;
+            //                case SelectorTypeEnum.Relation:
+            //                    // translate it.
+            //                    foreach (var declaration in rule.Declarations)
+            //                    {
+
+            //                    }
+            //                    break;
+            //                case SelectorTypeEnum.Area:
+            //                    // translate it.
+            //                    // convert way to line2D.
+            //                    way = (selectedObjectPair.Value as Way);
+            //                    if (way != null)
+            //                    {
+            //                        // the object is a way.					
+            //                        var x = new List<float>();
+            //                        var y = new List<float>();
+            //                        for (int idx = 0; idx < way.Nodes.Count; idx++)
+            //                        {
+            //                            x.Add((float) projection.LongitudeToX(way.Nodes[idx].Coordinate.Longitude));
+            //                            y.Add((float) projection.LatitudeToY(way.Nodes[idx].Coordinate.Latitude));
+            //                        }
+            //                        int color = SimpleColor.FromArgb(0, 255, 255, 255).Value;
+            //                        float width = 1;
+            //                        foreach (var declaration in rule.Declarations)
+            //                        {
+            //                            if (declaration is DeclarationInt)
+            //                            {
+            //                                var declarationInt = (declaration as DeclarationInt);
+            //                                if (declarationInt.Qualifier == DeclarationIntEnum.Color)
+            //                                {
+            //                                    color = declarationInt.Value;
+            //                                }
+            //                            }
+            //                            else if (declaration is DeclarationFloat)
+            //                            {
+            //                                var declarationFloat = (declaration as DeclarationFloat);
+            //                                if (declarationFloat.Qualifier == DeclarationFloatEnum.Width)
+            //                                {
+            //                                    width = declarationFloat.Value;
+            //                                }
+            //                            }
+            //                        }
+            //                        scene.AddPolygon(x.ToArray(), y.ToArray(), color, width, true);
+            //                    }
+            //                    break;
+            //                    break;
+            //                case SelectorTypeEnum.Line:
+            //                    // translate it.
+            //                    foreach (var declaration in rule.Declarations)
+            //                    {
+
+            //                    }
+            //                    break;
+            //                case SelectorTypeEnum.Canvas:
+            //                    break;
+            //                case SelectorTypeEnum.Star:
+            //                    // translate it.
+            //                    foreach (var declaration in rule.Declarations)
+            //                    {
+
+            //                    }
+            //                    break;
+            //                default:
+            //                    throw new ArgumentOutOfRangeException();
+            //            }
+            //        }
+            //    }
+            //}
+        }
+
+        /// <summary>
+        /// Translates a node.
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="projection"></param>
+        /// <param name="zoom"></param>
+        /// <param name="node"></param>
+        private void TranslateNode(Scene2D scene, IProjection projection, float zoom, Node node)
+        {
+            int? color = null;
+            int? fillColor = null;
+            int? zIndex = null;
+            int? casingColor = null;
+            int? extrude = null;
+            int? extrudeEdgeColor = null;
+            int? extrudeFaceColor = null;
+            int? iconWidth = null;
+            int? iconHeight = null;
+            int? fontSize = null;
+            int? textColor = null;
+            int? textOffset = null;
+            int? maxWidth = null;
+            int? textHaloColor = null;
+            int? textHaloRadius = null;
+
+            float? width = null;
+            float? fillOpacity = null;
+            float? opacity = null;
+            float? casingOpacity = null;
+            float? extrudeEdgeOpacity = null;
+            float? extrudeFaceOpacity = null;
+            float? extrudeEdgeWidth = null;
+            float? iconOpacity = null;
+            float? textOpacity = null;
+
+            float? x = null, y = null;
+
+            // interpret all rules on-by-one.
             foreach (var rule in _mapCSSFile.Rules)
             {
-                // select all elements.
-                var selectedObjects = new HashSet<OsmGeo>();
-                foreach (var selector in rule.Selectors)
-                { // add elements that are selected.
-                    foreach (var selectedObject in selector.Selects(zoom, osmGeo))
-                    {
-                        selectedObjects.Add(selectedObject);
+                if (rule.HasToBeAppliedTo((int)zoom, node))
+                {
+                    // get x/y.
+                    if (!x.HasValue)
+                    { // pre-calculate x/y.
+                        x = (float)projection.LongitudeToX(node.Coordinate.Longitude);
+                        y = (float)projection.LatitudeToY(node.Coordinate.Latitude);
                     }
-                }
 
-                if (selectedObjects.Count > 0)
-                { // the object was selected. 
-                    // translate it.
                     foreach (var declaration in rule.Declarations)
                     {
-
+                        if (declaration is DeclarationInt)
+                        {
+                            var declarationInt = (declaration as DeclarationInt);
+                            switch (declarationInt.Qualifier)
+                            {
+                                case DeclarationIntEnum.FillColor:
+                                    fillColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.ZIndex:
+                                    zIndex = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.Color:
+                                    color = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.CasingColor:
+                                    casingColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.Extrude:
+                                    extrude = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.ExtrudeEdgeColor:
+                                    extrudeEdgeColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.ExtrudeFaceColor:
+                                    extrudeFaceColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.IconWidth:
+                                    iconWidth = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.IconHeight:
+                                    iconHeight = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.FontSize:
+                                    fontSize = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.TextColor:
+                                    textColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.TextOffset:
+                                    textOffset = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.MaxWidth:
+                                    maxWidth = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.TextHaloColor:
+                                    textHaloColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.TextHaloRadius:
+                                    textHaloRadius = declarationInt.Value;
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+                        else if (declaration is DeclarationFloat)
+                        {
+                            var declarationFloat = (declaration as DeclarationFloat);
+                            switch (declarationFloat.Qualifier)
+                            {
+                                case DeclarationFloatEnum.Width:
+                                    width = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.FillOpacity:
+                                    width = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.Opacity:
+                                    opacity = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.CasingOpacity:
+                                    casingOpacity = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.ExtrudeEdgeOpacity:
+                                    extrudeEdgeOpacity = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.ExtrudeFaceOpacity:
+                                    extrudeFaceOpacity = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.ExtrudeEdgeWidth:
+                                    extrudeEdgeWidth = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.IconOpacity:
+                                    iconOpacity = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.TextOpacity:
+                                    textOpacity = declarationFloat.Value;
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
                     }
                 }
             }
-            return elements;
+
+            // validate what's there.
+
+            // calculate the layer to render on if any.
+            int sceneLayer = 0;
+            double? osmLayer = node.Tags.GetNumericValue("layer");
+            if (osmLayer.HasValue)
+            { // multiply by 100, allow another 100 sub divisions for each OSM layer.
+                sceneLayer = (int) osmLayer*100;
+            }
+
+            // interpret the results.
+            if (color.HasValue)
+            {
+                if (width.HasValue)
+                {
+                    sceneLayer = sceneLayer + IconTextLayerOffset;
+                    scene.AddPoint(sceneLayer, (float)projection.LongitudeToX(node.Coordinate.Longitude),
+                                   (float)projection.LatitudeToY(node.Coordinate.Latitude),
+                                   color.Value, width.Value);
+                    sceneLayer = sceneLayer - IconTextLayerOffset;
+                }
+                else
+                {
+                    sceneLayer = sceneLayer + IconTextLayerOffset;
+                    scene.AddPoint(sceneLayer, (float)projection.LongitudeToX(node.Coordinate.Longitude),
+                                   (float)projection.LatitudeToY(node.Coordinate.Latitude),
+                                   color.Value, 1);
+                    sceneLayer = sceneLayer - IconTextLayerOffset;
+                }
+            }
+            if (iconHeight.HasValue || iconWidth.HasValue)
+            { // an icon is to be drawn!
+                sceneLayer = sceneLayer + IconTextLayerOffset; // offset to correct layer.
+            }
+        }
+
+        /// <summary>
+        /// Translates a way.
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="projection"></param>
+        /// <param name="zoom"></param>
+        /// <param name="way"></param>
+        private void TranslateWay(Scene2D scene, IProjection projection, float zoom, Way way)
+        {
+            int? color = null;
+            int? fillColor = null;
+            int? zIndex = null;
+            int? casingColor = null;
+            int? extrude = null;
+            int? extrudeEdgeColor = null;
+            int? extrudeFaceColor = null;
+            int? iconWidth = null;
+            int? iconHeight = null;
+            int? fontSize = null;
+            int? textColor = null;
+            int? textOffset = null;
+            int? maxWidth = null;
+            int? textHaloColor = null;
+            int? textHaloRadius = null;
+
+            float? width = null;
+            float? fillOpacity = null;
+            float? opacity = null;
+            float? casingOpacity = null;
+            float? extrudeEdgeOpacity = null;
+            float? extrudeFaceOpacity = null;
+            float? extrudeEdgeWidth = null;
+            float? iconOpacity = null;
+            float? textOpacity = null;
+            float? casingWidth = null;
+
+            LineJoin lineJoin = LineJoin.None;
+
+            float[] x = null, y = null;
+
+            // interpret all rules on-by-one.
+            foreach (var rule in _mapCSSFile.Rules)
+            {
+                if (rule.HasToBeAppliedTo((int)zoom, way))
+                {
+                    // get x/y.
+                    if (x == null)
+                    { // pre-calculate x/y.
+                        x = new float[way.Nodes.Count];
+                        y = new float[way.Nodes.Count];
+                        for (int idx = 0; idx < way.Nodes.Count; idx++)
+                        {
+                            x[idx] = (float)projection.LongitudeToX(way.Nodes[idx].Coordinate.Longitude);
+                            y[idx] = (float)projection.LatitudeToY(way.Nodes[idx].Coordinate.Latitude);
+                        }
+                    }
+
+                    foreach (var declaration in rule.Declarations)
+                    {
+                        if (declaration is DeclarationInt)
+                        {
+                            var declarationInt = (declaration as DeclarationInt);
+                            switch (declarationInt.Qualifier)
+                            {
+                                case DeclarationIntEnum.FillColor:
+                                    fillColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.ZIndex:
+                                    zIndex = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.Color:
+                                    color = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.CasingColor:
+                                    casingColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.Extrude:
+                                    extrude = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.ExtrudeEdgeColor:
+                                    extrudeEdgeColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.ExtrudeFaceColor:
+                                    extrudeFaceColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.IconWidth:
+                                    iconWidth = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.IconHeight:
+                                    iconHeight = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.FontSize:
+                                    fontSize = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.TextColor:
+                                    textColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.TextOffset:
+                                    textOffset = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.MaxWidth:
+                                    maxWidth = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.TextHaloColor:
+                                    textHaloColor = declarationInt.Value;
+                                    break;
+                                case DeclarationIntEnum.TextHaloRadius:
+                                    textHaloRadius = declarationInt.Value;
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+                        else if (declaration is DeclarationFloat)
+                        {
+                            var declarationFloat = (declaration as DeclarationFloat);
+                            switch (declarationFloat.Qualifier)
+                            {
+                                case DeclarationFloatEnum.Width:
+                                    width = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.FillOpacity:
+                                    width = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.Opacity:
+                                    opacity = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.CasingOpacity:
+                                    casingOpacity = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.ExtrudeEdgeOpacity:
+                                    extrudeEdgeOpacity = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.ExtrudeFaceOpacity:
+                                    extrudeFaceOpacity = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.ExtrudeEdgeWidth:
+                                    extrudeEdgeWidth = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.IconOpacity:
+                                    iconOpacity = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.TextOpacity:
+                                    textOpacity = declarationFloat.Value;
+                                    break;
+                                case DeclarationFloatEnum.CasingWidth:
+                                    casingWidth = declarationFloat.Value;
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+                        else if (declaration is DeclarationLineJoin)
+                        {
+                            var declarationLineJoin = (declaration as DeclarationLineJoin);
+                            switch (declarationLineJoin.Value)
+                            {
+                                case LineJoinEnum.Round:
+                                    lineJoin = LineJoin.Miter;
+                                    break;
+                                case LineJoinEnum.Miter:
+                                    lineJoin = LineJoin.Miter;
+                                    break;
+                                case LineJoinEnum.Bevel:
+                                    lineJoin = LineJoin.Bevel;
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+                    }
+                }
+            }
+
+            // validate what's there.
+
+            // calculate the layer to render on if any.
+            int sceneLayer = 0;
+            double? osmLayer = way.Tags.GetNumericValue("layer");
+            if (osmLayer.HasValue)
+            { // multiply by 100, allow another 100 sub divisions for each OSM layer.
+                sceneLayer = (int)osmLayer * 100;
+            }
+
+            // add the z-index.
+            if (zIndex.HasValue)
+            {
+                sceneLayer = sceneLayer + zIndex.Value;
+            }
+
+            // interpret the results.
+            if (x != null)
+            { // there is a valid interpretation of this way.
+                if (way.IsOfType(MapCSSTypes.Area))
+                { // the way is an area. check if it can be rendered as an area.
+                    if (fillColor.HasValue)
+                    { // render as an area.
+                        sceneLayer = sceneLayer + FillLayerOffset;
+                        scene.AddPolygon(sceneLayer, x, y, fillColor.Value, 1, true);
+                        sceneLayer = sceneLayer - FillLayerOffset;
+                        if (color.HasValue)
+                        {
+                            sceneLayer = sceneLayer + CasingLayerOffset;
+                            scene.AddPolygon(sceneLayer, x, y, color.Value, 1, false);
+                            sceneLayer = sceneLayer - CasingLayerOffset;
+                        }
+                    }
+                }
+
+                // the way has to rendered as a line.
+                if (color.HasValue)
+                {
+                    sceneLayer = sceneLayer + StrokeLayerOffset;
+                    if (!width.HasValue)
+                    {
+                        width = 1;
+                    }
+                    scene.AddLine(sceneLayer, x, y, color.Value, width.Value, lineJoin);
+                    if (casingWidth.HasValue && casingColor.HasValue)
+                    {
+                        scene.AddLine(sceneLayer - 1, x, y, casingColor.Value, width.Value + (2*casingWidth.Value), lineJoin);
+                    }
+                    sceneLayer = sceneLayer - StrokeLayerOffset;
+                    return;
+                }
+            }
         }
     }
 }

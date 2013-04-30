@@ -13,17 +13,24 @@ namespace OsmSharp.UI.Renderer
 	/// </summary>
 	public class Scene2D
 	{
-		/// <summary>
-		/// Holds a list of primitives.
-		/// </summary>
-		private List<IScene2DPrimitive> _primitives;
+        /// <summary>
+        /// Holds all primitives indexed per layer and by id.
+        /// </summary>
+	    private readonly SortedDictionary<int, Dictionary<uint, IScene2DPrimitive>>  _primitives; 
+
+        /// <summary>
+        /// Holds the next primitive id.
+        /// </summary>
+	    private uint _nextId = 0;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.UI.Renderer.Scene2D"/> class.
 		/// </summary>
 		public Scene2D()
 		{
-			_primitives = new List<IScene2DPrimitive>();
+            _primitives = new SortedDictionary<int, Dictionary<uint, IScene2DPrimitive>>();
+
+            this.BackColor = SimpleColor.FromArgb(0, 255, 255, 255).Value; // fully transparent.
 		}
 
 		/// <summary>
@@ -32,15 +39,69 @@ namespace OsmSharp.UI.Renderer
 		/// <param name="view">View.</param>
 		internal IEnumerable<IScene2DPrimitive> Get(View2D view)
 		{
-			List<IScene2DPrimitive> primitivesInView = new List<IScene2DPrimitive>();
-			foreach(IScene2DPrimitive primitive in _primitives)
-			{
-				if(primitive.IsVisibleIn(view))
-				{
-					primitivesInView.Add(primitive);
-				}
-			}
-			return primitivesInView;
+			var primitivesInView = new List<IScene2DPrimitive>();
+		    foreach (var layer in _primitives)
+		    { // loop over all layers in order.
+		        foreach (KeyValuePair<uint, IScene2DPrimitive> primitivePair in layer.Value)
+		        { // loop over all primitives in order.
+		            if (primitivePair.Value.IsVisibleIn(view))
+		            {
+		                primitivesInView.Add(primitivePair.Value);
+		            }
+		        }
+		    }
+		    return primitivesInView;
+		}
+
+        /// <summary>
+        /// Gets/sets the backcolor of the scene.
+        /// </summary>
+	    public int BackColor { get; set; }
+
+        /// <summary>
+        /// Removes the primitive with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool Remove(uint id)
+        {
+            foreach (var layer in _primitives)
+            {
+                if (layer.Value.Remove(id))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+	    /// <summary>
+	    /// Adds a point.
+	    /// </summary>
+	    /// <param name="layer"></param>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="color">Color.</param>
+	    /// <param name="size">Size.</param>
+	    public uint AddPoint(int layer, float x, float y, int color, float size)
+        {
+            uint id = _nextId;
+            _nextId++;
+
+	        Dictionary<uint, IScene2DPrimitive> layerDic;
+            if (!_primitives.TryGetValue(layer, out layerDic))
+            {
+                layerDic = new Dictionary<uint, IScene2DPrimitive>();
+                _primitives.Add(layer, layerDic);
+            }
+            layerDic.Add(id, new Point2D()
+            {
+                Color = color,
+                X = x,
+                Y = y,
+                Size = size
+            });
+            return id;
 		}
 
 		/// <summary>
@@ -50,24 +111,60 @@ namespace OsmSharp.UI.Renderer
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="color">Color.</param>
 		/// <param name="size">Size.</param>
-		public void AddPoint(float x, float y, int color, float size)
+		public uint AddPoint(float x, float y, int color, float size)
 		{
-			_primitives.Add(new Point2D(){
-				Color = color,
-				X = x,
-				Y = y,
-				Size = size
-			});
+		    return this.AddPoint(0, x, y, color, size);
 		}
 
-		/// <summary>
-		/// Adds a line.
-		/// </summary>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="width">Width.</param>
-		public void AddLine (float[] x, float[] y, int color, float width)
+        /// <summary>
+        /// Adds a line.
+        /// </summary>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        /// <param name="color">Color.</param>
+        /// <param name="width">Width.</param>
+        public uint AddLine(float[] x, float[] y, int color, float width)
+        {
+            return this.AddLine(0, x, y, color, width);
+        }
+
+	    /// <summary>
+	    /// Adds a line.
+	    /// </summary>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="color">Color.</param>
+	    /// <param name="width">Width.</param>
+	    /// <param name="lineJoin"></param>
+	    public uint AddLine(float[] x, float[] y, int color, float width, LineJoin lineJoin)
+	    {
+	        return this.AddLine(0, x, y, color, width, lineJoin);
+	    }
+
+	    /// <summary>
+	    /// Adds a line.
+	    /// </summary>
+	    /// <param name="layer"></param>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="color">Color.</param>
+	    /// <param name="width">Width.</param>
+	    /// <returns></returns>
+	    public uint AddLine(int layer, float[] x, float[] y, int color, float width)
+        {
+            return this.AddLine(layer, x, y, color, width, LineJoin.None);
+        }
+
+	    /// <summary>
+	    /// Adds a line.
+	    /// </summary>
+	    /// <param name="layer"></param>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="color">Color.</param>
+	    /// <param name="width">Width.</param>
+	    /// <param name="lineJoin"></param>
+	    public uint AddLine(int layer, float[] x, float[] y, int color, float width, LineJoin lineJoin)
 		{
 			if (y == null)
 				throw new ArgumentNullException ("y");
@@ -76,22 +173,42 @@ namespace OsmSharp.UI.Renderer
 			if(x.Length != y.Length)
 				throw new ArgumentException("x and y arrays have different lenghts!");
 
-			_primitives.Add(new Line2D(){
-				Color = color,
-				X = x,
-				Y = y,
-				Width = width
-			});
+            uint id = _nextId;
+            _nextId++;
+
+            Dictionary<uint, IScene2DPrimitive> layerDic;
+            if (!_primitives.TryGetValue(layer, out layerDic))
+            {
+                layerDic = new Dictionary<uint, IScene2DPrimitive>();
+                _primitives.Add(layer, layerDic);
+            }
+	        layerDic.Add(id, new Line2D(x, y, color, width, lineJoin));
+		    return id;
 		}
-		/// <summary>
-		/// Adds the polygon.
-		/// </summary>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="width">Width.</param>
-		/// <param name="fill">If set to <c>true</c> fill.</param>
-		public void AddPolygon (float[] x, float[] y, int color, float width, bool fill)
+
+        /// <summary>
+        /// Adds the polygon.
+        /// </summary>
+        /// <param name="x">The x coordinate.</param>
+        /// <param name="y">The y coordinate.</param>
+        /// <param name="color">Color.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="fill">If set to <c>true</c> fill.</param>
+	    public uint AddPolygon(float[] x, float[] y, int color, float width, bool fill)
+        {
+            return this.AddPolygon(0, x, y, color, width, fill);
+        }
+
+	    /// <summary>
+	    /// Adds the polygon.
+	    /// </summary>
+	    /// <param name="layer"></param>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="color">Color.</param>
+	    /// <param name="width">Width.</param>
+	    /// <param name="fill">If set to <c>true</c> fill.</param>
+	    public uint AddPolygon(int layer, float[] x, float[] y, int color, float width, bool fill)
 		{
 			if (y == null)
 				throw new ArgumentNullException ("y");
@@ -100,14 +217,17 @@ namespace OsmSharp.UI.Renderer
 			if (x.Length != y.Length)
 				throw new ArgumentException("x and y arrays have different lenghts!");
 
-			
-			_primitives.Add(new Polygon2D(){
-				Color = color,
-				X = x,
-				Y = y,
-				Width = width,
-				Fill = fill
-			});
+            uint id = _nextId;
+            _nextId++;
+
+            Dictionary<uint, IScene2DPrimitive> layerDic;
+            if (!_primitives.TryGetValue(layer, out layerDic))
+            {
+                layerDic = new Dictionary<uint, IScene2DPrimitive>();
+                _primitives.Add(layer, layerDic);
+            }
+	        layerDic.Add(id, new Polygon2D(x, y, color, width, fill));
+            return id;
 		}
 	}
 }

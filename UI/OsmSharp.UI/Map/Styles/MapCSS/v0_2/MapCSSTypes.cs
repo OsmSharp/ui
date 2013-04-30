@@ -50,6 +50,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
         /// <returns></returns>
         public static bool IsOfType(this OsmGeo osmGeo, MapCSSTypes types)
         {
+            string area = string.Empty;
             switch (types)
             {
                 case MapCSSTypes.Node:
@@ -65,7 +66,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         if (way != null &&
                             way.Nodes[0] == way.Nodes[way.Nodes.Count - 1])
                         { // first node is the same as the last one.
-                            string area = string.Empty;
                             if (way.Tags != null &&
                                 way.Tags.TryGetValue("area", out area) &&
                                 area == "yes")
@@ -82,9 +82,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
 					break;
                 case MapCSSTypes.Area:
                     if (osmGeo.Type == OsmType.Way)
-                    {
-                        // the type is way, if it is not a line it is an area.
-                        return !osmGeo.IsOfType(MapCSSTypes.Line);
+                    { // the type is way way. now check for a line.
+                        var way = (osmGeo as Way);
+                        if (way != null &&
+                            way.Nodes[0] == way.Nodes[way.Nodes.Count - 1])
+                        { // first node is the same as the last one.
+                            return true;
+                        }
                     }
                     return false;
                 default:

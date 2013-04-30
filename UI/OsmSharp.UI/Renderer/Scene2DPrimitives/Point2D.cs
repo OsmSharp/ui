@@ -57,7 +57,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// <param name="view">View.</param>
 		public bool IsVisibleIn (View2D view)
 		{
-			return view.IsIn(this.X, this.Y);
+			return view.Contains(this.X, this.Y);
 		}
 
 		#endregion

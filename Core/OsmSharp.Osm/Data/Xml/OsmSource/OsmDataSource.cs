@@ -734,21 +734,21 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
             IList<OsmGeo> res = new List<OsmGeo>();
             foreach (Node node in _nodes.Values)
             {
-                if (filter.Evaluate(node) && node.Shape.Inside(box))
+                if ((filter == null || filter.Evaluate(node)) && node.Shape.Inside(box))
                 {
                     res.Add(node);
                 }
             } 
             foreach (Way way in _ways.Values)
             {
-                if (filter.Evaluate(way) && way.Shape.Inside(box))
+                if ((filter == null || filter.Evaluate(way)) && way.Shape.Inside(box))
                 {
                     res.Add(way);
                 }
             }
             foreach (Relation relation in _relations.Values)
             {
-                if (filter.Evaluate(relation) && relation.Shape.Inside(box))
+                if ((filter == null || filter.Evaluate(relation)) && relation.Shape.Inside(box))
                 {
                     res.Add(relation);
                 }
