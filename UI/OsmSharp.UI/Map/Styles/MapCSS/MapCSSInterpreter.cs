@@ -25,6 +25,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         private readonly MapCSSFile _mapCSSFile;
 
         /// <summary>
+        /// Holds the MapCSS image source.
+        /// </summary>
+        private readonly IMapCSSImageSource _mapCSSImageSource;
+
+        /// <summary>
         /// Holds the fill layer offset.
         /// </summary>
         private const int FillLayerOffset = 10;
@@ -49,18 +54,22 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// Creates a new MapCSS interpreter.
         /// </summary>
         /// <param name="mapCSSFile"></param>
-        public MapCSSInterpreter(MapCSSFile mapCSSFile)
+        /// <param name="imageSource"></param>
+        public MapCSSInterpreter(MapCSSFile mapCSSFile, IMapCSSImageSource imageSource)
         {
             _mapCSSFile = mapCSSFile;
+            _mapCSSImageSource = imageSource;
         }
 
         /// <summary>
         /// Creates a new MapCSS interpreter from a stream.
         /// </summary>
         /// <param name="stream"></param>
-        public MapCSSInterpreter(Stream stream)
+        /// <param name="imageSource"></param>
+        public MapCSSInterpreter(Stream stream, IMapCSSImageSource imageSource)
         {
             _mapCSSFile = MapCSSFile.FromStream(stream);
+            _mapCSSImageSource = imageSource;
         }
 
         /// <summary>
@@ -104,141 +113,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            //// interpret all rules on-by-one.
-            //foreach (var rule in _mapCSSFile.Rules)
-            //{
-            //    // select all elements.
-            //    var selectedObjects = new Dictionary<SelectorTypeEnum, OsmGeo>();
-            //    foreach (var selector in rule.Selectors)
-            //    {
-            //        // add elements that are selected.
-            //        foreach (var selectedObjectPair in selector.Selects((int) zoom, osmGeo))
-            //        {
-            //            selectedObjects[selectedObjectPair.Key] = selectedObjectPair.Value;
-            //        }
-            //    }
-
-            //    if (selectedObjects.Count > 0)
-            //    {
-            //        // the object was selected.
-            //        foreach (var selectedObjectPair in selectedObjects)
-            //        {
-            //            Way way;
-            //            switch (selectedObjectPair.Key)
-            //            {
-            //                case SelectorTypeEnum.Node:
-            //                    // translate it.
-            //                    foreach (var declaration in rule.Declarations)
-            //                    {
-
-            //                    }
-            //                    break;
-            //                case SelectorTypeEnum.Way:
-            //                    // convert way to line2D.
-            //                    way = (selectedObjectPair.Value as Way);
-            //                    if (way != null)
-            //                    {
-            //                        // the object is a way.					
-            //                        var x = new List<float>();
-            //                        var y = new List<float>();
-            //                        for (int idx = 0; idx < way.Nodes.Count; idx++)
-            //                        {
-            //                            x.Add((float) projection.LongitudeToX(way.Nodes[idx].Coordinate.Longitude));
-            //                            y.Add((float) projection.LatitudeToY(way.Nodes[idx].Coordinate.Latitude));
-            //                        }
-            //                        int color = SimpleColor.FromArgb(0, 255, 255, 255).Value;
-            //                        float width = 1;
-            //                        foreach (var declaration in rule.Declarations)
-            //                        {
-            //                            if (declaration is DeclarationInt)
-            //                            {
-            //                                var declarationInt = (declaration as DeclarationInt);
-            //                                if (declarationInt.Qualifier == DeclarationIntEnum.Color)
-            //                                {
-            //                                    color = declarationInt.Value;
-            //                                }
-            //                            }
-            //                            else if (declaration is DeclarationFloat)
-            //                            {
-            //                                var declarationFloat = (declaration as DeclarationFloat);
-            //                                if (declarationFloat.Qualifier == DeclarationFloatEnum.Width)
-            //                                {
-            //                                    width = declarationFloat.Value;
-            //                                }
-            //                            }
-            //                        }
-            //                        scene.AddLine(x.ToArray(), y.ToArray(), color, width);
-            //                    }
-            //                    break;
-            //                case SelectorTypeEnum.Relation:
-            //                    // translate it.
-            //                    foreach (var declaration in rule.Declarations)
-            //                    {
-
-            //                    }
-            //                    break;
-            //                case SelectorTypeEnum.Area:
-            //                    // translate it.
-            //                    // convert way to line2D.
-            //                    way = (selectedObjectPair.Value as Way);
-            //                    if (way != null)
-            //                    {
-            //                        // the object is a way.					
-            //                        var x = new List<float>();
-            //                        var y = new List<float>();
-            //                        for (int idx = 0; idx < way.Nodes.Count; idx++)
-            //                        {
-            //                            x.Add((float) projection.LongitudeToX(way.Nodes[idx].Coordinate.Longitude));
-            //                            y.Add((float) projection.LatitudeToY(way.Nodes[idx].Coordinate.Latitude));
-            //                        }
-            //                        int color = SimpleColor.FromArgb(0, 255, 255, 255).Value;
-            //                        float width = 1;
-            //                        foreach (var declaration in rule.Declarations)
-            //                        {
-            //                            if (declaration is DeclarationInt)
-            //                            {
-            //                                var declarationInt = (declaration as DeclarationInt);
-            //                                if (declarationInt.Qualifier == DeclarationIntEnum.Color)
-            //                                {
-            //                                    color = declarationInt.Value;
-            //                                }
-            //                            }
-            //                            else if (declaration is DeclarationFloat)
-            //                            {
-            //                                var declarationFloat = (declaration as DeclarationFloat);
-            //                                if (declarationFloat.Qualifier == DeclarationFloatEnum.Width)
-            //                                {
-            //                                    width = declarationFloat.Value;
-            //                                }
-            //                            }
-            //                        }
-            //                        scene.AddPolygon(x.ToArray(), y.ToArray(), color, width, true);
-            //                    }
-            //                    break;
-            //                    break;
-            //                case SelectorTypeEnum.Line:
-            //                    // translate it.
-            //                    foreach (var declaration in rule.Declarations)
-            //                    {
-
-            //                    }
-            //                    break;
-            //                case SelectorTypeEnum.Canvas:
-            //                    break;
-            //                case SelectorTypeEnum.Star:
-            //                    // translate it.
-            //                    foreach (var declaration in rule.Declarations)
-            //                    {
-
-            //                    }
-            //                    break;
-            //                default:
-            //                    throw new ArgumentOutOfRangeException();
-            //            }
-            //        }
-            //    }
-            //}
         }
 
         /// <summary>
@@ -277,6 +151,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             float? textOpacity = null;
 
             float? x = null, y = null;
+            byte[] iconImage = null;
+            byte[] image = null;
+            byte[] fillImage = null;
+            byte[] shieldImage = null;
 
             // interpret all rules on-by-one.
             foreach (var rule in _mapCSSFile.Rules)
@@ -382,6 +260,40 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     throw new ArgumentOutOfRangeException();
                             }
                         }
+                        else if (declaration is DeclarationString)
+                        {
+                            DeclarationString declarationString = declaration as DeclarationString;
+                            switch (declarationString.Qualifier)
+                            {
+                                case DeclarationStringEnum.FontFamily:
+                                    break;
+                                case DeclarationStringEnum.Text:
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+                        else if (declaration is DeclarationURL)
+                        {
+                            DeclarationURL declarationURL = declaration as DeclarationURL;
+                            switch (declarationURL.Qualifier)
+                            {
+                                case DeclarationURLEnum.Image:
+                                    _mapCSSImageSource.TryGet(declarationURL.Value, out image);
+                                    break;
+                                case DeclarationURLEnum.FillImage:
+                                    _mapCSSImageSource.TryGet(declarationURL.Value, out fillImage);
+                                    break;
+                                case DeclarationURLEnum.IconImage:
+                                    _mapCSSImageSource.TryGet(declarationURL.Value, out iconImage);
+                                    break;
+                                case DeclarationURLEnum.ShieldImage:
+                                    _mapCSSImageSource.TryGet(declarationURL.Value, out shieldImage);
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
                     }
                 }
             }
@@ -416,9 +328,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     sceneLayer = sceneLayer - IconTextLayerOffset;
                 }
             }
-            if (iconHeight.HasValue || iconWidth.HasValue)
+            if (iconImage != null)
             { // an icon is to be drawn!
                 sceneLayer = sceneLayer + IconTextLayerOffset; // offset to correct layer.
+
+                scene.AddIcon(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
+                              (float) projection.LatitudeToY(node.Coordinate.Latitude),
+                              iconImage);
+
+                sceneLayer = sceneLayer - IconTextLayerOffset; // offset to correct layer.
             }
         }
 
@@ -459,6 +377,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             float? casingWidth = null;
 
             LineJoin lineJoin = LineJoin.None;
+            int[] dashes = null;
 
             float[] x = null, y = null;
 
@@ -592,6 +511,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     throw new ArgumentOutOfRangeException();
                             }
                         }
+                        else if (declaration is DeclarationDashes)
+                        {
+                            var declarationDashes = (declaration as DeclarationDashes);
+                            dashes = declarationDashes.Value;
+                        }
                     }
                 }
             }
@@ -639,10 +563,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     {
                         width = 1;
                     }
-                    scene.AddLine(sceneLayer, x, y, color.Value, width.Value, lineJoin);
+                    scene.AddLine(sceneLayer, x, y, color.Value, width.Value, lineJoin, dashes);
                     if (casingWidth.HasValue && casingColor.HasValue)
                     {
-                        scene.AddLine(sceneLayer - 1, x, y, casingColor.Value, width.Value + (2*casingWidth.Value), lineJoin);
+                        scene.AddLine(sceneLayer - 1, x, y, casingColor.Value, width.Value + (2 * casingWidth.Value), lineJoin, dashes);
                     }
                     sceneLayer = sceneLayer - StrokeLayerOffset;
                     return;

@@ -43,14 +43,12 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="OsmSharp.Tools">
-      <HintPath>..\..\Core\OutputAndroid\OsmSharp.Tools.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Renderer\CanvasRenderer2D.cs" />
     <Compile Include="CanvasRenderer2DView.cs" />
+    <Compile Include="MapView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -66,6 +64,10 @@
     <ProjectReference Include="..\..\OsmSharp.UI\OsmSharp.UI.Android.csproj">
       <Project>{87AF65F0-A706-4145-9779-E810A717AD5A}</Project>
       <Name>OsmSharp.UI.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Core\OsmSharp.Tools\OsmSharp.Tools.Android.csproj">
+      <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
+      <Name>OsmSharp.Tools.Android</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>

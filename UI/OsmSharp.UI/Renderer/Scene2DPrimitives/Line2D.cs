@@ -19,7 +19,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <param name="lineJoin"></param>
-        public Line2D(float[] x, float[] y, int color, float width, LineJoin lineJoin)
+        public Line2D(float[] x, float[] y, int color, float width, LineJoin lineJoin, int[] dashes)
            : this()
         {
             this.X = x;
@@ -27,6 +27,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.Color = color;
             this.Width = width;
             this.LineJoin = lineJoin;
+            this.Dashes = dashes;
 
             _minX = int.MaxValue;
             _maxX = int.MinValue;
@@ -68,7 +69,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="maxX"></param>
         /// <param name="minY"></param>
         /// <param name="maxY"></param>
-        public Line2D(float[] x, float[] y, int color, float width, LineJoin lineJoin,
+        public Line2D(float[] x, float[] y, int color, float width, LineJoin lineJoin, int[] dashes,
             int minX, int maxX, int minY, int maxY)
             : this()
         {
@@ -77,12 +78,22 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.Color = color;
             this.Width = width;
             this.LineJoin = lineJoin;
+            this.Dashes = dashes;
 
             _minX = minX;
             _maxX = maxX;
             _minY = minY;
             _maxY = maxY;
-        }
+		}
+		
+		/// <summary>
+		/// Gets or sets the tag.
+		/// </summary>
+		/// <value>The tag.</value>
+		public object Tag {
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// Gets or sets the x.
@@ -123,7 +134,12 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <summary>
         /// Gets or sets the linejoin.
         /// </summary>
-	    public LineJoin LineJoin { get; set; }
+	    public LineJoin LineJoin { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the line dashses.
+        /// </summary>
+        public int[] Dashes { get; private set; }
 
 		#region IScene2DPrimitive implementation
 

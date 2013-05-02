@@ -136,9 +136,10 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
 	    /// <param name="lineJoin"></param>
-	    public uint AddLine(float[] x, float[] y, int color, float width, LineJoin lineJoin)
+	    /// <param name="dashes"></param>
+	    public uint AddLine(float[] x, float[] y, int color, float width, LineJoin lineJoin, int[] dashes)
 	    {
-	        return this.AddLine(0, x, y, color, width, lineJoin);
+            return this.AddLine(0, x, y, color, width, lineJoin, dashes);
 	    }
 
 	    /// <summary>
@@ -152,7 +153,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <returns></returns>
 	    public uint AddLine(int layer, float[] x, float[] y, int color, float width)
         {
-            return this.AddLine(layer, x, y, color, width, LineJoin.None);
+            return this.AddLine(layer, x, y, color, width, LineJoin.None, null);
         }
 
 	    /// <summary>
@@ -164,7 +165,8 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
 	    /// <param name="lineJoin"></param>
-	    public uint AddLine(int layer, float[] x, float[] y, int color, float width, LineJoin lineJoin)
+	    /// <param name="dashes"></param>
+	    public uint AddLine(int layer, float[] x, float[] y, int color, float width, LineJoin lineJoin, int[] dashes)
 		{
 			if (y == null)
 				throw new ArgumentNullException ("y");
@@ -182,7 +184,7 @@ namespace OsmSharp.UI.Renderer
                 layerDic = new Dictionary<uint, IScene2DPrimitive>();
                 _primitives.Add(layer, layerDic);
             }
-	        layerDic.Add(id, new Line2D(x, y, color, width, lineJoin));
+	        layerDic.Add(id, new Line2D(x, y, color, width, lineJoin, dashes));
 		    return id;
 		}
 
@@ -229,5 +231,59 @@ namespace OsmSharp.UI.Renderer
 	        layerDic.Add(id, new Polygon2D(x, y, color, width, fill));
             return id;
 		}
-	}
+
+        /// <summary>
+        /// Adds an icon.
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="iconImage"></param>
+        /// <returns></returns>
+        public uint AddIcon(int layer, float x, float y, byte[] iconImage)
+        {
+            if (iconImage == null)
+                throw new ArgumentNullException("iconImage");
+
+            uint id = _nextId;
+            _nextId++;
+
+            Dictionary<uint, IScene2DPrimitive> layerDic;
+            if (!_primitives.TryGetValue(layer, out layerDic))
+            {
+                layerDic = new Dictionary<uint, IScene2DPrimitive>();
+                _primitives.Add(layer, layerDic);
+            }
+            layerDic.Add(id, new Icon2D(x, y, iconImage));
+            return id;
+        }
+
+        /// <summary>
+        /// Adds an image.
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="right"></param>
+        /// <param name="bottom"></param>
+        /// <param name="imageData"></param>
+        /// <returns></returns>
+        public uint AddImage(int layer, float left, float top, float right, float bottom, byte[] imageData)
+        {
+            if (imageData == null)
+                throw new ArgumentNullException("imageData");
+
+            uint id = _nextId;
+            _nextId++;
+
+            Dictionary<uint, IScene2DPrimitive> layerDic;
+            if (!_primitives.TryGetValue(layer, out layerDic))
+            {
+                layerDic = new Dictionary<uint, IScene2DPrimitive>();
+                _primitives.Add(layer, layerDic);
+            }
+            layerDic.Add(id, new Image2D(left, top, bottom, right, imageData));
+            return id;
+        }
+    }
 }

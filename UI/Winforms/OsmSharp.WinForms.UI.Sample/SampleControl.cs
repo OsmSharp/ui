@@ -43,7 +43,7 @@ namespace OsmSharp.WinForms.UI.Sample
         {
             if (this.Scene != null)
             { // only render when scene and view are set.
-                Bitmap bitmap = new Bitmap((int) e.Graphics.VisibleClipBounds.Width,
+                var bitmap = new Bitmap((int) e.Graphics.VisibleClipBounds.Width,
                                            (int) e.Graphics.VisibleClipBounds.Height);
                 Graphics g = Graphics.FromImage(bitmap);
 
@@ -52,11 +52,10 @@ namespace OsmSharp.WinForms.UI.Sample
                                                      g.VisibleClipBounds.Height);
 
                 // initialize renderer.
-                var graphicsRenderer2D = new GraphicsRenderer2D(
-                    g);
+                var graphicsRenderer2D = new GraphicsRenderer2D();
 
                 // render the scene.
-                graphicsRenderer2D.Render(this.Scene, view);
+                graphicsRenderer2D.Render(g, this.Scene, view);
 
                 e.Graphics.DrawImageUnscaled(bitmap, 0, 0);
             }

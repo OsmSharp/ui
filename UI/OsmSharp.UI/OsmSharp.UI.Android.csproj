@@ -54,7 +54,6 @@
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
-    <Compile Include="Map\Layers\LayerElements.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Declaration.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationAntiAliasing.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationDashes.cs" />
@@ -87,11 +86,6 @@
     <Compile Include="SimpleColor.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSLexer.cs" />
     <Compile Include="Map\View.cs" />
-    <Compile Include="Elements\DataStructures\IElementDataStructure.cs" />
-    <Compile Include="Elements\ElementBase.cs" />
-    <Compile Include="Elements\ElementMultiLine.cs" />
-    <Compile Include="Elements\ElementPoint.cs" />
-    <Compile Include="Elements\IElement.cs" />
     <Compile Include="Renderer\Renderer2D.cs" />
     <Compile Include="Renderer\View2D.cs" />
     <Compile Include="Renderer\Scene2D.cs" />
@@ -99,6 +93,15 @@
     <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitive.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Line2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Polygon2D.cs" />
+    <Compile Include="Map\MapRenderer.cs" />
+    <Compile Include="Map\Layers\OsmRawLayer.cs" />
+    <Compile Include="Map\Layers\TileLayer.cs" />
+    <Compile Include="Renderer\Target2DWrapper.cs" />
+    <Compile Include="Map\Styles\MapCSS\IMapCSSImageSource.cs" />
+    <Compile Include="Map\Styles\MapCSS\MapCSSDictionaryImageSource.cs" />
+    <Compile Include="Map\Styles\MapCSS\MapCSSDirectoryImageSource.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Icon2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Image2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

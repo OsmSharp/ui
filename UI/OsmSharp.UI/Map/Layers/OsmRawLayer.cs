@@ -77,7 +77,13 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Holds al id's of all already interpreted objects.
         /// </summary>
-        private Dictionary<int,HashSet<long>> _interpretedObjects; 
+        private readonly Dictionary<int,HashSet<long>> _interpretedObjects;
+
+        /// <summary>
+        /// Holds all previously requested boxes.
+        /// </summary>
+        private HashSet<GeoCoordinateBox> _requestedBoxes = new HashSet<GeoCoordinateBox>();
+ 
 
         /// <summary>
         /// Builds the scene.
@@ -99,6 +105,14 @@ namespace OsmSharp.UI.Map.Layers
             // build the boundingbox.
             var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(view.Left, view.Top),
                 map.Projection.ToGeoCoordinates(view.Right, view.Bottom));
+            foreach (var requestedBox in _requestedBoxes)
+            {
+                if (requestedBox.IsInside(box))
+                {
+                    return;
+                }
+            }
+            _requestedBoxes.Add(box);
 
             // set the scene backcolor.
             SimpleColor? color = _styleInterpreter.GetCanvasColor();

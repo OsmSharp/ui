@@ -17,5 +17,14 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// <returns><c>true</c> if this instance is visible in the specified view; otherwise, <c>false</c>.</returns>
 		/// <param name="view">View.</param>
 		bool IsVisibleIn(View2D view);
+
+		/// <summary>
+		/// Gets or sets the tag.
+		/// </summary>
+		/// <value>The tag.</value>
+		object Tag {
+			get;
+			set;
+		}
 	}
 }

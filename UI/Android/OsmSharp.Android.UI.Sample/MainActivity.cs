@@ -17,6 +17,11 @@ using OsmSharp.Tools;
 using OsmSharp.UI;
 using OsmSharp.Tools.Math.Geo.Projections;
 using OsmSharp.Tools.Math.Geo;
+using OsmSharp.UI.Map.Styles.MapCSS;
+using OsmSharp.Osm.Data.Raw.XML.OsmSource;
+using OsmSharp.UI.Map;
+using OsmSharp.UI.Map.Layers;
+using OsmSharp.Osm.Data.Core.Memory;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -33,82 +38,40 @@ namespace OsmSharp.Android.UI.Sample
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
+			
+			// create the MapCSS image source.
+			var imageSource = new MapCSSDictionaryImageSource();
+			imageSource.Add("styles/default/parking.png",
+			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.parking.png"));
+			imageSource.Add("styles/default/bus.png",
+			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.bus.png"));
+			imageSource.Add("styles/default/postbox.png",
+			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.postbox.png"));
 
-			// load test osm file.
-			List<SimpleOsmGeo> osmList = new List<SimpleOsmGeo>();
-			Stream stream = 
-				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm");
-			XmlDataProcessorSource xmlDataProcessorSource = new XmlDataProcessorSource(
-				stream);
-			CollectionDataProcessorTarget collectionDataProcessorTarget = new CollectionDataProcessorTarget(
-				osmList);
-			collectionDataProcessorTarget.RegisterSource(xmlDataProcessorSource);
-			collectionDataProcessorTarget.Pull();
-
-			// build a scene using spherical mercator.
-			Scene2D scene2D = new Scene2D();
-			// build a scene using spherical mercator.
-			EllipticalMercator sphericalMercator = new EllipticalMercator();
-			Dictionary<long, GeoCoordinate> nodes = new Dictionary<long, GeoCoordinate>();
-			foreach (SimpleOsmGeo simpleOsmGeo in osmList)
-			{
-				if (simpleOsmGeo is SimpleNode)
-				{
-					SimpleNode simplenode = (simpleOsmGeo as SimpleNode);
-					double[] point = sphericalMercator.ToPixel(
-						simplenode.Latitude.Value, simplenode.Longitude.Value);
-					nodes.Add(simplenode.Id.Value, new GeoCoordinate(simplenode.Latitude.Value, simplenode.Longitude.Value));
-					scene2D.AddPoint((float)point[0], (float)point[1],
-					                 SimpleColor.FromKnownColor(KnownColor.Yellow).Value,
-					                 2);
-				}
-				else if (simpleOsmGeo is SimpleWay)
-				{
-					SimpleWay way = (simpleOsmGeo as SimpleWay);
-					List<float> x = new List<float>();
-					List<float> y = new List<float>();
-					if (way.Nodes != null)
-					{
-						for (int idx = 0; idx < way.Nodes.Count; idx++)
-						{
-							GeoCoordinate nodeCoords;
-							if (nodes.TryGetValue(way.Nodes[idx], out nodeCoords))
-							{
-								x.Add((float) sphericalMercator.LongitudeToX(nodeCoords.Longitude));
-								y.Add((float) sphericalMercator.LatitudeToY(nodeCoords.Latitude));
-							}
-						}
-					}
-					
-					if (x.Count > 0)
-					{
-						scene2D.AddLine(x.ToArray(), y.ToArray(), 
-						                SimpleColor.FromKnownColor(KnownColor.Blue).Value, 2);
-					}
-				}
-			}
+			// load mapcss style interpreter.
+			var mapCSSInterpreter = new MapCSSInterpreter(
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.mapcss"),
+				imageSource);
+			
+			// initialize the data source.
+			MemoryDataSource dataSource = new MemoryDataSource();
+			XmlDataProcessorSource source = new XmlDataProcessorSource(
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm"));
+			dataSource.PullFromSource(source);
+			
+			// initialize map.
+			var map = new Map();
+			map.AddLayer(new OsmRawLayer(dataSource, mapCSSInterpreter));
+			
+			// set control properties.
+			var mapView = new MapView(this);
+			mapView.Map = map;
+			mapView.Center = new GeoCoordinate(51.26337, 4.78739);
+			mapView.ZoomFactor = 2; // TODO: improve zoomfactor.
 
 			//Create the user interface in code
 			var layout = new LinearLayout (this);
 			layout.Orientation = Orientation.Vertical;
-
-//			// initialize a test-scene.
-//			scene2D.AddPoint(0f, 0f, global::Android.Graphics.Color.Blue.ToArgb(), 1);
-//			
-//			float[] x = new float[]{ 50, -80, 70};
-//			float[] y = new float[]{ 20, -10, -70};
-//
-//			bool fill = false;
-//			int color = global::Android.Graphics.Color.White.ToArgb();
-//			int width = 1;
-//			
-//			scene2D.AddPolygon(x, y, color, width, fill);
-
-			// create mapview.
-			var mapView = new CanvasRenderer2DView(
-				this, scene2D);
-			mapView.Center = new float[] { 534463.21f, 6633094.69f };
-			mapView.ZoomFactor = 1;
 
 			layout.AddView (mapView);
 

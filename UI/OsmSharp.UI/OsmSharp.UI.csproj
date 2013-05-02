@@ -53,17 +53,9 @@
     <OutputPath>bin\x64\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OsmSharp.Osm">
-      <HintPath>..\..\Core\Output\Debug\Any CPU\OsmSharp.Osm.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Routing">
-      <HintPath>..\..\Core\Output\Debug\Any CPU\OsmSharp.Routing.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Tools">
-      <HintPath>..\..\Core\Output\Debug\Any CPU\OsmSharp.Tools.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -80,6 +72,9 @@
     <Compile Include="Map\Layers\TileLayer.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\MapRenderer.cs" />
+    <Compile Include="Map\Styles\MapCSS\IMapCSSImageSource.cs" />
+    <Compile Include="Map\Styles\MapCSS\MapCSSDictionaryImageSource.cs" />
+    <Compile Include="Map\Styles\MapCSS\MapCSSDirectoryImageSource.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSInterpreter.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSTypes.cs" />
     <Compile Include="Map\Styles\StyleInterpreter.cs" />
@@ -109,6 +104,9 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSDomainParser.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSLexer.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParser.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Icon2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Image2D.cs" />
+    <Compile Include="Renderer\Target2DWrapper.cs" />
     <Compile Include="SimpleColor.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitive.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Line2D.cs" />
@@ -126,7 +124,16 @@
       <Generator>MSBuild:Compile</Generator>
     </Antlr3>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\OsmSharp.Osm\OsmSharp.Osm.csproj">
+      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
+      <Name>OsmSharp.Osm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\OsmSharp.Tools\OsmSharp.Tools.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>OsmSharp.Tools</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

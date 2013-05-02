@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -37,13 +38,23 @@ namespace OsmSharp.WinForms.UI.Sample
         {
             base.OnLoad(e);
 
+            // create the MapCSS image source.
+            var imageSource = new MapCSSDictionaryImageSource();
+            imageSource.Add("styles/default/parking.png",
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.images.parking.png"));
+            imageSource.Add("styles/default/bus.png",
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.images.bus.png"));
+            imageSource.Add("styles/default/postbox.png",
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.images.postbox.png"));
+
             // load mapcss style interpreter.
             var mapCSSInterpreter = new MapCSSInterpreter(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.mapcss"));
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.mapcss"),
+                imageSource);
 
             // initialize the data source.
-            var dataSource = new OsmDataSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm"));
+            var dataSource = new OsmDataSource(new FileInfo(@"c:\OSM\bin\kempen.osm").OpenRead());
+                //Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm"));
 
             // initialize map.
             var map = new Map();
@@ -51,6 +62,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // set control properties.
             this.mapControl1.Map = map;
+            //this.mapControl1.Center = new GeoCoordinate(51.0095111, 3.3210996); 
             this.mapControl1.Center = new GeoCoordinate(51.26337, 4.78739);
             this.mapControl1.ZoomFactor = 0; // TODO: improve zoomfactor.
         }

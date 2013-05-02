@@ -12,6 +12,15 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 	internal struct Point2D : IScene2DPrimitive
 	{
 		/// <summary>
+		/// Gets or sets the tag.
+		/// </summary>
+		/// <value>The tag.</value>
+		public object Tag {
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// Gets or sets the x.
 		/// </summary>
 		/// <value>The x.</value>

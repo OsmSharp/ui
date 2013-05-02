@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Text;
 using Antlr.Runtime.Tree;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 
@@ -776,7 +777,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "fill-image":
                             var fillImage = new DeclarationURL();
                             fillImage.Qualifier = DeclarationURLEnum.FillImage;
-                            fillImage.Value = valueString;
+                            fillImage.Value = MapCSSDomainParser.ParseURL(valueString);;
 
                             // add declaration.
                             rule.Declarations.Add(fillImage);
@@ -784,7 +785,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "icon-image":
                             var iconImage = new DeclarationURL();
                             iconImage.Qualifier = DeclarationURLEnum.IconImage;
-                            iconImage.Value = valueString;
+                            iconImage.Value = MapCSSDomainParser.ParseURL(valueString);
 
                             // add declaration.
                             rule.Declarations.Add(iconImage);
@@ -792,7 +793,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "image":
                             var image = new DeclarationURL();
                             image.Qualifier = DeclarationURLEnum.Image;
-                            image.Value = valueString;
+                            image.Value = MapCSSDomainParser.ParseURL(valueString);;
 
                             // add declaration.
                             rule.Declarations.Add(image);
@@ -1017,6 +1018,29 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                 dashes[idx] = int.Parse(tree.GetChild(idx).Text, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture);
             }
             return dashes;
+        }
+
+        /// <summary>
+        /// Parses an URL.
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        private static string ParseURL(string url)
+        {
+            var urlBuilder = new StringBuilder();
+            if (!string.IsNullOrEmpty(url))
+            {
+                if (url[0] == '"' && url[url.Length - 1] == '"')
+                {
+                    urlBuilder.Append(
+                        url.Substring(1, url.Length - 2));
+                }
+                else
+                {
+                    urlBuilder.Append(url);
+                }
+            }
+            return urlBuilder.ToString();
         }
 
         /// <summary>

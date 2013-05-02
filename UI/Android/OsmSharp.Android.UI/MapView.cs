@@ -11,8 +11,9 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
-
+using OsmSharp.UI.Map;
 using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Tools;
 using OsmSharp.UI.Renderer;
 
 namespace OsmSharp.Android.UI
@@ -20,55 +21,44 @@ namespace OsmSharp.Android.UI
 	/// <summary>
 	/// Map view.
 	/// </summary>
-	public class CanvasRenderer2DView : View, GestureDetector.IOnGestureListener, ScaleGestureDetector.IOnScaleGestureListener, global::Android.Views.View.IOnTouchListener
+	public class MapView : global::Android.Views.View, GestureDetector.IOnGestureListener, ScaleGestureDetector.IOnScaleGestureListener, global::Android.Views.View.IOnTouchListener
 	{
 		/// <summary>
 		/// Holds the gesture detector.
 		/// </summary>
 		private GestureDetector _gestureDetector;
-
+		
 		/// <summary>
 		/// Holds the scale gesture detector.
 		/// </summary>
 		private ScaleGestureDetector _scaleGestureDetector;
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.CanvasRenderer2DView"/> class.
-		/// </summary>
-		/// <param name="context">Context.</param>
-		public CanvasRenderer2DView (Context context, Scene2D scene) :
+		public MapView (Context context) :
 			base (context)
 		{
 			Initialize ();
-
-			this.Scene = scene;
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.CanvasRenderer2DView"/> class.
+		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapView"/> class.
 		/// </summary>
 		/// <param name="context">Context.</param>
 		/// <param name="attrs">Attrs.</param>
-		public CanvasRenderer2DView (Context context, IAttributeSet attrs, Scene2D scene) :
+		public MapView (Context context, IAttributeSet attrs) :
 			base (context, attrs)
 		{
 			Initialize ();
-
-			this.Scene = scene;
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.CanvasRenderer2DView"/> class.
+		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapView"/> class.
 		/// </summary>
 		/// <param name="context">Context.</param>
 		/// <param name="attrs">Attrs.</param>
 		/// <param name="defStyle">Def style.</param>
-		public CanvasRenderer2DView (Context context, IAttributeSet attrs, int defStyle, Scene2D scene) :
+		public MapView (Context context, IAttributeSet attrs, int defStyle) :
 			base (context, attrs, defStyle)
 		{
 			Initialize ();
-
-			this.Scene = scene;
 		}
 
 		/// <summary>
@@ -76,6 +66,8 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		void Initialize ()
 		{
+			_renderer = new MapRenderer<global::Android.Graphics.Canvas>(
+				new CanvasRenderer2D());
 			// initialize the gesture detection.
 			_gestureDetector= new GestureDetector(
 				this);
@@ -84,148 +76,25 @@ namespace OsmSharp.Android.UI
 			this.SetOnTouchListener(this);
 		}
 
-		#region IOnScaleGestureListener implementation
-
 		/// <summary>
-		/// Holds the scaled flag.
+		/// High quality rendering flag.
 		/// </summary>
-		private bool _scaled = false;
+		private bool _highQuality = true;
 
 		/// <summary>
-		/// Raises the scale event.
-		/// </summary>
-		/// <param name="detector">Detector.</param>
-		public bool OnScale (ScaleGestureDetector detector)
-		{
-			this.ZoomFactor = (float)System.Math.Log((System.Math.Pow(2, this.ZoomFactor) * detector.ScaleFactor), 2.0);
-
-//			float factorX = this.View.Width / this.Width;
-//			float factorY = this.View.Height / this.Height;
-//			this.View = View2D.CreateFromCenterAndSize(this.View.Width / detector.ScaleFactor, this.View.Height / detector.ScaleFactor, 
-//			                                           this.View.CenterX,
-//			                                           this.View.CenterY);
-			_scaled = true;
-			this.Invalidate();
-			return true;
-		}
-
-		/// <summary>
-		/// Raises the scale begin event.
-		/// </summary>
-		/// <param name="detector">Detector.</param>
-		public bool OnScaleBegin (ScaleGestureDetector detector)
-		{
-			return true;
-		}
-
-		/// <summary>
-		/// Raises the scale end event.
-		/// </summary>
-		/// <param name="detector">Detector.</param>
-		public void OnScaleEnd (ScaleGestureDetector detector)
-		{
-
-		}
-
-		#endregion
-
-		#region IOnGestureListener implementation
-
-		/// <summary>
-		/// Raises the down event.
-		/// </summary>
-		/// <param name="e">E.</param>
-		public bool OnDown (MotionEvent e)
-		{
-			return true;
-		}
-
-		/// <summary>
-		/// Raises the fling event.
-		/// </summary>
-		/// <param name="e1">E1.</param>
-		/// <param name="e2">E2.</param>
-		/// <param name="velocityX">Velocity x.</param>
-		/// <param name="velocityY">Velocity y.</param>
-		public bool OnFling (MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
-		{
-			return true;
-		}
-
-		/// <summary>
-		/// Raises the long press event.
-		/// </summary>
-		/// <param name="e">E.</param>
-		public void OnLongPress (MotionEvent e)
-		{
-
-		}
-
-		/// <summary>
-		/// Raises the scroll event.
-		/// </summary>
-		/// <param name="e1">E1.</param>
-		/// <param name="e2">E2.</param>
-		/// <param name="distanceX">Distance x.</param>
-		/// <param name="distanceY">Distance y.</param>
-		public bool OnScroll (MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
-		{
-			// recreate the view.
-			View2D view = View2D.CreateFrom(this.Center[0], this.Center[1],
-			                                this.Width, this.Height,
-			                                this.ZoomFactor);
-
-			// calculate the new center in pixels.
-			float centerXPixels = this.Width / 2.0f + distanceX;
-			float centerYPixles = this.Height / 2.0f + distanceY;
-
-			// calculate the new center from the view.
-			this.Center = view.ToViewPort(this.Width, this.Height, 
-			                              centerXPixels, centerYPixles);
-
-//			float factorX = this.View.Width / this.Width;
-//			float factorY = this.View.Height / this.Height;
-//			this.View = View2D.CreateFromCenterAndSize(this.View.Width, this.View.Height, 
-//			                                           this.View.CenterX + (-distanceX) * factorX,
-//			                                           this.View.CenterY + (-distanceY) * factorY);
-			this.Invalidate();
-			return true;
-		}
-
-		/// <summary>
-		/// Raises the show press event.
-		/// </summary>
-		/// <param name="e">E.</param>
-		public void OnShowPress (MotionEvent e)
-		{
-
-		}
-
-		/// <summary>
-		/// Raises the single tap up event.
-		/// </summary>
-		/// <param name="e">E.</param>
-		public bool OnSingleTapUp (MotionEvent e)
-		{
-			return true;
-		}
-
-		#endregion
-
-		/// <summary>
-		/// Gets or sets the scene.
-		/// </summary>
-		/// <value>The scene.</value>
-		public Scene2D Scene {
-			get;
-			private set;
-		}
-
-		/// <summary>
-		/// The center coordinates.
+		/// Gets or sets the center.
 		/// </summary>
 		/// <value>The center.</value>
-		public float[] Center {
+		public GeoCoordinate Center {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the map.
+		/// </summary>
+		/// <value>The map.</value>
+		public Map Map {
 			get;
 			set;
 		}
@@ -240,22 +109,194 @@ namespace OsmSharp.Android.UI
 		}
 
 		/// <summary>
+		/// Holds the renderer.
+		/// </summary>
+		private MapRenderer<global::Android.Graphics.Canvas> _renderer;
+
+		/// <summary>
 		/// Raises the draw event.
 		/// </summary>
 		/// <param name="canvas">Canvas.</param>
 		protected override void OnDraw (global::Android.Graphics.Canvas canvas)
 		{
 			base.OnDraw (canvas);
+			
+			// initialize the renderers.
+			global::Android.Graphics.Paint paint = new global::Android.Graphics.Paint();
+			if(_highQuality)
+			{			
+				// render the map.
+				_renderer.Render(canvas, this.Map, this.ZoomFactor, this.Center);
+			}
+			else
+			{
+				// render the cached parts only.
+				_renderer.RenderCache(canvas, this.Map, this.ZoomFactor, this.Center);
+			}
 
-			// recreate the view.
-			View2D view = View2D.CreateFrom(this.Center[0], this.Center[1],
-			                                canvas.Width, canvas.Height,
-			                                this.ZoomFactor);
-
-			// call the canvas renderer.
-			CanvasRenderer2D renderer = new CanvasRenderer2D();
-			renderer.Render(canvas, this.Scene, view);
 		}
+		
+		/// <summary>
+		/// Creates a view.
+		/// </summary>
+		/// <param name="map"></param>
+		/// <param name="zoomFactor"></param>
+		/// <param name="center"></param>
+		/// <returns></returns>
+		public View2D CreateView()
+		{
+			// calculate the center/zoom in scene coordinates.
+			double[] sceneCenter = this.Map.Projection.ToPixel(this.Center.Latitude, this.Center.Longitude);
+			float sceneZoomFactor = this.ZoomFactor; // TODO: find out the conversion rate and see if this is related to the projection?
+			
+			// create the view for this control.
+			return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
+			                         this.Width, this.Height, sceneZoomFactor);
+		}
+
+		/// <summary>
+		/// Raises the layout event.
+		/// </summary>
+		/// <param name="changed">If set to <c>true</c> changed.</param>
+		/// <param name="left">Left.</param>
+		/// <param name="top">Top.</param>
+		/// <param name="right">Right.</param>
+		/// <param name="bottom">Bottom.</param>
+		protected override void OnLayout (bool changed, int left, int top, int right, int bottom)
+		{
+			// notify the map.
+			this.Map.ViewChanged(this.ZoomFactor, this.Center, this.CreateView());
+			// notify there was movement.
+			//this.NotifyMovement();
+		}
+
+		#region IOnScaleGestureListener implementation
+		
+		/// <summary>
+		/// Holds the scaled flag.
+		/// </summary>
+		private bool _scaled = false;
+		
+		/// <summary>
+		/// Raises the scale event.
+		/// </summary>
+		/// <param name="detector">Detector.</param>
+		public bool OnScale (ScaleGestureDetector detector)
+		{
+			this.ZoomFactor = (float)System.Math.Log((System.Math.Pow(2, this.ZoomFactor) * detector.ScaleFactor), 2.0);
+
+			// notify the map.
+			this.Map.ViewChanged(this.ZoomFactor, this.Center, this.CreateView());
+
+			_scaled = true;
+			this.Invalidate();
+			return true;
+		}
+		
+		/// <summary>
+		/// Raises the scale begin event.
+		/// </summary>
+		/// <param name="detector">Detector.</param>
+		public bool OnScaleBegin (ScaleGestureDetector detector)
+		{
+			_highQuality = false;
+			return true;
+		}
+		
+		/// <summary>
+		/// Raises the scale end event.
+		/// </summary>
+		/// <param name="detector">Detector.</param>
+		public void OnScaleEnd (ScaleGestureDetector detector)
+		{
+			_highQuality = true;
+			this.Invalidate();
+		}
+		
+		#endregion
+
+		#region IOnGestureListener implementation
+		
+		/// <summary>
+		/// Raises the down event.
+		/// </summary>
+		/// <param name="e">E.</param>
+		public bool OnDown (MotionEvent e)
+		{
+			return true;
+		}
+		
+		/// <summary>
+		/// Raises the fling event.
+		/// </summary>
+		/// <param name="e1">E1.</param>
+		/// <param name="e2">E2.</param>
+		/// <param name="velocityX">Velocity x.</param>
+		/// <param name="velocityY">Velocity y.</param>
+		public bool OnFling (MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
+		{
+			return true;
+		}
+		
+		/// <summary>
+		/// Raises the long press event.
+		/// </summary>
+		/// <param name="e">E.</param>
+		public void OnLongPress (MotionEvent e)
+		{
+			
+		}
+		
+		/// <summary>
+		/// Raises the scroll event.
+		/// </summary>
+		/// <param name="e1">E1.</param>
+		/// <param name="e2">E2.</param>
+		/// <param name="distanceX">Distance x.</param>
+		/// <param name="distanceY">Distance y.</param>
+		public bool OnScroll (MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
+		{
+			// recreate the view.
+			View2D view = this.CreateView();
+			
+			// calculate the new center in pixels.
+			float centerXPixels = this.Width / 2.0f + distanceX;
+			float centerYPixles = this.Height / 2.0f + distanceY;
+			
+			// calculate the new center from the view.
+			float[] sceneCenter = view.ToViewPort(this.Width, this.Height, 
+			                              centerXPixels, centerYPixles);
+
+			// convert to the projected center.
+			this.Center = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
+
+			// notify the map.
+			this.Map.ViewChanged(this.ZoomFactor, this.Center, this.CreateView());
+
+			_highQuality = false;
+			this.Invalidate();
+			return true;
+		}
+		
+		/// <summary>
+		/// Raises the show press event.
+		/// </summary>
+		/// <param name="e">E.</param>
+		public void OnShowPress (MotionEvent e)
+		{
+			
+		}
+		
+		/// <summary>
+		/// Raises the single tap up event.
+		/// </summary>
+		/// <param name="e">E.</param>
+		public bool OnSingleTapUp (MotionEvent e)
+		{
+			return true;
+		}
+		
+		#endregion
 
 		/// <summary>
 		/// Raises the touch event event.
@@ -265,9 +306,9 @@ namespace OsmSharp.Android.UI
 		{
 			return true;
 		}
-
+		
 		#region IOnTouchListener implementation
-
+		
 		/// <summary>
 		/// Raises the touch event.
 		/// </summary>
@@ -279,11 +320,18 @@ namespace OsmSharp.Android.UI
 			if(!_scaled)
 			{
 				_gestureDetector.OnTouchEvent(e);
+
+				if(e.Action == MotionEventActions.Up)
+				{
+					_highQuality = true;
+					this.Invalidate();
+				}
 			}
 			_scaled = false;
 			return true;
 		}
-
+		
 		#endregion
 	}
 }
+

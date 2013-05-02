@@ -313,6 +313,7 @@
     <Compile Include="Math\Geo\Projections\IProjection.cs" />
     <Compile Include="Math\Geo\Projections\SphericalMercator.cs" />
     <Compile Include="Math\Geo\Projections\EllipticalMercator.cs" />
+    <Compile Include="Math\Geo\Projections\ScaledProjection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Xml\Gpx\v1_0\gpx.xsd">

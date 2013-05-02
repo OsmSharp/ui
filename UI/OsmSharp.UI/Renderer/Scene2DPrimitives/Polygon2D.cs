@@ -82,7 +82,16 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             _maxX = maxX;
             _minY = minY;
             _maxY = maxY;
-        }
+		}
+		
+		/// <summary>
+		/// Gets or sets the tag.
+		/// </summary>
+		/// <value>The tag.</value>
+		public object Tag {
+			get;
+			set;
+		}
 
 		/// <summary>
 		/// Gets or sets the x.
