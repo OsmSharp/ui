@@ -206,12 +206,6 @@
     <Compile Include="Targets\UserControlTarget\UserControlTargetEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\OsmSharp.UI.Map\OsmSharp.UI.Map.csproj">
-      <Project>{B076C8ED-B40F-4BAB-B91A-0673BB753C06}</Project>
-      <Name>OsmSharp.UI.Map</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -236,4 +230,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\OsmSharp.UI.Map\OsmSharp.UI.Map.csproj">
+      <Project>{B076C8ED-B40F-4BAB-B91A-0673BB753C06}</Project>
+      <Name>OsmSharp.UI.Map</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
