@@ -285,5 +285,32 @@ namespace OsmSharp.UI.Renderer
             layerDic.Add(id, new Image2D(left, top, bottom, right, imageData));
             return id;
         }
+
+        /// <summary>
+        /// Adds texts.
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="size"></param>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        public uint AddText(int layer, float x, float y, float size, string text)
+        {
+            if (text == null)
+                throw new ArgumentNullException("text");
+
+            uint id = _nextId;
+            _nextId++;
+
+            Dictionary<uint, IScene2DPrimitive> layerDic;
+            if (!_primitives.TryGetValue(layer, out layerDic))
+            {
+                layerDic = new Dictionary<uint, IScene2DPrimitive>();
+                _primitives.Add(layer, layerDic);
+            }
+            layerDic.Add(id, new Text2D(x, y, text, size));
+            return id;
+        }
     }
 }

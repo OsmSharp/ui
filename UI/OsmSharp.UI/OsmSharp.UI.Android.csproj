@@ -102,6 +102,7 @@
     <Compile Include="Map\Styles\MapCSS\MapCSSDirectoryImageSource.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Icon2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Image2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Text2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

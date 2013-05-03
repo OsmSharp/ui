@@ -174,21 +174,23 @@ namespace OsmSharp.WinForms.UI.Renderer
 		    switch (lineJoin)
 		    {
 		        case LineJoin.Round:
-                    pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
+		            pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 		            break;
 		        case LineJoin.Miter:
-                    pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Miter;
+		            pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Miter;
 		            break;
 		        case LineJoin.Bevel:
 		            pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Bevel;
 		            break;
 		        case LineJoin.None:
-                    // just keep the default.
+		            // just keep the default.
 		            break;
 		        default:
 		            throw new ArgumentOutOfRangeException("lineJoin");
 		    }
-            var points = new PointF[x.Length];
+            pen.StartCap = LineCap.Square;
+            pen.EndCap = LineCap.Square;
+		    var points = new PointF[x.Length];
 		    for (int idx = 0; idx < x.Length; idx++)
 		    {
                 points[idx] = new PointF(x[idx], -y[idx]);
@@ -258,6 +260,19 @@ namespace OsmSharp.WinForms.UI.Renderer
             //target.Target.DrawImage(image, left, -top);
             target.Target.DrawImage(image, new RectangleF(left, -top, right - left, top - bottom));
             return image;
+        }
+
+        /// <summary>
+        /// Draws text.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="text"></param>
+        /// <param name="size"></param>
+        protected override void DrawText(Target2DWrapper<Graphics> target, float x, float y, string text, float size)
+        {
+            target.Target.DrawString(text, new Font(FontFamily.GenericSansSerif, size), new SolidBrush(Color.Black), x, -y);
         }
 
 		#endregion

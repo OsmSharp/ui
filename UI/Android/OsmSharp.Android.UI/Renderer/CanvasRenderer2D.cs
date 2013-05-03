@@ -309,6 +309,11 @@ namespace OsmSharp.Android.UI
 			return image;
 		}
 
+		protected override void DrawText (Target2DWrapper<global::Android.Graphics.Canvas> target, float x, float y, string text, float size)
+		{
+
+		}
+
 		#endregion
 	}
 }

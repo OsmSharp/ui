@@ -150,6 +150,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             float? iconOpacity = null;
             float? textOpacity = null;
 
+            string text = null;
+            string fontFamily = null;
+
             float? x = null, y = null;
             byte[] iconImage = null;
             byte[] image = null;
@@ -266,8 +269,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             switch (declarationString.Qualifier)
                             {
                                 case DeclarationStringEnum.FontFamily:
+                                    fontFamily = declarationString.Value;
                                     break;
                                 case DeclarationStringEnum.Text:
+                                    text = declarationString.Value;
                                     break;
                                 default:
                                     throw new ArgumentOutOfRangeException();
@@ -337,6 +342,20 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                               iconImage);
 
                 sceneLayer = sceneLayer - IconTextLayerOffset; // offset to correct layer.
+            }
+
+            if (text != null)
+            { // a text is to be drawn.
+                string value;
+                if (node.Tags.TryGetValue(text, out value))
+                {
+                    sceneLayer = sceneLayer + IconTextLayerOffset; // offset to correct layer.
+
+                    scene.AddText(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
+                                  (float) projection.LatitudeToY(node.Coordinate.Latitude), 15, value);
+
+                    sceneLayer = sceneLayer - IconTextLayerOffset; // offset to correct layer.
+                }
             }
         }
 

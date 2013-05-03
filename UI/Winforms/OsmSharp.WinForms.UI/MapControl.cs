@@ -104,7 +104,7 @@ namespace OsmSharp.WinForms.UI
             // render the map.
             if (_quickMode)
             { // only render the cached scene.
-                _renderer.RenderCache(g, this.Map, this.ZoomFactor, this.Center);
+                _renderer.Render(g, this.Map, this.ZoomFactor, this.Center);
             }
             else
             { // render the entire scene.

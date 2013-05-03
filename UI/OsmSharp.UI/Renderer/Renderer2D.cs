@@ -134,6 +134,12 @@ namespace OsmSharp.UI.Renderer
 
                     image.Tag = this.DrawImage(target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData, image.Tag);
                 }
+                else if (primitive is Text2D)
+                {
+                    var text = (Text2D)(primitive);
+
+                    this.DrawText(target, text.X, text.Y, text.Text, this.FromPixels(target, view, text.Size));
+                }
             }
         }
 
@@ -254,5 +260,15 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="bottom"></param>
 	    /// <param name="imageData"></param>
         protected abstract object DrawImage(Target2DWrapper<TTarget> target, float left, float top, float right, float bottom, byte[] imageData, object tag);
+
+        /// <summary>
+        /// Draws text.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="text"></param>
+        /// <param name="size"></param>
+        protected abstract void DrawText(Target2DWrapper<TTarget> target, float x, float y, string text, float size);
 	}
 }
