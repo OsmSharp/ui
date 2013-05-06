@@ -1,6 +1,7 @@
 canvas {fill-color: #F7F4ED}
 
-way[landuse=meadow] :area					{ z-index: -5; fill-color: #96E6C2; fill-opacity: 0.2; }
+way[landuse=meadow], way[landuse=farmland]  :area					
+										    { z-index: -5; fill-color: #96E6C2; fill-opacity: 0.2; }
 way[amenity],way[shop] :area                { z-index: -5; color: #ADCEB5; width: 1; fill-color: #ADCEB5; fill-opacity: 0.2; }
 way[leisure] :area							{ z-index: -3; color: #ADDEB9; width: 1; fill-color: #ADDEB9; fill-opacity: 0.2; }
 way[sport] :area							{ z-index: -3; color: #8CD6B5; width: 1; fill-color: #8CD6B5; fill-opacity: 0.2; }	
@@ -8,7 +9,8 @@ way[tourism] :area                          { z-index: -3; color: #F7CECE; width
 way[historic],way[ruins] :area              { z-index: -5; color: #F7F7DE; width: 1; fill-color: #F7F7DE; fill-opacity: 0.2; }
 way[military] :area                         { z-index: -5; color: #D6D6D6; width: 1; fill-color: #D6D6D6; fill-opacity: 0.2; }
 way[landuse=forest],way[natural=wood] :area { z-index: -4; color: #8CD6B5;   width: 2; fill-color: #8CD6B5;   fill-opacity: 0.2; }
-way[landuse=residential] :area				{ z-index: -5; fill-color: #FAFAFA;   fill-opacity: 0.2; }
+way[landuse=residential], way[landuse=farmland] :area				
+											{ z-index: -5; fill-color: #EAEAEA;   fill-opacity: 0.2; }
 way[leisure=pitch]						    { z-index: -3; color: #8CD6B5; width: 1; fill-color: #8CD6B5; fill-opacity: 0.2; }
 way[amenity=parking] :area                  { z-index: -3; color: gray;    width: 1; fill-color: gray;    fill-opacity: 0.2; }
 way[public_transport=pay_scale_area] :area  { z-index: -2; color: gray;    width: 1; fill-color: gray;    fill-opacity: 0.1; }
@@ -17,7 +19,7 @@ way[waterway]								{ z-index: 9; color: #00D6E6; width: 3; }
 way[natural=water] :area					{ z-index: 9; color: #00D6E6; width: 3; fill-color: #00D6E6;  fill-opacity: 0.2; }
 
 way[building] {
-	fill-color:#E6E6E6;
+	fill-color:#E0E0E0;
 	color:#CCCCCC;
 	width:1;
 	z-index: 4;
@@ -45,6 +47,8 @@ way[highway=road]                                   { z-index: 5; color: gray; w
 way[highway=living_street]                          { z-index: 5; color: white; width: 3; casing-color: #555555; casing-width: 1; }
 way[highway=foot], way[highway=path], way[highway=footway]     			{ z-index: 5; color: gray; width: 1; dashes: 6,2; }
 
+
+way[boundary=administrative] :area					{ z-index: 10; color: darkblue; width: 1; dashes: 8,2}
 
 /*   ----------  AMENITIES  ----------     */
 way|z15-[amenity=parking] {icon-image: "styles/default/parking.png"; }

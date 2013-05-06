@@ -1,28 +1,22 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs">
     <Files>
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\test.mapcss" Line="35" Column="28" />
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="61" Column="4" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" Line="115" Column="15" />
+      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="14" Column="27" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Core" expanded="True" />
           <Node name="UI" expanded="True">
             <Node name="Android" expanded="True">
               <Node name="OsmSharp.Android.UI" expanded="True">
-                <Node name="Renderer" expanded="True" />
+                <Node name="Renderer" expanded="True">
+                  <Node name="OpenGLRenderer2D.cs" selected="True" />
+                </Node>
               </Node>
               <Node name="OsmSharp.Android.UI.Sample" expanded="True">
-                <Node name="images" expanded="True" />
                 <Node name="Resources" expanded="True" />
-                <Node name="MainActivity.cs" selected="True" />
-              </Node>
-            </Node>
-            <Node name="OsmSharp.UI.Android" expanded="True">
-              <Node name="Renderer" expanded="True">
-                <Node name="Scene2DPrimitives" expanded="True" />
               </Node>
             </Node>
           </Node>
@@ -39,7 +33,10 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" line="106" column="1" />
+      <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" line="97" column="1" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
   <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample AndroidDeviceId-Debug="emulator-5554" />

@@ -39,35 +39,40 @@ namespace OsmSharp.Android.UI.Sample
 		{
 			base.OnCreate (bundle);
 			
-			// create the MapCSS image source.
-			var imageSource = new MapCSSDictionaryImageSource();
-			imageSource.Add("styles/default/parking.png",
-			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.parking.png"));
-			imageSource.Add("styles/default/bus.png",
-			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.bus.png"));
-			imageSource.Add("styles/default/postbox.png",
-			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.postbox.png"));
+//			// create the MapCSS image source.
+//			var imageSource = new MapCSSDictionaryImageSource();
+//			imageSource.Add("styles/default/parking.png",
+//			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.parking.png"));
+//			imageSource.Add("styles/default/bus.png",
+//			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.bus.png"));
+//			imageSource.Add("styles/default/postbox.png",
+//			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.postbox.png"));
+//
+//			// load mapcss style interpreter.
+//			var mapCSSInterpreter = new MapCSSInterpreter(
+//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.mapcss"),
+//				imageSource);
+//			
+//			// initialize the data source.
+//			MemoryDataSource dataSource = new MemoryDataSource();
+//			XmlDataProcessorSource source = new XmlDataProcessorSource(
+//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm"));
+////			PBFDataProcessorSource source = new XmlDataProcessorSource(
+////				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.pbf"));
+//			dataSource.PullFromSource(source);
+//			
+//			// initialize map.
+//			var map = new Map();
+//			map.AddLayer(new OsmRawLayer(dataSource, mapCSSInterpreter));
+//			
+//			// set control properties.
+//			var mapView = new MapView(this);
+//			mapView.Map = map;
+//			mapView.Center = new GeoCoordinate(51.26337, 4.78739);
+//			mapView.ZoomFactor = 2; // TODO: improve zoomfactor.
 
-			// load mapcss style interpreter.
-			var mapCSSInterpreter = new MapCSSInterpreter(
-				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.mapcss"),
-				imageSource);
-			
-			// initialize the data source.
-			MemoryDataSource dataSource = new MemoryDataSource();
-			XmlDataProcessorSource source = new XmlDataProcessorSource(
-				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm"));
-			dataSource.PullFromSource(source);
-			
-			// initialize map.
-			var map = new Map();
-			map.AddLayer(new OsmRawLayer(dataSource, mapCSSInterpreter));
-			
-			// set control properties.
-			var mapView = new MapView(this);
-			mapView.Map = map;
-			mapView.Center = new GeoCoordinate(51.26337, 4.78739);
-			mapView.ZoomFactor = 2; // TODO: improve zoomfactor.
+			var mapView = new OpenGLRenderer2D(
+				this, null);
 
 			//Create the user interface in code
 			var layout = new LinearLayout (this);

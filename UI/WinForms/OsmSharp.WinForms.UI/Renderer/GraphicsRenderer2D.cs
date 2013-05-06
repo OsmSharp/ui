@@ -275,6 +275,78 @@ namespace OsmSharp.WinForms.UI.Renderer
             target.Target.DrawString(text, new Font(FontFamily.GenericSansSerif, size), new SolidBrush(Color.Black), x, -y);
         }
 
-		#endregion
+        ///// <summary>
+        ///// Draws text along a given line.
+        ///// </summary>
+        ///// <param name="target"></param>
+        ///// <param name="x"></param>
+        ///// <param name="y"></param>
+        ///// <param name="text"></param>
+        ///// <param name="size"></param>
+        //protected override void DrawTextAlongPath(Target2DWrapper<Graphics> target,
+        //                                          float[] x, float[] y, string text, float size)
+        //{
+        //    Font someFont = new Font(FontFamily.GenericSansSerif, size);
+            
+
+        //    // create the textpath.
+        //    var textPath = new GraphicsPath();
+
+        //    // the baseline should start at 0,0, so the next line is not quite correct
+        //    textPath.AddString(text, someFont, someStyle, someFontSize, new Point(0, 0));
+
+        //    RectangleF textBounds = textPath.GetBounds();
+
+        //    for (int i = 0; i < textPath.PathPoints.Length; i++)
+        //    {
+        //        PointF pt = textPath.PathPoints[i];
+        //        float textX = pt.X;
+        //        float textY = pt.Y;
+
+        //        // normalize the x coordinate into the parameterized value
+        //        // with a domain between 0 and 1.
+        //        float t = textX/textBounds.Width;
+
+        //        // calculate spline point for parameter t
+        //        float Sx = At3 + Bt2 + Ct + D
+        //        float Sy = Et3 + Ft2 + Gt + H
+
+        //        // calculate the tangent vector for the point        
+        //        float Tx = 3
+        //        At2 + 2
+        //        Bt + C
+        //        float Ty = 3E
+        //        t2 + 2F
+        //        t + G
+        //        // rotate 90 or 270 degrees to make it a perpendicular
+        //        float Px = Ty
+        //        float Py = - Tx
+
+        //        // normalize the perpendicular into a unit vector
+        //        float magnitude = sqrt(Px2 + Py2)
+        //        Px = Px/magnitude
+        //        Py = Py/magnitude
+
+        //        // assume that input text point y coord is the "height" or 
+        //        // distance from the spline.  Multiply the perpendicular vector 
+        //        // with y. it becomes the new magnitude of the vector.
+        //        Px *= textY;
+        //        Py *= textY;
+
+        //        // translate the spline point using the resultant vector
+        //        float finalX = Px + Sx
+        //        float finalY = Py + Sy
+
+        //        // I wish it were this easy, actually need 
+        //        // to create a new path.
+        //        textPath.PathPoints[i] = new PointF(finalX, finalY);
+        //    }
+
+        //    // draw the transformed text path		
+        //    g.DrawPath(Pens.Black, textPath);
+
+        //}
+
+	    #endregion
 	}
 }

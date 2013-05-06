@@ -50,6 +50,7 @@
     <Reference Include="Zlib.Portable">
       <HintPath>..\..\..\Core\Output\Debug\Any CPU\Zlib.Portable.dll</HintPath>
     </Reference>
+    <Reference Include="OpenTK" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
@@ -59,6 +60,7 @@
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
+    <None Include="test.osm.pbf" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />
