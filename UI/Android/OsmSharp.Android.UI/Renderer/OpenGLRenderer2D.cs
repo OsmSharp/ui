@@ -15,7 +15,7 @@ namespace OsmSharp.Android.UI
 {
 	public class OpenGLRenderer2D : AndroidGameView
 	{
-		int viewportWidth, viewportHeight;
+//		int viewportWidth, viewportHeight;
 		
 		public OpenGLRenderer2D (Context context, IAttributeSet attrs) :
 			base (context, attrs)
@@ -85,7 +85,7 @@ namespace OsmSharp.Android.UI
 //			};
 			
 			RenderFrame += delegate {
-				RenderCube ();
+				Render ();
 			};
 
 			GL.Enable(All.CullFace);
@@ -107,9 +107,9 @@ namespace OsmSharp.Android.UI
 			int h = this.Height;
 
 //			glControl1.MakeCurrent();
-			GL.MatrixMode(MatrixMode.Projection);
+//			GL.MatrixMode(MatrixMode.Projection);
 			GL.LoadIdentity();
-			GL.ClearColor(global::Android.Graphics.Color.SkyBlue);
+//			GL.ClearColor(global::Android.Graphics.Color.SkyBlue);
 			GL.Ortho(-w / 2, w / 2, -h / 2, h / 2, -1, 1);
 			GL.Viewport(0, 0, w, h);
 //			GL.End();

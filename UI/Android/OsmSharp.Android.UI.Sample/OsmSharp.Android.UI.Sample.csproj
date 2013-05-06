@@ -60,7 +60,6 @@
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
-    <None Include="test.osm.pbf" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />
@@ -93,6 +92,7 @@
     <EmbeddedResource Include="images\parking.png" />
     <EmbeddedResource Include="images\postbox.png" />
     <EmbeddedResource Include="images\tree.png" />
+    <EmbeddedResource Include="test.osm.pbf" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images\" />

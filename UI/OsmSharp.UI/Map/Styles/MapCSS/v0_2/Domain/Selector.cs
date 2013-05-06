@@ -30,23 +30,27 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <summary>
         /// Returns true if this selector 'selects' the given object.
         /// </summary>
-        /// <param name="zoom">The current zoom level.</param>
+        /// <param name="zooms">The zooms selected.</param>
         /// <param name="osmGeo">The object to 'select'.</param>
         /// <returns></returns>
-        public virtual Dictionary<SelectorTypeEnum, OsmGeo> Selects(int zoom, OsmGeo osmGeo)
+        public virtual bool Selects(OsmGeo osmGeo, out KeyValuePair<int?, int?> zooms)
         {
-            // osm geo list.
-            var osmGeos = new Dictionary<SelectorTypeEnum, OsmGeo>();
-
-            if (this.Zoom != null && !this.Zoom.Select(zoom))
-            { // oeps: the zoom was not valid.
-                return osmGeos;
+            // store the zooms.
+            if (this.Zoom == null)
+            { // there are no zooms.
+                zooms = new KeyValuePair<int?, int?>(
+                    null, null);
+            }
+            else
+            { // there are zooms.
+                zooms = new KeyValuePair<int?, int?>(
+                    this.Zoom.ZoomMin, this.Zoom.ZoomMax);
             }
 
             // check rule.
             if (!this.SelectorRule.Selects(osmGeo))
             { // oeps: the zoom was not valid.
-                return osmGeos;
+                return false;
             }
 
             // check the type.
@@ -57,7 +61,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                     { // this can be an area.
                         if (osmGeo.IsOfType(MapCSSTypes.Area))
                         {
-                            osmGeos.Add(SelectorTypeEnum.Area, osmGeo);
+                            return true;
                         }
                     }
                     else if (osmGeo.Type == OsmType.Relation)
@@ -73,7 +77,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                     { // this can be a line.
                         if (osmGeo.IsOfType(MapCSSTypes.Line))
                         {
-                            osmGeos.Add(SelectorTypeEnum.Line, osmGeo);
+                            return true;
                         }
                     }
                     else if (osmGeo.Type == OsmType.Relation)
@@ -84,26 +88,26 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                 case SelectorTypeEnum.Node:
                     if (osmGeo.Type == OsmType.Node)
                     {
-                        osmGeos.Add(SelectorTypeEnum.Node, osmGeo);
+                        return true;
                     }
                     break;
                 case SelectorTypeEnum.Star:
-                    osmGeos.Add(SelectorTypeEnum.Star, osmGeo);
+                    return true;
                     break;
                 case SelectorTypeEnum.Way:
                     if (osmGeo.Type == OsmType.Way)
                     {
-                        osmGeos.Add(SelectorTypeEnum.Way, osmGeo);
+                        return true;
                     }
                     break;
                 case SelectorTypeEnum.Relation:
                     if (osmGeo.Type == OsmType.Relation)
                     {
-                        osmGeos.Add(SelectorTypeEnum.Relation, osmGeo);
+                        return true;
                     }
                     break;
             }
-            return osmGeos; // all positive checks failed!
+            return false;
         }
 
         /// <summary>

@@ -52,19 +52,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <summary>
         /// Returns true if the rule is to be applied to the given object.
         /// </summary>
-        /// <param name="zoom"></param>
+        /// <param name="zooms"></param>
         /// <param name="osmGeo"></param>
         /// <returns></returns>
-        public bool HasToBeAppliedTo(int zoom, OsmGeo osmGeo)
+        public bool HasToBeAppliedTo(OsmGeo osmGeo, out List<KeyValuePair<int?, int?>> zooms)
         {
+            zooms = new List<KeyValuePair<int?, int?>>();
             foreach (var selector in this.Selectors)
             {
-                if (selector.Selects(zoom, osmGeo).Count > 0)
+                KeyValuePair<int?, int?> zoom;
+                if (selector.Selects(osmGeo, out zoom))
                 {
-                    return true;
+                    zooms.Add(zoom);
                 }
             }
-            return false;
+            return zooms.Count > 0;
         }
 	}
 }

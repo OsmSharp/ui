@@ -165,9 +165,27 @@ namespace OsmSharp.Android.UI
 		protected override void OnLayout (bool changed, int left, int top, int right, int bottom)
 		{
 			// notify the map.
-			this.Map.ViewChanged(this.ZoomFactor, this.Center, this.CreateView());
+			//this.Map.ViewChanged(this.ZoomFactor, this.Center, this.CreateView());
 			// notify there was movement.
 			//this.NotifyMovement();
+
+			System.Threading.Thread thread = new System.Threading.Thread(
+				new System.Threading.ThreadStart(NotifyMovement));
+			thread.Start();
+		}
+
+		/// <summary>
+		/// Notifies that there was movement.
+		/// </summary>
+		private void NotifyMovement()
+		{
+			lock(this.Map)
+			{
+				// notify the map.
+				this.Map.ViewChanged(this.ZoomFactor, this.Center, this.CreateView());
+
+//				this.Invalidate();
+			}
 		}
 
 		#region IOnScaleGestureListener implementation

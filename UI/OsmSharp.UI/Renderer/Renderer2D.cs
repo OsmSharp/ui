@@ -101,44 +101,46 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="view"></param>
         private void RenderPrimitives(Target2DWrapper<TTarget> target, Scene2D scene, View2D view)
         {
+            // TODO: calculate zoom.
+	        float zoom = view.CalculateZoom(target.Width, target.Height);
+
             // loop over all primitives in the scene.
-            foreach (IScene2DPrimitive primitive in scene.Get(view))
-            {
+            foreach (IScene2DPrimitive primitive in scene.Get(view, zoom))
+            { // the primitive is visible.
                 if (primitive is Point2D)
                 {
-                    Point2D point = (Point2D)(primitive);
-
-                    this.DrawPoint(target, point.X, point.Y, point.Color, this.FromPixels(target, view, point.Size));
+                    var point = (Point2D)(primitive);
+                    this.DrawPoint(target, point.X, point.Y, point.Color, 
+                        this.FromPixels(target, view, point.Size));
                 }
                 else if (primitive is Line2D)
                 {
-                    Line2D line = (Line2D)(primitive);
-
-                    this.DrawLine(target, line.X, line.Y, line.Color, this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
+                    var line = (Line2D)(primitive);
+                    this.DrawLine(target, line.X, line.Y, line.Color, 
+                        this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
                 }
                 else if (primitive is Polygon2D)
                 {
-                    Polygon2D polygon = (Polygon2D)(primitive);
-
-                    this.DrawPolygon(target, polygon.X, polygon.Y, polygon.Color, this.FromPixels(target, view, polygon.Width), polygon.Fill);
+                    var polygon = (Polygon2D)(primitive);
+                    this.DrawPolygon(target, polygon.X, polygon.Y, polygon.Color, 
+                        this.FromPixels(target, view, polygon.Width), polygon.Fill);
                 }
                 else if (primitive is Icon2D)
                 {
-                    Icon2D icon = (Icon2D)(primitive);
-
+                    var icon = (Icon2D)(primitive);
                     this.DrawIcon(target, icon.X, icon.Y, icon.Image);
                 }
                 else if (primitive is Image2D)
                 {
                     var image = (Image2D)(primitive);
-
-                    image.Tag = this.DrawImage(target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData, image.Tag);
+                    image.Tag = this.DrawImage(target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData, 
+                        image.Tag);
                 }
                 else if (primitive is Text2D)
                 {
                     var text = (Text2D)(primitive);
-
-                    this.DrawText(target, text.X, text.Y, text.Text, this.FromPixels(target, view, text.Size));
+                    this.DrawText(target, text.X, text.Y, text.Text, 
+                        this.FromPixels(target, view, text.Size));
                 }
             }
         }

@@ -11,12 +11,13 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 	/// </summary>
 	public interface IScene2DPrimitive
 	{
-		/// <summary>
-		/// Returns true if the object is visible on the view.
-		/// </summary>
-		/// <returns><c>true</c> if this instance is visible in the specified view; otherwise, <c>false</c>.</returns>
-		/// <param name="view">View.</param>
-		bool IsVisibleIn(View2D view);
+	    /// <summary>
+	    /// Returns true if the object is visible on the view.
+	    /// </summary>
+	    /// <returns><c>true</c> if this instance is visible in the specified view; otherwise, <c>false</c>.</returns>
+	    /// <param name="view">View.</param>
+	    /// <param name="zoom"></param>
+	    bool IsVisibleIn(View2D view, float zoom);
 
 		/// <summary>
 		/// Gets or sets the tag.

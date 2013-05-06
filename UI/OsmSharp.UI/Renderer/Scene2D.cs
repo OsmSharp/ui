@@ -33,18 +33,19 @@ namespace OsmSharp.UI.Renderer
             this.BackColor = SimpleColor.FromArgb(0, 255, 255, 255).Value; // fully transparent.
 		}
 
-		/// <summary>
-		/// Gets all objects in this scene for the specified view.
-		/// </summary>
-		/// <param name="view">View.</param>
-		internal IEnumerable<IScene2DPrimitive> Get(View2D view)
+	    /// <summary>
+	    /// Gets all objects in this scene for the specified view.
+	    /// </summary>
+	    /// <param name="view">View.</param>
+	    /// <param name="zoom"></param>
+	    internal IEnumerable<IScene2DPrimitive> Get(View2D view, float zoom)
 		{
 			var primitivesInView = new List<IScene2DPrimitive>();
 		    foreach (var layer in _primitives)
 		    { // loop over all layers in order.
 		        foreach (KeyValuePair<uint, IScene2DPrimitive> primitivePair in layer.Value)
 		        { // loop over all primitives in order.
-		            if (primitivePair.Value.IsVisibleIn(view))
+		            if (primitivePair.Value.IsVisibleIn(view, zoom))
 		            {
 		                primitivesInView.Add(primitivePair.Value);
 		            }

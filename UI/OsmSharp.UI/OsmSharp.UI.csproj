@@ -76,6 +76,8 @@
     <Compile Include="Map\Styles\MapCSS\MapCSSDictionaryImageSource.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSDirectoryImageSource.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSInterpreter.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRuleProperties.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRulePropertiesCollection.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSTypes.cs" />
     <Compile Include="Map\Styles\StyleInterpreter.cs" />
     <Compile Include="Map\View.cs" />

@@ -25,6 +25,9 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.Right = right;
             this.Top = top;
             this.Bottom = bottom;
+
+            this.MinZoom = float.MinValue;
+            this.MaxZoom = float.MaxValue;
         }
 
 		/// <summary>
@@ -61,6 +64,16 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// </summary>
         public float Bottom { get; set; }
 
+        /// <summary>
+        /// The minimum zoom.
+        /// </summary>
+        public float MinZoom { get; set; }
+
+        /// <summary>
+        /// The maximum zoom.
+        /// </summary>
+        public float MaxZoom { get; set; }
+
         #region IScene2DPrimitive implementation
 
         /// <summary>
@@ -69,8 +82,14 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <returns>true</returns>
         /// <c>false</c>
         /// <param name="view">View.</param>
-        public bool IsVisibleIn(View2D view)
+        /// <param name="zoom"></param>
+        public bool IsVisibleIn(View2D view, float zoom)
         {
+            if (this.MinZoom > zoom || this.MaxZoom < zoom)
+            { // outside of zoom bounds!
+                return false;
+            }
+
             if (view.Contains(this.Left, this.Bottom) ||
                 view.Contains(this.Left, this.Top) ||
                 view.Contains(this.Right, this.Bottom) ||

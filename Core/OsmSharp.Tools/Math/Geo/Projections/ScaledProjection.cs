@@ -104,5 +104,15 @@ namespace OsmSharp.Tools.Math.Geo.Projections
         {
 			return _projection.XToLongitude(x / _scaleFactor);
         }
+
+        /// <summary>
+        /// Converts the given zoom level to a zoomfactor for this projection.
+        /// </summary>
+        /// <param name="zoomLevel"></param>
+        /// <returns></returns>
+        public double ToZoomFactor(double zoomLevel)
+        {
+            return System.Math.Sqrt((78271.516 * _scaleFactor) / System.Math.Pow(2, zoomLevel));
+        }
     }
 }

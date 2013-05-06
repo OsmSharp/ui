@@ -41,9 +41,6 @@
     <AndroidLinkMode>SdkOnly</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="protobuf-net">
-      <HintPath>..\..\..\..\..\..\..\Program Files %28x86%29\protobuf-net\protobuf-net-VS9\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -52,6 +49,9 @@
       <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Change.cs" />
@@ -151,11 +151,23 @@
     <Compile Include="Xml\v0_6\osm.cs">
       <DependentUpon>osm.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Data\PBF\fileformat.cs" />
+    <Compile Include="Data\PBF\IPBFOsmPrimitiveConsumer.cs" />
+    <Compile Include="Data\PBF\IPBFPrimitiveBlockConsumer.cs" />
+    <Compile Include="Data\PBF\osmformat.cs" />
+    <Compile Include="Data\PBF\PBFReader.cs" />
+    <Compile Include="Data\PBF\PBFWriter.cs" />
+    <Compile Include="Data\PBF\Processor\PBFDataProcessorSource.cs" />
+    <Compile Include="Data\PBF\Processor\PBFDataProcessorTarget.cs" />
+    <Compile Include="Data\PBF\Dense\Compressor.cs" />
+    <Compile Include="Data\PBF\Dense\Decompressor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Xml\v0_6\osm.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Data\PBF\fileformat.proto" />
+    <None Include="Data\PBF\osmformat.proto" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Memory\Memory\" />

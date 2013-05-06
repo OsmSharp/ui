@@ -119,6 +119,16 @@ namespace OsmSharp.Tools
 			return SphericalMercator.RadToDeg(x) / R_MAJOR;
 		}
 
+        /// <summary>
+        /// Converts the given zoom level to a zoomfactor for this projection.
+        /// </summary>
+        /// <param name="zoomLevel"></param>
+        /// <returns></returns>
+        public double ToZoomFactor(double zoomLevel)
+        {
+            return System.Math.Sqrt(78271.516 / System.Math.Pow(2, zoomLevel));
+        }
+
 		#endregion
 
 		private static double RadToDeg(double rad)

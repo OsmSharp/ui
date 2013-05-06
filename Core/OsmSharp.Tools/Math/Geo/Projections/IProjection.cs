@@ -58,5 +58,12 @@ namespace OsmSharp.Tools
 		/// <returns>The longitude.</returns>
 		/// <param name="x">The x coordinate.</param>
 		double XToLongitude(double x);
+
+        /// <summary>
+        /// Converts the given zoom level to a given zoom factor for this projection.
+        /// </summary>
+        /// <param name="zoomLevel"></param>
+        /// <returns></returns>
+	    double ToZoomFactor(double zoomLevel);
 	}
 }

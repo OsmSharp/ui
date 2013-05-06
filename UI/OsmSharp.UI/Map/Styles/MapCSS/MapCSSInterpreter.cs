@@ -124,184 +124,18 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="node"></param>
         private void TranslateNode(Scene2D scene, IProjection projection, float zoom, Node node)
         {
-            int? color = null;
-            int? fillColor = null;
-            int? zIndex = null;
-            int? casingColor = null;
-            int? extrude = null;
-            int? extrudeEdgeColor = null;
-            int? extrudeFaceColor = null;
-            int? iconWidth = null;
-            int? iconHeight = null;
-            int? fontSize = null;
-            int? textColor = null;
-            int? textOffset = null;
-            int? maxWidth = null;
-            int? textHaloColor = null;
-            int? textHaloRadius = null;
-
-            float? width = null;
-            float? fillOpacity = null;
-            float? opacity = null;
-            float? casingOpacity = null;
-            float? extrudeEdgeOpacity = null;
-            float? extrudeFaceOpacity = null;
-            float? extrudeEdgeWidth = null;
-            float? iconOpacity = null;
-            float? textOpacity = null;
-
-            string text = null;
-            string fontFamily = null;
-
             float? x = null, y = null;
-            byte[] iconImage = null;
-            byte[] image = null;
-            byte[] fillImage = null;
-            byte[] shieldImage = null;
 
-            // interpret all rules on-by-one.
-            foreach (var rule in _mapCSSFile.Rules)
-            {
-                if (rule.HasToBeAppliedTo((int)zoom, node))
-                {
-                    // get x/y.
-                    if (!x.HasValue)
-                    { // pre-calculate x/y.
-                        x = (float)projection.LongitudeToX(node.Coordinate.Longitude);
-                        y = (float)projection.LatitudeToY(node.Coordinate.Latitude);
-                    }
-
-                    foreach (var declaration in rule.Declarations)
-                    {
-                        if (declaration is DeclarationInt)
-                        {
-                            var declarationInt = (declaration as DeclarationInt);
-                            switch (declarationInt.Qualifier)
-                            {
-                                case DeclarationIntEnum.FillColor:
-                                    fillColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.ZIndex:
-                                    zIndex = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.Color:
-                                    color = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.CasingColor:
-                                    casingColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.Extrude:
-                                    extrude = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.ExtrudeEdgeColor:
-                                    extrudeEdgeColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.ExtrudeFaceColor:
-                                    extrudeFaceColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.IconWidth:
-                                    iconWidth = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.IconHeight:
-                                    iconHeight = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.FontSize:
-                                    fontSize = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.TextColor:
-                                    textColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.TextOffset:
-                                    textOffset = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.MaxWidth:
-                                    maxWidth = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.TextHaloColor:
-                                    textHaloColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.TextHaloRadius:
-                                    textHaloRadius = declarationInt.Value;
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        }
-                        else if (declaration is DeclarationFloat)
-                        {
-                            var declarationFloat = (declaration as DeclarationFloat);
-                            switch (declarationFloat.Qualifier)
-                            {
-                                case DeclarationFloatEnum.Width:
-                                    width = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.FillOpacity:
-                                    width = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.Opacity:
-                                    opacity = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.CasingOpacity:
-                                    casingOpacity = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.ExtrudeEdgeOpacity:
-                                    extrudeEdgeOpacity = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.ExtrudeFaceOpacity:
-                                    extrudeFaceOpacity = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.ExtrudeEdgeWidth:
-                                    extrudeEdgeWidth = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.IconOpacity:
-                                    iconOpacity = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.TextOpacity:
-                                    textOpacity = declarationFloat.Value;
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        }
-                        else if (declaration is DeclarationString)
-                        {
-                            DeclarationString declarationString = declaration as DeclarationString;
-                            switch (declarationString.Qualifier)
-                            {
-                                case DeclarationStringEnum.FontFamily:
-                                    fontFamily = declarationString.Value;
-                                    break;
-                                case DeclarationStringEnum.Text:
-                                    text = declarationString.Value;
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        }
-                        else if (declaration is DeclarationURL)
-                        {
-                            DeclarationURL declarationURL = declaration as DeclarationURL;
-                            switch (declarationURL.Qualifier)
-                            {
-                                case DeclarationURLEnum.Image:
-                                    _mapCSSImageSource.TryGet(declarationURL.Value, out image);
-                                    break;
-                                case DeclarationURLEnum.FillImage:
-                                    _mapCSSImageSource.TryGet(declarationURL.Value, out fillImage);
-                                    break;
-                                case DeclarationURLEnum.IconImage:
-                                    _mapCSSImageSource.TryGet(declarationURL.Value, out iconImage);
-                                    break;
-                                case DeclarationURLEnum.ShieldImage:
-                                    _mapCSSImageSource.TryGet(declarationURL.Value, out shieldImage);
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        }
-                    }
-                }
+            // get x/y.
+            if (!x.HasValue)
+            { // pre-calculate x/y.
+                x = (float) projection.LongitudeToX(node.Coordinate.Longitude);
+                y = (float) projection.LatitudeToY(node.Coordinate.Latitude);
             }
+
+            // build the rules.
+            IEnumerable<MapCSSRuleProperties> rules =
+                this.BuildRules(node);
 
             // validate what's there.
 
@@ -314,47 +148,56 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             }
 
             // interpret the results.
-            if (color.HasValue)
+            foreach (var rule in rules)
             {
-                if (width.HasValue)
+                int color;
+                if (rule.TryGetProperty<int>("color", out color))
                 {
-                    sceneLayer = sceneLayer + IconTextLayerOffset;
-                    scene.AddPoint(sceneLayer, (float)projection.LongitudeToX(node.Coordinate.Longitude),
-                                   (float)projection.LatitudeToY(node.Coordinate.Latitude),
-                                   color.Value, width.Value);
-                    sceneLayer = sceneLayer - IconTextLayerOffset;
+                    float width;
+                    if (rule.TryGetProperty<float>("width", out width))
+                    {
+                        sceneLayer = sceneLayer + IconTextLayerOffset;
+                        scene.AddPoint(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
+                                       (float) projection.LatitudeToY(node.Coordinate.Latitude),
+                                       color, width);
+                        sceneLayer = sceneLayer - IconTextLayerOffset;
+                    }
+                    else
+                    {
+                        sceneLayer = sceneLayer + IconTextLayerOffset;
+                        scene.AddPoint(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
+                                       (float) projection.LatitudeToY(node.Coordinate.Latitude),
+                                       color, 1);
+                        sceneLayer = sceneLayer - IconTextLayerOffset;
+                    }
                 }
-                else
+                byte[] iconImage;
+                if (rule.TryGetProperty("iconImage", out iconImage))
                 {
-                    sceneLayer = sceneLayer + IconTextLayerOffset;
-                    scene.AddPoint(sceneLayer, (float)projection.LongitudeToX(node.Coordinate.Longitude),
-                                   (float)projection.LatitudeToY(node.Coordinate.Latitude),
-                                   color.Value, 1);
-                    sceneLayer = sceneLayer - IconTextLayerOffset;
-                }
-            }
-            if (iconImage != null)
-            { // an icon is to be drawn!
-                sceneLayer = sceneLayer + IconTextLayerOffset; // offset to correct layer.
-
-                scene.AddIcon(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
-                              (float) projection.LatitudeToY(node.Coordinate.Latitude),
-                              iconImage);
-
-                sceneLayer = sceneLayer - IconTextLayerOffset; // offset to correct layer.
-            }
-
-            if (text != null)
-            { // a text is to be drawn.
-                string value;
-                if (node.Tags.TryGetValue(text, out value))
-                {
+                    // an icon is to be drawn!
                     sceneLayer = sceneLayer + IconTextLayerOffset; // offset to correct layer.
 
-                    scene.AddText(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
-                                  (float) projection.LatitudeToY(node.Coordinate.Latitude), 15, value);
+                    scene.AddIcon(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
+                                  (float) projection.LatitudeToY(node.Coordinate.Latitude),
+                                  iconImage);
 
                     sceneLayer = sceneLayer - IconTextLayerOffset; // offset to correct layer.
+                }
+
+                string text;
+                if (rule.TryGetProperty("text", out text))
+                {
+                    // a text is to be drawn.
+                    string value;
+                    if (node.Tags.TryGetValue(text, out value))
+                    {
+                        sceneLayer = sceneLayer + IconTextLayerOffset; // offset to correct layer.
+
+                        scene.AddText(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
+                                      (float) projection.LatitudeToY(node.Coordinate.Latitude), 15, value);
+
+                        sceneLayer = sceneLayer - IconTextLayerOffset; // offset to correct layer.
+                    }
                 }
             }
         }
@@ -368,176 +211,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="way"></param>
         private void TranslateWay(Scene2D scene, IProjection projection, float zoom, Way way)
         {
-            int? color = null;
-            int? fillColor = null;
-            int? zIndex = null;
-            int? casingColor = null;
-            int? extrude = null;
-            int? extrudeEdgeColor = null;
-            int? extrudeFaceColor = null;
-            int? iconWidth = null;
-            int? iconHeight = null;
-            int? fontSize = null;
-            int? textColor = null;
-            int? textOffset = null;
-            int? maxWidth = null;
-            int? textHaloColor = null;
-            int? textHaloRadius = null;
-
-            float? width = null;
-            float? fillOpacity = null;
-            float? opacity = null;
-            float? casingOpacity = null;
-            float? extrudeEdgeOpacity = null;
-            float? extrudeFaceOpacity = null;
-            float? extrudeEdgeWidth = null;
-            float? iconOpacity = null;
-            float? textOpacity = null;
-            float? casingWidth = null;
-
-            LineJoin lineJoin = LineJoin.None;
-            int[] dashes = null;
-
-            float[] x = null, y = null;
-
-            // interpret all rules on-by-one.
-            foreach (var rule in _mapCSSFile.Rules)
-            {
-                if (rule.HasToBeAppliedTo((int)zoom, way))
-                {
-                    // get x/y.
-                    if (x == null)
-                    { // pre-calculate x/y.
-                        x = new float[way.Nodes.Count];
-                        y = new float[way.Nodes.Count];
-                        for (int idx = 0; idx < way.Nodes.Count; idx++)
-                        {
-                            x[idx] = (float)projection.LongitudeToX(way.Nodes[idx].Coordinate.Longitude);
-                            y[idx] = (float)projection.LatitudeToY(way.Nodes[idx].Coordinate.Latitude);
-                        }
-                    }
-
-                    foreach (var declaration in rule.Declarations)
-                    {
-                        if (declaration is DeclarationInt)
-                        {
-                            var declarationInt = (declaration as DeclarationInt);
-                            switch (declarationInt.Qualifier)
-                            {
-                                case DeclarationIntEnum.FillColor:
-                                    fillColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.ZIndex:
-                                    zIndex = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.Color:
-                                    color = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.CasingColor:
-                                    casingColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.Extrude:
-                                    extrude = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.ExtrudeEdgeColor:
-                                    extrudeEdgeColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.ExtrudeFaceColor:
-                                    extrudeFaceColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.IconWidth:
-                                    iconWidth = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.IconHeight:
-                                    iconHeight = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.FontSize:
-                                    fontSize = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.TextColor:
-                                    textColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.TextOffset:
-                                    textOffset = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.MaxWidth:
-                                    maxWidth = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.TextHaloColor:
-                                    textHaloColor = declarationInt.Value;
-                                    break;
-                                case DeclarationIntEnum.TextHaloRadius:
-                                    textHaloRadius = declarationInt.Value;
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        }
-                        else if (declaration is DeclarationFloat)
-                        {
-                            var declarationFloat = (declaration as DeclarationFloat);
-                            switch (declarationFloat.Qualifier)
-                            {
-                                case DeclarationFloatEnum.Width:
-                                    width = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.FillOpacity:
-                                    width = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.Opacity:
-                                    opacity = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.CasingOpacity:
-                                    casingOpacity = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.ExtrudeEdgeOpacity:
-                                    extrudeEdgeOpacity = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.ExtrudeFaceOpacity:
-                                    extrudeFaceOpacity = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.ExtrudeEdgeWidth:
-                                    extrudeEdgeWidth = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.IconOpacity:
-                                    iconOpacity = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.TextOpacity:
-                                    textOpacity = declarationFloat.Value;
-                                    break;
-                                case DeclarationFloatEnum.CasingWidth:
-                                    casingWidth = declarationFloat.Value;
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        }
-                        else if (declaration is DeclarationLineJoin)
-                        {
-                            var declarationLineJoin = (declaration as DeclarationLineJoin);
-                            switch (declarationLineJoin.Value)
-                            {
-                                case LineJoinEnum.Round:
-                                    lineJoin = LineJoin.Miter;
-                                    break;
-                                case LineJoinEnum.Miter:
-                                    lineJoin = LineJoin.Miter;
-                                    break;
-                                case LineJoinEnum.Bevel:
-                                    lineJoin = LineJoin.Bevel;
-                                    break;
-                                default:
-                                    throw new ArgumentOutOfRangeException();
-                            }
-                        }
-                        else if (declaration is DeclarationDashes)
-                        {
-                            var declarationDashes = (declaration as DeclarationDashes);
-                            dashes = declarationDashes.Value;
-                        }
-                    }
-                }
-            }
+            // build the rules.
+            IEnumerable<MapCSSRuleProperties> rules =
+                this.BuildRules(way);
 
             // validate what's there.
 
@@ -549,48 +225,278 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 sceneLayer = (int)osmLayer * 100;
             }
 
-            // add the z-index.
-            if (zIndex.HasValue)
-            {
-                sceneLayer = sceneLayer + zIndex.Value;
+            float[] x = null, y = null;
+
+            // get x/y.
+            if (x == null)
+            { // pre-calculate x/y.
+                x = new float[way.Nodes.Count];
+                y = new float[way.Nodes.Count];
+                for (int idx = 0; idx < way.Nodes.Count; idx++)
+                {
+                    x[idx] = (float)projection.LongitudeToX(
+                        way.Nodes[idx].Coordinate.Longitude);
+                    y[idx] = (float)projection.LatitudeToY(
+                        way.Nodes[idx].Coordinate.Latitude);
+                }
             }
 
-            // interpret the results.
-            if (x != null)
-            { // there is a valid interpretation of this way.
-                if (way.IsOfType(MapCSSTypes.Area))
-                { // the way is an area. check if it can be rendered as an area.
-                    if (fillColor.HasValue)
-                    { // render as an area.
-                        sceneLayer = sceneLayer + FillLayerOffset;
-                        scene.AddPolygon(sceneLayer, x, y, fillColor.Value, 1, true);
-                        sceneLayer = sceneLayer - FillLayerOffset;
-                        if (color.HasValue)
-                        {
-                            sceneLayer = sceneLayer + CasingLayerOffset;
-                            scene.AddPolygon(sceneLayer, x, y, color.Value, 1, false);
-                            sceneLayer = sceneLayer - CasingLayerOffset;
+            // add the z-index.
+            foreach (var rule in rules)
+            {
+                int zIndex;
+                if (rule.TryGetProperty<int>("zIndex", out zIndex))
+                {
+                    sceneLayer = sceneLayer + zIndex;
+                }
+
+                // interpret the results.
+                if (x != null)
+                { // there is a valid interpretation of this way.
+                    int color;
+                    if (way.IsOfType(MapCSSTypes.Area))
+                    { // the way is an area. check if it can be rendered as an area.
+                        int fillColor;
+                        if (rule.TryGetProperty("fillColor", out fillColor))
+                        { // render as an area.
+                            sceneLayer = sceneLayer + FillLayerOffset;
+                            scene.AddPolygon(sceneLayer, x, y, fillColor, 1, true);
+                            sceneLayer = sceneLayer - FillLayerOffset;
+                            if (rule.TryGetProperty("color", out color))
+                            {
+                                sceneLayer = sceneLayer + CasingLayerOffset;
+                                scene.AddPolygon(sceneLayer, x, y, color, 1, false);
+                                sceneLayer = sceneLayer - CasingLayerOffset;
+                            }
                         }
                     }
-                }
 
-                // the way has to rendered as a line.
-                if (color.HasValue)
-                {
-                    sceneLayer = sceneLayer + StrokeLayerOffset;
-                    if (!width.HasValue)
+                    // the way has to rendered as a line.
+                    LineJoin lineJoin;
+                    int[] dashes;
+                    if (rule.TryGetProperty("color", out color) && 
+                        rule.TryGetProperty("lineJoine", out lineJoin) &&
+                        rule.TryGetProperty("dashes", out dashes))
                     {
-                        width = 1;
+                        sceneLayer = sceneLayer + StrokeLayerOffset;
+                        int width;
+                        if (!rule.TryGetProperty("width", out width))
+                        {
+                            width = 1;
+                        }
+                        scene.AddLine(sceneLayer, x, y, color, width, lineJoin, dashes);
+                        float casingWidth;
+                        int casingColor;
+                        if (rule.TryGetProperty("casingWidth", out casingWidth) && 
+                            rule.TryGetProperty("casingColor", out casingColor))
+                        {
+                            scene.AddLine(sceneLayer - 1, x, y, casingColor, width + (2 * casingWidth), lineJoin, dashes);
+                        }
+                        sceneLayer = sceneLayer - StrokeLayerOffset;
+                        return;
                     }
-                    scene.AddLine(sceneLayer, x, y, color.Value, width.Value, lineJoin, dashes);
-                    if (casingWidth.HasValue && casingColor.HasValue)
-                    {
-                        scene.AddLine(sceneLayer - 1, x, y, casingColor.Value, width.Value + (2 * casingWidth.Value), lineJoin, dashes);
-                    }
-                    sceneLayer = sceneLayer - StrokeLayerOffset;
-                    return;
                 }
             }
+        }
+
+        /// <summary>
+        /// Build the property collection.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        private IEnumerable<MapCSSRuleProperties> BuildRules(OsmGeo osmGeo)
+        {
+            var rulesCollection = new MapCSSRulePropertiesCollection();
+
+            // interpret all rules on-by-one.
+            foreach (var rule in _mapCSSFile.Rules)
+            {
+                var zooms = new List<KeyValuePair<int?, int?>>();
+                if (rule.HasToBeAppliedTo(osmGeo, out zooms))
+                { // the selector was ok.
+                    // loop over all declarations.
+                    var properties = new MapCSSRuleProperties();
+                    foreach (var declaration in rule.Declarations)
+                    {
+                        if (declaration is DeclarationInt)
+                        {
+                            var declarationInt = (declaration as DeclarationInt);
+                            switch (declarationInt.Qualifier)
+                            {
+                                case DeclarationIntEnum.FillColor:
+                                    properties.AddProperty("fillColor", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.ZIndex:
+                                    properties.AddProperty("zIndex", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.Color:
+                                    properties.AddProperty("color", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.CasingColor:
+                                    properties.AddProperty("casingColor", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.Extrude:
+                                    properties.AddProperty("extrude", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.ExtrudeEdgeColor:
+                                    properties.AddProperty("extrudeEdgeColor", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.ExtrudeFaceColor:
+                                    properties.AddProperty("extrudeFaceColor", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.IconWidth:
+                                    properties.AddProperty("iconWidth", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.IconHeight:
+                                    properties.AddProperty("iconHeight", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.FontSize:
+                                    properties.AddProperty("fontSize", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.TextColor:
+                                    properties.AddProperty("textColor", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.TextOffset:
+                                    properties.AddProperty("textOffset", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.MaxWidth:
+                                    properties.AddProperty("maxWidth", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.TextHaloColor:
+                                    properties.AddProperty("textHaloColor", declarationInt.Value);
+                                    break;
+                                case DeclarationIntEnum.TextHaloRadius:
+                                    properties.AddProperty("textHaloRadius", declarationInt.Value);
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+                        else if (declaration is DeclarationFloat)
+                        {
+                            var declarationFloat = (declaration as DeclarationFloat);
+                            switch (declarationFloat.Qualifier)
+                            {
+                                case DeclarationFloatEnum.Width:
+                                    properties.AddProperty("width", declarationFloat.Value);
+                                    break;
+                                case DeclarationFloatEnum.FillOpacity:
+                                    properties.AddProperty("fillOpacity", declarationFloat.Value);
+                                    break;
+                                case DeclarationFloatEnum.Opacity:
+                                    properties.AddProperty("opacity", declarationFloat.Value);
+                                    break;
+                                case DeclarationFloatEnum.CasingOpacity:
+                                    properties.AddProperty("casingOpacity", declarationFloat.Value);
+                                    break;
+                                case DeclarationFloatEnum.ExtrudeEdgeOpacity:
+                                    properties.AddProperty("extrudeEdgeOpacity", declarationFloat.Value);
+                                    break;
+                                case DeclarationFloatEnum.ExtrudeFaceOpacity:
+                                    properties.AddProperty("extrudeFaceOpacity", declarationFloat.Value);
+                                    break;
+                                case DeclarationFloatEnum.ExtrudeEdgeWidth:
+                                    properties.AddProperty("extrudeEdgeWidth", declarationFloat.Value);
+                                    break;
+                                case DeclarationFloatEnum.IconOpacity:
+                                    properties.AddProperty("iconOpacity", declarationFloat.Value);
+                                    break;
+                                case DeclarationFloatEnum.TextOpacity:
+                                    properties.AddProperty("textOpacity", declarationFloat.Value);
+                                    break;
+                                case DeclarationFloatEnum.CasingWidth:
+                                    properties.AddProperty("casingWidth", declarationFloat.Value);
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+                        else if (declaration is DeclarationString)
+                        {
+                            var declarationString = declaration as DeclarationString;
+                            switch (declarationString.Qualifier)
+                            {
+                                case DeclarationStringEnum.FontFamily:
+                                    properties.AddProperty("fontFamily", declarationString.Value);
+                                    break;
+                                case DeclarationStringEnum.Text:
+                                    properties.AddProperty("text", declarationString.Value);
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+                        else if (declaration is DeclarationURL)
+                        {
+                            byte[] image;
+                            var declarationURL = declaration as DeclarationURL;
+                            switch (declarationURL.Qualifier)
+                            {
+                                case DeclarationURLEnum.Image:
+                                    if (_mapCSSImageSource.TryGet(declarationURL.Value, out image))
+                                    {
+                                        properties.AddProperty("image", image);
+                                    }
+                                    break;
+                                case DeclarationURLEnum.FillImage:
+                                    if (_mapCSSImageSource.TryGet(declarationURL.Value, out image))
+                                    {
+                                        properties.AddProperty("fillImage", image);
+                                    }
+                                    break;
+                                case DeclarationURLEnum.IconImage:
+                                    if (_mapCSSImageSource.TryGet(declarationURL.Value, out image))
+                                    {
+                                        properties.AddProperty("iconImage", image);
+                                    }
+                                    break;
+                                case DeclarationURLEnum.ShieldImage:
+                                    if (_mapCSSImageSource.TryGet(declarationURL.Value, out image))
+                                    {
+                                        properties.AddProperty("shieldImage", image);
+                                    }
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+                        }
+                        else if (declaration is DeclarationLineJoin)
+                        {
+                            var declarationLineJoin = (declaration as DeclarationLineJoin);
+                            properties.AddProperty("lineJoin", declarationLineJoin.Value);
+                        }
+                        else if (declaration is DeclarationDashes)
+                        {
+                            var declarationDashes = (declaration as DeclarationDashes);
+                            properties.AddProperty("dashes", declarationDashes.Value);
+                        }
+                    }
+
+                    // loop over all zoom levels.
+                    foreach (var keyValuePair in zooms)
+                    {
+                        int minZoom = 0;
+                        if (keyValuePair.Key.HasValue)
+                        {
+                            minZoom = keyValuePair.Key.Value;
+                        }
+                        int maxZoom = 25;
+                        if (keyValuePair.Value.HasValue)
+                        {
+                            maxZoom = keyValuePair.Value.Value;
+                        }
+
+                        // zoom properties;
+                        var zoomRule = new MapCSSRuleProperties(
+                            minZoom, maxZoom);
+                        zoomRule = zoomRule.Merge(properties);
+
+                        // add the properties.
+                        rulesCollection.AddProperties(zoomRule);
+                    }
+                }
+            }
+            return rulesCollection.GetRanges();
         }
     }
 }

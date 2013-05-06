@@ -105,7 +105,8 @@ namespace OsmSharp.UI.Renderer
         /// <param name="pixelsHeight"></param>
         /// <param name="zoomFactor"></param>
         /// <returns></returns>
-        public static View2D CreateFrom(float centerX, float centerY, float pixelsWidth, float pixelsHeight, float zoomFactor)
+        public static View2D CreateFrom(float centerX, float centerY, float pixelsWidth, float pixelsHeight, 
+            float zoomFactor)
         {
             float realZoom = (float)System.Math.Pow(2, zoomFactor);
 
@@ -227,6 +228,18 @@ namespace OsmSharp.UI.Renderer
             float offsetYScene = pixelY / scaleY;
 
             return new float[]{  (this.Left + offsetXScene), (this.Top - offsetYScene) };
+        }
+
+        /// <summary>
+        /// Calculates the zoom factor for the given view when at the given resolution.
+        /// </summary>
+        /// <param name="pixelsWidth"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <returns></returns>
+        public float CalculateZoom(float pixelsWidth, float pixelsHeight)
+        {
+            float realZoom = pixelsWidth/this.Width;
+            return (float)System.Math.Log(realZoom, 2);
         }
     }
 }

@@ -54,6 +54,9 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
                     _minY = y[idx];
                 }
             }
+
+            this.MinZoom = float.MinValue;
+            this.MaxZoom = float.MaxValue;
         }
 
         /// <summary>
@@ -82,6 +85,9 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             _maxX = maxX;
             _minY = minY;
             _maxY = maxY;
+
+            this.MinZoom = float.MinValue;
+            this.MaxZoom = float.MaxValue;
 		}
 		
 		/// <summary>
@@ -136,7 +142,17 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		public bool Fill {
 			get;
 			private set;
-		}
+        }
+
+        /// <summary>
+        /// The minimum zoom.
+        /// </summary>
+        public float MinZoom { get; set; }
+
+        /// <summary>
+        /// The maximum zoom.
+        /// </summary>
+        public float MaxZoom { get; set; }
 
 		#region IScene2DPrimitive implementation
 
@@ -144,15 +160,21 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         private readonly float _maxX;
         private readonly float _minY;
         private readonly float _maxY;
-		
-		/// <summary>
-		/// Returns true if the object is visible on the view.
-		/// </summary>
-		/// <returns>true</returns>
-		/// <c>false</c>
-		/// <param name="view">View.</param>
-		public bool IsVisibleIn (View2D view)
-		{
+
+	    /// <summary>
+	    /// Returns true if the object is visible on the view.
+	    /// </summary>
+	    /// <returns>true</returns>
+	    /// <c>false</c>
+	    /// <param name="view">View.</param>
+	    /// <param name="zoom"></param>
+	    public bool IsVisibleIn (View2D view, float zoom)
+        {
+            if (this.MinZoom > zoom || this.MaxZoom < zoom)
+            { // outside of zoom bounds!
+                return false;
+            }
+
             if (view.Contains(_minX, _minY) ||
                 view.Contains(_minX, _maxY) ||
                 view.Contains(_maxX, _minY) ||
