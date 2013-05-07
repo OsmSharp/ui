@@ -44,42 +44,42 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Holds the dynamic graph.
         /// </summary>
-        private IDynamicGraph<EdgeData> _dynamic_graph;
+        private readonly IDynamicGraph<EdgeData> _dynamic_graph;
 
         /// <summary>
         /// The interpreter for osm data.
         /// </summary>
-        private IRoutingInterpreter _interpreter;
+        private readonly IRoutingInterpreter _interpreter;
 
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private ITagsIndex _tags_index;
+        private readonly ITagsIndex _tags_index;
 
         /// <summary>
         /// True when this target is in pre-index mode.
         /// </summary>
-        private bool _pre_index_mode;
+        private bool _preIndexMode;
 
         /// <summary>
         /// The bounding box to limit nodes if any.
         /// </summary>
-        private GeoCoordinateBox _box;
+        private readonly GeoCoordinateBox _box;
 
         /// <summary>
         /// Holds the edge comparer.
         /// </summary>
-        private IDynamicGraphEdgeComparer<EdgeData> _edge_comparer;
+        private readonly IDynamicGraphEdgeComparer<EdgeData> _edgeComparer;
 
         /// <summary>
         /// Creates a new processor target.
         /// </summary>
-        /// <param name="dynamic_graph">The graph that will be filled.</param>
+        /// <param name="dynamicGraph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edge_comparer"></param>
-        public DynamicGraphDataProcessorTarget(IDynamicGraph<EdgeData> dynamic_graph,
-            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edge_comparer)
-            : this(dynamic_graph, interpreter, edge_comparer, new SimpleTagsIndex(), new Dictionary<long, uint>())
+        /// <param name="edgeComparer"></param>
+        public DynamicGraphDataProcessorTarget(IDynamicGraph<EdgeData> dynamicGraph,
+            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edgeComparer)
+            : this(dynamicGraph, interpreter, edgeComparer, new SimpleTagsIndex(), new Dictionary<long, uint>())
         {
 
         }
@@ -87,13 +87,13 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Creates a new processor target.
         /// </summary>
-        /// <param name="dynamic_graph">The graph that will be filled.</param>
+        /// <param name="dynamicGraph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edge_comparer"></param>
-        /// <param name="tags_index"></param>
-        public DynamicGraphDataProcessorTarget(IDynamicGraph<EdgeData> dynamic_graph,
-            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edge_comparer, ITagsIndex tags_index)
-            : this(dynamic_graph, interpreter, edge_comparer, tags_index, new Dictionary<long, uint>())
+        /// <param name="edgeComparer"></param>
+        /// <param name="tagsIndex"></param>
+        public DynamicGraphDataProcessorTarget(IDynamicGraph<EdgeData> dynamicGraph,
+            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edgeComparer, ITagsIndex tagsIndex)
+            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new Dictionary<long, uint>())
         {
 
         }
@@ -101,15 +101,15 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Creates a new processor target.
         /// </summary>
-        /// <param name="dynamic_graph">The graph that will be filled.</param>
+        /// <param name="dynamicGraph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edge_comparer"></param>
-        /// <param name="tags_index"></param>
-        /// <param name="id_transformations"></param>
-        public DynamicGraphDataProcessorTarget(IDynamicGraph<EdgeData> dynamic_graph,
-            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edge_comparer, ITagsIndex tags_index, 
-            IDictionary<long, uint> id_transformations)
-            : this(dynamic_graph, interpreter, edge_comparer, tags_index, id_transformations, null)
+        /// <param name="edgeComparer"></param>
+        /// <param name="tagsIndex"></param>
+        /// <param name="idTransformations"></param>
+        public DynamicGraphDataProcessorTarget(IDynamicGraph<EdgeData> dynamicGraph,
+            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edgeComparer, ITagsIndex tagsIndex, 
+            IDictionary<long, uint> idTransformations)
+            : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, idTransformations, null)
         {
 
         }
@@ -117,26 +117,26 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Creates a new processor target.
         /// </summary>
-        /// <param name="dynamic_graph">The graph that will be filled.</param>
+        /// <param name="dynamicGraph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
-        /// <param name="edge_comparer"></param>
-        /// <param name="tags_index"></param>
-        /// <param name="id_transformations"></param>
+        /// <param name="edgeComparer"></param>
+        /// <param name="tagsIndex"></param>
+        /// <param name="idTransformations"></param>
         /// <param name="box"></param>
         public DynamicGraphDataProcessorTarget(
-            IDynamicGraph<EdgeData> dynamic_graph, IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edge_comparer, 
-            ITagsIndex tags_index, IDictionary<long, uint> id_transformations,
+            IDynamicGraph<EdgeData> dynamicGraph, IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<EdgeData> edgeComparer, 
+            ITagsIndex tagsIndex, IDictionary<long, uint> idTransformations,
             GeoCoordinateBox box)
         {
-            _dynamic_graph = dynamic_graph;
+            _dynamic_graph = dynamicGraph;
             _interpreter = interpreter;
-            _edge_comparer = edge_comparer;
+            _edgeComparer = edgeComparer;
             _box = box;
 
-            _tags_index = tags_index;
-            _id_transformations = id_transformations;
-            _pre_index_mode = true;
-            _pre_index = new HashSet<long>();
+            _tags_index = tagsIndex;
+            _idTransformations = idTransformations;
+            _preIndexMode = true;
+            _preIndex = new HashSet<long>();
             _usedTwiceOrMore = new HashSet<long>();
         }
 
@@ -159,12 +159,12 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Holds the index of all relevant nodes.
         /// </summary>
-        private HashSet<long> _pre_index;
+        private HashSet<long> _preIndex;
 
         /// <summary>
         /// Holds the id transformations.
         /// </summary>
-        private IDictionary<long, uint> _id_transformations;
+        private readonly IDictionary<long, uint> _idTransformations;
 
         /// <summary>
         /// Initializes the processing.
@@ -189,9 +189,9 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="node"></param>
         public override void AddNode(SimpleNode node)
         {
-            if (!_pre_index_mode)
+            if (!_preIndexMode)
             {
-                if (_pre_index != null && _pre_index.Contains(node.Id.Value))
+                if (_preIndex != null && _preIndex.Contains(node.Id.Value))
                 { // only save the coordinates for relevant nodes.
                     // save the node-coordinates.
                     // add the relevant nodes.
@@ -199,10 +199,10 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                     if (_box == null || _box.IsInside(new GeoCoordinate((float)node.Latitude.Value, (float)node.Longitude.Value)))
                     { // the coordinate is acceptable.
                         _coordinates[node.Id.Value] = new float[] { (float)node.Latitude.Value, (float)node.Longitude.Value };
-                        if (_coordinates.Count == _pre_index.Count)
+                        if (_coordinates.Count == _preIndex.Count)
                         {
-                            _pre_index.Clear();
-                            _pre_index = null;
+                            _preIndex.Clear();
+                            _preIndex = null;
                         }
                     }
                 }
@@ -223,19 +223,19 @@ namespace OsmSharp.Routing.Osm.Data.Processing
             // initialize the way interpreter.
             if (_interpreter.EdgeInterpreter.IsRoutable(way.Tags))
             { // the way is a road.
-                if (_pre_index_mode)
+                if (_preIndexMode)
                 { // index only relevant nodes.
                     if (way.Nodes != null)
                     {
                         foreach (long node in way.Nodes)
                         {
-                            if (_pre_index.Contains(node))
+                            if (_preIndex.Contains(node))
                             {
                                 _usedTwiceOrMore.Add(node);
                             }
                             else
                             {
-                                _pre_index.Add(node); // node is relevant.
+                                _preIndex.Add(node); // node is relevant.
                             }
                         }
                     }
@@ -248,20 +248,31 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                     { // loop over all edges.
                         if (way.Nodes != null && way.Nodes.Count > 1)
                         { // way has at least two nodes.
+                            // keep the relevant tags.
+                            TagsCollection relevantTags = new SimpleTagsCollection();
+                            foreach (var relevantTag in way.Tags)
+                            {
+                                if (_interpreter.IsRelevant(relevantTag.Key))
+                                {
+                                    relevantTags.Add(relevantTag);
+                                }
+                            }
+
                             uint? from = this.AddRoadNode(way.Nodes[0]);
                             for (int idx = 1; idx < way.Nodes.Count; idx++)
                             { // the to-node.
                                 uint? to = this.AddRoadNode(way.Nodes[idx]);
 
-                                if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _tags_index, way.Tags))
+                                if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _tags_index, 
+                                    relevantTags))
                                 { // the edge is traversable, add the edges.
                                     // add the edge(s).
                                     if (from.HasValue && to.HasValue)
                                     {
                                         // 
-                                        if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value))
+                                        if (!this.AddRoadEdge(relevantTags, true, from.Value, to.Value))
                                         {
-                                            this.AddRoadEdge(way.Tags, false, to.Value, from.Value);
+                                            this.AddRoadEdge(relevantTags, false, to.Value, from.Value);
                                         }
                                     }
                                 }
@@ -277,25 +288,25 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Adds a node that is at least part of one road.
         /// </summary>
-        /// <param name="node_id"></param>
+        /// <param name="nodeId"></param>
         /// <returns></returns>
-        private uint? AddRoadNode(long node_id)
+        private uint? AddRoadNode(long nodeId)
         {
             uint id;
             // try and get existing node.
-            if (!_id_transformations.TryGetValue(node_id, out id))
+            if (!_idTransformations.TryGetValue(nodeId, out id))
             {
                 // get coordinates.
                 float[] coordinates;
-                if (_coordinates.TryGetValue(node_id, out coordinates))
+                if (_coordinates.TryGetValue(nodeId, out coordinates))
                 { // the coordinate is present.
                     id = _dynamic_graph.AddVertex(
                         coordinates[0], coordinates[1]);
-                    _coordinates.Remove(node_id); // free the memory again!
+                    _coordinates.Remove(nodeId); // free the memory again!
 
-                    if (_usedTwiceOrMore.Contains(node_id))
+                    if (_usedTwiceOrMore.Contains(nodeId))
                     {
-                        _id_transformations[node_id] = id;
+                        _idTransformations[nodeId] = id;
                     }
                     return id;
                 }
@@ -315,22 +326,22 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         {
             float latitude;
             float longitude;
-            GeoCoordinate from_coordinate = null;
+            GeoCoordinate fromCoordinate = null;
             if (_dynamic_graph.GetVertex(from, out latitude, out longitude))
             { // 
-                from_coordinate = new GeoCoordinate(latitude, longitude);
+                fromCoordinate = new GeoCoordinate(latitude, longitude);
             }
-            GeoCoordinate to_coordinate = null;
+            GeoCoordinate toCoordinate = null;
             if (_dynamic_graph.GetVertex(to, out latitude, out longitude))
             { // 
-                to_coordinate = new GeoCoordinate(latitude, longitude);
+                toCoordinate = new GeoCoordinate(latitude, longitude);
             }
 
-            if (from_coordinate != null && to_coordinate != null)
+            if (fromCoordinate != null && toCoordinate != null)
             { // calculate the edge data.
-                EdgeData edge_data = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tags_index, tags, forward, from_coordinate, to_coordinate);
+                EdgeData edgeData = this.CalculateEdgeData(_interpreter.EdgeInterpreter, _tags_index, tags, forward, fromCoordinate, toCoordinate);
 
-                _dynamic_graph.AddArc(from, to, edge_data, _edge_comparer);
+                _dynamic_graph.AddArc(from, to, edgeData, _edgeComparer);
             }
             return false;
         }
@@ -339,8 +350,8 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// Calculates the edge data.
         /// </summary>
         /// <returns></returns>
-        protected abstract EdgeData CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, TagsCollection tags,
-            bool direction_forward, GeoCoordinate from, GeoCoordinate to);
+        protected abstract EdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex, TagsCollection tags,
+            bool directionForward, GeoCoordinate from, GeoCoordinate to);
 
         /// <summary>
         /// Returns true if the edge can be traversed.
@@ -366,10 +377,10 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// </summary>
         public override void Close()
         {
-            if (_pre_index_mode)
+            if (_preIndexMode)
             {
                 this.Source.Reset();
-                _pre_index_mode = false;
+                _preIndexMode = false;
                 this.Pull();
             }
         }

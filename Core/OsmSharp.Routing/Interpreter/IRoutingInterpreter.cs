@@ -31,6 +31,13 @@ namespace OsmSharp.Routing.Interpreter
     public interface IRoutingInterpreter
     {
         /// <summary>
+        /// Returns true if the given tag is relevant, false otherwise.
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        bool IsRelevant(string tag);
+
+        /// <summary>
         /// Returns true if the given vertices can be traversed in the given order.
         /// </summary>
         /// <param name="from"></param>

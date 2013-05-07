@@ -34,13 +34,13 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="dynamic_graph"></param>
+        /// <param name="dynamicGraph"></param>
         /// <param name="interpreter"></param>
-        /// <param name="tags_index"></param>
+        /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        public PreProcessedDataGraphProcessingTarget(IDynamicGraphRouterDataSource<PreProcessedEdge> dynamic_graph,
-            IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle)
-            : this(dynamic_graph, interpreter, tags_index, vehicle, new Dictionary<long, uint>())
+        public PreProcessedDataGraphProcessingTarget(IDynamicGraphRouterDataSource<PreProcessedEdge> dynamicGraph,
+            IRoutingInterpreter interpreter, ITagsIndex tagsIndex, VehicleEnum vehicle)
+            : this(dynamicGraph, interpreter, tagsIndex, vehicle, new Dictionary<long, uint>())
         {
 
         }
@@ -48,14 +48,14 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="dynamic_graph"></param>
+        /// <param name="dynamicGraph"></param>
         /// <param name="interpreter"></param>
-        /// <param name="tags_index"></param>
+        /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        /// <param name="id_transformations"></param>
-        public PreProcessedDataGraphProcessingTarget(IDynamicGraphRouterDataSource<PreProcessedEdge> dynamic_graph,
-            IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle, IDictionary<long, uint> id_transformations)
-            : this(dynamic_graph, interpreter, tags_index, vehicle, id_transformations, null)
+        /// <param name="idTransformations"></param>
+        public PreProcessedDataGraphProcessingTarget(IDynamicGraphRouterDataSource<PreProcessedEdge> dynamicGraph,
+            IRoutingInterpreter interpreter, ITagsIndex tagsIndex, VehicleEnum vehicle, IDictionary<long, uint> idTransformations)
+            : this(dynamicGraph, interpreter, tagsIndex, vehicle, idTransformations, null)
         {
 
         }
@@ -63,14 +63,14 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="dynamic_graph"></param>
+        /// <param name="dynamicGraph"></param>
         /// <param name="interpreter"></param>
-        /// <param name="tags_index"></param>
+        /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
         /// <param name="box"></param>
-        public PreProcessedDataGraphProcessingTarget(IDynamicGraphRouterDataSource<PreProcessedEdge> dynamic_graph,
-            IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle, GeoCoordinateBox box)
-            : this(dynamic_graph, interpreter, tags_index, vehicle, new Dictionary<long, uint>(), box)
+        public PreProcessedDataGraphProcessingTarget(IDynamicGraphRouterDataSource<PreProcessedEdge> dynamicGraph,
+            IRoutingInterpreter interpreter, ITagsIndex tagsIndex, VehicleEnum vehicle, GeoCoordinateBox box)
+            : this(dynamicGraph, interpreter, tagsIndex, vehicle, new Dictionary<long, uint>(), box)
         {
 
         }
@@ -78,19 +78,19 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
-        /// <param name="dynamic_graph"></param>
+        /// <param name="dynamicGraph"></param>
         /// <param name="interpreter"></param>
-        /// <param name="tags_index"></param>
+        /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        /// <param name="id_transformations"></param>
+        /// <param name="idTransformations"></param>
         /// <param name="box"></param>
-        public PreProcessedDataGraphProcessingTarget(IDynamicGraphRouterDataSource<PreProcessedEdge> dynamic_graph,
-            IRoutingInterpreter interpreter, ITagsIndex tags_index, VehicleEnum vehicle, IDictionary<long, uint> id_transformations, 
+        public PreProcessedDataGraphProcessingTarget(IDynamicGraphRouterDataSource<PreProcessedEdge> dynamicGraph,
+            IRoutingInterpreter interpreter, ITagsIndex tagsIndex, VehicleEnum vehicle, IDictionary<long, uint> idTransformations, 
             GeoCoordinateBox box)
-            : base(dynamic_graph, interpreter, null, tags_index, id_transformations, box)
+            : base(dynamicGraph, interpreter, null, tagsIndex, idTransformations, box)
         {
             _vehicle = vehicle;
-            _dynamic_data_source = dynamic_graph;
+            _dynamic_data_source = dynamicGraph;
         }
 
         /// <summary>
@@ -106,19 +106,19 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Calculates edge data.
         /// </summary>
-        /// <param name="tags_index"></param>
+        /// <param name="tagsIndex"></param>
         /// <param name="tags"></param>
-        /// <param name="direction_forward"></param>
+        /// <param name="directionForward"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        /// <param name="edge_interpreter"></param>
+        /// <param name="edgeInterpreter"></param>
         /// <returns></returns>
-        protected override PreProcessedEdge CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, TagsCollection tags, 
-            bool direction_forward, GeoCoordinate from, GeoCoordinate to)
+        protected override PreProcessedEdge CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex, TagsCollection tags, 
+            bool directionForward, GeoCoordinate from, GeoCoordinate to)
         {
-            double weight = edge_interpreter.Weight(
+            double weight = edgeInterpreter.Weight(
                 tags, _vehicle, from, to);
-            bool? direction = edge_interpreter.IsOneWay(tags, _vehicle);
+            bool? direction = edgeInterpreter.IsOneWay(tags, _vehicle);
             bool forward = false;
             bool backward = false;
             if(!direction.HasValue)
@@ -128,14 +128,14 @@ namespace OsmSharp.Routing.Osm.Data.Processing
             }
             else
             { // define back/forward.
-                forward = (direction_forward && direction.Value) || 
-                    (!direction_forward && !direction.Value);
-                backward = (direction_forward && !direction.Value) ||
-                    (!direction_forward && direction.Value);
+                forward = (directionForward && direction.Value) || 
+                    (!directionForward && !direction.Value);
+                backward = (directionForward && !direction.Value) ||
+                    (!directionForward && direction.Value);
             }
 
             // initialize the edge data.
-            return new PreProcessedEdge((float)weight, forward, backward, tags_index.Add(
+            return new PreProcessedEdge((float)weight, forward, backward, tagsIndex.Add(
                 tags));
         }
 

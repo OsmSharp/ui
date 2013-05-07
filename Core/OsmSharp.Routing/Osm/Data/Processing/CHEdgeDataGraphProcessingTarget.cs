@@ -59,19 +59,19 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Calculates edge data.
         /// </summary>
-        /// <param name="edge_interpreter"></param>
-        /// <param name="tags_index"></param>
+        /// <param name="edgeInterpreter"></param>
+        /// <param name="tagsIndex"></param>
         /// <param name="tags"></param>
-        /// <param name="direction_forward"></param>
+        /// <param name="directionForward"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, 
-            TagsCollection tags, bool direction_forward, GeoCoordinate from, GeoCoordinate to)
+        protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex, 
+            TagsCollection tags, bool directionForward, GeoCoordinate from, GeoCoordinate to)
         {
-            double weight = edge_interpreter.Weight(
+            double weight = edgeInterpreter.Weight(
                 tags, _vehicle, from, to);
-            bool? direction = edge_interpreter.IsOneWay(tags, _vehicle);
+            bool? direction = edgeInterpreter.IsOneWay(tags, _vehicle);
             bool forward = false;
             bool backward = false;
             if (!direction.HasValue)
@@ -81,10 +81,10 @@ namespace OsmSharp.Routing.Osm.Data.Processing
             }
             else
             { // define back/forward.
-                forward = (direction_forward && direction.Value) ||
-                    (!direction_forward && !direction.Value);
-                backward = (direction_forward && !direction.Value) ||
-                    (!direction_forward && direction.Value);
+                forward = (directionForward && direction.Value) ||
+                    (!directionForward && !direction.Value);
+                backward = (directionForward && !direction.Value) ||
+                    (!directionForward && direction.Value);
             }
 
             // initialize the edge data.
@@ -93,7 +93,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                 Weight = (float)weight, 
                 Forward = forward, 
                 Backward = backward, 
-                Tags = tags_index.Add(
+                Tags = tagsIndex.Add(
                 tags),
                 ContractedVertexId = 0
             };

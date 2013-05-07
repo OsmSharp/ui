@@ -16,12 +16,17 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <summary>
         /// Holds the edge interpreter.
         /// </summary>
-        private IEdgeInterpreter _edge_interpreter;
+        private readonly IEdgeInterpreter _edge_interpreter;
 
         /// <summary>
         /// Holds the routing constraints.
         /// </summary>
-        private IRoutingConstraints _constraints;
+        private readonly IRoutingConstraints _constraints;
+
+        /// <summary>
+        /// Holds the relevant keys.
+        /// </summary>
+        private HashSet<string> _relevantKeys; 
 
         /// <summary>
         /// Creates a new routing intepreter with default settings.
@@ -30,7 +35,8 @@ namespace OsmSharp.Routing.Osm.Interpreter
         {
             _edge_interpreter = new Edge.EdgeInterpreter();
             _constraints = null;
-            //_constraints = new DefaultHighwayConstraints(_edge_interpreter);            
+
+            this.FillRelevantTags();
         }
 
         /// <summary>
@@ -40,7 +46,27 @@ namespace OsmSharp.Routing.Osm.Interpreter
         public OsmRoutingInterpreter(IRoutingConstraints constraints)
         {
             _edge_interpreter = new Edge.EdgeInterpreter();
-            _constraints = constraints;   
+            _constraints = constraints;
+            
+            this.FillRelevantTags();
+        }
+
+        /// <summary>
+        /// Builds the list of relevant tags.
+        /// </summary>
+        private void FillRelevantTags()
+        {
+            _relevantKeys = new HashSet<string> { "oneway", "highway", "name", "motor_vehicle", "bicycle", "foot", "access", "maxspeed", "junction" };
+        }
+
+        /// <summary>
+        /// Returns true if the given tags is relevant.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public bool IsRelevant(string key)
+        {
+            return _relevantKeys.Contains(key);
         }
 
         /// <summary>

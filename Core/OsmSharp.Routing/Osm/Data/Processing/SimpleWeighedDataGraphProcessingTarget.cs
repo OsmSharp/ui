@@ -105,32 +105,32 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Calculates edge data.
         /// </summary>
-        /// <param name="tags_index"></param>
+        /// <param name="tagsIndex"></param>
         /// <param name="tags"></param>
-        /// <param name="direction_forward"></param>
+        /// <param name="directionForward"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        /// <param name="edge_interpreter"></param>
+        /// <param name="edgeInterpreter"></param>
         /// <returns></returns>
-        protected override SimpleWeighedEdge CalculateEdgeData(IEdgeInterpreter edge_interpreter, ITagsIndex tags_index, TagsCollection tags,
-            bool direction_forward, GeoCoordinate from, GeoCoordinate to)
+        protected override SimpleWeighedEdge CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex, TagsCollection tags,
+            bool directionForward, GeoCoordinate from, GeoCoordinate to)
         {
             // use the distance as weight.
-            double distance = edge_interpreter.Weight(tags, _vehicle, from, to);
+            double distance = edgeInterpreter.Weight(tags, _vehicle, from, to);
 
-            if (tags_index == null)
+            if (tagsIndex == null)
             {
                 return new SimpleWeighedEdge()
                 {
-                    IsForward = direction_forward,
+                    IsForward = directionForward,
                     //Tags = tags_index.Add(tags),
                     Weight = distance
                 };
             }
             return new SimpleWeighedEdge()
             {
-                IsForward = direction_forward,
-                Tags = tags_index.Add(tags),
+                IsForward = directionForward,
+                Tags = tagsIndex.Add(tags),
                 Weight = distance
             };
         }
