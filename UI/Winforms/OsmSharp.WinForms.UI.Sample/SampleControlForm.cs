@@ -42,13 +42,13 @@ namespace OsmSharp.WinForms.UI.Sample
             // initialize a test-scene.
             var scene2D = new Scene2D();
             scene2D.BackColor = Color.White.ToArgb();
-            scene2D.AddPoint(0, 0, Color.Blue.ToArgb(), 1);
+            scene2D.AddPoint(float.MinValue, float.MaxValue, 0, 0, Color.Blue.ToArgb(), 1);
 
             bool fill = false;
             int color = Color.White.ToArgb();
             int width = 1;
 
-            scene2D.AddPolygon(new float[] { 50, -80, 70 }, new float[] { 20, -10, -70 }, color, width, fill);
+            scene2D.AddPolygon(float.MinValue, float.MaxValue, new float[] { 50, -80, 70 }, new float[] { 20, -10, -70 }, color, width, fill);
 
             // load test osm file.
             List<SimpleOsmGeo> osmList = new List<SimpleOsmGeo>();
@@ -62,7 +62,7 @@ namespace OsmSharp.WinForms.UI.Sample
             collectionDataProcessorTarget.Pull();
 
             // build a scene using spherical mercator.
-            EllipticalMercator sphericalMercator = new EllipticalMercator();
+            IProjection sphericalMercator = new WebMercator();
             Dictionary<long, GeoCoordinate> nodes = new Dictionary<long, GeoCoordinate>();
             foreach (SimpleOsmGeo simpleOsmGeo in osmList)
             {
@@ -72,7 +72,7 @@ namespace OsmSharp.WinForms.UI.Sample
                     double[] point = sphericalMercator.ToPixel(
                         simplenode.Latitude.Value, simplenode.Longitude.Value);
                     nodes.Add(simplenode.Id.Value, new GeoCoordinate(simplenode.Latitude.Value, simplenode.Longitude.Value));
-                    scene2D.AddPoint((float)point[0], (float)point[1],
+                    scene2D.AddPoint(float.MinValue, float.MaxValue, (float)point[0], (float)point[1],
                                      Color.Yellow.ToArgb(),
                                      2);
                 }
@@ -96,7 +96,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
                     if (x.Count > 0)
                     {
-                        scene2D.AddLine(x.ToArray(), y.ToArray(), Color.Blue.ToArgb(), 2);
+                        scene2D.AddLine(float.MinValue, float.MaxValue, x.ToArray(), y.ToArray(), Color.Blue.ToArgb(), 2);
                     }
                 }
             }

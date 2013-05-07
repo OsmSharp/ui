@@ -101,10 +101,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             switch (osmGeo.Type)
             {
                 case OsmType.Node:
-                    this.TranslateNode(scene, projection, zoom, osmGeo as Node);
+                    this.TranslateNode(scene, projection, osmGeo as Node);
                     break;
                 case OsmType.Way:
-                    this.TranslateWay(scene, projection, zoom, osmGeo as Way);
+                    this.TranslateWay(scene, projection, osmGeo as Way);
                     break;
                 case OsmType.Relation:
                     break;
@@ -120,9 +120,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// </summary>
         /// <param name="scene"></param>
         /// <param name="projection"></param>
-        /// <param name="zoom"></param>
         /// <param name="node"></param>
-        private void TranslateNode(Scene2D scene, IProjection projection, float zoom, Node node)
+        private void TranslateNode(Scene2D scene, IProjection projection, Node node)
         {
             float? x = null, y = null;
 
@@ -150,6 +149,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             // interpret the results.
             foreach (var rule in rules)
             {
+                float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
+                float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
+
                 int color;
                 if (rule.TryGetProperty<int>("color", out color))
                 {
@@ -157,7 +159,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     if (rule.TryGetProperty<float>("width", out width))
                     {
                         sceneLayer = sceneLayer + IconTextLayerOffset;
-                        scene.AddPoint(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
+                        scene.AddPoint(sceneLayer, minZoom, maxZoom, (float) projection.LongitudeToX(node.Coordinate.Longitude),
                                        (float) projection.LatitudeToY(node.Coordinate.Latitude),
                                        color, width);
                         sceneLayer = sceneLayer - IconTextLayerOffset;
@@ -165,7 +167,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     else
                     {
                         sceneLayer = sceneLayer + IconTextLayerOffset;
-                        scene.AddPoint(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
+                        scene.AddPoint(sceneLayer, minZoom, maxZoom, (float)projection.LongitudeToX(node.Coordinate.Longitude),
                                        (float) projection.LatitudeToY(node.Coordinate.Latitude),
                                        color, 1);
                         sceneLayer = sceneLayer - IconTextLayerOffset;
@@ -177,7 +179,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     // an icon is to be drawn!
                     sceneLayer = sceneLayer + IconTextLayerOffset; // offset to correct layer.
 
-                    scene.AddIcon(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
+                    scene.AddIcon(sceneLayer, minZoom, maxZoom, (float)projection.LongitudeToX(node.Coordinate.Longitude),
                                   (float) projection.LatitudeToY(node.Coordinate.Latitude),
                                   iconImage);
 
@@ -193,7 +195,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     {
                         sceneLayer = sceneLayer + IconTextLayerOffset; // offset to correct layer.
 
-                        scene.AddText(sceneLayer, (float) projection.LongitudeToX(node.Coordinate.Longitude),
+                        scene.AddText(sceneLayer, minZoom, maxZoom, (float)projection.LongitudeToX(node.Coordinate.Longitude),
                                       (float) projection.LatitudeToY(node.Coordinate.Latitude), 15, value);
 
                         sceneLayer = sceneLayer - IconTextLayerOffset; // offset to correct layer.
@@ -207,15 +209,18 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// </summary>
         /// <param name="scene"></param>
         /// <param name="projection"></param>
-        /// <param name="zoom"></param>
         /// <param name="way"></param>
-        private void TranslateWay(Scene2D scene, IProjection projection, float zoom, Way way)
+        private void TranslateWay(Scene2D scene, IProjection projection, Way way)
         {
             // build the rules.
-            IEnumerable<MapCSSRuleProperties> rules =
+            List<MapCSSRuleProperties> rules =
                 this.BuildRules(way);
 
             // validate what's there.
+            if (rules.Count == 0)
+            {
+                return;
+            }
 
             // calculate the layer to render on if any.
             int sceneLayer = 0;
@@ -244,6 +249,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             // add the z-index.
             foreach (var rule in rules)
             {
+                float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
+                float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
+
                 int zIndex;
                 if (rule.TryGetProperty<int>("zIndex", out zIndex))
                 {
@@ -260,12 +268,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         if (rule.TryGetProperty("fillColor", out fillColor))
                         { // render as an area.
                             sceneLayer = sceneLayer + FillLayerOffset;
-                            scene.AddPolygon(sceneLayer, x, y, fillColor, 1, true);
+                            scene.AddPolygon(sceneLayer, minZoom, maxZoom, x, y, fillColor, 1, true);
                             sceneLayer = sceneLayer - FillLayerOffset;
                             if (rule.TryGetProperty("color", out color))
                             {
                                 sceneLayer = sceneLayer + CasingLayerOffset;
-                                scene.AddPolygon(sceneLayer, x, y, color, 1, false);
+                                scene.AddPolygon(sceneLayer, minZoom, maxZoom, x, y, color, 1, false);
                                 sceneLayer = sceneLayer - CasingLayerOffset;
                             }
                         }
@@ -273,27 +281,32 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
 
                     // the way has to rendered as a line.
                     LineJoin lineJoin;
+                    if (!rule.TryGetProperty("lineJoin", out lineJoin))
+                    {
+                        lineJoin = LineJoin.Bevel;
+                    }
                     int[] dashes;
-                    if (rule.TryGetProperty("color", out color) && 
-                        rule.TryGetProperty("lineJoine", out lineJoin) &&
-                        rule.TryGetProperty("dashes", out dashes))
+                    if (!rule.TryGetProperty("dashes", out dashes))
+                    {
+                        dashes = null;
+                    }
+                    if (rule.TryGetProperty("color", out color))
                     {
                         sceneLayer = sceneLayer + StrokeLayerOffset;
-                        int width;
+                        float width;
                         if (!rule.TryGetProperty("width", out width))
                         {
                             width = 1;
                         }
-                        scene.AddLine(sceneLayer, x, y, color, width, lineJoin, dashes);
+                        scene.AddLine(sceneLayer, minZoom, maxZoom, x, y, color, width, lineJoin, dashes);
                         float casingWidth;
                         int casingColor;
                         if (rule.TryGetProperty("casingWidth", out casingWidth) && 
                             rule.TryGetProperty("casingColor", out casingColor))
                         {
-                            scene.AddLine(sceneLayer - 1, x, y, casingColor, width + (2 * casingWidth), lineJoin, dashes);
+                            scene.AddLine(sceneLayer - 1, minZoom, maxZoom, x, y, casingColor, width + (2 * casingWidth), lineJoin, dashes);
                         }
                         sceneLayer = sceneLayer - StrokeLayerOffset;
-                        return;
                     }
                 }
             }
@@ -304,14 +317,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// </summary>
         /// <param name="osmGeo"></param>
         /// <returns></returns>
-        private IEnumerable<MapCSSRuleProperties> BuildRules(OsmGeo osmGeo)
+        private List<MapCSSRuleProperties> BuildRules(OsmGeo osmGeo)
         {
             var rulesCollection = new MapCSSRulePropertiesCollection();
 
             // interpret all rules on-by-one.
             foreach (var rule in _mapCSSFile.Rules)
             {
-                var zooms = new List<KeyValuePair<int?, int?>>();
+                List<KeyValuePair<int?, int?>> zooms;
                 if (rule.HasToBeAppliedTo(osmGeo, out zooms))
                 { // the selector was ok.
                     // loop over all declarations.

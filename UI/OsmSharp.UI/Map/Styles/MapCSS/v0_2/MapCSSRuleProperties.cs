@@ -153,7 +153,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
         /// <returns></returns>
         internal bool IsForZoom(int zoom)
         {
-            if (this.MinZoom < zoom &&
+            if (this.MinZoom <= zoom &&
                 this.MaxZoom > zoom)
             {
                 return true;

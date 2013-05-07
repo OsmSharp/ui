@@ -26,7 +26,7 @@ namespace OsmSharp.UI.Map
         public Map()
         {
             _layers = new List<ILayer>();
-            this.Projection = new ScaledProjection(new EllipticalMercator(), 1); // TODO: change this to the more naive but efficient spherical version.
+            this.Projection = new WebMercator();
         }
 
         /// <summary>

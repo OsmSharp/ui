@@ -108,7 +108,7 @@ namespace OsmSharp.UI.Renderer
         public static View2D CreateFrom(float centerX, float centerY, float pixelsWidth, float pixelsHeight, 
             float zoomFactor)
         {
-            float realZoom = (float)System.Math.Pow(2, zoomFactor);
+            float realZoom = zoomFactor;
 
             float width = pixelsWidth / realZoom;
             float height = pixelsHeight / realZoom;
@@ -239,7 +239,7 @@ namespace OsmSharp.UI.Renderer
         public float CalculateZoom(float pixelsWidth, float pixelsHeight)
         {
             float realZoom = pixelsWidth/this.Width;
-            return (float)System.Math.Log(realZoom, 2);
+            return realZoom;
         }
     }
 }

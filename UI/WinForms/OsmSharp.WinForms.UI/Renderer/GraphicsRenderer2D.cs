@@ -76,7 +76,7 @@ namespace OsmSharp.WinForms.UI.Renderer
 
 	                imageData = stream.ToArray();
 	            }
-	            scene.AddImage(0, view.Left, view.Top, view.Right, view.Bottom, imageData);
+	            scene.AddImage(0, float.MinValue, float.MaxValue, view.Left, view.Top, view.Right, view.Bottom, imageData);
 	        }
 	        return scene;
         }
@@ -114,7 +114,7 @@ namespace OsmSharp.WinForms.UI.Renderer
             target.Target.ResetTransform();
             target.Target.ScaleTransform(scaleX, scaleY);
             target.Target.TranslateTransform((-view.CenterX + (view.Width / 2.0f)),
-                                  (view.CenterY + (view.Height / 2.0f)));
+                                  -(view.CenterY - (view.Height / 2.0f)));
 		}
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace OsmSharp.WinForms.UI.Renderer
 		/// <param name="size">Size.</param>
         protected override void DrawPoint(Target2DWrapper<Graphics> target, float x, float y, int color, float size)
 		{
-            target.Target.FillEllipse(new SolidBrush(Color.FromArgb(color)), x, -y, size, size);
+            target.Target.FillEllipse(new SolidBrush(Color.FromArgb(color)), x, y, size, size);
         }
 
 		/// <summary>
@@ -193,7 +193,7 @@ namespace OsmSharp.WinForms.UI.Renderer
 		    var points = new PointF[x.Length];
 		    for (int idx = 0; idx < x.Length; idx++)
 		    {
-                points[idx] = new PointF(x[idx], -y[idx]);
+                points[idx] = new PointF(x[idx], y[idx]);
 		    }
             target.Target.DrawLines(pen, points);
 		}
@@ -211,7 +211,7 @@ namespace OsmSharp.WinForms.UI.Renderer
             var points = new PointF[x.Length];
             for (int idx = 0; idx < x.Length; idx++)
             {
-                points[idx] = new PointF(x[idx], -y[idx]);
+                points[idx] = new PointF(x[idx], y[idx]);
             }
             if (fill)
             {
@@ -237,7 +237,7 @@ namespace OsmSharp.WinForms.UI.Renderer
             Image image = Image.FromStream(new MemoryStream(imageData));
 
             // draw the image.
-            target.Target.DrawImage(image, x, -y);
+            target.Target.DrawImage(image, x, y);
         }
 
         /// <summary>
@@ -258,7 +258,7 @@ namespace OsmSharp.WinForms.UI.Renderer
             }
 
             //target.Target.DrawImage(image, left, -top);
-            target.Target.DrawImage(image, new RectangleF(left, -top, right - left, top - bottom));
+            target.Target.DrawImage(image, new RectangleF(left, top - (top - bottom), right - left, top - bottom));
             return image;
         }
 
@@ -272,7 +272,7 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="size"></param>
         protected override void DrawText(Target2DWrapper<Graphics> target, float x, float y, string text, float size)
         {
-            target.Target.DrawString(text, new Font(FontFamily.GenericSansSerif, size), new SolidBrush(Color.Black), x, -y);
+            target.Target.DrawString(text, new Font(FontFamily.GenericSansSerif, size), new SolidBrush(Color.Black), x, y);
         }
 
         ///// <summary>

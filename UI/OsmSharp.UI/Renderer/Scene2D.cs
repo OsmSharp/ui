@@ -80,11 +80,13 @@ namespace OsmSharp.UI.Renderer
 	    /// Adds a point.
 	    /// </summary>
 	    /// <param name="layer"></param>
+	    /// <param name="maxZoom"></param>
 	    /// <param name="x">The x coordinate.</param>
 	    /// <param name="y">The y coordinate.</param>
 	    /// <param name="color">Color.</param>
 	    /// <param name="size">Size.</param>
-	    public uint AddPoint(int layer, float x, float y, int color, float size)
+	    /// <param name="minZoom"></param>
+	    public uint AddPoint(int layer, float minZoom, float maxZoom, float x, float y, int color, float size)
         {
             uint id = _nextId;
             _nextId++;
@@ -105,28 +107,32 @@ namespace OsmSharp.UI.Renderer
             return id;
 		}
 
-		/// <summary>
-		/// Adds a point.
-		/// </summary>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="size">Size.</param>
-		public uint AddPoint(float x, float y, int color, float size)
+	    /// <summary>
+	    /// Adds a point.
+	    /// </summary>
+	    /// <param name="maxZoom"></param>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="color">Color.</param>
+	    /// <param name="size">Size.</param>
+	    /// <param name="minZoom"></param>
+	    public uint AddPoint(float minZoom, float maxZoom, float x, float y, int color, float size)
 		{
-		    return this.AddPoint(0, x, y, color, size);
+		    return this.AddPoint(0, minZoom, maxZoom, x, y, color, size);
 		}
 
-        /// <summary>
-        /// Adds a line.
-        /// </summary>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="y">The y coordinate.</param>
-        /// <param name="color">Color.</param>
-        /// <param name="width">Width.</param>
-        public uint AddLine(float[] x, float[] y, int color, float width)
+	    /// <summary>
+	    /// Adds a line.
+	    /// </summary>
+	    /// <param name="maxZoom"></param>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="color">Color.</param>
+	    /// <param name="width">Width.</param>
+	    /// <param name="minZoom"></param>
+	    public uint AddLine(float minZoom, float maxZoom, float[] x, float[] y, int color, float width)
         {
-            return this.AddLine(0, x, y, color, width);
+            return this.AddLine(0, minZoom, maxZoom, x, y, color, width);
         }
 
 	    /// <summary>
@@ -138,36 +144,40 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="width">Width.</param>
 	    /// <param name="lineJoin"></param>
 	    /// <param name="dashes"></param>
-	    public uint AddLine(float[] x, float[] y, int color, float width, LineJoin lineJoin, int[] dashes)
+	    public uint AddLine(float minZoom, float maxZoom, float[] x, float[] y, int color, float width, LineJoin lineJoin, int[] dashes)
 	    {
-            return this.AddLine(0, x, y, color, width, lineJoin, dashes);
+            return this.AddLine(0, minZoom, maxZoom, x, y, color, width, lineJoin, dashes);
 	    }
 
 	    /// <summary>
 	    /// Adds a line.
 	    /// </summary>
 	    /// <param name="layer"></param>
+	    /// <param name="maxZoom"></param>
 	    /// <param name="x">The x coordinate.</param>
 	    /// <param name="y">The y coordinate.</param>
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
+	    /// <param name="minZoom"></param>
 	    /// <returns></returns>
-	    public uint AddLine(int layer, float[] x, float[] y, int color, float width)
+	    public uint AddLine(int layer, float minZoom, float maxZoom, float[] x, float[] y, int color, float width)
         {
-            return this.AddLine(layer, x, y, color, width, LineJoin.None, null);
+            return this.AddLine(layer, minZoom, maxZoom, x, y, color, width, LineJoin.None, null);
         }
 
 	    /// <summary>
 	    /// Adds a line.
 	    /// </summary>
 	    /// <param name="layer"></param>
+	    /// <param name="maxZoom"></param>
 	    /// <param name="x">The x coordinate.</param>
 	    /// <param name="y">The y coordinate.</param>
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
 	    /// <param name="lineJoin"></param>
 	    /// <param name="dashes"></param>
-	    public uint AddLine(int layer, float[] x, float[] y, int color, float width, LineJoin lineJoin, int[] dashes)
+	    /// <param name="minZoom"></param>
+	    public uint AddLine(int layer, float minZoom, float maxZoom, float[] x, float[] y, int color, float width, LineJoin lineJoin, int[] dashes)
 		{
 			if (y == null)
 				throw new ArgumentNullException ("y");
@@ -185,33 +195,37 @@ namespace OsmSharp.UI.Renderer
                 layerDic = new Dictionary<uint, IScene2DPrimitive>();
                 _primitives.Add(layer, layerDic);
             }
-	        layerDic.Add(id, new Line2D(x, y, color, width, lineJoin, dashes));
+	        layerDic.Add(id, new Line2D(x, y, color, width, lineJoin, dashes, minZoom, maxZoom));
 		    return id;
 		}
 
-        /// <summary>
-        /// Adds the polygon.
-        /// </summary>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="y">The y coordinate.</param>
-        /// <param name="color">Color.</param>
-        /// <param name="width">Width.</param>
-        /// <param name="fill">If set to <c>true</c> fill.</param>
-	    public uint AddPolygon(float[] x, float[] y, int color, float width, bool fill)
+	    /// <summary>
+	    /// Adds the polygon.
+	    /// </summary>
+	    /// <param name="maxZoom"></param>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="color">Color.</param>
+	    /// <param name="width">Width.</param>
+	    /// <param name="fill">If set to <c>true</c> fill.</param>
+	    /// <param name="minZoom"></param>
+	    public uint AddPolygon(float minZoom, float maxZoom, float[] x, float[] y, int color, float width, bool fill)
         {
-            return this.AddPolygon(0, x, y, color, width, fill);
+            return this.AddPolygon(0, minZoom, maxZoom, x, y, color, width, fill);
         }
 
 	    /// <summary>
 	    /// Adds the polygon.
 	    /// </summary>
 	    /// <param name="layer"></param>
+	    /// <param name="maxZoom"></param>
 	    /// <param name="x">The x coordinate.</param>
 	    /// <param name="y">The y coordinate.</param>
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
 	    /// <param name="fill">If set to <c>true</c> fill.</param>
-	    public uint AddPolygon(int layer, float[] x, float[] y, int color, float width, bool fill)
+	    /// <param name="minZoom"></param>
+	    public uint AddPolygon(int layer, float minZoom, float maxZoom, float[] x, float[] y, int color, float width, bool fill)
 		{
 			if (y == null)
 				throw new ArgumentNullException ("y");
@@ -229,19 +243,21 @@ namespace OsmSharp.UI.Renderer
                 layerDic = new Dictionary<uint, IScene2DPrimitive>();
                 _primitives.Add(layer, layerDic);
             }
-	        layerDic.Add(id, new Polygon2D(x, y, color, width, fill));
+	        layerDic.Add(id, new Polygon2D(x, y, color, width, fill, minZoom, maxZoom));
             return id;
 		}
 
-        /// <summary>
-        /// Adds an icon.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="iconImage"></param>
-        /// <returns></returns>
-        public uint AddIcon(int layer, float x, float y, byte[] iconImage)
+	    /// <summary>
+	    /// Adds an icon.
+	    /// </summary>
+	    /// <param name="layer"></param>
+	    /// <param name="maxZoom"></param>
+	    /// <param name="x"></param>
+	    /// <param name="y"></param>
+	    /// <param name="iconImage"></param>
+	    /// <param name="minZoom"></param>
+	    /// <returns></returns>
+	    public uint AddIcon(int layer, float minZoom, float maxZoom, float x, float y, byte[] iconImage)
         {
             if (iconImage == null)
                 throw new ArgumentNullException("iconImage");
@@ -255,21 +271,23 @@ namespace OsmSharp.UI.Renderer
                 layerDic = new Dictionary<uint, IScene2DPrimitive>();
                 _primitives.Add(layer, layerDic);
             }
-            layerDic.Add(id, new Icon2D(x, y, iconImage));
+            layerDic.Add(id, new Icon2D(x, y, iconImage, minZoom, maxZoom));
             return id;
         }
 
-        /// <summary>
-        /// Adds an image.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="left"></param>
-        /// <param name="top"></param>
-        /// <param name="right"></param>
-        /// <param name="bottom"></param>
-        /// <param name="imageData"></param>
-        /// <returns></returns>
-        public uint AddImage(int layer, float left, float top, float right, float bottom, byte[] imageData)
+	    /// <summary>
+	    /// Adds an image.
+	    /// </summary>
+	    /// <param name="layer"></param>
+	    /// <param name="minZoom"></param>
+	    /// <param name="maxZoom"></param>
+	    /// <param name="left"></param>
+	    /// <param name="top"></param>
+	    /// <param name="right"></param>
+	    /// <param name="bottom"></param>
+	    /// <param name="imageData"></param>
+	    /// <returns></returns>
+	    public uint AddImage(int layer, float minZoom, float maxZoom, float left, float top, float right, float bottom, byte[] imageData)
         {
             if (imageData == null)
                 throw new ArgumentNullException("imageData");
@@ -283,20 +301,22 @@ namespace OsmSharp.UI.Renderer
                 layerDic = new Dictionary<uint, IScene2DPrimitive>();
                 _primitives.Add(layer, layerDic);
             }
-            layerDic.Add(id, new Image2D(left, top, bottom, right, imageData));
+            layerDic.Add(id, new Image2D(left, top, bottom, right, imageData, minZoom, maxZoom));
             return id;
         }
 
-        /// <summary>
-        /// Adds texts.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="size"></param>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public uint AddText(int layer, float x, float y, float size, string text)
+	    /// <summary>
+	    /// Adds texts.
+	    /// </summary>
+	    /// <param name="layer"></param>
+	    /// <param name="maxZoom"></param>
+	    /// <param name="x"></param>
+	    /// <param name="y"></param>
+	    /// <param name="size"></param>
+	    /// <param name="text"></param>
+	    /// <param name="minZoom"></param>
+	    /// <returns></returns>
+	    public uint AddText(int layer, float minZoom, float maxZoom, float x, float y, float size, string text)
         {
             if (text == null)
                 throw new ArgumentNullException("text");
@@ -310,7 +330,7 @@ namespace OsmSharp.UI.Renderer
                 layerDic = new Dictionary<uint, IScene2DPrimitive>();
                 _primitives.Add(layer, layerDic);
             }
-            layerDic.Add(id, new Text2D(x, y, text, size));
+            layerDic.Add(id, new Text2D(x, y, text, size, minZoom, maxZoom));
             return id;
         }
     }

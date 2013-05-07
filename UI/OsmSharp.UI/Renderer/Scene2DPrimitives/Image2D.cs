@@ -30,6 +30,28 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.MaxZoom = float.MaxValue;
         }
 
+        /// <summary>
+        /// Creates a new Image2D.
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="bottom"></param>
+        /// <param name="right"></param>
+        /// <param name="imageData"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        public Image2D(float left, float top, float bottom, float right, byte[] imageData, float minZoom, float maxZoom)
+        {
+            this.ImageData = imageData;
+            this.Left = left;
+            this.Right = right;
+            this.Top = top;
+            this.Bottom = bottom;
+
+            this.MinZoom = minZoom;
+            this.MaxZoom = maxZoom;
+        }
+
 		/// <summary>
 		/// Gets or sets the tag.
 		/// </summary>

@@ -41,7 +41,7 @@ namespace OsmSharp.WinForms.UI
         /// <summary>
         /// The zoom factor.
         /// </summary>
-        public float ZoomFactor { get; set; }
+        public float ZoomLevel { get; set; }
 
         /// <summary>
         /// Gets/sets the map.
@@ -104,17 +104,18 @@ namespace OsmSharp.WinForms.UI
             // render the map.
             if (_quickMode)
             { // only render the cached scene.
-                _renderer.RenderCache(g, this.Map, this.ZoomFactor, this.Center);
+                //_renderer.Render(g, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
+                _renderer.RenderCache(g, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
             }
             else
             { // render the entire scene.
-                _renderer.Render(g, this.Map, this.ZoomFactor, this.Center);
+                _renderer.Render(g, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
             }
 
             long ticksAfter = DateTime.Now.Ticks;
 
-            Console.WriteLine("Rendering took: {0}ms", 
-                (new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds));
+            Console.WriteLine("Rendering took: {0}ms @ zoom level {1}",
+                (new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds), this.ZoomLevel);
         }
 
         #endregion
@@ -177,13 +178,14 @@ namespace OsmSharp.WinForms.UI
             {
                 float[] currentCoordinates = new float[] { e.X, e.Y };
                 float[] delta = new float[] { _draggingCoordinates[0] - currentCoordinates[0],
-                        _draggingCoordinates[1] - currentCoordinates[1]};
+                        -(_draggingCoordinates[1] - currentCoordinates[1])};
 
                 float[] newCenter = new float[] { (float)this.Width / 2.0f + delta[0], (float)this.Height / 2.0f + delta[1] };
 
                 this.Center = _oldCenter;
 
-                View2D view = _renderer.Create(this.Width, this.Height, this.Map, this.ZoomFactor, this.Center);
+                View2D view = _renderer.Create(this.Width, this.Height, this.Map, 
+                    (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
 
                 float[] sceneCenter = view.ToViewPort(this.Width, this.Height,
                                                        newCenter[0], newCenter[1]);
@@ -217,7 +219,7 @@ namespace OsmSharp.WinForms.UI
         {
             base.OnMouseWheel(e);
 
-            this.ZoomFactor += (float)(e.Delta / 120.0);
+            this.ZoomLevel += (float)(e.Delta / 120.0);
 
             this.QueueNotifyMapViewChanged();
         }
@@ -258,8 +260,8 @@ namespace OsmSharp.WinForms.UI
         {
 
             // notify the map.
-            this.Map.ViewChanged(this.ZoomFactor, this.Center, _renderer.Create(this.Width, this.Height, this.Map,
-                                                                                  this.ZoomFactor, this.Center));
+            this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, _renderer.Create(this.Width, this.Height, this.Map,
+                                                                                  (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center));
             this.Invalidate();
         }
 

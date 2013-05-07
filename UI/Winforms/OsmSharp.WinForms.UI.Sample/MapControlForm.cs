@@ -62,10 +62,10 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // set control properties.
             this.mapControl1.Map = map;
-            this.mapControl1.Center = new GeoCoordinate(51.0095111, 3.3210996); 
-            //this.mapControl1.Center = new GeoCoordinate(51.26337, 4.78739);
+            //this.mapControl1.Center = new GeoCoordinate(51.0095111, 3.3210996); 
+            this.mapControl1.Center = new GeoCoordinate(51.26337, 4.78739);
             //this.mapControl1.Center = new GeoCoordinate(50.88672, 3.23899);
-            this.mapControl1.ZoomFactor = 0; // TODO: improve zoomfactor.
+            this.mapControl1.ZoomLevel = 16;
         }
     }
 }

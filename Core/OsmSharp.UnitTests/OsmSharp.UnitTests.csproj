@@ -168,6 +168,7 @@
     <Compile Include="StaticDictionary.cs" />
     <Compile Include="Tiles\TilesTests.cs" />
     <Compile Include="Tools\BinairyHeapTests.cs" />
+    <Compile Include="Tools\WebMercatorTests.cs" />
     <Compile Include="Tools\FibonacciHeapTests.cs" />
     <Compile Include="Tools\GpxXmlTest.cs" />
     <Compile Include="Tools\HugeDictionaryTests.cs" />

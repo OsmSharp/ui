@@ -60,6 +60,58 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.MaxZoom = float.MaxValue;
         }
 
+	    /// <summary>
+	    /// Creates a new line2D.
+	    /// </summary>
+	    /// <param name="x"></param>
+	    /// <param name="y"></param>
+	    /// <param name="color"></param>
+	    /// <param name="width"></param>
+	    /// <param name="lineJoin"></param>
+	    /// <param name="dashes"></param>
+	    /// <param name="minZoom"></param>
+	    /// <param name="maxZoom"></param>
+	    public Line2D(float[] x, float[] y, int color, float width, LineJoin lineJoin, int[] dashes, float minZoom, float maxZoom)
+            : this()
+        {
+            this.X = x;
+            this.Y = y;
+            this.Color = color;
+            this.Width = width;
+            this.LineJoin = lineJoin;
+            this.Dashes = dashes;
+
+            _minX = int.MaxValue;
+            _maxX = int.MinValue;
+            for (int idx = 0; idx < x.Length; idx++)
+            {
+                if (x[idx] > _maxX)
+                {
+                    _maxX = x[idx];
+                }
+                if (x[idx] < _minX)
+                {
+                    _minX = x[idx];
+                }
+            }
+            _minY = int.MaxValue;
+            _maxY = int.MinValue;
+            for (int idx = 0; idx < y.Length; idx++)
+            {
+                if (y[idx] > _maxY)
+                {
+                    _maxY = y[idx];
+                }
+                if (y[idx] < _minY)
+                {
+                    _minY = y[idx];
+                }
+            }
+
+            this.MinZoom = minZoom;
+            this.MaxZoom = maxZoom;
+        }
+
         /// <summary>
         /// Creates a new line2D.
         /// </summary>

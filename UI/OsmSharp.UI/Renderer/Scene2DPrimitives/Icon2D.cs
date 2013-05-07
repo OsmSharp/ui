@@ -26,6 +26,25 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.MinZoom = float.MinValue;
             this.MaxZoom = float.MaxValue;
 		}
+
+        /// <summary>
+        /// Creates a new icon.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="image"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        public Icon2D(float x, float y, byte[] image, float minZoom, float maxZoom)
+            : this()
+        {
+            this.X = x;
+            this.Y = y;
+            this.Image = image;
+
+            this.MinZoom = minZoom;
+            this.MaxZoom = maxZoom;
+        }
 		
 		/// <summary>
 		/// Gets or sets the tag.

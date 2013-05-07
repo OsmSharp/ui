@@ -43,7 +43,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                 {
                     if (rule == null)
                     {
-                        rule = _properties[idx];
+                        rule = new MapCSSRuleProperties(_properties[idx].MinZoom, 
+                            _properties[idx].MaxZoom);
+                        rule = rule.Merge(_properties[idx]);
                     }
                     else
                     {
@@ -55,29 +57,72 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
         }
 
         /// <summary>
+        /// Returns the rule string for the given zoom.
+        /// </summary>
+        /// <param name="zoom"></param>
+        /// <returns></returns>
+        private string GetRuleStringForZoom(int zoom)
+        {
+            var ruleString = new StringBuilder();
+            for (int idx = 0; idx < _properties.Count; idx++)
+            {
+                if (_properties[idx].IsForZoom(zoom))
+                {
+                    ruleString.Append(
+                        idx.ToString(System.Globalization.CultureInfo.InvariantCulture));
+                    ruleString.Append('/');
+                }
+            }
+            return ruleString.ToString();
+        }
+
+        /// <summary>
         /// Returns the ranged properties.
         /// </summary>
         /// <returns></returns>
         public List<MapCSSRuleProperties> GetRanges()
         {
             var rules = new List<MapCSSRuleProperties>();
-            MapCSSRuleProperties previousRule = null;
-            int zoomLevel = 0;
-            while(zoomLevel < 25)
+            MapCSSRuleProperties currentRule = null;
+            string previousRuleString = string.Empty;
+            int minZoom = 0, maxZoom = 25;
+            for (int zoomLevel = 0; zoomLevel < 25; zoomLevel++)
             {
-                MapCSSRuleProperties rule = this.GetRulesForZoom(zoomLevel);
-                if (rule != null)
-                { // the current rule was found.
-                    // add the rule.
-                    rules.Add(rule);
-                    // set the new maximum zoom.
-                    zoomLevel = rule.MaxZoom;
+                // get the current rule string.
+                string currentRuleString = this.GetRuleStringForZoom(zoomLevel);
+
+                if (previousRuleString != currentRuleString)
+                { // there is a new rule.
+                    // store the previous rule.
+                    if (currentRule != null)
+                    { // the current rule exists; store it.
+                        currentRule.MinZoom = minZoom;
+                        currentRule.MaxZoom = maxZoom + 1;
+
+                        rules.Add(currentRule);
+                    }
+
+                    minZoom = zoomLevel; // set the min zoom.
+                    MapCSSRuleProperties props = this.GetRulesForZoom(zoomLevel);
+                    if (props != null)
+                    {
+                        currentRule = new MapCSSRuleProperties(minZoom, 25);
+                        currentRule = currentRule.Merge(props);
+                        previousRuleString = currentRuleString;
+                    }
                 }
-                else
-                { // manually increase the zoom.
-                    zoomLevel++;
-                }
+                maxZoom = zoomLevel; // set the max zoom.
             }
+
+            // store the previous rule.
+            if (currentRule != null)
+            { // the current rule exists; store it.
+                currentRule.MinZoom = minZoom;
+                currentRule.MaxZoom = maxZoom + 1;
+
+                rules.Add(currentRule);
+            }
+
             return rules;
         }
     }

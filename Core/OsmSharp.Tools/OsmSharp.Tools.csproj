@@ -203,6 +203,7 @@
     <Compile Include="Math\Geo\Meta\RelativeDirectionCalculator.cs" />
     <Compile Include="Math\Geo\Meta\RelativeDirectionEnum.cs" />
     <Compile Include="Math\Geo\Projections\ScaledProjection.cs" />
+    <Compile Include="Math\Geo\Projections\WebMercator.cs" />
     <Compile Include="Math\Geo\Simple\GeoCoordinateCompact.cs" />
     <Compile Include="Math\Geo\Simple\GeoCoordinateSimple.cs" />
     <Compile Include="Math\ILocationObject.cs" />

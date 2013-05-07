@@ -30,6 +30,25 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         }
 
         /// <summary>
+        /// Creates a new icon.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="text"></param>
+        /// <param name="size"></param>
+        public Text2D(float x, float y, string text, float size, float minZoom, float maxZoom)
+            : this()
+        {
+            this.X = x;
+            this.Y = y;
+            this.Text = text;
+            this.Size = size;
+
+            this.MinZoom = minZoom;
+            this.MaxZoom = maxZoom;
+        }
+
+        /// <summary>
         /// Gets or sets the tag.
         /// </summary>
         /// <value>The tag.</value>
