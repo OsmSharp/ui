@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Units.Angle;
 
-namespace OsmSharp.Tools.Math.Geo.Projections
+namespace OsmSharp.Math.Geo.Projections
 {
     /// <summary>
     /// Projection that corresponds to the projection used for webtiles. This will project webtiles nicely into 256x256 squares.

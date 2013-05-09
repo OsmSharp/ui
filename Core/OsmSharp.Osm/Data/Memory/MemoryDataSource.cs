@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Data.Memory;
+using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Osm.Data.Core.Processor;
@@ -376,10 +378,10 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// Adds all objects from the given source to this memory data source.
         /// </summary>
         /// <param name="source"></param>
-        public void PullFromSource(DataProcessorSource source)
+        public void PullFromSource(OsmStreamReader source)
         {
             // create a special memory data source target.
-            MemoryDataSourceProcessorTarget target = new MemoryDataSourceProcessorTarget(this);
+            var target = new MemoryOsmStreamWriter(this);
             target.RegisterSource(source); // register the given source as the source.
             target.Pull(); // pull the data from the source into the created target.
         }

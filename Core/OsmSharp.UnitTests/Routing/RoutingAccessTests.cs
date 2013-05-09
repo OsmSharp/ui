@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Routing;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Router;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Routers;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Route;
 using NUnit.Framework;
@@ -17,325 +17,324 @@ namespace OsmSharp.UnitTests.Routing
     /// <summary>
     /// Generic tests to test access restrictions using different vehicles.
     /// </summary>
-    public abstract class RoutingAccessTests<ResolvedType, EdgeData>
-        where EdgeData : IDynamicGraphEdgeData
-        where ResolvedType : IRouterPoint
+    public abstract class RoutingAccessTests<TEdgeData>
+        where TEdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
         /// Builds the router;
         /// </summary>
         /// <param name="data"></param>
         /// <param name="interpreter"></param>
-        /// <param name="basic_router"></param>
+        /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public abstract IRouter<ResolvedType> BuildRouter(IBasicRouterDataSource<EdgeData> data,
-            IRoutingInterpreter interpreter, IBasicRouter<EdgeData> basic_router);
+        public abstract Router BuildRouter(IBasicRouterDataSource<TEdgeData> data,
+            IRoutingInterpreter interpreter, IBasicRouter<TEdgeData> basicRouter);
 
         /// <summary>
         /// Builds the basic router.
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public abstract IBasicRouter<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data);
+        public abstract IBasicRouter<TEdgeData> BuildBasicRouter(IBasicRouterDataSource<TEdgeData> data);
 
         /// <summary>
         /// Builds the data.
         /// </summary>
         /// <returns></returns>
-        public abstract IBasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter,
-            string embedded_string, VehicleEnum vehicle);
+        public abstract IBasicRouterDataSource<TEdgeData> BuildData(IRoutingInterpreter interpreter,
+            string embeddedString, VehicleEnum vehicle);
 
         /// <summary>
         /// Tests access restrictions on all different highway times.
         /// </summary>
         protected void DoAccessTestsHighways()
         {
-            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            var interpreter = new OsmRoutingInterpreter();
 
-            double longitude_left = 4.7696568;
-            double longitude_right = 4.8283861;
+            const double longitudeLeft = 4.7696568;
+            const double longitudeRight = 4.8283861;
 
-            GeoCoordinate footway_from = new GeoCoordinate(51.2, longitude_left);
-            GeoCoordinate footway_to = new GeoCoordinate(51.2, longitude_right);
+            var footwayFrom = new GeoCoordinate(51.2, longitudeLeft);
+            var footwayTo = new GeoCoordinate(51.2, longitudeRight);
 
-            GeoCoordinate cycleway_from = new GeoCoordinate(51.1, longitude_left);
-            GeoCoordinate cycleway_to = new GeoCoordinate(51.1, longitude_right);
+            var cyclewayFrom = new GeoCoordinate(51.1, longitudeLeft);
+            var cyclewayTo = new GeoCoordinate(51.1, longitudeRight);
 
-            GeoCoordinate bridleway_from = new GeoCoordinate(51.0, longitude_left);
-            GeoCoordinate bridleway_to = new GeoCoordinate(51.0, longitude_right);
+            var bridlewayFrom = new GeoCoordinate(51.0, longitudeLeft);
+            var bridlewayTo = new GeoCoordinate(51.0, longitudeRight);
 
-            GeoCoordinate path_from = new GeoCoordinate(50.9, longitude_left);
-            GeoCoordinate path_to = new GeoCoordinate(50.9, longitude_right);
+            var pathFrom = new GeoCoordinate(50.9, longitudeLeft);
+            var pathTo = new GeoCoordinate(50.9, longitudeRight);
 
-            GeoCoordinate pedestrian_from = new GeoCoordinate(50.8, longitude_left);
-            GeoCoordinate pedestrian_to = new GeoCoordinate(50.8, longitude_right);
+            var pedestrianFrom = new GeoCoordinate(50.8, longitudeLeft);
+            var pedestrianTo = new GeoCoordinate(50.8, longitudeRight);
 
-            GeoCoordinate road_from = new GeoCoordinate(50.7, longitude_left);
-            GeoCoordinate road_to = new GeoCoordinate(50.7, longitude_right);
+            var roadFrom = new GeoCoordinate(50.7, longitudeLeft);
+            var roadTo = new GeoCoordinate(50.7, longitudeRight);
 
-            GeoCoordinate living_street_from = new GeoCoordinate(50.6, longitude_left);
-            GeoCoordinate living_street_to = new GeoCoordinate(50.6, longitude_right);
+            var livingStreetFrom = new GeoCoordinate(50.6, longitudeLeft);
+            var livingStreetTo = new GeoCoordinate(50.6, longitudeRight);
 
-            GeoCoordinate residential_from = new GeoCoordinate(50.5, longitude_left);
-            GeoCoordinate residential_to = new GeoCoordinate(50.5, longitude_right);
+            var residentialFrom = new GeoCoordinate(50.5, longitudeLeft);
+            var residentialTo = new GeoCoordinate(50.5, longitudeRight);
 
-            GeoCoordinate unclassified_from = new GeoCoordinate(50.4, longitude_left);
-            GeoCoordinate unclassified_to = new GeoCoordinate(50.4, longitude_right);
+            var unclassifiedFrom = new GeoCoordinate(50.4, longitudeLeft);
+            var unclassifiedTo = new GeoCoordinate(50.4, longitudeRight);
 
-            GeoCoordinate tertiary_from = new GeoCoordinate(50.3, longitude_left);
-            GeoCoordinate tertiary_to = new GeoCoordinate(50.3, longitude_right);
+            var tertiaryFrom = new GeoCoordinate(50.3, longitudeLeft);
+            var tertiaryTo = new GeoCoordinate(50.3, longitudeRight);
 
-            GeoCoordinate secondary_from = new GeoCoordinate(50.2, longitude_left);
-            GeoCoordinate secondary_to = new GeoCoordinate(50.2, longitude_right);
+            var secondaryFrom = new GeoCoordinate(50.2, longitudeLeft);
+            var secondaryTo = new GeoCoordinate(50.2, longitudeRight);
 
-            GeoCoordinate primary_from = new GeoCoordinate(50.1, longitude_left);
-            GeoCoordinate primary_to = new GeoCoordinate(50.1, longitude_right);
+            var primaryFrom = new GeoCoordinate(50.1, longitudeLeft);
+            var primaryTo = new GeoCoordinate(50.1, longitudeRight);
 
-            GeoCoordinate trunk_from = new GeoCoordinate(50.0, longitude_left);
-            GeoCoordinate trunk_to = new GeoCoordinate(50.0, longitude_right);
+            var trunkFrom = new GeoCoordinate(50.0, longitudeLeft);
+            var trunkTo = new GeoCoordinate(50.0, longitudeRight);
 
-            GeoCoordinate motorway_from = new GeoCoordinate(49.9, longitude_left);
-            GeoCoordinate motorway_to = new GeoCoordinate(49.9, longitude_right);
+            var motorwayFrom = new GeoCoordinate(49.9, longitudeLeft);
+            var motorwayTo = new GeoCoordinate(49.9, longitudeRight);
 
             // pedestrian
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                footway_from, footway_to, interpreter));
+                footwayFrom, footwayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                cycleway_from, cycleway_to, interpreter));
+                cyclewayFrom, cyclewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                bridleway_from, bridleway_to, interpreter));
+                bridlewayFrom, bridlewayTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                path_from, path_to, interpreter));
+                pathFrom, pathTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                pedestrian_from, pedestrian_to, interpreter));
+                pedestrianFrom, pedestrianTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                road_from, road_to, interpreter));
+                roadFrom, roadTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                living_street_from, living_street_to, interpreter));
+                livingStreetFrom, livingStreetTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                residential_from, residential_to, interpreter));
+                residentialFrom, residentialTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                unclassified_from, unclassified_to, interpreter));
+                unclassifiedFrom, unclassifiedTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                tertiary_from, tertiary_to, interpreter));
+                tertiaryFrom, tertiaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                secondary_from, secondary_to, interpreter));
+                secondaryFrom, secondaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                primary_from, primary_to, interpreter));
+                primaryFrom, primaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                trunk_from, trunk_to, interpreter));
+                trunkFrom, trunkTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Pedestrian,
-                motorway_from, motorway_to, interpreter));
+                motorwayFrom, motorwayTo, interpreter));
 
             // bicycle
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                footway_from, footway_to, interpreter));
+                footwayFrom, footwayTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                cycleway_from, cycleway_to, interpreter));
+                cyclewayFrom, cyclewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                bridleway_from, bridleway_to, interpreter));
+                bridlewayFrom, bridlewayTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                path_from, path_to, interpreter));
+                pathFrom, pathTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                pedestrian_from, pedestrian_to, interpreter));
+                pedestrianFrom, pedestrianTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                road_from, road_to, interpreter));
+                roadFrom, roadTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                living_street_from, living_street_to, interpreter));
+                livingStreetFrom, livingStreetTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                residential_from, residential_to, interpreter));
+                residentialFrom, residentialTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                unclassified_from, unclassified_to, interpreter));
+                unclassifiedFrom, unclassifiedTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                tertiary_from, tertiary_to, interpreter));
+                tertiaryFrom, tertiaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                secondary_from, secondary_to, interpreter));
+                secondaryFrom, secondaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                primary_from, primary_to, interpreter));
+                primaryFrom, primaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                trunk_from, trunk_to, interpreter));
+                trunkFrom, trunkTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bicycle,
-                motorway_from, motorway_to, interpreter));
+                motorwayFrom, motorwayTo, interpreter));
 
             // moped
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
-                footway_from, footway_to, interpreter));
+                footwayFrom, footwayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
-                cycleway_from, cycleway_to, interpreter));
+                cyclewayFrom, cyclewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
-                bridleway_from, bridleway_to, interpreter));
+                bridlewayFrom, bridlewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
-                path_from, path_to, interpreter));
+                pathFrom, pathTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
-                pedestrian_from, pedestrian_to, interpreter));
+                pedestrianFrom, pedestrianTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
-                road_from, road_to, interpreter));
+                roadFrom, roadTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
-                living_street_from, living_street_to, interpreter));
+                livingStreetFrom, livingStreetTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
-                residential_from, residential_to, interpreter));
+                residentialFrom, residentialTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
-                unclassified_from, unclassified_to, interpreter));
+                unclassifiedFrom, unclassifiedTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
-                tertiary_from, tertiary_to, interpreter));
+                tertiaryFrom, tertiaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
-                secondary_from, secondary_to, interpreter));
+                secondaryFrom, secondaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
-                primary_from, primary_to, interpreter));
+                primaryFrom, primaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Moped,
-                trunk_from, trunk_to, interpreter));
+                trunkFrom, trunkTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Moped,
-                motorway_from, motorway_to, interpreter));
+                motorwayFrom, motorwayTo, interpreter));
 
             // moped
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                footway_from, footway_to, interpreter));
+                footwayFrom, footwayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                cycleway_from, cycleway_to, interpreter));
+                cyclewayFrom, cyclewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                bridleway_from, bridleway_to, interpreter));
+                bridlewayFrom, bridlewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                path_from, path_to, interpreter));
+                pathFrom, pathTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                pedestrian_from, pedestrian_to, interpreter));
+                pedestrianFrom, pedestrianTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                road_from, road_to, interpreter));
+                roadFrom, roadTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                living_street_from, living_street_to, interpreter));
+                livingStreetFrom, livingStreetTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                residential_from, residential_to, interpreter));
+                residentialFrom, residentialTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                unclassified_from, unclassified_to, interpreter));
+                unclassifiedFrom, unclassifiedTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                tertiary_from, tertiary_to, interpreter));
+                tertiaryFrom, tertiaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                secondary_from, secondary_to, interpreter));
+                secondaryFrom, secondaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                primary_from, primary_to, interpreter));
+                primaryFrom, primaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                trunk_from, trunk_to, interpreter));
+                trunkFrom, trunkTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.MotorCycle,
-                motorway_from, motorway_to, interpreter));
+                motorwayFrom, motorwayTo, interpreter));
 
             // car
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Car,
-                footway_from, footway_to, interpreter));
+                footwayFrom, footwayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Car,
-                cycleway_from, cycleway_to, interpreter));
+                cyclewayFrom, cyclewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Car,
-                bridleway_from, bridleway_to, interpreter));
+                bridlewayFrom, bridlewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Car,
-                path_from, path_to, interpreter));
+                pathFrom, pathTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Car,
-                pedestrian_from, pedestrian_to, interpreter));
+                pedestrianFrom, pedestrianTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
-                road_from, road_to, interpreter));
+                roadFrom, roadTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
-                living_street_from, living_street_to, interpreter));
+                livingStreetFrom, livingStreetTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
-                residential_from, residential_to, interpreter));
+                residentialFrom, residentialTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
-                unclassified_from, unclassified_to, interpreter));
+                unclassifiedFrom, unclassifiedTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
-                tertiary_from, tertiary_to, interpreter));
+                tertiaryFrom, tertiaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
-                secondary_from, secondary_to, interpreter));
+                secondaryFrom, secondaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
-                primary_from, primary_to, interpreter));
+                primaryFrom, primaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
-                trunk_from, trunk_to, interpreter));
+                trunkFrom, trunkTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Car,
-                motorway_from, motorway_to, interpreter));
+                motorwayFrom, motorwayTo, interpreter));
 
             // small truck
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                footway_from, footway_to, interpreter));
+                footwayFrom, footwayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                cycleway_from, cycleway_to, interpreter));
+                cyclewayFrom, cyclewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                bridleway_from, bridleway_to, interpreter));
+                bridlewayFrom, bridlewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                path_from, path_to, interpreter));
+                pathFrom, pathTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                pedestrian_from, pedestrian_to, interpreter));
+                pedestrianFrom, pedestrianTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                road_from, road_to, interpreter));
+                roadFrom, roadTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                living_street_from, living_street_to, interpreter));
+                livingStreetFrom, livingStreetTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                residential_from, residential_to, interpreter));
+                residentialFrom, residentialTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                unclassified_from, unclassified_to, interpreter));
+                unclassifiedFrom, unclassifiedTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                tertiary_from, tertiary_to, interpreter));
+                tertiaryFrom, tertiaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                secondary_from, secondary_to, interpreter));
+                secondaryFrom, secondaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                primary_from, primary_to, interpreter));
+                primaryFrom, primaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                trunk_from, trunk_to, interpreter));
+                trunkFrom, trunkTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.SmallTruck,
-                motorway_from, motorway_to, interpreter));
+                motorwayFrom, motorwayTo, interpreter));
 
             // big truck
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                footway_from, footway_to, interpreter));
+                footwayFrom, footwayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                cycleway_from, cycleway_to, interpreter));
+                cyclewayFrom, cyclewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                bridleway_from, bridleway_to, interpreter));
+                bridlewayFrom, bridlewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                path_from, path_to, interpreter));
+                pathFrom, pathTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                pedestrian_from, pedestrian_to, interpreter));
+                pedestrianFrom, pedestrianTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                road_from, road_to, interpreter));
+                roadFrom, roadTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                living_street_from, living_street_to, interpreter));
+                livingStreetFrom, livingStreetTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                residential_from, residential_to, interpreter));
+                residentialFrom, residentialTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                unclassified_from, unclassified_to, interpreter));
+                unclassifiedFrom, unclassifiedTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                tertiary_from, tertiary_to, interpreter));
+                tertiaryFrom, tertiaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                secondary_from, secondary_to, interpreter));
+                secondaryFrom, secondaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                primary_from, primary_to, interpreter));
+                primaryFrom, primaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                trunk_from, trunk_to, interpreter));
+                trunkFrom, trunkTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.BigTruck,
-                motorway_from, motorway_to, interpreter));
+                motorwayFrom, motorwayTo, interpreter));
 
             // bus
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bus,
-                footway_from, footway_to, interpreter));
+                footwayFrom, footwayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bus,
-                cycleway_from, cycleway_to, interpreter));
+                cyclewayFrom, cyclewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bus,
-                bridleway_from, bridleway_to, interpreter));
+                bridlewayFrom, bridlewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bus,
-                path_from, path_to, interpreter));
+                pathFrom, pathTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(VehicleEnum.Bus,
-                pedestrian_from, pedestrian_to, interpreter));
+                pedestrianFrom, pedestrianTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
-                road_from, road_to, interpreter));
+                roadFrom, roadTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
-                living_street_from, living_street_to, interpreter));
+                livingStreetFrom, livingStreetTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
-                residential_from, residential_to, interpreter));
+                residentialFrom, residentialTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
-                unclassified_from, unclassified_to, interpreter));
+                unclassifiedFrom, unclassifiedTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
-                tertiary_from, tertiary_to, interpreter));
+                tertiaryFrom, tertiaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
-                secondary_from, secondary_to, interpreter));
+                secondaryFrom, secondaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
-                primary_from, primary_to, interpreter));
+                primaryFrom, primaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
-                trunk_from, trunk_to, interpreter));
+                trunkFrom, trunkTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(VehicleEnum.Bus,
-                motorway_from, motorway_to, interpreter));
+                motorwayFrom, motorwayTo, interpreter));
         }
 
         /// <summary>
@@ -348,19 +347,19 @@ namespace OsmSharp.UnitTests.Routing
         protected bool DoTestForVehicle(VehicleEnum vehicle, GeoCoordinate from, GeoCoordinate to,
             IRoutingInterpreter interpreter)
         {
-            IBasicRouterDataSource<EdgeData> data = 
+            IBasicRouterDataSource<TEdgeData> data = 
                 this.BuildData(interpreter, "OsmSharp.UnitTests.test_segments.osm", vehicle);
-            IBasicRouter<EdgeData> basic_router = 
+            IBasicRouter<TEdgeData> basicRouter = 
                 this.BuildBasicRouter(data);
-            IRouter<ResolvedType> router = 
-                this.BuildRouter(data, interpreter, basic_router);
+            Router router = 
+                this.BuildRouter(data, interpreter, basicRouter);
 
-            ResolvedType resolved_from = router.Resolve(vehicle, from);
-            ResolvedType resolved_to = router.Resolve(vehicle, to);
+            RouterPoint resolvedFrom = router.Resolve(vehicle, from);
+            RouterPoint resolvedTo = router.Resolve(vehicle, to);
 
-            if (resolved_from != null && resolved_to != null)
+            if (resolvedFrom != null && resolvedTo != null)
             {
-                OsmSharpRoute route = router.Calculate(vehicle, resolved_from, resolved_to);
+                OsmSharpRoute route = router.Calculate(vehicle, resolvedFrom, resolvedTo);
                 return route != null;
             }
             return false;

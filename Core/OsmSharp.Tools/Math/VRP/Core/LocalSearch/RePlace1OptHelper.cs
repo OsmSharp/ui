@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Collections;
 
-namespace OsmSharp.Tools.Math.VRP.Core.LocalSearch
+namespace OsmSharp.Math.VRP.Core.LocalSearch
 {
     /// <summary>
     /// Responsible for an local search strategy doing best-placement.

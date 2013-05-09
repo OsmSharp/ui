@@ -5,12 +5,12 @@ using System.Text;
 using NUnit.Framework;
 using OsmSharp.Osm;
 using System.IO;
+using OsmSharp.Osm.Data.Streams.Filters;
+using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Osm.Data.XML.Processor;
-using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using System.Reflection;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
@@ -167,19 +167,18 @@ namespace OsmSharp.UnitTests.Routing.CH.Contraction
         /// <returns></returns>
         private DynamicGraphRouterDataSource<CHEdgeData> BuildData(Stream stream)
         {
-            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            SimpleTagsIndex tags_index = new SimpleTagsIndex();
+            var interpreter = new OsmRoutingInterpreter();
+            var tagsIndex = new SimpleTagsIndex();
 
             // do the data processing.
-            DynamicGraphRouterDataSource<CHEdgeData> data =
-                new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
-            CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+            var data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+            var targetData = new CHEdgeGraphOsmStreamWriter(
                 data, interpreter, data.TagsIndex, VehicleEnum.Car);
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
-            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+            var dataProcessorSource = new XmlOsmStreamReader(stream);
+            var sorter = new OsmStreamFilterSort();
+            sorter.RegisterSource(dataProcessorSource);
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
 
             return data;
         }
@@ -191,12 +190,12 @@ namespace OsmSharp.UnitTests.Routing.CH.Contraction
         /// <returns></returns>
         private HashSet<uint> BuildNeighboursSet(KeyValuePair<uint, CHEdgeData>[] neighbours)
         {
-            HashSet<uint> neighbours_set = new HashSet<uint>();
+            var neighboursSet = new HashSet<uint>();
             foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
             {
-                neighbours_set.Add(neighbour.Key);
+                neighboursSet.Add(neighbour.Key);
             }
-            return neighbours_set;
+            return neighboursSet;
         }
     }
 }

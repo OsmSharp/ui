@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Collections;
 
-namespace OsmSharp.Tools.Math.VRP.Core
+namespace OsmSharp.Math.VRP.Core
 {
     /// <summary>
     /// A collection of nearest neighbours.

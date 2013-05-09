@@ -22,12 +22,12 @@ using System.Text;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Tools.Collections.Tags;
 
-namespace OsmSharp.Osm.Data.XML.Processor
+namespace OsmSharp.Osm.Data.Xml.Processor
 {
     /// <summary>
     /// Converts simple objects from/to xml equivalents.
     /// </summary>
-    public static class XmlSimpleConverter
+    internal static class XmlSimpleConverter
     {
         internal static SimpleChangeSet ConvertToSimple(Osm.Xml.v0_6.delete delete)
         {

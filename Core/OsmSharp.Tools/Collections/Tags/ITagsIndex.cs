@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace OsmSharp.Tools.Collections.Tags
+namespace OsmSharp.Collections.Tags
 {
     /// <summary>
     /// Abstracts an index containing tags.

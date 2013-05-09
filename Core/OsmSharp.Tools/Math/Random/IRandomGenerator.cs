@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.Random
+namespace OsmSharp.Math.Random
 {
     /// <summary>
     /// A representation of generic random generator functions

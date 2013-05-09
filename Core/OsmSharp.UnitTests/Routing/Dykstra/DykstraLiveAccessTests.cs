@@ -1,22 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using OsmSharp.Osm.UnitTests.Routing;
+﻿using NUnit.Framework;
+using OsmSharp.Osm.Data.Streams.Filters;
+using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Data;
-using OsmSharp.Routing.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
-using OsmSharp.Osm;
-using OsmSharp.Routing.Osm.Data.Processing;
-using OsmSharp.Osm.Data.XML.Processor;
 using System.Reflection;
-using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
-using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Osm.Data.Processing;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.UnitTests.Routing.Dykstra
@@ -25,18 +17,18 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
     /// Does some raw routing tests.
     /// </summary>
     [TestFixture]
-    public class DykstraLiveAccessTests : RoutingAccessTests<RouterPoint, SimpleWeighedEdge>
+    public class DykstraLiveAccessTests : RoutingAccessTests<LiveEdge>
     {
         /// <summary>
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<SimpleWeighedEdge> data, IRoutingInterpreter interpreter,
-            IBasicRouter<SimpleWeighedEdge> basic_router)
+        public override Router BuildRouter(IBasicRouterDataSource<LiveEdge> data, 
+            IRoutingInterpreter interpreter,
+                IBasicRouter<LiveEdge> basicRouter)
         {
             // initialize the router.
-            return new Router<SimpleWeighedEdge>(
-                    data, interpreter, basic_router);
+            return Router.CreateLiveFrom(data, basicRouter, interpreter);
         }
 
         /// <summary>
@@ -44,7 +36,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IBasicRouter<SimpleWeighedEdge> BuildBasicRouter(IBasicRouterDataSource<SimpleWeighedEdge> data)
+        public override IBasicRouter<LiveEdge> BuildBasicRouter(IBasicRouterDataSource<LiveEdge> data)
         {
             return new DykstraRoutingLive(data.TagsIndex);
         }
@@ -53,37 +45,27 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         /// Builds data source.
         /// </summary>
         /// <param name="interpreter"></param>
-        /// <param name="embedded_string"></param>
+        /// <param name="embeddedString"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<SimpleWeighedEdge> BuildData(IRoutingInterpreter interpreter,
-                                                                            string embedded_string, VehicleEnum vehicle)
+        public override IBasicRouterDataSource<LiveEdge> BuildData(IRoutingInterpreter interpreter,
+                                                                            string embeddedString, VehicleEnum vehicle)
         {
-            string key = string.Format("Dykstra.Routing.IBasicRouterDataSource<SimpleWeighedEdge>.OSM.{0}",
-                                       embedded_string);
-            IBasicRouterDataSource<SimpleWeighedEdge> data = StaticDictionary
-                .Get<IBasicRouterDataSource<SimpleWeighedEdge>>(
-                    key);
-
-            SimpleTagsIndex tags_index = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsIndex();
 
             // do the data processing.
-            DynamicGraphRouterDataSource<SimpleWeighedEdge> memory_data =
-                new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
-            SimpleWeighedDataGraphProcessingTarget target_data = new SimpleWeighedDataGraphProcessingTarget(
-                memory_data, interpreter, memory_data.TagsIndex, vehicle);
-            
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string));
-            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+            var memoryData =
+                new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var targetData = new LiveGraphOsmStreamWriter(
+                memoryData, interpreter, memoryData.TagsIndex);
+            var dataProcessorSource = new XmlOsmStreamReader(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
+            var sorter = new OsmStreamFilterSort();
+            sorter.RegisterSource(dataProcessorSource);
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
 
-            data = memory_data;
-            StaticDictionary.Add<IBasicRouterDataSource<SimpleWeighedEdge>>(key,
-                                                                            data);
-            return data;
+            return memoryData;
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Collections.Tags
+namespace OsmSharp.Collections.Tags
 {
     /// <summary>
     /// Represents a generic tags collection.

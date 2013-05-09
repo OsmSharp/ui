@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Collections;
 
-namespace OsmSharp.Tools.Math.Structures
+namespace OsmSharp.Math.Structures
 {
     /// <summary>
     /// A naive reference implementation of the ILocatedObjectIndex interface.

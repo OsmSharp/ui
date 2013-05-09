@@ -22,7 +22,7 @@ using System.Text;
 using System.Reflection;
 using System.IO;
 
-namespace OsmSharp.Tools.GeoCoding
+namespace OsmSharp.GeoCoding
 {
     /// <summary>
     /// Facade to this assembly.

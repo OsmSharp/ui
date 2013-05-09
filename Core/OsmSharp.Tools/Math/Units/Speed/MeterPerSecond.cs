@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.Units.Distance;
 using OsmSharp.Tools.Math.Units.Time;
 
-namespace OsmSharp.Tools.Math.Units.Speed
+namespace OsmSharp.Math.Units.Speed
 {
     /// <summary>
     /// Represents a speed in meters/seconds.

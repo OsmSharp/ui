@@ -25,8 +25,9 @@ using OsmSharp.Tools.Xml.Nominatim.Reverse.v1;
 using OsmSharp.Tools.Xml.Sources;
 using OsmSharp.Tools.Xml.Nominatim.Search;
 using OsmSharp.Tools.Xml.Nominatim.Search.v1;
+using OsmSharp.Xml;
 
-namespace OsmSharp.Tools.GeoCoding.Nominatim
+namespace OsmSharp.GeoCoding.Nominatim
 {
     /// <summary>
     /// Creates this geocoder.

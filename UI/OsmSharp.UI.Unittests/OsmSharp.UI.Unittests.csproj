@@ -66,9 +66,6 @@
     <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Tools">
-      <HintPath>..\..\Core\Output\Debug\Any CPU\OsmSharp.Tools.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MapCSSDomainParserTests.cs" />
@@ -96,6 +93,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\OsmSharp.Tools\OsmSharp.csproj">
+      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Name>OsmSharp</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
       <Project>{76BD9027-A67C-4D1B-8439-BE25E533C50D}</Project>
       <Name>OsmSharp.UI</Name>

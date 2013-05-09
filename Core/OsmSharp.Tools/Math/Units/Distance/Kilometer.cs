@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.Units.Time;
 using OsmSharp.Tools.Math.Units.Speed;
 
-namespace OsmSharp.Tools.Math.Units.Distance
+namespace OsmSharp.Math.Units.Distance
 {
     /// <summary>
     /// Represents a distance in kilometers.

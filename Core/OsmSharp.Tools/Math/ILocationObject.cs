@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Geo;
 
-namespace OsmSharp.Tools.Math
+namespace OsmSharp.Math
 {
     /// <summary>
     /// An object that represents a location.

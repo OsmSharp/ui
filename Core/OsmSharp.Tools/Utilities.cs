@@ -15,13 +15,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
 using System.Security.Cryptography;
 
-namespace OsmSharp.Tools
+namespace OsmSharp
 {
     /// <summary>
     /// Class containing some utilities and extension methods.

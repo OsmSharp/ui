@@ -6,12 +6,10 @@ using NUnit.Framework;
 using OsmSharp.Osm;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Osm.Data.Processing;
-using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.Osm.Interpreter;
 using System.Reflection;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
-using OsmSharp.Routing.Graph.Path;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Interpreter;
 

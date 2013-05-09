@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
+namespace OsmSharp.Math.VRP.Core.Routes.Symmetric
 {
     /// <summary>
     /// An implementation for a symmetric route with varying customer counts.

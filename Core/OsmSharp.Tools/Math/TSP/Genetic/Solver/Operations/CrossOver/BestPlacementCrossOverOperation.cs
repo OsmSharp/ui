@@ -26,7 +26,7 @@ using OsmSharp.Tools.Math.TSP;
 using OsmSharp.Tools.Math.TSP.Genetic.Solver;
 using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
 
-namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
+namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
     /// <summary>
     /// A best placement operation.

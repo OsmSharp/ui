@@ -28,7 +28,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic
+namespace OsmSharp.Math.TSP.EdgeAssemblyGenetic
 {
     /// <summary>
     /// Implements a best-placement solver.

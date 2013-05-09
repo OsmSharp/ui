@@ -23,14 +23,13 @@ using NUnit.Framework;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Constraints;
+using OsmSharp.Routing.Routers;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Route;
 using System.Reflection;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Router;
 using OsmSharp.Routing.Osm.Data;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Tools.Math;
 
@@ -39,19 +38,18 @@ namespace OsmSharp.Osm.UnitTests.Routing
     /// <summary>
     /// Base class with tests around IRouter objects.
     /// </summary>
-    public abstract class RoutingConditionalAccessTests<ResolvedType, EdgeData>
+    public abstract class RoutingConditionalAccessTests<EdgeData>
         where EdgeData : IDynamicGraphEdgeData
-        where ResolvedType : IRouterPoint
     {
         /// <summary>
         /// Builds the router;
         /// </summary>
         /// <param name="data"></param>
         /// <param name="interpreter"></param>
-        /// <param name="basic_router"></param>
+        /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public abstract IRouter<ResolvedType> BuildRouter(IBasicRouterDataSource<EdgeData> data,
-            IRoutingInterpreter interpreter, IBasicRouter<EdgeData> basic_router);
+        public abstract Router BuildRouter(IBasicRouterDataSource<EdgeData> data,
+            IRoutingInterpreter interpreter, IBasicRouter<EdgeData> basicRouter);
 
         /// <summary>
         /// Builds the basic router.
@@ -59,32 +57,33 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// <param name="data"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public abstract IBasicRouter<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data, VehicleEnum vehicle);
+        public abstract IBasicRouter<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data, 
+            VehicleEnum vehicle);
 
         /// <summary>
         /// Builds the data.
         /// </summary>
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
-        /// <param name="access_tags"></param>
+        /// <param name="accessTags"></param>
         /// <returns></returns>
         public abstract IBasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter, 
-            VehicleEnum vehicle, List<KeyValuePair<string, string>> access_tags);
+            VehicleEnum vehicle, List<KeyValuePair<string, string>> accessTags);
 
         /// <summary>
         /// Tests that a router actually finds the shortest route.
         /// </summary>
         /// <param name="vehicle"></param>
-        /// <param name="access_tags"></param>
-        protected void DoTestShortestWithAccess(VehicleEnum vehicle, List<KeyValuePair<string, string>> access_tags)
+        /// <param name="accessTags"></param>
+        protected void DoTestShortestWithAccess(VehicleEnum vehicle, List<KeyValuePair<string, string>> accessTags)
         {
-            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
-            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, access_tags);
-            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data, vehicle);
-            IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(vehicle, new GeoCoordinate(51.0582205, 3.7192647)); // -52
-            ResolvedType target = router.Resolve(vehicle, new GeoCoordinate(51.0579530, 3.7196168)); // -56
+            var interpreter = new OsmRoutingInterpreter();
+            IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, accessTags);
+            IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data, vehicle);
+            Router router = this.BuildRouter(
+                data, interpreter, basicRouter);
+            RouterPoint source = router.Resolve(vehicle, new GeoCoordinate(51.0582205, 3.7192647)); // -52
+            RouterPoint target = router.Resolve(vehicle, new GeoCoordinate(51.0579530, 3.7196168)); // -56
 
             OsmSharpRoute route = router.Calculate(vehicle, source, target);
             Assert.IsNotNull(route);
@@ -119,13 +118,13 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// <param name="access_tags"></param>
         protected void DoTestShortestWithoutAccess(VehicleEnum vehicle, List<KeyValuePair<string, string>> access_tags)
         {
-            OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
+            var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, access_tags);
-            IBasicRouter<EdgeData> basic_router = this.BuildBasicRouter(data, vehicle);
-            IRouter<ResolvedType> router = this.BuildRouter(
-                data, interpreter, basic_router);
-            ResolvedType source = router.Resolve(vehicle, new GeoCoordinate(51.0579530, 3.7196168)); // -56
-            ResolvedType target = router.Resolve(vehicle, new GeoCoordinate(51.0582205, 3.7192647)); // -52
+            IBasicRouter<EdgeData> basicRouter = this.BuildBasicRouter(data, vehicle);
+            Router router = this.BuildRouter(
+                data, interpreter, basicRouter);
+            RouterPoint source = router.Resolve(vehicle, new GeoCoordinate(51.0579530, 3.7196168)); // -56
+            RouterPoint target = router.Resolve(vehicle, new GeoCoordinate(51.0582205, 3.7192647)); // -52
 
             OsmSharpRoute route = router.Calculate(vehicle, source, target);
             Assert.IsNotNull(route);

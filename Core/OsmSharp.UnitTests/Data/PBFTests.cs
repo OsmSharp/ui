@@ -15,18 +15,15 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+
 using NUnit.Framework;
 using System.Reflection;
-using OsmSharp.Osm.Data.PBF.Raw.Processor;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Data;
 using OsmSharp.Osm.Data.Core.Memory;
+using OsmSharp.Osm.Data.PBF.Processor;
 
-namespace OsmSharp.Osm.UnitTests.Data
+namespace OsmSharp.UnitTests.Data
 {
     /// <summary>
     /// Containts tests for the PBF format.
@@ -77,11 +74,11 @@ namespace OsmSharp.Osm.UnitTests.Data
         private void TestReadPBF(string resource)
         {
             // create the pbf source from a pbf in the resources of this assembly.
-            PBFDataProcessorSource source = new PBFDataProcessorSource(
+            var source = new PBFOsmStreamReader(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(resource));
 
             // pull the data from the source into the memory data source.
-            MemoryDataSource data = new MemoryDataSource();
+            var data = new MemoryDataSource();
             data.PullFromSource(source);
 
             // test the data.

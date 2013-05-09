@@ -19,8 +19,9 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
+using OsmSharp.Xml;
 
-namespace OsmSharp.Tools.Xml.Nominatim.Search
+namespace OsmSharp.Xml.Nominatim.Search
 {
     /// <summary>
     /// Search document.

@@ -24,7 +24,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace OsmSharp.Tools.Math.AI.Genetic.Operations
+namespace OsmSharp.Math.AI.Genetic.Operations
 {
     /// <summary>
     /// Class combining the genetic operators.

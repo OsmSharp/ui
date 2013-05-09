@@ -16,7 +16,7 @@ using System.Xml.Serialization;
 using System.Xml;
 
 
-namespace OsmSharp.Tools.Xml.Gpx.v1_0
+namespace OsmSharp.Xml.Gpx.v1_0
 {
 
 

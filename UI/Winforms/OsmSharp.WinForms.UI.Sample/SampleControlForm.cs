@@ -8,8 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using OsmSharp.Osm.Data.Core.Processor.List;
-using OsmSharp.Osm.Data.XML.Processor;
+using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Tools;
 using OsmSharp.Tools.Math.Geo;
@@ -51,24 +50,19 @@ namespace OsmSharp.WinForms.UI.Sample
             scene2D.AddPolygon(float.MinValue, float.MaxValue, new float[] { 50, -80, 70 }, new float[] { 20, -10, -70 }, color, width, fill);
 
             // load test osm file.
-            List<SimpleOsmGeo> osmList = new List<SimpleOsmGeo>();
-            Stream stream =
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm");
-            XmlDataProcessorSource xmlDataProcessorSource = new XmlDataProcessorSource(
-                stream);
-            CollectionDataProcessorTarget collectionDataProcessorTarget = new CollectionDataProcessorTarget(
-                osmList);
-            collectionDataProcessorTarget.RegisterSource(xmlDataProcessorSource);
-            collectionDataProcessorTarget.Pull();
+            Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.WinForms.UI.Sample.test.osm");
+            var xmlDataProcessorSource = new XmlOsmStreamReader(stream);
+            ICollection<SimpleOsmGeo> osmList = xmlDataProcessorSource.PullToCollection();
 
             // build a scene using spherical mercator.
             IProjection sphericalMercator = new WebMercator();
-            Dictionary<long, GeoCoordinate> nodes = new Dictionary<long, GeoCoordinate>();
+            var nodes = new Dictionary<long, GeoCoordinate>();
             foreach (SimpleOsmGeo simpleOsmGeo in osmList)
             {
                 if (simpleOsmGeo is SimpleNode)
                 {
-                    SimpleNode simplenode = (simpleOsmGeo as SimpleNode);
+                    var simplenode = (simpleOsmGeo as SimpleNode);
                     double[] point = sphericalMercator.ToPixel(
                         simplenode.Latitude.Value, simplenode.Longitude.Value);
                     nodes.Add(simplenode.Id.Value, new GeoCoordinate(simplenode.Latitude.Value, simplenode.Longitude.Value));
@@ -78,9 +72,9 @@ namespace OsmSharp.WinForms.UI.Sample
                 }
                 else if (simpleOsmGeo is SimpleWay)
                 {
-                    SimpleWay way = (simpleOsmGeo as SimpleWay);
-                    List<float> x = new List<float>();
-                    List<float> y = new List<float>();
+                    var way = (simpleOsmGeo as SimpleWay);
+                    var x = new List<float>();
+                    var y = new List<float>();
                     if (way.Nodes != null)
                     {
                         for (int idx = 0; idx < way.Nodes.Count; idx++)

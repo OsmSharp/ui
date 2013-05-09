@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Collections
+namespace OsmSharp.Collections
 {
     /// <summary>
     /// Class implementing a thread-safe limited stack.

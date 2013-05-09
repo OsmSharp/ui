@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.VRP.Core
+namespace OsmSharp.Math.VRP.Core
 {
     /// <summary>
     /// The definition of the problem weights.

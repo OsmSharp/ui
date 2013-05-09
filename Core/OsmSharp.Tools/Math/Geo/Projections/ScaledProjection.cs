@@ -3,7 +3,7 @@
 //using System.Linq;
 //using System.Text;
 
-//namespace OsmSharp.Tools.Math.Geo.Projections
+//namespace OsmSharp.Math.Geo.Projections
 //{
 //    /// <summary>
 //    /// A scaled project to have more numerically stable calculations in some cases (for example when rendering).

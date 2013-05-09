@@ -15,23 +15,22 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.Reflection;
 using NUnit.Framework;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Osm.Data.Streams.Filters;
+using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Data;
-using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing;
+using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Data.Processing;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Route;
-using OsmSharp.Routing.Router;
+using OsmSharp.Routing.Routers;
 using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Graph.Router.Dykstra;
-using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
-using OsmSharp.Osm.Data.XML.Processor;
 
 namespace OsmSharp.Osm.UnitTests.Routing
 {
@@ -44,29 +43,28 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// Returns a router test object.
         /// </summary>
         /// <returns></returns>
-        public abstract IRouter<RouterPoint> BuildRouter(IRoutingInterpreter interpreter, string embedded_name);
+        public abstract Router BuildRouter(IRoutingInterpreter interpreter, string embeddedName);
 
         /// <summary>
         /// Builds a raw data source.
         /// </summary>
         /// <returns></returns>
-        public DynamicGraphRouterDataSource<PreProcessedEdge> BuildDykstraDataSource(
-            IRoutingInterpreter interpreter, string embedded_name)
+        public DynamicGraphRouterDataSource<LiveEdge> BuildDykstraDataSource(
+            IRoutingInterpreter interpreter, string embeddedName)
         {
-            SimpleTagsIndex tags_index = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsIndex();
 
             // do the data processing.
-            DynamicGraphRouterDataSource<PreProcessedEdge> data =
-                new DynamicGraphRouterDataSource<PreProcessedEdge>(tags_index);
-            PreProcessedDataGraphProcessingTarget target_data = new PreProcessedDataGraphProcessingTarget(
-                data, interpreter, data.TagsIndex, VehicleEnum.Car);
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
+            var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var targetData = new LiveGraphOsmStreamWriter(
+                data, interpreter, data.TagsIndex);
+            var dataProcessorSource = new XmlOsmStreamReader(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(
-                "OsmSharp.UnitTests.{0}", embedded_name)));
-            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+                "OsmSharp.UnitTests.{0}", embeddedName)));
+            var sorter = new OsmStreamFilterSort();
+            sorter.RegisterSource(dataProcessorSource);
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
 
             return data;
         }
@@ -75,66 +73,66 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// Builds a raw router to compare against.
         /// </summary>
         /// <returns></returns>
-        public IRouter<RouterPoint> BuildDykstraRouter(IBasicRouterDataSource<PreProcessedEdge> data, 
-            IRoutingInterpreter interpreter, IBasicRouter<PreProcessedEdge> basic_router)
+        public Router BuildDykstraRouter(IBasicRouterDataSource<LiveEdge> data,
+            IRoutingInterpreter interpreter, IBasicRouter<LiveEdge> basicRouter)
         {
             // initialize the router.
-            return new Router<PreProcessedEdge>(
-                    data, interpreter, basic_router);
+            return Router.CreateLiveFrom(data, basicRouter, interpreter);
         }
 
         /// <summary>
         /// Compares all routes against the reference router.
         /// </summary>
-        public void TestCompareAll(string embedded_name)
+        public void TestCompareAll(string embeddedName)
         {
             // build the routing settings.
             IRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
 
             // get the osm data source.
-            IBasicRouterDataSource<PreProcessedEdge> data = this.BuildDykstraDataSource(interpreter, embedded_name);
+            IBasicRouterDataSource<LiveEdge> data = this.BuildDykstraDataSource(interpreter, embeddedName);
 
             // build the reference router.;
-            IRouter<RouterPoint> reference_router = this.BuildDykstraRouter(
-                this.BuildDykstraDataSource(interpreter, embedded_name), interpreter, new DykstraRoutingPreProcessed(data.TagsIndex));
+            Router referenceRouter = this.BuildDykstraRouter(
+                this.BuildDykstraDataSource(interpreter, embeddedName), interpreter, 
+                    new DykstraRoutingLive(data.TagsIndex));
 
             // build the router to be tested.
-            IRouter<RouterPoint> router = this.BuildRouter(interpreter, embedded_name);
+            Router router = this.BuildRouter(interpreter, embeddedName);
 
             // loop over all nodes and resolve their locations.
-            RouterPoint[] resolved_reference = new RouterPoint[data.VertexCount - 1];
-            RouterPoint[] resolved = new RouterPoint[data.VertexCount - 1];
+            var resolvedReference = new RouterPoint[data.VertexCount - 1];
+            var resolved = new RouterPoint[data.VertexCount - 1];
             for (uint idx = 1; idx < data.VertexCount; idx++)
             { // resolve each vertex.
                 float latitude, longitude;
                 if(data.GetVertex(idx, out latitude, out longitude))
                 {
-                    resolved_reference[idx - 1] = reference_router.Resolve(VehicleEnum.Car, new GeoCoordinate(latitude, longitude));
+                    resolvedReference[idx - 1] = referenceRouter.Resolve(VehicleEnum.Car, new GeoCoordinate(latitude, longitude));
                     resolved[idx - 1] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(latitude, longitude));
                 }
 
-                Assert.IsNotNull(resolved_reference[idx - 1]);
+                Assert.IsNotNull(resolvedReference[idx - 1]);
                 Assert.IsNotNull(resolved[idx - 1]);
 
-                Assert.AreEqual(resolved_reference[idx - 1].Location.Latitude,
+                Assert.AreEqual(resolvedReference[idx - 1].Location.Latitude,
                     resolved[idx - 1].Location.Latitude, 0.0001);
-                Assert.AreEqual(resolved_reference[idx - 1].Location.Longitude,
+                Assert.AreEqual(resolvedReference[idx - 1].Location.Longitude,
                     resolved[idx - 1].Location.Longitude, 0.0001);
             }
 
             // check all the routes having the same weight(s).
-            for (int from_idx = 0; from_idx < resolved.Length; from_idx++)
+            for (int fromIdx = 0; fromIdx < resolved.Length; fromIdx++)
             {
-                for (int to_idx = 0; to_idx < resolved.Length; to_idx++)
+                for (int toIdx = 0; toIdx < resolved.Length; toIdx++)
                 {
-                    OsmSharpRoute reference_route = reference_router.Calculate(VehicleEnum.Car, 
-                        resolved_reference[from_idx], resolved_reference[to_idx]);
+                    OsmSharpRoute referenceRoute = referenceRouter.Calculate(VehicleEnum.Car, 
+                        resolvedReference[fromIdx], resolvedReference[toIdx]);
                     OsmSharpRoute route = router.Calculate(VehicleEnum.Car, 
-                        resolved[from_idx], resolved[to_idx]);
+                        resolved[fromIdx], resolved[toIdx]);
 
-                    Assert.IsNotNull(reference_route);
+                    Assert.IsNotNull(referenceRoute);
                     Assert.IsNotNull(route);
-                    Assert.AreEqual(reference_route.TotalDistance, route.TotalDistance, 0.0001);
+                    Assert.AreEqual(referenceRoute.TotalDistance, route.TotalDistance, 0.0001);
                     // TODO: meta data is missing in some CH routing; see issue 
                     //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
                 }

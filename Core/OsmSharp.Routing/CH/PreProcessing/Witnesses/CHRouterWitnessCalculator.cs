@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.CH.Routing;
-using OsmSharp.Routing.Graph.DynamicGraph;
+using OsmSharp.Routing.Graph;
 
 namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
 {

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using OsmSharp.Progress;
 using OsmSharp.Tools.Math.AI.Genetic.Operations;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
@@ -29,7 +30,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Fitness;
 using OsmSharp.Tools.Progress;
 using OsmSharp.Tools.Collections;
 
-namespace OsmSharp.Tools.Math.AI.Genetic.Solvers
+namespace OsmSharp.Math.AI.Genetic.Solvers
 {
     /// <summary>
     /// Class implementing the main flow of any genetic algorithm.

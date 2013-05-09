@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Collections;
 
-namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
+namespace OsmSharp.Math.VRP.Core.Routes.ASymmetric
 {
     /// <summary>
     /// A dynamic asymmetric route.

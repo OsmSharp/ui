@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic;
 
-namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
+namespace OsmSharp.Math.TSP.Genetic.Solver
 {
     /// <summary>
     /// Class acting as a wrapper for the problem implementing the IProblem interface.

@@ -25,7 +25,7 @@ using System.Globalization;
 using OsmSharp.Tools.TSPLIB.Problems;
 using OsmSharp.Tools.TSPLIB.Parser.Primitives;
 
-namespace OsmSharp.Tools.TSPLIB.Parser
+namespace OsmSharp.TSPLIB.Parser
 {
     /// <summary>
     /// Parses TSP LIB problems.

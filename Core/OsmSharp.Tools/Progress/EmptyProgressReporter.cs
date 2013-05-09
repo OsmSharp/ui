@@ -19,8 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Progress;
 
-namespace OsmSharp.Tools.Progress
+namespace OsmSharp.Progress
 {
     /// <summary>
     /// An empty progress reporter to use when not progress needs to be reported.

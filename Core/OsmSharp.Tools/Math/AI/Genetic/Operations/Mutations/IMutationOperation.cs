@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations
+namespace OsmSharp.Math.AI.Genetic.Operations.Mutations
 {
     /// <summary>
     /// Interface abstracting the usage of a specific mutation implementation.

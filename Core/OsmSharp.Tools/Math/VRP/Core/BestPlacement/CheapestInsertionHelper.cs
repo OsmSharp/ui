@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.BestPlacement.InsertionCosts;
 
-namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement
+namespace OsmSharp.Math.VRP.Core.BestPlacement
 {
     /// <summary>
     /// Implements some generic functions for best-placement.

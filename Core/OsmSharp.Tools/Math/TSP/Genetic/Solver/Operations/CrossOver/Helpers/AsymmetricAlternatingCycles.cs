@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Collections;
 
-namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.Helpers
+namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver.Helpers
 {
     /// <summary>
     /// A collection of asymmetric alternating cycles.

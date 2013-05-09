@@ -6,8 +6,6 @@ using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math.Structures;
 using OsmSharp.Tools.Math;
-using OsmSharp.Routing.Graph.DynamicGraph;
-using OsmSharp.Routing.Graph.DynamicGraph.Memory;
 using OsmSharp.Tools.Math.Structures.QTree;
 
 namespace OsmSharp.Routing.Graph
@@ -130,33 +128,24 @@ namespace OsmSharp.Routing.Graph
         }
 
         /// <summary>
-        /// Returns an enumerable of all vertices.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<uint> GetVertices()
-        {
-            return _graph.GetVertices();
-        }
-
-        /// <summary>
         /// Returns all arcs starting at a given vertex.
         /// </summary>
-        /// <param name="vertex"></param>
+        /// <param name="vertexId"></param>
         /// <returns></returns>
-        public KeyValuePair<uint, TEdgeData>[] GetArcs(uint vertex)
+        public KeyValuePair<uint, TEdgeData>[] GetArcs(uint vertexId)
         {
-            return _graph.GetArcs(vertex);
+            return _graph.GetArcs(vertexId);
         }
 
         /// <summary>
         /// Returns true if the given vertex has neighbour as a neighbour.
         /// </summary>
-        /// <param name="vertex"></param>
+        /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasNeighbour(uint vertex, uint neighbour)
+        public bool HasNeighbour(uint vertexId, uint neighbour)
         {
-            return _graph.HasNeighbour(vertex, neighbour);
+            return _graph.HasNeighbour(vertexId, neighbour);
         }
 
         /// <summary>
@@ -164,11 +153,11 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
-        /// <param name="neighbours_estimate"></param>
+        /// <param name="neighboursEstimate"></param>
         /// <returns></returns>
-        public uint AddVertex(float latitude, float longitude, byte neighbours_estimate)
+        public uint AddVertex(float latitude, float longitude, byte neighboursEstimate)
         {
-            uint vertex = _graph.AddVertex(latitude, longitude, neighbours_estimate);
+            uint vertex = _graph.AddVertex(latitude, longitude, neighboursEstimate);
             _vertexIndex.Add(new GeoCoordinate(latitude, longitude),
                 vertex);
             return vertex;

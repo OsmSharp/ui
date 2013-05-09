@@ -25,7 +25,7 @@ using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.TSP.Problems;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace OsmSharp.Tools.Math.TravellingSalesman.Random
+namespace OsmSharp.Math.TravellingSalesman.Random
 {
     /// <summary>
     /// Just generates random routes.

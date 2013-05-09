@@ -2,21 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Osm.Data.Streams.Filters;
+using OsmSharp.Osm.Data.Xml.Processor;
+using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Interpreter;
 using System.IO;
 using NUnit.Framework;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Interpreter;
 using System.Reflection;
-using OsmSharp.Osm;
-using OsmSharp.Routing.Osm.Data.Processing;
-using OsmSharp.Osm.Data.XML.Processor;
-using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.Graph.Path;
-using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing;
 using OsmSharp.Tools.Collections.Tags;
 
@@ -95,26 +94,26 @@ namespace OsmSharp.UnitTests.Routing.CH
         {
             _interpreter = new OsmRoutingInterpreter();
 
-            SimpleTagsIndex tags_index = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsIndex();
 
             // do the data processing.
-            _data = new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
-            CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+            _data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+            var targetData = new CHEdgeGraphOsmStreamWriter(
                 _data, _interpreter, _data.TagsIndex, VehicleEnum.Car);
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
-            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+            var dataProcessorSource = new XmlOsmStreamReader(stream);
+            var sorter = new OsmStreamFilterSort();
+            sorter.RegisterSource(dataProcessorSource);
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
 
             // do the pre-processing part.
             //INodeWitnessCalculator witness_calculator = new CHRouterWitnessCalculator(_data);
-            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(_data);
-            CHPreProcessor pre_processor = new CHPreProcessor(_data,
-                new EdgeDifferenceContractedSearchSpace(_data, witness_calculator), witness_calculator);
-            pre_processor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
-            pre_processor.OnAfterContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
-            pre_processor.Start();
+            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator(_data);
+            var preProcessor = new CHPreProcessor(_data,
+                new EdgeDifferenceContractedSearchSpace(_data, witnessCalculator), witnessCalculator);
+            preProcessor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
+            preProcessor.OnAfterContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
+            preProcessor.Start();
         }
 
         /// <summary>
@@ -135,32 +134,34 @@ namespace OsmSharp.UnitTests.Routing.CH
         {
             _interpreter = new OsmRoutingInterpreter();
 
-            SimpleTagsIndex tags_index = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsIndex();
 
             // do the data processing.
-            _data = new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
-            CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+            _data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+            var targetData = new CHEdgeGraphOsmStreamWriter(
                 _data, _interpreter, _data.TagsIndex, VehicleEnum.Car);
-            XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(stream);
-            DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-            sorter.RegisterSource(data_processor_source);
-            target_data.RegisterSource(sorter);
-            target_data.Pull();
+            var dataProcessorSource = new XmlOsmStreamReader(stream);
+            var sorter = new OsmStreamFilterSort();
+            sorter.RegisterSource(dataProcessorSource);
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
 
             // do the pre-processing part.
-            DykstraWitnessCalculator witness_calculator = new DykstraWitnessCalculator(
+            var witnessCalculator = new DykstraWitnessCalculator(
                 _data);
-            CHPreProcessor pre_processor = new CHPreProcessor(_data,
-                new EdgeDifference(_data, witness_calculator), witness_calculator);
-            pre_processor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
-            pre_processor.OnAfterContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
-            pre_processor.Start();
+            var preProcessor = new CHPreProcessor(_data,
+                new EdgeDifference(_data, witnessCalculator), witnessCalculator);
+            preProcessor.OnBeforeContractionEvent += 
+                new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
+            preProcessor.OnAfterContractionEvent += 
+                new CHPreProcessor.VertexDelegate(pre_processor_OnAfterContractionEvent);
+            preProcessor.Start();
         }
 
         /// <summary>
         /// Holds the paths calculate before contraction.
         /// </summary>
-        private Dictionary<uint, Dictionary<uint, PathSegment<long>>> _paths_before_contraction;
+        private Dictionary<uint, Dictionary<uint, PathSegment<long>>> _pathsBeforeContraction;
 
         /// <summary>
         /// Called right after the contraction.
@@ -170,28 +171,28 @@ namespace OsmSharp.UnitTests.Routing.CH
         void pre_processor_OnAfterContractionEvent(uint vertex, KeyValuePair<uint, CHEdgeData>[] edges)
         {
             // create a new CHRouter
-            CHRouter router = new CHRouter(_data);
+            var router = new CHRouter(_data);
 
             // calculate all the routes between the neighbours of the contracted vertex.
             foreach (KeyValuePair<uint, CHEdgeData> from in edges)
             {
                 // initialize the from-list.
-                PathSegmentVisitList from_list = new PathSegmentVisitList();
-                from_list.UpdateVertex(new PathSegment<long>(from.Key));
+                var fromList = new PathSegmentVisitList();
+                fromList.UpdateVertex(new PathSegment<long>(from.Key));
 
                 // initalize the from dictionary.
-                Dictionary<uint, PathSegment<long>> from_dic = _paths_before_contraction[from.Key];
+                Dictionary<uint, PathSegment<long>> fromDic = _pathsBeforeContraction[from.Key];
                 foreach (KeyValuePair<uint, CHEdgeData> to in edges)
                 {
                     // initialize the to-list.
-                    PathSegmentVisitList to_list = new PathSegmentVisitList();
-                    to_list.UpdateVertex(new PathSegment<long>(to.Key));
+                    var toList = new PathSegmentVisitList();
+                    toList.UpdateVertex(new PathSegment<long>(to.Key));
 
                     // calculate the route.
-                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.VehicleEnum.Car, from_list, to_list, double.MaxValue);
-                    if ((from_dic[to.Key] == null && route != null) ||
-                        (from_dic[to.Key] != null && route == null) ||
-                        ((from_dic[to.Key] != null && route != null) && from_dic[to.Key] != route))
+                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.VehicleEnum.Car, fromList, toList, double.MaxValue);
+                    if ((fromDic[to.Key] == null && route != null) ||
+                        (fromDic[to.Key] != null && route == null) ||
+                        ((fromDic[to.Key] != null && route != null) && fromDic[to.Key] != route))
                     { // the route match!
                         Assert.Fail("Routes are different before/after contraction!");
                     }
@@ -207,29 +208,30 @@ namespace OsmSharp.UnitTests.Routing.CH
         void pre_processor_OnBeforeContractionEvent(uint vertex, KeyValuePair<uint, CHEdgeData>[] edges)
         {
             // create a new CHRouter
-            CHRouter router = new CHRouter(_data);
+            var router = new CHRouter(_data);
 
             // calculate all the routes between the neighbours of the contracted vertex.
-            _paths_before_contraction =
+            _pathsBeforeContraction =
                 new Dictionary<uint, Dictionary<uint, PathSegment<long>>>();
             foreach (KeyValuePair<uint, CHEdgeData> from in edges)
             {
                 // initialize the from-list.
-                PathSegmentVisitList from_list = new PathSegmentVisitList();
-                from_list.UpdateVertex(new PathSegment<long>(from.Key));
+                var fromList = new PathSegmentVisitList();
+                fromList.UpdateVertex(new PathSegment<long>(from.Key));
 
                 // initalize the from dictionary.
-                Dictionary<uint, PathSegment<long>> from_dic = new Dictionary<uint, PathSegment<long>>();
-                _paths_before_contraction[from.Key] = from_dic;
+                var fromDic = new Dictionary<uint, PathSegment<long>>();
+                _pathsBeforeContraction[from.Key] = fromDic;
                 foreach (KeyValuePair<uint, CHEdgeData> to in edges)
                 {
                     // initialize the to-list.
-                    PathSegmentVisitList to_list = new PathSegmentVisitList();
-                    to_list.UpdateVertex(new PathSegment<long>(to.Key));
+                    var toList = new PathSegmentVisitList();
+                    toList.UpdateVertex(new PathSegment<long>(to.Key));
 
                     // calculate the route.
-                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.VehicleEnum.Car, from_list, to_list, double.MaxValue);
-                    from_dic[to.Key] = route;
+                    PathSegment<long> route = router.Calculate(_data, _interpreter, 
+                        OsmSharp.Routing.VehicleEnum.Car, fromList, toList, double.MaxValue);
+                    fromDic[to.Key] = route;
                 }
             }
         }

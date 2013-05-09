@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.VRP.Core;
 
-namespace OsmSharp.Tools.Math.TSP.Problems
+namespace OsmSharp.Math.TSP.Problems
 {
     /// <summary>
     /// Interface representing a generic TSP-problem.

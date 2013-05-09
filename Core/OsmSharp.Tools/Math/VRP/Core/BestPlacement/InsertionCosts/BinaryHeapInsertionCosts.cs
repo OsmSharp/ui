@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Collections.PriorityQueues;
 
-namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement.InsertionCosts
+namespace OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts
 {
     /// <summary>
     /// Keeps insertion costs using binary heap priority queues.

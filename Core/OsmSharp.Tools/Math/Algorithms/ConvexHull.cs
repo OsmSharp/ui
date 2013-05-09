@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Shapes.PrimitivesFactory;
 
-namespace OsmSharp.Tools.Math.Algorithms
+namespace OsmSharp.Math.Algorithms
 {
     /// <summary>
     /// A convex hull algorithm implementation.

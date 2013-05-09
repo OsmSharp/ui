@@ -24,7 +24,6 @@ using OsmSharp.Routing.CH.Routing;
 using System.Diagnostics;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Tools.Collections;
 //using System.Collections.Concurrent;
 
@@ -112,42 +111,43 @@ namespace OsmSharp.Routing.CH.PreProcessing
             uint total = _target.VertexCount;
             uint current = 1;
 
-#if !WINDOWS_PHONE
-            System.Threading.Tasks.Parallel.ForEach(_target.GetVertices(), current_vertex =>
-            {
-                float priority = _calculator.Calculate(current_vertex);
-                lock(_queue)
-                {
-                    _queue.Enqueue(current_vertex, priority);
+            // TODO: redo all the CH stuff.
+//#if !WINDOWS_PHONE
+//            System.Threading.Tasks.Parallel.ForEach(_target.GetVertices(), current_vertex =>
+//            {
+//                float priority = _calculator.Calculate(current_vertex);
+//                lock(_queue)
+//                {
+//                    _queue.Enqueue(current_vertex, priority);
 
-                    if (current % 1000 == 0)
-                    {
-                        Tools.Output.OutputStreamHost.ReportProgress(current, total,
-                            "CHPreProcessor", "Building CH Queue...");
-                    }
+//                    if (current % 1000 == 0)
+//                    {
+//                        Tools.Output.OutputStreamHost.ReportProgress(current, total,
+//                            "CHPreProcessor", "Building CH Queue...");
+//                    }
 
-                    current++;
-                }
-            });
-#endif
-#if WINDOWS_PHONE
-            foreach (uint current_vertex in _target.GetVertices())
-            {
-                float priority = _calculator.Calculate(current_vertex);
-                lock (_queue)
-                {
-                    _queue.Enqueue(current_vertex, priority);
+//                    current++;
+//                }
+//            });
+//#endif
+//#if WINDOWS_PHONE
+//            foreach (uint current_vertex in _target.GetVertices())
+//            {
+//                float priority = _calculator.Calculate(current_vertex);
+//                lock (_queue)
+//                {
+//                    _queue.Enqueue(current_vertex, priority);
 
-                    if (current % 1000 == 0)
-                    {
-                        Tools.Output.OutputStreamHost.ReportProgress(current, total,
-                            "CHPreProcessor", "Building CH Queue...");
-                    }
+//                    if (current % 1000 == 0)
+//                    {
+//                        Tools.Output.OutputStreamHost.ReportProgress(current, total,
+//                            "CHPreProcessor", "Building CH Queue...");
+//                    }
 
-                    current++;
-                }  
-            }
-#endif
+//                    current++;
+//                }  
+//            }
+//#endif
             //while (_all_nodes.MoveNext())
             //{ // keep enqueuing until the last node, or until no more nodes are left.
             //    this.ReQueue(_all_nodes.Current);

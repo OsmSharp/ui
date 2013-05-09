@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Units.Angle;
 
-namespace OsmSharp.Tools.Math.Geo.Meta
+namespace OsmSharp.Math.Geo.Meta
 {
     /// <summary>
     /// Direction calculator.

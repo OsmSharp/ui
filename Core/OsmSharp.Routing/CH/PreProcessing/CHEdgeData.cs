@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.DynamicGraph;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -69,14 +68,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Returns the tags.
         /// </summary>
         public uint Tags { get; set; }
-
-        /// <summary>
-        /// Returns the weight.
-        /// </summary>
-        double IDynamicGraphEdgeData.Weight
-        {
-            get { return this.Weight; }
-        }
     }
 
     /// <summary>

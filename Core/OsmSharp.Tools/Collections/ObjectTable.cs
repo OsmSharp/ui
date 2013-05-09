@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Collections
+namespace OsmSharp.Collections
 {
     /// <summary>
     /// A stringtable containing and index of strings to reduce memory usage.

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.Shapes.ResultHelpers
+namespace OsmSharp.Math.Shapes.ResultHelpers
 {
     /// <summary>
     /// Represents the result of a projection.

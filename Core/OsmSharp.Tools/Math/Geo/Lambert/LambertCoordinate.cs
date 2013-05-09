@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.Geo.Lambert
+namespace OsmSharp.Math.Geo.Lambert
 {
     /// <summary>
     /// Represents a lambert coordinate for a given projection.

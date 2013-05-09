@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Graph.DynamicGraph;
 
 namespace OsmSharp.Routing.Graph.Router
 {
@@ -13,5 +12,6 @@ namespace OsmSharp.Routing.Graph.Router
     public interface IDynamicGraphRouterDataSource<TEdgeData> : IDynamicGraph<TEdgeData>, IBasicRouterDataSource<TEdgeData>
         where TEdgeData : IDynamicGraphEdgeData
     {
+
     }
 }

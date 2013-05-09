@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement.InsertionCosts
+namespace OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts
 {
     /// <summary>
     /// Abstract a data structure keeping pre-calculated insertion costs.

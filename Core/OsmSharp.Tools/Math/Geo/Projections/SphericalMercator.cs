@@ -1,7 +1,7 @@
 //using System;
 //using OsmSharp.Tools.Math.Geo;
 
-//namespace OsmSharp.Tools.Math.Geo.Projections
+//namespace OsmSharp.Math.Geo.Projections
 //{
 //    /// <summary>
 //    /// Represents a spherical mercator projection.

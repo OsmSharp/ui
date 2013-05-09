@@ -6,7 +6,7 @@ using NUnit.Framework;
 using OsmSharp.Routing;
 using OsmSharp.Osm;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Router;
@@ -209,82 +209,79 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
         /// <param name="highway"></param>
         /// <param name="vehicle"></param>
         /// <param name="matcher"></param>
-        /// <param name="point_name"></param>
-        /// <param name="not_found"></param>
+        /// <param name="pointName"></param>
+        /// <param name="notFound"></param>
         private void TestResolveOnEdgeSingle(string name, string highway, 
             VehicleEnum vehicle, IEdgeMatcher matcher, 
-            string point_name, bool not_found)
+            string pointName, bool notFound)
         {
-            GeoCoordinate from_name = new GeoCoordinate(51.0003, 4.0007);
-            GeoCoordinate to_name = new GeoCoordinate(51.0003, 4.0008);
+            var fromName = new GeoCoordinate(51.0003, 4.0007);
+            var toName = new GeoCoordinate(51.0003, 4.0008);
 
-            GeoCoordinate from_noname = new GeoCoordinate(51.0, 4.0007);
-            GeoCoordinate to_noname = new GeoCoordinate(51.0, 4.0008);
+            var fromNoname = new GeoCoordinate(51.0, 4.0007);
+            var toNoname = new GeoCoordinate(51.0, 4.0008);
 
-            TagsCollection point_tags = new SimpleTagsCollection();
-            point_tags["name"] = point_name;
+            TagsCollection pointTags = new SimpleTagsCollection();
+            pointTags["name"] = pointName;
 
             TagsCollection tags = new SimpleTagsCollection();
             tags["highway"] = highway;
             //tags["name"] = name;
 
-            SimpleTagsIndex tags_index = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsIndex();
 
             // do the data processing.
-            DynamicGraphRouterDataSource<SimpleWeighedEdge> data =
-                new DynamicGraphRouterDataSource<SimpleWeighedEdge>(tags_index);
-            uint vertex_noname1 = data.AddVertex((float)from_noname.Latitude, (float)from_noname.Longitude);
-            uint vertex_noname2 = data.AddVertex((float)to_noname.Latitude, (float)to_noname.Longitude);
-            data.AddArc(vertex_noname1, vertex_noname2, new SimpleWeighedEdge()
+            var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            uint vertexNoname1 = data.AddVertex((float)fromNoname.Latitude, (float)fromNoname.Longitude);
+            uint vertexNoname2 = data.AddVertex((float)toNoname.Latitude, (float)toNoname.Longitude);
+            data.AddArc(vertexNoname1, vertexNoname2, new LiveEdge()
             {
-                IsForward = true,
-                Tags = tags_index.Add(tags),
-                Weight = 100
+                Forward = true,
+                Tags = tagsIndex.Add(tags)
             }, null);
             tags = new SimpleTagsCollection();
             tags["highway"] = highway;
             tags["name"] = name;
-            uint vertex_name1 = data.AddVertex((float)from_name.Latitude, (float)from_name.Longitude);
-            uint vertex_name2 = data.AddVertex((float)to_name.Latitude, (float)to_name.Longitude);
-            data.AddArc(vertex_name1, vertex_name2, new SimpleWeighedEdge()
+            uint vertexName1 = data.AddVertex((float)fromName.Latitude, (float)fromName.Longitude);
+            uint vertexName2 = data.AddVertex((float)toName.Latitude, (float)toName.Longitude);
+            data.AddArc(vertexName1, vertexName2, new LiveEdge()
             {
-                IsForward = true,
-                Tags = tags_index.Add(tags),
-                Weight = 100
+                Forward = true,
+                Tags = tagsIndex.Add(tags)
             }, null);
 
             IRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 
             // creates the data.
-            IBasicRouter<SimpleWeighedEdge> router = new DykstraRoutingLive(
+            IBasicRouter<LiveEdge> router = new DykstraRoutingLive(
                 data.TagsIndex);
 
-            GeoCoordinate noname_location = new GeoCoordinate(
-                (from_noname.Latitude + to_noname.Latitude) / 2.0,
-                (from_noname.Longitude + to_noname.Longitude) / 2.0);
-            GeoCoordinate name_location = new GeoCoordinate(
-                (from_name.Latitude + to_name.Latitude) / 2.0,
-                (from_name.Longitude + to_name.Longitude) / 2.0);
+            var nonameLocation = new GeoCoordinate(
+                (fromNoname.Latitude + toNoname.Latitude) / 2.0,
+                (fromNoname.Longitude + toNoname.Longitude) / 2.0);
+            var nameLocation = new GeoCoordinate(
+                (fromName.Latitude + toName.Latitude) / 2.0,
+                (fromName.Longitude + toName.Longitude) / 2.0);
 
-            float delta = 0.01f;
-            SearchClosestResult result = router.SearchClosest(data, interpreter, vehicle, noname_location, delta, matcher, point_tags);
+            const float delta = 0.01f;
+            SearchClosestResult result = router.SearchClosest(data, interpreter, vehicle, nonameLocation, delta, matcher, pointTags);
             if (result.Distance < double.MaxValue)
             { // there is a result.
-                Assert.IsFalse(not_found, "A result was found but was supposed not to  be found!");
+                Assert.IsFalse(notFound, "A result was found but was supposed not to  be found!");
 
-                if (name == point_name)
+                if (name == pointName)
                 { // the name location was supposed to be found!
-                    Assert.IsTrue(result.Vertex1 == vertex_name1 || result.Vertex1 == vertex_name2);
-                    Assert.IsTrue(result.Vertex2 == vertex_name1 || result.Vertex2 == vertex_name2);
+                    Assert.IsTrue(result.Vertex1 == vertexName1 || result.Vertex1 == vertexName2);
+                    Assert.IsTrue(result.Vertex2 == vertexName1 || result.Vertex2 == vertexName2);
                 }
                 else
                 { // the noname location was supposed to be found!
-                    Assert.IsTrue(result.Vertex1 == vertex_noname1 || result.Vertex1 == vertex_noname2);
-                    Assert.IsTrue(result.Vertex2 == vertex_noname1 || result.Vertex2 == vertex_noname2);
+                    Assert.IsTrue(result.Vertex1 == vertexNoname1 || result.Vertex1 == vertexNoname2);
+                    Assert.IsTrue(result.Vertex2 == vertexNoname1 || result.Vertex2 == vertexNoname2);
                 }
                 return;
             }
-            Assert.IsTrue(not_found, "A result was not found but was supposed to be found!");
+            Assert.IsTrue(notFound, "A result was not found but was supposed to be found!");
         }
     }
 }

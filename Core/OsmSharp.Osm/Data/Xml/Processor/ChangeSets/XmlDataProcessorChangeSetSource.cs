@@ -25,7 +25,7 @@ using System.IO;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor.ChangeSets;
 
-namespace OsmSharp.Osm.Data.XML.Processor.ChangeSets
+namespace OsmSharp.Osm.Data.Xml.Processor.ChangeSets
 {
     /// <summary>
     /// A changeset source.

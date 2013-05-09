@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace OsmSharp.Tools.Math.VRP.Core.LocalSearch
+namespace OsmSharp.Math.VRP.Core.LocalSearch
 {
     /// <summary>
     /// Responsible for an local search strategy doing best-placement.

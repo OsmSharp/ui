@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Problems
+namespace OsmSharp.Math.VRP.MultiSalesman.Problems
 {
     /// <summary>
     /// Represents an M-TSP problem.

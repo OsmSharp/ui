@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic;
 using OsmSharp.Tools.Math.Random;
 
-namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers
+namespace OsmSharp.Math.VRP.MultiSalesman.Genetic.Helpers
 {
     /// <summary>
     /// Individual helper.

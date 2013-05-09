@@ -26,7 +26,7 @@ using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace OsmSharp.Tools.Math.TSP.ArbitraryInsertion
+namespace OsmSharp.Math.TSP.ArbitraryInsertion
 {
     /// <summary>
     /// Implements a best-placement solver.

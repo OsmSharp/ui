@@ -15,35 +15,33 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using OsmSharp.Osm.Data.PBF.Raw.Processor;
-using System.Reflection;
-using OsmSharp.Osm.Data.Core.Processor.Default;
 
-namespace OsmSharp.Osm.UnitTests.Data.Processing
+using NUnit.Framework;
+using System.Reflection;
+using OsmSharp.Osm.Data.PBF.Processor;
+using OsmSharp.Osm.Data.Streams;
+
+namespace OsmSharp.UnitTests.Data.Processing
 {
     /// <summary>
-    /// Summary description for PBFDataProcessorSourceTests
+    /// Contains tests for the PBF osm streams.
     /// </summary>
     [TestFixture]
-    public class PBFDataProcessorSourceTests
+    public class PBFOsmStreamsTests
     {
         /// <summary>
-        /// A regression test on resetting a PBF data processor.
+        /// A regression test on resetting a PBF osm stream.
         /// </summary>
         [Test]
-        public void PBFDataProcessorSourceReset()
+        public void PBFOsmStreamReaderReset()
         {
             // generate the source.
-            PBFDataProcessorSource source = new PBFDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.api.osm.pbf"));
+            var source = new PBFOsmStreamReader(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    "OsmSharp.UnitTests.api.osm.pbf"));
 
             // pull the data out.
-            DataProcessorTargetEmpty target = new DataProcessorTargetEmpty();
+            var target = new OsmStreamWriterEmpty();
             target.RegisterSource(source);
             target.Pull();
 

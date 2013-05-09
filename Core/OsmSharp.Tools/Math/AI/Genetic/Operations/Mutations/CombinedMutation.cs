@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.Random;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations
+namespace OsmSharp.Math.AI.Genetic.Operations.Mutations
 {
     /// <summary>
     /// A combined mutation.

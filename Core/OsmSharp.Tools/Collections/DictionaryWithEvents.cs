@@ -20,7 +20,7 @@
 //using System.Linq;
 //using System.Text;
 
-//namespace OsmSharp.Tools.Collections
+//namespace OsmSharp.Collections
 //{
 //    public class DictionaryWithEvents<TKey, TValue> : Dictionary<TKey, TValue>
 //    {

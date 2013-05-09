@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Route;
+using OsmSharp.Routing.Routers;
 using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
@@ -10,17 +11,15 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
     /// <summary>
     /// A wrapper for all the RouterMaxTime implementations.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
-    public class MaxTimeRouterWrapper<ResolvedType> : RouterVRPWrapper<ResolvedType, RouterMaxTime>
-        where ResolvedType : IRouterPoint
+    public class MaxTimeRouterWrapper : RouterVRPWrapper<RouterMaxTime>
     {
         /// <summary>
         /// Creates a new RouterMaxTime wrapper.
         /// </summary>
-        /// <param name="router_vrp"></param>
+        /// <param name="routerVrp"></param>
         /// <param name="router"></param>
-        public MaxTimeRouterWrapper(RouterMaxTime router_vrp, IRouter<ResolvedType> router)
-            :base(router_vrp, router)
+        public MaxTimeRouterWrapper(RouterMaxTime routerVrp, Router router)
+            :base(routerVrp, router)
         {
 
         }
@@ -32,10 +31,10 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <param name="points"></param>
         /// <param name="weights"></param>
         /// <returns></returns>
-        public OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, ResolvedType[] points, double[][] weights)
+        public OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, RouterPoint[] points, double[][] weights)
         {
             // build the points array.
-            GeoCoordinate[] locations = new GeoCoordinate[points.Length];
+            var locations = new GeoCoordinate[points.Length];
             for(int idx = 0; idx < points.Length; idx++)
             {
                 locations[idx] = points[idx].Location;

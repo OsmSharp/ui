@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.Units.Distance;
 using OsmSharp.Tools.Math.Units.Speed;
 
-namespace OsmSharp.Tools.Math.Units.Time
+namespace OsmSharp.Math.Units.Time
 {
     /// <summary>
     /// Represents a unit of time in seconds.

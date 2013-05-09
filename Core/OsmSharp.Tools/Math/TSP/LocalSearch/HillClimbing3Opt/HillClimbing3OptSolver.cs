@@ -25,7 +25,7 @@ using OsmSharp.Tools.Math.TSP.Problems;
 using OsmSharp.Tools.Math.TSP.ArbitraryInsertion;
 using OsmSharp.Tools.Math.VRP.Core;
 
-namespace OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt
+namespace OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt
 {
     /// <summary>
     /// Uses the 3-opt local search procedure to generate ATSP solutions.

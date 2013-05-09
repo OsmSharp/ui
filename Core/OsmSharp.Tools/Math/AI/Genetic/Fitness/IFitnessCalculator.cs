@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace OsmSharp.Tools.Math.AI.Genetic.Fitness
+namespace OsmSharp.Math.AI.Genetic.Fitness
 {
     /// <summary>
     /// Interface abstracting the fitness calculation.

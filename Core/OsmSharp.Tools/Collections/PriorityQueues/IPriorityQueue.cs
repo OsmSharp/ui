@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Collections.PriorityQueues
+namespace OsmSharp.Collections.PriorityQueues
 {
     /// <summary>
     /// Represents general functionality of a priority queue.

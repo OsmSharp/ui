@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,16 +15,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Graph.Path;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math;
-using OsmSharp.Routing.Graph.DynamicGraph;
-using OsmSharp.Routing.Router;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Collections;
 
@@ -57,11 +55,11 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="vehicle"></param>
         /// <param name="sources"></param>
         /// <param name="targets"></param>
-        /// <param name="max_search"></param>
+        /// <param name="maxSearch"></param>
         /// <returns></returns>
         PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<TEdgeData> _data_graph, IRoutingInterpreter _interpreter,
             VehicleEnum vehicle, PathSegmentVisitList[] sources,
-            PathSegmentVisitList[] targets, double max_search);
+            PathSegmentVisitList[] targets, double maxSearch);
 
         /// <summary>
         /// Calculates the weight of the shortest path between two given vertices.

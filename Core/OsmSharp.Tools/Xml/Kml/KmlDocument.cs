@@ -21,8 +21,9 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using System.Xml;
+using OsmSharp.Xml;
 
-namespace OsmSharp.Tools.Xml.Kml
+namespace OsmSharp.Xml.Kml
 {
     /// <summary>
     /// Represents a kml document.

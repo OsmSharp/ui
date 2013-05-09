@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math
+namespace OsmSharp.Math
 {
     /// <summary>
     /// Represents an object that can be tagged with key-value pairs of strings.

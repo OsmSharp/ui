@@ -26,7 +26,7 @@ using OsmSharp.Tools.Math.Random;
 using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
 using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic;
 
-namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
+namespace OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Mutation
 {
     internal class BringingBestMutationOperator : IMutationOperation<List<Genome>, Problem, Fitness>
     {

@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Structures.StringTrees;
 
-namespace OsmSharp.Tools.GeoCoding.Memory
+namespace OsmSharp.GeoCoding.Memory
 {
     internal class IndexPostalCodes : StringTreeDictionary<IndexCommunes>
     {

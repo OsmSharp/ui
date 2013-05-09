@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Units.Angle;
 
-namespace OsmSharp.Tools.Math
+namespace OsmSharp.Math
 {
     /// <summary>
     /// Represents a vector in n dimensions.

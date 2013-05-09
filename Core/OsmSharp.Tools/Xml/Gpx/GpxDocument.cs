@@ -21,8 +21,9 @@ using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
 using System.Xml;
+using OsmSharp.Xml;
 
-namespace OsmSharp.Tools.Xml.Gpx
+namespace OsmSharp.Xml.Gpx
 {
     /// <summary>
     /// Represents a gpx document.

@@ -19,8 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Progress;
 
-namespace OsmSharp.Tools.Progress
+namespace OsmSharp.Progress
 {
     /// <summary>
     /// Implemented on objects that can report progress to users or to another part of the application.

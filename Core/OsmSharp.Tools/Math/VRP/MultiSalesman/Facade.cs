@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Progress;
 using OsmSharp.Tools.Math.Units.Time;
 using OsmSharp.Tools.Math.Random;
 using OsmSharp.Tools.Progress;
@@ -32,7 +33,7 @@ using OsmSharp.Tools.Math.VRP.MultiSalesman.Solver.Operations.Generation;
 using OsmSharp.Tools.Math.AI.Genetic;
 using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
 
-namespace OsmSharp.Tools.Math.VRP.MultiSalesman
+namespace OsmSharp.Math.VRP.MultiSalesman
 {
     /// <summary>
     /// Facade.

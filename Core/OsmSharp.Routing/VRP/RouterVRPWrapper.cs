@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Route;
+using OsmSharp.Routing.Routers;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 
 namespace OsmSharp.Routing.VRP
@@ -10,50 +11,48 @@ namespace OsmSharp.Routing.VRP
     /// <summary>
     /// A wrapper around the RouterVRP class.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
-    /// <typeparam name="RouterVRPType"></typeparam>
-    public abstract class RouterVRPWrapper<ResolvedType, RouterVRPType>
-        where ResolvedType : IRouterPoint
-        where RouterVRPType : RouterVRP
+    /// <typeparam name="TRouterVRPType"></typeparam>
+    public abstract class RouterVRPWrapper<TRouterVRPType>
+        where TRouterVRPType : RouterVRP
     {
         /// <summary>
         /// Holds the router VRP type.
         /// </summary>
-        private RouterVRPType _router_vrp;
+        private readonly TRouterVRPType _routerVRP;
 
         /// <summary>
         /// Holds the the router.
         /// </summary>
-        private IRouter<ResolvedType> _router;
+        private readonly Router _router;
 
         /// <summary>
         /// Creates a router VRP wrapper.
         /// </summary>
-        /// <param name="router_vrp"></param>
+        /// <param name="routerVRP"></param>
         /// <param name="router"></param>
-        public RouterVRPWrapper(RouterVRPType router_vrp, IRouter<ResolvedType> router)
+        protected RouterVRPWrapper(TRouterVRPType routerVRP, Router router)
         {
             _router = router;
-            _router_vrp = router_vrp;
+            _routerVRP = routerVRP;
 
-            _router_vrp.IntermidiateResult += new VRP.RouterVRP.SolutionDelegate(_router_vrp_IntermidiateResult);
+            _routerVRP.IntermidiateResult += new VRP.RouterVRP.SolutionDelegate(_router_vrp_IntermidiateResult);
         }
 
         /// <summary>
         /// Returns the VRP solver of this wrapper.
         /// </summary>
-        public RouterVRPType RouterVRP
+        public TRouterVRPType RouterVRP
         {
             get
             {
-                return _router_vrp;
+                return _routerVRP;
             }
         }
 
         /// <summary>
         /// Returns the router.
         /// </summary>
-        public IRouter<ResolvedType> Router
+        public Router Router
         {
             get
             {
@@ -78,18 +77,18 @@ namespace OsmSharp.Routing.VRP
         /// <param name="vehicle"></param>
         /// <param name="solution"></param>
         /// <param name="points"></param>
-        protected OsmSharpRoute[] ConvertSolution(VehicleEnum vehicle, int[][] solution, ResolvedType[] points)
+        protected OsmSharpRoute[] ConvertSolution(VehicleEnum vehicle, int[][] solution, RouterPoint[] points)
         {
-            OsmSharpRoute[] routes = new OsmSharpRoute[solution.Length];
-            for (int route_idx = 0; route_idx < solution.Length; route_idx++)
+            var routes = new OsmSharpRoute[solution.Length];
+            for (int routeIdx = 0; routeIdx < solution.Length; routeIdx++)
             {
                 // concatenate the route(s).
                 OsmSharpRoute tsp = null;
                 OsmSharpRoute route;
-                for (int idx = 0; idx < solution[route_idx].Length - 1; idx++)
+                for (int idx = 0; idx < solution[routeIdx].Length - 1; idx++)
                 {
-                    route = _router.Calculate(VehicleEnum.Car, points[solution[route_idx][idx]],
-                        points[solution[route_idx][idx + 1]]);
+                    route = _router.Calculate(VehicleEnum.Car, points[solution[routeIdx][idx]],
+                        points[solution[routeIdx][idx + 1]]);
                     if (route != null && route.Entries.Length > 0)
                     {
                         if (tsp == null)
@@ -104,27 +103,27 @@ namespace OsmSharp.Routing.VRP
                 }
 
                 // concatenate the route from the last to the first point again.
-                route = _router.Calculate(vehicle, points[solution[route_idx][solution[route_idx].Length - 1]],
-                            points[solution[route_idx][0]]);
+                route = _router.Calculate(vehicle, points[solution[routeIdx][solution[routeIdx].Length - 1]],
+                            points[solution[routeIdx][0]]);
                 if (route.Entries.Length > 0)
                 {
                     tsp = OsmSharpRoute.Concatenate(tsp, route);
                 }
 
                 // set the result.
-                routes[route_idx] = tsp;
+                routes[routeIdx] = tsp;
 
-                if (routes[route_idx] != null)
+                if (routes[routeIdx] != null)
                 { // route exists!
-                    List<RouteTags> tags = new List<RouteTags>();
-                    RouteTags customer_count = new RouteTags();
-                    customer_count.Key = "customer_count";
-                    customer_count.Value = solution[route_idx].Length.ToString();
-                    tags.Add(customer_count);
-                    routes[route_idx].Tags = tags.ToArray();
+                    var tags = new List<RouteTags>();
+                    var customerCount = new RouteTags();
+                    customerCount.Key = "customer_count";
+                    customerCount.Value = solution[routeIdx].Length.ToString();
+                    tags.Add(customerCount);
+                    routes[routeIdx].Tags = tags.ToArray();
 
                     // set the correct vehicle type.
-                    routes[route_idx].Vehicle = vehicle;
+                    routes[routeIdx].Vehicle = vehicle;
                 }
             }
 

@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.DynamicGraph;
 
 namespace OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering
 {

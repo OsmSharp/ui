@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.Units.Time
+namespace OsmSharp.Math.Units.Time
 {
     /// <summary>
     /// Represents a unit of time in hours.

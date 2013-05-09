@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.VRP.Core.Routes
+namespace OsmSharp.Math.VRP.Core.Routes
 {
     /// <summary>
     /// Represents a route encapsulating an IRoute but with depot included.

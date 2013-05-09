@@ -28,7 +28,7 @@ using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 using OsmSharp.Tools.Collections;
 
-namespace OsmSharp.Tools.Math.TSP.LK
+namespace OsmSharp.Math.TSP.LK
 {
     /// <summary>
     /// A solver that use the Lin-Kernighan heuristic to solve instances of the TSP.

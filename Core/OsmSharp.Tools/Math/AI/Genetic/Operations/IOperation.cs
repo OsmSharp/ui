@@ -23,7 +23,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
 using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
 
-namespace OsmSharp.Tools.Math.AI.Genetic.Operations
+namespace OsmSharp.Math.AI.Genetic.Operations
 {
     /// <summary>
     /// Interface abstracting the usage of mutation and cross over operations.

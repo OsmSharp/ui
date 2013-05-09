@@ -25,7 +25,7 @@ using System.Text.RegularExpressions;
 using OsmSharp.Tools.Math.TSP.Problems;
 using OsmSharp.Tools.Math.VRP.Core;
 
-namespace OsmSharp.Tools.TSPLIB.Problems
+namespace OsmSharp.TSPLIB.Problems
 {
     /// <summary>
     /// Represents and parses a TSPLIB problem.

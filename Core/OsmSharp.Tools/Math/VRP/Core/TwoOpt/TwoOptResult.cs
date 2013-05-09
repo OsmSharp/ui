@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.VRP.Core.TwoOpt
+namespace OsmSharp.Math.VRP.Core.TwoOpt
 {
     /// <summary>
     /// The result of a 2-opt operation.

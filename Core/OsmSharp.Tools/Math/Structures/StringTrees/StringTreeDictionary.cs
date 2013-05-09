@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.Structures.StringTrees
+namespace OsmSharp.Math.Structures.StringTrees
 {
     /// <summary>
     /// A hyper efficient data structure to search and index values by string identifiers.

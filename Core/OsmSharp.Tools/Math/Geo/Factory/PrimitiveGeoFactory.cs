@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Shapes.PrimitivesFactory;
 
-namespace OsmSharp.Tools.Math.Geo.Factory
+namespace OsmSharp.Math.Geo.Factory
 {
     /// <summary>
     /// A factory creating geo coordinate primitives.

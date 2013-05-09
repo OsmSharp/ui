@@ -23,7 +23,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
 using OsmSharp.Tools.Math.AI.Genetic;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
+namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
     /// <summary>
     /// An edge assembly operation.

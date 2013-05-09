@@ -25,7 +25,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 using OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation
+namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.Generation
 {
     /// <summary>
     /// A 3-opt operation.

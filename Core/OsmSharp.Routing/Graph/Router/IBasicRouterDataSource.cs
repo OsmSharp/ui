@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math;
-using OsmSharp.Routing.Graph.DynamicGraph;
 
 namespace OsmSharp.Routing.Graph.Router
 {
@@ -37,12 +36,6 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="vehicle"></param>
         /// <returns></returns>
         bool SupportsProfile(VehicleEnum vehicle);
-
-        /// <summary>
-        /// Adds a supported vehicle profile.
-        /// </summary>
-        /// <param name="vehicle"></param>
-        void AddSupportedProfile(VehicleEnum vehicle);
 
         /// <summary>
         /// Returns a list of edges inside or intersecting with the given bounding box.

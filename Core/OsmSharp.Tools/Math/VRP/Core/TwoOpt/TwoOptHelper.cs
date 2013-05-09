@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace OsmSharp.Tools.Math.VRP.Core.TwoOpt
+namespace OsmSharp.Math.VRP.Core.TwoOpt
 {
     /// <summary>
     /// Implements some generic 2 Opt functions.

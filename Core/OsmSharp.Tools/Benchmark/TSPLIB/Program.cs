@@ -33,7 +33,7 @@ using OsmSharp.Tools.TSPLIB.Parser;
 using OsmSharp.Tools.TSPLIB.Problems;
 using System.Diagnostics;
 
-namespace OsmSharp.Tools.Benchmark.TSPLIB
+namespace OsmSharp.Benchmark.TSPLIB
 {
     static class Program
     {

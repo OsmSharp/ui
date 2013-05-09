@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.VRP.Core;
 
-namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
+namespace OsmSharp.Math.VRP.Core.Routes.ASymmetric
 {
     /// <summary>
     /// Interface representing a route along serveral customers and the operations possible on it.

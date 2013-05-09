@@ -25,7 +25,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 using OsmSharp.Tools.Math.TSP.Genetic.Solver;
 using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
 
-namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Mutation
+namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.Mutation
 {
     /// <summary>
     /// A detailed best placement operation.

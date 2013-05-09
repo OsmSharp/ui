@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Collections.Tags
+namespace OsmSharp.Collections.Tags
 {
     /// <summary>
     /// An osm tags index.
@@ -59,7 +59,7 @@ namespace OsmSharp.Tools.Collections.Tags
         /// <summary>
         /// Holds tags.
         /// </summary>
-        private class OsmTags
+        public class OsmTags
         {
             /// <summary>
             /// Holds all the tags.

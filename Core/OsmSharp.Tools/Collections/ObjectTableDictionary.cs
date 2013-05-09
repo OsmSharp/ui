@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Collections
+namespace OsmSharp.Collections
 {
     /// <summary>
     /// A dictionary that uses a string table behind.

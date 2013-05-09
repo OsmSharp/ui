@@ -23,7 +23,7 @@ using System.IO;
 using OsmSharp.Tools.Math.TSP.Problems;
 using OsmSharp.Tools.TSPLIB.Problems;
 
-namespace OsmSharp.Tools.TSPLIB.Parser
+namespace OsmSharp.TSPLIB.Parser
 {
     /// <summary>
     /// TSPLIB problem generator.

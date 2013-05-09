@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.VRP.Core.BestPlacement.SeedCustomers
+namespace OsmSharp.Math.VRP.Core.BestPlacement.SeedCustomers
 {
     /// <summary>
     /// A seed customer selector that maximizes the distance between the selected customers.

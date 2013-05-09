@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.Geo
+namespace OsmSharp.Math.Geo
 {
     /// <summary>
     /// Contains generic constants.

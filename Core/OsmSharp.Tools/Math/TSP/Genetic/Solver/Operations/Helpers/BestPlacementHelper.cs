@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 using OsmSharp.Tools.Math.Random;
 
-namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers
+namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.Helpers
 {
     internal class BestPlacementHelper
     {

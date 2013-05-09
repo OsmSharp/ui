@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Progress
+namespace OsmSharp.Progress
 {
     /// <summary>
     /// Interface for progress enabled objects.

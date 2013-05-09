@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic.Fitness;
 using OsmSharp.Tools.Math.AI.Genetic;
 
-namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
+namespace OsmSharp.Math.VRP.MultiSalesman.Genetic
 {
     /// <summary>
     /// Calculates fitness.

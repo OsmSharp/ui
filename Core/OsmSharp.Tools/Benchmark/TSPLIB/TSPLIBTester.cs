@@ -27,7 +27,7 @@ using OsmSharp.Tools.Math.TSP;
 using OsmSharp.Tools.TSPLIB.Problems;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace OsmSharp.Tools.Benchmark.TSPLIB
+namespace OsmSharp.Benchmark.TSPLIB
 {
     /// <summary>
     /// Class with facilities to test TSP solvers.

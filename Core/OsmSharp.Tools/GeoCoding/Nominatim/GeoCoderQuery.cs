@@ -19,7 +19,7 @@
 using System.Text;
 using System.Configuration;
 
-namespace OsmSharp.Tools.GeoCoding.Nominatim
+namespace OsmSharp.GeoCoding.Nominatim
 {
     /// <summary>
     /// A geocoder query.

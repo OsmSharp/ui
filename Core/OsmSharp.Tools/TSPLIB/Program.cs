@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.TSPLIB.Problems;
 using System.IO;
 
-namespace OsmSharp.Tools.TSPLIB
+namespace OsmSharp.TSPLIB
 {
     class Program
     {

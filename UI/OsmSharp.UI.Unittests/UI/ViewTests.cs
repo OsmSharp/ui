@@ -1,8 +1,7 @@
 using System;
 using OsmSharp.UI.Map;
-using OsmSharp.Tools.Math;
-using OsmSharp.Tools.Math.Geo;
 using NUnit.Framework;
+using OsmSharp.Tools.Math.Geo;
 
 namespace OsmSharp.UI.Unittests
 {

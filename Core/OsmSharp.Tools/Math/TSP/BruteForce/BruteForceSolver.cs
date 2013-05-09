@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Collections;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.TSP.Problems;
-using OsmSharp.Tools.Enumerations;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace OsmSharp.Tools.Math.TSP.BruteForce
+namespace OsmSharp.Math.TSP.BruteForce
 {
     /// <summary>
     /// Implements a brute force solver by checking all possible combinations.

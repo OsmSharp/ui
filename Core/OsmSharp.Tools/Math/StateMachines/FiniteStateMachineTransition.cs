@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Automata;
 
-namespace OsmSharp.Tools.Math.StateMachines
+namespace OsmSharp.Math.StateMachines
 {
     /// <summary>
     /// Represents a transition in a finite-state machine.

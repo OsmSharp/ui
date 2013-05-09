@@ -15,42 +15,35 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using NUnit.Framework;
-using OsmSharp.Routing.Router;
+using OsmSharp.Osm.UnitTests.Routing;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Osm.Data;
-using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 using System.Reflection;
-using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
-using OsmSharp.Routing.Graph.DynamicGraph.PreProcessed;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Tools.Collections.Tags;
 
-namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
+namespace OsmSharp.UnitTests.Routing.Dykstra
 {
     /// <summary>
     /// Does some tests on an OsmSource routing implementation.
     /// </summary>
     [TestFixture]
-    public class OsmSourceRoutingTests : SimpleRoutingTests<RouterPoint, PreProcessedEdge>
+    public class OsmSourceRoutingTests : SimpleRoutingTests<LiveEdge>
     {
         /// <summary>
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<PreProcessedEdge> data, 
-            IRoutingInterpreter interpreter, IBasicRouter<PreProcessedEdge> basic_router)
+        public override Router BuildRouter(IBasicRouterDataSource<LiveEdge> data,
+            IRoutingInterpreter interpreter, IBasicRouter<LiveEdge> basicRouter)
         {
             // initialize the router.
-            return new Router<PreProcessedEdge>(
-                    data, interpreter, basic_router);
+            return Router.CreateLiveFrom(data, basicRouter, interpreter);
         }
 
         /// <summary>
@@ -58,27 +51,26 @@ namespace OsmSharp.Osm.UnitTests.Routing.Dykstra
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        public override IBasicRouter<PreProcessedEdge> BuildBasicRouter(IBasicRouterDataSource<PreProcessedEdge> data)
+        public override IBasicRouter<LiveEdge> BuildBasicRouter(IBasicRouterDataSource<LiveEdge> data)
         {
-            return new DykstraRoutingPreProcessed(data.TagsIndex);
+            return new DykstraRoutingLive(data.TagsIndex);
         }
 
         /// <summary>
         /// Builds data source.
         /// </summary>
         /// <param name="interpreter"></param>
-        /// <param name="embedded_string"></param>
+        /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<PreProcessedEdge> BuildData(IRoutingInterpreter interpreter,
-            string embedded_string)
+        public override IBasicRouterDataSource<LiveEdge> BuildData(IRoutingInterpreter interpreter,
+            string embeddedString)
         {
-            SimpleTagsIndex tags_index = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsIndex();
             
             // do the data processing.
-            OsmDataSource source = new OsmDataSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string)); // "OsmSharp.UnitTests.test_network.osm"));
-            return new OsmSharp.Routing.Osm.Data.OsmSourceRouterDataSource(interpreter,
-                tags_index, source, VehicleEnum.Car);
+            var source = new OsmDataSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)); // "OsmSharp.UnitTests.test_network.osm"));
+            return new OsmSourceRouterDataSource(interpreter, tagsIndex, source);
         }
 
         /// <summary>

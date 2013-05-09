@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.Geo.Simple
+namespace OsmSharp.Math.Geo.Simple
 {
     //public struct GeoCoordinateCompact
     //{

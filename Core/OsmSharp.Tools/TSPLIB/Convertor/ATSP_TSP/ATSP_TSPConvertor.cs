@@ -23,7 +23,7 @@ using OsmSharp.Tools.Math.TSP;
 using OsmSharp.Tools.TSPLIB.Problems;
 using OsmSharp.Tools.Math.TSP.Problems;
 
-namespace OsmSharp.Tools.TSPLIB.Convertor.ATSP_TSP
+namespace OsmSharp.TSPLIB.Convertor.ATSP_TSP
 {
     /// <summary>
     /// ATSP-TSP convertor.

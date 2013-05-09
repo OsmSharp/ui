@@ -22,6 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Xml;
 using System.Xml.Serialization;
 using System.Xml;
+using OsmSharp.Xml;
 
 namespace OsmSharp.Osm.Xml
 {

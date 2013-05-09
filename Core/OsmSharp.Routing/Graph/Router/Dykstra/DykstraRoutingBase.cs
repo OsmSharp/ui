@@ -1,9 +1,25 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Graph.DynamicGraph;
-using OsmSharp.Routing.Router;
 using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math.Geo;
 using OsmSharp.Tools.Math;
@@ -14,21 +30,21 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
     /// <summary>
     /// Contains generic fuctions common to all dykstra routers.
     /// </summary>
-    public abstract class DykstraRoutingBase<EdgeData>
-        where EdgeData : IDynamicGraphEdgeData
+    public abstract class DykstraRoutingBase<TEdgeData>
+        where TEdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private ITagsIndex _tags_index;
+        private readonly ITagsIndex _tagsIndex;
 
         /// <summary>
         /// Creates a new basic dykstra router.
         /// </summary>
-        /// <param name="tags_index"></param>
-        protected DykstraRoutingBase(ITagsIndex tags_index)
+        /// <param name="tagsIndex"></param>
+        protected DykstraRoutingBase(ITagsIndex tagsIndex)
         {
-            _tags_index = tags_index;
+            _tagsIndex = tagsIndex;
         }
 
         /// <summary>
@@ -38,7 +54,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         {
             get
             {
-                return _tags_index;
+                return _tagsIndex;
             }
         }
 
@@ -52,126 +68,126 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="coordinate"></param>
         /// <param name="delta"></param>
         /// <param name="matcher"></param>
-        /// <param name="point_tags"></param>
+        /// <param name="pointTags"></param>
         /// <param name="interpreter"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<EdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection point_tags)
+        public SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags)
         {
-            double search_box_size = delta;
+            double searchBoxSize = delta;
             // create the search box.
-            GeoCoordinateBox search_box = new GeoCoordinateBox(new GeoCoordinate(
-                coordinate.Latitude - search_box_size, coordinate.Longitude - search_box_size),
+            var searchBox = new GeoCoordinateBox(new GeoCoordinate(
+                coordinate.Latitude - searchBoxSize, coordinate.Longitude - searchBoxSize),
                                                                new GeoCoordinate(
-                coordinate.Latitude + search_box_size, coordinate.Longitude + search_box_size));
+                coordinate.Latitude + searchBoxSize, coordinate.Longitude + searchBoxSize));
 
             // get the arcs from the data source.
-            KeyValuePair<uint, KeyValuePair<uint, EdgeData>>[] arcs = graph.GetArcs(search_box);
+            KeyValuePair<uint, KeyValuePair<uint, TEdgeData>>[] arcs = graph.GetArcs(searchBox);
 
             // loop over all.
-            SearchClosestResult closest_with_match = new SearchClosestResult(double.MaxValue, 0);
-            SearchClosestResult closest_without_match = new SearchClosestResult(double.MaxValue, 0);
-            foreach (KeyValuePair<uint, KeyValuePair<uint, EdgeData>> arc in arcs)
+            var closestWithMatch = new SearchClosestResult(double.MaxValue, 0);
+            var closestWithoutMatch = new SearchClosestResult(double.MaxValue, 0);
+            foreach (KeyValuePair<uint, KeyValuePair<uint, TEdgeData>> arc in arcs)
             {
-                TagsCollection arc_tags = _tags_index.Get(arc.Value.Value.Tags);
-                bool can_be_traversed = interpreter.EdgeInterpreter.CanBeTraversedBy(arc_tags, vehicle);
-                if (can_be_traversed)
+                TagsCollection arcTags = _tagsIndex.Get(arc.Value.Value.Tags);
+                bool canBeTraversed = interpreter.EdgeInterpreter.CanBeTraversedBy(arcTags, vehicle);
+                if (canBeTraversed)
                 { // the edge can be traversed.
                     // test the two points.
-                    float from_latitude, from_longitude;
-                    float to_latitude, to_longitude;
+                    float fromLatitude, fromLongitude;
+                    float toLatitude, toLongitude;
                     double distance;
-                    if (graph.GetVertex(arc.Key, out from_latitude, out from_longitude) &&
-                        graph.GetVertex(arc.Value.Key, out to_latitude, out to_longitude))
+                    if (graph.GetVertex(arc.Key, out fromLatitude, out fromLongitude) &&
+                        graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
                     { // return the vertex.
-                        GeoCoordinate from_coordinates = new GeoCoordinate(from_latitude, from_longitude);
-                        distance = coordinate.Distance(from_coordinates);
+                        var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
+                        distance = coordinate.Distance(fromCoordinates);
 
                         if (distance < 0.00001)
                         { // the distance is smaller than the tolerance value.
-                            closest_without_match = new SearchClosestResult(
+                            closestWithoutMatch = new SearchClosestResult(
                                 distance, arc.Key);
                             if (matcher == null ||
-                                (point_tags == null || point_tags.Count == 0) ||
-                                matcher.MatchWithEdge(vehicle, point_tags, arc_tags))
+                                (pointTags == null || pointTags.Count == 0) ||
+                                matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                             {
-                                closest_with_match = new SearchClosestResult(
+                                closestWithMatch = new SearchClosestResult(
                                     distance, arc.Key);
                                 break;
                             }
                         }
 
-                        if (distance < closest_without_match.Distance)
+                        if (distance < closestWithoutMatch.Distance)
                         { // the distance is smaller for the without match.
-                            closest_without_match = new SearchClosestResult(
+                            closestWithoutMatch = new SearchClosestResult(
                                 distance, arc.Key);
                         }
-                        if (distance < closest_with_match.Distance)
+                        if (distance < closestWithMatch.Distance)
                         { // the distance is smaller for the with match.
                             if (matcher == null ||
-                                (point_tags == null || point_tags.Count == 0) ||
-                                matcher.MatchWithEdge(vehicle, point_tags, _tags_index.Get(arc.Value.Value.Tags)))
+                                (pointTags == null || pointTags.Count == 0) ||
+                                matcher.MatchWithEdge(vehicle, pointTags, _tagsIndex.Get(arc.Value.Value.Tags)))
                             {
-                                closest_with_match = new SearchClosestResult(
+                                closestWithMatch = new SearchClosestResult(
                                     distance, arc.Key);
                             }
                         }
-                        GeoCoordinate to_coordinates = new GeoCoordinate(to_latitude, to_longitude);
-                        distance = coordinate.Distance(to_coordinates);
+                        var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
+                        distance = coordinate.Distance(toCoordinates);
 
-                        if (distance < closest_without_match.Distance)
+                        if (distance < closestWithoutMatch.Distance)
                         { // the distance is smaller for the without match.
-                            closest_without_match = new SearchClosestResult(
+                            closestWithoutMatch = new SearchClosestResult(
                                 distance, arc.Value.Key);
                         }
-                        if (distance < closest_with_match.Distance)
+                        if (distance < closestWithMatch.Distance)
                         { // the distance is smaller for the with match.
                             if (matcher == null ||
-                                (point_tags == null || point_tags.Count == 0) ||
-                                matcher.MatchWithEdge(vehicle, point_tags, arc_tags))
+                                (pointTags == null || pointTags.Count == 0) ||
+                                matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                             {
-                                closest_with_match = new SearchClosestResult(
+                                closestWithMatch = new SearchClosestResult(
                                     distance, arc.Value.Key);
                             }
                         }
 
                         // create a line.
-                        double distance_total = from_coordinates.Distance(to_coordinates);
-                        if (distance_total > 0)
+                        double distanceTotal = fromCoordinates.Distance(toCoordinates);
+                        if (distanceTotal > 0)
                         { // the from/to are not the same location.
-                            GeoCoordinateLine line = new GeoCoordinateLine(from_coordinates, to_coordinates, true, true);
+                            var line = new GeoCoordinateLine(fromCoordinates, toCoordinates, true, true);
                             distance = line.Distance(coordinate);
 
-                            if (distance < closest_without_match.Distance)
+                            if (distance < closestWithoutMatch.Distance)
                             { // the distance is smaller.
-                                PointF2D projected_point =
+                                PointF2D projectedPoint =
                                     line.ProjectOn(coordinate);
 
                                 // calculate the position.
-                                if (projected_point != null)
+                                if (projectedPoint != null)
                                 { // calculate the distance
-                                    double distance_point = from_coordinates.Distance(projected_point);
-                                    double position = distance_point / distance_total;
+                                    double distancePoint = fromCoordinates.Distance(projectedPoint);
+                                    double position = distancePoint / distanceTotal;
 
-                                    closest_without_match = new SearchClosestResult(
+                                    closestWithoutMatch = new SearchClosestResult(
                                         distance, arc.Key, arc.Value.Key, position);
                                 }
                             }
-                            if (distance < closest_with_match.Distance)
+                            if (distance < closestWithMatch.Distance)
                             {
-                                PointF2D projected_point =
+                                PointF2D projectedPoint =
                                     line.ProjectOn(coordinate);
 
                                 // calculate the position.
-                                if (projected_point != null)
+                                if (projectedPoint != null)
                                 { // calculate the distance
-                                    double distance_point = from_coordinates.Distance(projected_point);
-                                    double position = distance_point / distance_total;
+                                    double distancePoint = fromCoordinates.Distance(projectedPoint);
+                                    double position = distancePoint / distanceTotal;
 
                                     if (matcher == null ||
-                                        (point_tags == null || point_tags.Count == 0) ||
-                                        matcher.MatchWithEdge(vehicle, point_tags, arc_tags))
+                                        (pointTags == null || pointTags.Count == 0) ||
+                                        matcher.MatchWithEdge(vehicle, pointTags, arcTags))
                                     {
-                                        closest_with_match = new SearchClosestResult(
+                                        closestWithMatch = new SearchClosestResult(
                                             distance, arc.Key, arc.Value.Key, position);
                                     }
                                 }
@@ -182,11 +198,11 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             }
 
             // return the best result.
-            if (closest_with_match.Distance < double.MaxValue)
+            if (closestWithMatch.Distance < double.MaxValue)
             {
-                return closest_with_match;
+                return closestWithMatch;
             }
-            return closest_without_match;
+            return closestWithoutMatch;
         }
 
         #endregion

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math
+namespace OsmSharp.Math
 {
     /// <summary>
     /// An abstract class serving as the base-type for all primitives.

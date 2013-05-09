@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Primitives.Enumerators.Lines;
 
-namespace OsmSharp.Tools.Math.Primitives.Enumerators.Points
+namespace OsmSharp.Math.Primitives.Enumerators.Points
 {
     /// <summary>
     /// An enurable for a line.

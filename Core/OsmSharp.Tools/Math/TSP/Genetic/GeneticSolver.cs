@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Progress;
 using OsmSharp.Tools.Math.TSP.Genetic.Solver;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 using OsmSharp.Tools.Math.AI.Genetic.Selectors;
@@ -35,7 +36,7 @@ using OsmSharp.Tools.Progress;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace OsmSharp.Tools.Math.TSP.Genetic
+namespace OsmSharp.Math.TSP.Genetic
 {
     /// <summary>
     /// Solver that uses a Genetic Algorithm to solve instances of the TSP.

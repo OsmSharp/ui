@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric
+namespace OsmSharp.Math.VRP.Core.Routes.ASymmetric
 {
     /// <summary>
     /// A dynamic asymmetric between enumerable.

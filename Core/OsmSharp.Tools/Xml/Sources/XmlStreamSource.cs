@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Xml;
+using OsmSharp.Xml;
 
-namespace OsmSharp.Tools.Xml.Sources
+namespace OsmSharp.Xml.Sources
 {
     /// <summary>
     /// XML stream source.

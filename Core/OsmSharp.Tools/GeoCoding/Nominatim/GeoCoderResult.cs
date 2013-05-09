@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp.Tools.GeoCoding.Nominatim
+namespace OsmSharp.GeoCoding.Nominatim
 {
     /// <summary>
     /// Represents a geocoding result.

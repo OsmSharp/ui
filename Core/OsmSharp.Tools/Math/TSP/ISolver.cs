@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.TSP.Problems;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 
-namespace OsmSharp.Tools.Math.TSP
+namespace OsmSharp.Math.TSP
 {
     /// <summary>
     /// Interface representing a solver for the TSP.

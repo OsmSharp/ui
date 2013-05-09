@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Geo.Lambert.Ellipsoids;
 
-namespace OsmSharp.Tools.Math.Geo.Lambert
+namespace OsmSharp.Math.Geo.Lambert
 {
     /// <summary>
     /// Represents an ellipsoid used with the lamber projection.

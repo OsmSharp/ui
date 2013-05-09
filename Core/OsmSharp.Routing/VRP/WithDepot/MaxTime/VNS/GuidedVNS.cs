@@ -14,56 +14,54 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
     /// <summary>
     /// Uses a Variable Neighbourhood Search technique.
     /// </summary>
-    /// <typeparam name="ResolvedType"></typeparam>
-    public class GuidedVNS<ResolvedType> : RouterMaxTime
-        where ResolvedType : IRouterPoint
+    public class GuidedVNS : RouterMaxTime
     {
         /// <summary>
         /// Holds the router.
         /// </summary>
-        private IRouter<ResolvedType> _router;
+        private readonly Router _router;
 
         /// <summary>
         /// Holds the lambda value.
         /// </summary>
-        private float _lambda;
+        private readonly float _lambda;
 
         /// <summary>
         /// The threshold percentage.
         /// </summary>
-        private float _threshold_percentage;
+        private readonly float _thresholdPercentage;
 
         /// <summary>
         /// Creates a new Guided Variable Neighbourhood Search solver.
         /// </summary>
         /// <param name="router"></param>
         /// <param name="max"></param>
-        /// <param name="delivery_time"></param>
-        /// <param name="threshold_precentage"></param>
+        /// <param name="deliveryTime"></param>
+        /// <param name="thresholdPrecentage"></param>
         /// <param name="lambda"></param>
-        public GuidedVNS(IRouter<ResolvedType> router, Second max, Second delivery_time, float threshold_precentage, float lambda)
-            : base(max, delivery_time)
+        public GuidedVNS(Router router, Second max, Second deliveryTime, float thresholdPrecentage, float lambda)
+            : base(max, deliveryTime)
         {
             _router = router;
-            _threshold_percentage = threshold_precentage;
+            _thresholdPercentage = thresholdPrecentage;
             _lambda = lambda;
 
-            _intra_improvements = new List<IImprovement>();
+            _intraImprovements = new List<IImprovement>();
             //_intra_improvements.Add(
             //    new ArbitraryInsertionSolver());
-            _intra_improvements.Add(
+            _intraImprovements.Add(
                 new HillClimbing3OptSolver(true, true));
 
-            _inter_improvements = new List<IInterImprovement>();
-            _inter_improvements.Add(
+            _interImprovements = new List<IInterImprovement>();
+            _interImprovements.Add(
                 new RelocateImprovement());
-            _inter_improvements.Add(
+            _interImprovements.Add(
                 new ExchangeInterImprovement());
             //_inter_improvements.Add(
             //    new TwoOptInterImprovement());
-            _inter_improvements.Add(
+            _interImprovements.Add(
                 new RelocateExchangeInterImprovement());
-            _inter_improvements.Add(
+            _interImprovements.Add(
                 new CrossExchangeInterImprovement());
         }
 
@@ -87,22 +85,22 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
         {
             float lambda = _lambda;
 
-            CheapestInsertionSolverWithImprovements<ResolvedType> vrp_router =
-                new CheapestInsertionSolverWithImprovements<ResolvedType>(
-                    _router, problem.Max.Value, problem.DeliveryTime.Value, 5, 0.10f, true, _threshold_percentage);
-            MaxTimeSolution original_solution = vrp_router.Solve(
+            var vrpRouter =
+                new CheapestInsertionSolverWithImprovements(
+                    _router, problem.Max.Value, problem.DeliveryTime.Value, 5, 0.10f, true, _thresholdPercentage);
+            MaxTimeSolution originalSolution = vrpRouter.Solve(
                 problem);
 
-            for (int round_x = 0; round_x < original_solution.Count; round_x++)
+            for (int roundX = 0; roundX < originalSolution.Count; roundX++)
             { // keep looping on rounds.
-                for (int round_y = 0; round_y < round_x; round_y++)
+                for (int roundY = 0; roundY < roundX; roundY++)
                 { // keep looping on rounds with a smaller index not equal to the current round.
-                    if (round_x != round_y)
+                    if (roundX != roundY)
                     { // routes are different.
-                        if (this.Overlaps(problem, original_solution.Route(round_x), original_solution.Route(round_y)))
+                        if (this.Overlaps(problem, originalSolution.Route(roundX), originalSolution.Route(roundY)))
                         { // only check routes that overlap.
                             double tau = double.MinValue;
-                            Dictionary<Edge, int> penalizations = new Dictionary<Edge, int>();
+                            var penalizations = new Dictionary<Edge, int>();
 
                             //bool improvement = true;
                             //while (improvement)
@@ -112,11 +110,11 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                             while (true)
                             { // keep trying to improve until the tau limit is exceeded.
                                 // calculate the route sizes before.
-                                double route1_actual_before = problem.Time(original_solution.Route(round_x));
-                                double route2_actual_before = problem.Time(original_solution.Route(round_y));
+                                double route1ActualBefore = problem.Time(originalSolution.Route(roundX));
+                                double route2ActualBefore = problem.Time(originalSolution.Route(roundY));
 
                                 // copy orignal solution.
-                                MaxTimeSolution solution = (original_solution.Clone() as MaxTimeSolution);
+                                var solution = (originalSolution.Clone() as MaxTimeSolution);
 
                                 // apply penalties.
                                 foreach (KeyValuePair<Edge, int> penalty in penalizations)
@@ -125,9 +123,9 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                                 }
 
                                 // apply the inter-route improvements.
-                                int count_before = solution.Route(round_x).Count + solution.Route(round_y).Count;
-                                int count_after;
-                                if (this.ImproveInterRoute(problem, solution, round_x, round_y, problem.Max.Value))
+                                int countBefore = solution.Route(roundX).Count + solution.Route(roundY).Count;
+                                int countAfter;
+                                if (this.ImproveInterRoute(problem, solution, roundX, roundY, problem.Max.Value))
                                 { // the improve inter route succeeded.
                                     if (!solution.IsValid())
                                     {
@@ -135,24 +133,24 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                                     }
                                     //improvement_inter = true;
 
-                                    count_after = solution.Route(round_x).Count + solution.Route(round_y).Count;
-                                    if (count_before != count_after)
+                                    countAfter = solution.Route(roundX).Count + solution.Route(roundY).Count;
+                                    if (countBefore != countAfter)
                                     {
                                         throw new Exception();
                                     }
 
                                     // apply the intra-route improvements.
-                                    solution[round_x] = this.ImproveIntraRoute(problem, solution.Route(round_x), solution[round_x]);
-                                    solution[round_y] = this.ImproveIntraRoute(problem, solution.Route(round_y), solution[round_y]);
+                                    solution[roundX] = this.ImproveIntraRoute(problem, solution.Route(roundX), solution[roundX]);
+                                    solution[roundY] = this.ImproveIntraRoute(problem, solution.Route(roundY), solution[roundY]);
 
                                     // recalculate weights.
-                                    solution[round_x] = problem.Time(solution.Route(round_x));
-                                    solution[round_y] = problem.Time(solution.Route(round_y));
+                                    solution[roundX] = problem.Time(solution.Route(roundX));
+                                    solution[roundY] = problem.Time(solution.Route(roundY));
                                 }
 
                                 // check customer counts.
-                                count_after = solution.Route(round_x).Count + solution.Route(round_y).Count;
-                                if (count_before != count_after)
+                                countAfter = solution.Route(roundX).Count + solution.Route(roundY).Count;
+                                if (countBefore != countAfter)
                                 {
                                     throw new Exception();
                                 }
@@ -161,59 +159,59 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                                 problem.ResetPenalizations();
 
                                 // check against the orginal objective function.
-                                double route1_actual_after = problem.Time(solution.Route(round_x));
-                                double route2_actual_after = problem.Time(solution.Route(round_y));
-                                if (route1_actual_after + route2_actual_after < route1_actual_before + route2_actual_before - 0.001 &&
-                                    route1_actual_after < problem.Max.Value && route2_actual_after < problem.Max.Value)
+                                double route1ActualAfter = problem.Time(solution.Route(roundX));
+                                double route2ActualAfter = problem.Time(solution.Route(roundY));
+                                if (route1ActualAfter + route2ActualAfter < route1ActualBefore + route2ActualBefore - 0.001 &&
+                                    route1ActualAfter < problem.Max.Value && route2ActualAfter < problem.Max.Value)
                                 { // there is improvement!
-                                    original_solution = solution;
+                                    originalSolution = solution;
 
                                     OsmSharp.Tools.Output.OutputStreamHost.WriteLine("IMPROVEMENT: {0}->{1}",
-                                        route1_actual_before + route2_actual_before, route1_actual_after + route2_actual_after);
+                                        route1ActualBefore + route2ActualBefore, route1ActualAfter + route2ActualAfter);
                                 }
 
                                 // select arc to be penalized.
-                                IRoute route1 = original_solution.Route(round_x);
-                                IRoute route2 = original_solution.Route(round_y);
+                                IRoute route1 = originalSolution.Route(roundX);
+                                IRoute route2 = originalSolution.Route(roundY);
                                 double u = double.MinValue;
-                                Edge penalizing_edge = new Edge();
-                                double total_p = 0;
+                                Edge penalizingEdge = new Edge();
+                                double totalP = 0;
                                 foreach (Edge edge in route1.Edges())
                                 {
-                                    int edge_p;
-                                    if (!penalizations.TryGetValue(edge, out edge_p))
+                                    int edgeP;
+                                    if (!penalizations.TryGetValue(edge, out edgeP))
                                     {
-                                        edge_p = 0;
+                                        edgeP = 0;
                                     }
-                                    total_p = total_p + edge_p;
-                                    double edge_u = ((lambda * (double)edge_p) + problem.WeightMatrix[edge.From][edge.To]) /
-                                        ((double)edge_p + 1.0);
-                                    if (u <= edge_u)
+                                    totalP = totalP + edgeP;
+                                    double edgeU = ((lambda * (double)edgeP) + problem.WeightMatrix[edge.From][edge.To]) /
+                                        ((double)edgeP + 1.0);
+                                    if (u <= edgeU)
                                     {
-                                        penalizing_edge = edge;
-                                        u = edge_u;
+                                        penalizingEdge = edge;
+                                        u = edgeU;
                                     }
                                 }
                                 foreach (Edge edge in route2.Edges())
                                 {
-                                    int edge_p;
-                                    if (!penalizations.TryGetValue(edge, out edge_p))
+                                    int edgeP;
+                                    if (!penalizations.TryGetValue(edge, out edgeP))
                                     {
-                                        edge_p = 0;
+                                        edgeP = 0;
                                     }
-                                    total_p = total_p + edge_p;
-                                    double edge_u = ((lambda * (double)edge_p) + problem.WeightMatrix[edge.From][edge.To]) /
-                                        ((double)edge_p + 1.0);
-                                    if (u <= edge_u)
+                                    totalP = totalP + edgeP;
+                                    double edgeU = ((lambda * (double)edgeP) + problem.WeightMatrix[edge.From][edge.To]) /
+                                        ((double)edgeP + 1.0);
+                                    if (u <= edgeU)
                                     {
-                                        penalizing_edge = edge;
-                                        u = edge_u;
+                                        penalizingEdge = edge;
+                                        u = edgeU;
                                     }
                                 }
 
                                 // actually penalize the edge.
                                 int p;
-                                if (!penalizations.TryGetValue(penalizing_edge, out p))
+                                if (!penalizations.TryGetValue(penalizingEdge, out p))
                                 {
                                     p = 1;
                                 }
@@ -221,26 +219,26 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                                 {
                                     p++;
                                 }
-                                penalizations[penalizing_edge] = p;
+                                penalizations[penalizingEdge] = p;
 
                                 // evaluate or set tau.
                                 if (tau > double.MinValue)
                                 { // evaluate if penalizations should end.
-                                    if (tau <= lambda * total_p)
+                                    if (tau <= lambda * totalP)
                                     { // the penalization should end!
                                         break;
                                     }
                                 }
                                 else
                                 { // first edge being penalized.
-                                    tau = lambda * problem.WeightMatrix[penalizing_edge.From][penalizing_edge.To] / 10;
+                                    tau = lambda * problem.WeightMatrix[penalizingEdge.From][penalizingEdge.To] / 10;
                                 }
                             }
                         }
                     }
                 }
             }
-            return original_solution;
+            return originalSolution;
         }
 
         #region Improvement Heurstics
@@ -248,12 +246,12 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
         /// <summary>
         /// Holds the intra-route improvements;
         /// </summary>
-        private readonly List<IImprovement> _intra_improvements;
+        private readonly List<IImprovement> _intraImprovements;
 
         /// <summary>
         /// Holds the inter-route improvements.
         /// </summary>
-        private readonly List<IInterImprovement> _inter_improvements;
+        private readonly List<IInterImprovement> _interImprovements;
 
         /// <summary>
         /// Apply some improvements within one route.
@@ -265,19 +263,19 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
             double currentWeight)
         {
             bool improvement = true;
-            double new_weight = currentWeight;
+            double newWeight = currentWeight;
             while (improvement)
             { // keep trying while there are still improvements.
                 improvement = false;
 
                 // loop over all improvement operations.
-                foreach (IImprovement improvement_operation in _intra_improvements)
+                foreach (IImprovement improvementOperation in _intraImprovements)
                 { // try the current improvement operations.
                     double difference;
-                    if (improvement_operation.Improve(problem, route, out difference))
+                    if (improvementOperation.Improve(problem, route, out difference))
                     { // there was an improvement.
                         OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Intra-improvement found {0} {1}->{2}",
-                            improvement_operation.Name, new_weight, new_weight + difference);
+                            improvementOperation.Name, newWeight, newWeight + difference);
 
                         // check if the route is valid.
                         if (!route.IsValid())
@@ -286,7 +284,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                         }
 
                         // update the weight.
-                        new_weight = new_weight + difference;
+                        newWeight = newWeight + difference;
 
                         improvement = true;
 
@@ -294,106 +292,41 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                     }
                 }
             }
-            return new_weight;
+            return newWeight;
         }
-
-        ///// <summary>
-        ///// Apply some improvements between the given routes and returns the resulting weight.
-        ///// </summary>
-        ///// <param name="problem"></param>
-        ///// <param name="route"></param>
-        ///// <returns></returns>
-        //private bool ImproveInterRoute(MaxTimeProblem problem, MaxTimeSolution solution, int route1_idx, int route2_idx, double max)
-        //{
-        //    // get the routes.
-        //    IRoute route1 = solution.Route(route1_idx);
-        //    IRoute route2 = solution.Route(route2_idx);
-
-        //    int count_before = route1.Count + route2.Count;
-
-        //    // get the weights.
-        //    double route1_weight = solution[route1_idx];
-        //    double route2_weight = solution[route2_idx];
-
-        //    // loop over all improvement operations.
-        //    bool global_improvement = false;
-        //    foreach (IInterImprovement improvement_operation in _inter_improvements)
-        //    { // try the current improvement operations.
-        //        bool improvement = true;
-        //        while (improvement)
-        //        { // keep looping when there is improvement.
-        //            improvement = false;
-        //            if (improvement_operation.Improve(problem, solution, route1_idx, route2_idx, max))
-        //            { // there was an improvement.
-        //                improvement = true;
-        //                global_improvement = true;
-
-        //                OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2}",
-        //                    route1_idx, route2_idx, improvement_operation.Name);
-
-        //                // check if the route is valid.
-        //                if (!route1.IsValid())
-        //                {
-        //                    throw new Exception();
-        //                }
-        //                if (!route2.IsValid())
-        //                {
-        //                    throw new Exception();
-        //                }
-
-        //                int count_after = route1.Count + route2.Count;
-        //                if (count_before != count_after)
-        //                {
-        //                    throw new Exception();
-        //                }
-
-        //                // recalculate weights.
-        //                solution[route1_idx] = problem.Time(solution.Route(route1_idx));
-        //                solution[route2_idx] = problem.Time(solution.Route(route2_idx));
-
-        //                //break;
-        //            }
-        //        }
-        //    }
-        //    return global_improvement;
-        //}
 
         /// <summary>
         /// Apply some improvements between the given routes and returns the resulting weight.
         /// </summary>
         /// <param name="problem"></param>
         /// <param name="solution"></param>
-        /// <param name="route2_idx"></param>
+        /// <param name="route2Idx"></param>
         /// <param name="max"></param>
-        /// <param name="route1_idx"></param>
+        /// <param name="route1Idx"></param>
         /// <returns></returns>
         private bool ImproveInterRoute(MaxTimeProblem problem, MaxTimeSolution solution, 
-            int route1_idx, int route2_idx, double max)
+            int route1Idx, int route2Idx, double max)
         {
             // get the routes.
-            IRoute route1 = solution.Route(route1_idx);
-            IRoute route2 = solution.Route(route2_idx);
+            IRoute route1 = solution.Route(route1Idx);
+            IRoute route2 = solution.Route(route2Idx);
 
-            int count_before = route1.Count + route2.Count;
-
-            //// get the weights.
-            //double route1_weight = solution[route1_idx];
-            //double route2_weight = solution[route2_idx];
+            int countBefore = route1.Count + route2.Count;
 
             // loop over all improvement operations.
-            bool global_improvement = false;
-            foreach (IInterImprovement improvement_operation in _inter_improvements)
+            bool globalImprovement = false;
+            foreach (IInterImprovement improvementOperation in _interImprovements)
             { // try the current improvement operations.
                 bool improvement = true;
                 while (improvement)
                 { // keep looping when there is improvement.
                     improvement = false;
-                    double total_before = problem.Time(solution.Route(route1_idx)) +
-                        problem.Time(solution.Route(route2_idx));
-                    if (improvement_operation.Improve(problem, solution, route1_idx, route2_idx, max))
+                    double totalBefore = problem.Time(solution.Route(route1Idx)) +
+                        problem.Time(solution.Route(route2Idx));
+                    if (improvementOperation.Improve(problem, solution, route1Idx, route2Idx, max))
                     { // there was an improvement.
                         improvement = true;
-                        global_improvement = true;
+                        globalImprovement = true;
 
                         // check if the route is valid.
                         if (!route1.IsValid())
@@ -405,33 +338,33 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                             throw new Exception();
                         }
 
-                        int count_after = route1.Count + route2.Count;
-                        if (count_before != count_after)
+                        int countAfter = route1.Count + route2.Count;
+                        if (countBefore != countAfter)
                         {
                             throw new Exception();
                         }
 
-                        double total_after = problem.Time(solution.Route(route1_idx)) +
-                            problem.Time(solution.Route(route2_idx));
-                        if (total_after >= total_before)
+                        double totalAfter = problem.Time(solution.Route(route1Idx)) +
+                            problem.Time(solution.Route(route2Idx));
+                        if (totalAfter >= totalBefore)
                         {
                             throw new Exception("this is not an improvement!");
                         }
 
                         OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
-                            route1_idx, route2_idx, improvement_operation.Name, total_before, total_after);
+                            route1Idx, route2Idx, improvementOperation.Name, totalBefore, totalAfter);
 
                         // recalculate weights.
-                        solution[route1_idx] = problem.Time(solution.Route(route1_idx));
-                        solution[route2_idx] = problem.Time(solution.Route(route2_idx));
+                        solution[route1Idx] = problem.Time(solution.Route(route1Idx));
+                        solution[route2Idx] = problem.Time(solution.Route(route2Idx));
 
                         //break;
                     }
-                    else if (!improvement_operation.IsSymmetric &&
-                        improvement_operation.Improve(problem, solution, route2_idx, route1_idx, max))
+                    else if (!improvementOperation.IsSymmetric &&
+                        improvementOperation.Improve(problem, solution, route2Idx, route1Idx, max))
                     { // also do the improvement the other way around when not symmetric.
                         improvement = true;
-                        global_improvement = true;
+                        globalImprovement = true;
 
 
                         // check if the route is valid.
@@ -444,31 +377,31 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                             throw new Exception();
                         }
 
-                        int count_after = route1.Count + route2.Count;
-                        if (count_before != count_after)
+                        int countAfter = route1.Count + route2.Count;
+                        if (countBefore != countAfter)
                         {
                             throw new Exception();
                         }
 
-                        double total_after = problem.Time(solution.Route(route1_idx)) +
-                            problem.Time(solution.Route(route2_idx));
-                        if (total_after >= total_before)
+                        double totalAfter = problem.Time(solution.Route(route1Idx)) +
+                            problem.Time(solution.Route(route2Idx));
+                        if (totalAfter >= totalBefore)
                         {
                             throw new Exception("this is not an improvement!");
                         }
 
                         OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
-                            route2_idx, route1_idx, improvement_operation.Name, total_before, total_after);
+                            route2Idx, route1Idx, improvementOperation.Name, totalBefore, totalAfter);
 
                         // recalculate weights.
-                        solution[route1_idx] = problem.Time(solution.Route(route1_idx));
-                        solution[route2_idx] = problem.Time(solution.Route(route2_idx));
+                        solution[route1Idx] = problem.Time(solution.Route(route1Idx));
+                        solution[route2Idx] = problem.Time(solution.Route(route2Idx));
 
                         //break;
                     }
                 }
             }
-            return global_improvement;
+            return globalImprovement;
         }
 
         #endregion

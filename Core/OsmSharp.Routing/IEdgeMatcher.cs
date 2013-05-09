@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,10 +35,10 @@ namespace OsmSharp.Routing
         /// Returns true if the edge is a suitable candidate as a target for a point to be resolved on.
         /// </summary>
         /// <param name="vehicle"></param>
-        /// <param name="point_tags"></param>
-        /// <param name="edge_tags"></param>
+        /// <param name="pointTags"></param>
+        /// <param name="edgeTags"></param>
         /// <returns></returns>
-        bool MatchWithEdge(VehicleEnum vehicle, TagsCollection point_tags, TagsCollection edge_tags);
+        bool MatchWithEdge(VehicleEnum vehicle, TagsCollection pointTags, TagsCollection edgeTags);
     }
 
     /// <summary>
@@ -49,27 +50,27 @@ namespace OsmSharp.Routing
         /// Returns true if the edge is a suitable candidate as a target for a point to be resolved on.
         /// </summary>
         /// <param name="vehicle"></param>
-        /// <param name="point_tags"></param>
-        /// <param name="edge_tags"></param>
+        /// <param name="pointTags"></param>
+        /// <param name="edgeTags"></param>
         /// <returns></returns>
         public bool MatchWithEdge(VehicleEnum vehicle,
-            TagsCollection point_tags, TagsCollection edge_tags)
+            TagsCollection pointTags, TagsCollection edgeTags)
         {
-            if (point_tags == null || point_tags.Count == 0)
+            if (pointTags == null || pointTags.Count == 0)
             { // when the point has no tags it has no requirements.
                 return true;
             }
 
-            if (edge_tags == null || edge_tags.Count == 0)
+            if (edgeTags == null || edgeTags.Count == 0)
             { // when the edge has no tags, no way to verify.
                 return false;
             }
 
-            string point_name, edge_name;
-            if (point_tags.TryGetValue("name", out point_name) &&
-                edge_tags.TryGetValue("name", out edge_name))
+            string pointName, edgeName;
+            if (pointTags.TryGetValue("name", out pointName) &&
+                edgeTags.TryGetValue("name", out edgeName))
             { // both have names.
-                return (point_name == edge_name);
+                return (pointName == edgeName);
             }
             return false;
         }
@@ -84,27 +85,27 @@ namespace OsmSharp.Routing
         /// Returns true if the edge is a suitable candidate as a target for a point to be resolved on.
         /// </summary>
         /// <param name="vehicle"></param>
-        /// <param name="point_tags"></param>
-        /// <param name="edge_tags"></param>
+        /// <param name="pointTags"></param>
+        /// <param name="edgeTags"></param>
         /// <returns></returns>
         public bool MatchWithEdge(VehicleEnum vehicle,
-            TagsCollection point_tags, TagsCollection edge_tags)
+            TagsCollection pointTags, TagsCollection edgeTags)
         {
-            if (point_tags == null || point_tags.Count == 0)
+            if (pointTags == null || pointTags.Count == 0)
             { // when the point has no tags it has no requirements.
                 return true;
             }
 
-            if (edge_tags == null || edge_tags.Count == 0)
+            if (edgeTags == null || edgeTags.Count == 0)
             { // when the edge has no tags, no way to verify.
                 return false;
             }
 
-            string point_name, edge_name;
-            if (point_tags.TryGetValue("name", out point_name) &&
-                edge_tags.TryGetValue("name", out edge_name))
+            string pointName, edgeName;
+            if (pointTags.TryGetValue("name", out pointName) &&
+                edgeTags.TryGetValue("name", out edgeName))
             { // both have names.
-                return (point_name.LevenshteinMatch(edge_name, 90));
+                return (pointName.LevenshteinMatch(edgeName, 90));
             }
             return false;
         }

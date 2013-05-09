@@ -6,7 +6,7 @@ using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.TSP.Problems;
 using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
-namespace OsmSharp.Tools.Math.TSP
+namespace OsmSharp.Math.TSP
 {
     /// <summary>
     /// Baseclass for all TSP solver.

@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.StateMachines;
 
-namespace OsmSharp.Tools.Math.Automata
+namespace OsmSharp.Math.Automata
 {
     /// <summary>
     /// Class representing a finite-state machine consuming objects representing events.

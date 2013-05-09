@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Collections;
 
-namespace OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric
+namespace OsmSharp.Math.VRP.Core.Routes.Symmetric
 {
     /// <summary>
     /// A fast implementation of a route with a steady customer count.

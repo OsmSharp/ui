@@ -25,7 +25,7 @@ using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
 using OsmSharp.Tools.Math.TSP;
 
-namespace OsmSharp.Tools.Math.TSP
+namespace OsmSharp.Math.TSP
 {
     /// <summary>
     /// Solver that uses RAI to solve instances of the TSP.

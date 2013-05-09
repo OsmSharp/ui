@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.Shapes.PrimitivesFactory;
 
-namespace OsmSharp.Tools.Math.Shapes.Factory
+namespace OsmSharp.Math.Shapes.Factory
 {
     /// <summary>
     /// A factory for shapes.

@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.TSP.Problems;
 
-namespace OsmSharp.Tools.Math.TSP
+namespace OsmSharp.Math.TSP
 {
     /// <summary>
     /// Converts TSP problems and routes.

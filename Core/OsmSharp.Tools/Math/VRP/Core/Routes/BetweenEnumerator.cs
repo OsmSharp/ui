@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.VRP.Core.Routes
+namespace OsmSharp.Math.VRP.Core.Routes
 {
     internal class BetweenEnumerable : IEnumerable<int>
     {

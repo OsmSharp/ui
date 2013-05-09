@@ -26,7 +26,7 @@ using OsmSharp.Tools.Math.Random;
 using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic;
 using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
 
-namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Solver.Operations.Generation
+namespace OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Generation
 {
     /// <summary>
     /// Generates new individuals by using best placement.

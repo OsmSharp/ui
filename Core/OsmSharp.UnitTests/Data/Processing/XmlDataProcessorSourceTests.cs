@@ -15,16 +15,13 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using OsmSharp.Osm.Data.XML.Processor;
-using System.Reflection;
-using OsmSharp.Osm.Data.Core.Processor.Default;
 
-namespace OsmSharp.Osm.UnitTests.Data.Processing
+using NUnit.Framework;
+using System.Reflection;
+using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Data.Xml.Processor;
+
+namespace OsmSharp.UnitTests.Data.Processing
 {
     /// <summary>
     /// Summary description for XmlDataProcessorSourceTests
@@ -39,11 +36,12 @@ namespace OsmSharp.Osm.UnitTests.Data.Processing
         public void XmlDataProcessorSourceReset()
         {
             // generate the source.
-            XmlDataProcessorSource source = new XmlDataProcessorSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.api.osm"));
+            var source = new XmlOsmStreamReader(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    "OsmSharp.UnitTests.api.osm"));
 
             // pull the data out.
-            DataProcessorTargetEmpty target = new DataProcessorTargetEmpty();
+            var target = new OsmStreamWriterEmpty();
             target.RegisterSource(source);
             target.Pull();
 

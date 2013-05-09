@@ -5,7 +5,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{A400832E-5
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Osm", "Core\OsmSharp.Osm\OsmSharp.Osm.csproj", "{249DCEC1-615D-40AA-93FF-BCE2178DFF83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Tools", "Core\OsmSharp.Tools\OsmSharp.Tools.csproj", "{95C32F29-5537-4FB7-8C85-B754BC9903A9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp", "Core\OsmSharp.Tools\OsmSharp.csproj", "{95C32F29-5537-4FB7-8C85-B754BC9903A9}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Routing", "Core\OsmSharp.Routing\OsmSharp.Routing.csproj", "{87A55F64-1162-4DF3-8B68-800E66D019EC}"
 EndProject

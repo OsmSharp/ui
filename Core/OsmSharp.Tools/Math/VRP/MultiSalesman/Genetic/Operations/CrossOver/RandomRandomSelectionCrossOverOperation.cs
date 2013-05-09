@@ -26,7 +26,7 @@ using OsmSharp.Tools.Math.Random;
 using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
 
 
-namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver
+namespace OsmSharp.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver
 {
     internal class RandomRandomSelectionCrossOverOperation : ICrossOverOperation<List<Genome>, Problem, Fitness>
     {

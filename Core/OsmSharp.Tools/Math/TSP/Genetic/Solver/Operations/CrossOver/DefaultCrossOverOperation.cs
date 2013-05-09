@@ -24,7 +24,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 using OsmSharp.Tools.Math.AI.Genetic;
 using OsmSharp.Tools.Math.TSP.Genetic.Solver;
 
-namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver
+namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
     /// <summary>
     /// A default crossover operation.

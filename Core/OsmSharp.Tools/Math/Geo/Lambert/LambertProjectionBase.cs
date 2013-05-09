@@ -23,7 +23,7 @@ using OsmSharp.Tools.Math.Units.Angle;
 using OsmSharp.Tools.Math.Geo.Lambert.International.Belgium;
 using OsmSharp.Tools.Math.Geo.Lambert.Ellipsoids;
 
-namespace OsmSharp.Tools.Math.Geo.Lambert
+namespace OsmSharp.Math.Geo.Lambert
 {
     /// <summary>
     /// A standard lamber projection.

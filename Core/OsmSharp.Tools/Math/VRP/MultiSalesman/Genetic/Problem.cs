@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic;
 using OsmSharp.Tools.Math.Units.Time;
 
-namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic
+namespace OsmSharp.Math.VRP.MultiSalesman.Genetic
 {
     /// <summary>
     /// Class representing a problem.

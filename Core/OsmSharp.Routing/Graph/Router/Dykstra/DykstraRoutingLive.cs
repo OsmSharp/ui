@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,21 +15,19 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Path;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Constraints;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Tools.Collections.Tags;
 using OsmSharp.Tools.Math;
-using OsmSharp.Routing.Graph.DynamicGraph;
 using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Routing.Router;
 using OsmSharp.Tools.Collections.PriorityQueues;
-using OsmSharp.Routing.Graph.DynamicGraph.SimpleWeighed;
 using OsmSharp.Tools.Collections;
 
 namespace OsmSharp.Routing.Graph.Router.Dykstra
@@ -37,14 +35,14 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
     /// <summary>
     /// A class containing a dykstra implementation suitable for a simple graph.
     /// </summary>
-    public class DykstraRoutingLive : DykstraRoutingBase<SimpleWeighedEdge>, IBasicRouter<SimpleWeighedEdge>
+    public class DykstraRoutingLive : DykstraRoutingBase<LiveEdge>, IBasicRouter<LiveEdge>
     {
         /// <summary>
         /// Creates a new dykstra routing object.
         /// </summary>
-        /// <param name="tags_index"></param>
-        public DykstraRoutingLive(ITagsIndex tags_index)
-            : base(tags_index)
+        /// <param name="tagsIndex"></param>
+        public DykstraRoutingLive(ITagsIndex tagsIndex)
+            : base(tagsIndex)
         {
 
         }
@@ -59,8 +57,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="interpreter"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public PathSegment<long> Calculate(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            PathSegmentVisitList from, PathSegmentVisitList to, double max)
+        public PathSegment<long> Calculate(IDynamicGraphReadOnly<LiveEdge> graph, IRoutingInterpreter interpreter, 
+            VehicleEnum vehicle, PathSegmentVisitList from, PathSegmentVisitList to, double max)
         {
             return this.CalculateToClosest(graph, interpreter, vehicle, from,
                 new PathSegmentVisitList[] { to }, max);
@@ -74,16 +72,16 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="vehicle"></param>
         /// <param name="sources"></param>
         /// <param name="targets"></param>
-        /// <param name="max_search"></param>
+        /// <param name="maxSearch"></param>
         /// <returns></returns>
-        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle, 
-            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max_search)
+        public PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter, 
+            VehicleEnum vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double maxSearch)
         {
-            PathSegment<long>[][] results = new PathSegment<long>[sources.Length][];
-            for (int source_idx = 0; source_idx < sources.Length; source_idx++)
+            var results = new PathSegment<long>[sources.Length][];
+            for (int sourceIdx = 0; sourceIdx < sources.Length; sourceIdx++)
             {
-                results[source_idx] = this.DoCalculation(graph, interpreter, vehicle,
-                   sources[source_idx], targets, max_search, false, false);
+                results[sourceIdx] = this.DoCalculation(graph, interpreter, vehicle,
+                   sources[sourceIdx], targets, maxSearch, false, false);
             }
             return results;
         }
@@ -98,7 +96,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="interpreter"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double CalculateWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public double CalculateWeight(IDynamicGraphReadOnly<LiveEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList from, PathSegmentVisitList to, double max)
         {
             PathSegment<long> closest = this.CalculateToClosest(graph, interpreter, vehicle, from,
@@ -120,7 +118,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, 
+        public PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<LiveEdge> graph, IRoutingInterpreter interpreter, 
             VehicleEnum vehicle, PathSegmentVisitList from, PathSegmentVisitList[] targets, double max)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
@@ -142,13 +140,13 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<LiveEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max)
         {
             PathSegment<long>[] many = this.DoCalculation(graph, interpreter, vehicle,
                    source, targets, max, false, false);
 
-            double[] weights = new double[many.Length];
+            var weights = new double[many.Length];
             for (int idx = 0; idx < many.Length; idx++)
             {
                 if (many[idx] != null)
@@ -173,17 +171,18 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max)
+        public double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<LiveEdge> graph, IRoutingInterpreter interpreter, 
+            VehicleEnum vehicle, PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max)
         {
-            double[][] results = new double[sources.Length][];
+            var results = new double[sources.Length][];
             for (int idx = 0; idx < sources.Length; idx++)
             {
                 results[idx] = this.CalculateOneToManyWeight(graph, interpreter, vehicle, sources[idx], targets, max);
 
                 // report progress.
-                OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(idx, sources.Length, "Router.Core.Graph.Router.Dykstra.DykstraRouting<EdgeData>.CalculateManyToManyWeight",
-                    "Calculating weights...");
+                OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(idx, sources.Length, 
+                    "Router.Core.Graph.Router.Dykstra.DykstraRouting<EdgeData>.CalculateManyToManyWeight",
+                        "Calculating weights...");
             }
             return results;
         }
@@ -209,8 +208,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            PathSegmentVisitList source, double weight)
+        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<LiveEdge> graph, IRoutingInterpreter interpreter, 
+            VehicleEnum vehicle, PathSegmentVisitList source, double weight)
         {
             return this.CalculateRange(graph, interpreter, vehicle, source, weight, true);
         }
@@ -225,18 +224,18 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="weight"></param>
         /// <param name="forward"></param>
         /// <returns></returns>
-        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            PathSegmentVisitList source, double weight, bool forward)
+        public HashSet<long> CalculateRange(IDynamicGraphReadOnly<LiveEdge> graph, IRoutingInterpreter interpreter, 
+            VehicleEnum vehicle, PathSegmentVisitList source, double weight, bool forward)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
                    source, new PathSegmentVisitList[0], weight, false, true, forward);
 
-            HashSet<long> result_vertices = new HashSet<long>();
+            var resultVertices = new HashSet<long>();
             for (int idx = 0; idx < result.Length; idx++)
             {
-                result_vertices.Add(result[idx].VertexId);
+                resultVertices.Add(result[idx].VertexId);
             }
-            return result_vertices;
+            return resultVertices;
         }
 
         /// <summary>
@@ -248,7 +247,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        public bool CheckConnectivity(IDynamicGraphReadOnly<LiveEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, double weight)
         {
             HashSet<long> range = this.CalculateRange(graph, interpreter, vehicle, source, weight, true);
@@ -275,14 +274,14 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <param name="weight"></param>
-        /// <param name="stop_at_first"></param>
-        /// <param name="return_at_weight"></param>
+        /// <param name="stopAtFirst"></param>
+        /// <param name="returnAtWeight"></param>
         /// <returns></returns>
-        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
-            PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
-            bool stop_at_first, bool return_at_weight)
+        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<LiveEdge> graph, IRoutingInterpreter interpreter, 
+            VehicleEnum vehicle, PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
+            bool stopAtFirst, bool returnAtWeight)
         {
-            return this.DoCalculation(graph, interpreter, vehicle, source, targets, weight, stop_at_first, return_at_weight, true);
+            return this.DoCalculation(graph, interpreter, vehicle, source, targets, weight, stopAtFirst, returnAtWeight, true);
         }
 
         /// <summary>
@@ -294,24 +293,23 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <param name="weight"></param>
-        /// <param name="stop_at_first"></param>
-        /// <param name="return_at_weight"></param>
+        /// <param name="stopAtFirst"></param>
+        /// <param name="returnAtWeight"></param>
         /// <param name="forward"></param>
         /// <returns></returns>
-        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<SimpleWeighedEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<LiveEdge> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
-            bool stop_at_first, bool return_at_weight, bool forward)
+            bool stopAtFirst, bool returnAtWeight, bool forward)
         {
             //  initialize the result data structures.
-            List<PathSegment<long>> segments_at_weight = new List<PathSegment<long>>();
-            PathSegment<long>[] segments_to_target = new PathSegment<long>[targets.Length]; // the resulting target segments.
-            long found_targets = 0;
+            var segmentsAtWeight = new List<PathSegment<long>>();
+            var segmentsToTarget = new PathSegment<long>[targets.Length]; // the resulting target segments.
+            long foundTargets = 0;
 
             // intialize dykstra data structures.
-            //IPriorityQueue<PathSegment<long>> heap = new FibonacciQueue<PathSegment<long>>();
             IPriorityQueue<PathSegment<long>> heap = new BinairyHeap<PathSegment<long>>();
-            HashSet<long> chosen_vertices = new HashSet<long>();
-            Dictionary<long, IList<RoutingLabel>> labels = new Dictionary<long, IList<RoutingLabel>>();
+            var chosenVertices = new HashSet<long>();
+            var labels = new Dictionary<long, IList<RoutingLabel>>();
             foreach (long vertex in source.GetVertices())
             {
                 labels[vertex] = new List<RoutingLabel>();
@@ -324,81 +322,81 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             // intialize the source's neighbours.
             PathSegment<long> current = heap.Pop();
             while (current != null &&
-                chosen_vertices.Contains(current.VertexId))
+                chosenVertices.Contains(current.VertexId))
             { // keep dequeuing.
                 current = heap.Pop();
             }
 
             // test each target for the source.
             // test each source for any of the targets.
-            Dictionary<long, PathSegment<long>> paths_from_source = new Dictionary<long, PathSegment<long>>();
-            foreach (long source_vertex in source.GetVertices())
+            var pathsFromSource = new Dictionary<long, PathSegment<long>>();
+            foreach (long sourceVertex in source.GetVertices())
             { // get the path to the vertex.
-                PathSegment<long> source_path = source.GetPathTo(source_vertex); // get the source path.
-                source_path = source_path.From;
-                while (source_path != null)
+                PathSegment<long> sourcePath = source.GetPathTo(sourceVertex); // get the source path.
+                sourcePath = sourcePath.From;
+                while (sourcePath != null)
                 { // add the path to the paths from source.
-                    paths_from_source[source_path.VertexId] = source_path;
-                    source_path = source_path.From;
+                    pathsFromSource[sourcePath.VertexId] = sourcePath;
+                    sourcePath = sourcePath.From;
                 }
             }
             // loop over all targets
             for (int idx = 0; idx < targets.Length; idx++)
             { // check for each target if there are paths to the source.
-                foreach (long target_vertex in targets[idx].GetVertices())
+                foreach (long targetVertex in targets[idx].GetVertices())
                 {
-                    PathSegment<long> target_path = targets[idx].GetPathTo(target_vertex); // get the target path.
-                    target_path = target_path.From;
-                    while (target_path != null)
+                    PathSegment<long> targetPath = targets[idx].GetPathTo(targetVertex); // get the target path.
+                    targetPath = targetPath.From;
+                    while (targetPath != null)
                     { // add the path to the paths from source.
-                        PathSegment<long> path_from_source;
-                        if (paths_from_source.TryGetValue(target_path.VertexId, out path_from_source))
+                        PathSegment<long> pathFromSource;
+                        if (pathsFromSource.TryGetValue(targetPath.VertexId, out pathFromSource))
                         { // a path is found.
                             // get the existing path if any.
-                            PathSegment<long> existing = segments_to_target[idx];
+                            PathSegment<long> existing = segmentsToTarget[idx];
                             if (existing == null)
                             { // a path did not exist yet!
-                                segments_to_target[idx] = target_path.Reverse().ConcatenateAfter(path_from_source);
-                                found_targets++;
+                                segmentsToTarget[idx] = targetPath.Reverse().ConcatenateAfter(pathFromSource);
+                                foundTargets++;
                             }
-                            else if (existing.Weight > target_path.Weight + path_from_source.Weight)
+                            else if (existing.Weight > targetPath.Weight + pathFromSource.Weight)
                             { // a new path is found with a lower weight.
-                                segments_to_target[idx] = target_path.Reverse().ConcatenateAfter(path_from_source);
+                                segmentsToTarget[idx] = targetPath.Reverse().ConcatenateAfter(pathFromSource);
                             }
                         }
-                        target_path = target_path.From;
+                        targetPath = targetPath.From;
                     }
                 }
             }
-            if (found_targets == targets.Length && targets.Length > 0)
+            if (foundTargets == targets.Length && targets.Length > 0)
             { // routing is finished!
-                return segments_to_target.ToArray();
+                return segmentsToTarget.ToArray();
             }
 
-            if (stop_at_first)
+            if (stopAtFirst)
             { // only one entry is needed.
-                if (found_targets > 0)
+                if (foundTargets > 0)
                 { // targets found, return the shortest!
                     PathSegment<long> shortest = null;
-                    foreach (PathSegment<long> found_target in segments_to_target)
+                    foreach (PathSegment<long> foundTarget in segmentsToTarget)
                     {
                         if (shortest == null)
                         {
-                            shortest = found_target;
+                            shortest = foundTarget;
                         }
-                        else if (found_target != null &&
-                            shortest.Weight > found_target.Weight)
+                        else if (foundTarget != null &&
+                            shortest.Weight > foundTarget.Weight)
                         {
-                            shortest = found_target;
+                            shortest = foundTarget;
                         }
                     }
-                    segments_to_target = new PathSegment<long>[1];
-                    segments_to_target[0] = shortest;
-                    return segments_to_target;
+                    segmentsToTarget = new PathSegment<long>[1];
+                    segmentsToTarget[0] = shortest;
+                    return segmentsToTarget;
                 }
                 else
                 { // not targets found yet!
-                    segments_to_target = new PathSegment<long>[1];
+                    segmentsToTarget = new PathSegment<long>[1];
                 }
             }
 
@@ -406,114 +404,123 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             for (int idx = 0; idx < targets.Length; idx++)
             {
                 PathSegmentVisitList target = targets[idx];
-                if (return_at_weight)
+                if (returnAtWeight)
                 { // add all the reached vertices larger than weight to the results.
                     if (current.Weight > weight)
                     {
-                        PathSegment<long> to_path = target.GetPathTo(current.VertexId);
-                        to_path.Reverse();
-                        to_path = to_path.ConcatenateAfter(current);
-                        segments_at_weight.Add(to_path);
+                        PathSegment<long> toPath = target.GetPathTo(current.VertexId);
+                        toPath.Reverse();
+                        toPath = toPath.ConcatenateAfter(current);
+                        segmentsAtWeight.Add(toPath);
                     }
                 }
                 else if (target.Contains(current.VertexId))
                 { // the current is a target!
-                    PathSegment<long> to_path = target.GetPathTo(current.VertexId);
-                    to_path = to_path.Reverse();
-                    to_path = to_path.ConcatenateAfter(current);
+                    PathSegment<long> toPath = target.GetPathTo(current.VertexId);
+                    toPath = toPath.Reverse();
+                    toPath = toPath.ConcatenateAfter(current);
 
-                    if (stop_at_first)
+                    if (stopAtFirst)
                     { // stop at the first occurance.
-                        segments_to_target[0] = to_path;
-                        return segments_to_target;
+                        segmentsToTarget[0] = toPath;
+                        return segmentsToTarget;
                     }
                     else
                     { // normal one-to-many; add to the result.
                         // check if routing is finished.
-                        if (segments_to_target[idx] == null)
+                        if (segmentsToTarget[idx] == null)
                         { // make sure only the first route is set.
-                            found_targets++;
-                            segments_to_target[idx] = to_path;
-                            if (found_targets == targets.Length)
+                            foundTargets++;
+                            segmentsToTarget[idx] = toPath;
+                            if (foundTargets == targets.Length)
                             { // routing is finished!
-                                return segments_to_target.ToArray();
+                                return segmentsToTarget.ToArray();
                             }
                         }
-                        else if (segments_to_target[idx].Weight > to_path.Weight)
+                        else if (segmentsToTarget[idx].Weight > toPath.Weight)
                         { // check if the second, third or later is shorter.
-                            segments_to_target[idx] = to_path;
+                            segmentsToTarget[idx] = toPath;
                         }
                     }
                 }
             }
 
             // start OsmSharp.Routing.
-            KeyValuePair<uint, SimpleWeighedEdge>[] arcs = graph.GetArcs(
+            KeyValuePair<uint, LiveEdge>[] arcs = graph.GetArcs(
                 Convert.ToUInt32(current.VertexId));
-            chosen_vertices.Add(current.VertexId);
+            chosenVertices.Add(current.VertexId);
 
             // loop until target is found and the route is the shortest!
             while (true)
             {
                 // get the current labels list (if needed).
-                IList<RoutingLabel> current_labels = null;
+                IList<RoutingLabel> currentLabels = null;
                 if (interpreter.Constraints != null)
                 { // there are constraints, get the labels.
-                    current_labels = labels[current.VertexId];
+                    currentLabels = labels[current.VertexId];
                     labels.Remove(current.VertexId);
                 }
 
+                float latitude, longitude;
+                graph.GetVertex(Convert.ToUInt32(current.VertexId), out latitude, out longitude);
+                var currentCoordinates = new GeoCoordinate(latitude, longitude);
+
                 // update the visited nodes.
-                foreach (KeyValuePair<uint, SimpleWeighedEdge> neighbour in arcs)
+                foreach (KeyValuePair<uint, LiveEdge> neighbour in arcs)
                 {
                     // check the tags against the interpreter.
                     TagsCollection tags = this.TagsIndex.Get(neighbour.Value.Tags);
                     if (interpreter.EdgeInterpreter.CanBeTraversedBy(tags, vehicle))
                     { // it's ok; the edge can be traversed by the given vehicle.
-                        bool? one_way = interpreter.EdgeInterpreter.IsOneWay(tags, vehicle);
-                        bool can_be_traversed_one_way = (!one_way.HasValue) || // bidirectional edge. 
-                            (forward && (one_way.Value == neighbour.Value.IsForward)) ||
-                            (!forward && (one_way.Value != neighbour.Value.IsForward)); // backward edge has backward restruction, forward edge forward restriction.
+                        bool? oneWay = interpreter.EdgeInterpreter.IsOneWay(tags, vehicle);
+                        bool canBeTraversedOneWay = (!oneWay.HasValue || oneWay.Value == neighbour.Value.Forward);
                         if ((current.From == null || 
                             interpreter.CanBeTraversed(current.From.VertexId, current.VertexId, neighbour.Key)) && // test for turning restrictions.
-                            can_be_traversed_one_way &&
-                            !chosen_vertices.Contains(neighbour.Key))
+                            canBeTraversedOneWay &&
+                            !chosenVertices.Contains(neighbour.Key))
                         { // the neigbour is forward and is not settled yet!
                             // check the labels (if needed).
-                            bool constraints_ok = true;
+                            bool constraintsOk = true;
                             if (interpreter.Constraints != null)
                             { // check if the label is ok.
-                                RoutingLabel neighbour_label = interpreter.Constraints.GetLabelFor(
+                                RoutingLabel neighbourLabel = interpreter.Constraints.GetLabelFor(
                                     this.TagsIndex.Get(neighbour.Value.Tags));
 
                                 // only test labels if there is a change.
-                                if (current_labels.Count == 0 || !neighbour_label.Equals(current_labels[current_labels.Count - 1]))
+                                if (currentLabels.Count == 0 || !neighbourLabel.Equals(currentLabels[currentLabels.Count - 1]))
                                 { // labels are different, test them!
-                                    constraints_ok = interpreter.Constraints.ForwardSequenceAllowed(current_labels,
-                                        neighbour_label);
+                                    constraintsOk = interpreter.Constraints.ForwardSequenceAllowed(currentLabels,
+                                        neighbourLabel);
 
-                                    if (constraints_ok)
+                                    if (constraintsOk)
                                     { // update the labels.
-                                        List<RoutingLabel> neighbour_labels = new List<RoutingLabel>(current_labels);
-                                        neighbour_labels.Add(neighbour_label);
+                                        var neighbourLabels = new List<RoutingLabel>(currentLabels);
+                                        neighbourLabels.Add(neighbourLabel);
 
-                                        labels[neighbour.Key] = neighbour_labels;
+                                        labels[neighbour.Key] = neighbourLabels;
                                     }
                                 }
                                 else
                                 { // set the same label(s).
-                                    labels[neighbour.Key] = current_labels;
+                                    labels[neighbour.Key] = currentLabels;
                                 }
                             }
 
-                            if (constraints_ok)
+                            if (constraintsOk)
                             { // all constraints are validated or there are none.
+                                graph.GetVertex(Convert.ToUInt32(neighbour.Key), out latitude, out longitude);
+                                var neighbourCoordinates = new GeoCoordinate(latitude, longitude);
+
+                                // calculate the weight.
+                                double weightToNeighbour = interpreter.EdgeInterpreter.Weight(tags,
+                                                                vehicle, currentCoordinates, neighbourCoordinates);
+
                                 // calculate neighbours weight.
-                                double total_weight = current.Weight + neighbour.Value.Weight;
+                                double totalWeight = current.Weight + weightToNeighbour;
 
                                 // update the visit list;
-                                PathSegment<long> neighbour_route = new PathSegment<long>(neighbour.Key, total_weight, current);
-                                heap.Push(neighbour_route, (float)neighbour_route.Weight);
+                                var neighbourRoute = new PathSegment<long>(neighbour.Key, totalWeight, current);
+                                heap.Push(neighbourRoute, (float)neighbourRoute.Weight);
                             }
                         }
                     }
@@ -526,26 +533,26 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                     // choose the next vertex.
                     current = heap.Pop();
                     while (current != null &&
-                        chosen_vertices.Contains(current.VertexId))
+                        chosenVertices.Contains(current.VertexId))
                     { // keep dequeuing.
                         current = heap.Pop();
                     }
                     if (current != null)
                     {
-                        chosen_vertices.Add(current.VertexId);
+                        chosenVertices.Add(current.VertexId);
                     }
                 }
                 while (current != null && current.Weight > weight)
                 {
-                    if (return_at_weight)
+                    if (returnAtWeight)
                     { // add all the reached vertices larger than weight to the results.
-                        segments_at_weight.Add(current);
+                        segmentsAtWeight.Add(current);
                     }
 
                     // choose the next vertex.
                     current = heap.Pop();
                     while (current != null &&
-                        chosen_vertices.Contains(current.VertexId))
+                        chosenVertices.Contains(current.VertexId))
                     { // keep dequeuing.
                         current = heap.Pop();
                     }
@@ -563,30 +570,30 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                     PathSegmentVisitList target = targets[idx];
                     if (target.Contains(current.VertexId))
                     { // the current is a target!
-                        PathSegment<long> to_path = target.GetPathTo(current.VertexId);
-                        to_path = to_path.Reverse();
-                        to_path = to_path.ConcatenateAfter(current);
+                        PathSegment<long> toPath = target.GetPathTo(current.VertexId);
+                        toPath = toPath.Reverse();
+                        toPath = toPath.ConcatenateAfter(current);
 
-                        if (stop_at_first)
+                        if (stopAtFirst)
                         { // stop at the first occurance.
-                            segments_to_target[0] = to_path;
-                            return segments_to_target;
+                            segmentsToTarget[0] = toPath;
+                            return segmentsToTarget;
                         }
                         else
                         { // normal one-to-many; add to the result.
                             // check if routing is finished.
-                            if (segments_to_target[idx] == null)
+                            if (segmentsToTarget[idx] == null)
                             { // make sure only the first route is set.
-                                found_targets++;
-                                segments_to_target[idx] = to_path;
-                                if (found_targets == targets.Length)
+                                foundTargets++;
+                                segmentsToTarget[idx] = toPath;
+                                if (foundTargets == targets.Length)
                                 { // routing is finished!
-                                    return segments_to_target.ToArray();
+                                    return segmentsToTarget.ToArray();
                                 }
                             }
-                            else if (segments_to_target[idx].Weight > to_path.Weight)
+                            else if (segmentsToTarget[idx].Weight > toPath.Weight)
                             { // check if the second, third or later is shorter.
-                                segments_to_target[idx] = to_path;
+                                segmentsToTarget[idx] = toPath;
                             }
                         }
                     }
@@ -597,11 +604,11 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             }
 
             // return the result.
-            if (!return_at_weight)
+            if (!returnAtWeight)
             {
-                return segments_to_target.ToArray();
+                return segmentsToTarget.ToArray();
             }
-            return segments_at_weight.ToArray();
+            return segmentsAtWeight.ToArray();
         }
 
         #endregion

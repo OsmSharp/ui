@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace OsmSharp.Tools.Math.AI.Genetic.Operations.Generation
+namespace OsmSharp.Math.AI.Genetic.Operations.Generation
 {
     /// <summary>
     /// Interface abstracting the implementation of the generation of new individuals.

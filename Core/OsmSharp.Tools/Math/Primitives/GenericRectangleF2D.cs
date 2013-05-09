@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.Primitives.Enumerators.Lines;
 using OsmSharp.Tools.Math.Primitives.Enumerators.Points;
 
-namespace OsmSharp.Tools.Math
+namespace OsmSharp.Math
 {
     /// <summary>
     /// Represents an n-dimensional bounding box.

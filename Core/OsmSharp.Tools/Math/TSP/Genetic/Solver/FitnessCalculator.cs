@@ -23,7 +23,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Fitness;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 using OsmSharp.Tools.Math.AI.Genetic;
 
-namespace OsmSharp.Tools.Math.TSP.Genetic.Solver
+namespace OsmSharp.Math.TSP.Genetic.Solver
 {
     /// <summary>
     /// A fintness calculator.

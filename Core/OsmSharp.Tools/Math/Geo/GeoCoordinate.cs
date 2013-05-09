@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.Units.Distance;
 using OsmSharp.Tools.Math.Units.Angle;
 
-namespace OsmSharp.Tools.Math.Geo
+namespace OsmSharp.Math.Geo
 {
     /// <summary>
     /// Represents a standard geo coordinate.

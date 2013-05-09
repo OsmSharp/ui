@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.AI.Genetic.Fitness;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 
-namespace OsmSharp.Tools.Math.AI.Genetic
+namespace OsmSharp.Math.AI.Genetic
 {
     /// <summary>
     /// A class representing a population of individuals.

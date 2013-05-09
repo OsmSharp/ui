@@ -15,37 +15,29 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
+
 using NUnit.Framework;
 using System.Reflection;
-using OsmSharp.Osm.Data.XML.Processor;
-using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Osm.Data.Streams.Filters;
+using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
+using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Router;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Data;
-using OsmSharp.Routing.Osm.Data.Processing;
-using OsmSharp.Osm;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
-using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
+using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.UnitTests;
 
-namespace OsmSharp.Osm.UnitTests.Routing.CH
+namespace OsmSharp.UnitTests.Routing.CH
 {
     /// <summary>
     /// Tests the sparse node ordering CH.
     /// </summary>
     [TestFixture]
-    public class CHEdgeDifferenceRoutingTest : SimpleRoutingTests<RouterPoint, CHEdgeData>
+    public class CHEdgeDifferenceRoutingTest : SimpleRoutingTests<CHEdgeData>
     {
         /// <summary>
         /// Creates an instance of the edge difference tests.
@@ -60,12 +52,12 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// </summary>
         /// <param name="data"></param>
         /// <param name="interpreter"></param>
-        /// <param name="basic_router"></param>
+        /// <param name="basicRouter"></param>
         /// <returns></returns>
-        public override IRouter<RouterPoint> BuildRouter(IBasicRouterDataSource<CHEdgeData> data,
-            IRoutingInterpreter interpreter, IBasicRouter<CHEdgeData> basic_router)
+        public override Router BuildRouter(IBasicRouterDataSource<CHEdgeData> data,
+            IRoutingInterpreter interpreter, IBasicRouter<CHEdgeData> basicRouter)
         {
-            return new Router<CHEdgeData>(data, interpreter, basic_router);
+            return Router.CreateCHFrom(data, basicRouter, interpreter);
         }
 
         /// <summary>
@@ -82,38 +74,37 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// Builds the data.
         /// </summary>
         /// <param name="interpreter"></param>
-        /// <param name="embedded_string"></param>
+        /// <param name="embeddedString"></param>
         /// <returns></returns>
         public override IBasicRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter, 
-            string embedded_string)
+            string embeddedString)
         {
             string key = string.Format("CHEdgeDifference.Routing.IBasicRouterDataSource<CHEdgeData>.OSM.{0}",
-                embedded_string);
-            IBasicRouterDataSource<CHEdgeData> data = StaticDictionary.Get<IBasicRouterDataSource<CHEdgeData>>(
+                embeddedString);
+            var data = StaticDictionary.Get<IBasicRouterDataSource<CHEdgeData>>(
                 key);
             if (data == null)
             {
-                SimpleTagsIndex tags_index = new SimpleTagsIndex();
+                var tagsIndex = new SimpleTagsIndex();
 
                 // do the data processing.
-                DynamicGraphRouterDataSource<CHEdgeData> memory_data =
-                    new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
-                CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
-                    memory_data, interpreter, memory_data.TagsIndex, VehicleEnum.Car);
-                XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
-                    Assembly.GetExecutingAssembly().GetManifestResourceStream(embedded_string));
-                DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-                sorter.RegisterSource(data_processor_source);
-                target_data.RegisterSource(sorter);
-                target_data.Pull();
+                var memoryData = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+                var targetData = new CHEdgeGraphOsmStreamWriter(
+                    memoryData, interpreter, memoryData.TagsIndex, VehicleEnum.Car);
+                var dataProcessorSource = new XmlOsmStreamReader(
+                    Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
+                var sorter = new OsmStreamFilterSort();
+                sorter.RegisterSource(dataProcessorSource);
+                targetData.RegisterSource(sorter);
+                targetData.Pull();
 
                 // do the pre-processing part.
-                INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(memory_data);
-                CHPreProcessor pre_processor = new CHPreProcessor(memory_data,
-                    new EdgeDifference(memory_data, witness_calculator), witness_calculator);
-                pre_processor.Start();
+                var witnessCalculator = new DykstraWitnessCalculator(memoryData);
+                var preProcessor = new CHPreProcessor(memoryData,
+                    new EdgeDifference(memoryData, witnessCalculator), witnessCalculator);
+                preProcessor.Start();
 
-                data = memory_data;
+                data = memoryData;
                 StaticDictionary.Add<IBasicRouterDataSource<CHEdgeData>>(key, data);
             }
             return data;
@@ -217,15 +208,6 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         {
             this.DoTestManyToMany1();
         }
-
-        ///// <summary>
-        ///// Test if the ch router handles connectivity questions correctly.
-        ///// </summary>
-        //[Test]
-        //public void TestCHEdgeDifferenceConnectivity1()
-        //{
-        //    this.DoTestConnectivity1();
-        //}
 
         /// <summary>
         /// Tests a simple shortest route calculation.

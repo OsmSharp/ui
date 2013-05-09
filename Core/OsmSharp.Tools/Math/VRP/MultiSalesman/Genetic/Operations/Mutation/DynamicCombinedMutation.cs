@@ -25,7 +25,7 @@ using OsmSharp.Tools.Math.AI.Genetic;
 using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic;
 
-namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
+namespace OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Mutation
 {
     internal class DynamicCombinedMutation : CombinedMutation<List<Genome>, Problem, Fitness>
     {

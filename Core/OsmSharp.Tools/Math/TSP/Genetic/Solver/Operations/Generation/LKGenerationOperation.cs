@@ -25,7 +25,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 using OsmSharp.Tools.Math.VRP.Core.Routes;
 using OsmSharp.Tools.Math.TSP.LK;
 
-namespace OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation
+namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.Generation
 {
     /// <summary>
     /// A LK generation operation.

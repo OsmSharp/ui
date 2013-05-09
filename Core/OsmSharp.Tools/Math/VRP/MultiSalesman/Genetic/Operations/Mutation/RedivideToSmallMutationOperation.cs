@@ -25,7 +25,7 @@ using OsmSharp.Tools.Math.AI.Genetic.Solvers;
 using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
 using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic;
 
-namespace OsmSharp.Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation
+namespace OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Mutation
 {
     internal class RedivideToSmallMutationOperation : IMutationOperation<List<Genome>, Problem, Fitness>
     {

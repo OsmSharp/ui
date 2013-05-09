@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Tools.Math.VRP.Core;
 
-namespace OsmSharp.Tools.Math.TSP.Problems
+namespace OsmSharp.Math.TSP.Problems
 {
     /// <summary>
     /// A general TSP problem with it's weights in a matrix.

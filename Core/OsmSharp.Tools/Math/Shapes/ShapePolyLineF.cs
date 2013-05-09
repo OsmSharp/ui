@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Tools.Math.Shapes.PrimitivesFactory;
 using OsmSharp.Tools.Math.Shapes.ResultHelpers;
 
-namespace OsmSharp.Tools.Math.Shapes
+namespace OsmSharp.Math.Shapes
 {
     /// <summary>
     /// Polyline shape: represents a line with multiple segments.

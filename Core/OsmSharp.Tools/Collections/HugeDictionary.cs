@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace OsmSharp.Tools.Collections.Huge
+namespace OsmSharp.Collections
 {
     /// <summary>
     /// A dictionary working around the pre .NET 4.5 memory limitations for one object.

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Tools.Math.Geo.Lambert.International.Belgium
+namespace OsmSharp.Math.Geo.Lambert.International.Belgium
 {
     /// <summary>
     /// The belgian 1972 lambert system.

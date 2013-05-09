@@ -15,24 +15,20 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using OsmSharp.Osm.Data.XML.Processor;
 using System.Reflection;
-using OsmSharp.Osm.Data.Core.Processor.Filter.Sort;
+using OsmSharp.Osm.Data.Streams.Filters;
+using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
+using OsmSharp.Routing.CH;
+using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
+using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Osm;
 using OsmSharp.Routing.Osm.Data.Processing;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
-using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
-using OsmSharp.Routing.CH.Routing;
-using OsmSharp.Routing.Router;
 using OsmSharp.Tools.Collections.Tags;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH
@@ -52,41 +48,41 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
         /// Returns a new router.
         /// </summary>
         /// <param name="interpreter"></param>
-        /// <param name="embedded_name"></param>
+        /// <param name="embeddedName"></param>
         /// <returns></returns>
-        public override IRouter<RouterPoint> BuildRouter(IRoutingInterpreter interpreter, string embedded_name)
+        public override Router BuildRouter(IRoutingInterpreter interpreter, string embeddedName)
         {
             if (_data == null)
             {
                 _data = new Dictionary<string, DynamicGraphRouterDataSource<CHEdgeData>>();
             }
             DynamicGraphRouterDataSource<CHEdgeData> data = null;
-            if (!_data.TryGetValue(embedded_name, out data))
+            if (!_data.TryGetValue(embeddedName, out data))
             {
-                SimpleTagsIndex tags_index = new SimpleTagsIndex();
+                var tagsIndex = new SimpleTagsIndex();
 
                 // do the data processing.
                 data =
-                    new DynamicGraphRouterDataSource<CHEdgeData>(tags_index);
-                CHEdgeDataGraphProcessingTarget target_data = new CHEdgeDataGraphProcessingTarget(
+                    new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+                var targetData = new CHEdgeGraphOsmStreamWriter(
                     data, interpreter, data.TagsIndex, VehicleEnum.Car);
-                XmlDataProcessorSource data_processor_source = new XmlDataProcessorSource(
+                var dataProcessorSource = new XmlOsmStreamReader(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(
-                    "OsmSharp.UnitTests.{0}", embedded_name)));
-                DataProcessorFilterSort sorter = new DataProcessorFilterSort();
-                sorter.RegisterSource(data_processor_source);
-                target_data.RegisterSource(sorter);
-                target_data.Pull();
+                    "OsmSharp.UnitTests.{0}", embeddedName)));
+                var sorter = new OsmStreamFilterSort();
+                sorter.RegisterSource(dataProcessorSource);
+                targetData.RegisterSource(sorter);
+                targetData.Pull();
 
                 // do the pre-processing part.
-                CHPreProcessor pre_processor = new CHPreProcessor(data,
+                var preProcessor = new CHPreProcessor(data,
                     new SparseOrdering(data), new DykstraWitnessCalculator(data));
-                pre_processor.Start();
+                preProcessor.Start();
 
-                _data[embedded_name] = data;
+                _data[embeddedName] = data;
             }
-            return new Router<CHEdgeData>(data, interpreter, new CHRouter(
-                data));
+            return Router.CreateCHFrom(data, new CHRouter(
+                data), interpreter);
         }
 
         /// <summary>

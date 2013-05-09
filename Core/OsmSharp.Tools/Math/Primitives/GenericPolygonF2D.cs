@@ -23,7 +23,7 @@ using OsmSharp.Tools.Math.Primitives.Enumerators;
 using OsmSharp.Tools.Math.Primitives.Enumerators.Lines;
 using OsmSharp.Tools.Math.Primitives.Enumerators.Points;
 
-namespace OsmSharp.Tools.Math
+namespace OsmSharp.Math
 {
     /// <summary>
     /// Class representing a polygon.

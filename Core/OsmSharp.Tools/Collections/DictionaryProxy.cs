@@ -22,7 +22,7 @@ using System.Xml.Serialization;
 using System.IO;
 //using System.IO.Compression;
 
-namespace OsmSharp.Tools.Collections
+namespace OsmSharp.Collections
 {
     /// <summary>
     /// Proxy class to permit XML Serialization of generic dictionaries
