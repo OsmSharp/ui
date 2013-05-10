@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Ionic.Zlib;
 using OsmSharp.Osm;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
@@ -34,6 +35,11 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         private const int Zoom = 15;
 
         /// <summary>
+        /// Holds the compression flag.
+        /// </summary>
+        private readonly bool _compress;
+
+        /// <summary>
         /// Holds the runtime type model.
         /// </summary>
         private readonly RuntimeTypeModel _runtimeTypeModel;
@@ -41,8 +47,11 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         /// <summary>
         /// Creates a new v2 serializer.
         /// </summary>
-        public V2RoutingSerializer()
+        /// <param name="compress">Flag telling this serializer to compress it's data.</param>
+        public V2RoutingSerializer(bool compress)
         {
+            _compress = compress;
+
             RuntimeTypeModel typeModel = TypeModel.Create();
             typeModel.Add(typeof(SerializableGraphTileMetas), true); // the tile metadata.
             typeModel.Add(typeof(SerializableGraphTile), true); // one tile of data.
@@ -164,7 +173,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
                 }
             }
 
-            // LAYOUT OF V2: {HEADER}{#tiles(4byte)}{tilesMetaEnd(8byte)}{tiles-meta-data-xxxxxxx}{tiles-data}
+            // LAYOUT OF V2: {HEADER}{compressionflag(1byte)}{#tiles(4byte)}{tilesMetaEnd(8byte)}{tiles-meta-data-xxxxxxx}{tiles-data}
             // {HEADER} : already written before this method.
             // {#tiles(4byte)} : the number of tiles in this file (calculate the offset of the {tiles-data} 
             //                   section using (TileMetaSize * dataPerTile.Count + 4 + 8)
@@ -173,7 +182,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
             // {tiles-data} : the actual tile data.
 
             // calculate the space needed for the tile offset.
-            const long tileMetaOffset = 4 + 8;
+            const long tileMetaOffset = 1 + 4 + 8;
             long tileOffset = TileMetaSize * dataPerTile.Count +
                 tileMetaOffset; // all tile metadata + a tile count + tags offset.
 
@@ -206,7 +215,19 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
                 }
 
                 // serialize the tile.
-                _runtimeTypeModel.Serialize(stream, serializableGraphTile);
+                if (!_compress)
+                { // compresses the file.
+                    _runtimeTypeModel.Serialize(stream, serializableGraphTile);
+                }
+                else 
+                { // first compress the data, then write.
+                    var uncompressed = new MemoryStream();
+                    _runtimeTypeModel.Serialize(uncompressed, serializableGraphTile);
+                    var uncompressedBuffer = uncompressed.ToArray();
+
+                    byte[] compressed = GZipStream.CompressBuffer(uncompressedBuffer);
+                    stream.Write(compressed, 0, compressed.Length);
+                }
 
                 // calculate the length of the data that was just serialized.
                 metas.Length[metasIndex] = (int)(stream.Position - metas.Offset[metasIndex]);
@@ -221,6 +242,8 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
 
             // save all the offsets.
             stream.Seek(0, SeekOrigin.Begin);
+            byte[] compressionFlag = new[] { (byte)(_compress ? 1 : 0) };
+            stream.Write(compressionFlag, 0, 1);
             byte[] tileCountBytes = BitConverter.GetBytes(metas.TileX.Length);
             stream.Write(tileCountBytes, 0, tileCountBytes.Length); // 4 bytes
             byte[] tileMetaEndBytes = BitConverter.GetBytes(tileMetaEnd);
@@ -240,6 +263,11 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         {
             // serialize all tile meta data.
             stream.Seek(0, SeekOrigin.Begin);
+
+            var compressionFlag = new byte[1];
+            stream.Read(compressionFlag, 0, 1);
+            bool decompress = (compressionFlag[0] == (byte) 1);
+
             var tileCountBytes = new byte[4];
             stream.Read(tileCountBytes, 0, tileCountBytes.Length);
             var tileCount = BitConverter.ToInt32(tileCountBytes, 0);
@@ -254,7 +282,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
                     typeof(SerializableGraphTileMetas));
 
             // create the datasource.
-            var routerDataSource = new V2RouterDataSource(stream, metas, Zoom,
+            var routerDataSource = new V2RouterDataSource(stream, decompress, metas, Zoom,
                     this, 1000);
             if (!lazy)
             {
@@ -276,9 +304,22 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         /// <param name="stream"></param>
         /// <param name="offset"></param>
         /// <param name="length"></param>
+        /// <param name="decompress"></param>
         /// <returns></returns>
-        internal SerializableGraphTile DeserializeTile(Stream stream, long offset, int length)
+        internal SerializableGraphTile DeserializeTile(Stream stream, long offset, int length, bool decompress)
         {
+            if (decompress)
+            { // decompress the data.
+                var buffer = new byte[length];
+                stream.Seek(offset, SeekOrigin.Begin);
+                stream.Read(buffer, 0, length);
+
+                var memoryStream = new MemoryStream(buffer);
+                var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
+                return (SerializableGraphTile) _runtimeTypeModel.Deserialize(gZipStream
+                                                                             , null,
+                                                                             typeof (SerializableGraphTile));
+            }
             return (SerializableGraphTile)_runtimeTypeModel.Deserialize(
                 new CappedStream(stream, offset, length), null,
                     typeof(SerializableGraphTile));

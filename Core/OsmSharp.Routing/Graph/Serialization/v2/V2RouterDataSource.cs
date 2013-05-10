@@ -45,12 +45,13 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         /// Creates a new router data source.
         /// </summary>
         /// <param name="stream"></param>
+        /// <param name="compressed"></param>
         /// <param name="tileMetas"></param>
         /// <param name="zoom"></param>
         /// <param name="v1RoutingSerializer"></param>
         /// <param name="initialCapacity"></param>
         internal V2RouterDataSource(
-            Stream stream,
+            Stream stream, bool compressed,
             V2RoutingSerializer.SerializableGraphTileMetas tileMetas,
             int zoom, V2RoutingSerializer v1RoutingSerializer,
             int initialCapacity = 1000)
@@ -78,6 +79,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
             _zoom = zoom;
             _routingSerializer = v1RoutingSerializer;
             _stream = stream;
+            _compressed = compressed;
         }
 
         /// <summary>
@@ -278,6 +280,11 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         private readonly Stream _stream;
 
         /// <summary>
+        /// Holds flag indicating that the data in the stream is compressed.
+        /// </summary>
+        private bool _compressed;
+
+        /// <summary>
         /// Holds the routing serializer.
         /// </summary>
         private readonly V2RoutingSerializer _routingSerializer;
@@ -365,7 +372,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
                 if (_graphTileMetas.TryGetValue(tile, out meta))
                 { // the meta data is available.
                     V2RoutingSerializer.SerializableGraphTile tileData =
-                        _routingSerializer.DeserializeTile(_stream, meta.Offset, meta.Length);
+                        _routingSerializer.DeserializeTile(_stream, meta.Offset, meta.Length, _compressed);
                     double top = tile.TopLeft.Latitude;
                     double left = tile.TopLeft.Longitude;
                     for(int vertexIdx = 0; vertexIdx < tileData.Ids.Length; vertexIdx++)
