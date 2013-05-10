@@ -112,6 +112,15 @@
     <EmbeddedResource Include="test.osm" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="images\parking.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="images\bus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="images\postbox.png" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Core\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
       <Name>OsmSharp.Osm</Name>
@@ -128,15 +137,6 @@
       <Project>{1433D177-B342-463C-8128-8399720A35AF}</Project>
       <Name>OsmSharp.WinForms.UI</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="images\parking.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="images\bus.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="images\postbox.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

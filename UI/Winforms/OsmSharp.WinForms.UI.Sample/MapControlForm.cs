@@ -58,7 +58,8 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // initialize map.
             var map = new Map();
-            map.AddLayer(new OsmRawLayer(dataSource, mapCSSInterpreter));
+            //map.AddLayer(new OsmRawLayer(dataSource, mapCSSInterpreter));
+            map.AddLayer(new TileLayer(@"http://tile.openstreetmap.org/{0}/{1}/{2}.png"));
 
             // set control properties.
             this.mapControl1.Map = map;

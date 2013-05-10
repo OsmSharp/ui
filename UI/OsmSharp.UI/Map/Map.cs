@@ -39,6 +39,17 @@ namespace OsmSharp.UI.Map
         }
 
         /// <summary>
+        /// Delegate for map changes.
+        /// </summary>
+        /// <param name="?"></param>
+        public delegate void MapChangedDelegate();
+
+        /// <summary>
+        /// Event raised when the map content changed.
+        /// </summary>
+        public event MapChangedDelegate MapChanged; 
+
+        /// <summary>
         /// A delegate for layer changes.
         /// </summary>
         /// <param name="sender"></param>
@@ -136,7 +147,10 @@ namespace OsmSharp.UI.Map
         /// <param name="sender"></param>
         void layer_LayerChanged(ILayer sender)
         {
-
+            if (MapChanged != null)
+            {
+                this.MapChanged();
+            }
         }
 
         #endregion

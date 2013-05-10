@@ -43,5 +43,22 @@ namespace OsmSharp.UnitTests.Tools
             Assert.AreEqual(coordinate.Longitude, reProjected.Longitude, 0.0001);
             Assert.AreEqual(coordinate.Latitude, reProjected.Latitude, 0.0001);
         }
+
+        /// <summary>
+        /// Tests simple web mercator projection zoom level zoom factor conversion.
+        /// </summary>
+        [Test]
+        public void TestSimpleWebMercatorZoomLevel()
+        {
+            var mercator = new WebMercator();
+
+            for (int orignalLevel = 0; orignalLevel < 20; orignalLevel++)
+            {
+                double zoomFactor = mercator.ToZoomFactor(orignalLevel);
+                double zoomLevel = mercator.ToZoomLevel(zoomFactor);
+
+                Assert.AreEqual(orignalLevel, zoomLevel, 0.001);
+            }
+        }
     }
 }

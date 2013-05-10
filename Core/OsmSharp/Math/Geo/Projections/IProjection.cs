@@ -61,6 +61,13 @@ namespace OsmSharp.Math.Geo.Projections
         /// </summary>
         /// <param name="zoomLevel"></param>
         /// <returns></returns>
-	    double ToZoomFactor(double zoomLevel);
+        double ToZoomFactor(double zoomLevel);
+
+        /// <summary>
+        /// Converts the given zoom factor to a given zoom level for this projection.
+        /// </summary>
+        /// <param name="zoomFactor"></param>
+        /// <returns></returns>
+        double ToZoomLevel(double zoomFactor);
 	}
 }

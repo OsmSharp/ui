@@ -123,5 +123,15 @@ namespace OsmSharp.Math.Geo.Projections
         {
             return System.Math.Pow(2, zoomLevel - DefaultZoom) * 256.0;
         }
+
+        /// <summary>
+        /// Returns the scale for the given zoomFactor.
+        /// </summary>
+        /// <param name="zoomFactor"></param>
+        /// <returns></returns>
+        public double ToZoomLevel(double zoomFactor)
+        {
+            return System.Math.Log(zoomFactor/256.0, 2) + DefaultZoom;
+        }
     }
 }

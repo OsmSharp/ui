@@ -44,9 +44,34 @@ namespace OsmSharp.WinForms.UI
         public float ZoomLevel { get; set; }
 
         /// <summary>
+        /// Holds the map.
+        /// </summary>
+        private Map _map;
+
+        /// <summary>
         /// Gets/sets the map.
         /// </summary>
-        public Map Map { get; set; }
+        public Map Map { get { return _map; }set
+        {
+            if (_map != null)
+            {
+                _map.MapChanged -= new OsmSharp.UI.Map.Map.MapChangedDelegate(_map_MapChanged);
+            }
+            _map = value;
+            if (_map != null)
+            {
+                _map.MapChanged += new OsmSharp.UI.Map.Map.MapChangedDelegate(_map_MapChanged);
+            }
+        }}
+
+        /// <summary>
+        /// Called when the map has changed.
+        /// </summary>
+        void _map_MapChanged()
+        {
+            // invalidate.
+            this.Invalidate();
+        }
 
         /// <summary>
         /// Raises the OnLoad event.

@@ -57,6 +57,7 @@ namespace OsmSharp.UI.Map
                 ILayer layer = map[layerIdx];
 
                 // render the scene for this layer.
+                // TODO: only render the layers with the correct min/max zooms.
                 _renderer.Render(target, layer.Scene, view);
             }
         }
