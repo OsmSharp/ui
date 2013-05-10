@@ -15,15 +15,13 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using OsmSharp.Osm.Data.Core.API;
+using OsmSharp.Osm.API;
 using OsmSharp.Osm.Simple;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.UnitTests.API
 {

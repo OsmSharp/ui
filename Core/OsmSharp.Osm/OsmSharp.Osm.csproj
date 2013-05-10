@@ -194,9 +194,9 @@
   <ItemGroup>
     <Compile Include="Change.cs" />
     <Compile Include="ChangeSet.cs" />
-    <Compile Include="Data\API\APICapabilities.cs" />
-    <Compile Include="Data\API\APIConnection.cs" />
-    <Compile Include="Data\API\APIException.cs" />
+    <Compile Include="API\APICapabilities.cs" />
+    <Compile Include="API\APIConnection.cs" />
+    <Compile Include="API\APIException.cs" />
     <Compile Include="Data\Cache\DataSourceCache.cs" />
     <Compile Include="Data\Cache\DataSourceQuadTree.cs" />
     <Compile Include="Data\Cache\DataSourceQuadTreeNode.cs" />

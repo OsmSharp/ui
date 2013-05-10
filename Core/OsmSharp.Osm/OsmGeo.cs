@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Shapes;
-using OsmSharp.Tools.Collections;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Shapes;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Osm
 {

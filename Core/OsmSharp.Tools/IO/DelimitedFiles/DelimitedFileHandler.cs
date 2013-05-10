@@ -15,15 +15,16 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using OsmSharp.DelimitedFiles;
 using OsmSharp.Progress;
-using OsmSharp.Tools.Progress;
 
-namespace OsmSharp.DelimitedFiles
+namespace OsmSharp.IO.DelimitedFiles
 {
     /// <summary>
     /// Handles common delimited file functions.

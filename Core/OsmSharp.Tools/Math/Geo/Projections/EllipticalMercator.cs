@@ -1,5 +1,5 @@
 //using System;
-//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Math.Geo;
 
 //namespace OsmSharp.Math.Geo.Projections
 //{

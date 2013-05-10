@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Math.TSP;
 using System.IO;
 using System.Text.RegularExpressions;
-using OsmSharp.Tools.Math.TSP.Problems;
-using OsmSharp.Tools.Math.VRP.Core;
+using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.VRP.Core;
 
 namespace OsmSharp.TSPLIB.Problems
 {

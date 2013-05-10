@@ -15,26 +15,20 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.AI.Genetic.Selectors;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.TSP.Genetic.Solver;
+using OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver;
+using OsmSharp.Math.TSP.Genetic.Solver.Operations.Generation;
+using OsmSharp.Math.TSP.Genetic.Solver.Operations.Mutation;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
 using OsmSharp.Progress;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.AI.Genetic.Selectors;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
-using OsmSharp.Tools.Math.Random;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Mutation;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
-using OsmSharp.Tools.Progress;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
 
 namespace OsmSharp.Math.TSP.Genetic
 {
@@ -126,7 +120,7 @@ namespace OsmSharp.Math.TSP.Genetic
         /// </summary>
         /// <param name="problem"></param>
         /// <returns></returns>
-        protected override IRoute DoSolve(OsmSharp.Tools.Math.TSP.Problems.IProblem problem)
+        protected override IRoute DoSolve(OsmSharp.Math.TSP.Problems.IProblem problem)
         {
             //int population_size = 10;
             //if (problem.Size < 100)

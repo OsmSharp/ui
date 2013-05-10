@@ -15,11 +15,8 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Tools.Collections.Huge;
+
+using OsmSharp.Collections;
 using NUnit.Framework;
 
 namespace OsmSharp.UnitTests.Tools
@@ -37,41 +34,41 @@ namespace OsmSharp.UnitTests.Tools
         public void TestHugeDictionary()
         {
             // create the huge dictionary.
-            HugeDictionary<long, long> huge_dictionary = new HugeDictionary<long, long>();
+            var hugeDictionary = new HugeDictionary<long, long>();
 
             for (long idx = 0; idx < 10000; idx++)
             {
-                huge_dictionary.Add(idx, idx);
+                hugeDictionary.Add(idx, idx);
             }
 
-            Assert.AreEqual(10000, huge_dictionary.Count);
-            Assert.AreEqual(1, huge_dictionary.CountDictionaries);
+            Assert.AreEqual(10000, hugeDictionary.Count);
+            Assert.AreEqual(1, hugeDictionary.CountDictionaries);
 
             for (long idx = 0; idx < 10000; idx++)
             {
-                huge_dictionary.Remove(idx);
+                hugeDictionary.Remove(idx);
             }
 
-            Assert.AreEqual(0, huge_dictionary.Count);
-            Assert.AreEqual(1, huge_dictionary.CountDictionaries);
+            Assert.AreEqual(0, hugeDictionary.Count);
+            Assert.AreEqual(1, hugeDictionary.CountDictionaries);
 
-            huge_dictionary = new HugeDictionary<long, long>();
+            hugeDictionary = new HugeDictionary<long, long>();
 
             for (long idx = 0; idx < 10000000; idx++)
             {
-                huge_dictionary.Add(idx, idx);
+                hugeDictionary.Add(idx, idx);
             }
 
-            Assert.AreEqual(10000000, huge_dictionary.Count);
-            Assert.AreEqual(10, huge_dictionary.CountDictionaries);
+            Assert.AreEqual(10000000, hugeDictionary.Count);
+            Assert.AreEqual(10, hugeDictionary.CountDictionaries);
 
             for (long idx = 0; idx < 10000000; idx++)
             {
-                huge_dictionary.Remove(idx);
+                hugeDictionary.Remove(idx);
             }
 
-            Assert.AreEqual(0, huge_dictionary.Count);
-            Assert.AreEqual(1, huge_dictionary.CountDictionaries);
+            Assert.AreEqual(0, hugeDictionary.Count);
+            Assert.AreEqual(1, hugeDictionary.CountDictionaries);
         }
     }
 }

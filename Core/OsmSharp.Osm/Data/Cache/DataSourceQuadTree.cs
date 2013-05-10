@@ -19,8 +19,8 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using OsmSharp.Tools.Math.Geo;
-//using OsmSharp.Tools.Math.Structures.QTree;
+//using OsmSharp.Math.Geo;
+//using OsmSharp.Math.Structures.QTree;
 
 //namespace OsmSharp.Osm.Data.Cache
 //{

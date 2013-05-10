@@ -19,10 +19,10 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Math.Geo;
 //using OsmSharp.Osm.Simple;
 //using OsmSharp.Osm.Data.Core.Processor.ChangeSets;
-//using OsmSharp.Tools.Collections;
+//using OsmSharp.Collections;
 
 //namespace OsmSharp.Osm.Data.Core.Processor.Filter
 //{
@@ -100,8 +100,8 @@
 //                if (changes_inside.Key.Changes.Count > 0)
 //                {
 //                    // some data in this changeset is ok!
-//                    OsmSharp.Tools.Output.OutputStreamHost.WriteLine(string.Empty);
-//                    OsmSharp.Tools.Output.OutputStreamHost.Write("Changeset accepted:");
+//                    OsmSharp.Output.OutputStreamHost.WriteLine(string.Empty);
+//                    OsmSharp.Output.OutputStreamHost.Write("Changeset accepted:");
 
 //                    // set the converted changeset as the current one!
 //                    _current = changes_inside.Key;
@@ -152,7 +152,7 @@
 //                        SimpleNode node = geo as SimpleNode;
 //                        GeoCoordinate coord = new GeoCoordinate(node.Latitude.Value, node.Longitude.Value);
 
-//                        if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { coord }))
+//                        if (_box.IsInsideAny(new OsmSharp.Math.PointF2D[] { coord }))
 //                        {
 //                            nodes_changed.Add(node);
 //                            nodes_inside.Add(node.Id.Value);
@@ -209,7 +209,7 @@
 //                            if (node != null)
 //                            { // only if the node is found
 //                                changes_coordinates.Add(node.Coordinate);
-//                                if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { node.Coordinate }))
+//                                if (_box.IsInsideAny(new OsmSharp.Math.PointF2D[] { node.Coordinate }))
 //                                {
 //                                    changes_coordinates.Add(node.Coordinate);
 //                                    ways_changed.Add(geo);
@@ -231,7 +231,7 @@
 //                        OsmSharp.Osm.Node node = _data_source.GetNode(node_id);
 //                        if (node != null)
 //                        { // only if the node is found
-//                            if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { node.Coordinate }))
+//                            if (_box.IsInsideAny(new OsmSharp.Math.PointF2D[] { node.Coordinate }))
 //                            {
 //                                changes_coordinates.Add(node.Coordinate);
 //                                ways_changed.Add(geo);
@@ -323,7 +323,7 @@
 //                        SimpleNode node = geo as SimpleNode;
 //                        GeoCoordinate coord = new GeoCoordinate(node.Latitude.Value, node.Longitude.Value);
                         
-//                        if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { coord }))
+//                        if (_box.IsInsideAny(new OsmSharp.Math.PointF2D[] { coord }))
 //                        {
 //                            return true;
 //                        }
@@ -347,7 +347,7 @@
 //                        {
 //                            if (node != null)
 //                            { // only if the node is found
-//                                if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { node.Coordinate }))
+//                                if (_box.IsInsideAny(new OsmSharp.Math.PointF2D[] { node.Coordinate }))
 //                                {
 //                                    return true;
 //                                }
@@ -414,7 +414,7 @@
 
 //                            if (node != null)
 //                            { // only if the node is found
-//                                if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { node.Coordinate }))
+//                                if (_box.IsInsideAny(new OsmSharp.Math.PointF2D[] { node.Coordinate }))
 //                                {
 //                                    nodes_inside.Add(node.Id);
 //                                    return true;
@@ -444,7 +444,7 @@
 //                            { // only if the node is found
 //                                foreach (Osm.Node node in way.Nodes)
 //                                {
-//                                    if (_box.IsInsideAny(new OsmSharp.Tools.Math.PointF2D[] { node.Coordinate }))
+//                                    if (_box.IsInsideAny(new OsmSharp.Math.PointF2D[] { node.Coordinate }))
 //                                    {
 //                                        ways_inside.Add(way.Id);
 //                                        nodes_inside.Add(node.Id);

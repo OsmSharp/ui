@@ -18,27 +18,27 @@
 
 using NUnit.Framework;
 using System.Reflection;
-using OsmSharp.Osm.Data.PBF.Processor;
 using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Data.Xml.Processor;
 
-namespace OsmSharp.UnitTests.Data.Processing
+namespace OsmSharp.UnitTests.Data.Streams
 {
     /// <summary>
-    /// Contains tests for the PBF osm streams.
+    /// Summary description for XmlDataProcessorSourceTests
     /// </summary>
     [TestFixture]
-    public class PBFOsmStreamsTests
+    public class XmlDataProcessorSourceTests
     {
         /// <summary>
-        /// A regression test on resetting a PBF osm stream.
+        /// A regression test in resetting and XML data source.
         /// </summary>
         [Test]
-        public void PBFOsmStreamReaderReset()
+        public void XmlDataProcessorSourceReset()
         {
             // generate the source.
-            var source = new PBFOsmStreamReader(
+            var source = new XmlOsmStreamReader(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.UnitTests.api.osm.pbf"));
+                    "OsmSharp.UnitTests.api.osm"));
 
             // pull the data out.
             var target = new OsmStreamWriterEmpty();

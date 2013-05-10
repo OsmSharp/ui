@@ -15,27 +15,20 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.VRP.Core;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
-using OsmSharp.Tools.Math.AI.Genetic.Selectors;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
-using OsmSharp.Tools.Math.Random;
-using System.IO;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.Units.Time;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.AI.Genetic.Selectors;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.Random;
 using System.Globalization;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
-using OsmSharp.Routing;
 using OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.Mutation;
-using OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.Generation;
-using OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
 {
@@ -145,7 +138,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
         {
             _customers = problem.Customers;
 
-            //float[] solutions = OsmSharp.Tools.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
+            //float[] solutions = OsmSharp.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
             //    problem, _customers);
 
             generations = 0;
@@ -153,10 +146,10 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
             _max_generations = 10000000;
 
             // calculate one tsp solution.
-            //Tools.Math.TSP.ISolver tsp_solver = new OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic.EdgeAssemblyCrossOverSolver(_population, _stagnation,
-            //         new OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation._3OptGenerationOperation(),
-            //          new OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.EdgeAssemblyCrossover(30,
-            //                 OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver.EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
+            //Tools.Math.TSP.ISolver tsp_solver = new OsmSharp.Math.TSP.EdgeAssemblyGenetic.EdgeAssemblyCrossOverSolver(_population, _stagnation,
+            //         new OsmSharp.Math.TSP.Genetic.Solver.Operations.Generation._3OptGenerationOperation(),
+            //          new OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver.EdgeAssemblyCrossover(30,
+            //                 OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver.EdgeAssemblyCrossover.EdgeAssemblyCrossoverSelectionStrategyEnum.SingleRandom,
             //                 true));
             //IRoute tsp_solution = tsp_solver.Solve(new OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement.TSPProblem(
             //    problem));

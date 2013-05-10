@@ -15,21 +15,23 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Net;
 using System.IO;
+using OsmSharp.Osm.Data.Core.API;
 using OsmSharp.Osm.Xml.v0_6;
 using OsmSharp.Osm.Simple;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Xml.Sources;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Xml.Sources;
 using OsmSharp.Osm.Xml;
 using System.Xml;
 using System.Xml.Serialization;
+using OsmSharp.Math.Geo;
 
-namespace OsmSharp.Osm.Data.Core.API
+namespace OsmSharp.Osm.API
 {
     /// <summary>
     /// Represents an osm api instance.
@@ -39,12 +41,12 @@ namespace OsmSharp.Osm.Data.Core.API
         /// <summary>
         /// Holds a username.
         /// </summary>
-        private string _user;
+        private readonly string _user;
 
         /// <summary>
         /// Holds the password.
         /// </summary>
-        private string _pass;
+        private readonly string _pass;
 
         /// <summary>
         /// Creates a new api instance.
@@ -82,9 +84,9 @@ namespace OsmSharp.Osm.Data.Core.API
             this.SetBasicAuthHeader(request);
             HttpWebResponse response;
             Encoding enc;
-            StreamReader response_stream;
-            string response_string;
-            Stream request_stream;
+            StreamReader responseStream;
+            string responseString;
+            Stream requestStream;
             switch (method)
             {
                 case Method.PUT:
@@ -94,24 +96,24 @@ namespace OsmSharp.Osm.Data.Core.API
                     request.ContentLength = data.Length; // set content length.
 
                     // get the request stream and write the data.
-                    request_stream = request.GetRequestStream();
-                    request_stream.Write(data, 0, data.Length);
-                    request_stream.Close();
+                    requestStream = request.GetRequestStream();
+                    requestStream.Write(data, 0, data.Length);
+                    requestStream.Close();
 
                     // get the response.
                     response = (HttpWebResponse)request.GetResponse();
                     enc = System.Text.Encoding.GetEncoding(1252);
-                    response_stream =
+                    responseStream =
                        new StreamReader(response.GetResponseStream(), enc);
-                    response_string = response_stream.ReadToEnd();
+                    responseString = responseStream.ReadToEnd();
 
                     // close everything.
                     response.Close();
-                    response_stream.Close();
+                    responseStream.Close();
 
-                    return response_string;
+                    return responseString;
                 case Method.GET:
-                    response_string = string.Empty;
+                    responseString = string.Empty;
                     try
                     {
                         request.Method = "GET";
@@ -119,13 +121,13 @@ namespace OsmSharp.Osm.Data.Core.API
                         // get the response.
                         response = (HttpWebResponse)request.GetResponse();
                         enc = System.Text.Encoding.GetEncoding(1252);
-                        response_stream =
+                        responseStream =
                            new StreamReader(response.GetResponseStream(), enc);
-                        response_string = response_stream.ReadToEnd();
+                        responseString = responseStream.ReadToEnd();
 
                         // close everything.
                         response.Close();
-                        response_stream.Close();
+                        responseStream.Close();
                     }
                     catch (WebException ex)
                     {
@@ -149,7 +151,7 @@ namespace OsmSharp.Osm.Data.Core.API
                         }
                     }
 
-                    return response_string;
+                    return responseString;
                 case Method.DELETE:
                     request.Method = "DELETE";
 
@@ -157,22 +159,22 @@ namespace OsmSharp.Osm.Data.Core.API
                     request.ContentLength = data.Length; // set content length.
 
                     // get the request stream and write the data.
-                    request_stream = request.GetRequestStream();
-                    request_stream.Write(data, 0, data.Length);
-                    request_stream.Close();
+                    requestStream = request.GetRequestStream();
+                    requestStream.Write(data, 0, data.Length);
+                    requestStream.Close();
 
                     // get the response.
                     response = (HttpWebResponse)request.GetResponse();
                     enc = System.Text.Encoding.GetEncoding(1252);
-                    response_stream =
+                    responseStream =
                        new StreamReader(response.GetResponseStream(), enc);
-                    response_string = response_stream.ReadToEnd();
+                    responseString = responseStream.ReadToEnd();
 
                     // close everything.
                     response.Close();
-                    response_stream.Close();
+                    responseStream.Close();
 
-                    return response_string;
+                    return responseString;
                 default:
                     throw new NotSupportedException(string.Format("Method {0} not supported!",
                         method.ToString()));
@@ -271,7 +273,7 @@ namespace OsmSharp.Osm.Data.Core.API
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public List<SimpleOsmGeo> BoundingBoxGet(Tools.Math.Geo.GeoCoordinateBox box)
+        public List<SimpleOsmGeo> BoundingBoxGet(GeoCoordinateBox box)
         {
             string response = this.DoApiCall(false, string.Format(
                 "/api/0.6/map?bbox={0},{1},{2},{3}", 

@@ -20,12 +20,11 @@ using System;
 using System.Net;
 using System.Text;
 using System.Threading;
-using OsmSharp.Tools.Xml;
-using OsmSharp.Tools.Xml.Nominatim.Reverse.v1;
-using OsmSharp.Tools.Xml.Sources;
-using OsmSharp.Tools.Xml.Nominatim.Search;
-using OsmSharp.Tools.Xml.Nominatim.Search.v1;
 using OsmSharp.Xml;
+using OsmSharp.Xml.Nominatim.Reverse.v1;
+using OsmSharp.Xml.Sources;
+using OsmSharp.Xml.Nominatim.Search;
+using OsmSharp.Xml.Nominatim.Search.v1;
 
 namespace OsmSharp.GeoCoding.Nominatim
 {
@@ -112,9 +111,9 @@ namespace OsmSharp.GeoCoding.Nominatim
             var res = new GeoCoderResult();
             res.Accuracy = AccuracyEnum.UnkownLocationLevel;
 
-            if (search_doc.Search is OsmSharp.Tools.Xml.Nominatim.Search.v1.searchresults)
+            if (search_doc.Search is OsmSharp.Xml.Nominatim.Search.v1.searchresults)
             {
-                searchresults result_v1 = search_doc.Search as OsmSharp.Tools.Xml.Nominatim.Search.v1.searchresults;
+                searchresults result_v1 = search_doc.Search as OsmSharp.Xml.Nominatim.Search.v1.searchresults;
                 if (result_v1.place != null && result_v1.place.Length > 0)
                 {
                     double latitude;
@@ -153,9 +152,9 @@ namespace OsmSharp.GeoCoding.Nominatim
                     }
                 }
             }
-            else if (search_doc.Search is OsmSharp.Tools.Xml.Nominatim.Reverse.v1.reversegeocode)
+            else if (search_doc.Search is OsmSharp.Xml.Nominatim.Reverse.v1.reversegeocode)
             {
-                reversegeocode result_v1 = search_doc.Search as OsmSharp.Tools.Xml.Nominatim.Reverse.v1.reversegeocode;
+                reversegeocode result_v1 = search_doc.Search as OsmSharp.Xml.Nominatim.Reverse.v1.reversegeocode;
                 if (result_v1.result != null && result_v1.result.Length > 0)
                 {
                     double latitude;

@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Osm;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Osm.UnitTests.Tiles
 {

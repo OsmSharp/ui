@@ -29,7 +29,7 @@ using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Data.Processing;
-using OsmSharp.Tools.Collections.Tags;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm.UnitTests.Routing.CH
 {

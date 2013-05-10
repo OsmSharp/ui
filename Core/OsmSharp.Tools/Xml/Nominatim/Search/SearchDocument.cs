@@ -118,7 +118,7 @@ namespace OsmSharp.Xml.Nominatim.Search
         private void FindVersionFromObject()
         {
             _version = SearchVersion.Unknown;
-            if (_search_object is OsmSharp.Tools.Xml.Nominatim.Search.v1.searchresults)
+            if (_search_object is OsmSharp.Xml.Nominatim.Search.v1.searchresults)
             {
                 _version = SearchVersion.Searchv1;
             }
@@ -164,7 +164,7 @@ namespace OsmSharp.Xml.Nominatim.Search
                 switch (_version)
                 {
                     case SearchVersion.Searchv1:
-                        version_type = typeof(OsmSharp.Tools.Xml.Nominatim.Search.v1.searchresults);
+                        version_type = typeof(OsmSharp.Xml.Nominatim.Search.v1.searchresults);
                         break;
                     case SearchVersion.Unknown:
                         throw new XmlException("Version could not be determined!");
@@ -189,7 +189,7 @@ namespace OsmSharp.Xml.Nominatim.Search
                 switch (_version)
                 {
                     case SearchVersion.Searchv1:
-                        version_type = typeof(OsmSharp.Tools.Xml.Nominatim.Search.v1.searchresults);
+                        version_type = typeof(OsmSharp.Xml.Nominatim.Search.v1.searchresults);
                         break;
                     case SearchVersion.Unknown:
                         throw new XmlException("Version could not be determined!");

@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using OsmSharp.Tools.Collections.Tags;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.UnitTests.Tools.Tags
 {

@@ -14,8 +14,8 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Routers;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.UnitTests.Routing.Serialization
 {

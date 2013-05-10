@@ -19,15 +19,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.VRP.Core;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
-using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Math.Units.Time;
+using OsmSharp.Math.VRP.Core;
+using OsmSharp.Math.VRP.Core.BestPlacement;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.TSP;
 using OsmSharp.Routing;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement.InsertionCosts;
-using OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt;
+using OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts;
+using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
 using OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
@@ -89,7 +89,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
 
             _intraImprovements = new List<IImprovement>();
             //_intra_improvements.Add(
-            //    new OsmSharp.Tools.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver());
+            //    new OsmSharp.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver());
             _intraImprovements.Add(
                 new HillClimbing3OptSolver(true, true));
 
@@ -347,7 +347,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
                     double difference;
                     if (improvementOperation.Improve(problem, route, out difference))
                     { // there was an improvement.
-                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Intra-improvement found {0} {1}->{2}",
+                        OsmSharp.Output.OutputStreamHost.WriteLine("Intra-improvement found {0} {1}->{2}",
                             improvementOperation.Name, newWeight, newWeight + difference);
 
                         // check if the route is valid.
@@ -424,7 +424,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
                             throw new Exception("this is not an improvement!");
                         }
 
-                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
+                        OsmSharp.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
                             route1Idx, route2Idx, improvementOperation.Name, totalBefore, totalAfter);
 
                         // recalculate weights.
@@ -439,7 +439,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
                         improvement = true;
                         globalImprovement = true;
 
-                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2}",
+                        OsmSharp.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2}",
                             route1Idx, route2Idx, improvementOperation.Name);
 
                         // check if the route is valid.

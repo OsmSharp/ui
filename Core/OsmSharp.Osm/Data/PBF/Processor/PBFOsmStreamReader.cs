@@ -23,7 +23,7 @@ using System.IO;
 using OsmSharp.Osm.Data.PBF.Dense;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Osm.Simple;
-using OsmSharp.Tools.Collections.Tags;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm.Data.PBF.Processor
 {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Tools.Collections;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Structures;
-using OsmSharp.Tools.Math;
-using OsmSharp.Tools.Math.Structures.QTree;
+using OsmSharp.Collections;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Structures;
+using OsmSharp.Math;
+using OsmSharp.Math.Structures.QTree;
 
 namespace OsmSharp.Routing.Graph
 {

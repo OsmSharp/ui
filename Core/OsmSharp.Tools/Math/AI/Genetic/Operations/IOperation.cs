@@ -15,26 +15,21 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
 
 namespace OsmSharp.Math.AI.Genetic.Operations
 {
     /// <summary>
     /// Interface abstracting the usage of mutation and cross over operations.
     /// </summary>
-    public interface IOperation<GenomeType, ProblemType, WeightType> :
-        ICrossOverOperation<GenomeType, ProblemType, WeightType>,
-        IMutationOperation<GenomeType, ProblemType, WeightType>,
-        IGenerationOperation<GenomeType, ProblemType, WeightType>
-        where ProblemType : IProblem
-        where GenomeType : class
-        where WeightType : IComparable
+    public interface IOperation<TGenome, TProblem, TWeight> :
+        ICrossOverOperation<TGenome, TProblem, TWeight>,
+        IMutationOperation<TGenome, TProblem, TWeight>,
+        IGenerationOperation<TGenome, TProblem, TWeight>
+        where TProblem : IProblem
+        where TGenome : class
+        where TWeight : IComparable
     {
 
     }

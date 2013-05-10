@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using OsmSharp.Tools.TSPLIB.Parser;
+using OsmSharp.TSPLIB.Parser;
 using System.Reflection;
 using System.IO;
-using OsmSharp.Tools.Math.TSP.BruteForce;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Math.TSP.BruteForce;
+using OsmSharp.Math.VRP.Core.Routes;
 
 namespace OsmSharp.UnitTests.TSP
 {
@@ -24,7 +24,7 @@ namespace OsmSharp.UnitTests.TSP
         public void TestBruteForceTSP5()
         {
             // load the problem.
-            OsmSharp.Tools.TSPLIB.Problems.TSPLIBProblem problem = TSPLIBProblemParser.ParseFrom(new StreamReader(
+            OsmSharp.TSPLIB.Problems.TSPLIBProblem problem = TSPLIBProblemParser.ParseFrom(new StreamReader(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_tsp_5.tsp")));
 
             // solve using the brute force solver.
@@ -46,7 +46,7 @@ namespace OsmSharp.UnitTests.TSP
         public void TestBruteForceTSP6()
         {
             // load the problem.
-            OsmSharp.Tools.TSPLIB.Problems.TSPLIBProblem problem = TSPLIBProblemParser.ParseFrom(new StreamReader(
+            OsmSharp.TSPLIB.Problems.TSPLIBProblem problem = TSPLIBProblemParser.ParseFrom(new StreamReader(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_tsp_6.tsp")));
 
             // solve using the brute force solver.

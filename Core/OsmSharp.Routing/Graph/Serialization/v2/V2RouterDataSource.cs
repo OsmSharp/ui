@@ -6,13 +6,13 @@ using System.Text;
 using OsmSharp.Osm;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Tools.Collections;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Geo.Simple;
-using OsmSharp.Tools.Math.Structures;
-using OsmSharp.Tools.Math.Structures.QTree;
+using OsmSharp.Collections;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Math.Structures;
+using OsmSharp.Math.Structures.QTree;
 
 namespace OsmSharp.Routing.Graph.Serialization.v2
 {

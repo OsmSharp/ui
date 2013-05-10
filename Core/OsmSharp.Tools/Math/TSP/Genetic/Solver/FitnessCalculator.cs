@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Fitness;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Fitness;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.AI.Genetic;
 
 namespace OsmSharp.Math.TSP.Genetic.Solver
 {

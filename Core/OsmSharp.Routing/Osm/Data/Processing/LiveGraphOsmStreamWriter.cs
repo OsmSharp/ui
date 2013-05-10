@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Interpreter;
 

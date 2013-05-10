@@ -19,7 +19,7 @@
 //using System;
 //using System.Collections.Generic;
 //using OsmSharp.Routing.Graph.DynamicGraph;
-//using OsmSharp.Tools.Math.Geo.Simple;
+//using OsmSharp.Math.Geo.Simple;
 
 //namespace OsmSharp.Routing.Osm.Graphs
 //{
@@ -162,7 +162,7 @@
 //        {
 //            if (_next_id > 1)
 //            {
-//                return OsmSharp.Tools.Range.UInt32(1, (uint)_next_id - 1, 1U);
+//                return OsmSharp.Range.UInt32(1, (uint)_next_id - 1, 1U);
 //            }
 //            return new List<uint>();
 //        }

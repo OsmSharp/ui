@@ -15,20 +15,17 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
-using OsmSharp.Tools.Collections;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.BestPlacement;
+using OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic;
 
-namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic.CrossOver
+namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.Genetic.CrossOver
 {
     internal class RouteExchangeOperation :
         ICrossOverOperation<List<Genome>, Problem, Fitness>
@@ -67,10 +64,10 @@ namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic.CrossOver
                 int selected_route = -1;
                 if (first)
                 {
-                    selected_route = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(route1.Sizes.Length);
+                    selected_route = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(route1.Sizes.Length);
                     while (selected_first.Contains(selected_route))
                     {
-                        selected_route = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(route1.Sizes.Length);
+                        selected_route = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(route1.Sizes.Length);
                     }
 
                     selected_first.Add(selected_route);
@@ -78,10 +75,10 @@ namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic.CrossOver
                 }
                 else
                 {
-                    selected_route = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(route2.Sizes.Length);
+                    selected_route = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(route2.Sizes.Length);
                     while (selected_second.Contains(selected_route))
                     {
-                        selected_route = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(route2.Sizes.Length);
+                        selected_route = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(route2.Sizes.Length);
                     }
 
                     selected_second.Add(selected_route);

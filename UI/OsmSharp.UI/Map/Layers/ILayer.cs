@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 using OsmSharp.UI.Renderer;
 
 namespace OsmSharp.UI.Map.Layers

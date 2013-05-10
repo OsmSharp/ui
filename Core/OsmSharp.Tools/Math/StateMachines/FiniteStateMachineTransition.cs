@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Automata;
+using OsmSharp.Math.Automata;
 
 namespace OsmSharp.Math.StateMachines
 {
@@ -104,7 +104,7 @@ namespace OsmSharp.Math.StateMachines
         /// <returns></returns>
         public static FiniteStateMachineTransition<EventType> Generate(
             List<FiniteStateMachineState<EventType>> states, int start, int end, Type event_type,
-            OsmSharp.Tools.Math.StateMachines.FiniteStateMachineTransitionCondition<EventType>.FiniteStateMachineTransitionConditionDelegate check_delegate)
+            OsmSharp.Math.StateMachines.FiniteStateMachineTransitionCondition<EventType>.FiniteStateMachineTransitionConditionDelegate check_delegate)
         {
             return FiniteStateMachineTransition<EventType>.Generate(states, start, end, false, event_type, check_delegate);
         }
@@ -121,7 +121,7 @@ namespace OsmSharp.Math.StateMachines
         /// <returns></returns>
         public static FiniteStateMachineTransition<EventType> Generate(
             List<FiniteStateMachineState<EventType>> states, int start, int end, bool inverted, Type event_type,
-            OsmSharp.Tools.Math.StateMachines.FiniteStateMachineTransitionCondition<EventType>.FiniteStateMachineTransitionConditionDelegate check_delegate)
+            OsmSharp.Math.StateMachines.FiniteStateMachineTransitionCondition<EventType>.FiniteStateMachineTransitionConditionDelegate check_delegate)
         {
             List<FiniteStateMachineTransitionCondition<EventType>> conditions = new List<FiniteStateMachineTransitionCondition<EventType>>();
 

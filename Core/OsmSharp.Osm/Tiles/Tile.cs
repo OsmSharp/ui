@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Units.Angle;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Units.Angle;
 
 namespace OsmSharp.Osm
 {

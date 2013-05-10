@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Collections;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver
 {
@@ -148,16 +148,16 @@ namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver
                     // randomly select one.
                     if (minimum_edges.Count != 0)
                     {
-                        selected_city = minimum_edges[Tools.Math.Random.StaticRandomGenerator.Get().Generate(minimum_edges.Count)];
+                        selected_city = minimum_edges[Math.Random.StaticRandomGenerator.Get().Generate(minimum_edges.Count)];
                     }
                     else
                     {
-                        selected_city = non_selected_cities[Tools.Math.Random.StaticRandomGenerator.Get().Generate(non_selected_cities.Count)];
+                        selected_city = non_selected_cities[Math.Random.StaticRandomGenerator.Get().Generate(non_selected_cities.Count)];
                     }
                 }
                 else
                 { // randomly select a city.
-                    selected_city = non_selected_cities[Tools.Math.Random.StaticRandomGenerator.Get().Generate(non_selected_cities.Count)];
+                    selected_city = non_selected_cities[Math.Random.StaticRandomGenerator.Get().Generate(non_selected_cities.Count)];
                 }
 
                 new_individual.Add(selected_city);

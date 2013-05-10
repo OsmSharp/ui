@@ -28,8 +28,8 @@ using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Routers;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph.Router;
 
 namespace OsmSharp.Osm.UnitTests.Routing

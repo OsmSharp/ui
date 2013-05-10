@@ -19,14 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.TSP.LK.SparseSets;
-using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Math.TSP.LK.SparseSets;
+using OsmSharp.Math.TSP.Problems;
 using System.Diagnostics;
-using OsmSharp.Tools.Math.TSP.ArbitraryInsertion;
-using OsmSharp.Tools.Math.VRP.Core.Routes.Symmetric;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
-using OsmSharp.Tools.Collections;
+using OsmSharp.Math.TSP.ArbitraryInsertion;
+using OsmSharp.Math.VRP.Core.Routes.Symmetric;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Math.TSP.LK
 {
@@ -243,7 +243,7 @@ namespace OsmSharp.Math.TSP.LK
 
                 if (x.Count != y.Count + 1)
                 {
-                    OsmSharp.Tools.Output.OutputStreamHost.Write(string.Empty);
+                    OsmSharp.Output.OutputStreamHost.Write(string.Empty);
                 }
 
                 result = this.SelectY(problem, route.Route, X, Y, x, y, t_3_exceptions);
@@ -322,7 +322,7 @@ namespace OsmSharp.Math.TSP.LK
 
                 if (x.Count != y.Count)
                 {
-                    OsmSharp.Tools.Output.OutputStreamHost.Write(string.Empty);
+                    OsmSharp.Output.OutputStreamHost.Write(string.Empty);
                 }
 
                 result = this.SelectX(problem, route.Route, X, Y, x, t_3, t_4_exceptions);
@@ -363,7 +363,7 @@ namespace OsmSharp.Math.TSP.LK
 
                 if (x.Count != y.Count)
                 {
-                    OsmSharp.Tools.Output.OutputStreamHost.Write(string.Empty);
+                    OsmSharp.Output.OutputStreamHost.Write(string.Empty);
                 }
 
                 // try and find a better route by selecting more customer.
@@ -379,7 +379,7 @@ namespace OsmSharp.Math.TSP.LK
 
                 if (x.Count != y.Count + 1)
                 {
-                    OsmSharp.Tools.Output.OutputStreamHost.Write(string.Empty);
+                    OsmSharp.Output.OutputStreamHost.Write(string.Empty);
                 }
 
                 result = this.SelectY(problem, route.Route, X, Y, x, y, t_5_exceptions);
@@ -391,7 +391,7 @@ namespace OsmSharp.Math.TSP.LK
         {
             if (x.Count != y.Count)
             {
-                OsmSharp.Tools.Output.OutputStreamHost.Write(string.Empty);
+                OsmSharp.Output.OutputStreamHost.Write(string.Empty);
             }
             int t_1 = x[0].From;
             int t_2i_min_1 = y[y.Count - 1].To;
@@ -433,7 +433,7 @@ namespace OsmSharp.Math.TSP.LK
 
                 if (x.Count != y.Count + 1)
                 {
-                    OsmSharp.Tools.Output.OutputStreamHost.Write(string.Empty);
+                    OsmSharp.Output.OutputStreamHost.Write(string.Empty);
                 }
 
                 if (new_route.Route.IsValid())
@@ -485,7 +485,7 @@ namespace OsmSharp.Math.TSP.LK
             }
             if (x.Count != y.Count)
             {
-                OsmSharp.Tools.Output.OutputStreamHost.Write(string.Empty);
+                OsmSharp.Output.OutputStreamHost.Write(string.Empty);
             }
             return new_route;
         }
@@ -537,7 +537,7 @@ namespace OsmSharp.Math.TSP.LK
         {
             if (x.Count != y.Count)
             {
-                OsmSharp.Tools.Output.OutputStreamHost.Write(string.Empty);
+                OsmSharp.Output.OutputStreamHost.Write(string.Empty);
             }
             FixedSymmetricRoute route_new = route.Clone() as FixedSymmetricRoute;
             for (int idx = 0; idx < x.Count; idx++)

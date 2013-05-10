@@ -18,7 +18,7 @@
 
 using System;
 using System.Collections.Generic;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Data.Streams.Filters

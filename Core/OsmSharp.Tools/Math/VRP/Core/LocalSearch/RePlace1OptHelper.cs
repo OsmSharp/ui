@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Collections;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Math.VRP.Core.LocalSearch
 {

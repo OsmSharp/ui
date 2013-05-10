@@ -21,8 +21,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using OsmSharp.Tools.Xml.Gpx;
-using OsmSharp.Tools.Xml.Sources;
+using OsmSharp.Xml.Gpx;
+using OsmSharp.Xml.Sources;
 using System.Reflection;
 using System.Xml.Serialization;
 

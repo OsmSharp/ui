@@ -278,7 +278,6 @@
     <Compile Include="VRP\WithDepot\RouterDepot.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="CH\Graph\" />
     <Folder Include="Interpreter\Roads\Tags\" />
   </ItemGroup>
   <ItemGroup>

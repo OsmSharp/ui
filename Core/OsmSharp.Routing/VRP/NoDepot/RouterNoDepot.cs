@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Route;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Routing.VRP.NoDepot
 {

@@ -15,15 +15,12 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+
 using NUnit.Framework;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Factory;
 
-namespace OsmSharp.Osm.UnitTests.Data
+namespace OsmSharp.UnitTests.Data
 {
     /// <summary>
     /// Contains some regression tests on nodes.
@@ -37,10 +34,10 @@ namespace OsmSharp.Osm.UnitTests.Data
         [Test]
         public void NodeToStringTests()
         {
-            Node test_node = OsmBaseFactory.CreateNode(-1);
-            string description = test_node.ToString(); // 
-            test_node.Coordinate = new OsmSharp.Tools.Math.Geo.GeoCoordinate(0, 0);
-            description = test_node.ToString();
+            Node testNode = OsmBaseFactory.CreateNode(-1);
+            string description = testNode.ToString(); // 
+            testNode.Coordinate = new OsmSharp.Math.Geo.GeoCoordinate(0, 0);
+            description = testNode.ToString();
         }
     }
 }

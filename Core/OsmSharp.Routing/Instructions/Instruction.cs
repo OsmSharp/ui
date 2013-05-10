@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.ArcAggregation.Output;
 
 namespace OsmSharp.Routing.Instructions

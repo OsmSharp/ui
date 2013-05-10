@@ -19,17 +19,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.VRP.Core;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.VRP.Core;
+using OsmSharp.Math.Units.Time;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
 {
     /// <summary>
     /// Represents a max time problem.
     /// </summary>
-    public class MaxTimeProblem : OsmSharp.Tools.Math.AI.Genetic.IProblem, IProblemWeights
+    public class MaxTimeProblem : OsmSharp.Math.AI.Genetic.IProblem, IProblemWeights
     {
         private IProblemWeights _weights;
 

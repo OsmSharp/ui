@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.Units.Time;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.Units.Time;
 using OsmSharp.Routing;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement
@@ -30,7 +30,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement
     /// </summary>
     public class TSPPlacementSolver : RouterMaxTime
     {
-        private OsmSharp.Tools.Math.TSP.ISolver _tsp_solver;
+        private OsmSharp.Math.TSP.ISolver _tsp_solver;
 
         private IRoute _tsp_solution;
 
@@ -41,7 +41,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement
         /// <param name="delivery_time"></param>
         /// <param name="tsp_solver"></param>
         public TSPPlacementSolver(Second max, Second delivery_time,
-            OsmSharp.Tools.Math.TSP.ISolver tsp_solver)
+            OsmSharp.Math.TSP.ISolver tsp_solver)
             :base(max, delivery_time)
         {
             _tsp_solver = tsp_solver;
@@ -87,7 +87,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.TSPPlacement
             MaxTimeSolution solution = new MaxTimeSolution(problem.Size, true);
 
             // select a random start point.
-            int start = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(problem.Size);
+            int start = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(problem.Size);
 
             // start the first tour.
             int placed = 0;

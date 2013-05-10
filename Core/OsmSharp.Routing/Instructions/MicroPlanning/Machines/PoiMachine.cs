@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.StateMachines;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Automata;
+using OsmSharp.Math.StateMachines;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Automata;
 using OsmSharp.Routing.Interpreter;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
@@ -78,7 +78,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             //            }
             //            switch (point.Point.Angle.Direction)
             //            {
-            //                case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
+            //                case OsmSharp.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
             //                    return true;
             //            }
             //        }
@@ -108,7 +108,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         //                }
         //                switch (point.Point.Angle.Direction)
         //                {
-        //                    case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
+        //                    case OsmSharp.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
         //                        return true;
         //                }
         //            }

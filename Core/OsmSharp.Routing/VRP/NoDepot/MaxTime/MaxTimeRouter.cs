@@ -19,14 +19,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.TSP.Problems;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.VRP.Core;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.Units.Time;
+using OsmSharp.Math.VRP.Core;
+using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Route;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Collections;
+using OsmSharp.Math.Geo;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
 {
@@ -101,7 +101,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
                 // calculate the weight.
                 vrp_solution_weights[idx] = problem.Time(current);
 
-                OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Route {0}: {1}s",
+                OsmSharp.Output.OutputStreamHost.WriteLine("Route {0}: {1}s",
                     idx, vrp_solution_weights[idx]);
 
                 // convert the route.

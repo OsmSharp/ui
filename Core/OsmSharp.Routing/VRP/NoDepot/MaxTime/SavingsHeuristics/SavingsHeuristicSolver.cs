@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Math.Units.Time;
+using OsmSharp.Math.VRP.Core.Routes;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.SavingsHeuristics
 {

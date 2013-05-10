@@ -6,12 +6,12 @@ using System.Text;
 using OsmSharp.Osm;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Tools.Collections;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.IO;
-using OsmSharp.Tools.Math;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Geo.Simple;
+using OsmSharp.Collections;
+using OsmSharp.Collections.Tags;
+using OsmSharp.IO;
+using OsmSharp.Math;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Simple;
 using ProtoBuf;
 using ProtoBuf.Meta;
 

@@ -10,8 +10,8 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 
 namespace OsmSharp.UnitTests.Routing.EdgeMatcher

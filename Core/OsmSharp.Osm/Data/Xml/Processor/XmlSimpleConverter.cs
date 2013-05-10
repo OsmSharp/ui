@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Simple;
-using OsmSharp.Tools.Collections.Tags;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm.Data.Xml.Processor
 {

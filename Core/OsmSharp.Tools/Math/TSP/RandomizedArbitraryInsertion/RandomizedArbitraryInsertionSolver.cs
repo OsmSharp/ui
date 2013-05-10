@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.TSP.Problems;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
-using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.VRP.Core.BestPlacement;
+using OsmSharp.Math.TSP;
 
 namespace OsmSharp.Math.TSP
 {
@@ -151,8 +151,8 @@ namespace OsmSharp.Math.TSP
             DynamicAsymmetricRoute route = null;
             if (initial_route == null)
             {
-                OsmSharp.Tools.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver ai_solver =
-                    new OsmSharp.Tools.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver();
+                OsmSharp.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver ai_solver =
+                    new OsmSharp.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver();
                 initial_route = ai_solver.Solve(problem);
             }
 
@@ -176,12 +176,12 @@ namespace OsmSharp.Math.TSP
                 int factor = 2;
 
                 // cut out a part.
-                int i = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate((route.Count / factor) - 1) + 1;
-                int j = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate((route.Count / factor) - 1) + 1;
+                int i = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate((route.Count / factor) - 1) + 1;
+                int j = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate((route.Count / factor) - 1) + 1;
 
                 while (i == j)
                 {
-                    j = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate((route.Count / factor) - 1) + 1;
+                    j = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate((route.Count / factor) - 1) + 1;
                 }
 
                 if (i > j)
@@ -205,7 +205,7 @@ namespace OsmSharp.Math.TSP
                     DynamicAsymmetricRoute cut_route = cut_result.Route;
 
                     // use best placement to re-insert.
-                    int c = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(cut_part.Count);
+                    int c = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(cut_part.Count);
                     while (cut_part.Count > 0)
                     { // loop until it's empty.
                         int customer = cut_part[c];
@@ -219,7 +219,7 @@ namespace OsmSharp.Math.TSP
                         new_weight = new_weight + result.Increase;
 
                         // choose next random customer.
-                        c = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(cut_part.Count);
+                        c = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(cut_part.Count);
                     }
 
                     // descide to keep new route or not.

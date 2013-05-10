@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.Units.Time;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.Units.Time;
 
 namespace OsmSharp.Math.VRP.MultiSalesman.Genetic
 {

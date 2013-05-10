@@ -1,10 +1,25 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
 
 namespace OsmSharp.UnitTests.Routes
 {
@@ -18,22 +33,22 @@ namespace OsmSharp.UnitTests.Routes
         /// Builds a simple route initialized with an initial customer.
         /// </summary>
         /// <returns></returns>
-        protected override IRoute BuildRoute(int customer, bool is_round)
+        protected override IRoute BuildRoute(int customer, bool isRound)
         {
-            List<int> customers = new List<int>();
+            var customers = new List<int>();
             customers.Add(customer);
-            return new SimpleAsymmetricRoute(customers, is_round);
+            return new SimpleAsymmetricRoute(customers, isRound);
         }
 
         /// <summary>
         /// Builds a dynamic route that is empty.
         /// </summary>
-        /// <param name="is_round"></param>
+        /// <param name="isRound"></param>
         /// <returns></returns>
-        protected override IRoute BuildRoute(bool is_round)
+        protected override IRoute BuildRoute(bool isRound)
         {
-            List<int> customers = new List<int>();
-            return new SimpleAsymmetricRoute(customers, is_round);
+            var customers = new List<int>();
+            return new SimpleAsymmetricRoute(customers, isRound);
         }
 
         /// <summary>

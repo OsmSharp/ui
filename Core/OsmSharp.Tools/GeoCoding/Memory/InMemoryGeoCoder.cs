@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Structures.StringTrees;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Structures.StringTrees;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.GeoCoding.Memory
 {

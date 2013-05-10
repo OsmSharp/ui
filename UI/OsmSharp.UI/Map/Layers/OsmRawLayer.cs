@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Data;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
 

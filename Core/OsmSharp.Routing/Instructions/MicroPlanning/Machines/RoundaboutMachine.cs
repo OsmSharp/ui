@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.StateMachines;
-using OsmSharp.Tools.Math.Geo.Meta;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.StateMachines;
+using OsmSharp.Math.Geo.Meta;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.ArcAggregation.Output;
-using OsmSharp.Tools.Math.Automata;
-using OsmSharp.Tools;
+using OsmSharp.Math.Automata;
+using OsmSharp;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {

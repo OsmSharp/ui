@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Geo.Projections;
+using OsmSharp;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 

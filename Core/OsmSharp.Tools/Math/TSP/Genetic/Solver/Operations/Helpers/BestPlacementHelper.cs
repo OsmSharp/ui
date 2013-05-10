@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.Random;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.Random;
 
 namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.Helpers
 {

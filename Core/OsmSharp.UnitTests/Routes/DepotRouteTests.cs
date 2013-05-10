@@ -1,10 +1,25 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
 using OsmSharp.Routing.VRP.WithDepot.MaxTime;
 
 namespace OsmSharp.UnitTests.Routes
@@ -21,12 +36,12 @@ namespace OsmSharp.UnitTests.Routes
         [Test]
         public void TestDepotDynamicAsymmetricRouteEmpty()
         {
-            DepotRoute route = new DepotRoute(
+            var route = new DepotRoute(
                 new DynamicAsymmetricRoute(10, false));
 
             route.InsertAfter(0, 1);
 
-            List<int> customers = new List<int>(route);
+            var customers = new List<int>(route);
             Assert.AreEqual(0, customers[0]);
             Assert.AreEqual(1, customers[1]);
         }
@@ -37,12 +52,12 @@ namespace OsmSharp.UnitTests.Routes
         [Test]
         public void TestDepotDynamicAsymmetricRouteInsertAfter()
         {
-            DepotRoute route = new DepotRoute(
+            var route = new DepotRoute(
                 new DynamicAsymmetricRoute(10, false));
 
             route.InsertAfter(0, 1);
 
-            List<int> customers = new List<int>(route);
+            var customers = new List<int>(route);
             Assert.AreEqual(0, customers[0]);
             Assert.AreEqual(1, customers[1]);
 
@@ -77,14 +92,14 @@ namespace OsmSharp.UnitTests.Routes
         [Test]
         public void TestDepotDynamicAsymmetricRouteReplaceEdge()
         {
-            DepotRoute route = new DepotRoute(
+            var route = new DepotRoute(
                 new DynamicAsymmetricRoute(10, false));
             route.InsertAfter(0, 1);
             route.InsertAfter(1, 2);
             route.InsertAfter(2, 3);
             route.InsertAfter(3, 4);
 
-            List<int> customers = new List<int>(route);
+            var customers = new List<int>(route);
             Assert.AreEqual(5, customers.Count);
             Assert.AreEqual(0, customers[0]);
             Assert.AreEqual(1, customers[1]);
@@ -124,9 +139,9 @@ namespace OsmSharp.UnitTests.Routes
             // create two routes.
             // 0->11->12->13->14->15->0
             // 0->21->22->23->24->25->0
-            MaxTimeSolution multi_route = new MaxTimeSolution(0);
-            IRoute route1 = multi_route.Add();
-            List<int> customers = new List<int>(route1);
+            var multiRoute = new MaxTimeSolution(0);
+            IRoute route1 = multiRoute.Add();
+            var customers = new List<int>(route1);
             Assert.AreEqual(1, customers.Count);
             Assert.AreEqual(0, customers[0]);
             route1.InsertAfter(0, 11);
@@ -135,7 +150,7 @@ namespace OsmSharp.UnitTests.Routes
             route1.InsertAfter(12, 13);
             route1.InsertAfter(13, 14);
             route1.InsertAfter(14, 15);
-            IRoute route2 = multi_route.Add();
+            IRoute route2 = multiRoute.Add();
             customers = new List<int>(route2);
             Assert.AreEqual(1, customers.Count);
             Assert.AreEqual(0, customers[0]);
@@ -174,13 +189,13 @@ namespace OsmSharp.UnitTests.Routes
             route2.ReplaceEdgeFrom(13, 14);
             route2.ReplaceEdgeFrom(14, 15);
 
-            Assert.IsTrue(multi_route.IsValid());
+            Assert.IsTrue(multiRoute.IsValid());
 
             // create two routes.
             // 0->11->12->13->14->15->0
             // 0->21->22->23->24->25->0
-            multi_route = new MaxTimeSolution(0);
-            route1 = multi_route.Add();
+            multiRoute = new MaxTimeSolution(0);
+            route1 = multiRoute.Add();
             customers = new List<int>(route1);
             Assert.AreEqual(1, customers.Count);
             Assert.AreEqual(0, customers[0]);
@@ -190,7 +205,7 @@ namespace OsmSharp.UnitTests.Routes
             route1.InsertAfter(12, 13);
             route1.InsertAfter(13, 14);
             route1.InsertAfter(14, 15);
-            route2 = multi_route.Add();
+            route2 = multiRoute.Add();
             customers = new List<int>(route2);
             Assert.AreEqual(1, customers.Count);
             Assert.AreEqual(0, customers[0]);
@@ -202,8 +217,8 @@ namespace OsmSharp.UnitTests.Routes
             route2.InsertAfter(24, 25);
 
             // exchange parts.
-            List<int> part1 = new List<int>(route1.Between(11, 13));
-            List<int> part2 = new List<int>(route2.Between(23, 25));
+            var part1 = new List<int>(route1.Between(11, 13));
+            var part2 = new List<int>(route2.Between(23, 25));
             route1.ReplaceEdgeFrom(0, 14);
             route2.ReplaceEdgeFrom(22, 0);
 
@@ -223,7 +238,7 @@ namespace OsmSharp.UnitTests.Routes
             }
             route2.ReplaceEdgeFrom(previous, 0);
 
-            Assert.IsTrue(multi_route.IsValid());
+            Assert.IsTrue(multiRoute.IsValid());
 
             customers = new List<int>(route1);
             Assert.AreEqual(6, customers.Count);
@@ -246,8 +261,8 @@ namespace OsmSharp.UnitTests.Routes
             // create two routes.
             // 0->11->12->13->14->15->0
             // 0->21->22->23->24->25->0
-            multi_route = new MaxTimeSolution(0);
-            route1 = multi_route.Add();
+            multiRoute = new MaxTimeSolution(0);
+            route1 = multiRoute.Add();
             customers = new List<int>(route1);
             Assert.AreEqual(1, customers.Count);
             Assert.AreEqual(0, customers[0]);
@@ -257,7 +272,7 @@ namespace OsmSharp.UnitTests.Routes
             route1.InsertAfter(12, 13);
             route1.InsertAfter(13, 14);
             route1.InsertAfter(14, 15);
-            route2 = multi_route.Add();
+            route2 = multiRoute.Add();
             customers = new List<int>(route2);
             Assert.AreEqual(1, customers.Count);
             Assert.AreEqual(0, customers[0]);
@@ -281,7 +296,7 @@ namespace OsmSharp.UnitTests.Routes
             Assert.AreEqual(12, customers[4]);
             Assert.AreEqual(15, customers[5]);
 
-            string route_string = route1.ToString();
+            route1.ToString();
         }
     }
 }

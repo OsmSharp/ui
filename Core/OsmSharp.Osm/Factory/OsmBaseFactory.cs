@@ -21,9 +21,9 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Simple;
-using OsmSharp.Tools.Collections;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Collections;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Osm.Factory
 {

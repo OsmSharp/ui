@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo.Meta;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo.Meta;
 
 namespace OsmSharp.Routing.Instructions.LanguageGeneration
 {

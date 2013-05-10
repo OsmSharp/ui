@@ -15,14 +15,11 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.AI.Genetic.Solvers;
 
 namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.Generation
 {

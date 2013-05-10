@@ -15,22 +15,20 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Text;
+
 using System.Collections.Generic;
-using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Osm.Data.Core.Memory;
 using OsmSharp.Osm.Factory;
 using OsmSharp.Osm;
 
-namespace OsmSharp.Osm.UnitTests
+namespace OsmSharp.UnitTests.Data
 {
     /// <summary>
-    /// Does ome raw data memory tests.
+    /// Does some raw data memory tests.
     /// </summary>
     [TestFixture]
-    public class DykstraMemoryDataSourceTests
+    public class MemoryDataSourceTests
     {
         /// <summary>
         /// Tests adding a node to the memory source.
@@ -38,23 +36,23 @@ namespace OsmSharp.Osm.UnitTests
         [Test]
         public void TestAddNode()
         {
-            Node test_node = OsmBaseFactory.CreateNode(-1);
-            MemoryDataSource source = new MemoryDataSource();
-            source.AddNode(test_node);
+            Node testNode = OsmBaseFactory.CreateNode(-1);
+            var source = new MemoryDataSource();
+            source.AddNode(testNode);
 
             // test if the node is actually there.
-            Assert.AreEqual(test_node, source.GetNode(-1));
+            Assert.AreEqual(testNode, source.GetNode(-1));
 
             // test if the node was not remove after getting it.
-            Assert.AreEqual(test_node, source.GetNode(-1));
+            Assert.AreEqual(testNode, source.GetNode(-1));
              
             // test if the node will be retrieved using a list of ids.
-            List<long> ids = new List<long>();
+            var ids = new List<long>();
             ids.Add(-1);
             IList<Node> nodes = source.GetNodes(ids);
             Assert.IsNotNull(nodes);
             Assert.AreEqual(1, nodes.Count);
-            Assert.AreEqual(test_node, nodes[0]);
+            Assert.AreEqual(testNode, nodes[0]);
         }
 
         /// <summary>
@@ -63,12 +61,12 @@ namespace OsmSharp.Osm.UnitTests
         [Test]
         public void TestRemoveNode()
         {
-            Node test_node = OsmBaseFactory.CreateNode(-1);
-            MemoryDataSource source = new MemoryDataSource();
-            source.AddNode(test_node);
+            Node testNode = OsmBaseFactory.CreateNode(-1);
+            var source = new MemoryDataSource();
+            source.AddNode(testNode);
 
             // test if the node is actually there.
-            Assert.AreEqual(test_node, source.GetNode(-1));
+            Assert.AreEqual(testNode, source.GetNode(-1));
 
             // remove the node.
             source.RemoveNode(-1);
@@ -83,23 +81,23 @@ namespace OsmSharp.Osm.UnitTests
         [Test]
         public void TestAddWay()
         {
-            Way test_way = OsmBaseFactory.CreateWay(-1);
-            MemoryDataSource source = new MemoryDataSource();
-            source.AddWay(test_way);
+            Way testWay = OsmBaseFactory.CreateWay(-1);
+            var source = new MemoryDataSource();
+            source.AddWay(testWay);
 
             // test if the way is actually there.
-            Assert.AreEqual(test_way, source.GetWay(-1));
+            Assert.AreEqual(testWay, source.GetWay(-1));
 
             // test if the way was not remove after getting it.
-            Assert.AreEqual(test_way, source.GetWay(-1));
+            Assert.AreEqual(testWay, source.GetWay(-1));
 
             // test if the way will be retrieved using a list of ids.
-            List<long> ids = new List<long>();
+            var ids = new List<long>();
             ids.Add(-1);
             IList<Way> ways = source.GetWays(ids);
             Assert.IsNotNull(ways);
             Assert.AreEqual(1, ways.Count);
-            Assert.AreEqual(test_way, ways[0]);
+            Assert.AreEqual(testWay, ways[0]);
         }
 
         /// <summary>
@@ -108,12 +106,12 @@ namespace OsmSharp.Osm.UnitTests
         [Test]
         public void TestRemoveWay()
         {
-            Way test_way = OsmBaseFactory.CreateWay(-1);
-            MemoryDataSource source = new MemoryDataSource();
-            source.AddWay(test_way);
+            Way testWay = OsmBaseFactory.CreateWay(-1);
+            var source = new MemoryDataSource();
+            source.AddWay(testWay);
 
             // test if the way is actually there.
-            Assert.AreEqual(test_way, source.GetWay(-1));
+            Assert.AreEqual(testWay, source.GetWay(-1));
 
             // remove the way.
             source.RemoveWay(-1);
@@ -128,15 +126,15 @@ namespace OsmSharp.Osm.UnitTests
         [Test]
         public void TestAddRelation()
         {
-            Relation test_relation = OsmBaseFactory.CreateRelation(-1);
-            MemoryDataSource source = new MemoryDataSource();
-            source.AddRelation(test_relation);
+            Relation testRelation = OsmBaseFactory.CreateRelation(-1);
+            var source = new MemoryDataSource();
+            source.AddRelation(testRelation);
 
             // test if the relation is actually there.
-            Assert.AreEqual(test_relation, source.GetRelation(-1));
+            Assert.AreEqual(testRelation, source.GetRelation(-1));
 
             // test if the relation was not remove after getting it.
-            Assert.AreEqual(test_relation, source.GetRelation(-1));
+            Assert.AreEqual(testRelation, source.GetRelation(-1));
 
             // test if the relation will be retrieved using a list of ids.
             List<long> ids = new List<long>();
@@ -144,7 +142,7 @@ namespace OsmSharp.Osm.UnitTests
             IList<Relation> relations = source.GetRelations(ids);
             Assert.IsNotNull(relations);
             Assert.AreEqual(1, relations.Count);
-            Assert.AreEqual(test_relation, relations[0]);
+            Assert.AreEqual(testRelation, relations[0]);
         }
 
         /// <summary>
@@ -153,12 +151,12 @@ namespace OsmSharp.Osm.UnitTests
         [Test]
         public void TestRemoveRelation()
         {
-            Relation test_relation = OsmBaseFactory.CreateRelation(-1);
-            MemoryDataSource source = new MemoryDataSource();
-            source.AddRelation(test_relation);
+            Relation testRelation = OsmBaseFactory.CreateRelation(-1);
+            var source = new MemoryDataSource();
+            source.AddRelation(testRelation);
 
             // test if the relation is actually there.
-            Assert.AreEqual(test_relation, source.GetRelation(-1));
+            Assert.AreEqual(testRelation, source.GetRelation(-1));
 
             // remove the relation.
             source.RemoveRelation(-1);
@@ -173,25 +171,25 @@ namespace OsmSharp.Osm.UnitTests
         [Test]
         public void TestWayNodeRelation()
         {
-            Way test_way = OsmBaseFactory.CreateWay(-1);
+            Way testWay = OsmBaseFactory.CreateWay(-1);
             Node node1 = OsmBaseFactory.CreateNode(-1);
-            test_way.Nodes.Add(node1);
+            testWay.Nodes.Add(node1);
             Node node2 = OsmBaseFactory.CreateNode(-2);
-            test_way.Nodes.Add(node2);
-            MemoryDataSource source = new MemoryDataSource();
-            source.AddWay(test_way);
+            testWay.Nodes.Add(node2);
+            var source = new MemoryDataSource();
+            source.AddWay(testWay);
 
             // test if node1 is present.
             Assert.AreEqual(node1, source.GetNode(-1));
             Assert.AreEqual(node2, source.GetNode(-2));
-            Assert.AreEqual(test_way, source.GetWay(-1));
+            Assert.AreEqual(testWay, source.GetWay(-1));
 
             // test if the way is present in the node's way list.
             IList<Way> ways = source.GetWaysFor(node1);
             Assert.IsNotNull(ways);
-            Assert.IsTrue(ways.Contains(test_way));
+            Assert.IsTrue(ways.Contains(testWay));
             ways = source.GetWaysFor(node2);
-            Assert.IsTrue(ways.Contains(test_way));
+            Assert.IsTrue(ways.Contains(testWay));
         }
     }
 }

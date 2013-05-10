@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.StateMachines;
-using OsmSharp.Tools.Math.Geo.Meta;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.StateMachines;
+using OsmSharp.Math.Geo.Meta;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Routing.Interpreter.Roads;
-using OsmSharp.Tools.Math.Automata;
+using OsmSharp.Math.Automata;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {
@@ -114,7 +114,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
                                 return true;
                             }
                             return false;
-                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
+                        case OsmSharp.Math.Geo.Meta.RelativeDirectionEnum.StraightOn:
                             // test to see if this is cross road or anything.
                             int left_count = MicroPlannerHelper.GetLeft(point, (machine as MicroPlannerMachine).Planner.Interpreter);
                             int right_count = MicroPlannerHelper.GetRight(point, (machine as MicroPlannerMachine).Planner.Interpreter);

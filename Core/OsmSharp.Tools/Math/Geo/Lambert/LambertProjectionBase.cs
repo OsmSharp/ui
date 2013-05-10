@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Units.Angle;
-using OsmSharp.Tools.Math.Geo.Lambert.International.Belgium;
-using OsmSharp.Tools.Math.Geo.Lambert.Ellipsoids;
+using OsmSharp.Math.Units.Angle;
+using OsmSharp.Math.Geo.Lambert.International.Belgium;
+using OsmSharp.Math.Geo.Lambert.Ellipsoids;
 
 namespace OsmSharp.Math.Geo.Lambert
 {

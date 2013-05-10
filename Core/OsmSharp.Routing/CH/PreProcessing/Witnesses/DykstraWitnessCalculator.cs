@@ -22,8 +22,8 @@ using System.Text;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Tools.Collections.PriorityQueues;
-using OsmSharp.Tools.Collections;
+using OsmSharp.Collections.PriorityQueues;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
 {

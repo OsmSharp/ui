@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using OsmSharp.Tools.Math.TSP.Problems;
-using OsmSharp.Tools.TSPLIB.Problems;
+using OsmSharp.Math.TSP.Problems;
+using OsmSharp.TSPLIB.Problems;
 
 namespace OsmSharp.TSPLIB.Parser
 {

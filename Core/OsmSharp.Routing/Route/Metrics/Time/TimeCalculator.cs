@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Units.Speed;
-using OsmSharp.Tools.Math.Units.Time;
+using OsmSharp.Math.Units.Speed;
+using OsmSharp.Math.Units.Time;
 using OsmSharp.Routing;
 using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Routing.ArcAggregation;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Tools;
+using OsmSharp;
 
 namespace OsmSharp.Routing.Metrics.Time
 {
@@ -106,17 +106,17 @@ namespace OsmSharp.Routing.Metrics.Time
                     // TODO: ASSUMED DRIVING ON THE RIGHT; UPDATE TO MAKE CONFIGURABLE.
                     switch (point.Angle.Direction)
                     {
-                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.Left:
-                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.SharpLeft:
-                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.SlightlyLeft:
+                        case OsmSharp.Math.Geo.Meta.RelativeDirectionEnum.Left:
+                        case OsmSharp.Math.Geo.Meta.RelativeDirectionEnum.SharpLeft:
+                        case OsmSharp.Math.Geo.Meta.RelativeDirectionEnum.SlightlyLeft:
                             second = 25;
                             break;
-                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.Right:
-                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.SharpRight:
-                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.SlightlyRight:
+                        case OsmSharp.Math.Geo.Meta.RelativeDirectionEnum.Right:
+                        case OsmSharp.Math.Geo.Meta.RelativeDirectionEnum.SharpRight:
+                        case OsmSharp.Math.Geo.Meta.RelativeDirectionEnum.SlightlyRight:
                             second = 5;
                             break;
-                        case OsmSharp.Tools.Math.Geo.Meta.RelativeDirectionEnum.TurnBack:
+                        case OsmSharp.Math.Geo.Meta.RelativeDirectionEnum.TurnBack:
                             second = 30;
                             break;
                     }

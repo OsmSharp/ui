@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.Random;
-using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.Random;
+using OsmSharp.Math.VRP.MultiSalesman.Genetic.Helpers;
 
 
 namespace OsmSharp.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver
@@ -125,7 +125,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver
 
             //        Individual<List<Genome>, Problem, Fitness> copy = new_individual.Copy();
 
-            //        OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers.BestPlacementHelper.BestPlacementResult result =
+            //        OsmSharp.Math.VRP.MultiSalesman.Genetic.Helpers.BestPlacementHelper.BestPlacementResult result =
             //            BestPlacementHelper.CalculateBestPlacementInGenome(
             //                solver.Problem,
             //                solver.FitnessCalculator as FitnessCalculator,

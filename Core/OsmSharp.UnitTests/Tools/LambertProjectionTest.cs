@@ -20,11 +20,11 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Geo.Lambert;
-using OsmSharp.Tools.Math.Geo.Lambert.Ellipsoids;
-using OsmSharp.Tools.Math.Units.Angle;
-using OsmSharp.Tools.Math.Geo.Lambert.International.Belgium;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Lambert;
+using OsmSharp.Math.Geo.Lambert.Ellipsoids;
+using OsmSharp.Math.Units.Angle;
+using OsmSharp.Math.Geo.Lambert.International.Belgium;
 
 namespace OsmSharp.UnitTests
 {

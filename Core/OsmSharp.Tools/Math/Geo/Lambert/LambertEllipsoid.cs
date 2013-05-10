@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Geo.Lambert.Ellipsoids;
+using OsmSharp.Math.Geo.Lambert.Ellipsoids;
 
 namespace OsmSharp.Math.Geo.Lambert
 {

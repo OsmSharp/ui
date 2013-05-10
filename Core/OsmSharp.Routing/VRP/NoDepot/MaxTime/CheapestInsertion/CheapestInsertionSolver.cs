@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.TSP.Problems;
-using OsmSharp.Tools.Math.VRP.Core;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.Units.Time;
+using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.VRP.Core;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.BestPlacement;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
 using OsmSharp.Routing;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
@@ -74,7 +74,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
             while (customers.Count > 0)
             {
                 // select a customer using some heuristic.
-                int customer_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers.Count);
+                int customer_idx = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(customers.Count);
                 int customer = customers[customer_idx];
                 customers.Remove(customer);
 
@@ -100,7 +100,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
                         current_route_weight = potential_weight;
 
                         //// improve if needed.
-                        ////if (improvement_probalitity > OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(1))
+                        ////if (improvement_probalitity > OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(1))
                         //if (((problem.Size - customers.Count) % _k) == 0)
                         //{ // an improvement is descided.
                         //    current_route_weight = this.ImproveIntraRoute(problem,

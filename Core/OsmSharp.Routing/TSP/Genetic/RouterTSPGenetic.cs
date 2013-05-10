@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Progress;
-using OsmSharp.Tools.Math.TSP;
-using OsmSharp.Tools.Math.TSP.Genetic;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Progress;
+using OsmSharp.Math.TSP;
+using OsmSharp.Math.TSP.Genetic;
 using OsmSharp.Routing;
 
 namespace OsmSharp.Routing.TSP.Genetic

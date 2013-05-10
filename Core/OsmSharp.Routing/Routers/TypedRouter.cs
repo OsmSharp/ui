@@ -24,8 +24,8 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Metrics.Time;
 using OsmSharp.Routing.Route;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Routing.Routers
 {
@@ -346,7 +346,7 @@ namespace OsmSharp.Routing.Routers
                 connectivityArray[idx] = this.CheckConnectivity(vehicle, point[idx], weight);
 
                 // report progress.
-                Tools.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.Core.CheckConnectivity",
+                Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.Core.CheckConnectivity",
                     "Checking connectivity...");
             }
             return connectivityArray;
@@ -417,7 +417,7 @@ namespace OsmSharp.Routing.Routers
                 {
                     entries[0].Points = new RoutePoint[1];
                     entries[0].Points[0] = from;
-                    entries[0].Points[0].Tags = fromResolved.Tags.ConvertFrom();
+                    entries[0].Points[0].Tags = RouteTagsExtensions.ConvertFrom(fromResolved.Tags);
                 }
 
                 // create the to routing point.
@@ -430,7 +430,7 @@ namespace OsmSharp.Routing.Routers
                     //to.Tags = ConvertTo(to_point.Tags);
                     entries[entries.Length - 1].Points = new RoutePoint[1];
                     entries[entries.Length - 1].Points[0] = to;
-                    entries[entries.Length - 1].Points[0].Tags = toResolved.Tags.ConvertFrom();
+                    entries[entries.Length - 1].Points[0].Tags = RouteTagsExtensions.ConvertFrom(toResolved.Tags);
                 }
 
                 // set the routing points.

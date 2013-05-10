@@ -15,19 +15,18 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
-using OsmSharp.Tools.Math.VRP.Core;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.VRP.Core.BestPlacement;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic;
 
-namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic.Generation
+namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.Genetic.Generation
 {
     /// <summary>
     /// Best-placement generator based on a random first customer for each route.
@@ -69,7 +68,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MinimaxTime.Genetic.Generation
                 multi_route.Add(i);
                 weights.Add(0);
             }
-            int k = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(problem.Depots.Count);
+            int k = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(problem.Depots.Count);
 
             // keep placing customer until none are left.
             while (customers.Count > 0)

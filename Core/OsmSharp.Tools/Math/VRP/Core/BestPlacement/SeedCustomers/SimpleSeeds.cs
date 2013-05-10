@@ -40,10 +40,10 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.SeedCustomers
             // randomly select k seeds.
             while (seeds.Count < k)
             {
-                int new_seed = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
+                int new_seed = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
                 while (seeds.Contains(new_seed))
                 {
-                    new_seed = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
+                    new_seed = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
                 }
                 seeds.Add(new_seed);
             }
@@ -69,10 +69,10 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.SeedCustomers
             int tries = 0;
             while (tries < max_tries)
             {
-                int seed = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
+                int seed = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
                 while (seeds.Contains(seed))
                 {
-                    seed = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
+                    seed = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(weights.Size);
                 }
 
                 // check the new minimal.
@@ -92,7 +92,7 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.SeedCustomers
                 // see if the new one has a higher minimal.
                 if (new_minimal > minimal)
                 { // ok there is an improvement!
-                    OsmSharp.Tools.Output.OutputStreamHost.WriteLine(string.Format("Seed new minimal: {0}->{1}",
+                    OsmSharp.Output.OutputStreamHost.WriteLine(string.Format("Seed new minimal: {0}->{1}",
                         minimal, new_minimal));
 
                     tries = 0;
@@ -105,7 +105,7 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.SeedCustomers
                 tries++; // increase the number of tries.
             }
 
-            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(string.Format("Seed distance: {0}", 
+            OsmSharp.Output.OutputStreamHost.WriteLine(string.Format("Seed distance: {0}", 
                 minimal));
 
             return seeds;

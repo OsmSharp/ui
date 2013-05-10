@@ -26,7 +26,7 @@ using System.Reflection;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Tools.Collections.Tags;
+using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 
 namespace OsmSharp.UnitTests.Routing.Dykstra

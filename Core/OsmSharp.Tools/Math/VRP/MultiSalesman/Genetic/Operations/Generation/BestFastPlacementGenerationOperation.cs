@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.Random;
-using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic;
-using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.Random;
+using OsmSharp.Math.VRP.MultiSalesman.Genetic;
+using OsmSharp.Math.VRP.MultiSalesman.Genetic.Helpers;
 
 namespace OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Generation
 {

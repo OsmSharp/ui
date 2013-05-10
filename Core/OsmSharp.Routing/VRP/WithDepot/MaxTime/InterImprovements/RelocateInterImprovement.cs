@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.VRP.Core;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
+using OsmSharp.Math.VRP.Core;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.BestPlacement;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements
 {

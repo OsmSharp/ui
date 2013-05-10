@@ -20,9 +20,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math;
 using OsmSharp.Routing.Interpreter;
 
 namespace OsmSharp.Routing.Graph.Router.Dykstra

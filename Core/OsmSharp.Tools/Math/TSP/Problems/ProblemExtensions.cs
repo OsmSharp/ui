@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Math.TSP.Problems;
 
 namespace OsmSharp.Math.TSP
 {

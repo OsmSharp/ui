@@ -20,17 +20,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using OsmSharp.Tools.Math.TSP;
-using OsmSharp.Tools.Math.TSP.ArbitraryInsertion;
-using OsmSharp.Tools.Math.TSP.CheapestInsertion;
-using OsmSharp.Tools.Math.TSP.EdgeAssemblyGenetic;
-using OsmSharp.Tools.Math.TSP.Genetic;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.CrossOver;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Generation;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Mutation;
-using OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt;
-using OsmSharp.Tools.TSPLIB.Parser;
-using OsmSharp.Tools.TSPLIB.Problems;
+using OsmSharp.Math.TSP;
+using OsmSharp.Math.TSP.ArbitraryInsertion;
+using OsmSharp.Math.TSP.CheapestInsertion;
+using OsmSharp.Math.TSP.EdgeAssemblyGenetic;
+using OsmSharp.Math.TSP.Genetic;
+using OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver;
+using OsmSharp.Math.TSP.Genetic.Solver.Operations.Generation;
+using OsmSharp.Math.TSP.Genetic.Solver.Operations.Mutation;
+using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
+using OsmSharp.TSPLIB.Parser;
+using OsmSharp.TSPLIB.Problems;
 using System.Diagnostics;
 
 namespace OsmSharp.Benchmark.TSPLIB
@@ -45,7 +45,7 @@ namespace OsmSharp.Benchmark.TSPLIB
         {
             DoTests();
 
-            OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Finished!");
+            OsmSharp.Output.OutputStreamHost.WriteLine("Finished!");
             Console.ReadLine();
         }
 
@@ -53,10 +53,10 @@ namespace OsmSharp.Benchmark.TSPLIB
         {
             //bool ga = false;
             //bool eax = true;
-            OsmSharp.Tools.Output.OutputStreamHost.RegisterOutputStream(
-                new OsmSharp.Tools.Output.ConsoleOutputStream());
-            OsmSharp.Tools.Output.OutputStreamHost.RegisterOutputStream(
-                new OsmSharp.Tools.Output.FileOutputStream(@"c:\temp\results_x64.txt"));
+            OsmSharp.Output.OutputStreamHost.RegisterOutputStream(
+                new OsmSharp.Output.ConsoleOutputStream());
+            OsmSharp.Output.OutputStreamHost.RegisterOutputStream(
+                new OsmSharp.Output.FileOutputStream(@"c:\temp\results_x64.txt"));
 
             List<TSPLIBProblem> problems = new List<TSPLIBProblem>();
 

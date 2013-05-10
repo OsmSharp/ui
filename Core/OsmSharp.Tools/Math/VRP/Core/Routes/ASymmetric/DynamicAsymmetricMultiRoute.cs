@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using OsmSharp.Tools.Collections;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Math.VRP.Core.Routes.ASymmetric
 {

@@ -22,8 +22,8 @@ using System.Text;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Globalization;
-using OsmSharp.Tools.TSPLIB.Problems;
-using OsmSharp.Tools.TSPLIB.Parser.Primitives;
+using OsmSharp.TSPLIB.Problems;
+using OsmSharp.TSPLIB.Parser.Primitives;
 
 namespace OsmSharp.TSPLIB.Parser
 {

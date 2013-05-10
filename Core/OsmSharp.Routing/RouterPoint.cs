@@ -17,8 +17,8 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using OsmSharp.Tools.Math;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Routing.Routers
 {

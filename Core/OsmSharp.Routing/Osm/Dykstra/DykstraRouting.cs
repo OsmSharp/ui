@@ -19,14 +19,14 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using OsmSharp.Tools.Math.Graph.Routing.Dykstra;
+//using OsmSharp.Math.Graph.Routing.Dykstra;
 //using OsmSharp.Routing.Osm.Graphs;
-//using OsmSharp.Tools.Math.Graph.Routing;
-//using OsmSharp.Tools.Math.Graph;
-//using OsmSharp.Tools.Math.Graph.Routing.Point2Point.Exceptions;
-//using OsmSharp.Tools.Math.Graph.Routing.DataStructures;
+//using OsmSharp.Math.Graph.Routing;
+//using OsmSharp.Math.Graph;
+//using OsmSharp.Math.Graph.Routing.Point2Point.Exceptions;
+//using OsmSharp.Math.Graph.Routing.DataStructures;
 //using OsmSharp.Routing.Osm.Core.Constraints;
-//using OsmSharp.Tools.Math;
+//using OsmSharp.Math;
 
 //namespace OsmSharp.Routing.Osm.Dykstra
 //{
@@ -352,7 +352,7 @@
 //                results[idx] = this.CalculateOneToMany(from[idx], tos);
 
 //                // report progress.
-//                OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(idx, from.Length, "Routing.Raw.Dykstra.CalculateManyToMany",
+//                OsmSharp.Output.OutputStreamHost.ReportProgress(idx, from.Length, "Routing.Raw.Dykstra.CalculateManyToMany",
 //                    "Calculating many to many weights....");
 //            }
 

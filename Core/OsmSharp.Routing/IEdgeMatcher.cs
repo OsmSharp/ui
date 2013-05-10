@@ -21,8 +21,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Tools;
-using OsmSharp.Tools.Collections.Tags;
+using OsmSharp;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Routing
 {

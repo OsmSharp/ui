@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.TSP;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.TSP.Problems;
-using OsmSharp.Tools.Math.TSP.ArbitraryInsertion;
-using OsmSharp.Tools.Math.VRP.Core;
+using OsmSharp.Math.TSP;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.TSP.ArbitraryInsertion;
+using OsmSharp.Math.VRP.Core;
 
 namespace OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt
 {
@@ -100,7 +100,7 @@ namespace OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt
         protected override IRoute DoSolve(IProblem problem)
         {
             // generate some random route first.
-            //IRoute route = OsmSharp.Tools.Math.TravellingSalesman.Random.RandomSolver.DoSolve(
+            //IRoute route = OsmSharp.Math.TravellingSalesman.Random.RandomSolver.DoSolve(
             //    problem);
             IRoute route = solver.Solve(problem);
 

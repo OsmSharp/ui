@@ -175,11 +175,11 @@
     <Compile Include="Math\AI\Genetic\Individual.cs" />
     <Compile Include="Math\AI\Genetic\IProblem.cs" />
     <Compile Include="Math\AI\Genetic\Operations\CombinedOperation.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\CrossOver\ICrossOverOperation.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\Generation\IGenerationOperator.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\ICrossOverOperation.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\IGenerationOperator.cs" />
     <Compile Include="Math\AI\Genetic\Operations\IOperation.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\Mutations\CombinedMutation.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\Mutations\IMutationOperation.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\CombinedMutationOperation.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\IMutationOperation.cs" />
     <Compile Include="Math\AI\Genetic\Population.cs" />
     <Compile Include="Math\AI\Genetic\Selectors\ISelector.cs" />
     <Compile Include="Math\AI\Genetic\Selectors\RandomSelector.cs" />

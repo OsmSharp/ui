@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 //using OsmSharp.Osm;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Routing.Route
 {

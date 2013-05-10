@@ -1,5 +1,5 @@
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math;
 
 namespace OsmSharp.UI.Map
 {	

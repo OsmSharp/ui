@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Automata;
+using OsmSharp.Math.Automata;
 
 namespace OsmSharp.Math.StateMachines
 {

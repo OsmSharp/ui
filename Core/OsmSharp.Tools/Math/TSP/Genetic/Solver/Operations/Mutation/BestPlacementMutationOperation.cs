@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.TSP.Genetic.Solver.Operations.Helpers;
+using OsmSharp.Math.TSP.Genetic.Solver;
 
 namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.Mutation
 {

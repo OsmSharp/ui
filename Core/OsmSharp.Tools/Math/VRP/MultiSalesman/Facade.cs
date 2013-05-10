@@ -15,23 +15,20 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Progress;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.Random;
-using OsmSharp.Tools.Progress;
-using OsmSharp.Tools.Math.VRP.MultiSalesman.Problems;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.VRP.MultiSalesman.Solver.Operations.Mutation;
-using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic;
-using OsmSharp.Tools.Math.AI.Genetic.Selectors;
-using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver;
-using OsmSharp.Tools.Math.VRP.MultiSalesman.Solver.Operations.Generation;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic.Helpers;
+using OsmSharp.Math.Units.Time;
+using OsmSharp.Math.Random;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Mutation;
+using OsmSharp.Math.VRP.MultiSalesman.Genetic;
+using OsmSharp.Math.AI.Genetic.Selectors;
+using OsmSharp.Math.VRP.MultiSalesman.Genetic.Operations.CrossOver;
+using OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Generation;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.VRP.MultiSalesman.Genetic.Helpers;
 
 namespace OsmSharp.Math.VRP.MultiSalesman
 {
@@ -42,9 +39,9 @@ namespace OsmSharp.Math.VRP.MultiSalesman
     {
         private class LocalProblem : Problem
         {
-            private OsmSharp.Tools.Math.VRP.Core.IProblemWeights _problem;
+            private OsmSharp.Math.VRP.Core.IProblemWeights _problem;
 
-            public LocalProblem(OsmSharp.Tools.Math.VRP.Core.IProblemWeights problem,
+            public LocalProblem(OsmSharp.Math.VRP.Core.IProblemWeights problem,
                 Second min, Second max)
                 :base(problem.Size, min, max)
             {
@@ -64,7 +61,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public static int[][] Calculate(OsmSharp.Tools.Math.VRP.Core.IProblemWeights problem,
+        public static int[][] Calculate(OsmSharp.Math.VRP.Core.IProblemWeights problem,
             Second min, Second max)
         {
             Problem local_problem = new LocalProblem(problem, min, max);
@@ -169,7 +166,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
 
             while (population.Count < population_size)
             {
-                OsmSharp.Tools.Output.OutputStreamHost.Write(
+                OsmSharp.Output.OutputStreamHost.Write(
                     "Initializing population individual {0}/{1}...", population.Count + 1, population_size);
 
                 // create copy of cities
@@ -202,7 +199,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
                 // add inidividual to the population.
                 population.Add(individual);
 
-                OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Done!");
+                OsmSharp.Output.OutputStreamHost.WriteLine("Done!");
             }
 
             return population;
@@ -235,7 +232,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
             Genome current_round = null;
             while (cities.Count > 0)
             {
-                OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Placing cities {0}/{1}",
+                OsmSharp.Output.OutputStreamHost.WriteLine("Placing cities {0}/{1}",
                     cities.Count,
                     problem.Cities);
                 if (_registered_progress_reporter != null)
@@ -357,12 +354,12 @@ namespace OsmSharp.Math.VRP.MultiSalesman
         //                }
         //                List<int> tried_and_failed_cities = new List<int>();
 
-        //                OsmSharp.Tools.Output.OutputTextStreamHost.WriteLine("");
-        //                OsmSharp.Tools.Output.OutputTextStreamHost.Write("Placing cities");
+        //                OsmSharp.Output.OutputTextStreamHost.WriteLine("");
+        //                OsmSharp.Output.OutputTextStreamHost.Write("Placing cities");
 
         //                while (cities.Count > 0)
         //                {
-        //                    OsmSharp.Tools.Output.OutputTextStreamHost.Write(".",
+        //                    OsmSharp.Output.OutputTextStreamHost.Write(".",
         //                        cities.Count,
         //                        problem.Count);
 
@@ -436,15 +433,15 @@ namespace OsmSharp.Math.VRP.MultiSalesman
         //                {
         //                    success = true;
 
-        //                    OsmSharp.Tools.Output.OutputTextStreamHost.WriteLine("");
-        //                    OsmSharp.Tools.Output.OutputTextStreamHost.WriteLine("Done for {0} rounds!", count);
+        //                    OsmSharp.Output.OutputTextStreamHost.WriteLine("");
+        //                    OsmSharp.Output.OutputTextStreamHost.WriteLine("Done for {0} rounds!", count);
         //                }
 
         //                if (!success && current_population_size >= population_size)
         //                {
         //                    count++;
-        //                    OsmSharp.Tools.Output.OutputTextStreamHost.WriteLine("");
-        //                    OsmSharp.Tools.Output.OutputTextStreamHost.WriteLine("Increasing to {0} rounds!", count);
+        //                    OsmSharp.Output.OutputTextStreamHost.WriteLine("");
+        //                    OsmSharp.Output.OutputTextStreamHost.WriteLine("Increasing to {0} rounds!", count);
 
         //                    current_population_size = 0;
         //                }

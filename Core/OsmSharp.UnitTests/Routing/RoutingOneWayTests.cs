@@ -24,14 +24,14 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Constraints;
 using OsmSharp.Routing.Routers;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Route;
 using System.Reflection;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Data;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Tools.Math;
+using OsmSharp.Math;
 
 namespace OsmSharp.Osm.UnitTests.Routing
 {

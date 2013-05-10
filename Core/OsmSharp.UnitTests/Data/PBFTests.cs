@@ -91,23 +91,21 @@ namespace OsmSharp.UnitTests.Data
         private void TestData(IDataSourceReadOnly data)
         {
             // test what data is present in the datasource.
-            Node node_291738780 = data.GetNode(291738780);
-            Assert.IsNotNull(node_291738780);
-            Assert.AreEqual(291738780, node_291738780.Id);
+            Node node291738780 = data.GetNode(291738780);
+            Assert.IsNotNull(node291738780);
+            Assert.AreEqual(291738780, node291738780.Id);
 
-            Node node_1727654333 = data.GetNode(1727654333);
-            Assert.IsNotNull(node_1727654333);
-            Assert.AreEqual(1727654333, node_1727654333.Id);
+            Node node1727654333 = data.GetNode(1727654333);
+            Assert.IsNotNull(node1727654333);
+            Assert.AreEqual(1727654333, node1727654333.Id);
 
-            Way way_87281441 = data.GetWay(87281441);
-            Assert.IsNotNull(way_87281441);
-            Assert.AreEqual(87281441, way_87281441.Id);
+            Way way87281441 = data.GetWay(87281441);
+            Assert.IsNotNull(way87281441);
+            Assert.AreEqual(87281441, way87281441.Id);
 
-            Way way_76705106 = data.GetWay(76705106);
-            Assert.IsNotNull(way_76705106);
-            Assert.AreEqual(76705106, way_76705106.Id);
+            Way way76705106 = data.GetWay(76705106);
+            Assert.IsNotNull(way76705106);
+            Assert.AreEqual(76705106, way76705106.Id);
         }
-
-        
     }
 }

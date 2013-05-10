@@ -15,20 +15,8 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.IO;
-using OsmSharp.Osm.Xml.v0_6;
-using OsmSharp.Osm.Simple;
-using OsmSharp.Tools.Xml.Sources;
-using OsmSharp.Osm.Xml;
-using System.Xml;
-using System.Xml.Serialization;
 
-namespace OsmSharp.Osm.Data.Core.API
+namespace OsmSharp.Osm.API
 {
     /// <summary>
     /// Holds API capabilities.

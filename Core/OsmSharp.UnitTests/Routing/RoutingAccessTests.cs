@@ -8,7 +8,7 @@ using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Routers;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Route;
 using NUnit.Framework;
 

@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Shapes.PrimitivesFactory;
-using OsmSharp.Tools.Math.Shapes.ResultHelpers;
+using OsmSharp.Math.Shapes.PrimitivesFactory;
+using OsmSharp.Math.Shapes.ResultHelpers;
 
 namespace OsmSharp.Math.Shapes
 {

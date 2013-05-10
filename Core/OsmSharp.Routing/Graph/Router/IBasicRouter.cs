@@ -21,10 +21,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Collections;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math;
+using OsmSharp.Math.Geo;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Routing.Graph.Router
 {

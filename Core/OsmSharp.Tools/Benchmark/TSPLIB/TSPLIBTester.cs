@@ -21,11 +21,11 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Reflection;
-using OsmSharp.Tools.Progress;
-using OsmSharp.Tools.TSPLIB.Parser;
-using OsmSharp.Tools.Math.TSP;
-using OsmSharp.Tools.TSPLIB.Problems;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Progress;
+using OsmSharp.TSPLIB.Parser;
+using OsmSharp.Math.TSP;
+using OsmSharp.TSPLIB.Problems;
+using OsmSharp.Math.VRP.Core.Routes;
 
 namespace OsmSharp.Benchmark.TSPLIB
 {
@@ -115,7 +115,7 @@ namespace OsmSharp.Benchmark.TSPLIB
             //Tools.Core.Output.OutputStreamHost.WriteLine("====== {0} started! ======", _name);
             //Tools.Core.Output.OutputStreamHost.WriteLine();
             //Tools.Core.Output.OutputStreamHost.WriteLine("Started: {0}", problem.Name);
-            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
+            OsmSharp.Output.OutputStreamHost.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
                 PadRight("Problem", 15),
                 PadRight("Name", 40),
                 PadRight("Time"),
@@ -184,7 +184,7 @@ namespace OsmSharp.Benchmark.TSPLIB
                         ToStringEmptyWhenNull(System.Math.Round(total / (double)_test_count, 3)),
                         ToStringEmptyWhenNull(best),
                         ToStringEmptyWhenNull(worst));
-                    OsmSharp.Tools.Output.OutputStreamHost.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
+                    OsmSharp.Output.OutputStreamHost.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
                         PadRight(problem.Name, 15),
                         PadRight(solver.Name, 40),
                         PadRight(System.Math.Round(time.TotalSeconds, 3)),
@@ -200,7 +200,7 @@ namespace OsmSharp.Benchmark.TSPLIB
                     writer.WriteLine(line);
                     writer.Flush();
                 }
-                OsmSharp.Tools.Output.OutputStreamHost.WriteLine();
+                OsmSharp.Output.OutputStreamHost.WriteLine();
             }
             writer.Flush();
             writer.Close();

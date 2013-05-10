@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Collections.PriorityQueues;
+using OsmSharp.Collections.PriorityQueues;
 using NUnit.Framework;
 
 namespace OsmSharp.UnitTests.Tools
@@ -80,7 +80,7 @@ namespace OsmSharp.UnitTests.Tools
             // enqueue one item.
             while (elements.Count > 0)
             { // keep selecting existing elements.
-                int selected = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(elements.Count);
+                int selected = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(elements.Count);
 
                 KeyValuePair<string, float> selected_pair =
                     elements[selected];
@@ -124,7 +124,7 @@ namespace OsmSharp.UnitTests.Tools
             // enqueue one item.
             while (elements.Count > 0)
             { // keep selecting existing elements.
-                int selected = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(elements.Count);
+                int selected = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(elements.Count);
 
                 KeyValuePair<string, float> selected_pair =
                     elements[selected];

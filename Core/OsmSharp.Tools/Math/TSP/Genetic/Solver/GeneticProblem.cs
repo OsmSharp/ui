@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic;
 
 namespace OsmSharp.Math.TSP.Genetic.Solver
 {
@@ -31,13 +31,13 @@ namespace OsmSharp.Math.TSP.Genetic.Solver
         /// <summary>
         /// The non-genetic problem.
         /// </summary>
-        private OsmSharp.Tools.Math.TSP.Problems.IProblem _problem;
+        private OsmSharp.Math.TSP.Problems.IProblem _problem;
 
         /// <summary>
         /// Creates a new genetic problem.
         /// </summary>
         /// <param name="problem"></param>
-        public GeneticProblem(OsmSharp.Tools.Math.TSP.Problems.IProblem problem)
+        public GeneticProblem(OsmSharp.Math.TSP.Problems.IProblem problem)
         {
             _problem = problem;
         }
@@ -45,7 +45,7 @@ namespace OsmSharp.Math.TSP.Genetic.Solver
         /// <summary>
         /// Returns the base problem.
         /// </summary>
-        public OsmSharp.Tools.Math.TSP.Problems.IProblem BaseProblem
+        public OsmSharp.Math.TSP.Problems.IProblem BaseProblem
         {
             get
             {

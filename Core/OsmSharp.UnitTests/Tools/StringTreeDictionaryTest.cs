@@ -20,8 +20,8 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using OsmSharp.Tools.Math.Structures.StringTrees;
-using OsmSharp.Tools;
+using OsmSharp.Math.Structures.StringTrees;
+using OsmSharp;
 
 namespace OsmSharp.UnitTests
 {

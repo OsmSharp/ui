@@ -22,7 +22,7 @@
 //using OsmSharp.Routing.Osm.Core.Interpreter;
 //using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 //using OsmSharp.Osm;
-//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Math.Geo;
 //using NUnit.Framework;
 
 //namespace OsmSharp.Osm.UnitTests.Routing

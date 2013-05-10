@@ -121,11 +121,11 @@ namespace OsmSharp.Xml.Gpx
         private void FindVersionFromObject()
         {
             _version = GpxVersion.Unknown;
-            if (_gpx_object is OsmSharp.Tools.Xml.Gpx.v1_0.gpx)
+            if (_gpx_object is OsmSharp.Xml.Gpx.v1_0.gpx)
             {
                 _version = GpxVersion.Gpxv1_0;
             }
-            else if (_gpx_object is OsmSharp.Tools.Xml.Gpx.v1_1.gpxType)
+            else if (_gpx_object is OsmSharp.Xml.Gpx.v1_1.gpxType)
             {
                 _version = GpxVersion.Gpxv1_1;
             }
@@ -180,10 +180,10 @@ namespace OsmSharp.Xml.Gpx
                 switch (_version)
                 {
                     case GpxVersion.Gpxv1_0:
-                        version_type = typeof(OsmSharp.Tools.Xml.Gpx.v1_0.gpx);
+                        version_type = typeof(OsmSharp.Xml.Gpx.v1_0.gpx);
                         break;
                     case GpxVersion.Gpxv1_1:
-                        version_type = typeof(OsmSharp.Tools.Xml.Gpx.v1_1.gpxType);
+                        version_type = typeof(OsmSharp.Xml.Gpx.v1_1.gpxType);
                         break;
                     case GpxVersion.Unknown:
                         throw new XmlException("Version could not be determined!");
@@ -210,10 +210,10 @@ namespace OsmSharp.Xml.Gpx
                 switch (_version)
                 {
                     case GpxVersion.Gpxv1_0:
-                        version_type = typeof(OsmSharp.Tools.Xml.Gpx.v1_0.gpx);
+                        version_type = typeof(OsmSharp.Xml.Gpx.v1_0.gpx);
                         break;
                     case GpxVersion.Gpxv1_1:
-                        version_type = typeof(OsmSharp.Tools.Xml.Gpx.v1_1.gpxType);
+                        version_type = typeof(OsmSharp.Xml.Gpx.v1_1.gpxType);
                         break;
                     case GpxVersion.Unknown:
                         throw new XmlException("Version could not be determined!");

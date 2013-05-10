@@ -1,9 +1,24 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.Routes;
 
 namespace OsmSharp.UnitTests.Routes
 {
@@ -16,14 +31,14 @@ namespace OsmSharp.UnitTests.Routes
         /// Creates the IRoute implementation to perform tests on with an initial customer.
         /// </summary>
         /// <returns></returns>
-        protected abstract IRoute BuildRoute(int customer, bool is_round);
+        protected abstract IRoute BuildRoute(int customer, bool isRound);
 
         /// <summary>
         /// Creates the IRoute implementation to perform tests one but one that is empty.
         /// </summary>
-        /// <param name="is_round"></param>
+        /// <param name="isRound"></param>
         /// <returns></returns>
-        protected abstract IRoute BuildRoute(bool is_round);
+        protected abstract IRoute BuildRoute(bool isRound);
 
         /// <summary>
         /// Some tests on an IRoute.
@@ -79,9 +94,9 @@ namespace OsmSharp.UnitTests.Routes
         public void DoTestRemove()
         {
             // create a new empty route.
-            int count = 100;
+            const int count = 100;
             IRoute route = this.BuildRoute(0, true);
-            List<int> customers = new List<int>();
+            var customers = new List<int>();
             if (route != null)
             { // this part needs testing!
                 customers.Add(0);
@@ -95,10 +110,10 @@ namespace OsmSharp.UnitTests.Routes
                 // remove customers.
                 while (customers.Count > 0)
                 {
-                    int customer_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(
+                    int customerIdx = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(
                         customers.Count);
-                    int customer = customers[customer_idx];
-                    customers.RemoveAt(customer_idx);
+                    int customer = customers[customerIdx];
+                    customers.RemoveAt(customerIdx);
 
                     route.Remove(customer);
 
@@ -123,10 +138,10 @@ namespace OsmSharp.UnitTests.Routes
                 // remove customers.
                 while (customers.Count > 0)
                 {
-                    int customer_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(
+                    int customerIdx = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(
                         customers.Count);
-                    int customer = customers[customer_idx];
-                    customers.RemoveAt(customer_idx);
+                    int customer = customers[customerIdx];
+                    customers.RemoveAt(customerIdx);
 
                     route.Remove(customer);
 
@@ -144,7 +159,7 @@ namespace OsmSharp.UnitTests.Routes
         public void DoTestContains()
         {
             // create a new empty route.
-            int count = 100;
+            const int count = 100;
             IRoute route = this.BuildRoute(true);
             if (route != null)
             { // this part needs testing.
@@ -178,14 +193,14 @@ namespace OsmSharp.UnitTests.Routes
         /// Test removing adding every customer at every position.
         /// </summary>
         public void DoTestAddRemoveComplete()
-        {            
+        {
             // create a new empty route.
-            int count = 10;
-            for (int customer_to_remove = 0; customer_to_remove < count; customer_to_remove++)
+            const int count = 10;
+            for (int customerToRemove = 0; customerToRemove < count; customerToRemove++)
             {
-                for (int customer_to_place_after = 0; customer_to_place_after < count; customer_to_place_after++)
+                for (int customerToPlaceAfter = 0; customerToPlaceAfter < count; customerToPlaceAfter++)
                 {
-                    if (customer_to_remove != customer_to_place_after)
+                    if (customerToRemove != customerToPlaceAfter)
                     {
                         IRoute route = this.BuildRoute(true);
                         if (route != null)
@@ -195,16 +210,16 @@ namespace OsmSharp.UnitTests.Routes
                                 route.InsertAfter(customer - 1, customer);
                                 //route.InsertAfterAndRemove(customer - 1, customer, -1);
                             }
+
+                            route.Remove(customerToRemove);
+                            route.InsertAfter(customerToPlaceAfter, customerToRemove);
+                            //route.InsertAfterAndRemove(customer_to_place_after, customer_to_remove, -1);
+
+                            Assert.IsTrue(route.Contains(customerToPlaceAfter, customerToRemove));
+                            Assert.AreEqual(count, route.Count);
+                            var customersInRoute = new HashSet<int>(route);
+                            Assert.AreEqual(customersInRoute.Count, route.Count);
                         }
-
-                        route.Remove(customer_to_remove);
-                        route.InsertAfter(customer_to_place_after, customer_to_remove);
-                        //route.InsertAfterAndRemove(customer_to_place_after, customer_to_remove, -1);
-
-                        Assert.IsTrue(route.Contains(customer_to_place_after, customer_to_remove));
-                        Assert.AreEqual(count, route.Count);
-                        HashSet<int> customers_in_route = new HashSet<int>(route);
-                        Assert.AreEqual(customers_in_route.Count, route.Count);
                     }
                 }
             }

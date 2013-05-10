@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.VRP.Core.LocalSearch;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Math.VRP.Core.LocalSearch;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.TSP;
 using OsmSharp.Routing;
 
 namespace OsmSharp.Routing.TSP.RandomizedArbitraryInsertion

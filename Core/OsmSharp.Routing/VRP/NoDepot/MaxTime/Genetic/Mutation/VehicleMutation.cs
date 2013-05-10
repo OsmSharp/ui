@@ -15,14 +15,13 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.VRP.Core.Routes;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.Mutation
 {
@@ -62,16 +61,16 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.Mutation
                 int avg = solution.Size / solution.Count;
 
                 // 
-                int source_route_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(solution.Count);
+                int source_route_idx = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(solution.Count);
 
                 // get the source count and descide what to do.
                 List<int> sizes = new List<int>(solution.Sizes);
                 int source_size = solution.Sizes[source_route_idx];
                 if (source_size > avg)
                 {
-                    int size = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_size / 2);
-                    //int size = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_size);
-                    //int size = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(source_size / 3);
+                    int size = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(source_size / 2);
+                    //int size = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(source_size);
+                    //int size = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(source_size / 3);
 
                     if (size > 0)
                     {
@@ -84,7 +83,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.Mutation
                     int target_route_idx = -1;
                     do
                     {
-                        target_route_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(solution.Sizes.Count);
+                        target_route_idx = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(solution.Sizes.Count);
                     } while (source_route_idx == target_route_idx);
 
                     if (target_route_idx >= 0 && target_route_idx < sizes.Count)
@@ -107,8 +106,8 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.Mutation
                 for (int route_idx = 0; route_idx < solution.Count; route_idx++)
                 {
                     double difference;
-                    OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt.HillClimbing3OptSolver hillclimbing_3opt =
-                        new OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt.HillClimbing3OptSolver(true, true);
+                    OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt.HillClimbing3OptSolver hillclimbing_3opt =
+                        new OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt.HillClimbing3OptSolver(true, true);
                     hillclimbing_3opt.Improve(solver.Problem, solution.Route(route_idx), out difference);
                 }
 

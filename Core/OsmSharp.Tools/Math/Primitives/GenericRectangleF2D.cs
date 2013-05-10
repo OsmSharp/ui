@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Primitives.Enumerators.Lines;
-using OsmSharp.Tools.Math.Primitives.Enumerators.Points;
+using OsmSharp.Math.Primitives.Enumerators.Lines;
+using OsmSharp.Math.Primitives.Enumerators.Points;
 
 namespace OsmSharp.Math
 {

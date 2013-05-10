@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Mutations;
-using OsmSharp.Tools.Math.Random;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.VRP.MultiSalesman.Genetic;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.Random;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.VRP.MultiSalesman.Genetic;
 
 namespace OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Mutation
 {
@@ -60,7 +60,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Mutation
             { // decrease total time.
                 if (_regime_reached == false)
                 {
-                    OsmSharp.Tools.Output.OutputStreamHost.WriteLine(
+                    OsmSharp.Output.OutputStreamHost.WriteLine(
                         "Regime Reached!");
                 }
                 //Tools.Core.Output.OutputTextStreamHost.Write("DT");

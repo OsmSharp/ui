@@ -15,18 +15,13 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Tools.Xml;
+
+using OsmSharp.Xml;
 using System.Xml.Serialization;
 using System.Xml;
-using OsmSharp.Xml;
 
 namespace OsmSharp.Osm.Xml
 {
-
     /// <summary>
     /// Represents a osm document.
     /// </summary>
@@ -35,7 +30,7 @@ namespace OsmSharp.Osm.Xml
         /// <summary>
         /// The actual osm object.
         /// </summary>
-        private object _osm_object;
+        private object _osmObject;
 
         /// <summary>
         /// The xml source this documents comes from.
@@ -71,11 +66,11 @@ namespace OsmSharp.Osm.Xml
             {
                 this.DoReadOsm();
 
-                return _osm_object;
+                return _osmObject;
             }
             set
             {
-                _osm_object = value;
+                _osmObject = value;
             }
         }
 
@@ -91,13 +86,13 @@ namespace OsmSharp.Osm.Xml
 
         private void DoReadOsm()
         {
-            if (_osm_object == null && _source.HasData)
+            if (_osmObject == null && _source.HasData)
             {
                 XmlSerializer xmlSerializer = null;
                 xmlSerializer = new XmlSerializer(typeof(v0_6.osm));
 
                 XmlReader reader = _source.GetReader();
-                _osm_object = xmlSerializer.Deserialize(reader);
+                _osmObject = xmlSerializer.Deserialize(reader);
 
                 reader.Close();
             }
@@ -105,13 +100,13 @@ namespace OsmSharp.Osm.Xml
 
         private void DoWriteOsm()
         {
-            if (_osm_object != null)
+            if (_osmObject != null)
             {
                 XmlSerializer xmlSerializer = null;
                 xmlSerializer = new XmlSerializer(typeof(v0_6.osm));
 
                 XmlWriter writer = _source.GetWriter();
-                xmlSerializer.Serialize(writer,_osm_object);
+                xmlSerializer.Serialize(writer,_osmObject);
                 writer.Flush();
                 writer.Close();
 
@@ -128,7 +123,7 @@ namespace OsmSharp.Osm.Xml
         public void Close()
         {
             _source = null;
-            _osm_object = null;
+            _osmObject = null;
         }
     }
 

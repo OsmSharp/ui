@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Structures;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Structures;
 using NUnit.Framework;
 
 namespace OsmSharp.UnitTests.Tools

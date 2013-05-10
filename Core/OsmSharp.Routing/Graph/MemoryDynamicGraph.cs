@@ -18,7 +18,7 @@
 
 using System;
 using System.Collections.Generic;
-using OsmSharp.Tools.Math.Geo.Simple;
+using OsmSharp.Math.Geo.Simple;
 
 namespace OsmSharp.Routing.Graph
 {

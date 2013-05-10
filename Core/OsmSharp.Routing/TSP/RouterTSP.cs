@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.TSP.Problems;
-using OsmSharp.Tools.Math.TSP;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.TSP;
+using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Route;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Routing.TSP
 {
@@ -90,7 +90,7 @@ namespace OsmSharp.Routing.TSP
             ISolver solver = null;
             if (locations.Length < 6)
             { // creates a bute force solver.
-                solver = new OsmSharp.Tools.Math.TSP.BruteForce.BruteForceSolver();
+                solver = new OsmSharp.Math.TSP.BruteForce.BruteForceSolver();
             }
             else
             { // creates a solver for the larger problems.

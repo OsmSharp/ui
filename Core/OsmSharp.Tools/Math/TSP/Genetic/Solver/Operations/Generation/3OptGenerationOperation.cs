@@ -19,11 +19,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.Generation;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
+using OsmSharp.Math.VRP.Core.Routes;
 
 namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.Generation
 {

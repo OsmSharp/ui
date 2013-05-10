@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Units.Speed;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Units.Speed;
 
 namespace OsmSharp.Routing.Osm.Interpreter.Edge
 {

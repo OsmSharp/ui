@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Xml;
 using OsmSharp.Osm;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Factory;
 using OsmSharp.Osm.Xml.v0_6;
 using OsmSharp.Osm.Sources;
@@ -72,7 +72,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
         /// Creates a new osm data source.
         /// </summary>
         public OsmDataSource(string file)
-            : this(new OsmSharp.Osm.Xml.OsmDocument(new OsmSharp.Tools.Xml.Sources.XmlFileSource(file)))
+            : this(new OsmSharp.Osm.Xml.OsmDocument(new OsmSharp.Xml.Sources.XmlFileSource(file)))
         {
 
         }
@@ -82,7 +82,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
         /// </summary>
         /// <param name="stream"></param>
         public OsmDataSource(Stream stream)
-            : this(new OsmSharp.Osm.Xml.OsmDocument(new OsmSharp.Tools.Xml.Sources.XmlReaderSource(XmlReader.Create(stream))))
+            : this(new OsmSharp.Osm.Xml.OsmDocument(new OsmSharp.Xml.Sources.XmlReaderSource(XmlReader.Create(stream))))
         {
             
         }

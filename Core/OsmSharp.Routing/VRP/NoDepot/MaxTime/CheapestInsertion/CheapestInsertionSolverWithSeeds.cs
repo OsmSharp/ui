@@ -19,15 +19,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.TSP.Problems;
-using OsmSharp.Tools.Math.VRP.Core;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement.SeedCustomers;
+using OsmSharp.Math.Units.Time;
+using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.VRP.Core;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.BestPlacement;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.VRP.Core.BestPlacement.SeedCustomers;
 using OsmSharp.Routing;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement.InsertionCosts;
+using OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
 {

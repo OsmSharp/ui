@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Automata;
-using OsmSharp.Tools.Math.StateMachines;
+using OsmSharp.Math.Automata;
+using OsmSharp.Math.StateMachines;
 using OsmSharp.Routing.Interpreter;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning

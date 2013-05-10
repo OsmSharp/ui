@@ -19,16 +19,16 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.VRP.Core;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
-using OsmSharp.Tools.Math.TSP;
+using OsmSharp.Math.Units.Time;
+using OsmSharp.Math.VRP.Core;
+using OsmSharp.Math.VRP.Core.BestPlacement;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.TSP;
 using OsmSharp.Routing;
-using OsmSharp.Tools.Math.VRP.Core.BestPlacement.InsertionCosts;
+using OsmSharp.Math.VRP.Core.BestPlacement.InsertionCosts;
 using OsmSharp.Routing.VRP.NoDepot.MaxTime.InterImprovements;
-using OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt;
+using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
 {
@@ -126,7 +126,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
             if (use_improvements)
             {
                 //_intra_improvements.Add(
-                //    new OsmSharp.Tools.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver());
+                //    new OsmSharp.Math.TSP.ArbitraryInsertion.ArbitraryInsertionSolver());
                 _intra_improvements.Add(
                     new HillClimbing3OptSolver(true, true));
             }
@@ -265,7 +265,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
                     }
                     else
                     { // just select a random customer.
-                        customer = customers[Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers.Count)];
+                        customer = customers[Math.Random.StaticRandomGenerator.Get().Generate(customers.Count)];
                     }
                     customers.Remove(customer);
 
@@ -275,7 +275,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
 
                     while (customers.Count > 0)
                     {
-                        //OsmSharp.Tools.Output.OutputStreamHost.WriteLine("{0}/{1} placed!",
+                        //OsmSharp.Output.OutputStreamHost.WriteLine("{0}/{1} placed!",
                         //    customers.Count, problem.Size);
 
                         // calculate the best placement.
@@ -488,7 +488,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
                     double difference;
                     if (improvement_operation.Improve(problem, route, out difference))
                     { // there was an improvement.
-                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Intra-improvement found {0} {1}->{2}",
+                        OsmSharp.Output.OutputStreamHost.WriteLine("Intra-improvement found {0} {1}->{2}",
                             improvement_operation.Name, new_weight, new_weight + difference);
 
                         // check if the route is valid.
@@ -569,7 +569,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
                             throw new Exception("this is not an improvement!");
                         }
 
-                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
+                        OsmSharp.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
                             route1_idx, route2_idx, improvement_operation.Name, total_before, total_after);
 
                         // recalculate weights.
@@ -584,7 +584,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
                         improvement = true;
                         global_improvement = true;
 
-                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2}",
+                        OsmSharp.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2}",
                             route1_idx, route2_idx, improvement_operation.Name);
 
                         // check if the route is valid.

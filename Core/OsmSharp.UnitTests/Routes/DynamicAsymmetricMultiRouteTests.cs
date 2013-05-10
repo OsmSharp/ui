@@ -1,10 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using NUnit.Framework;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
 
 namespace OsmSharp.UnitTests.Routes
 {
@@ -17,9 +31,9 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Creates a dynamic asymmetric multi route instance to test.
         /// </summary>
-        /// <param name="is_round"></param>
+        /// <param name="isRound"></param>
         /// <returns></returns>
-        protected override IMultiRoute BuildRoute(bool is_round)
+        protected override IMultiRoute BuildRoute(bool isRound)
         {
             return new DynamicAsymmetricMultiRoute(1, true);
         }

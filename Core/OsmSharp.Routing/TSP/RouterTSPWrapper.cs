@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Routers;
-using OsmSharp.Tools.Math.TSP;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Math.TSP;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.VRP.Core.Routes;
 
 namespace OsmSharp.Routing.TSP
 {

@@ -22,7 +22,7 @@ using System.Text;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Memory;
 using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Osm.Data.Core.Processor;
 

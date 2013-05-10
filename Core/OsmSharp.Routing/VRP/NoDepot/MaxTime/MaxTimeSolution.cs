@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.VRP.Core.Routes.ASymmetric;
+using OsmSharp.Math.VRP.Core.Routes.ASymmetric;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
 {

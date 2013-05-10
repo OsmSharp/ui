@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using OsmSharp.Routing.Constraints;
 using OsmSharp.Routing.Interpreter.Roads;
-using OsmSharp.Tools.Collections.Tags;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Routing.Interpreter.Constraints.Highways
 {

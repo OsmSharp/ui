@@ -21,8 +21,8 @@ using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Interpreter.Roads;
 
@@ -147,7 +147,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Holds the coordinates.
         /// </summary>
-        private OsmSharp.Tools.Collections.Huge.HugeDictionary<long, float[]> _coordinates;
+        private OsmSharp.Collections.HugeDictionary<long, float[]> _coordinates;
 
         /// <summary>
         /// Holds the index of all relevant nodes.
@@ -164,7 +164,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// </summary>
         public override void Initialize()
         {
-            _coordinates = new OsmSharp.Tools.Collections.Huge.HugeDictionary<long, float[]>();
+            _coordinates = new OsmSharp.Collections.HugeDictionary<long, float[]>();
         }
 
         /// <summary>

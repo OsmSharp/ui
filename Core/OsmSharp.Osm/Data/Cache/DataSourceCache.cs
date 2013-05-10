@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
-using OsmSharp.Tools.Math.Units.Angle;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Units.Angle;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
 
 namespace OsmSharp.Osm.Data.Cache
@@ -302,7 +302,7 @@ namespace OsmSharp.Osm.Data.Cache
         /// <summary>
         /// Returns the bounding of the data in this cache.
         /// </summary>
-        public OsmSharp.Tools.Math.Geo.GeoCoordinateBox BoundingBox
+        public OsmSharp.Math.Geo.GeoCoordinateBox BoundingBox
         {
             get 
             {
@@ -506,7 +506,7 @@ namespace OsmSharp.Osm.Data.Cache
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IList<OsmGeo> Get(OsmSharp.Tools.Math.Geo.GeoCoordinateBox box, OsmSharp.Osm.Filters.Filter filter)
+        public IList<OsmGeo> Get(OsmSharp.Math.Geo.GeoCoordinateBox box, OsmSharp.Osm.Filters.Filter filter)
         {
             List<OsmGeo> base_objects = new List<OsmGeo>();
 

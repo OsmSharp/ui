@@ -17,7 +17,7 @@ using System.Reflection;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing;
-using OsmSharp.Tools.Collections.Tags;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.UnitTests.Routing.CH
 {
@@ -46,7 +46,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <param name="xml"></param>
         private static void ExecuteEdgeDifference(string xml)
         {
-            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(xml);
+            OsmSharp.Output.OutputStreamHost.WriteLine(xml);
 
             CHVerifiedContractionBaseTests tester = new CHVerifiedContractionBaseTests();
             tester.DoTestCHEdgeDifferenceVerifiedContraction(xml);
@@ -58,7 +58,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <param name="xml"></param>
         private static void ExecuteSparse(string xml)
         {
-            OsmSharp.Tools.Output.OutputStreamHost.WriteLine(xml);
+            OsmSharp.Output.OutputStreamHost.WriteLine(xml);
 
             CHVerifiedContractionBaseTests tester = new CHVerifiedContractionBaseTests();
             tester.DoTestCHSparseVerifiedContraction(xml);

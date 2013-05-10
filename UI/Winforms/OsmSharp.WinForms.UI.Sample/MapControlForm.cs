@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Renderer;

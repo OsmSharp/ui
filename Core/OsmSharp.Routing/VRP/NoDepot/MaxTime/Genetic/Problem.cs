@@ -19,17 +19,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-//using OsmSharp.Tools.Math.VRP.MultiSalesman.Problems;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.TSP.Problems;
-using OsmSharp.Tools.Math.VRP.Core;
+//using OsmSharp.Math.VRP.MultiSalesman.Problems;
+using OsmSharp.Math.Units.Time;
+using OsmSharp.Math.TSP.Problems;
+using OsmSharp.Math.VRP.Core;
 
 namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
 {
     ///// <summary>
     ///// The problem description for the genetic algorithm.
     ///// </summary>
-    //internal class Problem : IProblemWeights, OsmSharp.Tools.Math.AI.Genetic.IProblem
+    //internal class Problem : IProblemWeights, OsmSharp.Math.AI.Genetic.IProblem
     //{
     //    private IProblemWeights _weights;
 

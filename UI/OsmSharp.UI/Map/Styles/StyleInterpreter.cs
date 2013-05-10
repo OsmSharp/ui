@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
 using OsmSharp.UI.Renderer;
-using OsmSharp.Tools;
+using OsmSharp;
 
 namespace OsmSharp.UI.Map.Styles
 {

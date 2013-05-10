@@ -1,7 +1,4 @@
-using System;
-using OsmSharp.Tools.Math.Geo;
-
-namespace OsmSharp.Tools
+namespace OsmSharp.Math.Geo.Projections
 {
 	/// <summary>
 	/// An abstract of a projection.

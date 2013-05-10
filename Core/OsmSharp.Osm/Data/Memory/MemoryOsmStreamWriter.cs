@@ -22,7 +22,7 @@ using OsmSharp.Osm.Data.Core.Memory;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Factory;
-using OsmSharp.Tools.Collections;
+using OsmSharp.Collections;
 
 namespace OsmSharp.Osm.Data.Memory
 {

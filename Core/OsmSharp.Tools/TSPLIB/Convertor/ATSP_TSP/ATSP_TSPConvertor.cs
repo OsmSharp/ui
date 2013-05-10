@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.TSP;
-using OsmSharp.Tools.TSPLIB.Problems;
-using OsmSharp.Tools.Math.TSP.Problems;
+using OsmSharp.Math.TSP;
+using OsmSharp.TSPLIB.Problems;
+using OsmSharp.Math.TSP.Problems;
 
 namespace OsmSharp.TSPLIB.Convertor.ATSP_TSP
 {

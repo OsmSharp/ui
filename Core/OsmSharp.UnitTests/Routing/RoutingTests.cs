@@ -20,12 +20,12 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Tools.Math;
+using OsmSharp.Math;
 using OsmSharp.Routing.Routers;
 
 namespace OsmSharp.UnitTests.Routing

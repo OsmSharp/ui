@@ -22,9 +22,9 @@ using System.Text;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.Routing;
 using System.Diagnostics;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Tools.Collections;
+using OsmSharp.Collections;
 //using System.Collections.Concurrent;
 
 namespace OsmSharp.Routing.CH.PreProcessing
@@ -167,7 +167,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
                 if (current % 1000 == 0)
                 {
-                    Tools.Output.OutputStreamHost.ReportProgress(current, total, "CHPreProcessor", "Pre-processing...");
+                    Output.OutputStreamHost.ReportProgress(current, total, "CHPreProcessor", "Pre-processing...");
                 }
                 current++;
             }

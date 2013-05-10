@@ -1,9 +1,24 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.Routes;
 
 namespace OsmSharp.UnitTests.Routes
 {
@@ -15,82 +30,82 @@ namespace OsmSharp.UnitTests.Routes
         /// <summary>
         /// Builds a multi route instances to test on.
         /// </summary>
-        /// <param name="is_round"></param>
+        /// <param name="isRound"></param>
         /// <returns></returns>
-        protected abstract IMultiRoute BuildRoute(bool is_round);
+        protected abstract IMultiRoute BuildRoute(bool isRound);
 
         /// <summary>
         /// Tests adding customers.
         /// </summary>
         public void DoTestAdd()
         {
-            IMultiRoute multi_route = this.BuildRoute(true);
+            IMultiRoute multiRoute = this.BuildRoute(true);
 
-            Assert.AreEqual(0, multi_route.Count);
+            Assert.AreEqual(0, multiRoute.Count);
             int count = 10;
             int routes = 3;
-            for (int route_idx = 0; route_idx < routes; route_idx++)
+            for (int routeIdx = 0; routeIdx < routes; routeIdx++)
             {
-                int customer_start = (route_idx * count);
-                IRoute route = multi_route.Add(customer_start);
+                int customerStart = (routeIdx * count);
+                IRoute route = multiRoute.Add(customerStart);
                 Assert.AreEqual(1, route.Count);
                 Assert.AreEqual(false, route.IsEmpty);
                 Assert.AreEqual(true, route.IsRound);
-                for (int customer = customer_start + 1; customer < customer_start + count; customer++)
+                for (int customer = customerStart + 1; customer < customerStart + count; customer++)
                 {
                     route.InsertAfter(customer - 1, customer);
 
-                    Assert.AreEqual(customer - customer_start + 1, route.Count);
+                    Assert.AreEqual(customer - customerStart + 1, route.Count);
                     Assert.AreEqual(false, route.IsEmpty);
                     Assert.AreEqual(true, route.IsRound);
-                    Assert.AreEqual(customer_start, route.First);
-                    Assert.AreEqual(customer_start, route.Last);
+                    Assert.AreEqual(customerStart, route.First);
+                    Assert.AreEqual(customerStart, route.Last);
                 }
 
-                for (int customer = customer_start + 1; customer < customer_start + count - 1; customer++)
+                for (int customer = customerStart + 1; customer < customerStart + count - 1; customer++)
                 {
                     Assert.IsTrue(route.Contains(customer));
                     Assert.IsTrue(route.Contains(customer, customer + 1));
                 }
-                Assert.IsTrue(route.Contains(customer_start + count - 1));
-                Assert.IsTrue(route.Contains(customer_start + count - 1, customer_start));
+                Assert.IsTrue(route.Contains(customerStart + count - 1));
+                Assert.IsTrue(route.Contains(customerStart + count - 1, customerStart));
 
-                Assert.AreEqual(route_idx + 1, multi_route.Count);
-                Assert.AreEqual(count * (route_idx + 1), multi_route.Size);
+                Assert.AreEqual(routeIdx + 1, multiRoute.Count);
+                Assert.AreEqual(count * (routeIdx + 1), multiRoute.Size);
             }
 
             // test with initializing the routes empty.
-            multi_route = this.BuildRoute(true);
+            multiRoute = this.BuildRoute(true);
 
-            Assert.AreEqual(0, multi_route.Count);
-            for (int route_idx = 0; route_idx < routes; route_idx++)
+            Assert.AreEqual(0, multiRoute.Count);
+            for (int routeIdx = 0; routeIdx < routes; routeIdx++)
             {
-                int customer_start = (route_idx * count);
-                IRoute route = multi_route.Add();
+                int customerStart = (routeIdx * count);
+                IRoute route = multiRoute.Add();
                 Assert.AreEqual(0, route.Count);
                 Assert.AreEqual(true, route.IsEmpty);
                 Assert.AreEqual(true, route.IsRound);
-                for (int customer = customer_start; customer < customer_start + count; customer++)
+                for (int customer = customerStart; customer < customerStart + count; customer++)
                 {
                     route.InsertAfter(customer - 1, customer);
 
-                    Assert.AreEqual(customer - customer_start + 1, route.Count);
+                    Assert.AreEqual(customer - customerStart + 1, route.Count);
                     Assert.AreEqual(false, route.IsEmpty);
                     Assert.AreEqual(true, route.IsRound);
-                    Assert.AreEqual(customer_start, route.First);
-                    Assert.AreEqual(customer_start, route.Last);
+                    Assert.AreEqual(customerStart, route.First);
+                    Assert.AreEqual(customerStart, route.Last);
                 }
 
-                for (int customer = customer_start; customer < customer_start + count - 1; customer++)
+                for (int customer = customerStart; customer < customerStart + count - 1; customer++)
                 {
                     Assert.IsTrue(route.Contains(customer));
                     Assert.IsTrue(route.Contains(customer, customer + 1));
                 }
-                Assert.IsTrue(route.Contains(customer_start + count - 1));
-                Assert.IsTrue(route.Contains(customer_start + count - 1, customer_start));
+                Assert.IsTrue(route.Contains(customerStart + count - 1));
+                Assert.IsTrue(route.Contains(customerStart + count - 1, customerStart));
 
-                Assert.AreEqual(route_idx + 1, multi_route.Count);
-                Assert.AreEqual(count * (route_idx + 1), multi_route.Size);
+                Assert.AreEqual(routeIdx + 1, multiRoute.Count);
+                Assert.AreEqual(count * (routeIdx + 1), multiRoute.Size);
             }
         }
 
@@ -99,50 +114,50 @@ namespace OsmSharp.UnitTests.Routes
         /// </summary>
         public void DoTestRemove()
         {
-            IMultiRoute multi_route = this.BuildRoute(true);
+            IMultiRoute multiRoute = this.BuildRoute(true);
 
-            Assert.AreEqual(0, multi_route.Count);
+            Assert.AreEqual(0, multiRoute.Count);
             int count = 10;
             int routes = 3;
 
             // test with initializing the routes empty.
-            List<List<int>> customers_per_route = new List<List<int>>();
-            Assert.AreEqual(0, multi_route.Count);
-            for (int route_idx = 0; route_idx < routes; route_idx++)
+            var customersPerRoute = new List<List<int>>();
+            Assert.AreEqual(0, multiRoute.Count);
+            for (int routeIdx = 0; routeIdx < routes; routeIdx++)
             {
-                customers_per_route.Add(new List<int>());
-                int customer_start = (route_idx * count);
-                IRoute route = multi_route.Add();
+                customersPerRoute.Add(new List<int>());
+                int customerStart = (routeIdx * count);
+                IRoute route = multiRoute.Add();
 
-                for (int customer = customer_start; customer < customer_start + count; customer++)
+                for (int customer = customerStart; customer < customerStart + count; customer++)
                 {
-                    customers_per_route[route_idx].Add(customer);
+                    customersPerRoute[routeIdx].Add(customer);
                     route.InsertAfter(customer - 1, customer);
                     //route.InsertAfterAndRemove(customer - 1, customer, -1);
                 }
             }
 
             // remove all the customers.
-            while (customers_per_route.Count > 0)
+            while (customersPerRoute.Count > 0)
             {
-                int route_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers_per_route.Count);
-                int customer_idx = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(customers_per_route[route_idx].Count);
+                int routeIdx = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(customersPerRoute.Count);
+                int customerIdx = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(customersPerRoute[routeIdx].Count);
 
-                int customer = customers_per_route[route_idx][customer_idx];
-                customers_per_route[route_idx].RemoveAt(customer_idx);
+                int customer = customersPerRoute[routeIdx][customerIdx];
+                customersPerRoute[routeIdx].RemoveAt(customerIdx);
 
-                IRoute route = multi_route.Route(route_idx);
+                IRoute route = multiRoute.Route(routeIdx);
                 route.Remove(customer);
 
-                Assert.AreEqual(customers_per_route[route_idx].Count, route.Count);
-                Assert.AreEqual(customers_per_route[route_idx].Count == 0, route.IsEmpty);
+                Assert.AreEqual(customersPerRoute[routeIdx].Count, route.Count);
+                Assert.AreEqual(customersPerRoute[routeIdx].Count == 0, route.IsEmpty);
                 Assert.AreEqual(true, route.IsRound);
                 Assert.AreEqual(route.First, route.Last);
 
-                if (customers_per_route[route_idx].Count == 0)
+                if (customersPerRoute[routeIdx].Count == 0)
                 {
-                    customers_per_route.RemoveAt(route_idx);
-                    multi_route.Remove(route_idx);
+                    customersPerRoute.RemoveAt(routeIdx);
+                    multiRoute.Remove(routeIdx);
                 }
             }
         }
@@ -155,44 +170,44 @@ namespace OsmSharp.UnitTests.Routes
             int count = 10;
             int routes = 3;
 
-            for (int route_to_test = 0; route_to_test < routes; route_to_test++)
+            for (int routeToTest = 0; routeToTest < routes; routeToTest++)
             {
-                for (int customer_to_remove = (route_to_test * count); customer_to_remove < (route_to_test * count) + count; customer_to_remove++)
+                for (int customerToRemove = (routeToTest * count); customerToRemove < (routeToTest * count) + count; customerToRemove++)
                 {
-                    for (int customer_to_place_after = (route_to_test * count); customer_to_place_after < (route_to_test * count) + count; customer_to_place_after++)
+                    for (int customerToPlaceAfter = (routeToTest * count); customerToPlaceAfter < (routeToTest * count) + count; customerToPlaceAfter++)
                     {
-                        if (customer_to_remove != customer_to_place_after)
+                        if (customerToRemove != customerToPlaceAfter)
                         {
-                            IMultiRoute multi_route = this.BuildRoute(true);
+                            IMultiRoute multiRoute = this.BuildRoute(true);
 
-                            Assert.AreEqual(0, multi_route.Count);
+                            Assert.AreEqual(0, multiRoute.Count);
 
                             // test with initializing the routes empty.
-                            List<List<int>> customers_per_route = new List<List<int>>();
-                            Assert.AreEqual(0, multi_route.Count);
+                            var customersPerRoute = new List<List<int>>();
+                            Assert.AreEqual(0, multiRoute.Count);
                             IRoute route;
-                            for (int route_idx = 0; route_idx < routes; route_idx++)
+                            for (int routeIdx = 0; routeIdx < routes; routeIdx++)
                             {
-                                customers_per_route.Add(new List<int>());
-                                int customer_start = (route_idx * count);
-                                route = multi_route.Add();
+                                customersPerRoute.Add(new List<int>());
+                                int customerStart = (routeIdx * count);
+                                route = multiRoute.Add();
 
-                                for (int customer = customer_start; customer < customer_start + count; customer++)
+                                for (int customer = customerStart; customer < customerStart + count; customer++)
                                 {
-                                    customers_per_route[route_idx].Add(customer);
+                                    customersPerRoute[routeIdx].Add(customer);
                                     route.InsertAfter(customer - 1, customer);
                                 }
                             }
 
-                            route = multi_route.Route(route_to_test);
+                            route = multiRoute.Route(routeToTest);
 
-                            route.Remove(customer_to_remove);
-                            route.InsertAfter(customer_to_place_after, customer_to_remove);
+                            route.Remove(customerToRemove);
+                            route.InsertAfter(customerToPlaceAfter, customerToRemove);
 
-                            Assert.IsTrue(route.Contains(customer_to_place_after, customer_to_remove));
+                            Assert.IsTrue(route.Contains(customerToPlaceAfter, customerToRemove));
                             Assert.AreEqual(count, route.Count);
-                            HashSet<int> customers_in_route = new HashSet<int>(route);
-                            Assert.AreEqual(customers_in_route.Count, route.Count);
+                            var customersInRoute = new HashSet<int>(route);
+                            Assert.AreEqual(customersInRoute.Count, route.Count);
                         }
                     }
                 }
@@ -207,42 +222,42 @@ namespace OsmSharp.UnitTests.Routes
             int count = 10;
             int routes = 3;
 
-            IMultiRoute multi_route = this.BuildRoute(true);
+            IMultiRoute multiRoute = this.BuildRoute(true);
 
-            Assert.AreEqual(0, multi_route.Count);
+            Assert.AreEqual(0, multiRoute.Count);
 
             // test with initializing the routes empty.
-            List<List<int>> customers_per_route = new List<List<int>>();
-            Assert.AreEqual(0, multi_route.Count);
+            var customersPerRoute = new List<List<int>>();
+            Assert.AreEqual(0, multiRoute.Count);
             IRoute route;
-            for (int route_idx = 0; route_idx < routes; route_idx++)
+            for (int routeIdx = 0; routeIdx < routes; routeIdx++)
             {
-                customers_per_route.Add(new List<int>());
-                int customer_start = (route_idx * count);
-                route = multi_route.Add();
+                customersPerRoute.Add(new List<int>());
+                int customerStart = (routeIdx * count);
+                route = multiRoute.Add();
 
-                for (int customer = customer_start; customer < customer_start + count; customer++)
+                for (int customer = customerStart; customer < customerStart + count; customer++)
                 {
-                    customers_per_route[route_idx].Add(customer);
+                    customersPerRoute[routeIdx].Add(customer);
                     route.InsertAfter(customer - 1, customer);
                     //route.InsertAfterAndRemove(customer - 1, customer, -1);
                 }
             }
 
-            for (int route_to_test = 0; route_to_test < routes; route_to_test++)
+            for (int routeToTest = 0; routeToTest < routes; routeToTest++)
             {
-                route = multi_route.Route(route_to_test);
+                route = multiRoute.Route(routeToTest);
 
-                for (int from = (route_to_test * count); from < (route_to_test * count) + count; from++)
+                for (int from = (routeToTest * count); from < (routeToTest * count) + count; from++)
                 {
-                    for (int to = (route_to_test * count); to < (route_to_test * count) + count; to++)
+                    for (int to = (routeToTest * count); to < (routeToTest * count) + count; to++)
                     {
                         IEnumerator<int> enumerator = route.Between(from, to).GetEnumerator();
                         for (int customer = from; customer - 1 != to; customer++)
                         {
-                            if (customer == (route_to_test * count) + count)
+                            if (customer == (routeToTest * count) + count)
                             {
-                                customer = (route_to_test * count);
+                                customer = (routeToTest * count);
                             }
 
                             Assert.IsTrue(enumerator.MoveNext());
@@ -261,40 +276,40 @@ namespace OsmSharp.UnitTests.Routes
             int count = 10;
             int routes = 3;
 
-            IMultiRoute multi_route = this.BuildRoute(true);
+            IMultiRoute multiRoute = this.BuildRoute(true);
 
-            Assert.AreEqual(0, multi_route.Count);
+            Assert.AreEqual(0, multiRoute.Count);
 
             // test with initializing the routes empty.
-            List<List<int>> customers_per_route = new List<List<int>>();
-            Assert.AreEqual(0, multi_route.Count);
+            var customersPerRoute = new List<List<int>>();
+            Assert.AreEqual(0, multiRoute.Count);
             IRoute route;
-            for (int route_idx = 0; route_idx < routes; route_idx++)
+            for (int routeIdx = 0; routeIdx < routes; routeIdx++)
             {
-                customers_per_route.Add(new List<int>());
-                int customer_start = (route_idx * count);
-                route = multi_route.Add();
+                customersPerRoute.Add(new List<int>());
+                int customerStart = (routeIdx * count);
+                route = multiRoute.Add();
 
-                for (int customer = customer_start; customer < customer_start + count; customer++)
+                for (int customer = customerStart; customer < customerStart + count; customer++)
                 {
-                    customers_per_route[route_idx].Add(customer);
+                    customersPerRoute[routeIdx].Add(customer);
                     route.InsertAfter(customer - 1, customer);
                     //route.InsertAfterAndRemove(customer - 1, customer, -1);
                 }
             }
 
-            for (int route_to_test = 0; route_to_test < routes; route_to_test++)
+            for (int routeToTest = 0; routeToTest < routes; routeToTest++)
             {
-                route = multi_route.Route(route_to_test);
+                route = multiRoute.Route(routeToTest);
 
                 int[] neighbours;
-                for (int customer = (route_to_test * count); customer < (route_to_test * count) + count - 1; customer++)
+                for (int customer = (routeToTest * count); customer < (routeToTest * count) + count - 1; customer++)
                 {
                     neighbours = route.GetNeigbours(customer);
                     Assert.IsTrue(neighbours[0] == customer + 1);
                 }
-                neighbours = route.GetNeigbours((route_to_test * count) + count - 1);
-                Assert.IsTrue(neighbours[0] == (route_to_test * count));
+                neighbours = route.GetNeigbours((routeToTest * count) + count - 1);
+                Assert.IsTrue(neighbours[0] == (routeToTest * count));
             }
         }
     }

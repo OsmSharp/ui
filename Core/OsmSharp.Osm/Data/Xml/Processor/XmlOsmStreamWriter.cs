@@ -25,7 +25,7 @@ using System.IO;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data.Core.Processor;
-using OsmSharp.Tools.Collections.Tags;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm.Data.Xml.Processor
 {

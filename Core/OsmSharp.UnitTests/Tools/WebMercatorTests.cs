@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using OsmSharp.Osm;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Geo.Projections;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Projections;
 
 namespace OsmSharp.UnitTests.Tools
 {

@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Shapes.PrimitivesFactory;
+using OsmSharp.Math.Shapes.PrimitivesFactory;
 
 namespace OsmSharp.Math.Geo.Factory
 {

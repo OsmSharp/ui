@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Units.Distance;
-using OsmSharp.Tools.Math.Units.Speed;
+using OsmSharp.Math.Units.Distance;
+using OsmSharp.Math.Units.Speed;
 
 namespace OsmSharp.Math.Units.Time
 {

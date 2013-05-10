@@ -15,14 +15,13 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Tools.Math.Random;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.Random;
 
-namespace OsmSharp.Math.AI.Genetic.Operations.Mutations
+namespace OsmSharp.Math.AI.Genetic.Operations
 {
     /// <summary>
     /// A combined mutation.
@@ -30,7 +29,8 @@ namespace OsmSharp.Math.AI.Genetic.Operations.Mutations
     /// <typeparam name="GenomeType"></typeparam>
     /// <typeparam name="ProblemType"></typeparam>
     /// <typeparam name="WeightType"></typeparam>
-    public class CombinedMutation<GenomeType, ProblemType, WeightType> : IMutationOperation<GenomeType, ProblemType, WeightType>
+    public class CombinedMutation<GenomeType, ProblemType, WeightType> : 
+        IMutationOperation<GenomeType, ProblemType, WeightType>
         where ProblemType : IProblem
         where GenomeType : class
         where WeightType : IComparable

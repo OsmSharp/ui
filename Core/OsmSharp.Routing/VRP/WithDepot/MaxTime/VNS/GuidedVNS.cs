@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.TSP;
-using OsmSharp.Tools.Math.Units.Time;
-using OsmSharp.Tools.Math.TSP.LocalSearch.HillClimbing3Opt;
+using OsmSharp.Math.TSP;
+using OsmSharp.Math.Units.Time;
+using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
 using OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements;
 using OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion;
-using OsmSharp.Tools.Math.VRP.Core.Routes;
+using OsmSharp.Math.VRP.Core.Routes;
 
 namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
 {
@@ -166,7 +166,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                                 { // there is improvement!
                                     originalSolution = solution;
 
-                                    OsmSharp.Tools.Output.OutputStreamHost.WriteLine("IMPROVEMENT: {0}->{1}",
+                                    OsmSharp.Output.OutputStreamHost.WriteLine("IMPROVEMENT: {0}->{1}",
                                         route1ActualBefore + route2ActualBefore, route1ActualAfter + route2ActualAfter);
                                 }
 
@@ -259,7 +259,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
         /// <param name="problem"></param>
         /// <param name="route"></param>
         /// <param name="currentWeight"></param>
-        private double ImproveIntraRoute(OsmSharp.Tools.Math.VRP.Core.IProblemWeights problem, IRoute route, 
+        private double ImproveIntraRoute(OsmSharp.Math.VRP.Core.IProblemWeights problem, IRoute route, 
             double currentWeight)
         {
             bool improvement = true;
@@ -274,7 +274,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                     double difference;
                     if (improvementOperation.Improve(problem, route, out difference))
                     { // there was an improvement.
-                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Intra-improvement found {0} {1}->{2}",
+                        OsmSharp.Output.OutputStreamHost.WriteLine("Intra-improvement found {0} {1}->{2}",
                             improvementOperation.Name, newWeight, newWeight + difference);
 
                         // check if the route is valid.
@@ -351,7 +351,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                             throw new Exception("this is not an improvement!");
                         }
 
-                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
+                        OsmSharp.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
                             route1Idx, route2Idx, improvementOperation.Name, totalBefore, totalAfter);
 
                         // recalculate weights.
@@ -390,7 +390,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.VNS
                             throw new Exception("this is not an improvement!");
                         }
 
-                        OsmSharp.Tools.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
+                        OsmSharp.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
                             route2Idx, route1Idx, improvementOperation.Name, totalBefore, totalAfter);
 
                         // recalculate weights.

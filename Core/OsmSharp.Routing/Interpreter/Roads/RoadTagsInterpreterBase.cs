@@ -20,8 +20,8 @@
 //using System.Linq;
 //using System.Text;
 //using OsmSharp.Routing;
-//using OsmSharp.Tools.Math.Units.Speed;
-//using OsmSharp.Tools.Math.Geo;
+//using OsmSharp.Math.Units.Speed;
+//using OsmSharp.Math.Geo;
 
 //namespace OsmSharp.Routing.Roads.Tags
 //{

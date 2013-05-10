@@ -21,13 +21,13 @@ using System.Collections.Generic;
 using System.Linq;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Tools.Collections.Tags;
-using OsmSharp.Tools.Math.Geo;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Tools.Math;
-using OsmSharp.Tools.Collections.PriorityQueues;
+using OsmSharp.Math;
+using OsmSharp.Collections.PriorityQueues;
 
 namespace OsmSharp.Routing.CH
 {
@@ -231,7 +231,7 @@ namespace OsmSharp.Routing.CH
         //        this.SearchBackwardIntoBucket(buckets, tos[idx]);
 
         //        // report progress.
-        //        OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
+        //        OsmSharp.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
         //            "Calculating backward...");
         //    }
 
@@ -255,7 +255,7 @@ namespace OsmSharp.Routing.CH
         //        result.Clear();
 
         //        // report progress.
-        //        OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
+        //        OsmSharp.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
         //            "Calculating forward...");
         //    }
         //    return weights;
@@ -690,7 +690,7 @@ namespace OsmSharp.Routing.CH
                     this.SearchBackwardIntoBucket(buckets, sources[idx]);
 
                 // report progress.
-                OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(idx, targets.Length, "Router.CH.CalculateManyToManyWeights",
+                OsmSharp.Output.OutputStreamHost.ReportProgress(idx, targets.Length, "Router.CH.CalculateManyToManyWeights",
                     "Calculating backward...");
             }
 
@@ -715,7 +715,7 @@ namespace OsmSharp.Routing.CH
                 result.Clear();
 
                 // report progress.
-                OsmSharp.Tools.Output.OutputStreamHost.ReportProgress(idx, sources.Length, "Router.CH.CalculateManyToManyWeights",
+                OsmSharp.Output.OutputStreamHost.ReportProgress(idx, sources.Length, "Router.CH.CalculateManyToManyWeights",
                     "Calculating forward...");
             }
             return weights;

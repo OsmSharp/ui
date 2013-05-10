@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,21 +15,22 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.AI.Genetic.Solvers;
 
 namespace OsmSharp.Math.AI.Genetic.Fitness
 {
     /// <summary>
     /// Interface abstracting the fitness calculation.
     /// </summary>
-    public interface IFitnessCalculator<GenomeType, ProblemType, WeightType>
-        where ProblemType : IProblem
-        where GenomeType : class
-        where WeightType : IComparable
+    public interface IFitnessCalculator<TGenome, TProblem, TWeight>
+        where TProblem : IProblem
+        where TGenome : class
+        where TWeight : IComparable
     {
         /// <summary>
         /// Returns the margin of error in the fitness calculation.
@@ -45,9 +46,9 @@ namespace OsmSharp.Math.AI.Genetic.Fitness
         /// <param name="problem"></param>
         /// <param name="individual"></param>
         /// <returns></returns>
-        WeightType Fitness(
-            ProblemType problem,
-            Individual<GenomeType, ProblemType, WeightType> individual);
+        TWeight Fitness(
+            TProblem problem,
+            Individual<TGenome, TProblem, TWeight> individual);
 
         /// <summary>
         /// Executes a fitness calculation.
@@ -56,9 +57,9 @@ namespace OsmSharp.Math.AI.Genetic.Fitness
         /// <param name="individual"></param>
         /// <param name="validate"></param>
         /// <returns></returns>
-        WeightType Fitness(
-            ProblemType problem,
-            Individual<GenomeType, ProblemType, WeightType> individual, bool validate);
+        TWeight Fitness(
+            TProblem problem,
+            Individual<TGenome, TProblem, TWeight> individual, bool validate);
 
         /// <summary>
         /// Executes a fitness calculation.
@@ -66,9 +67,9 @@ namespace OsmSharp.Math.AI.Genetic.Fitness
         /// <param name="problem"></param>
         /// <param name="genomes"></param>
         /// <returns></returns>
-        WeightType Fitness(
-            ProblemType problem,
-            GenomeType genomes);
+        TWeight Fitness(
+            TProblem problem,
+            TGenome genomes);
 
         /// <summary>
         /// Calculates the average fitness.
@@ -76,9 +77,9 @@ namespace OsmSharp.Math.AI.Genetic.Fitness
         /// <param name="problem"></param>
         /// <param name="population"></param>
         /// <returns></returns>
-        WeightType AverageFitness(
-            ProblemType problem,
-            IEnumerable<Individual<GenomeType, ProblemType, WeightType>> population);
+        TWeight AverageFitness(
+            TProblem problem,
+            IEnumerable<Individual<TGenome, TProblem, TWeight>> population);
 
         #region Partial Calculations
 

@@ -19,12 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Operations.CrossOver;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
-using OsmSharp.Tools.Math.AI.Genetic;
-using OsmSharp.Tools.Math.TSP;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver;
-using OsmSharp.Tools.Math.TSP.Genetic.Solver.Operations.Helpers;
+using OsmSharp.Math.AI.Genetic.Operations;
+using OsmSharp.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.AI.Genetic;
+using OsmSharp.Math.TSP;
+using OsmSharp.Math.TSP.Genetic.Solver;
+using OsmSharp.Math.TSP.Genetic.Solver.Operations.Helpers;
 
 namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver
 {

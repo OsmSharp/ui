@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.AI.Genetic.Solvers;
+using OsmSharp.Math.AI.Genetic.Solvers;
 
 namespace OsmSharp.Math.AI.Genetic.Selectors
 {
@@ -46,8 +46,8 @@ namespace OsmSharp.Math.AI.Genetic.Selectors
             Population<GenomeType, ProblemType, WeightType> population, 
             ICollection<Individual<GenomeType, ProblemType, WeightType>> do_not_select_list)
         {
-            int idx1 = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(population.Count);
-            int idx2 = OsmSharp.Tools.Math.Random.StaticRandomGenerator.Get().Generate(population.Count);
+            int idx1 = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(population.Count);
+            int idx2 = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(population.Count);
             if (population[idx1].Fitness.CompareTo(
                     population[idx2].Fitness) > 0)
             {

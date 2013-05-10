@@ -19,9 +19,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Units.Angle;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Geo.Meta;
+using OsmSharp.Math.Units.Angle;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Meta;
 
 namespace OsmSharp.Routing.ArcAggregation.Output
 {
