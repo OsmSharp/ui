@@ -95,7 +95,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
                     serializableGraphTile.Ids.Add(vertex);
                     serializableGraphTile.Latitude.Add((ushort)(((tile.TopLeft.Latitude - latitude)
                         / tile.Box.DeltaLat) * ushort.MaxValue));
-                    serializableGraphTile.Longitude.Add((ushort)(((tile.TopLeft.Longitude - longitude)
+                    serializableGraphTile.Longitude.Add((ushort)(((longitude - tile.TopLeft.Longitude)
                         / tile.Box.DeltaLon) * ushort.MaxValue));
 
                     // get the arcs.
@@ -158,6 +158,8 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
                                 }
                             }
                         }
+
+                        serializableGraphTile.Arcs.Add(serializableGraphArcs);
                     }
                 }
             }

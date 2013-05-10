@@ -82,7 +82,7 @@ namespace OsmSharp.Routing
             targetData.Pull();
 
             // creates the live edge router.
-            var liveEdgeRouter = new TypedRouter<LiveEdge>(
+            var liveEdgeRouter = new TypedRouterLiveEdge(
                 memoryData, interpreter, new DykstraRoutingLive(tagsIndex));
 
             return new Router(liveEdgeRouter); // create the actual router.
@@ -97,7 +97,7 @@ namespace OsmSharp.Routing
         public static Router CreateLiveFrom(IBasicRouterDataSource<LiveEdge> data, IRoutingInterpreter interpreter)
         {
             // creates the live edge router.
-            var liveEdgeRouter = new TypedRouter<LiveEdge>(
+            var liveEdgeRouter = new TypedRouterLiveEdge(
                 data, interpreter, new DykstraRoutingLive(data.TagsIndex));
 
             return new Router(liveEdgeRouter); // create the actual router.
@@ -114,7 +114,7 @@ namespace OsmSharp.Routing
             IRoutingInterpreter interpreter)
         {
             // creates the live edge router.
-            var liveEdgeRouter = new TypedRouter<LiveEdge>(
+            var liveEdgeRouter = new TypedRouterLiveEdge(
                 data, interpreter, basicRouter);
 
             return new Router(liveEdgeRouter); // create the actual router.
@@ -131,7 +131,7 @@ namespace OsmSharp.Routing
             IRoutingInterpreter interpreter)
         {
             // creates the live edge router.
-            var liveEdgeRouter = new TypedRouter<CHEdgeData>(
+            var liveEdgeRouter = new TypedRouterCHEdge(
                 data, interpreter, basicRouter);
 
             return new Router(liveEdgeRouter); // create the actual router.

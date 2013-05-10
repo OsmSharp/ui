@@ -195,6 +195,7 @@
     <Compile Include="Interpreter\Roads\RoadTagsInterpreterBase.cs" />
     <Compile Include="RouterPoint.cs" />
     <Compile Include="Routers\ITypedRouter.cs" />
+    <Compile Include="Routers\TypedRouterCHEdge.cs" />
     <Compile Include="Routers\TypedRouterResolvedGraph.cs" />
     <Compile Include="Routers\TypedRouter.cs" />
     <Compile Include="Routers\TypedRouterLiveEdge.cs" />

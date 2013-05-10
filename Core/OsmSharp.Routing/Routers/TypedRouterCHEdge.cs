@@ -16,28 +16,28 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Graphs;
 
 namespace OsmSharp.Routing.Routers
 {
     /// <summary>
-    /// A version of the typedrouter using edges of type LiveEdge.
+    /// A version of the typedrouter using edges of type CHEdgeData.
     /// </summary>
-    internal class TypedRouterLiveEdge : TypedRouter<LiveEdge>
+    internal class TypedRouterCHEdge : TypedRouter<CHEdgeData>
     {
         /// <summary>
-        /// Creates a new type router using edges of type LiveEdge.
+        /// Creates a new type router using edges of type CHEdgeData.
         /// </summary>
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="router"></param>
-        public TypedRouterLiveEdge(IBasicRouterDataSource<LiveEdge> graph, IRoutingInterpreter interpreter,
-                           IBasicRouter<LiveEdge> router)
-            :base(graph, interpreter, router)
+        public TypedRouterCHEdge(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
+                           IBasicRouter<CHEdgeData> router)
+            : base(graph, interpreter, router)
         {
-            
+
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace OsmSharp.Routing.Routers
         public override bool SupportsVehicle(VehicleEnum vehicle)
         {
             // TODO: ask interpreter.
-            return true; 
+            return true;
         }
     }
 }

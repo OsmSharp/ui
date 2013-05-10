@@ -375,9 +375,10 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
 
                         // create the location and calculate lat/lon.
                         var vertexLocation = new Location();
-                        vertexLocation.Latitude = (float)((((double) tileData.Latitude[vertexIdx]*tile.Box.DeltaLat)/ushort.MaxValue) +
-                                          top);
-                        vertexLocation.Longitude = (float)((((double)tileData.Longitude[vertexIdx] * tile.Box.DeltaLon) / ushort.MaxValue) +
+                        vertexLocation.Latitude = (float)(top - (((double)tileData.Latitude[vertexIdx] / (double)ushort.MaxValue) 
+                            * tile.Box.DeltaLat));
+                        vertexLocation.Longitude = (float)((((double)tileData.Longitude[vertexIdx] / (double)ushort.MaxValue)
+                            * tile.Box.DeltaLon) +
                                           left);
                         _coordinates[(int)tileData.Ids[vertexIdx]] = vertexLocation;
 
@@ -393,8 +394,8 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
                                      tagsIdx < tileData.Arcs[vertexIdx].Tags[idx].Keys.Length;
                                      tagsIdx++)
                                 {
-                                    string key = tileData.StringTable[tileData.Arcs[vertexIdx].Tags[idx].Keys[idx]];
-                                    string value = tileData.StringTable[tileData.Arcs[vertexIdx].Tags[idx].Values[idx]];
+                                    string key = tileData.StringTable[tileData.Arcs[vertexIdx].Tags[idx].Keys[tagsIdx]];
+                                    string value = tileData.StringTable[tileData.Arcs[vertexIdx].Tags[idx].Values[tagsIdx]];
 
                                     tagsCollection.Add(key, value);
                                 }
@@ -410,16 +411,20 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
                                     tileData.Arcs[vertexIdx].DestinationId[idx], edge);
 
                                 // store the target tile.
-                                _tilesPerVertex[tileData.Arcs[vertexIdx].DestinationId[idx]] =
-                                    new Tile(tileData.Arcs[vertexIdx].TileX[idx], tileData.Arcs[vertexIdx].TileY[idx], _zoom);
+                                var targetTile = new Tile(tileData.Arcs[vertexIdx].TileX[idx],
+                                                           tileData.Arcs[vertexIdx].TileY[idx], _zoom);
+                                if (!targetTile.Equals(tile) && !_loadedTiles.Contains(targetTile))
+                                {
+                                    _tilesPerVertex[tileData.Arcs[vertexIdx].DestinationId[idx]] = targetTile;
+                                }
                             }
                             _vertices[(int)tileData.Ids[vertexIdx]] = new Vertex()
                             {
                                 Arcs = arcs
                             };
                         }
-                        _vertexIndex.Add(new GeoCoordinate(tileData.Latitude[vertexIdx],
-                            tileData.Longitude[vertexIdx]), tileData.Ids[vertexIdx]);
+                        _vertexIndex.Add(new GeoCoordinate(vertexLocation.Latitude,
+                            vertexLocation.Longitude), tileData.Ids[vertexIdx]);
                     }
                 }
 

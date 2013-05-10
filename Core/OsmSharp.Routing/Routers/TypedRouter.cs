@@ -32,7 +32,7 @@ namespace OsmSharp.Routing.Routers
     /// <summary>
     /// A class that implements common functionality for any routing algorithm.
     /// </summary>
-    internal class TypedRouter<TEdgeData> : ITypedRouter
+    internal abstract class TypedRouter<TEdgeData> : ITypedRouter
         where TEdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
@@ -73,11 +73,19 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
+        /// Returns the routing interpreter.
+        /// </summary>
+        protected IRoutingInterpreter Interpreter
+        {
+            get { return _interpreter; }
+        }
+
+        /// <summary>
         /// Returns true if the given vehicle is supported.
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool SupportsVehicle(VehicleEnum vehicle)
+        public virtual bool SupportsVehicle(VehicleEnum vehicle)
         {
             return _dataGraph.SupportsProfile(vehicle);
         }
