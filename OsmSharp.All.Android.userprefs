@@ -1,20 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
+        <State expanded="True" selected="True">
+          <Node name="Core" expanded="True" />
           <Node name="UI" expanded="True">
-            <Node name="Android" expanded="True">
-              <Node name="OsmSharp.Android.UI" expanded="True">
-                <Node name="Renderer" expanded="True" />
-                <Node name="CanvasRenderer2DView.cs" selected="True" />
-              </Node>
-              <Node name="OsmSharp.Android.UI.Sample" expanded="True" />
-            </Node>
-            <Node name="OsmSharp.UI.Android" expanded="True">
-              <Node name="Renderer" expanded="True" />
-            </Node>
+            <Node name="Android" expanded="True" />
           </Node>
         </State>
       </Pad>

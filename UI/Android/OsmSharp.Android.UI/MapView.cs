@@ -12,8 +12,8 @@ using Android.Util;
 using Android.Views;
 using Android.Widget;
 using OsmSharp.UI.Map;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools;
+using OsmSharp.Math.Geo;
+using OsmSharp;
 using OsmSharp.UI.Renderer;
 
 namespace OsmSharp.Android.UI

@@ -47,6 +47,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArcAggregation\AggregatedHelper.cs" />
@@ -54,9 +57,7 @@
     <Compile Include="ArcAggregation\Output\Aggregated.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
-    <Compile Include="CH\Facade.cs" />
     <Compile Include="CH\PreProcessing\CHEdgeData.cs" />
-    <Compile Include="CH\PreProcessing\CHLocalCache.cs" />
     <Compile Include="CH\PreProcessing\CHPreProcessor.cs" />
     <Compile Include="CH\PreProcessing\CHPriorityQueue.cs" />
     <Compile Include="CH\PreProcessing\INodeWeightCalculator.cs" />
@@ -67,30 +68,9 @@
     <Compile Include="CH\PreProcessing\Ordering\LimitedLevelOrdering\SparseOrdering.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\CHRouterWitnessCalculator.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
-    <Compile Include="CH\Processor\CHDataProcessorTarget.cs" />
-    <Compile Include="CH\Routing\CHDataSource.cs" />
-    <Compile Include="CH\Routing\CHPathSegment.cs" />
-    <Compile Include="CH\Routing\CHPriorityQueue.cs" />
-    <Compile Include="CH\Routing\CHQueue.cs" />
-    <Compile Include="CH\Routing\CHResolvedPoint.cs" />
-    <Compile Include="CH\Routing\CHRouter.cs" />
-    <Compile Include="CH\Routing\ICHVertexMatcher.cs" />
-    <Compile Include="CH\Routing\Router.cs" />
     <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
-    <Compile Include="Graph\DynamicGraph\DynamicGraphExtensions.cs" />
-    <Compile Include="Graph\DynamicGraph\IDynamicGraph.cs" />
-    <Compile Include="Graph\DynamicGraph\IDynamicGraphEdgeData.cs" />
-    <Compile Include="Graph\DynamicGraph\IDynamicGraphReadOnly.cs" />
-    <Compile Include="Graph\DynamicGraph\Memory\MemoryDynamicGraph.cs" />
-    <Compile Include="Graph\DynamicGraph\Memory\MemoryRouterDataSource.cs" />
-    <Compile Include="Graph\DynamicGraph\PreProcessed\PreProcessedDynamicGraph.cs" />
-    <Compile Include="Graph\DynamicGraph\PreProcessed\PreProcessedEdge.cs" />
-    <Compile Include="Graph\DynamicGraph\SimpleWeighed\SimpleWeighedEdge.cs" />
-    <Compile Include="Graph\Path\PathSegment.cs" />
-    <Compile Include="Graph\Path\PathSegmentVisitList.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingLive.cs" />
-    <Compile Include="Graph\Router\Dykstra\DykstraRoutingPreProcessed.cs" />
     <Compile Include="Graph\Router\IBasicRouter.cs" />
     <Compile Include="Graph\Router\IBasicRouterDataSource.cs" />
     <Compile Include="Graph\Router\IDynamicGraphRouterDataSource.cs" />
@@ -126,35 +106,13 @@
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
     <Compile Include="Interpreter\Vehicles\RoutingVehicleBase.cs" />
     <Compile Include="Interpreter\Vehicles\RoutingVehicleSimple.cs" />
-    <Compile Include="IRouter.cs" />
     <Compile Include="IRouterExtensions.cs" />
-    <Compile Include="IRouterPoint.cs" />
-    <Compile Include="Osm\Data\OsmEdgeData.cs" />
-    <Compile Include="Osm\Data\OsmMemoryRouterDataSource.cs" />
-    <Compile Include="Osm\Data\OsmSourceRouterDataSource.cs" />
-    <Compile Include="Osm\Data\Processing\CHEdgeDataGraphProcessingTarget.cs" />
-    <Compile Include="Osm\Data\Processing\DynamicGraphDataProcessorTarget.cs" />
-    <Compile Include="Osm\Data\Processing\PreProcessedDataGraphProcessingTarget.cs" />
-    <Compile Include="Osm\Data\Processing\SimpleWeighedDataGraphProcessingTarget.cs" />
     <Compile Include="Osm\Dykstra\DykstraRouting.cs" />
-    <Compile Include="Osm\Graphs\Bounded\BoundedGraph.cs" />
-    <Compile Include="Osm\Graphs\Graph.cs" />
-    <Compile Include="Osm\Graphs\GraphDataSource.cs" />
-    <Compile Include="Osm\Graphs\GraphVertex.cs" />
-    <Compile Include="Osm\Graphs\Interpreter\GraphInterpreterBase.cs" />
-    <Compile Include="Osm\Graphs\Interpreter\GraphInterpreterTime.cs" />
-    <Compile Include="Osm\Graphs\Resolver\IGraphResolverMatcher.cs" />
-    <Compile Include="Osm\Graphs\Resolver\SimpleGraphResolver.cs" />
-    <Compile Include="Osm\Graphs\SimpleShapeInterpreter.cs" />
-    <Compile Include="Osm\Graphs\VertexAlongEdge.cs" />
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
     <Compile Include="Osm\IRoutingProgressConsumer.cs" />
     <Compile Include="Osm\Router.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Router\Router.cs" />
-    <Compile Include="Router\RouterGraph.cs" />
-    <Compile Include="Router\RouterPoint.cs" />
     <Compile Include="Route\Gpx\OsmSharpRouteGpx.cs" />
     <Compile Include="Route\Kml\OsmSharpRouteKml.cs" />
     <Compile Include="Route\Metrics\OsmSharpRouteMetricCalculator.cs" />
@@ -233,19 +191,43 @@
     <Compile Include="VRP\WithDepot\MaxTime\MaxTimeSolution.cs" />
     <Compile Include="VRP\WithDepot\MaxTime\VNS\GuidedVNS.cs" />
     <Compile Include="VRP\WithDepot\RouterDepot.cs" />
+    <Compile Include="CH\CHQueue.cs" />
+    <Compile Include="CH\CHRouter.cs" />
+    <Compile Include="Routers\ITypedRouter.cs" />
+    <Compile Include="Routers\TypedRouter.cs" />
+    <Compile Include="Routers\TypedRouterLiveEdge.cs" />
+    <Compile Include="Routers\TypedRouterResolvedGraph.cs" />
+    <Compile Include="Router.cs" />
+    <Compile Include="RouterPoint.cs" />
+    <Compile Include="Graph\Serialization\v2\V2RouterDataSource.cs" />
+    <Compile Include="Graph\Serialization\v2\V2RoutingSerializer.cs" />
+    <Compile Include="Graph\Serialization\RoutingSerializer.cs" />
+    <Compile Include="Graph\Serialization\RoutingSerializerStream.cs" />
+    <Compile Include="Graph\IDynamicGraph.cs" />
+    <Compile Include="Graph\IDynamicGraphEdgeData.cs" />
+    <Compile Include="Graph\IDynamicGraphReadOnly.cs" />
+    <Compile Include="Graph\MemoryDynamicGraph.cs" />
+    <Compile Include="Graph\Router\PathSegment.cs" />
+    <Compile Include="Graph\Router\PathSegmentVisitList.cs" />
+    <Compile Include="Osm\Data\Processing\CHEdgeGraphOsmStreamWriter.cs" />
+    <Compile Include="Osm\Data\Processing\DynamicGraphOsmStreamWriter.cs" />
+    <Compile Include="Osm\Data\Processing\LiveGraphOsmStreamWriter.cs" />
+    <Compile Include="Osm\Graphs\LiveEdge.cs" />
+    <Compile Include="Osm\Graphs\MemoryDynamicGraphSimpleWeighed.cs" />
+    <Compile Include="Osm\Graphs\OsmSourceRouterDataSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interpreter\Roads\Tags\" />
-    <Folder Include="Resolving\" />
+    <Folder Include="Osm\Data\Processing\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.Android.csproj">
       <Project>{E881DC2A-6738-4F9D-A047-0DF201544C1B}</Project>
       <Name>OsmSharp.Osm.Android</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.Tools.Android.csproj">
+    <ProjectReference Include="..\OsmSharp\OsmSharp.Android.csproj">
       <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
-      <Name>OsmSharp.Tools.Android</Name>
+      <Name>OsmSharp.Android</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />

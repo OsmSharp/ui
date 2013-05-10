@@ -44,12 +44,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="protobuf-net">
-      <HintPath>..\..\..\Core\Output\Debug\Any CPU\protobuf-net.dll</HintPath>
-    </Reference>
-    <Reference Include="Zlib.Portable">
-      <HintPath>..\..\..\Core\Output\Debug\Any CPU\Zlib.Portable.dll</HintPath>
-    </Reference>
     <Reference Include="OpenTK" />
   </ItemGroup>
   <ItemGroup>
@@ -72,17 +66,17 @@
       <Project>{87AF65F0-A706-4145-9779-E810A717AD5A}</Project>
       <Name>OsmSharp.UI.Android</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\OsmSharp.Tools\OsmSharp.Tools.Android.csproj">
+    <ProjectReference Include="..\..\..\Core\OsmSharp\OsmSharp.Android.csproj">
       <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
-      <Name>OsmSharp.Tools.Android</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\OsmSharp.Osm\OsmSharp.Osm.Android.csproj">
-      <Project>{E881DC2A-6738-4F9D-A047-0DF201544C1B}</Project>
-      <Name>OsmSharp.Osm.Android</Name>
+      <Name>OsmSharp.Android</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Android.UI\OsmSharp.Android.UI.csproj">
       <Project>{AED211E7-B8A8-4764-86D2-80C9B97CD1C8}</Project>
       <Name>OsmSharp.Android.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Core\OsmSharp.Osm\OsmSharp.Osm.Android.csproj">
+      <Project>{E881DC2A-6738-4F9D-A047-0DF201544C1B}</Project>
+      <Name>OsmSharp.Osm.Android</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

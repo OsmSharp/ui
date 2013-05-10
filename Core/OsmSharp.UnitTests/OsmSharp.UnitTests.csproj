@@ -232,7 +232,7 @@
       <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
       <Name>OsmSharp.Routing</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.Tools\OsmSharp.csproj">
+    <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
       <Name>OsmSharp</Name>
     </ProjectReference>

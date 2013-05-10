@@ -9,20 +9,15 @@ using Android.OS;
 using OsmSharp.UI.Renderer;
 using System.Reflection;
 using System.IO;
-using OsmSharp.Osm.Data.XML.Processor;
-using OsmSharp.Osm.Data.Core.Processor.List;
 using OsmSharp.Osm.Simple;
 using System.Collections.Generic;
-using OsmSharp.Tools;
 using OsmSharp.UI;
-using OsmSharp.Tools.Math.Geo.Projections;
-using OsmSharp.Tools.Math.Geo;
 using OsmSharp.UI.Map.Styles.MapCSS;
-using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
+using OsmSharp.Osm.Data.PBF.Processor;
 using OsmSharp.Osm.Data.Core.Memory;
-using OsmSharp.Osm.Data.PBF.Raw.Processor;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -56,9 +51,9 @@ namespace OsmSharp.Android.UI.Sample
 			
 			// initialize the data source.
 			var dataSource = new MemoryDataSource();
-//			XmlDataProcessorSource source = new XmlDataProcessorSource(
+//			XmlOsmStreamReader source = new XmlDataProcessorSource(
 //				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm"));
-			var source = new PBFDataProcessorSource(
+			var source = new PBFOsmStreamReader(
 				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.pbf"));
 			dataSource.PullFromSource(source);
 			

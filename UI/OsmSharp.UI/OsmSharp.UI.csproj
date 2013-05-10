@@ -132,7 +132,7 @@
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
       <Name>OsmSharp.Osm</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Core\OsmSharp.Tools\OsmSharp.csproj">
+    <ProjectReference Include="..\..\Core\OsmSharp\OsmSharp.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
       <Name>OsmSharp</Name>
     </ProjectReference>

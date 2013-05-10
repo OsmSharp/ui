@@ -44,12 +44,6 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.3\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="OsmSharp.Tools">
-      <HintPath>..\..\Core\OutputAndroid\OsmSharp.Tools.dll</HintPath>
-    </Reference>
-    <Reference Include="OsmSharp.Osm">
-      <HintPath>..\..\Core\OutputAndroid\OsmSharp.Osm.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
@@ -103,6 +97,8 @@
     <Compile Include="Renderer\Scene2DPrimitives\Icon2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Image2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Text2D.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRuleProperties.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRulePropertiesCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -115,5 +111,15 @@
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Renderer\Scene2DPrimitives\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\OsmSharp.Osm\OsmSharp.Osm.Android.csproj">
+      <Project>{E881DC2A-6738-4F9D-A047-0DF201544C1B}</Project>
+      <Name>OsmSharp.Osm.Android</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\OsmSharp\OsmSharp.Android.csproj">
+      <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
+      <Name>OsmSharp.Android</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

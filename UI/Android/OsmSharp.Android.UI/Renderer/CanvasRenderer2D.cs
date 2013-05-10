@@ -107,7 +107,7 @@ namespace OsmSharp.Android.UI
 					
 					imageData = stream.ToArray();
 				}
-				scene.AddImage(0, view.Left, view.Top, view.Right, view.Bottom, imageData);
+				scene.AddImage(0, float.MinValue, float.MaxValue, view.Left, view.Top, view.Right, view.Bottom, imageData);
 			}
 
 			// dispose of bitmap.

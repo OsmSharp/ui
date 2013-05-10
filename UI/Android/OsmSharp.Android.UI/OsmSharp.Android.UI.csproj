@@ -63,13 +63,13 @@
     <Folder Include="Renderer\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\OsmSharp\OsmSharp.Android.csproj">
+      <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
+      <Name>OsmSharp.Android</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\OsmSharp.UI\OsmSharp.UI.Android.csproj">
       <Project>{87AF65F0-A706-4145-9779-E810A717AD5A}</Project>
       <Name>OsmSharp.UI.Android</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\Core\OsmSharp.Tools\OsmSharp.Tools.Android.csproj">
-      <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
-      <Name>OsmSharp.Tools.Android</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
