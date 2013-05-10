@@ -18,6 +18,7 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.Osm.Data.PBF.Processor;
 using OsmSharp.Osm.Data.Core.Memory;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Data.Xml.Processor;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -51,7 +52,7 @@ namespace OsmSharp.Android.UI.Sample
 			
 			// initialize the data source.
 			var dataSource = new MemoryDataSource();
-//			XmlOsmStreamReader source = new XmlDataProcessorSource(
+//			var source = new XmlOsmStreamReader(
 //				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm"));
 			var source = new PBFOsmStreamReader(
 				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.pbf"));
@@ -60,12 +61,18 @@ namespace OsmSharp.Android.UI.Sample
 			// initialize map.
 			var map = new Map();
 			map.AddLayer(new OsmRawLayer(dataSource, mapCSSInterpreter));
+
+			// create gpx layer.
+			GpxLayer gpxLayer = new GpxLayer(map.Projection);
+			gpxLayer.AddGpx(
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.gpx"));
+			map.AddLayer(gpxLayer);
 			
 			// set control properties.
 			var mapView = new MapView(this);
 			mapView.Map = map;
 			mapView.Center = new GeoCoordinate(51.26337, 4.78739);
-			mapView.ZoomFactor = 2; // TODO: improve zoomfactor.
+			mapView.ZoomLevel = 17;
 
 //			var mapView = new OpenGLRenderer2D(
 //				this, null);

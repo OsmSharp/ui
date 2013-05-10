@@ -21,7 +21,8 @@ namespace OsmSharp.Android.UI
 	/// <summary>
 	/// Map view.
 	/// </summary>
-	public class MapView : global::Android.Views.View, GestureDetector.IOnGestureListener, ScaleGestureDetector.IOnScaleGestureListener, global::Android.Views.View.IOnTouchListener
+	public class MapView : global::Android.Views.View, 
+			GestureDetector.IOnGestureListener, ScaleGestureDetector.IOnScaleGestureListener, global::Android.Views.View.IOnTouchListener
 	{
 		/// <summary>
 		/// Holds the gesture detector.
@@ -103,7 +104,7 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the zoom factor.
 		/// </summary>
 		/// <value>The zoom factor.</value>
-		public float ZoomFactor {
+		public float ZoomLevel {
 			get;
 			set;
 		}
@@ -126,12 +127,12 @@ namespace OsmSharp.Android.UI
 			if(_highQuality)
 			{			
 				// render the map.
-				_renderer.Render(canvas, this.Map, this.ZoomFactor, this.Center);
+				_renderer.Render(canvas, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
 			}
 			else
 			{
 				// render the cached parts only.
-				_renderer.RenderCache(canvas, this.Map, this.ZoomFactor, this.Center);
+				_renderer.RenderCache(canvas, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
 			}
 
 		}
@@ -147,7 +148,7 @@ namespace OsmSharp.Android.UI
 		{
 			// calculate the center/zoom in scene coordinates.
 			double[] sceneCenter = this.Map.Projection.ToPixel(this.Center.Latitude, this.Center.Longitude);
-			float sceneZoomFactor = this.ZoomFactor; // TODO: find out the conversion rate and see if this is related to the projection?
+			float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel);
 			
 			// create the view for this control.
 			return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
@@ -182,7 +183,7 @@ namespace OsmSharp.Android.UI
 			lock(this.Map)
 			{
 				// notify the map.
-				this.Map.ViewChanged(this.ZoomFactor, this.Center, this.CreateView());
+				this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
 
 //				this.Invalidate();
 			}
@@ -201,10 +202,12 @@ namespace OsmSharp.Android.UI
 		/// <param name="detector">Detector.</param>
 		public bool OnScale (ScaleGestureDetector detector)
 		{
-			this.ZoomFactor = (float)System.Math.Log((System.Math.Pow(2, this.ZoomFactor) * detector.ScaleFactor), 2.0);
+			double zoomFactor = this.Map.Projection.ToZoomFactor(this.ZoomLevel);
+			zoomFactor = zoomFactor * detector.ScaleFactor;
+			this.ZoomLevel = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
 
 			// notify the map.
-			this.Map.ViewChanged(this.ZoomFactor, this.Center, this.CreateView());
+			this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
 
 			_scaled = true;
 			this.Invalidate();
@@ -289,7 +292,7 @@ namespace OsmSharp.Android.UI
 			this.Center = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
 
 			// notify the map.
-			this.Map.ViewChanged(this.ZoomFactor, this.Center, this.CreateView());
+			this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
 
 			_highQuality = false;
 			this.Invalidate();

@@ -1,12 +1,42 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs">
+    <Files>
+      <File FileName="UI\OsmSharp.UI\Map\Layers\GpxLayer.cs" Line="1" Column="1" />
+      <File FileName="Core\OsmSharp.Osm\Data\Xml\GpxSource\GpxDataSource.cs" Line="1" Column="1" />
+      <File FileName="Core\OsmSharp\Xml\Sources\XmlStreamSource.cs" Line="1" Column="1" />
+      <File FileName="UI\OsmSharp.UI\Map\Styles\MapCSS\MapCSSInterpreter.cs" Line="1" Column="1" />
+      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="83" Column="12" />
+      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\Resources\Resource.designer.cs" Line="1" Column="1" />
+    </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" selected="True">
-          <Node name="Core" expanded="True" />
+        <State expanded="True">
+          <Node name="Core" expanded="True">
+            <Node name="OsmSharp.Android" expanded="True">
+              <Node name="Xml" expanded="True">
+                <Node name="Sources" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="OsmSharp.Osm.Android" expanded="True">
+              <Node name="Data" expanded="True">
+                <Node name="Xml" expanded="True">
+                  <Node name="GpxSource" expanded="True" />
+                </Node>
+              </Node>
+            </Node>
+          </Node>
           <Node name="UI" expanded="True">
-            <Node name="Android" expanded="True" />
+            <Node name="Android" expanded="True">
+              <Node name="OsmSharp.Android.UI.Sample" expanded="True" selected="True">
+                <Node name="Resources" expanded="True" />
+              </Node>
+            </Node>
+            <Node name="OsmSharp.UI.Android" expanded="True">
+              <Node name="Map" expanded="True">
+                <Node name="Layers" expanded="True" />
+              </Node>
+            </Node>
           </Node>
         </State>
       </Pad>
@@ -26,6 +56,8 @@
       <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" line="97" column="1" />
       <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\OsmSharp.Osm\Data\PBF\Processor\PBFDataProcessorSource.cs" line="53" column="1" />
       <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\OsmSharp.Osm\Data\Memory\MemoryDataSource.cs" line="382" column="1" />
+      <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" line="71" column="36" />
+      <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" line="67" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

@@ -16,7 +16,7 @@ namespace OsmSharp.Math.Geo.Projections
         /// <summary>
         /// Holds the constant default zoom level.
         /// </summary>
-        private const int DefaultZoom = 14;
+        private const int DefaultZoom = 30;
 
         /// <summary>
         /// Converts the lat/lon to projected coordinates.

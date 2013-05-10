@@ -134,17 +134,20 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
                         relation_v1_0.Tags.Add("description", gpx_v1_0.desc);
                         relation_v1_0.Tags.Add("gpx_type", "gpx");
 
-                        foreach (OsmSharp.Xml.Gpx.v1_0.gpxTrk trk in gpx_v1_0.trk)
-                        {
-                            OsmGeo trk_osm = this.ConvertGpxTrk(trk);
-                            if (trk_osm != null)
-                            {
-                                RelationMember member = new RelationMember();
-                                member.Member = trk_osm;
-                                member.Role = "";
-                                relation_v1_0.Members.Add(member);
-                            }
-                        }
+						if(gpx_v1_0.trk != null)
+						{
+	                        foreach (OsmSharp.Xml.Gpx.v1_0.gpxTrk trk in gpx_v1_0.trk)
+	                        {
+	                            OsmGeo trk_osm = this.ConvertGpxTrk(trk);
+	                            if (trk_osm != null)
+	                            {
+	                                RelationMember member = new RelationMember();
+	                                member.Member = trk_osm;
+	                                member.Role = "";
+	                                relation_v1_0.Members.Add(member);
+	                            }
+	                        }
+						}
 
                         this.AddRelation(relation_v1_0);
                         break;
@@ -163,27 +166,32 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
                         relation_v1_1.Tags.Add("description", "v1.1");
                         relation_v1_1.Tags.Add("gpx_type", "gpxType");
 
-                        foreach (OsmSharp.Xml.Gpx.v1_1.trkType trk in gpx_v1_1.trk)
-                        {
-                            OsmGeo trk_osm = this.ConvertGpxTrk(trk);
-                            if (trk_osm != null)
-                            {
-                                RelationMember member = new RelationMember();
-                                member.Member = trk_osm;
-                                member.Role = "";
-                                relation_v1_1.Members.Add(member);
-                            }
-                        }
+						if(gpx_v1_1.trk !=null)
+						{
+	                        foreach (OsmSharp.Xml.Gpx.v1_1.trkType trk in gpx_v1_1.trk)
+	                        {
+	                            OsmGeo trk_osm = this.ConvertGpxTrk(trk);
+	                            if (trk_osm != null)
+	                            {
+	                                RelationMember member = new RelationMember();
+	                                member.Member = trk_osm;
+	                                member.Role = "";
+	                                relation_v1_1.Members.Add(member);
+	                            }
+	                        }
+						}
 
+						if(gpx_v1_1.wpt !=null)
+						{
+	                        foreach (OsmSharp.Xml.Gpx.v1_1.wptType wpt in gpx_v1_1.wpt)
+	                        {
+	                            Node n = this.ConvertWptType(wpt);
 
-                        foreach (OsmSharp.Xml.Gpx.v1_1.wptType wpt in gpx_v1_1.wpt)
-                        {
-                            Node n = this.ConvertWptType(wpt);
+	                            n.Tags.Add("type", "wpt");
 
-                            n.Tags.Add("type", "wpt");
-
-                            this.AddNode(n);
-                        }
+	                            this.AddNode(n);
+	                        }
+						}
 
 
                         this.AddRelation(relation_v1_1);

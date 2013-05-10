@@ -99,6 +99,7 @@
     <Compile Include="Renderer\Scene2DPrimitives\Text2D.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRuleProperties.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRulePropertiesCollection.cs" />
+    <Compile Include="Map\Layers\GpxLayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
