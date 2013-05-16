@@ -110,6 +110,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <EmbeddedResource Include="test.osm" />
+    <EmbeddedResource Include="test.gpx" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="images\parking.png" />
@@ -124,6 +125,10 @@
     <ProjectReference Include="..\..\..\Core\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
       <Name>OsmSharp.Osm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Core\OsmSharp.Routing\OsmSharp.Routing.csproj">
+      <Project>{87A55F64-1162-4DF3-8B68-800E66D019EC}</Project>
+      <Name>OsmSharp.Routing</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\Core\OsmSharp\OsmSharp.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>

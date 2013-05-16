@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Data;
-using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm;
+using OsmSharp.Osm.Factory;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
 
@@ -13,12 +15,12 @@ namespace OsmSharp.UI.Map.Layers
     /// <summary>
     /// A layer drawing OSM data.
     /// </summary>
-    public class OsmRawLayer : ILayer
+    public class LayerDynamicGraphLiveEdge : ILayer
     {
         /// <summary>
         /// Holds the source of the OSM raw data.
         /// </summary>
-        private readonly IDataSourceReadOnly _dataSource;
+        private readonly IBasicRouterDataSource<LiveEdge> _dataSource;
 
         /// <summary>
         /// Holds the style interpreter.
@@ -30,13 +32,14 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
-        public OsmRawLayer(IDataSourceReadOnly dataSource, StyleInterpreter styleInterpreter)
+        public LayerDynamicGraphLiveEdge(IBasicRouterDataSource<LiveEdge> dataSource, 
+            StyleInterpreter styleInterpreter)
         {
             _dataSource = dataSource;
             _styleInterpreter = styleInterpreter;
 
             this.Scene = new Scene2D();
-            _interpretedObjects = new Dictionary<int, HashSet<long>>();
+            _interpretedObjects = new Dictionary<int, HashSet<ArcId>>();
         }
 
         /// <summary>
@@ -77,13 +80,12 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Holds al id's of all already interpreted objects.
         /// </summary>
-        private readonly Dictionary<int,HashSet<long>> _interpretedObjects;
+        private readonly Dictionary<int, HashSet<ArcId>> _interpretedObjects;
 
         /// <summary>
         /// Holds all previously requested boxes.
         /// </summary>
         private HashSet<GeoCoordinateBox> _requestedBoxes = new HashSet<GeoCoordinateBox>();
- 
 
         /// <summary>
         /// Builds the scene.
@@ -95,10 +97,10 @@ namespace OsmSharp.UI.Map.Layers
         private void BuildScene(Map map, float zoomFactor, GeoCoordinate center, View2D view)
         {
             // get the indexed object at this zoom.
-            HashSet<long> interpretedObjects;
-            if (!_interpretedObjects.TryGetValue((int) zoomFactor, out interpretedObjects))
+            HashSet<ArcId> interpretedObjects;
+            if (!_interpretedObjects.TryGetValue((int)zoomFactor, out interpretedObjects))
             {
-                interpretedObjects = new HashSet<long>();
+                interpretedObjects = new HashSet<ArcId>();
                 _interpretedObjects.Add((int)zoomFactor, interpretedObjects);
             }
 
@@ -116,16 +118,72 @@ namespace OsmSharp.UI.Map.Layers
 
             // set the scene backcolor.
             SimpleColor? color = _styleInterpreter.GetCanvasColor();
-            this.Scene.BackColor = color.HasValue ? color.Value.Value : SimpleColor.FromArgb(0, 255, 255, 255).Value;
+            this.Scene.BackColor = color.HasValue ? color.Value.Value : 
+                SimpleColor.FromArgb(0, 255, 255, 255).Value;
 
             // get data.
-            foreach (var osmGeo in _dataSource.Get(box, null))
+            foreach (var arc in _dataSource.GetArcs(box))
             { // translate each object into scene object.
-                if (!interpretedObjects.Contains(osmGeo.Id))
+                var arcId = new ArcId()
+                                  {
+                                      Vertex1 = arc.Key,
+                                      Vertex2 = arc.Value.Key
+                                  };
+                if (!interpretedObjects.Contains(arcId))
                 {
-                    _styleInterpreter.Translate(this.Scene, map.Projection, zoomFactor, osmGeo);
-                    interpretedObjects.Add(osmGeo.Id);
+                    interpretedObjects.Add(arcId);
+
+                    // create nodes.
+                    float latitude, longitude;
+                    _dataSource.GetVertex(arcId.Vertex1, out latitude, out longitude);
+                    var node1 = OsmBaseFactory.CreateNode(arcId.Vertex1);
+                    node1.Coordinate = new GeoCoordinate(latitude, longitude);
+                    _dataSource.GetVertex(arcId.Vertex2, out latitude, out longitude);
+                    var node2 = OsmBaseFactory.CreateNode(arcId.Vertex2);
+                    node2.Coordinate = new GeoCoordinate(latitude, longitude);
+
+                    // create way.
+                    var way = OsmBaseFactory.CreateWay(-1);
+                    if (arc.Value.Value.Forward)
+                    {
+                        way.Nodes.Add(node1);
+                        way.Nodes.Add(node2);
+                    }
+                    else
+                    {
+                        way.Nodes.Add(node2);
+                        way.Nodes.Add(node1);
+                    }
+                    way.Tags.AddOrReplace(_dataSource.TagsIndex.Get(arc.Value.Value.Tags));
+
+                    _styleInterpreter.Translate(this.Scene, map.Projection, zoomFactor, way);
+                    interpretedObjects.Add(arcId);
                 }
+            }
+        }
+
+        private struct ArcId
+        {
+            public uint Vertex1 { get; set; }
+
+            public uint Vertex2 { get; set; }
+
+            public override int GetHashCode()
+            {
+                return (this.Vertex1 + this.Vertex2).GetHashCode();
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is ArcId)
+                {
+                    var other = (ArcId)(obj);
+                    return (other.Vertex1 == this.Vertex2 &&
+                            other.Vertex2 == this.Vertex1) ||
+                           (other.Vertex1 == this.Vertex1 &&
+                            other.Vertex2 == this.Vertex2);
+                }
+                return false;
             }
         }
 

@@ -48,7 +48,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
             }
 
             // check rule.
-            if (!this.SelectorRule.Selects(osmGeo))
+            if (this.SelectorRule != null && 
+			    !this.SelectorRule.Selects(osmGeo))
             { // oeps: the zoom was not valid.
                 return false;
             }

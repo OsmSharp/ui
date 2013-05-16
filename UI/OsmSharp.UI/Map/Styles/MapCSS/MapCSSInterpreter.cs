@@ -33,22 +33,22 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <summary>
         /// Holds the fill layer offset.
         /// </summary>
-        private const int FillLayerOffset = 10;
+        private const int FillLayerOffset = 100;
 
         /// <summary>
         /// Holds the casing layer offset.
         /// </summary>
-        private const int CasingLayerOffset = 20;
+        private const int CasingLayerOffset = 200;
 
         /// <summary>
         /// Holds the stroke layer offset.
         /// </summary>
-        private const int StrokeLayerOffset = 30;
+        private const int StrokeLayerOffset = 300;
 
         /// <summary>
         /// Holds the icon/test layer offset.
         /// </summary>
-        private const int IconTextLayerOffset = 40;
+        private const int IconTextLayerOffset = 400;
 
 
         /// <summary>
@@ -124,14 +124,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="node"></param>
         private void TranslateNode(Scene2D scene, IProjection projection, Node node)
         {
-            float? x = null, y = null;
-
-            // get x/y.
-            if (!x.HasValue)
-            { // pre-calculate x/y.
-                x = (float) projection.LongitudeToX(node.Coordinate.Longitude);
-                y = (float) projection.LatitudeToY(node.Coordinate.Latitude);
-            }
+            float? x = (float) projection.LongitudeToX(
+                node.Coordinate.Longitude);
+            float? y = (float) projection.LatitudeToY(
+                node.Coordinate.Latitude);
+            
 
             // build the rules.
             IEnumerable<MapCSSRuleProperties> rules =
@@ -223,26 +220,18 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 return;
             }
 
-            // calculate the layer to render on if any.
-            int sceneLayer = 0;
-            double? osmLayer = way.Tags.GetNumericValue("layer");
-            if (osmLayer.HasValue)
-            { // multiply by 100, allow another 100 sub divisions for each OSM layer.
-                sceneLayer = (int)osmLayer * 100;
-            }
-
-            float[] x = null, y = null;
+			double[] x = null, y = null;
 
             // get x/y.
             if (x == null)
             { // pre-calculate x/y.
-                x = new float[way.Nodes.Count];
-                y = new float[way.Nodes.Count];
+				x = new double[way.Nodes.Count];
+				y = new double[way.Nodes.Count];
                 for (int idx = 0; idx < way.Nodes.Count; idx++)
                 {
-                    x[idx] = (float)projection.LongitudeToX(
+                    x[idx] = projection.LongitudeToX(
                         way.Nodes[idx].Coordinate.Longitude);
-                    y[idx] = (float)projection.LatitudeToY(
+                    y[idx] = projection.LatitudeToY(
                         way.Nodes[idx].Coordinate.Latitude);
                 }
             }
@@ -250,13 +239,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             // add the z-index.
             foreach (var rule in rules)
             {
+                // calculate the layer to render on if any.
+                int sceneLayer = 0;
+                double? osmLayer = way.Tags.GetNumericValue("layer");
+                if (osmLayer.HasValue)
+                { // multiply by 100, allow another 100 sub divisions for each OSM layer.
+                    sceneLayer = (int)osmLayer * 1000;
+                }
+
                 float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
                 float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
 
                 int zIndex;
                 if (rule.TryGetProperty<int>("zIndex", out zIndex))
                 {
-                    sceneLayer = sceneLayer + zIndex;
+                    sceneLayer = sceneLayer + zIndex * 10;
                 }
 
                 // interpret the results.
@@ -269,7 +266,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         if (rule.TryGetProperty("fillColor", out fillColor))
                         { // render as an area.
                             sceneLayer = sceneLayer + FillLayerOffset;
-                            scene.AddPolygon(sceneLayer, minZoom, maxZoom, x, y, fillColor, 1, true);
+                            scene.AddPolygon(sceneLayer - 1, minZoom, maxZoom, x, y, fillColor, 1, true);
                             sceneLayer = sceneLayer - FillLayerOffset;
                             if (rule.TryGetProperty("color", out color))
                             {
@@ -284,7 +281,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     LineJoin lineJoin;
                     if (!rule.TryGetProperty("lineJoin", out lineJoin))
                     {
-                        lineJoin = LineJoin.Bevel;
+                        lineJoin = LineJoin.Round;
                     }
                     int[] dashes;
                     if (!rule.TryGetProperty("dashes", out dashes))

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -19,15 +20,16 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// Called right before rendering starts.
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="scene"></param>
+        /// <param name="scenes"></param>
         /// <param name="view"></param>
-        protected override void OnBeforeRender(Target2DWrapper<Graphics> target, Scene2D scene, View2D view)
+        protected override void OnBeforeRender(Target2DWrapper<Graphics> target, List<Scene2D> scenes, View2D view)
         {
             // create a bitmap and render there.
             var bitmap = new Bitmap((int)target.Width, (int)target.Height);
             target.BackTarget = target.Target;
+            target.BackTarget.CompositingMode = CompositingMode.SourceOver;
             target.Target = Graphics.FromImage(bitmap);
-            target.Target.CompositingMode = target.BackTarget.CompositingMode;
+            target.Target.CompositingMode = CompositingMode.SourceOver;
             target.Target.SmoothingMode = target.BackTarget.SmoothingMode;
             target.Target.PixelOffsetMode = target.BackTarget.PixelOffsetMode;
             target.Target.InterpolationMode = target.BackTarget.InterpolationMode;
@@ -39,9 +41,9 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// Called right after rendering.
         /// </summary>
         /// <param name="target"></param>
-        /// <param name="scene"></param>
+        /// <param name="scenes"></param>
         /// <param name="view"></param>
-        protected override void OnAfterRender(Target2DWrapper<Graphics> target, Scene2D scene, View2D view)
+        protected override void OnAfterRender(Target2DWrapper<Graphics> target, List<Scene2D> scenes, View2D view)
         {
             target.Target.Flush();
             target.Target = target.BackTarget;
@@ -57,13 +59,14 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// </summary>
 	    /// <param name="target"></param>
 	    /// <param name="currentCache"></param>
-	    /// <param name="currentScene"></param>
+	    /// <param name="currentScenes"></param>
 	    /// <param name="view"></param>
 	    /// <returns></returns>
-        protected override Scene2D BuildSceneCache(Target2DWrapper<Graphics> target, Scene2D currentCache, Scene2D currentScene, View2D view)
+        protected override Scene2D BuildSceneCache(Target2DWrapper<Graphics> target, Scene2D currentCache, 
+            List<Scene2D> currentScenes, View2D view)
         {
             var scene = new Scene2D();
-	        scene.BackColor = currentScene.BackColor;
+            scene.BackColor = currentScenes[0].BackColor;
 
 	        var bitmap = target.Tag as Bitmap;
 	        if (bitmap != null)
@@ -76,7 +79,8 @@ namespace OsmSharp.WinForms.UI.Renderer
 
 	                imageData = stream.ToArray();
 	            }
-	            scene.AddImage(0, float.MinValue, float.MaxValue, view.Left, view.Top, view.Right, view.Bottom, imageData);
+	            scene.AddImage(0, float.MinValue, float.MaxValue, 
+                    view.Left, view.Top, view.Right, view.Bottom, imageData);
 	        }
 	        return scene;
         }
@@ -96,7 +100,15 @@ namespace OsmSharp.WinForms.UI.Renderer
                 target.VisibleClipBounds.Height);
         }
 
+        /// <summary>
+        /// Keeps the view.
+        /// </summary>
 	    private View2D _view;
+
+        /// <summary>
+        /// Holds the target.
+        /// </summary>
+        private Target2DWrapper<Graphics> _target;
 
 	    /// <summary>
 	    /// Transforms the target using the specified view.
@@ -106,64 +118,98 @@ namespace OsmSharp.WinForms.UI.Renderer
         protected override void Transform(Target2DWrapper<Graphics> target, View2D view)
 	    {
 	        _view = view;
+	        _target = target;
+	    }
 
-            float scaleX = target.Width / view.Width;
-            float scaleY = target.Height / view.Height;
+        /// <summary>
+        /// Transforms the x-coordinate to screen coordinates.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <returns></returns>
+        private float TransformX(double x)
+        {
+            return (float)_view.ToViewPortX(_target.Width, x);
+        }
 
-            // scale and translate.
-            target.Target.ResetTransform();
-            target.Target.ScaleTransform(scaleX, scaleY);
-            target.Target.TranslateTransform((-view.CenterX + (view.Width / 2.0f)),
-                                  -(view.CenterY - (view.Height / 2.0f)));
-		}
+        /// <summary>
+        /// Transforms the y-coordinate to screen coordinates.
+        /// </summary>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        private float TransformY(double y)
+        {
+            return (float) _view.ToViewPortY(_target.Height, y);
+        }
 
         /// <summary>
         /// Returns the size in pixels.
         /// </summary>
-        /// <returns>The pixels.</returns>
-        /// <param name="view">View.</param>
-        /// <param name="sizeInPixels">Size in pixels.</param>
-        protected override float FromPixels(Target2DWrapper<Graphics> target, View2D view, float sizeInPixels)
+        /// <returns></returns>
+        private float ToPixels(double sceneSize)
         {
-            float scaleX = target.Width / view.Width;
+            double scaleX = _target.Width / _view.Width;
+
+            return (float)(sceneSize * scaleX);
+        }
+
+	    /// <summary>
+	    /// Returns the size in pixels.
+	    /// </summary>
+	    /// <returns>The pixels.</returns>
+	    /// <param name="target"></param>
+	    /// <param name="view">View.</param>
+	    /// <param name="sizeInPixels">Size in pixels.</param>
+	    protected override double FromPixels(Target2DWrapper<Graphics> target, View2D view, double sizeInPixels)
+        {
+            double scaleX = target.Width / view.Width;
 
             return sizeInPixels / scaleX;
         }
 
-        /// <summary>
-        /// Draws the backcolor.
-        /// </summary>
-        /// <param name="backColor"></param>
-        protected override void DrawBackColor(Target2DWrapper<Graphics> target, int backColor)
+	    /// <summary>
+	    /// Draws the backcolor.
+	    /// </summary>
+	    /// <param name="target"></param>
+	    /// <param name="backColor"></param>
+	    protected override void DrawBackColor(Target2DWrapper<Graphics> target, int backColor)
         {
             target.Target.Clear(Color.FromArgb(backColor));
         }
 
-		/// <summary>
-		/// Draws a point on the target. The coordinates given are scene coordinates.
-		/// </summary>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="size">Size.</param>
-        protected override void DrawPoint(Target2DWrapper<Graphics> target, float x, float y, int color, float size)
-		{
-            target.Target.FillEllipse(new SolidBrush(Color.FromArgb(color)), x, y, size, size);
+	    /// <summary>
+	    /// Draws a point on the target. The coordinates given are scene coordinates.
+	    /// </summary>
+	    /// <param name="target"></param>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="color">Color.</param>
+	    /// <param name="size">Size.</param>
+	    protected override void DrawPoint(Target2DWrapper<Graphics> target, double x, double y, int color, double size)
+	    {
+	        float sizeInPixels = this.ToPixels(size);
+            target.Target.FillEllipse(new SolidBrush(Color.FromArgb(color)), this.TransformX(x), this.TransformY(y),
+                sizeInPixels, sizeInPixels);
         }
 
-		/// <summary>
-		/// Draws a line on the target. The coordinates given are scene coordinates.
-		/// </summary>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="width">Width.</param>
-        protected override void DrawLine(Target2DWrapper<Graphics> target, float[] x, float[] y, int color, float width, LineJoin lineJoin, int[] dashes)
-		{
-		    var pen = new Pen(Color.FromArgb(color), width);
+	    /// <summary>
+	    /// Draws a line on the target. The coordinates given are scene coordinates.
+	    /// </summary>
+	    /// <param name="target"></param>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="color">Color.</param>
+	    /// <param name="width">Width.</param>
+	    /// <param name="lineJoin"></param>
+	    /// <param name="dashes"></param>
+	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width, 
+            LineJoin lineJoin, int[] dashes)
+	    {
+	        float widthInPixels = this.ToPixels(width);
+
+            var pen = new Pen(Color.FromArgb(color), widthInPixels);
             if (dashes != null)
             {
-                float[] penDashes = new float[dashes.Length];
+                var penDashes = new float[dashes.Length];
                 for (int idx = 0; idx < dashes.Length; idx++)
                 {
                     penDashes[idx] = dashes[idx];
@@ -193,62 +239,72 @@ namespace OsmSharp.WinForms.UI.Renderer
 		    var points = new PointF[x.Length];
 		    for (int idx = 0; idx < x.Length; idx++)
 		    {
-                points[idx] = new PointF(x[idx], y[idx]);
+                points[idx] = new PointF(this.TransformX(x[idx]), 
+                    this.TransformY(y[idx]));
 		    }
             target.Target.DrawLines(pen, points);
 		}
 
-		/// <summary>
-		/// Draws a polygon on the target. The coordinates given are scene coordinates.
-		/// </summary>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="width">Width.</param>
-		/// <param name="fill">If set to <c>true</c> fill.</param>
-        protected override void DrawPolygon(Target2DWrapper<Graphics> target, float[] x, float[] y, int color, float width, bool fill)
+	    /// <summary>
+	    /// Draws a polygon on the target. The coordinates given are scene coordinates.
+	    /// </summary>
+	    /// <param name="target"></param>
+	    /// <param name="x">The x coordinate.</param>
+	    /// <param name="y">The y coordinate.</param>
+	    /// <param name="color">Color.</param>
+	    /// <param name="width">Width.</param>
+	    /// <param name="fill">If set to <c>true</c> fill.</param>
+	    protected override void DrawPolygon(Target2DWrapper<Graphics> target, double[] x, double[] y, int color,
+            double width, bool fill)
         {
+            float widthInPixels = this.ToPixels(width);
+
             var points = new PointF[x.Length];
             for (int idx = 0; idx < x.Length; idx++)
             {
-                points[idx] = new PointF(x[idx], y[idx]);
+                points[idx] = new PointF(this.TransformX(x[idx]), 
+                    this.TransformY(y[idx]));
             }
             if (fill)
             {
-                var pen = new Pen(Color.FromArgb(color), width);
+                var pen = new Pen(Color.FromArgb(color), widthInPixels);
                 target.Target.FillPolygon(new SolidBrush(Color.FromArgb(color)), points);
             }
             else
             {
-                var pen = new Pen(Color.FromArgb(color), width);
+                var pen = new Pen(Color.FromArgb(color), widthInPixels);
                 target.Target.DrawPolygon(pen, points);
             }
 		}
 
-        /// <summary>
-        /// Draws an icon unscaled but at the given scene coordinates.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="imageData"></param>
-        protected override void DrawIcon(Target2DWrapper<Graphics> target, float x, float y, byte[] imageData)
+	    /// <summary>
+	    /// Draws an icon unscaled but at the given scene coordinates.
+	    /// </summary>
+	    /// <param name="target"></param>
+	    /// <param name="x"></param>
+	    /// <param name="y"></param>
+	    /// <param name="imageData"></param>
+	    protected override void DrawIcon(Target2DWrapper<Graphics> target, double x, double y, byte[] imageData)
         {
             // get the image.
             Image image = Image.FromStream(new MemoryStream(imageData));
 
             // draw the image.
-            target.Target.DrawImage(image, x, y);
+            target.Target.DrawImage(image, this.TransformX(x), this.TransformY(y));
         }
 
-        /// <summary>
-        /// Draws an image.
-        /// </summary>
-        /// <param name="left"></param>
-        /// <param name="top"></param>
-        /// <param name="right"></param>
-        /// <param name="bottom"></param>
-        /// <param name="imageData"></param>
-        protected override object DrawImage(Target2DWrapper<Graphics> target, float left, float top, float right, float bottom, byte[] imageData, object tag)
+	    /// <summary>
+	    /// Draws an image.
+	    /// </summary>
+	    /// <param name="target"></param>
+	    /// <param name="left"></param>
+	    /// <param name="top"></param>
+	    /// <param name="right"></param>
+	    /// <param name="bottom"></param>
+	    /// <param name="imageData"></param>
+	    /// <param name="tag"></param>
+	    protected override object DrawImage(Target2DWrapper<Graphics> target, double left, double top, double right, 
+            double bottom, byte[] imageData, object tag)
         {
             // get the image.
             var image = (tag as Image);
@@ -257,8 +313,12 @@ namespace OsmSharp.WinForms.UI.Renderer
                 image = Image.FromStream(new MemoryStream(imageData));
             }
 
-            //target.Target.DrawImage(image, left, -top);
-            target.Target.DrawImage(image, new RectangleF(left, top - (top - bottom), right - left, top - bottom));
+	        float x = this.TransformX(left);
+	        float y = this.TransformY(top);
+	        float width = this.TransformX(right) - x;
+	        float height = this.TransformY(bottom) - y;
+            target.Target.DrawImage(image, new RectangleF(x, y,
+                width, height));
             return image;
         }
 
@@ -270,82 +330,13 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-        protected override void DrawText(Target2DWrapper<Graphics> target, float x, float y, string text, float size)
+        protected override void DrawText(Target2DWrapper<Graphics> target, double x, double y, string text, double size)
         {
-            target.Target.DrawString(text, new Font(FontFamily.GenericSansSerif, size), new SolidBrush(Color.Black), x, y);
+            float sizeInPixels = this.ToPixels(size);
+
+            target.Target.DrawString(text, new Font(FontFamily.GenericSansSerif, sizeInPixels), new SolidBrush(Color.Black),
+                this.TransformX(x), this.TransformY(y));
         }
-
-        ///// <summary>
-        ///// Draws text along a given line.
-        ///// </summary>
-        ///// <param name="target"></param>
-        ///// <param name="x"></param>
-        ///// <param name="y"></param>
-        ///// <param name="text"></param>
-        ///// <param name="size"></param>
-        //protected override void DrawTextAlongPath(Target2DWrapper<Graphics> target,
-        //                                          float[] x, float[] y, string text, float size)
-        //{
-        //    Font someFont = new Font(FontFamily.GenericSansSerif, size);
-            
-
-        //    // create the textpath.
-        //    var textPath = new GraphicsPath();
-
-        //    // the baseline should start at 0,0, so the next line is not quite correct
-        //    textPath.AddString(text, someFont, someStyle, someFontSize, new Point(0, 0));
-
-        //    RectangleF textBounds = textPath.GetBounds();
-
-        //    for (int i = 0; i < textPath.PathPoints.Length; i++)
-        //    {
-        //        PointF pt = textPath.PathPoints[i];
-        //        float textX = pt.X;
-        //        float textY = pt.Y;
-
-        //        // normalize the x coordinate into the parameterized value
-        //        // with a domain between 0 and 1.
-        //        float t = textX/textBounds.Width;
-
-        //        // calculate spline point for parameter t
-        //        float Sx = At3 + Bt2 + Ct + D
-        //        float Sy = Et3 + Ft2 + Gt + H
-
-        //        // calculate the tangent vector for the point        
-        //        float Tx = 3
-        //        At2 + 2
-        //        Bt + C
-        //        float Ty = 3E
-        //        t2 + 2F
-        //        t + G
-        //        // rotate 90 or 270 degrees to make it a perpendicular
-        //        float Px = Ty
-        //        float Py = - Tx
-
-        //        // normalize the perpendicular into a unit vector
-        //        float magnitude = sqrt(Px2 + Py2)
-        //        Px = Px/magnitude
-        //        Py = Py/magnitude
-
-        //        // assume that input text point y coord is the "height" or 
-        //        // distance from the spline.  Multiply the perpendicular vector 
-        //        // with y. it becomes the new magnitude of the vector.
-        //        Px *= textY;
-        //        Py *= textY;
-
-        //        // translate the spline point using the resultant vector
-        //        float finalX = Px + Sx
-        //        float finalY = Py + Sy
-
-        //        // I wish it were this easy, actually need 
-        //        // to create a new path.
-        //        textPath.PathPoints[i] = new PointF(finalX, finalY);
-        //    }
-
-        //    // draw the transformed text path		
-        //    g.DrawPath(Pens.Black, textPath);
-
-        //}
 
 	    #endregion
 	}

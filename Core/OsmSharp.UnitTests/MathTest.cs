@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Math;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UnitTests
 {

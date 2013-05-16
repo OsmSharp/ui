@@ -19,7 +19,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
     /// <summary>
     /// A router data source that dynamically loads data.
     /// </summary>
-    internal class V2RouterDataSource : IBasicRouterDataSource<LiveEdge>
+    internal class V2RouterLiveEdgeDataSource : IBasicRouterDataSource<LiveEdge>
     {
         /// <summary>
         /// Holds all graph data.
@@ -50,10 +50,10 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         /// <param name="zoom"></param>
         /// <param name="v1RoutingSerializer"></param>
         /// <param name="initialCapacity"></param>
-        internal V2RouterDataSource(
+        internal V2RouterLiveEdgeDataSource(
             Stream stream, bool compressed,
-            V2RoutingSerializer.SerializableGraphTileMetas tileMetas,
-            int zoom, V2RoutingSerializer v1RoutingSerializer,
+            V2RoutingLiveEdgeSerializer.SerializableGraphTileMetas tileMetas,
+            int zoom, V2RoutingLiveEdgeSerializer v1RoutingSerializer,
             int initialCapacity = 1000)
         {
             _tagsIndex = new SimpleTagsIndex();
@@ -287,7 +287,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         /// <summary>
         /// Holds the routing serializer.
         /// </summary>
-        private readonly V2RoutingSerializer _routingSerializer;
+        private readonly V2RoutingLiveEdgeSerializer _routingSerializer;
 
         /// <summary>
         /// Holds the tile metas.
@@ -371,7 +371,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
                 TileStreamPosition meta;
                 if (_graphTileMetas.TryGetValue(tile, out meta))
                 { // the meta data is available.
-                    V2RoutingSerializer.SerializableGraphTile tileData =
+                    V2RoutingLiveEdgeSerializer.SerializableGraphTile tileData =
                         _routingSerializer.DeserializeTile(_stream, meta.Offset, meta.Length, _compressed);
                     double top = tile.TopLeft.Latitude;
                     double left = tile.TopLeft.Longitude;

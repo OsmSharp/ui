@@ -15,19 +15,20 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OsmSharp.Math.Primitives.Enumerators.Lines;
 using OsmSharp.Math.Primitives.Enumerators.Points;
 
-namespace OsmSharp.Math
+namespace OsmSharp.Math.Primitives
 {
     /// <summary>
     /// Represents an n-dimensional bounding box.
     /// </summary>
-    public abstract class GenericRectangleF2D<PointType> : PrimitiveF2D<PointType>, ILineList<PointType>, IPointList<PointType>
+    public abstract class GenericRectangleF2D<PointType> : 
+        PrimitiveF2D<PointType>, ILineList<PointType>, IPointList<PointType>
         where PointType : PointF2D
     {
         /// <summary>
@@ -273,14 +274,14 @@ namespace OsmSharp.Math
         /// <returns></returns>
         public bool IsInside(PointF2D a)
         {
-            bool is_inside = true;
+            bool isInside = true;
 
             for (int idx = 0; idx < 2; idx++)
             {
-                is_inside = is_inside && (_max[idx] >= a[idx] && a[idx] >= _min[idx]);
+                isInside = isInside && (_max[idx] > a[idx] && a[idx] >= _min[idx]);
             }
 
-            return is_inside;
+            return isInside;
         }
 
         /// <summary>
@@ -360,9 +361,6 @@ namespace OsmSharp.Math
             }
             return false;
         }
-
-        #endregion
-
         #region Overlaps
 
         /// <summary>
@@ -372,19 +370,14 @@ namespace OsmSharp.Math
         /// <returns></returns>
         public bool Overlaps(GenericRectangleF2D<PointType> box)
         {
-            foreach (PointF2D p in box.Corners)
+			double minX = System.Math.Max(this.Min[0], box.Min[0]);
+			double minY = System.Math.Max(this.Min[1], box.Min[1]);
+			double maxX = System.Math.Min(this.Max[0], box.Max[0]);
+			double maxY = System.Math.Min(this.Max[1], box.Max[1]);
+
+            if (minX <= maxX && minY <= maxY)
             {
-                if (this.IsInside(p))
-                {
-                    return true;
-                }
-            }
-            foreach (PointF2D p in this.Corners)
-            {
-                if (box.IsInside(p))
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
@@ -396,22 +389,19 @@ namespace OsmSharp.Math
         /// <returns></returns>
         public bool Overlaps(RectangleF2D box)
         {
-            foreach (PointF2D p in box.Corners)
+            double minX = System.Math.Max(this.Min[0], box.Min[0]);
+            double minY = System.Math.Max(this.Min[1], box.Min[1]);
+            double maxX = System.Math.Min(this.Max[0], box.Max[0]);
+            double maxY = System.Math.Min(this.Max[1], box.Max[1]);
+
+            if (minX <= maxX && minY <= maxY)
             {
-                if (this.IsInside(p))
-                {
-                    return true;
-                }
-            }
-            foreach (PointF2D p in this.Corners)
-            {
-                if (box.IsInside(p))
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
+
+        #endregion
 
 
         #endregion

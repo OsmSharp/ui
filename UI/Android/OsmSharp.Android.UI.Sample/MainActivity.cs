@@ -60,7 +60,7 @@ namespace OsmSharp.Android.UI.Sample
 			
 			// initialize map.
 			var map = new Map();
-			map.AddLayer(new OsmRawLayer(dataSource, mapCSSInterpreter));
+			map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
 
 			// create gpx layer.
 			GpxLayer gpxLayer = new GpxLayer(map.Projection);
@@ -77,11 +77,14 @@ namespace OsmSharp.Android.UI.Sample
 //			var mapView = new OpenGLRenderer2D(
 //				this, null);
 
+			var mapGLView = new MapGLView(this);
+
 			//Create the user interface in code
 			var layout = new LinearLayout (this);
 			layout.Orientation = Orientation.Vertical;
 
-			layout.AddView (mapView);
+			layout.AddView(mapGLView);
+			//layout.AddView (mapView);
 
 			SetContentView (layout);
 		}

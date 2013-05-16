@@ -130,6 +130,10 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\SpatialIndexes\IndexReferenceImplementation.cs" />
+    <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndexTests.cs" />
+    <Compile Include="Collections\SpatialIndexes\RTreeStreamIndexTests.cs" />
+    <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
     <Compile Include="Routes\DepotRouteTests.cs" />
     <Compile Include="API\APITests.cs" />
     <Compile Include="Routes\DynamicAsymmetricMultiRouteTests.cs" />
@@ -169,25 +173,25 @@
     <Compile Include="Routing\Serialization\RoutingSerializationTests.cs" />
     <Compile Include="StaticDictionary.cs" />
     <Compile Include="Tiles\TilesTests.cs" />
-    <Compile Include="Tools\BinairyHeapTests.cs" />
-    <Compile Include="Tools\GZipStreamTests.cs" />
-    <Compile Include="Tools\SparseArrayTests.cs" />
-    <Compile Include="Tools\WebMercatorTests.cs" />
-    <Compile Include="Tools\FibonacciHeapTests.cs" />
-    <Compile Include="Tools\GpxXmlTest.cs" />
-    <Compile Include="Tools\HugeDictionaryTests.cs" />
-    <Compile Include="Tools\KmlXmlTest.cs" />
-    <Compile Include="Tools\LambertProjectionTest.cs" />
-    <Compile Include="Tools\LocatedObjectIndexTest.cs" />
-    <Compile Include="Tools\LocatedObjectQTTests.cs" />
-    <Compile Include="Tools\MathTest.cs" />
-    <Compile Include="Tools\NomatimXmlTest.cs" />
-    <Compile Include="Tools\OsmApiXmlTest.cs" />
-    <Compile Include="Tools\PermutationEnumerationTests.cs" />
-    <Compile Include="Tools\StringTableTests.cs" />
-    <Compile Include="Tools\StringTreeDictionaryTest.cs" />
-    <Compile Include="Tools\Tags\SimpleTagsCollectionTests.cs" />
-    <Compile Include="Tools\Tags\TagsCollectionTests.cs" />
+    <Compile Include="BinairyHeapTests.cs" />
+    <Compile Include="GZipStreamTests.cs" />
+    <Compile Include="SparseArrayTests.cs" />
+    <Compile Include="WebMercatorTests.cs" />
+    <Compile Include="FibonacciHeapTests.cs" />
+    <Compile Include="GpxXmlTest.cs" />
+    <Compile Include="HugeDictionaryTests.cs" />
+    <Compile Include="KmlXmlTest.cs" />
+    <Compile Include="LambertProjectionTest.cs" />
+    <Compile Include="LocatedObjectIndexTest.cs" />
+    <Compile Include="LocatedObjectQTTests.cs" />
+    <Compile Include="MathTest.cs" />
+    <Compile Include="NomatimXmlTest.cs" />
+    <Compile Include="OsmApiXmlTest.cs" />
+    <Compile Include="PermutationEnumerationTests.cs" />
+    <Compile Include="StringTableTests.cs" />
+    <Compile Include="StringTreeDictionaryTest.cs" />
+    <Compile Include="Tags\SimpleTagsCollectionTests.cs" />
+    <Compile Include="Tags\TagsCollectionTests.cs" />
     <Compile Include="TSP\BruteForceTSPTest.cs" />
   </ItemGroup>
   <ItemGroup>

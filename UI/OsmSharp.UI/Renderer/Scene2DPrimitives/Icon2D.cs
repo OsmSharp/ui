@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 {
@@ -16,7 +17,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="image"></param>
-        public Icon2D(float x, float y, byte[] image)
+		public Icon2D(double x, double y, byte[] image)
             : this()
         {
             this.X = x;
@@ -35,7 +36,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="image"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public Icon2D(float x, float y, byte[] image, float minZoom, float maxZoom)
+		public Icon2D(double x, double y, byte[] image, float minZoom, float maxZoom)
             : this()
         {
             this.X = x;
@@ -59,13 +60,13 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-        public float X { get; private set; }
+		public double X { get; private set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-        public float Y { get; private set; }
+		public double Y { get; private set; }
 
         /// <summary>
         /// Gets or sets the color.
@@ -100,6 +101,15 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             }
 
             return view.Contains(this.X, this.Y);
+        }
+
+        /// <summary>
+        /// Returns the bounding box for this primitive.
+        /// </summary>
+        /// <returns></returns>
+        public RectangleF2D GetBox()
+        {
+            return new RectangleF2D(this.X, this.Y, this.X, this.Y);
         }
 
         #endregion

@@ -37,6 +37,14 @@ namespace OsmSharp.Math.Random
             _random = new System.Random();
         }
 
+        /// <summary>
+        /// Creates a new random generator.
+        /// </summary>
+        public RandomGenerator(int seed)
+        {
+            _random = new System.Random(seed);
+        }
+
         #region IRandomGenerator Members
 
         /// <summary>

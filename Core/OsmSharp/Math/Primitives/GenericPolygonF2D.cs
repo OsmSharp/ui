@@ -15,15 +15,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OsmSharp.Math.Primitives.Enumerators;
 using OsmSharp.Math.Primitives.Enumerators.Lines;
 using OsmSharp.Math.Primitives.Enumerators.Points;
 
-namespace OsmSharp.Math
+namespace OsmSharp.Math.Primitives
 {
     /// <summary>
     /// Class representing a polygon.

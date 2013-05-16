@@ -72,7 +72,7 @@
     <Compile Include="MapCSSParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleColorTests.cs" />
-    <Compile Include="UI\ViewTests.cs" />
+    <Compile Include="UI\View2DTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\MapCSS\coloured-addresses.mapcss" />

@@ -22,7 +22,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
     /// A v2 routing serializer.
     /// </summary>
     /// <remarks>Versioning is implemented in the file format to guarantee backward compatibility.</remarks>
-    public class V2RoutingSerializer : RoutingSerializer<LiveEdge>
+    public class V2RoutingLiveEdgeSerializer : RoutingSerializer<LiveEdge>
     {
         /// <summary>
         /// Holds the size of the tile meta.
@@ -48,7 +48,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         /// Creates a new v2 serializer.
         /// </summary>
         /// <param name="compress">Flag telling this serializer to compress it's data.</param>
-        public V2RoutingSerializer(bool compress)
+        public V2RoutingLiveEdgeSerializer(bool compress)
         {
             _compress = compress;
 
@@ -282,7 +282,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
                     typeof(SerializableGraphTileMetas));
 
             // create the datasource.
-            var routerDataSource = new V2RouterDataSource(stream, decompress, metas, Zoom,
+            var routerDataSource = new V2RouterLiveEdgeDataSource(stream, decompress, metas, Zoom,
                     this, 1000);
             if (!lazy)
             {

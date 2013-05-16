@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 {
@@ -19,7 +20,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <param name="fill"></param>
-        public Polygon2D(float[] x, float[] y, int color, float width, bool fill)
+		public Polygon2D(double[] x, double[] y, int color, double width, bool fill)
            : this()
         {
             this.X = x;
@@ -69,7 +70,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 	    /// <param name="fill"></param>
 	    /// <param name="minZoom"></param>
 	    /// <param name="maxZoom"></param>
-	    public Polygon2D(float[] x, float[] y, int color, float width, bool fill, float minZoom, float maxZoom)
+		public Polygon2D(double[] x, double[] y, int color, double width, bool fill, float minZoom, float maxZoom)
             : this()
         {
             this.X = x;
@@ -121,7 +122,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="maxX"></param>
         /// <param name="minY"></param>
         /// <param name="maxY"></param>
-        public Polygon2D(float[] x, float[] y, int color, float width, bool fill,
+		public Polygon2D(double[] x, double[] y, int color, double width, bool fill,
             int minX, int maxX, int minY, int maxY)
             : this()
         {
@@ -153,7 +154,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// Gets or sets the x.
 		/// </summary>
 		/// <value>The x.</value>
-		public float[] X {
+		public double[] X {
 			get;
 			private set;
 		}
@@ -162,7 +163,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// Gets or sets the y.
 		/// </summary>
 		/// <value>The y.</value>
-		public float[] Y {
+		public double[] Y {
 			get;
 			private set;
 		}
@@ -180,7 +181,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// Gets or sets the size.
 		/// </summary>
 		/// <value>The size.</value>
-		public float Width {
+		public double Width {
 			get;
 			private set;
 		}
@@ -206,10 +207,10 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 
 		#region IScene2DPrimitive implementation
 
-	    private readonly float _minX;
-        private readonly float _maxX;
-        private readonly float _minY;
-        private readonly float _maxY;
+		private readonly double _minX;
+		private readonly double _maxX;
+		private readonly double _minY;
+		private readonly double _maxY;
 
 	    /// <summary>
 	    /// Returns true if the object is visible on the view.
@@ -256,6 +257,15 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             }
 			return false;
 		}
+
+        /// <summary>
+        /// Returns the bounding box for this primitive.
+        /// </summary>
+        /// <returns></returns>
+        public RectangleF2D GetBox()
+        {
+            return new RectangleF2D(_minX, _minY, _maxX, _maxY);
+        }
 		
 		#endregion
 	}

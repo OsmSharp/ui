@@ -26,18 +26,32 @@ namespace OsmSharp.UI.Renderer
         /// </summary>
 	    private Scene2D _cachedScene;
 
+
+        /// <summary>
+        /// Renders the given scene on the given target for the given view.
+        /// </summary>
+        /// <param name="orginalTarget"></param>
+        /// <param name="scene">Scene.</param>
+        /// <param name="view">View.</param>
+	    public void Render(TTarget orginalTarget, Scene2D scene, View2D view)
+	    {
+            var scenes = new List<Scene2D>();
+            scenes.Add(scene);
+            this.Render(orginalTarget, scenes, view);
+	    }
+
 	    /// <summary>
 	    /// Renders the given scene on the given target for the given view.
 	    /// </summary>
         /// <param name="orginalTarget"></param>
-	    /// <param name="scene">Scene.</param>
+	    /// <param name="scenes">Scene.</param>
 	    /// <param name="view">View.</param>
-        public void Render(TTarget orginalTarget, Scene2D scene, View2D view)
+        public void Render(TTarget orginalTarget, List<Scene2D> scenes, View2D view)
 		{
 			if (view == null)
 				throw new ArgumentNullException ("view");
-			if (scene == null)
-                throw new ArgumentNullException("scene");
+			if (scenes == null)
+                throw new ArgumentNullException("scenes");
             if (orginalTarget == null)
                 throw new ArgumentNullException("orginalTarget");
 
@@ -45,23 +59,26 @@ namespace OsmSharp.UI.Renderer
             Target2DWrapper<TTarget> target = this.CreateTarget2DWrapper(orginalTarget);
 
             // the on before render event.
-            this.OnBeforeRender(target, scene, view);
+            this.OnBeforeRender(target, scenes, view);
 
 			// transform the target coordinates or notify the target of the
 			// view coordinate system.
             this.Transform(target, view);
 
             // draw the backcolor.
-            this.DrawBackColor(target, scene.BackColor);
+            this.DrawBackColor(target, scenes[0].BackColor);
 
-			// render the primitives.
-            this.RenderPrimitives(target, scene, view);
+	        foreach (var scene in scenes)
+	        {
+			    // render the primitives.
+                this.RenderPrimitives(target, scene, view);
+	        }
 
-            // the on after render event.
-            this.OnAfterRender(target, scene, view);
+	        // the on after render event.
+            this.OnAfterRender(target, scenes, view);
 
             // build a cached version.
-            _cachedScene = this.BuildSceneCache(target, _cachedScene, scene, view);
+            _cachedScene = this.BuildSceneCache(target, _cachedScene, scenes, view);
 		}
 
 	    /// <summary>
@@ -102,7 +119,7 @@ namespace OsmSharp.UI.Renderer
         private void RenderPrimitives(Target2DWrapper<TTarget> target, Scene2D scene, View2D view)
         {
             // TODO: calculate zoom.
-	        float zoom = view.CalculateZoom(target.Width, target.Height);
+			float zoom = (float)view.CalculateZoom(target.Width, target.Height);
 
             // loop over all primitives in the scene.
             foreach (IScene2DPrimitive primitive in scene.Get(view, zoom))
@@ -149,9 +166,9 @@ namespace OsmSharp.UI.Renderer
 	    /// Called before rendering starts.
 	    /// </summary>
 	    /// <param name="target"></param>
-	    /// <param name="scene"></param>
+	    /// <param name="scenes"></param>
 	    /// <param name="view"></param>
-        protected virtual void OnBeforeRender(Target2DWrapper<TTarget> target, Scene2D scene, View2D view)
+        protected virtual void OnBeforeRender(Target2DWrapper<TTarget> target, List<Scene2D> scenes, View2D view)
         {
             
         }
@@ -160,9 +177,9 @@ namespace OsmSharp.UI.Renderer
 	    /// Called after rendering stops.
 	    /// </summary>
 	    /// <param name="target"></param>
-	    /// <param name="scene"></param>
+	    /// <param name="scenes"></param>
 	    /// <param name="view"></param>
-        protected virtual void OnAfterRender(Target2DWrapper<TTarget> target, Scene2D scene, View2D view)
+        protected virtual void OnAfterRender(Target2DWrapper<TTarget> target, List<Scene2D> scenes, View2D view)
         {
 
         }
@@ -172,11 +189,11 @@ namespace OsmSharp.UI.Renderer
 	    /// </summary>
 	    /// <param name="target"></param>
 	    /// <param name="currentCache"></param>
-	    /// <param name="currentScene"></param>
+	    /// <param name="currentScenes"></param>
 	    /// <param name="view"></param>
-        protected virtual Scene2D BuildSceneCache(Target2DWrapper<TTarget> target, Scene2D currentCache, Scene2D currentScene, View2D view)
+        protected virtual Scene2D BuildSceneCache(Target2DWrapper<TTarget> target, Scene2D currentCache, List<Scene2D> currentScenes, View2D view)
 	    {
-	        return currentScene;
+	        return null;
 	    }
 
 	    /// <summary>
@@ -193,7 +210,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="target"></param>
 	    /// <param name="view">View.</param>
 	    /// <param name="sizeInPixels">Size in pixels.</param>
-        protected abstract float FromPixels(Target2DWrapper<TTarget> target, View2D view, float sizeInPixels);
+		protected abstract double FromPixels(Target2DWrapper<TTarget> target, View2D view, double sizeInPixels);
 
 	    /// <summary>
 	    /// Transforms the target using the specified view.
@@ -217,7 +234,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="y">The y coordinate.</param>
 	    /// <param name="color">Color.</param>
 	    /// <param name="size">Size.</param>
-        protected abstract void DrawPoint(Target2DWrapper<TTarget> target, float x, float y, int color, float size);
+		protected abstract void DrawPoint(Target2DWrapper<TTarget> target, double x, double y, int color, double size);
 
 	    /// <summary>
 	    /// Draws a line on the target. The coordinates given are scene coordinates.
@@ -229,7 +246,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="width">Width.</param>
 	    /// <param name="lineJoin"></param>
 	    /// <param name="dashes"></param>
-        protected abstract void DrawLine(Target2DWrapper<TTarget> target, float[] x, float[] y, int color, float width, LineJoin lineJoin, int[] dashes);
+		protected abstract void DrawLine(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes);
 
 	    /// <summary>
 	    /// Draws a polygon on the target. The coordinates given are scene coordinates.
@@ -240,7 +257,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
 	    /// <param name="fill">If set to <c>true</c> fill.</param>
-        protected abstract void DrawPolygon(Target2DWrapper<TTarget> target, float[] x, float[] y, int color, float width, bool fill);
+		protected abstract void DrawPolygon(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, bool fill);
 
 
 	    /// <summary>
@@ -250,7 +267,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="x"></param>
 	    /// <param name="y"></param>
 	    /// <param name="imageData"></param>
-        protected abstract void DrawIcon(Target2DWrapper<TTarget> target, float x, float y, byte[] imageData);
+		protected abstract void DrawIcon(Target2DWrapper<TTarget> target, double x, double y, byte[] imageData);
 
 	    /// <summary>
 	    /// Draws an image on the target.
@@ -261,7 +278,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="right"></param>
 	    /// <param name="bottom"></param>
 	    /// <param name="imageData"></param>
-        protected abstract object DrawImage(Target2DWrapper<TTarget> target, float left, float top, float right, float bottom, byte[] imageData, object tag);
+		protected abstract object DrawImage(Target2DWrapper<TTarget> target, double left, double top, double right, double bottom, byte[] imageData, object tag);
 
         /// <summary>
         /// Draws text.
@@ -271,6 +288,6 @@ namespace OsmSharp.UI.Renderer
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-        protected abstract void DrawText(Target2DWrapper<TTarget> target, float x, float y, string text, float size);
+		protected abstract void DrawText(Target2DWrapper<TTarget> target, double x, double y, string text, double size);
 	}
 }

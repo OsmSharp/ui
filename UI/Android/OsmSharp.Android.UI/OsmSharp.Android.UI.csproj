@@ -51,6 +51,7 @@
     <Compile Include="CanvasRenderer2DView.cs" />
     <Compile Include="MapView.cs" />
     <Compile Include="Renderer\OpenGLRenderer2D.cs" />
+    <Compile Include="MapGLView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

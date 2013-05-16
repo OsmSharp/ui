@@ -63,7 +63,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             }
 
             // create serializer.
-            var routingSerializer = new V2RoutingSerializer(false);
+            var routingSerializer = new V2RoutingLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             IBasicRouterDataSource<LiveEdge> deserializedVersion;
@@ -139,7 +139,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new V2RoutingSerializer(false);
+            var routingSerializer = new V2RoutingLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             byte[] byteArray;
@@ -229,7 +229,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new V2RoutingSerializer(true);
+            var routingSerializer = new V2RoutingLiveEdgeSerializer(true);
 
             // serialize/deserialize.
             byte[] byteArray;
@@ -324,7 +324,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
                 original, basicRouterOriginal, interpreter);
 
             // create serializer.
-            var routingSerializer = new V2RoutingSerializer(false);
+            var routingSerializer = new V2RoutingLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             byte[] byteArray;

@@ -28,7 +28,7 @@ namespace OsmSharp.WinForms.UI.Sample
         /// <summary>
         /// Gets/sets the view.
         /// </summary>
-        public float[] Center { get; set; }
+        public double[] Center { get; set; }
 
         /// <summary>
         /// Gets/sets the view factor.
@@ -70,7 +70,7 @@ namespace OsmSharp.WinForms.UI.Sample
         private View2D CreateCurrentView(float width, float height)
         {
             return View2D.CreateFrom(this.Center[0], this.Center[1],
-                                                width, height, this.ZoomFactor);
+                                                width, height, this.ZoomFactor, true, true);
         }
 
         /// <summary>
@@ -89,12 +89,12 @@ namespace OsmSharp.WinForms.UI.Sample
         /// <summary>
         /// Coordinates where dragging started.
         /// </summary>
-        private float[] _draggingCoordinates;
+        private double[] _draggingCoordinates;
 
         /// <summary>
         /// Coordinates of the old center.
         /// </summary>
-        private float[] _oldCenter;
+        private double[] _oldCenter;
 
         /// <summary>
         /// Raises the onmousedown event.
@@ -106,8 +106,8 @@ namespace OsmSharp.WinForms.UI.Sample
 
             if (e.Button == MouseButtons.Left)
             {
-                _draggingCoordinates = new float[]{ e.X, e.Y };
-                _oldCenter = new float[] { this.Center[0], this.Center[1] };
+                _draggingCoordinates = new double[] { e.X, e.Y };
+                _oldCenter = new double[] { this.Center[0], this.Center[1] };
             }
         }
 
@@ -122,14 +122,14 @@ namespace OsmSharp.WinForms.UI.Sample
             if (e.Button == MouseButtons.Left &&
                 _draggingCoordinates != null)
             {
-                float[] currentCoordinates = new float[] { e.X, e.Y};
-                float[] delta = new float[] { _draggingCoordinates[0] - currentCoordinates[0],
+                double[] currentCoordinates = new double[] { e.X, e.Y };
+                double[] delta = new double[] { _draggingCoordinates[0] - currentCoordinates[0],
                         _draggingCoordinates[1] - currentCoordinates[1]};
 
-                float[] newCenter = new float[] { (float)this.Width/2.0f + delta[0], (float)this.Height/2.0f + delta[1]};
+                double[] newCenter = new double[] { this.Width / 2.0f + delta[0], this.Height / 2.0f + delta[1] };
 
                 this.Center = _oldCenter;
-                this.Center = this.CreateCurrentView(this.Width, this.Height).ToViewPort(this.Width, this.Height,
+                this.Center = this.CreateCurrentView(this.Width, this.Height).FromViewPort(this.Width, this.Height,
                                                                                          newCenter[0], newCenter[1]);
 
                 //_draggingCoordinates = currentCoordinates;

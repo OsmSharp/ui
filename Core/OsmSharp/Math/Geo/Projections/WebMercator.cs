@@ -16,7 +16,7 @@ namespace OsmSharp.Math.Geo.Projections
         /// <summary>
         /// Holds the constant default zoom level.
         /// </summary>
-        private const int DefaultZoom = 30;
+        private const int DefaultZoom = 15;
 
         /// <summary>
         /// Converts the lat/lon to projected coordinates.
@@ -133,5 +133,15 @@ namespace OsmSharp.Math.Geo.Projections
         {
             return System.Math.Log(zoomFactor/256.0, 2) + DefaultZoom;
         }
+
+        /// <summary>
+        /// Returns true if this projection uses lowest left, highest right. False otherwise.
+        /// </summary>
+        public bool DirectionX { get { return true; } }
+
+        /// <summary>
+        /// Returns true if this projection uses lowest bottom, highest top. False otherwise.
+        /// </summary>
+        public bool DirectionY { get { return false; } }
     }
 }

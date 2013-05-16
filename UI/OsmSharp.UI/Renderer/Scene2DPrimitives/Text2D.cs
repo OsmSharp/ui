@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 {
@@ -36,7 +37,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-        public Text2D(float x, float y, string text, float size, float minZoom, float maxZoom)
+		public Text2D(double x, double y, string text, double size, float minZoom, float maxZoom)
             : this()
         {
             this.X = x;
@@ -62,13 +63,13 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-        public float X { get; private set; }
+		public double X { get; private set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-        public float Y { get; private set; }
+		public double Y { get; private set; }
 
         /// <summary>
         /// Gets the text.
@@ -79,7 +80,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <summary>
         /// Gets the size.
         /// </summary>
-        public float Size { get; private set; }
+		public double Size { get; private set; }
 
         /// <summary>
         /// The minimum zoom.
@@ -108,6 +109,15 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             }
 
             return view.Contains(this.X, this.Y);
+        }
+
+        /// <summary>
+        /// Returns the bounding box for this primitive.
+        /// </summary>
+        /// <returns></returns>
+        public RectangleF2D GetBox()
+        {
+            return new RectangleF2D(this.X, this.Y, this.X, this.Y);
         }
 
         #endregion

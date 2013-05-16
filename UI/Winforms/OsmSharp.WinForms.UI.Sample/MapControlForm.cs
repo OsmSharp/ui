@@ -1,19 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows.Forms;
+using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Data.Xml.Processor;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Data.Processing;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Styles.MapCSS;
-using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Map.Layers;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.WinForms.UI.Sample
 {
@@ -53,13 +52,33 @@ namespace OsmSharp.WinForms.UI.Sample
                 imageSource);
 
             // initialize the data source.
-            var dataSource = new OsmDataSource( //new FileInfo(@"c:\OSM\bin\wvl.osm").OpenRead());
+            var dataSource = new OsmDataSource(//new FileInfo(@"c:\OSM\bin\wvl.osm").OpenRead());
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm"));
 
             // initialize map.
             var map = new Map();
-            //map.AddLayer(new OsmRawLayer(dataSource, mapCSSInterpreter));
-            map.AddLayer(new TileLayer(@"http://tile.openstreetmap.org/{0}/{1}/{2}.png"));
+            //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
+            map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+
+            // create graph layer.
+            //var xmlOsmStreamReader =
+            //    new XmlOsmStreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm"));
+            //var tagsIndex = new SimpleTagsIndex();
+            //var osmInterpreter = new OsmRoutingInterpreter();
+            //// do the data processing.
+            //var memoryDynamicGraph = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            //var targetData = new LiveGraphOsmStreamWriter(
+            //    memoryDynamicGraph, osmInterpreter, tagsIndex);
+            //targetData.RegisterSource(xmlOsmStreamReader);
+            //targetData.Pull();
+            //var graphLayer = new LayerDynamicGraphLiveEdge(memoryDynamicGraph, mapCSSInterpreter);
+            //map.AddLayer(graphLayer);
+
+            // create gpx layer.
+            var gpxLayer = new LayerGpx(map.Projection);
+            gpxLayer.AddGpx(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.gpx"));
+            map.AddLayer(gpxLayer);
 
             // set control properties.
             this.mapControl1.Map = map;

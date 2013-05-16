@@ -69,5 +69,15 @@ namespace OsmSharp.Math.Geo.Projections
         /// <param name="zoomFactor"></param>
         /// <returns></returns>
         double ToZoomLevel(double zoomFactor);
+
+        /// <summary>
+        /// Returns true if this projection uses lowest left, highest right. False otherwise.
+        /// </summary>
+        bool DirectionX { get; }
+
+        /// <summary>
+        /// Returns true if this projection uses lowest bottom, highest top. False otherwise.
+        /// </summary>
+        bool DirectionY { get; }
 	}
 }

@@ -1,41 +1,27 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs">
     <Files>
-      <File FileName="UI\OsmSharp.UI\Map\Layers\GpxLayer.cs" Line="1" Column="1" />
-      <File FileName="Core\OsmSharp.Osm\Data\Xml\GpxSource\GpxDataSource.cs" Line="1" Column="1" />
-      <File FileName="Core\OsmSharp\Xml\Sources\XmlStreamSource.cs" Line="1" Column="1" />
-      <File FileName="UI\OsmSharp.UI\Map\Styles\MapCSS\MapCSSInterpreter.cs" Line="1" Column="1" />
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="83" Column="12" />
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\Resources\Resource.designer.cs" Line="1" Column="1" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" Line="337" Column="5" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Core" expanded="True">
-            <Node name="OsmSharp.Android" expanded="True">
-              <Node name="Xml" expanded="True">
-                <Node name="Sources" expanded="True" />
-              </Node>
-            </Node>
             <Node name="OsmSharp.Osm.Android" expanded="True">
               <Node name="Data" expanded="True">
-                <Node name="Xml" expanded="True">
-                  <Node name="GpxSource" expanded="True" />
-                </Node>
+                <Node name="Memory" expanded="True" />
               </Node>
             </Node>
           </Node>
           <Node name="UI" expanded="True">
             <Node name="Android" expanded="True">
-              <Node name="OsmSharp.Android.UI.Sample" expanded="True" selected="True">
-                <Node name="Resources" expanded="True" />
+              <Node name="OsmSharp.Android.UI" expanded="True">
+                <Node name="Renderer" expanded="True">
+                  <Node name="OpenGLRenderer2D.cs" selected="True" />
+                </Node>
               </Node>
-            </Node>
-            <Node name="OsmSharp.UI.Android" expanded="True">
-              <Node name="Map" expanded="True">
-                <Node name="Layers" expanded="True" />
-              </Node>
+              <Node name="OsmSharp.Android.UI.Sample" expanded="True" />
             </Node>
           </Node>
         </State>
@@ -46,20 +32,387 @@
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State>
           <Value>_primitives</Value>
+          <Value>e.RawX</Value>
+          <Value>e.RawY</Value>
         </State>
       </Pad>
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" line="106" column="1" />
-      <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" line="97" column="1" />
       <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\OsmSharp.Osm\Data\PBF\Processor\PBFDataProcessorSource.cs" line="53" column="1" />
-      <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\OsmSharp.Osm\Data\Memory\MemoryDataSource.cs" line="382" column="1" />
-      <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" line="71" column="36" />
-      <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" line="67" column="1" />
+      <Catchpoint exceptionName="Android.Accounts.AccountsException" />
+      <Catchpoint exceptionName="Android.Accounts.AuthenticatorException" />
+      <Catchpoint exceptionName="Android.Accounts.NetworkErrorException" />
+      <Catchpoint exceptionName="Android.Accounts.OperationCanceledException" />
+      <Catchpoint exceptionName="Android.App.PendingIntent+CanceledException" />
+      <Catchpoint exceptionName="Android.Content.ActivityNotFoundException" />
+      <Catchpoint exceptionName="Android.Content.IntentFilter+MalformedMimeTypeException" />
+      <Catchpoint exceptionName="Android.Content.IntentSender+SendIntentException" />
+      <Catchpoint exceptionName="Android.Content.OperationApplicationException" />
+      <Catchpoint exceptionName="Android.Content.PM.PackageManager+NameNotFoundException" />
+      <Catchpoint exceptionName="Android.Content.ReceiverCallNotAllowedException" />
+      <Catchpoint exceptionName="Android.Content.Res.Resources+NotFoundException" />
+      <Catchpoint exceptionName="Android.Database.CursorIndexOutOfBoundsException" />
+      <Catchpoint exceptionName="Android.Database.SQLException" />
+      <Catchpoint exceptionName="Android.Database.Sqlite.SQLiteAbortException" />
+      <Catchpoint exceptionName="Android.Database.Sqlite.SQLiteConstraintException" />
+      <Catchpoint exceptionName="Android.Database.Sqlite.SQLiteDatabaseCorruptException" />
+      <Catchpoint exceptionName="Android.Database.Sqlite.SQLiteDiskIOException" />
+      <Catchpoint exceptionName="Android.Database.Sqlite.SQLiteDoneException" />
+      <Catchpoint exceptionName="Android.Database.Sqlite.SQLiteException" />
+      <Catchpoint exceptionName="Android.Database.Sqlite.SQLiteFullException" />
+      <Catchpoint exceptionName="Android.Database.Sqlite.SQLiteMisuseException" />
+      <Catchpoint exceptionName="Android.Database.StaleDataException" />
+      <Catchpoint exceptionName="Android.Net.ParseException" />
+      <Catchpoint exceptionName="Android.Opengl.GLException" />
+      <Catchpoint exceptionName="Android.OS.BadParcelableException" />
+      <Catchpoint exceptionName="Android.OS.DeadObjectException" />
+      <Catchpoint exceptionName="Android.OS.ParcelFormatException" />
+      <Catchpoint exceptionName="Android.OS.RemoteException" />
+      <Catchpoint exceptionName="Android.Provider.Settings+SettingNotFoundException" />
+      <Catchpoint exceptionName="Android.Test.AssertionFailedError" />
+      <Catchpoint exceptionName="Android.Test.ComparisonFailure" />
+      <Catchpoint exceptionName="Android.Util.AndroidException" />
+      <Catchpoint exceptionName="Android.Util.AndroidRuntimeException" />
+      <Catchpoint exceptionName="Android.Util.TimeFormatException" />
+      <Catchpoint exceptionName="Android.Views.InflateException" />
+      <Catchpoint exceptionName="Android.Views.Surface+OutOfResourcesException" />
+      <Catchpoint exceptionName="Android.Views.SurfaceHolderBadSurfaceTypeException" />
+      <Catchpoint exceptionName="Android.Views.WindowManagerBadTokenException" />
+      <Catchpoint exceptionName="Android.Widget.RemoteViews+ActionException" />
+      <Catchpoint exceptionName="Java.Interop.JavaLocationException" />
+      <Catchpoint exceptionName="Java.IO.CharConversionException" />
+      <Catchpoint exceptionName="Java.IO.EOFException" />
+      <Catchpoint exceptionName="Java.IO.FileNotFoundException" />
+      <Catchpoint exceptionName="Java.IO.InterruptedIOException" />
+      <Catchpoint exceptionName="Java.IO.InvalidClassException" />
+      <Catchpoint exceptionName="Java.IO.InvalidObjectException" />
+      <Catchpoint exceptionName="Java.IO.IOException" />
+      <Catchpoint exceptionName="Java.IO.NotActiveException" />
+      <Catchpoint exceptionName="Java.IO.NotSerializableException" />
+      <Catchpoint exceptionName="Java.IO.ObjectStreamException" />
+      <Catchpoint exceptionName="Java.IO.ObjectStreamExceptionInvoker" />
+      <Catchpoint exceptionName="Java.IO.OptionalDataException" />
+      <Catchpoint exceptionName="Java.IO.StreamCorruptedException" />
+      <Catchpoint exceptionName="Java.IO.SyncFailedException" />
+      <Catchpoint exceptionName="Java.IO.UnsupportedEncodingException" />
+      <Catchpoint exceptionName="Java.IO.UTFDataFormatException" />
+      <Catchpoint exceptionName="Java.IO.WriteAbortedException" />
+      <Catchpoint exceptionName="Java.Lang.AbstractMethodError" />
+      <Catchpoint exceptionName="Java.Lang.Annotation.AnnotationFormatError" />
+      <Catchpoint exceptionName="Java.Lang.Annotation.AnnotationTypeMismatchException" />
+      <Catchpoint exceptionName="Java.Lang.Annotation.IncompleteAnnotationException" />
+      <Catchpoint exceptionName="Java.Lang.ArithmeticException" />
+      <Catchpoint exceptionName="Java.Lang.ArrayIndexOutOfBoundsException" />
+      <Catchpoint exceptionName="Java.Lang.ArrayStoreException" />
+      <Catchpoint exceptionName="Java.Lang.AssertionError" />
+      <Catchpoint exceptionName="Java.Lang.ClassCastException" />
+      <Catchpoint exceptionName="Java.Lang.ClassCircularityError" />
+      <Catchpoint exceptionName="Java.Lang.ClassFormatError" />
+      <Catchpoint exceptionName="Java.Lang.ClassNotFoundException" />
+      <Catchpoint exceptionName="Java.Lang.CloneNotSupportedException" />
+      <Catchpoint exceptionName="Java.Lang.EnumConstantNotPresentException" />
+      <Catchpoint exceptionName="Java.Lang.Error" />
+      <Catchpoint exceptionName="Java.Lang.Exception" />
+      <Catchpoint exceptionName="Java.Lang.ExceptionInInitializerError" />
+      <Catchpoint exceptionName="Java.Lang.IllegalAccessError" />
+      <Catchpoint exceptionName="Java.Lang.IllegalAccessException" />
+      <Catchpoint exceptionName="Java.Lang.IllegalArgumentException" />
+      <Catchpoint exceptionName="Java.Lang.IllegalMonitorStateException" />
+      <Catchpoint exceptionName="Java.Lang.IllegalStateException" />
+      <Catchpoint exceptionName="Java.Lang.IllegalThreadStateException" />
+      <Catchpoint exceptionName="Java.Lang.IncompatibleClassChangeError" />
+      <Catchpoint exceptionName="Java.Lang.IndexOutOfBoundsException" />
+      <Catchpoint exceptionName="Java.Lang.InstantiationError" />
+      <Catchpoint exceptionName="Java.Lang.InstantiationException" />
+      <Catchpoint exceptionName="Java.Lang.InternalError" />
+      <Catchpoint exceptionName="Java.Lang.InterruptedException" />
+      <Catchpoint exceptionName="Java.Lang.LinkageError" />
+      <Catchpoint exceptionName="Java.Lang.NegativeArraySizeException" />
+      <Catchpoint exceptionName="Java.Lang.NoClassDefFoundError" />
+      <Catchpoint exceptionName="Java.Lang.NoSuchFieldError" />
+      <Catchpoint exceptionName="Java.Lang.NoSuchFieldException" />
+      <Catchpoint exceptionName="Java.Lang.NoSuchMethodError" />
+      <Catchpoint exceptionName="Java.Lang.NoSuchMethodException" />
+      <Catchpoint exceptionName="Java.Lang.NullPointerException" />
+      <Catchpoint exceptionName="Java.Lang.NumberFormatException" />
+      <Catchpoint exceptionName="Java.Lang.OutOfMemoryError" />
+      <Catchpoint exceptionName="Java.Lang.RuntimeException" />
+      <Catchpoint exceptionName="Java.Lang.SecurityException" />
+      <Catchpoint exceptionName="Java.Lang.StackOverflowError" />
+      <Catchpoint exceptionName="Java.Lang.StringIndexOutOfBoundsException" />
+      <Catchpoint exceptionName="Java.Lang.ThreadDeath" />
+      <Catchpoint exceptionName="Java.Lang.Throwable" />
+      <Catchpoint exceptionName="Java.Lang.TypeNotPresentException" />
+      <Catchpoint exceptionName="Java.Lang.UnknownError" />
+      <Catchpoint exceptionName="Java.Lang.UnsatisfiedLinkError" />
+      <Catchpoint exceptionName="Java.Lang.UnsupportedClassVersionError" />
+      <Catchpoint exceptionName="Java.Lang.UnsupportedOperationException" />
+      <Catchpoint exceptionName="Java.Lang.VerifyError" />
+      <Catchpoint exceptionName="Java.Lang.VirtualMachineError" />
+      <Catchpoint exceptionName="Java.Lang.VirtualMachineErrorInvoker" />
+      <Catchpoint exceptionName="Java.Net.BindException" />
+      <Catchpoint exceptionName="Java.Net.ConnectException" />
+      <Catchpoint exceptionName="Java.Net.HttpRetryException" />
+      <Catchpoint exceptionName="Java.Net.MalformedURLException" />
+      <Catchpoint exceptionName="Java.Net.NoRouteToHostException" />
+      <Catchpoint exceptionName="Java.Net.PortUnreachableException" />
+      <Catchpoint exceptionName="Java.Net.ProtocolException" />
+      <Catchpoint exceptionName="Java.Net.SocketException" />
+      <Catchpoint exceptionName="Java.Net.SocketTimeoutException" />
+      <Catchpoint exceptionName="Java.Net.UnknownHostException" />
+      <Catchpoint exceptionName="Java.Net.UnknownServiceException" />
+      <Catchpoint exceptionName="Java.Net.URISyntaxException" />
+      <Catchpoint exceptionName="Java.Nio.BufferOverflowException" />
+      <Catchpoint exceptionName="Java.Nio.BufferUnderflowException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.AlreadyConnectedException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.AsynchronousCloseException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.CancelledKeyException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.ClosedByInterruptException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.ClosedChannelException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.ClosedSelectorException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.ConnectionPendingException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.FileLockInterruptionException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.IllegalBlockingModeException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.IllegalSelectorException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.NoConnectionPendingException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.NonReadableChannelException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.NonWritableChannelException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.NotYetBoundException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.NotYetConnectedException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.OverlappingFileLockException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.UnresolvedAddressException" />
+      <Catchpoint exceptionName="Java.Nio.Channels.UnsupportedAddressTypeException" />
+      <Catchpoint exceptionName="Java.Nio.Charset.CharacterCodingException" />
+      <Catchpoint exceptionName="Java.Nio.Charset.CoderMalfunctionError" />
+      <Catchpoint exceptionName="Java.Nio.Charset.IllegalCharsetNameException" />
+      <Catchpoint exceptionName="Java.Nio.Charset.MalformedInputException" />
+      <Catchpoint exceptionName="Java.Nio.Charset.UnmappableCharacterException" />
+      <Catchpoint exceptionName="Java.Nio.Charset.UnsupportedCharsetException" />
+      <Catchpoint exceptionName="Java.Nio.InvalidMarkException" />
+      <Catchpoint exceptionName="Java.Nio.ReadOnlyBufferException" />
+      <Catchpoint exceptionName="Java.Security.AccessControlException" />
+      <Catchpoint exceptionName="Java.Security.Acl.AclNotFoundException" />
+      <Catchpoint exceptionName="Java.Security.Acl.LastOwnerException" />
+      <Catchpoint exceptionName="Java.Security.Acl.NotOwnerException" />
+      <Catchpoint exceptionName="Java.Security.Cert.CertificateEncodingException" />
+      <Catchpoint exceptionName="Java.Security.Cert.CertificateException" />
+      <Catchpoint exceptionName="Java.Security.Cert.CertificateExpiredException" />
+      <Catchpoint exceptionName="Java.Security.Cert.CertificateNotYetValidException" />
+      <Catchpoint exceptionName="Java.Security.Cert.CertificateParsingException" />
+      <Catchpoint exceptionName="Java.Security.Cert.CertPathBuilderException" />
+      <Catchpoint exceptionName="Java.Security.Cert.CertPathValidatorException" />
+      <Catchpoint exceptionName="Java.Security.Cert.CertStoreException" />
+      <Catchpoint exceptionName="Java.Security.Cert.CRLException" />
+      <Catchpoint exceptionName="Java.Security.DigestException" />
+      <Catchpoint exceptionName="Java.Security.GeneralSecurityException" />
+      <Catchpoint exceptionName="Java.Security.InvalidAlgorithmParameterException" />
+      <Catchpoint exceptionName="Java.Security.InvalidKeyException" />
+      <Catchpoint exceptionName="Java.Security.InvalidParameterException" />
+      <Catchpoint exceptionName="Java.Security.KeyException" />
+      <Catchpoint exceptionName="Java.Security.KeyManagementException" />
+      <Catchpoint exceptionName="Java.Security.KeyStoreException" />
+      <Catchpoint exceptionName="Java.Security.NoSuchAlgorithmException" />
+      <Catchpoint exceptionName="Java.Security.NoSuchProviderException" />
+      <Catchpoint exceptionName="Java.Security.PrivilegedActionException" />
+      <Catchpoint exceptionName="Java.Security.ProviderException" />
+      <Catchpoint exceptionName="Java.Security.SignatureException" />
+      <Catchpoint exceptionName="Java.Security.Spec.InvalidKeySpecException" />
+      <Catchpoint exceptionName="Java.Security.Spec.InvalidParameterSpecException" />
+      <Catchpoint exceptionName="Java.Security.UnrecoverableEntryException" />
+      <Catchpoint exceptionName="Java.Security.UnrecoverableKeyException" />
+      <Catchpoint exceptionName="Java.Util.ConcurrentModificationException" />
+      <Catchpoint exceptionName="Java.Util.DuplicateFormatFlagsException" />
+      <Catchpoint exceptionName="Java.Util.EmptyStackException" />
+      <Catchpoint exceptionName="Java.Util.FormatFlagsConversionMismatchException" />
+      <Catchpoint exceptionName="Java.Util.FormatterClosedException" />
+      <Catchpoint exceptionName="Java.Util.IllegalFormatCodePointException" />
+      <Catchpoint exceptionName="Java.Util.IllegalFormatConversionException" />
+      <Catchpoint exceptionName="Java.Util.IllegalFormatException" />
+      <Catchpoint exceptionName="Java.Util.IllegalFormatFlagsException" />
+      <Catchpoint exceptionName="Java.Util.IllegalFormatPrecisionException" />
+      <Catchpoint exceptionName="Java.Util.IllegalFormatWidthException" />
+      <Catchpoint exceptionName="Java.Util.InputMismatchException" />
+      <Catchpoint exceptionName="Java.Util.InvalidPropertiesFormatException" />
+      <Catchpoint exceptionName="Java.Util.MissingFormatArgumentException" />
+      <Catchpoint exceptionName="Java.Util.MissingFormatWidthException" />
+      <Catchpoint exceptionName="Java.Util.MissingResourceException" />
+      <Catchpoint exceptionName="Java.Util.NoSuchElementException" />
+      <Catchpoint exceptionName="Java.Util.Regex.PatternSyntaxException" />
+      <Catchpoint exceptionName="Java.Util.TooManyListenersException" />
+      <Catchpoint exceptionName="Java.Util.UnknownFormatConversionException" />
+      <Catchpoint exceptionName="Java.Util.UnknownFormatFlagsException" />
+      <Catchpoint exceptionName="Java.Util.Zip.DataFormatException" />
+      <Catchpoint exceptionName="Java.Util.Zip.ZipException" />
+      <Catchpoint exceptionName="Javax.Crypto.BadPaddingException" />
+      <Catchpoint exceptionName="Javax.Crypto.ExemptionMechanismException" />
+      <Catchpoint exceptionName="Javax.Crypto.IllegalBlockSizeException" />
+      <Catchpoint exceptionName="Javax.Crypto.NoSuchPaddingException" />
+      <Catchpoint exceptionName="Javax.Crypto.ShortBufferException" />
+      <Catchpoint exceptionName="Javax.Net.Ssl.SSLException" />
+      <Catchpoint exceptionName="Javax.Net.Ssl.SSLHandshakeException" />
+      <Catchpoint exceptionName="Javax.Net.Ssl.SSLKeyException" />
+      <Catchpoint exceptionName="Javax.Net.Ssl.SSLPeerUnverifiedException" />
+      <Catchpoint exceptionName="Javax.Net.Ssl.SSLProtocolException" />
+      <Catchpoint exceptionName="Javax.Security.Auth.Callback.UnsupportedCallbackException" />
+      <Catchpoint exceptionName="Javax.Security.Auth.DestroyFailedException" />
+      <Catchpoint exceptionName="Javax.Security.Auth.Login.LoginException" />
+      <Catchpoint exceptionName="Javax.Security.Cert.CertificateEncodingException" />
+      <Catchpoint exceptionName="Javax.Security.Cert.CertificateException" />
+      <Catchpoint exceptionName="Javax.Security.Cert.CertificateExpiredException" />
+      <Catchpoint exceptionName="Javax.Security.Cert.CertificateNotYetValidException" />
+      <Catchpoint exceptionName="Javax.Security.Cert.CertificateParsingException" />
+      <Catchpoint exceptionName="Mono.Xml.SmallXmlParserException" />
+      <Catchpoint exceptionName="Mono.Xml.XPath.yyParser.yyException" />
+      <Catchpoint exceptionName="Mono.Xml.XPath.yyParser.yyUnexpectedEof" />
+      <Catchpoint exceptionName="Mono.Xml.Xsl.yyParser.yyException" />
+      <Catchpoint exceptionName="Mono.Xml.Xsl.yyParser.yyUnexpectedEof" />
+      <Catchpoint exceptionName="OpenTK.Audio.AudioContextException" />
+      <Catchpoint exceptionName="OpenTK.Audio.AudioDeviceException" />
+      <Catchpoint exceptionName="OpenTK.Audio.AudioException" />
+      <Catchpoint exceptionName="OpenTK.Audio.AudioValueException" />
+      <Catchpoint exceptionName="OpenTK.Graphics.GraphicsContextException" />
+      <Catchpoint exceptionName="OpenTK.Graphics.GraphicsContextMissingException" />
+      <Catchpoint exceptionName="OpenTK.Graphics.GraphicsModeException" />
+      <Catchpoint exceptionName="OpenTK.Platform.Android.EglException" />
+      <Catchpoint exceptionName="Org.XmlPull.V1.XmlPullParserException" />
+      <Catchpoint exceptionName="OsmSharp.UI.Map.Styles.MapCSS.v0_2.MapCSSDomainParserException" />
+      <Catchpoint exceptionName="System.AccessViolationException" />
+      <Catchpoint exceptionName="System.AggregateException" />
+      <Catchpoint exceptionName="System.AppDomainUnloadedException" />
+      <Catchpoint exceptionName="System.ApplicationException" />
+      <Catchpoint exceptionName="System.ArgumentException" />
+      <Catchpoint exceptionName="System.ArgumentNullException" />
+      <Catchpoint exceptionName="System.ArgumentOutOfRangeException" />
+      <Catchpoint exceptionName="System.ArithmeticException" />
+      <Catchpoint exceptionName="System.ArrayTypeMismatchException" />
+      <Catchpoint exceptionName="System.BadImageFormatException" />
+      <Catchpoint exceptionName="System.CannotUnloadAppDomainException" />
+      <Catchpoint exceptionName="System.Collections.Generic.KeyNotFoundException" />
+      <Catchpoint exceptionName="System.ComponentModel.InvalidEnumArgumentException" />
+      <Catchpoint exceptionName="System.ComponentModel.Win32Exception" />
+      <Catchpoint exceptionName="System.ContextMarshalException" />
+      <Catchpoint exceptionName="System.DataMisalignedException" />
+      <Catchpoint exceptionName="System.Diagnostics.Contracts.ContractException" />
+      <Catchpoint exceptionName="System.Diagnostics.Contracts.ContractShouldAssertException" />
+      <Catchpoint exceptionName="System.DivideByZeroException" />
+      <Catchpoint exceptionName="System.DllNotFoundException" />
+      <Catchpoint exceptionName="System.DuplicateWaitObjectException" />
+      <Catchpoint exceptionName="System.EntryPointNotFoundException" />
+      <Catchpoint exceptionName="System.Exception" />
+      <Catchpoint exceptionName="System.ExecutionEngineException" />
+      <Catchpoint exceptionName="System.FieldAccessException" />
+      <Catchpoint exceptionName="System.FormatException" />
+      <Catchpoint exceptionName="System.Globalization.CultureNotFoundException" />
+      <Catchpoint exceptionName="System.IndexOutOfRangeException" />
+      <Catchpoint exceptionName="System.InsufficientMemoryException" />
+      <Catchpoint exceptionName="System.InvalidCastException" />
+      <Catchpoint exceptionName="System.InvalidOperationException" />
+      <Catchpoint exceptionName="System.InvalidProgramException" />
+      <Catchpoint exceptionName="System.InvalidTimeZoneException" />
+      <Catchpoint exceptionName="System.IO.DirectoryNotFoundException" />
+      <Catchpoint exceptionName="System.IO.DriveNotFoundException" />
+      <Catchpoint exceptionName="System.IO.EndOfStreamException" />
+      <Catchpoint exceptionName="System.IO.FileLoadException" />
+      <Catchpoint exceptionName="System.IO.FileNotFoundException" />
+      <Catchpoint exceptionName="System.IO.IOException" />
+      <Catchpoint exceptionName="System.IO.IsolatedStorage.IsolatedStorageException" />
+      <Catchpoint exceptionName="System.IO.PathTooLongException" />
+      <Catchpoint exceptionName="System.Linq.Parallel.QueryNodes.QueryZipException" />
+      <Catchpoint exceptionName="System.MemberAccessException" />
+      <Catchpoint exceptionName="System.MethodAccessException" />
+      <Catchpoint exceptionName="System.MissingFieldException" />
+      <Catchpoint exceptionName="System.MissingMemberException" />
+      <Catchpoint exceptionName="System.MissingMethodException" />
+      <Catchpoint exceptionName="System.MulticastNotSupportedException" />
+      <Catchpoint exceptionName="System.Net.CookieException" />
+      <Catchpoint exceptionName="System.Net.HttpListenerException" />
+      <Catchpoint exceptionName="System.Net.Mail.SmtpClient+CancellationException" />
+      <Catchpoint exceptionName="System.Net.Mail.SmtpException" />
+      <Catchpoint exceptionName="System.Net.Mail.SmtpFailedRecipientException" />
+      <Catchpoint exceptionName="System.Net.Mail.SmtpFailedRecipientsException" />
+      <Catchpoint exceptionName="System.Net.NetworkInformation.NetworkInformationException" />
+      <Catchpoint exceptionName="System.Net.NetworkInformation.PingException" />
+      <Catchpoint exceptionName="System.Net.ProtocolViolationException" />
+      <Catchpoint exceptionName="System.Net.Sockets.SocketException" />
+      <Catchpoint exceptionName="System.Net.WebException" />
+      <Catchpoint exceptionName="System.NotFiniteNumberException" />
+      <Catchpoint exceptionName="System.NotImplementedException" />
+      <Catchpoint exceptionName="System.NotSupportedException" />
+      <Catchpoint exceptionName="System.NullReferenceException" />
+      <Catchpoint exceptionName="System.ObjectDisposedException" />
+      <Catchpoint exceptionName="System.OperationCanceledException" />
+      <Catchpoint exceptionName="System.OutOfMemoryException" />
+      <Catchpoint exceptionName="System.OverflowException" />
+      <Catchpoint exceptionName="System.PlatformNotSupportedException" />
+      <Catchpoint exceptionName="System.RankException" />
+      <Catchpoint exceptionName="System.Reflection.AmbiguousMatchException" />
+      <Catchpoint exceptionName="System.Reflection.CustomAttributeFormatException" />
+      <Catchpoint exceptionName="System.Reflection.InvalidFilterCriteriaException" />
+      <Catchpoint exceptionName="System.Reflection.ReflectionTypeLoadException" />
+      <Catchpoint exceptionName="System.Reflection.TargetException" />
+      <Catchpoint exceptionName="System.Reflection.TargetInvocationException" />
+      <Catchpoint exceptionName="System.Reflection.TargetParameterCountException" />
+      <Catchpoint exceptionName="System.Resources.MissingManifestResourceException" />
+      <Catchpoint exceptionName="System.Resources.MissingSatelliteAssemblyException" />
+      <Catchpoint exceptionName="System.Runtime.CompilerServices.RuntimeWrappedException" />
+      <Catchpoint exceptionName="System.Runtime.InteropServices.COMException" />
+      <Catchpoint exceptionName="System.Runtime.InteropServices.ExternalException" />
+      <Catchpoint exceptionName="System.Runtime.InteropServices.InvalidComObjectException" />
+      <Catchpoint exceptionName="System.Runtime.InteropServices.InvalidOleVariantTypeException" />
+      <Catchpoint exceptionName="System.Runtime.InteropServices.MarshalDirectiveException" />
+      <Catchpoint exceptionName="System.Runtime.InteropServices.SafeArrayRankMismatchException" />
+      <Catchpoint exceptionName="System.Runtime.InteropServices.SafeArrayTypeMismatchException" />
+      <Catchpoint exceptionName="System.Runtime.InteropServices.SEHException" />
+      <Catchpoint exceptionName="System.Runtime.Remoting.RemotingException" />
+      <Catchpoint exceptionName="System.Runtime.Remoting.RemotingTimeoutException" />
+      <Catchpoint exceptionName="System.Runtime.Remoting.ServerException" />
+      <Catchpoint exceptionName="System.Runtime.Serialization.SerializationException" />
+      <Catchpoint exceptionName="System.Security.AccessControl.PrivilegeNotHeldException" />
+      <Catchpoint exceptionName="System.Security.Authentication.AuthenticationException" />
+      <Catchpoint exceptionName="System.Security.Authentication.InvalidCredentialException" />
+      <Catchpoint exceptionName="System.Security.Cryptography.CryptographicException" />
+      <Catchpoint exceptionName="System.Security.Cryptography.CryptographicUnexpectedOperationException" />
+      <Catchpoint exceptionName="System.Security.HostProtectionException" />
+      <Catchpoint exceptionName="System.Security.Policy.PolicyException" />
+      <Catchpoint exceptionName="System.Security.Principal.IdentityNotMappedException" />
+      <Catchpoint exceptionName="System.Security.SecurityException" />
+      <Catchpoint exceptionName="System.Security.VerificationException" />
+      <Catchpoint exceptionName="System.Security.XmlSyntaxException" />
+      <Catchpoint exceptionName="System.StackOverflowException" />
+      <Catchpoint exceptionName="System.SystemException" />
+      <Catchpoint exceptionName="System.Text.DecoderFallbackException" />
+      <Catchpoint exceptionName="System.Text.EncoderFallbackException" />
+      <Catchpoint exceptionName="System.Threading.AbandonedMutexException" />
+      <Catchpoint exceptionName="System.Threading.BarrierPostPhaseException" />
+      <Catchpoint exceptionName="System.Threading.LockRecursionException" />
+      <Catchpoint exceptionName="System.Threading.SemaphoreFullException" />
+      <Catchpoint exceptionName="System.Threading.SynchronizationLockException" />
+      <Catchpoint exceptionName="System.Threading.Tasks.TaskCanceledException" />
+      <Catchpoint exceptionName="System.Threading.Tasks.TaskSchedulerException" />
+      <Catchpoint exceptionName="System.Threading.ThreadAbortException" />
+      <Catchpoint exceptionName="System.Threading.ThreadInterruptedException" />
+      <Catchpoint exceptionName="System.Threading.ThreadStartException" />
+      <Catchpoint exceptionName="System.Threading.ThreadStateException" />
+      <Catchpoint exceptionName="System.Threading.WaitHandleCannotBeOpenedException" />
+      <Catchpoint exceptionName="System.TimeoutException" />
+      <Catchpoint exceptionName="System.TimeZoneNotFoundException" />
+      <Catchpoint exceptionName="System.TypeAccessException" />
+      <Catchpoint exceptionName="System.TypeInitializationException" />
+      <Catchpoint exceptionName="System.TypeLoadException" />
+      <Catchpoint exceptionName="System.TypeUnloadedException" />
+      <Catchpoint exceptionName="System.UnauthorizedAccessException" />
+      <Catchpoint exceptionName="System.UriFormatException" />
+      <Catchpoint exceptionName="System.Xml.Schema.XmlSchemaException" />
+      <Catchpoint exceptionName="System.Xml.Schema.XmlSchemaInferenceException" />
+      <Catchpoint exceptionName="System.Xml.Schema.XmlSchemaValidationException" />
+      <Catchpoint exceptionName="System.Xml.XmlException" />
+      <Catchpoint exceptionName="System.Xml.XPath.XPathException" />
+      <Catchpoint exceptionName="System.Xml.Xsl.XsltCompileException" />
+      <Catchpoint exceptionName="System.Xml.Xsl.XsltException" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample AndroidDeviceId-Debug="8889CC253F925A2FB51379C653D11F1" />
+  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample AndroidDeviceId-Debug="8889CC253F925A2FB51379C653D11F1" MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" />
 </Properties>

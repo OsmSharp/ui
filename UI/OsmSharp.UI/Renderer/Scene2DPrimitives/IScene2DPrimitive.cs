@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 {
@@ -18,6 +19,12 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 	    /// <param name="view">View.</param>
 	    /// <param name="zoom"></param>
 	    bool IsVisibleIn(View2D view, float zoom);
+
+        /// <summary>
+        /// Returns the bounding box for this primitive.
+        /// </summary>
+        /// <returns></returns>
+	    RectangleF2D GetBox();
 
 		/// <summary>
 		/// Gets or sets the tag.

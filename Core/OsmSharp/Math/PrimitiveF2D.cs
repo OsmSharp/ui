@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Math
 {
@@ -73,14 +74,14 @@ namespace OsmSharp.Math
         /// </summary>
         /// <param name="point1"></param>
         /// <param name="point2"></param>
-        /// <param name="is_segment1"></param>
-        /// <param name="is_segment2"></param>
+        /// <param name="isSegment1"></param>
+        /// <param name="isSegment2"></param>
         /// <returns></returns>
         protected abstract GenericLineF2D<PointType> CreateLine(
             PointType point1,
             PointType point2,
-            bool is_segment1,
-            bool is_segment2);
+            bool isSegment1,
+            bool isSegment2);
 
         /// <summary>
         /// Creates a new rectangle.

@@ -149,8 +149,8 @@
     <Compile Include="Graph\Router\IDynamicGraphRouterDataSource.cs" />
     <Compile Include="Graph\Serialization\RoutingSerializer.cs" />
     <Compile Include="Graph\Serialization\RoutingSerializerStream.cs" />
-    <Compile Include="Graph\Serialization\v2\V2RouterDataSource.cs" />
-    <Compile Include="Graph\Serialization\v2\V2RoutingSerializer.cs" />
+    <Compile Include="Graph\Serialization\v2\V2RouterLiveEdgeDataSource.cs" />
+    <Compile Include="Graph\Serialization\v2\V2RoutingLiveEdgeSerializer.cs" />
     <Compile Include="Instructions\Instruction.cs" />
     <Compile Include="Instructions\InstructionGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\Defaults\SimpleDutchLanguageGenerator.cs" />

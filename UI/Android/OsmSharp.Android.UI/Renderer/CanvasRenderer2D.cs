@@ -30,7 +30,6 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.AndroidCanvasRenderer"/> class.
 		/// </summary>
-		/// <param name="canvas">The canvas to render on.</param>
 		public CanvasRenderer2D()
 		{
 			_paint = new global::Android.Graphics.Paint();
@@ -40,7 +39,6 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.CanvasRenderer2D"/> class.
 		/// </summary>
-		/// <param name="canvas">Canvas.</param>
 		/// <param name="paint">Paint.</param>
 		public CanvasRenderer2D(global::Android.Graphics.Paint paint)
 		{
@@ -54,15 +52,16 @@ namespace OsmSharp.Android.UI
 		/// Called right before rendering starts.
 		/// </summary>
 		/// <param name="target"></param>
-		/// <param name="scene"></param>
+		/// <param name="scenes"></param>
 		/// <param name="view"></param>
-		protected override void OnBeforeRender(Target2DWrapper<global::Android.Graphics.Canvas> target, Scene2D scene, View2D view)
+		protected override void OnBeforeRender(Target2DWrapper<global::Android.Graphics.Canvas> target, List<Scene2D> scenes, View2D view)
 		{
 			// create a bitmap and render there.
 			var bitmap = global::Android.Graphics.Bitmap.CreateBitmap((int)target.Width, (int)target.Height,
 			                                                          global::Android.Graphics.Bitmap.Config.Argb8888);
 			target.BackTarget = target.Target;
 			target.Target = new global::Android.Graphics.Canvas(bitmap);
+			target.Target.DrawColor(global::Android.Graphics.Color.Transparent);
 			
 			target.Tag = bitmap;
 		}
@@ -71,9 +70,9 @@ namespace OsmSharp.Android.UI
 		/// Called right after rendering.
 		/// </summary>
 		/// <param name="target"></param>
-		/// <param name="scene"></param>
+		/// <param name="scenes"></param>
 		/// <param name="view"></param>
-		protected override void OnAfterRender(Target2DWrapper<global::Android.Graphics.Canvas> target, Scene2D scene, View2D view)
+		protected override void OnAfterRender(Target2DWrapper<global::Android.Graphics.Canvas> target, List<Scene2D> scenes, View2D view)
 		{
 			target.Target.Dispose(); // dispose of the old target.
 			target.Target = target.BackTarget;
@@ -89,13 +88,14 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <param name="target"></param>
 		/// <param name="currentCache"></param>
-		/// <param name="currentScene"></param>
+		/// <param name="currentScenes"></param>
 		/// <param name="view"></param>
 		/// <returns></returns>
-		protected override Scene2D BuildSceneCache(Target2DWrapper<global::Android.Graphics.Canvas> target, Scene2D currentCache, Scene2D currentScene, View2D view)
+		protected override Scene2D BuildSceneCache(Target2DWrapper<global::Android.Graphics.Canvas> target, Scene2D currentCache, 
+		                                           List<Scene2D> currentScenes, View2D view)
 		{
 			var scene = new Scene2D();
-			scene.BackColor = currentScene.BackColor;
+			scene.BackColor = currentScenes[0].BackColor;
 			
 			var bitmap = target.Tag as global::Android.Graphics.Bitmap;
 			if (bitmap != null)
@@ -107,11 +107,12 @@ namespace OsmSharp.Android.UI
 					
 					imageData = stream.ToArray();
 				}
-				scene.AddImage(0, float.MinValue, float.MaxValue, view.Left, view.Top, view.Right, view.Bottom, imageData);
+				scene.AddImage(0, float.MinValue, float.MaxValue, 
+				               view.Left, view.Top, view.Right, view.Bottom, imageData);
+				
+				// dispose of bitmap.
+				bitmap.Dispose();
 			}
-
-			// dispose of bitmap.
-			bitmap.Dispose();
 			return scene;
 		}
 		
@@ -130,7 +131,15 @@ namespace OsmSharp.Android.UI
 				target, target.Width, target.Height);
 		}
 
+		/// <summary>
+		/// Holds the view.
+		/// </summary>
 		private View2D _view;
+
+		/// <summary>
+		/// Holds the target.
+		/// </summary>
+		private Target2DWrapper<global::Android.Graphics.Canvas> _target;
 
 		/// <summary>
 		/// Transforms the canvas to the coordinate system of the view.
@@ -139,26 +148,51 @@ namespace OsmSharp.Android.UI
 		protected override void Transform (Target2DWrapper<global::Android.Graphics.Canvas> target, View2D view)
 		{
 			_view = view;
-
-			float scaleX = target.Width / view.Width;
-			float scaleY = target.Height / view.Height;
-
-			// scale and translate.
-			target.Target.Scale(scaleX, scaleY);
-			target.Target.Translate((-view.CenterX + (view.Width / 2.0f)), 
-			                      (view.CenterY + (view.Height / 2.0f)));
+			_target = target;
 		}
-
+		
+		/// <summary>
+		/// Transforms the x-coordinate to screen coordinates.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <returns></returns>
+		private float TransformX(double x)
+		{
+			return (float)_view.ToViewPortX(_target.Width, x);
+		}
+		
+		/// <summary>
+		/// Transforms the y-coordinate to screen coordinates.
+		/// </summary>
+		/// <param name="y"></param>
+		/// <returns></returns>
+		private float TransformY(double y)
+		{
+			return (float)_view.ToViewPortY(_target.Height, y);
+		}
+		
+		/// <summary>
+		/// Returns the size in pixels.
+		/// </summary>
+		/// <returns></returns>
+		private float ToPixels(double sceneSize)
+		{
+			double scaleX = _target.Width / _view.Width;
+			
+			return (float)(sceneSize * scaleX);
+		}
+		
 		/// <summary>
 		/// Returns the size in pixels.
 		/// </summary>
 		/// <returns>The pixels.</returns>
+		/// <param name="target"></param>
 		/// <param name="view">View.</param>
 		/// <param name="sizeInPixels">Size in pixels.</param>
-		protected override float FromPixels (Target2DWrapper<global::Android.Graphics.Canvas> target, View2D view, float sizeInPixels)
+		protected override double FromPixels(Target2DWrapper<global::Android.Graphics.Canvas> target, View2D view, double sizeInPixels)
 		{
-			float scaleX = target.Width / view.Width;
-
+			double scaleX = target.Width / view.Width;
+			
 			return sizeInPixels / scaleX;
 		}
 
@@ -178,13 +212,14 @@ namespace OsmSharp.Android.UI
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="color">Color.</param>
 		/// <param name="size">Size.</param>
-		protected override void DrawPoint (Target2DWrapper<global::Android.Graphics.Canvas> target, float x, float y, int color, float size)
+		protected override void DrawPoint (Target2DWrapper<global::Android.Graphics.Canvas> target, double x, double y, int color, double size)
 		{
+			float sizeInPixels = this.ToPixels(size);
 			_paint.Color = new global::Android.Graphics.Color(color);
 			_paint.StrokeWidth = 1;
 			_paint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
 
-			target.Target.DrawCircle(x, -y, size,
+			target.Target.DrawCircle(this.TransformX(x), this.TransformY(y), sizeInPixels,
 			                  _paint);
 		}
 
@@ -195,27 +230,30 @@ namespace OsmSharp.Android.UI
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="color">Color.</param>
 		/// <param name="width">Width.</param>
-		protected override void DrawLine (Target2DWrapper<global::Android.Graphics.Canvas> target, float[] x, float[] y, int color, float width, LineJoin lineJoine, int[] dashes)
+		protected override void DrawLine (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, 
+		                                  int color, double width, LineJoin lineJoine, int[] dashes)
 		{
 			if(x.Length > 1)
 			{
+				float widthInPixels = this.ToPixels(width);
+
 				_paint.Color = new global::Android.Graphics.Color(color);
-				_paint.StrokeWidth = width;
+				_paint.StrokeWidth = widthInPixels;
 
 				// convert to the weid android api array!
 				float[] lineCoordinates = new float[(x.Length - 2) * 4 + 4];
-				lineCoordinates[0] = x[0];
-				lineCoordinates[1] = -y[0];
+				lineCoordinates[0] = this.TransformX(x[0]);
+				lineCoordinates[1] = this.TransformY(y[0]);
 				for(int idx = 1; idx < x.Length - 1; idx++)
-				{
+				{					
 					int androidApiIndex = (idx - 1) * 4 + 2;
-					lineCoordinates[androidApiIndex] = x[idx];
-					lineCoordinates[androidApiIndex + 1] = -y[idx];
-					lineCoordinates[androidApiIndex + 2] = x[idx];
-					lineCoordinates[androidApiIndex + 3] = -y[idx];
+					lineCoordinates[androidApiIndex] = this.TransformX(x[idx]);
+					lineCoordinates[androidApiIndex + 1] = this.TransformY(y[idx]);
+					lineCoordinates[androidApiIndex + 2] = this.TransformX(x[idx]);
+					lineCoordinates[androidApiIndex + 3] = this.TransformY(y[idx]);
 				}
-				lineCoordinates[lineCoordinates.Length - 2] = x[x.Length - 1];
-				lineCoordinates[lineCoordinates.Length - 1] = -y[y.Length - 1];
+				lineCoordinates[lineCoordinates.Length - 2] = this.TransformX(x[x.Length - 1]);
+				lineCoordinates[lineCoordinates.Length - 1] = this.TransformY(y[y.Length - 1]);
 				target.Target.DrawLines(lineCoordinates, 0, lineCoordinates.Length, _paint);
 			}
 		}
@@ -228,12 +266,13 @@ namespace OsmSharp.Android.UI
 		/// <param name="color">Color.</param>
 		/// <param name="width">Width.</param>
 		/// <param name="fill">If set to <c>true</c> fill.</param>
-		protected override void DrawPolygon (Target2DWrapper<global::Android.Graphics.Canvas> target, float[] x, float[] y, int color, float width, bool fill)
+		protected override void DrawPolygon (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, 
+		                                     int color, double width, bool fill)
 		{
 			if(x.Length > 1)
 			{
 				_paint.Color = new global::Android.Graphics.Color(color);
-				_paint.StrokeWidth = width;
+				_paint.StrokeWidth = (float)width;
 				if(fill)
 				{
 					_paint.SetStyle(global::Android.Graphics.Paint.Style.Fill);
@@ -245,12 +284,12 @@ namespace OsmSharp.Android.UI
 
 				// convert android path object.
 				global::Android.Graphics.Path path = new global::Android.Graphics.Path();
-				path.MoveTo(x[0], -y[0]);
+				path.MoveTo(this.TransformX(x[0]), this.TransformY(y[0]));
 				for(int idx = 1; idx < x.Length; idx++)
 				{
-					path.LineTo(x[idx], -y[idx]);
+					path.LineTo(this.TransformX(x[idx]), this.TransformY(y[idx]));
 				}
-				path.LineTo(x[0], -y[0]);
+				path.LineTo(this.TransformX(x[0]), this.TransformY(y[0]));
 
 				target.Target.DrawPath(path, _paint);
 			}
@@ -263,23 +302,21 @@ namespace OsmSharp.Android.UI
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <param name="imageData"></param>
-		protected override void DrawIcon (Target2DWrapper<global::Android.Graphics.Canvas> target, float x, float y, byte[] imageData)
+		protected override void DrawIcon (Target2DWrapper<global::Android.Graphics.Canvas> target, double x, double y, 
+		                                  byte[] imageData)
 		{
 			global::Android.Graphics.Bitmap image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
 				imageData, 0, imageData.Length);
 
-			// calculate target rectangle.
-			float sceneSizeX = this.FromPixels(target, _view, image.Width) / 2.0f;
-			float sceneSizeY = this.FromPixels(target, _view, image.Height) / 2.0f;
-			float sceneTop = x + sceneSizeX;
-			float sceneBottom = x - sceneSizeX;
-			float sceneLeft = y - sceneSizeY;
-			float sceneRight = y + sceneSizeY;
-			
-//			target.Target.DrawBitmap(image,new global::Android.Graphics.Rect(0, 0, image.Width, image.Height),
-//			                         new global::Android.Graphics.RectF(sceneLeft, -sceneTop, sceneRight, -sceneBottom),
-//			                         null);
-			target.Target.DrawBitmap(image, x, -y, null);
+//			// calculate target rectangle.
+//			double sceneSizeX = this.FromPixels(target, _view, image.Width) / 2.0f;
+//			double sceneSizeY = this.FromPixels(target, _view, image.Height) / 2.0f;
+//			double sceneTop = x + sceneSizeX;
+//			double sceneBottom = x - sceneSizeX;
+//			double sceneLeft = y - sceneSizeY;
+//			double sceneRight = y + sceneSizeY;
+
+			target.Target.DrawBitmap(image, this.TransformX(x), this.TransformY(y), null);
 			image.Dispose();
 		}
 
@@ -294,7 +331,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="imageData"></param>
 		/// <param name="tag"></param>
 		protected override object DrawImage (Target2DWrapper<global::Android.Graphics.Canvas> target, 
-		                                   float left, float top, float right, float bottom, byte[] imageData,
+		                                     double left, double top, double right, double bottom, byte[] imageData,
 		                                   object tag)
 		{
 			global::Android.Graphics.Bitmap image = (tag as global::Android.Graphics.Bitmap);
@@ -303,13 +340,20 @@ namespace OsmSharp.Android.UI
 				image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
 					imageData, 0, imageData.Length);
 			}
+			
+			float leftPixels = this.TransformX(left);
+			float topPixels = this.TransformY(top);
+			float rightPixels = this.TransformX(right);
+			float bottomPixels = this.TransformY(bottom);
+
 			target.Target.DrawBitmap(image,new global::Android.Graphics.Rect(0, 0, image.Width, image.Height),
-			                         new global::Android.Graphics.RectF(left, -top, right, -bottom),
+			                         new global::Android.Graphics.RectF(leftPixels, topPixels, rightPixels, bottomPixels),
 			                         null);
 			return image;
 		}
 
-		protected override void DrawText (Target2DWrapper<global::Android.Graphics.Canvas> target, float x, float y, string text, float size)
+		protected override void DrawText (Target2DWrapper<global::Android.Graphics.Canvas> target, double x, double y, 
+		                                  string text, double size)
 		{
 
 		}

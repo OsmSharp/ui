@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Math.Geo
 {
@@ -55,16 +56,16 @@ namespace OsmSharp.Math.Geo
         /// </summary>
         /// <param name="point1"></param>
         /// <param name="point2"></param>
-        /// <param name="is_segment1"></param>
-        /// <param name="is_segment2"></param>
+        /// <param name="isSegment1"></param>
+        /// <param name="isSegment2"></param>
         /// <returns></returns>
         protected override GenericLineF2D<GeoCoordinate> CreateLine(
             GeoCoordinate point1,
             GeoCoordinate point2,
-            bool is_segment1,
-            bool is_segment2)
+            bool isSegment1,
+            bool isSegment2)
         {
-            return new GeoCoordinateLine(point1, point2, is_segment1, is_segment2);
+            return new GeoCoordinateLine(point1, point2, isSegment1, isSegment2);
         }
 
         /// <summary>

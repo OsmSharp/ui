@@ -24,17 +24,20 @@ namespace OsmSharp.UI.Renderer
 		}
 
 		#region Create From
-		
-		/// <summary>
-		/// Creates a new instance of the <see cref="OsmSharp.UI.Renderer.View2D"/> class.
-		/// </summary>
-		/// <param name="width">The width.</param>
-		/// <param name="height">The height.</param>
-		/// <param name="centerX">The center x.</param>
-		/// <param name="centerY">The center y.</param>
-		public static View2D CreateFromCenterAndSize(float width, float height, float centerX, float centerY)
+
+	    /// <summary>
+	    /// Creates a new instance of the <see cref="OsmSharp.UI.Renderer.View2D"/> class.
+	    /// </summary>
+	    /// <param name="width">The width.</param>
+	    /// <param name="height">The height.</param>
+	    /// <param name="centerX">The center x.</param>
+	    /// <param name="centerY">The center y.</param>
+	    /// <param name="directionX"></param>
+	    /// <param name="directionY"></param>
+        public static View2D CreateFromCenterAndSize(double width, double height, double centerX, double centerY,
+            bool directionX, bool directionY)
 		{
-			View2D view = new View2D();
+			var view = new View2D();
 
 			if(width <= 0)
 			{
@@ -51,12 +54,29 @@ namespace OsmSharp.UI.Renderer
 			view.CenterY = centerY;
 			
 			// calculate the derived properties.
-			float halfX = view.Width / 2.0f;
-			float halfY = view.Height / 2.0f;
-			view.Left = view.CenterX - halfX;
-			view.Right = view.CenterX + halfX;
-			view.Top = view.CenterY + halfY;
-			view.Bottom = view.CenterY - halfY;
+            double halfX = view.Width / 2.0f;
+            double halfY = view.Height / 2.0f;
+	        if (directionX)
+	        {
+	            view.Left = view.CenterX - halfX;
+	            view.Right = view.CenterX + halfX;
+	        }
+	        else
+            {
+                view.Left = view.CenterX + halfX;
+                view.Right = view.CenterX - halfX;
+	        }
+
+            if (directionY)
+            {
+                view.Top = view.CenterY + halfY;
+                view.Bottom = view.CenterY - halfY;
+            }
+            else
+            {
+                view.Top = view.CenterY - halfY;
+                view.Bottom = view.CenterY + halfY;
+            }
 
 			return view;
 		}
@@ -69,18 +89,9 @@ namespace OsmSharp.UI.Renderer
 		/// <param name="left">Left.</param>
 		/// <param name="bottom">Bottom.</param>
 		/// <param name="right">Right.</param>
-		public static View2D CreateFromBounds(float top, float left, float bottom, float right)
+        public static View2D CreateFromBounds(double top, double left, double bottom, double right)
 		{
 			var view = new View2D();
-
-			if(top <= bottom)
-			{
-				throw new ArgumentException("top smaller than bottom!");
-			}
-			if(right <= left)
-			{
-				throw new ArgumentException("right smaller than left!");
-			}
 			
 			view.Top = top;
 			view.Bottom = bottom;
@@ -88,32 +99,34 @@ namespace OsmSharp.UI.Renderer
 			view.Right = right;
 			
 			// calculate the derived properties.
-			view.CenterX = (left + right) / 2.0f;
-			view.CenterY = (bottom + top) / 2.0f;
-			view.Height = (top - bottom);
-			view.Width = (left - right);
+			view.CenterX = (left + right) / 2.0;
+			view.CenterY = (bottom + top) / 2.0;
+			view.Height = System.Math.Abs(top - bottom);
+            view.Width = System.Math.Abs(left - right);
 			
 			return view;
 		}
 
-        /// <summary>
-        /// Creates a view based on a center location a zoomfactor and the size of the current viewport.
-        /// </summary>
-        /// <param name="centerX"></param>
-        /// <param name="centerY"></param>
-        /// <param name="pixelsWidth"></param>
-        /// <param name="pixelsHeight"></param>
-        /// <param name="zoomFactor"></param>
-        /// <returns></returns>
-        public static View2D CreateFrom(float centerX, float centerY, float pixelsWidth, float pixelsHeight, 
-            float zoomFactor)
+	    /// <summary>
+	    /// Creates a view based on a center location a zoomfactor and the size of the current viewport.
+	    /// </summary>
+	    /// <param name="centerX"></param>
+	    /// <param name="centerY"></param>
+	    /// <param name="pixelsWidth"></param>
+	    /// <param name="pixelsHeight"></param>
+	    /// <param name="zoomFactor"></param>
+	    /// <param name="directionX"></param>
+	    /// <param name="directionY"></param>
+	    /// <returns></returns>
+        public static View2D CreateFrom(double centerX, double centerY, double pixelsWidth, double pixelsHeight,
+            double zoomFactor, bool directionX, bool directionY)
         {
-            float realZoom = zoomFactor;
+            double realZoom = zoomFactor;
 
-            float width = pixelsWidth / realZoom;
-            float height = pixelsHeight / realZoom;
+            double width = pixelsWidth / realZoom;
+            double height = pixelsHeight / realZoom;
 
-            return View2D.CreateFromCenterAndSize(width, height, centerX, centerY);
+            return View2D.CreateFromCenterAndSize(width, height, centerX, centerY, directionX, directionY);
         }
 
 		#endregion
@@ -123,7 +136,8 @@ namespace OsmSharp.UI.Renderer
 		/// Gets the width.
 		/// </summary>
 		/// <value>The width.</value>
-		public float Width {
+        public double Width
+        {
 			get;
 			private set;
 		}
@@ -132,7 +146,8 @@ namespace OsmSharp.UI.Renderer
 		/// Gets the height.
 		/// </summary>
 		/// <value>The height.</value>
-		public float Height {
+        public double Height
+        {
 			get;
 			private set;
 		}
@@ -141,7 +156,8 @@ namespace OsmSharp.UI.Renderer
 		/// Gets the center x.
 		/// </summary>
 		/// <value>The center x.</value>
-		public float CenterX {
+        public double CenterX
+        {
 			get;
 			private set;
 		}
@@ -150,7 +166,8 @@ namespace OsmSharp.UI.Renderer
 		/// Gets the center y.
 		/// </summary>
 		/// <value>The center y.</value>
-		public float CenterY {
+        public double CenterY
+        {
 			get;
 			private set;
 		}
@@ -159,7 +176,8 @@ namespace OsmSharp.UI.Renderer
 		/// Gets the bottom.
 		/// </summary>
 		/// <value>The bottom.</value>
-		public float Bottom {
+        public double Bottom
+        {
 			get;
 			private set;
 		}
@@ -168,7 +186,8 @@ namespace OsmSharp.UI.Renderer
 		/// Gets the top.
 		/// </summary>
 		/// <value>The top.</value>
-		public float Top {
+        public double Top
+        {
 			get;
 			private set;
 		}
@@ -177,7 +196,8 @@ namespace OsmSharp.UI.Renderer
 		/// Gets the left.
 		/// </summary>
 		/// <value>The left.</value>
-		public float Left {
+        public double Left
+        {
 			get;
 			private set;
 		}
@@ -186,7 +206,8 @@ namespace OsmSharp.UI.Renderer
 		/// Gets the right.
 		/// </summary>
 		/// <value>The right.</value>
-		public float Right {
+        public double Right
+        {
 			get;
 			private set;
 		}
@@ -197,10 +218,12 @@ namespace OsmSharp.UI.Renderer
 		/// <returns><c>true</c> if this instance is in the specified x y; otherwise, <c>false</c>.</returns>
 		/// <param name="x">The x coordinate.</param>
 		/// <param name="y">The y coordinate.</param>
-		public bool Contains (float x, float y)
+		public bool Contains (double x, double y)
 		{
-			if(y > this.Top || y < this.Bottom || 
-			   x < this.Left || x > this.Right)
+			if((this.Top > this.Bottom && (y > this.Top || y < this.Bottom)) ||
+                (this.Top < this.Bottom && (y < this.Top || y > this.Bottom)) ||
+                (this.Left < this.Right && (x < this.Left || x > this.Right)) ||
+                (this.Left > this.Right && (x > this.Left || x < this.Right)))
 			{ // one of the bounds was violated.
 				return false;
 			}
@@ -215,19 +238,168 @@ namespace OsmSharp.UI.Renderer
         /// <param name="pixelsWidth"></param>
         /// <param name="pixelsHeight"></param>
         /// <returns></returns>
-        public float[] ToViewPort(float pixelsWidth, float pixelsHeight, float pixelX, float pixelY)
+        public double[] FromViewPort(double pixelsWidth, double pixelsHeight, double pixelX, double pixelY)
         { // assumed that the coordinate system of the viewport starts at (0,0) in the topleft corner and increases to 
             // the right and going down.
-            //pixelX = pixelX - (pixelsWidth / 2.0f);
-            //pixelY = pixelY - (pixelsHeight / 2.0f);
+            double scaleX = pixelsWidth / this.Width;
+            double scaleY = pixelsHeight / this.Height;
 
-            float scaleX = pixelsWidth / this.Width;
-            float scaleY = pixelsHeight / this.Height;
+            double offsetXScene = pixelX / scaleX;
+            double offsetYScene = pixelY / scaleY;
 
-            float offsetXScene = pixelX / scaleX;
-            float offsetYScene = pixelY / scaleY;
+            double x;
+            if (this.Left < this.Right)
+            {
+                x = (this.Left + offsetXScene);
+            }
+            else
+            {
+                x = (this.Left - offsetXScene);
+            }
 
-            return new float[]{  (this.Left + offsetXScene), (this.Top - offsetYScene) };
+            double y;
+            if (this.Top > this.Bottom)
+            {
+                y = (this.Top - offsetYScene);
+            }
+            else
+            {
+                y =  (this.Top + offsetYScene);
+            }
+
+            return new double[]{ x ,y  };
+        }
+
+        /// <summary>
+        /// Returns the scene x-coordinates represents by the given x-coordinate for the given viewport width.
+        /// </summary>
+        /// <param name="pixelX"></param>
+        /// <param name="pixelsWidth"></param>
+        /// <returns></returns>
+        public double FromViewPortX(double pixelsWidth, double pixelX)
+        {
+            // the right and going down.
+            double scaleX = pixelsWidth / this.Width;
+
+            double offsetXScene = pixelX / scaleX;
+
+            double x;
+            if (this.Left < this.Right)
+            {
+                x = (this.Left + offsetXScene);
+            }
+            else
+            {
+                x = (this.Left - offsetXScene);
+            }
+            return x;
+        }
+
+        /// <summary>
+        /// Returns the scene y-coordinates represents by the given y-coordinate for the given viewport height.
+        /// </summary>
+        /// <param name="pixelY"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <returns></returns>
+        public double FromViewPortY(double pixelsHeight, double pixelY)
+        {
+            double scaleY = pixelsHeight / this.Height;
+
+            double offsetYScene = pixelY / scaleY;
+
+            double y;
+            if (this.Top > this.Bottom)
+            {
+                y = (this.Top - offsetYScene);
+            }
+            else
+            {
+                y = (this.Top + offsetYScene);
+            }
+
+            return y;
+        }
+
+        /// <summary>
+        /// Returns the viewport coordinates in the given viewport that corresponds with the given scene coordinates.
+        /// </summary>
+        /// <param name="pixelsWidth"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <param name="sceneX"></param>
+        /// <param name="sceneY"></param>
+        /// <returns></returns>
+        public double[] ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY)
+        { // the right and going down.
+            double scaleX = pixelsWidth / this.Width;
+            double scaleY = pixelsHeight / this.Height;
+
+            double pixelsX;
+            if (this.Left < this.Right)
+            {
+                pixelsX = (sceneX - this.Left) * scaleX;
+            }
+            else
+            { // left < right
+                pixelsX = (this.Width - (sceneX - this.Right)) * scaleX;
+            }
+
+            double pixelsY;
+            if (this.Bottom < this.Top)
+            {
+                pixelsY = (this.Height - (sceneY - this.Bottom)) * scaleY;
+            }
+            else
+            { // left < right
+                pixelsY = ((sceneY - this.Top)) * scaleY;
+            }
+
+            return new double[] { pixelsX, pixelsY };
+        }
+
+        /// <summary>
+        /// Returns the viewport x-coordinate for the given viewport width that corresponds with the given scene x-coordinate.
+        /// </summary>
+        /// <param name="pixelsWidth"></param>
+        /// <param name="sceneX"></param>
+        /// <returns></returns>
+        public double ToViewPortX(double pixelsWidth, double sceneX)
+        {
+            double scaleX = pixelsWidth / this.Width;
+
+            double pixelsX;
+            if (this.Left < this.Right)
+            {
+                pixelsX = (sceneX - this.Left) * scaleX;
+            }
+            else
+            { // left < right
+                pixelsX = (this.Width - (sceneX - this.Right)) * scaleX;
+            }
+
+            return pixelsX;
+        }
+
+        /// <summary>
+        /// Returns the viewport y-coordinate for the given viewport height that corresponds with the given scene y-coordinate.
+        /// </summary>
+        /// <param name="pixelsHeight"></param>
+        /// <param name="sceneY"></param>
+        /// <returns></returns>
+        public double ToViewPortY(double pixelsHeight, double sceneY)
+        {
+            double scaleY = pixelsHeight / this.Height;
+
+            double pixelsY;
+            if (this.Bottom < this.Top)
+            {
+                pixelsY = (this.Height - (sceneY - this.Bottom)) * scaleY;
+            }
+            else
+            { // left < right
+                pixelsY = ((sceneY - this.Top)) * scaleY;
+            }
+
+            return pixelsY;
         }
 
         /// <summary>
@@ -236,9 +408,9 @@ namespace OsmSharp.UI.Renderer
         /// <param name="pixelsWidth"></param>
         /// <param name="pixelsHeight"></param>
         /// <returns></returns>
-        public float CalculateZoom(float pixelsWidth, float pixelsHeight)
+        public double CalculateZoom(double pixelsWidth, double pixelsHeight)
         {
-            float realZoom = pixelsWidth/this.Width;
+            double realZoom = pixelsWidth / this.Width;
             return realZoom;
         }
     }

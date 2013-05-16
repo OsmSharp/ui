@@ -15,6 +15,9 @@ using OsmSharp.UI.Map;
 using OsmSharp.Math.Geo;
 using OsmSharp;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Map.Layers;
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.UI;
 
 namespace OsmSharp.Android.UI
 {
@@ -28,6 +31,11 @@ namespace OsmSharp.Android.UI
 		/// Holds the gesture detector.
 		/// </summary>
 		private GestureDetector _gestureDetector;
+
+		/// <summary>
+		/// Holds the primitives layer.
+		/// </summary>
+		private PrimitivesLayer _makerLayer;
 		
 		/// <summary>
 		/// Holds the scale gesture detector.
@@ -75,6 +83,9 @@ namespace OsmSharp.Android.UI
 			_scaleGestureDetector = new ScaleGestureDetector(
 				this.Context, this);
 			this.SetOnTouchListener(this);
+
+			_makerLayer = new PrimitivesLayer(
+				new WebMercator());
 		}
 
 		/// <summary>
@@ -124,17 +135,28 @@ namespace OsmSharp.Android.UI
 			
 			// initialize the renderers.
 			global::Android.Graphics.Paint paint = new global::Android.Graphics.Paint();
+
+			// build the layers list.
+			var layers = new List<ILayer>();
+			for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++)
+			{
+				// get the layer.
+				layers.Add(this.Map[layerIdx]);
+			}
+
+			// add the internal layers.
+			layers.Add (_makerLayer);
+
 			if(_highQuality)
 			{			
 				// render the map.
-				_renderer.Render(canvas, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
+				_renderer.Render(canvas, this.Map.Projection, layers, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
 			}
 			else
 			{
 				// render the cached parts only.
 				_renderer.RenderCache(canvas, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
 			}
-
 		}
 		
 		/// <summary>
@@ -152,7 +174,8 @@ namespace OsmSharp.Android.UI
 			
 			// create the view for this control.
 			return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-			                         this.Width, this.Height, sceneZoomFactor);
+			                         this.Width, this.Height, sceneZoomFactor, 
+			                         this.Map.Projection.DirectionX, this.Map.Projection.DirectionY);
 		}
 
 		/// <summary>
@@ -265,7 +288,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="e">E.</param>
 		public void OnLongPress (MotionEvent e)
 		{
-			
+
 		}
 		
 		/// <summary>
@@ -281,11 +304,11 @@ namespace OsmSharp.Android.UI
 			View2D view = this.CreateView();
 			
 			// calculate the new center in pixels.
-			float centerXPixels = this.Width / 2.0f + distanceX;
-			float centerYPixles = this.Height / 2.0f + distanceY;
+			double centerXPixels = this.Width / 2.0f + distanceX;
+			double centerYPixles = this.Height / 2.0f + distanceY;
 			
 			// calculate the new center from the view.
-			float[] sceneCenter = view.ToViewPort(this.Width, this.Height, 
+			double[] sceneCenter = view.FromViewPort(this.Width, this.Height, 
 			                              centerXPixels, centerYPixles);
 
 			// convert to the projected center.
@@ -305,7 +328,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="e">E.</param>
 		public void OnShowPress (MotionEvent e)
 		{
-			
+
 		}
 		
 		/// <summary>

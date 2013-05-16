@@ -173,15 +173,17 @@ namespace OsmSharp.Android.UI
 			// recreate the view.
 			View2D view = View2D.CreateFrom(this.Center[0], this.Center[1],
 			                                this.Width, this.Height,
-			                                this.ZoomFactor);
+			                                this.ZoomFactor, true, true);
 
 			// calculate the new center in pixels.
-			float centerXPixels = this.Width / 2.0f + distanceX;
-			float centerYPixles = this.Height / 2.0f + distanceY;
+			double centerXPixels = this.Width / 2.0f + distanceX;
+			double centerYPixles = this.Height / 2.0f + distanceY;
 
 			// calculate the new center from the view.
-			this.Center = view.ToViewPort(this.Width, this.Height, 
-			                              centerXPixels, centerYPixles);
+			double[] center = view.ToViewPort(this.Width, this.Height, 
+			                                  (float)centerXPixels, (float)centerYPixles);
+			this.Center[0] = (float)center[0];
+			this.Center[1] = (float)center[1];
 
 //			float factorX = this.View.Width / this.Width;
 //			float factorY = this.View.Height / this.Height;
@@ -250,7 +252,7 @@ namespace OsmSharp.Android.UI
 			// recreate the view.
 			View2D view = View2D.CreateFrom(this.Center[0], this.Center[1],
 			                                canvas.Width, canvas.Height,
-			                                this.ZoomFactor);
+			                                this.ZoomFactor, true, true);
 
 			// call the canvas renderer.
 			CanvasRenderer2D renderer = new CanvasRenderer2D();

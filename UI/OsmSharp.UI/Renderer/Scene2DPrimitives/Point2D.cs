@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 {	
@@ -14,7 +15,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <summary>
         /// Creates a new point 2D.
         /// </summary>
-        public Point2D(float x, float y, int color, float size)
+		public Point2D(double x, double y, int color, double size)
             : this()
         {
             this.X = x;
@@ -39,7 +40,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// Gets or sets the x.
 		/// </summary>
 		/// <value>The x.</value>
-		public float X {
+		public double X {
 			get;
 			set;
 		}
@@ -48,7 +49,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// Gets or sets the y.
 		/// </summary>
 		/// <value>The y.</value>
-		public float Y {
+		public double Y {
 			get;
 			set;
 		}
@@ -66,7 +67,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// Gets or sets the size.
 		/// </summary>
 		/// <value>The size.</value>
-		public float Size {
+		public double Size {
 			get;
 			set;
         }
@@ -99,6 +100,15 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 
             return view.Contains(this.X, this.Y);
 		}
+
+        /// <summary>
+        /// Returns the bounding box for this primitive.
+        /// </summary>
+        /// <returns></returns>
+        public RectangleF2D GetBox()
+        {
+            return new RectangleF2D(this.X, this.Y, this.X, this.Y);
+        }
 
 		#endregion
 	}

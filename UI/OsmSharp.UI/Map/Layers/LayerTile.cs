@@ -15,7 +15,7 @@ namespace OsmSharp.UI.Map.Layers
     /// <summary>
     /// A tile layer.
     /// </summary>
-    public class TileLayer : ILayer
+    public class LayerTile : ILayer
     {
         /// <summary>
         /// Holds the tile url.
@@ -25,7 +25,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Creates a new tiles layer.
         /// </summary>
-        public TileLayer(string tilesURL)
+        public LayerTile(string tilesURL)
         {
             _tilesURL = tilesURL;
 

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 {
@@ -40,7 +41,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="imageData"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public Image2D(float left, float top, float bottom, float right, byte[] imageData, float minZoom, float maxZoom)
+		public Image2D(double left, double top, double bottom, double right, byte[] imageData, float minZoom, float maxZoom)
         {
             this.ImageData = imageData;
             this.Left = left;
@@ -69,22 +70,22 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <summary>
         /// Gets the left.
         /// </summary>
-        public float Left { get; set; }
+		public double Left { get; set; }
 
         /// <summary>
         /// Gets the right.
         /// </summary>
-        public float Right { get; set; }
+		public double Right { get; set; }
 
         /// <summary>
         /// Gets the top.
         /// </summary>
-        public float Top { get; set; }
+		public double Top { get; set; }
 
         /// <summary>
         /// Gets the bottom.
         /// </summary>
-        public float Bottom { get; set; }
+		public double Bottom { get; set; }
 
         /// <summary>
         /// The minimum zoom.
@@ -142,6 +143,15 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// Returns the bounding box for this primitive.
+        /// </summary>
+        /// <returns></returns>
+        public RectangleF2D GetBox()
+        {
+            return new RectangleF2D(this.Left, this.Top, this.Right, this.Bottom);
         }
 
         #endregion

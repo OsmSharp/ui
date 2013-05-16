@@ -118,6 +118,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net, Version=2.0.0.621, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -148,6 +152,12 @@
     <Compile Include="Collections\ObjectTable.cs" />
     <Compile Include="Collections\ObjectTableDictionary.cs" />
     <Compile Include="Collections\SparseArray.cs" />
+    <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializer.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializerStream.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />
     <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
     <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />

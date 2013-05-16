@@ -201,18 +201,18 @@ namespace OsmSharp.WinForms.UI
             if (e.Button == MouseButtons.Left &&
                 _draggingCoordinates != null)
             {
-                float[] currentCoordinates = new float[] { e.X, e.Y };
-                float[] delta = new float[] { _draggingCoordinates[0] - currentCoordinates[0],
-                        -(_draggingCoordinates[1] - currentCoordinates[1])};
+                var currentCoordinates = new double[] { e.X, e.Y };
+                var delta = new double[] { _draggingCoordinates[0] - currentCoordinates[0],
+                        (_draggingCoordinates[1] - currentCoordinates[1])};
 
-                float[] newCenter = new float[] { (float)this.Width / 2.0f + delta[0], (float)this.Height / 2.0f + delta[1] };
+                var newCenter = new double[] { this.Width / 2.0f + delta[0], this.Height / 2.0f + delta[1] };
 
                 this.Center = _oldCenter;
 
                 View2D view = _renderer.Create(this.Width, this.Height, this.Map, 
                     (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
 
-                float[] sceneCenter = view.ToViewPort(this.Width, this.Height,
+                double[] sceneCenter = view.FromViewPort(this.Width, this.Height,
                                                        newCenter[0], newCenter[1]);
                 
                 // project to new center.

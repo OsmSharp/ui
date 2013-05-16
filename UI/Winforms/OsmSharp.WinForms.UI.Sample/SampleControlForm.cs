@@ -30,11 +30,7 @@ namespace OsmSharp.WinForms.UI.Sample
         {
             base.OnLoad(e);
 
-            //// initialize a view.
-            //var view = View2D.CreateFromCenterAndSize(9000, 9000,
-            //                                            534463.21f, 6633094.69f);
-
-            this.sampleControl1.Center = new float[] { 534463.21f, 6633094.69f };
+            this.sampleControl1.Center = new double[] { 534463.21f, 6633094.69f };
             //this.sampleControl1.Center = new float[] { 0f, 0f };
             this.sampleControl1.ZoomFactor = 1;
 
@@ -47,7 +43,7 @@ namespace OsmSharp.WinForms.UI.Sample
             int color = Color.White.ToArgb();
             int width = 1;
 
-            scene2D.AddPolygon(float.MinValue, float.MaxValue, new float[] { 50, -80, 70 }, new float[] { 20, -10, -70 }, color, width, fill);
+            scene2D.AddPolygon(float.MinValue, float.MaxValue, new double[] { 50, -80, 70 }, new double[] { 20, -10, -70 }, color, width, fill);
 
             // load test osm file.
             Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
@@ -73,8 +69,8 @@ namespace OsmSharp.WinForms.UI.Sample
                 else if (simpleOsmGeo is SimpleWay)
                 {
                     var way = (simpleOsmGeo as SimpleWay);
-                    var x = new List<float>();
-                    var y = new List<float>();
+                    var x = new List<double>();
+                    var y = new List<double>();
                     if (way.Nodes != null)
                     {
                         for (int idx = 0; idx < way.Nodes.Count; idx++)

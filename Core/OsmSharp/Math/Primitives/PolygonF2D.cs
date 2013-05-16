@@ -15,12 +15,10 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace OsmSharp.Math
+using System.Collections.Generic;
+
+namespace OsmSharp.Math.Primitives
 {
     /// <summary>
     /// Represents a polyfon.
@@ -75,16 +73,16 @@ namespace OsmSharp.Math
         /// </summary>
         /// <param name="point1"></param>
         /// <param name="point2"></param>
-        /// <param name="is_segment1"></param>
-        /// <param name="is_segment2"></param>
+        /// <param name="isSegment1"></param>
+        /// <param name="isSegment2"></param>
         /// <returns></returns>
         protected override GenericLineF2D<PointF2D> CreateLine(
             PointF2D point1, 
             PointF2D point2, 
-            bool is_segment1, 
-            bool is_segment2)
+            bool isSegment1, 
+            bool isSegment2)
         {
-            return new LineF2D(point1, point2, is_segment1, is_segment2);
+            return new LineF2D(point1, point2, isSegment1, isSegment2);
         }
 
         /// <summary>

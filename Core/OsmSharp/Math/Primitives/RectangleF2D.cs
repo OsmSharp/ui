@@ -15,12 +15,8 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace OsmSharp.Math
+namespace OsmSharp.Math.Primitives
 {
     /// <summary>
     /// Class representing a retangular box.
@@ -30,9 +26,22 @@ namespace OsmSharp.Math
         /// <summary>
         /// Creates a new box.
         /// </summary>
+        /// <param name="x1"></param>
+        /// <param name="y1"></param>
+        /// <param name="x2"></param>
+        /// <param name="y2"></param>
+        public RectangleF2D(double x1, double y1, double x2, double y2)
+            : base(new PointF2D(x1, y1), new PointF2D(x2, y2))
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new box.
+        /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        internal RectangleF2D(PointF2D a, PointF2D b)
+        public RectangleF2D(PointF2D a, PointF2D b)
             :base(a,b)
         {
 
@@ -42,7 +51,7 @@ namespace OsmSharp.Math
         /// Creates a new box.
         /// </summary>
         /// <param name="points"></param>
-        internal RectangleF2D(PointF2D[] points)
+        public RectangleF2D(PointF2D[] points)
             : base(points)
         {
 
@@ -65,16 +74,16 @@ namespace OsmSharp.Math
         /// </summary>
         /// <param name="point1"></param>
         /// <param name="point2"></param>
-        /// <param name="is_segment1"></param>
-        /// <param name="is_segment2"></param>
+        /// <param name="isSegment1"></param>
+        /// <param name="isSegment2"></param>
         /// <returns></returns>
         protected override GenericLineF2D<PointF2D> CreateLine(
             PointF2D point1,
             PointF2D point2,
-            bool is_segment1,
-            bool is_segment2)
+            bool isSegment1,
+            bool isSegment2)
         {
-            return new LineF2D(point1, point2, is_segment1, is_segment2);
+            return new LineF2D(point1, point2, isSegment1, isSegment2);
         }
 
         /// <summary>
@@ -98,5 +107,47 @@ namespace OsmSharp.Math
         }
 
         #endregion
+		
+		/// <summary>
+		/// Calculates the intersection between this box and the given box.
+		/// </summary>
+		/// <param name="box">Box.</param>
+		public RectangleF2D Intersection (RectangleF2D box)
+		{// get the highest minimums and the lowest maximums.
+			double minX = System.Math.Max(this.Min[0], box.Min[0]);
+			double minY = System.Math.Max(this.Min[1], box.Min[1]);
+			double maxX = System.Math.Min(this.Max[0], box.Max[0]);
+			double maxY = System.Math.Min(this.Max[1], box.Max[1]);
+
+            if (minX <= maxX && minY <= maxY)
+            {
+                return new RectangleF2D(new PointF2D(minX, minY), new PointF2D(maxX, maxY));
+            }
+		    return null;
+		}
+
+		/// <summary>
+		/// Calculates the union of this box and the given box or the box that encompasses both original boxes.
+		/// </summary>
+		/// <param name="box">Box.</param>
+		public RectangleF2D Union(RectangleF2D box)
+		{// get the lowest minimums and the highest maximums.
+			double minX = System.Math.Min(this.Min[0], box.Min[0]);
+			double minY = System.Math.Min(this.Min[1], box.Min[1]);
+			double maxX = System.Math.Max(this.Max[0], box.Max[0]);
+			double maxY = System.Math.Max(this.Max[1], box.Max[1]);
+			
+			return new RectangleF2D(new PointF2D(minX, minY), new PointF2D(maxX, maxY));
+		}
+
+        /// <summary>
+        /// Returns a description of this object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("RectF:[({0},{1}),({2},{3})]",
+                                 this.Min[0], this.Min[1], this.Max[0], this.Max[1]);
+        }
     }
 }

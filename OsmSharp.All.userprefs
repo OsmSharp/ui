@@ -1,17 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Core\OsmSharp.UnitTests\Routing\Dykstra\DykstraLiveAccessTests.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Core\OsmSharp\Collections\SpatialIndexes\RTreeIndex.cs">
     <Files>
-      <File FileName="UI\OsmSharp.UI\SimpleColor.cs" Line="1" Column="1" />
-      <File FileName="UI\OsmSharp.UI.Map\Layers\Tiles\TilesLayer.cs" Line="1" Column="1" />
-      <File FileName="Core\OsmSharp.Tools\Math\Geo\Projections\SphericalMercator.cs" Line="1" Column="1" />
-      <File FileName="Core\OsmSharp.UnitTests\TSP\BruteForceTSPTest.cs" Line="1" Column="1" />
-      <File FileName="Core\OsmSharp.UnitTests\Routing\DynamicGraphTests.cs" Line="1" Column="1" />
-      <File FileName="Core\OsmSharp.UnitTests\Data\RawMemoryDataSourceTests.cs" Line="1" Column="1" />
-      <File FileName="Core\OsmSharp.UnitTests\Routes\MultiRouteTest.cs" Line="1" Column="1" />
-      <File FileName="Core\OsmSharp.UnitTests\Routes\RouteTest.cs" Line="1" Column="1" />
-      <File FileName="Core\OsmSharp.UnitTests\Routing\RoutingAccessTests.cs" Line="1" Column="1" />
-      <File FileName="Core\OsmSharp.UnitTests\Routing\Dykstra\DykstraLiveAccessTests.cs" Line="1" Column="1" />
+      <File FileName="Core\OsmSharp\Collections\SpatialIndexes\RTreeIndex.cs" Line="136" Column="30" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
