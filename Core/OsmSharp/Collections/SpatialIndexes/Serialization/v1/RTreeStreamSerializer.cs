@@ -18,9 +18,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
+using OsmSharp.Math.Primitives;
 using ProtoBuf;
+using ProtoBuf.Meta;
 
 namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
 {
@@ -31,6 +32,41 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
     public abstract class RTreeStreamSerializer<T> : SpatialIndexSerializer<T>
     {
         /// <summary>
+        /// Creates a new serializer.
+        /// </summary>
+        protected RTreeStreamSerializer()
+        {
+
+        }
+
+        /// <summary>
+        /// Holds the type model.
+        /// </summary>
+        private RuntimeTypeModel _typeModel;
+
+        /// <summary>
+        /// Returns the runtime type model.
+        /// </summary>
+        /// <returns></returns>
+        private RuntimeTypeModel GetRuntimeTypeModel()
+        {
+            if (_typeModel == null)
+            {
+                // build the run time type model.
+                _typeModel = TypeModel.Create();
+                _typeModel.Add(typeof(ChildrenIndex), true); // the tile metadata.
+                this.BuildRuntimeTypeModel(_typeModel);
+            }
+            return _typeModel;
+        }
+
+        /// <summary>
+        /// Builds the type model.
+        /// </summary>
+        /// <param name="typeModel"></param>
+        protected abstract void BuildRuntimeTypeModel(RuntimeTypeModel typeModel);
+
+        /// <summary>
         /// Serializes the given index to the given stream.
         /// </summary>
         /// <param name="stream"></param>
@@ -38,38 +74,119 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
         protected override void DoSerialize(SpatialIndexSerializerStream stream, 
             RTreeStreamIndex<T> index)
         {
-            //// serialize root node.
-            //var root = new ChildrenIndex();
-            //bool[] isLeafs;
-            //List<byte[]> serializedChildren =
-            //    this.SerializeChildren(index.Root, isLeafs);
+            // build the run time type model.
+            RuntimeTypeModel typeModel = this.GetRuntimeTypeModel();
 
-            //root.IsLeaf = new bool[index.Root.Count];
-            //root.MaxX = new float[index.Root.Count];
-            //root.MaxY = new float[index.Root.Count];
-            //root.MinX = new float[index.Root.Count];
-            //root.MinY = new float[index.Root.Count];
-            //root.Starts = new int[index.Root.Count];
-            //for (int idx = 0; idx < index.Root.Count; idx++)
-            //{
-                
-            //}
+            // serialize root node.
+            byte[] serializedRoot = 
+                this.Serialize(typeModel, index.Root);
+            stream.Write(serializedRoot, 0, serializedRoot.Length);
+            stream.Flush();
         }
 
         /// <summary>
         /// Serializes all children of the given node.
         /// </summary>
-        /// <param name="node"></param>
-        /// <param name="isLeafs"></param>
+        /// <param name="typeModel"></param>
+        /// <param name="nodeBase"></param>
         /// <returns></returns>
-        private List<byte[]> SerializeChildren(RTreeStreamIndex<T>.RTreeNode node, bool[] isLeafs)
+        private byte[] Serialize(RuntimeTypeModel typeModel, RTreeStreamIndex<T>.RTreeNodeBase nodeBase)
         {
-            //for (int idx = 0; idx < node.Count; idx++)
-            //{
+            var stream = new MemoryStream();
+            if (nodeBase is RTreeStreamIndex<T>.RTreeNode)
+            { // the node is not a leaf.
+                int position = 0;
+                var node = (nodeBase as RTreeStreamIndex<T>.RTreeNode);
+                var childrenIndex = new ChildrenIndex();
+                childrenIndex.IsLeaf = new bool[node.Count];
+                childrenIndex.MinX = new float[node.Count];
+                childrenIndex.MinY = new float[node.Count];
+                childrenIndex.MaxX = new float[node.Count];
+                childrenIndex.MaxY = new float[node.Count];
+                childrenIndex.Starts = new int[node.Count];
+                var serializedChildren = new List<byte[]>();
+                for (int idx = 0; idx < node.Count; idx++)
+                {
+                    RectangleF2D box = node.Box(idx);
+                    childrenIndex.MinX[idx] = (float) box.Min[0];
+                    childrenIndex.MinY[idx] = (float) box.Min[1];
+                    childrenIndex.MaxX[idx] = (float) box.Max[0];
+                    childrenIndex.MaxY[idx] = (float) box.Max[1];
+                    childrenIndex.IsLeaf[idx] = (node.Child(idx) is RTreeStreamIndex<T>.RTreeLeafNode);
+
+                    byte[] childSerialized = this.Serialize(typeModel, node.Child(idx));
+                    serializedChildren.Add(childSerialized);
+
+                    childrenIndex.Starts[idx] = position;
+                    position = position + childSerialized.Length;
+                }
+                childrenIndex.End = position;
+
+                // serialize this index object.
+                var indexStream = new MemoryStream();
+                typeModel.Serialize(indexStream, childrenIndex);
+                byte[] indexBytes = indexStream.ToArray();
+
+                // START WRITING THE DATA TO THE TARGET STREAM HERE!
+
+                // 1: write the type of data.
+                byte[] leafFlag = new[] { (byte)(false ? 1 : 0) };
+                stream.Write(leafFlag, 0, 1);
                 
-            //}
-            return null;
+                // 2: Write the length of the meta data.
+                byte[] indexLength = BitConverter.GetBytes(indexBytes.Length);
+                stream.Write(indexLength, 0, indexLength.Length);
+
+                // 3: write the meta data or the node-index.
+                stream.Write(indexBytes, 0, indexBytes.Length);
+
+                // 4: write the actual children.
+                for (int idx = 0; idx < serializedChildren.Count; idx++)
+                {
+                    stream.Write(serializedChildren[idx], 0, serializedChildren[idx].Length);
+                }
+            }
+            else if (nodeBase is RTreeStreamIndex<T>.RTreeLeafNode)
+            { // the node is a leaf node.
+                // START WRITING THE DATA TO THE TARGET STREAM HERE!
+
+                // 1: write the type of data.
+                byte[] leafFlag = new[] { (byte)(true ? 1 : 0) };
+                stream.Write(leafFlag, 0, 1);
+
+                // 2: write the leaf data.
+                return this.Serialize(typeModel,
+                    (nodeBase as RTreeStreamIndex<T>.RTreeLeafNode).Children, 
+                    (nodeBase as RTreeStreamIndex<T>.RTreeLeafNode).Boxes);
+            }
+            else
+            {
+                throw new Exception("Unknown node type!");
+            }
+            byte[] serialized = stream.ToArray();
+            stream.Dispose();
+            return serialized;
         }
+
+        /// <summary>
+        /// Serializes all data on one leaf.
+        /// </summary>
+        /// <param name="typeModel"></param>
+        /// <param name="data"></param>
+        /// <param name="boxes"></param>
+        /// <returns></returns>
+        protected abstract byte[] Serialize(RuntimeTypeModel typeModel, List<T> data, 
+            List<RectangleF2D> boxes);
+
+        /// <summary>
+        /// Deserializes all data on one leaf.
+        /// </summary>
+        /// <param name="typeModel"></param>
+        /// <param name="data"></param>
+        /// <param name="boxes"></param>
+        /// <returns></returns>
+        protected abstract List<T> DeSerialize(RuntimeTypeModel typeModel, byte[] data,
+            out List<RectangleF2D> boxes);
 
         /// <summary>
         /// Deserializes the given stream into an index.
@@ -79,6 +196,9 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
         /// <returns></returns>
         protected override RTreeStreamIndex<T> DoDeserialize(SpatialIndexSerializerStream stream, bool lazy)
         {
+            // build the run time type model.
+            RuntimeTypeModel typeModel = this.GetRuntimeTypeModel();
+
             throw new NotImplementedException();
         }
 
@@ -128,6 +248,51 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             /// </summary>
             [ProtoMember(7)]
             public bool[] IsLeaf { get; set; }
+        }
+
+        /// <summary>
+        /// Deserializes the root.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="position"></param>
+        /// <param name="size"></param>
+        /// <returns></returns>
+        internal RTreeStreamIndex<T>.RTreeNodeBase DeserializeNode(SpatialIndexSerializerStream stream, 
+            int position, int size)
+        {
+            // build the run time type model.
+            RuntimeTypeModel typeModel = this.GetRuntimeTypeModel();
+
+            var leafFlag = new byte[1];
+            stream.Read(leafFlag, 0, 1);
+            if (leafFlag[0] == (byte)1 && size > 0)
+            { // the data is a leaf and can be read.
+                var dataBytes = new byte[size];
+                stream.Read(dataBytes, 0, dataBytes.Length);
+                List<RectangleF2D> boxes;
+                List<T> data = this.DeSerialize(typeModel, dataBytes, out boxes);
+
+                return new RTreeStreamIndex<T>.RTreeLeafNode(boxes, 
+                    data);
+            }
+            else if (leafFlag[0] == 0 && size < 0)
+            { // the data is a node, read meta data.
+                var metaLengthBytes = new byte[4];
+                stream.Read(metaLengthBytes, 0, metaLengthBytes.Length);
+                int metaLength = BitConverter.ToInt32(metaLengthBytes, 0);
+
+                var metaBytes = new byte[metaLength];
+                stream.Read(metaBytes, 0, metaBytes.Length);
+
+                var index =
+                    typeModel.Deserialize(new MemoryStream(metaBytes), null, typeof(ChildrenIndex)) as ChildrenIndex;
+                if (index != null)
+                {
+                    return new RTreeStreamIndex<T>.RTreeNode(index,
+                                                             this, stream);
+                }
+            }
+            throw new Exception("Cannot deserialize node!");
         }
     }
 }

@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using OsmSharp.Math.Primitives;
+using System.IO;
 
 namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
 {
@@ -39,32 +40,31 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
         /// <summary>
         /// Holds the maximum leaf size M.
         /// </summary>
-        private readonly int _maxLeafSize = 50;
+        private const int MaxLeafSize = 50;
 
         /// <summary>
         /// Holds the minimum leaf size m.
         /// </summary>
-        private readonly int _minLeafSize = 20;
+        private const int MinLeafSize = 20;
+
+        /// <summary>
+        /// Holds the R-tree serializer.
+        /// </summary>
+        private readonly RTreeStreamSerializer<T> _serializer;
+
+        /// <summary>
+        /// Holds the stream.
+        /// </summary>
+        private readonly SpatialIndexSerializerStream _stream;
 
         /// <summary>
         /// Initializes a new instance of the OsmSharp.Collections.SpatialIndexes.RTreeIndex class.
         /// </summary>
-        public RTreeStreamIndex()
+        public RTreeStreamIndex(RTreeStreamSerializer<T> serializer)
         {
             _root = null;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the OsmSharp.Collections.SpatialIndexes.RTreeIndex class.
-        /// </summary>
-        /// <param name="M">Holds the maximum leaf size M.</param>
-        /// <param name="m">Holds the minimum leaf size m.</param>
-        public RTreeStreamIndex(int M, int m)
-        {
-            _root = null;
-
-            _maxLeafSize = M;
-            _minLeafSize = m;
+            _serializer = serializer;
+            _stream = null;
         }
 
         /// <summary>
@@ -86,6 +86,10 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                 throw new ArgumentNullException("box");
 
             var result = new HashSet<T>();
+            if (_root == null)
+            {
+                _root = _serializer.DeserializeNode(_stream, 0, -1);
+            }
             if (_root != null)
             {
                 _root.Get(box, result);
@@ -113,7 +117,6 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                 throw new ArgumentNullException("box");
 
             // create the new leaf to be added.
-            var leaf = new RTreeLeaf(data);
             if (_root == null)
             { // create a new root node.
                 _root = new RTreeLeafNode();
@@ -121,7 +124,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
 
             // the root exists, search the correct leaf.
             RTreeLeafNode l = _root.ChooseLeaf(box);
-            RTreeNode newRoot = l.Add(box, leaf, _maxLeafSize, _minLeafSize);
+            RTreeNode newRoot = l.Add(box, data, MaxLeafSize, MinLeafSize);
             if (newRoot != null)
             {
                 _root = newRoot;
@@ -262,6 +265,11 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             /// </summary>
             /// <returns></returns>
             internal abstract int CountLeaves();
+
+            /// <summary>
+            /// Returns the count.
+            /// </summary>
+            internal abstract int Count { get; }
         }
 
         /// <summary>
@@ -280,6 +288,21 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             private readonly List<RTreeNodeBase> _children;
 
             /// <summary>
+            /// Holds the positions of the children in the data stream.
+            /// </summary>
+            private readonly Dictionary<int, KeyValuePair<int, int>> _positions;
+
+            /// <summary>
+            /// Holds the serializer.
+            /// </summary>
+            private readonly RTreeStreamSerializer<T> _serializer; 
+
+            /// <summary>
+            /// Holds the stream.
+            /// </summary>
+            private SpatialIndexSerializerStream _stream;
+
+            /// <summary>
             /// Creates a new R-tree node.
             /// </summary>
             public RTreeNode()
@@ -289,9 +312,42 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             }
 
             /// <summary>
+            /// Creates a new R-tree node from a children index.
+            /// </summary>
+            /// <param name="index"></param>
+            /// <param name="serializer"></param>
+            /// <param name="stream"></param>
+            public RTreeNode(RTreeStreamSerializer<T>.ChildrenIndex index,
+                RTreeStreamSerializer<T> serializer, SpatialIndexSerializerStream stream)
+            {
+                _serializer = serializer;
+                _stream = stream;
+
+                _boxes = new List<RectangleF2D>(index.IsLeaf.Length);
+                _positions = new Dictionary<int, KeyValuePair<int, int>>();
+                _children = new List<RTreeNodeBase>();
+                for (int idx = 0; idx < index.IsLeaf.Length; idx++)
+                {
+                    _boxes.Add(new RectangleF2D(
+                        index.MinX[idx], index.MinY[idx], index.MaxX[idx], index.MaxY[idx]));
+                    if (idx == index.IsLeaf.Length - 1)
+                    {
+                        _positions[idx] = new KeyValuePair<int, int>(
+                            index.Starts[idx], index.End - index.Starts[idx]);
+                    }
+                    else
+                    {
+                        _positions[idx] = new KeyValuePair<int, int>(
+                            index.Starts[idx], index.Starts[idx + 1] - index.Starts[idx]);
+                    }
+                    _children.Add(null);
+                }
+            }
+
+            /// <summary>
             /// Returns the numbers of children.
             /// </summary>
-            public int Count
+            internal override int Count
             {
                 get { return _boxes.Count; }
             }
@@ -303,7 +359,12 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             /// <returns></returns>
             public RTreeNodeBase Child(int idx)
             {
-                return _children[idx];
+                RTreeNodeBase child = _children[idx];
+                if (child == null)
+                {
+                    child = _serializer.DeserializeNode(_stream, _positions[idx].Key, _positions[idx].Value);
+                }
+                return child;
             }
 
             /// <summary>
@@ -655,7 +716,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             /// <summary>
             /// Holds the children of this node.
             /// </summary>
-            private readonly List<RTreeLeaf> _children;
+            private readonly List<T> _children;
 
             /// <summary>
             /// Creates a new leaf node.
@@ -663,7 +724,40 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             public RTreeLeafNode()
             {
                 _boxes = new List<RectangleF2D>();
-                _children = new List<RTreeLeaf>();
+                _children = new List<T>();
+            }
+
+            /// <summary>
+            /// Creates a new leaf node.
+            /// </summary>
+            public RTreeLeafNode(List<RectangleF2D> boxes, List<T> data)
+            {
+                _boxes = boxes;
+                _children = data;
+            }
+
+            /// <summary>
+            /// Returns the list of children.
+            /// </summary>
+            internal List<T> Children
+            {
+                get { return _children; }
+            }
+
+            /// <summary>
+            /// Returns the numbers of children.
+            /// </summary>
+            internal override int Count
+            {
+                get { return _boxes.Count; }
+            }
+
+            /// <summary>
+            /// Returns the list of boxes.
+            /// </summary>
+            public List<RectangleF2D> Boxes
+            {
+                get { return _boxes; }
             }
 
             /// <summary>
@@ -674,7 +768,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             /// <param name="M"></param>
             /// <param name="m"></param>
             /// <returns></returns>
-            internal RTreeNode Add(RectangleF2D box, RTreeLeaf leaf, int M, int m)
+            internal RTreeNode Add(RectangleF2D box, T leaf, int M, int m)
             {
                 if (box == null) throw new ArgumentNullException("box");
 
@@ -729,7 +823,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             /// <param name="M"></param>
             /// <param name="m"></param>
             /// <returns></returns>
-            internal RTreeLeafNode Split(RectangleF2D box, RTreeLeaf leaf, int M, int m)
+            internal RTreeLeafNode Split(RectangleF2D box, T leaf, int M, int m)
             {
                 // first add child then split.
                 _boxes.Add(box);
@@ -738,12 +832,12 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                 // split this node.
                 int[] seeds = RTreeNode.PickSeeds(_boxes);
 
-                var data = new List<KeyValuePair<RectangleF2D, RTreeLeaf>>[] { 
-                new List<KeyValuePair<RectangleF2D, RTreeLeaf>>(),
-                new List<KeyValuePair<RectangleF2D, RTreeLeaf>>() };
-                data[0].Add(new KeyValuePair<RectangleF2D, RTreeLeaf>(_boxes[seeds[0]], 
+                var data = new List<KeyValuePair<RectangleF2D, T>>[] { 
+                new List<KeyValuePair<RectangleF2D, T>>(),
+                new List<KeyValuePair<RectangleF2D, T>>() };
+                data[0].Add(new KeyValuePair<RectangleF2D, T>(_boxes[seeds[0]], 
                     _children[seeds[0]]));
-                data[1].Add(new KeyValuePair<RectangleF2D, RTreeLeaf>(_boxes[seeds[1]], 
+                data[1].Add(new KeyValuePair<RectangleF2D, T>(_boxes[seeds[1]], 
                     _children[seeds[1]]));
                 var boxes = new RectangleF2D[2] { _boxes[seeds[0]], _boxes[seeds[1]] };
 
@@ -760,7 +854,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                         for (int idx = 0; idx < _boxes.Count; idx++)
                         {
                             boxes[0] = boxes[0].Union(_boxes[0]);
-                            data[0].Add(new KeyValuePair<RectangleF2D, RTreeLeaf>(_boxes[0], 
+                            data[0].Add(new KeyValuePair<RectangleF2D, T>(_boxes[0], 
                                 _children[0]));
 
                             _boxes.RemoveAt(0);
@@ -772,7 +866,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                         for (int idx = 0; idx < _boxes.Count; idx++)
                         {
                             boxes[1] = boxes[1].Union(_boxes[0]);
-                            data[1].Add(new KeyValuePair<RectangleF2D, RTreeLeaf>(_boxes[0], 
+                            data[1].Add(new KeyValuePair<RectangleF2D, T>(_boxes[0], 
                                 _children[0]));
 
                             _boxes.RemoveAt(0);
@@ -785,7 +879,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                         int nextId = RTreeNode.PickNext(boxes, _boxes, out leafIdx);
 
                         boxes[leafIdx] = boxes[leafIdx].Union(_boxes[nextId]);
-                        data[leafIdx].Add(new KeyValuePair<RectangleF2D, RTreeLeaf>(_boxes[nextId], 
+                        data[leafIdx].Add(new KeyValuePair<RectangleF2D, T>(_boxes[nextId], 
                             _children[nextId]));
 
                         _boxes.RemoveAt(nextId);
@@ -829,7 +923,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             {
                 foreach (var data in _children)
                 {
-                    result.Add(data.Data);
+                    result.Add(data);
                 }
             }
 
@@ -844,7 +938,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                 {
                     if (_boxes[idx].Overlaps(box))
                     {
-                        result.Add(_children[idx].Data);
+                        result.Add(_children[idx]);
                     }
                 }
             }
@@ -872,27 +966,6 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             { // when called, this node was already choosen.
                 return this;
             }
-        }
-
-        /// <summary>
-        /// Represents a leaf in an R-tree.
-        /// </summary>
-        internal class RTreeLeaf
-        {
-            /// <summary>
-            /// Creates a new R-tree leaf.
-            /// </summary>
-            /// <param name="data"></param>
-            public RTreeLeaf(T data)
-            {
-                //this.Box = box;
-                this.Data = data;
-            }
-
-            /// <summary>
-            /// Gets the data in this leaf.
-            /// </summary>
-            public T Data { get; private set; }
         }
     }
 }

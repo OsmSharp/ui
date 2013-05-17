@@ -21,7 +21,9 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Math;
+using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
+using OsmSharp.Math.Units.Distance;
 
 namespace OsmSharp.UnitTests
 {
@@ -215,7 +217,6 @@ namespace OsmSharp.UnitTests
             Assert.AreEqual(line.Distance(c), sqrt_2, delta, string.Format("Point distance should be {0}f!", 1));
         }
 
-
         /// <summary>
         /// Tests the functionalities of the point object.
         /// </summary>
@@ -282,6 +283,18 @@ namespace OsmSharp.UnitTests
             Assert.AreEqual(VectorF2D.Dot(a_b, a_g), -1);
             Assert.AreEqual(VectorF2D.Dot(b_a, a_b), -2, string.Format("Cross product of two parallel vectors should be maximized; in this case {0}!", -2));
             Assert.AreEqual(VectorF2D.Dot(a_c, a_b), 0, string.Format("Cross product of two perpendicular vectors should be {0}!", 0));
+        }
+
+        /// <summary>
+        /// Tests the geo coordinates.
+        /// </summary>
+        [Test]
+        public void GeoCoordinateTest()
+        {
+            var from = new GeoCoordinate(50.0589533, -122.9576373);
+            var to = new GeoCoordinate(50.058952331543, -122.957633972168);
+
+            Meter m = from.DistanceReal(to);
         }
     }
 }

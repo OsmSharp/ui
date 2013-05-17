@@ -14,6 +14,14 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <summary>
         /// Creates a new Image2D.
         /// </summary>
+        public Image2D()
+        {
+            
+        }
+
+        /// <summary>
+        /// Creates a new Image2D.
+        /// </summary>
         /// <param name="left"></param>
         /// <param name="top"></param>
         /// <param name="bottom"></param>

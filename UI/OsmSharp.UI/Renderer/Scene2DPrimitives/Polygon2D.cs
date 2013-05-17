@@ -10,10 +10,18 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 	/// <summary>
 	/// A simple 2D polygon.
 	/// </summary>
-	internal struct Polygon2D : IScene2DPrimitive
+	internal class Polygon2D : IScene2DPrimitive
 	{
         /// <summary>
-        /// Creates a new line2D.
+        /// Creates a new Polygon2D.
+        /// </summary>
+        public Polygon2D()
+        {
+            
+        }
+
+        /// <summary>
+        /// Creates a new Polygon2D.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -21,7 +29,6 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="width"></param>
         /// <param name="fill"></param>
 		public Polygon2D(double[] x, double[] y, int color, double width, bool fill)
-           : this()
         {
             this.X = x;
             this.Y = y;
@@ -29,30 +36,30 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.Width = width;
             this.Fill = fill;
 
-            _minX = int.MaxValue;
-            _maxX = int.MinValue;
+            MinX = int.MaxValue;
+            MaxX = int.MinValue;
             for (int idx = 0; idx < x.Length; idx++)
             {
-                if (x[idx] > _maxX)
+                if (x[idx] > MaxX)
                 {
-                    _maxX = x[idx];
+                    MaxX = x[idx];
                 }
-                if (x[idx] < _minX)
+                if (x[idx] < MinX)
                 {
-                    _minX = x[idx];
+                    MinX = x[idx];
                 }
             }
-            _minY = int.MaxValue;
-            _maxY = int.MinValue;
+            MinY = int.MaxValue;
+            MaxY = int.MinValue;
             for (int idx = 0; idx < y.Length; idx++)
             {
-                if (y[idx] > _maxY)
+                if (y[idx] > MaxY)
                 {
-                    _maxY = y[idx];
+                    MaxY = y[idx];
                 }
-                if (y[idx] < _minY)
+                if (y[idx] < MinY)
                 {
-                    _minY = y[idx];
+                    MinY = y[idx];
                 }
             }
 
@@ -61,7 +68,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         }
 
 	    /// <summary>
-	    /// Creates a new line2D.
+        /// Creates a new Polygon2D.
 	    /// </summary>
 	    /// <param name="x"></param>
 	    /// <param name="y"></param>
@@ -79,30 +86,30 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.Width = width;
             this.Fill = fill;
 
-            _minX = int.MaxValue;
-            _maxX = int.MinValue;
+            MinX = int.MaxValue;
+            MaxX = int.MinValue;
             for (int idx = 0; idx < x.Length; idx++)
             {
-                if (x[idx] > _maxX)
+                if (x[idx] > MaxX)
                 {
-                    _maxX = x[idx];
+                    MaxX = x[idx];
                 }
-                if (x[idx] < _minX)
+                if (x[idx] < MinX)
                 {
-                    _minX = x[idx];
+                    MinX = x[idx];
                 }
             }
-            _minY = int.MaxValue;
-            _maxY = int.MinValue;
+            MinY = int.MaxValue;
+            MaxY = int.MinValue;
             for (int idx = 0; idx < y.Length; idx++)
             {
-                if (y[idx] > _maxY)
+                if (y[idx] > MaxY)
                 {
-                    _maxY = y[idx];
+                    MaxY = y[idx];
                 }
-                if (y[idx] < _minY)
+                if (y[idx] < MinY)
                 {
-                    _minY = y[idx];
+                    MinY = y[idx];
                 }
             }
 
@@ -111,7 +118,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         }
 
         /// <summary>
-        /// Creates a new line2D.
+        /// Creates a new Polygon2D.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
@@ -132,10 +139,10 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.Width = width;
             this.Fill = fill;
 
-            _minX = minX;
-            _maxX = maxX;
-            _minY = minY;
-            _maxY = maxY;
+            MinX = minX;
+            MaxX = maxX;
+            MinY = minY;
+            MaxY = maxY;
 
             this.MinZoom = float.MinValue;
             this.MaxZoom = float.MaxValue;
@@ -156,7 +163,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// <value>The x.</value>
 		public double[] X {
 			get;
-			private set;
+			set;
 		}
 		
 		/// <summary>
@@ -165,7 +172,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// <value>The y.</value>
 		public double[] Y {
 			get;
-			private set;
+			set;
 		}
 		
 		/// <summary>
@@ -174,7 +181,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// <value>The color.</value>
 		public int Color {
 			get;
-			private set;
+			set;
 		}
 		
 		/// <summary>
@@ -183,7 +190,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// <value>The size.</value>
 		public double Width {
 			get;
-			private set;
+			set;
 		}
 
 		/// <summary>
@@ -192,7 +199,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 		/// <value><c>true</c> if fill; otherwise, <c>false</c>.</value>
 		public bool Fill {
 			get;
-			private set;
+			set;
         }
 
         /// <summary>
@@ -207,10 +214,10 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 
 		#region IScene2DPrimitive implementation
 
-		private readonly double _minX;
-		private readonly double _maxX;
-		private readonly double _minY;
-		private readonly double _maxY;
+        internal double MinX { get; set; }
+        internal double MaxX { get; set; }
+        internal double MinY { get; set; }
+        internal double MaxY { get; set; }
 
 	    /// <summary>
 	    /// Returns true if the object is visible on the view.
@@ -226,31 +233,31 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
                 return false;
             }
 
-            if (view.Contains(_minX, _minY) ||
-                view.Contains(_minX, _maxY) ||
-                view.Contains(_maxX, _minY) ||
-                view.Contains(_maxX, _maxY))
+            if (view.Contains(MinX, MinY) ||
+                view.Contains(MinX, MaxY) ||
+                view.Contains(MaxX, MinY) ||
+                view.Contains(MaxX, MaxY))
             {
                 return true;
             }
-            if (_minX < view.Left && view.Left < _maxX)
+            if (MinX < view.Left && view.Left < MaxX)
             {
-                if (_minY < view.Top && view.Top < _maxY)
+                if (MinY < view.Top && view.Top < MaxY)
                 {
                     return true;
                 }
-                else if (_minY < view.Bottom && view.Bottom < _maxY)
+                else if (MinY < view.Bottom && view.Bottom < MaxY)
                 {
                     return true;
                 }
             }
-            else if (_minX < view.Right && view.Right < _maxX)
+            else if (MinX < view.Right && view.Right < MaxX)
             {
-                if (_minY < view.Top && view.Top < _maxY)
+                if (MinY < view.Top && view.Top < MaxY)
                 {
                     return true;
                 }
-                else if (_minY < view.Bottom && view.Bottom < _maxY)
+                else if (MinY < view.Bottom && view.Bottom < MaxY)
                 {
                     return true;
                 }
@@ -264,7 +271,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <returns></returns>
         public RectangleF2D GetBox()
         {
-            return new RectangleF2D(_minX, _minY, _maxX, _maxY);
+            return new RectangleF2D(MinX, MinY, MaxX, MaxY);
         }
 		
 		#endregion

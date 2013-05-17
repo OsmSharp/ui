@@ -16,30 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
-using OsmSharp.Math;
+using System.Linq;
+using System.Text;
 using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Collections.SpatialIndexes
 {
     /// <summary>
-    /// Abstract representation of a spatial index.
+    /// Abstract representation of a readonly spatial index.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface ISpatialIndex<T> : ISpatialIndexReadonly<T>
+    public interface ISpatialIndexReadonly<T>
     {
-
         /// <summary>
-        /// Adds a new item with the corresponding box.
+        /// Queries this index and returns all objects with overlapping bounding boxes.
         /// </summary>
         /// <param name="box"></param>
-        /// <param name="item"></param>
-        void Add(RectangleF2D box, T item);
-
-        /// <summary>
-        /// Removes the given item.
-        /// </summary>
-        /// <param name="item"></param>
-        void Remove(T item);
+        /// <returns></returns>
+        IEnumerable<T> Get(RectangleF2D box);
     }
 }

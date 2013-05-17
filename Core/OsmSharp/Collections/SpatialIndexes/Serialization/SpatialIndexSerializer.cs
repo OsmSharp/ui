@@ -22,38 +22,15 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization
         /// <summary>
         /// Returns the version number.
         /// </summary>
-        public abstract uint Version { get; }
+        public abstract string VersionString { get; }
 
         /// <summary>
         /// Builds a uniform version header.
         /// </summary>
-        /// <param name="version"></param>
         /// <returns></returns>
-        private byte[] BuildVersionHeader(uint version)
+        private byte[] BuildVersionHeader()
         {
-            if (version <= 0 || version >= 100000)
-            { // checks the version numbering.
-                throw new ArgumentOutOfRangeException("version",
-                    "Version number has to be larger than zero and smaller than 100000");
-            }
-            return System.Text.Encoding.ASCII.GetBytes(
-                string.Format("OsmSharp.Collections.SpatialIndexes.v{0}", version.ToString("00000")));
-        }
-
-        /// <summary>
-        /// Reads the version header.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-        private string GetVersionHeader(Stream stream)
-        {
-            // seek to beginning of stream.
-            stream.Seek(0, SeekOrigin.Begin);
-
-            // get the first 23 bytes and read header.
-            var buffer = new byte[23];
-            stream.Read(buffer, 0, 23);
-            return System.Text.Encoding.ASCII.GetString(buffer);
+            return System.Text.Encoding.ASCII.GetBytes(this.VersionString);
         }
 
         /// <summary>
@@ -65,7 +42,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization
             stream.Seek(0, SeekOrigin.Begin);
 
             // write the header bytes.
-            byte[] header = this.BuildVersionHeader(this.Version);
+            byte[] header = this.BuildVersionHeader();
             stream.Write(header, 0, header.Length);
         }
 
@@ -73,23 +50,32 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization
         /// Reads and validates the header.
         /// </summary>
         /// <param name="stream"></param>
-        private uint? ReadAndValidateHeader(Stream stream)
+        private bool ReadAndValidateHeader(Stream stream)
         {
-            // get the version string.
-            string versionString = this.GetVersionHeader(stream);
+            // get the original version header.
+            byte[] header = this.BuildVersionHeader();
 
-            // validate.
-            if (versionString != null && versionString.Length == 23)
-            { // the length is correct, now validate content.
-                uint version;
-                if (versionString.Substring(0, 18) == "OsmSharp.Collections.SpatialIndexes.v" &&
-                    uint.TryParse(versionString.Substring(18, 5), NumberStyles.Any,
-                    CultureInfo.InvariantCulture, out version))
-                { // the version got parsed too!
-                    return version;
+            try
+            {
+                // get the version string.
+                byte[] presentHeader = new byte[header.Length];
+                stream.Seek(0, SeekOrigin.Begin);
+                stream.Read(presentHeader, 0, header.Length);
+
+                for (int idx = 0; idx < header.Length; idx++)
+                {
+                    if (header[idx] != presentHeader[idx])
+                    {
+                        return false;
+                    }
                 }
+                return true;
             }
-            return null;
+            catch (Exception)
+            {
+
+            }
+            return false;
         }
 
         #endregion
@@ -100,8 +86,9 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization
         /// <param name="stream"></param>
         public virtual bool CanDeSerialize(Stream stream)
         {
-            uint? version = this.ReadAndValidateHeader(stream);
-            return (version.HasValue && version.Value == this.Version);
+            bool canRead = this.ReadAndValidateHeader(stream);
+            stream.Seek(0, SeekOrigin.Begin);
+            return canRead;
         }
 
         /// <summary>

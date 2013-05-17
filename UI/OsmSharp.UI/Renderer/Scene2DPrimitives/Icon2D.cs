@@ -9,8 +9,16 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
     /// <summary>
     /// A simple icon.
     /// </summary>
-    internal struct Icon2D : IScene2DPrimitive
+    internal class Icon2D : IScene2DPrimitive
     {
+        /// <summary>
+        /// Creates a new icon.
+        /// </summary>
+        public Icon2D()
+        {
+            
+        }
+
         /// <summary>
         /// Creates a new icon.
         /// </summary>
@@ -18,7 +26,6 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="y"></param>
         /// <param name="image"></param>
 		public Icon2D(double x, double y, byte[] image)
-            : this()
         {
             this.X = x;
             this.Y = y;
@@ -37,7 +44,6 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
 		public Icon2D(double x, double y, byte[] image, float minZoom, float maxZoom)
-            : this()
         {
             this.X = x;
             this.Y = y;
@@ -60,19 +66,19 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-		public double X { get; private set; }
+		public double X { get; set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-		public double Y { get; private set; }
+		public double Y { get; set; }
 
         /// <summary>
         /// Gets or sets the color.
         /// </summary>
         /// <value>The color.</value>
-        public byte[] Image { get; private set; }
+        public byte[] Image { get; set; }
 
         /// <summary>
         /// The minimum zoom.

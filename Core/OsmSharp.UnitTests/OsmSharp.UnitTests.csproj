@@ -111,6 +111,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net, Version=2.0.0.621, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -132,6 +136,7 @@
   <ItemGroup>
     <Compile Include="Collections\SpatialIndexes\IndexReferenceImplementation.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndexTests.cs" />
+    <Compile Include="Collections\SpatialIndexes\RTreeMemorySimpleIndexTests.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeStreamIndexTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
     <Compile Include="Routes\DepotRouteTests.cs" />

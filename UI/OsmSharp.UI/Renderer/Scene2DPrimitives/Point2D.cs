@@ -10,13 +10,20 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 	/// <summary>
 	/// A simple 2D point.
 	/// </summary>
-	internal struct Point2D : IScene2DPrimitive
+	internal class Point2D : IScene2DPrimitive
 	{
         /// <summary>
         /// Creates a new point 2D.
         /// </summary>
+        public Point2D()
+        {
+            
+        }
+
+        /// <summary>
+        /// Creates a new point 2D.
+        /// </summary>
 		public Point2D(double x, double y, int color, double size)
-            : this()
         {
             this.X = x;
             this.Y = y;

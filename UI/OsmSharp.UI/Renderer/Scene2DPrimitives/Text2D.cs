@@ -9,8 +9,16 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
     /// <summary>
     /// A simple text.
     /// </summary>
-    internal struct Text2D : IScene2DPrimitive
+    internal class Text2D : IScene2DPrimitive
     {
+        /// <summary>
+        /// Creates a new Text.
+        /// </summary>
+        public Text2D()
+        {
+            
+        }
+
         /// <summary>
         /// Creates a new icon.
         /// </summary>
@@ -19,7 +27,6 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="text"></param>
         /// <param name="size"></param>
         public Text2D(float x, float y, string text, float size)
-            : this()
         {
             this.X = x;
             this.Y = y;
@@ -37,8 +44,9 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-		public Text2D(double x, double y, string text, double size, float minZoom, float maxZoom)
-            : this()
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        public Text2D(double x, double y, string text, double size, float minZoom, float maxZoom)
         {
             this.X = x;
             this.Y = y;
@@ -63,24 +71,24 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-		public double X { get; private set; }
+		public double X { get; set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-		public double Y { get; private set; }
+		public double Y { get; set; }
 
         /// <summary>
         /// Gets the text.
         /// </summary>
         /// <value>The text.</value>
-        public string Text { get; private set; }
+        public string Text { get; set; }
 
         /// <summary>
         /// Gets the size.
         /// </summary>
-		public double Size { get; private set; }
+		public double Size { get; set; }
 
         /// <summary>
         /// The minimum zoom.

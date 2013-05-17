@@ -53,6 +53,10 @@
     <OutputPath>bin\x64\Release\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net, Version=2.0.0.621, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -110,6 +114,7 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParser.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Icon2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Image2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSerializer.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Text2D.cs" />
     <Compile Include="Renderer\Target2DWrapper.cs" />
     <Compile Include="Renderer\View2D.cs" />
