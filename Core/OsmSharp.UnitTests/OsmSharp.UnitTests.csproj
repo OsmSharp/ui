@@ -136,7 +136,6 @@
   <ItemGroup>
     <Compile Include="Collections\SpatialIndexes\IndexReferenceImplementation.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndexTests.cs" />
-    <Compile Include="Collections\SpatialIndexes\RTreeMemorySimpleIndexTests.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeStreamIndexTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
     <Compile Include="Routes\DepotRouteTests.cs" />

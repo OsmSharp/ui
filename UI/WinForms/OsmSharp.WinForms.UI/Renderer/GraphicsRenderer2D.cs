@@ -14,6 +14,10 @@ namespace OsmSharp.WinForms.UI.Renderer
 	/// </summary>
     public class GraphicsRenderer2D : Renderer2D<Graphics>
 	{
+	    private Pen _pen = new Pen(Color.Black);
+
+        //private _pen = new Pen(Color.FromArgb(color), widthInPixels);
+
         #region Caching Implementation
 
         /// <summary>
@@ -206,7 +210,9 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    {
 	        float widthInPixels = this.ToPixels(width);
 
-            var pen = new Pen(Color.FromArgb(color), widthInPixels);
+	        _pen.Color = Color.FromArgb(color);
+            _pen.Width = this.ToPixels(width);
+            _pen.DashStyle = DashStyle.Solid;
             if (dashes != null)
             {
                 var penDashes = new float[dashes.Length];
@@ -214,35 +220,36 @@ namespace OsmSharp.WinForms.UI.Renderer
                 {
                     penDashes[idx] = dashes[idx];
                 }
-                pen.DashPattern = penDashes;
-                pen.DashStyle = DashStyle.Custom;
+                _pen.DashPattern = penDashes;
+                _pen.DashStyle = DashStyle.Custom;
             }
 		    switch (lineJoin)
 		    {
 		        case LineJoin.Round:
-		            pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
+                    _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 		            break;
 		        case LineJoin.Miter:
-		            pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Miter;
+                    _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Miter;
 		            break;
 		        case LineJoin.Bevel:
-		            pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Bevel;
+                    _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Bevel;
 		            break;
 		        case LineJoin.None:
 		            // just keep the default.
+                    _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 		            break;
 		        default:
 		            throw new ArgumentOutOfRangeException("lineJoin");
 		    }
-            pen.StartCap = LineCap.Square;
-            pen.EndCap = LineCap.Square;
+            _pen.StartCap = LineCap.Square;
+            _pen.EndCap = LineCap.Square;
 		    var points = new PointF[x.Length];
 		    for (int idx = 0; idx < x.Length; idx++)
 		    {
                 points[idx] = new PointF(this.TransformX(x[idx]), 
                     this.TransformY(y[idx]));
 		    }
-            target.Target.DrawLines(pen, points);
+            target.Target.DrawLines(_pen, points);
 		}
 
 	    /// <summary>

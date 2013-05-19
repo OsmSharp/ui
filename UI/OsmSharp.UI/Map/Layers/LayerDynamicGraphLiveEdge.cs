@@ -40,6 +40,7 @@ namespace OsmSharp.UI.Map.Layers
 
             this.Scene = new Scene2D();
             _interpretedObjects = new Dictionary<int, HashSet<ArcId>>();
+            this.Cache = false;
         }
 
         /// <summary>
@@ -58,6 +59,11 @@ namespace OsmSharp.UI.Map.Layers
         public Scene2D Scene { get; private set; }
 
         /// <summary>
+        /// Gets or sets the cache flag.
+        /// </summary>
+        public bool Cache { get; set; }
+
+        /// <summary>
         /// Called when the view on the map containing this layer has changed.
         /// </summary>
         /// <param name="map"></param>
@@ -66,6 +72,11 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="view"></param>
         public void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view)
         {
+            if (!this.Cache)
+            {
+                _interpretedObjects.Clear();
+                _requestedBoxes.Clear();
+            }
             this.BuildScene(map, zoomFactor, center, view);
         }
 
@@ -97,38 +108,40 @@ namespace OsmSharp.UI.Map.Layers
         private void BuildScene(Map map, float zoomFactor, GeoCoordinate center, View2D view)
         {
             // get the indexed object at this zoom.
-            HashSet<ArcId> interpretedObjects;
-            if (!_interpretedObjects.TryGetValue((int)zoomFactor, out interpretedObjects))
-            {
-                interpretedObjects = new HashSet<ArcId>();
-                _interpretedObjects.Add((int)zoomFactor, interpretedObjects);
-            }
-
-            // build the boundingbox.
-            var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(view.Left, view.Top),
-                map.Projection.ToGeoCoordinates(view.Right, view.Bottom));
-            foreach (var requestedBox in _requestedBoxes)
-            {
-                if (requestedBox.IsInside(box))
+                HashSet<ArcId> interpretedObjects;
+                if (!_interpretedObjects.TryGetValue((int) zoomFactor, out interpretedObjects))
                 {
-                    return;
+                    interpretedObjects = new HashSet<ArcId>();
+                    _interpretedObjects.Add((int) zoomFactor, interpretedObjects);
                 }
-            }
-            _requestedBoxes.Add(box);
 
-            // set the scene backcolor.
-            SimpleColor? color = _styleInterpreter.GetCanvasColor();
-            this.Scene.BackColor = color.HasValue ? color.Value.Value : 
-                SimpleColor.FromArgb(0, 255, 255, 255).Value;
+                // build the boundingbox.
+                var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(view.Left, view.Top),
+                                               map.Projection.ToGeoCoordinates(view.Right, view.Bottom));
+                foreach (var requestedBox in _requestedBoxes)
+                {
+                    if (requestedBox.IsInside(box))
+                    {
+                        return;
+                    }
+                }
+                _requestedBoxes.Add(box);
+
+                // set the scene backcolor.
+                SimpleColor? color = _styleInterpreter.GetCanvasColor();
+                this.Scene.BackColor = color.HasValue
+                                           ? color.Value.Value
+                                           : SimpleColor.FromArgb(0, 255, 255, 255).Value;
 
             // get data.
             foreach (var arc in _dataSource.GetArcs(box))
-            { // translate each object into scene object.
+            {
+                // translate each object into scene object.
                 var arcId = new ArcId()
-                                  {
-                                      Vertex1 = arc.Key,
-                                      Vertex2 = arc.Value.Key
-                                  };
+                                {
+                                    Vertex1 = arc.Key,
+                                    Vertex2 = arc.Value.Key
+                                };
                 if (!interpretedObjects.Contains(arcId))
                 {
                     interpretedObjects.Add(arcId);

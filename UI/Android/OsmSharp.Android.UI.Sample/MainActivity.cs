@@ -19,6 +19,10 @@ using OsmSharp.Osm.Data.PBF.Processor;
 using OsmSharp.Osm.Data.Core.Memory;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data.Xml.Processor;
+using OsmSharp.Routing.Graph.Serialization.v2;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Route;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -57,13 +61,32 @@ namespace OsmSharp.Android.UI.Sample
 			var source = new PBFOsmStreamReader(
 				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.pbf"));
 			dataSource.PullFromSource(source);
-			
+
 			// initialize map.
 			var map = new Map();
-			map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
+			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
+
+			var routingSerializer = new V2RoutingLiveEdgeSerializer(true);
+			var graphSerialized = routingSerializer.Deserialize(
+				//Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.pbf.routing.3"));
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.pbf.routing.4"));
+
+			var graphLayer = new LayerDynamicGraphLiveEdge(graphSerialized, mapCSSInterpreter);
+			map.AddLayer(graphLayer);
+			
+			// calculate route.            
+			Router router = Router.CreateLiveFrom(
+				graphSerialized,
+				new OsmRoutingInterpreter());
+			OsmSharpRoute route = router.Calculate(VehicleEnum.Car, 
+			                                       router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.15136, 3.19462)),
+			                                       router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.075023, 3.096632)));
+			var osmSharpLayer = new LayerOsmSharpRoute(map.Projection);
+			osmSharpLayer.AddRoute(route);
+			map.AddLayer(osmSharpLayer);
 
 			// create gpx layer.
-			GpxLayer gpxLayer = new GpxLayer(map.Projection);
+			LayerGpx gpxLayer = new LayerGpx(map.Projection);
 			gpxLayer.AddGpx(
 				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.gpx"));
 			map.AddLayer(gpxLayer);
@@ -71,20 +94,21 @@ namespace OsmSharp.Android.UI.Sample
 			// set control properties.
 			var mapView = new MapView(this);
 			mapView.Map = map;
-			mapView.Center = new GeoCoordinate(51.26337, 4.78739);
-			mapView.ZoomLevel = 17;
+			mapView.Center = new GeoCoordinate(51.075023, 3.096632);
+			//mapView.Center = new GeoCoordinate(51.26337, 4.78739);
+			mapView.ZoomLevel = 16;
 
 //			var mapView = new OpenGLRenderer2D(
 //				this, null);
 
-			var mapGLView = new MapGLView(this);
+			//var mapGLView = new MapGLView(this);
 
 			//Create the user interface in code
 			var layout = new LinearLayout (this);
 			layout.Orientation = Orientation.Vertical;
 
-			layout.AddView(mapGLView);
-			//layout.AddView (mapView);
+			//layout.AddView(mapGLView);
+			layout.AddView (mapView);
 
 			SetContentView (layout);
 		}

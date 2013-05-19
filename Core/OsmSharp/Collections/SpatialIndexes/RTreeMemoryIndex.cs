@@ -17,7 +17,11 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
 using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Collections.SpatialIndexes
@@ -25,16 +29,14 @@ namespace OsmSharp.Collections.SpatialIndexes
     /// <summary>
     /// R-tree implementation of a spatial index.
     /// http://en.wikipedia.org/wiki/R-tree
-    /// 
-    /// This tree reads it's data from a byte-stream and is serializable to a byte stream.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class RTreeMemoryIndex<T> : ISpatialIndex<T>
     {
         /// <summary>
-        /// Holds the root node of the tree.
+        /// Holds the root node.
         /// </summary>
-        private RTreeNodeBase _root;
+        private Node _root;
 
         /// <summary>
         /// Holds the maximum leaf size M.
@@ -47,82 +49,43 @@ namespace OsmSharp.Collections.SpatialIndexes
         private readonly int _minLeafSize = 20;
 
         /// <summary>
-        /// Initializes a new instance of the OsmSharp.Collections.SpatialIndexes.RTreeMemoryIndex class.
+        /// Creates a new index.
         /// </summary>
         public RTreeMemoryIndex()
         {
-            _root = null;
+
         }
 
         /// <summary>
-        /// Initializes a new instance of the OsmSharp.Collections.SpatialIndexes.RTreeIndex class.
+        /// Creates a new index.
         /// </summary>
-        /// <param name="M">Holds the maximum leaf size M.</param>
-        /// <param name="m">Holds the minimum leaf size m.</param>
-        public RTreeMemoryIndex(int M, int m)
+        /// <param name="minLeafSize"></param>
+        /// <param name="maxLeafSize"></param>
+        public RTreeMemoryIndex(int minLeafSize, int maxLeafSize)
         {
-            _root = null;
-
-            _maxLeafSize = M;
-            _minLeafSize = m;
-        }
-
-        /// <summary>
-        /// Returns the root node.
-        /// </summary>
-        internal RTreeNodeBase Root
-        {
-            get { return _root; }
-        }
-
-        /// <summary>
-        /// Queries this index and returns all objects with overlapping bounding boxes.
-        /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-        public IEnumerable<T> Get(RectangleF2D box)
-        {
-            if (box == null)
-                throw new ArgumentNullException("box");
-
-            var result = new HashSet<T>();
-            if (_root != null)
-            {
-                _root.Get(box, result);
-            }
-            return result;
-        }
-
-        /// <summary>
-        /// Returns the count.
-        /// </summary>
-        /// <returns></returns>
-        public int Count()
-        {
-            return _root.CountLeaves();
+            _minLeafSize = minLeafSize;
+            _maxLeafSize = maxLeafSize;
         }
 
         /// <summary>
         /// Adds a new item with the corresponding box.
         /// </summary>
         /// <param name="box"></param>
-        /// <param name="data"></param>
-        public void Add(RectangleF2D box, T data)
+        /// <param name="item"></param>
+        public void Add(RectangleF2D box, T item)
         {
-            if (box == null)
-                throw new ArgumentNullException("box");
-
-            // create the new leaf to be added.
             if (_root == null)
-            { // create a new root node.
-                _root = new RTreeLeafNode();
+            { // create the root.
+                _root = new Node();
+                _root.Boxes = new List<RectangleF2D>();
+                _root.Children = new List<T>();
             }
 
-            // the root exists, search the correct leaf.
-            RTreeLeafNode l = _root.ChooseLeaf(box);
-            RTreeNode newRoot = l.Add(box, data, _maxLeafSize, _minLeafSize);
+            // add new data.
+            Node leaf = RTreeMemoryIndex<T>.ChooseLeaf(_root, box);
+            Node newRoot = RTreeMemoryIndex<T>.Add(leaf, box, item, _minLeafSize, _maxLeafSize);
             if (newRoot != null)
-            {
+            { // there should be a new root.
                 _root = newRoot;
             }
         }
@@ -136,367 +99,269 @@ namespace OsmSharp.Collections.SpatialIndexes
 
         }
 
-
         /// <summary>
-        /// R-tree node base class.
+        /// Queries this index and returns all objects with overlapping bounding boxes.
         /// </summary>
-        internal abstract class RTreeNodeBase
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public IEnumerable<T> Get(RectangleF2D box)
         {
-            /// <summary>
-            /// Initializes a new instance of the OsmSharp.Collections.SpatialIndexes.RTreeIndex.RTreeNodeBase class.
-            /// </summary>
-            protected RTreeNodeBase()
-            {
-
-            }
-
-            /// <summary>
-            /// Returns true if this node is the root.
-            /// </summary>
-            public bool IsRoot
-            {
-                get { return this.Parent == null; }
-            }
-
-            /// <summary>
-            /// Gets the parent.
-            /// </summary>
-            /// <value>The parent.</value>
-            public RTreeNode Parent
-            {
-                get;
-                set;
-            }
-
-            /// <summary>
-            /// Returns the most tight box available.
-            /// </summary>
-            /// <returns></returns>
-            protected internal abstract RectangleF2D GetBox();
-
-            /// <summary>
-            /// Chooses 
-            /// </summary>
-            /// <param name="box"></param>
-            /// <returns></returns>
-            internal abstract RTreeLeafNode ChooseLeaf(RectangleF2D box);
-
-            /// <summary>
-            /// Picks the seeds for the split-node procedure.
-            /// </summary>
-            /// <param name="boxes"></param>
-            /// <returns>The seeds.</returns>
-            protected static int[] PickSeeds(List<RectangleF2D> boxes)
-            {
-                // the Quadratic Split version: selecting the two items that waste the most space
-                // if put together.
-
-                var seeds = new int[2];
-                double loss = 0;
-                for (int idx1 = 0; idx1 < boxes.Count; idx1++)
-                {
-                    for (int idx2 = 0; idx2 < idx1; idx2++)
-                    {
-                        double localLoss = boxes[idx1].Union(boxes[idx2]).Surface -
-                            boxes[idx1].Surface - boxes[idx2].Surface;
-                        if (localLoss > loss)
-                        {
-                            loss = localLoss;
-                            seeds[0] = idx1;
-                            seeds[1] = idx2;
-                        }
-                    }
-                }
-
-                return seeds;
-            }
-
-            /// <summary>
-            /// Picks the next item.
-            /// </summary>
-            /// <returns>The next.</returns>
-            /// <param name="leafs">The leaves.</param>
-            /// <param name="boxes">The boxes to choose from.</param>
-            /// <param name="leafIdx"></param>
-            protected static int PickNext(RectangleF2D[] leafs, IList<RectangleF2D> boxes, out int leafIdx)
-            {
-                double difference = double.MinValue;
-                leafIdx = 0;
-                int pickedIdx = -1;
-                for (int idx = 0; idx < boxes.Count; idx++)
-                {
-                    RectangleF2D item = boxes[idx];
-                    double d1 = item.Union(leafs[0]).Surface -
-                                item.Surface;
-                    double d2 = item.Union(leafs[1]).Surface -
-                                item.Surface;
-
-                    double localDifference = System.Math.Abs(d1 - d2);
-                    if (difference < localDifference)
-                    {
-                        difference = localDifference;
-                        if (d1 == d2)
-                        {
-                            leafIdx = (leafs[0].Surface < leafs[1].Surface) ? 0 : 1;
-                        }
-                        else
-                        {
-                            leafIdx = (d1 < d2) ? 0 : 1;
-                        }
-                        pickedIdx = idx;
-                    }
-                }
-                return pickedIdx;
-            }
-
-            /// <summary>
-            /// Fills the given hashset with objects having a box overlapping the given box.
-            /// </summary>
-            /// <param name="box"></param>
-            /// <param name="result"></param>
-            internal abstract void Get(RectangleF2D box, HashSet<T> result);
-
-            /// <summary>
-            /// Returns the total count of all leaves.
-            /// </summary>
-            /// <returns></returns>
-            internal abstract int CountLeaves();
+            var result = new HashSet<T>();
+            RTreeMemoryIndex<T>.Get(_root, box, result);
+            return result;
         }
 
         /// <summary>
-        /// Represents a node in an R-tree that is not a leaf.
+        /// Gets the root node.
         /// </summary>
-        internal class RTreeNode : RTreeNodeBase, IEnumerable<RTreeNodeBase>
+        internal Node Root { get { return _root; } }
+
+        #region Tree Structure
+
+        /// <summary>
+        /// Represents a simple node.
+        /// </summary>
+        internal class Node
         {
             /// <summary>
-            /// Holds the boxes of the children in this node.
+            /// Gets or sets boxes.
             /// </summary>
-            private readonly List<RectangleF2D> _boxes;
+            public List<RectangleF2D> Boxes { get; set; }
 
             /// <summary>
-            /// Holds the children of this node.
+            /// Gets or sets the children.
             /// </summary>
-            private readonly List<RTreeNodeBase> _children;
+            public IList Children { get; set; }
 
             /// <summary>
-            /// Creates a new R-tree node.
+            /// Gets or sets the parent.
             /// </summary>
-            public RTreeNode()
-            {
-                _boxes = new List<RectangleF2D>();
-                _children = new List<RTreeNodeBase>();
-            }
+            public Node Parent { get; set; }
 
             /// <summary>
-            /// Returns the numbers of children.
+            /// Returns the bounding box for this node.
             /// </summary>
-            public int Count
-            {
-                get { return _boxes.Count; }
-            }
-
-            /// <summary>
-            /// Returns the child at the given index.
-            /// </summary>
-            /// <param name="idx"></param>
             /// <returns></returns>
-            public RTreeNodeBase Child(int idx)
+            public RectangleF2D GetBox()
             {
-                return _children[idx];
-            }
-
-            /// <summary>
-            /// Returns the box at the given index.
-            /// </summary>
-            /// <param name="idx"></param>
-            /// <returns></returns>
-            public RectangleF2D Box(int idx)
-            {
-                return _boxes[idx];
-            }
-
-            /// <summary>
-            /// Adds a new child with the given box and returns a new root if needed.
-            /// </summary>
-            /// <param name="box">The box of the child.</param>
-            /// <param name="child">The child node.</param>
-            /// <param name="M"></param>
-            /// <param name="m"></param>
-            internal RTreeNode Add(RectangleF2D box, RTreeNodeBase child, int M, int m)
-            {
-                if (box == null) throw new ArgumentNullException("box");
-                if (child == null) throw new ArgumentNullException("child");
-
-                RTreeNodeBase ll = null;
-                if (_boxes.Count == M)
-                { // split the node.
-                    ll = this.Split(box, child, M, m);
+                RectangleF2D box = this.Boxes[0];
+                for (int idx = 1; idx < this.Boxes.Count; idx++)
+                {
+                    box = box.Union(this.Boxes[idx]);
                 }
-                else
-                { // add the child.
-                    child.Parent = this;
-                    _boxes.Add(box);
-                    _children.Add(child);
-                }
+                return box;
+            }
+        }
 
-                // adjust the tree.
-                RTreeNode n = this;
-                RTreeNodeBase nn = ll;
-                while (!n.IsRoot)
-                { // keep going until the root is reached.
-                    RTreeNode p = n.Parent;
-                    p.TightenFor(n); // tighten the parent box around n.
+        #region Tree Operations
 
-                    if (nn != null)
-                    { // propagate split if needed.
-                        if (p._boxes.Count == M)
-                        { // parent needs to be split.
-                            nn = p.Split(nn.GetBox(), nn, M, m);
+        /// <summary>
+        /// Fills the collection with data.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="box"></param>
+        /// <param name="result"></param>
+        private static void Get(Node node, RectangleF2D box, HashSet<T> result)
+        {
+            if (node.Children is List<Node>)
+            {
+                var children = (node.Children as List<Node>);
+                for (int idx = 0; idx < children.Count; idx++)
+                {
+                    if (box.Overlaps(node.Boxes[idx]))
+                    {
+                        if (box.IsInside(node.Boxes[idx]))
+                        { // add all the data from the child.
+                            RTreeMemoryIndex<T>.GetAll(children[idx],
+                                result);
                         }
                         else
-                        { // add the other 'split' node.
-                            p.Add(nn.GetBox(), nn, M, m);
-                            nn = null;
+                        { // add the data from the child.
+                            RTreeMemoryIndex<T>.Get(children[idx],
+                                box, result);
                         }
                     }
-                    n = p;
                 }
-                if (nn != null)
-                { // create a new root node and 
-                    var root = new RTreeNode();
-                    root.Add(n.GetBox(), n, M, m);
-                    root.Add(nn.GetBox(), nn, M, m);
-                    return root;
+            }
+            else
+            {
+                var children = (node.Children as List<T>);
+                if (children != null)
+                { // the children are of the data type.
+                    for (int idx = 0; idx < node.Children.Count; idx++)
+                    {
+                        if (node.Boxes[idx].Overlaps(box))
+                        {
+                            result.Add(children[idx]);
+                        }
+                    }
                 }
-                return null; // no new root node needed.
+            }
+        }
+
+        /// <summary>
+        /// Fills the collection with data.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <param name="result"></param>
+        private static void GetAll(Node node, HashSet<T> result)
+        {
+            if (node.Children is List<Node>)
+            {
+                var children = (node.Children as List<Node>);
+                for (int idx = 0; idx < children.Count; idx++)
+                {
+                    // add all the data from the child.
+                    RTreeMemoryIndex<T>.GetAll(children[idx],
+                                                     result);
+                }
+            }
+            else
+            {
+                var children = (node.Children as List<T>);
+                if (children != null)
+                { // the children are of the data type.
+                    for (int idx = 0; idx < node.Children.Count; idx++)
+                    {
+                        result.Add(children[idx]);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds the given item to the given box.
+        /// </summary>
+        /// <param name="leaf"></param>
+        /// <param name="box"></param>
+        /// <param name="item"></param>
+        /// <param name="minimumSize"></param>
+        /// <param name="maximumSize"></param>
+        private static Node Add(Node leaf, RectangleF2D box, T item, int minimumSize, int maximumSize)
+        {
+            if (box == null) throw new ArgumentNullException("box");
+            if (leaf == null) throw new ArgumentNullException("leaf");
+
+            Node ll = null;
+            if (leaf.Boxes.Count == maximumSize)
+            { // split the node.
+                // add the child.
+                leaf.Boxes.Add(box);
+                leaf.Children.Add(item);
+
+                Node[] split = RTreeMemoryIndex<T>.SplitNode(leaf, minimumSize);
+                leaf.Boxes = split[0].Boxes;
+                leaf.Children = split[0].Children;
+                RTreeMemoryIndex<T>.SetParents(leaf);
+                ll = split[1];
+            }
+            else
+            {
+                // add the child.
+                leaf.Boxes.Add(box);
+                leaf.Children.Add(item);
             }
 
-            /// <summary>
-            /// Splits the current node and returns the second half.
-            /// </summary>
-            /// <param name="box"></param>
-            /// <param name="child"></param>
-            /// <param name="M"></param>
-            /// <param name="m"></param>
-            /// <returns></returns>
-            internal RTreeNodeBase Split(RectangleF2D box, RTreeNodeBase child, int M, int m)
-            {
-                // first add child then split.
-                _boxes.Add(box);
-                _children.Add(child);
+            // adjust the tree.
+            Node n = leaf;
+            Node nn = ll;
+            while (n.Parent != null)
+            { // keep going until the root is reached.
+                Node p = n.Parent;
+                RTreeMemoryIndex<T>.TightenFor(p, n); // tighten the parent box around n.
 
-                // split this node.
-                int[] seeds = RTreeNode.PickSeeds(_boxes);
-
-                var data = new List<KeyValuePair<RectangleF2D, RTreeNodeBase>>[] { 
-                new List<KeyValuePair<RectangleF2D, RTreeNodeBase>>(),
-                new List<KeyValuePair<RectangleF2D, RTreeNodeBase>>() };
-                data[0].Add(new KeyValuePair<RectangleF2D, RTreeNodeBase>(_boxes[seeds[0]], _children[seeds[0]]));
-                data[1].Add(new KeyValuePair<RectangleF2D, RTreeNodeBase>(_boxes[seeds[1]], _children[seeds[1]]));
-                var boxes = new RectangleF2D[2] { _boxes[seeds[0]], _boxes[seeds[1]] };
-
-                _boxes.RemoveAt(seeds[0]); // seeds[1] is always < seeds[0].
-                _boxes.RemoveAt(seeds[1]);
-                _children.RemoveAt(seeds[0]);
-                _children.RemoveAt(seeds[1]);
-
-                while (_boxes.Count > 0)
-                {
-                    // check if one of them needs em all!
-                    if (data[0].Count + _boxes.Count == m)
-                    { // all remaining boxes need te be assigned here.
-                        for (int idx = 0; idx < _boxes.Count; idx++)
-                        {
-                            boxes[0] = boxes[0].Union(_boxes[0]);
-                            data[0].Add(new KeyValuePair<RectangleF2D, RTreeNodeBase>(_boxes[0], _children[0]));
-
-                            _boxes.RemoveAt(0);
-                            _children.RemoveAt(0);
-                        }
-                    }
-                    else if (data[1].Count + _boxes.Count == m)
-                    { // all remaining boxes need te be assigned here.
-                        for (int idx = 0; idx < _boxes.Count; idx++)
-                        {
-                            boxes[1] = boxes[1].Union(_boxes[0]);
-                            data[1].Add(new KeyValuePair<RectangleF2D, RTreeNodeBase>(_boxes[0], _children[0]));
-
-                            _boxes.RemoveAt(0);
-                            _children.RemoveAt(0);
-                        }
+                if (nn != null)
+                { // propagate split if needed.
+                    if (p.Boxes.Count == maximumSize)
+                    { // parent needs to be split.
+                        p.Boxes.Add(nn.GetBox());
+                        p.Children.Add(nn);
+                        Node[] split = RTreeMemoryIndex<T>.SplitNode(
+                            p, minimumSize);
+                        p.Boxes = split[0].Boxes;
+                        p.Children = split[0].Children;
+                        RTreeMemoryIndex<T>.SetParents(p);
+                        nn = split[1];
                     }
                     else
-                    { // choose one of the leaves.
-                        int leafIdx;
-                        int nextId = RTreeNode.PickNext(boxes, _boxes, out leafIdx);
-
-                        boxes[leafIdx] = boxes[leafIdx].Union(_boxes[nextId]);
-                        data[leafIdx].Add(new KeyValuePair<RectangleF2D, RTreeNodeBase>(_boxes[nextId], _children[nextId]));
-
-                        _boxes.RemoveAt(nextId);
-                        _children.RemoveAt(nextId);
+                    { // add the other 'split' node.
+                        p.Boxes.Add(nn.GetBox());
+                        p.Children.Add(nn);
+                        nn.Parent = p;
+                        nn = null;
                     }
                 }
-
-                // set boxes on this node.
-                _boxes.Clear();
-                _children.Clear();
-                for (int idx = 0; idx < data[0].Count; idx++)
-                {
-                    _boxes.Add(data[0][idx].Key);
-                    _children.Add(data[0][idx].Value);
-                    data[0][idx].Value.Parent = this;
-                }
-
-                // set boxes on other node.
-                var other = new RTreeNode();
-                for (int idx = 0; idx < data[1].Count; idx++)
-                {
-                    other._boxes.Add(data[1][idx].Key);
-                    other._children.Add(data[1][idx].Value);
-                    data[1][idx].Value.Parent = other;
-                }
-                return other;
+                n = p;
             }
+            if (nn != null)
+            { // create a new root node and 
+                var root = new Node();
+                root.Boxes = new List<RectangleF2D>();
+                root.Boxes.Add(n.GetBox());
+                root.Boxes.Add(nn.GetBox());
+                root.Children = new List<Node>();
+                root.Children.Add(n);
+                n.Parent = root;
+                root.Children.Add(nn);
+                nn.Parent = root;
+                return root;
+            }
+            return null; // no new root node needed.
+        }
 
-            /// <summary>
-            /// Choose the leaf to best place the given box.
-            /// </summary>
-            /// <param name="box"></param>
-            /// <returns></returns>
-            internal override RTreeLeafNode ChooseLeaf(RectangleF2D box)
+        /// <summary>
+        /// Tightens the box for the given node in the given parent.
+        /// </summary>
+        /// <param name="parent"></param>
+        /// <param name="child"></param>
+        private static void TightenFor(Node parent, Node child)
+        {
+            for (int idx = 0; idx < parent.Children.Count; idx++)
             {
-                if (box == null) throw new ArgumentNullException("box");
-
-                // check if there are children. If not just return this node.
-                if (_boxes.Count == 0)
+                if (parent.Children[idx] == child)
                 {
-                    throw new Exception("Node found without children!");
+                    parent.Boxes[idx] = child.GetBox();
                 }
+            }
+        }
 
-                // find the best child.
-                RTreeNodeBase bestChild = null;
+        /// <summary>
+        /// Choose the child to best place the given box.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private static Node ChooseLeaf(Node node, RectangleF2D box)
+        {
+            if (box == null) throw new ArgumentNullException("box");
+            if (node == null) throw new ArgumentNullException("node");
+
+            // keep looping until a leaf is found.
+            while (node.Children is List<Node>)
+            { // choose the best leaf.
+                Node bestChild = null;
                 RectangleF2D bestBox = null;
                 double bestIncrease = double.MaxValue;
-                for (int idx = 0; idx < _boxes.Count; idx++)
+                var children = node.Children as List<Node>; // cast just once.
+                for (int idx = 0; idx < node.Boxes.Count; idx++)
                 {
-                    RectangleF2D union = _boxes[idx].Union(box);
-                    double increase = union.Surface - _boxes[idx].Surface; // calculates the increase.
+                    RectangleF2D union = node.Boxes[idx].Union(box);
+                    double increase = union.Surface - node.Boxes[idx].Surface; // calculates the increase.
                     if (bestIncrease > increase)
                     {
                         // the increase for this child is smaller.
                         bestIncrease = increase;
-                        bestChild = _children[idx];
-                        bestBox = _boxes[idx];
+                        bestChild = children[idx];
+                        bestBox = node.Boxes[idx];
                     }
                     else if (bestBox != null &&
                              bestIncrease == increase)
                     {
                         // the increase is indentical, choose the smalles child.
-                        if (_boxes[idx].Surface < bestBox.Surface)
+                        if (node.Boxes[idx].Surface < bestBox.Surface)
                         {
-                            bestChild = _children[idx];
-                            bestBox = _boxes[idx];
+                            bestChild = children[idx];
+                            bestBox = node.Boxes[idx];
                         }
                     }
                 }
@@ -504,372 +369,200 @@ namespace OsmSharp.Collections.SpatialIndexes
                 {
                     throw new Exception("Finding best child failed!");
                 }
-                // get leaf from best child.
-                return bestChild.ChooseLeaf(box);
+                node = bestChild;
             }
+            return node;
+        }
 
-            /// <summary>
-            /// Tightens the boxes in this node.
-            /// </summary>
-            public void Tighten()
+        /// <summary>
+        /// Sets all the parent properties of the children of the given node.
+        /// </summary>
+        /// <param name="node"></param>
+        private static void SetParents(Node node)
+        {
+            if (node.Children is List<Node>)
             {
-                for (int idx = 0; idx < _boxes.Count; idx++)
+                var children = (node.Children as List<Node>);
+                for (int idx = 0; idx < node.Boxes.Count; idx++)
                 {
-                    _boxes[idx] = _children[idx].GetBox();
+                    children[idx].Parent = node;
                 }
-            }
-
-            /// <summary>
-            /// Tightens the box for the given child.
-            /// </summary>
-            /// <param name="child"></param>
-            public void TightenFor(RTreeNodeBase child)
-            {
-                for (int idx = 0; idx < _boxes.Count; idx++)
-                {
-                    if (_children[idx] == child)
-                    {
-                        _boxes[idx] = _children[idx].GetBox();
-                        return;
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Returns the most tight box available.
-            /// </summary>
-            /// <returns></returns>
-            protected internal override RectangleF2D GetBox()
-            {
-                RectangleF2D box = _boxes[0];
-                for (int idx = 1; idx < _boxes.Count; idx++)
-                {
-                    box = box.Union(_boxes[idx]);
-                }
-                return box;
-            }
-
-            /// <summary>
-            /// Returns a enumerator.
-            /// </summary>
-            /// <returns></returns>
-            public IEnumerator<RTreeNodeBase> GetEnumerator()
-            {
-                return _children.GetEnumerator();
-            }
-
-            /// <summary>
-            /// Returns a enumerator.
-            /// </summary>
-            /// <returns></returns>
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return _children.GetEnumerator();
-            }
-
-            /// <summary>
-            /// Fills the given hashset with objects having a box overlapping the given box.
-            /// </summary>
-            /// <param name="box"></param>
-            /// <param name="result"></param>
-            internal override void Get(RectangleF2D box, HashSet<T> result)
-            {
-                for (int idx = 0; idx < _boxes.Count; idx++)
-                {
-                    if (_boxes[idx].Overlaps(box))
-                    {
-                        if (box.IsInside(_boxes[idx]))
-                        { // all elements are inside the given box.
-                            if (_children[idx] is RTreeNode)
-                            {
-                                (_children[idx] as RTreeNode).GetAll(result);
-                            }
-                            else if (_children[idx] is RTreeLeafNode)
-                            {
-                                (_children[idx] as RTreeLeafNode).GetAll(result);
-                            }
-                        }
-                        else if (_children[idx] is RTreeNode)
-                        { // return all child elements.
-                            (_children[idx] as RTreeNode).Get(box, result);
-                        }
-                        else if (_children[idx] is RTreeLeafNode)
-                        {
-                            (_children[idx] as RTreeLeafNode).Get(box, result);
-                        }
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Fills the given hashset with all objects in this node and all nodes below.
-            /// </summary>
-            internal void GetAll(HashSet<T> result)
-            {
-                for (int idx = 0; idx < _boxes.Count; idx++)
-                {
-                    if (_children[idx] is RTreeNode)
-                    { // return all child elements.
-                        (_children[idx] as RTreeNode).GetAll(result);
-                    }
-                    else if (_children[idx] is RTreeLeafNode)
-                    {
-                        (_children[idx] as RTreeLeafNode).GetAll(result);
-                    }
-                }
-            }
-
-            /// <summary>
-            /// Returns the total count of all leaves.
-            /// </summary>
-            internal override int CountLeaves()
-            {
-                int leaves = 0;
-                for (int idx = 0; idx < _boxes.Count; idx++)
-                {
-                    if (_children[idx] is RTreeNode)
-                    { // return all child elements.
-                        leaves = leaves + (_children[idx] as RTreeNode).CountLeaves();
-                    }
-                    else if (_children[idx] is RTreeLeafNode)
-                    {
-                        leaves = leaves + (_children[idx] as RTreeLeafNode).CountLeaves();
-                    }
-                }
-                return leaves;
             }
         }
 
         /// <summary>
-        /// Represents a leaf-node containing all the actual data.
+        /// Splits the given node in two other nodes.
         /// </summary>
-        internal class RTreeLeafNode : RTreeNodeBase
+        /// <param name="node"></param>
+        /// <param name="minimumSize"></param>
+        /// <returns></returns>
+        private static Node[] SplitNode(Node node, int minimumSize)
         {
-            /// <summary>
-            /// Holds the boxes of the children in this node.
-            /// </summary>
-            private readonly List<RectangleF2D> _boxes;
+            bool leaf = (node.Children is List<T>);
 
-            /// <summary>
-            /// Holds the children of this node.
-            /// </summary>
-            private readonly List<T> _children;
-
-            /// <summary>
-            /// Creates a new leaf node.
-            /// </summary>
-            public RTreeLeafNode()
+            // create the target nodes.
+            var nodes = new Node[2];
+            nodes[0] = new Node();
+            nodes[0].Boxes = new List<RectangleF2D>();
+            if (leaf)
             {
-                _boxes = new List<RectangleF2D>();
-                _children = new List<T>();
+                nodes[0].Children = new List<T>();
+            }
+            else
+            {
+                nodes[0].Children = new List<Node>();
+            }
+            nodes[1] = new Node();
+            nodes[1].Boxes = new List<RectangleF2D>();
+            if (leaf)
+            {
+                nodes[1].Children = new List<T>();
+            }
+            else
+            {
+                nodes[1].Children = new List<Node>();
             }
 
-            /// <summary>
-            /// Adds a new leaf to this node.
-            /// </summary>
-            /// <param name="box"></param>
-            /// <param name="leaf"></param>
-            /// <param name="M"></param>
-            /// <param name="m"></param>
-            /// <returns></returns>
-            internal RTreeNode Add(RectangleF2D box, T leaf, int M, int m)
-            {
-                if (box == null) throw new ArgumentNullException("box");
+            // select the seed boxes.
+            int[] seeds = RTreeMemoryIndex<T>.SelectSeeds(node.Boxes);
 
-                RTreeLeafNode ll = null;
-                if (_boxes.Count == M)
-                { // split the node.
-                    ll = this.Split(box, leaf, M, m);
+            // add the boxes.
+            nodes[0].Boxes.Add(node.Boxes[seeds[0]]);
+            nodes[1].Boxes.Add(node.Boxes[seeds[1]]);
+            nodes[0].Children.Add(node.Children[seeds[0]]);
+            nodes[1].Children.Add(node.Children[seeds[1]]);
+
+            // create the boxes.
+            var boxes = new RectangleF2D[2]
+                            {
+                                node.Boxes[seeds[0]], node.Boxes[seeds[1]]
+                            };
+            node.Boxes.RemoveAt(seeds[0]); // seeds[1] is always < seeds[0].
+            node.Boxes.RemoveAt(seeds[1]);
+            node.Children.RemoveAt(seeds[0]);
+            node.Children.RemoveAt(seeds[1]);
+
+            while (node.Boxes.Count > 0)
+            {
+                // check if one of them needs em all!
+                if (nodes[0].Boxes.Count + node.Boxes.Count == minimumSize)
+                { // all remaining boxes need te be assigned here.
+                    for (int idx = 0; node.Boxes.Count > 0; idx++)
+                    {
+                        boxes[0] = boxes[0].Union(node.Boxes[0]);
+                        nodes[0].Boxes.Add(node.Boxes[0]);
+                        nodes[0].Children.Add(node.Children[0]);
+
+                        node.Boxes.RemoveAt(0);
+                        node.Children.RemoveAt(0);
+                    }
+                }
+                else if (nodes[1].Boxes.Count + node.Boxes.Count == minimumSize)
+                { // all remaining boxes need te be assigned here.
+                    for (int idx = 0; node.Boxes.Count > 0; idx++)
+                    {
+                        boxes[1] = boxes[1].Union(node.Boxes[0]);
+                        nodes[1].Boxes.Add(node.Boxes[0]);
+                        nodes[1].Children.Add(node.Children[0]);
+
+                        node.Boxes.RemoveAt(0);
+                        node.Children.RemoveAt(0);
+                    }
                 }
                 else
-                { // add the child.
-                    _boxes.Add(box);
-                    _children.Add(leaf);
-                }
+                { // choose one of the leaves.
+                    int leafIdx;
+                    int nextId = RTreeMemoryIndex<T>.PickNext(boxes, node.Boxes, out leafIdx);
 
-                // adjust the tree.
-                RTreeNodeBase n = this;
-                RTreeNodeBase nn = ll;
-                while (!n.IsRoot)
-                { // keep going until the root is reached.
-                    RTreeNode p = n.Parent;
-                    p.TightenFor(n); // tighten the parent box around n.
+                    boxes[leafIdx] = boxes[leafIdx].Union(node.Boxes[nextId]);
 
-                    if (nn != null)
-                    { // propagate split if needed.
-                        if (p.Count == M)
-                        { // parent needs to be split.
-                            nn = p.Split(nn.GetBox(), nn, M, m);
-                        }
-                        else
-                        { // add the other 'split' node.
-                            p.Add(nn.GetBox(), nn, M, m);
-                            nn = null;
-                        }
-                    }
-                    n = p;
+                    nodes[leafIdx].Boxes.Add(node.Boxes[nextId]);
+                    nodes[leafIdx].Children.Add(node.Children[nextId]);
+
+                    node.Boxes.RemoveAt(nextId);
+                    node.Children.RemoveAt(nextId);
                 }
-                if (nn != null)
-                { // create a new root node and 
-                    var root = new RTreeNode();
-                    root.Add(n.GetBox(), n, M, m);
-                    root.Add(nn.GetBox(), nn, M, m);
-                    return root;
-                }
-                return null; // no new root node needed.
             }
 
-            /// <summary>
-            /// Splits the current node and returns the second half.
-            /// </summary>
-            /// <param name="box"></param>
-            /// <param name="leaf"></param>
-            /// <param name="M"></param>
-            /// <param name="m"></param>
-            /// <returns></returns>
-            internal RTreeLeafNode Split(RectangleF2D box, T leaf, int M, int m)
+            RTreeMemoryIndex<T>.SetParents(nodes[0]);
+            RTreeMemoryIndex<T>.SetParents(nodes[1]);
+
+            return nodes;
+        }
+
+        /// <summary>
+        /// Picks the next best box to add to one of the given nodes.
+        /// </summary>
+        /// <param name="nodeBoxes"></param>
+        /// <param name="boxes"></param>
+        /// <param name="nodeBoxIndex"></param>
+        /// <returns></returns>
+        protected static int PickNext(RectangleF2D[] nodeBoxes, IList<RectangleF2D> boxes, out int nodeBoxIndex)
+        {
+            double difference = double.MinValue;
+            nodeBoxIndex = 0;
+            int pickedIdx = -1;
+            for (int idx = 0; idx < boxes.Count; idx++)
             {
-                // first add child then split.
-                _boxes.Add(box);
-                _children.Add(leaf);
+                RectangleF2D item = boxes[idx];
+                double d1 = item.Union(nodeBoxes[0]).Surface -
+                            item.Surface;
+                double d2 = item.Union(nodeBoxes[1]).Surface -
+                            item.Surface;
 
-                // split this node.
-                int[] seeds = RTreeNode.PickSeeds(_boxes);
-
-                var data = new List<KeyValuePair<RectangleF2D, T>>[] { 
-                new List<KeyValuePair<RectangleF2D, T>>(),
-                new List<KeyValuePair<RectangleF2D, T>>() };
-                data[0].Add(new KeyValuePair<RectangleF2D, T>(_boxes[seeds[0]],
-                    _children[seeds[0]]));
-                data[1].Add(new KeyValuePair<RectangleF2D, T>(_boxes[seeds[1]],
-                    _children[seeds[1]]));
-                var boxes = new RectangleF2D[2] { _boxes[seeds[0]], _boxes[seeds[1]] };
-
-                _boxes.RemoveAt(seeds[0]); // seeds[1] is always < seeds[0].
-                _boxes.RemoveAt(seeds[1]);
-                _children.RemoveAt(seeds[0]);
-                _children.RemoveAt(seeds[1]);
-
-                while (_boxes.Count > 0)
+                double localDifference = System.Math.Abs(d1 - d2);
+                if (difference < localDifference)
                 {
-                    // check if one of them needs em all!
-                    if (data[0].Count + _boxes.Count == m)
-                    { // all remaining boxes need te be assigned here.
-                        for (int idx = 0; idx < _boxes.Count; idx++)
-                        {
-                            boxes[0] = boxes[0].Union(_boxes[0]);
-                            data[0].Add(new KeyValuePair<RectangleF2D, T>(_boxes[0],
-                                _children[0]));
-
-                            _boxes.RemoveAt(0);
-                            _children.RemoveAt(0);
-                        }
-                    }
-                    else if (data[1].Count + _boxes.Count == m)
-                    { // all remaining boxes need te be assigned here.
-                        for (int idx = 0; idx < _boxes.Count; idx++)
-                        {
-                            boxes[1] = boxes[1].Union(_boxes[0]);
-                            data[1].Add(new KeyValuePair<RectangleF2D, T>(_boxes[0],
-                                _children[0]));
-
-                            _boxes.RemoveAt(0);
-                            _children.RemoveAt(0);
-                        }
+                    difference = localDifference;
+                    if (d1 == d2)
+                    {
+                        nodeBoxIndex = (nodeBoxes[0].Surface < nodeBoxes[1].Surface) ? 0 : 1;
                     }
                     else
-                    { // choose one of the leaves.
-                        int leafIdx;
-                        int nextId = RTreeNode.PickNext(boxes, _boxes, out leafIdx);
-
-                        boxes[leafIdx] = boxes[leafIdx].Union(_boxes[nextId]);
-                        data[leafIdx].Add(new KeyValuePair<RectangleF2D, T>(_boxes[nextId],
-                            _children[nextId]));
-
-                        _boxes.RemoveAt(nextId);
-                        _children.RemoveAt(nextId);
-                    }
-                }
-
-                // set boxes on this node.
-                _boxes.Clear();
-                _children.Clear();
-                for (int idx = 0; idx < data[0].Count; idx++)
-                {
-                    _boxes.Add(data[0][idx].Key);
-                    _children.Add(data[0][idx].Value);
-                }
-
-                // set boxes on other node.
-                var other = new RTreeLeafNode();
-                for (int idx = 0; idx < data[1].Count; idx++)
-                {
-                    other._boxes.Add(data[1][idx].Key);
-                    other._children.Add(data[1][idx].Value);
-                }
-                return other;
-            }
-
-            /// <summary>
-            /// Returns the leaf count.
-            /// </summary>
-            /// <returns></returns>
-            internal override int CountLeaves()
-            {
-                return _boxes.Count;
-            }
-
-            /// <summary>
-            /// Returns all data in this ndoe.
-            /// </summary>
-            /// <param name="result"></param>
-            internal void GetAll(HashSet<T> result)
-            {
-                foreach (var data in _children)
-                {
-                    result.Add(data);
-                }
-            }
-
-            /// <summary>
-            /// Returns all data that overlaps the given box.
-            /// </summary>
-            /// <param name="box"></param>
-            /// <param name="result"></param>
-            internal override void Get(RectangleF2D box, HashSet<T> result)
-            {
-                for (int idx = 0; idx < _boxes.Count; idx++)
-                {
-                    if (_boxes[idx].Overlaps(box))
                     {
-                        result.Add(_children[idx]);
+                        nodeBoxIndex = (d1 < d2) ? 0 : 1;
+                    }
+                    pickedIdx = idx;
+                }
+            }
+            return pickedIdx;
+        }
+
+        /// <summary>
+        /// Selects the best seed boxes to start splitting a node.
+        /// </summary>
+        /// <param name="boxes"></param>
+        /// <returns></returns>
+        private static int[] SelectSeeds(List<RectangleF2D> boxes)
+        {
+            if (boxes == null) throw new ArgumentNullException("boxes");
+            if (boxes.Count < 2) throw new ArgumentException("Cannot select seeds from a list with less than two items.");
+
+            // the Quadratic Split version: selecting the two items that waste the most space
+            // if put together.
+
+            var seeds = new int[2];
+            double loss = double.MinValue;
+            for (int idx1 = 0; idx1 < boxes.Count; idx1++)
+            {
+                for (int idx2 = 0; idx2 < idx1; idx2++)
+                {
+                    double localLoss = System.Math.Max(boxes[idx1].Union(boxes[idx2]).Surface -
+                        boxes[idx1].Surface - boxes[idx2].Surface, 0);
+                    if (localLoss > loss)
+                    {
+                        loss = localLoss;
+                        seeds[0] = idx1;
+                        seeds[1] = idx2;
                     }
                 }
             }
 
-            /// <summary>
-            /// Returns the most tight box available.
-            /// </summary>
-            /// <returns></returns>
-            protected internal override RectangleF2D GetBox()
-            {
-                RectangleF2D box = _boxes[0];
-                for (int idx = 1; idx < _boxes.Count; idx++)
-                {
-                    box = box.Union(_boxes[idx]);
-                }
-                return box;
-            }
-
-            /// <summary>
-            /// Chooses a good leaf.
-            /// </summary>
-            /// <param name="box"></param>
-            /// <returns></returns>
-            internal override RTreeLeafNode ChooseLeaf(RectangleF2D box)
-            { // when called, this node was already choosen.
-                return this;
-            }
+            return seeds;
         }
+
+        #endregion
+
+        #endregion
     }
 }

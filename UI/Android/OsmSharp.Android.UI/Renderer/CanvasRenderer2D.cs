@@ -179,7 +179,7 @@ namespace OsmSharp.Android.UI
 		{
 			double scaleX = _target.Width / _view.Width;
 			
-			return (float)(sceneSize * scaleX);
+			return (float)(sceneSize * scaleX) * 2;
 		}
 		
 		/// <summary>

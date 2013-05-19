@@ -96,7 +96,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="index"></param>
-        public void Serialize(Stream stream, RTreeStreamIndex<T> index)
+        public void Serialize(Stream stream, RTreeMemoryIndex<T> index)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -118,7 +118,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="index"></param>
-        protected abstract void DoSerialize(SpatialIndexSerializerStream stream, RTreeStreamIndex<T> index);
+        protected abstract void DoSerialize(SpatialIndexSerializerStream stream, RTreeMemoryIndex<T> index);
 
         /// <summary>
         /// Deserializes the given stream into an index.
@@ -126,7 +126,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
         /// <returns></returns>
-        public RTreeStreamIndex<T> Deserialize(Stream stream, bool lazy = true)
+        public ISpatialIndexReadonly<T> Deserialize(Stream stream, bool lazy = true)
         {
             if (stream == null)
                 throw new ArgumentNullException("stream");
@@ -145,13 +145,12 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization
             throw new ArgumentOutOfRangeException("stream", "Cannot deserialize the given stream, version unsupported or content unrecognized!");
         }
 
-
         /// <summary>
         /// Deserializes the given stream into an index.
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
         /// <returns></returns>
-        protected abstract RTreeStreamIndex<T> DoDeserialize(SpatialIndexSerializerStream stream, bool lazy);
+        protected abstract ISpatialIndexReadonly<T> DoDeserialize(SpatialIndexSerializerStream stream, bool lazy);
     }
 }

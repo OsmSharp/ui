@@ -77,6 +77,10 @@
       <Project>{E881DC2A-6738-4F9D-A047-0DF201544C1B}</Project>
       <Name>OsmSharp.Osm.Android</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Core\OsmSharp.Routing\OsmSharp.Routing.Android.csproj">
+      <Project>{BE27CB1F-873A-4971-9C84-A81C7DAD04CD}</Project>
+      <Name>OsmSharp.Routing.Android</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="test.mapcss" />
@@ -87,6 +91,7 @@
     <EmbeddedResource Include="images\tree.png" />
     <EmbeddedResource Include="test.osm.pbf" />
     <EmbeddedResource Include="test.gpx" />
+    <EmbeddedResource Include="test.osm.pbf.routing.3" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="images\" />

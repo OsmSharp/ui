@@ -71,8 +71,8 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="index"></param>
-        protected override void DoSerialize(SpatialIndexSerializerStream stream, 
-            RTreeStreamIndex<T> index)
+        protected override void DoSerialize(SpatialIndexSerializerStream stream,
+            RTreeMemoryIndex<T> index)
         {
             // build the run time type model.
             RuntimeTypeModel typeModel = this.GetRuntimeTypeModel();
@@ -90,31 +90,33 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
         /// <param name="typeModel"></param>
         /// <param name="nodeBase"></param>
         /// <returns></returns>
-        private byte[] Serialize(RuntimeTypeModel typeModel, RTreeStreamIndex<T>.RTreeNodeBase nodeBase)
+        private byte[] Serialize(RuntimeTypeModel typeModel, RTreeMemoryIndex<T>.Node nodeBase)
         {
             var stream = new MemoryStream();
-            if (nodeBase is RTreeStreamIndex<T>.RTreeNode)
+            if (nodeBase.Children is List<RTreeMemoryIndex<T>.Node>)
             { // the node is not a leaf.
                 int position = 0;
-                var node = (nodeBase as RTreeStreamIndex<T>.RTreeNode);
+                var node = (nodeBase as RTreeMemoryIndex<T>.Node);
                 var childrenIndex = new ChildrenIndex();
-                childrenIndex.IsLeaf = new bool[node.Count];
-                childrenIndex.MinX = new float[node.Count];
-                childrenIndex.MinY = new float[node.Count];
-                childrenIndex.MaxX = new float[node.Count];
-                childrenIndex.MaxY = new float[node.Count];
-                childrenIndex.Starts = new int[node.Count];
+                childrenIndex.IsLeaf = new bool[nodeBase.Children.Count];
+                childrenIndex.MinX = new float[nodeBase.Children.Count];
+                childrenIndex.MinY = new float[nodeBase.Children.Count];
+                childrenIndex.MaxX = new float[nodeBase.Children.Count];
+                childrenIndex.MaxY = new float[nodeBase.Children.Count];
+                childrenIndex.Starts = new int[nodeBase.Children.Count];
                 var serializedChildren = new List<byte[]>();
-                for (int idx = 0; idx < node.Count; idx++)
+                for (int idx = 0; idx < nodeBase.Children.Count; idx++)
                 {
-                    RectangleF2D box = node.Box(idx);
+                    var child = (node.Children[idx] as RTreeMemoryIndex<T>.Node);
+                    RectangleF2D box = node.Boxes[idx];
                     childrenIndex.MinX[idx] = (float) box.Min[0];
                     childrenIndex.MinY[idx] = (float) box.Min[1];
                     childrenIndex.MaxX[idx] = (float) box.Max[0];
                     childrenIndex.MaxY[idx] = (float) box.Max[1];
-                    childrenIndex.IsLeaf[idx] = (node.Child(idx) is RTreeStreamIndex<T>.RTreeLeafNode);
+                    childrenIndex.IsLeaf[idx] = (
+                        child.Children is List<T>);
 
-                    byte[] childSerialized = this.Serialize(typeModel, node.Child(idx));
+                    byte[] childSerialized = this.Serialize(typeModel, child);
                     serializedChildren.Add(childSerialized);
 
                     childrenIndex.Starts[idx] = position;
@@ -146,7 +148,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                     stream.Write(serializedChildren[idx], 0, serializedChildren[idx].Length);
                 }
             }
-            else if (nodeBase is RTreeStreamIndex<T>.RTreeLeafNode)
+            else if (nodeBase.Children is List<T>)
             { // the node is a leaf node.
                 // START WRITING THE DATA TO THE TARGET STREAM HERE!
 
@@ -155,9 +157,10 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                 stream.Write(leafFlag, 0, 1);
 
                 // 2: write the leaf data.
-                return this.Serialize(typeModel,
-                    (nodeBase as RTreeStreamIndex<T>.RTreeLeafNode).Children, 
-                    (nodeBase as RTreeStreamIndex<T>.RTreeLeafNode).Boxes);
+                byte[] data = this.Serialize(typeModel,
+                    nodeBase.Children as List<T>, 
+                    nodeBase.Boxes);
+                stream.Write(data, 0, data.Length);
             }
             else
             {
@@ -194,17 +197,18 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
         /// <returns></returns>
-        protected override RTreeStreamIndex<T> DoDeserialize(SpatialIndexSerializerStream stream, bool lazy)
+        protected override ISpatialIndexReadonly<T> DoDeserialize(SpatialIndexSerializerStream stream, bool lazy)
         {
-            // build the run time type model.
-            RuntimeTypeModel typeModel = this.GetRuntimeTypeModel();
+            if (stream == null) throw new ArgumentNullException("stream");
+            if (!lazy) throw new NotSupportedException();
 
-            throw new NotImplementedException();
+            return new RTreeStreamIndex<T>(this, stream);
         }
 
         /// <summary>
         /// Represents a reserializable index of children of an R-tree node.
         /// </summary>
+        [ProtoContract]
         internal class ChildrenIndex
         {
             /// <summary>
@@ -250,47 +254,157 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             public bool[] IsLeaf { get; set; }
         }
 
+        ///// <summary>
+        ///// Deserializes the root.
+        ///// </summary>
+        ///// <param name="stream"></param>
+        ///// <param name="position"></param>
+        ///// <param name="size"></param>
+        ///// <returns></returns>
+        //internal RTreeStreamIndex<T>.Node DeserializeNode(SpatialIndexSerializerStream stream, 
+        //    int position, int size)
+        //{
+        //    var node = new RTreeMemorySimpleIndex<T>.Node();
+
+        //    // build the run time type model.
+        //    RuntimeTypeModel typeModel = this.GetRuntimeTypeModel();
+
+        //    var leafFlag = new byte[1];
+        //    stream.Read(leafFlag, 0, 1);
+        //    if (leafFlag[0] == (byte)1 && size > 0)
+        //    { // the data is a leaf and can be read.
+        //        var dataBytes = new byte[size];
+        //        stream.Read(dataBytes, 0, dataBytes.Length);
+        //        List<RectangleF2D> boxes;
+        //        List<T> data = this.DeSerialize(typeModel, dataBytes, out boxes);
+
+        //        node.Boxes = boxes;
+        //        node.Children = data;
+        //        return node;
+        //    }
+        //    else if (leafFlag[0] == 0 && size < 0)
+        //    { // the data is a node, read meta data.
+        //        var metaLengthBytes = new byte[4];
+        //        stream.Read(metaLengthBytes, 0, metaLengthBytes.Length);
+        //        int metaLength = BitConverter.ToInt32(metaLengthBytes, 0);
+
+        //        var metaBytes = new byte[metaLength];
+        //        stream.Read(metaBytes, 0, metaBytes.Length);
+
+        //        var index =
+        //            typeModel.Deserialize(new MemoryStream(metaBytes), null, typeof(ChildrenIndex)) as ChildrenIndex;
+        //        if (index != null)
+        //        {
+        //            return new RTreeStreamIndex<T>.RTreeNode(index,
+        //                                                     this, stream);
+        //        }
+        //    }
+        //    throw new Exception("Cannot deserialize node!");
+        //}
+
         /// <summary>
-        /// Deserializes the root.
+        /// Deserializes the data that is relevant for the given box.
         /// </summary>
         /// <param name="stream"></param>
-        /// <param name="position"></param>
-        /// <param name="size"></param>
+        /// <param name="box"></param>
+        /// <param name="result"></param>
         /// <returns></returns>
-        internal RTreeStreamIndex<T>.RTreeNodeBase DeserializeNode(SpatialIndexSerializerStream stream, 
-            int position, int size)
+        internal void Search(SpatialIndexSerializerStream stream, 
+            RectangleF2D box, HashSet<T> result)
         {
+            var leafFlag = new byte[1];
+            stream.Read(leafFlag, 0, 1);
+
+            if (leafFlag[0] == 1)
+            { // cannot deserialize a leaf without a given size.
+                // try to read the entire stream as a leaf.
+                this.SearchInLeaf(stream, 1, stream.Length - 1, box, result);
+                return;
+            }
+
             // build the run time type model.
             RuntimeTypeModel typeModel = this.GetRuntimeTypeModel();
 
-            var leafFlag = new byte[1];
-            stream.Read(leafFlag, 0, 1);
-            if (leafFlag[0] == (byte)1 && size > 0)
+            // get the lenght of the meta info.
+            var metaLengthBytes = new byte[4];
+            stream.Read(metaLengthBytes, 0, metaLengthBytes.Length);
+            int metaLength = BitConverter.ToInt32(metaLengthBytes, 0);
+            var metaBytes = new byte[metaLength];
+            stream.Read(metaBytes, 0, metaBytes.Length);
+            var index = typeModel.Deserialize(new MemoryStream(metaBytes), null, 
+                typeof(ChildrenIndex)) as ChildrenIndex;
+            if (index != null)
+            { // the index was deserialized.
+                long position = stream.Position;
+                for (int idx = 0; idx < index.IsLeaf.Length; idx++)
+                {
+                    var localBox = new RectangleF2D(index.MinX[idx], index.MinY[idx],
+                        index.MaxX[idx], index.MaxY[idx]);
+                    if (localBox.Overlaps(box))
+                    { // there will be data in one of the children.
+                        if (index.IsLeaf[idx])
+                        { // deserialize and search the leaf-data.
+                            // calculate size.
+                            int size;
+                            if (idx == index.IsLeaf.Length - 1)
+                            { // the last index.
+                                size = index.End - index.Starts[idx] - 1;
+                            }
+                            else
+                            { // not the last index.
+                                size = index.Starts[idx + 1] - 
+                                    index.Starts[idx] - 1;
+                            }
+                            this.SearchInLeaf(stream, position + index.Starts[idx] + 1, 
+                                size, box, result);
+                        }
+                        else
+                        { // deserialize the node and the children.
+                            stream.Seek(position + index.Starts[idx], SeekOrigin.Begin);
+
+                            this.Search(stream, box, result);
+                        }
+                    }
+                }
+                return;
+            }
+            throw new Exception("Cannot deserialize node!");
+        }
+
+        /// <summary>
+        /// Deserializes the leaf data at the given offset and with the given length and 
+        /// returns the data overlapping the given box.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="offset"></param>
+        /// <param name="size"></param>
+        /// <param name="box"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        internal void SearchInLeaf(SpatialIndexSerializerStream stream, long offset, long size,
+            RectangleF2D box, HashSet<T> result)
+        {
+            // position the stream.
+            stream.Seek(offset, SeekOrigin.Begin);
+
+            // build the run time type model.
+            RuntimeTypeModel typeModel = this.GetRuntimeTypeModel();
+
+            if (size > 0)
             { // the data is a leaf and can be read.
                 var dataBytes = new byte[size];
                 stream.Read(dataBytes, 0, dataBytes.Length);
                 List<RectangleF2D> boxes;
                 List<T> data = this.DeSerialize(typeModel, dataBytes, out boxes);
 
-                return new RTreeStreamIndex<T>.RTreeLeafNode(boxes, 
-                    data);
-            }
-            else if (leafFlag[0] == 0 && size < 0)
-            { // the data is a node, read meta data.
-                var metaLengthBytes = new byte[4];
-                stream.Read(metaLengthBytes, 0, metaLengthBytes.Length);
-                int metaLength = BitConverter.ToInt32(metaLengthBytes, 0);
-
-                var metaBytes = new byte[metaLength];
-                stream.Read(metaBytes, 0, metaBytes.Length);
-
-                var index =
-                    typeModel.Deserialize(new MemoryStream(metaBytes), null, typeof(ChildrenIndex)) as ChildrenIndex;
-                if (index != null)
-                {
-                    return new RTreeStreamIndex<T>.RTreeNode(index,
-                                                             this, stream);
+                for (int idx = 0; idx < data.Count; idx++)
+                { // check each overlapping box.
+                    if (boxes[idx].Overlaps(box))
+                    { // adds the object to the result set.
+                        result.Add(data[idx]);
+                    }
                 }
+                return;
             }
             throw new Exception("Cannot deserialize node!");
         }

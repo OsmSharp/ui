@@ -75,6 +75,7 @@
     <Compile Include="Map\Layers\LayerGpx.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
     <Compile Include="Map\Layers\LayerOsm.cs" />
+    <Compile Include="Map\Layers\LayerOsmSharpRoute.cs" />
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
     <Compile Include="Map\Layers\LayerTile.cs" />
     <Compile Include="Map\Map.cs" />

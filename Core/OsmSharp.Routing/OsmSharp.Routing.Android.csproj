@@ -202,8 +202,6 @@
     <Compile Include="Routers\TypedRouterResolvedGraph.cs" />
     <Compile Include="Router.cs" />
     <Compile Include="RouterPoint.cs" />
-    <Compile Include="Graph\Serialization\v2\V2RouterDataSource.cs" />
-    <Compile Include="Graph\Serialization\v2\V2RoutingSerializer.cs" />
     <Compile Include="Graph\Serialization\RoutingSerializer.cs" />
     <Compile Include="Graph\Serialization\RoutingSerializerStream.cs" />
     <Compile Include="Graph\IDynamicGraph.cs" />
@@ -219,6 +217,8 @@
     <Compile Include="Osm\Graphs\MemoryDynamicGraphSimpleWeighed.cs" />
     <Compile Include="Osm\Graphs\OsmSourceRouterDataSource.cs" />
     <Compile Include="Routers\TypedRouterCHEdge.cs" />
+    <Compile Include="Graph\Serialization\v2\V2RouterLiveEdgeDataSource.cs" />
+    <Compile Include="Graph\Serialization\v2\V2RoutingLiveEdgeSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interpreter\Roads\Tags\" />

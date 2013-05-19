@@ -281,7 +281,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     LineJoin lineJoin;
                     if (!rule.TryGetProperty("lineJoin", out lineJoin))
                     {
-                        lineJoin = LineJoin.Round;
+                        lineJoin = LineJoin.Miter;
                     }
                     int[] dashes;
                     if (!rule.TryGetProperty("dashes", out dashes))

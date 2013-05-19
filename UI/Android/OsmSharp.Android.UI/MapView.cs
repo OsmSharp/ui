@@ -35,7 +35,7 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Holds the primitives layer.
 		/// </summary>
-		private PrimitivesLayer _makerLayer;
+		private LayerPrimitives _makerLayer;
 		
 		/// <summary>
 		/// Holds the scale gesture detector.
@@ -84,7 +84,7 @@ namespace OsmSharp.Android.UI
 				this.Context, this);
 			this.SetOnTouchListener(this);
 
-			_makerLayer = new PrimitivesLayer(
+			_makerLayer = new LayerPrimitives(
 				new WebMercator());
 		}
 
@@ -149,6 +149,9 @@ namespace OsmSharp.Android.UI
 
 			if(_highQuality)
 			{			
+				// notify the map.
+				this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
+
 				// render the map.
 				_renderer.Render(canvas, this.Map.Projection, layers, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
 			}
@@ -203,13 +206,13 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private void NotifyMovement()
 		{
-			lock(this.Map)
-			{
-				// notify the map.
-				this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
-
-//				this.Invalidate();
-			}
+//			lock(this.Map)
+//			{
+//				// notify the map.
+//				//this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
+//
+////				this.Invalidate();
+//			}
 		}
 
 		#region IOnScaleGestureListener implementation
@@ -230,7 +233,7 @@ namespace OsmSharp.Android.UI
 			this.ZoomLevel = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
 
 			// notify the map.
-			this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
+			//this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
 
 			_scaled = true;
 			this.Invalidate();
@@ -313,9 +316,6 @@ namespace OsmSharp.Android.UI
 
 			// convert to the projected center.
 			this.Center = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
-
-			// notify the map.
-			this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
 
 			_highQuality = false;
 			this.Invalidate();

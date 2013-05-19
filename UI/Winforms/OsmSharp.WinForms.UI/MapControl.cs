@@ -157,7 +157,6 @@ namespace OsmSharp.WinForms.UI
             {
                 // notify the map.
                 this.QueueNotifyMapViewChanged();
-
             }
         }
 

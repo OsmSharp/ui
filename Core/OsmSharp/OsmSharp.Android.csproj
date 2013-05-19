@@ -46,6 +46,9 @@
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
     <Reference Include="System.Data" />
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
@@ -315,6 +318,14 @@
     <Compile Include="IO\Output\OutputStreamHost.cs" />
     <Compile Include="IO\CappedStream.cs" />
     <Compile Include="Math\Geo\Projections\WebMercator.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializer.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializerStream.cs" />
+    <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\ISpatialIndexReadonly.cs" />
+    <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\RTreeMemorySimpleIndex.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Xml\Gpx\v1_0\gpx.xsd">
