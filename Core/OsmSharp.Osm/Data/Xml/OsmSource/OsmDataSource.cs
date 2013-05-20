@@ -698,21 +698,24 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
             IList<OsmBase> res = new List<OsmBase>();
             foreach (Node node in _nodes.Values)
             {
-                if (filter.Evaluate(node))
+                if (filter == null ||
+                    filter.Evaluate(node))
                 {
                     res.Add(node);
                 }
             }
             foreach (Way way in _ways.Values)
             {
-                if (filter.Evaluate(way))
+                if (filter == null ||
+                    filter.Evaluate(way))
                 {
                     res.Add(way);
                 }
             }
             foreach (Relation relation in _relations.Values)
             {
-                if (filter.Evaluate(relation))
+                if (filter == null ||
+                    filter.Evaluate(relation))
                 {
                     res.Add(relation);
                 }

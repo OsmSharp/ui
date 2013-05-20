@@ -309,7 +309,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
         /// <param name="box"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        internal void Search(SpatialIndexSerializerStream stream, 
+        public void Search(SpatialIndexSerializerStream stream, 
             RectangleF2D box, HashSet<T> result)
         {
             var leafFlag = new byte[1];
@@ -381,7 +381,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
         /// <param name="box"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        internal void SearchInLeaf(SpatialIndexSerializerStream stream, long offset, long size,
+        protected void SearchInLeaf(SpatialIndexSerializerStream stream, long offset, long size,
             RectangleF2D box, HashSet<T> result)
         {
             // position the stream.

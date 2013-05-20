@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Collections.SpatialIndexes.Serialization.v1;
 using OsmSharp.Math.Primitives;
+using ProtoBuf;
 using ProtoBuf.Meta;
 
 namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
@@ -12,7 +13,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
     /// <summary>
     /// A serializer for scene primitive spatial index.
     /// </summary>
-    public class Scene2DPrimitivesSerializer : RTreeStreamSerializer<IScene2DPrimitive>
+    internal class Scene2DPrimitivesSerializer : RTreeStreamSerializer<Scene2DEntry>
     {
         /// <summary>
         /// Builds the runtime type model.
@@ -79,6 +80,13 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
             textMetaType.Add(4, "Size");
             textMetaType.Add(5, "MinZoom");
             textMetaType.Add(6, "MaxZoom");
+
+            typeModel.Add(typeof(Icon2DEntry), true);
+            typeModel.Add(typeof(Image2DEntry), true);
+            typeModel.Add(typeof(Line2DEntry), true);
+            typeModel.Add(typeof(Point2DEntry), true);
+            typeModel.Add(typeof(Polygon2DEntry), true);
+            typeModel.Add(typeof(Text2DEntry), true);
         }
 
         /// <summary>
@@ -88,41 +96,74 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
         /// <param name="data"></param>
         /// <param name="boxes"></param>
         /// <returns></returns>
-        protected override byte[] Serialize(RuntimeTypeModel typeModel, List<IScene2DPrimitive> data, 
-            List<RectangleF2D> boxes)
+        protected override byte[] Serialize(RuntimeTypeModel typeModel, List<Scene2DEntry> data,
+                                            List<RectangleF2D> boxes)
         {
-            var icons = new List<Icon2D>();
-            var images = new List<Image2D>();
-            var lines = new List<Line2D>();
-            var points = new List<Point2D>();
-            var polygons = new List<Polygon2D>();
-            var texts = new List<Text2D>();
+            var icons = new List<Icon2DEntry>();
+            var images = new List<Image2DEntry>();
+            var lines = new List<Line2DEntry>();
+            var points = new List<Point2DEntry>();
+            var polygons = new List<Polygon2DEntry>();
+            var texts = new List<Text2DEntry>();
 
-            foreach (var primitive in data)
+            // build the collection object.
+            var collection = new PrimitivesCollection();
+            for (int idx = 0; idx < data.Count; idx++)
             {
+                IScene2DPrimitive primitive = data[idx].Scene2DPrimitive;
                 if (primitive is Icon2D)
                 {
-                    icons.Add((Icon2D)primitive);
+                    icons.Add(new Icon2DEntry()
+                                  {
+                                      Primitive = (Icon2D)primitive,
+                                      Id = data[idx].Id,
+                                      Layer = data[idx].Layer
+                                  });
                 }
                 else if (primitive is Image2D)
                 {
-                    images.Add((Image2D)primitive);
+                    images.Add(new Image2DEntry()
+                    {
+                        Primitive = (Image2D)primitive,
+                        Id = data[idx].Id,
+                        Layer = data[idx].Layer
+                    });
                 }
                 else if (primitive is Line2D)
                 {
-                    lines.Add((Line2D)primitive);
+                    lines.Add(new Line2DEntry()
+                    {
+                        Primitive = (Line2D)primitive,
+                        Id = data[idx].Id,
+                        Layer = data[idx].Layer
+                    });
                 }
                 else if (primitive is Point2D)
                 {
-                    points.Add((Point2D)primitive);
+                    points.Add(new Point2DEntry()
+                    {
+                        Primitive = (Point2D)primitive,
+                        Id = data[idx].Id,
+                        Layer = data[idx].Layer
+                    });
                 }
                 else if (primitive is Polygon2D)
                 {
-                    polygons.Add((Polygon2D)primitive);
+                    polygons.Add(new Polygon2DEntry()
+                    {
+                        Primitive = (Polygon2D)primitive,
+                        Id = data[idx].Id,
+                        Layer = data[idx].Layer
+                    });
                 }
                 else if (primitive is Text2D)
                 {
-                    texts.Add((Text2D)primitive);
+                    texts.Add(new Text2DEntry()
+                    {
+                        Primitive = (Text2D)primitive,
+                        Id = data[idx].Id,
+                        Layer = data[idx].Layer
+                    });
                 }
                 else
                 {
@@ -130,8 +171,6 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
                 }
             }
 
-            // build the collection object.
-            var collection = new PrimitivesCollection();
             collection.Icons = icons.ToArray();
             collection.Images = images.ToArray();
             collection.Lines = lines.ToArray();
@@ -156,42 +195,225 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
         /// <summary>
         /// Holds primitives.
         /// </summary>
+        [ProtoContract]
         internal class PrimitivesCollection
         {
             /// <summary>
             /// Holds the icons.
             /// </summary>
-            public Icon2D[] Icons { get; set; }
+            [ProtoMember(1)]
+            public Icon2DEntry[] Icons { get; set; }
 
             /// <summary>
             /// Holds the images.
             /// </summary>
-            public Image2D[] Images { get; set; }
+            [ProtoMember(2)]
+            public Image2DEntry[] Images { get; set; }
 
             /// <summary>
             /// Holds the lines.
             /// </summary>
-            public Line2D[] Lines { get; set; }
+            [ProtoMember(3)]
+            public Line2DEntry[] Lines { get; set; }
 
             /// <summary>
             /// Holds the points.
             /// </summary>
-            public Point2D[] Points { get; set; }
+            [ProtoMember(4)]
+            public Point2DEntry[] Points { get; set; }
 
             /// <summary>
             /// Holds the polygons.
             /// </summary>
-            public Polygon2D[] Polygons { get; set; }
+            [ProtoMember(5)]
+            public Polygon2DEntry[] Polygons { get; set; }
 
             /// <summary>
             /// Holds the texts.
             /// </summary>
-            public Text2D[] Texts { get; set; }
+            [ProtoMember(6)]
+            public Text2DEntry[] Texts { get; set; }
         }
 
-        protected override List<IScene2DPrimitive> DeSerialize(RuntimeTypeModel typeModel, byte[] data, out List<RectangleF2D> boxes)
+        [ProtoContract]
+        internal class Icon2DEntry
         {
-            throw new NotImplementedException();
+            [ProtoMember(1)]
+            public Icon2D Primitive { get; set; }
+
+            [ProtoMember(2)]
+            public int Layer { get; set; }
+
+            [ProtoMember(3)]
+            public uint Id { get; set; }
+        }
+
+        [ProtoContract]
+        internal class Image2DEntry
+        {
+            [ProtoMember(1)]
+            public Image2D Primitive { get; set; }
+
+            [ProtoMember(2)]
+            public int Layer { get; set; }
+
+            [ProtoMember(3)]
+            public uint Id { get; set; }
+        }
+
+        [ProtoContract]
+        internal class Line2DEntry
+        {
+            [ProtoMember(1)]
+            public Line2D Primitive { get; set; }
+
+            [ProtoMember(2)]
+            public int Layer { get; set; }
+
+            [ProtoMember(3)]
+            public uint Id { get; set; }
+        }
+
+        [ProtoContract]
+        internal class Point2DEntry
+        {
+            [ProtoMember(1)]
+            public Point2D Primitive { get; set; }
+
+            [ProtoMember(2)]
+            public int Layer { get; set; }
+
+            [ProtoMember(3)]
+            public uint Id { get; set; }
+        }
+
+        [ProtoContract]
+        internal class Polygon2DEntry
+        {
+            [ProtoMember(1)]
+            public Polygon2D Primitive { get; set; }
+
+            [ProtoMember(2)]
+            public int Layer { get; set; }
+
+            [ProtoMember(3)]
+            public uint Id { get; set; }
+        }
+
+        [ProtoContract]
+        internal class Text2DEntry
+        {
+            [ProtoMember(1)]
+            public Text2D Primitive { get; set; }
+
+            [ProtoMember(2)]
+            public int Layer { get; set; }
+
+            [ProtoMember(3)]
+            public uint Id { get; set; }
+        }
+
+        /// <summary>
+        /// Deserializes the actual data.
+        /// </summary>
+        /// <param name="typeModel"></param>
+        /// <param name="data"></param>
+        /// <param name="boxes"></param>
+        /// <returns></returns>
+        protected override List<Scene2DEntry> DeSerialize(RuntimeTypeModel typeModel, byte[] data, 
+            out List<RectangleF2D> boxes)
+        {
+            // create the memory stream.
+            var stream = new MemoryStream(data);
+            var collection = typeModel.Deserialize(stream, null, 
+                typeof(PrimitivesCollection)) as PrimitivesCollection;
+            if (collection == null)
+            {
+                throw new Exception("Could not deserialize primitives.");
+            }
+
+            // create the collection
+            var primitives = new List<Scene2DEntry>();
+            if (collection.Icons != null)
+            {
+                foreach (var primitive in collection.Icons)
+                {
+                    primitives.Add(new Scene2DEntry()
+                                       {
+                                           Id = primitive.Id,
+                                           Layer = primitive.Layer,
+                                           Scene2DPrimitive = primitive.Primitive
+                                       });
+                }
+            }
+            if (collection.Images != null)
+            {
+                foreach (var primitive in collection.Images)
+                {
+                    primitives.Add(new Scene2DEntry()
+                                       {
+                                           Id = primitive.Id,
+                                           Layer = primitive.Layer,
+                                           Scene2DPrimitive = primitive.Primitive
+                                       });
+                }
+            }
+            if (collection.Lines != null)
+            {
+                foreach (var primitive in collection.Lines)
+                {
+                    primitives.Add(new Scene2DEntry()
+                                       {
+                                           Id = primitive.Id,
+                                           Layer = primitive.Layer,
+                                           Scene2DPrimitive = primitive.Primitive
+                                       });
+                }
+            }
+            if (collection.Points != null)
+            {
+                foreach (var primitive in collection.Points)
+                {
+                    primitives.Add(new Scene2DEntry()
+                                       {
+                                           Id = primitive.Id,
+                                           Layer = primitive.Layer,
+                                           Scene2DPrimitive = primitive.Primitive
+                                       });
+                }
+            }
+            if (collection.Polygons != null)
+            {
+                foreach (var primitive in collection.Polygons)
+                {
+                    primitives.Add(new Scene2DEntry()
+                                       {
+                                           Id = primitive.Id,
+                                           Layer = primitive.Layer,
+                                           Scene2DPrimitive = primitive.Primitive
+                                       });
+                }
+            }
+            if (collection.Texts != null)
+            {
+                foreach (var primitive in collection.Texts)
+                {
+                    primitives.Add(new Scene2DEntry()
+                                       {
+                                           Id = primitive.Id,
+                                           Layer = primitive.Layer,
+                                           Scene2DPrimitive = primitive.Primitive
+                                       });
+                }
+            }
+
+            // build the boxes list.
+            boxes = new List<RectangleF2D>();
+            for (int idx = 0; idx < primitives.Count; idx++)
+            {
+                boxes.Add(primitives[idx].Scene2DPrimitive.GetBox());
+            }
+            return primitives;
         }
     }
 }

@@ -77,6 +77,7 @@
     <Compile Include="Map\Layers\LayerOsm.cs" />
     <Compile Include="Map\Layers\LayerOsmSharpRoute.cs" />
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
+    <Compile Include="Map\Layers\LayerScene.cs" />
     <Compile Include="Map\Layers\LayerTile.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\MapRenderer.cs" />
@@ -115,7 +116,10 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParser.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Icon2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Image2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitivesSource.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DEntry.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSerializer.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSource.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Text2D.cs" />
     <Compile Include="Renderer\Target2DWrapper.cs" />
     <Compile Include="Renderer\View2D.cs" />

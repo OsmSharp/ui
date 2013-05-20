@@ -1,24 +1,25 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using OsmSharp.Collections.SpatialIndexes;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI.Renderer.Scene2DPrimitives;
+using OsmSharp.UI.Renderer.Scene2DPrimitives.Storage;
 
 namespace OsmSharp.UI.Renderer
 {
 	/// <summary>
 	/// Contains all objects that need to be rendered.
 	/// </summary>
-	public class Scene2D
+    public class Scene2D
 	{
         /// <summary>
         /// Holds all primitives indexed per layer and by id.
         /// </summary>
         private readonly SortedDictionary<int, Dictionary<uint, IScene2DPrimitive>> _primitives; 
-        //private readonly SortedDictionary<int, ISpatialIndex<IScene2DPrimitive>>  _primitives; 
 
         /// <summary>
         /// Holds the next primitive id.
@@ -31,7 +32,6 @@ namespace OsmSharp.UI.Renderer
 		public Scene2D()
 		{
             _primitives = new SortedDictionary<int, Dictionary<uint, IScene2DPrimitive>>();
-            //_primitives = new SortedDictionary<int, ISpatialIndex<IScene2DPrimitive>>();
 
             this.BackColor = SimpleColor.FromArgb(0, 255, 255, 255).Value; // fully transparent.
 		}
@@ -41,7 +41,7 @@ namespace OsmSharp.UI.Renderer
 	    /// </summary>
 	    /// <param name="view">View.</param>
 	    /// <param name="zoom"></param>
-	    internal IEnumerable<IScene2DPrimitive> Get(View2D view, float zoom)
+	    public IEnumerable<IScene2DPrimitive> Get(View2D view, float zoom)
 		{
 			var primitivesInView = new List<IScene2DPrimitive>();
 			
@@ -92,7 +92,13 @@ namespace OsmSharp.UI.Renderer
             return false;
         }
 
-        private void AddPrimitive(int layer, uint id, IScene2DPrimitive primitive)
+        /// <summary>
+        /// Adds a new primitive with a given id and layer.
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="id"></param>
+        /// <param name="primitive"></param>
+        internal void AddPrimitive(int layer, uint id, IScene2DPrimitive primitive)
         {
             Dictionary<uint, IScene2DPrimitive> layerDic;
             if (!_primitives.TryGetValue(layer, out layerDic))
@@ -390,5 +396,49 @@ namespace OsmSharp.UI.Renderer
 				return id;
 			}
         }
-    }
+
+        #region Serialization/Deserialization
+
+        /// <summary>
+        /// Serializes this scene2D to the given stream.
+        /// </summary>
+        /// <param name="stream"></param>
+	    public void Serialize(Stream stream)
+	    {
+            // build the index.
+            var index = new RTreeMemoryIndex<Scene2DEntry>();
+            foreach (var primitiveLayer in _primitives)
+            {
+                foreach (var primitive in primitiveLayer.Value)
+                {
+                    index.Add(primitive.Value.GetBox(), new Scene2DEntry()
+                                                            {
+                                                                Layer = primitiveLayer.Key,
+                                                                Id = primitive.Key,
+                                                                Scene2DPrimitive = primitive.Value
+                                                            });
+                }
+            }
+
+            // create the serializer.
+            var serializer = new Scene2DPrimitivesSerializer();
+            serializer.Serialize(stream, index);
+	    }
+
+        /// <summary>
+        /// Deserialize a Scene2D from the given stream.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+	    public static IScene2DPrimitivesSource Deserialize(Stream stream)
+        {
+            // create the serializer.
+            var serializer = new Scene2DPrimitivesSerializer();
+            ISpatialIndexReadonly<Scene2DEntry> index = serializer.Deserialize(stream);
+
+            return new Scene2DPrimitivesSource(index);
+        }
+
+	    #endregion
+	}
 }

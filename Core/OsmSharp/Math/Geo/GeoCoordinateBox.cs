@@ -335,6 +335,40 @@ namespace OsmSharp.Math.Geo
 
         #endregion
 
+
+        /// <summary>
+        /// Calculates the intersection between this box and the given box.
+        /// </summary>
+        /// <param name="box">Box.</param>
+        public GeoCoordinateBox Intersection(GeoCoordinateBox box)
+        {// get the highest minimums and the lowest maximums.
+            double minX = System.Math.Max(this.Min[0], box.Min[0]);
+            double minY = System.Math.Max(this.Min[1], box.Min[1]);
+            double maxX = System.Math.Min(this.Max[0], box.Max[0]);
+            double maxY = System.Math.Min(this.Max[1], box.Max[1]);
+
+            if (minX <= maxX && minY <= maxY)
+            {
+                return new GeoCoordinateBox(new GeoCoordinate(minY, minX), new GeoCoordinate(maxY, maxX));
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Calculates the union of this box and the given box or the box that encompasses both original boxes.
+        /// </summary>
+        /// <param name="box">Box.</param>
+        public GeoCoordinateBox Union(GeoCoordinateBox box)
+        {// get the lowest minimums and the highest maximums.
+            double minX = System.Math.Min(this.Min[0], box.Min[0]);
+            double minY = System.Math.Min(this.Min[1], box.Min[1]);
+            double maxX = System.Math.Max(this.Max[0], box.Max[0]);
+            double maxY = System.Math.Max(this.Max[1], box.Max[1]);
+
+            return new GeoCoordinateBox(new GeoCoordinate(minY, minX), new GeoCoordinate(maxY, maxX));
+        }
+
+
         /// <summary>
         /// Resizes this bounding box with the given delta.
         /// </summary>

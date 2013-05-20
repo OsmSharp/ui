@@ -71,6 +71,7 @@
     <Compile Include="MapCSSDomainParserTests.cs" />
     <Compile Include="MapCSSParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSerializerTests.cs" />
     <Compile Include="SimpleColorTests.cs" />
     <Compile Include="UI\View2DTests.cs" />
   </ItemGroup>
@@ -90,9 +91,15 @@
     <EmbeddedResource Include="Data\MapCSS\color-named.mapcss" />
     <EmbeddedResource Include="Data\MapCSS\color-short.mapcss" />
     <EmbeddedResource Include="Data\MapCSS\color.mapcss" />
+    <EmbeddedResource Include="Data\MapCSS\test.mapcss" />
+    <EmbeddedResource Include="Data\test.osm" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Core\OsmSharp.Osm\OsmSharp.Osm.csproj">
+      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
+      <Name>OsmSharp.Osm</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Core\OsmSharp\OsmSharp.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
       <Name>OsmSharp</Name>
