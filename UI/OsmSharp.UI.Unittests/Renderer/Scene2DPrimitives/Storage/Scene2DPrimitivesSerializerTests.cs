@@ -8,7 +8,8 @@ using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Data.Raw.XML.OsmSource;
+using OsmSharp.Osm.Data.Xml.OsmSource;
+using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene2DPrimitives;
@@ -37,15 +38,16 @@ namespace OsmSharp.UI.Unittests.Renderer.Scene2DPrimitives.Storage
                 imageSource);
 
             // initialize the data source.
-            var dataSource = new OsmDataSource(//new FileInfo(@"c:\OSM\bin\wvl.osm").OpenRead());
+            var xmlSource = new XmlOsmStreamReader(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     "OsmSharp.UI.Unittests.Data.test.osm"));
+            IEnumerable<OsmGeo> dataSource = xmlSource.GetOsmGeoEnumerable();
 
             // get data.
             var scene = new Scene2D();
             var projection = new WebMercator();
             GeoCoordinateBox box = null;
-            foreach (var osmGeo in dataSource.Get(null))
+            foreach (var osmGeo in dataSource)
             {
                 // translate each object into scene object.
                 mapCSSInterpreter.Translate(scene, projection, 16, osmGeo as OsmGeo);
@@ -62,10 +64,10 @@ namespace OsmSharp.UI.Unittests.Renderer.Scene2DPrimitives.Storage
 
             // create the stream.
             var stream = new MemoryStream();
-            scene.Serialize(stream);
+            scene.Serialize(stream, false);
 
             // deserialize the stream.
-            IScene2DPrimitivesSource sceneSource = Scene2D.Deserialize(stream);
+            IScene2DPrimitivesSource sceneSource = Scene2D.Deserialize(stream, false);
 
             if (box != null)
             {

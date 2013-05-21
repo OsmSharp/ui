@@ -3,8 +3,8 @@ using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Osm.Data.Raw.XML.OsmSource;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Data.Xml.OsmSource;
 using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
@@ -16,6 +16,7 @@ using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.UI.Renderer;
 
 namespace OsmSharp.WinForms.UI.Sample
 {
@@ -62,13 +63,14 @@ namespace OsmSharp.WinForms.UI.Sample
             var map = new Map();
             //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+            map.AddLayer(new LayerScene(Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\test.osm.scene").OpenRead(), true)));
 
             var routingSerializer = new V2RoutingLiveEdgeSerializer(true);
             var graphSerialized = routingSerializer.Deserialize(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     "OsmSharp.WinForms.UI.Sample.test.osm.pbf.routing.3"));
-            var graphLayer = new LayerDynamicGraphLiveEdge(graphSerialized, mapCSSInterpreter);
-            map.AddLayer(graphLayer);
+            //var graphLayer = new LayerDynamicGraphLiveEdge(graphSerialized, mapCSSInterpreter);
+            //map.AddLayer(graphLayer);
 
             //// create graph layer.
             //var xmlOsmStreamReader =
@@ -104,9 +106,9 @@ namespace OsmSharp.WinForms.UI.Sample
             // set control properties.
             this.mapControl1.Map = map;
             //this.mapControl1.Center = new GeoCoordinate(51.0095111, 3.3210996); 
-            //this.mapControl1.Center = new GeoCoordinate(51.26337, 4.78739);
+            this.mapControl1.Center = new GeoCoordinate(51.26337, 4.78739);
             //this.mapControl1.Center = new GeoCoordinate(50.88672, 3.23899);
-            this.mapControl1.Center = new GeoCoordinate(51.075023, 3.096632);
+            //this.mapControl1.Center = new GeoCoordinate(51.075023, 3.096632);
             this.mapControl1.ZoomLevel = 16;
         }
     }

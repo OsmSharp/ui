@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Factory;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map.Styles;
@@ -149,14 +148,14 @@ namespace OsmSharp.UI.Map.Layers
                     // create nodes.
                     float latitude, longitude;
                     _dataSource.GetVertex(arcId.Vertex1, out latitude, out longitude);
-                    var node1 = OsmBaseFactory.CreateNode(arcId.Vertex1);
+                    var node1 = Node.Create(arcId.Vertex1);
                     node1.Coordinate = new GeoCoordinate(latitude, longitude);
                     _dataSource.GetVertex(arcId.Vertex2, out latitude, out longitude);
-                    var node2 = OsmBaseFactory.CreateNode(arcId.Vertex2);
+                    var node2 = Node.Create(arcId.Vertex2);
                     node2.Coordinate = new GeoCoordinate(latitude, longitude);
 
                     // create way.
-                    var way = OsmBaseFactory.CreateWay(-1);
+                    var way = Way.Create(-1);
                     if (arc.Value.Value.Forward)
                     {
                         way.Nodes.Add(node1);

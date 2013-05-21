@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Xml.Gpx;
-using OsmSharp.Osm.Factory;
 using OsmSharp.Osm;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
@@ -128,7 +127,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
                     case GpxVersion.Gpxv1_0:
                         OsmSharp.Xml.Gpx.v1_0.gpx gpx_v1_0 = _document.Gpx as OsmSharp.Xml.Gpx.v1_0.gpx;
 
-                        Relation relation_v1_0 = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+                        Relation relation_v1_0 = Relation.Create(KeyGenerator.GenerateNew());
 
                         relation_v1_0.Tags.Add("name", gpx_v1_0.name);
                         relation_v1_0.Tags.Add("description", gpx_v1_0.desc);
@@ -160,7 +159,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
                             source_name = gpx_v1_1.metadata.name;
                         }
 
-                        Relation relation_v1_1 = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+                        Relation relation_v1_1 = Relation.Create(KeyGenerator.GenerateNew());
 
                         //relation_v1_1.Tags.Add("name", _document.Name);
                         relation_v1_1.Tags.Add("description", "v1.1");
@@ -209,7 +208,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
         /// <returns></returns>
         private OsmGeo ConvertGpxTrk(OsmSharp.Xml.Gpx.v1_1.trkType trk)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Tags.Add("name", trk.name);
             relation.Tags.Add("number", trk.number);
@@ -238,7 +237,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
         /// <returns></returns>
         private OsmGeo ConvertTrkSegType(OsmSharp.Xml.Gpx.v1_1.trksegType seg)
         {
-            Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
+            Way way = Way.Create(KeyGenerator.GenerateNew());
 
             foreach (OsmSharp.Xml.Gpx.v1_1.wptType pt in seg.trkpt)
             {
@@ -259,7 +258,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
         /// <returns></returns>
         private Node ConvertWptType(OsmSharp.Xml.Gpx.v1_1.wptType pt)
         {
-            Node n = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+            Node n = Node.Create(KeyGenerator.GenerateNew());
 
             n.TimeStamp = pt.time;
             n.Coordinate = new GeoCoordinate((double)pt.lat, (double)pt.lon);
@@ -278,7 +277,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
         /// <returns></returns>
         private OsmGeo ConvertGpxTrk(OsmSharp.Xml.Gpx.v1_0.gpxTrk trk)
         {
-            Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
+            Way way = Way.Create(KeyGenerator.GenerateNew());
             foreach (OsmSharp.Xml.Gpx.v1_0.gpxTrkTrksegTrkpt seg in trk.trkseg)
             {
                 Node seg_geo = this.ConvertTrkSegType(seg);
@@ -298,7 +297,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
         /// <returns></returns>
         private Node ConvertTrkSegType(OsmSharp.Xml.Gpx.v1_0.gpxTrkTrksegTrkpt seg)
         {
-            Node n = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+            Node n = Node.Create(KeyGenerator.GenerateNew());
 
             n.TimeStamp = seg.time;
             n.Coordinate = new GeoCoordinate((double)seg.lat, (double)seg.lon);

@@ -100,14 +100,8 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Applies the given changeset to the data in this datasource.
         /// </summary>
-        /// <param name="change_set"></param>
-        void ApplyChangeSet(ChangeSet change_set);
-
-        /// <summary>
-        /// Creates a new changeset.
-        /// </summary>
-        /// <returns></returns>
-        ChangeSet CreateChangeSet();
+        /// <param name="changeSet"></param>
+        void ApplyChangeSet(ChangeSet changeSet);
 
         #endregion
     }

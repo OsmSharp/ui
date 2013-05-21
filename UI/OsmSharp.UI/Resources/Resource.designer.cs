@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: Android.Runtime.ResourceDesignerAttribute("EmptyTemplate.Resource", IsApplication=false)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("EmptyTemplate.Resource", IsApplication=false)]
 
 namespace EmptyTemplate
 {
@@ -19,13 +19,18 @@ namespace EmptyTemplate
 	public partial class Resource
 	{
 		
-		Resource()
+		static Resource()
 		{
-			global::Android.Runtime.ResourceIdManager.UpdateIdValues ();
+			global::Android.Runtime.ResourceIdManager.UpdateIdValues();
 		}
 		
 		public partial class Attribute
 		{
+			
+			static Attribute()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private Attribute()
 			{
@@ -37,6 +42,11 @@ namespace EmptyTemplate
 			
 			// aapt resource value: 0x7f020000
 			public static int library_name = 2130837504;
+			
+			static String()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private String()
 			{

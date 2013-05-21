@@ -20,7 +20,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Collections;
+using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Simple;
+using OsmSharp.Osm.Simple.Cache;
 
 namespace OsmSharp.Osm
 {
@@ -32,7 +34,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Holds the members of this relation.
         /// </summary>
-        private IList<RelationMember> _members;
+        private readonly IList<RelationMember> _members;
 
         /// <summary>
         /// Creates a new relation.
@@ -48,9 +50,9 @@ namespace OsmSharp.Osm
         /// Creates a new relation using a string table.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="string_table"></param>
-        internal protected Relation(ObjectTable<string> string_table, long id)
-            : base(string_table, id)
+        /// <param name="stringTable"></param>
+        internal protected Relation(ObjectTable<string> stringTable, long id)
+            : base(stringTable, id)
         {
             _members = new List<RelationMember>();
         }
@@ -100,7 +102,7 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public override SimpleOsmGeo ToSimple()
         {
-            SimpleRelation relation = new SimpleRelation();
+            var relation = new SimpleRelation();
             relation.Id = this.Id;
             relation.ChangeSetId = this.ChangeSetId;
             relation.Tags = this.Tags;
@@ -113,7 +115,7 @@ namespace OsmSharp.Osm
             relation.Members = new List<SimpleRelationMember>();
             foreach (RelationMember member in this.Members)
             {
-                SimpleRelationMember simple_member = new SimpleRelationMember();
+                var simple_member = new SimpleRelationMember();
                 simple_member.MemberId = member.Member.Id;
                 simple_member.MemberRole = member.Role;
                 switch(member.Member.Type)
@@ -132,5 +134,303 @@ namespace OsmSharp.Osm
             }
             return relation;
         }
+
+        #region Relation factory functions
+
+        /// <summary>
+        /// Creates a relation with a new id.
+        /// </summary>
+        /// <returns></returns>
+        public static Relation Create()
+        {
+            return Create(OsmBaseIdGenerator.NewId());
+        }
+
+        /// <summary>
+        /// Creates a relation with a given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Relation Create(long id)
+        {
+            return new Relation(id);
+        }
+
+        /// <summary>
+        /// Creates a relation from a SimpleRelation.
+        /// </summary>
+        /// <param name="simpleRelation"></param>
+        /// <param name="nodes"></param>
+        /// <param name="ways"></param>
+        /// <param name="relations"></param>
+        /// <returns></returns>
+        public static Relation CreateFrom(SimpleRelation simpleRelation,
+            IDictionary<long, Node> nodes,
+            IDictionary<long, Way> ways,
+            IDictionary<long, Relation> relations)
+        {
+            if (simpleRelation == null) throw new ArgumentNullException("simpleRelation");
+            if (nodes == null) throw new ArgumentNullException("nodes");
+            if (ways == null) throw new ArgumentNullException("ways");
+            if (relations == null) throw new ArgumentNullException("relations");
+            if (simpleRelation.Id == null) throw new Exception("simpleRelation.Id is null");
+
+            Relation relation = Create(simpleRelation.Id.Value);
+
+            relation.ChangeSetId = simpleRelation.ChangeSetId;
+            foreach (Tag pair in simpleRelation.Tags)
+            {
+                relation.Tags.Add(pair);
+            }
+            for (int idx = 0; idx < simpleRelation.Members.Count; idx++)
+            {
+                long memberId = simpleRelation.Members[idx].MemberId.Value;
+                string role = simpleRelation.Members[idx].MemberRole;
+
+                var member = new RelationMember();
+                member.Role = role;
+                switch (simpleRelation.Members[idx].MemberType.Value)
+                {
+                    case SimpleRelationMemberType.Node:
+                        Node node = null;
+                        if (nodes.TryGetValue(memberId, out node))
+                        {
+                            member.Member = node;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        break;
+                    case SimpleRelationMemberType.Way:
+                        Way way = null;
+                        if (ways.TryGetValue(memberId, out way))
+                        {
+                            member.Member = way;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        break;
+                    case SimpleRelationMemberType.Relation:
+                        Relation relationMember = null;
+                        if (relations.TryGetValue(memberId, out relationMember))
+                        {
+                            member.Member = relationMember;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        break;
+                }
+                relation.Members.Add(member);
+            }
+            relation.TimeStamp = simpleRelation.TimeStamp;
+            relation.User = simpleRelation.UserName;
+            relation.UserId = simpleRelation.UserId;
+            relation.Version = simpleRelation.Version.HasValue ? (long)simpleRelation.Version.Value : (long?)null;
+            relation.Visible = simpleRelation.Visible.HasValue && simpleRelation.Visible.Value;
+
+            return relation;
+        }
+
+        /// <summary>
+        /// Creates a relation from a SimpleRelation.
+        /// </summary>
+        /// <param name="simpleRelation"></param>
+        /// <param name="cache"></param>
+        /// <returns></returns>
+        public static Relation CreateFrom(SimpleRelation simpleRelation,
+            OsmDataCache cache)
+        {
+            if (simpleRelation == null) throw new ArgumentNullException("simpleRelation");
+            if (cache == null) throw new ArgumentNullException("cache");
+            if (simpleRelation.Id == null) throw new Exception("simpleRelation.Id is null");
+
+            Relation relation = Create(simpleRelation.Id.Value);
+
+            relation.ChangeSetId = simpleRelation.ChangeSetId;
+            foreach (Tag pair in simpleRelation.Tags)
+            {
+                relation.Tags.Add(pair);
+            }
+            for (int idx = 0; idx < simpleRelation.Members.Count; idx++)
+            {
+                long memberId = simpleRelation.Members[idx].MemberId.Value;
+                string role = simpleRelation.Members[idx].MemberRole;
+
+                var member = new RelationMember();
+                member.Role = role;
+                switch (simpleRelation.Members[idx].MemberType.Value)
+                {
+                    case SimpleRelationMemberType.Node:
+                        SimpleNode simpleNode = null;
+                        if (cache.TryGetNode(memberId, out simpleNode))
+                        {
+                            member.Member = Node.CreateFrom(simpleNode);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        break;
+                    case SimpleRelationMemberType.Way:
+                        SimpleWay simpleWay = null;
+                        if (cache.TryGetWay(memberId, out simpleWay))
+                        {
+                            member.Member = Way.CreateFrom(simpleWay, cache);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        break;
+                    case SimpleRelationMemberType.Relation:
+                        SimpleRelation relationMember = null;
+                        if (cache.TryGetRelation(memberId, out relationMember))
+                        {
+                            member.Member = Relation.CreateFrom(relationMember, cache);
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        break;
+                }
+                relation.Members.Add(member);
+            }
+            relation.TimeStamp = simpleRelation.TimeStamp;
+            relation.User = simpleRelation.UserName;
+            relation.UserId = simpleRelation.UserId;
+            relation.Version = simpleRelation.Version.HasValue ? (long)simpleRelation.Version.Value : (long?)null;
+            relation.Visible = simpleRelation.Visible.HasValue && simpleRelation.Visible.Value;
+
+            return relation;
+        }
+
+        /// <summary>
+        /// Creates a new relation.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static Relation Create(ObjectTable<string> table)
+        {
+            return Create(table, OsmBaseIdGenerator.NewId());
+        }
+
+        /// <summary>
+        /// Creates a new relation.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Relation Create(ObjectTable<string> table, long id)
+        {
+            return new Relation(table, id);
+        }
+
+        /// <summary>
+        /// Creates a new relation from a SimpleRelation.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="simpleRelation"></param>
+        /// <param name="nodes"></param>
+        /// <param name="ways"></param>
+        /// <param name="relations"></param>
+        /// <returns></returns>
+        public static Relation CreateFrom(ObjectTable<string> table, SimpleRelation simpleRelation,
+            IDictionary<long, Node> nodes,
+            IDictionary<long, Way> ways,
+            IDictionary<long, Relation> relations)
+        {
+            if (simpleRelation == null) throw new ArgumentNullException("simpleRelation");
+            if (nodes == null) throw new ArgumentNullException("nodes");
+            if (ways == null) throw new ArgumentNullException("ways");
+            if (relations == null) throw new ArgumentNullException("relations");
+            if (simpleRelation.Id == null) throw new Exception("simpleRelation.Id is null");
+
+            Relation relation = Create(table, simpleRelation.Id.Value);
+
+            relation.ChangeSetId = simpleRelation.ChangeSetId;
+            foreach (Tag pair in simpleRelation.Tags)
+            {
+                relation.Tags.Add(pair);
+            }
+            for (int idx = 0; idx < simpleRelation.Members.Count; idx++)
+            {
+                long memberId = simpleRelation.Members[idx].MemberId.Value;
+                string role = simpleRelation.Members[idx].MemberRole;
+
+                var member = new RelationMember();
+                member.Role = role;
+                switch (simpleRelation.Members[idx].MemberType.Value)
+                {
+                    case SimpleRelationMemberType.Node:
+                        Node node = null;
+                        if (nodes.TryGetValue(memberId, out node))
+                        {
+                            member.Member = node;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        break;
+                    case SimpleRelationMemberType.Way:
+                        Way way = null;
+                        if (ways.TryGetValue(memberId, out way))
+                        {
+                            member.Member = way;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        break;
+                    case SimpleRelationMemberType.Relation:
+                        Relation relationMember = null;
+                        if (relations.TryGetValue(memberId, out relationMember))
+                        {
+                            member.Member = relationMember;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                        break;
+                }
+                relation.Members.Add(member);
+            }
+            relation.TimeStamp = simpleRelation.TimeStamp;
+            relation.User = simpleRelation.UserName;
+            relation.UserId = simpleRelation.UserId;
+            relation.Version = simpleRelation.Version.HasValue ? (long)simpleRelation.Version.Value : (long?)null;
+            relation.Visible = simpleRelation.Visible.HasValue && simpleRelation.Visible.Value;
+
+            return relation;
+        }
+
+        /// <summary>
+        /// Creates a new changeset.
+        /// </summary>
+        /// <returns></returns>
+        public static ChangeSet CreateChangeSet()
+        {
+            return CreateChangeSet(OsmBaseIdGenerator.NewId());
+        }
+
+        /// <summary>
+        /// Creates a new changeset.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static ChangeSet CreateChangeSet(long id)
+        {
+            return new ChangeSet(id);
+        }
+
+        #endregion
     }
 }

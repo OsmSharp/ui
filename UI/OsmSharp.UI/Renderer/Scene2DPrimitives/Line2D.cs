@@ -268,8 +268,8 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
                 {
                     return true;
                 }
-            }
-			return false;
+			}
+			return this.GetBox().Overlaps(new RectangleF2D(view.Left, view.Top, view.Right, view.Bottom));
 		}
 
         /// <summary>

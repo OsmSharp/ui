@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OsmSharp.IO.StreamCache;
 using OsmSharp.Math.Primitives;
 using ProtoBuf;
 using ProtoBuf.Meta;
@@ -32,11 +33,16 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
     public abstract class RTreeStreamSerializer<T> : SpatialIndexSerializer<T>
     {
         /// <summary>
+        /// Holds the stream cache.
+        /// </summary>
+        private readonly IStreamCache _streamCache;
+
+        /// <summary>
         /// Creates a new serializer.
         /// </summary>
         protected RTreeStreamSerializer()
         {
-
+            _streamCache = new MemoryCachedStream();
         }
 
         /// <summary>
@@ -78,9 +84,10 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             RuntimeTypeModel typeModel = this.GetRuntimeTypeModel();
 
             // serialize root node.
-            byte[] serializedRoot = 
+            Stream serializedRoot = 
                 this.Serialize(typeModel, index.Root);
-            stream.Write(serializedRoot, 0, serializedRoot.Length);
+            serializedRoot.Seek(0, SeekOrigin.Begin);
+            serializedRoot.CopyTo(stream);
             stream.Flush();
         }
 
@@ -90,12 +97,12 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
         /// <param name="typeModel"></param>
         /// <param name="nodeBase"></param>
         /// <returns></returns>
-        private byte[] Serialize(RuntimeTypeModel typeModel, RTreeMemoryIndex<T>.Node nodeBase)
+        private Stream Serialize(RuntimeTypeModel typeModel, RTreeMemoryIndex<T>.Node nodeBase)
         {
-            var stream = new MemoryStream();
+            var stream = _streamCache.CreateNew();
             if (nodeBase.Children is List<RTreeMemoryIndex<T>.Node>)
             { // the node is not a leaf.
-                int position = 0;
+                long position = 0;
                 var node = (nodeBase as RTreeMemoryIndex<T>.Node);
                 var childrenIndex = new ChildrenIndex();
                 childrenIndex.IsLeaf = new bool[nodeBase.Children.Count];
@@ -104,7 +111,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                 childrenIndex.MaxX = new float[nodeBase.Children.Count];
                 childrenIndex.MaxY = new float[nodeBase.Children.Count];
                 childrenIndex.Starts = new int[nodeBase.Children.Count];
-                var serializedChildren = new List<byte[]>();
+                var serializedChildren = new List<Stream>();
                 for (int idx = 0; idx < nodeBase.Children.Count; idx++)
                 {
                     var child = (node.Children[idx] as RTreeMemoryIndex<T>.Node);
@@ -116,13 +123,13 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                     childrenIndex.IsLeaf[idx] = (
                         child.Children is List<T>);
 
-                    byte[] childSerialized = this.Serialize(typeModel, child);
+                    Stream childSerialized = this.Serialize(typeModel, child);
                     serializedChildren.Add(childSerialized);
 
-                    childrenIndex.Starts[idx] = position;
+                    childrenIndex.Starts[idx] = (int)position;
                     position = position + childSerialized.Length;
                 }
-                childrenIndex.End = position;
+                childrenIndex.End = (int)position;
 
                 // serialize this index object.
                 var indexStream = new MemoryStream();
@@ -145,7 +152,10 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                 // 4: write the actual children.
                 for (int idx = 0; idx < serializedChildren.Count; idx++)
                 {
-                    stream.Write(serializedChildren[idx], 0, serializedChildren[idx].Length);
+                    serializedChildren[idx].Seek(0, SeekOrigin.Begin);
+                    serializedChildren[idx].CopyTo(stream);
+                    _streamCache.Dispose(serializedChildren[idx]);
+                    serializedChildren[idx] = null;
                 }
             }
             else if (nodeBase.Children is List<T>)
@@ -166,9 +176,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             {
                 throw new Exception("Unknown node type!");
             }
-            byte[] serialized = stream.ToArray();
-            stream.Dispose();
-            return serialized;
+            return stream;
         }
 
         /// <summary>

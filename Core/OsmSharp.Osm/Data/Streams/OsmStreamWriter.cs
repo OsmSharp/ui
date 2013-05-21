@@ -108,6 +108,32 @@ namespace OsmSharp.Osm.Data.Streams
         }
 
         /// <summary>
+        /// Pulls the next object and returns true if there was one.
+        /// </summary>
+        /// <returns></returns>
+        public bool PullNext()
+        {
+            if (_reader.MoveNext())
+            {
+                object sourceObject = _reader.Current();
+                if (sourceObject is SimpleNode)
+                {
+                    this.AddNode(sourceObject as SimpleNode);
+                }
+                else if (sourceObject is SimpleWay)
+                {
+                    this.AddWay(sourceObject as SimpleWay);
+                }
+                else if (sourceObject is SimpleRelation)
+                {
+                    this.AddRelation(sourceObject as SimpleRelation);
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Closes the current target.
         /// </summary>
         public virtual void Close()

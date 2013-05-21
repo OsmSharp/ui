@@ -70,7 +70,6 @@
     <Compile Include="Data\Xml\Processor\Replication\Replicator.cs" />
     <Compile Include="Data\Xml\Processor\XmlFragmentWriter.cs" />
     <Compile Include="Data\Xml\Processor\XmlSimpleConverter.cs" />
-    <Compile Include="Factory\OsmBaseFactory.cs" />
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilterAny.cs" />
     <Compile Include="Filters\FilterBox.cs" />
@@ -154,6 +153,10 @@
     <Compile Include="Data\Xml\Processor\XmlOsmStreamWriter.cs" />
     <Compile Include="Data\PBF\Processor\PBFOsmStreamReader.cs" />
     <Compile Include="Data\PBF\Processor\PBFOsmStreamWriter.cs" />
+    <Compile Include="Data\Streams\OsmStreamOsmGeoWriter.cs" />
+    <Compile Include="Data\Streams\Collections\OsmGeoEnumerableStreamReader.cs" />
+    <Compile Include="Simple\Cache\OsmDataCache.cs" />
+    <Compile Include="Simple\Cache\OsmDataCacheMemory.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Xml\v0_6\osm.xsd">

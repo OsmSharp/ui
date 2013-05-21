@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -16,6 +16,7 @@
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
     <AssemblyName>OsmSharp.Android.UI.Sample</AssemblyName>
     <TargetFrameworkVersion>v2.3</TargetFrameworkVersion>
+    <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -43,7 +44,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="OpenTK" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
@@ -53,6 +53,7 @@
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
+    <None Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\Main.axml" />
@@ -61,10 +62,18 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\..\OsmSharp.UI\OsmSharp.UI.Android.csproj">
-      <Project>{87AF65F0-A706-4145-9779-E810A717AD5A}</Project>
-      <Name>OsmSharp.UI.Android</Name>
-    </ProjectReference>
+    <EmbeddedResource Include="test.mapcss" />
+    <EmbeddedResource Include="test.osm" />
+    <EmbeddedResource Include="images\bus.png" />
+    <EmbeddedResource Include="images\parking.png" />
+    <EmbeddedResource Include="images\postbox.png" />
+    <EmbeddedResource Include="images\tree.png" />
+    <EmbeddedResource Include="test.osm.pbf.routing.3" />
+    <EmbeddedResource Include="test.osm.pbf" />
+    <EmbeddedResource Include="test.osm.scene" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Core\OsmSharp\OsmSharp.Android.csproj">
       <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
       <Name>OsmSharp.Android</Name>
@@ -81,19 +90,9 @@
       <Project>{BE27CB1F-873A-4971-9C84-A81C7DAD04CD}</Project>
       <Name>OsmSharp.Routing.Android</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="test.mapcss" />
-    <EmbeddedResource Include="test.osm" />
-    <EmbeddedResource Include="images\bus.png" />
-    <EmbeddedResource Include="images\parking.png" />
-    <EmbeddedResource Include="images\postbox.png" />
-    <EmbeddedResource Include="images\tree.png" />
-    <EmbeddedResource Include="test.osm.pbf" />
-    <EmbeddedResource Include="test.gpx" />
-    <EmbeddedResource Include="test.osm.pbf.routing.3" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="images\" />
+    <ProjectReference Include="..\..\OsmSharp.UI\OsmSharp.UI.Android.csproj">
+      <Project>{87AF65F0-A706-4145-9779-E810A717AD5A}</Project>
+      <Name>OsmSharp.UI.Android</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>

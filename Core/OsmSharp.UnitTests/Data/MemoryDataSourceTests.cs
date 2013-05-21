@@ -19,7 +19,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using OsmSharp.Osm.Data.Core.Memory;
-using OsmSharp.Osm.Factory;
 using OsmSharp.Osm;
 
 namespace OsmSharp.UnitTests.Data
@@ -36,7 +35,7 @@ namespace OsmSharp.UnitTests.Data
         [Test]
         public void TestAddNode()
         {
-            Node testNode = OsmBaseFactory.CreateNode(-1);
+            Node testNode = Node.Create(-1);
             var source = new MemoryDataSource();
             source.AddNode(testNode);
 
@@ -61,7 +60,7 @@ namespace OsmSharp.UnitTests.Data
         [Test]
         public void TestRemoveNode()
         {
-            Node testNode = OsmBaseFactory.CreateNode(-1);
+            Node testNode = Node.Create(-1);
             var source = new MemoryDataSource();
             source.AddNode(testNode);
 
@@ -81,7 +80,7 @@ namespace OsmSharp.UnitTests.Data
         [Test]
         public void TestAddWay()
         {
-            Way testWay = OsmBaseFactory.CreateWay(-1);
+            Way testWay = Way.Create(-1);
             var source = new MemoryDataSource();
             source.AddWay(testWay);
 
@@ -106,7 +105,7 @@ namespace OsmSharp.UnitTests.Data
         [Test]
         public void TestRemoveWay()
         {
-            Way testWay = OsmBaseFactory.CreateWay(-1);
+            Way testWay = Way.Create(-1);
             var source = new MemoryDataSource();
             source.AddWay(testWay);
 
@@ -126,7 +125,7 @@ namespace OsmSharp.UnitTests.Data
         [Test]
         public void TestAddRelation()
         {
-            Relation testRelation = OsmBaseFactory.CreateRelation(-1);
+            Relation testRelation = Relation.Create(-1);
             var source = new MemoryDataSource();
             source.AddRelation(testRelation);
 
@@ -151,7 +150,7 @@ namespace OsmSharp.UnitTests.Data
         [Test]
         public void TestRemoveRelation()
         {
-            Relation testRelation = OsmBaseFactory.CreateRelation(-1);
+            Relation testRelation = Relation.Create(-1);
             var source = new MemoryDataSource();
             source.AddRelation(testRelation);
 
@@ -171,10 +170,10 @@ namespace OsmSharp.UnitTests.Data
         [Test]
         public void TestWayNodeRelation()
         {
-            Way testWay = OsmBaseFactory.CreateWay(-1);
-            Node node1 = OsmBaseFactory.CreateNode(-1);
+            Way testWay = Way.Create(-1);
+            Node node1 = Node.Create(-1);
             testWay.Nodes.Add(node1);
-            Node node2 = OsmBaseFactory.CreateNode(-2);
+            Node node2 = Node.Create(-2);
             testWay.Nodes.Add(node2);
             var source = new MemoryDataSource();
             source.AddWay(testWay);

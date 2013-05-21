@@ -15,21 +15,19 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using OsmSharp.Osm.Xml;
-using OsmSharp.Osm;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Factory;
 using OsmSharp.Osm.Xml.v0_6;
 using OsmSharp.Osm.Sources;
 using OsmSharp.Osm.Filters;
 using System.Xml;
 using System.IO;
 
-namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
+namespace OsmSharp.Osm.Data.Xml.OsmSource
 {
     /// <summary>
     /// An osm data source for an xml stream.
@@ -82,7 +80,8 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
         /// </summary>
         /// <param name="stream"></param>
         public OsmDataSource(Stream stream)
-            : this(new OsmSharp.Osm.Xml.OsmDocument(new OsmSharp.Xml.Sources.XmlReaderSource(XmlReader.Create(stream))))
+            : this(new OsmSharp.Osm.Xml.OsmDocument(
+                new OsmSharp.Xml.Sources.XmlReaderSource(XmlReader.Create(stream))))
         {
             
         }
@@ -362,23 +361,23 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
         /// <summary>
         /// Applies the given changeset to the data in this datasource.
         /// </summary>
-        /// <param name="change_set"></param>
-        public void ApplyChangeSet(ChangeSet change_set)
+        /// <param name="changeSet"></param>
+        public void ApplyChangeSet(ChangeSet changeSet)
         {
             // test if the changeset was not already applied.
-            if (_closed_change_set.Contains(change_set.Id))
+            if (_closed_change_set.Contains(changeSet.Id))
             {
                 throw new InvalidOperationException("Cannot apply an already closed changeset!");
             }
 
             // change the objects in the changeset.
-            foreach (Change change in change_set.Changes)
+            foreach (Change change in changeSet.Changes)
             {
                 switch (change.Type)
                 {
                     case ChangeType.Create:
                         // set the changeset and version field.
-                        change.Object.ChangeSetId = change_set.Id;
+                        change.Object.ChangeSetId = changeSet.Id;
                         change.Object.Version = 0;
 
                         switch (change.Object.Type)
@@ -408,12 +407,12 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
                                 this.RemoveWay(change.Object as Way);
                                 break;
                         }
-                        this.RegisterChangeSetId(change_set.Id);
+                        this.RegisterChangeSetId(changeSet.Id);
                         break;
                     case ChangeType.Modify:
 
                         // update the changeset field and the version field.
-                        change.Object.ChangeSetId = change_set.Id;
+                        change.Object.ChangeSetId = changeSet.Id;
                         if (change.Object.Version.HasValue)
                         {
                             change.Object.Version =  change.Object.Version.Value + 1;
@@ -487,19 +486,10 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
                                 }
                                 break;
                         }
-                        this.RegisterChangeSetId(change_set.Id);
+                        this.RegisterChangeSetId(changeSet.Id);
                         break;
                 }
             }
-        }
-
-        /// <summary>
-        /// Creates a new changeset.
-        /// </summary>
-        /// <returns></returns>
-        public ChangeSet CreateChangeSet()
-        {
-            return OsmBaseFactory.CreateChangeSet(KeyGenerator.GenerateNew());
         }
 
         /// <summary>
@@ -508,7 +498,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
         /// <returns></returns>
         public Node CreateNode()
         {
-            return OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+            return Node.Create(KeyGenerator.GenerateNew());
         }
 
         /// <summary>
@@ -565,7 +555,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
         /// <returns></returns>
         public Relation CreateRelation()
         {
-            return OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            return Relation.Create(KeyGenerator.GenerateNew());
         }
 
         /// <summary>
@@ -623,7 +613,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.OsmSource
         /// <returns></returns>
         public Way CreateWay()
         {
-            return OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
+            return Way.Create(KeyGenerator.GenerateNew());
         }
 
         /// <summary>

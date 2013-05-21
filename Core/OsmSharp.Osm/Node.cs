@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Simple;
+using OsmSharp.Osm.Simple.Cache;
 
 namespace OsmSharp.Osm
 {
@@ -45,9 +47,9 @@ namespace OsmSharp.Osm
         /// Creates a new node using a string table.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="string_table"></param>
-        internal protected Node(ObjectTable<string> string_table, long id)
-            : base(string_table, id)
+        /// <param name="stringTable"></param>
+        internal protected Node(ObjectTable<string> stringTable, long id)
+            : base(stringTable, id)
         {
 
         }
@@ -111,12 +113,12 @@ namespace OsmSharp.Osm
         {
             if (this.Coordinate != null)
             {
-                return string.Format("http://www.openstreetmap.org/?node={0}:[{1};{2}]",
+                return String.Format("http://www.openstreetmap.org/?node={0}:[{1};{2}]",
                     this.Id,
                     this.Coordinate.Longitude,
                     this.Coordinate.Latitude);
             }
-            return string.Format("http://www.openstreetmap.org/?node={0}",
+            return String.Format("http://www.openstreetmap.org/?node={0}",
                 this.Id);
         }
 
@@ -151,5 +153,115 @@ namespace OsmSharp.Osm
             this.CopyTo(n);
             return n;
         }
+
+        #region Node factory functions
+
+        /// <summary>
+        /// Creates a new node with a new id.
+        /// </summary>
+        /// <returns></returns>
+        public static Node Create()
+        {
+            return Create(OsmBaseIdGenerator.NewId());
+        }
+
+        /// <summary>
+        /// Creates a new node with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Node Create(long id)
+        {
+            return new Node(id);
+        }
+
+        /// <summary>
+        /// Creates a new node using the given stringtable.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static Node Create(ObjectTable<string> table)
+        {
+            return Create(table, OsmBaseIdGenerator.NewId());
+        }
+
+        /// <summary>
+        /// Creates a new node using a given string table with the given id.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Node Create(ObjectTable<string> table, long id)
+        {
+            return new Node(table, id);
+        }
+
+        /// <summary>
+        /// Creates a new node from a SimpleNode.
+        /// </summary>
+        /// <param name="simpleNode"></param>
+        /// <returns></returns>
+        public static Node CreateFrom(SimpleNode simpleNode)
+        {
+            if (simpleNode == null) throw new ArgumentNullException("simpleNode");
+            if (simpleNode.Id == null) throw new Exception("simpleNode.id is null");
+            if (simpleNode.Latitude == null) throw new Exception("simpleNode.Latitude is null");
+            if (simpleNode.Longitude == null) throw new Exception("simpleNode.Longitude is null");
+
+            Node node = Node.Create(simpleNode.Id.Value);
+
+            node.ChangeSetId = simpleNode.ChangeSetId;
+            node.Coordinate = new GeoCoordinate(simpleNode.Latitude.Value, simpleNode.Longitude.Value);
+            if (simpleNode.Tags != null)
+            {
+                foreach (Tag pair in simpleNode.Tags)
+                {
+                    node.Tags.Add(pair);
+                }
+            }
+            node.TimeStamp = simpleNode.TimeStamp;
+            node.User = simpleNode.UserName;
+            node.UserId = simpleNode.UserId;
+            node.Version = simpleNode.Version.HasValue ? (long)simpleNode.Version.Value : (long?)null;
+            node.Visible = simpleNode.Visible.HasValue && simpleNode.Visible.Value;
+
+            return node;
+        }
+
+        /// <summary>
+        /// Creates a new node from a SimpleNode using a string table.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="simpleNode"></param>
+        /// <returns></returns>
+        public static Node CreateFrom(ObjectTable<string> table, SimpleNode simpleNode)
+        {
+            if (table == null) throw new ArgumentNullException("table");
+            if (simpleNode == null) throw new ArgumentNullException("simpleNode");
+            if (simpleNode.Id == null) throw new Exception("simpleNode.id is null");
+            if (simpleNode.Latitude == null) throw new Exception("simpleNode.Latitude is null");
+            if (simpleNode.Longitude == null) throw new Exception("simpleNode.Longitude is null");
+
+            Node node = Node.Create(table, simpleNode.Id.Value);
+
+            node.ChangeSetId = simpleNode.ChangeSetId;
+            node.Coordinate = new GeoCoordinate(simpleNode.Latitude.Value, simpleNode.Longitude.Value);
+            if (simpleNode.Tags != null)
+            {
+                foreach (Tag pair in simpleNode.Tags)
+                {
+                    node.Tags.Add(pair);
+                }
+            }
+            node.TimeStamp = simpleNode.TimeStamp;
+            node.User = simpleNode.UserName;
+            node.UserId = simpleNode.UserId;
+            node.Version = simpleNode.Version.HasValue ? (long)simpleNode.Version.Value : (long?)null;
+            node.Visible = simpleNode.Visible.HasValue && simpleNode.Visible.Value;
+
+            return node;
+        }
+
+        #endregion
     }
 }

@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: Android.Runtime.ResourceDesignerAttribute("OsmSharp.Android.UI.Resource", IsApplication=false)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("OsmSharp.Android.UI.Resource", IsApplication=false)]
 
 namespace OsmSharp.Android.UI
 {
@@ -19,13 +19,18 @@ namespace OsmSharp.Android.UI
 	public partial class Resource
 	{
 		
-		Resource()
+		static Resource()
 		{
-			global::Android.Runtime.ResourceIdManager.UpdateIdValues ();
+			global::Android.Runtime.ResourceIdManager.UpdateIdValues();
 		}
 		
 		public partial class Attribute
 		{
+			
+			static Attribute()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private Attribute()
 			{
@@ -37,6 +42,11 @@ namespace OsmSharp.Android.UI
 			
 			// aapt resource value: 0x7f020000
 			public static int library_name = 2130837504;
+			
+			static String()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private String()
 			{

@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using OsmSharp.Osm.Data.Core.Memory;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Osm.Simple;
-using OsmSharp.Osm.Factory;
 using OsmSharp.Collections;
 
 namespace OsmSharp.Osm.Data.Memory
@@ -48,6 +47,7 @@ namespace OsmSharp.Osm.Data.Memory
         public MemoryOsmStreamWriter(MemoryDataSource dataSource)
         {
             _dataSource = dataSource;
+			_stringTable = new ObjectTable<string> (false);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// <param name="simpleNode"></param>
         public override void AddNode(SimpleNode simpleNode)
         {
-            Node node= OsmBaseFactory.CreateNodeFrom(_stringTable, simpleNode);
+            Node node= Node.CreateFrom(_stringTable, simpleNode);
             if (node != null)
             {
                 _nodes[node.Id] = node;
@@ -102,7 +102,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// <param name="simpleWay"></param>
         public override void AddWay(SimpleWay simpleWay)
         {
-            Way way = OsmBaseFactory.CreateWayFrom(_stringTable, simpleWay, _nodes);
+            Way way = Way.CreateFrom(_stringTable, simpleWay, _nodes);
             if (way != null)
             {
                 _ways[way.Id] = way;
@@ -122,7 +122,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// <param name="simpleRelation"></param>
         public override void AddRelation(SimpleRelation simpleRelation)
         {
-            Relation relation = OsmBaseFactory.CreateRelationFrom(_stringTable, simpleRelation, _nodes, _ways, _relations);
+            Relation relation = Relation.CreateFrom(_stringTable, simpleRelation, _nodes, _ways, _relations);
             if (relation != null)
             {
                 _relations[relation.Id] = relation;

@@ -9,7 +9,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: Android.Runtime.ResourceDesignerAttribute("OsmSharp.Android.UI.Sample.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("OsmSharp.Android.UI.Sample.Resource", IsApplication=true)]
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -19,19 +19,24 @@ namespace OsmSharp.Android.UI.Sample
 	public partial class Resource
 	{
 		
-		Resource()
+		static Resource()
 		{
-			global::Android.Runtime.ResourceIdManager.UpdateIdValues ();
+			global::Android.Runtime.ResourceIdManager.UpdateIdValues();
 		}
 		
 		public static void UpdateIdValues()
 		{
-			EmptyTemplate.Resource.String.library_name = OsmSharp.Android.UI.Sample.Resource.String.library_name;
 			OsmSharp.Android.UI.Resource.String.library_name = OsmSharp.Android.UI.Sample.Resource.String.library_name;
+			EmptyTemplate.Resource.String.library_name = OsmSharp.Android.UI.Sample.Resource.String.library_name;
 		}
 		
 		public partial class Attribute
 		{
+			
+			static Attribute()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private Attribute()
 			{
@@ -44,6 +49,11 @@ namespace OsmSharp.Android.UI.Sample
 			// aapt resource value: 0x7f020000
 			public const int Icon = 2130837504;
 			
+			static Drawable()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
 			private Drawable()
 			{
 			}
@@ -54,6 +64,11 @@ namespace OsmSharp.Android.UI.Sample
 			
 			// aapt resource value: 0x7f050000
 			public const int scrollView1 = 2131034112;
+			
+			static Id()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private Id()
 			{
@@ -66,6 +81,11 @@ namespace OsmSharp.Android.UI.Sample
 			// aapt resource value: 0x7f030000
 			public const int Main = 2130903040;
 			
+			static Layout()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
+			
 			private Layout()
 			{
 			}
@@ -74,11 +94,13 @@ namespace OsmSharp.Android.UI.Sample
 		public partial class String
 		{
 			
-			// aapt resource value: 0x7f040001
-			public const int app_name = 2130968577;
-			
 			// aapt resource value: 0x7f040000
 			public const int library_name = 2130968576;
+			
+			static String()
+			{
+				global::Android.Runtime.ResourceIdManager.UpdateIdValues();
+			}
 			
 			private String()
 			{

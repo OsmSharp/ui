@@ -325,7 +325,8 @@
     <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\ISpatialIndexReadonly.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />
-    <Compile Include="Collections\SpatialIndexes\RTreeMemorySimpleIndex.cs" />
+    <Compile Include="IO\StreamCache\IStreamCache.cs" />
+    <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Xml\Gpx\v1_0\gpx.xsd">

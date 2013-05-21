@@ -18,7 +18,6 @@
 
 using NUnit.Framework;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Factory;
 
 namespace OsmSharp.UnitTests.Data
 {
@@ -34,7 +33,7 @@ namespace OsmSharp.UnitTests.Data
         [Test]
         public void NodeToStringTests()
         {
-            Node testNode = OsmBaseFactory.CreateNode(-1);
+            Node testNode = Node.Create(-1);
             string description = testNode.ToString(); // 
             testNode.Coordinate = new OsmSharp.Math.Geo.GeoCoordinate(0, 0);
             description = testNode.ToString();

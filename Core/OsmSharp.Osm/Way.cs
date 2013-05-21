@@ -22,8 +22,8 @@ using System.Text;
 using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Factory;
 using OsmSharp.Osm.Simple;
+using OsmSharp.Osm.Simple.Cache;
 
 namespace OsmSharp.Osm
 {
@@ -35,7 +35,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Holds the nodes of this way.
         /// </summary>
-        private List<Node> _nodes;
+        private readonly List<Node> _nodes;
 
         /// <summary>
         /// Creates a new way.
@@ -51,9 +51,9 @@ namespace OsmSharp.Osm
         /// Creates a new way using a string table.
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="string_table"></param>
-        internal protected Way(ObjectTable<string> string_table, long id)
-            : base(string_table, id)
+        /// <param name="stringTable"></param>
+        internal protected Way(ObjectTable<string> stringTable, long id)
+            : base(stringTable, id)
         {
             _nodes = new List<Node>();
         }
@@ -83,7 +83,7 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public IList<GeoCoordinate> GetCoordinates()
         {
-            List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
+            var coordinates = new List<GeoCoordinate>();
 
             for (int idx = 0; idx < this.Nodes.Count; idx++)
             {
@@ -119,7 +119,7 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public Way Copy()
         {
-            Way w = new Way(this.Id);
+            var w = new Way(this.Id);
             this.CopyTo(w);
             return w;
         }
@@ -140,7 +140,7 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public override SimpleOsmGeo ToSimple()
         {
-            SimpleWay way = new SimpleWay();
+            var way = new SimpleWay();
             way.Id = this.Id;
             way.ChangeSetId = this.ChangeSetId;
             way.Tags = this.Tags;
@@ -164,8 +164,181 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("http://www.openstreetmap.org/?way={0}",
+            return String.Format("http://www.openstreetmap.org/?way={0}",
                 this.Id);
         }
+
+        #region Way factory functions
+
+        /// <summary>
+        /// Creates a new way.
+        /// </summary>
+        /// <returns></returns>
+        public static Way Create()
+        {
+            return Create(OsmBaseIdGenerator.NewId());
+        }
+
+        /// <summary>
+        /// Creates a new way with a given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Way Create(long id)
+        {
+            return new Way(id);
+        }
+
+        /// <summary>
+        /// Creates a new way from a SimpleWay given a dictionary with nodes.
+        /// </summary>
+        /// <param name="simpleWay"></param>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
+        public static Way CreateFrom(SimpleWay simpleWay, IDictionary<long, Node> nodes)
+        {
+            if (simpleWay == null) throw new ArgumentNullException("simpleWay");
+            if (nodes == null) throw new ArgumentNullException("nodes");
+            if (simpleWay.Id == null) throw new Exception("simpleWay.id is null");
+
+            Way way = Create(simpleWay.Id.Value);
+
+            way.ChangeSetId = simpleWay.ChangeSetId;
+            foreach (Tag pair in simpleWay.Tags)
+            {
+                way.Tags.Add(pair);
+            }
+            for (int idx = 0; idx < simpleWay.Nodes.Count; idx++)
+            {
+                long nodeId = simpleWay.Nodes[idx];
+                Node node = null;
+                if (nodes.TryGetValue(nodeId, out node))
+                {
+                    way.Nodes.Add(node);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            way.TimeStamp = simpleWay.TimeStamp;
+            way.User = simpleWay.UserName;
+            way.UserId = simpleWay.UserId;
+            way.Version = simpleWay.Version.HasValue ? (long)simpleWay.Version.Value : (long?)null;
+            way.Visible = simpleWay.Visible.HasValue && simpleWay.Visible.Value;
+
+            return way;
+        }
+
+        /// <summary>
+        /// Creates a new way from a SimpleWay.
+        /// </summary>
+        /// <param name="simpleWay"></param>
+        /// <param name="cache"></param>
+        /// <returns></returns>
+        public static Way CreateFrom(SimpleWay simpleWay, OsmDataCache cache)
+        {
+            if (simpleWay == null) throw new ArgumentNullException("simpleWay");
+            if (cache == null) throw new ArgumentNullException("cache");
+            if (simpleWay.Id == null) throw new Exception("simpleWay.id is null");
+
+            Way way = Create(simpleWay.Id.Value);
+
+            way.ChangeSetId = simpleWay.ChangeSetId;
+            if (simpleWay.Tags != null)
+            {
+                foreach (Tag pair in simpleWay.Tags)
+                {
+                    way.Tags.Add(pair);
+                }
+            }
+            for (int idx = 0; idx < simpleWay.Nodes.Count; idx++)
+            {
+                long nodeId = simpleWay.Nodes[idx];
+                SimpleNode node = null;
+                if (cache.TryGetNode(nodeId, out node))
+                {
+                    way.Nodes.Add(Node.CreateFrom(node));
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            way.TimeStamp = simpleWay.TimeStamp;
+            way.User = simpleWay.UserName;
+            way.UserId = simpleWay.UserId;
+            way.Version = simpleWay.Version.HasValue ? (long)simpleWay.Version.Value : (long?)null;
+            way.Visible = simpleWay.Visible.HasValue && simpleWay.Visible.Value;
+
+            return way;
+        }
+
+        /// <summary>
+        /// Creates a new way with a new id given a stringtable.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <returns></returns>
+        public static Way Create(ObjectTable<string> table)
+        {
+            return Create(table, OsmBaseIdGenerator.NewId());
+        }
+
+        /// <summary>
+        /// Creates a new way with a given id given a stringtable.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static Way Create(ObjectTable<string> table, long id)
+        {
+            return new Way(table, id);
+        }
+
+        /// <summary>
+        /// Creates a new way from a SimpleWay given a stringtable.
+        /// </summary>
+        /// <param name="table"></param>
+        /// <param name="simpleWay"></param>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
+        public static Way CreateFrom(ObjectTable<string> table, SimpleWay simpleWay,
+                                        IDictionary<long, Node> nodes)
+        {
+            if (table == null) throw new ArgumentNullException("table");
+            if (simpleWay == null) throw new ArgumentNullException("simpleWay");
+            if (nodes == null) throw new ArgumentNullException("nodes");
+            if (simpleWay.Id == null) throw new Exception("simpleWay.id is null");
+
+            Way way = Create(table, simpleWay.Id.Value);
+
+            way.ChangeSetId = simpleWay.ChangeSetId;
+            foreach (Tag pair in simpleWay.Tags)
+            {
+                way.Tags.Add(pair);
+            }
+            for (int idx = 0; idx < simpleWay.Nodes.Count; idx++)
+            {
+                long nodeId = simpleWay.Nodes[idx];
+                Node node = null;
+                if (nodes.TryGetValue(nodeId, out node))
+                {
+                    way.Nodes.Add(node);
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            way.TimeStamp = simpleWay.TimeStamp;
+            way.User = simpleWay.UserName;
+            way.UserId = simpleWay.UserId;
+            way.Version = simpleWay.Version.HasValue ? (long)simpleWay.Version.Value : (long?)null;
+            way.Visible = simpleWay.Visible.HasValue && simpleWay.Visible.Value;
+
+            return way;
+        }
+
+        #endregion
     }
 }

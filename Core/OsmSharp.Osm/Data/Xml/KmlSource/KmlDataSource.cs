@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Xml.Kml;
-using OsmSharp.Osm.Factory;
 using OsmSharp.Osm;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
@@ -211,7 +210,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertPlacemark(OsmSharp.Xml.Kml.v2_0.Placemark placemark)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Tags.Add("kml_type", "Response");
 
@@ -275,7 +274,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertPolygon(OsmSharp.Xml.Kml.v2_0.Polygon polygon)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             OsmGeo inner = this.ConvertLinearRing(polygon.innerBoundaryIs.LinearRing);
             if (inner != null)
@@ -305,7 +304,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertLinearRing(OsmSharp.Xml.Kml.v2_0.LinearRing linearRing)
         {
-            Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
+            Way way = Way.Create(KeyGenerator.GenerateNew());
 
             way.Tags.Add("area", "yes");
             way.Tags.Add("kml_type", "LinearRing");
@@ -313,7 +312,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
             IList<GeoCoordinate> coordinates = this.ConvertCoordinates(linearRing.coordinates);
             foreach (GeoCoordinate coordinate in coordinates)
             {
-                Node node = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+                Node node = Node.Create(KeyGenerator.GenerateNew());
                 node.Coordinate = coordinate;
                 way.Nodes.Add(node);
             }
@@ -328,7 +327,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertPoint(OsmSharp.Xml.Kml.v2_0.Point point)
         {
-            Node node = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+            Node node = Node.Create(KeyGenerator.GenerateNew());
 
             node.Tags.Add("kml_type", "Point");
 
@@ -375,7 +374,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertMultiGeometry(OsmSharp.Xml.Kml.v2_0.MultiGeometry multiGeometry)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Tags.Add("kml_type", "MultiGeometry");
 
@@ -439,14 +438,14 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertLineString(OsmSharp.Xml.Kml.v2_0.LineString lineString)
         {
-            Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
+            Way way = Way.Create(KeyGenerator.GenerateNew());
 
             way.Tags.Add("kml_type", "LineString");
 
             IList<GeoCoordinate> coordinates = this.ConvertCoordinates(lineString.coordinates);
             foreach (GeoCoordinate coordinate in coordinates)
             {
-                Node node = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+                Node node = Node.Create(KeyGenerator.GenerateNew());
                 node.Coordinate = coordinate;
                 way.Nodes.Add(node);
             }
@@ -461,7 +460,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertFolder(OsmSharp.Xml.Kml.v2_0.Folder folder)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Tags.Add("kml_type", "Folder");
 
@@ -501,7 +500,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertDocument(OsmSharp.Xml.Kml.v2_0.Document document)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Tags.Add("kml_type", "Document");
 
@@ -545,7 +544,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertResponse(OsmSharp.Xml.Kml.v2_0_response.Response response)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Tags.Add("kml_type", "Response");
 
@@ -601,7 +600,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertPlacemark(OsmSharp.Xml.Kml.v2_0_response.Placemark placemark)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Tags.Add("kml_type", "Response");
 
@@ -665,7 +664,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertPolygon(OsmSharp.Xml.Kml.v2_0_response.Polygon polygon)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             OsmGeo inner = this.ConvertLinearRing(polygon.innerBoundaryIs.LinearRing);
             if (inner != null)
@@ -695,7 +694,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertLinearRing(OsmSharp.Xml.Kml.v2_0_response.LinearRing linearRing)
         {
-            Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
+            Way way = Way.Create(KeyGenerator.GenerateNew());
 
             way.Tags.Add("area", "yes");
             way.Tags.Add("kml_type", "LinearRing");
@@ -703,7 +702,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
             IList<GeoCoordinate> coordinates = this.ConvertCoordinates(linearRing.coordinates);
             foreach (GeoCoordinate coordinate in coordinates)
             {
-                Node node = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+                Node node = Node.Create(KeyGenerator.GenerateNew());
                 node.Coordinate = coordinate;
                 way.Nodes.Add(node);
             }
@@ -718,7 +717,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertPoint(OsmSharp.Xml.Kml.v2_0_response.Point point)
         {
-            Node node = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+            Node node = Node.Create(KeyGenerator.GenerateNew());
 
             node.Tags.Add("kml_type", "Point");
 
@@ -765,7 +764,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertMultiGeometry(OsmSharp.Xml.Kml.v2_0_response.MultiGeometry multiGeometry)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Tags.Add("kml_type", "MultiGeometry");
 
@@ -829,14 +828,14 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertLineString(OsmSharp.Xml.Kml.v2_0_response.LineString lineString)
         {
-            Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
+            Way way = Way.Create(KeyGenerator.GenerateNew());
 
             way.Tags.Add("kml_type", "LineString");
 
             IList<GeoCoordinate> coordinates = this.ConvertCoordinates(lineString.coordinates);
             foreach (GeoCoordinate coordinate in coordinates)
             {
-                Node node = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+                Node node = Node.Create(KeyGenerator.GenerateNew());
                 node.Coordinate = coordinate;
                 way.Nodes.Add(node);
             }
@@ -851,7 +850,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertFolder(OsmSharp.Xml.Kml.v2_0_response.Folder folder)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Tags.Add("kml_type", "Folder");
 
@@ -891,7 +890,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertDocument(OsmSharp.Xml.Kml.v2_0_response.Document document)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Tags.Add("kml_type", "Document");
 
@@ -1013,7 +1012,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertMultiGeometry(OsmSharp.Xml.Kml.v2_1.MultiGeometryType multiGeometry)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Visible = true;
             relation.Tags.Add("kml_type", "MultiGeometryType");
@@ -1039,7 +1038,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertPolygon(OsmSharp.Xml.Kml.v2_1.PolygonType polygon)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Visible = true;
             relation.Tags.Add("kml_type", "PolygonType");
@@ -1071,7 +1070,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertBoundary(OsmSharp.Xml.Kml.v2_1.boundaryType[] boundary)
         {
-            Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+            Relation relation = Relation.Create(KeyGenerator.GenerateNew());
 
             relation.Visible = true;
             relation.Tags.Add("kml_type", "boundaryType[]");
@@ -1097,7 +1096,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertLinearRing(OsmSharp.Xml.Kml.v2_1.LinearRingType linearRing)
         {
-            Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
+            Way way = Way.Create(KeyGenerator.GenerateNew());
 
             way.Tags.Add("kml_type", "LinearRingType");
             way.Tags.Add("area", "yes");
@@ -1105,7 +1104,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
             IList<GeoCoordinate> coordinates = this.ConvertCoordinates(linearRing.coordinates);
             foreach (GeoCoordinate coordinate in coordinates)
             {
-                Node n = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+                Node n = Node.Create(KeyGenerator.GenerateNew());
                 n.Coordinate = coordinate;
                 way.Nodes.Add(n);
             }
@@ -1120,14 +1119,14 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertLineString(OsmSharp.Xml.Kml.v2_1.LineStringType lineString)
         {
-            Way way = OsmBaseFactory.CreateWay(KeyGenerator.GenerateNew());
+            Way way = Way.Create(KeyGenerator.GenerateNew());
 
             way.Tags.Add("kml_type", "LineStringType");
 
             IList<GeoCoordinate> coordinates = this.ConvertCoordinates(lineString.coordinates);
             foreach (GeoCoordinate coordinate in coordinates)
             {
-                Node n = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+                Node n = Node.Create(KeyGenerator.GenerateNew());
                 n.Coordinate = coordinate;
                 way.Nodes.Add(n);
             }
@@ -1142,7 +1141,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
         /// <returns></returns>
         private OsmGeo ConvertPoint(OsmSharp.Xml.Kml.v2_1.PointType point)
         {
-            Node n = OsmBaseFactory.CreateNode(KeyGenerator.GenerateNew());
+            Node n = Node.Create(KeyGenerator.GenerateNew());
             IList<GeoCoordinate> coordinates = this.ConvertCoordinates(point.coordinates);
 
             n.Tags.Add("kml_type", "PointType");
@@ -1167,7 +1166,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
                 IList<OsmGeo> created_features = this.ConvertFeatures(folder.Items1);
 
                 // create the relation for this folder.
-                Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+                Relation relation = Relation.Create(KeyGenerator.GenerateNew());
                 relation.Tags.Add("name", folder.name);
                 relation.Visible = folder.visibility;
                 relation.Tags.Add("description", folder.description);
@@ -1191,7 +1190,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
                 IList<OsmGeo> created_features = this.ConvertFeatures(document.Items1);
 
                 // create the relation for this folder.
-                Relation relation = OsmBaseFactory.CreateRelation(KeyGenerator.GenerateNew());
+                Relation relation = Relation.Create(KeyGenerator.GenerateNew());
                 relation.Tags.Add("name", document.name);
                 relation.Visible = document.visibility;
                 relation.Tags.Add("description", document.description);

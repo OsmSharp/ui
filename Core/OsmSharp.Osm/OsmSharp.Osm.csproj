@@ -200,6 +200,8 @@
     <Compile Include="Data\Cache\DataSourceCache.cs" />
     <Compile Include="Data\Cache\DataSourceQuadTree.cs" />
     <Compile Include="Data\Cache\DataSourceQuadTreeNode.cs" />
+    <Compile Include="Data\Streams\Collections\OsmGeoEnumerableStreamReader.cs" />
+    <Compile Include="Simple\Cache\OsmDataCache.cs" />
     <Compile Include="Data\IDataSource.cs" />
     <Compile Include="Data\IDataSourceReadOnly.cs" />
     <Compile Include="Data\KeyGenerator.cs" />
@@ -230,6 +232,7 @@
     <Compile Include="Data\Streams\ChangeSets\DataProcessorChangeSetFilter.cs" />
     <Compile Include="Data\Streams\ChangeSets\DataProcessorChangeSetSource.cs" />
     <Compile Include="Data\Streams\ChangeSets\DataProcessorChangeSetTarget.cs" />
+    <Compile Include="Data\Streams\OsmStreamOsmGeoWriter.cs" />
     <Compile Include="Data\Streams\OsmStreamExtensions.cs" />
     <Compile Include="Data\Streams\OsmStreamFilter.cs" />
     <Compile Include="Data\Streams\OsmStreamReader.cs" />
@@ -261,7 +264,6 @@
     <Compile Include="Data\Xml\Processor\XmlOsmStreamWriter.cs" />
     <Compile Include="Data\Xml\Processor\XmlFragmentWriter.cs" />
     <Compile Include="Data\Xml\Processor\XmlSimpleConverter.cs" />
-    <Compile Include="Factory\OsmBaseFactory.cs" />
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilterAny.cs" />
     <Compile Include="Filters\FilterBox.cs" />
@@ -281,6 +283,7 @@
     <Compile Include="Relation.cs" />
     <Compile Include="RelationMember.cs" />
     <Compile Include="SimpleShapeInterpreter.cs" />
+    <Compile Include="Simple\Cache\OsmDataCacheMemory.cs" />
     <Compile Include="Simple\SimpleChange.cs" />
     <Compile Include="Simple\SimpleChangeSet.cs" />
     <Compile Include="Simple\SimpleChangeSetInfo.cs" />

@@ -19,7 +19,8 @@ namespace OsmSharp.UI.Renderer
         /// <summary>
         /// Holds all primitives indexed per layer and by id.
         /// </summary>
-        private readonly SortedDictionary<int, Dictionary<uint, IScene2DPrimitive>> _primitives; 
+        private readonly SortedDictionary<int, 
+			Dictionary<uint, IScene2DPrimitive>> _primitives; 
 
         /// <summary>
         /// Holds the next primitive id.
@@ -399,11 +400,12 @@ namespace OsmSharp.UI.Renderer
 
         #region Serialization/Deserialization
 
-        /// <summary>
-        /// Serializes this scene2D to the given stream.
-        /// </summary>
-        /// <param name="stream"></param>
-	    public void Serialize(Stream stream)
+	    /// <summary>
+	    /// Serializes this scene2D to the given stream.
+	    /// </summary>
+	    /// <param name="stream"></param>
+	    /// <param name="compress"></param>
+	    public void Serialize(Stream stream, bool compress)
 	    {
             // build the index.
             var index = new RTreeMemoryIndex<Scene2DEntry>();
@@ -421,19 +423,20 @@ namespace OsmSharp.UI.Renderer
             }
 
             // create the serializer.
-            var serializer = new Scene2DPrimitivesSerializer();
+            var serializer = new Scene2DPrimitivesSerializer(compress);
             serializer.Serialize(stream, index);
 	    }
 
-        /// <summary>
-        /// Deserialize a Scene2D from the given stream.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <returns></returns>
-	    public static IScene2DPrimitivesSource Deserialize(Stream stream)
+	    /// <summary>
+	    /// Deserialize a Scene2D from the given stream.
+	    /// </summary>
+	    /// <param name="stream"></param>
+	    /// <param name="compressed"></param>
+	    /// <returns></returns>
+	    public static IScene2DPrimitivesSource Deserialize(Stream stream, bool compressed)
         {
             // create the serializer.
-            var serializer = new Scene2DPrimitivesSerializer();
+            var serializer = new Scene2DPrimitivesSerializer(compressed);
             ISpatialIndexReadonly<Scene2DEntry> index = serializer.Deserialize(stream);
 
             return new Scene2DPrimitivesSource(index);

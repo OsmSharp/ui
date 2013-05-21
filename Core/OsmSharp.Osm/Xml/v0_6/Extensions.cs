@@ -22,7 +22,6 @@ using System.Text;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Factory;
 using OsmSharp.Osm.Sources;
 using System.Globalization;
 
@@ -84,7 +83,7 @@ namespace OsmSharp.Osm.Xml.v0_6
             IWaySource way_source, IRelationSource relation_source)
         {
             // create a new node and immidiately set the id.
-            Relation new_obj = OsmBaseFactory.CreateRelation(xml_obj.id);
+            Relation new_obj = Relation.Create(xml_obj.id);
 
             // set the members
             for (int idx = 0; idx < xml_obj.member.Length; idx++)
@@ -190,7 +189,7 @@ namespace OsmSharp.Osm.Xml.v0_6
         public static Way ConvertFrom(this way xml_obj, INodeSource node_source)
         {
             // create a new node and immidiately set the id.
-            Way new_obj = OsmBaseFactory.CreateWay((int)xml_obj.id);
+            Way new_obj = Way.Create((int)xml_obj.id);
 
             // set the nodes
             for (int idx = 0; idx < xml_obj.nd.Length;idx++)
@@ -256,7 +255,7 @@ namespace OsmSharp.Osm.Xml.v0_6
         public static Node ConvertFrom(this node xml_obj)
         {
             // create a new node an immidiately set the id.
-            Node new_obj = OsmBaseFactory.CreateNode((int)xml_obj.id);
+            Node new_obj = Node.Create((int)xml_obj.id);
 
             // set the long- and latitude
             if (!xml_obj.latSpecified || !xml_obj.lonSpecified)

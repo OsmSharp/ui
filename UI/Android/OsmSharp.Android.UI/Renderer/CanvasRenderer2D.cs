@@ -34,6 +34,7 @@ namespace OsmSharp.Android.UI
 		{
 			_paint = new global::Android.Graphics.Paint();
 			_paint.AntiAlias= true;
+			_paint.StrokeJoin = global::Android.Graphics.Paint.Join.Round;
 		}
 
 		/// <summary>
@@ -44,7 +45,6 @@ namespace OsmSharp.Android.UI
 		{
 			_paint = paint;
 		}
-
 		
 		#region Caching Implementation
 		
@@ -54,7 +54,8 @@ namespace OsmSharp.Android.UI
 		/// <param name="target"></param>
 		/// <param name="scenes"></param>
 		/// <param name="view"></param>
-		protected override void OnBeforeRender(Target2DWrapper<global::Android.Graphics.Canvas> target, List<Scene2D> scenes, View2D view)
+		protected override void OnBeforeRender(Target2DWrapper<global::Android.Graphics.Canvas> target, 
+		                                       List<Scene2D> scenes, View2D view)
 		{
 			// create a bitmap and render there.
 			var bitmap = global::Android.Graphics.Bitmap.CreateBitmap((int)target.Width, (int)target.Height,
@@ -72,7 +73,8 @@ namespace OsmSharp.Android.UI
 		/// <param name="target"></param>
 		/// <param name="scenes"></param>
 		/// <param name="view"></param>
-		protected override void OnAfterRender(Target2DWrapper<global::Android.Graphics.Canvas> target, List<Scene2D> scenes, View2D view)
+		protected override void OnAfterRender(Target2DWrapper<global::Android.Graphics.Canvas> target, 
+		                                      List<Scene2D> scenes, View2D view)
 		{
 			target.Target.Dispose(); // dispose of the old target.
 			target.Target = target.BackTarget;

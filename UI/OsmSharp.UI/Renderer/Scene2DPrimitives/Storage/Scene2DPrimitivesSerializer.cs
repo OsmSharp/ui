@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Ionic.Zlib;
 using OsmSharp.Collections.SpatialIndexes.Serialization.v1;
 using OsmSharp.Math.Primitives;
 using ProtoBuf;
@@ -15,6 +16,20 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
     /// </summary>
     internal class Scene2DPrimitivesSerializer : RTreeStreamSerializer<Scene2DEntry>
     {
+        /// <summary>
+        /// Holds the compression flag.
+        /// </summary>
+        private bool _compress;
+
+        /// <summary>
+        /// Creates a new scene serializer.
+        /// </summary>
+        /// <param name="compress"></param>
+        public Scene2DPrimitivesSerializer(bool compress)
+        {
+            _compress = compress;
+        }
+
         /// <summary>
         /// Builds the runtime type model.
         /// </summary>
@@ -181,7 +196,11 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
             // create the memory stream.
             var stream = new MemoryStream();
             typeModel.Serialize(stream, collection);
-            return stream.ToArray();
+            if (!_compress)
+            {
+                return stream.ToArray();
+            }
+            return GZipStream.CompressBuffer(stream.ToArray());
         }
 
         /// <summary>
@@ -323,6 +342,12 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
         protected override List<Scene2DEntry> DeSerialize(RuntimeTypeModel typeModel, byte[] data, 
             out List<RectangleF2D> boxes)
         {
+            // decompress if needed.
+            if (_compress)
+            {
+                data = GZipStream.UncompressBuffer(data);
+            }
+
             // create the memory stream.
             var stream = new MemoryStream(data);
             var collection = typeModel.Deserialize(stream, null, 
