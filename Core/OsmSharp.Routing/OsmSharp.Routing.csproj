@@ -135,6 +135,8 @@
     <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
     <Compile Include="CH\CHQueue.cs" />
     <Compile Include="CH\CHRouter.cs" />
+    <Compile Include="CH\Serialization\CHEdgeDataDataSource.cs" />
+    <Compile Include="CH\Serialization\CHEdgeDataSerializer.cs" />
     <Compile Include="Graph\IDynamicGraph.cs" />
     <Compile Include="Graph\IDynamicGraphEdgeData.cs" />
     <Compile Include="Graph\IDynamicGraphReadOnly.cs" />
@@ -147,10 +149,10 @@
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingLive.cs" />
     <Compile Include="Graph\Router\IBasicRouter.cs" />
     <Compile Include="Graph\Router\IDynamicGraphRouterDataSource.cs" />
-    <Compile Include="Graph\Serialization\RoutingSerializer.cs" />
-    <Compile Include="Graph\Serialization\RoutingSerializerStream.cs" />
-    <Compile Include="Graph\Serialization\v2\V2RouterLiveEdgeDataSource.cs" />
-    <Compile Include="Graph\Serialization\v2\V2RoutingLiveEdgeSerializer.cs" />
+    <Compile Include="Graph\Serialization\RoutingDataSourceSerializer.cs" />
+    <Compile Include="Graph\Serialization\RoutingDataSourceSerializerStream.cs" />
+    <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
+    <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
     <Compile Include="Instructions\Instruction.cs" />
     <Compile Include="Instructions\InstructionGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\Defaults\SimpleDutchLanguageGenerator.cs" />

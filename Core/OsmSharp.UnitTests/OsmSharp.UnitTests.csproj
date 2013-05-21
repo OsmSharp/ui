@@ -158,6 +158,7 @@
     <Compile Include="Routing\CH\CHSparseRoutingTest.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceRoutingTest.cs" />
     <Compile Include="Routing\CH\CHVerifiedContractionTests.cs" />
+    <Compile Include="Routing\Osm\LuaProfilesTests.cs" />
     <Compile Include="Routing\RoutingConditionalAccessTests.cs" />
     <Compile Include="Routing\Dykstra\DykstraLiveRoutingTests.cs" />
     <Compile Include="Routing\DynamicGraphTests.cs" />

@@ -6,12 +6,14 @@ using System.Reflection;
 using NUnit.Framework;
 using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
+using OsmSharp.Routing.CH;
+using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
-using OsmSharp.Routing.Graph.Serialization.v2;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Routers;
@@ -63,7 +65,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             }
 
             // create serializer.
-            var routingSerializer = new V2RoutingLiveEdgeSerializer(false);
+            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             IBasicRouterDataSource<LiveEdge> deserializedVersion;
@@ -139,7 +141,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new V2RoutingLiveEdgeSerializer(false);
+            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             byte[] byteArray;
@@ -229,7 +231,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             targetData.Pull();
 
             // create serializer.
-            var routingSerializer = new V2RoutingLiveEdgeSerializer(true);
+            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
 
             // serialize/deserialize.
             byte[] byteArray;
@@ -302,29 +304,22 @@ namespace OsmSharp.UnitTests.Routing.Serialization
         {
             const string embeddedString = "OsmSharp.UnitTests.test_network_real1.osm";
 
-            // create the tags index.
-            var tagsIndex = new SimpleTagsIndex();
-
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
-            var original =
-                new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            var targetData = new LiveGraphOsmStreamWriter(original, interpreter, original.TagsIndex);
-            var dataProcessorSource = new XmlOsmStreamReader(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
-            targetData.RegisterSource(dataProcessorSource);
-            targetData.Pull();
+            var original = LiveGraphOsmStreamWriter.Preprocess(new XmlOsmStreamReader(
+                                                                   Assembly.GetExecutingAssembly()
+                                                                           .GetManifestResourceStream(embeddedString)),
+                                                               interpreter);
 
             // create the original routing.
-            var basicRouterOriginal =
-                new DykstraRoutingLive(original.TagsIndex);
+            var basicRouterOriginal = new DykstraRoutingLive(original.TagsIndex);
             Router referenceRouter = Router.CreateLiveFrom(
                 original, basicRouterOriginal, interpreter);
 
             // create serializer.
-            var routingSerializer = new V2RoutingLiveEdgeSerializer(false);
+            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
 
             // serialize/deserialize.
             byte[] byteArray;
@@ -393,6 +388,101 @@ namespace OsmSharp.UnitTests.Routing.Serialization
         //            //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
         //        }
         //    }
+        }
+
+        /// <summary>
+        /// Tests serializing/deserializing RoutingSerializationRoutingComparisonTest using the V1 routing serializer.
+        /// </summary>
+        [Test]
+        public void RoutingSerializationCHRoutingComparisonTest()
+        {
+            const string embeddedString = "OsmSharp.UnitTests.test_network_real1.osm";
+
+            // creates a new interpreter.
+            var interpreter = new OsmRoutingInterpreter();
+
+            // do the data processing.
+            var original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamReader(
+                                                                   Assembly.GetExecutingAssembly()
+                                                                           .GetManifestResourceStream(embeddedString)),
+                                                               interpreter,
+                                                               Vehicle.Car);
+
+            // create the original routing.
+            var basicRouterOriginal = new CHRouter(original);
+            Router referenceRouter = Router.CreateCHFrom(
+                original, basicRouterOriginal, interpreter);
+
+            // create serializer.
+            var routingSerializer = new OsmSharp.Routing.CH.Serialization.CHEdgeDataDataSourceSerializer(true);
+
+            // serialize/deserialize.
+            byte[] byteArray;
+            using (var stream = new MemoryStream())
+            {
+                try
+                {
+                    routingSerializer.Serialize(stream, original);
+                    byteArray = stream.ToArray();
+                }
+                catch (Exception)
+                {
+                    if (Debugger.IsAttached)
+                    {
+                        Debugger.Break();
+                    }
+                    throw;
+                }
+            }
+
+            IBasicRouterDataSource<CHEdgeData> deserializedVersion =
+                routingSerializer.Deserialize(new MemoryStream(byteArray));
+            Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
+
+            // try to do some routing on the deserialized version.
+            var basicRouter =
+                new CHRouter(deserializedVersion);
+            Router router = Router.CreateCHFrom(
+                deserializedVersion, basicRouter, interpreter);
+
+            // loop over all nodes and resolve their locations.
+            var resolvedReference = new RouterPoint[original.VertexCount];
+            var resolved = new RouterPoint[original.VertexCount];
+            for (uint idx = 1; idx < original.VertexCount + 1; idx++)
+            { // resolve each vertex.
+                float latitude, longitude;
+                if (original.GetVertex(idx, out latitude, out longitude))
+                {
+                    resolvedReference[idx - 1] = referenceRouter.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+                    resolved[idx - 1] = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+                }
+
+                Assert.IsNotNull(resolvedReference[idx - 1]);
+                Assert.IsNotNull(resolved[idx - 1]);
+
+                Assert.AreEqual(resolvedReference[idx - 1].Location.Latitude,
+                    resolved[idx - 1].Location.Latitude, 0.0001);
+                Assert.AreEqual(resolvedReference[idx - 1].Location.Longitude,
+                    resolved[idx - 1].Location.Longitude, 0.0001);
+            }
+
+            //    // check all the routes having the same weight(s).
+            //    for (int fromIdx = 0; fromIdx < resolved.Length; fromIdx++)
+            //    {
+            //        for (int toIdx = 0; toIdx < resolved.Length; toIdx++)
+            //        {
+            //            OsmSharpRoute referenceRoute = referenceRouter.Calculate(VehicleEnum.Car,
+            //                resolvedReference[fromIdx], resolvedReference[toIdx]);
+            //            OsmSharpRoute route = router.Calculate(VehicleEnum.Car,
+            //                resolved[fromIdx], resolved[toIdx]);
+
+            //            Assert.IsNotNull(referenceRoute);
+            //            Assert.IsNotNull(route);
+            //            //Assert.AreEqual(referenceRoute.TotalDistance, route.TotalDistance, 0.1);
+            //            // TODO: meta data is missing in some CH routing; see issue 
+            //            //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
+            //        }
+            //    }
         }
     }
 }

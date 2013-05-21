@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.PreProcessing.Ordering;
+using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Collections.Tags;
@@ -98,5 +101,55 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         {
             return _vehicle.CanTraverse(tags);
         }
+
+        #region Static Processing Functions
+
+        /// <summary>
+        /// Preprocesses the data from the given OsmStreamReader and converts it directly to a routable data source.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="tagsIndex"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <returns></returns>
+        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamReader reader,
+                                                                        ITagsIndex tagsIndex,
+                                                                        IRoutingInterpreter interpreter,
+                                                                        Vehicle vehicle)
+        {
+            // pull in the data.
+            var dynamicGraphRouterDataSource =
+                new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
+            var targetData = new CHEdgeGraphOsmStreamWriter(
+                dynamicGraphRouterDataSource, interpreter, dynamicGraphRouterDataSource.TagsIndex, vehicle);
+            targetData.RegisterSource(reader);
+            targetData.Pull();
+
+            // compress the graph.
+            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator(dynamicGraphRouterDataSource);
+            var edgeDifference = new EdgeDifference(
+                dynamicGraphRouterDataSource, witnessCalculator);
+            var preProcessor = new CHPreProcessor(
+                dynamicGraphRouterDataSource, edgeDifference, witnessCalculator);
+            preProcessor.Start();
+
+            return dynamicGraphRouterDataSource;
+        }
+
+        /// <summary>
+        /// Preprocesses the data from the given OsmStreamReader and converts it directly to a routable data source.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <returns></returns>
+        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamReader reader,
+                                                                        IRoutingInterpreter interpreter,
+                                                                        Vehicle vehicle)
+        {
+            return CHEdgeGraphOsmStreamWriter.Preprocess(reader, new SimpleTagsIndex(), interpreter, vehicle);
+        }
+
+        #endregion
     }
 }

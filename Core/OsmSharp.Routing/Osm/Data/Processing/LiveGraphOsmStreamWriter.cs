@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Collections.Tags;
@@ -116,5 +116,41 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         {
             return edgeInterpreter.IsRoutable(tags);
         }
+
+        #region Static Processing Functions
+
+        /// <summary>
+        /// Preprocesses the data from the given OsmStreamReader and converts it directly to a routable data source.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="tagsIndex"></param>
+        /// <param name="interpreter"></param>
+        /// <returns></returns>
+        public static DynamicGraphRouterDataSource<LiveEdge> Preprocess(OsmStreamReader reader,
+                                                                        ITagsIndex tagsIndex,
+                                                                        IRoutingInterpreter interpreter)
+        {
+            var dynamicGraphRouterDataSource =
+                new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var targetData = new LiveGraphOsmStreamWriter(dynamicGraphRouterDataSource, interpreter, dynamicGraphRouterDataSource.TagsIndex);
+            targetData.RegisterSource(reader);
+            targetData.Pull();
+
+            return dynamicGraphRouterDataSource;
+        }
+
+        /// <summary>
+        /// Preprocesses the data from the given OsmStreamReader and converts it directly to a routable data source.
+        /// </summary>
+        /// <param name="reader"></param>
+        /// <param name="interpreter"></param>
+        /// <returns></returns>
+        public static DynamicGraphRouterDataSource<LiveEdge> Preprocess(OsmStreamReader reader,
+                                                                        IRoutingInterpreter interpreter)
+        {
+            return LiveGraphOsmStreamWriter.Preprocess(reader, new SimpleTagsIndex(), interpreter);
+        }
+
+        #endregion
     }
 }

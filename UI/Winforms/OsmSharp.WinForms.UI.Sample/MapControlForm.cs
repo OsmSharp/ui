@@ -8,9 +8,9 @@ using OsmSharp.Osm.Data.Xml.OsmSource;
 using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Graph.Serialization.v2;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Route;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Styles.MapCSS;
@@ -65,7 +65,7 @@ namespace OsmSharp.WinForms.UI.Sample
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
             map.AddLayer(new LayerScene(Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\test.osm.scene").OpenRead(), true)));
 
-            var routingSerializer = new V2RoutingLiveEdgeSerializer(true);
+            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
             var graphSerialized = routingSerializer.Deserialize(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     "OsmSharp.WinForms.UI.Sample.test.osm.pbf.routing.3"));

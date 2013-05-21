@@ -9,7 +9,7 @@ namespace OsmSharp.Routing.Graph.Serialization
     /// <summary>
     /// Wraps a stream to prevent some fixed data from being overwritten.
     /// </summary>
-    public class RoutingSerializerStream : Stream
+    public class RoutingDataSourceSerializerStream : Stream
     {
         /// <summary>
         /// Holds the offset or the header length.
@@ -25,7 +25,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// Creates a new routing serializer stream.
         /// </summary>
         /// <param name="stream"></param>
-        public RoutingSerializerStream(Stream stream)
+        public RoutingDataSourceSerializerStream(Stream stream)
         {
             _stream = stream;
             _offset = _stream.Position;

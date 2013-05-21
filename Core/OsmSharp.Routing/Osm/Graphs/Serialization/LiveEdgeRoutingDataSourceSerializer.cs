@@ -1,28 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Ionic.Zlib;
 using OsmSharp.Osm;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.IO;
-using OsmSharp.Math;
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.Geo.Simple;
+using OsmSharp.Routing.Graph.Serialization;
 using ProtoBuf;
 using ProtoBuf.Meta;
 
-namespace OsmSharp.Routing.Graph.Serialization.v2
+namespace OsmSharp.Routing.Osm.Graphs.Serialization
 {
     /// <summary>
     /// A v2 routing serializer.
     /// </summary>
     /// <remarks>Versioning is implemented in the file format to guarantee backward compatibility.</remarks>
-    public class V2RoutingLiveEdgeSerializer : RoutingSerializer<LiveEdge>
+    public class V2RoutingDataSourceLiveEdgeSerializer : RoutingDataSourceSerializer<LiveEdge>
     {
         /// <summary>
         /// Holds the size of the tile meta.
@@ -48,7 +44,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         /// Creates a new v2 serializer.
         /// </summary>
         /// <param name="compress">Flag telling this serializer to compress it's data.</param>
-        public V2RoutingLiveEdgeSerializer(bool compress)
+        public V2RoutingDataSourceLiveEdgeSerializer(bool compress)
         {
             _compress = compress;
 
@@ -62,11 +58,11 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         }
 
         /// <summary>
-        /// Returns the version number.
+        /// Returns the version string.
         /// </summary>
-        public override uint Version
+        public override string VersionString
         {
-            get { return 2; }
+            get { return "LiveEdge.v1"; }
         }
 
         /// <summary>
@@ -75,7 +71,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         /// <param name="stream"></param>
         /// <param name="graph"></param>
         /// <returns></returns>
-        protected override void DoSerialize(RoutingSerializerStream stream,
+        protected override void DoSerialize(RoutingDataSourceSerializerStream stream,
             DynamicGraphRouterDataSource<LiveEdge> graph)
         {
             // create an index per tile.
@@ -259,7 +255,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         /// <param name="lazy"></param>
         /// <returns></returns>
         protected override IBasicRouterDataSource<LiveEdge> DoDeserialize(
-            RoutingSerializerStream stream, bool lazy)
+            RoutingDataSourceSerializerStream stream, bool lazy)
         {
             // serialize all tile meta data.
             stream.Seek(0, SeekOrigin.Begin);
