@@ -87,7 +87,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool SupportsProfile(VehicleEnum vehicle)
+        public bool SupportsProfile(Vehicle vehicle)
         {
             // TODO: also save the profiles.
             return true;
@@ -98,7 +98,7 @@ namespace OsmSharp.Routing.Graph.Serialization.v2
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public void AddSupportedProfile(VehicleEnum vehicle)
+        public void AddSupportedProfile(Vehicle vehicle)
         {
             // TODO: also save the profiles.
         }

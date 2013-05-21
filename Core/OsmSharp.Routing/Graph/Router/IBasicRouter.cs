@@ -44,7 +44,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="target"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        PathSegment<long> Calculate(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        PathSegment<long> Calculate(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList target, double max);
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="maxSearch"></param>
         /// <returns></returns>
         PathSegment<long>[][] CalculateManyToMany(IBasicRouterDataSource<TEdgeData> _data_graph, IRoutingInterpreter _interpreter,
-            VehicleEnum vehicle, PathSegmentVisitList[] sources,
+            Vehicle vehicle, PathSegmentVisitList[] sources,
             PathSegmentVisitList[] targets, double maxSearch);
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="target"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        double CalculateWeight(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        double CalculateWeight(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList target, double max);
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        PathSegment<long> CalculateToClosest(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max);
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        double[] CalculateOneToManyWeight(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, PathSegmentVisitList[] targets, double max);
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        double[][] CalculateManyToManyWeight(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList[] sources, PathSegmentVisitList[] targets, double max);
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        HashSet<long> CalculateRange(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        HashSet<long> CalculateRange(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight);
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="source"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        bool CheckConnectivity(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        bool CheckConnectivity(IDynamicGraphReadOnly<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             PathSegmentVisitList source, double weight);
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <param name="matcher">The matcher to match to edges.</param>
         /// <param name="pointTags">The properties of the point to match.</param>
         /// <returns></returns>
-        SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, VehicleEnum vehicle,
+        SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags);
     }
 

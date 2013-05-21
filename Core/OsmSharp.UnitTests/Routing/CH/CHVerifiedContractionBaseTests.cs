@@ -99,7 +99,7 @@ namespace OsmSharp.UnitTests.Routing.CH
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamWriter(
-                _data, _interpreter, _data.TagsIndex, VehicleEnum.Car);
+                _data, _interpreter, _data.TagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamReader(stream);
             var sorter = new OsmStreamFilterSort();
             sorter.RegisterSource(dataProcessorSource);
@@ -139,7 +139,7 @@ namespace OsmSharp.UnitTests.Routing.CH
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamWriter(
-                _data, _interpreter, _data.TagsIndex, VehicleEnum.Car);
+                _data, _interpreter, _data.TagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamReader(stream);
             var sorter = new OsmStreamFilterSort();
             sorter.RegisterSource(dataProcessorSource);
@@ -189,7 +189,7 @@ namespace OsmSharp.UnitTests.Routing.CH
                     toList.UpdateVertex(new PathSegment<long>(to.Key));
 
                     // calculate the route.
-                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.VehicleEnum.Car, fromList, toList, double.MaxValue);
+                    PathSegment<long> route = router.Calculate(_data, _interpreter, OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue);
                     if ((fromDic[to.Key] == null && route != null) ||
                         (fromDic[to.Key] != null && route == null) ||
                         ((fromDic[to.Key] != null && route != null) && fromDic[to.Key] != route))
@@ -230,7 +230,7 @@ namespace OsmSharp.UnitTests.Routing.CH
 
                     // calculate the route.
                     PathSegment<long> route = router.Calculate(_data, _interpreter, 
-                        OsmSharp.Routing.VehicleEnum.Car, fromList, toList, double.MaxValue);
+                        OsmSharp.Routing.Vehicle.Car, fromList, toList, double.MaxValue);
                     fromDic[to.Key] = route;
                 }
             }

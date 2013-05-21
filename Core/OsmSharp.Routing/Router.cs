@@ -146,7 +146,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool SupportsVehicle(VehicleEnum vehicle)
+        public bool SupportsVehicle(Vehicle vehicle)
         {
             return _router.SupportsVehicle(vehicle);
         }
@@ -158,7 +158,7 @@ namespace OsmSharp.Routing
         /// <param name="source">The source point.</param>
         /// <param name="target">The target point.</param>
         /// <returns></returns>
-        public OsmSharpRoute Calculate(VehicleEnum vehicle, RouterPoint source, RouterPoint target)
+        public OsmSharpRoute Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target)
         {
             return _router.Calculate(vehicle, source, target);
         }
@@ -171,7 +171,7 @@ namespace OsmSharp.Routing
         /// <param name="target">The target point.</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
         /// <returns></returns>
-        public OsmSharpRoute Calculate(VehicleEnum vehicle, RouterPoint source, RouterPoint target, float max)
+        public OsmSharpRoute Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max)
         {
             return _router.Calculate(vehicle, source, target, max);
         }
@@ -183,7 +183,7 @@ namespace OsmSharp.Routing
         /// <param name="source">The source point.</param>
         /// <param name="targets">The target point(s).</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateToClosest(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets)
+        public OsmSharpRoute CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
             return _router.CalculateToClosest(vehicle, source, targets);
         }
@@ -196,7 +196,7 @@ namespace OsmSharp.Routing
         /// <param name="targets">The target point(s).</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateToClosest(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets, float max)
+        public OsmSharpRoute CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max)
         {
             return _router.CalculateToClosest(vehicle, source, targets, max);
         }
@@ -208,7 +208,7 @@ namespace OsmSharp.Routing
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public OsmSharpRoute[] CalculateOneToMany(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets)
+        public OsmSharpRoute[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
             return _router.CalculateOneToMany(vehicle, source, targets);
         }
@@ -220,7 +220,7 @@ namespace OsmSharp.Routing
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public OsmSharpRoute[][] CalculateManyToMany(VehicleEnum vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        public OsmSharpRoute[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
         {
             return _router.CalculateManyToMany(vehicle, sources, targets);
         }
@@ -232,7 +232,7 @@ namespace OsmSharp.Routing
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public double CalculateWeight(VehicleEnum vehicle, RouterPoint source, RouterPoint target)
+        public double CalculateWeight(Vehicle vehicle, RouterPoint source, RouterPoint target)
         {
             return _router.CalculateWeight(vehicle, source, target);
         }
@@ -244,7 +244,7 @@ namespace OsmSharp.Routing
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public double[] CalculateOneToManyWeight(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets)
+        public double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
             return _router.CalculateOneToManyWeight(vehicle, source, targets);
         }
@@ -256,7 +256,7 @@ namespace OsmSharp.Routing
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public double[][] CalculateManyToManyWeight(VehicleEnum vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        public double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
         {
             return _router.CalculateManyToManyWeight(vehicle, sources, targets);
         }
@@ -276,7 +276,7 @@ namespace OsmSharp.Routing
         /// <param name="orgine"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public HashSet<GeoCoordinate> CalculateRange(VehicleEnum vehicle, RouterPoint orgine, float weight)
+        public HashSet<GeoCoordinate> CalculateRange(Vehicle vehicle, RouterPoint orgine, float weight)
         {
             return _router.CalculateRange(vehicle, orgine, weight);
         }
@@ -288,7 +288,7 @@ namespace OsmSharp.Routing
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool CheckConnectivity(VehicleEnum vehicle, RouterPoint point, float weight)
+        public bool CheckConnectivity(Vehicle vehicle, RouterPoint point, float weight)
         {
             return _router.CheckConnectivity(vehicle, point, weight);
         }
@@ -300,7 +300,7 @@ namespace OsmSharp.Routing
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public bool[] CheckConnectivity(VehicleEnum vehicle, RouterPoint[] point, float weight)
+        public bool[] CheckConnectivity(Vehicle vehicle, RouterPoint[] point, float weight)
         {
             return _router.CheckConnectivity(vehicle, point, weight);
         }
@@ -311,7 +311,7 @@ namespace OsmSharp.Routing
         /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="coordinate">The location of the point to resolve.</param>
         /// <returns></returns>
-        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate)
+        public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate)
         {
             return _router.Resolve(vehicle, coordinate);
         }
@@ -323,7 +323,7 @@ namespace OsmSharp.Routing
         /// <param name="delta">The size of the box to search in.</param>
         /// <param name="coordinate">The location of the point to resolve.</param>
         /// <returns></returns>
-        public RouterPoint Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate)
+        public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate)
         {
             return _router.Resolve(vehicle, delta, coordinate);
         }
@@ -336,7 +336,7 @@ namespace OsmSharp.Routing
         /// <param name="matcher">The matcher containing some matching algorithm.</param>
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
-        public RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher, 
+        public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher, 
             TagsCollection matchingTags)
         {
             return _router.Resolve(vehicle, coordinate, matcher, matchingTags);
@@ -351,7 +351,7 @@ namespace OsmSharp.Routing
         /// <param name="matcher">The matcher containing some matching algorithm.</param>
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
-        public RouterPoint Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate, 
+        public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate, 
             IEdgeMatcher matcher, TagsCollection matchingTags)
         {
             return _router.Resolve(vehicle, delta, coordinate, matcher, matchingTags);
@@ -363,7 +363,7 @@ namespace OsmSharp.Routing
         /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="coordinate">The location of the point to resolve.</param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate)
+        public RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinate)
         {
             return _router.Resolve(vehicle, coordinate);
         }
@@ -375,7 +375,7 @@ namespace OsmSharp.Routing
         /// <param name="delta">The size of the box to search in.</param>
         /// <param name="coordinate">The location of the point to resolve.</param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(VehicleEnum vehicle, float delta, GeoCoordinate[] coordinate)
+        public RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinate)
         {
             return _router.Resolve(vehicle, delta, coordinate);
         }
@@ -388,7 +388,7 @@ namespace OsmSharp.Routing
         /// <param name="matcher">The matcher containing some matching algorithm.</param>
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinates, IEdgeMatcher matcher, 
+        public RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinates, IEdgeMatcher matcher, 
             TagsCollection[] matchingTags)
         {
             return _router.Resolve(vehicle, coordinates, matcher, matchingTags);
@@ -403,7 +403,7 @@ namespace OsmSharp.Routing
         /// <param name="matcher">The matcher containing some matching algorithm.</param>
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
-        public RouterPoint[] Resolve(VehicleEnum vehicle, float delta, GeoCoordinate[] coordinates, 
+        public RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinates, 
             IEdgeMatcher matcher, TagsCollection[] matchingTags)
         {
             return _router.Resolve(vehicle, delta, coordinates, matcher, matchingTags);
@@ -416,7 +416,7 @@ namespace OsmSharp.Routing
         /// <param name="coordinate">The location of the point to search.</param>
         /// <returns></returns>
         /// <remarks>Similar to resolve except no resolved point is created.</remarks>
-        public GeoCoordinate Search(VehicleEnum vehicle, GeoCoordinate coordinate)
+        public GeoCoordinate Search(Vehicle vehicle, GeoCoordinate coordinate)
         {
             return _router.Search(vehicle, coordinate);
         }
@@ -429,7 +429,7 @@ namespace OsmSharp.Routing
         /// <param name="coordinate">The location of the point to search.</param>
         /// <returns></returns>
         /// <remarks>Similar to resolve except no resolved point is created.</remarks>
-        public GeoCoordinate Search(VehicleEnum vehicle, float delta, GeoCoordinate coordinate)
+        public GeoCoordinate Search(Vehicle vehicle, float delta, GeoCoordinate coordinate)
         {
             return _router.Search(vehicle, delta, coordinate);
         }

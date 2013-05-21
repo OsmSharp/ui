@@ -39,21 +39,21 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
             //point_tags["highway"] = "footway";
 
             // test with empty point tags.
-            Assert.IsTrue(matcher.MatchWithEdge(VehicleEnum.Car, null, null));
-            Assert.IsTrue(matcher.MatchWithEdge(VehicleEnum.Car, pointTags, null));
+            Assert.IsTrue(matcher.MatchWithEdge(Vehicle.Car, null, null));
+            Assert.IsTrue(matcher.MatchWithEdge(Vehicle.Car, pointTags, null));
 
             // test with empty edge tags.
             pointTags["name"] = "Ben Abelshausen Boulevard";
-            Assert.IsFalse(matcher.MatchWithEdge(VehicleEnum.Car, pointTags, null));
-            Assert.IsFalse(matcher.MatchWithEdge(VehicleEnum.Car, pointTags, edgeTags));
+            Assert.IsFalse(matcher.MatchWithEdge(Vehicle.Car, pointTags, null));
+            Assert.IsFalse(matcher.MatchWithEdge(Vehicle.Car, pointTags, edgeTags));
 
             // test with matching name.
             edgeTags["name"] = "Ben Abelshausen Boulevard";
-            Assert.IsTrue(matcher.MatchWithEdge(VehicleEnum.Car, pointTags, edgeTags));
+            Assert.IsTrue(matcher.MatchWithEdge(Vehicle.Car, pointTags, edgeTags));
 
             // test with none-matching name.
             edgeTags["name"] = "Jorieke Vyncke Boulevard";
-            Assert.IsFalse(matcher.MatchWithEdge(VehicleEnum.Car, pointTags, edgeTags));
+            Assert.IsFalse(matcher.MatchWithEdge(Vehicle.Car, pointTags, edgeTags));
         }
 
         /// <summary>
@@ -65,125 +65,125 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
             string name = "Ben Abelshausen Boulevard";
             IEdgeMatcher matc = new DefaultEdgeMatcher();
 
-            this.TestResolveOnEdge(name, "footway", VehicleEnum.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "cycleway", VehicleEnum.Pedestrian, matc, false);
-            this.TestResolveOnEdge(name, "bridleway", VehicleEnum.Pedestrian, matc, false);
-            this.TestResolveOnEdge(name, "path", VehicleEnum.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "pedestrian", VehicleEnum.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "road", VehicleEnum.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "living_street", VehicleEnum.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "residential", VehicleEnum.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "unclassified", VehicleEnum.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "tertiary", VehicleEnum.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "secondary", VehicleEnum.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "primary", VehicleEnum.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "trunk", VehicleEnum.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "motorway", VehicleEnum.Pedestrian, matc, false);
+            this.TestResolveOnEdge(name, "footway", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "cycleway", Vehicle.Pedestrian, matc, false);
+            this.TestResolveOnEdge(name, "bridleway", Vehicle.Pedestrian, matc, false);
+            this.TestResolveOnEdge(name, "path", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "pedestrian", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "road", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "living_street", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "residential", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "unclassified", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "tertiary", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "secondary", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "primary", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "trunk", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "motorway", Vehicle.Pedestrian, matc, false);
 
-            this.TestResolveOnEdge(name, "footway", VehicleEnum.Bicycle, matc, false);
-            this.TestResolveOnEdge(name, "cycleway", VehicleEnum.Bicycle, matc, true);
-            this.TestResolveOnEdge(name, "bridleway", VehicleEnum.Bicycle, matc, false);
-            this.TestResolveOnEdge(name, "path", VehicleEnum.Bicycle, matc, true);
-            this.TestResolveOnEdge(name, "pedestrian", VehicleEnum.Bicycle, matc, false);
-            this.TestResolveOnEdge(name, "road", VehicleEnum.Bicycle, matc, true);
-            this.TestResolveOnEdge(name, "living_street", VehicleEnum.Bicycle, matc, true);
-            this.TestResolveOnEdge(name, "residential", VehicleEnum.Bicycle, matc, true);
-            this.TestResolveOnEdge(name, "unclassified", VehicleEnum.Bicycle, matc, true);
-            this.TestResolveOnEdge(name, "tertiary", VehicleEnum.Bicycle, matc, true);
-            this.TestResolveOnEdge(name, "secondary", VehicleEnum.Bicycle, matc, true);
-            this.TestResolveOnEdge(name, "primary", VehicleEnum.Bicycle, matc, true);
-            this.TestResolveOnEdge(name, "trunk", VehicleEnum.Bicycle, matc, true);
-            this.TestResolveOnEdge(name, "motorway", VehicleEnum.Bicycle, matc, false);
+            this.TestResolveOnEdge(name, "footway", Vehicle.Bicycle, matc, false);
+            this.TestResolveOnEdge(name, "cycleway", Vehicle.Bicycle, matc, true);
+            this.TestResolveOnEdge(name, "bridleway", Vehicle.Bicycle, matc, false);
+            this.TestResolveOnEdge(name, "path", Vehicle.Bicycle, matc, true);
+            this.TestResolveOnEdge(name, "pedestrian", Vehicle.Bicycle, matc, false);
+            this.TestResolveOnEdge(name, "road", Vehicle.Bicycle, matc, true);
+            this.TestResolveOnEdge(name, "living_street", Vehicle.Bicycle, matc, true);
+            this.TestResolveOnEdge(name, "residential", Vehicle.Bicycle, matc, true);
+            this.TestResolveOnEdge(name, "unclassified", Vehicle.Bicycle, matc, true);
+            this.TestResolveOnEdge(name, "tertiary", Vehicle.Bicycle, matc, true);
+            this.TestResolveOnEdge(name, "secondary", Vehicle.Bicycle, matc, true);
+            this.TestResolveOnEdge(name, "primary", Vehicle.Bicycle, matc, true);
+            this.TestResolveOnEdge(name, "trunk", Vehicle.Bicycle, matc, true);
+            this.TestResolveOnEdge(name, "motorway", Vehicle.Bicycle, matc, false);
 
-            this.TestResolveOnEdge(name, "footway", VehicleEnum.Moped, matc, false);
-            this.TestResolveOnEdge(name, "cycleway", VehicleEnum.Moped, matc, false);
-            this.TestResolveOnEdge(name, "bridleway", VehicleEnum.Moped, matc, false);
-            this.TestResolveOnEdge(name, "path", VehicleEnum.Moped, matc, false);
-            this.TestResolveOnEdge(name, "pedestrian", VehicleEnum.Moped, matc, false);
-            this.TestResolveOnEdge(name, "road", VehicleEnum.Moped, matc, true);
-            this.TestResolveOnEdge(name, "living_street", VehicleEnum.Moped, matc, true);
-            this.TestResolveOnEdge(name, "residential", VehicleEnum.Moped, matc, true);
-            this.TestResolveOnEdge(name, "unclassified", VehicleEnum.Moped, matc, true);
-            this.TestResolveOnEdge(name, "tertiary", VehicleEnum.Moped, matc, true);
-            this.TestResolveOnEdge(name, "secondary", VehicleEnum.Moped, matc, true);
-            this.TestResolveOnEdge(name, "primary", VehicleEnum.Moped, matc, true);
-            this.TestResolveOnEdge(name, "trunk", VehicleEnum.Moped, matc, true);
-            this.TestResolveOnEdge(name, "motorway", VehicleEnum.Moped, matc, false);
+            this.TestResolveOnEdge(name, "footway", Vehicle.Moped, matc, false);
+            this.TestResolveOnEdge(name, "cycleway", Vehicle.Moped, matc, false);
+            this.TestResolveOnEdge(name, "bridleway", Vehicle.Moped, matc, false);
+            this.TestResolveOnEdge(name, "path", Vehicle.Moped, matc, false);
+            this.TestResolveOnEdge(name, "pedestrian", Vehicle.Moped, matc, false);
+            this.TestResolveOnEdge(name, "road", Vehicle.Moped, matc, true);
+            this.TestResolveOnEdge(name, "living_street", Vehicle.Moped, matc, true);
+            this.TestResolveOnEdge(name, "residential", Vehicle.Moped, matc, true);
+            this.TestResolveOnEdge(name, "unclassified", Vehicle.Moped, matc, true);
+            this.TestResolveOnEdge(name, "tertiary", Vehicle.Moped, matc, true);
+            this.TestResolveOnEdge(name, "secondary", Vehicle.Moped, matc, true);
+            this.TestResolveOnEdge(name, "primary", Vehicle.Moped, matc, true);
+            this.TestResolveOnEdge(name, "trunk", Vehicle.Moped, matc, true);
+            this.TestResolveOnEdge(name, "motorway", Vehicle.Moped, matc, false);
 
-            this.TestResolveOnEdge(name, "footway", VehicleEnum.MotorCycle, matc, false);
-            this.TestResolveOnEdge(name, "cycleway", VehicleEnum.MotorCycle, matc, false);
-            this.TestResolveOnEdge(name, "bridleway", VehicleEnum.MotorCycle, matc, false);
-            this.TestResolveOnEdge(name, "path", VehicleEnum.MotorCycle, matc, false);
-            this.TestResolveOnEdge(name, "pedestrian", VehicleEnum.MotorCycle, matc, false);
-            this.TestResolveOnEdge(name, "road", VehicleEnum.MotorCycle, matc, true);
-            this.TestResolveOnEdge(name, "living_street", VehicleEnum.MotorCycle, matc, true);
-            this.TestResolveOnEdge(name, "residential", VehicleEnum.MotorCycle, matc, true);
-            this.TestResolveOnEdge(name, "unclassified", VehicleEnum.MotorCycle, matc, true);
-            this.TestResolveOnEdge(name, "tertiary", VehicleEnum.MotorCycle, matc, true);
-            this.TestResolveOnEdge(name, "secondary", VehicleEnum.MotorCycle, matc, true);
-            this.TestResolveOnEdge(name, "primary", VehicleEnum.MotorCycle, matc, true);
-            this.TestResolveOnEdge(name, "trunk", VehicleEnum.MotorCycle, matc, true);
-            this.TestResolveOnEdge(name, "motorway", VehicleEnum.MotorCycle, matc, true);
+            this.TestResolveOnEdge(name, "footway", Vehicle.MotorCycle, matc, false);
+            this.TestResolveOnEdge(name, "cycleway", Vehicle.MotorCycle, matc, false);
+            this.TestResolveOnEdge(name, "bridleway", Vehicle.MotorCycle, matc, false);
+            this.TestResolveOnEdge(name, "path", Vehicle.MotorCycle, matc, false);
+            this.TestResolveOnEdge(name, "pedestrian", Vehicle.MotorCycle, matc, false);
+            this.TestResolveOnEdge(name, "road", Vehicle.MotorCycle, matc, true);
+            this.TestResolveOnEdge(name, "living_street", Vehicle.MotorCycle, matc, true);
+            this.TestResolveOnEdge(name, "residential", Vehicle.MotorCycle, matc, true);
+            this.TestResolveOnEdge(name, "unclassified", Vehicle.MotorCycle, matc, true);
+            this.TestResolveOnEdge(name, "tertiary", Vehicle.MotorCycle, matc, true);
+            this.TestResolveOnEdge(name, "secondary", Vehicle.MotorCycle, matc, true);
+            this.TestResolveOnEdge(name, "primary", Vehicle.MotorCycle, matc, true);
+            this.TestResolveOnEdge(name, "trunk", Vehicle.MotorCycle, matc, true);
+            this.TestResolveOnEdge(name, "motorway", Vehicle.MotorCycle, matc, true);
 
-            this.TestResolveOnEdge(name, "footway", VehicleEnum.Car, matc, false);
-            this.TestResolveOnEdge(name, "cycleway", VehicleEnum.Car, matc, false);
-            this.TestResolveOnEdge(name, "bridleway", VehicleEnum.Car, matc, false);
-            this.TestResolveOnEdge(name, "path", VehicleEnum.Car, matc, false);
-            this.TestResolveOnEdge(name, "pedestrian", VehicleEnum.Car, matc, false);
-            this.TestResolveOnEdge(name, "road", VehicleEnum.Car, matc, true);
-            this.TestResolveOnEdge(name, "living_street", VehicleEnum.Car, matc, true);
-            this.TestResolveOnEdge(name, "residential", VehicleEnum.Car, matc, true);
-            this.TestResolveOnEdge(name, "unclassified", VehicleEnum.Car, matc, true);
-            this.TestResolveOnEdge(name, "tertiary", VehicleEnum.Car, matc, true);
-            this.TestResolveOnEdge(name, "secondary", VehicleEnum.Car, matc, true);
-            this.TestResolveOnEdge(name, "primary", VehicleEnum.Car, matc, true);
-            this.TestResolveOnEdge(name, "trunk", VehicleEnum.Car, matc, true);
-            this.TestResolveOnEdge(name, "motorway", VehicleEnum.Car, matc, true);
+            this.TestResolveOnEdge(name, "footway", Vehicle.Car, matc, false);
+            this.TestResolveOnEdge(name, "cycleway", Vehicle.Car, matc, false);
+            this.TestResolveOnEdge(name, "bridleway", Vehicle.Car, matc, false);
+            this.TestResolveOnEdge(name, "path", Vehicle.Car, matc, false);
+            this.TestResolveOnEdge(name, "pedestrian", Vehicle.Car, matc, false);
+            this.TestResolveOnEdge(name, "road", Vehicle.Car, matc, true);
+            this.TestResolveOnEdge(name, "living_street", Vehicle.Car, matc, true);
+            this.TestResolveOnEdge(name, "residential", Vehicle.Car, matc, true);
+            this.TestResolveOnEdge(name, "unclassified", Vehicle.Car, matc, true);
+            this.TestResolveOnEdge(name, "tertiary", Vehicle.Car, matc, true);
+            this.TestResolveOnEdge(name, "secondary", Vehicle.Car, matc, true);
+            this.TestResolveOnEdge(name, "primary", Vehicle.Car, matc, true);
+            this.TestResolveOnEdge(name, "trunk", Vehicle.Car, matc, true);
+            this.TestResolveOnEdge(name, "motorway", Vehicle.Car, matc, true);
 
-            this.TestResolveOnEdge(name, "footway", VehicleEnum.SmallTruck, matc, false);
-            this.TestResolveOnEdge(name, "cycleway", VehicleEnum.SmallTruck, matc, false);
-            this.TestResolveOnEdge(name, "bridleway", VehicleEnum.SmallTruck, matc, false);
-            this.TestResolveOnEdge(name, "path", VehicleEnum.SmallTruck, matc, false);
-            this.TestResolveOnEdge(name, "pedestrian", VehicleEnum.SmallTruck, matc, false);
-            this.TestResolveOnEdge(name, "road", VehicleEnum.SmallTruck, matc, true);
-            this.TestResolveOnEdge(name, "living_street", VehicleEnum.SmallTruck, matc, true);
-            this.TestResolveOnEdge(name, "residential", VehicleEnum.SmallTruck, matc, true);
-            this.TestResolveOnEdge(name, "unclassified", VehicleEnum.SmallTruck, matc, true);
-            this.TestResolveOnEdge(name, "tertiary", VehicleEnum.SmallTruck, matc, true);
-            this.TestResolveOnEdge(name, "secondary", VehicleEnum.SmallTruck, matc, true);
-            this.TestResolveOnEdge(name, "primary", VehicleEnum.SmallTruck, matc, true);
-            this.TestResolveOnEdge(name, "trunk", VehicleEnum.SmallTruck, matc, true);
-            this.TestResolveOnEdge(name, "motorway", VehicleEnum.SmallTruck, matc, true);
+            this.TestResolveOnEdge(name, "footway", Vehicle.SmallTruck, matc, false);
+            this.TestResolveOnEdge(name, "cycleway", Vehicle.SmallTruck, matc, false);
+            this.TestResolveOnEdge(name, "bridleway", Vehicle.SmallTruck, matc, false);
+            this.TestResolveOnEdge(name, "path", Vehicle.SmallTruck, matc, false);
+            this.TestResolveOnEdge(name, "pedestrian", Vehicle.SmallTruck, matc, false);
+            this.TestResolveOnEdge(name, "road", Vehicle.SmallTruck, matc, true);
+            this.TestResolveOnEdge(name, "living_street", Vehicle.SmallTruck, matc, true);
+            this.TestResolveOnEdge(name, "residential", Vehicle.SmallTruck, matc, true);
+            this.TestResolveOnEdge(name, "unclassified", Vehicle.SmallTruck, matc, true);
+            this.TestResolveOnEdge(name, "tertiary", Vehicle.SmallTruck, matc, true);
+            this.TestResolveOnEdge(name, "secondary", Vehicle.SmallTruck, matc, true);
+            this.TestResolveOnEdge(name, "primary", Vehicle.SmallTruck, matc, true);
+            this.TestResolveOnEdge(name, "trunk", Vehicle.SmallTruck, matc, true);
+            this.TestResolveOnEdge(name, "motorway", Vehicle.SmallTruck, matc, true);
 
-            this.TestResolveOnEdge(name, "footway", VehicleEnum.BigTruck, matc, false);
-            this.TestResolveOnEdge(name, "cycleway", VehicleEnum.BigTruck, matc, false);
-            this.TestResolveOnEdge(name, "bridleway", VehicleEnum.BigTruck, matc, false);
-            this.TestResolveOnEdge(name, "path", VehicleEnum.BigTruck, matc, false);
-            this.TestResolveOnEdge(name, "pedestrian", VehicleEnum.BigTruck, matc, false);
-            this.TestResolveOnEdge(name, "road", VehicleEnum.BigTruck, matc, true);
-            this.TestResolveOnEdge(name, "living_street", VehicleEnum.BigTruck, matc, true);
-            this.TestResolveOnEdge(name, "residential", VehicleEnum.BigTruck, matc, true);
-            this.TestResolveOnEdge(name, "unclassified", VehicleEnum.BigTruck, matc, true);
-            this.TestResolveOnEdge(name, "tertiary", VehicleEnum.BigTruck, matc, true);
-            this.TestResolveOnEdge(name, "secondary", VehicleEnum.BigTruck, matc, true);
-            this.TestResolveOnEdge(name, "primary", VehicleEnum.BigTruck, matc, true);
-            this.TestResolveOnEdge(name, "trunk", VehicleEnum.BigTruck, matc, true);
-            this.TestResolveOnEdge(name, "motorway", VehicleEnum.BigTruck, matc, true);
+            this.TestResolveOnEdge(name, "footway", Vehicle.BigTruck, matc, false);
+            this.TestResolveOnEdge(name, "cycleway", Vehicle.BigTruck, matc, false);
+            this.TestResolveOnEdge(name, "bridleway", Vehicle.BigTruck, matc, false);
+            this.TestResolveOnEdge(name, "path", Vehicle.BigTruck, matc, false);
+            this.TestResolveOnEdge(name, "pedestrian", Vehicle.BigTruck, matc, false);
+            this.TestResolveOnEdge(name, "road", Vehicle.BigTruck, matc, true);
+            this.TestResolveOnEdge(name, "living_street", Vehicle.BigTruck, matc, true);
+            this.TestResolveOnEdge(name, "residential", Vehicle.BigTruck, matc, true);
+            this.TestResolveOnEdge(name, "unclassified", Vehicle.BigTruck, matc, true);
+            this.TestResolveOnEdge(name, "tertiary", Vehicle.BigTruck, matc, true);
+            this.TestResolveOnEdge(name, "secondary", Vehicle.BigTruck, matc, true);
+            this.TestResolveOnEdge(name, "primary", Vehicle.BigTruck, matc, true);
+            this.TestResolveOnEdge(name, "trunk", Vehicle.BigTruck, matc, true);
+            this.TestResolveOnEdge(name, "motorway", Vehicle.BigTruck, matc, true);
 
-            this.TestResolveOnEdge(name, "footway", VehicleEnum.Bus, matc, false);
-            this.TestResolveOnEdge(name, "cycleway", VehicleEnum.Bus, matc, false);
-            this.TestResolveOnEdge(name, "bridleway", VehicleEnum.Bus, matc, false);
-            this.TestResolveOnEdge(name, "path", VehicleEnum.Bus, matc, false);
-            this.TestResolveOnEdge(name, "pedestrian", VehicleEnum.Bus, matc, false);
-            this.TestResolveOnEdge(name, "road", VehicleEnum.Bus, matc, true);
-            this.TestResolveOnEdge(name, "living_street", VehicleEnum.Bus, matc, true);
-            this.TestResolveOnEdge(name, "residential", VehicleEnum.Bus, matc, true);
-            this.TestResolveOnEdge(name, "unclassified", VehicleEnum.Bus, matc, true);
-            this.TestResolveOnEdge(name, "tertiary", VehicleEnum.Bus, matc, true);
-            this.TestResolveOnEdge(name, "secondary", VehicleEnum.Bus, matc, true);
-            this.TestResolveOnEdge(name, "primary", VehicleEnum.Bus, matc, true);
-            this.TestResolveOnEdge(name, "trunk", VehicleEnum.Bus, matc, true);
-            this.TestResolveOnEdge(name, "motorway", VehicleEnum.Bus, matc, true);
+            this.TestResolveOnEdge(name, "footway", Vehicle.Bus, matc, false);
+            this.TestResolveOnEdge(name, "cycleway", Vehicle.Bus, matc, false);
+            this.TestResolveOnEdge(name, "bridleway", Vehicle.Bus, matc, false);
+            this.TestResolveOnEdge(name, "path", Vehicle.Bus, matc, false);
+            this.TestResolveOnEdge(name, "pedestrian", Vehicle.Bus, matc, false);
+            this.TestResolveOnEdge(name, "road", Vehicle.Bus, matc, true);
+            this.TestResolveOnEdge(name, "living_street", Vehicle.Bus, matc, true);
+            this.TestResolveOnEdge(name, "residential", Vehicle.Bus, matc, true);
+            this.TestResolveOnEdge(name, "unclassified", Vehicle.Bus, matc, true);
+            this.TestResolveOnEdge(name, "tertiary", Vehicle.Bus, matc, true);
+            this.TestResolveOnEdge(name, "secondary", Vehicle.Bus, matc, true);
+            this.TestResolveOnEdge(name, "primary", Vehicle.Bus, matc, true);
+            this.TestResolveOnEdge(name, "trunk", Vehicle.Bus, matc, true);
+            this.TestResolveOnEdge(name, "motorway", Vehicle.Bus, matc, true);
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
         /// <param name="matcher"></param>
         /// <param name="found"></param>
         private void TestResolveOnEdge(string name, string highway,
-            VehicleEnum vehicle, IEdgeMatcher matcher, bool found)
+            Vehicle vehicle, IEdgeMatcher matcher, bool found)
         {
             this.TestResolveOnEdgeSingle(name, highway, vehicle, null, null, !found);
             this.TestResolveOnEdgeSingle(name, highway, vehicle, matcher, null, !found);
@@ -212,7 +212,7 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
         /// <param name="pointName"></param>
         /// <param name="notFound"></param>
         private void TestResolveOnEdgeSingle(string name, string highway, 
-            VehicleEnum vehicle, IEdgeMatcher matcher, 
+            Vehicle vehicle, IEdgeMatcher matcher, 
             string pointName, bool notFound)
         {
             var fromName = new GeoCoordinate(51.0003, 4.0007);

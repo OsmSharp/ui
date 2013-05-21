@@ -22,7 +22,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Holds the vehicle profile this pre-processing target is for.
         /// </summary>
-        private readonly VehicleEnum _vehicle;
+        private readonly Vehicle _vehicle;
 
         /// <summary>
         /// Holds the data source.
@@ -37,7 +37,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
         public CHEdgeGraphOsmStreamWriter(IDynamicGraphRouterDataSource<CHEdgeData> dynamicGraph,
-            IRoutingInterpreter interpreter, ITagsIndex tagsIndex, VehicleEnum vehicle)
+            IRoutingInterpreter interpreter, ITagsIndex tagsIndex, Vehicle vehicle)
             :base(dynamicGraph, interpreter, new CHEdgeDataComparer(), tagsIndex)
         {
             _vehicle = vehicle;
@@ -57,9 +57,8 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex, 
             TagsCollection tags, bool directionForward, GeoCoordinate from, GeoCoordinate to)
         {
-            double weight = edgeInterpreter.Weight(
-                tags, _vehicle, from, to);
-            bool? direction = edgeInterpreter.IsOneWay(tags, _vehicle);
+            double weight = _vehicle.Weight(tags, from, to);
+            bool? direction = _vehicle.IsOneWay(tags);
             bool forward = false;
             bool backward = false;
             if (!direction.HasValue)
@@ -97,7 +96,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         protected override bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter, 
             ITagsIndex tagsIndex, TagsCollection tags)
         {
-            return edgeInterpreter.CanBeTraversedBy(tags, _vehicle);
+            return _vehicle.CanTraverse(tags);
         }
     }
 }

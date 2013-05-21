@@ -35,7 +35,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the supported vehicle profiles.
         /// </summary>
-        private readonly HashSet<VehicleEnum> _supportedVehicles; 
+        private readonly HashSet<Vehicle> _supportedVehicles; 
 
         /// <summary>
         /// Creates a new osm memory router data source.
@@ -49,7 +49,7 @@ namespace OsmSharp.Routing.Graph
             _vertexIndex = new QuadTree<GeoCoordinate, uint>();
             _tagsIndex = tagsIndex;
 
-            _supportedVehicles = new HashSet<VehicleEnum>();
+            _supportedVehicles = new HashSet<Vehicle>();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace OsmSharp.Routing.Graph
             _vertexIndex = new QuadTree<GeoCoordinate, uint>();
             _tagsIndex = tagsIndex;
 
-            _supportedVehicles = new HashSet<VehicleEnum>();
+            _supportedVehicles = new HashSet<Vehicle>();
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace OsmSharp.Routing.Graph
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool SupportsProfile(VehicleEnum vehicle)
+        public bool SupportsProfile(Vehicle vehicle)
         {
             return _supportedVehicles.Contains(vehicle); // for backwards compatibility.
         }
@@ -84,7 +84,7 @@ namespace OsmSharp.Routing.Graph
         /// Adds one more supported profile.
         /// </summary>
         /// <param name="vehicle"></param>
-        public void AddSupportedProfile(VehicleEnum vehicle)
+        public void AddSupportedProfile(Vehicle vehicle)
         {
             _supportedVehicles.Add(vehicle);
         }

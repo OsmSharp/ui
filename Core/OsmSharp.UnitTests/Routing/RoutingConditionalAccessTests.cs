@@ -58,7 +58,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// <param name="vehicle"></param>
         /// <returns></returns>
         public abstract IBasicRouter<EdgeData> BuildBasicRouter(IBasicRouterDataSource<EdgeData> data, 
-            VehicleEnum vehicle);
+            Vehicle vehicle);
 
         /// <summary>
         /// Builds the data.
@@ -68,14 +68,14 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// <param name="accessTags"></param>
         /// <returns></returns>
         public abstract IBasicRouterDataSource<EdgeData> BuildData(IRoutingInterpreter interpreter, 
-            VehicleEnum vehicle, List<KeyValuePair<string, string>> accessTags);
+            Vehicle vehicle, List<KeyValuePair<string, string>> accessTags);
 
         /// <summary>
         /// Tests that a router actually finds the shortest route.
         /// </summary>
         /// <param name="vehicle"></param>
         /// <param name="accessTags"></param>
-        protected void DoTestShortestWithAccess(VehicleEnum vehicle, List<KeyValuePair<string, string>> accessTags)
+        protected void DoTestShortestWithAccess(Vehicle vehicle, List<KeyValuePair<string, string>> accessTags)
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, accessTags);
@@ -116,7 +116,7 @@ namespace OsmSharp.Osm.UnitTests.Routing
         /// </summary>
         /// <param name="vehicle"></param>
         /// <param name="access_tags"></param>
-        protected void DoTestShortestWithoutAccess(VehicleEnum vehicle, List<KeyValuePair<string, string>> access_tags)
+        protected void DoTestShortestWithoutAccess(Vehicle vehicle, List<KeyValuePair<string, string>> access_tags)
         {
             var interpreter = new OsmRoutingInterpreter();
             IBasicRouterDataSource<EdgeData> data = this.BuildData(interpreter, vehicle, access_tags);

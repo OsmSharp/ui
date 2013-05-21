@@ -167,13 +167,13 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             // try to do some routing on the deserialized version.
             var basicRouter = new DykstraRoutingLive(deserializedVersion.TagsIndex);
             Router router = Router.CreateLiveFrom(deserializedVersion, basicRouter, interpreter);
-            RouterPoint source = router.Resolve(VehicleEnum.Car,
+            RouterPoint source = router.Resolve(Vehicle.Car,
                 new GeoCoordinate(51.0578532, 3.7192229));
-            RouterPoint target = router.Resolve(VehicleEnum.Car,
+            RouterPoint target = router.Resolve(Vehicle.Car,
                 new GeoCoordinate(51.0576193, 3.7191801));
 
             // calculate the route.
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
@@ -257,13 +257,13 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             // try to do some routing on the deserialized version.
             var basicRouter = new DykstraRoutingLive(deserializedVersion.TagsIndex);
             Router router = Router.CreateLiveFrom(deserializedVersion, basicRouter, interpreter);
-            RouterPoint source = router.Resolve(VehicleEnum.Car,
+            RouterPoint source = router.Resolve(Vehicle.Car,
                 new GeoCoordinate(51.0578532, 3.7192229));
-            RouterPoint target = router.Resolve(VehicleEnum.Car,
+            RouterPoint target = router.Resolve(Vehicle.Car,
                 new GeoCoordinate(51.0576193, 3.7191801));
 
             // calculate the route.
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, source, target);
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
@@ -363,8 +363,8 @@ namespace OsmSharp.UnitTests.Routing.Serialization
                 float latitude, longitude;
                 if (original.GetVertex(idx, out latitude, out longitude))
                 {
-                    resolvedReference[idx - 1] = referenceRouter.Resolve(VehicleEnum.Car, new GeoCoordinate(latitude, longitude));
-                    resolved[idx - 1] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(latitude, longitude));
+                    resolvedReference[idx - 1] = referenceRouter.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+                    resolved[idx - 1] = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
                 }
 
                 Assert.IsNotNull(resolvedReference[idx - 1]);

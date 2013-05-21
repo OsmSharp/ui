@@ -31,7 +31,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         /// <param name="points"></param>
         /// <param name="weights"></param>
         /// <returns></returns>
-        public OsmSharpRoute[] CalculateNoDepot(VehicleEnum vehicle, RouterPoint[] points, double[][] weights)
+        public OsmSharpRoute[] CalculateNoDepot(Vehicle vehicle, RouterPoint[] points, double[][] weights)
         {
             // build the points array.
             var locations = new GeoCoordinate[points.Length];

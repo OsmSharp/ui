@@ -166,7 +166,7 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <param name="next_arc"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        private bool IsSignificant(VehicleEnum vehicle, AggregatedArc previous_arc, AggregatedArc next_arc)
+        private bool IsSignificant(Vehicle vehicle, AggregatedArc previous_arc, AggregatedArc next_arc)
         {
             if (previous_arc.Next.Points != null && previous_arc.Next.Points.Count > 0)
             { // the point has at least one important point.
@@ -187,7 +187,7 @@ namespace OsmSharp.Routing.ArcAggregation
             {
                 nextTagsDic.Add(pair.Key, pair.Value);
             }
-            if (!_interpreter.EdgeInterpreter.IsEqualFor(vehicle, previousTagsDic, nextTagsDic))
+            if (!vehicle.IsEqualFor(previousTagsDic, nextTagsDic))
             { // the previous and the next edge do not represent a change for the given vehicle.
                 //RoadTagsInterpreterBase previous_interpreter = new RoadTagsInterpreterBase(previous_tags_dic);
                 //RoadTagsInterpreterBase next_interpreter = new RoadTagsInterpreterBase(next_tags_dic);

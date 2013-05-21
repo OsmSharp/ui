@@ -90,9 +90,9 @@ namespace OsmSharp.WinForms.UI.Sample
             Router router = Router.CreateLiveFrom(
                 graphSerialized,
                 new OsmRoutingInterpreter());
-            OsmSharpRoute route = router.Calculate(VehicleEnum.Car, 
-                router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.15136, 3.19462)),
-                router.Resolve(VehicleEnum.Car, new GeoCoordinate(51.075023, 3.096632)));
+            OsmSharpRoute route = router.Calculate(Vehicle.Car, 
+                router.Resolve(Vehicle.Car, new GeoCoordinate(51.15136, 3.19462)),
+                router.Resolve(Vehicle.Car, new GeoCoordinate(51.075023, 3.096632)));
             var osmSharpLayer = new LayerOsmSharpRoute(map.Projection);
             osmSharpLayer.AddRoute(route);
             map.AddLayer(osmSharpLayer);

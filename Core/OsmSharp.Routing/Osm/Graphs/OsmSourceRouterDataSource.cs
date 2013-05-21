@@ -66,7 +66,7 @@ namespace OsmSharp.Routing.Osm.Graphs
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool SupportsProfile(VehicleEnum vehicle)
+        public bool SupportsProfile(Vehicle vehicle)
         {
             return true; // any IBasicRouterDataSource<LiveEdge> support all vehicle types.
         }

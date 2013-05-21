@@ -20,7 +20,7 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        bool SupportsVehicle(VehicleEnum vehicle);
+        bool SupportsVehicle(Vehicle vehicle);
 
         #endregion
 
@@ -33,7 +33,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source">The source point.</param>
         /// <param name="target">The target point.</param>
         /// <returns></returns>
-        OsmSharpRoute Calculate(VehicleEnum vehicle, RouterPoint source, RouterPoint target);
+        OsmSharpRoute Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target);
 
         /// <summary>
         /// Calculates a route between two given points.
@@ -43,7 +43,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="target">The target point.</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
         /// <returns></returns>
-        OsmSharpRoute Calculate(VehicleEnum vehicle, RouterPoint source, RouterPoint target, float max);
+        OsmSharpRoute Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max);
 
         /// <summary>
         /// Calculates a shortest route from a given point to any of the targets points.
@@ -52,7 +52,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source">The source point.</param>
         /// <param name="targets">The target point(s).</param>
         /// <returns></returns>
-        OsmSharpRoute CalculateToClosest(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets);
+        OsmSharpRoute CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets);
 
         /// <summary>
         /// Calculates a shortest route from a given point to any of the targets points.
@@ -62,7 +62,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="targets">The target point(s).</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
         /// <returns></returns>
-        OsmSharpRoute CalculateToClosest(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets, float max);
+        OsmSharpRoute CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max);
 
         /// <summary>
         /// Calculates all routes between one source and many target points.
@@ -71,7 +71,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        OsmSharpRoute[] CalculateOneToMany(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets);
+        OsmSharpRoute[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets);
 
         /// <summary>
         /// Calculates all routes between many sources/targets.
@@ -80,7 +80,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        OsmSharpRoute[][] CalculateManyToMany(VehicleEnum vehicle, RouterPoint[] sources, RouterPoint[] targets);
+        OsmSharpRoute[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets);
 
         /// <summary>
         /// Calculates the weight between two given points.
@@ -89,7 +89,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        double CalculateWeight(VehicleEnum vehicle, RouterPoint source, RouterPoint target);
+        double CalculateWeight(Vehicle vehicle, RouterPoint source, RouterPoint target);
 
         /// <summary>
         /// Calculates a route between one source and many target points.
@@ -98,7 +98,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        double[] CalculateOneToManyWeight(VehicleEnum vehicle, RouterPoint source, RouterPoint[] targets);
+        double[] CalculateOneToManyWeight(Vehicle vehicle, RouterPoint source, RouterPoint[] targets);
 
         /// <summary>
         /// Calculates all routes between many sources/targets.
@@ -107,7 +107,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        double[][] CalculateManyToManyWeight(VehicleEnum vehicle, RouterPoint[] sources, RouterPoint[] targets);
+        double[][] CalculateManyToManyWeight(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets);
 
         #endregion
 
@@ -128,7 +128,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="orgine"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        HashSet<GeoCoordinate> CalculateRange(VehicleEnum vehicle, RouterPoint orgine, float weight);
+        HashSet<GeoCoordinate> CalculateRange(Vehicle vehicle, RouterPoint orgine, float weight);
 
         #endregion
 
@@ -141,7 +141,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        bool CheckConnectivity(VehicleEnum vehicle, RouterPoint point, float weight);
+        bool CheckConnectivity(Vehicle vehicle, RouterPoint point, float weight);
 
         /// <summary>
         /// Returns true if the given point is connected for a radius of at least the given weight.
@@ -150,7 +150,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="point"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        bool[] CheckConnectivity(VehicleEnum vehicle, RouterPoint[] point, float weight);
+        bool[] CheckConnectivity(Vehicle vehicle, RouterPoint[] point, float weight);
 
         #endregion
 
@@ -162,7 +162,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="coordinate">The location of the point to resolve.</param>
         /// <returns></returns>
-        RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate);
+        RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate);
 
         /// <summary>
         /// Resolves a point.
@@ -171,7 +171,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="delta">The size of the box to search in.</param>
         /// <param name="coordinate">The location of the point to resolve.</param>
         /// <returns></returns>
-        RouterPoint Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate);
+        RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate);
 
         /// <summary>
         /// Resolves a point.
@@ -181,7 +181,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matcher">The matcher containing some matching algorithm.</param>
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
-        RouterPoint Resolve(VehicleEnum vehicle, GeoCoordinate coordinate,
+        RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate,
             IEdgeMatcher matcher, TagsCollection matchingTags);
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matcher">The matcher containing some matching algorithm.</param>
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
-        RouterPoint Resolve(VehicleEnum vehicle, float delta, GeoCoordinate coordinate,
+        RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate,
             IEdgeMatcher matcher, TagsCollection matchingTags);
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="coordinate">The location of the point to resolve.</param>
         /// <returns></returns>
-        RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinate);
+        RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinate);
 
         /// <summary>
         /// Resolves all the given points.
@@ -211,7 +211,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="delta">The size of the box to search in.</param>
         /// <param name="coordinate">The location of the point to resolve.</param>
         /// <returns></returns>
-        RouterPoint[] Resolve(VehicleEnum vehicle, float delta, GeoCoordinate[] coordinate);
+        RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinate);
 
         /// <summary>
         /// Resolves all the given points.
@@ -221,7 +221,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matcher">The matcher containing some matching algorithm.</param>
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
-        RouterPoint[] Resolve(VehicleEnum vehicle, GeoCoordinate[] coordinates,
+        RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinates,
             IEdgeMatcher matcher, TagsCollection[] matchingTags);
 
         /// <summary>
@@ -233,7 +233,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matcher">The matcher containing some matching algorithm.</param>
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
-        RouterPoint[] Resolve(VehicleEnum vehicle, float delta, GeoCoordinate[] coordinates,
+        RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinates,
             IEdgeMatcher matcher, TagsCollection[] matchingTags);
 
         #region Search
@@ -245,7 +245,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="coordinate">The location of the point to search.</param>
         /// <returns></returns>
         /// <remarks>Similar to resolve except no resolved point is created.</remarks>
-        GeoCoordinate Search(VehicleEnum vehicle, GeoCoordinate coordinate);
+        GeoCoordinate Search(Vehicle vehicle, GeoCoordinate coordinate);
 
         /// <summary>
         /// Searches for a closeby link to the road network.
@@ -255,7 +255,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="coordinate">The location of the point to search.</param>
         /// <returns></returns>
         /// <remarks>Similar to resolve except no resolved point is created.</remarks>
-        GeoCoordinate Search(VehicleEnum vehicle, float delta, GeoCoordinate coordinate);
+        GeoCoordinate Search(Vehicle vehicle, float delta, GeoCoordinate coordinate);
 
         #endregion
 

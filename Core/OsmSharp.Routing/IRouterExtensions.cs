@@ -37,7 +37,7 @@ namespace OsmSharp.Routing
         /// <param name="weight"></param>
         /// <returns></returns>
         public static RouterPoint[] CheckConnectivityAndRemoveInvalid(
-            this Router router, VehicleEnum vehicle, RouterPoint[] resolvedPoints, float weight)
+            this Router router, Vehicle vehicle, RouterPoint[] resolvedPoints, float weight)
         {
             var connectedPoints = new List<RouterPoint>();
             for (int idx = 0; idx < resolvedPoints.Length; idx++)

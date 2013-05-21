@@ -107,8 +107,8 @@ namespace OsmSharp.Osm.UnitTests.Routing
                 float latitude, longitude;
                 if(data.GetVertex(idx, out latitude, out longitude))
                 {
-                    resolvedReference[idx - 1] = referenceRouter.Resolve(VehicleEnum.Car, new GeoCoordinate(latitude, longitude));
-                    resolved[idx - 1] = router.Resolve(VehicleEnum.Car, new GeoCoordinate(latitude, longitude));
+                    resolvedReference[idx - 1] = referenceRouter.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+                    resolved[idx - 1] = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
                 }
 
                 Assert.IsNotNull(resolvedReference[idx - 1]);
@@ -125,9 +125,9 @@ namespace OsmSharp.Osm.UnitTests.Routing
             {
                 for (int toIdx = 0; toIdx < resolved.Length; toIdx++)
                 {
-                    OsmSharpRoute referenceRoute = referenceRouter.Calculate(VehicleEnum.Car, 
+                    OsmSharpRoute referenceRoute = referenceRouter.Calculate(Vehicle.Car, 
                         resolvedReference[fromIdx], resolvedReference[toIdx]);
-                    OsmSharpRoute route = router.Calculate(VehicleEnum.Car, 
+                    OsmSharpRoute route = router.Calculate(Vehicle.Car, 
                         resolved[fromIdx], resolved[toIdx]);
 
                     Assert.IsNotNull(referenceRoute);

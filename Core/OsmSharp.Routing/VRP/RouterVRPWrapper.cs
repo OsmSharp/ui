@@ -77,7 +77,7 @@ namespace OsmSharp.Routing.VRP
         /// <param name="vehicle"></param>
         /// <param name="solution"></param>
         /// <param name="points"></param>
-        protected OsmSharpRoute[] ConvertSolution(VehicleEnum vehicle, int[][] solution, RouterPoint[] points)
+        protected OsmSharpRoute[] ConvertSolution(Vehicle vehicle, int[][] solution, RouterPoint[] points)
         {
             var routes = new OsmSharpRoute[solution.Length];
             for (int routeIdx = 0; routeIdx < solution.Length; routeIdx++)
@@ -87,7 +87,7 @@ namespace OsmSharp.Routing.VRP
                 OsmSharpRoute route;
                 for (int idx = 0; idx < solution[routeIdx].Length - 1; idx++)
                 {
-                    route = _router.Calculate(VehicleEnum.Car, points[solution[routeIdx][idx]],
+                    route = _router.Calculate(Vehicle.Car, points[solution[routeIdx][idx]],
                         points[solution[routeIdx][idx + 1]]);
                     if (route != null && route.Entries.Length > 0)
                     {

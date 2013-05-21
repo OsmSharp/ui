@@ -45,7 +45,7 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public override bool SupportsVehicle(VehicleEnum vehicle)
+        public override bool SupportsVehicle(Vehicle vehicle)
         {
             // TODO: ask interpreter.
             return true;

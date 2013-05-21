@@ -49,7 +49,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         /// <param name="vehicle"></param>
         /// <returns></returns>
         public override IBasicRouterDataSource<LiveEdge> BuildData(IRoutingInterpreter interpreter,
-                                                                            string embeddedString, VehicleEnum vehicle)
+                                                                            string embeddedString, Vehicle vehicle)
         {
             var tagsIndex = new SimpleTagsIndex();
 
