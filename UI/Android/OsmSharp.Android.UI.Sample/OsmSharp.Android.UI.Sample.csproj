@@ -70,7 +70,7 @@
     <EmbeddedResource Include="images\tree.png" />
     <EmbeddedResource Include="test.osm.pbf.routing.3" />
     <EmbeddedResource Include="test.osm.pbf" />
-    <EmbeddedResource Include="test.osm.scene" />
+    <EmbeddedResource Include="test.osm.pbf.scene" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

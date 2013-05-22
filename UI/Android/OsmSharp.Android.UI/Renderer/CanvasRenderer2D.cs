@@ -241,22 +241,39 @@ namespace OsmSharp.Android.UI
 
 				_paint.Color = new global::Android.Graphics.Color(color);
 				_paint.StrokeWidth = widthInPixels;
+				_paint.SetStyle(global::Android.Graphics.Paint.Style.Stroke);
+				if(dashes != null && dashes.Length > 0)
+				{ // set the dashes effect.
+					float[] intervals = new float[dashes.Length];
+					for(int idx = 0; idx < dashes.Length; idx++)
+					{
+						intervals [idx] = dashes [idx];
+					}
+					_paint.SetPathEffect(
+						new global::Android.Graphics.DashPathEffect(
+							intervals, 0));
+				}
 
 				// convert to the weid android api array!
-				float[] lineCoordinates = new float[(x.Length - 2) * 4 + 4];
-				lineCoordinates[0] = this.TransformX(x[0]);
-				lineCoordinates[1] = this.TransformY(y[0]);
-				for(int idx = 1; idx < x.Length - 1; idx++)
-				{					
-					int androidApiIndex = (idx - 1) * 4 + 2;
-					lineCoordinates[androidApiIndex] = this.TransformX(x[idx]);
-					lineCoordinates[androidApiIndex + 1] = this.TransformY(y[idx]);
-					lineCoordinates[androidApiIndex + 2] = this.TransformX(x[idx]);
-					lineCoordinates[androidApiIndex + 3] = this.TransformY(y[idx]);
+				global::Android.Graphics.Path path = new global::Android.Graphics.Path ();
+				path.MoveTo (this.TransformX(x[0]), this.TransformY (y[0]));
+//				float[] lineCoordinates = new float[(x.Length - 2) * 4 + 4];
+//				lineCoordinates[0] = ;
+//				lineCoordinates[1] = ;
+				for(int idx = 1; idx < x.Length; idx++)
+				{		
+					path.LineTo (this.TransformX(x[idx]), this.TransformY (y[idx]));
+//					int androidApiIndex = (idx - 1) * 4 + 2;
+//					lineCoordinates[androidApiIndex] = ;
+//					lineCoordinates[androidApiIndex + 1] = ;
+//					lineCoordinates[androidApiIndex + 2] = this.TransformX(x[idx]);
+//					lineCoordinates[androidApiIndex + 3] = this.TransformY(y[idx]);
 				}
-				lineCoordinates[lineCoordinates.Length - 2] = this.TransformX(x[x.Length - 1]);
-				lineCoordinates[lineCoordinates.Length - 1] = this.TransformY(y[y.Length - 1]);
-				target.Target.DrawLines(lineCoordinates, 0, lineCoordinates.Length, _paint);
+//				lineCoordinates[lineCoordinates.Length - 2] = this.TransformX(x[x.Length - 1]);
+//				lineCoordinates[lineCoordinates.Length - 1] = this.TransformY(y[y.Length - 1]);
+//				target.Target.DrawLines(lineCoordinates, 0, lineCoordinates.Length, _paint);
+				target.Target.DrawPath (path, _paint);
+				_paint.Reset ();
 			}
 		}
 

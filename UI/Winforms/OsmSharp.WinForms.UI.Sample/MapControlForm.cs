@@ -56,19 +56,21 @@ namespace OsmSharp.WinForms.UI.Sample
                 imageSource);
 
             // initialize the data source.
-            var dataSource = new OsmDataSource(//new FileInfo(@"c:\OSM\bin\wvl.osm").OpenRead());
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm"));
+            var dataSource = new OsmDataSource(new FileInfo(@"c:\OSM\bin\gistel.osm").OpenRead());
+                //Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm"));
 
             // initialize map.
             var map = new Map();
             //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
-            map.AddLayer(new LayerScene(Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\test.osm.scene").OpenRead(), true)));
+            map.AddLayer(
+                new LayerScene(
+                    Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\test.osm.pbf.scene").OpenRead(), true)));
 
-            var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
-            var graphSerialized = routingSerializer.Deserialize(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.WinForms.UI.Sample.test.osm.pbf.routing.3"));
+            //var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
+            //var graphSerialized = routingSerializer.Deserialize(
+            //    Assembly.GetExecutingAssembly().GetManifestResourceStream(
+            //        "OsmSharp.WinForms.UI.Sample.test.osm.pbf.routing.3"));
             //var graphLayer = new LayerDynamicGraphLiveEdge(graphSerialized, mapCSSInterpreter);
             //map.AddLayer(graphLayer);
 
@@ -86,16 +88,16 @@ namespace OsmSharp.WinForms.UI.Sample
             //var graphLayer = new LayerDynamicGraphLiveEdge(memoryDynamicGraph, mapCSSInterpreter);
             //map.AddLayer(graphLayer);
 
-            // calculate route.            
-            Router router = Router.CreateLiveFrom(
-                graphSerialized,
-                new OsmRoutingInterpreter());
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, 
-                router.Resolve(Vehicle.Car, new GeoCoordinate(51.15136, 3.19462)),
-                router.Resolve(Vehicle.Car, new GeoCoordinate(51.075023, 3.096632)));
-            var osmSharpLayer = new LayerOsmSharpRoute(map.Projection);
-            osmSharpLayer.AddRoute(route);
-            map.AddLayer(osmSharpLayer);
+            //// calculate route.            
+            //Router router = Router.CreateLiveFrom(
+            //    graphSerialized,
+            //    new OsmRoutingInterpreter());
+            //OsmSharpRoute route = router.Calculate(Vehicle.Car, 
+            //    router.Resolve(Vehicle.Car, new GeoCoordinate(51.15136, 3.19462)),
+            //    router.Resolve(Vehicle.Car, new GeoCoordinate(51.075023, 3.096632)));
+            //var osmSharpLayer = new LayerOsmSharpRoute(map.Projection);
+            //osmSharpLayer.AddRoute(route);
+            //map.AddLayer(osmSharpLayer);
 
             //// create gpx layer.
             //var gpxLayer = new LayerGpx(map.Projection);
@@ -106,9 +108,9 @@ namespace OsmSharp.WinForms.UI.Sample
             // set control properties.
             this.mapControl1.Map = map;
             //this.mapControl1.Center = new GeoCoordinate(51.0095111, 3.3210996); 
-            this.mapControl1.Center = new GeoCoordinate(51.26337, 4.78739);
+            //this.mapControl1.Center = new GeoCoordinate(51.26337, 4.78739);
             //this.mapControl1.Center = new GeoCoordinate(50.88672, 3.23899);
-            //this.mapControl1.Center = new GeoCoordinate(51.075023, 3.096632);
+            this.mapControl1.Center = new GeoCoordinate(51.156803, 2.958887);
             this.mapControl1.ZoomLevel = 16;
         }
     }

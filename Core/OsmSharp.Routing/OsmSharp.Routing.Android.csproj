@@ -127,7 +127,6 @@
     <Compile Include="TSP\RandomizedArbitraryInsertion\RouteTSPRAI.cs" />
     <Compile Include="TSP\RouterTSP.cs" />
     <Compile Include="TSP\RouterTSPWrapper.cs" />
-    <Compile Include="VehicleEnum.cs" />
     <Compile Include="VRP\MTSP\RouterMTSP.cs" />
     <Compile Include="VRP\NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolver.cs" />
     <Compile Include="VRP\NoDepot\MaxTime\CheapestInsertion\CheapestInsertionSolverWithImprovements.cs" />
@@ -202,8 +201,6 @@
     <Compile Include="Routers\TypedRouterResolvedGraph.cs" />
     <Compile Include="Router.cs" />
     <Compile Include="RouterPoint.cs" />
-    <Compile Include="Graph\Serialization\RoutingSerializer.cs" />
-    <Compile Include="Graph\Serialization\RoutingSerializerStream.cs" />
     <Compile Include="Graph\IDynamicGraph.cs" />
     <Compile Include="Graph\IDynamicGraphEdgeData.cs" />
     <Compile Include="Graph\IDynamicGraphReadOnly.cs" />
@@ -217,8 +214,11 @@
     <Compile Include="Osm\Graphs\MemoryDynamicGraphSimpleWeighed.cs" />
     <Compile Include="Osm\Graphs\OsmSourceRouterDataSource.cs" />
     <Compile Include="Routers\TypedRouterCHEdge.cs" />
-    <Compile Include="Graph\Serialization\v2\V2RouterLiveEdgeDataSource.cs" />
-    <Compile Include="Graph\Serialization\v2\V2RoutingLiveEdgeSerializer.cs" />
+    <Compile Include="Vehicle.cs" />
+    <Compile Include="Graph\Serialization\RoutingDataSourceSerializer.cs" />
+    <Compile Include="Graph\Serialization\RoutingDataSourceSerializerStream.cs" />
+    <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
+    <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interpreter\Roads\Tags\" />

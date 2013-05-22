@@ -2,27 +2,12 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs">
     <Files>
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="99" Column="62" />
+      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="69" Column="4" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="276" Column="21" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Core" expanded="True">
-            <Node name="OsmSharp.Android" expanded="True">
-              <Node name="Xml" expanded="True">
-                <Node name="Sources" expanded="True" />
-              </Node>
-            </Node>
-            <Node name="OsmSharp.Osm.Android" expanded="True">
-              <Node name="Data" expanded="True">
-                <Node name="Memory" expanded="True" />
-                <Node name="PBF" expanded="True">
-                  <Node name="Processor" expanded="True" />
-                </Node>
-                <Node name="Streams" expanded="True" />
-              </Node>
-            </Node>
-          </Node>
           <Node name="UI" expanded="True">
             <Node name="Android" expanded="True">
               <Node name="OsmSharp.Android.UI" expanded="True">
@@ -30,11 +15,6 @@
               </Node>
               <Node name="OsmSharp.Android.UI.Sample" expanded="True">
                 <Node name="MainActivity.cs" selected="True" />
-              </Node>
-            </Node>
-            <Node name="OsmSharp.UI.Android" expanded="True">
-              <Node name="Renderer" expanded="True">
-                <Node name="Scene2DPrimitives" expanded="True" />
               </Node>
             </Node>
           </Node>

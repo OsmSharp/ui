@@ -19,7 +19,6 @@ using OsmSharp.Osm.Data.PBF.Processor;
 using OsmSharp.Osm.Data.Core.Memory;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data.Xml.Processor;
-using OsmSharp.Routing.Graph.Serialization.v2;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Route;
@@ -66,7 +65,7 @@ namespace OsmSharp.Android.UI.Sample
 			var map = new Map();
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
 			map.AddLayer(new LayerScene(Scene2D.Deserialize(
-				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.scene"), true)));
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.pbf.scene"), true)));
 
 //			var routingSerializer = new V2RoutingLiveEdgeSerializer(true);
 //			var graphSerialized = routingSerializer.Deserialize(
@@ -97,7 +96,8 @@ namespace OsmSharp.Android.UI.Sample
 			var mapView = new MapView(this);
 			mapView.Map = map;
 			//mapView.Center = new GeoCoordinate(51.075023, 3.096632);
-			mapView.Center = new GeoCoordinate(51.26337, 4.78739);
+//			mapView.Center = new GeoCoordinate(51.26337, 4.78739);
+			mapView.Center = new GeoCoordinate(51.156803, 2.958887);
 			mapView.ZoomLevel = 16;
 
 //			var mapView = new OpenGLRenderer2D(
