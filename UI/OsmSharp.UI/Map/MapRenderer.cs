@@ -150,5 +150,16 @@ namespace OsmSharp.UI.Map
             return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
                                              width, height, sceneZoomFactor, projection.DirectionX, projection.DirectionY);
         }
+
+		/// <summary>
+		/// Holds the scene renderer.
+		/// </summary>
+		/// <value>The scene renderer.</value>
+		public Renderer2D<TTarget> SceneRenderer
+		{
+			get{
+				return _renderer;
+			}
+		}
     }
 }

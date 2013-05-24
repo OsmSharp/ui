@@ -234,6 +234,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     y[idx] = projection.LatitudeToY(
                         way.Nodes[idx].Coordinate.Latitude);
                 }
+
+                // simplify.
+                if (x.Length > 2)
+                {
+                    double[][] simplified = SimplifyCurve.Simplify(new double[][] {x, y}, 0.01);
+                    x = simplified[0];
+                    y = simplified[1];
+                }
             }
 
             // add the z-index.

@@ -63,9 +63,12 @@ namespace OsmSharp.WinForms.UI.Sample
             var map = new Map();
             //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+            //map.AddLayer(
+            //    new LayerScene(
+            //        Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\test.osm.pbf.scene").OpenRead(), true)));
             map.AddLayer(
                 new LayerScene(
-                    Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\test.osm.pbf.scene").OpenRead(), true)));
+                    Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf.scene.simple").OpenRead(), true)));
 
             //var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
             //var graphSerialized = routingSerializer.Deserialize(

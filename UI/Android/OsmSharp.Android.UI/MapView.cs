@@ -18,6 +18,7 @@ using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI;
+using System.IO;
 
 namespace OsmSharp.Android.UI
 {
@@ -77,6 +78,8 @@ namespace OsmSharp.Android.UI
 		{
 			_renderer = new MapRenderer<global::Android.Graphics.Canvas>(
 				new CanvasRenderer2D());
+
+
 			// initialize the gesture detection.
 			_gestureDetector= new GestureDetector(
 				this);
@@ -86,12 +89,103 @@ namespace OsmSharp.Android.UI
 
 			_makerLayer = new LayerPrimitives(
 				new WebMercator());
+
+			
+			// initialize all the caching stuff.
+			_cacheRenderer = new MapRenderer<global::Android.Graphics.Canvas>(
+				new CanvasRenderer2D());
+			_scene = new Scene2D ();
+			_scene.BackColor = SimpleColor.FromKnownColor (KnownColor.White).Value;
+			System.Threading.Timer timer = 
+				new System.Threading.Timer (RenderingTimer, null, 
+				                            500, 500);
 		}
 
 		/// <summary>
-		/// High quality rendering flag.
+		/// Holds the current scene.
 		/// </summary>
-		private bool _highQuality = true;
+		private Scene2D _scene;
+
+		/// <summary>
+		/// Holds the cache.
+		/// </summary>
+		private global::Android.Graphics.Bitmap _cache;
+
+		/// <summary>
+		/// Holds the rendering flag.
+		/// </summary>
+		private bool _rendering = false;
+
+		/// <summary>
+		/// Holds the renderer.
+		/// </summary>
+		private MapRenderer<global::Android.Graphics.Canvas> _cacheRenderer;
+
+		/// <summary>
+		/// Renders the current complete scene.
+		/// </summary>
+		/// <param name="state">State.</param>
+		void RenderingTimer(object state)
+		{	
+			if (!_rendering) 
+			{
+				_rendering = true;
+
+				// build the layers list.
+				var layers = new List<ILayer> ();
+				for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++) {
+					// get the layer.
+					layers.Add (this.Map[layerIdx]);
+				}
+
+				// add the internal layers.
+				layers.Add (_makerLayer);
+
+				// create a new cache if size has changed.
+				if (_cache == null || _cache.Width != this.Width || this.Height != this.Height) {
+					// create a bitmap and render there.
+					_cache = global::Android.Graphics.Bitmap.CreateBitmap ((int)this.Width, (int)this.Height,
+					                                                      global::Android.Graphics.Bitmap.Config.Argb8888);
+				} else {
+					// clear the cache???
+				}
+
+				// create the canvas.
+				global::Android.Graphics.Canvas canvas = new global::Android.Graphics.Canvas (_cache);
+				canvas.DrawColor (new global::Android.Graphics.Color(
+					SimpleColor.FromKnownColor(KnownColor.Transparent).Value));
+
+				// notify the map that the view has changed.
+				this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
+
+				// create the view.
+				View2D view = _cacheRenderer.Create (canvas.Width, canvas.Height,
+				                  this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center);
+
+				// does the rendering.
+				_cacheRenderer.Render (canvas, this.Map.Projection, 
+				                layers, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center);
+
+				// add the result to the scene cache.
+				lock(_scene)
+				{
+					_scene.Clear ();
+
+					byte[] imageData = null;
+					using (var stream = new MemoryStream())
+					{
+						_cache.Compress(global::Android.Graphics.Bitmap.CompressFormat.Png, 0, stream);
+
+						imageData = stream.ToArray();
+					}
+					_scene.AddImage(0, float.MinValue, float.MaxValue, 
+					               view.Left, view.Top, view.Right, view.Bottom, imageData);
+				}
+
+				this.PostInvalidate ();
+				_rendering = false;
+			}
+		}
 
 		/// <summary>
 		/// Gets or sets the center.
@@ -132,34 +226,34 @@ namespace OsmSharp.Android.UI
 		protected override void OnDraw (global::Android.Graphics.Canvas canvas)
 		{
 			base.OnDraw (canvas);
-			
-			// initialize the renderers.
-			global::Android.Graphics.Paint paint = new global::Android.Graphics.Paint();
 
-			// build the layers list.
-			var layers = new List<ILayer>();
-			for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++)
+			// render only the cached scene.
+			lock(_scene)
 			{
-				// get the layer.
-				layers.Add(this.Map[layerIdx]);
+				canvas.DrawColor (new global::Android.Graphics.Color(_scene.BackColor));
+				_renderer.SceneRenderer.Render (
+					canvas, 
+					_scene,
+					_renderer.Create (canvas.Width, canvas.Height,
+				                  this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center));
 			}
 
-			// add the internal layers.
-			layers.Add (_makerLayer);
-
-			if(_highQuality)
-			{			
-				// notify the map.
-				this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
-
-				// render the map.
-				_renderer.Render(canvas, this.Map.Projection, layers, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
-			}
-			else
-			{
-				// render the cached parts only.
-				_renderer.RenderCache(canvas, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
-			}
+//			long before = DateTime.Now.Ticks;
+//
+//			if(_highQuality)
+//			{			
+//				// render the map.
+//				_renderer.Render(canvas, this.Map.Projection, layers, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
+//			}
+//			else
+//			{
+//				// render the cached parts only.
+//				_renderer.RenderCache(canvas, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
+//			}
+//			
+//			long after = DateTime.Now.Ticks;
+//			global::Android.Util.Log.Debug("Tag", "Rendering in {0}ms", 
+//			                                   new TimeSpan (after - before).TotalMilliseconds);
 		}
 		
 		/// <summary>
@@ -196,24 +290,24 @@ namespace OsmSharp.Android.UI
 			// notify there was movement.
 			//this.NotifyMovement();
 
-			System.Threading.Thread thread = new System.Threading.Thread(
-				new System.Threading.ThreadStart(NotifyMovement));
-			thread.Start();
+//			System.Threading.Thread thread = new System.Threading.Thread(
+//				new System.Threading.ThreadStart(NotifyMovement));
+//			thread.Start();
 		}
 
-		/// <summary>
-		/// Notifies that there was movement.
-		/// </summary>
-		private void NotifyMovement()
-		{
+//		/// <summary>
+//		/// Notifies that there was movement.
+//		/// </summary>
+//		private void NotifyMovement()
+//		{
 //			lock(this.Map)
 //			{
 //				// notify the map.
-//				//this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
+//				this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
 //
 ////				this.Invalidate();
 //			}
-		}
+//		}
 
 		#region IOnScaleGestureListener implementation
 		
@@ -232,9 +326,6 @@ namespace OsmSharp.Android.UI
 			zoomFactor = zoomFactor * detector.ScaleFactor;
 			this.ZoomLevel = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
 
-			// notify the map.
-			//this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
-
 			_scaled = true;
 			this.Invalidate();
 			return true;
@@ -246,7 +337,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="detector">Detector.</param>
 		public bool OnScaleBegin (ScaleGestureDetector detector)
 		{
-			_highQuality = false;
+//			_highQuality = false;
 			return true;
 		}
 		
@@ -256,7 +347,11 @@ namespace OsmSharp.Android.UI
 		/// <param name="detector">Detector.</param>
 		public void OnScaleEnd (ScaleGestureDetector detector)
 		{
-			_highQuality = true;
+//			System.Threading.Thread thread = new System.Threading.Thread(
+//				new System.Threading.ThreadStart(NotifyMovement));
+//			thread.Start();
+
+//			_highQuality = true;
 			this.Invalidate();
 		}
 		
@@ -317,7 +412,8 @@ namespace OsmSharp.Android.UI
 			// convert to the projected center.
 			this.Center = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
 
-			_highQuality = false;
+//			_highQuality = false;
+
 			this.Invalidate();
 			return true;
 		}
@@ -367,7 +463,11 @@ namespace OsmSharp.Android.UI
 
 				if(e.Action == MotionEventActions.Up)
 				{
-					_highQuality = true;
+//					System.Threading.Thread thread = new System.Threading.Thread(
+//						new System.Threading.ThreadStart(NotifyMovement));
+//					thread.Start();
+
+//					_highQuality = true;
 					this.Invalidate();
 				}
 			}

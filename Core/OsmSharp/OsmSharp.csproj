@@ -118,10 +118,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="protobuf-net, Version=2.0.0.621, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -133,6 +129,9 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Benchmark\TSPLIB\DemoForm.cs" />
@@ -431,6 +430,7 @@
     <Compile Include="Math\Geo\Projections\IProjection.cs" />
     <Compile Include="Math\Geo\Projections\EllipticalMercator.cs" />
     <Compile Include="Math\Geo\Projections\SphericalMercator.cs" />
+    <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

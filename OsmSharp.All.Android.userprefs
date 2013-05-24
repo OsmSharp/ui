@@ -1,20 +1,18 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI\MapView.cs">
     <Files>
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="69" Column="4" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="276" Column="21" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\MapView.cs" Line="108" Column="3" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="1" Column="1" />
+      <File FileName="UI\OsmSharp.UI\Map\MapRenderer.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="UI" expanded="True">
             <Node name="Android" expanded="True">
-              <Node name="OsmSharp.Android.UI" expanded="True">
-                <Node name="Renderer" expanded="True" />
-              </Node>
               <Node name="OsmSharp.Android.UI.Sample" expanded="True">
-                <Node name="MainActivity.cs" selected="True" />
+                <Node name="test.osm.pbf.scene" selected="True" />
               </Node>
             </Node>
           </Node>

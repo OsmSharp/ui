@@ -37,6 +37,14 @@ namespace OsmSharp.UI.Renderer
             this.BackColor = SimpleColor.FromArgb(0, 255, 255, 255).Value; // fully transparent.
 		}
 
+		/// <summary>
+		/// Clear this instance.
+		/// </summary>
+		public void Clear ()
+		{
+			_primitives.Clear ();
+		}
+
 	    /// <summary>
 	    /// Gets all objects in this scene for the specified view.
 	    /// </summary>

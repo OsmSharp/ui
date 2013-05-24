@@ -47,6 +47,11 @@ namespace OsmSharp.Android.UI
 		}
 		
 		#region Caching Implementation
+
+//		/// <summary>
+//		/// Holds the bitmap cache.
+//		/// </summary>
+//		private global::Android.Graphics.Bitmap _cache;
 		
 		/// <summary>
 		/// Called right before rendering starts.
@@ -57,14 +62,18 @@ namespace OsmSharp.Android.UI
 		protected override void OnBeforeRender(Target2DWrapper<global::Android.Graphics.Canvas> target, 
 		                                       List<Scene2D> scenes, View2D view)
 		{
-			// create a bitmap and render there.
-			var bitmap = global::Android.Graphics.Bitmap.CreateBitmap((int)target.Width, (int)target.Height,
-			                                                          global::Android.Graphics.Bitmap.Config.Argb8888);
-			target.BackTarget = target.Target;
-			target.Target = new global::Android.Graphics.Canvas(bitmap);
-			target.Target.DrawColor(global::Android.Graphics.Color.Transparent);
-			
-			target.Tag = bitmap;
+//			if (_cache == null || _cache.Width != target.Width || _cache.Height != target.Height) {
+//				// create a bitmap and render there.
+//				_cache = global::Android.Graphics.Bitmap.CreateBitmap ((int)target.Width, (int)target.Height,
+//				                                                       global::Android.Graphics.Bitmap.Config.Argb8888);
+//			} else {
+//				// clear the cache???
+//			}
+//			target.BackTarget = target.Target;
+//			target.Target = new global::Android.Graphics.Canvas(_cache);
+//			target.Target.DrawColor(global::Android.Graphics.Color.Transparent);
+//			
+//			target.Tag = _cache;
 		}
 		
 		/// <summary>
@@ -76,13 +85,13 @@ namespace OsmSharp.Android.UI
 		protected override void OnAfterRender(Target2DWrapper<global::Android.Graphics.Canvas> target, 
 		                                      List<Scene2D> scenes, View2D view)
 		{
-			target.Target.Dispose(); // dispose of the old target.
-			target.Target = target.BackTarget;
-			var bitmap = target.Tag as global::Android.Graphics.Bitmap;
-			if (bitmap != null)
-			{
-				target.Target.DrawBitmap(bitmap, 0, 0, _paint);
-			}
+//			target.Target.Dispose(); // dispose of the old target.
+//			target.Target = target.BackTarget;
+//			var bitmap = target.Tag as global::Android.Graphics.Bitmap;
+//			if (bitmap != null)
+//			{
+//				target.Target.DrawBitmap(bitmap, 0, 0, _paint);
+//			}
 		}
 		
 		/// <summary>
@@ -97,24 +106,21 @@ namespace OsmSharp.Android.UI
 		                                           List<Scene2D> currentScenes, View2D view)
 		{
 			var scene = new Scene2D();
-			scene.BackColor = currentScenes[0].BackColor;
-			
-			var bitmap = target.Tag as global::Android.Graphics.Bitmap;
-			if (bitmap != null)
-			{
-				byte[] imageData = null;
-				using (var stream = new MemoryStream())
-				{
-					bitmap.Compress(global::Android.Graphics.Bitmap.CompressFormat.Png, 0, stream);
-					
-					imageData = stream.ToArray();
-				}
-				scene.AddImage(0, float.MinValue, float.MaxValue, 
-				               view.Left, view.Top, view.Right, view.Bottom, imageData);
-				
-				// dispose of bitmap.
-				bitmap.Dispose();
-			}
+//			scene.BackColor = currentScenes[0].BackColor;
+//			
+//			var bitmap = target.Tag as global::Android.Graphics.Bitmap;
+//			if (bitmap != null)
+//			{
+//				byte[] imageData = null;
+//				using (var stream = new MemoryStream())
+//				{
+//					bitmap.Compress(global::Android.Graphics.Bitmap.CompressFormat.Png, 0, stream);
+//					
+//					imageData = stream.ToArray();
+//				}
+//				scene.AddImage(0, float.MinValue, float.MaxValue, 
+//				               view.Left, view.Top, view.Right, view.Bottom, imageData);
+//			}
 			return scene;
 		}
 		

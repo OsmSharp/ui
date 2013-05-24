@@ -62,6 +62,11 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         public event Map.LayerChanged LayerChanged;
 
+		/// <summary>
+		/// Holds the last box.
+		/// </summary>
+		private GeoCoordinateBox _lastBox;
+
         #region Scene Building
         
         /// <summary>
@@ -73,6 +78,14 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="view"></param>
         private void BuildScene(Map map, float zoomFactor, GeoCoordinate center, View2D view)
         {
+			// build the boundingbox.
+			var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(view.Left, view.Top),
+			                               map.Projection.ToGeoCoordinates(view.Right, view.Bottom));
+			if (_lastBox != null && _lastBox.IsInside (box)) {
+				return;
+			}
+			_lastBox = box;
+
             // reset the scene.
             this.Scene = new Scene2D();
 

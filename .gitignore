@@ -19,3 +19,5 @@ Data/PostgreSQL/Output*/
 Data/Redis/Output*/
 Data/SQLServer/Output*/
 Data/SQLite/Output*/
+Core/OsmSharp.UnitTests/test-results*/
+*.userprefs
