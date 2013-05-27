@@ -100,8 +100,8 @@
 //                if (changes_inside.Key.Changes.Count > 0)
 //                {
 //                    // some data in this changeset is ok!
-//                    OsmSharp.Output.OutputStreamHost.WriteLine(string.Empty);
-//                    OsmSharp.Output.OutputStreamHost.Write("Changeset accepted:");
+//                    OsmSharp.IO.Output.OutputStreamHost.WriteLine(string.Empty);
+//                    OsmSharp.IO.Output.OutputStreamHost.Write("Changeset accepted:");
 
 //                    // set the converted changeset as the current one!
 //                    _current = changes_inside.Key;

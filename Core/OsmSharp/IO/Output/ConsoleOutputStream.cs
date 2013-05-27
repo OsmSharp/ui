@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Output
+namespace OsmSharp.IO.Output
 {
     /// <summary>
     /// Writes the output to console.

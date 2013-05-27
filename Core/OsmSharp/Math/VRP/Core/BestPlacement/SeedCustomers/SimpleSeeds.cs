@@ -92,7 +92,7 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.SeedCustomers
                 // see if the new one has a higher minimal.
                 if (new_minimal > minimal)
                 { // ok there is an improvement!
-                    OsmSharp.Output.OutputStreamHost.WriteLine(string.Format("Seed new minimal: {0}->{1}",
+                    OsmSharp.IO.Output.OutputStreamHost.WriteLine(string.Format("Seed new minimal: {0}->{1}",
                         minimal, new_minimal));
 
                     tries = 0;
@@ -105,7 +105,7 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.SeedCustomers
                 tries++; // increase the number of tries.
             }
 
-            OsmSharp.Output.OutputStreamHost.WriteLine(string.Format("Seed distance: {0}", 
+            OsmSharp.IO.Output.OutputStreamHost.WriteLine(string.Format("Seed distance: {0}", 
                 minimal));
 
             return seeds;

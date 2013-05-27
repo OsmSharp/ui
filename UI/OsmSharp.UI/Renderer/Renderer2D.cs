@@ -25,19 +25,18 @@ namespace OsmSharp.UI.Renderer
         /// Contains simpler version or even cached images of the last rendering.
         /// </summary>
 	    private Scene2D _cachedScene;
-
-
+		
         /// <summary>
         /// Renders the given scene on the given target for the given view.
         /// </summary>
         /// <param name="orginalTarget"></param>
         /// <param name="scene">Scene.</param>
         /// <param name="view">View.</param>
-	    public void Render(TTarget orginalTarget, Scene2D scene, View2D view)
+	    public bool Render(TTarget orginalTarget, Scene2D scene, View2D view)
 	    {
             var scenes = new List<Scene2D>();
             scenes.Add(scene);
-            this.Render(orginalTarget, scenes, view);
+            return this.Render(orginalTarget, scenes, view);
 	    }
 
 	    /// <summary>
@@ -46,8 +45,10 @@ namespace OsmSharp.UI.Renderer
         /// <param name="orginalTarget"></param>
 	    /// <param name="scenes">Scene.</param>
 	    /// <param name="view">View.</param>
-        public void Render(TTarget orginalTarget, List<Scene2D> scenes, View2D view)
+        public bool Render(TTarget orginalTarget, List<Scene2D> scenes, View2D view)
 		{
+			this.SetRunning (true);
+
 			if (view == null)
 				throw new ArgumentNullException ("view");
 			if (scenes == null)
@@ -68,10 +69,16 @@ namespace OsmSharp.UI.Renderer
             // draw the backcolor.
             this.DrawBackColor(target, scenes[0].BackColor);
 
+			bool complete = true;
 	        foreach (var scene in scenes)
 	        {
 			    // render the primitives.
-                this.RenderPrimitives(target, scene, view);
+				complete = complete  && 
+					this.RenderPrimitives(target, scene, view);
+
+				if (!complete) {
+					break;
+				}
 	        }
 
 	        // the on after render event.
@@ -79,6 +86,10 @@ namespace OsmSharp.UI.Renderer
 
             // build a cached version.
             _cachedScene = this.BuildSceneCache(target, _cachedScene, scenes, view);
+			
+			this.SetRunning (false);
+
+			return complete;
 		}
 
 	    /// <summary>
@@ -86,10 +97,12 @@ namespace OsmSharp.UI.Renderer
 	    /// </summary>
         /// <param name="orginalTarget"></param>
 	    /// <param name="view"></param>
-	    public void RenderCache(TTarget orginalTarget, View2D view)
+	    public bool RenderCache(TTarget orginalTarget, View2D view)
         {
             if (_cachedScene != null)
             {
+				this.SetRunning (true);
+
                 if (view == null)
                     throw new ArgumentNullException("view");
                 if (orginalTarget == null)
@@ -106,9 +119,72 @@ namespace OsmSharp.UI.Renderer
                 this.DrawBackColor(target, _cachedScene.BackColor);
 
                 // render the primitives.
-                this.RenderPrimitives(target, _cachedScene, view);
+				bool complete = this.RenderPrimitives(target, _cachedScene, view);
+
+				this.SetRunning (false);
+
+				return complete;
             }
+			return true;
         }
+
+		#region Running/Cancelling/State
+
+		/// <summary>
+		/// Holds the running flag.
+		/// </summary>
+		private bool _running = false;
+
+		/// <summary>
+		/// Holds the cancel flag.
+		/// </summary>
+		private bool _cancelFlag = false;
+
+		/// <summary>
+		/// Sets the running flag.
+		/// </summary>
+		/// <param name="running">If set to <c>true</c> running.</param>
+		private void SetRunning(bool running)
+		{
+			_running = running;
+
+			// always reset cancel-flag on new run or stopping run.
+			_cancelFlag = false;
+		}
+
+		/// <summary>
+		/// Cancels the current run.
+		/// </summary>
+		/// <returns><c>true</c> if this instance cancel ; otherwise, <c>false</c>.</returns>
+		public void Cancel()
+		{
+			_cancelFlag = true;
+		}
+
+		/// <summary>
+		/// Cancels the current run and wait until the current run is finished.
+		/// </summary>
+		/// <returns><c>true</c> if this instance cancel and wait; otherwise, <c>false</c>.</returns>
+		public void CancelAndWait()
+		{
+			_cancelFlag = true;
+
+			while (_running) { // wait and wait and wait.
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this renderer is running.
+		/// </summary>
+		/// <value><c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
+		public bool IsRunning
+		{
+			get{
+				return _running;
+			}
+		}
+
+		#endregion
 
 	    /// <summary>
 	    /// Renders the primities for the given scene.
@@ -116,7 +192,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="target"></param>
 	    /// <param name="scene"></param>
 	    /// <param name="view"></param>
-        private void RenderPrimitives(Target2DWrapper<TTarget> target, Scene2D scene, View2D view)
+        private bool RenderPrimitives(Target2DWrapper<TTarget> target, Scene2D scene, View2D view)
         {
             // TODO: calculate zoom.
 			float zoom = (float)view.CalculateZoom(target.Width, target.Height);
@@ -124,6 +200,10 @@ namespace OsmSharp.UI.Renderer
             // loop over all primitives in the scene.
             foreach (IScene2DPrimitive primitive in scene.Get(view, zoom))
             { // the primitive is visible.
+				if (_cancelFlag) {
+					return false; // stop rendering on cancel and return false for an incomplete rendering.
+				}
+
                 if (primitive is Point2D)
                 {
                     var point = (Point2D)(primitive);
@@ -160,6 +240,7 @@ namespace OsmSharp.UI.Renderer
                         this.FromPixels(target, view, text.Size));
                 }
             }
+			return true;
         }
 
 	    /// <summary>

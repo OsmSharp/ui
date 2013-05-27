@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace OsmSharp.Output
+namespace OsmSharp.IO.Output
 {
     /// <summary>
     /// Writes output to stream.

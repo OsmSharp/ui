@@ -50,7 +50,7 @@ namespace OsmSharp.Routing
                 }
 
                 // report progress.
-                OsmSharp.Output.OutputStreamHost.ReportProgress(idx, resolvedPoints.Length, 
+                OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, resolvedPoints.Length, 
                     "Router.Core.CheckConnectivityAndRemoveInvalid",
                         "Checking connectivity...");
             }

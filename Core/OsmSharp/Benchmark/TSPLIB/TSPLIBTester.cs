@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -115,7 +116,7 @@ namespace OsmSharp.Benchmark.TSPLIB
             //Tools.Core.Output.OutputStreamHost.WriteLine("====== {0} started! ======", _name);
             //Tools.Core.Output.OutputStreamHost.WriteLine();
             //Tools.Core.Output.OutputStreamHost.WriteLine("Started: {0}", problem.Name);
-            OsmSharp.Output.OutputStreamHost.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
+            OsmSharp.IO.Output.OutputStreamHost.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
                 PadRight("Problem", 15),
                 PadRight("Name", 40),
                 PadRight("Time"),
@@ -184,7 +185,7 @@ namespace OsmSharp.Benchmark.TSPLIB
                         ToStringEmptyWhenNull(System.Math.Round(total / (double)_test_count, 3)),
                         ToStringEmptyWhenNull(best),
                         ToStringEmptyWhenNull(worst));
-                    OsmSharp.Output.OutputStreamHost.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
+                    OsmSharp.IO.Output.OutputStreamHost.WriteLine(string.Format("{0}{1}{2}{3}{4}{5}{6}{7}{8}{9}{10}",
                         PadRight(problem.Name, 15),
                         PadRight(solver.Name, 40),
                         PadRight(System.Math.Round(time.TotalSeconds, 3)),
@@ -200,7 +201,7 @@ namespace OsmSharp.Benchmark.TSPLIB
                     writer.WriteLine(line);
                     writer.Flush();
                 }
-                OsmSharp.Output.OutputStreamHost.WriteLine();
+                OsmSharp.IO.Output.OutputStreamHost.WriteLine();
             }
             writer.Flush();
             writer.Close();

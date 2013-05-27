@@ -33,7 +33,8 @@ namespace OsmSharp.Android.UI
 		public CanvasRenderer2D()
 		{
 			_paint = new global::Android.Graphics.Paint();
-			_paint.AntiAlias= true;
+			_paint.AntiAlias = true;
+			_paint.Dither = true;
 			_paint.StrokeJoin = global::Android.Graphics.Paint.Join.Round;
 		}
 

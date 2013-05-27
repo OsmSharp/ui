@@ -38,6 +38,9 @@ namespace OsmSharp.Android.UI.Sample
 		protected override void OnCreate (Bundle bundle)
 		{
 			base.OnCreate (bundle);
+
+//			OsmSharp.IO.Output.OutputStreamHost.RegisterOutputStream (
+//				new OsmSharp.Android.UI.IO.Output.ConsoleOutputStream ());
 			
 			// create the MapCSS image source.
 			var imageSource = new MapCSSDictionaryImageSource();

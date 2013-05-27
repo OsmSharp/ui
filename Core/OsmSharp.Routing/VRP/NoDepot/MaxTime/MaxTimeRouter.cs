@@ -101,7 +101,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
                 // calculate the weight.
                 vrp_solution_weights[idx] = problem.Time(current);
 
-                OsmSharp.Output.OutputStreamHost.WriteLine("Route {0}: {1}s",
+                OsmSharp.IO.Output.OutputStreamHost.WriteLine("Route {0}: {1}s",
                     idx, vrp_solution_weights[idx]);
 
                 // convert the route.

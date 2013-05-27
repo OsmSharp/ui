@@ -81,10 +81,10 @@ namespace OsmSharp.UI.Map.Layers
 			// build the boundingbox.
 			var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(view.Left, view.Top),
 			                               map.Projection.ToGeoCoordinates(view.Right, view.Bottom));
-			if (_lastBox != null && _lastBox.IsInside (box)) {
-				return;
-			}
-			_lastBox = box;
+//			if (_lastBox != null && _lastBox.IsInside (box)) {
+//				return;
+//			}
+//			_lastBox = box;
 
             // reset the scene.
             this.Scene = new Scene2D();

@@ -147,8 +147,8 @@
 //                    current_source.Initialize();
 //                    _sequenceNumber = next;
 
-//                    OsmSharp.Output.OutputStreamHost.WriteLine("");
-//                    OsmSharp.Output.OutputStreamHost.WriteLine("Started applying changeset {0}:{1}!", _sequenceNumber,state_array[0]);
+//                    OsmSharp.IO.Output.OutputStreamHost.WriteLine("");
+//                    OsmSharp.IO.Output.OutputStreamHost.WriteLine("Started applying changeset {0}:{1}!", _sequenceNumber,state_array[0]);
 
 //                    _current_source = current_source;
 

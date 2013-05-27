@@ -190,7 +190,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
 
                                     //improvement = true;
 
-                                    OsmSharp.Output.OutputStreamHost.WriteLine("IMPROVEMENT: {0}->{1}",
+                                    OsmSharp.IO.Output.OutputStreamHost.WriteLine("IMPROVEMENT: {0}->{1}",
                                         route1ActualBefore + route2ActualBefore, route1ActualAfter + route2ActualAfter);
                                 }
 
@@ -297,7 +297,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
                     double difference;
                     if (improvementOperation.Improve(problem, route, out difference))
                     { // there was an improvement.
-                        OsmSharp.Output.OutputStreamHost.WriteLine("Intra-improvement found {0} {1}->{2}",
+                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Intra-improvement found {0} {1}->{2}",
                             improvementOperation.Name, newWeight, newWeight + difference);
 
                         // check if the route is valid.
@@ -374,7 +374,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
                             throw new Exception("this is not an improvement!");
                         }
 
-                        OsmSharp.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
+                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
                             route1Idx, route2Idx, improvementOperation.Name, totalBefore, totalAfter);
 
                         // recalculate weights.
@@ -413,7 +413,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
                             throw new Exception("this is not an improvement!");
                         }
 
-                        OsmSharp.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
+                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
                             route2Idx, route1Idx, improvementOperation.Name, totalBefore, totalAfter);
 
                         // recalculate weights.

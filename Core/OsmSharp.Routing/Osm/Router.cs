@@ -403,7 +403,7 @@
 //                    connectivities[idx] = this.CheckConnectivity(point[idx], weight);
 
 //                    // report progress.
-//                    OsmSharp.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.Raw.CheckConnectivity", 
+//                    OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.Raw.CheckConnectivity", 
 //                        "Checking connectivity...");
 //                }
 //                return connectivities;
@@ -512,7 +512,7 @@
 //                resolved_points[idx] = this.Resolve(coordinates[idx], matcher);
 
 //                // report progress.
-//                OsmSharp.Output.OutputStreamHost.ReportProgress(idx, coordinates.Length, "Router.Raw.Resolve", "Resolving Points...");
+//                OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, coordinates.Length, "Router.Raw.Resolve", "Resolving Points...");
 //            }
 //            return resolved_points;
 //        }

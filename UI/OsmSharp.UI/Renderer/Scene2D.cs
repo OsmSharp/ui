@@ -373,6 +373,45 @@ namespace OsmSharp.UI.Renderer
 			}
         }
 
+		/// <summary>
+		/// Adds the image.
+		/// </summary>
+		/// <returns>The image.</returns>
+		/// <param name="layer">Layer.</param>
+		/// <param name="minZoom">Minimum zoom.</param>
+		/// <param name="maxZoom">Max zoom.</param>
+		/// <param name="left">Left.</param>
+		/// <param name="top">Top.</param>
+		/// <param name="right">Right.</param>
+		/// <param name="bottom">Bottom.</param>
+		/// <param name="imageData">Image data.</param>
+		public uint AddImage(int layer, float minZoom, float maxZoom, double left, double top, double right, double bottom, 
+		                     byte[] imageData, object tag)
+		{
+			if (imageData == null)
+				throw new ArgumentNullException("imageData");
+
+			Image2D image = new Image2D (left, top, bottom, right, imageData, minZoom, maxZoom);
+			image.Tag = tag;
+
+			lock(_primitives)
+			{
+
+				uint id = _nextId;
+				_nextId++;
+
+				//Dictionary<uint, IScene2DPrimitive> layerDic;
+				//if (!_primitives.TryGetValue(layer, out layerDic))
+				//{
+				//    layerDic = new Dictionary<uint, IScene2DPrimitive>();
+				//    _primitives.Add(layer, layerDic);
+				//}
+				//layerDic.Add(id, new Image2D(left, top, bottom, right, imageData, minZoom, maxZoom));
+				this.AddPrimitive(layer, id, image);
+				return id;
+			}
+		}
+
 	    /// <summary>
 	    /// Adds texts.
 	    /// </summary>

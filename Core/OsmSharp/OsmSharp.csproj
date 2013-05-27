@@ -147,6 +147,7 @@
     <Compile Include="Collections\LimitedStack.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeap.cs" />
     <Compile Include="Collections\PriorityQueues\IPriorityQueue.cs" />
+    <Compile Include="Collections\SerializableSparseArray.cs" />
     <Compile Include="Collections\SortedSet.cs" />
     <Compile Include="Collections\ObjectTable.cs" />
     <Compile Include="Collections\ObjectTableDictionary.cs" />

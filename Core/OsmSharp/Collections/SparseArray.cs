@@ -25,7 +25,7 @@ namespace OsmSharp.Collections
         /// <summary>
         /// Holds the array blocks.
         /// </summary>
-        private readonly Dictionary<int, ArrayBlock> _arrayBlocks;
+        private readonly Dictionary<long, ArrayBlock> _arrayBlocks;
 
         /// <summary>
         /// Creates a new sparse array.
@@ -36,7 +36,7 @@ namespace OsmSharp.Collections
             _virtualSize = size;
             _blockSize = 256;
 
-            _arrayBlocks = new Dictionary<int, ArrayBlock>();
+            _arrayBlocks = new Dictionary<long, ArrayBlock>();
             _lastAccessedBlock = null;
         }
 
@@ -50,7 +50,7 @@ namespace OsmSharp.Collections
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public T this[int index]
+        public T this[long index]
         {
             get
             {
@@ -64,7 +64,7 @@ namespace OsmSharp.Collections
                     return _lastAccessedBlock.Data[index - _lastAccessedBlock.Index];
                 }
                 // calculate block index.
-                int blockIndex = index/_blockSize;
+                long blockIndex = index / _blockSize;
                 
                 // get block.
                 ArrayBlock block;
@@ -87,7 +87,7 @@ namespace OsmSharp.Collections
                     _lastAccessedBlock.Data[index - _lastAccessedBlock.Index] = value;
                 }
                 // calculate block index.
-                int blockIndex = index / _blockSize;
+                long blockIndex = index / _blockSize;
 
                 // get block.
                 ArrayBlock block;
@@ -116,8 +116,8 @@ namespace OsmSharp.Collections
                 _virtualSize = size;
 
                 // remove unneeded blocks.
-                var unneededBlocks = 
-                    new List<KeyValuePair<int, ArrayBlock>>();
+                var unneededBlocks =
+                    new List<KeyValuePair<long, ArrayBlock>>();
                 foreach (var block in _arrayBlocks)
                 {
                     if (block.Value.Index > _virtualSize)
@@ -147,7 +147,7 @@ namespace OsmSharp.Collections
             /// </summary>
             /// <param name="index"></param>
             /// <param name="size"></param>
-            public ArrayBlock(int index, int size)
+            public ArrayBlock(long index, int size)
             {
                 this.Index = index;
                 this.Data = new T[size];
@@ -156,7 +156,7 @@ namespace OsmSharp.Collections
             /// <summary>
             /// The starting index of this block.
             /// </summary>
-            public int Index { get; private set; }
+            public long Index { get; private set; }
 
             /// <summary>
             /// The actual data.

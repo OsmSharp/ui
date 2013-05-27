@@ -19,6 +19,7 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI;
 using System.IO;
+using System.Threading;
 
 namespace OsmSharp.Android.UI
 {
@@ -79,7 +80,6 @@ namespace OsmSharp.Android.UI
 			_renderer = new MapRenderer<global::Android.Graphics.Canvas>(
 				new CanvasRenderer2D());
 
-
 			// initialize the gesture detection.
 			_gestureDetector= new GestureDetector(
 				this);
@@ -89,47 +89,98 @@ namespace OsmSharp.Android.UI
 
 			_makerLayer = new LayerPrimitives(
 				new WebMercator());
-
 			
 			// initialize all the caching stuff.
+			_previousCache = null;
 			_cacheRenderer = new MapRenderer<global::Android.Graphics.Canvas>(
 				new CanvasRenderer2D());
 			_scene = new Scene2D ();
 			_scene.BackColor = SimpleColor.FromKnownColor (KnownColor.White).Value;
-			System.Threading.Timer timer = 
-				new System.Threading.Timer (RenderingTimer, null, 
-				                            500, 500);
+
+			System.Threading.Timer timer = new Timer(InvalidateSimple,
+			                                         null, 0, 100);
 		}
 
 		/// <summary>
-		/// Holds the current scene.
+		/// Holds the cached scene.
 		/// </summary>
 		private Scene2D _scene;
 
 		/// <summary>
-		/// Holds the cache.
+		/// Holds the bitmap to draw on.
+		/// </summary>
+		private global::Android.Graphics.Bitmap _canvasBitmap;
+
+		/// <summary>
+		/// Holds the cache bitmap.
 		/// </summary>
 		private global::Android.Graphics.Bitmap _cache;
 
 		/// <summary>
-		/// Holds the rendering flag.
-		/// </summary>
-		private bool _rendering = false;
-
-		/// <summary>
-		/// Holds the renderer.
+		/// Holds the cache renderer.
 		/// </summary>
 		private MapRenderer<global::Android.Graphics.Canvas> _cacheRenderer;
 
 		/// <summary>
+		/// Holds the previous cache id.
+		/// </summary>
+		private uint? _previousCache;
+
+		/// <summary>
+		/// Does the rendering.
+		/// </summary>
+		private bool _render;
+
+		/// <summary>
+		/// Notifies change.
+		/// </summary>
+		void Change()
+		{
+			if (_cacheRenderer.IsRunning) {
+				_cacheRenderer.Cancel ();
+			}
+
+			_render = true;
+//			// queue the rendering.
+//			Thread thread = new Thread (Render);
+//			thread.Start ();
+		}
+
+		/// <summary>
+		/// Invalidates while rendering.
+		/// </summary>
+		void InvalidateSimple(object state)
+		{
+			if (_cacheRenderer.IsRunning) {
+				this.PostInvalidate ();
+			}
+
+			if (_render) {
+				_render = false;
+
+				if (_cacheRenderer.IsRunning) {
+					_cacheRenderer.Cancel ();
+				}
+
+				this.Render ();
+			}
+		}
+
+		/// <summary>
 		/// Renders the current complete scene.
 		/// </summary>
-		/// <param name="state">State.</param>
-		void RenderingTimer(object state)
+		void Render()
 		{	
-			if (!_rendering) 
-			{
-				_rendering = true;
+			if (_cacheRenderer.IsRunning) {
+				_cacheRenderer.CancelAndWait ();
+			}
+
+			// make sure only on thread at the same time is using the renderer.
+			lock (_cacheRenderer) {
+				double extra = 1.5;
+				long before = DateTime.Now.Ticks;
+
+				OsmSharp.IO.Output.OutputStreamHost.WriteLine ("Rendering Start");
 
 				// build the layers list.
 				var layers = new List<ILayer> ();
@@ -142,48 +193,69 @@ namespace OsmSharp.Android.UI
 				layers.Add (_makerLayer);
 
 				// create a new cache if size has changed.
-				if (_cache == null || _cache.Width != this.Width || this.Height != this.Height) {
+				if (_canvasBitmap == null || 
+				    _canvasBitmap.Width != (int)(this.Width * extra) || 
+				    _canvasBitmap.Height != (int)(this.Height * extra)) {
 					// create a bitmap and render there.
-					_cache = global::Android.Graphics.Bitmap.CreateBitmap ((int)this.Width, (int)this.Height,
-					                                                      global::Android.Graphics.Bitmap.Config.Argb8888);
+					_canvasBitmap = global::Android.Graphics.Bitmap.CreateBitmap ((int)(this.Width * extra), 
+					                                                              (int)(this.Height * extra),
+					                                                             global::Android.Graphics.Bitmap.Config.Argb8888);
 				} else {
 					// clear the cache???
 				}
 
-				// create the canvas.
-				global::Android.Graphics.Canvas canvas = new global::Android.Graphics.Canvas (_cache);
+				// create and reset the canvas.
+				global::Android.Graphics.Canvas canvas = new global::Android.Graphics.Canvas (_canvasBitmap);
 				canvas.DrawColor (new global::Android.Graphics.Color(
 					SimpleColor.FromKnownColor(KnownColor.Transparent).Value));
 
-				// notify the map that the view has changed.
-				this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
-
 				// create the view.
 				View2D view = _cacheRenderer.Create (canvas.Width, canvas.Height,
-				                  this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center);
+				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center);
+
+				// notify the map that the view has changed.
+				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, 
+				                      view);
+
+				// add the current canvas to the scene.
+				uint canvasId = _scene.AddImage (-1, float.MinValue, float.MaxValue, 
+				                                view.Left, view.Top, view.Right, view.Bottom, new byte[0], _canvasBitmap);
 
 				// does the rendering.
-				_cacheRenderer.Render (canvas, this.Map.Projection, 
-				                layers, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center);
+				bool complete = _cacheRenderer.Render (canvas, this.Map.Projection, 
+				                      layers, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center);
 
-				// add the result to the scene cache.
-				lock(_scene)
-				{
-					_scene.Clear ();
+				if(complete)
+				{ // there was no cancellation, the rendering completely finished.
+					// add the result to the scene cache.
+					lock (_scene) {
+//						if (_previousCache.HasValue) {
+//							_scene.Remove (_previousCache.Value);
+//						}
+//						_scene.Remove (canvasId);
+//
+						// add the newly rendered image again.
+						_scene.Clear ();
+						_previousCache = _scene.AddImage (0, float.MinValue, float.MaxValue, 
+						                                  view.Left, view.Top, view.Right, view.Bottom, new byte[0], _canvasBitmap);
 
-					byte[] imageData = null;
-					using (var stream = new MemoryStream())
-					{
-						_cache.Compress(global::Android.Graphics.Bitmap.CompressFormat.Png, 0, stream);
-
-						imageData = stream.ToArray();
+						// switch cache and canvas to prevent re-allocation of bitmaps.
+						global::Android.Graphics.Bitmap newCanvas = _cache;
+						_cache = _canvasBitmap;
+						_canvasBitmap = newCanvas;
 					}
-					_scene.AddImage(0, float.MinValue, float.MaxValue, 
-					               view.Left, view.Top, view.Right, view.Bottom, imageData);
 				}
 
 				this.PostInvalidate ();
-				_rendering = false;
+				
+				long after = DateTime.Now.Ticks;
+				if (!complete) {
+					OsmSharp.IO.Output.OutputStreamHost.WriteLine (string.Format("Rendering in {0}ms after cancellation!", 
+					                                                             new TimeSpan (after - before).TotalMilliseconds));
+				} else {
+					OsmSharp.IO.Output.OutputStreamHost.WriteLine (string.Format("Rendering in {0}ms", 
+					                                                             new TimeSpan (after - before).TotalMilliseconds));
+				}
 			}
 		}
 
@@ -226,10 +298,13 @@ namespace OsmSharp.Android.UI
 		protected override void OnDraw (global::Android.Graphics.Canvas canvas)
 		{
 			base.OnDraw (canvas);
+			
+//			long before = DateTime.Now.Ticks;
 
 			// render only the cached scene.
 			lock(_scene)
 			{
+//				OsmSharp.IO.Output.OutputStreamHost.WriteLine ("OnDraw");
 				canvas.DrawColor (new global::Android.Graphics.Color(_scene.BackColor));
 				_renderer.SceneRenderer.Render (
 					canvas, 
@@ -238,22 +313,9 @@ namespace OsmSharp.Android.UI
 				                  this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center));
 			}
 
-//			long before = DateTime.Now.Ticks;
-//
-//			if(_highQuality)
-//			{			
-//				// render the map.
-//				_renderer.Render(canvas, this.Map.Projection, layers, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
-//			}
-//			else
-//			{
-//				// render the cached parts only.
-//				_renderer.RenderCache(canvas, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
-//			}
-//			
 //			long after = DateTime.Now.Ticks;
-//			global::Android.Util.Log.Debug("Tag", "Rendering in {0}ms", 
-//			                                   new TimeSpan (after - before).TotalMilliseconds);
+//			OsmSharp.IO.Output.OutputStreamHost.WriteLine(string.Format("Rendering in {0}ms", 
+//			                                   new TimeSpan (after - before).TotalMilliseconds));
 		}
 		
 		/// <summary>
@@ -285,31 +347,23 @@ namespace OsmSharp.Android.UI
 		/// <param name="bottom">Bottom.</param>
 		protected override void OnLayout (bool changed, int left, int top, int right, int bottom)
 		{
-			// notify the map.
-			//this.Map.ViewChanged(this.ZoomFactor, this.Center, this.CreateView());
 			// notify there was movement.
-			//this.NotifyMovement();
+			this.NotifyMovement();
 
-//			System.Threading.Thread thread = new System.Threading.Thread(
-//				new System.Threading.ThreadStart(NotifyMovement));
-//			thread.Start();
+			this.Change ();
 		}
 
-//		/// <summary>
-//		/// Notifies that there was movement.
-//		/// </summary>
-//		private void NotifyMovement()
-//		{
-//			lock(this.Map)
-//			{
-//				// notify the map.
-//				this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, this.CreateView());
-//
-////				this.Invalidate();
-//			}
-//		}
+		/// <summary>
+		/// Notifies that there was movement.
+		/// </summary>
+		private void NotifyMovement()
+		{		
+			// invalidate the current view.
+			this.Invalidate ();
+		}
 
 		#region IOnScaleGestureListener implementation
+
 		
 		/// <summary>
 		/// Holds the scaled flag.
@@ -327,7 +381,7 @@ namespace OsmSharp.Android.UI
 			this.ZoomLevel = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
 
 			_scaled = true;
-			this.Invalidate();
+			this.NotifyMovement();
 			return true;
 		}
 		
@@ -352,7 +406,10 @@ namespace OsmSharp.Android.UI
 //			thread.Start();
 
 //			_highQuality = true;
-			this.Invalidate();
+//			this.NotifyMovement();
+
+//			OsmSharp.IO.Output.OutputStreamHost.WriteLine("OnScaleEnd");
+//			this.Change ();
 		}
 		
 		#endregion
@@ -414,7 +471,7 @@ namespace OsmSharp.Android.UI
 
 //			_highQuality = false;
 
-			this.Invalidate();
+			this.NotifyMovement();
 			return true;
 		}
 		
@@ -468,7 +525,10 @@ namespace OsmSharp.Android.UI
 //					thread.Start();
 
 //					_highQuality = true;
-					this.Invalidate();
+					this.NotifyMovement();
+					
+					OsmSharp.IO.Output.OutputStreamHost.WriteLine("OnTouch");
+					this.Change ();
 				}
 			}
 			_scaled = false;

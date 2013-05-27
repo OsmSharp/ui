@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Output
+namespace OsmSharp.IO.Output
 {
     /// <summary>
     /// Interface representing a listener that can be used to listen to output.

@@ -60,7 +60,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Mutation
             { // decrease total time.
                 if (_regime_reached == false)
                 {
-                    OsmSharp.Output.OutputStreamHost.WriteLine(
+                    OsmSharp.IO.Output.OutputStreamHost.WriteLine(
                         "Regime Reached!");
                 }
                 //Tools.Core.Output.OutputTextStreamHost.Write("DT");

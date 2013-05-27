@@ -37,7 +37,7 @@ namespace OsmSharp.UI.Map
 		/// <param name="layers">Layers.</param>
 		/// <param name="zoomFactor">Zoom factor.</param>
 		/// <param name="coordinate">Coordinate.</param>
-		public void Render(TTarget target, IProjection projection, List<ILayer> layers, float zoomFactor, GeoCoordinate center)
+		public bool Render(TTarget target, IProjection projection, List<ILayer> layers, float zoomFactor, GeoCoordinate center)
 		{			
 			// calculate the center/zoom in scene coordinates.
 			double[] sceneCenter = projection.ToPixel(center.Latitude, center.Longitude);
@@ -58,7 +58,7 @@ namespace OsmSharp.UI.Map
 			}
 			
 			// render the scenes.
-			_renderer.Render(target, scenes, view);
+			return _renderer.Render(target, scenes, view);
 		}
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace OsmSharp.UI.Map
         /// <param name="map"></param>
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
-        public void Render(TTarget target, Map map, float zoomFactor, GeoCoordinate center)
+        public bool Render(TTarget target, Map map, float zoomFactor, GeoCoordinate center)
         {
             // get the projection.
             IProjection projection = map.Projection;
@@ -92,7 +92,7 @@ namespace OsmSharp.UI.Map
             }
 
             // render the scenes.
-            _renderer.Render(target, scenes, view);
+            return _renderer.Render(target, scenes, view);
         }
 
         /// <summary>
@@ -160,6 +160,35 @@ namespace OsmSharp.UI.Map
 			get{
 				return _renderer;
 			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is running.
+		/// </summary>
+		/// <value><c>true</c> if this instance is running; otherwise, <c>false</c>.</value>
+		public bool IsRunning
+		{
+			get{
+				return _renderer.IsRunning;
+			}
+		}
+	
+		/// <summary>
+		/// Cancels the current run.
+		/// </summary>
+		/// <returns><c>true</c> if this instance cancel ; otherwise, <c>false</c>.</returns>
+		public void Cancel()
+		{
+			_renderer.Cancel ();
+		}
+
+		/// <summary>
+		/// Cancels the current run and waits.
+		/// </summary>
+		/// <returns><c>true</c> if this instance cancel and wait; otherwise, <c>false</c>.</returns>
+		public void CancelAndWait()
+		{
+			_renderer.CancelAndWait ();
 		}
     }
 }

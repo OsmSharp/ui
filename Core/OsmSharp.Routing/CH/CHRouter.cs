@@ -231,7 +231,7 @@ namespace OsmSharp.Routing.CH
         //        this.SearchBackwardIntoBucket(buckets, tos[idx]);
 
         //        // report progress.
-        //        OsmSharp.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
+        //        OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
         //            "Calculating backward...");
         //    }
 
@@ -255,7 +255,7 @@ namespace OsmSharp.Routing.CH
         //        result.Clear();
 
         //        // report progress.
-        //        OsmSharp.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
+        //        OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, tos.Length, "Router.CH.CalculateManyToManyWeights",
         //            "Calculating forward...");
         //    }
         //    return weights;
@@ -690,7 +690,7 @@ namespace OsmSharp.Routing.CH
                     this.SearchBackwardIntoBucket(buckets, sources[idx]);
 
                 // report progress.
-                OsmSharp.Output.OutputStreamHost.ReportProgress(idx, targets.Length, "Router.CH.CalculateManyToManyWeights",
+                OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, targets.Length, "Router.CH.CalculateManyToManyWeights",
                     "Calculating backward...");
             }
 
@@ -715,7 +715,7 @@ namespace OsmSharp.Routing.CH
                 result.Clear();
 
                 // report progress.
-                OsmSharp.Output.OutputStreamHost.ReportProgress(idx, sources.Length, "Router.CH.CalculateManyToManyWeights",
+                OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, sources.Length, "Router.CH.CalculateManyToManyWeights",
                     "Calculating forward...");
             }
             return weights;

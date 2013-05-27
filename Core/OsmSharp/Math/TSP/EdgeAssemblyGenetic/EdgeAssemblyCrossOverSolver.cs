@@ -200,7 +200,7 @@ namespace OsmSharp.Math.TSP.EdgeAssemblyGenetic
                 }
 
                 //// report progress.
-                //OsmSharp.Output.OutputStreamHost.ReportProgress(stagnation,_stagnation,
+                //OsmSharp.IO.Output.OutputStreamHost.ReportProgress(stagnation,_stagnation,
                 //    "OsmSharp.Math.TSP.EdgeAssemblyGenetic.EdgeAssemblyCrossOverSolver",
                 //    "Solving using EAX...");
             }

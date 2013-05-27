@@ -352,7 +352,7 @@
 //                results[idx] = this.CalculateOneToMany(from[idx], tos);
 
 //                // report progress.
-//                OsmSharp.Output.OutputStreamHost.ReportProgress(idx, from.Length, "Routing.Raw.Dykstra.CalculateManyToMany",
+//                OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, from.Length, "Routing.Raw.Dykstra.CalculateManyToMany",
 //                    "Calculating many to many weights....");
 //            }
 

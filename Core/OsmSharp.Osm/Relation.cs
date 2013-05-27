@@ -15,12 +15,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Simple.Cache;
 
@@ -133,6 +135,36 @@ namespace OsmSharp.Osm
                 relation.Members.Add(simple_member);
             }
             return relation;
+        }
+
+        /// <summary>
+        /// Returns all the coordinates in this way in the same order as the nodes.
+        /// </summary>
+        /// <returns></returns>
+        public IList<GeoCoordinate> GetCoordinates()
+        {
+            var coordinates = new List<GeoCoordinate>();
+
+            for (int idx = 0; idx < this.Members.Count; idx++)
+            {
+                if (this.Members[idx].Member is Node)
+                {
+                    var node = this.Members[idx].Member as Node;
+                    coordinates.Add(node.Coordinate);
+                }
+                else if (this.Members[idx].Member is Way)
+                {
+                    var way = this.Members[idx].Member as Way;
+                    coordinates.AddRange(way.GetCoordinates());
+                }
+                else if (this.Members[idx].Member is Relation)
+                {
+                    var relation = this.Members[idx].Member as Relation;
+                    coordinates.AddRange(relation.GetCoordinates());
+                }
+            }
+
+            return coordinates;
         }
 
         #region Relation factory functions

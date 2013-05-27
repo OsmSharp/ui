@@ -12,16 +12,6 @@ namespace OsmSharp.Osm
     /// </summary>
     public class Tile
     {
-        ///// <summary>
-        ///// Flag indicating where the y-tiles start.
-        ///// </summary>
-        //private readonly bool _y_is_top;
-
-        ///// <summary>
-        ///// Flag indicating where the x-tiles start.
-        ///// </summary>
-        //private readonly bool _x_is_left;
-
         /// <summary>
         /// Creates a new tile.
         /// </summary>
@@ -34,29 +24,7 @@ namespace OsmSharp.Osm
             this.Y = y;
 
             this.Zoom = zoom;
-
-            //_y_is_top = true;
-            //_x_is_left = true;
         }
-
-        ///// <summary>
-        ///// Creates a new tile.
-        ///// </summary>
-        ///// <param name="x"></param>
-        ///// <param name="y"></param>
-        ///// <param name="zoom"></param>
-        ///// <param name="y_is_top"></param>
-        ///// <param name="x_is_left"></param>
-        //private void Tile(int x, int y, int zoom, bool y_is_top, bool x_is_left)
-        //{
-        //    this.X = x;
-        //    this.Y = y;
-
-        //    this.Zoom = zoom;
-
-        //    //_y_is_top = true;
-        //    //_x_is_left = true;
-        //}
 
         /// <summary>
         /// The X position of the tile.
@@ -80,9 +48,7 @@ namespace OsmSharp.Osm
         public override int GetHashCode()
         {
             return this.X.GetHashCode() ^
-                   this.Y.GetHashCode(); // ^
-                   //_x_is_left.GetHashCode() ^
-                   //_y_is_top.GetHashCode();
+                   this.Y.GetHashCode();
         }
 
         /// <summary>
@@ -153,6 +119,22 @@ namespace OsmSharp.Osm
                 GeoCoordinate bottom_right = this.BottomRight;
 
                 return new GeoCoordinateBox(top_left, bottom_right);
+            }
+        }
+
+        /// <summary>
+        /// Returns the 4 subtiles.
+        /// </summary>
+        /// <returns></returns>
+        public TileRange SubTiles
+        {
+            get
+            {
+                return new TileRange(2*this.X, 
+                    2*this.Y, 
+                    2*this.X + 1, 
+                    2*this.Y + 1, 
+                    this.Zoom + 1);
             }
         }
 

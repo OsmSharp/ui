@@ -166,7 +166,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
 
             while (population.Count < population_size)
             {
-                OsmSharp.Output.OutputStreamHost.Write(
+                OsmSharp.IO.Output.OutputStreamHost.Write(
                     "Initializing population individual {0}/{1}...", population.Count + 1, population_size);
 
                 // create copy of cities
@@ -199,7 +199,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
                 // add inidividual to the population.
                 population.Add(individual);
 
-                OsmSharp.Output.OutputStreamHost.WriteLine("Done!");
+                OsmSharp.IO.Output.OutputStreamHost.WriteLine("Done!");
             }
 
             return population;
@@ -232,7 +232,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
             Genome current_round = null;
             while (cities.Count > 0)
             {
-                OsmSharp.Output.OutputStreamHost.WriteLine("Placing cities {0}/{1}",
+                OsmSharp.IO.Output.OutputStreamHost.WriteLine("Placing cities {0}/{1}",
                     cities.Count,
                     problem.Cities);
                 if (_registered_progress_reporter != null)
@@ -354,12 +354,12 @@ namespace OsmSharp.Math.VRP.MultiSalesman
         //                }
         //                List<int> tried_and_failed_cities = new List<int>();
 
-        //                OsmSharp.Output.OutputTextStreamHost.WriteLine("");
-        //                OsmSharp.Output.OutputTextStreamHost.Write("Placing cities");
+        //                OsmSharp.IO.Output.OutputTextStreamHost.WriteLine("");
+        //                OsmSharp.IO.Output.OutputTextStreamHost.Write("Placing cities");
 
         //                while (cities.Count > 0)
         //                {
-        //                    OsmSharp.Output.OutputTextStreamHost.Write(".",
+        //                    OsmSharp.IO.Output.OutputTextStreamHost.Write(".",
         //                        cities.Count,
         //                        problem.Count);
 
@@ -433,15 +433,15 @@ namespace OsmSharp.Math.VRP.MultiSalesman
         //                {
         //                    success = true;
 
-        //                    OsmSharp.Output.OutputTextStreamHost.WriteLine("");
-        //                    OsmSharp.Output.OutputTextStreamHost.WriteLine("Done for {0} rounds!", count);
+        //                    OsmSharp.IO.Output.OutputTextStreamHost.WriteLine("");
+        //                    OsmSharp.IO.Output.OutputTextStreamHost.WriteLine("Done for {0} rounds!", count);
         //                }
 
         //                if (!success && current_population_size >= population_size)
         //                {
         //                    count++;
-        //                    OsmSharp.Output.OutputTextStreamHost.WriteLine("");
-        //                    OsmSharp.Output.OutputTextStreamHost.WriteLine("Increasing to {0} rounds!", count);
+        //                    OsmSharp.IO.Output.OutputTextStreamHost.WriteLine("");
+        //                    OsmSharp.IO.Output.OutputTextStreamHost.WriteLine("Increasing to {0} rounds!", count);
 
         //                    current_population_size = 0;
         //                }
