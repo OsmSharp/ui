@@ -1,17 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Math.Geo;
+﻿using OsmSharp.Math.Geo;
 using OsmSharp.Math.Units.Angle;
 
-namespace OsmSharp.Osm
+namespace OsmSharp.Osm.Tiles
 {
     /// <summary>
     /// Represents a tile.
     /// </summary>
     public class Tile
     {
+        /// <summary>
+        /// Creates a new tile from a given id.
+        /// </summary>
+        /// <param name="id"></param>
+        public Tile(ulong id)
+        {
+            Tile tile = Tile.CalculateTile(id);
+            this.X = tile.X;
+            this.Y = tile.Y;
+            this.Zoom = tile.Zoom;
+        }
+
         /// <summary>
         /// Creates a new tile.
         /// </summary>
@@ -115,10 +123,10 @@ namespace OsmSharp.Osm
             get
             {
                 // calculate the tiles bounding box and set its properties.
-                GeoCoordinate top_left = this.TopLeft;
-                GeoCoordinate bottom_right = this.BottomRight;
+                GeoCoordinate topLeft = this.TopLeft;
+                GeoCoordinate bottomRight = this.BottomRight;
 
-                return new GeoCoordinateBox(top_left, bottom_right);
+                return new GeoCoordinateBox(topLeft, bottomRight);
             }
         }
 
@@ -136,6 +144,80 @@ namespace OsmSharp.Osm
                     2*this.Y + 1, 
                     this.Zoom + 1);
             }
+        }
+
+        /// <summary>
+        /// Calculates the tile id of the tile at position (0, 0) for the given zoom.
+        /// </summary>
+        /// <param name="zoom"></param>
+        /// <returns></returns>
+        private static ulong CalculateTileId(int zoom)
+        {
+            if (zoom == 0)
+            { // zoom level 0: {0}.
+                return 0;
+            }
+            //else if (zoom == 1)
+            //{ // zoom level 1: {1, 2, 3, 4}.
+            //    return 1;
+            //}
+            //else if (zoom == 2)
+            //{ // zoom level 2: {5, 6, 7, 8, 9, 10, 11, 12}.
+            //    return 5;
+            //}
+
+            ulong size = (ulong) System.Math.Pow(2, 2*(zoom - 1));
+            return Tile.CalculateTileId(zoom - 1) + size;
+        }
+
+        /// <summary>
+        /// Calculates the tile id of the tile at position (x, y) for the given zoom.
+        /// </summary>
+        /// <param name="zoom"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        private static ulong CalculateTileId(int zoom, int x, int y)
+        {
+            ulong id = Tile.CalculateTileId(zoom);
+            long width = (long)System.Math.Pow(2, zoom);
+            return id + (ulong)x + (ulong)(y*width);
+        }
+
+        /// <summary>
+        /// Calculate the tile given the id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private static Tile CalculateTile(ulong id)
+        {
+            // find out the zoom level first.
+            int zoom = 0;
+            if (id > 0)
+            { // only if the id is at least at zoom level 1.
+                while (id >= Tile.CalculateTileId(zoom))
+                {
+                    // move to the next zoom level and keep searching.
+                    zoom++;
+                }
+                zoom--;
+            }
+
+            // calculate the x-y.
+            ulong local = id - Tile.CalculateTileId(zoom);
+            ulong width = (ulong)System.Math.Pow(2, zoom);
+            int x = (int)(local % width);
+            int y = (int)(local / width);
+
+            return new Tile(x, y, zoom);
+        }
+
+        /// <summary>
+        /// Returns the id of this tile.
+        /// </summary>
+        public ulong Id
+        {
+            get { return Tile.CalculateTileId(this.Zoom, this.X, this.Y); }
         }
 
         #region Conversion Functions

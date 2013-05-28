@@ -85,19 +85,24 @@ namespace OsmSharp.Collections
                     _lastAccessedBlock.Index <= index && (_lastAccessedBlock.Index + _blockSize) > index)
                 { // the last accessed block is contains the requested value.
                     _lastAccessedBlock.Data[index - _lastAccessedBlock.Index] = value;
+                    return;
                 }
                 // calculate block index.
                 long blockIndex = index / _blockSize;
 
                 // get block.
                 ArrayBlock block;
-                if (!_arrayBlocks.TryGetValue(blockIndex, out block))
+                if (!_arrayBlocks.TryGetValue(blockIndex, out block) &&
+                    value != null)
                 { // return the value from this block.
                     block = new ArrayBlock(blockIndex*_blockSize, _blockSize);
                     _arrayBlocks.Add(blockIndex, block);
                 }
-                _lastAccessedBlock = block; // set last accessed block.
-                _lastAccessedBlock.Data[index - _lastAccessedBlock.Index] = value;
+                if (block != null)
+                { // the block exists.
+                    _lastAccessedBlock = block; // set last accessed block.
+                    _lastAccessedBlock.Data[index - _lastAccessedBlock.Index] = value;
+                }
             }
         }
 

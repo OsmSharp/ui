@@ -8,6 +8,7 @@ using System.Threading;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Tiles;
 using OsmSharp.UI.Renderer;
 
 namespace OsmSharp.UI.Map.Layers

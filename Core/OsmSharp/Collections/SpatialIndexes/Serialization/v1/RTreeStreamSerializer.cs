@@ -262,54 +262,6 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             public bool[] IsLeaf { get; set; }
         }
 
-        ///// <summary>
-        ///// Deserializes the root.
-        ///// </summary>
-        ///// <param name="stream"></param>
-        ///// <param name="position"></param>
-        ///// <param name="size"></param>
-        ///// <returns></returns>
-        //internal RTreeStreamIndex<T>.Node DeserializeNode(SpatialIndexSerializerStream stream, 
-        //    int position, int size)
-        //{
-        //    var node = new RTreeMemorySimpleIndex<T>.Node();
-
-        //    // build the run time type model.
-        //    RuntimeTypeModel typeModel = this.GetRuntimeTypeModel();
-
-        //    var leafFlag = new byte[1];
-        //    stream.Read(leafFlag, 0, 1);
-        //    if (leafFlag[0] == (byte)1 && size > 0)
-        //    { // the data is a leaf and can be read.
-        //        var dataBytes = new byte[size];
-        //        stream.Read(dataBytes, 0, dataBytes.Length);
-        //        List<RectangleF2D> boxes;
-        //        List<T> data = this.DeSerialize(typeModel, dataBytes, out boxes);
-
-        //        node.Boxes = boxes;
-        //        node.Children = data;
-        //        return node;
-        //    }
-        //    else if (leafFlag[0] == 0 && size < 0)
-        //    { // the data is a node, read meta data.
-        //        var metaLengthBytes = new byte[4];
-        //        stream.Read(metaLengthBytes, 0, metaLengthBytes.Length);
-        //        int metaLength = BitConverter.ToInt32(metaLengthBytes, 0);
-
-        //        var metaBytes = new byte[metaLength];
-        //        stream.Read(metaBytes, 0, metaBytes.Length);
-
-        //        var index =
-        //            typeModel.Deserialize(new MemoryStream(metaBytes), null, typeof(ChildrenIndex)) as ChildrenIndex;
-        //        if (index != null)
-        //        {
-        //            return new RTreeStreamIndex<T>.RTreeNode(index,
-        //                                                     this, stream);
-        //        }
-        //    }
-        //    throw new Exception("Cannot deserialize node!");
-        //}
-
         /// <summary>
         /// Deserializes the data that is relevant for the given box.
         /// </summary>

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Units.Angle;
 
-namespace OsmSharp.Osm
+namespace OsmSharp.Osm.Tiles
 {
     /// <summary>
     /// Represents a range of tiles.
@@ -15,17 +12,17 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new tile range.
         /// </summary>
-        /// <param name="x_min"></param>
-        /// <param name="y_min"></param>
-        /// <param name="x_max"></param>
-        /// <param name="y_max"></param>
+        /// <param name="xMin"></param>
+        /// <param name="yMin"></param>
+        /// <param name="xMax"></param>
+        /// <param name="yMax"></param>
         /// <param name="zoom"></param>
-        public TileRange(int x_min, int y_min, int x_max, int y_max, int zoom)
+        public TileRange(int xMin, int yMin, int xMax, int yMax, int zoom)
         {
-            this.XMin = x_min;
-            this.XMax = x_max;
-            this.YMin = y_min;
-            this.YMax = y_max;
+            this.XMin = xMin;
+            this.XMax = xMax;
+            this.YMin = yMin;
+            this.YMax = yMax;
 
             this.Zoom = zoom;
         }

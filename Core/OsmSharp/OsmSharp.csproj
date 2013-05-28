@@ -124,6 +124,7 @@
     </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -164,6 +165,9 @@
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
     <Compile Include="Collections\Tags\TagsCollection.cs" />
+    <Compile Include="IO\ByteCache\DiskByteCache.cs" />
+    <Compile Include="IO\ByteCache\IByteCache.cs" />
+    <Compile Include="IO\ByteCache\MemoryByteCache.cs" />
     <Compile Include="IO\DelimitedFiles\DefaultDelimitedFormat.cs" />
     <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
     <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />

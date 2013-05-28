@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using OsmSharp.IO.ByteCache;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Tiles;
 
 namespace OsmSharp.Osm.Simple.Cache
 {
@@ -15,20 +17,20 @@ namespace OsmSharp.Osm.Simple.Cache
         /// <summary>
         /// Holds the info of the base directory.
         /// </summary>
-        private DirectoryInfo _info;
+        private IByteCache _byteCache;
 
         /// <summary>
         /// Creates a new Osm disk cache.
         /// </summary>
-        /// <param name="path"></param>
-        public OsmDiskCache(string path)
+        /// <param name="byteCache">An interface to the cache to save the objects to.</param>
+        public OsmDiskCache(IByteCache byteCache)
         {
-            _info = new DirectoryInfo(path);
+            _byteCache = byteCache;
 
-            _osmDataCaches = new Dictionary<Tile, OsmDataCache>();
-            _nodesPerTile = new Dictionary<long, Tile>();
-            _waysPerTile = new Dictionary<long, Tile>();
-            _relationsPerTile = new Dictionary<long, Tile>();
+            _osmDataCaches = new Dictionary<ulong, OsmDataCache>();
+            _nodesPerTile = new Dictionary<long, ulong>();
+            _waysPerTile = new Dictionary<long, ulong>();
+            _relationsPerTile = new Dictionary<long, ulong>();
         }
 
         #region OsmDataCache-implementation
@@ -141,10 +143,11 @@ namespace OsmSharp.Osm.Simple.Cache
         /// <returns></returns>
         public override bool TryGetRelation(long id, out SimpleRelation relation)
         {
-            Tile tile;
+            ulong tileId;
             relation = null;
-            if (_relationsPerTile.TryGetValue(id, out tile))
+            if (_relationsPerTile.TryGetValue(id, out tileId))
             { // tries to get the node.
+                var tile = new Tile(tileId);
                 relation = this.GetFromTile(tile, SimpleOsmGeoType.Relation, id) as SimpleRelation;
                 return relation != null;
             }
@@ -162,25 +165,27 @@ namespace OsmSharp.Osm.Simple.Cache
 
         #endregion
 
+        #region Save/Load caching
+
         /// <summary>
         /// Holds the nodes per tile.
         /// </summary>
-        private Dictionary<long, Tile> _nodesPerTile;
+        private readonly Dictionary<long, ulong> _nodesPerTile;
 
         /// <summary>
         /// Holds the ways per tile.
         /// </summary>
-        private Dictionary<long, Tile> _waysPerTile;
+        private readonly Dictionary<long, ulong> _waysPerTile;
 
         /// <summary>
         /// Holds the relations per tile.
         /// </summary>
-        private Dictionary<long, Tile> _relationsPerTile; 
+        private readonly Dictionary<long, ulong> _relationsPerTile;
 
         /// <summary>
         /// Holds the data caches per tile.
         /// </summary>
-        private Dictionary<Tile, OsmDataCache> _osmDataCaches; 
+        private readonly Dictionary<ulong, OsmDataCache> _osmDataCaches;
 
         /// <summary>
         /// Adds a simple Osm-geo objects (Nodes, Ways and Relations).
@@ -207,6 +212,10 @@ namespace OsmSharp.Osm.Simple.Cache
                 { // there was no improvement.
                     break;
                 }
+                if (tile.Zoom == 16)
+                { // zoom 16 is the lowest zoom level.
+                    break;
+                }
             }
 
             // add to the tile.
@@ -216,31 +225,31 @@ namespace OsmSharp.Osm.Simple.Cache
         /// <summary>
         /// Adds an object to the given tile.
         /// </summary>
-        /// <param name="tile"></param>
+        /// <param name="tileId"></param>
         /// <param name="geo"></param>
-        private void AddToTile(Tile tile, SimpleOsmGeo geo)
+        private void AddToTile(ulong tileId, SimpleOsmGeo geo)
         {
             OsmDataCache data;
-            if (!_osmDataCaches.TryGetValue(tile, out data))
+            if (!_osmDataCaches.TryGetValue(tileId, out data))
             {
                 // the osm data cache is not there yet.
                 data = new OsmDataCacheMemory();
-                _osmDataCaches.Add(tile, data);
+                _osmDataCaches.Add(tileId, data);
             }
             if (geo is SimpleNode)
             {
                 data.AddNode(geo as SimpleNode);
-                _nodesPerTile.Add(geo.Id.Value, tile);
+                _nodesPerTile.Add(geo.Id.Value, tileId);
             }
             else if (geo is SimpleWay)
             {
                 data.AddWay(geo as SimpleWay);
-                _waysPerTile.Add(geo.Id.Value, tile);
+                _waysPerTile.Add(geo.Id.Value, tileId);
             }
             else if (geo is SimpleRelation)
             {
                 data.AddRelation(geo as SimpleRelation);
-                _relationsPerTile.Add(geo.Id.Value, tile);
+                _relationsPerTile.Add(geo.Id.Value, tileId);
             }
         }
 
@@ -267,5 +276,17 @@ namespace OsmSharp.Osm.Simple.Cache
             }
             return null;
         }
+
+        /// <summary>
+        /// Returns the data in a tile.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private OsmDataCache GetTile(ulong id)
+        {
+            
+        }
+
+        #endregion
     }
 }

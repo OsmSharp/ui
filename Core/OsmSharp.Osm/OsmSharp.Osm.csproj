@@ -180,6 +180,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -283,6 +284,7 @@
     <Compile Include="Relation.cs" />
     <Compile Include="RelationMember.cs" />
     <Compile Include="SimpleShapeInterpreter.cs" />
+    <Compile Include="Simple\Cache\OsmDataCacheDefault.cs" />
     <Compile Include="Simple\Cache\OsmDataCacheMemory.cs" />
     <Compile Include="Simple\Cache\OsmDiskCache.cs" />
     <Compile Include="Simple\SimpleChange.cs" />

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Ionic.Zlib;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;

@@ -15,15 +15,13 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using OsmSharp.Osm;
-using OsmSharp.Math.Geo;
 
-namespace OsmSharp.Osm.UnitTests.Tiles
+using System.Collections.Generic;
+using NUnit.Framework;
+using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Tiles;
+
+namespace OsmSharp.UnitTests.Tiles
 {
     /// <summary>
     /// Does some tests on the tile calculations.
@@ -85,6 +83,42 @@ namespace OsmSharp.Osm.UnitTests.Tiles
             Assert.IsTrue(tiles.Contains(new Tile(0, 1, 16)));
             Assert.IsTrue(tiles.Contains(new Tile(1, 1, 16)));
             Assert.IsTrue(tiles.Contains(new Tile(0, 1, 16)));
+        }
+
+        /// <summary>
+        /// Tests the tile id generation.
+        /// </summary>
+        [Test]
+        public void TestTileId()
+        {
+            var tile0 = new Tile(0, 0, 0);
+            Assert.AreEqual(0, tile0.Id);
+
+            var tile1_0_0 = new Tile(0, 0, 1);
+            Assert.AreEqual(1, tile1_0_0.Id);
+
+            var tile2_0_0 = new Tile(0, 0, 2);
+            Assert.AreEqual(5, tile2_0_0.Id);
+
+            var tile3_0_0 = new Tile(0, 0, 3);
+            Assert.AreEqual(5 + 16, tile3_0_0.Id);
+
+            var tile4_0_0 = new Tile(0, 0, 4);
+            Assert.AreEqual(5 + 16 + 64, tile4_0_0.Id);
+
+            var tile2_1_1 = new Tile(1, 1, 2);
+            Assert.AreEqual(5 + 1 + 4, tile2_1_1.Id);
+
+            var tile2_1_1_fromId = new Tile(5 + 1 + 4);
+            Assert.AreEqual(tile2_1_1.Zoom, tile2_1_1_fromId.Zoom);
+            Assert.AreEqual(tile2_1_1.X, tile2_1_1_fromId.X);
+            Assert.AreEqual(tile2_1_1.Y, tile2_1_1_fromId.Y);
+
+            for (ulong id = 0; id < 1000; id++)
+            {
+                Tile tile = new Tile(id);
+                Assert.AreEqual(id, tile.Id);
+            }
         }
     }
 }

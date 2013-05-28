@@ -1,14 +1,6 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI.Sample\test.mapcss">
-    <Files>
-      <File FileName="UI\Android\OsmSharp.Android.UI\MapView.cs" Line="231" Column="21" />
-      <File FileName="UI\OsmSharp.UI\Renderer\Renderer2D.cs" Line="243" Column="16" />
-      <File FileName="UI\OsmSharp.UI\Map\MapRenderer.cs" Line="62" Column="4" />
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="63" Column="22" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="249" Column="1" />
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\test.mapcss" Line="36" Column="29" />
-    </Files>
+  <MonoDevelop.Ide.Workbench>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
@@ -25,11 +17,11 @@
           <Node name="UI" expanded="True">
             <Node name="Android" expanded="True">
               <Node name="OsmSharp.Android.UI" expanded="True">
-                <Node name="Renderer" expanded="True" />
+                <Node name="Renderer" expanded="True">
+                  <Node name="CanvasRenderer2D.cs" selected="True" />
+                </Node>
               </Node>
-              <Node name="OsmSharp.Android.UI.Sample" expanded="True">
-                <Node name="test.mapcss" selected="True" />
-              </Node>
+              <Node name="OsmSharp.Android.UI.Sample" expanded="True" />
             </Node>
             <Node name="OsmSharp.UI.Android" expanded="True">
               <Node name="Map" expanded="True">

@@ -6,6 +6,7 @@ using NUnit.Framework;
 using OsmSharp.Osm;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Osm.Tiles;
 
 namespace OsmSharp.UnitTests.Tools
 {
