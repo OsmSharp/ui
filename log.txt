@@ -1,0 +1,366 @@
+ILMerge version 2.12.803.0
+Copyright (C) Microsoft Corporation 2004-2006. All rights reserved.
+ILMerge /targetplatform:v4 /log:log.txt /out:./OutputPackaged/OsmSharp.dll ./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll 
+Set platform to 'v4', using directory 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319' for mscorlib.dll
+Running on Microsoft (R) .NET Framework v2.0.50727
+mscorlib.dll version = 2.0.0.0
+The list of input assemblies is:
+	./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Tools's metadata.
+Checking to see that all of the input assemblies have a compatible PeKind.
+	OsmSharp.Tools.PeKind = ILonly
+All input assemblies have a compatible PeKind value.
+AssemblyResolver: Assembly 'OsmSharp.Tools' is referencing assembly 'System.Core'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+	AssemblyResolver: Did not find assembly in referencing assembly's directory.
+	AssemblyResolver: Attempting input directory.
+	AssemblyResolver: Did not find assembly in input directory.
+	AssemblyResolver: Attempting user-supplied directories.
+	AssemblyResolver: No user-supplied directories.
+	AssemblyResolver: Attempting framework directory.
+Can not find PDB file. Debug info will not be available for assembly 'System.Core'.
+Resolved assembly reference 'System.Core' to 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319\System.Core.dll'. (Used framework directory.)
+Using assembly 'OsmSharp.Tools' for assembly-level attributes for the target assembly.
+Merging assembly 'OsmSharp.Tools' into target assembly.
+Copying 1 Win32 Resources from assembly 'OsmSharp.Tools' into target assembly.
+	There were no errors reported in the target assembly's metadata.
+ILMerge: Writing target assembly './OutputPackaged/OsmSharp.dll'.
+Location for referenced assembly 'mscorlib' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\mscorlib.dll'
+	There were no errors reported in  mscorlib's metadata.
+Location for referenced assembly 'System.Core' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Core.dll'
+	There were no errors reported in  System.Core's metadata.
+Location for referenced assembly 'System.Xml' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Xml.dll'
+	There were no errors reported in  System.Xml's metadata.
+Location for referenced assembly 'System' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\system.dll'
+	There were no errors reported in  System's metadata.
+ILMerge: Done.
+ILMerge version 2.12.803.0
+Copyright (C) Microsoft Corporation 2004-2006. All rights reserved.
+ILMerge /targetplatform:v4 /log:log.txt /out:./OutputPackaged/OsmSharp.dll ./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll ./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll ./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll 
+Set platform to 'v4', using directory 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319' for mscorlib.dll
+Running on Microsoft (R) .NET Framework v2.0.50727
+mscorlib.dll version = 2.0.0.0
+The list of input assemblies is:
+	./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll
+	./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll
+	./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Tools's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Osm's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Routing's metadata.
+Checking to see that all of the input assemblies have a compatible PeKind.
+	OsmSharp.Tools.PeKind = ILonly
+	OsmSharp.Osm.PeKind = ILonly
+	OsmSharp.Routing.PeKind = ILonly
+All input assemblies have a compatible PeKind value.
+AssemblyResolver: Assembly 'OsmSharp.Tools' is referencing assembly 'System.Core'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+	AssemblyResolver: Did not find assembly in referencing assembly's directory.
+	AssemblyResolver: Attempting input directory.
+	AssemblyResolver: Did not find assembly in input directory.
+	AssemblyResolver: Attempting user-supplied directories.
+	AssemblyResolver: No user-supplied directories.
+	AssemblyResolver: Attempting framework directory.
+Can not find PDB file. Debug info will not be available for assembly 'System.Core'.
+Resolved assembly reference 'System.Core' to 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319\System.Core.dll'. (Used framework directory.)
+AssemblyResolver: Assembly 'OsmSharp.Osm' is referencing assembly 'protobuf-net'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Resolved assembly reference 'protobuf-net' to 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\protobuf-net.dll'. (Used referencing Module's directory.)
+AssemblyResolver: Assembly 'OsmSharp.Osm' is referencing assembly 'Zlib.Portable'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Resolved assembly reference 'Zlib.Portable' to 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\Zlib.Portable.dll'. (Used referencing Module's directory.)
+Using assembly 'OsmSharp.Tools' for assembly-level attributes for the target assembly.
+Merging assembly 'OsmSharp.Tools' into target assembly.
+Merging assembly 'OsmSharp.Osm' into target assembly.
+Merging assembly 'OsmSharp.Routing' into target assembly.
+Copying 1 Win32 Resources from assembly 'OsmSharp.Tools' into target assembly.
+	There were no errors reported in the target assembly's metadata.
+ILMerge: Writing target assembly './OutputPackaged/OsmSharp.dll'.
+AssemblyResolver: Assembly 'System.Xml' is referencing assembly 'System.Data.SqlXml'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Can not find PDB file. Debug info will not be available for assembly 'System.Data.SqlXml'.
+Resolved assembly reference 'System.Data.SqlXml' to 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Data.SqlXml.dll'. (Used referencing Module's directory.)
+Location for referenced assembly 'mscorlib' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\mscorlib.dll'
+	There were no errors reported in  mscorlib's metadata.
+Location for referenced assembly 'System.Core' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Core.dll'
+	There were no errors reported in  System.Core's metadata.
+Location for referenced assembly 'System.Xml' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Xml.dll'
+	There were no errors reported in  System.Xml's metadata.
+Location for referenced assembly 'System' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\system.dll'
+	There were no errors reported in  System's metadata.
+Location for referenced assembly 'protobuf-net' is 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\protobuf-net.dll'
+	There were no errors reported in  protobuf-net's metadata.
+Location for referenced assembly 'Zlib.Portable' is 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\Zlib.Portable.dll'
+	There were no errors reported in  Zlib.Portable's metadata.
+ILMerge: Done.
+ILMerge version 2.12.803.0
+Copyright (C) Microsoft Corporation 2004-2006. All rights reserved.
+ILMerge /targetplatform:v4 /log:log.txt /out:./OutputPackaged/OsmSharp.dll ./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll ./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll ./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll 
+Set platform to 'v4', using directory 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319' for mscorlib.dll
+Running on Microsoft (R) .NET Framework v2.0.50727
+mscorlib.dll version = 2.0.0.0
+The list of input assemblies is:
+	./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll
+	./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll
+	./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Tools's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Osm's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Routing's metadata.
+Checking to see that all of the input assemblies have a compatible PeKind.
+	OsmSharp.Tools.PeKind = ILonly
+	OsmSharp.Osm.PeKind = ILonly
+	OsmSharp.Routing.PeKind = ILonly
+All input assemblies have a compatible PeKind value.
+AssemblyResolver: Assembly 'OsmSharp.Tools' is referencing assembly 'System.Core'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+	AssemblyResolver: Did not find assembly in referencing assembly's directory.
+	AssemblyResolver: Attempting input directory.
+	AssemblyResolver: Did not find assembly in input directory.
+	AssemblyResolver: Attempting user-supplied directories.
+	AssemblyResolver: No user-supplied directories.
+	AssemblyResolver: Attempting framework directory.
+Can not find PDB file. Debug info will not be available for assembly 'System.Core'.
+Resolved assembly reference 'System.Core' to 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319\System.Core.dll'. (Used framework directory.)
+AssemblyResolver: Assembly 'OsmSharp.Osm' is referencing assembly 'protobuf-net'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Resolved assembly reference 'protobuf-net' to 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\protobuf-net.dll'. (Used referencing Module's directory.)
+AssemblyResolver: Assembly 'OsmSharp.Osm' is referencing assembly 'Zlib.Portable'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Resolved assembly reference 'Zlib.Portable' to 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\Zlib.Portable.dll'. (Used referencing Module's directory.)
+Using assembly 'OsmSharp.Tools' for assembly-level attributes for the target assembly.
+Merging assembly 'OsmSharp.Tools' into target assembly.
+Merging assembly 'OsmSharp.Osm' into target assembly.
+Merging assembly 'OsmSharp.Routing' into target assembly.
+Copying 1 Win32 Resources from assembly 'OsmSharp.Tools' into target assembly.
+	There were no errors reported in the target assembly's metadata.
+ILMerge: Writing target assembly './OutputPackaged/OsmSharp.dll'.
+AssemblyResolver: Assembly 'System.Xml' is referencing assembly 'System.Data.SqlXml'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Can not find PDB file. Debug info will not be available for assembly 'System.Data.SqlXml'.
+Resolved assembly reference 'System.Data.SqlXml' to 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Data.SqlXml.dll'. (Used referencing Module's directory.)
+Location for referenced assembly 'mscorlib' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\mscorlib.dll'
+	There were no errors reported in  mscorlib's metadata.
+Location for referenced assembly 'System.Core' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Core.dll'
+	There were no errors reported in  System.Core's metadata.
+Location for referenced assembly 'System.Xml' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Xml.dll'
+	There were no errors reported in  System.Xml's metadata.
+Location for referenced assembly 'System' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\system.dll'
+	There were no errors reported in  System's metadata.
+Location for referenced assembly 'protobuf-net' is 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\protobuf-net.dll'
+	There were no errors reported in  protobuf-net's metadata.
+Location for referenced assembly 'Zlib.Portable' is 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\Zlib.Portable.dll'
+	There were no errors reported in  Zlib.Portable's metadata.
+ILMerge: Done.
+ILMerge version 2.12.803.0
+Copyright (C) Microsoft Corporation 2004-2006. All rights reserved.
+ILMerge /targetplatform:v4 /log:log.txt /out:./OutputPackaged/OsmSharp.dll ./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll ./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll ./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll ./UI/Output/OsmSharp.Osm.Map.dll ./UI/Output/OsmSharp.Osm.Interpreter.dll 
+Set platform to 'v4', using directory 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319' for mscorlib.dll
+Running on Microsoft (R) .NET Framework v2.0.50727
+mscorlib.dll version = 2.0.0.0
+The list of input assemblies is:
+	./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll
+	./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll
+	./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll
+	./UI/Output/OsmSharp.Osm.Map.dll
+	./UI/Output/OsmSharp.Osm.Interpreter.dll
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Tools's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Osm's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Routing's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./UI/Output/OsmSharp.Osm.Map.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Osm.Map's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./UI/Output/OsmSharp.Osm.Interpreter.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Osm.Interpreter's metadata.
+Checking to see that all of the input assemblies have a compatible PeKind.
+	OsmSharp.Tools.PeKind = ILonly
+	OsmSharp.Osm.PeKind = ILonly
+	OsmSharp.Routing.PeKind = ILonly
+	OsmSharp.Osm.Map.PeKind = ILonly
+	OsmSharp.Osm.Interpreter.PeKind = ILonly, Requires32bits
+All input assemblies have a compatible PeKind value.
+AssemblyResolver: Assembly 'OsmSharp.Tools' is referencing assembly 'System.Core'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+	AssemblyResolver: Did not find assembly in referencing assembly's directory.
+	AssemblyResolver: Attempting input directory.
+	AssemblyResolver: Did not find assembly in input directory.
+	AssemblyResolver: Attempting user-supplied directories.
+	AssemblyResolver: No user-supplied directories.
+	AssemblyResolver: Attempting framework directory.
+Can not find PDB file. Debug info will not be available for assembly 'System.Core'.
+Resolved assembly reference 'System.Core' to 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319\System.Core.dll'. (Used framework directory.)
+AssemblyResolver: Assembly 'OsmSharp.Osm' is referencing assembly 'protobuf-net'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Resolved assembly reference 'protobuf-net' to 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\protobuf-net.dll'. (Used referencing Module's directory.)
+AssemblyResolver: Assembly 'OsmSharp.Osm' is referencing assembly 'Zlib.Portable'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Resolved assembly reference 'Zlib.Portable' to 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\Zlib.Portable.dll'. (Used referencing Module's directory.)
+Using assembly 'OsmSharp.Tools' for assembly-level attributes for the target assembly.
+Merging assembly 'OsmSharp.Tools' into target assembly.
+Merging assembly 'OsmSharp.Osm' into target assembly.
+Merging assembly 'OsmSharp.Routing' into target assembly.
+Merging assembly 'OsmSharp.Osm.Map' into target assembly.
+Merging assembly 'OsmSharp.Osm.Interpreter' into target assembly.
+Copying 1 Win32 Resources from assembly 'OsmSharp.Tools' into target assembly.
+	There were no errors reported in the target assembly's metadata.
+ILMerge: Writing target assembly './OutputPackaged/OsmSharp.dll'.
+AssemblyResolver: Assembly 'System.Xml' is referencing assembly 'System.Data.SqlXml'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Can not find PDB file. Debug info will not be available for assembly 'System.Data.SqlXml'.
+Resolved assembly reference 'System.Data.SqlXml' to 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Data.SqlXml.dll'. (Used referencing Module's directory.)
+AssemblyResolver: Assembly 'OsmSharp.Osm.Map' is referencing assembly 'System.Configuration'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+	AssemblyResolver: Did not find assembly in referencing assembly's directory.
+	AssemblyResolver: Attempting input directory.
+	AssemblyResolver: Did not find assembly in input directory.
+	AssemblyResolver: Attempting user-supplied directories.
+	AssemblyResolver: No user-supplied directories.
+	AssemblyResolver: Attempting framework directory.
+Can not find PDB file. Debug info will not be available for assembly 'System.Configuration'.
+Resolved assembly reference 'System.Configuration' to 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319\System.Configuration.dll'. (Used framework directory.)
+Location for referenced assembly 'mscorlib' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\mscorlib.dll'
+	There were no errors reported in  mscorlib's metadata.
+Location for referenced assembly 'System.Core' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Core.dll'
+	There were no errors reported in  System.Core's metadata.
+Location for referenced assembly 'System.Xml' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Xml.dll'
+	There were no errors reported in  System.Xml's metadata.
+Location for referenced assembly 'System' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\system.dll'
+	There were no errors reported in  System's metadata.
+Location for referenced assembly 'protobuf-net' is 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\protobuf-net.dll'
+	There were no errors reported in  protobuf-net's metadata.
+Location for referenced assembly 'Zlib.Portable' is 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\Zlib.Portable.dll'
+	There were no errors reported in  Zlib.Portable's metadata.
+Location for referenced assembly 'System.Drawing' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Drawing.dll'
+	There were no errors reported in  System.Drawing's metadata.
+Location for referenced assembly 'System.Configuration' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Configuration.dll'
+	There were no errors reported in  System.Configuration's metadata.
+ILMerge: Done.
+ILMerge version 2.12.803.0
+Copyright (C) Microsoft Corporation 2004-2006. All rights reserved.
+ILMerge /targetplatform:v4 /log:log.txt /out:./OutputPackaged/OsmSharp.dll ./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll ./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll ./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll ./UI/Output/OsmSharp.Osm.Map.dll ./UI/Output/OsmSharp.Osm.Interpreter.dll ./UI/Output/OsmSharp.Osm.Renderer.Gdi.dll ./UI/Output/OsmSharp.Osm.UI.Model.dll ./UI/Output/OsmSharp.Osm.UI.WinForms.dll 
+Set platform to 'v4', using directory 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319' for mscorlib.dll
+Running on Microsoft (R) .NET Framework v2.0.50727
+mscorlib.dll version = 2.0.0.0
+The list of input assemblies is:
+	./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll
+	./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll
+	./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll
+	./UI/Output/OsmSharp.Osm.Map.dll
+	./UI/Output/OsmSharp.Osm.Interpreter.dll
+	./UI/Output/OsmSharp.Osm.Renderer.Gdi.dll
+	./UI/Output/OsmSharp.Osm.UI.Model.dll
+	./UI/Output/OsmSharp.Osm.UI.WinForms.dll
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Tools.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Tools's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Osm.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Osm's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./Core/Output/Debug/Any CPU/OsmSharp.Routing.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Routing's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./UI/Output/OsmSharp.Osm.Map.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Osm.Map's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./UI/Output/OsmSharp.Osm.Interpreter.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Osm.Interpreter's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./UI/Output/OsmSharp.Osm.Renderer.Gdi.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Osm.Renderer.Gdi's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./UI/Output/OsmSharp.Osm.UI.Model.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Osm.UI.Model's metadata.
+Trying to read assembly from the file 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\./UI/Output/OsmSharp.Osm.UI.WinForms.dll'.
+	Successfully read in assembly.
+	There were no errors reported in OsmSharp.Osm.UI.WinForms's metadata.
+Checking to see that all of the input assemblies have a compatible PeKind.
+	OsmSharp.Tools.PeKind = ILonly
+	OsmSharp.Osm.PeKind = ILonly
+	OsmSharp.Routing.PeKind = ILonly
+	OsmSharp.Osm.Map.PeKind = ILonly
+	OsmSharp.Osm.Interpreter.PeKind = ILonly, Requires32bits
+	OsmSharp.Osm.Renderer.Gdi.PeKind = ILonly
+	OsmSharp.Osm.UI.Model.PeKind = ILonly
+	OsmSharp.Osm.UI.WinForms.PeKind = ILonly
+All input assemblies have a compatible PeKind value.
+AssemblyResolver: Assembly 'OsmSharp.Tools' is referencing assembly 'System.Core'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+	AssemblyResolver: Did not find assembly in referencing assembly's directory.
+	AssemblyResolver: Attempting input directory.
+	AssemblyResolver: Did not find assembly in input directory.
+	AssemblyResolver: Attempting user-supplied directories.
+	AssemblyResolver: No user-supplied directories.
+	AssemblyResolver: Attempting framework directory.
+Can not find PDB file. Debug info will not be available for assembly 'System.Core'.
+Resolved assembly reference 'System.Core' to 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319\System.Core.dll'. (Used framework directory.)
+AssemblyResolver: Assembly 'OsmSharp.Osm' is referencing assembly 'protobuf-net'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Resolved assembly reference 'protobuf-net' to 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\protobuf-net.dll'. (Used referencing Module's directory.)
+AssemblyResolver: Assembly 'OsmSharp.Osm' is referencing assembly 'Zlib.Portable'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Resolved assembly reference 'Zlib.Portable' to 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\Zlib.Portable.dll'. (Used referencing Module's directory.)
+Using assembly 'OsmSharp.Tools' for assembly-level attributes for the target assembly.
+Merging assembly 'OsmSharp.Tools' into target assembly.
+Merging assembly 'OsmSharp.Osm' into target assembly.
+Merging assembly 'OsmSharp.Routing' into target assembly.
+Merging assembly 'OsmSharp.Osm.Map' into target assembly.
+Merging assembly 'OsmSharp.Osm.Interpreter' into target assembly.
+Merging assembly 'OsmSharp.Osm.Renderer.Gdi' into target assembly.
+Merging assembly 'OsmSharp.Osm.UI.Model' into target assembly.
+Merging assembly 'OsmSharp.Osm.UI.WinForms' into target assembly.
+Copying 1 Win32 Resources from assembly 'OsmSharp.Tools' into target assembly.
+	There were no errors reported in the target assembly's metadata.
+ILMerge: Writing target assembly './OutputPackaged/OsmSharp.dll'.
+AssemblyResolver: Assembly 'System.Xml' is referencing assembly 'System.Data.SqlXml'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+Can not find PDB file. Debug info will not be available for assembly 'System.Data.SqlXml'.
+Resolved assembly reference 'System.Data.SqlXml' to 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Data.SqlXml.dll'. (Used referencing Module's directory.)
+AssemblyResolver: Assembly 'OsmSharp.Osm.Map' is referencing assembly 'System.Configuration'.
+	AssemblyResolver: Attempting referencing assembly's directory.
+	AssemblyResolver: Did not find assembly in referencing assembly's directory.
+	AssemblyResolver: Attempting input directory.
+	AssemblyResolver: Did not find assembly in input directory.
+	AssemblyResolver: Attempting user-supplied directories.
+	AssemblyResolver: No user-supplied directories.
+	AssemblyResolver: Attempting framework directory.
+Can not find PDB file. Debug info will not be available for assembly 'System.Configuration'.
+Resolved assembly reference 'System.Configuration' to 'C:\Windows\Microsoft.NET\Framework64\v2.0.50727\..\v4.0.30319\System.Configuration.dll'. (Used framework directory.)
+Location for referenced assembly 'mscorlib' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\mscorlib.dll'
+	There were no errors reported in  mscorlib's metadata.
+Location for referenced assembly 'System.Core' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Core.dll'
+	There were no errors reported in  System.Core's metadata.
+Location for referenced assembly 'System.Xml' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Xml.dll'
+	There were no errors reported in  System.Xml's metadata.
+Location for referenced assembly 'System' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\system.dll'
+	There were no errors reported in  System's metadata.
+Location for referenced assembly 'protobuf-net' is 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\protobuf-net.dll'
+	There were no errors reported in  protobuf-net's metadata.
+Location for referenced assembly 'Zlib.Portable' is 'C:\PRIVATE\Projects\OsmSharp\git\osmsharp\Core\Output\Debug\Any CPU\Zlib.Portable.dll'
+	There were no errors reported in  Zlib.Portable's metadata.
+Location for referenced assembly 'System.Drawing' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Drawing.dll'
+	There were no errors reported in  System.Drawing's metadata.
+Location for referenced assembly 'System.Configuration' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Configuration.dll'
+	There were no errors reported in  System.Configuration's metadata.
+Location for referenced assembly 'System.Windows.Forms' is 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319\System.Windows.Forms.dll'
+	There were no errors reported in  System.Windows.Forms's metadata.
+ILMerge: Done.

@@ -98,7 +98,7 @@ namespace OsmSharp.Android.UI
 			_scene.BackColor = SimpleColor.FromKnownColor (KnownColor.White).Value;
 
 			System.Threading.Timer timer = new Timer(InvalidateSimple,
-			                                         null, 0, 100);
+			                                         null, 0, 150);
 		}
 
 		/// <summary>
@@ -177,7 +177,7 @@ namespace OsmSharp.Android.UI
 
 			// make sure only on thread at the same time is using the renderer.
 			lock (_cacheRenderer) {
-				double extra = 1.5;
+				double extra = 1.25;
 				long before = DateTime.Now.Ticks;
 
 				OsmSharp.IO.Output.OutputStreamHost.WriteLine ("Rendering Start");

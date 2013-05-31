@@ -246,6 +246,7 @@ namespace OsmSharp.Android.UI
 			{
 				float widthInPixels = this.ToPixels(width);
 
+				_paint.AntiAlias = true;
 				_paint.Color = new global::Android.Graphics.Color(color);
 				_paint.StrokeWidth = widthInPixels;
 				_paint.SetStyle(global::Android.Graphics.Paint.Style.Stroke);
@@ -378,10 +379,23 @@ namespace OsmSharp.Android.UI
 			return image;
 		}
 
+		/// <summary>
+		/// Draws text.
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="text"></param>
+		/// <param name="size"></param>
 		protected override void DrawText (Target2DWrapper<global::Android.Graphics.Canvas> target, double x, double y, 
 		                                  string text, double size)
 		{
-
+			float xPixels = this.TransformX(x);
+			float yPixels = this.TransformY(y);
+			float textSize = this.TransformX (x + size) - xPixels;
+			_paint.FakeBoldText = true;
+			_paint.TextSize = textSize * 2;
+			target.Target.DrawText (text, xPixels, yPixels, _paint);
 		}
 
 		#endregion
