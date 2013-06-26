@@ -219,6 +219,8 @@
     <Compile Include="Graph\Serialization\RoutingDataSourceSerializerStream.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
+    <Compile Include="CH\Serialization\CHEdgeDataDataSource.cs" />
+    <Compile Include="CH\Serialization\CHEdgeDataSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interpreter\Roads\Tags\" />

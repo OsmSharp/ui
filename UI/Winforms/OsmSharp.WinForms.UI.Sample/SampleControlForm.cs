@@ -43,7 +43,8 @@ namespace OsmSharp.WinForms.UI.Sample
             int color = Color.White.ToArgb();
             int width = 1;
 
-            scene2D.AddPolygon(float.MinValue, float.MaxValue, new double[] { 50, -80, 70 }, new double[] { 20, -10, -70 }, color, width, fill);
+            scene2D.AddPolygon(float.MinValue, float.MaxValue, 
+                new double[] { 50, -80, 70 }, new double[] { 20, -10, -70 }, color, width, fill);
 
             // load test osm file.
             Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
@@ -61,7 +62,8 @@ namespace OsmSharp.WinForms.UI.Sample
                     var simplenode = (simpleOsmGeo as SimpleNode);
                     double[] point = sphericalMercator.ToPixel(
                         simplenode.Latitude.Value, simplenode.Longitude.Value);
-                    nodes.Add(simplenode.Id.Value, new GeoCoordinate(simplenode.Latitude.Value, simplenode.Longitude.Value));
+                    nodes.Add(simplenode.Id.Value, 
+                        new GeoCoordinate(simplenode.Latitude.Value, simplenode.Longitude.Value));
                     scene2D.AddPoint(float.MinValue, float.MaxValue, (float)point[0], (float)point[1],
                                      Color.Yellow.ToArgb(),
                                      2);
@@ -86,7 +88,8 @@ namespace OsmSharp.WinForms.UI.Sample
 
                     if (x.Count > 0)
                     {
-                        scene2D.AddLine(float.MinValue, float.MaxValue, x.ToArray(), y.ToArray(), Color.Blue.ToArgb(), 2);
+                        scene2D.AddLine(float.MinValue, float.MaxValue, x.ToArray(), y.ToArray(),
+                            Color.Blue.ToArgb(), 2);
                     }
                 }
             }

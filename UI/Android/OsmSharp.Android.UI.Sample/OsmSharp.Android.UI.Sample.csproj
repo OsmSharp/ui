@@ -71,6 +71,8 @@
     <EmbeddedResource Include="test.osm.pbf.routing.3" />
     <EmbeddedResource Include="test.osm.pbf" />
     <EmbeddedResource Include="test.osm.pbf.scene" />
+    <EmbeddedResource Include="wvl.pbf.routing.4" />
+    <EmbeddedResource Include="wvl.osm.pbf.routing.ch.4" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

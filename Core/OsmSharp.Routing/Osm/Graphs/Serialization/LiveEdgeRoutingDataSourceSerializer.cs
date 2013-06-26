@@ -29,7 +29,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// Holds the zoom.
         /// </summary>
-        private const int Zoom = 15;
+        private const int Zoom = 13;
 
         /// <summary>
         /// Holds the compression flag.

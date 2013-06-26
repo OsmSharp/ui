@@ -1,26 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UI\OsmSharp.UI\Renderer\Scene2DPrimitives\Text2D.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs">
     <Files>
-      <File FileName="UI\Android\OsmSharp.Android.UI\MapView.cs" Line="246" Column="7" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\CanvasRenderer2DView.cs" Line="1" Column="1" />
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="104" Column="27" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="383" Column="18" />
-      <File FileName="c:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\OsmSharp.UI\Renderer\Renderer2D.cs" Line="216" Column="1" />
-      <File FileName="UI\OsmSharp.UI\Renderer\Scene2DPrimitives\Text2D.cs" Line="120" Column="10" />
+      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="93" Column="21" />
+      <File FileName="UI\OsmSharp.UI\Map\Layers\LayerOsmSharpRoute.cs" Line="1" Column="1" />
+      <File FileName="c:\WORK\git\osmsharp\Core\OsmSharp\Math\Primitives\GenericRectangleF2D.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True" />
+        <State selected="True" />
       </Pad>
       <Pad Id="ClassPad">
         <State expanded="True" selected="True" />
       </Pad>
       <Pad Id="MonoDevelop.Debugger.WatchPad">
         <State>
-          <Value>_primitives</Value>
-          <Value>e.RawX</Value>
-          <Value>e.RawY</Value>
+          <Value>_loadedTiles.Count</Value>
         </State>
       </Pad>
     </Pads>
@@ -400,8 +395,9 @@
       <Catchpoint exceptionName="System.Xml.Xsl.XsltException" />
       <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" line="47" column="1" />
       <Breakpoint file="C:\PRIVATE\Projects\OsmSharp\git\osmsharp\UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" line="226" column="1" />
+      <Breakpoint file="C:\WORK\git\osmsharp\Core\OsmSharp.Routing\Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" line="289" column="1" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" AndroidDeviceId-Debug="8889CC253F925A2FB51379C653D11F1" />
+  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" AndroidDeviceId-Debug="emulator-5554" />
 </Properties>

@@ -244,7 +244,7 @@ namespace OsmSharp.Android.UI
 		{
 			if(x.Length > 1)
 			{
-				float widthInPixels = this.ToPixels(width);
+				float widthInPixels = this.ToPixels(width) / 2.0f;
 
 				_paint.AntiAlias = true;
 				_paint.Color = new global::Android.Graphics.Color(color);

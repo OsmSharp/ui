@@ -90,9 +90,41 @@ namespace OsmSharp.UI.Map.Layers
                                                                    blue.R, blue.G, blue.B);
 
                 this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
-                                   transparantBlue.Value, 8);
+                                   transparantBlue.Value, 16);
             }
-        }
+		}
+
+		/// <summary>
+		/// Adds a new OsmSharpRoute.
+		/// </summary>
+		/// <param name="route">Stream.</param>
+		/// <param name="argb">Stream.</param>
+		public void AddRoute(OsmSharpRoute route, int argb)
+		{
+			if (route.Entries != null && route.Entries.Length > 0)
+			{ // there are entries.
+				// get x/y.
+				var x = new double[route.Entries.Length];
+				var y = new double[route.Entries.Length];
+				for (int idx = 0; idx < route.Entries.Length; idx++)
+				{
+					x[idx] = _projection.LongitudeToX(
+						route.Entries[idx].Longitude);
+					y[idx] = _projection.LatitudeToY(
+						route.Entries[idx].Latitude);
+				}
+
+				// set the default color if none is given.
+				SimpleColor blue = new SimpleColor () {
+					Value = argb
+				};
+				SimpleColor transparantBlue = SimpleColor.FromArgb(128,
+				                                                   blue.R, blue.G, blue.B);
+
+				this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
+				                   transparantBlue.Value, 16);
+			}
+		}
 
         #endregion
     }
