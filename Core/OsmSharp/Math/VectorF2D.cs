@@ -271,6 +271,17 @@ namespace OsmSharp.Math
             }
         }
 
+		/// <summary>
+		/// Returns a normalized version of this Vector.
+		/// </summary>
+		public VectorF2D Normalize()
+		{
+			double s = this.Size;
+			double x = this [0] / s;
+			double y = this [1] / s;
+			return new VectorF2D (x, y);
+		}
+
         #endregion
 
         #region Operators

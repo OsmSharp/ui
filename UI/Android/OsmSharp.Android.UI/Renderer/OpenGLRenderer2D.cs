@@ -1,354 +1,249 @@
 using System;
 using System.Runtime.InteropServices;
 
-using OpenTK;
-using OpenTK.Graphics;
-using OpenTK.Graphics.ES11;
-using OpenTK.Platform;
-using OpenTK.Platform.Android;
-
 using Android.Views;
 using Android.Util;
 using Android.Content;
 using Android.Opengl;
 using Java.Nio;
 using Java.Lang;
+using OsmSharp.UI.Renderer;
+using OsmSharp.UI;
+using OsmSharp.Math;
 
 namespace OsmSharp.Android.UI
 {
-	class OpenGLRenderer2D : Java.Lang.Object, GLSurfaceView.IRenderer
+	/// <summary>
+	/// OpenGLRenderer2D 
+	/// </summary>
+	public class OpenGLRenderer2D : Renderer2D<OpenGLTarget2D>
 	{
-		private static string TAG = "MyGLRenderer";
+		/// <summary>
+		/// Holds the view.
+		/// </summary>
+		private View2D _view;
 
-		private Triangle mTriangle;
-		private Square   mSquare;
+		/// <summary>
+		/// Holds the target.
+		/// </summary>
+		private Target2DWrapper<OpenGLTarget2D> _target;
 
-		private float[] mMVPMatrix = new float[16];
-		private float[] mProjMatrix = new float[16];
-		private float[] mVMatrix = new float[16];
-		private float[] mRotationMatrix = new float[16];
-		
-		#region IRenderer implementation
-		public void OnDrawFrame (Javax.Microedition.Khronos.Opengles.IGL10 gl)
+		/// <summary>
+		/// Transforms the x-coordinate to screen coordinates.
+		/// </summary>
+		/// <param name="x"></param>
+		/// <returns></returns>
+		private float TransformX(double x)
 		{
-			// Draw background color
-			GLES20.GlClear ((int)GLES20.GlColorBufferBit);
-			
-			// Set the camera position (View matrix)
-			Matrix.SetLookAtM (mVMatrix, 0, 0, 0, -3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);
-			
-			// Calculate the projection and view transformation
-			Matrix.MultiplyMM (mMVPMatrix, 0, mProjMatrix, 0, mVMatrix, 0);
-			
-			// Draw square
-			mSquare.Draw (mMVPMatrix);
-			
-			// Create a rotation for the triangle
-			// long time = SystemClock.UptimeMillis() % 4000L;
-			// float angle = 0.090f * ((int) time);
-			Matrix.SetRotateM (mRotationMatrix, 0, Angle, 0, 0, -1.0f);
-			
-			// Combine the rotation matrix with the projection and camera view
-			Matrix.MultiplyMM (mMVPMatrix, 0, mRotationMatrix, 0, mMVPMatrix, 0);
-			
-			// Draw triangle
-			mTriangle.Draw (mMVPMatrix);
+			return (float)_view.ToViewPortX(_target.Width, x);
 		}
-		
-		public void OnSurfaceChanged (Javax.Microedition.Khronos.Opengles.IGL10 gl, int width, int height)
+
+		/// <summary>
+		/// Transforms the y-coordinate to screen coordinates.
+		/// </summary>
+		/// <param name="y"></param>
+		/// <returns></returns>
+		private float TransformY(double y)
 		{
-			// Adjust the viewport based on geometry changes,
-			// such as screen rotation
-			GLES20.GlViewport (0, 0, width, height);
-			
-			float ratio = (float)width / height;
-			
-			// this projection matrix is applied to object coordinates
-			// in the onDrawFrame() method
-			Matrix.FrustumM (mProjMatrix, 0, -ratio, ratio, -1, 1, 3, 7);
+			return (float)_view.ToViewPortY(_target.Height, y);
 		}
-		
-		public void OnSurfaceCreated (Javax.Microedition.Khronos.Opengles.IGL10 gl, Javax.Microedition.Khronos.Egl.EGLConfig config)
+
+		/// <summary>
+		/// Returns the size in pixels.
+		/// </summary>
+		/// <returns></returns>
+		private float ToPixels(double sceneSize)
 		{
-			// Set the background frame color
-			GLES20.GlClearColor (0.0f, 0.0f, 0.0f, 1.0f);
-			
-			mTriangle = new Triangle ();
-			mSquare = new Square ();
+			double scaleX = _target.Width / _view.Width;
+
+			return (float)(sceneSize * scaleX) * 2;
 		}
+
+		#region implemented abstract members of Renderer2D
+
+		public override Target2DWrapper<OpenGLTarget2D> CreateTarget2DWrapper (OpenGLTarget2D target)
+		{
+			_target = new Target2DWrapper<OpenGLTarget2D> (target, 
+			                                              target.Width,
+			                                              target.Height);
+			return _target;
+		}
+
+		protected override double FromPixels (Target2DWrapper<OpenGLTarget2D> target, View2D view, double sizeInPixels)
+		{
+			double scaleX = target.Width / view.Width;
+
+			return sizeInPixels / scaleX;
+		}
+
+		protected override void Transform (Target2DWrapper<OpenGLTarget2D> target, View2D view)
+		{
+			_view = view;
+			_target = target;
+
+			_target.Target.SetOrtho((float)_view.Left, (float)_view.Right, 
+			                        (float)_view.Bottom, (float)_view.Top);
+		}
+
+		protected override void DrawBackColor (Target2DWrapper<OpenGLTarget2D> target, int backColor)
+		{
+
+		}
+
+		protected override void DrawPoint (Target2DWrapper<OpenGLTarget2D> target, double x, double y, int color, double size)
+		{
+
+		}
+
+		/// <summary>
+		/// Draws a line on the target. The coordinates given are scene coordinates.
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
+		/// <param name="color">Color.</param>
+		/// <param name="width">Width.</param>
+		/// <param name="lineJoin"></param>
+		/// <param name="dashes"></param>
+		protected override void DrawLine (Target2DWrapper<OpenGLTarget2D> target, double[] x, double[] y, int color, 
+		                                  double width, OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
+		{
+			float[] points = new float[x.Length * 3];
+			for(int idx = 0; idx < x.Length; idx++)
+			{
+				int pathIdx = idx * 3;
+				points [pathIdx + 0] = (float)x [idx];
+				points [pathIdx + 1] = (float)y [idx];
+				points [pathIdx + 2] = 0;
+			}
+
+			_target.Target.AddLine(points, this.ToPixels(width), color);
+
+//			double epsilon = 0.00001; // define this value properly.
+//			//double semiwidth = this.ToPixels(width) / 2.0;
+//			double semiwidth = width / 2.0;
+//
+//			float[] path = new float[(x.Length - 1) * 2 * 3 * 2];
+//			for(int idx = 0; idx < x.Length - 1; idx++)
+//			{
+////				double x1 = this.TransformX (x[idx]);
+////				double x2 = this.TransformX (x[idx + 1]);
+////				double y1 = this.TransformY (y[idx]);
+////				double y2 = this.TransformY (y[idx + 1]);
+//
+//				double x1 = x[idx];
+//				double x2 = x[idx + 1];
+//				double y1 = y[idx];
+//				double y2 = y[idx + 1];
+//
+//				PointF2D p1 = new PointF2D (x1, y1);
+//				PointF2D p2 = new PointF2D (x2, y2);
+//				// calculate the direction of the current line-segment.
+//				VectorF2D vector = p2 - p1;
+//				if(vector.Size > epsilon)
+//				{ // anything below this value will not be feasible to calculate or visible on screen.
+//					vector = vector.Normalize ();
+//
+//					// rotate counter-clockwize and mutliply with width.
+//					VectorF2D ccw1 = vector.Rotate90 (false) * semiwidth;
+//					PointF2D p1top = p1 + ccw1;
+//					PointF2D p1bottom = p1 - ccw1;
+//
+//					// invert vector.
+//					vector = vector.Inverse;
+//					ccw1 = vector.Rotate90 (true) * semiwidth;
+//					PointF2D p2top = p2 + ccw1;
+//					PointF2D p2bottom = p2 - ccw1;
+//
+//					// make triangles out of this.
+//					int pathIdx = idx * 2 * 3 * 2;
+////					if(idx % 2 == 0)
+////					{
+//					path [pathIdx + 0] = (float)p1bottom [0];
+//					path [pathIdx + 1] = (float)p1bottom [1];
+//					path [pathIdx + 2] = 0;
+//					path [pathIdx + 3] = (float)p1top [0];
+//					path [pathIdx + 4] = (float)p1top [1];
+//					path [pathIdx + 5] = 0;
+//					
+//					path [pathIdx + 0 + 6] = (float)p2bottom [0];
+//					path [pathIdx + 1 + 6] = (float)p2bottom [1];
+//					path [pathIdx + 2 + 6] = 0;
+//					path [pathIdx + 3 + 6] = (float)p2top [0];
+//					path [pathIdx + 4 + 6] = (float)p2top [1];
+//					path [pathIdx + 5 + 6] = 0;
+////					}
+////					else
+////					{
+////						path [pathIdx + 0] = (float)p1top [0];
+////						path [pathIdx + 1] = (float)p1top [1];
+////						path [pathIdx + 2] = 0;
+////						path [pathIdx + 3] = (float)p1bottom [0];
+////						path [pathIdx + 4] = (float)p1bottom [1];
+////						path [pathIdx + 5] = 0;
+////					}
+//				}
+//			}
+//			target.Target.AddTriangles(path, color);
+		}
+
+		/// <summary>
+		/// Draws a polygon on the target. The coordinates given are scene coordinates.
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
+		/// <param name="color">Color.</param>
+		/// <param name="width">Width.</param>
+		/// <param name="fill">If set to <c>true</c> fill.</param>
+		protected override void DrawPolygon (Target2DWrapper<OpenGLTarget2D> target, double[] x, double[] y, 
+		                                     int color, double width, bool fill)
+		{
+			float[] points = new float[x.Length * 3];
+			for(int idx = 0; idx < x.Length; idx++)
+			{
+				int pathIdx = idx * 3;
+				points [pathIdx + 0] = (float)x [idx];
+				points [pathIdx + 1] = (float)y [idx];
+				points [pathIdx + 2] = 0;
+			}
+
+			_target.Target.AddLine(points, 1, color);
+
+//			for(int idx = 0; idx < 3; idx++)
+//			{
+//				float[] path = new float[3 * 3];
+//				path [0] = this.TransformX (x[idx]);
+//				path [1] = this.TransformY (y[idx] + 2);
+//				path [2] = 0;
+//				path [3] = this.TransformX (x[idx]);
+//				path [4] = this.TransformY (y[idx]);
+//				path [5] = 0;
+//				path [6] = this.TransformX (x[idx] + 2);
+//				path [7] = this.TransformY (y[idx] + 2);
+//				path [8] = 0;
+//
+//				target.Target.AddTriangles(path, color);
+//			}
+		}
+
+		protected override void DrawIcon (Target2DWrapper<OpenGLTarget2D> target, double x, double y, byte[] imageData)
+		{
+
+		}
+
+		protected override object DrawImage (Target2DWrapper<OpenGLTarget2D> target, double left, double top, double right, double bottom, byte[] imageData, object tag)
+		{
+			return null;
+		}
+
+		protected override void DrawText (Target2DWrapper<OpenGLTarget2D> target, double x, double y, string text, double size)
+		{
+
+		}
+
 		#endregion
-		
-		public static int LoadShader (int type, string shaderCode)
-		{
-			// create a vertex shader type (GLES20.GL_VERTEX_SHADER)
-			// or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
-			int shader = GLES20.GlCreateShader (type);
-			
-			// add the source code to the shader and compile it
-			GLES20.GlShaderSource (shader, shaderCode);
-			GLES20.GlCompileShader (shader);
-			
-			return shader;
-		}
-		
-		/**
-		* Utility method for debugging OpenGL calls. Provide the name of the call
-		* just after making it:
-		*
-		* <pre>
-		* mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
-		* MyGLRenderer.checkGlError("glGetUniformLocation");</pre>
-		*
-		* If the operation is not successful, the check throws an error.
-		*
-		* @param glOperation - Name of the OpenGL call to check.
-		*/
-		public static void CheckGlError (string glOperation)
-		{
-			int error;
-			while ((error = GLES20.GlGetError ()) != GLES20.GlNoError) {
-				Log.Error (TAG, glOperation + ": glError " + error);
-				throw new RuntimeException (glOperation + ": glError " + error);
-			}
-		}
-		
-		public float Angle {
-			get;
-			set;
-		}
 
-		class Square
-		{
-			private string vertexShaderCode =
-				// This matrix member variable provides a hook to manipulate
-				// the coordinates of the objects that use this vertex shader
-				"uniform mat4 uMVPMatrix;" +
-					
-					"attribute vec4 vPosition;" +
-					"void main() {" +
-					// the matrix must be included as a modifier of gl_Position
-					"  gl_Position = vPosition * uMVPMatrix;" +
-					"}";
-			private string fragmentShaderCode =
-				"precision mediump float;" +
-					"uniform vec4 vColor;" +
-					"void main() {" +
-					"  gl_FragColor = vColor;" +
-					"}";
-			private FloatBuffer vertexBuffer;
-			private ShortBuffer drawListBuffer;
-			private int mProgram;
-			private int mPositionHandle;
-			private int mColorHandle;
-			private int mMVPMatrixHandle;
-			
-			// number of coordinates per vertex in this array
-			static int COORDS_PER_VERTEX = 3;
-			static float[] squareCoords = new float[] { 
-				-0.5f,  0.5f, 0.0f,   // top left
-				-0.5f, -0.5f, 0.0f,   // bottom left
-				0.5f, -0.5f, 0.0f,    // bottom right
-				0.5f,  0.5f, 0.0f };  // top right
-			
-			private short[] drawOrder = new short[] { 
-				0, 
-				1, 
-				2, 
-				0, 
-				2, 
-				3
-			}; // order to draw vertices
-			
-			private int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
-			
-			// Set color with red, green, blue and alpha (opacity) values
-			float[] color = new float[] { 
-				0.2f, 
-				0.709803922f, 
-				0.898039216f, 
-				1.0f
-			};
-			
-			public Square ()
-			{
-				// initialize vertex byte buffer for shape coordinates
-				ByteBuffer bb = ByteBuffer.AllocateDirect (
-					// (# of coordinate values * 4 bytes per float)
-					squareCoords.Length * 4);
-				bb.Order (ByteOrder.NativeOrder ());
-				vertexBuffer = bb.AsFloatBuffer ();
-				vertexBuffer.Put (squareCoords);
-				vertexBuffer.Position (0);
-				
-				// initialize byte buffer for the draw list
-				ByteBuffer dlb = ByteBuffer.AllocateDirect (
-					// (# of coordinate values * 2 bytes per short)
-					drawOrder.Length * 2);
-				dlb.Order (ByteOrder.NativeOrder ());
-				drawListBuffer = dlb.AsShortBuffer ();
-				drawListBuffer.Put (drawOrder);
-				drawListBuffer.Position (0);
-				
-				// prepare shaders and OpenGL program
-				int vertexShader = OpenGLRenderer2D.LoadShader (GLES20.GlVertexShader,
-				                                            vertexShaderCode);
-				int fragmentShader = OpenGLRenderer2D.LoadShader (GLES20.GlFragmentShader,
-				                                              fragmentShaderCode);
-				
-				mProgram = GLES20.GlCreateProgram ();             // create empty OpenGL Program
-				GLES20.GlAttachShader (mProgram, vertexShader);   // add the vertex shader to program
-				GLES20.GlAttachShader (mProgram, fragmentShader); // add the fragment shader to program
-				GLES20.GlLinkProgram (mProgram);                  // create OpenGL program executables
-			}
-			
-			public void Draw (float[] mvpMatrix)
-			{
-				// Add program to OpenGL environment
-				GLES20.GlUseProgram (mProgram);
-				
-				// get handle to vertex shader's vPosition member
-				mPositionHandle = GLES20.GlGetAttribLocation (mProgram, "vPosition");
-				
-				// Enable a handle to the triangle vertices
-				GLES20.GlEnableVertexAttribArray (mPositionHandle);
-				
-				// Prepare the triangle coordinate data
-				GLES20.GlVertexAttribPointer (mPositionHandle, COORDS_PER_VERTEX,
-				                              GLES20.GlFloat, false,
-				                              vertexStride, vertexBuffer);
-				
-				// get handle to fragment shader's vColor member
-				mColorHandle = GLES20.GlGetUniformLocation (mProgram, "vColor");
-				
-				// Set color for drawing the triangle
-				GLES20.GlUniform4fv (mColorHandle, 1, color, 0);
-				
-				// get handle to shape's transformation matrix
-				mMVPMatrixHandle = GLES20.GlGetUniformLocation (mProgram, "uMVPMatrix");
-				OpenGLRenderer2D.CheckGlError ("glGetUniformLocation");
-				
-				// Apply the projection and view transformation
-				GLES20.GlUniformMatrix4fv (mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-				OpenGLRenderer2D.CheckGlError ("glUniformMatrix4fv");
-				
-				// Draw the square
-				GLES20.GlDrawElements (GLES20.GlTriangles, drawOrder.Length,
-				                       GLES20.GlUnsignedShort, drawListBuffer);
-				
-				// Disable vertex array
-				GLES20.GlDisableVertexAttribArray (mPositionHandle);
-			}
-		}
 
-		class Triangle
-		{
-			private string vertexShaderCode =
-				// This matrix member variable provides a hook to manipulate
-				// the coordinates of the objects that use this vertex shader
-				"uniform mat4 uMVPMatrix;" +
-					
-					"attribute vec4 vPosition;" +
-					"void main() {" +
-					// the matrix must be included as a modifier of gl_Position
-					"  gl_Position = vPosition * uMVPMatrix;" +
-					"}";
-			private string fragmentShaderCode =
-				"precision mediump float;" +
-					"uniform vec4 vColor;" +
-					"void main() {" +
-					"  gl_FragColor = vColor;" +
-					"}";
-			private FloatBuffer vertexBuffer;
-			private int mProgram;
-			private int mPositionHandle;
-			private int mColorHandle;
-			private int mMVPMatrixHandle;
-			
-			// number of coordinates per vertex in this array
-			static int COORDS_PER_VERTEX = 3;
-			static float[] triangleCoords = new float [] { // in counterclockwise order:
-				0.0f,  0.9f, 0.0f,   // top
-				-0.5f, -0.311004243f, 0.0f,   // bottom left
-				0.5f, -0.311004243f, 0.0f    // bottom right
-			};
-			private int vertexCount = triangleCoords.Length / COORDS_PER_VERTEX;
-			private int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
-			
-			// Set color with red, green, blue and alpha (opacity) values
-			float[] color = new float[] { 
-				0.63671875f, 
-				0.76953125f, 
-				0.22265625f, 
-				1.0f };
-			
-			public Triangle ()
-			{
-				// initialize vertex byte buffer for shape coordinates
-				ByteBuffer bb = ByteBuffer.AllocateDirect (
-					// (number of coordinate values * 4 bytes per float)
-					triangleCoords.Length * 4);
-				// use the device hardware's native byte order
-				bb.Order (ByteOrder.NativeOrder ());
-				
-				// create a floating point buffer from the ByteBuffer
-				vertexBuffer = bb.AsFloatBuffer ();
-				// add the coordinates to the FloatBuffer
-				vertexBuffer.Put (triangleCoords);
-				// set the buffer to read the first coordinate
-				vertexBuffer.Position (0);
-				
-				// prepare shaders and OpenGL program
-				int vertexShader = OpenGLRenderer2D.LoadShader (GLES20.GlVertexShader,
-				                                            vertexShaderCode);
-				int fragmentShader = OpenGLRenderer2D.LoadShader (GLES20.GlFragmentShader,
-				                                              fragmentShaderCode);
-				
-				mProgram = GLES20.GlCreateProgram ();             // create empty OpenGL Program
-				GLES20.GlAttachShader (mProgram, vertexShader);   // add the vertex shader to program
-				GLES20.GlAttachShader (mProgram, fragmentShader); // add the fragment shader to program
-				GLES20.GlLinkProgram (mProgram);                  // create OpenGL program executables
-			}
-			
-			public void Draw (float[] mvpMatrix)
-			{
-				// Add program to OpenGL environment
-				GLES20.GlUseProgram (mProgram);
-				
-				// get handle to vertex shader's vPosition member
-				mPositionHandle = GLES20.GlGetAttribLocation (mProgram, "vPosition");
-				
-				// Enable a handle to the triangle vertices
-				GLES20.GlEnableVertexAttribArray (mPositionHandle);
-				
-				// Prepare the triangle coordinate data
-				GLES20.GlVertexAttribPointer (mPositionHandle, COORDS_PER_VERTEX,
-				                              GLES20.GlFloat, false,
-				                              vertexStride, vertexBuffer);
-				
-				// get handle to fragment shader's vColor member
-				mColorHandle = GLES20.GlGetUniformLocation (mProgram, "vColor");
-				
-				// Set color for drawing the triangle
-				GLES20.GlUniform4fv (mColorHandle, 1, color, 0);
-				
-				// get handle to shape's transformation matrix
-				mMVPMatrixHandle = GLES20.GlGetUniformLocation (mProgram, "uMVPMatrix");
-				OpenGLRenderer2D.CheckGlError ("glGetUniformLocation");
-				
-				// Apply the projection and view transformation
-				GLES20.GlUniformMatrix4fv (mMVPMatrixHandle, 1, false, mvpMatrix, 0);
-				OpenGLRenderer2D.CheckGlError ("glUniformMatrix4fv");
-				
-				// Draw the triangle
-				//GLES20.GlDrawArrays (GLES20.GlTriangles, 0, vertexCount);
-				GLES20.GlDrawArrays (GLES20.GlLineStrip, 0, vertexCount);
-				
-				// Disable vertex array
-				GLES20.GlDisableVertexAttribArray (mPositionHandle);
-			}
-		}
-		
 	}
-
 }
-

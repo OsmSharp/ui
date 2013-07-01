@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Android" />
-    <Reference Include="OpenTK" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Resources\Resource.designer.cs" />
@@ -53,6 +52,7 @@
     <Compile Include="Renderer\OpenGLRenderer2D.cs" />
     <Compile Include="MapGLView.cs" />
     <Compile Include="IO\Output\AndroidLogOutputStream.cs" />
+    <Compile Include="Renderer\OpenGLTarget2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

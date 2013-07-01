@@ -27,7 +27,8 @@ namespace OsmSharp.Android.UI
 	/// Map view.
 	/// </summary>
 	public class MapView : global::Android.Views.View, 
-			GestureDetector.IOnGestureListener, ScaleGestureDetector.IOnScaleGestureListener, global::Android.Views.View.IOnTouchListener
+			GestureDetector.IOnGestureListener, ScaleGestureDetector.IOnScaleGestureListener, 
+			global::Android.Views.View.IOnTouchListener
 	{
 		/// <summary>
 		/// Holds the gesture detector.
@@ -43,6 +44,7 @@ namespace OsmSharp.Android.UI
 		/// Holds the scale gesture detector.
 		/// </summary>
 		private ScaleGestureDetector _scaleGestureDetector;
+
 		public MapView (Context context) :
 			base (context)
 		{
@@ -141,9 +143,6 @@ namespace OsmSharp.Android.UI
 			}
 
 			_render = true;
-//			// queue the rendering.
-//			Thread thread = new Thread (Render);
-//			thread.Start ();
 		}
 
 		/// <summary>

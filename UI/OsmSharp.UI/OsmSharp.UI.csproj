@@ -59,6 +59,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\packages\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\..\packages\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -78,6 +84,7 @@
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
     <Compile Include="Map\Layers\LayerGpx.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
+    <Compile Include="Map\Layers\LayerMBTile.cs" />
     <Compile Include="Map\Layers\LayerOsm.cs" />
     <Compile Include="Map\Layers\LayerOsmSharpRoute.cs" />
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
@@ -142,6 +149,14 @@
     <Antlr3 Include="Map\Styles\MapCSS\v0_2\MapCSS.g">
       <Generator>MSBuild:Compile</Generator>
     </Antlr3>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\OsmSharp.Osm\OsmSharp.Osm.csproj">

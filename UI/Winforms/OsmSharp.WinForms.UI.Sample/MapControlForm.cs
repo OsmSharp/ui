@@ -63,12 +63,13 @@ namespace OsmSharp.WinForms.UI.Sample
             var map = new Map();
             //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
+            map.AddLayer(new LayerMBTile(@"C:\Users\xivk\Documents\Nostalgeo.mbtiles"));
             //map.AddLayer(
             //    new LayerScene(
             //        Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\test.osm.pbf.scene").OpenRead(), true)));
-            map.AddLayer(
-                new LayerScene(
-                    Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf.scene.simple").OpenRead(), true)));
+            //map.AddLayer(
+            //    new LayerScene(
+            //        Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf.scene.simple").OpenRead(), true)));
 
             //var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
             //var graphSerialized = routingSerializer.Deserialize(
@@ -111,9 +112,9 @@ namespace OsmSharp.WinForms.UI.Sample
             // set control properties.
             this.mapControl1.Map = map;
             //this.mapControl1.Center = new GeoCoordinate(51.0095111, 3.3210996); 
-            //this.mapControl1.Center = new GeoCoordinate(51.26337, 4.78739);
+            this.mapControl1.Center = new GeoCoordinate(51.26371, 4.7854); //51.26371&lon=4.7854
             //this.mapControl1.Center = new GeoCoordinate(50.88672, 3.23899);
-            this.mapControl1.Center = new GeoCoordinate(51.156803, 2.958887);
+            //this.mapControl1.Center = new GeoCoordinate(51.156803, 2.958887); 
             this.mapControl1.ZoomLevel = 16;
         }
     }

@@ -154,6 +154,24 @@ namespace OsmSharp.Math
             return new PointF2D(c);
         }
 
+		/// <summary>
+		/// Adds a point and a vector and returns the resulting point.
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <returns></returns>
+		public static PointF2D operator -(PointF2D a, VectorF2D b)
+		{
+			double[] c = new double[2];
+
+			for (int idx = 0; idx < 2; idx++)
+			{
+				c[idx] = a[idx] - b[idx];
+			}
+
+			return new PointF2D(c);
+		}
+
         #endregion
 
         #region Equals/GetHashCode

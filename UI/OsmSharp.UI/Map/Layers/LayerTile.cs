@@ -146,7 +146,7 @@ namespace OsmSharp.UI.Map.Layers
                                 float right = (float) projection.LongitudeToX(tile.BottomRight.Longitude);
                                 float bottom = (float) projection.LatitudeToY(tile.BottomRight.Latitude);
                                 float top = (float) projection.LatitudeToY(tile.TopLeft.Latitude);
-                                this.Scene.AddImage(0, minZoom, maxZoom, left, bottom, right, top,
+                                this.Scene.AddImage(0, minZoom, maxZoom, left, top, right, bottom,
                                                     image);
                             }
 

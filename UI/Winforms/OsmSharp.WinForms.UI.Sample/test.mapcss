@@ -20,8 +20,6 @@ way[natural=water] :area					{ z-index: 9; color: #00D6E6; width: 3; fill-color:
 
 way|z14-[building] {
 	fill-color:#E0E0E0;
-	color:#CCCCCC;
-	width:1;
 	z-index: 4;
 }
 

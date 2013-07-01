@@ -238,7 +238,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 // simplify.
                 if (x.Length > 2)
                 {
-                    double[][] simplified = SimplifyCurve.Simplify(new double[][] {x, y}, 0.01);
+                    double[][] simplified = SimplifyCurve.Simplify(new double[][] {x, y}, 0.0001);
                     x = simplified[0];
                     y = simplified[1];
                 }

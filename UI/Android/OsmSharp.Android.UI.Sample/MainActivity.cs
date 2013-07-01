@@ -63,15 +63,16 @@ namespace OsmSharp.Android.UI.Sample
 			var dataSource = new MemoryDataSource();
 //			var source = new XmlOsmStreamReader(
 //				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm"));
-			var source = new PBFOsmStreamReader(
-				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.pbf"));
-			dataSource.PullFromSource(source);
+//			var source = new PBFOsmStreamReader(
+//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.pbf"));
+//			dataSource.PullFromSource(source);
 
 			// initialize map.
 			var map = new Map();
+			//map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
 			map.AddLayer(new LayerScene(Scene2D.Deserialize(
-				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.pbf.scene"), true)));
+							Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.osm.pbf.scene.simple"), true)));
 
 //			var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
 //			var graphSerialized = routingSerializer.Deserialize(
@@ -93,7 +94,6 @@ namespace OsmSharp.Android.UI.Sample
 			var router = Router.CreateCHFrom(
 				graphDeserialized, new CHRouter(graphDeserialized),
 				new OsmRoutingInterpreter());
-
 
 			GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
 			GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
@@ -134,6 +134,7 @@ namespace OsmSharp.Android.UI.Sample
 			
 			// set control properties.
 			var mapView = new MapView(this);
+			//var mapView = new MapGLView (this);
 			mapView.Map = map;
 			mapView.Center = new GeoCoordinate(51.158075, 2.961545);
 //			mapView.Center = new GeoCoordinate(51.26337, 4.78739);
