@@ -28,7 +28,7 @@ namespace OsmSharp.Osm.Data.Memory
     /// <summary>
     /// A memory OSM stream writer.
     /// </summary>
-    internal class MemoryOsmStreamWriter : OsmStreamWriter
+    internal class MemoryOsmStreamTarget : OsmStreamTarget
     {
         /// <summary>
         /// Holds the memory data source.
@@ -44,7 +44,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// Creates a memory data processor target.
         /// </summary>
         /// <param name="dataSource"></param>
-        public MemoryOsmStreamWriter(MemoryDataSource dataSource)
+        public MemoryOsmStreamTarget(MemoryDataSource dataSource)
         {
             _dataSource = dataSource;
 			_stringTable = new ObjectTable<string> (false);
@@ -55,7 +55,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// </summary>
         /// <param name="stringTable"></param>
         /// <param name="dataSource"></param>
-        public MemoryOsmStreamWriter(ObjectTable<string> stringTable, MemoryDataSource dataSource)
+        public MemoryOsmStreamTarget(ObjectTable<string> stringTable, MemoryDataSource dataSource)
         {
             _dataSource = dataSource;
             _stringTable = stringTable;

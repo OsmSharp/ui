@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -23,17 +23,17 @@ namespace OsmSharp.Osm.Data.Streams
     /// <summary>
     /// Any target of osm data (Nodes, Ways and Relations).
     /// </summary>
-    public abstract class OsmStreamWriter
+    public abstract class OsmStreamTarget
     {
         /// <summary>
         /// Holds the source for this target.
         /// </summary>
-        private OsmStreamReader _reader;
+        private OsmStreamSource _reader;
 
         /// <summary>
         /// Creates a new target.
         /// </summary>
-        protected OsmStreamWriter()
+        protected OsmStreamTarget()
         {
 
         }
@@ -65,7 +65,7 @@ namespace OsmSharp.Osm.Data.Streams
         /// Registers a reader on this writer.
         /// </summary>
         /// <param name="reader"></param>
-        public void RegisterSource(OsmStreamReader reader)
+        public void RegisterSource(OsmStreamSource reader)
         {
             _reader = reader;
         }
@@ -73,7 +73,7 @@ namespace OsmSharp.Osm.Data.Streams
         /// <summary>
         /// Returns the registered reader.
         /// </summary>
-        protected OsmStreamReader Reader
+        protected OsmStreamSource Reader
         {
             get
             {

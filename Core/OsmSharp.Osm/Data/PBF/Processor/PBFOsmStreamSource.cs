@@ -30,7 +30,7 @@ namespace OsmSharp.Osm.Data.PBF.Processor
     /// <summary>
     /// A source of PBF formatted OSM data.
     /// </summary>
-    public class PBFOsmStreamReader : OsmStreamReader, IPBFOsmPrimitiveConsumer
+    public class PBFOsmStreamSource : OsmStreamSource, IPBFOsmPrimitiveConsumer
     {
         /// <summary>
         /// Holds the source of the data.
@@ -41,7 +41,7 @@ namespace OsmSharp.Osm.Data.PBF.Processor
         /// Creates a new source of PBF formated OSM data.
         /// </summary>
         /// <param name="stream"></param>
-        public PBFOsmStreamReader(Stream stream)
+        public PBFOsmStreamSource(Stream stream)
         {
             _stream = stream;
         }

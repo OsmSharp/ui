@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Tools.Math.Geo;
-using OsmSharp.Tools.Math.Shapes;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Shapes;
 
 namespace OsmSharp.UI.Map.Elements
 {

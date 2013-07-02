@@ -30,7 +30,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <returns></returns>
         private byte[] BuildVersionHeader()
         {
-            return System.Text.Encoding.ASCII.GetBytes(this.VersionString);
+            return System.Text.UTF8Encoding.UTF8.GetBytes(this.VersionString);
         }
 
         /// <summary>

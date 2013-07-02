@@ -191,7 +191,6 @@
     <Compile Include="Math\AI\Genetic\Fitness\IFitnessCalculator.cs" />
     <Compile Include="Math\AI\Genetic\Individual.cs" />
     <Compile Include="Math\AI\Genetic\IProblem.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\CombinedOperation.cs" />
     <Compile Include="Math\AI\Genetic\Operations\ICrossOverOperation.cs" />
     <Compile Include="Math\AI\Genetic\Operations\IGenerationOperator.cs" />
     <Compile Include="Math\AI\Genetic\Operations\IOperation.cs" />

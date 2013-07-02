@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -378,10 +379,10 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// Adds all objects from the given source to this memory data source.
         /// </summary>
         /// <param name="source"></param>
-        public void PullFromSource(OsmStreamReader source)
+        public void PullFromSource(OsmStreamSource source)
         {
             // create a special memory data source target.
-            var target = new MemoryOsmStreamWriter(this);
+            var target = new MemoryOsmStreamTarget(this);
             target.RegisterSource(source); // register the given source as the source.
             target.Pull(); // pull the data from the source into the created target.
         }

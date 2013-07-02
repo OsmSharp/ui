@@ -126,7 +126,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="tagsIndex"></param>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public static DynamicGraphRouterDataSource<LiveEdge> Preprocess(OsmStreamReader reader,
+        public static DynamicGraphRouterDataSource<LiveEdge> Preprocess(OsmStreamSource reader,
                                                                         ITagsIndex tagsIndex,
                                                                         IRoutingInterpreter interpreter)
         {
@@ -145,7 +145,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="reader"></param>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public static DynamicGraphRouterDataSource<LiveEdge> Preprocess(OsmStreamReader reader,
+        public static DynamicGraphRouterDataSource<LiveEdge> Preprocess(OsmStreamSource reader,
                                                                         IRoutingInterpreter interpreter)
         {
             return LiveGraphOsmStreamWriter.Preprocess(reader, new SimpleTagsIndex(), interpreter);

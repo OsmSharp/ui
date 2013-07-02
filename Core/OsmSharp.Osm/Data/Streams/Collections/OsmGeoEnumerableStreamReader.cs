@@ -1,7 +1,26 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Osm.Data.Streams.OsmGeoStream;
 
 namespace OsmSharp.Osm.Data.Streams.Collections
 {
@@ -13,13 +32,13 @@ namespace OsmSharp.Osm.Data.Streams.Collections
         /// <summary>
         /// Holds the reader.
         /// </summary>
-        private readonly OsmStreamReader _reader;
+        private readonly OsmStreamSource _reader;
 
         /// <summary>
         /// Creates a new OsmGeo enumerable.
         /// </summary>
         /// <param name="reader"></param>
-        public OsmGeoEnumerableStreamReader(OsmStreamReader reader)
+        public OsmGeoEnumerableStreamReader(OsmStreamSource reader)
         {
             _reader = reader;
         }
@@ -50,7 +69,8 @@ namespace OsmSharp.Osm.Data.Streams.Collections
     /// <summary>
     /// Enumerates all OsmGeo objects that can be detected in an OsmStream.
     /// </summary>
-    internal class OsmGeoEnumerableStreamEnumerator : OsmStreamOsmGeoWriter, IEnumerator<OsmGeo>
+    internal class OsmGeoEnumerableStreamEnumerator : OsmStreamTargetOsmGeo, 
+        IEnumerator<OsmGeo>, IOsmGeoStreamTarget
     {
         /// <summary>
         /// Holds the current object.
@@ -94,6 +114,8 @@ namespace OsmSharp.Osm.Data.Streams.Collections
         {
             if (!_initialized)
             {
+                this.RegisterOsmGeoTarget(this);
+
                 this.Initialize();
                 this.Reader.Initialize();
                 _initialized = true;
@@ -127,7 +149,7 @@ namespace OsmSharp.Osm.Data.Streams.Collections
         /// A complete node was detected.
         /// </summary>
         /// <param name="node"></param>
-        protected override void AddNode(Node node)
+        public void AddNode(Node node)
         {
             _current = node;
         }
@@ -136,7 +158,7 @@ namespace OsmSharp.Osm.Data.Streams.Collections
         /// A complete wasy was detected.
         /// </summary>
         /// <param name="way"></param>
-        protected override void AddWay(Way way)
+        public void AddWay(Way way)
         {
             _current = way;
         }
@@ -145,7 +167,7 @@ namespace OsmSharp.Osm.Data.Streams.Collections
         /// A complete relation was detected.
         /// </summary>
         /// <param name="relation"></param>
-        protected override void AddRelation(Relation relation)
+        public void AddRelation(Relation relation)
         {
             _current = relation;
         }

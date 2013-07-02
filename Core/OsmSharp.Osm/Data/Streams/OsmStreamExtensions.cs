@@ -31,7 +31,7 @@ namespace OsmSharp.Osm.Data.Streams
         /// Returns an OSM stream reader for the objects in this enumerable.
         /// </summary>
         /// <param name="enumerable"></param>
-        public static OsmStreamReader ToOsmStreamReader(this IEnumerable<SimpleOsmGeo> enumerable)
+        public static OsmStreamSource ToOsmStreamReader(this IEnumerable<SimpleOsmGeo> enumerable)
         {
             return new OsmEnumerableStreamReader(enumerable);
         }

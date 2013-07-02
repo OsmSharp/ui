@@ -398,4 +398,86 @@ namespace OsmSharp
             return obj.ToString();
         }
     }
+
+    /// <summary>
+    /// Contains enumeration parsing methods for compatibility purposes between difference .NET/Mono/WindowsPhone flavours.
+    /// </summary>
+    public static class EnumHelper
+    {
+#if WINDOWS_PHONE
+        /// <summary>
+        /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object. A parameter
+        /// specifies whether the operation is case-sensitive. The return value indicates whether the conversion succeeded.
+        /// </summary>
+        /// <typeparam name="TEnum">The enumeration type to which to convert value.</typeparam>
+        /// <param name="value">The string representation of the enumeration name or underlying value to convert.</param>
+        /// <param name="result">When this method returns, contains an object of type TEnum whose value is represented by value. This parameter is passed uninitialized.</param>
+        /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+        public static bool TryParse<TEnum>(string value, out TEnum result) where TEnum : struct
+        {
+            try
+            {
+                result = (TEnum)Enum.Parse(typeof(TEnum), value, false);
+                return true;
+            }
+            catch
+            {
+
+            }
+            result = default(TEnum);
+            return false;
+        }
+
+        /// <summary>
+        /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object. A parameter
+        /// specifies whether the operation is case-sensitive. The return value indicates whether the conversion succeeded.
+        /// </summary>
+        /// <typeparam name="TEnum">The enumeration type to which to convert value.</typeparam>
+        /// <param name="value">The string representation of the enumeration name or underlying value to convert.</param>
+        /// <param name="ignoreCase">true to ignore case; false to consider case.</param>
+        /// <param name="result">When this method returns, contains an object of type TEnum whose value is represented by value. This parameter is passed uninitialized.</param>
+        /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+        public static bool TryParse<TEnum>(string value, bool ignoreCase, out TEnum result) where TEnum : struct
+        {
+            try
+            {
+                result = (TEnum)Enum.Parse(typeof(TEnum), value, ignoreCase);
+                return true;
+            }
+            catch
+            {
+
+            }
+            result = default(TEnum);
+            return false;
+        }
+#else
+        /// <summary>
+        /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object. A parameter
+        /// specifies whether the operation is case-sensitive. The return value indicates whether the conversion succeeded.
+        /// </summary>
+        /// <typeparam name="TEnum">The enumeration type to which to convert value.</typeparam>
+        /// <param name="value">The string representation of the enumeration name or underlying value to convert.</param>
+        /// <param name="result">When this method returns, contains an object of type TEnum whose value is represented by value. This parameter is passed uninitialized.</param>
+        /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+        public static bool TryParse<TEnum>(string value, out TEnum result) where TEnum : struct
+        {
+            return Enum.TryParse<TEnum>(value, out result);
+        }
+
+        /// <summary>
+        /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object. A parameter
+        /// specifies whether the operation is case-sensitive. The return value indicates whether the conversion succeeded.
+        /// </summary>
+        /// <typeparam name="TEnum">The enumeration type to which to convert value.</typeparam>
+        /// <param name="value">The string representation of the enumeration name or underlying value to convert.</param>
+        /// <param name="ignoreCase">true to ignore case; false to consider case.</param>
+        /// <param name="result">When this method returns, contains an object of type TEnum whose value is represented by value. This parameter is passed uninitialized.</param>
+        /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+        public static bool TryParse<TEnum>(string value, bool ignoreCase, out TEnum result) where TEnum : struct
+        {
+            return Enum.TryParse<TEnum>(value, ignoreCase, out result);
+        }
+#endif
+    }
 }

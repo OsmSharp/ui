@@ -69,7 +69,7 @@ namespace OsmSharp.Routing
         /// <param name="reader">The OSM-stream reader.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static Router CreateLiveFrom(OsmStreamReader reader, IRoutingInterpreter interpreter)
+        public static Router CreateLiveFrom(OsmStreamSource reader, IRoutingInterpreter interpreter)
         {
             var tagsIndex = new SimpleTagsIndex(); // creates a tagged index.
 

@@ -74,7 +74,7 @@ namespace OsmSharp.UnitTests.Data
         private void TestReadPBF(string resource)
         {
             // create the pbf source from a pbf in the resources of this assembly.
-            var source = new PBFOsmStreamReader(
+            var source = new PBFOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(resource));
 
             // pull the data from the source into the memory data source.

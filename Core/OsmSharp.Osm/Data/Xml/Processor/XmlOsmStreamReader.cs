@@ -32,7 +32,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
     /// <summary>
     /// A stream reader that reads from OSM Xml.
     /// </summary>
-    public class XmlOsmStreamReader : OsmStreamReader
+    public class XmlOsmStreamReader : OsmStreamSource
     {
         private XmlReader _reader;
 

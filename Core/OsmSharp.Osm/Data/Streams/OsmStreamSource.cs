@@ -25,12 +25,12 @@ namespace OsmSharp.Osm.Data.Streams
     /// <summary>
     /// Base class for any (streamable) source of osm data (Nodes, Ways and Relations).
     /// </summary>
-    public abstract class OsmStreamReader
+    public abstract class OsmStreamSource
     {
         /// <summary>
         /// Creates a new source.
         /// </summary>
-        protected OsmStreamReader()
+        protected OsmStreamSource()
         {
 
         }

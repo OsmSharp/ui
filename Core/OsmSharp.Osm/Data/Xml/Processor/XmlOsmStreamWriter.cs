@@ -32,7 +32,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
     /// <summary>
     /// A data processor target that write OSM XML.
     /// </summary>
-    public class XmlOsmStreamWriter : OsmStreamWriter
+    public class XmlOsmStreamWriter : OsmStreamTarget
     {
         private XmlFragmentWriter _writer;
 

@@ -78,6 +78,10 @@ namespace OsmSharp.WindowsPhone.UI.Sample
         {
             SharedGraphicsDeviceManager.Current.GraphicsDevice.Clear(Color.CornflowerBlue);
 
+            SharedGraphicsDeviceManager.Current.GraphicsDevice.DrawPrimitives(PrimitiveType.LineStrip,
+                0, 10);
+
+
             // TODO: Add your drawing code here
         }
     }

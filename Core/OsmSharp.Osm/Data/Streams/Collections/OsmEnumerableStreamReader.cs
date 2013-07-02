@@ -24,7 +24,7 @@ namespace OsmSharp.Osm.Data.Streams.Collections
     /// <summary>
     /// An OSM Stream Reader that wraps around a collection of OSM objects.
     /// </summary>
-    internal class OsmEnumerableStreamReader : OsmStreamReader
+    internal class OsmEnumerableStreamReader : OsmStreamSource
     {
         /// <summary>
         /// Holds the list of SimpleOsmGeo objects.

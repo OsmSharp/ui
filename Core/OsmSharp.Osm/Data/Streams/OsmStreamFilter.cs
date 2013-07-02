@@ -23,12 +23,12 @@ namespace OsmSharp.Osm.Data.Streams
     /// <summary>
     /// An OSM stream filter.
     /// </summary>
-    public abstract class OsmStreamFilter : OsmStreamReader
+    public abstract class OsmStreamFilter : OsmStreamSource
     {
         /// <summary>
         /// Holds the reader.
         /// </summary>
-        private OsmStreamReader _reader;
+        private OsmStreamSource _reader;
 
         /// <summary>
         /// Creates a new OSM filter.
@@ -42,7 +42,7 @@ namespace OsmSharp.Osm.Data.Streams
         /// Registers a reader as the source to filter.
         /// </summary>
         /// <param name="source"></param>
-        public virtual void RegisterSource(OsmStreamReader source)
+        public virtual void RegisterSource(OsmStreamSource source)
         {
             _reader = source;
         }
@@ -50,7 +50,7 @@ namespace OsmSharp.Osm.Data.Streams
         /// <summary>
         /// Returns the reader being filtered.
         /// </summary>
-        protected OsmStreamReader Reader
+        protected OsmStreamSource Reader
         {
             get
             {

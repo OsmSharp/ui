@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 
-namespace OsmSharp.Tools.Collections
+namespace System.Collections.Generic
 {
 #if WINDOWS_PHONE
     /// <summary>

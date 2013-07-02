@@ -1,8 +1,8 @@
 ﻿
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Routing.Route;
 using OsmSharp.UI.Renderer;
+using OsmSharp.Math.Geo.Projections;
 
 namespace OsmSharp.UI.Map.Layers
 {

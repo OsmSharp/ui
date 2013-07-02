@@ -25,9 +25,9 @@ namespace OsmSharp.Osm.Data.Streams.Filters
     /// <summary>
     /// A data source reporting progress.
     /// </summary>
-    public class OsmStreamFilterProgress : OsmStreamReader
+    public class OsmStreamFilterProgress : OsmStreamSource
     {
-        private readonly OsmStreamReader _reader;
+        private readonly OsmStreamSource _reader;
 
         private long _start;
         private long _node;
@@ -38,7 +38,7 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         /// Creates a new progress reporting source.
         /// </summary>
         /// <param name="reader"></param>
-        public OsmStreamFilterProgress(OsmStreamReader reader)
+        public OsmStreamFilterProgress(OsmStreamSource reader)
         {
             _reader = reader;
         }

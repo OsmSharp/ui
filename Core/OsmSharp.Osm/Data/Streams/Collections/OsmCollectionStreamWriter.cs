@@ -26,7 +26,7 @@ namespace OsmSharp.Osm.Data.Streams.Collections
     /// <summary>
     /// A data processor target for regular SimpleOsmBase objects.
     /// </summary>
-    internal class OsmCollectionStreamWriter : OsmStreamWriter
+    internal class OsmCollectionStreamWriter : OsmStreamTarget
     {
         /// <summary>
         /// Holds the target list.

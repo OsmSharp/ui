@@ -24,7 +24,7 @@ namespace OsmSharp.Osm.Data.Streams.Collections
     /// <summary>
     /// A data processor source of regular OsmBase objects.
     /// </summary>
-    public class OsmGeoListDataProcessorSource : OsmStreamReader
+    public class OsmGeoListDataProcessorSource : OsmStreamSource
     {
         /// <summary>
         /// Holds the list of OsmBase objects.

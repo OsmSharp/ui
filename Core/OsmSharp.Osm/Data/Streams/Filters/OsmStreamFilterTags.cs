@@ -166,7 +166,7 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         /// Registers the reader of this filter.
         /// </summary>
         /// <param name="reader"></param>
-        public override void RegisterSource(OsmStreamReader reader)
+        public override void RegisterSource(OsmStreamSource reader)
         {
             if (_wayKeepNodes || _relationKeepObjects)
             {

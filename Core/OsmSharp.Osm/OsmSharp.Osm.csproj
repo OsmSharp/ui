@@ -202,12 +202,13 @@
     <Compile Include="Data\Cache\DataSourceQuadTree.cs" />
     <Compile Include="Data\Cache\DataSourceQuadTreeNode.cs" />
     <Compile Include="Data\Streams\Collections\OsmGeoEnumerableStreamReader.cs" />
+    <Compile Include="Data\Streams\OsmGeoStream\IOsmGeoStreamTarget.cs" />
     <Compile Include="Simple\Cache\OsmDataCache.cs" />
     <Compile Include="Data\IDataSource.cs" />
     <Compile Include="Data\IDataSourceReadOnly.cs" />
     <Compile Include="Data\KeyGenerator.cs" />
     <Compile Include="Data\Memory\MemoryDataSource.cs" />
-    <Compile Include="Data\Memory\MemoryOsmStreamWriter.cs" />
+    <Compile Include="Data\Memory\MemoryOsmStreamTarget.cs" />
     <Compile Include="Data\PBF\Dense\Compressor.cs" />
     <Compile Include="Data\PBF\Dense\Decompressor.cs" />
     <Compile Include="Data\PBF\fileformat.cs">
@@ -226,23 +227,23 @@
     </Compile>
     <Compile Include="Data\PBF\PBFReader.cs" />
     <Compile Include="Data\PBF\PBFWriter.cs" />
-    <Compile Include="Data\PBF\Processor\PBFOsmStreamReader.cs" />
-    <Compile Include="Data\PBF\Processor\PBFOsmStreamWriter.cs">
+    <Compile Include="Data\PBF\Processor\PBFOsmStreamSource.cs" />
+    <Compile Include="Data\PBF\Processor\PBFOsmStreamTarget.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Data\Streams\ChangeSets\DataProcessorChangeSetFilter.cs" />
     <Compile Include="Data\Streams\ChangeSets\DataProcessorChangeSetSource.cs" />
     <Compile Include="Data\Streams\ChangeSets\DataProcessorChangeSetTarget.cs" />
-    <Compile Include="Data\Streams\OsmStreamOsmGeoWriter.cs" />
+    <Compile Include="Data\Streams\OsmStreamTargetOsmGeo.cs" />
     <Compile Include="Data\Streams\OsmStreamExtensions.cs" />
     <Compile Include="Data\Streams\OsmStreamFilter.cs" />
-    <Compile Include="Data\Streams\OsmStreamReader.cs" />
-    <Compile Include="Data\Streams\OsmStreamWriter.cs" />
+    <Compile Include="Data\Streams\OsmStreamSource.cs" />
+    <Compile Include="Data\Streams\OsmStreamTarget.cs" />
     <Compile Include="Data\Streams\OsmStreamSourceEmpty.cs" />
     <Compile Include="Data\Streams\OsmStreamTargetEmpty.cs" />
-    <Compile Include="Data\Streams\Filters\BoundingBox\DataProcessorChangeSetFilterBoundingBox.cs" />
+    <Compile Include="Data\Streams\ChangeSets\Filters\BoundingBox\DataProcessorChangeSetFilterBoundingBox.cs" />
     <Compile Include="Data\Streams\Filters\OsmStreamFilterBoundingBox.cs" />
-    <Compile Include="Data\Streams\Filters\BoundingBox\IChangeSetFilterListener.cs" />
+    <Compile Include="Data\Streams\ChangeSets\Filters\BoundingBox\IChangeSetFilterListener.cs" />
     <Compile Include="Data\Streams\Filters\LongIndex\ILongIndexNode.cs" />
     <Compile Include="Data\Streams\Filters\LongIndex\LongIndex.cs" />
     <Compile Include="Data\Streams\Filters\LongIndex\LongIndexLeaf.cs" />
@@ -254,8 +255,6 @@
     <Compile Include="Data\Streams\Collections\OsmCollectionStreamWriter.cs" />
     <Compile Include="Data\Streams\Collections\OsmGeoStreamReader.cs" />
     <Compile Include="Data\Streams\Filters\OsmStreamFilterProgress.cs" />
-    <Compile Include="Data\Streams\SimpleSource\ISimpleSourceData.cs" />
-    <Compile Include="Data\Streams\SimpleSource\SimpleMemoryData.cs" />
     <Compile Include="Data\Xml\GpxSource\GpxDataSource.cs" />
     <Compile Include="Data\Xml\KmlSource\KmlDataSource.cs" />
     <Compile Include="Data\Xml\OsmSource\OsmDataSource.cs" />
@@ -330,6 +329,7 @@
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

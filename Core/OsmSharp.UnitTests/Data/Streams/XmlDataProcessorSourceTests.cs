@@ -41,7 +41,7 @@ namespace OsmSharp.UnitTests.Data.Streams
                     "OsmSharp.UnitTests.api.osm"));
 
             // pull the data out.
-            var target = new OsmStreamWriterEmpty();
+            var target = new OsmStreamTargetEmpty();
             target.RegisterSource(source);
             target.Pull();
 

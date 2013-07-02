@@ -36,12 +36,12 @@ namespace OsmSharp.UnitTests.Data.Streams
         public void PBFOsmStreamReaderReset()
         {
             // generate the source.
-            var source = new PBFOsmStreamReader(
+            var source = new PBFOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     "OsmSharp.UnitTests.api.osm.pbf"));
 
             // pull the data out.
-            var target = new OsmStreamWriterEmpty();
+            var target = new OsmStreamTargetEmpty();
             target.RegisterSource(source);
             target.Pull();
 

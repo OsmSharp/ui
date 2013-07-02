@@ -112,7 +112,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamReader reader,
+        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
                                                                         ITagsIndex tagsIndex,
                                                                         IRoutingInterpreter interpreter,
                                                                         Vehicle vehicle)
@@ -143,7 +143,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamReader reader,
+        public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
                                                                         IRoutingInterpreter interpreter,
                                                                         Vehicle vehicle)
         {

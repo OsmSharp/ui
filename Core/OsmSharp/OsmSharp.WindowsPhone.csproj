@@ -47,6 +47,9 @@
     <DocumentationFile>..\OutputWindowsPhone\OsmSharp.Tools.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="protobuf-net">
+      <HintPath>..\..\packages\protobuf-net.2.0.0.640\lib\sl4-windowsphone71\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
@@ -56,7 +59,7 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cache\LRUCache.cs" />
+    <Compile Include="Collections\Cache\LRUCache.cs" />
     <Compile Include="Collections\DictionaryProxy.cs" />
     <Compile Include="Collections\DictionaryWithEvents.cs" />
     <Compile Include="Collections\HashSet.cs" />
@@ -65,33 +68,63 @@
     <Compile Include="Collections\LimitedStack.cs" />
     <Compile Include="Collections\ObjectTable.cs" />
     <Compile Include="Collections\ObjectTableDictionary.cs" />
+    <Compile Include="Collections\PermutationEnumerator.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeap.cs" />
     <Compile Include="Collections\PriorityQueues\IPriorityQueue.cs" />
+    <Compile Include="Collections\SerializableSparseArray.cs" />
     <Compile Include="Collections\SortedDictionary.cs" />
     <Compile Include="Collections\SortedList.cs" />
     <Compile Include="Collections\SortedSet.cs" />
+    <Compile Include="Collections\SparseArray.cs" />
+    <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\ISpatialIndexReadonly.cs" />
+    <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializer.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializerStream.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />
     <Compile Include="Collections\Tags\ITagsIndex.cs" />
     <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
     <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
     <Compile Include="Collections\Tags\TagsCollection.cs" />
-    <Compile Include="DelimitedFiles\DefaultDelimitedFormat.cs" />
-    <Compile Include="DelimitedFiles\DelimitedFileHandler.cs" />
-    <Compile Include="DelimitedFiles\DelimiterType.cs" />
-    <Compile Include="DelimitedFiles\IDelimitedFormat.cs" />
     <Compile Include="Encoding\ASCIIEncoding.cs" />
-    <Compile Include="Enumerations\PermutationEnumerator.cs" />
+    <Compile Include="GeoCoding\AccuracyEnum.cs" />
+    <Compile Include="GeoCoding\Facade.cs" />
+    <Compile Include="GeoCoding\IGeoCoder.cs" />
+    <Compile Include="GeoCoding\IGeoCoderResult.cs" />
+    <Compile Include="GeoCoding\Memory\IndexCommunes.cs" />
+    <Compile Include="GeoCoding\Memory\IndexHouseNumbers.cs" />
+    <Compile Include="GeoCoding\Memory\IndexPostalCodes.cs" />
+    <Compile Include="GeoCoding\Memory\IndexStreets.cs" />
+    <Compile Include="GeoCoding\Memory\InMemoryGeoCoder.cs" />
+    <Compile Include="GeoCoding\Nominatim\GeoCoder.cs" />
+    <Compile Include="GeoCoding\Nominatim\GeoCoderQuery.cs" />
+    <Compile Include="GeoCoding\Nominatim\GeoCoderResult.cs" />
     <Compile Include="IClonable.cs" />
+    <Compile Include="IO\ByteCache\DiskByteCache.cs" />
+    <Compile Include="IO\ByteCache\IByteCache.cs" />
+    <Compile Include="IO\ByteCache\MemoryByteCache.cs" />
+    <Compile Include="IO\CappedStream.cs" />
+    <Compile Include="IO\DelimitedFiles\DefaultDelimitedFormat.cs" />
+    <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
+    <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
+    <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
+    <Compile Include="IO\Output\ConsoleOutputStream.cs" />
+    <Compile Include="IO\Output\FileOutputStream.cs" />
+    <Compile Include="IO\Output\IOutputStream.cs" />
+    <Compile Include="IO\Output\OutputStreamHost.cs" />
+    <Compile Include="IO\StreamCache\IStreamCache.cs" />
+    <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
     <Compile Include="Math\AI\Genetic\Fitness\IFitnessCalculator.cs" />
     <Compile Include="Math\AI\Genetic\Individual.cs" />
     <Compile Include="Math\AI\Genetic\IProblem.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\CombinedOperation.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\CrossOver\ICrossOverOperation.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\Generation\IGenerationOperator.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\CombinedMutationOperation.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\ICrossOverOperation.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\IGenerationOperator.cs" />
+    <Compile Include="Math\AI\Genetic\Operations\IMutationOperation.cs" />
     <Compile Include="Math\AI\Genetic\Operations\IOperation.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\Mutations\CombinedMutation.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\Mutations\IMutationOperation.cs" />
     <Compile Include="Math\AI\Genetic\Population.cs" />
     <Compile Include="Math\AI\Genetic\Selectors\ISelector.cs" />
     <Compile Include="Math\AI\Genetic\Selectors\RandomSelector.cs" />
@@ -99,6 +132,7 @@
     <Compile Include="Math\AI\Genetic\Solvers\Solver.cs" />
     <Compile Include="Math\AI\Genetic\Solvers\SolverSettings.cs" />
     <Compile Include="Math\Algorithms\ConvexHull.cs" />
+    <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
     <Compile Include="Math\Geo\Constants.cs" />
     <Compile Include="Math\Geo\Extensions.cs" />
     <Compile Include="Math\Geo\Factory\PrimitiveGeoFactory.cs" />
@@ -117,6 +151,11 @@
     <Compile Include="Math\Geo\Meta\RelativeDirection.cs" />
     <Compile Include="Math\Geo\Meta\RelativeDirectionCalculator.cs" />
     <Compile Include="Math\Geo\Meta\RelativeDirectionEnum.cs" />
+    <Compile Include="Math\Geo\Projections\EllipticalMercator.cs" />
+    <Compile Include="Math\Geo\Projections\IProjection.cs" />
+    <Compile Include="Math\Geo\Projections\ScaledProjection.cs" />
+    <Compile Include="Math\Geo\Projections\SphericalMercator.cs" />
+    <Compile Include="Math\Geo\Projections\WebMercator.cs" />
     <Compile Include="Math\Geo\Simple\GeoCoordinateCompact.cs" />
     <Compile Include="Math\Geo\Simple\GeoCoordinateSimple.cs" />
     <Compile Include="Math\ILocationObject.cs" />
@@ -270,17 +309,12 @@
     <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\TakeOutMutationOperation.cs" />
     <Compile Include="Math\VRP\MultiSalesman\Genetic\Problem.cs" />
     <Compile Include="Math\VRP\MultiSalesman\Problems\IProblem.cs" />
-    <Compile Include="Output\ConsoleOutputStream.cs" />
-    <Compile Include="Output\FileOutputStream.cs" />
-    <Compile Include="Output\IOutputStream.cs" />
-    <Compile Include="Output\OutputStreamHost.cs" />
     <Compile Include="Progress\EmptyProgressReporter.cs" />
     <Compile Include="Progress\IProgressEnabled.cs" />
     <Compile Include="Progress\IProgressReporter.cs" />
     <Compile Include="Progress\ProgressStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
-    <Compile Include="Threading\LIFOThreadPool.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Xml\IXmlSource.cs" />
     <Compile Include="Xml\Kml\KmlDocument.cs">
@@ -315,6 +349,7 @@
     <Compile Include="Xml\Sources\XmlStringSource.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Xml\Kml\v2_0\kml.xsd">
       <SubType>Designer</SubType>
     </None>
