@@ -522,7 +522,7 @@ namespace OsmSharp.Osm.Data.Cache
                     foreach (OsmGeo obj in objects_in_box)
                     {
                         if (obj is OsmGeo
-                            && (obj as OsmGeo).Shape.Inside(box))
+                            && (obj as OsmGeo).Geometries.IsInside(box))
                         {
                             base_objects.Add(obj);
                         }

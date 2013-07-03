@@ -90,11 +90,11 @@ namespace OsmSharp.Math
         /// <returns></returns>
         protected abstract GenericRectangleF2D<PointType> CreateRectangle(PointType[] points);
 
-        /// <summary>
-        /// Creates a new polygon.
-        /// </summary>
-        /// <param name="points"></param>
-        /// <returns></returns>
-        protected abstract GenericPolygonF2D<PointType> CreatePolygon(PointType[] points);
+        ///// <summary>
+        ///// Creates a new polygon.
+        ///// </summary>
+        ///// <param name="points"></param>
+        ///// <returns></returns>
+        //protected abstract GenericPolygonF2D<PointType> CreatePolygon(PointType[] points);
     }
 }

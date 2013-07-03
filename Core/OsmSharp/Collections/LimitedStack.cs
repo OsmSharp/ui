@@ -159,18 +159,24 @@ namespace OsmSharp.Collections
         /// <summary>
         /// The maximum amount of elements in this queue.
         /// </summary>
-        public int Limit 
+        public int Limit
         {
             get
             {
-                return _limit;
+                lock (_elements)
+                {
+                    return _limit;
+                }
             }
             set
             {
-                _limit = value;
-                if (_elements.Count > _limit)
+                lock (_elements)
                 {
-                    _elements.RemoveRange(0, _elements.Count - _limit);
+                    _limit = value;
+                    if (_elements.Count > _limit)
+                    {
+                        _elements.RemoveRange(0, _elements.Count - _limit);
+                    }
                 }
             }
         }

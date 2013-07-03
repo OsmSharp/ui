@@ -22,6 +22,8 @@ using System.Text;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Shapes;
 using OsmSharp.Collections;
+using OsmSharp.Osm.Interpreter;
+using OsmSharp.Geo.Geometries;
 
 namespace OsmSharp.Osm
 {
@@ -63,39 +65,39 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public abstract OsmSharp.Osm.Simple.SimpleOsmGeo ToSimple();
 
-        #region Shape - Interpreter
+        #region Geometry - Interpreter
 
         /// <summary>
         /// The interpreter for these objects.
         /// </summary>
-        public static IShapeInterpreter ShapeInterperter = new SimpleShapeInterpreter(); // set a default shape interpreter.
+        public static IGeometryInterpreter GeometryInterperter = new SimpleGeometryInterpreter(); // set a default geometry interpreter.
 
         /// <summary>
-        /// The shape this osm geo object represents.
+        /// The geometries this OSM-object represents.
         /// </summary>
-        private ShapeF<GeoCoordinate, GeoCoordinateBox, GeoCoordinateLine> _shape;
+        private GeometryCollection _geometries;
 
         /// <summary>
-        /// Returns the shape of this object represents.
+        /// Returns the geometries this OSM-object represents.
         /// </summary>
-        public ShapeF<GeoCoordinate, GeoCoordinateBox, GeoCoordinateLine> Shape
+        public GeometryCollection Geometries
         {
             get
             {
-                if (_shape == null)
+                if (_geometries == null)
                 {
-                    _shape = OsmGeo.ShapeInterperter.Interpret(this);
+                    _geometries = OsmGeo.GeometryInterperter.Interpret(this);
                 }
-                return _shape;
+                return _geometries;
             }
         }
 
         /// <summary>
-        /// Make sure the shape of this objects will be recalculated the next time it is requested.
+        /// Make sure the geometries of this objects will be recalculated.
         /// </summary>
-        public void ResetShape()
+        public void ResetGeometries()
         {
-            _shape = null;
+            _geometries = null;
         }
 
         #endregion
@@ -109,7 +111,7 @@ namespace OsmSharp.Osm
         {
             get
             {
-                return this.Shape.BoundingBox;
+                return this.Geometries.Box;
             }
         }
 

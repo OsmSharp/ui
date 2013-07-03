@@ -1,12 +1,33 @@
-﻿using System.Collections.Generic;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using System.Collections.Generic;
 
 namespace OsmSharp.Collections
 {
     /// <summary>
+    /// An enumerable of all possible permutations of a given sequence of objects.
+    /// </summary>
+    /// <remarks>
     /// Implements the Shimon Even variant of the Steinhaus–Johnson–Trotter algorithm.
     /// 
     /// https://en.wikipedia.org/wiki/Steinhaus%E2%80%93Johnson%E2%80%93Trotter_algorithm#Even.27s_speedup
-    /// </summary>
+    /// </remarks>
     /// <typeparam name="T"></typeparam>
     public class PermutationEnumerable<T> : IEnumerable<T[]>
     {

@@ -110,15 +110,15 @@ namespace OsmSharp.Math.Primitives
             return new RectangleF2D(points);
         }
 
-        /// <summary>
-        /// Creates a new polygon.
-        /// </summary>
-        /// <param name="points"></param>
-        /// <returns></returns>
-        protected override GenericPolygonF2D<PointF2D> CreatePolygon(PointF2D[] points)
-        {
-            return new PolygonF2D(points);
-        }
+        ///// <summary>
+        ///// Creates a new polygon.
+        ///// </summary>
+        ///// <param name="points"></param>
+        ///// <returns></returns>
+        //protected override GenericPolygonF2D<PointF2D> CreatePolygon(PointF2D[] points)
+        //{
+        //    return new PolygonF2D(points);
+        //}
 
         #endregion      
     }

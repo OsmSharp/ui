@@ -28,7 +28,6 @@ namespace OsmSharp.Collections.SpatialIndexes
     /// <typeparam name="T"></typeparam>
     public interface ISpatialIndex<T> : ISpatialIndexReadonly<T>
     {
-
         /// <summary>
         /// Adds a new item with the corresponding box.
         /// </summary>

@@ -1,4 +1,22 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +27,7 @@ namespace OsmSharp.Collections
     /// <summary>
     /// A sparse array; an array that still handles 'holes' between elements.
     /// </summary>
+    /// <remarks>Stores it's data in blocks of smaller arrays. Assumes some localitiy in the data, otherwise, use a regular array.</remarks>
     /// <typeparam name="T"></typeparam>
     public class SparseArray<T> : IEnumerable<T>
     {

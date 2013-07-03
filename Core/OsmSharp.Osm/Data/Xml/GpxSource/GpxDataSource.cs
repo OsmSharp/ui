@@ -660,7 +660,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
             foreach (Node node in _nodes.Values)
             {
                 if ((filter == null
-                    || filter.Evaluate(node)) && node.Shape.Inside(box))
+                    || filter.Evaluate(node)) && node.Geometries.IsInside(box))
                 {
                     res.Add(node);
                 }
@@ -668,7 +668,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
             foreach (Way way in _ways.Values)
             {
                 if ((filter == null
-                    || filter.Evaluate(way)) && way.Shape.Inside(box))
+                    || filter.Evaluate(way)) && way.Geometries.IsInside(box))
                 {
                     res.Add(way);
                 }
@@ -676,7 +676,7 @@ namespace OsmSharp.Osm.Data.Raw.XML.GpxSource
             foreach (Relation relation in _relations.Values)
             {
                 if ((filter == null
-                    || filter.Evaluate(relation)) && relation.Shape.Inside(box))
+                    || filter.Evaluate(relation)) && relation.Geometries.IsInside(box))
                 {
                     res.Add(relation);
                 }

@@ -1548,21 +1548,21 @@ namespace OsmSharp.Osm.Data.Raw.XML.KmlSource
             IList<OsmGeo> res = new List<OsmGeo>();
             foreach (Node node in _nodes.Values)
             {
-                if (filter.Evaluate(node) && node.Shape.Inside(box))
+                if (filter.Evaluate(node) && node.Geometries.IsInside(box))
                 {
                     res.Add(node);
                 }
             }
             foreach (Way way in _ways.Values)
             {
-                if (filter.Evaluate(way) && way.Shape.Inside(box))
+                if (filter.Evaluate(way) && way.Geometries.IsInside(box))
                 {
                     res.Add(way);
                 }
             }
             foreach (Relation relation in _relations.Values)
             {
-                if (filter.Evaluate(relation) && relation.Shape.Inside(box))
+                if (filter.Evaluate(relation) && relation.Geometries.IsInside(box))
                 {
                     res.Add(relation);
                 }

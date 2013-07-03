@@ -30,6 +30,7 @@ namespace OsmSharp
     /// <summary>
     /// Represents a strongly typed list of objects that will be sorted using the IComparable interface.
     /// </summary>
+    /// <remarks>Re-implemented for compatibility with Windows Phone/Silverlight.</remarks>
     /// <typeparam name="T">The type of the elements in the list.</typeparam>
     public class SortedSet<T> : ISet<T>, ICollection<T>, IEnumerable<T>, ICollection, IEnumerable
     {
