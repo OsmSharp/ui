@@ -26,18 +26,24 @@ using OsmSharp.Geo.Streams;
 using OsmSharp.Math.Geo;
 using OsmSharp.Xml.Gpx;
 using System.Collections.Generic;
+using OsmSharp.Xml.Sources;
 
 namespace OsmSharp.Geo.IO.Gpx
 {
     /// <summary>
     /// Gpx-stream source.
     /// </summary>
-    public class GpxGeometryStreamSource : GeometryCollectionStreamSource
+    public class GpxGeometryStreamSource : GeoCollectionStreamSource
     {
         /// <summary>
         /// Holds the stream containing the source-data.
         /// </summary>
         private Stream _stream;
+
+        /// <summary>
+        /// Holds the flag to create invidiual points for each track position.
+        /// </summary>
+        private bool _createTrackPoints = true;
 
         /// <summary>
         /// Creates a new Gpx-geometry stream.
@@ -49,54 +55,57 @@ namespace OsmSharp.Geo.IO.Gpx
             _stream = stream;
         }
 
+        /// <summary>
+        /// Creates a new Gpx-geometry stream.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="createTrackPoints"></param>
+        public GpxGeometryStreamSource(Stream stream, bool createTrackPoints)
+            : base(new GeometryCollection())
+        {
+            _stream = stream;
+            _createTrackPoints = createTrackPoints;
+        }
+
+        /// <summary>
+        /// Called when initializing this source.
+        /// </summary>
+        public override void Initialize()
+        {
+            // read the gpx-data.
+            if (!_read) { this.DoReadGpx(); }
+
+            base.Initialize();
+        }
+
         #region Read Gpx
 
         /// <summary>
         /// The gpx object.
         /// </summary>
-        private object _gpx_object;
+        private bool _read = false;
 
         /// <summary>
         /// Reads the actual Gpx.
         /// </summary>
         private void DoReadGpx()
-        {
-            if (_gpx_object == null)
-            { // only read if the gpx object does not exist yet.
-                // find the version.
-                Type version_type = null;
+        {            
+            // seek to the beginning of the stream.
+            if (_stream.CanSeek) { _stream.Seek(0, SeekOrigin.Begin); }
 
-                // determine the version from source.
-                GpxVersion version = this.FindVersionFromSource();
-                switch (version)
-                {
-                    case GpxVersion.Gpxv1_0:
-                        version_type = typeof(OsmSharp.Xml.Gpx.v1_0.gpx);
-                        break;
-                    case GpxVersion.Gpxv1_1:
-                        version_type = typeof(OsmSharp.Xml.Gpx.v1_1.gpxType);
-                        break;
-                    case GpxVersion.Unknown:
-                        throw new XmlException("Version could not be determined!");
-                }
+            // instantiate and load the gpx test document.
+            XmlStreamSource source = new XmlStreamSource(_stream);
+            GpxDocument document = new GpxDocument(source);
+            object gpx = document.Gpx;
 
-                // deserialize
-                XmlSerializer xmlSerializer = null;
-                xmlSerializer = new XmlSerializer(version_type);
-                XmlReader reader = XmlReader.Create(_stream);
-                _gpx_object = xmlSerializer.Deserialize(reader);
-                reader.Close();
-
-                // process the result.
-                switch (version)
-                {
-                    case GpxVersion.Gpxv1_0:
-                        this.ReadGpxv1_0(_gpx_object as OsmSharp.Xml.Gpx.v1_0.gpx);
-                        break;
-                    case GpxVersion.Gpxv1_1:
-                        this.ReadGpxv1_1(_gpx_object as OsmSharp.Xml.Gpx.v1_1.gpxType);
-                        break;
-                }
+            switch(document.Version)
+            {
+                case GpxVersion.Gpxv1_0:
+                    this.ReadGpxv1_0(gpx as OsmSharp.Xml.Gpx.v1_0.gpx);
+                    break;
+                case GpxVersion.Gpxv1_1:
+                    this.ReadGpxv1_1(gpx as Xml.Gpx.v1_1.gpxType);
+                    break;
             }
         }
 
@@ -127,14 +136,14 @@ namespace OsmSharp.Geo.IO.Gpx
                     if (wpt.timeSpecified) { point.Attributes.Add("time", wpt.time); }
                     if (wpt.vdopSpecified) { point.Attributes.Add("vdop", wpt.vdop); }
 
-                    point.Attributes.Add("cmt", wpt.cmt);
-                    point.Attributes.Add("desc", wpt.desc);
-                    point.Attributes.Add("dgpsid", wpt.dgpsid);
-                    point.Attributes.Add("name", wpt.name);
-                    point.Attributes.Add("sat", wpt.sat);
-                    point.Attributes.Add("src", wpt.src);
-                    point.Attributes.Add("sym", wpt.sym);
-                    point.Attributes.Add("type", wpt.type);
+                    if (wpt.cmt != null) { point.Attributes.Add("cmt", wpt.cmt); }
+                    if (wpt.desc != null) { point.Attributes.Add("desc", wpt.desc); }
+                    if (wpt.dgpsid != null) { point.Attributes.Add("dgpsid", wpt.dgpsid); }
+                    if (wpt.name != null) { point.Attributes.Add("name", wpt.name); }
+                    if (wpt.sat != null) { point.Attributes.Add("sat", wpt.sat); }
+                    if (wpt.src != null) { point.Attributes.Add("src", wpt.src); }
+                    if (wpt.sym != null) { point.Attributes.Add("sym", wpt.sym); }
+                    if (wpt.type != null) { point.Attributes.Add("type", wpt.type); }
 
                     this.GeometryCollection.Add(point);
                 }
@@ -151,38 +160,42 @@ namespace OsmSharp.Geo.IO.Gpx
                         GeoCoordinate coordinate = new GeoCoordinate((double)rtept.lat, (double)rtept.lon);
                         coordinates.Add(coordinate);
 
-                        Point point = new Point(coordinate);
-                        point.Attributes = new SimpleGeometryAttributeCollection();
+                        if (_createTrackPoints)
+                        {
+                            Point point = new Point(coordinate);
+                            point.Attributes = new SimpleGeometryAttributeCollection();
 
-                        if (rtept.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", rtept.ageofdgpsdata); }
-                        if (rtept.eleSpecified) { point.Attributes.Add("ele", rtept.ele); }
-                        if (rtept.fixSpecified) { point.Attributes.Add("fix", rtept.fix); }
-                        if (rtept.geoidheightSpecified) { point.Attributes.Add("geoidheight", rtept.geoidheight); }
-                        if (rtept.hdopSpecified) { point.Attributes.Add("hdop", rtept.hdop); }
-                        if (rtept.magvarSpecified) { point.Attributes.Add("magvar", rtept.magvar); }
-                        if (rtept.pdopSpecified) { point.Attributes.Add("pdop", rtept.pdop); }
-                        if (rtept.timeSpecified) { point.Attributes.Add("time", rtept.time); }
-                        if (rtept.vdopSpecified) { point.Attributes.Add("vdop", rtept.vdop); }
+                            if (rtept.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", rtept.ageofdgpsdata); }
+                            if (rtept.eleSpecified) { point.Attributes.Add("ele", rtept.ele); }
+                            if (rtept.fixSpecified) { point.Attributes.Add("fix", rtept.fix); }
+                            if (rtept.geoidheightSpecified) { point.Attributes.Add("geoidheight", rtept.geoidheight); }
+                            if (rtept.hdopSpecified) { point.Attributes.Add("hdop", rtept.hdop); }
+                            if (rtept.magvarSpecified) { point.Attributes.Add("magvar", rtept.magvar); }
+                            if (rtept.pdopSpecified) { point.Attributes.Add("pdop", rtept.pdop); }
+                            if (rtept.timeSpecified) { point.Attributes.Add("time", rtept.time); }
+                            if (rtept.vdopSpecified) { point.Attributes.Add("vdop", rtept.vdop); }
 
-                        point.Attributes.Add("cmt", rtept.cmt);
-                        point.Attributes.Add("desc", rtept.desc);
-                        point.Attributes.Add("dgpsid", rtept.dgpsid);
-                        point.Attributes.Add("name", rtept.name);
-                        point.Attributes.Add("sat", rtept.sat);
-                        point.Attributes.Add("src", rtept.src);
-                        point.Attributes.Add("sym", rtept.sym);
-                        point.Attributes.Add("type", rtept.type);
+                            if (rtept.cmt != null) { point.Attributes.Add("cmt", rtept.cmt); }
+                            if (rtept.desc != null) { point.Attributes.Add("desc", rtept.desc); }
+                            if (rtept.dgpsid != null) { point.Attributes.Add("dgpsid", rtept.dgpsid); }
+                            if (rtept.name != null) { point.Attributes.Add("name", rtept.name); }
+                            if (rtept.sat != null) { point.Attributes.Add("sat", rtept.sat); }
+                            if (rtept.src != null) { point.Attributes.Add("src", rtept.src); }
+                            if (rtept.sym != null) { point.Attributes.Add("sym", rtept.sym); }
+                            if (rtept.type != null) { point.Attributes.Add("type", rtept.type); }
 
-                        this.GeometryCollection.Add(point);
+                            this.GeometryCollection.Add(point);
+                        }
                     }
 
                     // creates a new linestring.
                     LineString lineString = new LineString(coordinates);
-                    lineString.Attributes.Add("cmt", rte.cmt);
-                    lineString.Attributes.Add("desc", rte.desc);
-                    lineString.Attributes.Add("name", rte.name);
-                    lineString.Attributes.Add("number", rte.number);
-                    lineString.Attributes.Add("src", rte.src);
+                    lineString.Attributes = new SimpleGeometryAttributeCollection();
+                    if (rte.cmt != null) { lineString.Attributes.Add("cmt", rte.cmt); }
+                    if (rte.desc != null) { lineString.Attributes.Add("desc", rte.desc); }
+                    if (rte.name != null) { lineString.Attributes.Add("name", rte.name); }
+                    if (rte.number != null) { lineString.Attributes.Add("number", rte.number); }
+                    if (rte.src != null) { lineString.Attributes.Add("src", rte.src); }
 
                     this.GeometryCollection.Add(lineString);
                 }
@@ -204,39 +217,43 @@ namespace OsmSharp.Geo.IO.Gpx
                             coordinates.Add(coordinate);
                         }
 
-                        Point point = new Point(coordinate);
-                        point.Attributes = new SimpleGeometryAttributeCollection();
+                        if (_createTrackPoints)
+                        {
+                            Point point = new Point(coordinate);
+                            point.Attributes = new SimpleGeometryAttributeCollection();
 
-                        if (wpt.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", wpt.ageofdgpsdata); }
-                        if (wpt.eleSpecified) { point.Attributes.Add("ele", wpt.ele); }
-                        if (wpt.fixSpecified) { point.Attributes.Add("fix", wpt.fix); }
-                        if (wpt.geoidheightSpecified) { point.Attributes.Add("geoidheight", wpt.geoidheight); }
-                        if (wpt.hdopSpecified) { point.Attributes.Add("hdop", wpt.hdop); }
-                        if (wpt.magvarSpecified) { point.Attributes.Add("magvar", wpt.magvar); }
-                        if (wpt.pdopSpecified) { point.Attributes.Add("pdop", wpt.pdop); }
-                        if (wpt.timeSpecified) { point.Attributes.Add("time", wpt.time); }
-                        if (wpt.vdopSpecified) { point.Attributes.Add("vdop", wpt.vdop); }
+                            if (wpt.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", wpt.ageofdgpsdata); }
+                            if (wpt.eleSpecified) { point.Attributes.Add("ele", wpt.ele); }
+                            if (wpt.fixSpecified) { point.Attributes.Add("fix", wpt.fix); }
+                            if (wpt.geoidheightSpecified) { point.Attributes.Add("geoidheight", wpt.geoidheight); }
+                            if (wpt.hdopSpecified) { point.Attributes.Add("hdop", wpt.hdop); }
+                            if (wpt.magvarSpecified) { point.Attributes.Add("magvar", wpt.magvar); }
+                            if (wpt.pdopSpecified) { point.Attributes.Add("pdop", wpt.pdop); }
+                            if (wpt.timeSpecified) { point.Attributes.Add("time", wpt.time); }
+                            if (wpt.vdopSpecified) { point.Attributes.Add("vdop", wpt.vdop); }
 
-                        point.Attributes.Add("cmt", wpt.cmt);
-                        point.Attributes.Add("desc", wpt.desc);
-                        point.Attributes.Add("dgpsid", wpt.dgpsid);
-                        point.Attributes.Add("name", wpt.name);
-                        point.Attributes.Add("sat", wpt.sat);
-                        point.Attributes.Add("src", wpt.src);
-                        point.Attributes.Add("sym", wpt.sym);
-                        point.Attributes.Add("type", wpt.type);
+                            if (wpt.cmt != null) { point.Attributes.Add("cmt", wpt.cmt); }
+                            if (wpt.desc != null) { point.Attributes.Add("desc", wpt.desc); }
+                            if (wpt.dgpsid != null) { point.Attributes.Add("dgpsid", wpt.dgpsid); }
+                            if (wpt.name != null) { point.Attributes.Add("name", wpt.name); }
+                            if (wpt.sat != null) { point.Attributes.Add("sat", wpt.sat); }
+                            if (wpt.src != null) { point.Attributes.Add("src", wpt.src); }
+                            if (wpt.sym != null) { point.Attributes.Add("sym", wpt.sym); }
+                            if (wpt.type != null) { point.Attributes.Add("type", wpt.type); }
 
-                        this.GeometryCollection.Add(point);
+                            this.GeometryCollection.Add(point);
+                        }
                     }
                 }
 
                 // creates a new linestring.
                 LineString lineString = new LineString(coordinates);
-                lineString.Attributes.Add("cmt", trk.cmt);
-                lineString.Attributes.Add("desc", trk.desc);
-                lineString.Attributes.Add("name", trk.name);
-                lineString.Attributes.Add("number", trk.number);
-                lineString.Attributes.Add("src", trk.src);
+                lineString.Attributes = new SimpleGeometryAttributeCollection();
+                if (trk.cmt != null) { lineString.Attributes.Add("cmt", trk.cmt); }
+                if (trk.desc != null) { lineString.Attributes.Add("desc", trk.desc); }
+                if (trk.name != null) { lineString.Attributes.Add("name", trk.name); }
+                if (trk.number != null) { lineString.Attributes.Add("number", trk.number); }
+                if (trk.src != null) { lineString.Attributes.Add("src", trk.src); }
 
                 this.GeometryCollection.Add(lineString);
             }
@@ -269,17 +286,17 @@ namespace OsmSharp.Geo.IO.Gpx
                     if (wpt.timeSpecified) { point.Attributes.Add("time", wpt.time); }
                     if (wpt.vdopSpecified) { point.Attributes.Add("vdop", wpt.vdop); }
 
-                    point.Attributes.Add("Any", wpt.Any);
-                    point.Attributes.Add("cmt", wpt.cmt);
-                    point.Attributes.Add("desc", wpt.desc);
-                    point.Attributes.Add("dgpsid", wpt.dgpsid);
-                    point.Attributes.Add("name", wpt.name);
-                    point.Attributes.Add("sat", wpt.sat);
-                    point.Attributes.Add("src", wpt.src);
-                    point.Attributes.Add("sym", wpt.sym);
-                    point.Attributes.Add("url", wpt.url);
-                    point.Attributes.Add("urlname", wpt.urlname);
-                    point.Attributes.Add("type", wpt.type);
+                    if (wpt.Any != null) { point.Attributes.Add("Any", wpt.Any); }
+                    if (wpt.cmt != null) { point.Attributes.Add("cmt", wpt.cmt); }
+                    if (wpt.desc != null) { point.Attributes.Add("desc", wpt.desc); }
+                    if (wpt.dgpsid != null) { point.Attributes.Add("dgpsid", wpt.dgpsid); }
+                    if (wpt.name != null) { point.Attributes.Add("name", wpt.name); }
+                    if (wpt.sat != null) { point.Attributes.Add("sat", wpt.sat); }
+                    if (wpt.src != null) { point.Attributes.Add("src", wpt.src); }
+                    if (wpt.sym != null) { point.Attributes.Add("sym", wpt.sym); }
+                    if (wpt.url != null) { point.Attributes.Add("url", wpt.url); }
+                    if (wpt.urlname != null) { point.Attributes.Add("urlname", wpt.urlname); }
+                    if (wpt.type != null) { point.Attributes.Add("type", wpt.type); }
 
                     this.GeometryCollection.Add(point);
                 }
@@ -296,44 +313,48 @@ namespace OsmSharp.Geo.IO.Gpx
                         GeoCoordinate coordinate = new GeoCoordinate((double)rtept.lat, (double)rtept.lon);
                         coordinates.Add(coordinate);
 
-                        Point point = new Point(coordinate);
-                        point.Attributes = new SimpleGeometryAttributeCollection();
+                        if (_createTrackPoints)
+                        {
+                            Point point = new Point(coordinate);
+                            point.Attributes = new SimpleGeometryAttributeCollection();
 
-                        if (rtept.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", rtept.ageofdgpsdata); }
-                        if (rtept.eleSpecified) { point.Attributes.Add("ele", rtept.ele); }
-                        if (rtept.fixSpecified) { point.Attributes.Add("fix", rtept.fix); }
-                        if (rtept.geoidheightSpecified) { point.Attributes.Add("geoidheight", rtept.geoidheight); }
-                        if (rtept.hdopSpecified) { point.Attributes.Add("hdop", rtept.hdop); }
-                        if (rtept.magvarSpecified) { point.Attributes.Add("magvar", rtept.magvar); }
-                        if (rtept.pdopSpecified) { point.Attributes.Add("pdop", rtept.pdop); }
-                        if (rtept.timeSpecified) { point.Attributes.Add("time", rtept.time); }
-                        if (rtept.vdopSpecified) { point.Attributes.Add("vdop", rtept.vdop); }
+                            if (rtept.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", rtept.ageofdgpsdata); }
+                            if (rtept.eleSpecified) { point.Attributes.Add("ele", rtept.ele); }
+                            if (rtept.fixSpecified) { point.Attributes.Add("fix", rtept.fix); }
+                            if (rtept.geoidheightSpecified) { point.Attributes.Add("geoidheight", rtept.geoidheight); }
+                            if (rtept.hdopSpecified) { point.Attributes.Add("hdop", rtept.hdop); }
+                            if (rtept.magvarSpecified) { point.Attributes.Add("magvar", rtept.magvar); }
+                            if (rtept.pdopSpecified) { point.Attributes.Add("pdop", rtept.pdop); }
+                            if (rtept.timeSpecified) { point.Attributes.Add("time", rtept.time); }
+                            if (rtept.vdopSpecified) { point.Attributes.Add("vdop", rtept.vdop); }
 
-                        point.Attributes.Add("Any", rtept.Any);
-                        point.Attributes.Add("cmt", rtept.cmt);
-                        point.Attributes.Add("desc", rtept.desc);
-                        point.Attributes.Add("dgpsid", rtept.dgpsid);
-                        point.Attributes.Add("name", rtept.name);
-                        point.Attributes.Add("sat", rtept.sat);
-                        point.Attributes.Add("src", rtept.src);
-                        point.Attributes.Add("sym", rtept.sym);
-                        point.Attributes.Add("url", rtept.url);
-                        point.Attributes.Add("urlname", rtept.urlname);
-                        point.Attributes.Add("type", rtept.type);
+                            if (rtept.Any != null) { point.Attributes.Add("Any", rtept.Any); }
+                            if (rtept.cmt != null) { point.Attributes.Add("cmt", rtept.cmt); }
+                            if (rtept.desc != null) { point.Attributes.Add("desc", rtept.desc); }
+                            if (rtept.dgpsid != null) { point.Attributes.Add("dgpsid", rtept.dgpsid); }
+                            if (rtept.name != null) { point.Attributes.Add("name", rtept.name); }
+                            if (rtept.sat != null) { point.Attributes.Add("sat", rtept.sat); }
+                            if (rtept.src != null) { point.Attributes.Add("src", rtept.src); }
+                            if (rtept.sym != null) { point.Attributes.Add("sym", rtept.sym); }
+                            if (rtept.url != null) { point.Attributes.Add("url", rtept.url); }
+                            if (rtept.urlname != null) { point.Attributes.Add("urlname", rtept.urlname); }
+                            if (rtept.type != null) { point.Attributes.Add("type", rtept.type); }
 
-                        this.GeometryCollection.Add(point);
+                            this.GeometryCollection.Add(point);
+                        }
                     }
 
                     // creates a new linestring.
                     LineString lineString = new LineString(coordinates);
-                    lineString.Attributes.Add("Any", rte.Any);
-                    lineString.Attributes.Add("cmt", rte.cmt);
-                    lineString.Attributes.Add("desc", rte.desc);
-                    lineString.Attributes.Add("name", rte.name);
-                    lineString.Attributes.Add("number", rte.number);
-                    lineString.Attributes.Add("src", rte.src);
-                    lineString.Attributes.Add("url", rte.url);
-                    lineString.Attributes.Add("urlname", rte.urlname);
+                    lineString.Attributes = new SimpleGeometryAttributeCollection();
+                    if (rte.Any != null) { lineString.Attributes.Add("Any", rte.Any); }
+                    if (rte.cmt != null) { lineString.Attributes.Add("cmt", rte.cmt); }
+                    if (rte.desc != null) { lineString.Attributes.Add("desc", rte.desc); }
+                    if (rte.name != null) { lineString.Attributes.Add("name", rte.name); }
+                    if (rte.number != null) { lineString.Attributes.Add("number", rte.number); }
+                    if (rte.src != null) { lineString.Attributes.Add("src", rte.src); }
+                    if (rte.url != null) { lineString.Attributes.Add("url", rte.url); }
+                    if (rte.urlname != null) { lineString.Attributes.Add("urlname", rte.urlname); }
 
                     this.GeometryCollection.Add(lineString);
                 }
@@ -348,90 +369,51 @@ namespace OsmSharp.Geo.IO.Gpx
                     GeoCoordinate coordinate = new GeoCoordinate((double)trkseg.lat, (double)trkseg.lon);
                     coordinates.Add(coordinate);
 
-                    Point point = new Point(coordinate);
-                    point.Attributes = new SimpleGeometryAttributeCollection();
+                    if (_createTrackPoints)
+                    {
+                        Point point = new Point(coordinate);
+                        point.Attributes = new SimpleGeometryAttributeCollection();
 
-                    if (trkseg.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", trkseg.ageofdgpsdata); }
-                    if (trkseg.eleSpecified) { point.Attributes.Add("ele", trkseg.ele); }
-                    if (trkseg.fixSpecified) { point.Attributes.Add("fix", trkseg.fix); }
-                    if (trkseg.geoidheightSpecified) { point.Attributes.Add("geoidheight", trkseg.geoidheight); }
-                    if (trkseg.hdopSpecified) { point.Attributes.Add("hdop", trkseg.hdop); }
-                    if (trkseg.magvarSpecified) { point.Attributes.Add("magvar", trkseg.magvar); }
-                    if (trkseg.pdopSpecified) { point.Attributes.Add("pdop", trkseg.pdop); }
-                    if (trkseg.timeSpecified) { point.Attributes.Add("time", trkseg.time); }
-                    if (trkseg.vdopSpecified) { point.Attributes.Add("vdop", trkseg.vdop); }
+                        if (trkseg.ageofdgpsdataSpecified) { point.Attributes.Add("ageofdgpsdata", trkseg.ageofdgpsdata); }
+                        if (trkseg.eleSpecified) { point.Attributes.Add("ele", trkseg.ele); }
+                        if (trkseg.fixSpecified) { point.Attributes.Add("fix", trkseg.fix); }
+                        if (trkseg.geoidheightSpecified) { point.Attributes.Add("geoidheight", trkseg.geoidheight); }
+                        if (trkseg.hdopSpecified) { point.Attributes.Add("hdop", trkseg.hdop); }
+                        if (trkseg.magvarSpecified) { point.Attributes.Add("magvar", trkseg.magvar); }
+                        if (trkseg.pdopSpecified) { point.Attributes.Add("pdop", trkseg.pdop); }
+                        if (trkseg.timeSpecified) { point.Attributes.Add("time", trkseg.time); }
+                        if (trkseg.vdopSpecified) { point.Attributes.Add("vdop", trkseg.vdop); }
 
-                    point.Attributes.Add("Any", trkseg.Any);
-                    point.Attributes.Add("cmt", trkseg.cmt);
-                    point.Attributes.Add("desc", trkseg.desc);
-                    point.Attributes.Add("dgpsid", trkseg.dgpsid);
-                    point.Attributes.Add("name", trkseg.name);
-                    point.Attributes.Add("sat", trkseg.sat);
-                    point.Attributes.Add("src", trkseg.src);
-                    point.Attributes.Add("sym", trkseg.sym);
-                    point.Attributes.Add("url", trkseg.url);
-                    point.Attributes.Add("urlname", trkseg.urlname);
-                    point.Attributes.Add("type", trkseg.type);
+                        if (trkseg.Any != null) { point.Attributes.Add("Any", trkseg.Any); }
+                        if (trkseg.cmt != null) { point.Attributes.Add("cmt", trkseg.cmt); }
+                        if (trkseg.desc != null) { point.Attributes.Add("desc", trkseg.desc); }
+                        if (trkseg.dgpsid != null) { point.Attributes.Add("dgpsid", trkseg.dgpsid); }
+                        if (trkseg.name != null) { point.Attributes.Add("name", trkseg.name); }
+                        if (trkseg.sat != null) { point.Attributes.Add("sat", trkseg.sat); }
+                        if (trkseg.src != null) { point.Attributes.Add("src", trkseg.src); }
+                        if (trkseg.sym != null) { point.Attributes.Add("sym", trkseg.sym); }
+                        if (trkseg.url != null) { point.Attributes.Add("url", trkseg.url); }
+                        if (trkseg.urlname != null) { point.Attributes.Add("urlname", trkseg.urlname); }
+                        if (trkseg.type != null) { point.Attributes.Add("type", trkseg.type); }
 
-                    this.GeometryCollection.Add(point);
+                        this.GeometryCollection.Add(point);
+                    }
                 }
 
                 // creates a new linestring.
                 LineString lineString = new LineString(coordinates);
-                lineString.Attributes.Add("Any", trk.Any);
-                lineString.Attributes.Add("cmt", trk.cmt);
-                lineString.Attributes.Add("desc", trk.desc);
-                lineString.Attributes.Add("name", trk.name);
-                lineString.Attributes.Add("number", trk.number);
-                lineString.Attributes.Add("src", trk.src);
-                lineString.Attributes.Add("url", trk.url);
-                lineString.Attributes.Add("urlname", trk.urlname);
+                lineString.Attributes = new SimpleGeometryAttributeCollection();
+                if (trk.Any != null) { lineString.Attributes.Add("Any", trk.Any); }
+                if (trk.cmt != null) { lineString.Attributes.Add("cmt", trk.cmt); }
+                if (trk.desc != null) { lineString.Attributes.Add("desc", trk.desc); }
+                if (trk.name != null) { lineString.Attributes.Add("name", trk.name); }
+                if (trk.number != null) { lineString.Attributes.Add("number", trk.number); }
+                if (trk.src != null) { lineString.Attributes.Add("src", trk.src); }
+                if (trk.url != null) { lineString.Attributes.Add("url", trk.url); }
+                if (trk.urlname != null) { lineString.Attributes.Add("urlname", trk.urlname); }
 
                 this.GeometryCollection.Add(lineString);
             }
-        }
-
-        /// <summary>
-        /// Tries to find the version from the source.
-        /// </summary>
-        private GpxVersion FindVersionFromSource()
-        {
-            GpxVersion version = GpxVersion.Unknown;
-
-            // try to find the xmlns and the correct version to use.
-            XmlReader reader = XmlReader.Create(_stream);
-            while (!reader.EOF)
-            {
-                if (reader.NodeType == XmlNodeType.Element
-                    && reader.Name == "gpx")
-                {
-                    string ns = reader.GetAttribute("xmlns");
-                    switch (ns)
-                    {
-                        case "http://www.topografix.com/GPX/1/0":
-                            version = GpxVersion.Gpxv1_0;
-                            break;
-                        case "http://www.topografix.com/GPX/1/1":
-                            version = GpxVersion.Gpxv1_1;
-                            break;
-                    }
-                }
-                else if (reader.NodeType == XmlNodeType.Element)
-                {
-                    throw new XmlException("First element expected: gpx!");
-                }
-
-                // check end conditions.
-                if (version != GpxVersion.Unknown)
-                {
-                    reader.Close();
-                    reader = null;
-                    break;
-                }
-
-                reader.Read();
-            }
-            return version;
         }
 
         #endregion

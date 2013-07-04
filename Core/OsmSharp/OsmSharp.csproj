@@ -169,7 +169,7 @@
     <Compile Include="Geo\Geometries\Point.cs" />
     <Compile Include="Geo\Geometries\Polygon.cs" />
     <Compile Include="Geo\IO\Gpx\GpxGeometryStreamSource.cs" />
-    <Compile Include="Geo\Streams\GeometryCollectionStreamSource.cs" />
+    <Compile Include="Geo\Streams\GeoCollectionStreamSource.cs" />
     <Compile Include="IO\ByteCache\DiskByteCache.cs" />
     <Compile Include="IO\ByteCache\IByteCache.cs" />
     <Compile Include="IO\ByteCache\MemoryByteCache.cs" />
@@ -391,44 +391,44 @@
     <Compile Include="Progress\ProgressStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
-    <Compile Include="Geo\Streams\IGeometryStreamSource.cs" />
-    <Compile Include="Geo\Streams\IGeometryStreamTarget.cs" />
+    <Compile Include="Geo\Streams\IGeoStreamSource.cs" />
+    <Compile Include="Geo\Streams\IGeoStreamTarget.cs" />
     <Compile Include="Utilities.cs" />
-    <Compile Include="Xml\Gpx\GpxDocument.cs" />
-    <Compile Include="Xml\Gpx\v1_0\gpx.cs">
+    <Compile Include="IO\Xml\Gpx\GpxDocument.cs" />
+    <Compile Include="IO\Xml\Gpx\v1_0\gpx.cs">
       <DependentUpon>gpx.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Xml\Gpx\v1_1\gpx.cs">
+    <Compile Include="IO\Xml\Gpx\v1_1\gpx.cs">
       <DependentUpon>gpx.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Xml\IXmlSource.cs" />
-    <Compile Include="Xml\Kml\KmlDocument.cs" />
-    <Compile Include="Xml\Kml\v2_0\kml.cs">
+    <Compile Include="IO\Xml\IXmlSource.cs" />
+    <Compile Include="IO\Xml\Kml\KmlDocument.cs" />
+    <Compile Include="IO\Xml\Kml\v2_0\kml.cs">
       <DependentUpon>kml.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Xml\Kml\v2_0_response\kml.cs">
+    <Compile Include="IO\Xml\Kml\v2_0_response\kml.cs">
       <DependentUpon>kml.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Xml\Kml\v2_1\kml.cs">
+    <Compile Include="IO\Xml\Kml\v2_1\kml.cs">
       <DependentUpon>kml.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Xml\Nominatim\Reverse\v1\reverse.cs">
+    <Compile Include="IO\Xml\Nominatim\Reverse\v1\reverse.cs">
       <DependentUpon>reverse.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Xml\Nominatim\Search\SearchDocument.cs" />
-    <Compile Include="Xml\Nominatim\Search\v1\search.cs">
+    <Compile Include="IO\Xml\Nominatim\Search\SearchDocument.cs" />
+    <Compile Include="IO\Xml\Nominatim\Search\v1\search.cs">
       <DependentUpon>search.xsd</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Xml\Nominatim\Search\v1\search.Designer.cs">
+    <Compile Include="IO\Xml\Nominatim\Search\v1\search.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>search.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Xml\Sources\XmlFileSource.cs" />
-    <Compile Include="Xml\Sources\XmlReaderSource.cs" />
-    <Compile Include="Xml\Sources\XmlStreamSource.cs" />
-    <Compile Include="Xml\Sources\XmlStringSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlFileSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlReaderSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlStreamSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlStringSource.cs" />
     <Compile Include="Geo\Projections\IProjection.cs" />
     <Compile Include="Geo\Projections\EllipticalMercator.cs" />
     <Compile Include="Geo\Projections\SphericalMercator.cs" />
@@ -436,31 +436,31 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Xml\Gpx\v1_0\gpx.xsd">
+    <None Include="IO\Xml\Gpx\v1_0\gpx.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Xml\Gpx\v1_1\gpx.xsd">
+    <None Include="IO\Xml\Gpx\v1_1\gpx.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Xml\Kml\v2_0\kml.xsd">
+    <None Include="IO\Xml\Kml\v2_0\kml.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Xml\Kml\v2_0_response\kml.xsd">
+    <None Include="IO\Xml\Kml\v2_0_response\kml.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Xml\Kml\v2_1\kml.xsd">
+    <None Include="IO\Xml\Kml\v2_1\kml.xsd">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Xml\Nominatim\Reverse\v1\reverse.xsd" />
-    <None Include="Xml\Nominatim\Search\v1\search.xsc">
+    <None Include="IO\Xml\Nominatim\Reverse\v1\reverse.xsd" />
+    <None Include="IO\Xml\Nominatim\Search\v1\search.xsc">
       <DependentUpon>search.xsd</DependentUpon>
     </None>
-    <None Include="Xml\Nominatim\Search\v1\search.xsd">
+    <None Include="IO\Xml\Nominatim\Search\v1\search.xsd">
       <Generator>MSDataSetGenerator</Generator>
       <LastGenOutput>search.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
-    <None Include="Xml\Nominatim\Search\v1\search.xss">
+    <None Include="IO\Xml\Nominatim\Search\v1\search.xss">
       <DependentUpon>search.xsd</DependentUpon>
     </None>
   </ItemGroup>

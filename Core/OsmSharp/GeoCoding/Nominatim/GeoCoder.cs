@@ -24,7 +24,7 @@ using OsmSharp.Xml;
 using OsmSharp.Xml.Nominatim.Reverse.v1;
 using OsmSharp.Xml.Sources;
 using OsmSharp.Xml.Nominatim.Search;
-using OsmSharp.Xml.Nominatim.Search.v1;
+using OsmSharp.IO.Xml.Nominatim.Search.v1;
 
 namespace OsmSharp.GeoCoding.Nominatim
 {
@@ -111,9 +111,9 @@ namespace OsmSharp.GeoCoding.Nominatim
             var res = new GeoCoderResult();
             res.Accuracy = AccuracyEnum.UnkownLocationLevel;
 
-            if (search_doc.Search is OsmSharp.Xml.Nominatim.Search.v1.searchresults)
+            if (search_doc.Search is searchresults)
             {
-                searchresults result_v1 = search_doc.Search as OsmSharp.Xml.Nominatim.Search.v1.searchresults;
+                searchresults result_v1 = search_doc.Search as searchresults;
                 if (result_v1.place != null && result_v1.place.Length > 0)
                 {
                     double latitude;

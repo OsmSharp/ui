@@ -8,7 +8,6 @@ using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Xml.Gpx;
 using OsmSharp.Xml.Sources;
-using OsmSharp.Osm.Data.XML.GpxSource;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Osm;
 using System.IO;
@@ -80,49 +79,49 @@ namespace OsmSharp.UI.Map.Layers
 		/// <param name="stream">Stream.</param>
 		public void AddGpx(Stream stream)
 		{
-			var gpxDocument = new GpxDocument(
-				new XmlStreamSource(stream));
-			var gpxDataSource = new GpxDataSource(
-				gpxDocument);
+            //var gpxDocument = new GpxDocument(
+            //    new XmlStreamSource(stream));
+            //var gpxDataSource = new GpxDataSource(
+            //    gpxDocument);
 
-			// query all objects.
-			IList<OsmBase> objects = gpxDataSource.Get(
-				Filter.Any());
+            //// query all objects.
+            //IList<OsmBase> objects = gpxDataSource.Get(
+            //    Filter.Any());
 
-			foreach(var osmBase in objects)
-			{
-				if(osmBase is Node)
-				{
+            //foreach(var osmBase in objects)
+            //{
+            //    if(osmBase is Node)
+            //    {
 
-				}
-				else if(osmBase is Way)
-				{ // the actual route.
-					var way = (osmBase as Way);
+            //    }
+            //    else if(osmBase is Way)
+            //    { // the actual route.
+            //        var way = (osmBase as Way);
 
-					// get x/y.
-					var x = new double[way.Nodes.Count];
-					var y = new double[way.Nodes.Count];
-					for (int idx = 0; idx < way.Nodes.Count; idx++)
-					{
-						x[idx] = _projection.LongitudeToX(
-							way.Nodes[idx].Coordinate.Longitude);
-						y[idx] = _projection.LatitudeToY(
-							way.Nodes[idx].Coordinate.Latitude);
-					}
+            //        // get x/y.
+            //        var x = new double[way.Nodes.Count];
+            //        var y = new double[way.Nodes.Count];
+            //        for (int idx = 0; idx < way.Nodes.Count; idx++)
+            //        {
+            //            x[idx] = _projection.LongitudeToX(
+            //                way.Nodes[idx].Coordinate.Longitude);
+            //            y[idx] = _projection.LatitudeToY(
+            //                way.Nodes[idx].Coordinate.Latitude);
+            //        }
 
-                    // set the default color if none is given.
-				    SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
-				    SimpleColor transparantBlue = SimpleColor.FromArgb(128,
-				                                                       blue.R, blue.G, blue.B);
+            //        // set the default color if none is given.
+            //        SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
+            //        SimpleColor transparantBlue = SimpleColor.FromArgb(128,
+            //                                                           blue.R, blue.G, blue.B);
 
-					this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
-                                       transparantBlue.Value, 8);
-				}
-				else if(osmBase is Relation)
-				{
-					// hmm relations in a GPX are impossible.
-				}
-			}
+            //        this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
+            //                           transparantBlue.Value, 8);
+            //    }
+            //    else if(osmBase is Relation)
+            //    {
+            //        // hmm relations in a GPX are impossible.
+            //    }
+            //}
 		}
 		
 		#endregion

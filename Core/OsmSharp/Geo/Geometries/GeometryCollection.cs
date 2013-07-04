@@ -43,6 +43,26 @@ namespace OsmSharp.Geo.Geometries
         }
 
         /// <summary>
+        /// Creates a new geometry collection.
+        /// </summary>
+        /// <param name="geometries"></param>
+        public GeometryCollection(IEnumerable<Geometry> geometries)
+        {
+            _geometries = new List<Geometry>(geometries);
+        }
+
+        /// <summary>
+        /// Returns the object count.
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                return _geometries.Count;
+            }
+        }
+
+        /// <summary>
         /// Adds a new geometry.
         /// </summary>
         /// <param name="geometry"></param>

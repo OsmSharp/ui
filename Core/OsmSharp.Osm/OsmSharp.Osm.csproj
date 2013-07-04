@@ -257,7 +257,6 @@
     <Compile Include="Simple\Streams\Collections\OsmCollectionStreamWriter.cs" />
     <Compile Include="Simple\Streams\Collections\OsmGeoStreamReader.cs" />
     <Compile Include="Simple\Streams\Filters\OsmStreamFilterProgress.cs" />
-    <Compile Include="Data\Xml\GpxSource\GpxDataSource.cs" />
     <Compile Include="Data\Xml\KmlSource\KmlDataSource.cs" />
     <Compile Include="Data\Xml\OsmSource\OsmDataSource.cs" />
     <Compile Include="Data\Xml\Processor\ChangeSets\XmlDataProcessorChangeSetSource.cs" />

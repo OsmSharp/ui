@@ -137,6 +137,7 @@
     <Compile Include="Collections\SpatialIndexes\IndexReferenceImplementation.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndexTests.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeStreamIndexTests.cs" />
+    <Compile Include="Geo\IO\Gpx\GpxGeometryTests.cs" />
     <Compile Include="IO\ByteCache\ByteCacheTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
     <Compile Include="Routes\DepotRouteTests.cs" />
@@ -183,7 +184,7 @@
     <Compile Include="SparseArrayTests.cs" />
     <Compile Include="WebMercatorTests.cs" />
     <Compile Include="FibonacciHeapTests.cs" />
-    <Compile Include="GpxXmlTest.cs" />
+    <Compile Include="Xml\Gpx\GpxXmlTest.cs" />
     <Compile Include="HugeDictionaryTests.cs" />
     <Compile Include="KmlXmlTest.cs" />
     <Compile Include="LambertProjectionTest.cs" />
