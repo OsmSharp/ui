@@ -161,12 +161,15 @@
     <Compile Include="Geo\Attributes\GeometryAttribute.cs" />
     <Compile Include="Geo\Attributes\GeometryAttributeCollection.cs" />
     <Compile Include="Geo\Attributes\IGeometryAttributesIndex.cs" />
+    <Compile Include="Geo\Attributes\SimpleGeometryAttributeCollection.cs" />
     <Compile Include="Geo\Geometries\Geometry.cs" />
     <Compile Include="Geo\Geometries\GeometryCollection.cs" />
     <Compile Include="Geo\Geometries\LineairRing.cs" />
     <Compile Include="Geo\Geometries\LineString.cs" />
     <Compile Include="Geo\Geometries\Point.cs" />
     <Compile Include="Geo\Geometries\Polygon.cs" />
+    <Compile Include="Geo\IO\Gpx\GpxGeometryStreamSource.cs" />
+    <Compile Include="Geo\Streams\GeometryCollectionStreamSource.cs" />
     <Compile Include="IO\ByteCache\DiskByteCache.cs" />
     <Compile Include="IO\ByteCache\IByteCache.cs" />
     <Compile Include="IO\ByteCache\MemoryByteCache.cs" />

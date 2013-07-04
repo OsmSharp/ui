@@ -8,7 +8,7 @@ using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Xml.Gpx;
 using OsmSharp.Xml.Sources;
-using OsmSharp.Osm.Data.Raw.XML.GpxSource;
+using OsmSharp.Osm.Data.XML.GpxSource;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Osm;
 using System.IO;

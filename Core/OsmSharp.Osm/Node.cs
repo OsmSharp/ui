@@ -38,7 +38,7 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="id"></param>
         internal protected Node(long id)
-            :base(id)
+            : base(id)
         {
 
         }

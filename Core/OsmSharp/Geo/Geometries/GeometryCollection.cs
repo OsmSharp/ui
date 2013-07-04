@@ -103,6 +103,14 @@ namespace OsmSharp.Geo.Geometries
             return false;
         }
 
+        /// <summary>
+        /// Removes all items from this collection.
+        /// </summary>
+        public void Clear()
+        {
+            _geometries.Clear();
+        }
+
         #region IEnumerable<Geometry> Implementation
 
         /// <summary>

@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Geo.Geometries.Streams
 {
@@ -43,5 +44,19 @@ namespace OsmSharp.Geo.Geometries.Streams
         /// </summary>
         /// <remarks>Closes any open connections, file locks or anything related to this source.</remarks>
         void Close();
+
+        /// <summary>
+        /// Returns true if this source is bounded.
+        /// </summary>
+        bool HasBounds
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns the bounds of this source.
+        /// </summary>
+        /// <returns></returns>
+        GeoCoordinateBox GetBounds();
     }
 }

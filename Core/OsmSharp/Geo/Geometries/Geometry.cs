@@ -27,19 +27,13 @@ namespace OsmSharp.Geo.Geometries
         /// <returns></returns>
         public abstract bool IsInside(GeoCoordinateBox box);
 
-        /// <summary>
-        /// Gets/sets the geometry attribute id.
-        /// </summary>
-        public uint GeometryAttributeId { get; set; }
+        #region Attributes
 
         /// <summary>
-        /// Returns the attribute collection.
+        /// Gets/sets the attribute collection.
         /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public GeometryAttributeCollection GetAttributes(IGeometryAttributesIndex index)
-        {
-            return index.Get(this.GeometryAttributeId);
-        }
+        public GeometryAttributeCollection Attributes { get; set; }
+
+        #endregion
     }
 }
