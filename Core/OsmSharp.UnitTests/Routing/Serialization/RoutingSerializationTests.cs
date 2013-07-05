@@ -350,26 +350,26 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             Router router = Router.CreateLiveFrom(
                 deserializedVersion, basicRouter, interpreter);
 
-            // loop over all nodes and resolve their locations.
-            var resolvedReference = new RouterPoint[original.VertexCount];
-            var resolved = new RouterPoint[original.VertexCount];
-            for (uint idx = 1; idx < original.VertexCount + 1; idx++)
-            { // resolve each vertex.
-                float latitude, longitude;
-                if (original.GetVertex(idx, out latitude, out longitude))
-                {
-                    resolvedReference[idx - 1] = referenceRouter.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
-                    resolved[idx - 1] = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
-                }
+            //// loop over all nodes and resolve their locations.
+            //var resolvedReference = new RouterPoint[original.VertexCount];
+            //var resolved = new RouterPoint[original.VertexCount];
+            //for (uint idx = 1; idx < original.VertexCount + 1; idx++)
+            //{ // resolve each vertex.
+            //    float latitude, longitude;
+            //    if (original.GetVertex(idx, out latitude, out longitude))
+            //    {
+            //        resolvedReference[idx - 1] = referenceRouter.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+            //        resolved[idx - 1] = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+            //    }
 
-                Assert.IsNotNull(resolvedReference[idx - 1]);
-                Assert.IsNotNull(resolved[idx - 1]);
+            //    Assert.IsNotNull(resolvedReference[idx - 1]);
+            //    Assert.IsNotNull(resolved[idx - 1]);
 
-                Assert.AreEqual(resolvedReference[idx - 1].Location.Latitude,
-                    resolved[idx - 1].Location.Latitude, 0.0001);
-                Assert.AreEqual(resolvedReference[idx - 1].Location.Longitude,
-                    resolved[idx - 1].Location.Longitude, 0.0001);
-            }
+            //    Assert.AreEqual(resolvedReference[idx - 1].Location.Latitude,
+            //        resolved[idx - 1].Location.Latitude, 0.0001);
+            //    Assert.AreEqual(resolvedReference[idx - 1].Location.Longitude,
+            //        resolved[idx - 1].Location.Longitude, 0.0001);
+            //}
 
         //    // check all the routes having the same weight(s).
         //    for (int fromIdx = 0; fromIdx < resolved.Length; fromIdx++)

@@ -27,7 +27,7 @@ namespace OsmSharp.Geo.Geometries
     /// <summary>
     /// Represents a collection of geometry-objects.
     /// </summary>
-    public class GeometryCollection : IEnumerable<Geometry>
+    public class GeometryCollection : Geometry, IEnumerable<Geometry>
     {
         /// <summary>
         /// Holds the list of geometries.
@@ -86,7 +86,7 @@ namespace OsmSharp.Geo.Geometries
         /// <summary>
         /// Returns the smallest bounding box containing all geometries in this collection.
         /// </summary>
-        public GeoCoordinateBox Box
+        public override GeoCoordinateBox Box
         {
             get
             {
@@ -111,7 +111,7 @@ namespace OsmSharp.Geo.Geometries
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public bool IsInside(GeoCoordinateBox box)
+        public override bool IsInside(GeoCoordinateBox box)
         {
             foreach (Geometry geometry in _geometries)
             {

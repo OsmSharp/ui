@@ -166,9 +166,13 @@
     <Compile Include="Geo\Geometries\GeometryCollection.cs" />
     <Compile Include="Geo\Geometries\LineairRing.cs" />
     <Compile Include="Geo\Geometries\LineString.cs" />
+    <Compile Include="Geo\Geometries\MultiLineString.cs" />
+    <Compile Include="Geo\Geometries\MultiPoint.cs" />
+    <Compile Include="Geo\Geometries\MultiPolygon.cs" />
     <Compile Include="Geo\Geometries\Point.cs" />
     <Compile Include="Geo\Geometries\Polygon.cs" />
     <Compile Include="Geo\IO\Gpx\GpxGeometryStreamSource.cs" />
+    <Compile Include="Geo\IO\Kml\KmlGeometryStreamSource.cs" />
     <Compile Include="Geo\Streams\GeoCollectionStreamSource.cs" />
     <Compile Include="IO\ByteCache\DiskByteCache.cs" />
     <Compile Include="IO\ByteCache\IByteCache.cs" />

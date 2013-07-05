@@ -20,47 +20,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Geo.Geometries
 {
     /// <summary>
-    /// Represents a single point.
+    /// A multi point, a collection of zero or more points.
     /// </summary>
-    public class Point : Geometry
+    public class MultiPoint : GeometryCollection
     {
         /// <summary>
-        /// Creates a new point geometry.
+        /// Creates a new multipoint string.
         /// </summary>
-        /// <param name="coordinate"></param>
-        public Point(GeoCoordinate coordinate)
+        public MultiPoint()
         {
-            this.Coordinate = coordinate;
+
         }
 
         /// <summary>
-        /// Gets/sets the coordinate.
+        /// Creates a new multipoint string.
         /// </summary>
-        public GeoCoordinate Coordinate { get; set; }
-
-        /// <summary>
-        /// Returns the smallest possible bounding box containing this geometry.
-        /// </summary>
-        public override GeoCoordinateBox Box
+        /// <param name="points"></param>
+        public MultiPoint(IEnumerable<Point> points)
+            : base(points)
         {
-            get { return new GeoCoordinateBox(this.Coordinate, this.Coordinate); }
-        }
 
-        /// <summary>
-        /// Returns true if this point is visible inside the given bounding box.
-        /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-        public override bool IsInside(GeoCoordinateBox box)
-        {
-            if (box == null) { throw new ArgumentNullException(); }
-
-            return box.IsInside(this.Coordinate);
         }
     }
 }
