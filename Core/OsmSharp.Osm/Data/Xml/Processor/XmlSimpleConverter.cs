@@ -29,15 +29,15 @@ namespace OsmSharp.Osm.Data.Xml.Processor
     /// </summary>
     internal static class XmlSimpleConverter
     {
-        internal static SimpleChangeSet ConvertToSimple(Osm.Xml.v0_6.delete delete)
+        internal static ChangeSet ConvertToSimple(Osm.Xml.v0_6.delete delete)
         {
             // create change set record.
-            SimpleChangeSet change_set = new SimpleChangeSet();
+            OsmSharp.Osm.Simple.ChangeSet change_set = new OsmSharp.Osm.Simple.ChangeSet();
 
             // create change record.
-            SimpleChange change = new SimpleChange();
-            change.Type = SimpleChangeType.Delete;
-            change.OsmGeo = new List<SimpleOsmGeo>();
+            OsmSharp.Osm.Simple.Change change = new OsmSharp.Osm.Simple.Change();
+            change.Type = OsmSharp.Osm.Simple.ChangeType.Delete;
+            change.OsmGeo = new List<OsmGeo>();
 
             // add all relations to the list.
             if (delete.relation != null)
@@ -68,21 +68,21 @@ namespace OsmSharp.Osm.Data.Xml.Processor
 
             
             // add change to changeset
-            change_set.Changes = new List<SimpleChange>();
+            change_set.Changes = new List<Change>();
             change_set.Changes.Add(change);
 
             return change_set;            
         }
 
-        internal static SimpleChangeSet ConvertToSimple(Osm.Xml.v0_6.modify modify)
+        internal static ChangeSet ConvertToSimple(Osm.Xml.v0_6.modify modify)
         {
             // create change set record.
-            SimpleChangeSet change_set = new SimpleChangeSet();
+            ChangeSet change_set = new ChangeSet();
 
             // create change record.
-            SimpleChange change = new SimpleChange();
-            change.Type = SimpleChangeType.Modify;
-            change.OsmGeo = new List<SimpleOsmGeo>();
+            OsmSharp.Osm.Simple.Change change = new OsmSharp.Osm.Simple.Change();
+            change.Type = OsmSharp.Osm.Simple.ChangeType.Modify;
+            change.OsmGeo = new List<OsmGeo>();
 
             // add all relations to the list.
             if (modify.relation != null)
@@ -112,21 +112,21 @@ namespace OsmSharp.Osm.Data.Xml.Processor
             }
             
             // add change to changeset
-            change_set.Changes = new List<SimpleChange>();
+            change_set.Changes = new List<Change>();
             change_set.Changes.Add(change);
 
             return change_set;          
         }
 
-        internal static SimpleChangeSet ConvertToSimple(Osm.Xml.v0_6.create create)
+        internal static ChangeSet ConvertToSimple(Osm.Xml.v0_6.create create)
         {
             // create change set record.
-            SimpleChangeSet change_set = new SimpleChangeSet();
+            ChangeSet change_set = new ChangeSet();
 
             // create change record.
-            SimpleChange change = new SimpleChange();
-            change.Type = SimpleChangeType.Create;
-            change.OsmGeo = new List<SimpleOsmGeo>();
+            OsmSharp.Osm.Simple.Change change = new OsmSharp.Osm.Simple.Change();
+            change.Type = OsmSharp.Osm.Simple.ChangeType.Create;
+            change.OsmGeo = new List<OsmGeo>();
 
 
             // add all nodes to the list.
@@ -157,16 +157,16 @@ namespace OsmSharp.Osm.Data.Xml.Processor
             }
 
             // add change to changeset
-            change_set.Changes = new List<SimpleChange>();
+            change_set.Changes = new List<Change>();
             change_set.Changes.Add(change);
 
             return change_set;         
         }
 
 
-        internal static SimpleNode ConvertToSimple(Osm.Xml.v0_6.node nd)
+        internal static Node ConvertToSimple(Osm.Xml.v0_6.node nd)
         {
-            SimpleNode node = new SimpleNode();
+            Node node = new Node();
 
             // set id
             if (nd.idSpecified)
@@ -229,9 +229,9 @@ namespace OsmSharp.Osm.Data.Xml.Processor
             return node;
         }
 
-        internal static SimpleWay ConvertToSimple(Osm.Xml.v0_6.way wa)
+        internal static Way ConvertToSimple(Osm.Xml.v0_6.way wa)
         {
-            SimpleWay way = new SimpleWay();
+            Way way = new Way();
 
             // set id
             if (wa.idSpecified)
@@ -292,9 +292,9 @@ namespace OsmSharp.Osm.Data.Xml.Processor
             return way;
         }
 
-        internal static SimpleRelation ConvertToSimple(Osm.Xml.v0_6.relation re)
+        internal static Relation ConvertToSimple(Osm.Xml.v0_6.relation re)
         {
-            SimpleRelation relation = new SimpleRelation();
+            Relation relation = new Relation();
 
             // set id
             if (re.idSpecified)
@@ -345,11 +345,11 @@ namespace OsmSharp.Osm.Data.Xml.Processor
             // set members.
             if (re.member != null && re.member.Length > 0)
             {
-                relation.Members = new List<SimpleRelationMember>();
+                relation.Members = new List<RelationMember>();
                 for (int idx = 0; idx < re.member.Length; idx++)
                 {
                     OsmSharp.Osm.Xml.v0_6.member mem = re.member[idx];
-                    SimpleRelationMember relation_member = new SimpleRelationMember();
+                    RelationMember relation_member = new RelationMember();
                     // set memberid
                     if (mem.refSpecified)
                     {
@@ -365,13 +365,13 @@ namespace OsmSharp.Osm.Data.Xml.Processor
                         switch (mem.type)
                         {
                             case OsmSharp.Osm.Xml.v0_6.memberType.node:
-                                relation_member.MemberType = SimpleRelationMemberType.Node;
+                                relation_member.MemberType = RelationMemberType.Node;
                                 break;
                             case OsmSharp.Osm.Xml.v0_6.memberType.way:
-                                relation_member.MemberType = SimpleRelationMemberType.Way;
+                                relation_member.MemberType = RelationMemberType.Way;
                                 break;
                             case OsmSharp.Osm.Xml.v0_6.memberType.relation:
-                                relation_member.MemberType = SimpleRelationMemberType.Relation;
+                                relation_member.MemberType = RelationMemberType.Relation;
                                 break;
                         }
                     }

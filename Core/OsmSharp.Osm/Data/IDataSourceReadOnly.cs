@@ -63,14 +63,14 @@ namespace OsmSharp.Osm.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        SimpleNode GetNode(long id);
+        Node GetNode(long id);
 
         /// <summary>
         /// Returns the node(s) with the given id(s).
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        IList<SimpleNode> GetNodes(IList<long> ids);
+        IList<Node> GetNodes(IList<long> ids);
 
         #endregion
 
@@ -81,21 +81,21 @@ namespace OsmSharp.Osm.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        SimpleRelation GetRelation(long id);
+        Relation GetRelation(long id);
 
         /// <summary>
         /// Returns the relation(s) with the given id(s).
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        IList<SimpleRelation> GetRelations(IList<long> ids);
+        IList<Relation> GetRelations(IList<long> ids);
 
         /// <summary>
         /// Returns all the relations for the given object.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        IList<SimpleRelation> GetRelationsFor(SimpleOsmGeo obj);
+        IList<Relation> GetRelationsFor(OsmGeo obj);
 
         #endregion
 
@@ -106,21 +106,21 @@ namespace OsmSharp.Osm.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        SimpleWay GetWay(long id);
+        Way GetWay(long id);
 
         /// <summary>
         /// Returns the way(s) with given id.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        IList<SimpleWay> GetWays(IList<long> ids);
+        IList<Way> GetWays(IList<long> ids);
 
         /// <summary>
         /// Returns the way(s) for a given node.
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        IList<SimpleWay> GetWaysFor(SimpleNode node);
+        IList<Way> GetWaysFor(Node node);
 
         #endregion
 
@@ -132,7 +132,7 @@ namespace OsmSharp.Osm.Data
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        IList<SimpleOsmGeo> Get(GeoCoordinateBox box, Filter filter);
+        IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter);
 
         #endregion
 

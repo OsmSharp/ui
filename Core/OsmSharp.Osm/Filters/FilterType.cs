@@ -31,13 +31,13 @@ namespace OsmSharp.Osm.Filters
         /// <summary>
         /// Holds the type to filter on.
         /// </summary>
-        private SimpleOsmGeoType _type;
+        private OsmGeoType _type;
 
         /// <summary>
         /// Creates a new filter type.
         /// </summary>
         /// <param name="type"></param>
-        internal FilterType(SimpleOsmGeoType type)
+        internal FilterType(OsmGeoType type)
         {
             _type = type;
         }
@@ -47,7 +47,7 @@ namespace OsmSharp.Osm.Filters
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public override bool Evaluate(SimpleOsmGeo obj)
+        public override bool Evaluate(OsmGeo obj)
         {
             return obj.Type == _type;
         }

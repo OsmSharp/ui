@@ -63,7 +63,7 @@ namespace OsmSharp.Osm
         /// Converts this OsmGeo object to an OsmGeoSimple object.
         /// </summary>
         /// <returns></returns>
-        public abstract OsmSharp.Osm.Simple.SimpleOsmGeo ToSimple();
+        public abstract OsmSharp.Osm.Simple.OsmGeo ToSimple();
 
         #region Geometry - Interpreter
 

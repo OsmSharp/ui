@@ -42,7 +42,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
 
         private XmlSerializer _serRelation;
 
-        private SimpleOsmGeo _next;
+        private OsmGeo _next;
 
         private readonly string _fileName;
 
@@ -214,7 +214,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
         /// Returns the current object.
         /// </summary>
         /// <returns></returns>
-        public override SimpleOsmGeo Current()
+        public override OsmGeo Current()
         {
             return _next;
         }

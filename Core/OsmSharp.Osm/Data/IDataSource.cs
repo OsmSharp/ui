@@ -68,7 +68,7 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Adds a node.
         /// </summary>
-        void AddNode(SimpleNode node);
+        void AddNode(Node node);
 
         #endregion
 
@@ -78,7 +78,7 @@ namespace OsmSharp.Osm.Data
         /// Creates a new relation.
         /// </summary>
         /// <returns></returns>
-        void AddRelation (SimpleRelation relation);
+        void AddRelation (Relation relation);
 
         #endregion
 
@@ -88,7 +88,7 @@ namespace OsmSharp.Osm.Data
         /// Creates a new way.
         /// </summary>
         /// <returns></returns>
-        void AddWay(SimpleWay way);
+        void AddWay(Way way);
 
         #endregion
 

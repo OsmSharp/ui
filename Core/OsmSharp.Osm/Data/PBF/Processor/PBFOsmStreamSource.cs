@@ -20,9 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
-using OsmSharp.Osm.Data.PBF.Dense;
 using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Osm.Simple;
 using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm.Data.PBF.Processor
@@ -76,13 +74,13 @@ namespace OsmSharp.Osm.Data.PBF.Processor
         /// <summary>
         /// Holds the current object.
         /// </summary>
-        private SimpleOsmGeo _current;
+        private OsmSharp.Osm.Simple.OsmGeo _current;
 
         /// <summary>
         /// Returns the current geometry.
         /// </summary>
         /// <returns></returns>
-        public override SimpleOsmGeo Current()
+        public override OsmSharp.Osm.Simple.OsmGeo Current()
         {
             return _current;
         }
@@ -114,7 +112,7 @@ namespace OsmSharp.Osm.Data.PBF.Processor
         /// </summary>
         /// <param name="pbfPrimitive"></param>
         /// <returns></returns>
-        internal SimpleOsmGeo Convert(KeyValuePair<PrimitiveBlock, object> pbfPrimitive)
+        internal OsmSharp.Osm.Simple.OsmGeo Convert(KeyValuePair<PrimitiveBlock, object> pbfPrimitive)
         {
             if (pbfPrimitive.Value == null || pbfPrimitive.Key == null)
             {
@@ -122,10 +120,10 @@ namespace OsmSharp.Osm.Data.PBF.Processor
             }
 
             PrimitiveBlock block = pbfPrimitive.Key; // get the block properties this object comes from.
-            if (pbfPrimitive.Value is Node)
+            if (pbfPrimitive.Value is OsmSharp.Osm.Data.PBF.Node)
             {
-                var node = (pbfPrimitive.Value as Node);
-                var simpleNode = new SimpleNode();
+                var node = (pbfPrimitive.Value as OsmSharp.Osm.Data.PBF.Node);
+                var simpleNode = new OsmSharp.Osm.Simple.Node();
                 simpleNode.ChangeSetId = node.info.changeset;
                 simpleNode.Id = node.id;
                 simpleNode.Latitude = .000000001 * ((double)block.lat_offset 
@@ -154,11 +152,11 @@ namespace OsmSharp.Osm.Data.PBF.Processor
 
                 return simpleNode;
             }
-            else if (pbfPrimitive.Value is Way)
+            else if (pbfPrimitive.Value is OsmSharp.Osm.Data.PBF.Way)
             {
-                Way way = (pbfPrimitive.Value as Way);
+                var way = (pbfPrimitive.Value as OsmSharp.Osm.Data.PBF.Way);
 
-                SimpleWay simple_way = new SimpleWay();
+                var simple_way = new OsmSharp.Osm.Simple.Way();
                 simple_way.Id = way.id;
                 simple_way.Nodes = new List<long>(way.refs.Count);
                 long node_id = 0;
@@ -191,32 +189,32 @@ namespace OsmSharp.Osm.Data.PBF.Processor
 
                 return simple_way;
             }
-            else if (pbfPrimitive.Value is Relation)
+            else if (pbfPrimitive.Value is OsmSharp.Osm.Data.PBF.Relation)
             {
-                Relation relation = (pbfPrimitive.Value as Relation);
+                var relation = (pbfPrimitive.Value as OsmSharp.Osm.Data.PBF.Relation);
 
-                SimpleRelation simple_relation = new SimpleRelation();
+                var simple_relation = new OsmSharp.Osm.Simple.Relation();
                 simple_relation.Id = relation.id;
-                simple_relation.Members = new List<SimpleRelationMember>();
+                simple_relation.Members = new List<OsmSharp.Osm.Simple.RelationMember>();
                 long member_id = 0;
                 for (int member_idx = 0; member_idx < relation.types.Count; member_idx++)
                 {
                     member_id = member_id + relation.memids[member_idx];
                     string role = ASCIIEncoding.ASCII.GetString(
                         block.stringtable.s[relation.roles_sid[member_idx]]);
-                    SimpleRelationMember member = new SimpleRelationMember();
+                    var member = new OsmSharp.Osm.Simple.RelationMember();
                     member.MemberId = member_id;
                     member.MemberRole = role;
                     switch(relation.types[member_idx])
                     {
                         case Relation.MemberType.NODE:
-                            member.MemberType = SimpleRelationMemberType.Node;
+                            member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Node;
                             break;
                         case Relation.MemberType.WAY:
-                            member.MemberType = SimpleRelationMemberType.Way;
+                            member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Way;
                             break;
                         case Relation.MemberType.RELATION:
-                            member.MemberType = SimpleRelationMemberType.Relation;
+                            member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Relation;
                             break;
                     }
 
@@ -262,7 +260,7 @@ namespace OsmSharp.Osm.Data.PBF.Processor
         /// <summary>
         /// Holds the primitives decompressor.
         /// </summary>
-        private Decompressor _decompressor;
+        private OsmSharp.Osm.Data.PBF.Dense.Decompressor _decompressor;
 
         /// <summary>
         /// Initializes the PBF reader.
@@ -270,7 +268,7 @@ namespace OsmSharp.Osm.Data.PBF.Processor
         private void InitializePBFReader()
         {
             _reader = new PBFReader(_stream);
-            _decompressor = new Decompressor(this);
+            _decompressor = new OsmSharp.Osm.Data.PBF.Dense.Decompressor(this);
 
             this.InitializeBlockCache();
         }

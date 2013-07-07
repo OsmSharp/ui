@@ -44,6 +44,6 @@ namespace OsmSharp.Osm.Interpreter
         /// <param name="simpleOsmGeo"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        GeometryCollection Interpret(SimpleOsmGeo simpleOsmGeo, IDataSourceReadOnly data);
+        GeometryCollection Interpret(OsmGeo simpleOsmGeo, IDataSourceReadOnly data);
     }
 }

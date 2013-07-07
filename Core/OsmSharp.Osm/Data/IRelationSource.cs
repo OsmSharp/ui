@@ -34,6 +34,6 @@ namespace OsmSharp.Osm.Sources
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        SimpleRelation GetRelation(long id);
+        Relation GetRelation(long id);
     }
 }

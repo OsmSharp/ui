@@ -33,6 +33,6 @@ namespace OsmSharp.Osm.Sources
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        SimpleWay GetWay(long id);
+        Way GetWay(long id);
     }
 }

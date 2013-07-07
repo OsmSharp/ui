@@ -56,58 +56,58 @@ namespace OsmSharp.Osm.Data.Core.Memory
         {
             _id = Guid.NewGuid(); // creates a new Guid.
 
-            _nodes = new Dictionary<long, SimpleNode>();
-            _ways = new Dictionary<long, SimpleWay>();
-            _relations = new Dictionary<long, SimpleRelation>();
-            _ways_per_node = new Dictionary<long, IList<SimpleWay>>();
+            _nodes = new Dictionary<long, Node>();
+            _ways = new Dictionary<long, Way>();
+            _relations = new Dictionary<long, Relation>();
+            _ways_per_node = new Dictionary<long, IList<Way>>();
         }
 
         #region Objects Cache
 
-        private Dictionary<long, SimpleNode> _nodes;
-        private void NodeCachePut(SimpleNode node)
+        private Dictionary<long, Node> _nodes;
+        private void NodeCachePut(Node node)
         {
             _nodes.Add(node.Id.Value, node);
         }
-        private SimpleNode NodeCacheTryGet(long id)
+        private Node NodeCacheTryGet(long id)
         {
-            SimpleNode output = null;
+            Node output = null;
             _nodes.TryGetValue(id, out output);
             return output;
         }
 
-        private Dictionary<long, SimpleWay> _ways;
-        private void WayCachePut(SimpleWay way)
+        private Dictionary<long, Way> _ways;
+        private void WayCachePut(Way way)
         {
             _ways.Add(way.Id.Value, way);
         }
-        private SimpleWay WayCacheTryGet(long id)
+        private Way WayCacheTryGet(long id)
         {
-            SimpleWay output = null;
+            Way output = null;
             _ways.TryGetValue(id, out output);
             return output;
         }
 
-        private Dictionary<long, SimpleRelation> _relations;
-        private void RelationCachePut(SimpleRelation relation)
+        private Dictionary<long, Relation> _relations;
+        private void RelationCachePut(Relation relation)
         {
             _relations.Add(relation.Id.Value, relation);
         }
-        private SimpleRelation RelationCacheTryGet(long id)
+        private Relation RelationCacheTryGet(long id)
         {
-            SimpleRelation output = null;
+            Relation output = null;
             _relations.TryGetValue(id, out output);
             return output;
         }
 
-        private Dictionary<long, IList<SimpleWay>> _ways_per_node;
-        private void WaysPerNodeCachePut(long node_id, IList<SimpleWay> ways)
+        private Dictionary<long, IList<Way>> _ways_per_node;
+        private void WaysPerNodeCachePut(long node_id, IList<Way> ways)
         {
             _ways_per_node.Add(node_id, ways);
         }
-        private IList<SimpleWay> WaysPerNodeCacheTryGet(long node_id)
+        private IList<Way> WaysPerNodeCacheTryGet(long node_id)
         {
-            IList<SimpleWay> output = null;
+            IList<Way> output = null;
             _ways_per_node.TryGetValue(node_id, out output);
             return output;
         }
@@ -170,9 +170,9 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SimpleNode GetNode(long id)
+        public Node GetNode(long id)
         {
-            SimpleNode node = null;
+            Node node = null;
             _nodes.TryGetValue(id, out node);
             return node;
         }
@@ -182,9 +182,9 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<SimpleNode> GetNodes(IList<long> ids)
+        public IList<Node> GetNodes(IList<long> ids)
         {
-            List<SimpleNode> nodes = new List<SimpleNode>();
+            List<Node> nodes = new List<Node>();
             if (ids != null)
             { // get all the ids.
                 for (int idx = 0; idx < ids.Count; idx++)
@@ -199,7 +199,7 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// Adds a node.
         /// </summary>
         /// <param name="node"></param>
-        public void AddNode(SimpleNode node)
+        public void AddNode(Node node)
         {
             _nodes[node.Id.Value] = node;
         }
@@ -218,9 +218,9 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SimpleRelation GetRelation(long id)
+        public Relation GetRelation(long id)
         {
-            SimpleRelation relation = null;
+            Relation relation = null;
             _relations.TryGetValue(id, out relation);
             return relation;
         }
@@ -230,9 +230,9 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<SimpleRelation> GetRelations(IList<long> ids)
+        public IList<Relation> GetRelations(IList<long> ids)
         {
-            List<SimpleRelation> relations = new List<SimpleRelation>();
+            List<Relation> relations = new List<Relation>();
             if (ids != null)
             { // get all the ids.
                 for (int idx = 0; idx < ids.Count; idx++)
@@ -247,7 +247,7 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// Adds a relation.
         /// </summary>
         /// <param name="relation"></param>
-        public void AddRelation(SimpleRelation relation)
+        public void AddRelation(Relation relation)
         {
             _relations[relation.Id.Value] = relation;
         }
@@ -266,7 +266,7 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public IList<SimpleRelation> GetRelationsFor(SimpleOsmGeo obj)
+        public IList<Relation> GetRelationsFor(OsmGeo obj)
         {
             throw new NotImplementedException();
         }
@@ -276,9 +276,9 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SimpleWay GetWay(long id)
+        public Way GetWay(long id)
         {
-            SimpleWay way = null;
+            Way way = null;
             _ways.TryGetValue(id, out way);
             return way;
         }
@@ -288,9 +288,9 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<SimpleWay> GetWays(IList<long> ids)
+        public IList<Way> GetWays(IList<long> ids)
         {
-            List<SimpleWay> relations = new List<SimpleWay>();
+            List<Way> relations = new List<Way>();
             if (ids != null)
             { // get all the ids.
                 for (int idx = 0; idx < ids.Count; idx++)
@@ -306,9 +306,9 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public IList<SimpleWay> GetWaysFor(SimpleNode node)
+        public IList<Way> GetWaysFor(Node node)
         {
-            IList<SimpleWay> ways = null;
+            IList<Way> ways = null;
             _ways_per_node.TryGetValue(node.Id.Value, out ways);
             return ways;
         }
@@ -317,7 +317,7 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// Adds a relation.
         /// </summary>
         /// <param name="way"></param>
-        public void AddWay(SimpleWay way)
+        public void AddWay(Way way)
         {
             _ways[way.Id.Value] = way;
         }
@@ -337,10 +337,10 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IList<SimpleOsmGeo> Get(GeoCoordinateBox box, Filter filter)
+        public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
-            IList<SimpleOsmGeo> res = new List<SimpleOsmGeo>();
-            foreach (SimpleNode node in _nodes.Values)
+            IList<OsmGeo> res = new List<OsmGeo>();
+            foreach (Node node in _nodes.Values)
             {
                 if ((filter == null || filter.Evaluate(node)) && 
                     _geometryInterpreter.Interpret(node, this).IsInside(box))
@@ -348,7 +348,7 @@ namespace OsmSharp.Osm.Data.Core.Memory
                     res.Add(node);
                 }
             }
-            foreach (SimpleWay way in _ways.Values)
+            foreach (Way way in _ways.Values)
             {
                 if ((filter == null || filter.Evaluate(way)) &&
                     _geometryInterpreter.Interpret(way, this).IsInside(box))
@@ -356,7 +356,7 @@ namespace OsmSharp.Osm.Data.Core.Memory
                     res.Add(way);
                 }
             }
-            foreach (SimpleRelation relation in _relations.Values)
+            foreach (Relation relation in _relations.Values)
             {
                 if ((filter == null || filter.Evaluate(relation)) &&
                     _geometryInterpreter.Interpret(relation, this).IsInside(box))

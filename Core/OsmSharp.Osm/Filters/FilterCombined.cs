@@ -61,7 +61,7 @@ namespace OsmSharp.Osm.Filters
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public override bool Evaluate(SimpleOsmGeo obj)
+        public override bool Evaluate(OsmGeo obj)
         {
             switch (_op)
             {

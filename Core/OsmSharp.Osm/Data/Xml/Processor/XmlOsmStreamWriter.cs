@@ -96,7 +96,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
         /// Adds a node to the xml output stream.
         /// </summary>
         /// <param name="simpleNode"></param>
-        public override void AddNode(SimpleNode simpleNode)
+        public override void AddNode(Node simpleNode)
         {
             var nd = new OsmSharp.Osm.Xml.v0_6.node();
 
@@ -179,7 +179,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
         /// Adds a way to this target.
         /// </summary>
         /// <param name="simpleWay"></param>
-        public override void AddWay(SimpleWay simpleWay)
+        public override void AddWay(Way simpleWay)
         {
             var wa = new OsmSharp.Osm.Xml.v0_6.way();
 
@@ -258,7 +258,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
         /// Adds a relation to this target.
         /// </summary>
         /// <param name="simpleRelation"></param>
-        public override void AddRelation(SimpleRelation simpleRelation)
+        public override void AddRelation(Relation simpleRelation)
         {
             var re = new OsmSharp.Osm.Xml.v0_6.relation();
 
@@ -314,7 +314,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
                 for (int idx = 0; idx < simpleRelation.Members.Count; idx++)
                 {
                     var mem = new OsmSharp.Osm.Xml.v0_6.member();
-                    SimpleRelationMember memberToAdd = simpleRelation.Members[idx];
+                    RelationMember memberToAdd = simpleRelation.Members[idx];
 
                     // set memberid
                     mem.refSpecified = false;
@@ -330,13 +330,13 @@ namespace OsmSharp.Osm.Data.Xml.Processor
                     {
                         switch (memberToAdd.MemberType.Value)
                         {
-                            case SimpleRelationMemberType.Node:
+                            case RelationMemberType.Node:
                                 mem.type = OsmSharp.Osm.Xml.v0_6.memberType.node;
                                 break;
-                            case SimpleRelationMemberType.Way:
+                            case RelationMemberType.Way:
                                 mem.type = OsmSharp.Osm.Xml.v0_6.memberType.way;
                                 break;
-                            case SimpleRelationMemberType.Relation:
+                            case RelationMemberType.Relation:
                                 mem.type = OsmSharp.Osm.Xml.v0_6.memberType.relation;
                                 break;
                         }

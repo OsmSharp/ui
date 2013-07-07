@@ -71,7 +71,7 @@ namespace OsmSharp.UnitTests.API
             long changesetId = apiInstance.ChangeSetOpen("A test changeset!");
 
             // get the changeset.
-            SimpleChangeSetInfo simpleChangesetInfo = 
+            ChangeSetInfo simpleChangesetInfo = 
                 apiInstance.ChangeSetGet(changesetId);
 
             Assert.IsTrue(simpleChangesetInfo.Open);
@@ -101,7 +101,7 @@ namespace OsmSharp.UnitTests.API
             long changesetId = apiInstance.ChangeSetOpen("Simple Node Creation Test");
 
             // initialize the node.
-            var node = new SimpleNode();
+            var node = new Node();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
             node.Tags = new SimpleTagsCollection();
@@ -121,7 +121,7 @@ namespace OsmSharp.UnitTests.API
             long nodeId = node.Id.Value;
 
             // get the node from the api.
-            SimpleNode nodeAPI = apiInstance.NodeGet(node.Id.Value);
+            Node nodeAPI = apiInstance.NodeGet(node.Id.Value);
             Assert.AreEqual(node.Latitude, nodeAPI.Latitude);
             Assert.AreEqual(node.Longitude, nodeAPI.Longitude);
             Assert.AreEqual(node.Tags.Count, nodeAPI.Tags.Count);
@@ -144,7 +144,7 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetOpen("Simple Node Creation Test");
 
             // initialize the node.
-            var node = new SimpleNode();
+            var node = new Node();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
             node.Tags = new SimpleTagsCollection();
@@ -167,7 +167,7 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetOpen("Simple Node Update Test");
 
             // get the node.
-            SimpleNode apiNode = apiInstance.NodeGet(node.Id.Value);
+            Node apiNode = apiInstance.NodeGet(node.Id.Value);
             apiNode.Tags.Add("another_tag", "test adding a tag!");
             apiInstance.NodeUpdate(apiNode);
 
@@ -196,7 +196,7 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetOpen("Simple Node Creation Test");
 
             // initialize the node.
-            var node = new SimpleNode();
+            var node = new Node();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
             node.Tags = new SimpleTagsCollection();
@@ -228,7 +228,7 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetClose();
 
             // get the node.
-            SimpleNode apiNode = apiInstance.NodeGet(node.Id.Value);
+            Node apiNode = apiInstance.NodeGet(node.Id.Value);
             Assert.IsNull(apiNode);
         }
 
@@ -246,14 +246,14 @@ namespace OsmSharp.UnitTests.API
             long changesetId = apiInstance.ChangeSetOpen("Simple Way Creation Test");
 
             // initialize the way.
-            var way = new SimpleWay();
+            var way = new Way();
             way.Tags = new SimpleTagsCollection();
             way.Tags.Add("type", "testway");
             way.Nodes = new List<long>();
             way.Visible = true;
 
             // initialize the nodes.
-            var node = new SimpleNode();
+            var node = new Node();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
             node.Tags = new SimpleTagsCollection();
@@ -261,7 +261,7 @@ namespace OsmSharp.UnitTests.API
             node.Visible = true;
             node = apiInstance.NodeCreate(node);
             way.Nodes.Add(node.Id.Value);
-            node = new SimpleNode();
+            node = new Node();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
             node.Tags = new SimpleTagsCollection();
@@ -283,7 +283,7 @@ namespace OsmSharp.UnitTests.API
             long wayId = way.Id.Value;
 
             // get the way from the api.
-            SimpleWay wayAPI = apiInstance.WayGet(way.Id.Value);
+            Way wayAPI = apiInstance.WayGet(way.Id.Value);
             Assert.AreEqual(wayId, wayAPI.Id.Value);
             Assert.AreEqual(way.Tags.Count, wayAPI.Tags.Count);
             Assert.AreEqual(way.Visible, wayAPI.Visible);
@@ -307,14 +307,14 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetOpen("Simple Way Creation Test");
 
             // initialize the way.
-            var way = new SimpleWay();
+            var way = new Way();
             way.Tags = new SimpleTagsCollection();
             way.Tags.Add("type", "testway");
             way.Nodes = new List<long>();
             way.Visible = true;
 
             // initialize the nodes.
-            var node = new SimpleNode();
+            var node = new Node();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
             node.Tags = new SimpleTagsCollection();
@@ -322,7 +322,7 @@ namespace OsmSharp.UnitTests.API
             node.Visible = true;
             node = apiInstance.NodeCreate(node);
             way.Nodes.Add(node.Id.Value);
-            node = new SimpleNode();
+            node = new Node();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
             node.Tags = new SimpleTagsCollection();
@@ -347,7 +347,7 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetOpen("Simple Way Update Test");
 
             // get the way.
-            SimpleWay apiWay = apiInstance.WayGet(way.Id.Value);
+            Way apiWay = apiInstance.WayGet(way.Id.Value);
             apiWay.Tags.Add("another_tag", "test adding a tag!");
             apiInstance.WayUpdate(apiWay);
 
@@ -376,14 +376,14 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetOpen("Simple Way Creation Test");
 
             // initialize the way.
-            var way = new SimpleWay();
+            var way = new Way();
             way.Tags = new SimpleTagsCollection();
             way.Tags.Add("type", "testway");
             way.Nodes = new List<long>();
             way.Visible = true;
 
             // initialize the nodes.
-            var node = new SimpleNode();
+            var node = new Node();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
             node.Tags = new SimpleTagsCollection();
@@ -391,7 +391,7 @@ namespace OsmSharp.UnitTests.API
             node.Visible = true;
             node = apiInstance.NodeCreate(node);
             way.Nodes.Add(node.Id.Value);
-            node = new SimpleNode();
+            node = new Node();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
             node.Tags = new SimpleTagsCollection();
@@ -425,7 +425,7 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetClose();
 
             // get the way.
-            SimpleWay apiWay = apiInstance.WayGet(way.Id.Value);
+            Way apiWay = apiInstance.WayGet(way.Id.Value);
             Assert.IsNull(apiWay);
         }
 
@@ -444,38 +444,38 @@ namespace OsmSharp.UnitTests.API
             long changesetId = apiInstance.ChangeSetOpen("Simple Relation Creation Test");
 
             // initialize the relation.
-            var relation = new SimpleRelation();
+            var relation = new Relation();
             relation.Tags = new SimpleTagsCollection();
             relation.Tags.Add("type", "testrelation");
-            relation.Members = new List<SimpleRelationMember>();
+            relation.Members = new List<RelationMember>();
             relation.Visible = true;
 
             // initialize the nodes.
-            var node = new SimpleNode();
+            var node = new Node();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
             node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode1");
             node.Visible = true;
             node = apiInstance.NodeCreate(node);
-            relation.Members.Add(new SimpleRelationMember()
+            relation.Members.Add(new RelationMember()
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = SimpleRelationMemberType.Node
+                MemberType = RelationMemberType.Node
             });
-            node = new SimpleNode();
+            node = new Node();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
             node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode2");
             node.Visible = true;
             node = apiInstance.NodeCreate(node);
-            relation.Members.Add(new SimpleRelationMember()
+            relation.Members.Add(new RelationMember()
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = SimpleRelationMemberType.Node
+                MemberType = RelationMemberType.Node
             });
 
             // save the relation.
@@ -491,7 +491,7 @@ namespace OsmSharp.UnitTests.API
             long relationId = relation.Id.Value;
 
             // get the relation from the api.
-            SimpleRelation relationAPI = apiInstance.RelationGet(relation.Id.Value);
+            Relation relationAPI = apiInstance.RelationGet(relation.Id.Value);
             Assert.AreEqual(relationId, relationAPI.Id.Value);
             Assert.AreEqual(relation.Tags.Count, relationAPI.Tags.Count);
             Assert.AreEqual(relation.Visible, relationAPI.Visible);
@@ -519,38 +519,38 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetOpen("Simple Relation Creation Test");
 
             // initialize the relation.
-            var relation = new SimpleRelation();
+            var relation = new Relation();
             relation.Tags = new SimpleTagsCollection();
             relation.Tags.Add("type", "testrelation");
-            relation.Members = new List<SimpleRelationMember>();
+            relation.Members = new List<RelationMember>();
             relation.Visible = true;
 
             // initialize the nodes.
-            var node = new SimpleNode();
+            var node = new Node();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
             node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode1");
             node.Visible = true;
             node = apiInstance.NodeCreate(node);
-            relation.Members.Add(new SimpleRelationMember()
+            relation.Members.Add(new RelationMember()
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = SimpleRelationMemberType.Node
+                MemberType = RelationMemberType.Node
             });
-            node = new SimpleNode();
+            node = new Node();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
             node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode2");
             node.Visible = true;
             node = apiInstance.NodeCreate(node);
-            relation.Members.Add(new SimpleRelationMember()
+            relation.Members.Add(new RelationMember()
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = SimpleRelationMemberType.Node
+                MemberType = RelationMemberType.Node
             });
 
             // save the relation.
@@ -569,7 +569,7 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetOpen("Simple Relation Update Test");
 
             // get the relation.
-            SimpleRelation apiRelation = apiInstance.RelationGet(relation.Id.Value);
+            Relation apiRelation = apiInstance.RelationGet(relation.Id.Value);
             apiRelation.Tags.Add("another_tag", "test adding a tag!");
             apiInstance.RelationUpdate(apiRelation);
 
@@ -598,38 +598,38 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetOpen("Simple Relation Creation Test");
 
             // initialize the relation.
-            var relation = new SimpleRelation();
+            var relation = new Relation();
             relation.Tags = new SimpleTagsCollection();
             relation.Tags.Add("type", "testrelation");
-            relation.Members = new List<SimpleRelationMember>();
+            relation.Members = new List<RelationMember>();
             relation.Visible = true;
 
             // initialize the nodes.
-            var node = new SimpleNode();
+            var node = new Node();
             node.Latitude = -0.494497;
             node.Longitude = -24.119325;
             node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode1");
             node.Visible = true;
             node = apiInstance.NodeCreate(node);
-            relation.Members.Add(new SimpleRelationMember()
+            relation.Members.Add(new RelationMember()
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = SimpleRelationMemberType.Node
+                MemberType = RelationMemberType.Node
             });
-            node = new SimpleNode();
+            node = new Node();
             node.Latitude = -0.494497 + 0.0001f;
             node.Longitude = -24.119325 + 0.0001f;
             node.Tags = new SimpleTagsCollection();
             node.Tags.Add("type", "testnode2");
             node.Visible = true;
             node = apiInstance.NodeCreate(node);
-            relation.Members.Add(new SimpleRelationMember()
+            relation.Members.Add(new RelationMember()
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = SimpleRelationMemberType.Node
+                MemberType = RelationMemberType.Node
             });
 
             // save the relation.
@@ -657,7 +657,7 @@ namespace OsmSharp.UnitTests.API
             apiInstance.ChangeSetClose();
 
             // get the relation.
-            SimpleRelation apiRelation = apiInstance.RelationGet(relation.Id.Value);
+            Relation apiRelation = apiInstance.RelationGet(relation.Id.Value);
             Assert.IsNull(apiRelation);
         }
 
@@ -675,37 +675,37 @@ namespace OsmSharp.UnitTests.API
             var box = new GeoCoordinateBox(new GeoCoordinate(-0.494497, -24.119325),
                 new GeoCoordinate(-0.494497, -24.119325));
             box = box.Resize(0.001f); // create a box around the usual test coordinates.
-            List<SimpleOsmGeo> boxObjects = apiInstance.BoundingBoxGet(box);
+            List<OsmGeo> boxObjects = apiInstance.BoundingBoxGet(box);
 
             // delete all objects.
             long changesetId = apiInstance.ChangeSetOpen("delete test objects again");
 
-            foreach (SimpleOsmGeo geoObject in boxObjects)
+            foreach (OsmGeo geoObject in boxObjects)
             {
                 switch(geoObject.Type)
                 {
-                    case SimpleOsmGeoType.Relation:
-                        apiInstance.RelationDelete(geoObject as SimpleRelation);
+                    case OsmGeoType.Relation:
+                        apiInstance.RelationDelete(geoObject as Relation);
                         break;
                 }
             }
 
-            foreach (SimpleOsmGeo geoObject in boxObjects)
+            foreach (OsmGeo geoObject in boxObjects)
             {
                 switch (geoObject.Type)
                 {
-                    case SimpleOsmGeoType.Way:
-                        apiInstance.WayDelete(geoObject as SimpleWay);
+                    case OsmGeoType.Way:
+                        apiInstance.WayDelete(geoObject as Way);
                         break;
                 }
             }
 
-            foreach (SimpleOsmGeo geoObject in boxObjects)
+            foreach (OsmGeo geoObject in boxObjects)
             {
                 switch (geoObject.Type)
                 {
-                    case SimpleOsmGeoType.Node:
-                        apiInstance.NodeDelete(geoObject as SimpleNode);
+                    case OsmGeoType.Node:
+                        apiInstance.NodeDelete(geoObject as Node);
                         break;
                 }
             }

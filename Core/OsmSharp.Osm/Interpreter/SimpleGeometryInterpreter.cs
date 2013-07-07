@@ -77,7 +77,7 @@ namespace OsmSharp.Osm.Interpreter
         /// <param name="simpleOsmGeo"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        public GeometryCollection Interpret(SimpleOsmGeo simpleOsmGeo, IDataSourceReadOnly data)
+        public GeometryCollection Interpret(OsmGeo simpleOsmGeo, IDataSourceReadOnly data)
         {
             // DISCLAIMER: this is a very very very simple and inaccurate way of interpreting OSM-objects.
             //             Do not use this for any pupose other than testing or experimentation.

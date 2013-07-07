@@ -140,9 +140,9 @@ namespace OsmSharp.Osm
         /// Converts this relation into it's simple counterpart.
         /// </summary>
         /// <returns></returns>
-        public override SimpleOsmGeo ToSimple()
+        public override OsmGeo ToSimple()
         {
-            var way = new SimpleWay();
+            var way = new Way();
             way.Id = this.Id;
             way.ChangeSetId = this.ChangeSetId;
             way.Tags = this.Tags;
@@ -188,7 +188,7 @@ namespace OsmSharp.Osm
         /// <param name="simpleWay"></param>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        public static CompleteWay CreateFrom(SimpleWay simpleWay, IDictionary<long, CompleteNode> nodes)
+        public static CompleteWay CreateFrom(Way simpleWay, IDictionary<long, CompleteNode> nodes)
         {
             if (simpleWay == null) throw new ArgumentNullException("simpleWay");
             if (nodes == null) throw new ArgumentNullException("nodes");
@@ -229,7 +229,7 @@ namespace OsmSharp.Osm
         /// <param name="simpleWay"></param>
         /// <param name="cache"></param>
         /// <returns></returns>
-        public static CompleteWay CreateFrom(SimpleWay simpleWay, IDataSourceReadOnly cache)
+        public static CompleteWay CreateFrom(Way simpleWay, IDataSourceReadOnly cache)
         {
             if (simpleWay == null) throw new ArgumentNullException("simpleWay");
             if (cache == null) throw new ArgumentNullException("cache");
@@ -248,7 +248,7 @@ namespace OsmSharp.Osm
             for (int idx = 0; idx < simpleWay.Nodes.Count; idx++)
             {
                 long nodeId = simpleWay.Nodes[idx];
-                SimpleNode node = cache.GetNode(nodeId);
+                Node node = cache.GetNode(nodeId);
                 if (node != null)
                 {
                     way.Nodes.Add(CompleteNode.CreateFrom(node));
@@ -285,7 +285,7 @@ namespace OsmSharp.Osm
         /// <param name="simpleWay"></param>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        public static CompleteWay CreateFrom(ObjectTable<string> table, SimpleWay simpleWay,
+        public static CompleteWay CreateFrom(ObjectTable<string> table, Way simpleWay,
                                         IDictionary<long, CompleteNode> nodes)
         {
             if (table == null) throw new ArgumentNullException("table");

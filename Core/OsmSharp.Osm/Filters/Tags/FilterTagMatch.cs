@@ -54,7 +54,7 @@ namespace OsmSharp.Osm.Filters.Tags
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public override bool Evaluate(SimpleOsmGeo obj)
+        public override bool Evaluate(OsmGeo obj)
         {
             string value;
             if (obj.Tags != null &&

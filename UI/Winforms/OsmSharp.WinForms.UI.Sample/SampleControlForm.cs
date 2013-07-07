@@ -50,16 +50,16 @@ namespace OsmSharp.WinForms.UI.Sample
             Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 "OsmSharp.WinForms.UI.Sample.test.osm");
             var xmlDataProcessorSource = new XmlOsmStreamReader(stream);
-            ICollection<SimpleOsmGeo> osmList = xmlDataProcessorSource.PullToCollection();
+            ICollection<OsmGeo> osmList = xmlDataProcessorSource.PullToCollection();
 
             // build a scene using spherical mercator.
             IProjection sphericalMercator = new WebMercator();
             var nodes = new Dictionary<long, GeoCoordinate>();
-            foreach (SimpleOsmGeo simpleOsmGeo in osmList)
+            foreach (OsmGeo simpleOsmGeo in osmList)
             {
-                if (simpleOsmGeo is SimpleNode)
+                if (simpleOsmGeo is Node)
                 {
-                    var simplenode = (simpleOsmGeo as SimpleNode);
+                    var simplenode = (simpleOsmGeo as Node);
                     double[] point = sphericalMercator.ToPixel(
                         simplenode.Latitude.Value, simplenode.Longitude.Value);
                     nodes.Add(simplenode.Id.Value, 
@@ -68,9 +68,9 @@ namespace OsmSharp.WinForms.UI.Sample
                                      Color.Yellow.ToArgb(),
                                      2);
                 }
-                else if (simpleOsmGeo is SimpleWay)
+                else if (simpleOsmGeo is Way)
                 {
-                    var way = (simpleOsmGeo as SimpleWay);
+                    var way = (simpleOsmGeo as Way);
                     var x = new List<double>();
                     var y = new List<double>();
                     if (way.Nodes != null)

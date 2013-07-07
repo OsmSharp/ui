@@ -77,18 +77,18 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="xml_obj"></param>
         /// <returns></returns>
-        public static SimpleRelation ConvertFrom(this relation xml_obj)
+        public static Relation ConvertFrom(this relation xml_obj)
         {
             // create a new node and immidiately set the id.
-            SimpleRelation new_obj = new SimpleRelation();
+            Relation new_obj = new Relation();
             new_obj.Id = xml_obj.id;
 
             // set the members
-            new_obj.Members = new List<SimpleRelationMember>(xml_obj.member.Length);
+            new_obj.Members = new List<RelationMember>(xml_obj.member.Length);
             for (int idx = 0; idx < xml_obj.member.Length; idx++)
             {
                 member member = xml_obj.member[idx];
-                SimpleRelationMember simpleMember = new SimpleRelationMember();
+                RelationMember simpleMember = new RelationMember();
                 simpleMember.MemberId = member.@ref;
                 simpleMember.MemberRole = member.role;
                 if (member.refSpecified && member.typeSpecified)
@@ -96,13 +96,13 @@ namespace OsmSharp.Osm.Xml.v0_6
                     switch (member.type)
                     {
                         case memberType.node:
-                            simpleMember.MemberType = SimpleRelationMemberType.Node;
+                            simpleMember.MemberType = RelationMemberType.Node;
                             break;
                         case memberType.relation:
-                            simpleMember.MemberType = SimpleRelationMemberType.Relation;
+                            simpleMember.MemberType = RelationMemberType.Relation;
                             break;
                         case memberType.way:
-                            simpleMember.MemberType = SimpleRelationMemberType.Way;
+                            simpleMember.MemberType = RelationMemberType.Way;
                             break;
                     }
                 }
@@ -151,10 +151,10 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="xml_obj"></param>
         /// <returns></returns>
-        public static SimpleWay ConvertFrom(this way xml_obj)
+        public static Way ConvertFrom(this way xml_obj)
         {
             // create a new node and immidiately set the id.
-            SimpleWay new_obj = new SimpleWay();
+            Way new_obj = new Way();
             new_obj.Id = xml_obj.id;
 
             // set the nodes.
@@ -210,10 +210,10 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="xml_obj"></param>
         /// <returns></returns>
-        public static SimpleNode ConvertFrom(this node xml_obj)
+        public static Node ConvertFrom(this node xml_obj)
         {
             // create a new node an immidiately set the id.
-            SimpleNode new_obj = new SimpleNode();
+            Node new_obj = new Node();
             new_obj.Id = xml_obj.id;
 
             // set the long- and latitude
@@ -546,7 +546,7 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="dom_obj"></param>
         /// <returns></returns>
-        public static node ConvertTo(this OsmSharp.Osm.Simple.SimpleNode dom_obj)
+        public static node ConvertTo(this OsmSharp.Osm.Simple.Node dom_obj)
         {
             node xml_obj = new node();
 
@@ -618,7 +618,7 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="dom_obj"></param>
         /// <returns></returns>
-        public static way ConvertTo(this OsmSharp.Osm.Simple.SimpleWay dom_obj)
+        public static way ConvertTo(this OsmSharp.Osm.Simple.Way dom_obj)
         {
             way xml_obj = new way();
 
@@ -705,7 +705,7 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="dom_obj"></param>
         /// <returns></returns>
-        public static relation ConvertTo(this OsmSharp.Osm.Simple.SimpleRelation dom_obj)
+        public static relation ConvertTo(this OsmSharp.Osm.Simple.Relation dom_obj)
         {
             relation xml_obj = new relation();
 
@@ -778,22 +778,22 @@ namespace OsmSharp.Osm.Xml.v0_6
             xml_obj.member = new member[dom_obj.Members.Count];
             for (int idx = 0; idx < dom_obj.Members.Count; idx++)
             {
-                Simple.SimpleRelationMember dom_member = dom_obj.Members[idx];
+                Simple.RelationMember dom_member = dom_obj.Members[idx];
                 member m = new member();
 
                 if (dom_member.MemberType.HasValue)
                 {
                     switch (dom_member.MemberType.Value)
                     {
-                        case Simple.SimpleRelationMemberType.Node:
+                        case Simple.RelationMemberType.Node:
                             m.type = memberType.node;
                             m.typeSpecified = true;
                             break;
-                        case Simple.SimpleRelationMemberType.Relation:
+                        case Simple.RelationMemberType.Relation:
                             m.type = memberType.relation;
                             m.typeSpecified = true;
                             break;
-                        case Simple.SimpleRelationMemberType.Way:
+                        case Simple.RelationMemberType.Way:
                             m.type = memberType.way;
                             m.typeSpecified = true;
                             break;

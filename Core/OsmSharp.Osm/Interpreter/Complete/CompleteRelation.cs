@@ -103,9 +103,9 @@ namespace OsmSharp.Osm
         /// Converts this relation into it's simple counterpart.
         /// </summary>
         /// <returns></returns>
-        public override SimpleOsmGeo ToSimple()
+        public override OsmGeo ToSimple()
         {
-            var relation = new SimpleRelation();
+            var relation = new Relation();
             relation.Id = this.Id;
             relation.ChangeSetId = this.ChangeSetId;
             relation.Tags = this.Tags;
@@ -115,22 +115,22 @@ namespace OsmSharp.Osm
             relation.Version = (ulong?)this.Version;
             relation.Visible = this.Visible;
 
-            relation.Members = new List<SimpleRelationMember>();
+            relation.Members = new List<RelationMember>();
             foreach (CompleteRelationMember member in this.Members)
             {
-                var simple_member = new SimpleRelationMember();
+                var simple_member = new RelationMember();
                 simple_member.MemberId = member.Member.Id;
                 simple_member.MemberRole = member.Role;
                 switch (member.Member.Type)
                 {
                     case CompleteOsmType.Node:
-                        simple_member.MemberType = SimpleRelationMemberType.Node;
+                        simple_member.MemberType = RelationMemberType.Node;
                         break;
                     case CompleteOsmType.Relation:
-                        simple_member.MemberType = SimpleRelationMemberType.Relation;
+                        simple_member.MemberType = RelationMemberType.Relation;
                         break;
                     case CompleteOsmType.Way:
-                        simple_member.MemberType = SimpleRelationMemberType.Way;
+                        simple_member.MemberType = RelationMemberType.Way;
                         break;
                 }
                 relation.Members.Add(simple_member);
@@ -188,7 +188,7 @@ namespace OsmSharp.Osm
         /// <param name="ways"></param>
         /// <param name="relations"></param>
         /// <returns></returns>
-        public static CompleteRelation CreateFrom(SimpleRelation simpleRelation,
+        public static CompleteRelation CreateFrom(Relation simpleRelation,
             IDictionary<long, CompleteNode> nodes,
             IDictionary<long, CompleteWay> ways,
             IDictionary<long, CompleteRelation> relations)
@@ -215,7 +215,7 @@ namespace OsmSharp.Osm
                 member.Role = role;
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
-                    case SimpleRelationMemberType.Node:
+                    case RelationMemberType.Node:
                         CompleteNode node = null;
                         if (nodes.TryGetValue(memberId, out node))
                         {
@@ -226,7 +226,7 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case SimpleRelationMemberType.Way:
+                    case RelationMemberType.Way:
                         CompleteWay way = null;
                         if (ways.TryGetValue(memberId, out way))
                         {
@@ -237,7 +237,7 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case SimpleRelationMemberType.Relation:
+                    case RelationMemberType.Relation:
                         CompleteRelation relationMember = null;
                         if (relations.TryGetValue(memberId, out relationMember))
                         {
@@ -266,7 +266,7 @@ namespace OsmSharp.Osm
         /// <param name="simpleRelation"></param>
         /// <param name="cache"></param>
         /// <returns></returns>
-        public static CompleteRelation CreateFrom(SimpleRelation simpleRelation, IDataSourceReadOnly cache)
+        public static CompleteRelation CreateFrom(Relation simpleRelation, IDataSourceReadOnly cache)
         {
             if (simpleRelation == null) throw new ArgumentNullException("simpleRelation");
             if (cache == null) throw new ArgumentNullException("cache");
@@ -288,8 +288,8 @@ namespace OsmSharp.Osm
                 member.Role = role;
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
-                    case SimpleRelationMemberType.Node:
-                        SimpleNode simpleNode = cache.GetNode(memberId);
+                    case RelationMemberType.Node:
+                        Node simpleNode = cache.GetNode(memberId);
                         if (simpleNode != null)
                         {
                             member.Member = CompleteNode.CreateFrom(simpleNode);
@@ -299,8 +299,8 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case SimpleRelationMemberType.Way:
-                        SimpleWay simpleWay = cache.GetWay(memberId);
+                    case RelationMemberType.Way:
+                        Way simpleWay = cache.GetWay(memberId);
                         if (simpleWay != null)
                         {
                             member.Member = CompleteWay.CreateFrom(simpleWay, cache);
@@ -310,8 +310,8 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case SimpleRelationMemberType.Relation:
-                        SimpleRelation simpleRelationMember = cache.GetRelation(memberId);
+                    case RelationMemberType.Relation:
+                        Relation simpleRelationMember = cache.GetRelation(memberId);
                         if (simpleRelation != null)
                         {
                             member.Member = CompleteRelation.CreateFrom(simpleRelationMember, cache);
@@ -353,7 +353,7 @@ namespace OsmSharp.Osm
         /// <param name="ways"></param>
         /// <param name="relations"></param>
         /// <returns></returns>
-        public static CompleteRelation CreateFrom(ObjectTable<string> table, SimpleRelation simpleRelation,
+        public static CompleteRelation CreateFrom(ObjectTable<string> table, Relation simpleRelation,
             IDictionary<long, CompleteNode> nodes,
             IDictionary<long, CompleteWay> ways,
             IDictionary<long, CompleteRelation> relations)
@@ -380,7 +380,7 @@ namespace OsmSharp.Osm
                 member.Role = role;
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
-                    case SimpleRelationMemberType.Node:
+                    case RelationMemberType.Node:
                         CompleteNode node = null;
                         if (nodes.TryGetValue(memberId, out node))
                         {
@@ -391,7 +391,7 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case SimpleRelationMemberType.Way:
+                    case RelationMemberType.Way:
                         CompleteWay way = null;
                         if (ways.TryGetValue(memberId, out way))
                         {
@@ -402,7 +402,7 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case SimpleRelationMemberType.Relation:
+                    case RelationMemberType.Relation:
                         CompleteRelation relationMember = null;
                         if (relations.TryGetValue(memberId, out relationMember))
                         {

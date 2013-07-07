@@ -71,9 +71,9 @@ namespace OsmSharp.Osm
         /// Converts this node to it's simple counterpart.
         /// </summary>
         /// <returns></returns>
-        public override SimpleOsmGeo ToSimple()
+        public override OsmGeo ToSimple()
         {
-            SimpleNode simple_node = new SimpleNode();
+            Node simple_node = new Node();
             simple_node.Id = this.Id;
             simple_node.ChangeSetId = this.ChangeSetId;
             simple_node.Latitude = this.Coordinate.Latitude;
@@ -182,7 +182,7 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="simpleNode"></param>
         /// <returns></returns>
-        public static CompleteNode CreateFrom(SimpleNode simpleNode)
+        public static CompleteNode CreateFrom(Node simpleNode)
         {
             if (simpleNode == null) throw new ArgumentNullException("simpleNode");
             if (simpleNode.Id == null) throw new Exception("simpleNode.id is null");
@@ -215,7 +215,7 @@ namespace OsmSharp.Osm
         /// <param name="table"></param>
         /// <param name="simpleNode"></param>
         /// <returns></returns>
-        public static CompleteNode CreateFrom(ObjectTable<string> table, SimpleNode simpleNode)
+        public static CompleteNode CreateFrom(ObjectTable<string> table, Node simpleNode)
         {
             if (table == null) throw new ArgumentNullException("table");
             if (simpleNode == null) throw new ArgumentNullException("simpleNode");

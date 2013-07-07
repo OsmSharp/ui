@@ -34,6 +34,6 @@ namespace OsmSharp.Osm.Sources
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        SimpleNode GetNode(long id);
+        Node GetNode(long id);
     }
 }

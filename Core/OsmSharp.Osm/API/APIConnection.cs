@@ -273,7 +273,7 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public List<SimpleOsmGeo> BoundingBoxGet(GeoCoordinateBox box)
+        public List<OsmGeo> BoundingBoxGet(GeoCoordinateBox box)
         {
             string response = this.DoApiCall(false, string.Format(
                 "/api/0.6/map?bbox={0},{1},{2},{3}", 
@@ -287,7 +287,7 @@ namespace OsmSharp.Osm.API
                 XmlReaderSource xml_source = new XmlReaderSource(XmlReader.Create(new StringReader(response)));
                 OsmDocument osm = new OsmDocument(xml_source);
 
-                List<SimpleOsmGeo> box_objects = new List<SimpleOsmGeo>();
+                List<OsmGeo> box_objects = new List<OsmGeo>();
                 OsmSharp.Osm.Xml.v0_6.osm xml_osm = (osm.Osm as OsmSharp.Osm.Xml.v0_6.osm);
                 if (xml_osm.node != null)
                 {
@@ -345,7 +345,7 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SimpleChangeSetInfo ChangeSetGet(long id)
+        public ChangeSetInfo ChangeSetGet(long id)
         {
             string response = this.DoApiCall(false, string.Format(
                 "/api/0.6/changeset/{0}", id), Method.GET, null);
@@ -365,7 +365,7 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SimpleChangeSet ChangesGet(long id)
+        public ChangeSet ChangesGet(long id)
         {
             string response = this.DoApiCall(false, string.Format(
                 "/api/0.6/changeset/{0}", id), Method.GET, null);
@@ -448,7 +448,7 @@ namespace OsmSharp.Osm.API
         /// Creates a new node by adding it's creation to the current changeset.
         /// </summary>
         /// <param name="node"></param>
-        public SimpleNode NodeCreate(SimpleNode node)
+        public Node NodeCreate(Node node)
         {
             if (_current_changeset == null)
             {
@@ -492,7 +492,7 @@ namespace OsmSharp.Osm.API
         /// Modifies a the given node by adding it's modification to the current changeset.
         /// </summary>
         /// <param name="node"></param>
-        public void NodeUpdate(SimpleNode node)
+        public void NodeUpdate(Node node)
         {
             if (_current_changeset == null)
             {
@@ -531,7 +531,7 @@ namespace OsmSharp.Osm.API
         /// Deletes the given node by adding it's deletion to the current changeset.
         /// </summary>
         /// <param name="node"></param>
-        public void NodeDelete(SimpleNode node)
+        public void NodeDelete(Node node)
         {
             if (_current_changeset == null)
             {
@@ -571,7 +571,7 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SimpleNode NodeGet(long id)
+        public Node NodeGet(long id)
         {
             string response = this.DoApiCall(false, string.Format(
                 "/api/0.6/node/{0}", id), Method.GET, null);
@@ -591,9 +591,9 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="xml_changeset"></param>
         /// <returns></returns>
-        private SimpleChangeSetInfo Convertv6XmlChangeSet(OsmSharp.Osm.Xml.v0_6.changeset xml_changeset)
+        private ChangeSetInfo Convertv6XmlChangeSet(OsmSharp.Osm.Xml.v0_6.changeset xml_changeset)
         {
-            SimpleChangeSetInfo simple_changeset = new SimpleChangeSetInfo();
+            ChangeSetInfo simple_changeset = new ChangeSetInfo();
             if (xml_changeset.idSpecified)
             {
                 simple_changeset.Id = xml_changeset.id;
@@ -647,9 +647,9 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="osm_change"></param>
         /// <returns></returns>
-        private SimpleChangeSet Convertv6XmlChanges(OsmSharp.Osm.Xml.v0_6.osmChange osm_change)
+        private ChangeSet Convertv6XmlChanges(OsmSharp.Osm.Xml.v0_6.osmChange osm_change)
         {
-            List<SimpleChange> changes = new List<SimpleChange>();
+            List<Change> changes = new List<Change>();
 
             if (osm_change.create != null)
             {
@@ -657,7 +657,7 @@ namespace OsmSharp.Osm.API
                 {
                     OsmSharp.Osm.Xml.v0_6.create create = osm_change.create[idx];
 
-                    List<SimpleOsmGeo> changed_objects = new List<SimpleOsmGeo>();
+                    List<OsmGeo> changed_objects = new List<OsmGeo>();
 
                     if (create.node != null)
                     { // change represents a change in a node.
@@ -683,16 +683,16 @@ namespace OsmSharp.Osm.API
 
                     if (changed_objects.Count > 0)
                     { // there are actually changed objects.
-                        changes.Add(new SimpleChange()
+                        changes.Add(new OsmSharp.Osm.Simple.Change()
                         {
                             OsmGeo = changed_objects,
-                            Type = SimpleChangeType.Create
+                            Type = OsmSharp.Osm.Simple.ChangeType.Create
                         });
                     }
                 }
             }
 
-            SimpleChangeSet simple_change_set = new SimpleChangeSet();
+            ChangeSet simple_change_set = new ChangeSet();
             simple_change_set.Changes = changes;
 
             return simple_change_set;
@@ -703,9 +703,9 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="xml_node"></param>
         /// <returns></returns>
-        private SimpleNode Convertv6XmlNode(Osm.Xml.v0_6.node xml_node)
+        private Node Convertv6XmlNode(Osm.Xml.v0_6.node xml_node)
         {
-            SimpleNode node = new SimpleNode();
+            Node node = new Node();
             node.Id = xml_node.id;
             node.Latitude = xml_node.lat;
             node.Longitude = xml_node.lon;
@@ -734,9 +734,9 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="xml_way"></param>
         /// <returns></returns>
-        private SimpleWay Convertv6XmlWay(way xml_way)
+        private Way Convertv6XmlWay(way xml_way)
         {
-            SimpleWay way = new SimpleWay();
+            Way way = new Way();
             way.Id = xml_way.id;
 
             if (xml_way.tag != null)
@@ -772,9 +772,9 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="xml_relation"></param>
         /// <returns></returns>
-        private SimpleRelation Convertv6XmlRelation(relation xml_relation)
+        private Relation Convertv6XmlRelation(relation xml_relation)
         {
-            SimpleRelation relation = new SimpleRelation();
+            Relation relation = new Relation();
             relation.Id = xml_relation.id;
 
             if (xml_relation.tag != null)
@@ -788,24 +788,24 @@ namespace OsmSharp.Osm.API
 
             if (xml_relation.member != null)
             {
-                relation.Members = new List<SimpleRelationMember>();
+                relation.Members = new List<RelationMember>();
                 foreach (Osm.Xml.v0_6.member xml_member in xml_relation.member)
                 {
-                    SimpleRelationMemberType? member_type = null;
+                    RelationMemberType? member_type = null;
                     switch (xml_member.type)
                     {
                         case memberType.node:
-                            member_type = SimpleRelationMemberType.Node;
+                            member_type = RelationMemberType.Node;
                             break;
                         case memberType.way:
-                            member_type = SimpleRelationMemberType.Way;
+                            member_type = RelationMemberType.Way;
                             break;
                         case memberType.relation:
-                            member_type = SimpleRelationMemberType.Relation;
+                            member_type = RelationMemberType.Relation;
                             break;
                     }
 
-                    relation.Members.Add(new SimpleRelationMember()
+                    relation.Members.Add(new RelationMember()
                     {
                         MemberId = xml_member.@ref,
                         MemberRole = xml_member.role,
@@ -832,7 +832,7 @@ namespace OsmSharp.Osm.API
         /// Creates a new way by adding it to the current changeset.
         /// </summary>
         /// <param name="way"></param>
-        public SimpleWay WayCreate(SimpleWay way)
+        public Way WayCreate(Way way)
         {
             if (_current_changeset == null)
             {
@@ -876,7 +876,7 @@ namespace OsmSharp.Osm.API
         /// Updates the given way by adding it's changes to the current changeset.
         /// </summary>
         /// <param name="way"></param>
-        public void WayUpdate(SimpleWay way)
+        public void WayUpdate(Way way)
         {
             if (_current_changeset == null)
             {
@@ -915,7 +915,7 @@ namespace OsmSharp.Osm.API
         /// Updates the given way.
         /// </summary>
         /// <param name="way"></param>
-        public void WayDelete(SimpleWay way)
+        public void WayDelete(Way way)
         {
             if (_current_changeset == null)
             {
@@ -955,7 +955,7 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SimpleWay WayGet(long id)
+        public Way WayGet(long id)
         {
             string response = this.DoApiCall(false, string.Format(
                 "/api/0.6/way/{0}", id), Method.GET, null);
@@ -979,7 +979,7 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SimpleRelation RelationGet(long id)
+        public Relation RelationGet(long id)
         {
             string response = this.DoApiCall(false, string.Format(
                 "/api/0.6/relation/{0}", id), Method.GET, null);
@@ -999,7 +999,7 @@ namespace OsmSharp.Osm.API
         /// </summary>
         /// <param name="relation"></param>
         /// <returns></returns>
-        public SimpleRelation RelationCreate(SimpleRelation relation)
+        public Relation RelationCreate(Relation relation)
         {
             if (_current_changeset == null)
             {
@@ -1043,7 +1043,7 @@ namespace OsmSharp.Osm.API
         /// Updates the given relation by adding it's changes to the current changeset.
         /// </summary>
         /// <param name="relation"></param>
-        public void RelationUpdate(SimpleRelation relation)
+        public void RelationUpdate(Relation relation)
         {
             if (_current_changeset == null)
             {
@@ -1082,7 +1082,7 @@ namespace OsmSharp.Osm.API
         /// Deletes the given relation by adding it's deletion to the current changeset.
         /// </summary>
         /// <param name="relation"></param>
-        public void RelationDelete(SimpleRelation relation)
+        public void RelationDelete(Relation relation)
         {
             if (_current_changeset == null)
             {

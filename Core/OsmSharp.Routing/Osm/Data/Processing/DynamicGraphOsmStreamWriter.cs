@@ -171,7 +171,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// Adds the given node.
         /// </summary>
         /// <param name="node"></param>
-        public override void AddNode(SimpleNode node)
+        public override void AddNode(Node node)
         {
             if (!_preIndexMode)
             {
@@ -202,7 +202,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// Adds a given way.
         /// </summary>
         /// <param name="way"></param>
-        public override void AddWay(SimpleWay way)
+        public override void AddWay(Way way)
         {
             // initialize the way interpreter.
             if (_interpreter.EdgeInterpreter.IsRoutable(way.Tags))
@@ -351,7 +351,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// Adds a given relation.
         /// </summary>
         /// <param name="relation"></param>
-        public override void AddRelation(SimpleRelation relation)
+        public override void AddRelation(Relation relation)
         {
 
         }

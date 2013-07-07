@@ -44,7 +44,7 @@ namespace OsmSharp.Osm.Filters
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public abstract bool Evaluate(SimpleOsmGeo obj);
+        public abstract bool Evaluate(OsmGeo obj);
 
         /// <summary>
         /// Returns description of this filter.
@@ -95,7 +95,7 @@ namespace OsmSharp.Osm.Filters
         /// </summary>
         /// <param name="type"></param>
         /// <returns></returns>
-        public static Filter Type(SimpleOsmGeoType type)
+        public static Filter Type(OsmGeoType type)
         {
             return new FilterType(type);
         }

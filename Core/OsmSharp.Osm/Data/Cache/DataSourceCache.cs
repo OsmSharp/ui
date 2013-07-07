@@ -57,17 +57,17 @@ namespace OsmSharp.Osm.Data.Cache
         /// <summary>
         /// Holds the lru cache for the nodes.
         /// </summary>
-        private LRUCache<long, SimpleNode> _nodesCache = new LRUCache<long,SimpleNode>(10000);
+        private LRUCache<long, Node> _nodesCache = new LRUCache<long,Node>(10000);
 
         /// <summary>
         /// Holds the lru cache for the ways.
         /// </summary>
-        private LRUCache<long, SimpleWay> _waysCache = new LRUCache<long, SimpleWay>(5000);
+        private LRUCache<long, Way> _waysCache = new LRUCache<long, Way>(5000);
 
         /// <summary>
         /// Holds the lru cache for the relations.
         /// </summary>
-        private LRUCache<long, SimpleRelation> _relationsCache = new LRUCache<long, SimpleRelation>(1000);
+        private LRUCache<long, Relation> _relationsCache = new LRUCache<long, Relation>(1000);
 
         /// <summary>
         /// Returns the boundingbox.
@@ -106,9 +106,9 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SimpleNode GetNode(long id)
+        public Node GetNode(long id)
         {
-            SimpleNode node;
+            Node node;
             if(!_nodesCache.TryGet(id, out node))
             { // cache miss.
                 node = _source.GetNode(id);
@@ -122,9 +122,9 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<SimpleNode> GetNodes(IList<long> ids)
+        public IList<Node> GetNodes(IList<long> ids)
         {
-            List<SimpleNode> nodes = new List<SimpleNode>(ids.Count);
+            List<Node> nodes = new List<Node>(ids.Count);
             for (int idx = 0; idx < nodes.Count; idx++)
             {
                 nodes.Add(this.GetNode(ids[idx]));
@@ -137,9 +137,9 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SimpleRelation GetRelation(long id)
+        public Relation GetRelation(long id)
         {
-            SimpleRelation relation;
+            Relation relation;
             if (!_relationsCache.TryGet(id, out relation))
             { // cache miss.
                 relation = _source.GetRelation(id);
@@ -153,9 +153,9 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<SimpleRelation> GetRelations(IList<long> ids)
+        public IList<Relation> GetRelations(IList<long> ids)
         {
-            List<SimpleRelation> relations = new List<SimpleRelation>(ids.Count);
+            List<Relation> relations = new List<Relation>(ids.Count);
             for (int idx = 0; idx < relations.Count; idx++)
             {
                 relations.Add(this.GetRelation(ids[idx]));
@@ -168,10 +168,10 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public IList<SimpleRelation> GetRelationsFor(SimpleOsmGeo obj)
+        public IList<Relation> GetRelationsFor(OsmGeo obj)
         {
-            IList<SimpleRelation> relations = _source.GetRelationsFor(obj);
-            foreach (SimpleRelation relation in relations)
+            IList<Relation> relations = _source.GetRelationsFor(obj);
+            foreach (Relation relation in relations)
             {
                 _relationsCache.Add(relation.Id.Value, relation);
             }
@@ -183,9 +183,9 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public SimpleWay GetWay(long id)
+        public Way GetWay(long id)
         {
-            SimpleWay way;
+            Way way;
             if (!_waysCache.TryGet(id, out way))
             { // cache miss.
                 way = _source.GetWay(id);
@@ -199,9 +199,9 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<SimpleWay> GetWays(IList<long> ids)
+        public IList<Way> GetWays(IList<long> ids)
         {
-            List<SimpleWay> ways = new List<SimpleWay>(ids.Count);
+            List<Way> ways = new List<Way>(ids.Count);
             for (int idx = 0; idx < ways.Count; idx++)
             {
                 ways.Add(this.GetWay(ids[idx]));
@@ -214,10 +214,10 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public IList<SimpleWay> GetWaysFor(SimpleNode node)
+        public IList<Way> GetWaysFor(Node node)
         {
-            IList<SimpleWay> ways = _source.GetWaysFor(node);
-            foreach (SimpleWay way in ways)
+            IList<Way> ways = _source.GetWaysFor(node);
+            foreach (Way way in ways)
             {
                 _waysCache.Add(way.Id.Value, way);
             }
@@ -230,21 +230,21 @@ namespace OsmSharp.Osm.Data.Cache
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IList<SimpleOsmGeo> Get(GeoCoordinateBox box, Filter filter)
+        public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
-            IList<SimpleOsmGeo> objects = _source.Get(box, filter);
-            foreach (SimpleOsmGeo osmGeo in objects)
+            IList<OsmGeo> objects = _source.Get(box, filter);
+            foreach (OsmGeo osmGeo in objects)
             {
                 switch(osmGeo.Type)
                 {
-                    case SimpleOsmGeoType.Node:
-                        _nodesCache.Add(osmGeo.Id.Value, osmGeo as SimpleNode);
+                    case OsmGeoType.Node:
+                        _nodesCache.Add(osmGeo.Id.Value, osmGeo as Node);
                         break;
-                    case SimpleOsmGeoType.Way:
-                        _waysCache.Add(osmGeo.Id.Value, osmGeo as SimpleWay);
+                    case OsmGeoType.Way:
+                        _waysCache.Add(osmGeo.Id.Value, osmGeo as Way);
                         break;
-                    case SimpleOsmGeoType.Relation:
-                        _relationsCache.Add(osmGeo.Id.Value, osmGeo as SimpleRelation);
+                    case OsmGeoType.Relation:
+                        _relationsCache.Add(osmGeo.Id.Value, osmGeo as Relation);
                         break;
                 }
             }

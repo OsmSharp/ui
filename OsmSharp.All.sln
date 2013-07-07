@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.WinForms.UI.Sample
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp", "Core\OsmSharp\OsmSharp.csproj", "{95C32F29-5537-4FB7-8C85-B754BC9903A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.UI.Benchmark", "OsmSharp.UI.Benchmark\OsmSharp.UI.Benchmark.csproj", "{3978DE3E-5CB0-4DBD-8DCE-B1AFD1D4CE13}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.UI.Benchmark", "UI\OsmSharp.UI.Benchmark\OsmSharp.UI.Benchmark.csproj", "{3978DE3E-5CB0-4DBD-8DCE-B1AFD1D4CE13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -164,7 +164,6 @@ Global
 		{3978DE3E-5CB0-4DBD-8DCE-B1AFD1D4CE13}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{3978DE3E-5CB0-4DBD-8DCE-B1AFD1D4CE13}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{3978DE3E-5CB0-4DBD-8DCE-B1AFD1D4CE13}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3978DE3E-5CB0-4DBD-8DCE-B1AFD1D4CE13}.Debug|x86.Build.0 = Debug|Any CPU
 		{3978DE3E-5CB0-4DBD-8DCE-B1AFD1D4CE13}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3978DE3E-5CB0-4DBD-8DCE-B1AFD1D4CE13}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3978DE3E-5CB0-4DBD-8DCE-B1AFD1D4CE13}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU

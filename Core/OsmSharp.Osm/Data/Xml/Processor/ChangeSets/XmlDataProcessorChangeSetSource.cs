@@ -32,7 +32,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor.ChangeSets
     /// </summary>
     public class XmlDataProcessorChangeSetSource : DataProcessorChangeSetSource
     {
-        private SimpleChangeSet _next;
+        private ChangeSet _next;
 
         private XmlSerializer _ser_create;
 
@@ -145,7 +145,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor.ChangeSets
         /// Returns the current changeset.
         /// </summary>
         /// <returns></returns>
-        public override SimpleChangeSet Current()
+        public override ChangeSet Current()
         {
             return _next;
         }
