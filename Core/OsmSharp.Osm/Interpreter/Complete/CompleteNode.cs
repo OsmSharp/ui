@@ -31,13 +31,13 @@ namespace OsmSharp.Osm
     /// <summary>
     /// Node class.
     /// </summary>
-    public class Node : OsmGeo, IEquatable<Node>
+    public class CompleteNode : CompleteOsmGeo, IEquatable<CompleteNode>
     {
         /// <summary>
         /// Creates a new node.
         /// </summary>
         /// <param name="id"></param>
-        internal protected Node(long id)
+        internal protected CompleteNode(long id)
             : base(id)
         {
 
@@ -48,7 +48,7 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="id"></param>
         /// <param name="stringTable"></param>
-        internal protected Node(ObjectTable<string> stringTable, long id)
+        internal protected CompleteNode(ObjectTable<string> stringTable, long id)
             : base(stringTable, id)
         {
 
@@ -57,9 +57,9 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns the node type.
         /// </summary>
-        public override OsmType Type
+        public override CompleteOsmType Type
         {
-            get { return OsmType.Node; }
+            get { return CompleteOsmType.Node; }
         }
 
         /// <summary>
@@ -87,14 +87,14 @@ namespace OsmSharp.Osm
             return simple_node;
         }
 
-        #region IEquatable<Node> Members
+        #region IEquatable<CompleteNode> Members
 
         /// <summary>
         /// Returns true if the given object equals the other in content.
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(Node other)
+        public bool Equals(CompleteNode other)
         {
             if (other != null)
             {
@@ -127,7 +127,7 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
-        public void CopyTo(Node n)
+        public void CopyTo(CompleteNode n)
         {
             foreach (Tag tag in this.Tags)
             {
@@ -147,9 +147,9 @@ namespace OsmSharp.Osm
         /// WARNING: even the id is copied!
         /// </summary>
         /// <returns></returns>
-        public Node Copy()
+        public CompleteNode Copy()
         {
-            Node n = new Node(this.Id);
+            CompleteNode n = new CompleteNode(this.Id);
             this.CopyTo(n);
             return n;
         }
@@ -157,32 +157,13 @@ namespace OsmSharp.Osm
         #region Node factory functions
 
         /// <summary>
-        /// Creates a new node with a new id.
-        /// </summary>
-        /// <returns></returns>
-        public static Node Create()
-        {
-            return Create(OsmBaseIdGenerator.NewId());
-        }
-
-        /// <summary>
         /// Creates a new node with the given id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static Node Create(long id)
+        public static CompleteNode Create(long id)
         {
-            return new Node(id);
-        }
-
-        /// <summary>
-        /// Creates a new node using the given stringtable.
-        /// </summary>
-        /// <param name="table"></param>
-        /// <returns></returns>
-        public static Node Create(ObjectTable<string> table)
-        {
-            return Create(table, OsmBaseIdGenerator.NewId());
+            return new CompleteNode(id);
         }
 
         /// <summary>
@@ -191,9 +172,9 @@ namespace OsmSharp.Osm
         /// <param name="table"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static Node Create(ObjectTable<string> table, long id)
+        public static CompleteNode Create(ObjectTable<string> table, long id)
         {
-            return new Node(table, id);
+            return new CompleteNode(table, id);
         }
 
         /// <summary>
@@ -201,14 +182,14 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="simpleNode"></param>
         /// <returns></returns>
-        public static Node CreateFrom(SimpleNode simpleNode)
+        public static CompleteNode CreateFrom(SimpleNode simpleNode)
         {
             if (simpleNode == null) throw new ArgumentNullException("simpleNode");
             if (simpleNode.Id == null) throw new Exception("simpleNode.id is null");
             if (simpleNode.Latitude == null) throw new Exception("simpleNode.Latitude is null");
             if (simpleNode.Longitude == null) throw new Exception("simpleNode.Longitude is null");
 
-            Node node = Node.Create(simpleNode.Id.Value);
+            CompleteNode node = CompleteNode.Create(simpleNode.Id.Value);
 
             node.ChangeSetId = simpleNode.ChangeSetId;
             node.Coordinate = new GeoCoordinate(simpleNode.Latitude.Value, simpleNode.Longitude.Value);
@@ -234,7 +215,7 @@ namespace OsmSharp.Osm
         /// <param name="table"></param>
         /// <param name="simpleNode"></param>
         /// <returns></returns>
-        public static Node CreateFrom(ObjectTable<string> table, SimpleNode simpleNode)
+        public static CompleteNode CreateFrom(ObjectTable<string> table, SimpleNode simpleNode)
         {
             if (table == null) throw new ArgumentNullException("table");
             if (simpleNode == null) throw new ArgumentNullException("simpleNode");
@@ -242,7 +223,7 @@ namespace OsmSharp.Osm
             if (simpleNode.Latitude == null) throw new Exception("simpleNode.Latitude is null");
             if (simpleNode.Longitude == null) throw new Exception("simpleNode.Longitude is null");
 
-            Node node = Node.Create(table, simpleNode.Id.Value);
+            CompleteNode node = CompleteNode.Create(table, simpleNode.Id.Value);
 
             node.ChangeSetId = simpleNode.ChangeSetId;
             node.Coordinate = new GeoCoordinate(simpleNode.Latitude.Value, simpleNode.Longitude.Value);

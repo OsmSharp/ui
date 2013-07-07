@@ -48,21 +48,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
         /// <param name="osmGeo"></param>
         /// <param name="types"></param>
         /// <returns></returns>
-        public static bool IsOfType(this OsmGeo osmGeo, MapCSSTypes types)
+        public static bool IsOfType(this CompleteOsmGeo osmGeo, MapCSSTypes types)
         {
             string area = string.Empty;
             switch (types)
             {
                 case MapCSSTypes.Node:
-                    return osmGeo.Type == OsmType.Node;
+                    return osmGeo.Type == CompleteOsmType.Node;
                 case MapCSSTypes.Way:
-                    return osmGeo.Type == OsmType.Way;
+                    return osmGeo.Type == CompleteOsmType.Way;
                 case MapCSSTypes.Relation:
-                    return osmGeo.Type == OsmType.Relation;
+                    return osmGeo.Type == CompleteOsmType.Relation;
                 case MapCSSTypes.Line:
-                    if (osmGeo.Type == OsmType.Way)
+                    if (osmGeo.Type == CompleteOsmType.Way)
                     { // the type is way way. now check for a line.
-                        var way = (osmGeo as Way);
+                        var way = (osmGeo as CompleteWay);
                         if (way != null &&
                             way.Nodes[0] == way.Nodes[way.Nodes.Count - 1])
                         { // first node is the same as the last one.
@@ -81,9 +81,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                     }
 					break;
                 case MapCSSTypes.Area:
-                    if (osmGeo.Type == OsmType.Way)
+                    if (osmGeo.Type == CompleteOsmType.Way)
                     { // the type is way way. now check for a line.
-                        var way = (osmGeo as Way);
+                        var way = (osmGeo as CompleteWay);
                         if (way != null &&
                             way.Nodes[0] == way.Nodes[way.Nodes.Count - 1])
                         { // first node is the same as the last one.

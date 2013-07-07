@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Sources
 {
@@ -32,6 +33,6 @@ namespace OsmSharp.Osm.Sources
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Way GetWay(long id);
+        SimpleWay GetWay(long id);
     }
 }

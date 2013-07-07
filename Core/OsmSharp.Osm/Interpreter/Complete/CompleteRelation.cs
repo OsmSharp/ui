@@ -25,27 +25,28 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Simple.Cache;
+using OsmSharp.Osm.Data;
 
 namespace OsmSharp.Osm
 {
     /// <summary>
     /// Relation class.
     /// </summary>
-    public class Relation : OsmGeo
+    public class CompleteRelation : CompleteOsmGeo
     {
         /// <summary>
         /// Holds the members of this relation.
         /// </summary>
-        private readonly IList<RelationMember> _members;
+        private readonly IList<CompleteRelationMember> _members;
 
         /// <summary>
         /// Creates a new relation.
         /// </summary>
         /// <param name="id"></param>
-        internal protected Relation(long id)
-            :base(id)
+        internal protected CompleteRelation(long id)
+            : base(id)
         {
-            _members = new List<RelationMember>();
+            _members = new List<CompleteRelationMember>();
         }
 
         /// <summary>
@@ -53,24 +54,24 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="id"></param>
         /// <param name="stringTable"></param>
-        internal protected Relation(ObjectTable<string> stringTable, long id)
+        internal protected CompleteRelation(ObjectTable<string> stringTable, long id)
             : base(stringTable, id)
         {
-            _members = new List<RelationMember>();
+            _members = new List<CompleteRelationMember>();
         }
 
         /// <summary>
         /// Returns the relation type.
         /// </summary>
-        public override OsmType Type
+        public override CompleteOsmType Type
         {
-            get { return OsmType.Relation; }
+            get { return CompleteOsmType.Relation; }
         }
 
         /// <summary>
         /// Gets the relation members.
         /// </summary>
-        public IList<RelationMember> Members
+        public IList<CompleteRelationMember> Members
         {
             get
             {
@@ -83,11 +84,11 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="role"></param>
         /// <returns></returns>
-        public OsmBase FindMember(string role)
+        public CompleteOsmBase FindMember(string role)
         {
             if (this.Members != null)
             {
-                foreach (RelationMember member in this.Members)
+                foreach (CompleteRelationMember member in this.Members)
                 {
                     if (member.Role == role)
                     {
@@ -115,20 +116,20 @@ namespace OsmSharp.Osm
             relation.Visible = this.Visible;
 
             relation.Members = new List<SimpleRelationMember>();
-            foreach (RelationMember member in this.Members)
+            foreach (CompleteRelationMember member in this.Members)
             {
                 var simple_member = new SimpleRelationMember();
                 simple_member.MemberId = member.Member.Id;
                 simple_member.MemberRole = member.Role;
-                switch(member.Member.Type)
+                switch (member.Member.Type)
                 {
-                    case OsmType.Node:
+                    case CompleteOsmType.Node:
                         simple_member.MemberType = SimpleRelationMemberType.Node;
                         break;
-                    case OsmType.Relation:
+                    case CompleteOsmType.Relation:
                         simple_member.MemberType = SimpleRelationMemberType.Relation;
                         break;
-                    case OsmType.Way:
+                    case CompleteOsmType.Way:
                         simple_member.MemberType = SimpleRelationMemberType.Way;
                         break;
                 }
@@ -147,19 +148,19 @@ namespace OsmSharp.Osm
 
             for (int idx = 0; idx < this.Members.Count; idx++)
             {
-                if (this.Members[idx].Member is Node)
+                if (this.Members[idx].Member is CompleteNode)
                 {
-                    var node = this.Members[idx].Member as Node;
+                    var node = this.Members[idx].Member as CompleteNode;
                     coordinates.Add(node.Coordinate);
                 }
-                else if (this.Members[idx].Member is Way)
+                else if (this.Members[idx].Member is CompleteWay)
                 {
-                    var way = this.Members[idx].Member as Way;
+                    var way = this.Members[idx].Member as CompleteWay;
                     coordinates.AddRange(way.GetCoordinates());
                 }
-                else if (this.Members[idx].Member is Relation)
+                else if (this.Members[idx].Member is CompleteRelation)
                 {
-                    var relation = this.Members[idx].Member as Relation;
+                    var relation = this.Members[idx].Member as CompleteRelation;
                     coordinates.AddRange(relation.GetCoordinates());
                 }
             }
@@ -170,22 +171,13 @@ namespace OsmSharp.Osm
         #region Relation factory functions
 
         /// <summary>
-        /// Creates a relation with a new id.
-        /// </summary>
-        /// <returns></returns>
-        public static Relation Create()
-        {
-            return Create(OsmBaseIdGenerator.NewId());
-        }
-
-        /// <summary>
         /// Creates a relation with a given id.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static Relation Create(long id)
+        public static CompleteRelation Create(long id)
         {
-            return new Relation(id);
+            return new CompleteRelation(id);
         }
 
         /// <summary>
@@ -196,10 +188,10 @@ namespace OsmSharp.Osm
         /// <param name="ways"></param>
         /// <param name="relations"></param>
         /// <returns></returns>
-        public static Relation CreateFrom(SimpleRelation simpleRelation,
-            IDictionary<long, Node> nodes,
-            IDictionary<long, Way> ways,
-            IDictionary<long, Relation> relations)
+        public static CompleteRelation CreateFrom(SimpleRelation simpleRelation,
+            IDictionary<long, CompleteNode> nodes,
+            IDictionary<long, CompleteWay> ways,
+            IDictionary<long, CompleteRelation> relations)
         {
             if (simpleRelation == null) throw new ArgumentNullException("simpleRelation");
             if (nodes == null) throw new ArgumentNullException("nodes");
@@ -207,7 +199,7 @@ namespace OsmSharp.Osm
             if (relations == null) throw new ArgumentNullException("relations");
             if (simpleRelation.Id == null) throw new Exception("simpleRelation.Id is null");
 
-            Relation relation = Create(simpleRelation.Id.Value);
+            CompleteRelation relation = Create(simpleRelation.Id.Value);
 
             relation.ChangeSetId = simpleRelation.ChangeSetId;
             foreach (Tag pair in simpleRelation.Tags)
@@ -219,12 +211,12 @@ namespace OsmSharp.Osm
                 long memberId = simpleRelation.Members[idx].MemberId.Value;
                 string role = simpleRelation.Members[idx].MemberRole;
 
-                var member = new RelationMember();
+                var member = new CompleteRelationMember();
                 member.Role = role;
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
                     case SimpleRelationMemberType.Node:
-                        Node node = null;
+                        CompleteNode node = null;
                         if (nodes.TryGetValue(memberId, out node))
                         {
                             member.Member = node;
@@ -235,7 +227,7 @@ namespace OsmSharp.Osm
                         }
                         break;
                     case SimpleRelationMemberType.Way:
-                        Way way = null;
+                        CompleteWay way = null;
                         if (ways.TryGetValue(memberId, out way))
                         {
                             member.Member = way;
@@ -246,7 +238,7 @@ namespace OsmSharp.Osm
                         }
                         break;
                     case SimpleRelationMemberType.Relation:
-                        Relation relationMember = null;
+                        CompleteRelation relationMember = null;
                         if (relations.TryGetValue(memberId, out relationMember))
                         {
                             member.Member = relationMember;
@@ -274,14 +266,13 @@ namespace OsmSharp.Osm
         /// <param name="simpleRelation"></param>
         /// <param name="cache"></param>
         /// <returns></returns>
-        public static Relation CreateFrom(SimpleRelation simpleRelation,
-            OsmDataCache cache)
+        public static CompleteRelation CreateFrom(SimpleRelation simpleRelation, IDataSourceReadOnly cache)
         {
             if (simpleRelation == null) throw new ArgumentNullException("simpleRelation");
             if (cache == null) throw new ArgumentNullException("cache");
             if (simpleRelation.Id == null) throw new Exception("simpleRelation.Id is null");
 
-            Relation relation = Create(simpleRelation.Id.Value);
+            CompleteRelation relation = Create(simpleRelation.Id.Value);
 
             relation.ChangeSetId = simpleRelation.ChangeSetId;
             foreach (Tag pair in simpleRelation.Tags)
@@ -293,15 +284,15 @@ namespace OsmSharp.Osm
                 long memberId = simpleRelation.Members[idx].MemberId.Value;
                 string role = simpleRelation.Members[idx].MemberRole;
 
-                var member = new RelationMember();
+                var member = new CompleteRelationMember();
                 member.Role = role;
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
                     case SimpleRelationMemberType.Node:
-                        SimpleNode simpleNode = null;
-                        if (cache.TryGetNode(memberId, out simpleNode))
+                        SimpleNode simpleNode = cache.GetNode(memberId);
+                        if (simpleNode != null)
                         {
-                            member.Member = Node.CreateFrom(simpleNode);
+                            member.Member = CompleteNode.CreateFrom(simpleNode);
                         }
                         else
                         {
@@ -309,10 +300,10 @@ namespace OsmSharp.Osm
                         }
                         break;
                     case SimpleRelationMemberType.Way:
-                        SimpleWay simpleWay = null;
-                        if (cache.TryGetWay(memberId, out simpleWay))
+                        SimpleWay simpleWay = cache.GetWay(memberId);
+                        if (simpleWay != null)
                         {
-                            member.Member = Way.CreateFrom(simpleWay, cache);
+                            member.Member = CompleteWay.CreateFrom(simpleWay, cache);
                         }
                         else
                         {
@@ -320,10 +311,10 @@ namespace OsmSharp.Osm
                         }
                         break;
                     case SimpleRelationMemberType.Relation:
-                        SimpleRelation relationMember = null;
-                        if (cache.TryGetRelation(memberId, out relationMember))
+                        SimpleRelation simpleRelationMember = cache.GetRelation(memberId);
+                        if (simpleRelation != null)
                         {
-                            member.Member = Relation.CreateFrom(relationMember, cache);
+                            member.Member = CompleteRelation.CreateFrom(simpleRelationMember, cache);
                         }
                         else
                         {
@@ -346,21 +337,11 @@ namespace OsmSharp.Osm
         /// Creates a new relation.
         /// </summary>
         /// <param name="table"></param>
-        /// <returns></returns>
-        public static Relation Create(ObjectTable<string> table)
-        {
-            return Create(table, OsmBaseIdGenerator.NewId());
-        }
-
-        /// <summary>
-        /// Creates a new relation.
-        /// </summary>
-        /// <param name="table"></param>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static Relation Create(ObjectTable<string> table, long id)
+        public static CompleteRelation Create(ObjectTable<string> table, long id)
         {
-            return new Relation(table, id);
+            return new CompleteRelation(table, id);
         }
 
         /// <summary>
@@ -372,10 +353,10 @@ namespace OsmSharp.Osm
         /// <param name="ways"></param>
         /// <param name="relations"></param>
         /// <returns></returns>
-        public static Relation CreateFrom(ObjectTable<string> table, SimpleRelation simpleRelation,
-            IDictionary<long, Node> nodes,
-            IDictionary<long, Way> ways,
-            IDictionary<long, Relation> relations)
+        public static CompleteRelation CreateFrom(ObjectTable<string> table, SimpleRelation simpleRelation,
+            IDictionary<long, CompleteNode> nodes,
+            IDictionary<long, CompleteWay> ways,
+            IDictionary<long, CompleteRelation> relations)
         {
             if (simpleRelation == null) throw new ArgumentNullException("simpleRelation");
             if (nodes == null) throw new ArgumentNullException("nodes");
@@ -383,7 +364,7 @@ namespace OsmSharp.Osm
             if (relations == null) throw new ArgumentNullException("relations");
             if (simpleRelation.Id == null) throw new Exception("simpleRelation.Id is null");
 
-            Relation relation = Create(table, simpleRelation.Id.Value);
+            CompleteRelation relation = Create(table, simpleRelation.Id.Value);
 
             relation.ChangeSetId = simpleRelation.ChangeSetId;
             foreach (Tag pair in simpleRelation.Tags)
@@ -395,12 +376,12 @@ namespace OsmSharp.Osm
                 long memberId = simpleRelation.Members[idx].MemberId.Value;
                 string role = simpleRelation.Members[idx].MemberRole;
 
-                var member = new RelationMember();
+                var member = new CompleteRelationMember();
                 member.Role = role;
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
                     case SimpleRelationMemberType.Node:
-                        Node node = null;
+                        CompleteNode node = null;
                         if (nodes.TryGetValue(memberId, out node))
                         {
                             member.Member = node;
@@ -411,7 +392,7 @@ namespace OsmSharp.Osm
                         }
                         break;
                     case SimpleRelationMemberType.Way:
-                        Way way = null;
+                        CompleteWay way = null;
                         if (ways.TryGetValue(memberId, out way))
                         {
                             member.Member = way;
@@ -422,7 +403,7 @@ namespace OsmSharp.Osm
                         }
                         break;
                     case SimpleRelationMemberType.Relation:
-                        Relation relationMember = null;
+                        CompleteRelation relationMember = null;
                         if (relations.TryGetValue(memberId, out relationMember))
                         {
                             member.Member = relationMember;
@@ -447,20 +428,11 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Creates a new changeset.
         /// </summary>
-        /// <returns></returns>
-        public static ChangeSet CreateChangeSet()
-        {
-            return CreateChangeSet(OsmBaseIdGenerator.NewId());
-        }
-
-        /// <summary>
-        /// Creates a new changeset.
-        /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static ChangeSet CreateChangeSet(long id)
+        public static CompleteChangeSet CreateChangeSet(long id)
         {
-            return new ChangeSet(id);
+            return new CompleteChangeSet(id);
         }
 
         #endregion

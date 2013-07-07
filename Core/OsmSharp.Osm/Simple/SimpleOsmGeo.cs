@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,18 +15,22 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.Data;
+using OsmSharp.Geo.Geometries;
+using OsmSharp.Osm.Interpreter;
 
 namespace OsmSharp.Osm.Simple
 {
     /// <summary>
     /// Primive used as a base class for any osm object that has a meaning on the map (Nodes, Ways and Relations).
     /// </summary>
-    public class SimpleOsmGeo
+    public abstract class SimpleOsmGeo
     {
         /// <summary>
         /// The id.

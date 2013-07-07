@@ -34,7 +34,7 @@ namespace OsmSharp.Osm.Filters
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        public bool Evaluate(OsmGeo obj)
+        public bool Evaluate(CompleteOsmGeo obj)
         {
             return this.Evaluate(obj.ToSimple());
         }

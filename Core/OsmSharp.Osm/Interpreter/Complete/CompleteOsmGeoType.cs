@@ -25,7 +25,7 @@ namespace OsmSharp.Osm
     /// <summary>
     /// Enumeration for the different types of osm data.
     /// </summary>
-    public enum OsmType
+    public enum CompleteOsmType
     {
         /// <summary>
         /// Node

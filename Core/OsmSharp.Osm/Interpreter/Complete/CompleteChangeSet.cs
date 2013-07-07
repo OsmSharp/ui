@@ -26,21 +26,21 @@ namespace OsmSharp.Osm
     /// <summary>
     /// Represents a changeset.
     /// </summary>
-    public class ChangeSet : OsmBase
+    public class CompleteChangeSet : CompleteOsmBase
     {
         /// <summary>
         /// Holds all the changes in this changeset.
         /// </summary>
-        private IList<Change> _changes;
+        private IList<CompleteChange> _changes;
 
         /// <summary>
         /// Creates a new changeset.
         /// </summary>
         /// <param name="id"></param>
-        internal ChangeSet(long id)
+        internal CompleteChangeSet(long id)
             :base(id)
         {
-            _changes = new List<Change>();
+            _changes = new List<CompleteChange>();
         }
 
         #region Properties
@@ -48,7 +48,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns an ordered list of all changes in this changeset.
         /// </summary>
-        public IList<Change> Changes
+        public IList<CompleteChange> Changes
         {
             get
             {
@@ -59,13 +59,13 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns the list of objects that this changeset applies to.
         /// </summary>
-        public IList<OsmGeo> Objects
+        public IList<CompleteOsmGeo> Objects
         {
             get
             {
-                IList<OsmGeo> objs = new List<OsmGeo>();
+                IList<CompleteOsmGeo> objs = new List<CompleteOsmGeo>();
 
-                foreach (Change change in this.Changes)
+                foreach (CompleteChange change in this.Changes)
                 {
                     objs.Add(change.Object);
                 }
@@ -99,9 +99,9 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns the changeset type.
         /// </summary>
-        public override OsmType Type
+        public override CompleteOsmType Type
         {
-            get { return OsmType.ChangeSet; }
+            get { return CompleteOsmType.ChangeSet; }
         }
 
         #endregion

@@ -30,7 +30,7 @@ namespace OsmSharp.Osm
     /// 
     /// ChangeSets, Nodes, Ways and Relations.
     /// </summary>   
-    public abstract class OsmBase : IEquatable<OsmBase>
+    public abstract class CompleteOsmBase : IEquatable<CompleteOsmBase>
     {
         /// <summary>
         /// Holds the id of the object.
@@ -41,7 +41,7 @@ namespace OsmSharp.Osm
         /// Creates a new base object.
         /// </summary>
         /// <param name="id"></param>
-        internal OsmBase(long id)
+        internal CompleteOsmBase(long id)
             : this(null, id)
         {
 
@@ -52,7 +52,7 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="stringTable"></param>
         /// <param name="id"></param>
-        internal OsmBase(ObjectTable<string> stringTable, long id)
+        internal CompleteOsmBase(ObjectTable<string> stringTable, long id)
         {
             _id = id;
 
@@ -106,7 +106,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns the type of osm data.
         /// </summary>
-        public abstract OsmType Type
+        public abstract CompleteOsmType Type
         {
             get;
         }
@@ -140,7 +140,7 @@ namespace OsmSharp.Osm
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static bool operator ==(OsmBase a, OsmBase b)
+        public static bool operator ==(CompleteOsmBase a, CompleteOsmBase b)
         {
             // If both are null, or both are same instance, return true.
             if (System.Object.ReferenceEquals(a, b))
@@ -164,7 +164,7 @@ namespace OsmSharp.Osm
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static bool operator !=(OsmBase a, OsmBase b)
+        public static bool operator !=(CompleteOsmBase a, CompleteOsmBase b)
         {
             return !(a == b);
         }
@@ -176,7 +176,7 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="other"></param>
         /// <returns></returns>
-        public bool Equals(OsmBase other)
+        public bool Equals(CompleteOsmBase other)
         {
             if (other == null)
             {
@@ -207,9 +207,9 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            if (obj is OsmBase)
+            if (obj is CompleteOsmBase)
             {
-                return this.Equals(obj as OsmBase);
+                return this.Equals(obj as CompleteOsmBase);
             }
             return false;
         }

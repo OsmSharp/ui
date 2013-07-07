@@ -21,6 +21,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Geo.Geometries;
+using OsmSharp.Osm.Simple;
+using OsmSharp.Osm.Data;
 
 namespace OsmSharp.Osm.Interpreter
 {
@@ -34,6 +36,14 @@ namespace OsmSharp.Osm.Interpreter
         /// </summary>
         /// <param name="osmObject"></param>
         /// <returns></returns>
-        GeometryCollection Interpret(OsmGeo osmObject);
+        GeometryCollection Interpret(CompleteOsmGeo osmObject);
+
+        /// <summary>
+        /// Interprets an OSM-object and returns the corresponding geometry.
+        /// </summary>
+        /// <param name="simpleOsmGeo"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        GeometryCollection Interpret(SimpleOsmGeo simpleOsmGeo, IDataSourceReadOnly data);
     }
 }

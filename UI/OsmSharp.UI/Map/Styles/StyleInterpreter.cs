@@ -28,6 +28,6 @@ namespace OsmSharp.UI.Map.Styles
         /// <param name="osmGeo">The osm object.</param>
         /// <param name="scene">The scene to fill with the resulting geometries.</param>
         /// <returns></returns>
-        public abstract void Translate(Scene2D scene, IProjection projection, float zoom, OsmGeo osmGeo);
+        public abstract void Translate(Scene2D scene, IProjection projection, float zoom, CompleteOsmGeo osmGeo);
     }
 }

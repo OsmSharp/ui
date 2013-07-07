@@ -29,7 +29,7 @@ namespace OsmSharp.Osm.Data.Streams.Collections
         /// <summary>
         /// Holds the list of OsmBase objects.
         /// </summary>
-        private readonly IList<OsmGeo> _baseObjects;
+        private readonly IList<CompleteOsmGeo> _baseObjects;
 
         /// <summary>
         /// Holds the current object index.
@@ -40,7 +40,7 @@ namespace OsmSharp.Osm.Data.Streams.Collections
         /// Creates a new OsmBase source.
         /// </summary>
         /// <param name="baseObjects"></param>
-        public OsmGeoListDataProcessorSource(IList<OsmGeo> baseObjects)
+        public OsmGeoListDataProcessorSource(IList<CompleteOsmGeo> baseObjects)
         {
             _baseObjects = baseObjects;
             _current = int.MinValue;
@@ -72,7 +72,7 @@ namespace OsmSharp.Osm.Data.Streams.Collections
         public override SimpleOsmGeo Current()
         {
             // get the current object.
-            OsmGeo osmObject = _baseObjects[_current];
+            CompleteOsmGeo osmObject = _baseObjects[_current];
 
             // convert the object.
             return osmObject.ToSimple();

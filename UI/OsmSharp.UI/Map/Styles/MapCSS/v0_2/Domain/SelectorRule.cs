@@ -53,7 +53,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// </summary>
         /// <param name="osmGeo"></param>
         /// <returns></returns>
-        internal abstract bool Selects(Osm.OsmGeo osmGeo);
+        internal abstract bool Selects(Osm.CompleteOsmGeo osmGeo);
     }
 
     /// <summary>
@@ -96,7 +96,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// </summary>
         /// <param name="osmGeo"></param>
         /// <returns></returns>
-        internal override bool Selects(Osm.OsmGeo osmGeo)
+        internal override bool Selects(Osm.CompleteOsmGeo osmGeo)
         {
             switch (this.Operator)
             {
@@ -137,7 +137,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// </summary>
         /// <param name="osmGeo"></param>
         /// <returns></returns>
-        internal override bool Selects(Osm.OsmGeo osmGeo)
+        internal override bool Selects(Osm.CompleteOsmGeo osmGeo)
         {
             if (osmGeo.Tags != null)
             {
@@ -178,7 +178,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// </summary>
         /// <param name="osmGeo"></param>
         /// <returns></returns>
-        internal override bool Selects(Osm.OsmGeo osmGeo)
+        internal override bool Selects(Osm.CompleteOsmGeo osmGeo)
         {
             if (osmGeo.Tags != null)
             {

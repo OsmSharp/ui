@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,16 +23,12 @@ using System.Text;
 using OsmSharp.Osm;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
+using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Data
 {
     /// <summary>
-    /// Represents a generic readonly data source.
-    /// 
-    /// This datasource can only generate osm elements.
-    /// 
-    /// Used for: GPX, KML, ...
-    /// 
+    /// Represents a generic readonly data source. 
     /// </summary>
     public interface IDataSourceReadOnly
     {
@@ -66,14 +63,14 @@ namespace OsmSharp.Osm.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Node GetNode(long id);
+        SimpleNode GetNode(long id);
 
         /// <summary>
         /// Returns the node(s) with the given id(s).
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        IList<Node> GetNodes(IList<long> ids);
+        IList<SimpleNode> GetNodes(IList<long> ids);
 
         #endregion
 
@@ -84,21 +81,21 @@ namespace OsmSharp.Osm.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Relation GetRelation(long id);
+        SimpleRelation GetRelation(long id);
 
         /// <summary>
         /// Returns the relation(s) with the given id(s).
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        IList<Relation> GetRelations(IList<long> ids);
+        IList<SimpleRelation> GetRelations(IList<long> ids);
 
         /// <summary>
         /// Returns all the relations for the given object.
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
-        IList<Relation> GetRelationsFor(OsmBase obj);
+        IList<SimpleRelation> GetRelationsFor(SimpleOsmGeo obj);
 
         #endregion
 
@@ -109,21 +106,21 @@ namespace OsmSharp.Osm.Data
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Way GetWay(long id);
+        SimpleWay GetWay(long id);
 
         /// <summary>
         /// Returns the way(s) with given id.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        IList<Way> GetWays(IList<long> ids);
+        IList<SimpleWay> GetWays(IList<long> ids);
 
         /// <summary>
         /// Returns the way(s) for a given node.
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        IList<Way> GetWaysFor(Node node);
+        IList<SimpleWay> GetWaysFor(SimpleNode node);
 
         #endregion
 
@@ -135,7 +132,7 @@ namespace OsmSharp.Osm.Data
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter);
+        IList<SimpleOsmGeo> Get(GeoCoordinateBox box, Filter filter);
 
         #endregion
 

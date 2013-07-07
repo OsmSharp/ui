@@ -97,19 +97,19 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="osmGeo">The osm object.</param>
         /// <param name="scene">The scene to fill with the resulting geometries.</param>
         /// <returns></returns>
-        public override void Translate(Scene2D scene, IProjection projection, float zoom, OsmGeo osmGeo)
+        public override void Translate(Scene2D scene, IProjection projection, float zoom, CompleteOsmGeo osmGeo)
         {
             switch (osmGeo.Type)
             {
-                case OsmType.Node:
-                    this.TranslateNode(scene, projection, osmGeo as Node);
+                case CompleteOsmType.Node:
+                    this.TranslateNode(scene, projection, osmGeo as CompleteNode);
                     break;
-                case OsmType.Way:
-                    this.TranslateWay(scene, projection, osmGeo as Way);
+                case CompleteOsmType.Way:
+                    this.TranslateWay(scene, projection, osmGeo as CompleteWay);
                     break;
-                case OsmType.Relation:
+                case CompleteOsmType.Relation:
                     break;
-                case OsmType.ChangeSet:
+                case CompleteOsmType.ChangeSet:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -122,7 +122,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="scene"></param>
         /// <param name="projection"></param>
         /// <param name="node"></param>
-        private void TranslateNode(Scene2D scene, IProjection projection, Node node)
+        private void TranslateNode(Scene2D scene, IProjection projection, CompleteNode node)
         {
             float? x = (float) projection.LongitudeToX(
                 node.Coordinate.Longitude);
@@ -208,7 +208,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="scene"></param>
         /// <param name="projection"></param>
         /// <param name="way"></param>
-        private void TranslateWay(Scene2D scene, IProjection projection, Way way)
+        private void TranslateWay(Scene2D scene, IProjection projection, CompleteWay way)
         {
             // build the rules.
             List<MapCSSRuleProperties> rules =
@@ -323,7 +323,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// </summary>
         /// <param name="osmGeo"></param>
         /// <returns></returns>
-        private List<MapCSSRuleProperties> BuildRules(OsmGeo osmGeo)
+        private List<MapCSSRuleProperties> BuildRules(CompleteOsmGeo osmGeo)
         {
             var rulesCollection = new MapCSSRulePropertiesCollection();
 

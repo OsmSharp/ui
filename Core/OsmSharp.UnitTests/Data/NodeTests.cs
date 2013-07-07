@@ -33,7 +33,7 @@ namespace OsmSharp.UnitTests.Data
         [Test]
         public void NodeToStringTests()
         {
-            Node testNode = Node.Create(-1);
+            CompleteNode testNode = CompleteNode.Create(-1);
             string description = testNode.ToString(); // 
             testNode.Coordinate = new OsmSharp.Math.Geo.GeoCoordinate(0, 0);
             description = testNode.ToString();

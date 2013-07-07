@@ -22,6 +22,8 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Data;
+using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Interpreter
 {
@@ -35,37 +37,83 @@ namespace OsmSharp.Osm.Interpreter
         /// </summary>
         /// <param name="osmObject"></param>
         /// <returns></returns>
-        public GeometryCollection Interpret(OsmGeo osmObject)
+        public GeometryCollection Interpret(CompleteOsmGeo osmObject)
         {
             // DISCLAIMER: this is a very very very simple and inaccurate way of interpreting OSM-objects.
             //             Do not use this for any pupose other than testing or experimentation.
 
             GeometryCollection collection = new GeometryCollection();
-            switch (osmObject.Type)
-            {
-                case OsmType.Node:
-                    collection.Add(new Point((osmObject as Node).Coordinate));
-                    break;
-                case OsmType.Way:
-                    if (osmObject.Tags.ContainsKey("area"))
-                    { // area tags leads to simple polygon
-                        collection.Add(
-                            new LineairRing((osmObject as Way).GetCoordinates().ToArray<GeoCoordinate>()));
-                    }
-                    else
-                    { // no area tag leads to just a line.
-                        collection.Add(
-                            new LineairRing((osmObject as Way).GetCoordinates().ToArray<GeoCoordinate>()));
-                    }
-                    break;
-                case OsmType.Relation:
-                    Relation relation = (osmObject as Relation);
-                    foreach (var member in relation.Members)
-                    {
-                        collection.AddRange(this.Interpret(member.Member));
-                    }
-                    break;
-            }
+            //switch (osmObject.Type)
+            //{
+            //    case OsmType.Node:
+            //        collection.Add(new Point((osmObject as Node).Coordinate));
+            //        break;
+            //    case OsmType.Way:
+            //        if (osmObject.Tags.ContainsKey("area"))
+            //        { // area tags leads to simple polygon
+            //            collection.Add(
+            //                new LineairRing((osmObject as Way).GetCoordinates().ToArray<GeoCoordinate>()));
+            //        }
+            //        else
+            //        { // no area tag leads to just a line.
+            //            collection.Add(
+            //                new LineairRing((osmObject as Way).GetCoordinates().ToArray<GeoCoordinate>()));
+            //        }
+            //        break;
+            //    case OsmType.Relation:
+            //        Relation relation = (osmObject as Relation);
+            //        foreach (var member in relation.Members)
+            //        {
+            //            collection.AddRange(this.Interpret(member.Member));
+            //        }
+            //        break;
+            //}
+            return collection;
+        }
+
+        /// <summary>
+        /// Interprets an OSM-object and returns the correctponding geometry.
+        /// </summary>
+        /// <param name="simpleOsmGeo"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public GeometryCollection Interpret(SimpleOsmGeo simpleOsmGeo, IDataSourceReadOnly data)
+        {
+            // DISCLAIMER: this is a very very very simple and inaccurate way of interpreting OSM-objects.
+            //             Do not use this for any pupose other than testing or experimentation.
+
+            GeometryCollection collection = new GeometryCollection();
+            //switch (simpleOsmGeo.Type)
+            //{
+            //    case SimpleOsmGeoType.Node:
+            //        SimpleNode node = simpleOsmGeo as SimpleNode;
+            //        collection.Add(new Point(
+            //            new GeoCoordinate(node.Latitude.Value, node.Longitude.Value)));
+            //        break;
+            //    case SimpleOsmGeoType.Way:
+            //        Way way = Way.CreateFrom(simpleOsmGeo as SimpleWay, data);
+            //        if (way != null)
+            //        {
+            //            if (simpleOsmGeo.Tags.ContainsKey("area"))
+            //            { // area tags leads to simple polygon.
+            //                collection.Add(
+            //                    new LineairRing(way.GetCoordinates().ToArray<GeoCoordinate>()));
+            //            }
+            //            else
+            //            { // no area tag leads to just a line.
+            //                collection.Add(
+            //                    new LineairRing(way.GetCoordinates().ToArray<GeoCoordinate>()));
+            //            }
+            //        }
+            //        break;
+            //    case SimpleOsmGeoType.Relation:
+            //        Relation relation = Relation.CreateFrom(simpleOsmGeo as SimpleRelation, data);
+            //        foreach (var member in relation.Members)
+            //        {
+            //            collection.AddRange(this.Interpret(member.Member));
+            //        }
+            //        break;
+            //}
             return collection;
         }
     }

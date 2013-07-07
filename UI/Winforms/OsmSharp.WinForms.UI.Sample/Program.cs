@@ -13,9 +13,9 @@ namespace OsmSharp.WinForms.UI.Sample
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new SampleControlForm());
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            ////Application.Run(new SampleControlForm());
             Application.Run(new MapControlForm());
         }
     }

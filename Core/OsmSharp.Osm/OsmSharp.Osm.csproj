@@ -193,14 +193,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Change.cs" />
-    <Compile Include="ChangeSet.cs" />
+    <Compile Include="Interpreter\Complete\CompleteChange.cs" />
+    <Compile Include="Interpreter\Complete\CompleteChangeSet.cs" />
     <Compile Include="API\APICapabilities.cs" />
     <Compile Include="API\APIConnection.cs" />
     <Compile Include="API\APIException.cs" />
     <Compile Include="Data\Cache\DataSourceCache.cs" />
-    <Compile Include="Data\Cache\DataSourceQuadTree.cs" />
-    <Compile Include="Data\Cache\DataSourceQuadTreeNode.cs" />
     <Compile Include="Interpreter\SimpleGeometryInterpreter.cs" />
     <Compile Include="Simple\Streams\Collections\OsmGeoEnumerableStreamReader.cs" />
     <Compile Include="Simple\Streams\OsmGeoStream\IOsmGeoStreamTarget.cs" />
@@ -257,7 +255,6 @@
     <Compile Include="Simple\Streams\Collections\OsmCollectionStreamWriter.cs" />
     <Compile Include="Simple\Streams\Collections\OsmGeoStreamReader.cs" />
     <Compile Include="Simple\Streams\Filters\OsmStreamFilterProgress.cs" />
-    <Compile Include="Data\Xml\KmlSource\KmlDataSource.cs" />
     <Compile Include="Data\Xml\OsmSource\OsmDataSource.cs" />
     <Compile Include="Data\Xml\Processor\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
     <Compile Include="Data\Xml\Processor\Replication\Replicator.cs" />
@@ -274,14 +271,14 @@
     <Compile Include="Filters\Tags\FilterTagCount.cs" />
     <Compile Include="Filters\Tags\FilterTagExists.cs" />
     <Compile Include="Filters\Tags\FilterTagMatch.cs" />
-    <Compile Include="Node.cs" />
-    <Compile Include="OsmBaseIdGenerator.cs" />
-    <Compile Include="OsmGeo.cs" />
-    <Compile Include="OsmBase.cs" />
-    <Compile Include="OsmGeoType.cs" />
+    <Compile Include="Interpreter\Complete\CompleteNode.cs" />
+    <Compile Include="Interpreter\Complete\OsmBaseIdGenerator.cs" />
+    <Compile Include="Interpreter\Complete\CompleteOsmGeo.cs" />
+    <Compile Include="Interpreter\Complete\CompleteOsmBase.cs" />
+    <Compile Include="Interpreter\Complete\CompleteOsmGeoType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Relation.cs" />
-    <Compile Include="RelationMember.cs" />
+    <Compile Include="Interpreter\Complete\CompleteRelation.cs" />
+    <Compile Include="Interpreter\Complete\CompleteRelationMember.cs" />
     <Compile Include="Simple\Cache\OsmDataCacheDefault.cs" />
     <Compile Include="Simple\Cache\OsmDataCacheMemory.cs" />
     <Compile Include="Simple\Cache\OsmDiskCache.cs" />
@@ -301,8 +298,8 @@
     <Compile Include="Data\IWaySource.cs" />
     <Compile Include="Tiles\Tile.cs" />
     <Compile Include="Tiles\TileRange.cs" />
-    <Compile Include="User.cs" />
-    <Compile Include="Way.cs" />
+    <Compile Include="Interpreter\Complete\CompleteUser.cs" />
+    <Compile Include="Interpreter\Complete\CompleteWay.cs" />
     <Compile Include="Xml\OsmDocument.cs" />
     <Compile Include="Xml\v0_6\Extensions.cs" />
     <Compile Include="Xml\v0_6\osm.cs">

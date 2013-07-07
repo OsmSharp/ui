@@ -32,13 +32,13 @@ namespace OsmSharp.Osm
     /// 
     /// Nodes, Ways and Relations
     /// </summary>
-    public abstract class OsmGeo : OsmBase
+    public abstract class CompleteOsmGeo : CompleteOsmBase
     {
         /// <summary>
         /// Creates a new OsmGeo object.
         /// </summary>
         /// <param name="id"></param>
-        internal OsmGeo(long id)
+        internal CompleteOsmGeo(long id)
             :base(id)
         {
             this.Visible = true;
@@ -51,7 +51,7 @@ namespace OsmSharp.Osm
         /// </summary>
         /// <param name="string_table"></param>
         /// <param name="id"></param>
-        internal OsmGeo(ObjectTable<string> string_table, long id)
+        internal CompleteOsmGeo(ObjectTable<string> string_table, long id)
             : base(string_table, id)
         {
             this.Visible = true;
@@ -86,7 +86,7 @@ namespace OsmSharp.Osm
             {
                 if (_geometries == null)
                 {
-                    _geometries = OsmGeo.GeometryInterperter.Interpret(this);
+                    _geometries = CompleteOsmGeo.GeometryInterperter.Interpret(this);
                 }
                 return _geometries;
             }

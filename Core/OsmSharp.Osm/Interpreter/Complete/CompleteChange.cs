@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace OsmSharp.Osm
     /// <summary>
     /// Represents a change in a change set.
     /// </summary>
-    public class Change
+    public class CompleteChange
     {
         /// <summary>
         /// Contains the type of change.
@@ -35,14 +36,14 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Contains the object to change.
         /// </summary>
-        private OsmGeo _obj;
+        private CompleteOsmGeo _obj;
 
         /// <summary>
         /// Creates a new change object.
         /// </summary>
         /// <param name="type"></param>
         /// <param name="obj"></param>
-        public Change(ChangeType type, OsmGeo obj)
+        public CompleteChange(ChangeType type, CompleteOsmGeo obj)
         {
             _type = type;
             _obj = obj;
@@ -62,7 +63,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// The object this change is for.
         /// </summary>
-        public OsmGeo Object
+        public CompleteOsmGeo Object
         {
             get
             {

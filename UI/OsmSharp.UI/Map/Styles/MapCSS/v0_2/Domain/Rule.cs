@@ -55,7 +55,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <param name="zooms"></param>
         /// <param name="osmGeo"></param>
         /// <returns></returns>
-        public bool HasToBeAppliedTo(OsmGeo osmGeo, out List<KeyValuePair<int?, int?>> zooms)
+        public bool HasToBeAppliedTo(CompleteOsmGeo osmGeo, out List<KeyValuePair<int?, int?>> zooms)
         {
             zooms = new List<KeyValuePair<int?, int?>>();
             foreach (var selector in this.Selectors)

@@ -86,14 +86,14 @@ namespace OsmSharp.Osm.Data.Streams
             return collection;
         }
 
-        /// <summary>
-        /// Returns a enumerable for all OsmGeo objects that can be detected in this stream.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<OsmGeo> GetOsmGeoEnumerable()
-        {
-            return new OsmGeoEnumerableStreamReader(this);
-        }
+        ///// <summary>
+        ///// Returns a enumerable for all OsmGeo objects that can be detected in this stream.
+        ///// </summary>
+        ///// <returns></returns>
+        //public IEnumerable<OsmGeo> GetOsmGeoEnumerable()
+        //{
+        //    return new OsmGeoEnumerableStreamReader(this);
+        //}
 
         #endregion
     }

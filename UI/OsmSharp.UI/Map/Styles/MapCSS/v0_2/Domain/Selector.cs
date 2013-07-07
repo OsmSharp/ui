@@ -33,7 +33,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <param name="zooms">The zooms selected.</param>
         /// <param name="osmGeo">The object to 'select'.</param>
         /// <returns></returns>
-        public virtual bool Selects(OsmGeo osmGeo, out KeyValuePair<int?, int?> zooms)
+        public virtual bool Selects(CompleteOsmGeo osmGeo, out KeyValuePair<int?, int?> zooms)
         {
             // store the zooms.
             if (this.Zoom == null)
@@ -58,14 +58,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
             switch (this.Type)
             {
                 case SelectorTypeEnum.Area:
-                    if (osmGeo.Type == OsmType.Way)
+                    if (osmGeo.Type == CompleteOsmType.Way)
                     { // this can be an area.
                         if (osmGeo.IsOfType(MapCSSTypes.Area))
                         {
                             return true;
                         }
                     }
-                    else if (osmGeo.Type == OsmType.Relation)
+                    else if (osmGeo.Type == CompleteOsmType.Relation)
                     {
                         // TODO: implement relation support.
                     }
@@ -74,20 +74,20 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                     // no way the canvas can be here!
                     break;
                 case SelectorTypeEnum.Line:
-                    if (osmGeo.Type == OsmType.Way)
+                    if (osmGeo.Type == CompleteOsmType.Way)
                     { // this can be a line.
                         if (osmGeo.IsOfType(MapCSSTypes.Line))
                         {
                             return true;
                         }
                     }
-                    else if (osmGeo.Type == OsmType.Relation)
+                    else if (osmGeo.Type == CompleteOsmType.Relation)
                     {
                         // TODO: implement relation support.
                     }
                     break;
                 case SelectorTypeEnum.Node:
-                    if (osmGeo.Type == OsmType.Node)
+                    if (osmGeo.Type == CompleteOsmType.Node)
                     {
                         return true;
                     }
@@ -96,13 +96,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                     return true;
                     break;
                 case SelectorTypeEnum.Way:
-                    if (osmGeo.Type == OsmType.Way)
+                    if (osmGeo.Type == CompleteOsmType.Way)
                     {
                         return true;
                     }
                     break;
                 case SelectorTypeEnum.Relation:
-                    if (osmGeo.Type == OsmType.Relation)
+                    if (osmGeo.Type == CompleteOsmType.Relation)
                     {
                         return true;
                     }

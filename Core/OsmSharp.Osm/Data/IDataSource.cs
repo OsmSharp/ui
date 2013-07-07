@@ -24,15 +24,12 @@ using OsmSharp.Osm;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Osm.Sources;
+using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Data
 {
     /// <summary>
-    /// Represents a generic data source.
-    /// 
-    /// This datasource can create elements.
-    /// 
-    /// Used For: OSM Files
+    /// Represents a generic data read/write datasource.
     /// </summary>
     public interface IDataSource : IDataSourceReadOnly
     {
@@ -69,10 +66,9 @@ namespace OsmSharp.Osm.Data
         #region Nodes
 
         /// <summary>
-        /// Creates a new node.
+        /// Adds a node.
         /// </summary>
-        /// <returns></returns>
-        Node CreateNode();
+        void AddNode(SimpleNode node);
 
         #endregion
 
@@ -82,7 +78,7 @@ namespace OsmSharp.Osm.Data
         /// Creates a new relation.
         /// </summary>
         /// <returns></returns>
-        Relation CreateRelation();
+        void AddRelation (SimpleRelation relation);
 
         #endregion
 
@@ -92,7 +88,7 @@ namespace OsmSharp.Osm.Data
         /// Creates a new way.
         /// </summary>
         /// <returns></returns>
-        Way CreateWay();
+        void AddWay(SimpleWay way);
 
         #endregion
 
@@ -102,7 +98,7 @@ namespace OsmSharp.Osm.Data
         /// Applies the given changeset to the data in this datasource.
         /// </summary>
         /// <param name="changeSet"></param>
-        void ApplyChangeSet(ChangeSet changeSet);
+        void ApplyChangeSet(CompleteChangeSet changeSet);
 
         #endregion
     }
