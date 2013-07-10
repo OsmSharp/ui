@@ -41,7 +41,7 @@ namespace OsmSharp.Geo.Geometries
         /// </summary>
         /// <param name="points"></param>
         public MultiPoint(IEnumerable<Point> points)
-            : base(points)
+            : base(points.Cast<Geometry>())
         {
 
         }

@@ -1,36 +1,12 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs">
     <Files>
-      <File FileName="UI\Android\OsmSharp.Android.UI\MapGLView.cs" Line="137" Column="17" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\MapView.cs" Line="146" Column="4" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" Line="119" Column="4" />
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="43" Column="27" />
-      <File FileName="c:\WORK\git\OsmSharp\v4\Core\OsmSharp\Collections\SpatialIndexes\Serialization\SpatialIndexSerializer.cs" Line="130" Column="10" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLTarget2D.cs" Line="218" Column="2" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="1" Column="1" />
+      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="142" Column="26" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Core" expanded="True">
-            <Node name="OsmSharp.Routing.Android" expanded="True">
-              <Node name="Graph" expanded="True">
-                <Node name="Serialization" expanded="True" />
-              </Node>
-            </Node>
-          </Node>
-          <Node name="UI" expanded="True">
-            <Node name="Android" expanded="True">
-              <Node name="OsmSharp.Android.UI" expanded="True">
-                <Node name="Renderer" expanded="True">
-                  <Node name="CanvasRenderer2D.cs" selected="True" />
-                </Node>
-              </Node>
-              <Node name="OsmSharp.Android.UI.Sample" expanded="True" />
-            </Node>
-          </Node>
-        </State>
+        <State expanded="True" selected="True" />
       </Pad>
       <Pad Id="ClassPad">
         <State expanded="True" selected="True" />
@@ -422,5 +398,5 @@
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" AndroidDeviceId-Debug="8889CC253F925A2FB51379C653D11F1" />
+  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" AndroidDeviceId-Debug="emulator-5554" />
 </Properties>

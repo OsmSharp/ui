@@ -202,7 +202,7 @@
     <Compile Include="Interpreter\SimpleGeometryInterpreter.cs" />
     <Compile Include="Streams\Collections\OsmGeoEnumerableStreamReader.cs" />
     <Compile Include="Streams\OsmGeoStream\IOsmGeoStreamTarget.cs" />
-    <Compile Include="Interpreter\IGeometryInterpreter.cs" />
+    <Compile Include="Interpreter\GeometryInterpreter.cs" />
     <Compile Include="Cache\OsmDataCache.cs" />
     <Compile Include="Data\IDataSource.cs" />
     <Compile Include="Data\IDataSourceReadOnly.cs" />
@@ -253,7 +253,6 @@
     <Compile Include="Streams\Filters\OsmStreamFilterTags.cs" />
     <Compile Include="Streams\Collections\OsmEnumerableStreamReader.cs" />
     <Compile Include="Streams\Collections\OsmCollectionStreamWriter.cs" />
-    <Compile Include="Streams\Collections\OsmGeoStreamReader.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
     <Compile Include="Data\Xml\OsmSource\OsmDataSource.cs" />
     <Compile Include="Data\Xml\Processor\ChangeSets\XmlDataProcessorChangeSetSource.cs" />

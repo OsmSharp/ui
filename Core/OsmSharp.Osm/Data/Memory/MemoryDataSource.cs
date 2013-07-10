@@ -38,7 +38,7 @@ namespace OsmSharp.Osm.Data.Core.Memory
         /// <summary>
         /// Holds geometry interpreter.
         /// </summary>
-        private IGeometryInterpreter _geometryInterpreter = null;
+        private GeometryInterpreter _geometryInterpreter = null;
 
         /// <summary>
         /// Creates a new memory data structure.

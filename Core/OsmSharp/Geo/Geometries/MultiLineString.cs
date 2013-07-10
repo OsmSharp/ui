@@ -41,7 +41,7 @@ namespace OsmSharp.Geo.Geometries
         /// </summary>
         /// <param name="lineStrings"></param>
         public MultiLineString(IEnumerable<LineString> lineStrings)
-            : base(lineStrings)
+            : base(lineStrings.Cast<Geometry>())
         {
 
         }

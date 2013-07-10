@@ -23,7 +23,7 @@ namespace OsmSharp.Geo.Geometries
         /// </summary>
         /// <param name="polygons"></param>
         public MultiPolygon(IEnumerable<Polygon> polygons)
-            : base(polygons)
+            : base(polygons.Cast<Geometry>())
         {
 
         }

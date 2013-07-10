@@ -38,7 +38,6 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
     <ConsolePause>False</ConsolePause>
-    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -68,13 +67,9 @@
     <Compile Include="GeoCoding\Memory\IndexPostalCodes.cs" />
     <Compile Include="GeoCoding\Memory\IndexStreets.cs" />
     <Compile Include="GeoCoding\Memory\InMemoryGeoCoder.cs" />
-    <Compile Include="GeoCoding\Nominatim\GeoCoder.cs" />
-    <Compile Include="GeoCoding\Nominatim\GeoCoderQuery.cs" />
-    <Compile Include="GeoCoding\Nominatim\GeoCoderResult.cs" />
     <Compile Include="Math\AI\Genetic\Fitness\IFitnessCalculator.cs" />
     <Compile Include="Math\AI\Genetic\Individual.cs" />
     <Compile Include="Math\AI\Genetic\IProblem.cs" />
-    <Compile Include="Math\AI\Genetic\Operations\CombinedOperation.cs" />
     <Compile Include="Math\AI\Genetic\Operations\IOperation.cs" />
     <Compile Include="Math\AI\Genetic\Population.cs" />
     <Compile Include="Math\AI\Genetic\Selectors\ISelector.cs" />
@@ -83,26 +78,6 @@
     <Compile Include="Math\AI\Genetic\Solvers\Solver.cs" />
     <Compile Include="Math\AI\Genetic\Solvers\SolverSettings.cs" />
     <Compile Include="Math\Algorithms\ConvexHull.cs" />
-    <Compile Include="Math\Geo\Constants.cs" />
-    <Compile Include="Math\Geo\Extensions.cs" />
-    <Compile Include="Math\Geo\Factory\PrimitiveGeoFactory.cs" />
-    <Compile Include="Math\Geo\GeoCoordinate.cs" />
-    <Compile Include="Math\Geo\GeoCoordinateBox.cs" />
-    <Compile Include="Math\Geo\GeoCoordinateLine.cs" />
-    <Compile Include="Math\Geo\GeoCoordinatePolygon.cs" />
-    <Compile Include="Math\Geo\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
-    <Compile Include="Math\Geo\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
-    <Compile Include="Math\Geo\Lambert\International\Belgium\Belgium1972LambertProjection.cs" />
-    <Compile Include="Math\Geo\Lambert\LambertCoordinate.cs" />
-    <Compile Include="Math\Geo\Lambert\LambertEllipsoid.cs" />
-    <Compile Include="Math\Geo\Lambert\LambertProjectionBase.cs" />
-    <Compile Include="Math\Geo\Meta\DirectionCalculator.cs" />
-    <Compile Include="Math\Geo\Meta\DirectionEnum.cs" />
-    <Compile Include="Math\Geo\Meta\RelativeDirection.cs" />
-    <Compile Include="Math\Geo\Meta\RelativeDirectionCalculator.cs" />
-    <Compile Include="Math\Geo\Meta\RelativeDirectionEnum.cs" />
-    <Compile Include="Math\Geo\Simple\GeoCoordinateCompact.cs" />
-    <Compile Include="Math\Geo\Simple\GeoCoordinateSimple.cs" />
     <Compile Include="Math\ILocationObject.cs" />
     <Compile Include="Math\IPointF2D.cs" />
     <Compile Include="Math\ITaggedObject.cs" />
@@ -269,39 +244,6 @@
     <Compile Include="Progress\IProgressReporter.cs" />
     <Compile Include="Progress\ProgressStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Xml\Gpx\GpxDocument.cs" />
-    <Compile Include="Xml\Gpx\v1_0\gpx.cs">
-      <DependentUpon>gpx.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\Gpx\v1_1\gpx.cs">
-      <DependentUpon>gpx.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\IXmlSource.cs" />
-    <Compile Include="Xml\Kml\KmlDocument.cs" />
-    <Compile Include="Xml\Kml\v2_0\kml.cs">
-      <DependentUpon>kml.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\Kml\v2_0_response\kml.cs">
-      <DependentUpon>kml.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\Kml\v2_1\kml.cs">
-      <DependentUpon>kml.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\Nominatim\Reverse\v1\reverse.cs">
-      <DependentUpon>reverse.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\Nominatim\Search\SearchDocument.cs" />
-    <Compile Include="Xml\Nominatim\Search\v1\search.cs">
-      <DependentUpon>search.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Xml\Sources\XmlFileSource.cs" />
-    <Compile Include="Xml\Sources\XmlReaderSource.cs" />
-    <Compile Include="Xml\Sources\XmlStreamSource.cs" />
-    <Compile Include="Xml\Sources\XmlStringSource.cs" />
-    <Compile Include="Math\Geo\Projections\IProjection.cs" />
-    <Compile Include="Math\Geo\Projections\SphericalMercator.cs" />
-    <Compile Include="Math\Geo\Projections\EllipticalMercator.cs" />
-    <Compile Include="Math\Geo\Projections\ScaledProjection.cs" />
     <Compile Include="Math\AI\Genetic\Operations\CombinedMutationOperation.cs" />
     <Compile Include="Math\AI\Genetic\Operations\ICrossOverOperation.cs" />
     <Compile Include="Math\AI\Genetic\Operations\IGenerationOperator.cs" />
@@ -317,7 +259,6 @@
     <Compile Include="IO\Output\IOutputStream.cs" />
     <Compile Include="IO\Output\OutputStreamHost.cs" />
     <Compile Include="IO\CappedStream.cs" />
-    <Compile Include="Math\Geo\Projections\WebMercator.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializer.cs" />
@@ -328,39 +269,70 @@
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
     <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
+    <Compile Include="Geo\Attributes\GeometryAttribute.cs" />
+    <Compile Include="Geo\Attributes\GeometryAttributeCollection.cs" />
+    <Compile Include="Geo\Attributes\IGeometryAttributesIndex.cs" />
+    <Compile Include="Geo\Attributes\SimpleGeometryAttributeCollection.cs" />
+    <Compile Include="Geo\Geometries\Geometry.cs" />
+    <Compile Include="Geo\Geometries\GeometryCollection.cs" />
+    <Compile Include="Geo\Geometries\LineairRing.cs" />
+    <Compile Include="Geo\Geometries\LineString.cs" />
+    <Compile Include="Geo\Geometries\MultiLineString.cs" />
+    <Compile Include="Geo\Geometries\MultiPoint.cs" />
+    <Compile Include="Geo\Geometries\MultiPolygon.cs" />
+    <Compile Include="Geo\Geometries\Point.cs" />
+    <Compile Include="Geo\Geometries\Polygon.cs" />
+    <Compile Include="Geo\IO\Gpx\GpxGeometryStreamSource.cs" />
+    <Compile Include="Geo\IO\Kml\KmlGeometryStreamSource.cs" />
+    <Compile Include="Geo\Meta\DirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\DirectionEnum.cs" />
+    <Compile Include="Geo\Meta\RelativeDirection.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
+    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\International\Belgium\Belgium1972LambertProjection.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertCoordinate.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertEllipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertProjectionBase.cs" />
+    <Compile Include="Geo\Projections\EllipticalMercator.cs" />
+    <Compile Include="Geo\Projections\IProjection.cs" />
+    <Compile Include="Geo\Projections\ScaledProjection.cs" />
+    <Compile Include="Geo\Projections\SphericalMercator.cs" />
+    <Compile Include="Geo\Projections\WebMercator.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateCompact.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
+    <Compile Include="Geo\Streams\GeoCollectionStreamSource.cs" />
+    <Compile Include="Geo\Streams\IGeoStreamSource.cs" />
+    <Compile Include="Geo\Streams\IGeoStreamTarget.cs" />
+    <Compile Include="Geo\Extensions.cs" />
+    <Compile Include="Geo\GeoCoordinate.cs" />
+    <Compile Include="Geo\GeoCoordinateBox.cs" />
+    <Compile Include="Geo\GeoCoordinateLine.cs" />
+    <Compile Include="Geo\GeoCoordinatePolygon.cs" />
+    <Compile Include="IO\Xml\Gpx\v1_0\gpx.cs" />
+    <Compile Include="IO\Xml\Gpx\v1_1\gpx.cs" />
+    <Compile Include="IO\Xml\Gpx\GpxDocument.cs" />
+    <Compile Include="IO\Xml\Kml\v2_0\kml.cs" />
+    <Compile Include="IO\Xml\Kml\v2_0_response\kml.cs" />
+    <Compile Include="IO\Xml\Kml\v2_1\kml.cs" />
+    <Compile Include="IO\Xml\Kml\KmlDocument.cs" />
+    <Compile Include="IO\Xml\Sources\XmlFileSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlReaderSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlStreamSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlStringSource.cs" />
+    <Compile Include="IO\Xml\IXmlSource.cs" />
+    <Compile Include="IO\ByteCache\DiskByteCache.cs" />
+    <Compile Include="IO\ByteCache\IByteCache.cs" />
+    <Compile Include="IO\ByteCache\MemoryByteCache.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Collections\Cache\LRUCache.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Xml\Gpx\v1_0\gpx.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\Gpx\v1_1\gpx.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\Kml\v2_0\kml.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\Kml\v2_0_response\kml.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\Kml\v2_1\kml.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\Nominatim\Reverse\v1\reverse.xsc">
-      <DependentUpon>reverse.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\Nominatim\Reverse\v1\reverse.xsd" />
-    <None Include="Xml\Nominatim\Reverse\v1\reverse.xss">
-      <DependentUpon>reverse.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\Nominatim\Search\v1\search.xsc">
-      <DependentUpon>search.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\Nominatim\Search\v1\search.xsd" />
-    <None Include="Xml\Nominatim\Search\v1\search.xss">
-      <DependentUpon>search.xsd</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Math\Geo\Projections\" />
+    <None Include="IO\Xml\Gpx\v1_0\gpx.xsd" />
+    <None Include="IO\Xml\Gpx\v1_1\gpx.xsd" />
+    <None Include="IO\Xml\Kml\v2_0\kml.xsd" />
+    <None Include="IO\Xml\Kml\v2_0_response\kml.xsd" />
+    <None Include="IO\Xml\Kml\v2_1\kml.xsd" />
   </ItemGroup>
 </Project>

@@ -29,21 +29,33 @@ namespace OsmSharp.Osm.Interpreter
     /// <summary>
     /// Represents a geometry interpreter to convert OSM-objects to corresponding geometries.
     /// </summary>
-    public interface IGeometryInterpreter
+    public abstract class GeometryInterpreter
     {
         /// <summary>
         /// Interprets an OSM-object and returns the corresponding geometry.
         /// </summary>
         /// <param name="osmObject"></param>
         /// <returns></returns>
-        GeometryCollection Interpret(CompleteOsmGeo osmObject);
+        public abstract GeometryCollection Interpret(CompleteOsmGeo osmObject);
 
         /// <summary>
-        /// Interprets an OSM-object and returns the corresponding geometry.
+        /// Interprets an OSM-object and returns the correctponding geometry.
         /// </summary>
         /// <param name="simpleOsmGeo"></param>
         /// <param name="data"></param>
         /// <returns></returns>
-        GeometryCollection Interpret(OsmGeo simpleOsmGeo, IDataSourceReadOnly data);
+        public virtual GeometryCollection Interpret(OsmGeo simpleOsmGeo, IDataSourceReadOnly data)
+        {
+            switch (simpleOsmGeo.Type)
+            {
+                case OsmGeoType.Node:
+                    return this.Interpret(CompleteNode.CreateFrom(simpleOsmGeo as Node));
+                case OsmGeoType.Way:
+                    return this.Interpret(CompleteWay.CreateFrom(simpleOsmGeo as Way, data));
+                case OsmGeoType.Relation:
+                    return this.Interpret(CompleteRelation.CreateFrom(simpleOsmGeo as Relation, data));
+            }
+            throw new ArgumentOutOfRangeException();
+        }
     }
 }
