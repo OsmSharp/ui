@@ -239,6 +239,12 @@ namespace OsmSharp.UI.Renderer
                     this.DrawText(target, text.X, text.Y, text.Text, 
                         this.FromPixels(target, view, text.Size));
                 }
+                else if (primitive is LineText2D)
+                {
+                    var lineText = (LineText2D)(primitive);
+                    this.DrawLineText(target, lineText.X, lineText.Y, lineText.Color,
+                        this.FromPixels(target, view, lineText.Size));
+                }
             }
 			return true;
         }
@@ -370,5 +376,15 @@ namespace OsmSharp.UI.Renderer
         /// <param name="text"></param>
         /// <param name="size"></param>
 		protected abstract void DrawText(Target2DWrapper<TTarget> target, double x, double y, string text, double size);
+
+        /// <summary>
+        /// Draws text along a given line.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="color"></param>
+        /// <param name="size"></param>
+        protected abstract void DrawLineText(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double size);
 	}
 }

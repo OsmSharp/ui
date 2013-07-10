@@ -345,6 +345,19 @@ namespace OsmSharp.WinForms.UI.Renderer
                 this.TransformX(x), this.TransformY(y));
         }
 
+        /// <summary>
+        /// Draws text along a line.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="color"></param>
+        /// <param name="size"></param>
+        protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double size)
+        {
+            // TODO: implement! :-)
+        }
+
 	    #endregion
-	}
+    }
 }

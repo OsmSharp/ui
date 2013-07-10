@@ -128,6 +128,7 @@
     <Compile Include="Renderer\Scene2DPrimitives\Icon2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Image2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitivesSource.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\LineText2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DEntry.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSerializer.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSource.cs" />
