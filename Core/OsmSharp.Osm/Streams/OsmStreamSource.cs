@@ -19,13 +19,14 @@
 using System.Collections.Generic;
 using OsmSharp.Osm.Data.Streams.Collections;
 using OsmSharp.Osm.Simple;
+using System.Collections;
 
 namespace OsmSharp.Osm.Data.Streams
 {
     /// <summary>
     /// Base class for any (streamable) source of osm data (Nodes, Ways and Relations).
     /// </summary>
-    public abstract class OsmStreamSource
+    public abstract class OsmStreamSource : IEnumerable<OsmGeo>, IEnumerator<OsmGeo>
     {
         /// <summary>
         /// Creates a new source.
@@ -86,14 +87,55 @@ namespace OsmSharp.Osm.Data.Streams
             return collection;
         }
 
-        ///// <summary>
-        ///// Returns a enumerable for all OsmGeo objects that can be detected in this stream.
-        ///// </summary>
-        ///// <returns></returns>
-        //public IEnumerable<OsmGeo> GetOsmGeoEnumerable()
-        //{
-        //    return new OsmGeoEnumerableStreamReader(this);
-        //}
+        #endregion
+
+        #region IEnumerator/IEnumerable Implementation
+
+        /// <summary>
+        /// Returns the enumerator for this enumerable.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<OsmGeo> GetEnumerator()
+        {
+            this.Initialize();
+
+            return this;
+        }
+
+        /// <summary>
+        /// Returns the enumerator for this enumerable.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            this.Initialize();
+
+            return this;
+        }
+
+        /// <summary>
+        /// Returns the current object.
+        /// </summary>
+        OsmGeo IEnumerator<OsmGeo>.Current
+        {
+            get { return this.Current(); }
+        }
+
+        /// <summary>
+        /// Disposes all resources associated with this source.
+        /// </summary>
+        public virtual void Dispose()
+        {
+
+        }
+
+        /// <summary>
+        /// Returns the current object.
+        /// </summary>
+        object System.Collections.IEnumerator.Current
+        {
+            get { return this.Current(); }
+        }
 
         #endregion
     }

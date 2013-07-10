@@ -32,6 +32,30 @@ namespace OsmSharp.Osm.Interpreter
     public abstract class GeometryInterpreter
     {
         /// <summary>
+        /// Holds the default geometry interpreter.
+        /// </summary>
+        private static GeometryInterpreter _defaultInterpreter;
+
+        /// <summary>
+        /// Gets/sets the default interpreter.
+        /// </summary>
+        public static GeometryInterpreter DefaultInterpreter
+        {
+            get
+            {
+                if (_defaultInterpreter == null)
+                { // TODO: replace this with a more intelligent geometry interpreter.
+                    _defaultInterpreter = new SimpleGeometryInterpreter();
+                }
+                return _defaultInterpreter;
+            }
+            set
+            {
+                _defaultInterpreter = value;
+            }
+        }
+
+        /// <summary>
         /// Interprets an OSM-object and returns the corresponding geometry.
         /// </summary>
         /// <param name="osmObject"></param>

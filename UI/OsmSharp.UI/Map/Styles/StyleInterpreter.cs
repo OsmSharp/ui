@@ -6,6 +6,8 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
 using OsmSharp.UI.Renderer;
 using OsmSharp;
+using OsmSharp.Osm.Simple;
+using OsmSharp.Osm.Data;
 
 namespace OsmSharp.UI.Map.Styles
 {
@@ -15,10 +17,34 @@ namespace OsmSharp.UI.Map.Styles
     public abstract class StyleInterpreter
     {
         /// <summary>
-        /// Returns the 
+        /// Returns the canvas color if any.
         /// </summary>
         /// <returns></returns>
         public abstract SimpleColor? GetCanvasColor();
+
+        /// <summary>
+        /// Translates the given OSM objects into corresponding geometries.
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <param name="projection"></param>
+        /// <param name="zoom"></param>
+        /// <param name="source"></param>
+        /// <param name="osmGeo"></param>
+        public virtual void Translate(Scene2D scene, IProjection projection, float zoom, IDataSourceReadOnly source, OsmGeo osmGeo)
+        {
+            switch (osmGeo.Type)
+            {
+                case OsmGeoType.Node:
+                    this.Translate(scene, projection, zoom, CompleteNode.CreateFrom(osmGeo as Node));
+                    break;
+                case OsmGeoType.Way:
+                    this.Translate(scene, projection, zoom, CompleteWay.CreateFrom(osmGeo as Way, source));
+                    break;
+                case OsmGeoType.Relation:
+                    this.Translate(scene, projection, zoom, CompleteRelation.CreateFrom(osmGeo as Relation, source));
+                    break;
+            }
+        }
 
         /// <summary>
         /// Translates the given OSM objects into corresponding geometries.

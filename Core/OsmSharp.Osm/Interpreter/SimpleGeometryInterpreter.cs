@@ -43,30 +43,33 @@ namespace OsmSharp.Osm.Interpreter
             //             Do not use this for any pupose other than testing or experimentation.
 
             GeometryCollection collection = new GeometryCollection();
-            switch (osmObject.Type)
+            if (osmObject != null)
             {
-                case CompleteOsmType.Node:
-                    collection.Add(new Point((osmObject as CompleteNode).Coordinate));
-                    break;
-                case CompleteOsmType.Way:
-                    if (osmObject.Tags.ContainsKey("area"))
-                    { // area tags leads to simple polygon
-                        collection.Add(
-                            new LineairRing((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>()));
-                    }
-                    else
-                    { // no area tag leads to just a line.
-                        collection.Add(
-                            new LineairRing((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>()));
-                    }
-                    break;
-                case CompleteOsmType.Relation:
-                    CompleteRelation relation = (osmObject as CompleteRelation);
-                    foreach (var member in relation.Members)
-                    {
-                        collection.AddRange(this.Interpret(member.Member));
-                    }
-                    break;
+                switch (osmObject.Type)
+                {
+                    case CompleteOsmType.Node:
+                        collection.Add(new Point((osmObject as CompleteNode).Coordinate));
+                        break;
+                    case CompleteOsmType.Way:
+                        if (osmObject.Tags.ContainsKey("area"))
+                        { // area tags leads to simple polygon
+                            collection.Add(
+                                new LineairRing((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>()));
+                        }
+                        else
+                        { // no area tag leads to just a line.
+                            collection.Add(
+                                new LineairRing((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>()));
+                        }
+                        break;
+                    case CompleteOsmType.Relation:
+                        CompleteRelation relation = (osmObject as CompleteRelation);
+                        foreach (var member in relation.Members)
+                        {
+                            collection.AddRange(this.Interpret(member.Member));
+                        }
+                        break;
+                }
             }
             return collection;
         }

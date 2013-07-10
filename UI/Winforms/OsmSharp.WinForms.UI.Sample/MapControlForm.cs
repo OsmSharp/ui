@@ -1,4 +1,22 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -16,6 +34,7 @@ using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.UI.Renderer;
+using OsmSharp.Osm.Data.Memory;
 
 namespace OsmSharp.WinForms.UI.Sample
 {
@@ -55,17 +74,17 @@ namespace OsmSharp.WinForms.UI.Sample
                 imageSource);
 
             // initialize the data source.
-            //var dataSource = new OsmDataSource(new FileInfo(@"c:\OSM\bin\gistel.osm").OpenRead());
+            var dataSource = MemoryDataSource.CreateFromXmlStream(new FileInfo(@"c:\OSM\bin\gistel.osm").OpenRead());
             //Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm"));
 
             // initialize map.
             var map = new Map();
-            //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
+            map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
             //map.AddLayer(new LayerMBTile(@"C:\Users\xivk\Documents\Nostalgeo.mbtiles"));
-            map.AddLayer(
-                new LayerScene(
-                    Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\test.osm.pbf.scene").OpenRead(), true)));
+            //map.AddLayer(
+            //    new LayerScene(
+            //        Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\test.osm.pbf.scene").OpenRead(), true)));
             //map.AddLayer(
             //    new LayerScene(
             //        Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf.scene.simple").OpenRead(), true)));

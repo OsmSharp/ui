@@ -24,11 +24,11 @@ using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
-using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Interpreter;
+using System.IO;
 
-namespace OsmSharp.Osm.Data.Core.Memory
+namespace OsmSharp.Osm.Data.Memory
 {
     /// <summary>
     /// An in-memory data repository of OSM data primitives.
@@ -41,11 +41,18 @@ namespace OsmSharp.Osm.Data.Core.Memory
         private GeometryInterpreter _geometryInterpreter = null;
 
         /// <summary>
+        /// Creates a new memory data structure using the default geometry interpreter.
+        /// </summary>
+        public MemoryDataSource() : this(GeometryInterpreter.DefaultInterpreter) { }
+
+        /// <summary>
         /// Creates a new memory data structure.
         /// </summary>
-        public MemoryDataSource()
+        /// <param name="geometryInterpreter">The geometry interpreter.</param>
+        public MemoryDataSource(GeometryInterpreter geometryInterpreter)
         {
-            // initialize the data structures.
+            _geometryInterpreter = geometryInterpreter;
+
             this.InitializeDataStructures();
         }
 
@@ -368,16 +375,61 @@ namespace OsmSharp.Osm.Data.Core.Memory
             return res;
         }
 
-        ///// <summary>
-        ///// Adds all objects from the given source to this memory data source.
-        ///// </summary>
-        ///// <param name="source"></param>
-        //public void PullFromSource(OsmStreamSource source)
-        //{
-        //    // create a special memory data source target.
-        //    var target = new MemoryOsmStreamTarget(this);
-        //    target.RegisterSource(source); // register the given source as the source.
-        //    target.Pull(); // pull the data from the source into the created target.
-        //}
+        #region Create Functions
+
+        /// <summary>
+        /// Creates a new memory data source from all the data in the given osm-stream.
+        /// </summary>
+        /// <param name="sourceStream"></param>
+        /// <returns></returns>
+        public static MemoryDataSource CreateFrom(OsmStreamSource sourceStream)
+        {
+            // reset if possible.
+            if (sourceStream.CanReset) { sourceStream.Reset(); }
+
+            // enumerate all objects and add them to a new datasource.
+            MemoryDataSource dataSource = new MemoryDataSource();
+            foreach (var osmGeo in sourceStream)
+            {
+                if (osmGeo != null)
+                {
+                    switch(osmGeo.Type)
+                    {
+                        case OsmGeoType.Node:
+                            dataSource.AddNode(osmGeo as Node);
+                            break;
+                        case OsmGeoType.Way:
+                            dataSource.AddWay(osmGeo as Way);
+                            break;
+                        case OsmGeoType.Relation:
+                            dataSource.AddRelation(osmGeo as Relation);
+                            break;
+                    }
+                }
+            }
+            return dataSource;
+        }
+
+        /// <summary>
+        /// Creates a new memory data source from all the data in the given osm xml stream.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static MemoryDataSource CreateFromXmlStream(Stream stream)
+        {
+            return MemoryDataSource.CreateFrom(new Xml.Processor.XmlOsmStreamReader(stream));
+        }
+
+        /// <summary>
+        /// Creates a new memory data source from all the data in the given osm pbf stream.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static MemoryDataSource CreateFromPBFStream(Stream stream)
+        {
+            return MemoryDataSource.CreateFrom(new PBF.Processor.PBFOsmStreamSource(stream));
+        }
+
+        #endregion
     }
 }

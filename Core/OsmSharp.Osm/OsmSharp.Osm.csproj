@@ -208,7 +208,6 @@
     <Compile Include="Data\IDataSourceReadOnly.cs" />
     <Compile Include="Data\KeyGenerator.cs" />
     <Compile Include="Data\Memory\MemoryDataSource.cs" />
-    <Compile Include="Data\Memory\MemoryOsmStreamTarget.cs" />
     <Compile Include="Data\PBF\Dense\Compressor.cs" />
     <Compile Include="Data\PBF\Dense\Decompressor.cs" />
     <Compile Include="Data\PBF\fileformat.cs">
