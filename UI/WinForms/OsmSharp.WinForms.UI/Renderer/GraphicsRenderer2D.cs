@@ -365,7 +365,7 @@ namespace OsmSharp.WinForms.UI.Renderer
                 float sizeInPixels = this.ToPixels(size);
                 Color textColor = Color.FromArgb(color);
                 Brush brush = new SolidBrush(textColor);
-                Font font = new Font(FontFamily.GenericSansSerif, sizeInPixels);
+                Font font = new Font(FontFamily.GenericSerif, sizeInPixels);
 
                 // get some metrics on the texts.
                 var characterWidths = GetCharacterWidths(target.Target, text, font);
@@ -375,52 +375,88 @@ namespace OsmSharp.WinForms.UI.Renderer
                 }
                 var characterHeight = target.Target.MeasureString(text, font).Height;
                 var textLength = characterWidths.Sum();
-                var avgCharacterWidth = textLength / characterWidths.Length; 
+                var avgCharacterWidth = textLength / characterWidths.Length;
 
-                // calculate a central position along the line.
-                double middle = Polyline2D.Length(x, y) / 2.0;
-                double first = middle - (textLength / 2.0);
-                PointF2D current = Polyline2D.PositionAtPosition(x, y, first);
-                for (int idx = 0; idx < text.Length; idx++)
+                // calculate line length.
+                var lineLength = Polyline2D.Length(x, y);
+                if (lineLength > textLength)
                 {
-                    double nextPosition = middle - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
-                    PointF2D next = Polyline2D.PositionAtPosition(x, y, nextPosition);
-                    char currentChar = text[idx];
-                    using (GraphicsPath characterPath = new GraphicsPath())
+                    // see if the text is 'upside down'.
+                    double averageAngle = 0;
+                    double middle = lineLength / 2.0;
+                    double first = middle - (textLength / 2.0);
+                    PointF2D current = Polyline2D.PositionAtPosition(x, y, first);
+                    for (int idx = 0; idx < text.Length; idx++)
                     {
-                        characterPath.AddString(currentChar.ToString(), font.FontFamily, (int)font.Style, font.Size, Point.Empty,
-                                                StringFormat.GenericTypographic);
-
-                        var pathBounds = characterPath.GetBounds();
-
-                        // Transformation matrix to move the character to the correct location. 
-                        // Note that all actions on the Matrix class are prepended, so we apply them in reverse.
-                        var transform = new Matrix();
+                        double nextPosition = middle - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
+                        PointF2D next = Polyline2D.PositionAtPosition(x, y, nextPosition);
 
                         // Translate to the final position, the center of line-segment between 'current' and 'next'
                         PointF2D position = current + ((next - current) / 2.0);
-                        transform.Translate(this.TransformX(position[0]), this.TransformY(position[1]));
 
                         // calculate the angle.
                         VectorF2D vector = next - current;
                         VectorF2D horizontal = new VectorF2D(1, 0);
                         double angleDegrees = ((Degree)horizontal.Angle(vector)).Value;
-
-                        // Rotate the character
-                        transform.Rotate((float)angleDegrees);
-
-                        // Translate the character so the centre of its base is over the origin
-                        transform.Translate(0, -characterHeight / 2.0f);
-
-                        //transform.Scale((float)this.FromPixels(_target, _view, 1), 
-                        //    (float)this.FromPixels(_target, _view, 1));
-
-                        characterPath.Transform(transform);
-
-                        // Draw the character
-                        target.Target.FillPath(brush, characterPath);
+                        averageAngle = averageAngle + angleDegrees;
+                        current = next;
                     }
-                    current = next;
+                    averageAngle = averageAngle / text.Length;
+
+                    // reverse if 'upside down'.
+                    double[] xText = x;
+                    double[] yText = y;
+                    if (averageAngle > 90 && averageAngle < 180 + 90)
+                    { // the average angle is > PI => means upside down.
+                        xText = x.Reverse<double>().ToArray<double>();
+                        yText = y.Reverse<double>().ToArray<double>();
+                    }
+
+                    // calculate a central position along the line.
+                    middle = lineLength / 2.0;
+                    first = middle - (textLength / 2.0);
+                    current = Polyline2D.PositionAtPosition(xText, yText, first);
+                    for (int idx = 0; idx < text.Length; idx++)
+                    {
+                        double nextPosition = middle - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
+                        PointF2D next = Polyline2D.PositionAtPosition(xText, yText, nextPosition);
+                        char currentChar = text[idx];
+                        using (GraphicsPath characterPath = new GraphicsPath())
+                        {
+                            characterPath.AddString(currentChar.ToString(), font.FontFamily, (int)font.Style, font.Size, Point.Empty,
+                                                    StringFormat.GenericTypographic);
+
+                            var pathBounds = characterPath.GetBounds();
+
+                            // Transformation matrix to move the character to the correct location. 
+                            // Note that all actions on the Matrix class are prepended, so we apply them in reverse.
+                            var transform = new Matrix();
+
+                            // Translate to the final position, the center of line-segment between 'current' and 'next'
+                            PointF2D position = current + ((next - current) / 2.0);
+                            transform.Translate(this.TransformX(position[0]), this.TransformY(position[1]));
+
+                            // calculate the angle.
+                            VectorF2D vector = next - current;
+                            VectorF2D horizontal = new VectorF2D(1, 0);
+                            double angleDegrees = ((Degree)horizontal.Angle(vector)).Value;
+
+                            // Rotate the character
+                            transform.Rotate((float)angleDegrees);
+
+                            // Translate the character so the centre of its base is over the origin
+                            transform.Translate(0, -characterHeight / 2.5f);
+                            
+                            //transform.Scale((float)this.FromPixels(_target, _view, 1), 
+                            //    (float)this.FromPixels(_target, _view, 1));
+
+                            characterPath.Transform(transform);
+
+                            // Draw the character
+                            target.Target.FillPath(brush, characterPath);
+                        }
+                        current = next;
+                    }
                 }
             }
         }

@@ -28,24 +28,24 @@ way[highway=trunk],way[highway=trunk_link],
 way[highway=primary],way[highway=primary_link],
 way[highway=secondary],way[highway=secondary_link],
 way[highway=tertiary],way[highway=tertiary_link],
-way[highway=residential],way[highway=unclassified]		{ z-index: 8; text: name; text-color: black; font-size: 12; text-position: line; text-halo-color: white; text-halo-radius: 2; linecap: round; casing-linecap: round }
-way[highway=motorway],way[highway=motorway_link]		{ z-index: 7; color: red; width: 7; casing-color: black; casing-width: 1; }
-way[highway=trunk],way[highway=trunk_link]				{ z-index: 6; color: red; width: 5; casing-color: black; casing-width: 1; }
-way[highway=primary],way[highway=primary_link]			{ z-index: 6; color: red; width: 5; casing-color: #555555; casing-width: 1; }
-way[highway=secondary],way[highway=secondary_link]		{ z-index: 6; color: orange; width: 5; casing-color: #555555; casing-width: 1; }
-way[highway=tertiary],way[highway=tertiary_link]		{ z-index: 5; color: white; width: 4; casing-color: #555555; casing-width: 1; }
-way|z14-[highway=unclassified]                           { z-index: 5; color: white; width: 4; casing-color: gray; casing-width: 1; }
-way|z14-[highway=residential]                            { z-index: 5; color: white; width: 4; casing-color: gray; casing-width: 1; }
-way|z14-[highway=service]								 { z-index: 5; color: white; width: 4; casing-color: gray; casing-width: 1; }
-way|z14-[highway=service][service!=parking_aisle]        { z-index: 5; color: white; width: 3; casing-color: gray; casing-width: 1; }
-way|z16-[highway=track]								     { z-index: 5; color: gray; width: 2; dashes: 6,2; }
+way[highway=residential],way[highway=unclassified]		{ z-index: 8; text: name; text-color: black; font-size: 10; text-position: line; text-halo-color: white; text-halo-radius: 2; linecap: round; casing-linecap: round }
+way[highway=motorway],way[highway=motorway_link]		{ z-index: 7; color: red; width: 10; casing-color: black; casing-width: 1; }
+way[highway=trunk],way[highway=trunk_link]				{ z-index: 6; color: red; width: 8; casing-color: black; casing-width: 1; }
+way[highway=primary],way[highway=primary_link]			{ z-index: 6; color: red; width: 8; casing-color: #555555; casing-width: 1; }
+way[highway=secondary],way[highway=secondary_link]		{ z-index: 6; color: orange; width: 8; casing-color: #555555; casing-width: 1; }
+way[highway=tertiary],way[highway=tertiary_link]		{ z-index: 5; color: white; width: 7; casing-color: #555555; casing-width: 1; }
+way|z14-[highway=unclassified]                           { z-index: 5; color: white; width: 7; casing-color: gray; casing-width: 1; }
+way|z14-[highway=residential]                            { z-index: 5; color: white; width: 7; casing-color: gray; casing-width: 1; }
+way|z14-[highway=service]								 { z-index: 5; color: white; width: 7; casing-color: gray; casing-width: 1; }
+way|z14-[highway=service][service!=parking_aisle]        { z-index: 5; color: white; width: 4; casing-color: gray; casing-width: 1; }
+way|z16-[highway=track]								     { z-index: 5; color: gray; width: 3; dashes: 6,2; }
 way|z16-[highway=service][service=parking_aisle]         { z-index: 5; color: white; width: 1; casing-color: #555555; casing-width: 1; }
-way|z16-[highway=service][service=alley]                 { z-index: 5; color: white; width: 2; dashes: 6,2; casing-color: 555555; casing-width: 1; }
-way|z14-[highway=road]                                   { z-index: 5; color: gray; width: 5; casing-color: white; casing-width: 1; }
-way|z16-[highway=living_street]                          { z-index: 5; color: white; width: 3; casing-color: #555555; casing-width: 1; }
+way|z16-[highway=service][service=alley]                 { z-index: 5; color: white; width: 3; dashes: 6,2; casing-color: 555555; casing-width: 1; }
+way|z14-[highway=road]                                   { z-index: 5; color: gray; width: 7; casing-color: white; casing-width: 1; }
+way|z16-[highway=living_street]                          { z-index: 5; color: white; width: 6; casing-color: #555555; casing-width: 1; }
 way|z16-[highway=foot], way|z16-[highway=path], way|z16-[highway=footway]     			
-													     { z-index: 5; color: gray; width: 1; dashes: 6,2; }
-way|z14-[highway=cycleway]							     { z-index: 5; color: blue; width: 2; dashes: 2,2; }
+													     { z-index: 5; color: gray; width: 2; dashes: 6,2; }
+way|z14-[highway=cycleway]							     { z-index: 5; color: blue; width: 3; dashes: 2,2; }
 						
 
 way[boundary=administrative] :area					{ z-index: 10; color: darkblue; width: 1; dashes: 8,2}
