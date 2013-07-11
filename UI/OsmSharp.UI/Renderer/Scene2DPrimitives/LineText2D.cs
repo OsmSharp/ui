@@ -30,12 +30,13 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="width"></param>
         /// <param name="lineJoin"></param>
         /// <param name="dashes"></param>
-        public LineText2D(double[] x, double[] y, int color, float size)
+        public LineText2D(double[] x, double[] y, int color, float size, string text)
         {
             this.X = x;
             this.Y = y;
             this.Color = color;
             this.Size = size;
+            this.Text = text;
 
             MinX = int.MaxValue;
             MaxX = int.MinValue;
@@ -79,13 +80,14 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="dashes"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public LineText2D(double[] x, double[] y, int color, double size, float minZoom, float maxZoom)
+        public LineText2D(double[] x, double[] y, int color, double size, string text, float minZoom, float maxZoom)
             : this()
         {
             this.X = x;
             this.Y = y;
             this.Color = color;
             this.Size = size;
+            this.Text = text;
 
             MinX = int.MaxValue;
             MaxX = int.MinValue;
@@ -130,7 +132,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="maxX"></param>
         /// <param name="minY"></param>
         /// <param name="maxY"></param>
-        public LineText2D(double[] x, double[] y, int color, double size,
+        public LineText2D(double[] x, double[] y, int color, double size, string text,
             int minX, int maxX, int minY, int maxY)
             : this()
         {
@@ -138,6 +140,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.Y = y;
             this.Color = color;
             this.Size = size;
+            this.Text = text;
 
             MinX = minX;
             MaxX = maxX;
@@ -152,51 +155,36 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// Gets or sets the tag.
         /// </summary>
         /// <value>The tag.</value>
-        public object Tag
-        {
-            get;
-            set;
-        }
+        public object Tag { get; set; }
+
+        /// <summary>
+        /// Gets or sets the text.
+        /// </summary>
+        public string Text { get; set; }
 
         /// <summary>
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-        public double[] X
-        {
-            get;
-            set;
-        }
+        public double[] X { get; set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-        public double[] Y
-        {
-            get;
-            set;
-        }
+        public double[] Y { get; set; }
 
         /// <summary>
         /// Gets or sets the color.
         /// </summary>
         /// <value>The color.</value>
-        public int Color
-        {
-            get;
-            set;
-        }
+        public int Color { get; set; }
 
         /// <summary>
         /// Gets or sets the size.
         /// </summary>
         /// <value>The size.</value>
-        public double Size
-        {
-            get;
-            set;
-        }
+        public double Size { get; set; }
 
         /// <summary>
         /// The minimum zoom.

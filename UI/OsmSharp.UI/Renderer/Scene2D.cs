@@ -241,13 +241,6 @@ namespace OsmSharp.UI.Renderer
 
 			lock(_primitives)
 			{
-                //Dictionary<uint, IScene2DPrimitive> layerDic;
-                //if (!_primitives.TryGetValue(layer, out layerDic))
-                //{
-                //    layerDic = new Dictionary<uint, IScene2DPrimitive>();
-                //    _primitives.Add(layer, layerDic);
-                //}
-                //layerDic.Add(id, new Line2D(x, y, color, width, lineJoin, dashes, minZoom, maxZoom));
                 this.AddPrimitive(layer, id, new Line2D(x, y, color, width, lineJoin, dashes, minZoom, maxZoom));
 			}
 		    return id;
@@ -293,13 +286,7 @@ namespace OsmSharp.UI.Renderer
 			{
 				uint id = _nextId;
 				_nextId++;
-                //Dictionary<uint, IScene2DPrimitive> layerDic;
-                //if (!_primitives.TryGetValue(layer, out layerDic))
-                //{
-                //    layerDic = new Dictionary<uint, IScene2DPrimitive>();
-                //    _primitives.Add(layer, layerDic);
-                //}
-                //layerDic.Add(id, new Polygon2D(x, y, color, width, fill, minZoom, maxZoom));
+
                 this.AddPrimitive(layer, id, new Polygon2D(x, y, color, width, fill, minZoom, maxZoom));
 				return id;
 			}
@@ -325,13 +312,7 @@ namespace OsmSharp.UI.Renderer
 			{
 				uint id = _nextId;
 				_nextId++;
-                //Dictionary<uint, IScene2DPrimitive> layerDic;
-                //if (!_primitives.TryGetValue(layer, out layerDic))
-                //{
-                //    layerDic = new Dictionary<uint, IScene2DPrimitive>();
-                //    _primitives.Add(layer, layerDic);
-                //}
-                //layerDic.Add(id, new Icon2D(x, y, iconImage, minZoom, maxZoom));
+
                 this.AddPrimitive(layer, id, new Icon2D(x, y, iconImage, minZoom, maxZoom));
 				return id;
 			}
@@ -361,13 +342,6 @@ namespace OsmSharp.UI.Renderer
 				uint id = _nextId;
 				_nextId++;
 
-                //Dictionary<uint, IScene2DPrimitive> layerDic;
-                //if (!_primitives.TryGetValue(layer, out layerDic))
-                //{
-                //    layerDic = new Dictionary<uint, IScene2DPrimitive>();
-                //    _primitives.Add(layer, layerDic);
-                //}
-                //layerDic.Add(id, new Image2D(left, top, bottom, right, imageData, minZoom, maxZoom));
                 this.AddPrimitive(layer, id, new Image2D(left, top, bottom, right, imageData, minZoom, maxZoom));
 				return id;
 			}
@@ -400,13 +374,6 @@ namespace OsmSharp.UI.Renderer
 				uint id = _nextId;
 				_nextId++;
 
-				//Dictionary<uint, IScene2DPrimitive> layerDic;
-				//if (!_primitives.TryGetValue(layer, out layerDic))
-				//{
-				//    layerDic = new Dictionary<uint, IScene2DPrimitive>();
-				//    _primitives.Add(layer, layerDic);
-				//}
-				//layerDic.Add(id, new Image2D(left, top, bottom, right, imageData, minZoom, maxZoom));
 				this.AddPrimitive(layer, id, image);
 				return id;
 			}
@@ -423,7 +390,7 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="text"></param>
 	    /// <param name="minZoom"></param>
 	    /// <returns></returns>
-		public uint AddText(int layer, float minZoom, float maxZoom, double x, double y, double size, string text)
+		public uint AddText(int layer, float minZoom, float maxZoom, double x, double y, double size, string text, int color)
         {
             if (text == null)
                 throw new ArgumentNullException("text");
@@ -433,16 +400,35 @@ namespace OsmSharp.UI.Renderer
 				uint id = _nextId;
 				_nextId++;
 
-                //Dictionary<uint, IScene2DPrimitive> layerDic;
-                //if (!_primitives.TryGetValue(layer, out layerDic))
-                //{
-                //    layerDic = new Dictionary<uint, IScene2DPrimitive>();
-                //    _primitives.Add(layer, layerDic);
-                //}
-                //layerDic.Add(id, new Text2D(x, y, text, size, minZoom, maxZoom));
-                this.AddPrimitive(layer, id, new Text2D(x, y, text, size, minZoom, maxZoom));
+                this.AddPrimitive(layer, id, new Text2D(x, y, text, color, size, minZoom, maxZoom));
 				return id;
 			}
+        }
+
+        /// <summary>
+        /// Adds a text along a line to this scene.
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="color"></param>
+        /// <param name="font_size"></param>
+        /// <param name="text"></param>
+        public uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double font_size, string text)
+        {
+            if (text == null)
+                throw new ArgumentNullException("text");
+
+            lock (_primitives)
+            {
+                uint id = _nextId;
+                _nextId++;
+
+                this.AddPrimitive(layer, id, new LineText2D(x, y, color, font_size, text, minZoom, maxZoom));
+                return id;
+            }
         }
 
         #region Serialization/Deserialization
@@ -490,5 +476,5 @@ namespace OsmSharp.UI.Renderer
         }
 
 	    #endregion
-	}
+    }
 }

@@ -236,13 +236,13 @@ namespace OsmSharp.UI.Renderer
                 else if (primitive is Text2D)
                 {
                     var text = (Text2D)(primitive);
-                    this.DrawText(target, text.X, text.Y, text.Text, 
+                    this.DrawText(target, text.X, text.Y, text.Text, text.Color,
                         this.FromPixels(target, view, text.Size));
                 }
                 else if (primitive is LineText2D)
                 {
                     var lineText = (LineText2D)(primitive);
-                    this.DrawLineText(target, lineText.X, lineText.Y, lineText.Color,
+                    this.DrawLineText(target, lineText.X, lineText.Y, lineText.Text, lineText.Color,
                         this.FromPixels(target, view, lineText.Size));
                 }
             }
@@ -333,7 +333,8 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="width">Width.</param>
 	    /// <param name="lineJoin"></param>
 	    /// <param name="dashes"></param>
-		protected abstract void DrawLine(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes);
+		protected abstract void DrawLine(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, 
+            LineJoin lineJoin, int[] dashes);
 
 	    /// <summary>
 	    /// Draws a polygon on the target. The coordinates given are scene coordinates.
@@ -375,7 +376,7 @@ namespace OsmSharp.UI.Renderer
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-		protected abstract void DrawText(Target2DWrapper<TTarget> target, double x, double y, string text, double size);
+		protected abstract void DrawText(Target2DWrapper<TTarget> target, double x, double y, string text, int color, double size);
 
         /// <summary>
         /// Draws text along a given line.
@@ -385,6 +386,6 @@ namespace OsmSharp.UI.Renderer
         /// <param name="y"></param>
         /// <param name="color"></param>
         /// <param name="size"></param>
-        protected abstract void DrawLineText(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double size);
+        protected abstract void DrawLineText(Target2DWrapper<TTarget> target, double[] x, double[] y, string text, int color, double size);
 	}
 }

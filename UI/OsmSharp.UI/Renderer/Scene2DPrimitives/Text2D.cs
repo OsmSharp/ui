@@ -26,7 +26,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-        public Text2D(float x, float y, string text, float size)
+        public Text2D(float x, float y, string text, int color, float size)
         {
             this.X = x;
             this.Y = y;
@@ -46,7 +46,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="size"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public Text2D(double x, double y, string text, double size, float minZoom, float maxZoom)
+        public Text2D(double x, double y, string text, int color, double size, float minZoom, float maxZoom)
         {
             this.X = x;
             this.Y = y;
@@ -61,11 +61,12 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// Gets or sets the tag.
         /// </summary>
         /// <value>The tag.</value>
-        public object Tag
-        {
-            get;
-            set;
-        }
+        public object Tag { get; set; }
+
+        /// <summary>
+        /// Gets/sets the color.
+        /// </summary>
+        public int Color { get; set; }
 
         /// <summary>
         /// Gets or sets the x.

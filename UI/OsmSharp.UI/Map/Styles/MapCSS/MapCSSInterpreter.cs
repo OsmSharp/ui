@@ -46,9 +46,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         private const int StrokeLayerOffset = 300;
 
         /// <summary>
+        /// Holds the text layer offset.
+        /// </summary>
+        private const int TextLayerOffset = 400;
+
+        /// <summary>
         /// Holds the icon/test layer offset.
         /// </summary>
-        private const int IconTextLayerOffset = 400;
+        private const int IconTextLayerOffset = 500;
 
 
         /// <summary>
@@ -187,6 +192,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 string text;
                 if (rule.TryGetProperty("text", out text))
                 {
+                    int textColor;
+                    if(!rule.TryGetProperty("textColor", out textColor))
+                    {
+                        textColor = SimpleColor.FromKnownColor(KnownColor.Black).Value;
+                    }
+
                     // a text is to be drawn.
                     string value;
                     if (node.Tags.TryGetValue(text, out value))
@@ -194,7 +205,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         sceneLayer = sceneLayer + IconTextLayerOffset; // offset to correct layer.
 
                         scene.AddText(sceneLayer, minZoom, maxZoom, (float)projection.LongitudeToX(node.Coordinate.Longitude),
-                                      (float) projection.LatitudeToY(node.Coordinate.Latitude), 15, value);
+                                      (float) projection.LatitudeToY(node.Coordinate.Latitude), 15, value, textColor);
 
                         sceneLayer = sceneLayer - IconTextLayerOffset; // offset to correct layer.
                     }
@@ -313,6 +324,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             scene.AddLine(sceneLayer - 1, minZoom, maxZoom, x, y, casingColor, width + (2 * casingWidth), lineJoin, dashes);
                         }
                         sceneLayer = sceneLayer - StrokeLayerOffset;
+                    }
+
+                    int textColor;
+                    int fontSize;
+                    string nameTag;
+                    if (rule.TryGetProperty("text", out nameTag) &&
+                        rule.TryGetProperty("fontSize", out fontSize) &&
+                        rule.TryGetProperty("textColor", out textColor))
+                    {
+                        string name;
+                        if (way.Tags.TryGetValue(nameTag, out name))
+                        {
+                            sceneLayer = sceneLayer + TextLayerOffset; // offset to correct layer.
+
+                            scene.AddTextLine(sceneLayer - 1, minZoom, maxZoom, x, y, textColor, fontSize, name);
+
+                            sceneLayer = sceneLayer - TextLayerOffset; 
+                        }
                     }
                 }
             }

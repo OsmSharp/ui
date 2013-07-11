@@ -4,8 +4,12 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using OsmSharp.UI.Renderer;
 using LineJoin = OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin;
+using OsmSharp.Math.Primitives;
+using OsmSharp.Math;
+using OsmSharp.Math.Units.Angle;
 
 namespace OsmSharp.WinForms.UI.Renderer
 {
@@ -337,11 +341,12 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-        protected override void DrawText(Target2DWrapper<Graphics> target, double x, double y, string text, double size)
+        protected override void DrawText(Target2DWrapper<Graphics> target, double x, double y, string text, int color, double size)
         {
             float sizeInPixels = this.ToPixels(size);
+            Color textColor = Color.FromArgb(color);
 
-            target.Target.DrawString(text, new Font(FontFamily.GenericSansSerif, sizeInPixels), new SolidBrush(Color.Black),
+            target.Target.DrawString(text, new Font(FontFamily.GenericSansSerif, sizeInPixels), new SolidBrush(textColor),
                 this.TransformX(x), this.TransformY(y));
         }
 
@@ -353,11 +358,95 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="y"></param>
         /// <param name="color"></param>
         /// <param name="size"></param>
-        protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double size)
+        protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color, double size)
         {
-            // TODO: implement! :-)
+            if (x.Length > 1)
+            {
+                float sizeInPixels = this.ToPixels(size);
+                Color textColor = Color.FromArgb(color);
+                Brush brush = new SolidBrush(textColor);
+                Font font = new Font(FontFamily.GenericSansSerif, sizeInPixels);
+
+                // get some metrics on the texts.
+                var characterWidths = GetCharacterWidths(target.Target, text, font);
+                for (int idx = 0; idx < characterWidths.Length; idx++)
+                {
+                    characterWidths[idx] = (float)this.FromPixels(_target, _view, characterWidths[idx]);
+                }
+                var characterHeight = target.Target.MeasureString(text, font).Height;
+                var textLength = characterWidths.Sum();
+                var avgCharacterWidth = textLength / characterWidths.Length; 
+
+                // calculate a central position along the line.
+                double middle = Polyline2D.Length(x, y) / 2.0;
+                double first = middle - (textLength / 2.0);
+                PointF2D current = Polyline2D.PositionAtPosition(x, y, first);
+                for (int idx = 0; idx < text.Length; idx++)
+                {
+                    double nextPosition = middle - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
+                    PointF2D next = Polyline2D.PositionAtPosition(x, y, nextPosition);
+                    char currentChar = text[idx];
+                    using (GraphicsPath characterPath = new GraphicsPath())
+                    {
+                        characterPath.AddString(currentChar.ToString(), font.FontFamily, (int)font.Style, font.Size, Point.Empty,
+                                                StringFormat.GenericTypographic);
+
+                        var pathBounds = characterPath.GetBounds();
+
+                        // Transformation matrix to move the character to the correct location. 
+                        // Note that all actions on the Matrix class are prepended, so we apply them in reverse.
+                        var transform = new Matrix();
+
+                        // Translate to the final position, the center of line-segment between 'current' and 'next'
+                        PointF2D position = current + ((next - current) / 2.0);
+                        transform.Translate(this.TransformX(position[0]), this.TransformY(position[1]));
+
+                        // calculate the angle.
+                        VectorF2D vector = next - current;
+                        VectorF2D horizontal = new VectorF2D(1, 0);
+                        double angleDegrees = ((Degree)horizontal.Angle(vector)).Value;
+
+                        // Rotate the character
+                        transform.Rotate((float)angleDegrees);
+
+                        // Translate the character so the centre of its base is over the origin
+                        transform.Translate(0, -characterHeight / 2.0f);
+
+                        //transform.Scale((float)this.FromPixels(_target, _view, 1), 
+                        //    (float)this.FromPixels(_target, _view, 1));
+
+                        characterPath.Transform(transform);
+
+                        // Draw the character
+                        target.Target.FillPath(brush, characterPath);
+                    }
+                    current = next;
+                }
+            }
         }
 
-	    #endregion
+        #endregion
+
+        /// <summary>
+        /// Gets the char widths for the given string and given font.
+        /// </summary>
+        /// <param name="graphics"></param>
+        /// <param name="text"></param>
+        /// <param name="font"></param>
+        /// <returns></returns>
+        private float[] GetCharacterWidths(Graphics graphics, string text, Font font)
+        {
+            // The length of a space. Necessary because a space measured using StringFormat.GenericTypographic has no width.
+            // We can't use StringFormat.GenericDefault for the characters themselves, as it adds unwanted spacing.
+            var spaceLength = graphics.MeasureString(" ", font, Point.Empty, StringFormat.GenericDefault).Width;
+
+            float[] widths = new float[text.Length];
+            for (int idx = 0; idx < text.Length; idx++)
+            {
+                widths[idx] = (text[idx] == ' ' ? spaceLength :
+                    graphics.MeasureString(text[idx].ToString(), font, Point.Empty, StringFormat.GenericTypographic).Width);
+            }
+            return widths;
+        }
     }
 }
