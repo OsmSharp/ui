@@ -49,7 +49,7 @@ namespace OsmSharp.Math.Primitives
         /// <param name="x2"></param>
         /// <param name="y2"></param>
         public RectangleF2D(double x1, double y1, double x2, double y2)
-            : this(new PointF2D(x1, y2), new PointF2D(x2, y2))
+            : this(new PointF2D(x1, y1), new PointF2D(x2, y2))
         {
 
         }
