@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{38D6C99B-2556-4784-B386-4AEDEB54318F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.iOS", "Core\OsmSharp\OsmSharp.iOS.csproj", "{CF2AE65D-56A8-4577-807B-6FC9B1630489}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{F6EB922F-A0E9-4F8E-8D3E-6C168C17A8EC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Release|iPhone = Release|iPhone
+		Ad-Hoc|iPhone = Ad-Hoc|iPhone
+		AppStore|iPhone = AppStore|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.Ad-Hoc|iPhone.ActiveCfg = Debug|Any CPU
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.Ad-Hoc|iPhone.Build.0 = Debug|Any CPU
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.AppStore|iPhone.ActiveCfg = Debug|Any CPU
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.AppStore|iPhone.Build.0 = Debug|Any CPU
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.Release|iPhone.Build.0 = Release|Any CPU
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CF2AE65D-56A8-4577-807B-6FC9B1630489} = {38D6C99B-2556-4784-B386-4AEDEB54318F}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Core\OsmSharp\OsmSharp.iOS.csproj
+	EndGlobalSection
+EndGlobal

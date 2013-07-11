@@ -139,7 +139,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                 // START WRITING THE DATA TO THE TARGET STREAM HERE!
 
                 // 1: write the type of data.
-                byte[] leafFlag = new[] { (byte)(false ? 1 : 0) };
+                byte[] leafFlag = new[] { (byte)0 };
                 stream.Write(leafFlag, 0, 1);
                 
                 // 2: Write the length of the meta data.
@@ -163,7 +163,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                 // START WRITING THE DATA TO THE TARGET STREAM HERE!
 
                 // 1: write the type of data.
-                byte[] leafFlag = new[] { (byte)(true ? 1 : 0) };
+                byte[] leafFlag = new[] { (byte)1 };
                 stream.Write(leafFlag, 0, 1);
 
                 // 2: write the leaf data.
