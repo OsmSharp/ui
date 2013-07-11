@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,13 +27,11 @@ namespace OsmSharp.Math.Primitives.Enumerators.Points
     /// <summary>
     /// An enurable for a line.
     /// </summary>
-    /// <typeparam name="PointType"></typeparam>
-    public sealed class LineEnumerable<PointType> : IEnumerable<GenericLineF2D<PointType>>
-        where PointType : PointF2D
+    public sealed class LineEnumerable : IEnumerable<LineF2D>
     {
-        private LineEnumerator<PointType> _enumerator;
+        private LineEnumerator _enumerator;
 
-        internal LineEnumerable(LineEnumerator<PointType> enumerator)
+        internal LineEnumerable(LineEnumerator enumerator)
         {
             _enumerator = enumerator;
         }
@@ -43,7 +42,7 @@ namespace OsmSharp.Math.Primitives.Enumerators.Points
         /// Creates the enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<GenericLineF2D<PointType>> GetEnumerator()
+        public IEnumerator<LineF2D> GetEnumerator()
         {
             return _enumerator;
         }

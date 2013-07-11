@@ -25,8 +25,7 @@ namespace OsmSharp.Math.Primitives.Enumerators.Points
     /// <summary>
     /// Interface representing an enumerable with a list of points.
     /// </summary>
-    internal interface IPointList<PointType>
-        where PointType : PointF2D
+    internal interface IPointList
     {
         /// <summary>
         /// Returns the count of points.
@@ -41,7 +40,7 @@ namespace OsmSharp.Math.Primitives.Enumerators.Points
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
-        PointType this[int idx]
+        PointF2D this[int idx]
         {
             get;
         }

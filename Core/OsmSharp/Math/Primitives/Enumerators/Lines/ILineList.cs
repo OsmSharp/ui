@@ -25,9 +25,7 @@ namespace OsmSharp.Math.Primitives.Enumerators.Lines
     /// <summary>
     /// Interface representing a list of lines.
     /// </summary>
-    /// <typeparam name="PointType"></typeparam>
-    internal interface ILineList<PointType>
-        where PointType : PointF2D
+    internal interface ILineList
     {
         /// <summary>
         /// Returns the count of lines.
@@ -42,7 +40,7 @@ namespace OsmSharp.Math.Primitives.Enumerators.Lines
         /// </summary>
         /// <param name="idx"></param>
         /// <returns></returns>
-        GenericLineF2D<PointType> this[int idx]
+        LineF2D this[int idx]
         {
             get;
         }

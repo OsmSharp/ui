@@ -27,20 +27,14 @@ namespace OsmSharp.Math.Algorithms
     /// <summary>
     /// A convex hull algorithm implementation.
     /// </summary>
-    /// <typeparam name="PointType"></typeparam>
-    /// <typeparam name="RectangleType"></typeparam>
-    /// <typeparam name="LineType"></typeparam>
-    public static class ConvexHull<PointType, RectangleType, LineType>
-        where PointType : PointF2D
-        where RectangleType : GenericRectangleF2D<PointType>
-        where LineType : GenericLineF2D<PointType>
+    public static class ConvexHull
     {
         /// <summary>
         /// Calculates a polygon out of a list of points. The resulting polygon the convex hull of all points.
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public static IList<PointType> Calculate(IList<PointType> points)
+        public static IList<PointF2D> Calculate(IList<PointF2D> points)
         {
             if (points.Count < 3)
             {
@@ -49,8 +43,8 @@ namespace OsmSharp.Math.Algorithms
             }
             
             // find the 'left-most' and 'top-most' point.
-            PointType start = points[0];
-            foreach (PointType point in points)
+            PointF2D start = points[0];
+            foreach (PointF2D point in points)
             {
                 if (start[0] > point[0])
                 {
@@ -71,16 +65,16 @@ namespace OsmSharp.Math.Algorithms
             VectorF2D reference = start - before_start;
 
             // start the gift-wrapping!
-            List<PointType> result = new List<PointType>();
-            PointType current = start;
+            List<PointF2D> result = new List<PointF2D>();
+            PointF2D current = start;
             result.Add(current);
 
             do
             {
                 // find the point with the smallest angle.
                 double angle = double.MaxValue;
-                PointType next = null;
-                foreach (PointType point in points)
+                PointF2D next = null;
+                foreach (PointF2D point in points)
                 {
                     if (point != current)
                     {

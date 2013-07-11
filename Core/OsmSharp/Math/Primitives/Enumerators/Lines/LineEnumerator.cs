@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,20 +24,19 @@ using System.Collections;
 
 namespace OsmSharp.Math.Primitives.Enumerators.Lines
 {
-    internal class LineEnumerator<PointType> :
-        IEnumerator<GenericLineF2D<PointType>>,
+    internal class LineEnumerator :
+        IEnumerator<LineF2D>,
         IEnumerator
-        where PointType : PointF2D
     {
         /// <summary>
         /// Holds the enumerable being enumerated.
         /// </summary>
-        private ILineList<PointType> _enumerable;
+        private ILineList _enumerable;
 
         /// <summary>
         /// Holds the current line.
         /// </summary>
-        private GenericLineF2D<PointType> _current_line;
+        private LineF2D _current_line;
 
         /// <summary>
         /// Holds the current index.
@@ -47,14 +47,17 @@ namespace OsmSharp.Math.Primitives.Enumerators.Lines
         /// Creates a new enumerator.
         /// </summary>
         /// <param name="enumerable"></param>
-        public LineEnumerator(ILineList<PointType> enumerable)
+        public LineEnumerator(ILineList enumerable)
         {
             _enumerable = enumerable;
         }
 
         #region IEnumerator<GenericLineF2D<PointType>> Members
 
-        public GenericLineF2D<PointType> Current
+        /// <summary>
+        /// Returns the current enumerator.
+        /// </summary>
+        public LineF2D Current
         {
             get { return _current_line; }
         }

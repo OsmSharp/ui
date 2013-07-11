@@ -26,7 +26,7 @@ namespace OsmSharp.Math.Structures.KDTree
     /// An implementation of a 2-dimensional k-d tree.
     /// </summary>
     public class Tree2D<PointType> 
-        where PointType : IPointF2D
+        where PointType : PointF2D
     {
         /// <summary>
         /// The root node of the tree.

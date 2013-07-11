@@ -26,7 +26,7 @@ namespace OsmSharp.Math.Geo
     /// <summary>
     /// Class representing a geo coordinate line.
     /// </summary>
-    public class GeoCoordinateLine : GenericLineF2D<GeoCoordinate>
+    public class GeoCoordinateLine : LineF2D
     {
         /// <summary>
         /// Creates a geo coordinate line.
@@ -57,57 +57,6 @@ namespace OsmSharp.Math.Geo
         {
 
         }
-
-        #region Factory
-
-        /// <summary>
-        /// Creates a new point.
-        /// </summary>
-        /// <param name="values"></param>
-        /// <returns></returns>
-        protected override GeoCoordinate CreatePoint(double[] values)
-        {
-            return new GeoCoordinate(values);
-        }
-
-        /// <summary>
-        /// Creates a new line.
-        /// </summary>
-        /// <param name="point1"></param>
-        /// <param name="point2"></param>
-        /// <param name="isSegment1"></param>
-        /// <param name="isSegment2"></param>
-        /// <returns></returns>
-        protected override GenericLineF2D<GeoCoordinate> CreateLine(
-            GeoCoordinate point1,
-            GeoCoordinate point2,
-            bool isSegment1,
-            bool isSegment2)
-        {
-            return new GeoCoordinateLine(point1, point2, isSegment1, isSegment2);
-        }
-
-        /// <summary>
-        /// Creates a new rectangle
-        /// </summary>
-        /// <param name="points"></param>
-        /// <returns></returns>
-        protected override GenericRectangleF2D<GeoCoordinate> CreateRectangle(GeoCoordinate[] points)
-        {
-            return new GeoCoordinateBox(points);
-        }
-
-        ///// <summary>
-        ///// Creates a new polygon.
-        ///// </summary>
-        ///// <param name="points"></param>
-        ///// <returns></returns>
-        //protected override GenericPolygonF2D<GeoCoordinate> CreatePolygon(GeoCoordinate[] points)
-        //{
-        //    return new GeoCoordinatePolygon(points);
-        //}
-
-        #endregion
 
         /// <summary>
         /// Serves as a hash function for a particular type.

@@ -32,7 +32,7 @@ namespace OsmSharp.Math.Structures
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        IEnumerable<TDataType> GetInside(GenericRectangleF2D<TPointType> box);
+        IEnumerable<TDataType> GetInside(RectangleF2D box);
 
         /// <summary>
         /// Adds new located data.

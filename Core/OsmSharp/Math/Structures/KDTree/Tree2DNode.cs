@@ -26,7 +26,7 @@ namespace OsmSharp.Math.Structures.KDTree
     /// Represents a node in a k-d tree.
     /// </summary>
     internal class Tree2DNode<PointType>
-        where PointType : IPointF2D
+        where PointType : PointF2D
     {
         /// <summary>
         /// The point this node splits on.

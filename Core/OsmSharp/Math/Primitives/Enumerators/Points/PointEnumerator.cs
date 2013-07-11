@@ -26,20 +26,19 @@ namespace OsmSharp.Math.Primitives.Enumerators.Points
     /// <summary>
     /// Enumerator class for any collection if points implementing IPointEnumerable.
     /// </summary>
-    internal class PointEnumerator<PointType> : 
-        IEnumerator<PointType>,
+    internal class PointEnumerator :
+        IEnumerator<PointF2D>,
         IEnumerator
-        where PointType : PointF2D
     {
         /// <summary>
         /// Holds the enumerable being enumerated.
         /// </summary>
-        private IPointList<PointType> _enumerable;
+        private IPointList _enumerable;
 
         /// <summary>
         /// Holds the current point.
         /// </summary>
-        private PointType _current_point;
+        private PointF2D _current_point;
 
         /// <summary>
         /// Holds the current index.
@@ -50,17 +49,17 @@ namespace OsmSharp.Math.Primitives.Enumerators.Points
         /// Creates a new enumerator.
         /// </summary>
         /// <param name="enumerable"></param>
-        public PointEnumerator(IPointList<PointType> enumerable)
+        public PointEnumerator(IPointList enumerable)
         {
             _enumerable = enumerable;
         }
 
-        #region IEnumerator<PointType> Members
+        #region IEnumerator<PointF2D> Members
 
         /// <summary>
         /// Returns the current points.
         /// </summary>
-        public PointType Current
+        public PointF2D Current
         {
             get { return _current_point; }
         }

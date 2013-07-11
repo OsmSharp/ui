@@ -312,7 +312,7 @@ namespace OsmSharp.Osm
                         break;
                     case RelationMemberType.Relation:
                         Relation simpleRelationMember = cache.GetRelation(memberId);
-                        if (simpleRelation != null)
+                        if (simpleRelationMember != null)
                         {
                             member.Member = CompleteRelation.CreateFrom(simpleRelationMember, cache);
                         }

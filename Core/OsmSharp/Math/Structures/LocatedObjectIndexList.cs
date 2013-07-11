@@ -33,7 +33,7 @@ namespace OsmSharp.Math.Structures
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public IEnumerable<DataType> GetInside(GenericRectangleF2D<PointType> box)
+        public IEnumerable<DataType> GetInside(RectangleF2D box)
         {
             HashSet<DataType> dataset = new HashSet<DataType>();
             foreach (KeyValuePair<PointType, DataType> data in _data)

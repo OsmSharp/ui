@@ -25,13 +25,11 @@ namespace OsmSharp.Math.Primitives.Enumerators.Points
     /// <summary>
     /// An enumerable for a point.
     /// </summary>
-    /// <typeparam name="PointType"></typeparam>
-    public sealed class PointEnumerable<PointType> : IEnumerable<PointType>
-        where PointType : PointF2D
+    public sealed class PointEnumerable : IEnumerable<PointF2D>
     {
-        private PointEnumerator<PointType> _enumerator;
+        private PointEnumerator _enumerator;
 
-        internal PointEnumerable(PointEnumerator<PointType> enumerator)
+        internal PointEnumerable(PointEnumerator enumerator)
         {
             _enumerator = enumerator;
         }
@@ -42,7 +40,7 @@ namespace OsmSharp.Math.Primitives.Enumerators.Points
         /// Returns the enumerator.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<PointType> GetEnumerator()
+        public IEnumerator<PointF2D> GetEnumerator()
         {
             return _enumerator;
         }

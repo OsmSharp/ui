@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,7 +57,7 @@ namespace OsmSharp.Math.Structures.QTree
         /// <param name="bounds"></param>
         /// <returns></returns>
         public QuadTree(
-            int dept, GenericRectangleF2D<TPointType> bounds)
+            int dept, RectangleF2D bounds)
         {
             _root = new QuadTreeNode(dept, bounds);
         }
@@ -158,7 +159,7 @@ namespace OsmSharp.Math.Structures.QTree
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public IEnumerable<TDataType> GetInside(GenericRectangleF2D<TPointType> box)
+        public IEnumerable<TDataType> GetInside(RectangleF2D box)
         {
             if (_root == null)
             { // this can only mean not data was added yet to this index.
@@ -240,7 +241,7 @@ namespace OsmSharp.Math.Structures.QTree
             /// </summary>
             /// <param name="dept"></param>
             /// <param name="bounds"></param>
-            public QuadTreeNode(int dept, GenericRectangleF2D<TPointType> bounds)
+            public QuadTreeNode(int dept, RectangleF2D bounds)
             {
                 _depth = dept;
 
@@ -425,7 +426,7 @@ namespace OsmSharp.Math.Structures.QTree
             /// <param name="data"></param>
             /// <param name="node"></param>
             /// <param name="box"></param>
-            public void AddInsideAtNode(IList<TDataType> data, QuadTreeNode node, GenericRectangleF2D<TPointType> box)
+            public void AddInsideAtNode(IList<TDataType> data, QuadTreeNode node, RectangleF2D box)
             {
                 if (box.Overlaps(_bounds))
                 { // ok there is an overlap.
