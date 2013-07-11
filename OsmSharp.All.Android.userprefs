@@ -3,31 +3,18 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs">
     <Files>
       <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="63" Column="44" />
-      <File FileName="Core\OsmSharp\Math\Primitives\Enumerators\Points\PointEnumerable.cs" Line="7" Column="57" />
-      <File FileName="Core\OsmSharp\Math\Primitives\Enumerators\Points\PointEnumerator.cs" Line="27" Column="49" />
-      <File FileName="Core\OsmSharp\Geo\GeoCoordinateBox.cs" Line="42" Column="4" />
-      <File FileName="UI\OsmSharp.UI\Renderer\Renderer2D.cs" Line="245" Column="34" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="387" Column="31" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" Line="242" Column="4" />
+      <File FileName="Core\OsmSharp\Math\Primitives\Enumerators\Points\PointEnumerable.cs" Line="1" Column="1" />
+      <File FileName="Core\OsmSharp\Math\Primitives\Enumerators\Points\PointEnumerator.cs" Line="1" Column="1" />
+      <File FileName="Core\OsmSharp\Geo\GeoCoordinateBox.cs" Line="1" Column="1" />
+      <File FileName="UI\OsmSharp.UI\Renderer\Renderer2D.cs" Line="1" Column="1" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="1" Column="1" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Option id="ShowAllFiles" value="True" />
           <Node name="UI" expanded="True">
-            <Node name="Android" expanded="True">
-              <Node name="OsmSharp.Android.UI" expanded="True">
-                <Node name="Renderer" expanded="True" />
-              </Node>
-              <Node name="OsmSharp.Android.UI.Sample" expanded="True">
-                <Node name="MainActivity.cs" selected="True" />
-              </Node>
-            </Node>
-            <Node name="OsmSharp.UI.Android" expanded="True">
-              <Node name="Renderer" expanded="True">
-                <Node name="Scene2DPrimitives" expanded="True" />
-              </Node>
-            </Node>
+            <Node name="Android" expanded="True" />
           </Node>
         </State>
       </Pad>
