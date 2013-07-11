@@ -68,7 +68,6 @@
     <Compile Include="Collections\ObjectTable.cs" />
     <Compile Include="Collections\ObjectTableDictionary.cs" />
     <Compile Include="Collections\PermutationEnumerator.cs" />
-    <Compile Include="Collections\SortedDictionary.cs" />
     <Compile Include="Collections\SortedList.cs" />
     <Compile Include="Collections\SortedSet.cs" />
     <Compile Include="Collections\SparseArray.cs" />
@@ -287,5 +286,10 @@
     <Compile Include="Geo\GeoCoordinateBox.cs" />
     <Compile Include="Geo\GeoCoordinateLine.cs" />
     <Compile Include="Geo\GeoCoordinatePolygon.cs" />
+    <Compile Include="IO\Xml\IXmlSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlFileSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlReaderSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlStreamSource.cs" />
+    <Compile Include="IO\Xml\Sources\XmlStringSource.cs" />
   </ItemGroup>
 </Project>

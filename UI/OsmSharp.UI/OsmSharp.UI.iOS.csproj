@@ -35,9 +35,96 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.3\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
+    <Reference Include="Zlib.Portable">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Compile Include="Map\Layers\ILayer.cs" />
+    <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
+    <Compile Include="Map\Layers\LayerOsm.cs" />
+    <Compile Include="Map\Layers\LayerOsmSharpRoute.cs" />
+    <Compile Include="Map\Layers\LayerPrimitives.cs" />
+    <Compile Include="Map\Layers\LayerScene.cs" />
+    <Compile Include="Map\Layers\LayerTile.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Declaration.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationAntiAliasing.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationDashes.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFloat.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFontStyle.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFontVariant.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationFontWeight.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationInt.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationLineCap.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationLineJoin.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationString.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationTextDecoration.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationTextPosition.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationTextTransform.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationURL.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\MapCSSFile.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Rule.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Selector.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\SelectorRule.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\SelectorTypeEnum.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\SelectorZoom.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSDomainParser.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSLexer.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParser.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRuleProperties.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRulePropertiesCollection.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSTypes.cs" />
+    <Compile Include="Map\Styles\MapCSS\IMapCSSImageSource.cs" />
+    <Compile Include="Map\Styles\MapCSS\MapCSSDictionaryImageSource.cs" />
+    <Compile Include="Map\Styles\MapCSS\MapCSSDirectoryImageSource.cs" />
+    <Compile Include="Map\Styles\MapCSS\MapCSSInterpreter.cs" />
+    <Compile Include="Map\Styles\StyleInterpreter.cs" />
+    <Compile Include="Map\Map.cs" />
+    <Compile Include="Map\MapRenderer.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DEntry.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSerializer.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSource.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Icon2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Image2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitive.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitivesSource.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Line2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\LineText2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Point2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Polygon2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\Text2D.cs" />
+    <Compile Include="Renderer\Renderer2D.cs" />
+    <Compile Include="Renderer\Scene2D.cs" />
+    <Compile Include="Renderer\Target2DWrapper.cs" />
+    <Compile Include="Renderer\View2D.cs" />
+    <Compile Include="KnownColor.cs" />
+    <Compile Include="SimpleColor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Map\Styles\MapCSS\v0_2\MapCSS.g" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\OsmSharp\OsmSharp.iOS.csproj">
+      <Project>{CF2AE65D-56A8-4577-807B-6FC9B1630489}</Project>
+      <Name>OsmSharp.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\OsmSharp.Osm\OsmSharp.Osm.iOS.csproj">
+      <Project>{1F1A6D47-3499-47F5-8FDA-98C0BCBAFD5F}</Project>
+      <Name>OsmSharp.Osm.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Core\OsmSharp.Routing\OsmSharp.Routing.iOS.csproj">
+      <Project>{2CE94153-EEFD-4D25-AF5E-9234F5EEF4AE}</Project>
+      <Name>OsmSharp.Routing.iOS</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>

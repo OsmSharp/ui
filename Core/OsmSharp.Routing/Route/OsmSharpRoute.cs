@@ -150,6 +150,7 @@ namespace OsmSharp.Routing.Route
 
         #endregion
 
+#if !IOS
         #region Gpx
 
         /// <summary>
@@ -160,8 +161,8 @@ namespace OsmSharp.Routing.Route
         {
             OsmSharp.Routing.Route.Gpx.OsmSharpRouteGpx.Save(file, this);
         }
-
-        #endregion
+		#endregion
+#endif
 
         #region Kml
 

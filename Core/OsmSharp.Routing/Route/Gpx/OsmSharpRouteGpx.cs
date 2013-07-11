@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-#if !WINDOWS_PHONE
+#if !WINDOWS_PHONE && !IOS
 using OsmSharp.Xml.Gpx;
 using OsmSharp.Xml.Gpx.v1_1;
 using OsmSharp.Xml.Sources;
