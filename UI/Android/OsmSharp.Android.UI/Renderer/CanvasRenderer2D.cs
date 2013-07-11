@@ -388,14 +388,29 @@ namespace OsmSharp.Android.UI
 		/// <param name="text"></param>
 		/// <param name="size"></param>
 		protected override void DrawText (Target2DWrapper<global::Android.Graphics.Canvas> target, double x, double y, 
-		                                  string text, double size)
+		                                  string text, int color, double size)
 		{
 			float xPixels = this.TransformX(x);
 			float yPixels = this.TransformY(y);
 			float textSize = this.TransformX (x + size) - xPixels;
+			_paint.Color = new global::Android.Graphics.Color(color);
 			_paint.FakeBoldText = true;
 			_paint.TextSize = textSize * 2;
 			target.Target.DrawText (text, xPixels, yPixels, _paint);
+		}
+
+		/// <summary>
+		/// Draws text along a given line.
+		/// </summary>
+		/// <param name="target"></param>
+		/// <param name="x"></param>
+		/// <param name="y"></param>
+		/// <param name="color"></param>
+		/// <param name="size"></param>
+		/// <param name="text">Text.</param>
+		protected override void DrawLineText (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, string text, int color, double size)
+		{
+			// TODO: Implement!
 		}
 
 		#endregion

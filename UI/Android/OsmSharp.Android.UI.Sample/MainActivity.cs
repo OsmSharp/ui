@@ -16,7 +16,6 @@ using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.Osm.Data.PBF.Processor;
-using OsmSharp.Osm.Data.Core.Memory;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
@@ -25,6 +24,7 @@ using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.Serialization;
+using OsmSharp.Osm.Data.Memory;
 
 namespace OsmSharp.Android.UI.Sample
 {

@@ -113,7 +113,6 @@
     <Compile Include="Streams\Collections\OsmCollectionStreamWriter.cs" />
     <Compile Include="Streams\Collections\OsmEnumerableStreamReader.cs" />
     <Compile Include="Streams\Collections\OsmGeoEnumerableStreamReader.cs" />
-    <Compile Include="Streams\Collections\OsmGeoStreamReader.cs" />
     <Compile Include="Streams\Filters\LongIndex\ILongIndexNode.cs" />
     <Compile Include="Streams\Filters\LongIndex\LongIndex.cs" />
     <Compile Include="Streams\Filters\LongIndex\LongIndexLeaf.cs" />
@@ -134,7 +133,6 @@
     <Compile Include="Data\INodeSource.cs" />
     <Compile Include="Data\IRelationSource.cs" />
     <Compile Include="Data\IWaySource.cs" />
-    <Compile Include="Data\Memory\MemoryOsmStreamTarget.cs" />
     <Compile Include="Data\PBF\Processor\PBFOsmStreamSource.cs" />
     <Compile Include="Data\PBF\Processor\PBFOsmStreamTarget.cs" />
     <Compile Include="Interpreter\Complete\CompleteChange.cs" />
@@ -148,11 +146,11 @@
     <Compile Include="Interpreter\Complete\CompleteUser.cs" />
     <Compile Include="Interpreter\Complete\CompleteWay.cs" />
     <Compile Include="Interpreter\Complete\OsmBaseIdGenerator.cs" />
-    <Compile Include="Interpreter\IGeometryInterpreter.cs" />
     <Compile Include="Interpreter\SimpleGeometryInterpreter.cs" />
     <Compile Include="RelationMemberType.cs" />
     <Compile Include="ChangeSetInfo.cs" />
     <Compile Include="ChangeType.cs" />
+    <Compile Include="Interpreter\GeometryInterpreter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Xml\v0_6\osm.xsd">

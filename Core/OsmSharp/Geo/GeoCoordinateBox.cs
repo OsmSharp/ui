@@ -37,7 +37,7 @@ namespace OsmSharp.Math.Geo
         /// </summary>
         /// <param name="points"></param>
         public GeoCoordinateBox(IList<GeoCoordinate> points)
-            : base(points.ToArray<PointF2D>())
+            : base(points.Cast<PointF2D>().ToArray<PointF2D>())
         {
 
         }
