@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,12 +15,12 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Math.Primitives;
-using OsmSharp.Math.Shapes.PrimitivesFactory;
 
 namespace OsmSharp.Math.Algorithms
 {
@@ -38,10 +38,9 @@ namespace OsmSharp.Math.Algorithms
         /// <summary>
         /// Calculates a polygon out of a list of points. The resulting polygon the convex hull of all points.
         /// </summary>
-        /// <param name="factory"></param>
         /// <param name="points"></param>
         /// <returns></returns>
-        public static IList<PointType> Calculate(IPrimitivesFactory<PointType, RectangleType, LineType> factory, IList<PointType> points)
+        public static IList<PointType> Calculate(IList<PointType> points)
         {
             if (points.Count < 3)
             {
@@ -68,7 +67,7 @@ namespace OsmSharp.Math.Algorithms
 
             // produce the first reference vector.
             double[] before_start_coords = new double[]{ start[0], start[1] - 10};
-            PointType before_start = factory.CreatePoint(before_start_coords);
+            PointF2D before_start = new PointF2D(before_start_coords);
             VectorF2D reference = start - before_start;
 
             // start the gift-wrapping!
