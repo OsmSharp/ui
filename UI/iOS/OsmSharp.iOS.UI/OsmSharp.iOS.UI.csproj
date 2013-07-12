@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -40,6 +40,7 @@
     <Folder Include="Resources\" />
     <Folder Include="Renderer\" />
   </ItemGroup>
+<<<<<<< HEAD
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Compile Include="MapView.cs" />
@@ -63,4 +64,7 @@
       <Name>OsmSharp.UI.iOS</Name>
     </ProjectReference>
   </ItemGroup>
+=======
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+>>>>>>> 21c0ba407d825fede89461030681173b310ccf27
 </Project>

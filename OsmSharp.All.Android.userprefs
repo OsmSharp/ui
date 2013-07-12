@@ -2,18 +2,29 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs">
     <Files>
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="63" Column="44" />
-      <File FileName="Core\OsmSharp\Math\Primitives\Enumerators\Points\PointEnumerable.cs" Line="7" Column="57" />
-      <File FileName="Core\OsmSharp\Math\Primitives\Enumerators\Points\PointEnumerator.cs" Line="27" Column="49" />
-      <File FileName="Core\OsmSharp\Geo\GeoCoordinateBox.cs" Line="42" Column="4" />
-      <File FileName="UI\OsmSharp.UI\Renderer\Renderer2D.cs" Line="245" Column="34" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="387" Column="31" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" Line="242" Column="4" />
+      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="78" Column="38" />
+      <File FileName="Core\OsmSharp\Math\Primitives\Enumerators\Points\PointEnumerable.cs" Line="1" Column="1" />
+      <File FileName="Core\OsmSharp\Math\Primitives\Enumerators\Points\PointEnumerator.cs" Line="1" Column="1" />
+      <File FileName="Core\OsmSharp\Geo\GeoCoordinateBox.cs" Line="1" Column="1" />
+      <File FileName="UI\OsmSharp.UI\Renderer\Renderer2D.cs" Line="210" Column="33" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="318" Column="6" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\MapView.cs" Line="12" Column="21" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Option id="ShowAllFiles" value="True" />
+          <Node name="Core" expanded="True">
+            <Node name="OsmSharp.Android" expanded="True">
+              <Node name="Geo" expanded="True" />
+              <Node name="Math" expanded="True">
+                <Node name="Primitives" expanded="True">
+                  <Node name="Enumerators" expanded="True">
+                    <Node name="Points" expanded="True" />
+                  </Node>
+                </Node>
+              </Node>
+            </Node>
+          </Node>
           <Node name="UI" expanded="True">
             <Node name="Android" expanded="True">
               <Node name="OsmSharp.Android.UI" expanded="True">
@@ -24,9 +35,7 @@
               </Node>
             </Node>
             <Node name="OsmSharp.UI.Android" expanded="True">
-              <Node name="Renderer" expanded="True">
-                <Node name="Scene2DPrimitives" expanded="True" />
-              </Node>
+              <Node name="Renderer" expanded="True" />
             </Node>
           </Node>
         </State>
@@ -421,5 +430,5 @@
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" AndroidDeviceId-Debug="emulator-5554" />
+  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" AndroidDeviceId-Debug="8889CC253F925A2FB51379C653D11F1" />
 </Properties>
