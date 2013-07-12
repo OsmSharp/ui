@@ -88,6 +88,16 @@ namespace OsmSharp.UI
             }
         }
 
+		/// <summary>
+		/// Creates a new simplecolor from the given argb value.
+		/// </summary>
+		/// <returns>The ARGB.</returns>
+		/// <param name="argb">ARGB.</param>
+		public static SimpleColor FromArgb(int argb)
+		{
+			return new SimpleColor () { Value = argb };
+		}
+
         /// <summary>
         /// Gets the 32-bit ARGB simple color from the specified 8-bit color values (red, green, and blue). The alpha value is implicitly 255 (fully opaque). Although this method allows a 32-bit value to be passed for each color component, the value of each component is limited to 8 bits.
         /// </summary>

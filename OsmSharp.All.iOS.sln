@@ -112,6 +112,6 @@ Global
 		{CC6E330A-88C4-4A78-B24D-C19DCADD1F69} = {4D216ACB-82B7-491D-B35B-D157B7EC06A3}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Core\OsmSharp\OsmSharp.iOS.csproj
+		StartupItem = UI\iOS\OsmSharp.iOS.UI.Sample\OsmSharp.iOS.UI.Sample.csproj
 	EndGlobalSection
 EndGlobal
