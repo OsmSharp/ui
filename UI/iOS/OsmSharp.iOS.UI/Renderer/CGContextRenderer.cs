@@ -127,8 +127,8 @@ namespace OsmSharp.iOS.UI
 		protected override void DrawBackColor (Target2DWrapper<CGContext> target, int backColor)
 		{
 			SimpleColor backColorSimple = SimpleColor.FromArgb(backColor);
-			target.Target.SetFillColor (backColorSimple.R, backColorSimple.G, backColorSimple.B,
-			                           backColorSimple.A);
+			target.Target.SetFillColor (backColorSimple.R / 256.0f, backColorSimple.G / 256.0f, backColorSimple.B / 256.0f,
+			                            backColorSimple.A / 256.0f);
 		}
 
 		/// <summary>
@@ -154,8 +154,40 @@ namespace OsmSharp.iOS.UI
 		/// <param name="width">Width.</param>
 		/// <param name="lineJoin"></param>
 		/// <param name="dashes"></param>
-		protected override void DrawLine (Target2DWrapper<CGContext> target, double[] x, double[] y, int color, double width, OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
+		protected override void DrawLine (Target2DWrapper<CGContext> target, double[] x, double[] y, int color, double width, 
+		                                  OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
 		{
+			float widthInPixels = this.ToPixels (width);
+
+			SimpleColor simpleColor = SimpleColor.FromArgb(color);
+			target.Target.SetLineWidth (widthInPixels);
+			target.Target.SetStrokeColor (simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
+			                              simpleColor.A / 256.0f);
+			target.Target.SetLineDash (0, new float[0]);
+			if(dashes != null && dashes.Length > 1)
+			{
+				float[] intervals = new float[dashes.Length];
+				for(int idx = 0; idx < dashes.Length; idx++)
+				{
+					intervals [idx] = dashes [idx];
+				}
+				target.Target.SetLineDash (0.0f, intervals);
+			}
+
+			switch(lineJoin)
+			{
+				case OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin.Bevel:
+					target.Target.SetLineJoin (CGLineJoin.Bevel);
+					break;
+				case OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin.Miter:
+					target.Target.SetLineJoin (CGLineJoin.Miter);
+					break;
+				case OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin.Round:
+					target.Target.SetLineJoin (CGLineJoin.Round);
+					break;
+			}
+			target.Target.BeginPath ();
+
 			PointF[] points = new PointF[x.Length];
 			for(int idx = 0; idx < x.Length; idx++)
 			{
@@ -165,6 +197,8 @@ namespace OsmSharp.iOS.UI
 			}
 
 			target.Target.AddLines (points);
+			target.Target.DrawPath (CGPathDrawingMode.Stroke);
+			//target.Target.E
 		}
 
 		/// <summary>

@@ -36,7 +36,7 @@ namespace OsmSharp.iOS.UI.Sample
 			MapView mapView = new MapView ();
 			mapView.Map = map;
 			mapView.MapCenter = new OsmSharp.Math.Geo.GeoCoordinate (51.158075, 2.961545);
-			mapView.ZoomLevel = 8;
+			mapView.ZoomLevel = 16;
 
 			View.BackgroundColor = UIColor.Black;
 			mapView.Bounds = this.View.Bounds;
