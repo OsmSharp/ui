@@ -98,7 +98,6 @@
   <ItemGroup>
     <InterfaceDefinition Include="OsmSharp_iOS_UI_SampleViewController.xib" />
   </ItemGroup>
-<<<<<<< HEAD
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\OsmSharp\OsmSharp.iOS.csproj">
@@ -125,7 +124,5 @@
   <ItemGroup>
     <EmbeddedResource Include="wvl.osm.pbf.scene.simple" />
   </ItemGroup>
-=======
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
->>>>>>> 21c0ba407d825fede89461030681173b310ccf27
 </Project>

@@ -96,12 +96,26 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
             textMetaType.Add(5, "MinZoom");
             textMetaType.Add(6, "MaxZoom");
 
+            MetaType lineTextMetaType = typeModel.Add(typeof(LineText2D), false);
+            lineTextMetaType.Add(1, "X");
+            lineTextMetaType.Add(2, "Y");
+            lineTextMetaType.Add(3, "Text");
+            lineTextMetaType.Add(4, "Color");
+            lineTextMetaType.Add(5, "Size");
+            lineTextMetaType.Add(6, "MinZoom");
+            lineTextMetaType.Add(7, "MaxZoom");
+            lineTextMetaType.Add(8, "MinX");
+            lineTextMetaType.Add(9, "MaxX");
+            lineTextMetaType.Add(10, "MinY");
+            lineTextMetaType.Add(11, "MaxY");
+
             typeModel.Add(typeof(Icon2DEntry), true);
             typeModel.Add(typeof(Image2DEntry), true);
             typeModel.Add(typeof(Line2DEntry), true);
             typeModel.Add(typeof(Point2DEntry), true);
             typeModel.Add(typeof(Polygon2DEntry), true);
             typeModel.Add(typeof(Text2DEntry), true);
+            typeModel.Add(typeof(LineText2DEntry), true);
         }
 
         /// <summary>
@@ -120,6 +134,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
             var points = new List<Point2DEntry>();
             var polygons = new List<Polygon2DEntry>();
             var texts = new List<Text2DEntry>();
+            var lineTexts = new List<LineText2DEntry>();
 
             // build the collection object.
             var collection = new PrimitivesCollection();
@@ -180,6 +195,15 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
                         Layer = data[idx].Layer
                     });
                 }
+                else if (primitive is LineText2D)
+                {
+                    lineTexts.Add(new LineText2DEntry()
+                    {
+                        Primitive = (LineText2D)primitive,
+                        Id = data[idx].Id,
+                        Layer = data[idx].Layer
+                    });
+                }
                 else
                 {
                     throw new Exception("Primitive type not supported by serializer.");
@@ -192,6 +216,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
             collection.Points = points.ToArray();
             collection.Polygons = polygons.ToArray();
             collection.Texts = texts.ToArray();
+            collection.LineTexts = lineTexts.ToArray();
 
             // create the memory stream.
             var stream = new MemoryStream();
@@ -252,6 +277,12 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
             /// </summary>
             [ProtoMember(6)]
             public Text2DEntry[] Texts { get; set; }
+
+            /// <summary>
+            /// Holds the line texts.
+            /// </summary>
+            [ProtoMember(7)]
+            public LineText2DEntry[] LineTexts { get; set; }
         }
 
         [ProtoContract]
@@ -317,6 +348,19 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
 
             [ProtoMember(3)]
             public uint Id { get; set; }
+        }
+
+        [ProtoContract]
+        internal class LineText2DEntry
+        {
+            [ProtoMember(1)]
+            public LineText2D Primitive { get; set; }
+
+            [ProtoMember(2)]
+            public int Layer { get; set; }
+
+            [ProtoMember(3)]
+            public uint Id { get; set; }            
         }
 
         [ProtoContract]
@@ -429,6 +473,18 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
                                            Layer = primitive.Layer,
                                            Scene2DPrimitive = primitive.Primitive
                                        });
+                }
+            }
+            if (collection.LineTexts != null)
+            {
+                foreach (var primitive in collection.LineTexts)
+                {
+                    primitives.Add(new Scene2DEntry()
+                    {
+                        Id = primitive.Id,
+                        Layer = primitive.Layer,
+                        Scene2DPrimitive = primitive.Primitive
+                    });
                 }
             }
 

@@ -136,8 +136,8 @@ namespace OsmSharp.Android.UI.Sample
 			var mapView = new MapView(this);
 			//var mapView = new MapGLView (this);
 			mapView.Map = map;
-			//mapView.Center = new GeoCoordinate(51.158075, 2.961545);
-			mapView.Center = new GeoCoordinate(51.26337, 4.78739);
+			mapView.Center = new GeoCoordinate(51.158075, 2.961545);
+			//mapView.Center = new GeoCoordinate(51.26337, 4.78739);
 			//mapView.Center = new GeoCoordinate(51.156803, 2.958887);
 			mapView.ZoomLevel = 18;
 

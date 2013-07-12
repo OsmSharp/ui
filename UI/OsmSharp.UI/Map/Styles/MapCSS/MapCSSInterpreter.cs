@@ -105,6 +105,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <returns></returns>
         public override void Translate(Scene2D scene, IProjection projection, float zoom, CompleteOsmGeo osmGeo)
         {
+            if (osmGeo == null) { return; }
+
             switch (osmGeo.Type)
             {
                 case CompleteOsmType.Node:
@@ -135,7 +137,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             float? y = (float) projection.LatitudeToY(
                 node.Coordinate.Latitude);
             
-
             // build the rules.
             IEnumerable<MapCSSRuleProperties> rules =
                 this.BuildRules(node);
