@@ -2,12 +2,13 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs">
     <Files>
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="75" Column="20" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="421" Column="51" />
-      <File FileName="UI\OsmSharp.UI\Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSerializer.cs" Line="489" Column="14" />
-      <File FileName="UI\OsmSharp.UI\Map\Styles\MapCSS\v0_2\Domain\SelectorRule.cs" Line="147" Column="10" />
-      <File FileName="UI\OsmSharp.UI\Renderer\Scene2D.cs" Line="66" Column="26" />
-      <File FileName="c:\WORK\git\OsmSharp\v4\UI\OsmSharp.UI\Renderer\Renderer2D.cs" Line="260" Column="13" />
+      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="1" Column="1" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="254" Column="31" />
+      <File FileName="UI\OsmSharp.UI\Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSerializer.cs" Line="1" Column="1" />
+      <File FileName="UI\OsmSharp.UI\Map\Styles\MapCSS\v0_2\Domain\SelectorRule.cs" Line="1" Column="1" />
+      <File FileName="UI\OsmSharp.UI\Renderer\Scene2D.cs" Line="1" Column="1" />
+      <File FileName="c:\WORK\git\OsmSharp\v4\UI\OsmSharp.UI\Renderer\Renderer2D.cs" Line="1" Column="1" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\MapView.cs" Line="1" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">

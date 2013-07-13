@@ -28,7 +28,7 @@ way[highway=trunk],way[highway=trunk_link],
 way[highway=primary],way[highway=primary_link],
 way[highway=secondary],way[highway=secondary_link],
 way[highway=tertiary],way[highway=tertiary_link],
-way[highway=residential],way[highway=unclassified]		{ z-index: 8; text: name; text-color: black; font-size: 10; text-position: line; text-halo-color: white; text-halo-radius: 2; linecap: round; casing-linecap: round }
+way[highway=residential],way[highway=unclassified]		{ z-index: 8; text: name; text-color: black; font-size: 14; text-position: line; text-halo-color: white; text-halo-radius: 2; linecap: round; casing-linecap: round }
 way[highway=motorway],way[highway=motorway_link]		{ z-index: 7; color: red; width: 10; casing-color: black; casing-width: 1; }
 way[highway=trunk],way[highway=trunk_link]				{ z-index: 6; color: red; width: 8; casing-color: black; casing-width: 1; }
 way[highway=primary],way[highway=primary_link]			{ z-index: 6; color: red; width: 8; casing-color: #555555; casing-width: 1; }

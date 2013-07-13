@@ -365,6 +365,7 @@ namespace OsmSharp.WinForms.UI.Renderer
                 float sizeInPixels = this.ToPixels(size);
                 Color textColor = Color.FromArgb(color);
                 Brush brush = new SolidBrush(textColor);
+                Brush haloBrush = new SolidBrush(Color.White);
                 Font font = new Font(FontFamily.GenericSerif, sizeInPixels);
 
                 // get some metrics on the texts.
@@ -449,8 +450,16 @@ namespace OsmSharp.WinForms.UI.Renderer
                             
                             //transform.Scale((float)this.FromPixels(_target, _view, 1), 
                             //    (float)this.FromPixels(_target, _view, 1));
-
                             characterPath.Transform(transform);
+
+                            GraphicsPath haloPath = characterPath.Clone() as GraphicsPath;
+                            using (haloPath)
+                            {
+                                haloPath.Widen(new Pen(haloBrush, 3));
+
+                                // Draw the character
+                                target.Target.FillPath(haloBrush, haloPath);
+                            }
 
                             // Draw the character
                             target.Target.FillPath(brush, characterPath);
