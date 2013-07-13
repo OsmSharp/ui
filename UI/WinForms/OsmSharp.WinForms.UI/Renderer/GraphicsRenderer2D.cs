@@ -341,7 +341,8 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-        protected override void DrawText(Target2DWrapper<Graphics> target, double x, double y, string text, int color, double size)
+        protected override void DrawText(Target2DWrapper<Graphics> target, double x, double y, string text, int color, double size,
+            int? haloColor, int? haloRadius)
         {
             float sizeInPixels = this.ToPixels(size);
             Color textColor = Color.FromArgb(color);
@@ -358,15 +359,20 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="y"></param>
         /// <param name="color"></param>
         /// <param name="size"></param>
-        protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color, double size)
+        protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color, 
+            double size, int? haloColor, int? haloRadius)
         {
             if (x.Length > 1)
             {
                 float sizeInPixels = this.ToPixels(size);
                 Color textColor = Color.FromArgb(color);
                 Brush brush = new SolidBrush(textColor);
-                Brush haloBrush = new SolidBrush(Color.White);
-                Font font = new Font(FontFamily.GenericSerif, sizeInPixels);
+                Brush haloBrush = null;
+                if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
+                {
+                    haloBrush = new SolidBrush(Color.FromArgb(haloColor.Value));
+                }
+                Font font = new Font(FontFamily.GenericSansSerif, sizeInPixels);
 
                 // get some metrics on the texts.
                 var characterWidths = GetCharacterWidths(target.Target, text, font);
@@ -417,10 +423,12 @@ namespace OsmSharp.WinForms.UI.Renderer
                     middle = lineLength / 2.0;
                     first = middle - (textLength / 2.0);
                     current = Polyline2D.PositionAtPosition(xText, yText, first);
+                    double nextPosition2 = first;
                     for (int idx = 0; idx < text.Length; idx++)
                     {
-                        double nextPosition = middle - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
-                        PointF2D next = Polyline2D.PositionAtPosition(xText, yText, nextPosition);
+                        nextPosition2 = nextPosition2 + characterWidths[idx];
+                        //double nextPosition = middle - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
+                        PointF2D next = Polyline2D.PositionAtPosition(xText, yText, nextPosition2);
                         char currentChar = text[idx];
                         using (GraphicsPath characterPath = new GraphicsPath())
                         {
@@ -434,7 +442,8 @@ namespace OsmSharp.WinForms.UI.Renderer
                             var transform = new Matrix();
 
                             // Translate to the final position, the center of line-segment between 'current' and 'next'
-                            PointF2D position = current + ((next - current) / 2.0);
+                            PointF2D position = current;
+                            //PointF2D position = current + ((next - current) / 2.0);
                             transform.Translate(this.TransformX(position[0]), this.TransformY(position[1]));
 
                             // calculate the angle.
@@ -452,13 +461,16 @@ namespace OsmSharp.WinForms.UI.Renderer
                             //    (float)this.FromPixels(_target, _view, 1));
                             characterPath.Transform(transform);
 
-                            GraphicsPath haloPath = characterPath.Clone() as GraphicsPath;
-                            using (haloPath)
+                            if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
                             {
-                                haloPath.Widen(new Pen(haloBrush, 3));
+                                GraphicsPath haloPath = characterPath.Clone() as GraphicsPath;
+                                using (haloPath)
+                                {
+                                    haloPath.Widen(new Pen(haloBrush, haloRadius.Value));
 
-                                // Draw the character
-                                target.Target.FillPath(haloBrush, haloPath);
+                                    // Draw the character
+                                    target.Target.FillPath(haloBrush, haloPath);
+                                }
                             }
 
                             // Draw the character

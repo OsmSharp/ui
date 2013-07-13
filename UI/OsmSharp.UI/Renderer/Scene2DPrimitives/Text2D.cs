@@ -46,12 +46,14 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="size"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public Text2D(double x, double y, string text, int color, double size, float minZoom, float maxZoom)
+        public Text2D(double x, double y, string text, int color, double size, int? haloColor, int? haloRadius, float minZoom, float maxZoom)
         {
             this.X = x;
             this.Y = y;
             this.Text = text;
             this.Size = size;
+            this.HaloColor = haloColor;
+            this.HaloRadius = haloRadius;
 
             this.MinZoom = minZoom;
             this.MaxZoom = maxZoom;
@@ -85,6 +87,16 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// </summary>
         /// <value>The text.</value>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Gets or sets the halo size.
+        /// </summary>
+        public int? HaloRadius { get; set; }
+
+        /// <summary>
+        /// Gets or sets the halo color.
+        /// </summary>
+        public int? HaloColor { get; set; }
 
         /// <summary>
         /// Gets the size.

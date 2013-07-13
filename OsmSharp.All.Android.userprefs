@@ -1,14 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs">
     <Files>
-      <File FileName="UI\Android\OsmSharp.Android.UI.Sample\MainActivity.cs" Line="1" Column="1" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="254" Column="31" />
-      <File FileName="UI\OsmSharp.UI\Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSerializer.cs" Line="1" Column="1" />
-      <File FileName="UI\OsmSharp.UI\Map\Styles\MapCSS\v0_2\Domain\SelectorRule.cs" Line="1" Column="1" />
-      <File FileName="UI\OsmSharp.UI\Renderer\Scene2D.cs" Line="1" Column="1" />
-      <File FileName="c:\WORK\git\OsmSharp\v4\UI\OsmSharp.UI\Renderer\Renderer2D.cs" Line="1" Column="1" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\MapView.cs" Line="1" Column="1" />
+      <File FileName="UI\OsmSharp.UI\Map\Styles\MapCSS\v0_2\Domain\SelectorRule.cs" Line="141" Column="10" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="412" Column="74" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" Line="233" Column="4" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -18,10 +14,9 @@
             <Node name="Android" expanded="True">
               <Node name="OsmSharp.Android.UI" expanded="True">
                 <Node name="Renderer" expanded="True">
-                  <Node name="CanvasRenderer2D.cs" selected="True" />
+                  <Node name="OpenGLRenderer2D.cs" selected="True" />
                 </Node>
               </Node>
-              <Node name="OsmSharp.Android.UI.Sample" expanded="True" />
             </Node>
             <Node name="OsmSharp.UI.Android" expanded="True">
               <Node name="Map" expanded="True">
@@ -31,11 +26,6 @@
                       <Node name="Domain" expanded="True" />
                     </Node>
                   </Node>
-                </Node>
-              </Node>
-              <Node name="Renderer" expanded="True">
-                <Node name="Scene2DPrimitives" expanded="True">
-                  <Node name="Storage" expanded="True" />
                 </Node>
               </Node>
             </Node>
@@ -432,5 +422,5 @@
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" AndroidDeviceId-Debug="8889CC253F925A2FB51379C653D11F1" />
+  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" AndroidDeviceId-Debug="emulator-5554" />
 </Properties>

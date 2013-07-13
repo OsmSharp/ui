@@ -56,7 +56,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// </summary>
         private const int IconTextLayerOffset = 500;
 
-
         /// <summary>
         /// Creates a new MapCSS interpreter.
         /// </summary>
@@ -199,6 +198,18 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     {
                         textColor = SimpleColor.FromKnownColor(KnownColor.Black).Value;
                     }
+                    int haloColor;
+                    int? haloColorNullable = null;
+                    if (rule.TryGetProperty("textHaloColor", out haloColor))
+                    {
+                        haloColorNullable = haloColor;
+                    }
+                    int haloRadius;
+                    int? haloRadiusNullable = null;
+                    if (rule.TryGetProperty("textHaloRadius", out haloRadius))
+                    {
+                        haloRadiusNullable = haloRadius;
+                    }
 
                     // a text is to be drawn.
                     string value;
@@ -207,7 +218,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         sceneLayer = sceneLayer + IconTextLayerOffset; // offset to correct layer.
 
                         scene.AddText(sceneLayer, minZoom, maxZoom, (float)projection.LongitudeToX(node.Coordinate.Longitude),
-                                      (float) projection.LatitudeToY(node.Coordinate.Latitude), 15, value, textColor);
+                                      (float) projection.LatitudeToY(node.Coordinate.Latitude), 15, value, textColor, 
+                                      haloColorNullable, haloRadiusNullable);
 
                         sceneLayer = sceneLayer - IconTextLayerOffset; // offset to correct layer.
                     }
@@ -335,12 +347,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         rule.TryGetProperty("fontSize", out fontSize) &&
                         rule.TryGetProperty("textColor", out textColor))
                     {
+                        int haloColor;
+                        int? haloColorNullable = null;
+                        if (rule.TryGetProperty("textHaloColor", out haloColor))
+                        {
+                            haloColorNullable = haloColor;
+                        }
+                        int haloRadius;
+                        int? haloRadiusNullable = null;
+                        if (rule.TryGetProperty("textHaloRadius", out haloRadius))
+                        {
+                            haloRadiusNullable = haloRadius;
+                        }
                         string name;
                         if (way.Tags.TryGetValue(nameTag, out name))
                         {
                             sceneLayer = sceneLayer + TextLayerOffset; // offset to correct layer.
 
-                            scene.AddTextLine(sceneLayer - 1, minZoom, maxZoom, x, y, textColor, fontSize, name);
+                            scene.AddTextLine(sceneLayer - 1, minZoom, maxZoom, x, y, textColor, fontSize, name, haloColorNullable, haloRadiusNullable);
 
                             sceneLayer = sceneLayer - TextLayerOffset; 
                         }

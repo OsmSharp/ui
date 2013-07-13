@@ -237,13 +237,13 @@ namespace OsmSharp.UI.Renderer
                 {
                     var text = (Text2D)(primitive);
                     this.DrawText(target, text.X, text.Y, text.Text, text.Color,
-                        this.FromPixels(target, view, text.Size));
+                        this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius);
                 }
                 else if (primitive is LineText2D)
                 {
                     var lineText = (LineText2D)(primitive);
                     this.DrawLineText(target, lineText.X, lineText.Y, lineText.Text, lineText.Color,
-                        this.FromPixels(target, view, lineText.Size));
+                        this.FromPixels(target, view, lineText.Size), lineText.HaloColor, lineText.HaloRadius);
                 }
             }
 			return true;
@@ -376,7 +376,8 @@ namespace OsmSharp.UI.Renderer
         /// <param name="y"></param>
         /// <param name="text"></param>
         /// <param name="size"></param>
-		protected abstract void DrawText(Target2DWrapper<TTarget> target, double x, double y, string text, int color, double size);
+		protected abstract void DrawText(Target2DWrapper<TTarget> target, double x, double y, string text, int color, double size,
+            int? haloColor, int? haloRadius);
 
         /// <summary>
         /// Draws text along a given line.
@@ -386,6 +387,7 @@ namespace OsmSharp.UI.Renderer
         /// <param name="y"></param>
         /// <param name="color"></param>
         /// <param name="size"></param>
-        protected abstract void DrawLineText(Target2DWrapper<TTarget> target, double[] x, double[] y, string text, int color, double size);
+        protected abstract void DrawLineText(Target2DWrapper<TTarget> target, double[] x, double[] y, string text, int color, 
+            double size, int? haloColor, int? haloRadius);
 	}
 }

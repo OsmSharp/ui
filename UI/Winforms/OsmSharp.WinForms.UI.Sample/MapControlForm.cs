@@ -74,8 +74,8 @@ namespace OsmSharp.WinForms.UI.Sample
                 imageSource);
 
             // initialize the data source.
-            //var dataSource = MemoryDataSource.CreateFromXmlStream(new FileInfo(@"c:\OSM\bin\gistel.osm").OpenRead());
-            var dataSource = MemoryDataSource.CreateFromPBFStream(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf").OpenRead());
+            var dataSource = MemoryDataSource.CreateFromXmlStream(new FileInfo(@"c:\OSM\bin\wechel2.osm").OpenRead());
+            //var dataSource = MemoryDataSource.CreateFromPBFStream(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf").OpenRead());
             //Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm"));
 
             // initialize map.
@@ -131,9 +131,9 @@ namespace OsmSharp.WinForms.UI.Sample
             // set control properties.
             this.mapControl1.Map = map;
             //this.mapControl1.Center = new GeoCoordinate(51.0095111, 3.3210996); 
-            //this.mapControl1.Center = new GeoCoordinate(51.26371, 4.7854); //51.26371&lon=4.7854
+            this.mapControl1.Center = new GeoCoordinate(51.26371, 4.7854); //51.26371&lon=4.7854
             //this.mapControl1.Center = new GeoCoordinate(50.88672, 3.23899);
-            this.mapControl1.Center = new GeoCoordinate(51.156803, 2.958887); 
+            //this.mapControl1.Center = new GeoCoordinate(51.156803, 2.958887); 
             this.mapControl1.ZoomLevel = 16;
         }
     }

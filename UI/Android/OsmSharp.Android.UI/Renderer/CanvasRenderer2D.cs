@@ -388,7 +388,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="text"></param>
 		/// <param name="size"></param>
 		protected override void DrawText (Target2DWrapper<global::Android.Graphics.Canvas> target, double x, double y, 
-		                                  string text, int color, double size)
+		                                  string text, int color, double size, int? haloColor, int? haloRadius)
 		{
 			float xPixels = this.TransformX(x);
 			float yPixels = this.TransformY(y);
@@ -408,7 +408,8 @@ namespace OsmSharp.Android.UI
 		/// <param name="color"></param>
 		/// <param name="size"></param>
 		/// <param name="text">Text.</param>
-		protected override void DrawLineText (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, string text, int color, double size)
+		protected override void DrawLineText (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, string text, int color, 
+		                                      double size, int? haloColor, int? haloRadius)
 		{
 //			if (x.Length > 1)
 //			{

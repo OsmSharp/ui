@@ -390,7 +390,8 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="text"></param>
 	    /// <param name="minZoom"></param>
 	    /// <returns></returns>
-		public uint AddText(int layer, float minZoom, float maxZoom, double x, double y, double size, string text, int color)
+		public uint AddText(int layer, float minZoom, float maxZoom, double x, double y, double size, string text, int color,
+            int? haloColor, int? haloRadius)
         {
             if (text == null)
                 throw new ArgumentNullException("text");
@@ -400,7 +401,7 @@ namespace OsmSharp.UI.Renderer
 				uint id = _nextId;
 				_nextId++;
 
-                this.AddPrimitive(layer, id, new Text2D(x, y, text, color, size, minZoom, maxZoom));
+                this.AddPrimitive(layer, id, new Text2D(x, y, text, color, size, haloColor, haloRadius, minZoom, maxZoom));
 				return id;
 			}
         }
@@ -416,7 +417,8 @@ namespace OsmSharp.UI.Renderer
         /// <param name="color"></param>
         /// <param name="font_size"></param>
         /// <param name="text"></param>
-        public uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double font_size, string text)
+        public uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double font_size, 
+            string text, int? haloColor, int? haloRadius)
         {
             if (text == null)
                 throw new ArgumentNullException("text");
@@ -426,7 +428,7 @@ namespace OsmSharp.UI.Renderer
                 uint id = _nextId;
                 _nextId++;
 
-                this.AddPrimitive(layer, id, new LineText2D(x, y, color, font_size, text, minZoom, maxZoom));
+                this.AddPrimitive(layer, id, new LineText2D(x, y, color, font_size, text, haloColor, haloRadius, minZoom, maxZoom));
                 return id;
             }
         }

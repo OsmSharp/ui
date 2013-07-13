@@ -243,7 +243,7 @@ namespace OsmSharp.WinForms.UI
         {
             base.OnMouseWheel(e);
 
-            this.ZoomLevel += (float)(e.Delta / 1200.0);
+            this.ZoomLevel += (float)(e.Delta / 2000.0);
 
             this.QueueNotifyMapViewChanged();
         }

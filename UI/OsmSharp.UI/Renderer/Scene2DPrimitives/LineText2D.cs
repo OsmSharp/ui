@@ -80,7 +80,8 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// <param name="dashes"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public LineText2D(double[] x, double[] y, int color, double size, string text, float minZoom, float maxZoom)
+        public LineText2D(double[] x, double[] y, int color, double size, string text, int? haloColor, int? haloRadius,
+            float minZoom, float maxZoom)
             : this()
         {
             this.X = x;
@@ -88,6 +89,8 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.Color = color;
             this.Size = size;
             this.Text = text;
+            this.HaloColor = haloColor;
+            this.HaloRadius = haloRadius;
 
             MinX = int.MaxValue;
             MaxX = int.MinValue;
@@ -179,6 +182,16 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
         /// </summary>
         /// <value>The color.</value>
         public int Color { get; set; }
+
+        /// <summary>
+        /// Gets or sets the halo size.
+        /// </summary>
+        public int? HaloRadius { get; set; }
+
+        /// <summary>
+        /// Gets or sets the halo color.
+        /// </summary>
+        public int? HaloColor { get; set; }
 
         /// <summary>
         /// Gets or sets the size.
