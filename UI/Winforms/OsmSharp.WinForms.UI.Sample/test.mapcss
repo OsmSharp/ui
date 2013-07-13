@@ -12,8 +12,7 @@ way|z14-[tourism] :area                     { z-index: -3; color: #F7CECE; width
 way[historic],way[ruins] :area              { z-index: -5; color: #F7F7DE; width: 1; fill-color: #F7F7DE; fill-opacity: 0.2; }
 way[military] :area                         { z-index: -5; color: #D6D6D6; width: 1; fill-color: #D6D6D6; fill-opacity: 0.2; }
 way[landuse=forest],way[natural=wood] :area { z-index: -4; color: #8CD6B5;   width: 2; fill-color: #8CD6B5;   fill-opacity: 0.2; }
-way[landuse=residential], way[landuse=farmland] :area				
-											{ z-index: -5; fill-color: #EAEAEA;   fill-opacity: 0.2; }
+way[landuse=residential] :area				{ z-index: -5; fill-color: #EAEAEA;   fill-opacity: 0.2; }
 way[leisure=pitch]						    { z-index: -3; color: #8CD6B5; width: 1; fill-color: #8CD6B5; fill-opacity: 0.2; }
 way|z16-[amenity=parking] :area                  { z-index: -3; color: gray;    width: 1; fill-color: gray;    fill-opacity: 0.2; }
 way|z16-[public_transport=pay_scale_area] :area  { z-index: -2; color: gray;    width: 1; fill-color: gray;    fill-opacity: 0.1; }
@@ -26,21 +25,27 @@ way|z14-[building] {
 	z-index: 4;
 }
 
-way[highway]											{ z-index: 8; text: name; text-color: black; font-size: 10; text-position: line; text-halo-color: white; text-halo-radius: 3; linecap: round; casing-linecap: round }
+way[highway]											{ z-index: 8; text: name; text-color: black; font-size: 10; text-position: line; text-halo-color: white; text-halo-radius: 1; linecap: round; casing-linecap: round }
+way[highway=motorway],way[highway=motorway_link],
+way[highway=trunk],way[highway=trunk_link],
+way[highway=primary],way[highway=primary_link],
+way[highway=secondary],way[highway=secondary_link],
+way[highway=tertiary],way[highway=tertiary_link]		{ z-index: 8; text: name; text-color: black; font-size: 14; text-position: line; text-halo-color: white; text-halo-radius: 1; linecap: round; casing-linecap: round }
+
 way[highway=motorway],way[highway=motorway_link]		{ z-index: 7; color: red; width: 10; casing-color: black; casing-width: 1; }
 way[highway=trunk],way[highway=trunk_link]				{ z-index: 6; color: red; width: 8; casing-color: black; casing-width: 1; }
 way[highway=primary],way[highway=primary_link]			{ z-index: 6; color: red; width: 8; casing-color: #555555; casing-width: 1; }
 way[highway=secondary],way[highway=secondary_link]		{ z-index: 6; color: orange; width: 8; casing-color: #555555; casing-width: 1; }
-way[highway=tertiary],way[highway=tertiary_link]		{ z-index: 5; color: white; width: 7; casing-color: #555555; casing-width: 1; }
-way|z14-[highway=unclassified]                           { z-index: 5; color: white; width: 7; casing-color: gray; casing-width: 1; }
+way[highway=tertiary],way[highway=tertiary_link]		{ z-index: 5; color: white; width: 6; casing-color: #555555; casing-width: 1; }
+way|z14-[highway=unclassified]                           { z-index: 5; color: white; width: 3; casing-color: gray; casing-width: 1; }
 way|z14-[highway=residential]                            { z-index: 5; color: white; width: 7; casing-color: gray; casing-width: 1; }
 way|z14-[highway=service]								 { z-index: 5; color: white; width: 7; casing-color: gray; casing-width: 1; }
 way|z14-[highway=service][service!=parking_aisle]        { z-index: 5; color: white; width: 4; casing-color: gray; casing-width: 1; }
 way|z14-[highway=track]								     { z-index: 5; color: gray; width: 1; dashes: 6,2; }
 way|z16-[highway=service][service=parking_aisle]         { z-index: 5; color: white; width: 1; casing-color: #555555; casing-width: 1; }
 way|z16-[highway=service][service=alley]                 { z-index: 5; color: white; width: 3; dashes: 6,2; casing-color: 555555; casing-width: 1; }
-way|z14-[highway=road]                                   { z-index: 5; color: gray; width: 7; casing-color: white; casing-width: 1; }
-way|z16-[highway=living_street]                          { z-index: 5; color: white; width: 6; casing-color: #555555; casing-width: 1; }
+way|z14-[highway=road]                                   { z-index: 5; color: gray; width: 3; casing-color: white; casing-width: 1; }
+way|z16-[highway=living_street]                          { z-index: 5; color: white; width: 3; casing-color: #555555; casing-width: 1; }
 way|z16-[highway=foot], way|z16-[highway=path], way|z16-[highway=footway]     			
 													     { z-index: 5; color: gray; width: 1; dashes: 6,2; }
 way|z14-[highway=cycleway]							     { z-index: 5; color: blue; width: 1; dashes: 2,2; }
@@ -53,6 +58,6 @@ way|z15-[amenity=parking] {icon-image: "styles/default/parking.png"; }
 
 node|z15-[natural=tree]
 {
-	width:3;
+	width:1;
 	color:green;
 }
