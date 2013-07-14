@@ -57,11 +57,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Elements\DataStructures\IElementDataStructure.cs" />
-    <Compile Include="Elements\ElementBase.cs" />
-    <Compile Include="Elements\ElementMultiLine.cs" />
-    <Compile Include="Elements\ElementPoint.cs" />
-    <Compile Include="Elements\IElement.cs" />
     <Compile Include="KnownColor.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
@@ -111,6 +106,7 @@
     <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitive.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitivesSource.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Line2D.cs" />
+    <Compile Include="Renderer\Scene2DPrimitives\LineText2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Point2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Polygon2D.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DEntry.cs" />

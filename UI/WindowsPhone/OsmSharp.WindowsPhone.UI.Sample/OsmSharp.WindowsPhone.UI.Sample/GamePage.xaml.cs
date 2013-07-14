@@ -12,77 +12,34 @@ using Microsoft.Phone.Controls;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using PhoneClassLibrary4;
+using OsmSharp.UI.Map;
+using OsmSharp.UI.Map.Layers;
+using OsmSharp.UI.Renderer;
+using System.Reflection;
 
 namespace OsmSharp.WindowsPhone.UI.Sample
 {
-    public partial class GamePage : PhoneApplicationPage
+    public partial class GamePage : MapGamePageView
     {
-        ContentManager contentManager;
-        GameTimer timer;
-        SpriteBatch spriteBatch;
-
         public GamePage()
+            : base((Application.Current as App).Content)
         {
-            InitializeComponent();
-
-            // Get the content manager from the application
-            contentManager = (Application.Current as App).Content;
-
-            // Create a timer for this page
-            timer = new GameTimer();
-            timer.UpdateInterval = TimeSpan.FromTicks(333333);
-            timer.Update += OnUpdate;
-            timer.Draw += OnDraw;
+            this.Initialize();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        public void Initialize()
         {
-            // Set the sharing mode of the graphics device to turn on XNA rendering
-            SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(true);
+            // initialize a test-map.
+            var map = new Map();
+            map.AddLayer(new LayerScene(Scene2D.Deserialize(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                "OsmSharp.WindowsPhone.UI.Sample.wvl.osm.pbf.scene.simple"), true)));
 
-            // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(SharedGraphicsDeviceManager.Current.GraphicsDevice);
-
-            // TODO: use this.content to load your game content here
-
-            // Start the timer
-            timer.Start();
-
-            base.OnNavigatedTo(e);
-        }
-
-        protected override void OnNavigatedFrom(NavigationEventArgs e)
-        {
-            // Stop the timer
-            timer.Stop();
-
-            // Set the sharing mode of the graphics device to turn off XNA rendering
-            SharedGraphicsDeviceManager.Current.GraphicsDevice.SetSharingMode(false);
-
-            base.OnNavigatedFrom(e);
-        }
-
-        /// <summary>
-        /// Allows the page to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        private void OnUpdate(object sender, GameTimerEventArgs e)
-        {
-            // TODO: Add your update logic here
-        }
-
-        /// <summary>
-        /// Allows the page to draw itself.
-        /// </summary>
-        private void OnDraw(object sender, GameTimerEventArgs e)
-        {
-            SharedGraphicsDeviceManager.Current.GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            SharedGraphicsDeviceManager.Current.GraphicsDevice.DrawPrimitives(PrimitiveType.LineStrip,
-                0, 10);
-
-
-            // TODO: Add your drawing code here
+            // initializes this map.
+            this.Map = map;
+            this.Center = new OsmSharp.Math.Geo.GeoCoordinate(51.158075, 2.961545);
+            this.ZoomLevel = 16;
         }
     }
 }

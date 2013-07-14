@@ -55,6 +55,10 @@
     <Reference Include="Microsoft.Xna.Framework.Graphics" />
     <Reference Include="Microsoft.Xna.Framework.Input.Touch" />
     <Reference Include="microsoft.xna.framework.interop" />
+    <Reference Include="protobuf-net, Version=2.0.0.621, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
@@ -68,6 +72,7 @@
     </Compile>
     <Compile Include="GamePage.xaml.cs">
       <DependentUpon>GamePage.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
@@ -92,6 +97,7 @@
   <ItemGroup>
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml" />
+    <EmbeddedResource Include="wvl.osm.pbf.scene.simple" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ApplicationIcon.png">
@@ -101,6 +107,29 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="SplashScreenImage.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Core\OsmSharp.Osm\OsmSharp.Osm.WindowsPhone.csproj">
+      <Project>{B050A8E0-25FF-4FA1-B01E-0A06D7090863}</Project>
+      <Name>OsmSharp.Osm.WindowsPhone</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Core\OsmSharp.Routing\OsmSharp.Routing.WindowsPhone.csproj">
+      <Project>{BEDE3991-D151-48D0-BAB2-D04369CD1711}</Project>
+      <Name>OsmSharp.Routing.WindowsPhone</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Core\OsmSharp\OsmSharp.WindowsPhone.csproj">
+      <Project>{5F0F6567-835D-4807-893C-F4B6C3E58CE8}</Project>
+      <Name>OsmSharp.WindowsPhone</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\OsmSharp.UI\OsmSharp.UI.WindowsPhone.csproj">
+      <Project>{E3BB9FEF-3728-4944-9229-CD486C19BDD5}</Project>
+      <Name>OsmSharp.UI.WindowsPhone</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OsmSharp.WindowsPhone.UI\OsmSharp.WindowsPhone.UI.csproj">
+      <Project>{5ED8F316-9B5A-46DB-BDB6-73269D361969}</Project>
+      <Name>OsmSharp.WindowsPhone.UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

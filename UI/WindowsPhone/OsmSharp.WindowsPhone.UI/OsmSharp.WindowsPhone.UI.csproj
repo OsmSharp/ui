@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PhoneClassLibrary4</RootNamespace>
-    <AssemblyName>PhoneClassLibrary4</AssemblyName>
+    <RootNamespace>OsmSharp.WindowsPhone.UI</RootNamespace>
+    <AssemblyName>OsmSharp.WindowsPhone.UI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <TargetFrameworkProfile>WindowsPhone71</TargetFrameworkProfile>
@@ -41,17 +41,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="box2d">
-      <HintPath>..\..\..\packages\Cocos2D-XNA.Windows.2.0.3.2\lib\box2d.dll</HintPath>
-    </Reference>
-    <Reference Include="cocos2d-xna">
-      <HintPath>..\..\..\packages\Cocos2D-XNA.Windows.2.0.3.2\lib\cocos2d-xna.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib">
-      <HintPath>..\..\..\packages\Cocos2D-XNA.Windows.2.0.3.2\lib\ICSharpCode.SharpZipLib.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Phone.Interop" />
+    <Reference Include="Microsoft.Xna.Framework" />
+    <Reference Include="Microsoft.Xna.Framework.Game" />
+    <Reference Include="Microsoft.Xna.Framework.Graphics" />
+    <Reference Include="Microsoft.Xna.Framework.Input.Touch" />
+    <Reference Include="Microsoft.Xna.Framework.Interop" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
@@ -63,14 +60,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MapGamePageView.cs" />
     <Compile Include="Layers\TileLayer.cs" />
+    <Compile Include="Renderer\GraphicsDeviceRenderer2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
-    <Folder Include="Renderer\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\OsmSharp.Osm\OsmSharp.Osm.WindowsPhone.csproj">
+      <Project>{B050A8E0-25FF-4FA1-B01E-0A06D7090863}</Project>
+      <Name>OsmSharp.Osm.WindowsPhone</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Core\OsmSharp.Routing\OsmSharp.Routing.WindowsPhone.csproj">
+      <Project>{BEDE3991-D151-48D0-BAB2-D04369CD1711}</Project>
+      <Name>OsmSharp.Routing.WindowsPhone</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Core\OsmSharp\OsmSharp.WindowsPhone.csproj">
+      <Project>{5F0F6567-835D-4807-893C-F4B6C3E58CE8}</Project>
+      <Name>OsmSharp.WindowsPhone</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OsmSharp.UI\OsmSharp.UI.WindowsPhone.csproj">
+      <Project>{E3BB9FEF-3728-4944-9229-CD486C19BDD5}</Project>
+      <Name>OsmSharp.UI.WindowsPhone</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

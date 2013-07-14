@@ -410,6 +410,7 @@ namespace OsmSharp.Osm.Data.Memory
             return dataSource;
         }
 
+#if !WINDOWS_PHONE
         /// <summary>
         /// Creates a new memory data source from all the data in the given osm xml stream.
         /// </summary>
@@ -419,6 +420,7 @@ namespace OsmSharp.Osm.Data.Memory
         {
             return MemoryDataSource.CreateFrom(new Xml.Processor.XmlOsmStreamReader(stream));
         }
+#endif
 
         /// <summary>
         /// Creates a new memory data source from all the data in the given osm pbf stream.

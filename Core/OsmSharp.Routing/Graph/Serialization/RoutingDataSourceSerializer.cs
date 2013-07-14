@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Xml.v0_6;
 using OsmSharp.Routing.Graph.Router;
 
 namespace OsmSharp.Routing.Graph.Serialization

@@ -313,6 +313,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Collections\Cache\LRUCache.cs" />
     <Compile Include="Math\Primitives\PointF2D.cs" />
+    <Compile Include="Math\Primitives\Polyline2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="IO\Xml\Gpx\v1_0\gpx.xsd" />

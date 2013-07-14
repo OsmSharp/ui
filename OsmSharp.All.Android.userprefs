@@ -1,32 +1,24 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI\MapView.cs">
     <Files>
-      <File FileName="UI\OsmSharp.UI\Map\Styles\MapCSS\v0_2\Domain\SelectorRule.cs" Line="141" Column="10" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="412" Column="74" />
-      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\OpenGLRenderer2D.cs" Line="233" Column="4" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="80" Column="6" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\CanvasRenderer2DView.cs" Line="1" Column="1" />
+      <File FileName="UI\Android\OsmSharp.Android.UI\MapView.cs" Line="320" Column="1" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
-          <Node name="Core" expanded="True" />
           <Node name="UI" expanded="True">
             <Node name="Android" expanded="True">
               <Node name="OsmSharp.Android.UI" expanded="True">
-                <Node name="Renderer" expanded="True">
-                  <Node name="OpenGLRenderer2D.cs" selected="True" />
-                </Node>
+                <Node name="Renderer" expanded="True" />
+                <Node name="MapView.cs" selected="True" />
               </Node>
             </Node>
             <Node name="OsmSharp.UI.Android" expanded="True">
               <Node name="Map" expanded="True">
-                <Node name="Styles" expanded="True">
-                  <Node name="MapCSS" expanded="True">
-                    <Node name="v0_2" expanded="True">
-                      <Node name="Domain" expanded="True" />
-                    </Node>
-                  </Node>
-                </Node>
+                <Node name="Styles" expanded="True" />
               </Node>
             </Node>
           </Node>
@@ -422,5 +414,5 @@
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
-  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" AndroidDeviceId-Debug="emulator-5554" />
+  <MonoDevelop.Ide.ItemProperties.UI.Android.OsmSharp.Android.UI.Sample MonoForAntroid.PreferredDevice="3.7in WVGA (Nexus One)" AndroidDeviceId-Debug="8889CC253F925A2FB51379C653D11F1" />
 </Properties>

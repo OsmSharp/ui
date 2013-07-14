@@ -9,8 +9,8 @@
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OsmSharp.Tools</RootNamespace>
-    <AssemblyName>OsmSharp.Tools</AssemblyName>
+    <RootNamespace>OsmSharp</RootNamespace>
+    <AssemblyName>OsmSharp</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <TargetFrameworkProfile>WindowsPhone71</TargetFrameworkProfile>
@@ -33,7 +33,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\OutputWindowsPhone\OsmSharp.Tools.XML</DocumentationFile>
+    <DocumentationFile>..\OutputWindowsPhone\OsmSharp.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,7 +44,7 @@
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\OutputWindowsPhone\OsmSharp.Tools.XML</DocumentationFile>
+    <DocumentationFile>..\OutputWindowsPhone\OsmSharp.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="protobuf-net">
@@ -71,7 +71,6 @@
     <Compile Include="Collections\PermutationEnumerator.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeap.cs" />
     <Compile Include="Collections\PriorityQueues\IPriorityQueue.cs" />
-    <Compile Include="Collections\SerializableSparseArray.cs" />
     <Compile Include="Collections\SortedDictionary.cs" />
     <Compile Include="Collections\SortedList.cs" />
     <Compile Include="Collections\SortedSet.cs" />
@@ -89,6 +88,7 @@
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
     <Compile Include="Collections\Tags\TagsCollection.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Encoding\ASCIIEncoding.cs" />
     <Compile Include="GeoCoding\AccuracyEnum.cs" />
     <Compile Include="GeoCoding\Facade.cs" />
@@ -99,9 +99,45 @@
     <Compile Include="GeoCoding\Memory\IndexPostalCodes.cs" />
     <Compile Include="GeoCoding\Memory\IndexStreets.cs" />
     <Compile Include="GeoCoding\Memory\InMemoryGeoCoder.cs" />
-    <Compile Include="GeoCoding\Nominatim\GeoCoder.cs" />
-    <Compile Include="GeoCoding\Nominatim\GeoCoderQuery.cs" />
-    <Compile Include="GeoCoding\Nominatim\GeoCoderResult.cs" />
+    <Compile Include="Geo\Attributes\GeometryAttribute.cs" />
+    <Compile Include="Geo\Attributes\GeometryAttributeCollection.cs" />
+    <Compile Include="Geo\Attributes\IGeometryAttributesIndex.cs" />
+    <Compile Include="Geo\Attributes\SimpleGeometryAttributeCollection.cs" />
+    <Compile Include="Geo\Extensions.cs" />
+    <Compile Include="Geo\GeoCoordinate.cs" />
+    <Compile Include="Geo\GeoCoordinateBox.cs" />
+    <Compile Include="Geo\GeoCoordinateLine.cs" />
+    <Compile Include="Geo\GeoCoordinatePolygon.cs" />
+    <Compile Include="Geo\Geometries\Geometry.cs" />
+    <Compile Include="Geo\Geometries\GeometryCollection.cs" />
+    <Compile Include="Geo\Geometries\LineairRing.cs" />
+    <Compile Include="Geo\Geometries\LineString.cs" />
+    <Compile Include="Geo\Geometries\MultiLineString.cs" />
+    <Compile Include="Geo\Geometries\MultiPoint.cs" />
+    <Compile Include="Geo\Geometries\MultiPolygon.cs" />
+    <Compile Include="Geo\Geometries\Point.cs" />
+    <Compile Include="Geo\Geometries\Polygon.cs" />
+    <Compile Include="Geo\Meta\DirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\DirectionEnum.cs" />
+    <Compile Include="Geo\Meta\RelativeDirection.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionCalculator.cs" />
+    <Compile Include="Geo\Meta\RelativeDirectionEnum.cs" />
+    <Compile Include="Geo\Projections\EllipticalMercator.cs" />
+    <Compile Include="Geo\Projections\IProjection.cs" />
+    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\International\Belgium\Belgium1972LambertProjection.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertCoordinate.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertEllipsoid.cs" />
+    <Compile Include="Geo\Projections\Lambert\LambertProjectionBase.cs" />
+    <Compile Include="Geo\Projections\ScaledProjection.cs" />
+    <Compile Include="Geo\Projections\SphericalMercator.cs" />
+    <Compile Include="Geo\Projections\WebMercator.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateCompact.cs" />
+    <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
+    <Compile Include="Geo\Streams\GeoCollectionStreamSource.cs" />
+    <Compile Include="Geo\Streams\IGeoStreamSource.cs" />
+    <Compile Include="Geo\Streams\IGeoStreamTarget.cs" />
     <Compile Include="IClonable.cs" />
     <Compile Include="IO\ByteCache\DiskByteCache.cs" />
     <Compile Include="IO\ByteCache\IByteCache.cs" />
@@ -133,61 +169,23 @@
     <Compile Include="Math\AI\Genetic\Solvers\SolverSettings.cs" />
     <Compile Include="Math\Algorithms\ConvexHull.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
-    <Compile Include="Math\Geo\Constants.cs" />
-    <Compile Include="Math\Geo\Extensions.cs" />
-    <Compile Include="Math\Geo\Factory\PrimitiveGeoFactory.cs" />
-    <Compile Include="Math\Geo\GeoCoordinate.cs" />
-    <Compile Include="Math\Geo\GeoCoordinateBox.cs" />
-    <Compile Include="Math\Geo\GeoCoordinateLine.cs" />
-    <Compile Include="Math\Geo\GeoCoordinatePolygon.cs" />
-    <Compile Include="Math\Geo\Lambert\Ellipsoids\Hayford1924Ellipsoid.cs" />
-    <Compile Include="Math\Geo\Lambert\Ellipsoids\Wgs1984Ellipsoid.cs" />
-    <Compile Include="Math\Geo\Lambert\International\Belgium\Belgium1972LambertProjection.cs" />
-    <Compile Include="Math\Geo\Lambert\LambertCoordinate.cs" />
-    <Compile Include="Math\Geo\Lambert\LambertEllipsoid.cs" />
-    <Compile Include="Math\Geo\Lambert\LambertProjectionBase.cs" />
-    <Compile Include="Math\Geo\Meta\DirectionCalculator.cs" />
-    <Compile Include="Math\Geo\Meta\DirectionEnum.cs" />
-    <Compile Include="Math\Geo\Meta\RelativeDirection.cs" />
-    <Compile Include="Math\Geo\Meta\RelativeDirectionCalculator.cs" />
-    <Compile Include="Math\Geo\Meta\RelativeDirectionEnum.cs" />
-    <Compile Include="Math\Geo\Projections\EllipticalMercator.cs" />
-    <Compile Include="Math\Geo\Projections\IProjection.cs" />
-    <Compile Include="Math\Geo\Projections\ScaledProjection.cs" />
-    <Compile Include="Math\Geo\Projections\SphericalMercator.cs" />
-    <Compile Include="Math\Geo\Projections\WebMercator.cs" />
-    <Compile Include="Math\Geo\Simple\GeoCoordinateCompact.cs" />
-    <Compile Include="Math\Geo\Simple\GeoCoordinateSimple.cs" />
     <Compile Include="Math\ILocationObject.cs" />
-    <Compile Include="Math\IPointF2D.cs" />
     <Compile Include="Math\ITaggedObject.cs" />
-    <Compile Include="Math\PointF2D.cs" />
     <Compile Include="Math\PrimitiveF2D.cs" />
-    <Compile Include="Math\PrimitiveSimpleF2D.cs" />
     <Compile Include="Math\Primitives\Enumerators\Lines\ILineList.cs" />
     <Compile Include="Math\Primitives\Enumerators\Lines\LineEnumerable.cs" />
     <Compile Include="Math\Primitives\Enumerators\Lines\LineEnumerator.cs" />
     <Compile Include="Math\Primitives\Enumerators\Points\IPointList.cs" />
     <Compile Include="Math\Primitives\Enumerators\Points\PointEnumerable.cs" />
     <Compile Include="Math\Primitives\Enumerators\Points\PointEnumerator.cs" />
-    <Compile Include="Math\Primitives\Factory\PrimitiveFactory.cs" />
-    <Compile Include="Math\Primitives\GenericLineF2D.cs" />
-    <Compile Include="Math\Primitives\GenericPolygonF2D.cs" />
-    <Compile Include="Math\Primitives\GenericRectangleF2D.cs" />
     <Compile Include="Math\Primitives\LineF2D.cs" />
+    <Compile Include="Math\Primitives\PointF2D.cs" />
     <Compile Include="Math\Primitives\PolygonF2D.cs" />
+    <Compile Include="Math\Primitives\Polyline2D.cs" />
     <Compile Include="Math\Primitives\RectangleF2D.cs" />
     <Compile Include="Math\Random\IRandomGenerator.cs" />
     <Compile Include="Math\Random\RandomGenerator.cs" />
     <Compile Include="Math\Random\StaticRandomGenerator.cs" />
-    <Compile Include="Math\Shapes\Factory\ShapesFactory.cs" />
-    <Compile Include="Math\Shapes\PrimitivesFactory\IPrimitivesFactory.cs" />
-    <Compile Include="Math\Shapes\ResultHelpers\DistanceResult.cs" />
-    <Compile Include="Math\Shapes\ShapeCombinedF.cs" />
-    <Compile Include="Math\Shapes\ShapeDotF.cs" />
-    <Compile Include="Math\Shapes\ShapeF.cs" />
-    <Compile Include="Math\Shapes\ShapePolyGonF.cs" />
-    <Compile Include="Math\Shapes\ShapePolyLineF.cs" />
     <Compile Include="Math\StateMachines\FiniteStateMachine.cs" />
     <Compile Include="Math\StateMachines\FiniteStateMachineState.cs" />
     <Compile Include="Math\StateMachines\FiniteStateMachineTransition.cs" />
@@ -316,71 +314,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="Utilities.cs" />
-    <Compile Include="Xml\IXmlSource.cs" />
-    <Compile Include="Xml\Kml\KmlDocument.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Xml\Kml\v2_0\kml.cs">
-      <DependentUpon>kml.xsd</DependentUpon>
-      <SubType>code</SubType>
-    </Compile>
-    <Compile Include="Xml\Kml\v2_0_response\kml.cs">
-      <DependentUpon>kml.xsd</DependentUpon>
-      <SubType>code</SubType>
-    </Compile>
-    <Compile Include="Xml\Kml\v2_1\kml.cs">
-      <DependentUpon>kml.xsd</DependentUpon>
-      <SubType>code</SubType>
-    </Compile>
-    <Compile Include="Xml\Nominatim\Reverse\v1\reverse.cs">
-      <DependentUpon>reverse.xsd</DependentUpon>
-      <SubType>code</SubType>
-    </Compile>
-    <Compile Include="Xml\Nominatim\Search\SearchDocument.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Xml\Nominatim\Search\v1\search.cs">
-      <DependentUpon>search.xsd</DependentUpon>
-      <SubType>code</SubType>
-    </Compile>
-    <Compile Include="Xml\Sources\XmlFileSource.cs" />
-    <Compile Include="Xml\Sources\XmlReaderSource.cs" />
-    <Compile Include="Xml\Sources\XmlStreamSource.cs" />
-    <Compile Include="Xml\Sources\XmlStringSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Xml\Kml\v2_0\kml.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\Kml\v2_0_response\kml.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\Kml\v2_1\kml.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\Nominatim\Reverse\v1\reverse.xsc">
-      <DependentUpon>reverse.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\Nominatim\Reverse\v1\reverse.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>reverse.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\Nominatim\Reverse\v1\reverse.xss">
-      <DependentUpon>reverse.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\Nominatim\Search\v1\search.xsc">
-      <DependentUpon>search.xsd</DependentUpon>
-    </None>
-    <None Include="Xml\Nominatim\Search\v1\search.xsd">
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>search1.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </None>
-    <None Include="Xml\Nominatim\Search\v1\search.xss">
-      <DependentUpon>search.xsd</DependentUpon>
-    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Geo\IO\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

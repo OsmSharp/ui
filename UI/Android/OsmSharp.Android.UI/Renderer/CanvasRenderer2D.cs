@@ -14,6 +14,10 @@ using Android.Widget;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene2DPrimitives;
 using System.IO;
+using OsmSharp.Math.Primitives;
+using OsmSharp.Math;
+using OsmSharp.Math.Units.Angle;
+using Android.Graphics;
 
 namespace OsmSharp.Android.UI
 {
@@ -411,20 +415,45 @@ namespace OsmSharp.Android.UI
 		protected override void DrawLineText (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, string text, int color, 
 		                                      double size, int? haloColor, int? haloRadius)
 		{
+////			if (x.Length > 1) {
+////				float textSize = this.ToPixels(size);
+////
+////				_paint.Color = new global::Android.Graphics.Color(color);
+////				_paint.FakeBoldText = true;
+////				_paint.TextSize = textSize * 2;
+////
+//////				float[] characterWidths = new float[text.Length];
+//////				_paint.GetTextWidths (text, characterWidths);
+////
+////				double textLength = this.FromPixels(_target, _view, _paint.MeasureText (text));
+////				double lineLength = Polyline2D.Length(x, y);
+////
+////				if (lineLength > textLength * 1.5) {
+////					global::Android.Graphics.Path linePath = new global::Android.Graphics.Path ();
+////					linePath.MoveTo (this.TransformX (x [0]), this.TransformY (y [0]));
+////					for (int idx = 1; idx < x.Length; idx++) {
+////						linePath.LineTo (this.TransformX (x [1]), this.TransformY (y [1]));
+////					}
+////					target.Target.DrawTextOnPath (text, linePath, 0, 0, _paint);
+////				}
+////			}
 //			if (x.Length > 1)
 //			{
-//				float sizeInPixels = this.ToPixels(size);
+//				float textSize = this.ToPixels(size);
 //				_paint.Color = new global::Android.Graphics.Color(color);
 //				_paint.FakeBoldText = true;
-//				_paint.TextSize = textSize * 2;
+//				_paint.TextSize = textSize;
+//				_paint.SetStyle (global::Android.Graphics.Paint.Style.Fill);
 //
 //				// get some metrics on the texts.
-//				var characterWidths = GetCharacterWidths(target.Target, text, font);
+//				//var characterWidths = GetCharacterWidths(target.Target, text, font);
+//				float[] characterWidths = new float[text.Length];
+//				_paint.GetTextWidths (text, characterWidths);
 //				for (int idx = 0; idx < characterWidths.Length; idx++)
 //				{
 //					characterWidths[idx] = (float)this.FromPixels(_target, _view, characterWidths[idx]);
 //				}
-//				var characterHeight = target.Target.(text, font).Height;
+//				float characterHeight = (float)size;
 //				var textLength = characterWidths.Sum();
 //				var avgCharacterWidth = textLength / characterWidths.Length;
 //
@@ -467,17 +496,18 @@ namespace OsmSharp.Android.UI
 //					middle = lineLength / 2.0;
 //					first = middle - (textLength / 2.0);
 //					current = Polyline2D.PositionAtPosition(xText, yText, first);
+//					Matrix matrixBefore = _target.Target.Matrix;
 //					for (int idx = 0; idx < text.Length; idx++)
 //					{
 //						double nextPosition = middle - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
 //						PointF2D next = Polyline2D.PositionAtPosition(xText, yText, nextPosition);
 //						char currentChar = text[idx];
-//						using (GraphicsPath characterPath = new GraphicsPath())
-//						{
-//							characterPath.AddString(currentChar.ToString(), font.FontFamily, (int)font.Style, font.Size, Point.Empty,
-//							                        StringFormat.GenericTypographic);
+//						global::Android.Graphics.Path textPath = new global::Android.Graphics.Path ();
+//						_paint.GetTextPath (text, idx, idx + 1, 0, 0, textPath);
+////							characterPath.AddString(currentChar.ToString(), font.FontFamily, (int)font.Style, font.Size, Point.Empty,
+////							                        StringFormat.GenericTypographic);
 //
-//							var pathBounds = characterPath.GetBounds();
+//							//var pathBounds = characterPath.GetBounds();
 //
 //							// Transformation matrix to move the character to the correct location. 
 //							// Note that all actions on the Matrix class are prepended, so we apply them in reverse.
@@ -485,7 +515,7 @@ namespace OsmSharp.Android.UI
 //
 //							// Translate to the final position, the center of line-segment between 'current' and 'next'
 //							PointF2D position = current + ((next - current) / 2.0);
-//							transform.Translate(this.TransformX(position[0]), this.TransformY(position[1]));
+//							transform.SetTranslate(this.TransformX(position[0]), this.TransformY(position[1]));
 //
 //							// calculate the angle.
 //							VectorF2D vector = next - current;
@@ -493,24 +523,185 @@ namespace OsmSharp.Android.UI
 //							double angleDegrees = ((Degree)horizontal.Angle(vector)).Value;
 //
 //							// Rotate the character
-//							transform.Rotate((float)angleDegrees);
+//						transform.PreRotate ((float)angleDegrees);
+//							//transform.SetRotate((float)angleDegrees);
 //
 //							// Translate the character so the centre of its base is over the origin
-//							transform.Translate(0, -characterHeight / 2.5f);
+//						transform.PreTranslate(0, -characterHeight / 2.5f);
 //
 //							//transform.Scale((float)this.FromPixels(_target, _view, 1), 
 //							//    (float)this.FromPixels(_target, _view, 1));
 //
-//							characterPath.Transform(transform);
+//						//target.Target.
+//						textPath.Transform(transform);
 //
-//							// Draw the character
-//							target.Target.FillPath(brush, characterPath);
-//						}
+//						// Draw the character
+//						target.Target.DrawPath (textPath, _paint);
+//						//target.Target.DrawText (text, idx , idx + 1, 0, 0, _paint);
+//
 //						current = next;
 //					}
 //				}
 //			}
+			if (x.Length > 1)
+			{
+				float sizeInPixels = this.ToPixels(size);	
+				_paint.SubpixelText = true;
+				_paint.TextSize = (float)sizeInPixels;
+
+				// get some metrics on the texts.
+				float[] characterWidths = new float[text.Length];
+				_paint.GetTextWidths (text, characterWidths);
+				for (int idx = 0; idx < characterWidths.Length; idx++)
+				{
+					characterWidths[idx] = (float)this.FromPixels(_target, _view, characterWidths[idx]);
+				}
+				var characterHeight = (float)size;
+				var textLength = characterWidths.Sum();
+				var avgCharacterWidth = textLength / characterWidths.Length;
+
+				// calculate line length.
+				var lineLength = Polyline2D.Length(x, y);
+				if (lineLength > textLength * 1.2f)
+				{
+					// calculate the number of labels.
+					int labelCount = (int)System.Math.Floor(lineLength / (textLength * 10)) + 1;
+
+					// calculate positions of label(s).
+					double positionGap = lineLength / (labelCount + 1);
+
+					// draw each label.
+					for (double position = positionGap; position < lineLength; position = position + positionGap)
+					{
+						this.DrawLineTextSegment(target, x, y, text, color, size, haloColor, haloRadius, position, characterWidths,
+						                         textLength, characterHeight);
+					}
+				}
+			}
 		}
+
+		public void DrawLineTextSegment(Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, string text, int color,
+		                                double size, int? haloColor, int? haloRadius, double middlePosition, float[] characterWidths, double textLength,
+		                                float characterHeight)
+		{
+			_paint.Color = new global::Android.Graphics.Color(color);
+			_paint.SetStyle (global::Android.Graphics.Paint.Style.Fill);
+
+			// see if the text is 'upside down'.
+			double averageAngle = 0;
+			double first = middlePosition - (textLength / 2.0);
+			PointF2D current = Polyline2D.PositionAtPosition(x, y, first);
+			for (int idx = 0; idx < text.Length; idx++)
+			{
+				double nextPosition = middlePosition - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
+				PointF2D next = Polyline2D.PositionAtPosition(x, y, nextPosition);
+
+				// Translate to the final position, the center of line-segment between 'current' and 'next'
+				PointF2D position = current + ((next - current) / 2.0);
+
+				// calculate the angle.
+				VectorF2D vector = next - current;
+				VectorF2D horizontal = new VectorF2D(1, 0);
+				double angleDegrees = ((Degree)horizontal.Angle(vector)).Value;
+				averageAngle = averageAngle + angleDegrees;
+				current = next;
+			}
+			averageAngle = averageAngle / text.Length;
+
+			// reverse if 'upside down'.
+			double[] xText = x;
+			double[] yText = y;
+			if (averageAngle > 90 && averageAngle < 180 + 90)
+			{ // the average angle is > PI => means upside down.
+				xText = x.Reverse<double>().ToArray<double>();
+				yText = y.Reverse<double>().ToArray<double>();
+			}
+
+			// calculate a central position along the line.
+			first = middlePosition - (textLength / 2.0);
+			current = Polyline2D.PositionAtPosition(xText, yText, first);
+			double nextPosition2 = first;
+			for (int idx = 0; idx < text.Length; idx++)
+			{
+				nextPosition2 = nextPosition2 + characterWidths[idx];
+				//double nextPosition = middle - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
+				PointF2D next = Polyline2D.PositionAtPosition(xText, yText, nextPosition2);
+				char currentChar = text[idx];
+				global::Android.Graphics.Path characterPath = new global::Android.Graphics.Path ();
+				_paint.GetTextPath (text, idx, idx + 1, 0, 0, characterPath);
+				using (characterPath)
+				{
+					// Transformation matrix to move the character to the correct location. 
+					// Note that all actions on the Matrix class are prepended, so we apply them in reverse.
+					var transform = new Matrix();
+
+					// Translate to the final position, the center of line-segment between 'current' and 'next'
+					PointF2D position = current;
+					//PointF2D position = current + ((next - current) / 2.0);
+					transform.SetTranslate(this.TransformX(position[0]), this.TransformY(position[1]));
+
+					// calculate the angle.
+					VectorF2D vector = next - current;
+					VectorF2D horizontal = new VectorF2D(1, 0);
+					double angleDegrees = ((Degree)horizontal.Angle(vector)).Value;
+
+					// Rotate the character
+					transform.PreRotate((float)angleDegrees);
+
+					// Translate the character so the centre of its base is over the origin
+					transform.PreTranslate(0, -characterHeight / 2.5f);
+
+					//transform.Scale((float)this.FromPixels(_target, _view, 1), 
+					//    (float)this.FromPixels(_target, _view, 1));
+					characterPath.Transform(transform);
+
+					if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
+					{
+						_paint.SetStyle (global::Android.Graphics.Paint.Style.FillAndStroke);
+						_paint.StrokeWidth = haloRadius.Value;
+						_paint.Color = new global::Android.Graphics.Color(haloColor.Value);
+						using (global::Android.Graphics.Path haloPath = new global::Android.Graphics.Path())
+						{
+							_paint.GetFillPath (characterPath, haloPath);
+							// Draw the character
+							target.Target.DrawPath(haloPath, _paint);
+						}
+					}
+
+					// Draw the character
+					_paint.SetStyle (global::Android.Graphics.Paint.Style.Fill);
+					_paint.StrokeWidth = 0;
+					_paint.Color = new global::Android.Graphics.Color(color);
+					target.Target.DrawPath(characterPath, _paint);
+				}
+				current = next;
+			}
+		}
+
+//		/// <summary>
+//		/// Gets the char widths for the given string and given font.
+//		/// </summary>
+//		/// <param name="graphics"></param>
+//		/// <param name="text"></param>
+//		/// <param name="font"></param>
+//		/// <returns></returns>
+//		private float[] GetCharacterWidths(string text)
+//		{
+//			// The length of a space. Necessary because a space measured using StringFormat.GenericTypographic has no width.
+//			// We can't use StringFormat.GenericDefault for the characters themselves, as it adds unwanted spacing.
+//			global::Android.Graphics.RectF bounds;
+//			_paint.MeasureText(" ", 0, 1, bounds);
+//			var spaceLength = bounds.Width;
+//
+//			float[] widths = new float[text.Length];
+//			for (int idx = 0; idx < text.Length; idx++)
+//			{
+//				_paint.GetTextBounds (text, idx, 1, bounds);
+//				widths[idx] = (text[idx] == ' ' ? spaceLength :
+//				               bounds.Width);
+//			}
+//			return widths;
+//		}
 
 		#endregion
 	}

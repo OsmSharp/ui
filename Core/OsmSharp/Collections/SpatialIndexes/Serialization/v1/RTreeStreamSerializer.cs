@@ -217,7 +217,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
         /// Represents a reserializable index of children of an R-tree node.
         /// </summary>
         [ProtoContract]
-        internal class ChildrenIndex
+        public class ChildrenIndex
         {
             /// <summary>
             /// The min X of each child.
