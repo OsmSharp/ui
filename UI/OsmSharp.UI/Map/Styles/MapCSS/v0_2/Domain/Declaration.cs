@@ -55,6 +55,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <returns></returns>
         public override string ToString()
         {
+            if (!string.IsNullOrWhiteSpace(this.EvalFunction))
+            {
+                return string.Format("{0}:{1}",
+                                    this.ConvertToDashedFormat(this.Qualifier.ToString()),
+                                    this.EvalFunction);
+            }
             return string.Format("{0}:{1}",
                                  this.ConvertToDashedFormat(this.Qualifier.ToString()),
                                  this.ConvertToDashedFormat(this.Value.ToString()));
