@@ -6,7 +6,7 @@ way {
   /* text: name; */text-position: line; text-halo-radius:2;
    linecap: round;
 
-   casing-opacity: eval( min(1, (num(any(tag("layer"),1))+5) / 6) );
+   casing-opacity: eval("min(1,(num(any(tag('layer'),1))+5) / 6)");
    }
 
 

@@ -62,7 +62,7 @@ namespace OsmSharp.UI.Unittests
 
             // instantiate color.
             var simpleColor = new SimpleColor();
-            simpleColor.Value = declarationInt.Value;
+            simpleColor.Value = declarationInt.Eval(null);
             Assert.AreEqual("#FFFFFF", simpleColor.HexRgb);
         }
 
@@ -95,7 +95,7 @@ namespace OsmSharp.UI.Unittests
 
             // instantiate color.
             var simpleColor = new SimpleColor();
-            simpleColor.Value = declarationInt.Value;
+            simpleColor.Value = declarationInt.Eval(null);
             Assert.AreEqual("#665555", simpleColor.HexRgb);
         }
 
@@ -128,7 +128,7 @@ namespace OsmSharp.UI.Unittests
 
             // instantiate color.
             var simpleColor = new SimpleColor();
-            simpleColor.Value = declarationInt.Value;
+            simpleColor.Value = declarationInt.Eval(null);
             Assert.AreEqual("#00FF00", simpleColor.HexRgb);
         }
 

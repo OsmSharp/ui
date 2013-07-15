@@ -334,12 +334,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                     int valueInt;
                     float valueFloat;
                     string[] strings;
+                    string evalCall = null;
 
                     // skip all eval calls.
                     if (valueString == "EVAL_CALL") // TODO: implement the eval calls and change Antlr grammar.
                     { // skip to next declaration.
-                        declarationSelectorIdx++;
-                        continue;
+                        evalCall = (declarationTree.Children[1] as CommonTree).Children[0].Text;
                     }
 
                     switch (qualifierString)
@@ -347,17 +347,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "text-position":
                             var textPosition = new DeclarationTextPosition();
                             textPosition.Qualifier = DeclarationTextPositionEnum.TextPosition;
-                            switch (valueString)
+                            if (evalCall != null)
                             {
-                                case "line":
-                                    textPosition.Value = TextPositionEnum.Line;
-                                    break;
-                                case "center":
-                                    textPosition.Value = TextPositionEnum.Center;
-                                    break;
-                                default:
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                textPosition.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "line":
+                                        textPosition.Value = TextPositionEnum.Line;
+                                        break;
+                                    case "center":
+                                        textPosition.Value = TextPositionEnum.Center;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -366,14 +373,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "text-halo-radius":
                             var textHaloRaduis = new DeclarationInt();
                             textHaloRaduis.Qualifier = DeclarationIntEnum.TextHaloRadius;
-                            if(int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                            if (evalCall != null)
                             {
-                                textHaloRaduis.Value = valueInt;
+                                textHaloRaduis.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                {
+                                    textHaloRaduis.Value = valueInt;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -382,20 +396,27 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "antialiasing":
                             var antialiasing = new DeclarationAntiAliasing();
                             antialiasing.Qualifier = QualifierAntiAliasingEnum.AntiAliasing;
-                            switch (valueString)
+                            if (evalCall != null)
                             {
-                                case "full":
-                                    antialiasing.Value = AntiAliasingEnum.Full;
-                                    break;
-                                case "text":
-                                    antialiasing.Value = AntiAliasingEnum.Text;
-                                    break;
-                                case "none":
-                                    antialiasing.Value = AntiAliasingEnum.None;
-                                    break;
-                                default:
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                antialiasing.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "full":
+                                        antialiasing.Value = AntiAliasingEnum.Full;
+                                        break;
+                                    case "text":
+                                        antialiasing.Value = AntiAliasingEnum.Text;
+                                        break;
+                                    case "none":
+                                        antialiasing.Value = AntiAliasingEnum.None;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -404,23 +425,30 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "linecap":
                             var linecap = new DeclarationLineCap();
                             linecap.Qualifier = QualifierLineCapEnum.LineCap;
-                            switch (valueString)
+                            if (evalCall != null)
                             {
-                                case "none":
-                                    linecap.Value = LineCapEnum.None;
-                                    break;
-                                case "round":
-                                    linecap.Value = LineCapEnum.Round;
-                                    break;
-                                case "square":
-                                    linecap.Value = LineCapEnum.Square;
-                                    break;
-                                case "butt":
-                                    linecap.Value = LineCapEnum.Butt;
-                                    break;
-                                default:
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                linecap.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "none":
+                                        linecap.Value = LineCapEnum.None;
+                                        break;
+                                    case "round":
+                                        linecap.Value = LineCapEnum.Round;
+                                        break;
+                                    case "square":
+                                        linecap.Value = LineCapEnum.Square;
+                                        break;
+                                    case "butt":
+                                        linecap.Value = LineCapEnum.Butt;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -429,23 +457,30 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "casing-linecap":
                             var casingLinecap = new DeclarationLineCap();
                             casingLinecap.Qualifier = QualifierLineCapEnum.CasingLineCap;
-                            switch (valueString)
+                            if (evalCall != null)
                             {
-                                case "none":
-                                    casingLinecap.Value = LineCapEnum.None;
-                                    break;
-                                case "round":
-                                    casingLinecap.Value = LineCapEnum.Round;
-                                    break;
-                                case "square":
-                                    casingLinecap.Value = LineCapEnum.Square;
-                                    break;
-                                case "butt":
-                                    casingLinecap.Value = LineCapEnum.Butt;
-                                    break;
-                                default:
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                casingLinecap.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "none":
+                                        casingLinecap.Value = LineCapEnum.None;
+                                        break;
+                                    case "round":
+                                        casingLinecap.Value = LineCapEnum.Round;
+                                        break;
+                                    case "square":
+                                        casingLinecap.Value = LineCapEnum.Square;
+                                        break;
+                                    case "butt":
+                                        casingLinecap.Value = LineCapEnum.Butt;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -454,20 +489,27 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "linejoin":
                             var linejoin = new DeclarationLineJoin();
                             linejoin.Qualifier = QualifierLineJoinEnum.LineJoin;
-                            switch (valueString)
+                            if (evalCall != null)
                             {
-                                case "round":
-                                    linejoin.Value = LineJoinEnum.Round;
-                                    break;
-                                case "miter":
-                                    linejoin.Value = LineJoinEnum.Miter;
-                                    break;
-                                case "bevel":
-                                    linejoin.Value = LineJoinEnum.Bevel;
-                                    break;
-                                default:
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                linejoin.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "round":
+                                        linejoin.Value = LineJoinEnum.Round;
+                                        break;
+                                    case "miter":
+                                        linejoin.Value = LineJoinEnum.Miter;
+                                        break;
+                                    case "bevel":
+                                        linejoin.Value = LineJoinEnum.Bevel;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -476,17 +518,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "font-weight":
                             var fontWeight = new DeclarationFontWeight();
                             fontWeight.Qualifier = QualifierFontWeightEnum.FontWeight;
-                            switch (valueString)
+                            if (evalCall != null)
                             {
-                                case "bold":
-                                    fontWeight.Value = FontWeightEnum.Bold;
-                                    break;
-                                case "normal":
-                                    fontWeight.Value = FontWeightEnum.Normal;
-                                    break;
-                                default:
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                fontWeight.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "bold":
+                                        fontWeight.Value = FontWeightEnum.Bold;
+                                        break;
+                                    case "normal":
+                                        fontWeight.Value = FontWeightEnum.Normal;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -495,17 +544,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "font-style":
                             var fontStyle = new DeclarationFontStyle();
                             fontStyle.Qualifier = QualifierFontStyleEnum.FontStyle;
-                            switch (valueString)
+                            if (evalCall != null)
                             {
-                                case "italic":
-                                    fontStyle.Value = FontStyleEnum.Italic;
-                                    break;
-                                case "normal":
-                                    fontStyle.Value = FontStyleEnum.Normal;
-                                    break;
-                                default:
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                fontStyle.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "italic":
+                                        fontStyle.Value = FontStyleEnum.Italic;
+                                        break;
+                                    case "normal":
+                                        fontStyle.Value = FontStyleEnum.Normal;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -514,17 +570,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "font-variant":
                             var fontVariant = new DeclarationFontVariant();
                             fontVariant.Qualifier = QualifierFontVariantEnum.FontVariant;
-                            switch (valueString)
+                            if (evalCall != null)
                             {
-                                case "small-caps":
-                                    fontVariant.Value = FontVariantEnum.SmallCaps;
-                                    break;
-                                case "normal":
-                                    fontVariant.Value = FontVariantEnum.Normal;
-                                    break;
-                                default:
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                fontVariant.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "small-caps":
+                                        fontVariant.Value = FontVariantEnum.SmallCaps;
+                                        break;
+                                    case "normal":
+                                        fontVariant.Value = FontVariantEnum.Normal;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -533,17 +596,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "text-decoration":
                             var textDecoration = new DeclarationTextDecoration();
                             textDecoration.Qualifier = QualifierTextDecorationEnum.TextDecoration;
-                            switch (valueString)
+                            if (evalCall != null)
                             {
-                                case "none":
-                                    textDecoration.Value  = TextDecorationEnum.None;
-                                    break;
-                                case "underline":
-                                    textDecoration.Value = TextDecorationEnum.Underlined;
-                                    break;
-                                default:
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                textDecoration.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "none":
+                                        textDecoration.Value = TextDecorationEnum.None;
+                                        break;
+                                    case "underline":
+                                        textDecoration.Value = TextDecorationEnum.Underlined;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -552,23 +622,30 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "text-transform":
                             var textTransform = new DeclarationTextTransform();
                             textTransform.Qualifier = QualifierTextTransformEnum.TextTransform;
-                            switch (valueString)
+                            if (evalCall != null)
                             {
-                                case "none":
-                                    textTransform.Value = TextTransformEnum.None;
-                                    break;
-                                case "uppercase":
-                                    textTransform.Value = TextTransformEnum.Uppercase;
-                                    break;
-                                case "lowercase":
-                                    textTransform.Value = TextTransformEnum.Lowercase;
-                                    break;
-                                case "capitalize":
-                                    textTransform.Value = TextTransformEnum.Capitalize;
-                                    break;
-                                default:
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                textTransform.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "none":
+                                        textTransform.Value = TextTransformEnum.None;
+                                        break;
+                                    case "uppercase":
+                                        textTransform.Value = TextTransformEnum.Uppercase;
+                                        break;
+                                    case "lowercase":
+                                        textTransform.Value = TextTransformEnum.Lowercase;
+                                        break;
+                                    case "capitalize":
+                                        textTransform.Value = TextTransformEnum.Capitalize;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -577,20 +654,27 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "casing-linejoin":
                             var casingLinejoin = new DeclarationLineJoin();
                             casingLinejoin.Qualifier = QualifierLineJoinEnum.CasingLineJoin;
-                            switch (valueString)
+                            if (evalCall != null)
                             {
-                                case "round":
-                                    casingLinejoin.Value = LineJoinEnum.Round;
-                                    break;
-                                case "miter":
-                                    casingLinejoin.Value = LineJoinEnum.Miter;
-                                    break;
-                                case "bevel":
-                                    casingLinejoin.Value = LineJoinEnum.Bevel;
-                                    break;
-                                default:
-                                    throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                casingLinejoin.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                switch (valueString)
+                                {
+                                    case "round":
+                                        casingLinejoin.Value = LineJoinEnum.Round;
+                                        break;
+                                    case "miter":
+                                        casingLinejoin.Value = LineJoinEnum.Miter;
+                                        break;
+                                    case "bevel":
+                                        casingLinejoin.Value = LineJoinEnum.Bevel;
+                                        break;
+                                    default:
+                                        throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -599,8 +683,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "fill-color":
                             var fillColor = new DeclarationInt();
                             fillColor.Qualifier = DeclarationIntEnum.FillColor;
-                            fillColor.Value = MapCSSDomainParser.ParseColor(
-                                declarationTree.Children[1] as CommonTree);
+                            if (evalCall != null)
+                            {
+                                fillColor.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                fillColor.Value = MapCSSDomainParser.ParseColor(
+                                    declarationTree.Children[1] as CommonTree);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(fillColor);
@@ -608,8 +699,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "text-color":
                             var textColor = new DeclarationInt();
                             textColor.Qualifier = DeclarationIntEnum.TextColor;
-                            textColor.Value = MapCSSDomainParser.ParseColor(
-                                declarationTree.Children[1] as CommonTree);
+                            if (evalCall != null)
+                            {
+                                textColor.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                textColor.Value = MapCSSDomainParser.ParseColor(
+                                    declarationTree.Children[1] as CommonTree);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(textColor);
@@ -617,14 +715,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "font-size":
                             var fontSize = new DeclarationInt();
                             fontSize.Qualifier = DeclarationIntEnum.FontSize;
-                            if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                            if (evalCall != null)
                             {
-                                fontSize.Value = valueInt;
+                                fontSize.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                {
+                                    fontSize.Value = valueInt;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -633,14 +738,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "text-offset":
                             var textOffset = new DeclarationInt();
                             textOffset.Qualifier = DeclarationIntEnum.TextOffset;
-                            if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                            if (evalCall != null)
                             {
-                                textOffset.Value = valueInt;
+                                textOffset.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                {
+                                    textOffset.Value = valueInt;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -649,14 +761,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "max-width":
                             var maxWidth = new DeclarationInt();
                             maxWidth.Qualifier = DeclarationIntEnum.MaxWidth;
-                            if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                            if (evalCall != null)
                             {
-                                maxWidth.Value = valueInt;
+                                maxWidth.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                {
+                                    maxWidth.Value = valueInt;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -665,14 +784,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "fill-opacity":
                             var fillOpacity = new DeclarationFloat();
                             fillOpacity.Qualifier = DeclarationFloatEnum.FillOpacity;
-                            if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                            if (evalCall != null)
                             {
-                                fillOpacity.Value = valueFloat;
+                                fillOpacity.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                                {
+                                    fillOpacity.Value = valueFloat;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -681,14 +807,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "text-opacity":
                             var textOpacity = new DeclarationFloat();
                             textOpacity.Qualifier = DeclarationFloatEnum.TextOpacity;
-                            if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                            if (evalCall != null)
                             {
-                                textOpacity.Value = valueFloat;
+                                textOpacity.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                                {
+                                    textOpacity.Value = valueFloat;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -697,14 +830,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "casing-opacity":
                             var casingOpacity = new DeclarationFloat();
                             casingOpacity.Qualifier = DeclarationFloatEnum.CasingOpacity;
-                            if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                            if (evalCall != null)
                             {
-                                casingOpacity.Value = valueFloat;
+                                casingOpacity.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                                {
+                                    casingOpacity.Value = valueFloat;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -713,14 +853,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "extrude-edge-opacity":
                             var extrudeEdgeOpacity = new DeclarationFloat();
                             extrudeEdgeOpacity.Qualifier = DeclarationFloatEnum.ExtrudeEdgeOpacity;
-                            if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                            if (evalCall != null)
                             {
-                                extrudeEdgeOpacity.Value = valueFloat;
+                                extrudeEdgeOpacity.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                                {
+                                    extrudeEdgeOpacity.Value = valueFloat;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -729,14 +876,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "extrude-face-opacity":
                             var extrudeFaceOpacity = new DeclarationFloat();
                             extrudeFaceOpacity.Qualifier = DeclarationFloatEnum.ExtrudeFaceOpacity;
-                            if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                            if (evalCall != null)
                             {
-                                extrudeFaceOpacity.Value = valueFloat;
+                                extrudeFaceOpacity.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                                {
+                                    extrudeFaceOpacity.Value = valueFloat;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -745,14 +899,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "extrude-edge-width":
                             var extrudeEdgeWidth = new DeclarationFloat();
                             extrudeEdgeWidth.Qualifier = DeclarationFloatEnum.Width;
-                            if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                            if (evalCall != null)
                             {
-                                extrudeEdgeWidth.Value = valueFloat;
+                                extrudeEdgeWidth.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                                {
+                                    extrudeEdgeWidth.Value = valueFloat;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -761,14 +922,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "icon-opacity":
                             var iconOpacity = new DeclarationFloat();
                             iconOpacity.Qualifier = DeclarationFloatEnum.IconOpacity;
-                            if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                            if (evalCall != null)
                             {
-                                iconOpacity.Value = valueFloat;
+                                iconOpacity.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                                {
+                                    iconOpacity.Value = valueFloat;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -777,7 +945,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "fill-image":
                             var fillImage = new DeclarationURL();
                             fillImage.Qualifier = DeclarationURLEnum.FillImage;
-                            fillImage.Value = MapCSSDomainParser.ParseURL(valueString);;
+                            if (evalCall != null)
+                            {
+                                fillImage.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                fillImage.Value = MapCSSDomainParser.ParseURL(valueString);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(fillImage);
@@ -785,7 +960,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "icon-image":
                             var iconImage = new DeclarationURL();
                             iconImage.Qualifier = DeclarationURLEnum.IconImage;
-                            iconImage.Value = MapCSSDomainParser.ParseURL(valueString);
+                            if (evalCall != null)
+                            {
+                                iconImage.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                iconImage.Value = MapCSSDomainParser.ParseURL(valueString);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(iconImage);
@@ -793,7 +975,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "image":
                             var image = new DeclarationURL();
                             image.Qualifier = DeclarationURLEnum.Image;
-                            image.Value = MapCSSDomainParser.ParseURL(valueString);;
+                            if (evalCall != null)
+                            {
+                                image.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                image.Value = MapCSSDomainParser.ParseURL(valueString);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(image);
@@ -801,14 +990,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "z-index":
                             var zIndex = new DeclarationInt();
                             zIndex.Qualifier = DeclarationIntEnum.ZIndex;
-                            if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                            if (evalCall != null)
                             {
-                                zIndex.Value = valueInt;
+                                zIndex.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                {
+                                    zIndex.Value = valueInt;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -817,14 +1013,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "extrude":
                             var extrude = new DeclarationInt();
                             extrude.Qualifier = DeclarationIntEnum.Extrude;
-                            if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                            if (evalCall != null)
                             {
-                                extrude.Value = valueInt;
+                                extrude.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                {
+                                    extrude.Value = valueInt;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -833,8 +1036,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "extrude-edge-color":
                             var extrudeEdgeColor = new DeclarationInt();
                             extrudeEdgeColor.Qualifier = DeclarationIntEnum.ExtrudeEdgeColor;
-                            extrudeEdgeColor.Value = MapCSSDomainParser.ParseColor(
-                                declarationTree.Children[1] as CommonTree);
+                            if (evalCall != null)
+                            {
+                                extrudeEdgeColor.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                extrudeEdgeColor.Value = MapCSSDomainParser.ParseColor(
+                                    declarationTree.Children[1] as CommonTree);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(extrudeEdgeColor);
@@ -842,8 +1052,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "extrude-face-color":
                             var extrudeFaceColor = new DeclarationInt();
                             extrudeFaceColor.Qualifier = DeclarationIntEnum.ExtrudeFaceColor;
-                            extrudeFaceColor.Value = MapCSSDomainParser.ParseColor(
-                                declarationTree.Children[1] as CommonTree);
+                            if (evalCall != null)
+                            {
+                                extrudeFaceColor.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                extrudeFaceColor.Value = MapCSSDomainParser.ParseColor(
+                                    declarationTree.Children[1] as CommonTree);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(extrudeFaceColor);
@@ -851,14 +1068,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "width":
                             var width = new DeclarationFloat();
                             width.Qualifier = DeclarationFloatEnum.Width;
-                            if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                            if (evalCall != null)
                             {
-                                width.Value = valueFloat;
+                                width.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                                {
+                                    width.Value = valueFloat;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -867,14 +1091,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "icon-width":
                             var iconWidth = new DeclarationInt();
                             iconWidth.Qualifier = DeclarationIntEnum.IconWidth;
-                            if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                            if (evalCall != null)
                             {
-                                iconWidth.Value = valueInt;
+                                iconWidth.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                {
+                                    iconWidth.Value = valueInt;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -883,14 +1114,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "icon-height":
                             var iconHeight = new DeclarationInt();
                             iconHeight.Qualifier = DeclarationIntEnum.IconHeight;
-                            if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                            if (evalCall != null)
                             {
-                                iconHeight.Value = valueInt;
+                                iconHeight.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (int.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueInt))
+                                {
+                                    iconHeight.Value = valueInt;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -899,14 +1137,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "casing-width":
                             var casingWidth = new DeclarationFloat();
                             casingWidth.Qualifier = DeclarationFloatEnum.CasingWidth;
-                            if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                            if (evalCall != null)
                             {
-                                casingWidth.Value = valueFloat;
+                                casingWidth.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                                {
+                                    casingWidth.Value = valueFloat;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -915,8 +1160,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "casing-color":
                             var casingColor = new DeclarationInt();
                             casingColor.Qualifier = DeclarationIntEnum.CasingColor;
-                            casingColor.Value = MapCSSDomainParser.ParseColor(
-                                declarationTree.Children[1] as CommonTree);
+                            if (evalCall != null)
+                            {
+                                casingColor.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                casingColor.Value = MapCSSDomainParser.ParseColor(
+                                    declarationTree.Children[1] as CommonTree);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(casingColor);
@@ -924,8 +1176,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "text-halo-color":
                             var textHaloColor = new DeclarationInt();
                             textHaloColor.Qualifier = DeclarationIntEnum.TextHaloColor;
-                            textHaloColor.Value = MapCSSDomainParser.ParseColor(
-                                declarationTree.Children[1] as CommonTree);
+                            if (evalCall != null)
+                            {
+                                textHaloColor.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                textHaloColor.Value = MapCSSDomainParser.ParseColor(
+                                    declarationTree.Children[1] as CommonTree);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(textHaloColor);
@@ -933,8 +1192,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "color":
                             var color = new DeclarationInt();
                             color.Qualifier = DeclarationIntEnum.Color;
-                            color.Value = MapCSSDomainParser.ParseColor(
-                                declarationTree.Children[1] as CommonTree);
+                            if (evalCall != null)
+                            {
+                                color.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                color.Value = MapCSSDomainParser.ParseColor(
+                                    declarationTree.Children[1] as CommonTree);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(color);
@@ -942,14 +1208,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "opacity":
                             var opacity = new DeclarationFloat();
                             opacity.Qualifier = DeclarationFloatEnum.Opacity;
-                            if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                            if (evalCall != null)
                             {
-                                opacity.Value = valueFloat;
+                                opacity.EvalFunction = evalCall;
                             }
                             else
-                            { // value could not be parsed.
-                                throw new MapCSSDomainParserException(declarationTree,
-                                                                            string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                            {
+                                if (float.TryParse(valueString, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueFloat))
+                                {
+                                    opacity.Value = valueFloat;
+                                }
+                                else
+                                { // value could not be parsed.
+                                    throw new MapCSSDomainParserException(declarationTree,
+                                                                                string.Format("{1} value {0} cannot be parsed!", valueString, qualifierString));
+                                }
                             }
 
                             // add declaration.
@@ -958,7 +1231,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "dashes":
                             var dashes = new DeclarationDashes();
                             dashes.Qualifier = DeclarationDashesEnum.Dashes;
-                            dashes.Value = MapCSSDomainParser.ParseDashes(declarationTree.Children[1]);
+                            if (evalCall != null)
+                            {
+                                dashes.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                dashes.Value = MapCSSDomainParser.ParseDashes(declarationTree.Children[1]);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(dashes);
@@ -966,7 +1246,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "casing-dashes":
                             var casingDashes = new DeclarationDashes();
                             casingDashes.Qualifier = DeclarationDashesEnum.CasingDashes;
-                            casingDashes.Value = MapCSSDomainParser.ParseDashes(declarationTree.Children[1]);
+                            if (evalCall != null)
+                            {
+                                casingDashes.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                casingDashes.Value = MapCSSDomainParser.ParseDashes(declarationTree.Children[1]);
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(casingDashes);
@@ -974,7 +1261,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "font-family":
                             var fontFamily = new DeclarationString();
                             fontFamily.Qualifier = DeclarationStringEnum.FontFamily;
-                            fontFamily.Value = valueString;
+                            if (evalCall != null)
+                            {
+                                fontFamily.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                fontFamily.Value = valueString;
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(fontFamily);
@@ -982,7 +1276,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         case "text":
                             var text = new DeclarationString();
                             text.Qualifier = DeclarationStringEnum.Text;
-                            text.Value = valueString;
+                            if (evalCall != null)
+                            {
+                                text.EvalFunction = evalCall;
+                            }
+                            else
+                            {
+                                text.Value = valueString;
+                            }
 
                             // add declaration.
                             rule.Declarations.Add(text);

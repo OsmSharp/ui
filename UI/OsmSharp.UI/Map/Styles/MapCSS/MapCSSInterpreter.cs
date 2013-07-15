@@ -398,49 +398,49 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             switch (declarationInt.Qualifier)
                             {
                                 case DeclarationIntEnum.FillColor:
-                                    properties.AddProperty("fillColor", declarationInt.Value);
+                                    properties.AddProperty("fillColor", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.ZIndex:
-                                    properties.AddProperty("zIndex", declarationInt.Value);
+                                    properties.AddProperty("zIndex", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.Color:
-                                    properties.AddProperty("color", declarationInt.Value);
+                                    properties.AddProperty("color", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.CasingColor:
-                                    properties.AddProperty("casingColor", declarationInt.Value);
+                                    properties.AddProperty("casingColor", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.Extrude:
-                                    properties.AddProperty("extrude", declarationInt.Value);
+                                    properties.AddProperty("extrude", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.ExtrudeEdgeColor:
-                                    properties.AddProperty("extrudeEdgeColor", declarationInt.Value);
+                                    properties.AddProperty("extrudeEdgeColor", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.ExtrudeFaceColor:
-                                    properties.AddProperty("extrudeFaceColor", declarationInt.Value);
+                                    properties.AddProperty("extrudeFaceColor", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.IconWidth:
-                                    properties.AddProperty("iconWidth", declarationInt.Value);
+                                    properties.AddProperty("iconWidth", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.IconHeight:
-                                    properties.AddProperty("iconHeight", declarationInt.Value);
+                                    properties.AddProperty("iconHeight", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.FontSize:
-                                    properties.AddProperty("fontSize", declarationInt.Value);
+                                    properties.AddProperty("fontSize", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.TextColor:
-                                    properties.AddProperty("textColor", declarationInt.Value);
+                                    properties.AddProperty("textColor", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.TextOffset:
-                                    properties.AddProperty("textOffset", declarationInt.Value);
+                                    properties.AddProperty("textOffset", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.MaxWidth:
-                                    properties.AddProperty("maxWidth", declarationInt.Value);
+                                    properties.AddProperty("maxWidth", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.TextHaloColor:
-                                    properties.AddProperty("textHaloColor", declarationInt.Value);
+                                    properties.AddProperty("textHaloColor", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationIntEnum.TextHaloRadius:
-                                    properties.AddProperty("textHaloRadius", declarationInt.Value);
+                                    properties.AddProperty("textHaloRadius", declarationInt.Eval(osmGeo.Tags));
                                     break;
                                 default:
                                     throw new ArgumentOutOfRangeException();
@@ -452,34 +452,34 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             switch (declarationFloat.Qualifier)
                             {
                                 case DeclarationFloatEnum.Width:
-                                    properties.AddProperty("width", declarationFloat.Value);
+                                    properties.AddProperty("width", declarationFloat.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationFloatEnum.FillOpacity:
-                                    properties.AddProperty("fillOpacity", declarationFloat.Value);
+                                    properties.AddProperty("fillOpacity", declarationFloat.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationFloatEnum.Opacity:
-                                    properties.AddProperty("opacity", declarationFloat.Value);
+                                    properties.AddProperty("opacity", declarationFloat.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationFloatEnum.CasingOpacity:
-                                    properties.AddProperty("casingOpacity", declarationFloat.Value);
+                                    properties.AddProperty("casingOpacity", declarationFloat.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationFloatEnum.ExtrudeEdgeOpacity:
-                                    properties.AddProperty("extrudeEdgeOpacity", declarationFloat.Value);
+                                    properties.AddProperty("extrudeEdgeOpacity", declarationFloat.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationFloatEnum.ExtrudeFaceOpacity:
-                                    properties.AddProperty("extrudeFaceOpacity", declarationFloat.Value);
+                                    properties.AddProperty("extrudeFaceOpacity", declarationFloat.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationFloatEnum.ExtrudeEdgeWidth:
-                                    properties.AddProperty("extrudeEdgeWidth", declarationFloat.Value);
+                                    properties.AddProperty("extrudeEdgeWidth", declarationFloat.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationFloatEnum.IconOpacity:
-                                    properties.AddProperty("iconOpacity", declarationFloat.Value);
+                                    properties.AddProperty("iconOpacity", declarationFloat.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationFloatEnum.TextOpacity:
-                                    properties.AddProperty("textOpacity", declarationFloat.Value);
+                                    properties.AddProperty("textOpacity", declarationFloat.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationFloatEnum.CasingWidth:
-                                    properties.AddProperty("casingWidth", declarationFloat.Value);
+                                    properties.AddProperty("casingWidth", declarationFloat.Eval(osmGeo.Tags));
                                     break;
                                 default:
                                     throw new ArgumentOutOfRangeException();
@@ -491,10 +491,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             switch (declarationString.Qualifier)
                             {
                                 case DeclarationStringEnum.FontFamily:
-                                    properties.AddProperty("fontFamily", declarationString.Value);
+                                    properties.AddProperty("fontFamily", declarationString.Eval(osmGeo.Tags));
                                     break;
                                 case DeclarationStringEnum.Text:
-                                    properties.AddProperty("text", declarationString.Value);
+                                    properties.AddProperty("text", declarationString.Eval(osmGeo.Tags));
                                     break;
                                 default:
                                     throw new ArgumentOutOfRangeException();
@@ -507,25 +507,25 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             switch (declarationURL.Qualifier)
                             {
                                 case DeclarationURLEnum.Image:
-                                    if (_mapCSSImageSource.TryGet(declarationURL.Value, out image))
+                                    if (_mapCSSImageSource.TryGet(declarationURL.Eval(osmGeo.Tags), out image))
                                     {
                                         properties.AddProperty("image", image);
                                     }
                                     break;
                                 case DeclarationURLEnum.FillImage:
-                                    if (_mapCSSImageSource.TryGet(declarationURL.Value, out image))
+                                    if (_mapCSSImageSource.TryGet(declarationURL.Eval(osmGeo.Tags), out image))
                                     {
                                         properties.AddProperty("fillImage", image);
                                     }
                                     break;
                                 case DeclarationURLEnum.IconImage:
-                                    if (_mapCSSImageSource.TryGet(declarationURL.Value, out image))
+                                    if (_mapCSSImageSource.TryGet(declarationURL.Eval(osmGeo.Tags), out image))
                                     {
                                         properties.AddProperty("iconImage", image);
                                     }
                                     break;
                                 case DeclarationURLEnum.ShieldImage:
-                                    if (_mapCSSImageSource.TryGet(declarationURL.Value, out image))
+                                    if (_mapCSSImageSource.TryGet(declarationURL.Eval(osmGeo.Tags), out image))
                                     {
                                         properties.AddProperty("shieldImage", image);
                                     }
@@ -537,12 +537,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         else if (declaration is DeclarationLineJoin)
                         {
                             var declarationLineJoin = (declaration as DeclarationLineJoin);
-                            properties.AddProperty("lineJoin", declarationLineJoin.Value);
+                            properties.AddProperty("lineJoin", declarationLineJoin.Eval(
+                                osmGeo.Tags));
                         }
                         else if (declaration is DeclarationDashes)
                         {
                             var declarationDashes = (declaration as DeclarationDashes);
-                            properties.AddProperty("dashes", declarationDashes.Value);
+                            properties.AddProperty("dashes", declarationDashes.Eval(
+                                osmGeo.Tags));
                         }
                     }
 

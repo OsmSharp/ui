@@ -1,4 +1,6 @@
 ﻿using System.Text;
+using OsmSharp.Collections.Tags;
+using System;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
 {
@@ -23,7 +25,29 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <summary>
         /// The value of this declaration.
         /// </summary>
-        public TValue Value { get; set; }
+        public TValue Value { private get; set; }
+
+        /// <summary>
+        /// Holds the eval function.
+        /// </summary>
+        public string EvalFunction { get; set; }
+
+        /// <summary>
+        /// Evalues the value in this declaration or returns the regular value when there is no eval function.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public TValue Eval(TagsCollection tags)
+        {
+            if (!string.IsNullOrWhiteSpace(this.EvalFunction))
+            { // parse and execute the eval function.
+                throw new NotImplementedException();
+            }
+            else
+            { // return the regular value.
+                return this.Value;
+            }
+        }
 
         /// <summary>
         /// Returns a description of this declaration.

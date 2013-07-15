@@ -17,7 +17,7 @@ way[leisure=pitch]						    { z-index: -3; color: #8CD6B5; width: 1; fill-color:
 way|z16-[amenity=parking] :area                  { z-index: -3; color: gray;    width: 1; fill-color: gray;    fill-opacity: 0.2; }
 way|z16-[public_transport=pay_scale_area] :area  { z-index: -2; color: gray;    width: 1; fill-color: gray;    fill-opacity: 0.1; }
 way[amenity=place_of_worship] :area         { z-index: 9; color: #CCCCCC; width: 1; fill-color: #CCCCCC; fill-opacity: 0.2; }
-way[waterway]								{ z-index: 9; color: #00D6E6; width: 3; }
+way[waterway]								{ z-index: 9; color: #00D6E6; width: eval("tag('width')"); }
 way[natural=water] :area					{ z-index: 9; color: #00D6E6; width: 3; fill-color: #00D6E6;  fill-opacity: 0.2; }
 
 way|z14-[building] {

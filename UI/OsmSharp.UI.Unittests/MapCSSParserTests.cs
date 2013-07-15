@@ -159,23 +159,23 @@ namespace OsmSharp.UI.Unittests
             Assert.AreEqual(252, tree.ChildCount);
         }
 
-        ///// <summary>
-        ///// Tests simply parsing one of the testcases.
-        ///// </summary>
-        //[Test]
-        //public void Test_opencyclemap()
-        //{
-        //    //TODO: this css will not parse; the meta section is a problem!
+        /// <summary>
+        /// Tests simply parsing one of the testcases.
+        /// </summary>
+        [Test]
+        public void Test_opencyclemap()
+        {
+            //TODO: this css will not parse; the meta section is a problem!
 
-        //    // parses the MapCSS.
-        //    AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
-        //        "OsmSharp.UI.Unittests.Data.MapCSS.opencyclemap.mapcss");
+            // parses the MapCSS.
+            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsing(
+                "OsmSharp.UI.Unittests.Data.MapCSS.opencyclemap.mapcss");
 
-        //    // Test the very minimum; no errors during parsing says a lot already!
-        //    Antlr.Runtime.Tree.CommonTree tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
-        //    Assert.NotNull(tree);
-        //    Assert.AreEqual(36, tree.ChildCount);
-        //}
+            // Test the very minimum; no errors during parsing says a lot already!
+            Antlr.Runtime.Tree.CommonTree tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
+            Assert.NotNull(tree);
+            Assert.AreEqual(47, tree.ChildCount);
+        }
 
         ///// <summary>
         ///// Tests simply parsing one of the testcases.
