@@ -1289,8 +1289,19 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             rule.Declarations.Add(text);
                             break;
                         default:
-                            throw new MapCSSDomainParserException(declarationTree,
-                                                                    string.Format("{0} qualifier cannot be parsed!", qualifierString));
+                            var declarationCustom = new DeclarationCustom();
+                            declarationCustom.Qualifier = qualifierString;
+                            if (evalCall != null)
+                            {
+                                declarationCustom.EvalFunction = evalCall;
+                                rule.Declarations.Add(declarationCustom);
+                            }
+                            else
+                            {
+                                throw new MapCSSDomainParserException(declarationTree,
+                                                                        string.Format("{0} qualifier cannot be parsed!", qualifierString));
+                            }
+                            break;
                     }
 
                     // move to next declaration.
