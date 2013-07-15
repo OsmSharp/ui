@@ -1,10 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="UI\Android\OsmSharp.Android.UI\MapView.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="UI\OsmSharp.UI\Map\Styles\MapCSS\v0_2\MapCSSDomainParser.cs">
     <Files>
       <File FileName="UI\Android\OsmSharp.Android.UI\Renderer\CanvasRenderer2D.cs" Line="1" Column="1" />
       <File FileName="UI\Android\OsmSharp.Android.UI\CanvasRenderer2DView.cs" Line="1" Column="1" />
       <File FileName="UI\Android\OsmSharp.Android.UI\MapView.cs" Line="528" Column="6" />
+      <File FileName="UI\OsmSharp.UI\Map\Styles\MapCSS\v0_2\MapCSSDomainParser.cs" Line="1292" Column="57" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
@@ -13,12 +14,17 @@
             <Node name="Android" expanded="True">
               <Node name="OsmSharp.Android.UI" expanded="True">
                 <Node name="Renderer" expanded="True" />
-                <Node name="MapView.cs" selected="True" />
               </Node>
             </Node>
             <Node name="OsmSharp.UI.Android" expanded="True">
               <Node name="Map" expanded="True">
-                <Node name="Styles" expanded="True" />
+                <Node name="Styles" expanded="True">
+                  <Node name="MapCSS" expanded="True">
+                    <Node name="v0_2" expanded="True">
+                      <Node name="Domain" expanded="True" selected="True" />
+                    </Node>
+                  </Node>
+                </Node>
               </Node>
             </Node>
           </Node>

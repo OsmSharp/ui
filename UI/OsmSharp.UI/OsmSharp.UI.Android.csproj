@@ -113,6 +113,7 @@
     <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitivesSource.cs" />
     <Compile Include="Map\Layers\LayerScene.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\LineText2D.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationCustom.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
