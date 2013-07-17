@@ -85,15 +85,15 @@ namespace OsmSharp.Osm.Data.Streams.Filters
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
                         if ((_node % 1000000) == 0) { GC.Collect(); }
-                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Node[{0}]: {1}nodes/s @ {2}MB",
-                            _node, (int)((double)_node / seconds), p.PrivateMemorySize64 / 1024 / 1024);
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
+                            "Node[{0}]: {1}nodes/s @ {2}MB",  _node, (int)((double)_node / seconds), p.PrivateMemorySize64 / 1024 / 1024);
 #endif
 #if WINDOWS_PHONE
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
                         if ((_node % 1000000) == 0) { GC.Collect(); }
-                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Node[{0}]: {1}nodes/s",
-                            _node, (int)((double)_node / seconds));
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
+                            "Node[{0}]: {1}nodes/s",  _node, (int)((double)_node / seconds));
 #endif
                     }
                     break;
@@ -107,15 +107,15 @@ namespace OsmSharp.Osm.Data.Streams.Filters
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
                         if ((_relation % 10000) == 0) { GC.Collect(); }
-                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Relation[{0}]: {1}relations/s @ {2}MB",
-                            _relation, (int)((double)_relation / seconds), p.PrivateMemorySize64 / 1024 / 1024);
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
+                            "Relation[{0}]: {1}relations/s @ {2}MB", _relation, (int)((double)_relation / seconds), p.PrivateMemorySize64 / 1024 / 1024);
 #endif
 #if WINDOWS_PHONE
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
                         if ((_relation % 10000) == 0) { GC.Collect(); }
-                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Relation[{0}]: {1}relations/s",
-                            _relation, (int)((double)_relation / seconds));
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
+                            "Relation[{0}]: {1}relations/s", _relation, (int)((double)_relation / seconds));
 #endif
                     }
                     break;
@@ -129,15 +129,15 @@ namespace OsmSharp.Osm.Data.Streams.Filters
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
                         if ((_way % 100000) == 0) { GC.Collect(); }
-                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Way[{0}]: {1}ways/s @ {2}MB",
-                            _way, (int)((double)_way / seconds), p.PrivateMemorySize64 / 1024 / 1024);
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
+                            "Way[{0}]: {1}ways/s @ {2}MB", _way, (int)((double)_way / seconds), p.PrivateMemorySize64 / 1024 / 1024);
 #endif
 #if WINDOWS_PHONE
                         long stop = DateTime.Now.Ticks;
                         float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
                         if ((_way % 100000) == 0) { GC.Collect(); }
-                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Way[{0}]: {1}ways/s",
-                            _way, (int)((double)_way / seconds));
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
+                            "Way[{0}]: {1}ways/s", _way, (int)((double)_way / seconds));
 #endif
                     }
                     break;

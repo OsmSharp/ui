@@ -97,8 +97,8 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
             double[] vrp_solution_weights = new double[routes.Count];
             for (int idx = 0; idx < routes.Count; idx++)
             {
-                OsmSharp.IO.Output.OutputStreamHost.WriteLine("Route {0}: {1}s",
-                    idx, routes[idx]);
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.MaxTimeRouter", System.Diagnostics.TraceEventType.Information,
+                    "Route {0}: {1}s", idx, routes[idx]);
 
                 // get the route.
                 IRoute current = routes.Route(idx);

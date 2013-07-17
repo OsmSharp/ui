@@ -67,6 +67,8 @@
     <Compile Include="GeoCoding\Memory\IndexPostalCodes.cs" />
     <Compile Include="GeoCoding\Memory\IndexStreets.cs" />
     <Compile Include="GeoCoding\Memory\InMemoryGeoCoder.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\TraceSource.cs" />
     <Compile Include="Math\AI\Genetic\Fitness\IFitnessCalculator.cs" />
     <Compile Include="Math\AI\Genetic\Individual.cs" />
     <Compile Include="Math\AI\Genetic\IProblem.cs" />
@@ -239,10 +241,6 @@
     <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
     <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
-    <Compile Include="IO\Output\ConsoleOutputStream.cs" />
-    <Compile Include="IO\Output\FileOutputStream.cs" />
-    <Compile Include="IO\Output\IOutputStream.cs" />
-    <Compile Include="IO\Output\OutputStreamHost.cs" />
     <Compile Include="IO\CappedStream.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />

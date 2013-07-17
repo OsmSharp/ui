@@ -201,7 +201,8 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
                     bulkCopy.WriteToServer(table);
                 }
 
-                OsmSharp.IO.Output.OutputStreamHost.WriteLine(
+
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.PostgreSQL.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
                     "Inserted {0} records into {1}!", table.Rows.Count, table_name);
             }
         }

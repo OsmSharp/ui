@@ -167,7 +167,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
                 if (current % 1000 == 0)
                 {
-					OsmSharp.IO.Output.OutputStreamHost.ReportProgress(current, total, "CHPreProcessor", "Pre-processing...");
+                    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information, "Pre-processing... {0}%", (int)(((float)current / (float)total) * 100));
                 }
                 current++;
             }

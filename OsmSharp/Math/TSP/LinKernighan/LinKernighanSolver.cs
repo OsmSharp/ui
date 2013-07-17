@@ -241,11 +241,6 @@ namespace OsmSharp.Math.TSP.LK
                 // remove y_1 again and backtrack.
                 y.RemoveLast();
 
-                if (x.Count != y.Count + 1)
-                {
-                    OsmSharp.IO.Output.OutputStreamHost.Write(string.Empty);
-                }
-
                 result = this.SelectY(problem, route.Route, X, Y, x, y, t_3_exceptions);
             }
             return new_route;
@@ -320,11 +315,6 @@ namespace OsmSharp.Math.TSP.LK
                 // remove and backtrack x_2.
                 x.RemoveLast();
 
-                if (x.Count != y.Count)
-                {
-                    OsmSharp.IO.Output.OutputStreamHost.Write(string.Empty);
-                }
-
                 result = this.SelectX(problem, route.Route, X, Y, x, t_3, t_4_exceptions);
             } // choose t_4
             return new_route;
@@ -360,12 +350,6 @@ namespace OsmSharp.Math.TSP.LK
                 y.Add(y_2);
                 Y.Add(y_2);
 
-
-                if (x.Count != y.Count)
-                {
-                    OsmSharp.IO.Output.OutputStreamHost.Write(string.Empty);
-                }
-
                 // try and find a better route by selecting more customer.
                 new_route = this.AfterSelectt5(problem, route, X, Y, x, y);
                 if (new_route.Route != null &&
@@ -377,11 +361,6 @@ namespace OsmSharp.Math.TSP.LK
                 // remove and backtrack y_2.
                 y.RemoveLast();
 
-                if (x.Count != y.Count + 1)
-                {
-                    OsmSharp.IO.Output.OutputStreamHost.Write(string.Empty);
-                }
-
                 result = this.SelectY(problem, route.Route, X, Y, x, y, t_5_exceptions);
             } // choose t_5
             return new_route;
@@ -389,10 +368,6 @@ namespace OsmSharp.Math.TSP.LK
 
         private RouteFound AfterSelectt5(IProblem problem, RouteFound route, EdgeSet X, EdgeSet Y, EdgeList x, EdgeList y)
         {
-            if (x.Count != y.Count)
-            {
-                OsmSharp.IO.Output.OutputStreamHost.Write(string.Empty);
-            }
             int t_1 = x[0].From;
             int t_2i_min_1 = y[y.Count - 1].To;
 
@@ -430,11 +405,6 @@ namespace OsmSharp.Math.TSP.LK
                 });
                 new_route.Route = this.Replace(route.Route, x, y);
                 y.RemoveLast(); // remove the perliminary y.
-
-                if (x.Count != y.Count + 1)
-                {
-                    OsmSharp.IO.Output.OutputStreamHost.Write(string.Empty);
-                }
 
                 if (new_route.Route.IsValid())
                 {
@@ -482,10 +452,6 @@ namespace OsmSharp.Math.TSP.LK
                 // backtrack over x.
                 x.RemoveLast();
                 result = this.SelectX(problem, route.Route, X, Y, x, t_2i_min_1, exceptions);
-            }
-            if (x.Count != y.Count)
-            {
-                OsmSharp.IO.Output.OutputStreamHost.Write(string.Empty);
             }
             return new_route;
         }
@@ -535,10 +501,6 @@ namespace OsmSharp.Math.TSP.LK
         /// <returns></returns>
         private FixedSymmetricRoute Replace(FixedSymmetricRoute route, EdgeList x, EdgeList y)
         {
-            if (x.Count != y.Count)
-            {
-                OsmSharp.IO.Output.OutputStreamHost.Write(string.Empty);
-            }
             FixedSymmetricRoute route_new = route.Clone() as FixedSymmetricRoute;
             for (int idx = 0; idx < x.Count; idx++)
             {

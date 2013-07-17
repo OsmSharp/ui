@@ -179,7 +179,8 @@ namespace OsmSharp.Android.UI
 				double extra = 1.25;
 				long before = DateTime.Now.Ticks;
 
-				OsmSharp.IO.Output.OutputStreamHost.WriteLine ("Rendering Start");
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+                    "Rendering Start");
 
 				// build the layers list.
 				var layers = new List<ILayer> ();
@@ -249,11 +250,11 @@ namespace OsmSharp.Android.UI
 				
 				long after = DateTime.Now.Ticks;
 				if (!complete) {
-					OsmSharp.IO.Output.OutputStreamHost.WriteLine (string.Format("Rendering in {0}ms after cancellation!", 
-					                                                             new TimeSpan (after - before).TotalMilliseconds));
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering in {0}ms after cancellation!", 
+					                                                             new TimeSpan (after - before).TotalMilliseconds);
 				} else {
-					OsmSharp.IO.Output.OutputStreamHost.WriteLine (string.Format("Rendering in {0}ms", 
-					                                                             new TimeSpan (after - before).TotalMilliseconds));
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering in {0}ms", 
+					                                                             new TimeSpan (after - before).TotalMilliseconds);
 				}
 			}
 		}
@@ -525,8 +526,8 @@ namespace OsmSharp.Android.UI
 
 //					_highQuality = true;
 					this.NotifyMovement();
-					
-					OsmSharp.IO.Output.OutputStreamHost.WriteLine("OnTouch");
+
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information, "OnTouch");
 					this.Change ();
 				}
 			}

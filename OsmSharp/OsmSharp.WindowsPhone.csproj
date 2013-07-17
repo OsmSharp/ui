@@ -147,12 +147,10 @@
     <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
     <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
-    <Compile Include="IO\Output\ConsoleOutputStream.cs" />
-    <Compile Include="IO\Output\FileOutputStream.cs" />
-    <Compile Include="IO\Output\IOutputStream.cs" />
-    <Compile Include="IO\Output\OutputStreamHost.cs" />
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
     <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\TraceSource.cs" />
     <Compile Include="Math\AI\Genetic\Fitness\IFitnessCalculator.cs" />
     <Compile Include="Math\AI\Genetic\Individual.cs" />
     <Compile Include="Math\AI\Genetic\IProblem.cs" />

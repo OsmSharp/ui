@@ -51,7 +51,6 @@
     <Compile Include="MapView.cs" />
     <Compile Include="Renderer\OpenGLRenderer2D.cs" />
     <Compile Include="MapGLView.cs" />
-    <Compile Include="IO\Output\AndroidLogOutputStream.cs" />
     <Compile Include="Renderer\OpenGLTarget2D.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -689,9 +689,8 @@ namespace OsmSharp.Routing.CH
                 targetIds[idx] = 
                     this.SearchBackwardIntoBucket(buckets, sources[idx]);
 
-                // report progress.
-                OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, targets.Length, "Router.CH.CalculateManyToManyWeights",
-                    "Calculating backward...");
+                OsmSharp.Logging.Log.TraceEvent("CHRouter", System.Diagnostics.TraceEventType.Information, "Calculating backward... {0}%",
+                    (int)(((float)idx / (float)targets.Length) * 100));
             }
 
             // conduct a forward search from each source.
@@ -713,10 +712,9 @@ namespace OsmSharp.Routing.CH
 
                 weights[idx] = toWeights;
                 result.Clear();
-
-                // report progress.
-                OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, sources.Length, "Router.CH.CalculateManyToManyWeights",
-                    "Calculating forward...");
+                
+                OsmSharp.Logging.Log.TraceEvent("CHRouter", System.Diagnostics.TraceEventType.Information, "Calculating forward... {0}%",
+                    (int)(((float)idx / (float)sources.Length) * 100));
             }
             return weights;
         }

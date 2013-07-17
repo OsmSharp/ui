@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,36 +15,42 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace OsmSharp.IO.Output
+using System.Diagnostics;
+
+namespace OsmSharp.Logging
 {
     /// <summary>
-    /// Interface representing a listener that can be used to listen to output.
+    /// Logging class.
     /// </summary>
-    public interface IOutputStream
+    public static class Log
     {
         /// <summary>
-        /// Writes a line of text to the output stream.
+        /// Holds the tracesource.
         /// </summary>
-        /// <param name="text"></param>
-        void WriteLine(string text);
+        private static TraceSource _source = new TraceSource("Log");
 
         /// <summary>
-        /// Writes text to the output stream.
+        /// Writes a trace event message.
         /// </summary>
-        /// <param name="text"></param>
-        void Write(string text);
-
-        /// <summary>
-        /// Reports progress to the output stream.
-        /// </summary>
-        /// <param name="progress"></param>
-        /// <param name="key"></param>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
         /// <param name="message"></param>
-        void ReportProgress(double progress, string key, string message);
+        public static void TraceEvent(string name, TraceEventType type, string message)
+        {
+            _source.TraceEvent(type, 0, message);
+        }
+
+        /// <summary>
+        /// Writes a trace event message.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        public static void TraceEvent(string name, TraceEventType type, string message, params object[] args)
+        {
+            _source.TraceEvent(type, 0, message, args);
+        }
     }
 }

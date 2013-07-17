@@ -46,8 +46,6 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <param name="xml"></param>
         private static void ExecuteEdgeDifference(string xml)
         {
-            OsmSharp.IO.Output.OutputStreamHost.WriteLine(xml);
-
             CHVerifiedContractionBaseTests tester = new CHVerifiedContractionBaseTests();
             tester.DoTestCHEdgeDifferenceVerifiedContraction(xml);
         }
@@ -58,8 +56,6 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <param name="xml"></param>
         private static void ExecuteSparse(string xml)
         {
-            OsmSharp.IO.Output.OutputStreamHost.WriteLine(xml);
-
             CHVerifiedContractionBaseTests tester = new CHVerifiedContractionBaseTests();
             tester.DoTestCHSparseVerifiedContraction(xml);
         }

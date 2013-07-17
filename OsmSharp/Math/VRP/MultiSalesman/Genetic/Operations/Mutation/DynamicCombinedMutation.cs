@@ -34,8 +34,6 @@ namespace OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Mutation
         private IList<double> _decrease_rounds;
         private IList<double> _decrease_time;
 
-        private bool _regime_reached = false;
-
         public DynamicCombinedMutation(
             IList<IMutationOperation<List<Genome>, Problem, Fitness>> operations,
             IList<double> initial,
@@ -58,14 +56,13 @@ namespace OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Mutation
             // determine correct probalities.
             if (mutating.Fitness.Feasable)
             { // decrease total time.
-                if (_regime_reached == false)
-                {
-                    OsmSharp.IO.Output.OutputStreamHost.WriteLine(
-                        "Regime Reached!");
-                }
+                //if (_regime_reached == false)
+                //{
+                //    OsmSharp.IO.Output.Log.WriteLine(
+                //        "Regime Reached!");
+                //}
                 //Tools.Core.Output.OutputTextStreamHost.Write("DT");
                 this.Probabilities = _decrease_time;
-                _regime_reached = true;
                 if (solver.Fittest.Fitness.LargestRoundCategory == 0
                     || solver.Fittest.Fitness.SmallestRoundCategory == 0)
                 {

@@ -353,9 +353,8 @@ namespace OsmSharp.Routing.Routers
             {
                 connectivityArray[idx] = this.CheckConnectivity(vehicle, point[idx], weight);
 
-                // report progress.
-                OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, point.Length, "Router.Core.CheckConnectivity",
-                    "Checking connectivity...");
+                Logging.Log.TraceEvent("TypedRouter<TEdgeData>", System.Diagnostics.TraceEventType.Information, "Checking connectivity... {0}%",
+                    (int)(((float)idx / (float)point.Length) * 100));
             }
             return connectivityArray;
         }

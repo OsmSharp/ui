@@ -488,7 +488,8 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
                     double difference;
                     if (improvement_operation.Improve(problem, route, out difference))
                     { // there was an improvement.
-                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Intra-improvement found {0} {1}->{2}",
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion.CheapestInsertionSolverWithImprovements", System.Diagnostics.TraceEventType.Information,
+                            "Intra-improvement found {0} {1}->{2}",
                             improvement_operation.Name, new_weight, new_weight + difference);
 
                         // check if the route is valid.
@@ -568,8 +569,8 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
                         {
                             throw new Exception("this is not an improvement!");
                         }
-
-                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion.CheapestInsertionSolverWithImprovements", System.Diagnostics.TraceEventType.Information,
+                            "Inter-improvement found {0}<->{1}: {2} ({3}->{4})",
                             route1_idx, route2_idx, improvement_operation.Name, total_before, total_after);
 
                         // recalculate weights.
@@ -584,7 +585,8 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion
                         improvement = true;
                         global_improvement = true;
 
-                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Inter-improvement found {0}<->{1}: {2}",
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion.CheapestInsertionSolverWithImprovements", System.Diagnostics.TraceEventType.Information,
+                            "Inter-improvement found {0}<->{1}: {2}",
                             route1_idx, route2_idx, improvement_operation.Name);
 
                         // check if the route is valid.

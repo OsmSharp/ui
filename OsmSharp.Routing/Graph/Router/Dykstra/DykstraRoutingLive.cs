@@ -179,10 +179,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             {
                 results[idx] = this.CalculateOneToManyWeight(graph, interpreter, vehicle, sources[idx], targets, max);
 
-                // report progress.
-                OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, sources.Length, 
-                    "Router.Core.Graph.Router.Dykstra.DykstraRouting<EdgeData>.CalculateManyToManyWeight",
-                        "Calculating weights...");
+                OsmSharp.Logging.Log.TraceEvent("DykstraRoutingLive", System.Diagnostics.TraceEventType.Information, "Calculating weights... {0}%",
+                    (int)(((float)idx / (float)sources.Length) * 100));
             }
             return results;
         }

@@ -166,7 +166,7 @@ namespace OsmSharp.Math.VRP.MultiSalesman
 
             while (population.Count < population_size)
             {
-                OsmSharp.IO.Output.OutputStreamHost.Write(
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.VRP.MultiSalesman.Facade", System.Diagnostics.TraceEventType.Information,
                     "Initializing population individual {0}/{1}...", population.Count + 1, population_size);
 
                 // create copy of cities
@@ -199,9 +199,9 @@ namespace OsmSharp.Math.VRP.MultiSalesman
                 // add inidividual to the population.
                 population.Add(individual);
 
-                OsmSharp.IO.Output.OutputStreamHost.WriteLine("Done!");
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.VRP.MultiSalesman.Facade", System.Diagnostics.TraceEventType.Information,
+                    "Done!");
             }
-
             return population;
         }
 
@@ -232,9 +232,8 @@ namespace OsmSharp.Math.VRP.MultiSalesman
             Genome current_round = null;
             while (cities.Count > 0)
             {
-                OsmSharp.IO.Output.OutputStreamHost.WriteLine("Placing cities {0}/{1}",
-                    cities.Count,
-                    problem.Cities);
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.VRP.MultiSalesman.Facade", System.Diagnostics.TraceEventType.Information,
+                    "Placing cities {0}/{1}", cities.Count, problem.Cities);
                 if (_registered_progress_reporter != null)
                 {
                     ProgressStatus status = new ProgressStatus();

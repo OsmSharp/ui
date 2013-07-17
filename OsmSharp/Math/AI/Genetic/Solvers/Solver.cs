@@ -300,7 +300,8 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
             WeightType fitness = default(WeightType);
 
             Population<GenomeType, ProblemType, WeightType> population = new Population<GenomeType, ProblemType, WeightType>(initial, true);
-            OsmSharp.IO.Output.OutputStreamHost.Write("Generating population...");
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.SolversSolver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                "Generating population...");
 
             // use parallelism to generate population.
 #if !WINDOWS_PHONE
@@ -320,7 +321,8 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
                     }
 
                     // report population generation.
-                    OsmSharp.IO.Output.OutputStreamHost.Write(string.Format("Generating population{0}/{1}..."), population.Count, _settings.PopulationSize);
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.SolversSolver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                        "Generating population{0}/{1}...", population.Count, _settings.PopulationSize);
                     this.ReportNew(string.Format("Generating population..."), population.Count, _settings.PopulationSize);
                 });
             }
@@ -337,11 +339,13 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
                 population.Add(new_individual);
 
                 // report population generation.
-                OsmSharp.IO.Output.OutputStreamHost.WriteLine(string.Format("Generating population {0}/{1}...", population.Count, _settings.PopulationSize));
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.SolversSolver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                    "Generating population {0}/{1}...", population.Count, _settings.PopulationSize);
                 this.ReportNew(string.Format("Generating population..."), population.Count, _settings.PopulationSize);
             }
 
-            OsmSharp.IO.Output.OutputStreamHost.WriteLine("Done!");
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.SolversSolver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information, 
+                "Done!");
 
             // sort the initial population.
             population.Sort(this, _fitness_calculator);
@@ -369,8 +373,8 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
                 // reset the stagnation count.
                 stagnation = 0;
 
-                OsmSharp.IO.Output.OutputStreamHost.WriteLine("New Fittest {0}",
-                    fittest.ToString());
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                    "New Fittest {0}" ,fittest.ToString());
             }
 
             // start getting genetic!
@@ -396,9 +400,8 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
 
                 // get the population fitness.
                 population.Sort(this, _fitness_calculator);
-                OsmSharp.IO.Output.OutputStreamHost.WriteLine("{0}->{1}",
-                    population[0].Fitness,
-                    population[population.Count - 1].Fitness);
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                    "{0}->{1}", population[0].Fitness, population[population.Count - 1].Fitness);
 
                 // start next generation or stop.
                 new_fitness =
@@ -414,10 +417,8 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
                     fitness = new_fitness;
                     fittest = population[0];
                     
-                    OsmSharp.IO.Output.OutputStreamHost.WriteLine("New Fittest {0}-{1} {2}",
-                        generation_count,
-                        stagnation,
-                        fittest.ToString());
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                        "New Fittest {0}-{1} {2}", generation_count, stagnation, fittest.ToString());
 
                     // reset the stagnation count.
                     stagnation = 0;
@@ -445,23 +446,20 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
                     fittest.ToString()), stagnation, _settings.StagnationCount);
                 if (stagnation != 0 && stagnation % 1 == 0)
                 {
-                    OsmSharp.IO.Output.OutputStreamHost.WriteLine("Generation {0}-{1} {2}",
-                        generation_count,
-                        stagnation,
-                        fittest.ToString());
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                        "Generation {0}-{1} {2}",  generation_count,  stagnation, fittest.ToString());
                 }
             }
 
-            OsmSharp.IO.Output.OutputStreamHost.WriteLine("Result [{0}]:",
-                fitness, fittest.ToString());
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                "Result [{0}]:", fitness, fittest.ToString());
 
             // report the new generation.
             this.ReportNew(string.Format("Evolution finished @ generation {0}: {1}",
                 generation_count,
                 fittest.ToString()), generation_count, _settings.StagnationCount);
-            OsmSharp.IO.Output.OutputStreamHost.WriteLine("Evolution finished @ generation {0}: {1}",
-                generation_count,
-                fittest.ToString());
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                "Evolution finished @ generation {0}: {1}", generation_count, fittest.ToString());
 
             return fittest;
         }

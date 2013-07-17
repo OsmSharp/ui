@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,8 +93,8 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.SeedCustomers
                 // see if the new one has a higher minimal.
                 if (new_minimal > minimal)
                 { // ok there is an improvement!
-                    OsmSharp.IO.Output.OutputStreamHost.WriteLine(string.Format("Seed new minimal: {0}->{1}",
-                        minimal, new_minimal));
+                    OsmSharp.Logging.Log.TraceEvent("SimpleSeeds", System.Diagnostics.TraceEventType.Information, "Seed new minimal: {0}->{1}",
+                        minimal, new_minimal);
 
                     tries = 0;
                     minimal = new_minimal;
@@ -104,10 +105,8 @@ namespace OsmSharp.Math.VRP.Core.BestPlacement.SeedCustomers
 
                 tries++; // increase the number of tries.
             }
-
-            OsmSharp.IO.Output.OutputStreamHost.WriteLine(string.Format("Seed distance: {0}", 
-                minimal));
-
+            OsmSharp.Logging.Log.TraceEvent("SimpleSeeds", System.Diagnostics.TraceEventType.Information, "Seed distance: {0}", 
+                minimal);
             return seeds;
         }
     }

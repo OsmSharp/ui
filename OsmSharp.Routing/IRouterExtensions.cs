@@ -48,11 +48,6 @@ namespace OsmSharp.Routing
                 { // the point is connected.
                     connectedPoints.Add(resolvedPoint);
                 }
-
-                // report progress.
-                OsmSharp.IO.Output.OutputStreamHost.ReportProgress(idx, resolvedPoints.Length, 
-                    "Router.Core.CheckConnectivityAndRemoveInvalid",
-                        "Checking connectivity...");
             }
             return connectedPoints.ToArray();
         }

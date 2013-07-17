@@ -81,55 +81,6 @@ namespace OsmSharp.Routing.Instructions
         /// <returns></returns>
         public List<Instruction> Generate(AggregatedPoint point, IRoutingInterpreter interpreter, ILanguageGenerator language_generator)
         {
-            OsmSharp.Routing.ArcAggregation.Output.AggregatedPoint p = point;
-            while (p != null && p.Next != null)
-            {
-                // print point.
-                OsmSharp.IO.Output.OutputStreamHost.WriteLine("Point: {0}:", p.Location);
-
-                if (p.ArcsNotTaken != null)
-                {
-                    foreach (KeyValuePair<OsmSharp.Math.Geo.Meta.RelativeDirection, OsmSharp.Routing.ArcAggregation.Output.AggregatedArc> arc in p.ArcsNotTaken)
-                    {
-                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("ArcNotTaken:{0} - {1}", arc.Key.Direction.ToString(), arc.Value.Name);
-                    }
-                }
-
-                if (p.Points != null)
-                {
-                    foreach (PointPoi poi in p.Points)
-                    {
-                        string angle_string = "None";
-                        if(poi.Angle != null)
-                        {
-                            angle_string = poi.Angle.Direction.ToString();
-                        }
-                        OsmSharp.IO.Output.OutputStreamHost.WriteLine("Poi [{0}]:{1}", poi.Name, angle_string);
-                        foreach (KeyValuePair<string, string> tag in poi.Tags)
-                        {
-                            OsmSharp.IO.Output.OutputStreamHost.WriteLine("PoiTag: {0}->{1}", tag.Key, tag.Value);
-                        }
-                    }
-                }
-
-                // print arc.
-                if (p.Angle != null)
-                {
-                    OsmSharp.IO.Output.OutputStreamHost.WriteLine("Arc: {0}[{1}] {2}", p.Angle.Direction, p.Next.Distance, p.Next.Name);
-                }
-                else
-                {
-                    OsmSharp.IO.Output.OutputStreamHost.WriteLine("Arc: {0}[{1}]", p.Next.Name, p.Next.Distance);
-                }
-                OsmSharp.IO.Output.OutputStreamHost.WriteLine("");
-
-                p = p.Next.Next;
-            }
-            if (p != null)
-            {
-                OsmSharp.IO.Output.OutputStreamHost.WriteLine("Point: {0}:", p.Location);
-            }
-
             MicroPlanning.MicroPlanner planner = new MicroPlanning.MicroPlanner(language_generator, interpreter);
             return planner.Plan(point);
         }

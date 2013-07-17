@@ -345,7 +345,7 @@ namespace OsmSharp.Android.UI
 					//					_highQuality = true;
 					this.NotifyMovement();
 
-					OsmSharp.IO.Output.OutputStreamHost.WriteLine("OnTouch");
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapGLView", System.Diagnostics.TraceEventType.Information, "OnTouch");
 					this.Change ();
 				}
 			}
