@@ -21,3 +21,6 @@ Data/SQLServer/Output*/
 Data/SQLite/Output*/
 Core/OsmSharp.UnitTests/test-results*/
 *.userprefs
+Output*/
+OutputAndroid*/
+OutputWindowsPhone*/
