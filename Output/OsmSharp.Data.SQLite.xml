@@ -1,0 +1,309 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OsmSharp.Data.SQLite</name>
+    </assembly>
+    <members>
+        <member name="T:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamTarget">
+            <summary>
+            Data processor target for SQLite.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamTarget.#ctor(System.String)">
+            <summary>
+            Creates a new SQLite target.
+            </summary>
+            <param name="connectionString">The connection string.</param>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamTarget.Initialize">
+            <summary>
+            Initializes this target.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamTarget.AddNode(OsmSharp.Osm.Simple.Node)">
+            <summary>
+            Adds a node to this target.
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamTarget.AddWay(OsmSharp.Osm.Simple.Way)">
+            <summary>
+            Adds a way to this target.
+            </summary>
+            <param name="way"></param>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamTarget.AddRelation(OsmSharp.Osm.Simple.Relation)">
+            <summary>
+            Adds a relation to this target.
+            </summary>
+            <param name="relation"></param>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamTarget.Close">
+            <summary>
+            Closes this target.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Data.SQLite.Osm.Streams.Extensions">
+            <summary>
+            Common database extensions.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.Extensions.ConvertToDBValue``1(System.Nullable{``0})">
+            <summary>
+            Converts the given value into a proper db value.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="nullable"></param>
+            <returns></returns>
+        </member>
+        <member name="T:OsmSharp.Data.SQLite.Osm.SQLiteDataSource">
+            <summary>
+            An SQLite data source.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.MaxCacheNodes">
+            <summary>
+            The maximum number of nodes to cache.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.SQLite.Osm.SQLiteDataSource._connectionString">
+            <summary>
+            Holds the connection string.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.SQLite.Osm.SQLiteDataSource._id">
+            <summary>
+            The unique id for this datasource.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.SQLite.Osm.SQLiteDataSource._cacheNodes">
+            <summary>
+            Holds the cached nodes.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.#ctor(System.String)">
+            <summary>
+            Creates a new SQLite simple data source.
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="F:OsmSharp.Data.SQLite.Osm.SQLiteDataSource._connection">
+            <summary>
+            Holds the connection.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.CreateConnection">
+            <summary>
+            Creates/get the connection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.GetNode(System.Int64)">
+            <summary>
+            Returns the node for the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.GetNodes(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all the nodes for the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.GetRelation(System.Int64)">
+            <summary>
+            Returns the relation for the given if.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.GetRelations(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns the relations for the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.GetRelationsFor(OsmSharp.Osm.Simple.OsmGeo)">
+            <summary>
+            Returns all relations that contain the given object.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.GetWay(System.Int64)">
+            <summary>
+            Returns the way for the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.GetWays(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns the ways for the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.GetWaysFor(OsmSharp.Osm.Simple.Node)">
+            <summary>
+            Returns all the ways that contain the given node.
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.GetWaysForNodes(System.Collections.Generic.Dictionary{System.Int64,OsmSharp.Osm.Simple.Node})">
+            <summary>
+            Returns all the ways that contain any of the given nodes.
+            </summary>
+            <param name="nodes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.Get(OsmSharp.Math.Geo.GeoCoordinateBox,OsmSharp.Osm.Filters.Filter)">
+            <summary>
+            Returns all objects with the given bounding box and valid for the given filter;
+            </summary>
+            <param name="box"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.ConstructIdList(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Constructs a list of ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.ConstructIdList(System.Collections.Generic.IList{System.Int64},System.Int32,System.Int32)">
+            <summary>
+            Constructs a list of ids.
+            </summary>
+            <param name="ids"></param>
+            <param name="startIdx"></param>
+            <param name="endIdx"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.LoadNodeTags(System.Collections.Generic.Dictionary{System.Int64,OsmSharp.Osm.Simple.Node})">
+            <summary>
+            Loads all tags for all given nodes.
+            </summary>
+            <param name="nodes"></param>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.Close">
+            <summary>
+            Closes this source.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.Dispose">
+            <summary>
+            Disposes all resources.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.BoundingBox">
+            <summary>
+            Returns the boundingbox of this data if any.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.Name">
+            <summary>
+            Returns the name of this data source.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.Id">
+            <summary>
+            Returns the id of this data source.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.HasBoundinBox">
+            <summary>
+            Returns a value that indicates if the boundingbox is available or not.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.IsReadOnly">
+            <summary>
+            Returns a value that indicates if this data is readonly or not.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.CachedNode">
+            <summary>
+            Represents a cached node.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.CachedNode.#ctor(OsmSharp.Osm.Simple.Node)">
+            <summary>
+            Creates a new cached node.
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="P:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.CachedNode.Node">
+            <summary>
+            Gets/sets the node.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.SQLite.Osm.SQLiteDataSource.CachedNode.Ways">
+            <summary>
+            Gets/sets the ways.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamSource">
+            <summary>
+            An SQLite data processor source.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamSource._connection">
+            <summary>
+            Holds the connection.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamSource._currentType">
+            <summary>
+            Holds the current type.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamSource._current">
+            <summary>
+            Holds the current object.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamSource._connectionString">
+            <summary>
+            Holds the connection string.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamSource.#ctor(System.String)">
+            <summary>
+            Initializes a new SQLite data processor source.
+            </summary>
+            <param name="connectionString">The connection string.</param>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamSource.Initialize">
+            <summary>
+            Initializes this source.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamSource.MoveNext">
+            <summary>
+            Moves to the next object.
+            </summary>
+            <returns>True if successfull.</returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamSource.Current">
+            <summary>
+            Returns the current object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamSource.Reset">
+            <summary>
+            Resets this source.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.SQLite.Osm.Streams.SQLiteOsmStreamSource.CanReset">
+            <summary>
+            Returns a value that indicates if this source can be reset or not.
+            </summary>
+        </member>
+    </members>
+</doc>

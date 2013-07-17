@@ -1,0 +1,22 @@
+Release notes:
+
+- Fixed issue: http://osmsharp.codeplex.com/workitem/1246 'Optimized route has zero TotalDistance'
+- Fixed lazy loading strategy for datasource routing.
+- Fixed precision bug in View.
+- Added unittests for instruction generation.
+- Added daily build nuget packages: Daily build packages at http://5.9.56.3:8080/guestAuth/app/nuget/v1/FeedService.svc/
+- Fixed default direction on roundabout: roundabouts are always oneway.
+- Take average left+right turn.
+- Fixed UTF8 encoding issue.
+- Added unittest to test for resolving when high density in routing endpoints.
+- Added facilities to trace routing progress.
+- Added a boundingbox calculation to each data processor target.
+- Fixed routing bug: added missing highway tags.
+- Fixed routing bug: added oneway=true in addition to oneway=yes.
+- Updated speed calculations.
+- Fixed resolving bug: some resolved points resulted in invalid routes.
+- Fixed route concatenation: Route concatenation was dropping way tags.
+- Added a layerchanged event trigger when layer is enabled/disable.
+- Added easier methods te instantiate router.
+- Minor performance improvements to PBF importer.
+- Added gpx layer.

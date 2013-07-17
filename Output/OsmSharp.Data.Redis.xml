@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OsmSharp.Data.Redis</name>
+    </assembly>
+    <members>
+        <member name="T:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget">
+            <summary>
+            A data processor target using Redis.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget._redisClient">
+            <summary>
+            Holds the redis client.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget.#ctor">
+            <summary>
+            Creates a new data processor target.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget.#ctor(System.String,System.Int32)">
+            <summary>
+            Creates a new data processor target.
+            </summary>
+            <param name="host"></param>
+            <param name="port"></param>
+        </member>
+        <member name="F:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget._node_type_client">
+            <summary>
+            The redist node clients.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget._way_type_client">
+            <summary>
+            The redist node clients.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget.Initialize">
+            <summary>
+            Initializes this data processor.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget._cached_nodes">
+            <summary>
+            Holds the nodes in memory.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget._nodes_in_ways">
+            <summary>
+            Holds the nodes in the ways.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget.AddNode(OsmSharp.Osm.Simple.Node)">
+            <summary>
+            Adds a node to this database.
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget.AddWay(OsmSharp.Osm.Simple.Way)">
+            <summary>
+            Adds a way to this database.
+            </summary>
+            <param name="way"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget.AddRelation(OsmSharp.Osm.Simple.Relation)">
+            <summary>
+            Adds a relation to this database.
+            </summary>
+            <param name="relation"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Redis.Osm.Streams.RedisDataProcessorTarget.Close">
+            <summary>
+            Closes the redis target.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Data.Redis.Osm.OsmHash">
+            <summary>
+            Converts OSM objects to a hashstring.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Redis.Osm.OsmHash.GetOsmHashAsString(OsmSharp.Math.Geo.GeoCoordinate)">
+            <summary>
+            
+            </summary>
+            <param name="coordinate"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

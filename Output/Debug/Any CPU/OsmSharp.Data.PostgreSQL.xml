@@ -1,0 +1,751 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OsmSharp.Data.PostgreSQL</name>
+    </assembly>
+    <members>
+        <member name="T:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget">
+            <summary>
+            A data processor target for the PostgreSQL schema.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget._connection">
+            <summary>
+            Holds the connection.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget._create_and_detect_schema">
+            <summary>
+            Flag that indicates if the schema needs to be created if not present.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget.#ctor(System.String)">
+            <summary>
+            Creates a new target.
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a new target.
+            </summary>
+            <param name="connectionString"></param>
+            <param name="createSchema"></param>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget.Initialize">
+            <summary>
+            Initializes this target.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget.BulkCopy(System.Data.DataTable,System.String)">
+            <summary>
+            Does the actual bulk copy.
+            </summary>
+            <param name="table"></param>
+            <param name="table_name"></param>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget.BulkCopy(System.Data.DataTable,System.String,System.Int32)">
+            <summary>
+            Does the actual bulk inserts.
+            </summary>
+            <param name="table"></param>
+            <param name="table_name"></param>
+            <param name="batch_size"></param>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget.ReverseEndianness(System.IO.Stream,System.Byte[])">
+            <summary>
+            Writes the given bytes after reversing their order.
+            </summary>
+            <param name="stream"></param>
+            <param name="data"></param>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget.AddNode(OsmSharp.Osm.Simple.Node)">
+            <summary>
+            Adds a node.
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget.AddWay(OsmSharp.Osm.Simple.Way)">
+            <summary>
+            Adds a way.
+            </summary>
+            <param name="way"></param>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget.AddRelation(OsmSharp.Osm.Simple.Relation)">
+            <summary>
+            Adds a relation.
+            </summary>
+            <param name="relation"></param>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.Streams.PostgreSQLOsmStreamTarget.Close">
+            <summary>
+            Closes this target.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource">
+            <summary>
+            Reads data from the OSM PostgreSQL snapshot schema.
+            
+            http://wiki.openstreetmap.org/wiki/Osmosis/PostGIS_Setup#Procedure_to_import_data_into_PostgreSQL
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource._connectionString">
+            <summary>
+            Holds the connection string.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource._id">
+            <summary>
+            The id of this datasource.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.#ctor(System.String)">
+            <summary>
+            Creates a new snapshot datasource.
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="F:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource._connection">
+            <summary>
+            Holds the PostgreSQL connection.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.CreateConnection">
+            <summary>
+            Creates/gets the connection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.ParseTags(System.String,OsmSharp.Collections.Tags.TagsCollection)">
+            <summary>
+            Parses tags from hstore.
+            </summary>
+            <param name="tags"></param>
+            <param name="target"></param>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.GetNode(System.Int64)">
+            <summary>
+            Returns the node with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.GetNodes(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all the nodes with all the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.GetRelation(System.Int64)">
+            <summary>
+            Returns the relation with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.GetRelations(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all relations with the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.GetRelationsFor(OsmSharp.Osm.Simple.OsmGeo)">
+            <summary>
+            Returns all relations containing the given object.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.GetWay(System.Int64)">
+            <summary>
+            Returns the way with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.GetWays(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all ways with the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.GetWaysFor(OsmSharp.Osm.Simple.Node)">
+            <summary>
+            Returns all the ways with the given node.
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.Get(OsmSharp.Math.Geo.GeoCoordinateBox,OsmSharp.Osm.Filters.Filter)">
+            <summary>
+            Returns all objects within the given bounding box and that are valid according to the given filter.
+            </summary>
+            <param name="box"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.Close">
+            <summary>
+            Closes this datasource.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.Dispose">
+            <summary>
+            Releases all resources.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.BoundingBox">
+            <summary>
+            Returns the bounding box of the data.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.Name">
+            <summary>
+            Returns the name of this data source.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.Id">
+            <summary>
+            Returns the id of the datasource.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.HasBoundinBox">
+            <summary>
+            Returns true if there is a bounding box.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Data.PostgreSQL.Osm.PostgreSQLSnapshotSource.IsReadOnly">
+            <summary>
+            Returns true if the data is readonly.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools">
+            <summary>
+            Tools for creation/detection of the simple schema in PostgreSQL.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.TABLE_DETECTION_SQL">
+            <summary>
+            SQL to detect the existence of a table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.TABLE_NODE_CREATION">
+            <summary>
+            SQL to create the nodes table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.TABLE_NODE_TAGS_CREATION">
+            <summary>
+            SQL to create the node tags table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.TABLE_WAY_CREATION">
+            <summary>
+            SQL to create the way table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.TABLE_WAY_NODES_CREATION">
+            <summary>
+            SQL to create way nodes table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.TABLE_WAY_TAGS_CREATION">
+            <summary>
+            SQL to create way tags table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.TABLE_RELATION_CREATION">
+            <summary>
+            SQL to create relation table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.TABLE_RELATION_MEMBERS_CREATION">
+            <summary>
+            SQL to create relation members table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.TABLE_RELATION_TAGS_CREATION">
+            <summary>
+            SQL to create relation tags table.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.DetectTable(Npgsql.NpgsqlConnection,System.String)">
+            <summary>
+            Returns true if the table with the given name exists in the database connected to.
+            </summary>
+            <param name="connection"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.ExecuteScript(Npgsql.NpgsqlConnection,System.String)">
+            <summary>
+            Executes the given script on the database connected to.
+            </summary>
+            <param name="connection"></param>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.DetectNodeTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Returns true if the nodes table exists.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.CreateNodeTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Creates the nodes table.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.DetectNodeTagsTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Returns true if the node tags table exists.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.CreateNodeTagsTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Creates the node tags table.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.DetectWayTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Returns true if the ways table exists.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.CreateWayTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Creates the way table.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.DetectWayNodesTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Returns true if the way nodes table exists.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.CreateWayNodesTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Creates the way nodes table.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.CreateWayTagsTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Creates the way tags table.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.DetectWayTagsTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Returns true if the way tags table exists.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.DetectRelationTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Returns true if the relation table exists.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.CreateRelationTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Creates the relation table.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.DetectRelationMembersTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Returns true if the relation members table exists.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.CreateRelationMembersTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Creates the relation members table.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.DetectRelationTagsTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Returns true if the relation tags table exists.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.CreateRelationTagsTable(Npgsql.NpgsqlConnection)">
+            <summary>
+            Creates relation tags.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools.PostgreSQLSimpleSchemaTools.CreateAndDetect(Npgsql.NpgsqlConnection)">
+            <summary>
+            Creates the entire schema but also detects existing tables.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="T:OsmSharp.Data.PostgreSQL.Extensions">
+            <summary>
+            Extensions.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Extensions.ConvertToDBValue``1(System.Nullable{``0})">
+            <summary>
+            Converts a nullable to a database value.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="nullable"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.PostgreSQL.Extensions.ToStringEmptyWhenNull(System.Object)">
+            <summary>
+            Returns ToString() or string.Empty if the given object is null.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource">
+            <summary>
+            Reads OSM data from an pre-imported API database.
+            
+            http://wiki.openstreetmap.org/wiki/Rails_port/Database_schema
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource._connectionString">
+            <summary>
+            Holds the connection string.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource._id">
+            <summary>
+            Id of this data source.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.#ctor(System.String)">
+            <summary>
+            Creates a new API datasource.
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource._connection">
+            <summary>
+            The postgresql connection.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.CreateConnection">
+            <summary>
+            Creates/gets the connection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.GetNode(System.Int64)">
+            <summary>
+            Returns the node with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.GetNodes(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all nodes with the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.GetRelation(System.Int64)">
+            <summary>
+            Returns the relation with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.GetRelations(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all relations with the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.GetRelationsFor(OsmSharp.Osm.Simple.OsmGeo)">
+            <summary>
+            Returns all relations for the given ids.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.GetWay(System.Int64)">
+            <summary>
+            Returns the way with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.GetWays(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all ways with the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.GetWays(System.Collections.Generic.IList{System.Int64},System.Collections.Generic.Dictionary{System.Int64,OsmSharp.Osm.Simple.Node})">
+            <summary>
+            Returns all ways that have the given nodes.
+            </summary>
+            <param name="ids"></param>
+            <param name="nodes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.GetWaysFor(OsmSharp.Osm.Simple.Node)">
+            <summary>
+            Returns all ways that have the given node.
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.GetWaysForNodes(System.Collections.Generic.Dictionary{System.Int64,OsmSharp.Osm.Simple.Node})">
+            <summary>
+            Returns all ways that have the given nodes.
+            </summary>
+            <param name="nodes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.Get(OsmSharp.Math.Geo.GeoCoordinateBox,OsmSharp.Osm.Filters.Filter)">
+            <summary>
+            Returns all objects withing the given bounding box and the objects that are valid according to the filter.
+            </summary>
+            <param name="box"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.Close">
+            <summary>
+            Closes this datasource.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.Dispose">
+            <summary>
+            Releases all resources.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.BoundingBox">
+            <summary>
+            Returns the bounding box of the data in this rouce.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.Name">
+            <summary>
+            The name of this data source.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.Id">
+            <summary>
+            The id of this data source.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.HasBoundinBox">
+            <summary>
+            Return true if there is a boundingbox.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.PostgreSQL.PostgreSQLApiSource.IsReadOnly">
+            <summary>
+            Returns true if readonly.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource">
+            <summary>
+            Allows a version of the OsmSharp simple schema to be queried in PostgreSQL.
+            
+            http://www.osmsharp.com/wiki/simpleschema
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource._connectionString">
+            <summary>
+            Holds the connection string.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource._id">
+            <summary>
+            The id of this datasource.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource._create_and_detect_schema">
+            <summary>
+            Flag that indicates if the schema needs to be created if not present.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.#ctor(System.String)">
+            <summary>
+            Creates a new simple schema datasource.
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a new simple schema datasource.
+            </summary>
+            <param name="connectionString">The connection string.</param>
+            <param name="createSchema">Creates all the needed tables if true.</param>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource._connection">
+            <summary>
+            Holds the connection to the PostgreSQL db.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.CreateConnection">
+            <summary>
+            Creates a new/gets the existing connection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.GetNode(System.Int64)">
+            <summary>
+            Returns the node with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.GetNodes(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all the nodes with the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.GetRelation(System.Int64)">
+            <summary>
+            Returns the relation with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.GetRelations(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all the relations with the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.GetRelationsFor(OsmSharp.Osm.Simple.OsmGeo)">
+            <summary>
+            Returns all relations for the given objects.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.GetWay(System.Int64)">
+            <summary>
+            Returns the way with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.GetWays(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all ways with the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.GetWays(System.Collections.Generic.IList{System.Int64},System.Collections.Generic.Dictionary{System.Int64,OsmSharp.Osm.Simple.Node})">
+            <summary>
+            Returns all ways but use the existing nodes to fill the Nodes-lists.
+            </summary>
+            <param name="ids"></param>
+            <param name="nodes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.GetWaysFor(OsmSharp.Osm.Simple.Node)">
+            <summary>
+            Returns all ways using the given node.
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.GetWaysForNodes(System.Collections.Generic.Dictionary{System.Int64,OsmSharp.Osm.Simple.Node})">
+            <summary>
+            Returns all ways using any of the given nodes.
+            </summary>
+            <param name="nodes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.Get(OsmSharp.Math.Geo.GeoCoordinateBox,OsmSharp.Osm.Filters.Filter)">
+            <summary>
+            Returns all data within the given bounding box and filtered by the given filter.
+            </summary>
+            <param name="box"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.ConstructIdList(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Constructs an id list for SQL.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.ConstructIdList(System.Collections.Generic.IList{System.Int64},System.Int32,System.Int32)">
+            <summary>
+            Constructs an id list for SQL for only the specified section of ids.
+            </summary>
+            <param name="ids"></param>
+            <param name="start_idx"></param>
+            <param name="end_idx"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.LoadNodeTags(System.Collections.Generic.Dictionary{System.Int64,OsmSharp.Osm.Simple.Node})">
+            <summary>
+            Loads all tags for the given nodes.
+            </summary>
+            <param name="nodes"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.Close">
+            <summary>
+            Closes this datasource.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.Dispose">
+            <summary>
+            Diposes the resources used in this datasource.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.BoundingBox">
+            <summary>
+            Not supported.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.Name">
+            <summary>
+            Returns the name.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.Id">
+            <summary>
+            Returns the id.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.HasBoundinBox">
+            <summary>
+            Returns false; database sources have no bounding box.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.PostgreSQLSimpleSchemaSource.IsReadOnly">
+            <summary>
+            Return true; source is readonly.
+            </summary>
+        </member>
+    </members>
+</doc>

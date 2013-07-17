@@ -1,0 +1,601 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>OsmSharp.Osm.Data.Oracle</name>
+    </assembly>
+    <members>
+        <member name="T:OsmSharp.Data.Oracle.Extensions">
+            <summary>
+            Extension methods.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Extensions.ConvertToDBValue``1(System.Nullable{``0})">
+            <summary>
+            Converts a nullable to a database value.
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="nullable"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Extensions.ToStringEmptyWhenNull(System.Object)">
+            <summary>
+            Returns the ToString() value of string.Empty when the given object is null.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="T:OsmSharp.Data.Oracle.OracleCommandExtension">
+            <summary>
+            Extensions for the oracle command.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.OracleCommandExtension.AddParameterCollection``1(Oracle.ManagedDataAccess.Client.OracleCommand,System.String,System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Adds a list of parameters to the given oracle command.
+            </summary>
+            <typeparam name="TValue"></typeparam>
+            <param name="command"></param>
+            <param name="name"></param>
+            <param name="collection"></param>
+            <returns></returns>
+        </member>
+        <member name="T:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource">
+            <summary>
+            An OSM data source implementation that can read imported data from and Oracle database.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource._connectionString">
+            <summary>
+            The connection string.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource._id">
+            <summary>
+            The connection id.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.#ctor(System.String)">
+            <summary>
+            Creates a new oracle data source.
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource._connection">
+            <summary>
+            Holds the connection.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.CreateConnection">
+            <summary>
+            Gets/creates the connection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.GetNode(System.Int64)">
+            <summary>
+            Returns the node with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.GetNodes(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all nodes with the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.GetRelation(System.Int64)">
+            <summary>
+            Returns the relation with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.GetRelations(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all relations with the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.GetRelationsFor(OsmSharp.Osm.Simple.OsmGeo)">
+            <summary>
+            Returns all relation containing the given object.
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.GetWay(System.Int64)">
+            <summary>
+            Returns the way with the given id.
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.GetWays(System.Collections.Generic.IList{System.Int64})">
+            <summary>
+            Returns all the ways with the given ids.
+            </summary>
+            <param name="ids"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.GetWays(System.Collections.Generic.IList{System.Int64},System.Collections.Generic.Dictionary{System.Int64,OsmSharp.Osm.Simple.Node})">
+            <summary>
+            Returns all ways containing the given nodes.
+            </summary>
+            <param name="ids"></param>
+            <param name="nodes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.GetWaysFor(OsmSharp.Osm.Simple.Node)">
+            <summary>
+            Returns all ways containing the given node.
+            </summary>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.GetWaysForNodes(System.Collections.Generic.Dictionary{System.Int64,OsmSharp.Osm.Simple.Node})">
+            <summary>
+            Returns all ways that have the given nodes in them.
+            </summary>
+            <param name="nodes"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.Get(OsmSharp.Math.Geo.GeoCoordinateBox,OsmSharp.Osm.Filters.Filter)">
+            <summary>
+            Returns all objects in the given bounding box that are valid according to the given filter.
+            </summary>
+            <param name="box"></param>
+            <param name="filter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.Close">
+            <summary>
+            Closes the source.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.Dispose">
+            <summary>
+            Releases all resources.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.BoundingBox">
+            <summary>
+            Returns the bounding box.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.Name">
+            <summary>
+            The name of this source.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.Id">
+            <summary>
+            Returns the id of this data source.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.HasBoundinBox">
+            <summary>
+            Returns true if there is a bounding box.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.Oracle.Osm.OracleDataSource.IsReadOnly">
+            <summary>
+            Returns true if this data source is readonly.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget">
+            <summary>
+            An OSM stream target loading data into an oracle database.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget._connection">
+            <summary>
+            Holds the oracle connection.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget._nodeTable">
+            <summary>
+            Holds the nodes-table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget._nodeTagsTable">
+            <summary>
+            Holds the nodes-tags-table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget._wayTable">
+            <summary>
+            Holds the way-table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget._wayTagsTable">
+            <summary>
+            Holds the way-tags-table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget._wayNodesTable">
+            <summary>
+            Holds the way-nodes-table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget._relationTable">
+            <summary>
+            Holds the relation table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget._relationMembersTable">
+            <summary>
+            Holds the relation-members-table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget._relationTagsTable">
+            <summary>
+            Holds the relation-tags-table.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget.#ctor(System.String)">
+            <summary>
+            Creates a new oracle simple data processor target.
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget.Initialize">
+            <summary>
+            Initializes this target.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget.BulkCopy(System.Data.DataTable,System.String)">
+            <summary>
+            Does the actual bulk copy.
+            </summary>
+            <param name="table"></param>
+            <param name="table_name"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget.BulkCopy(System.Data.DataTable,System.String,System.Int32)">
+            <summary>
+            Does the actual bulk inserts.
+            </summary>
+            <param name="table"></param>
+            <param name="table_name"></param>
+            <param name="batch_size"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget.AddNode(OsmSharp.Osm.Simple.Node)">
+            <summary>
+            Adds a node.
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget.AddWay(OsmSharp.Osm.Simple.Way)">
+            <summary>
+            Adds a way.
+            </summary>
+            <param name="way"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget.AddRelation(OsmSharp.Osm.Simple.Relation)">
+            <summary>
+            Adds a relation.
+            </summary>
+            <param name="relation"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleOsmStreamTarget.Close">
+            <summary>
+            Closes this target.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Osm.Data.Oracle.Osm.Stream.OracleOsmStreamSource">
+            <summary>
+            An OSM stream source reading data from an Oracle database.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.Stream.OracleOsmStreamSource._connection">
+            <summary>
+            Holds the connection.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.Stream.OracleOsmStreamSource._current_type">
+            <summary>
+            Holds the current type.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.Stream.OracleOsmStreamSource._current">
+            <summary>
+            Holds the current OsmGeo-object.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.Stream.OracleOsmStreamSource._connectionString">
+            <summary>
+            Holds the connection string.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.Stream.OracleOsmStreamSource.#ctor(System.String)">
+            <summary>
+            Creates a new oracle simple source.
+            </summary>
+            <param name="connectionString"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.Stream.OracleOsmStreamSource.Initialize">
+            <summary>
+            Initialiers this oracle source.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.Stream.OracleOsmStreamSource.MoveNext">
+            <summary>
+            Move to the next object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.Stream.OracleOsmStreamSource.Current">
+            <summary>
+            Returns the current object.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.Stream.OracleOsmStreamSource.Reset">
+            <summary>
+            Resets the current source.
+            </summary>
+        </member>
+        <member name="P:OsmSharp.Osm.Data.Oracle.Osm.Stream.OracleOsmStreamSource.CanReset">
+            <summary>
+            Returns true if this source can be reset.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools">
+            <summary>
+            Tools for creation/detection of the simple schema in Oracle.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.TABLE_DETECTION_SQL">
+            <summary>
+            SQL to detect the existence of a table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.TABLE_NODE_CREATION">
+            <summary>
+            SQL to create the nodes table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.TABLE_NODE_TAGS_CREATION">
+            <summary>
+            SQL to create the node tags table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.TABLE_WAY_CREATION">
+            <summary>
+            SQL to create the way table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.TABLE_WAY_NODES_CREATION">
+            <summary>
+            SQL to create way nodes table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.TABLE_WAY_TAGS_CREATION">
+            <summary>
+            SQL to create way tags table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.TABLE_RELATION_CREATION">
+            <summary>
+            SQL to create relation table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.TABLE_RELATION_MEMBERS_CREATION">
+            <summary>
+            SQL to create relation members table.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.TABLE_RELATION_TAGS_CREATION">
+            <summary>
+            SQL to create relation tags table.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.DetectTable(Oracle.ManagedDataAccess.Client.OracleConnection,System.String)">
+            <summary>
+            Returns true if the table with the given name exists in the database connected to.
+            </summary>
+            <param name="connection"></param>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.ExecuteScript(Oracle.ManagedDataAccess.Client.OracleConnection,System.String)">
+            <summary>
+            Executes the given script on the database connected to.
+            </summary>
+            <param name="connection"></param>
+            <param name="sql"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.DetectNodeTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Returns true if the nodes table exists.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.CreateNodeTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Creates the nodes table.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.DetectNodeTagsTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Returns true if the node tags table exists.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.CreateNodeTagsTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Creates the node tags table.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.DetectWayTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Returns true if the ways table exists.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.CreateWayTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Creates the way table.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.DetectWayNodesTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Returns true if the way nodes table exists.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.CreateWayNodesTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Creates the way nodes table.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.CreateWayTagsTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Creates the way tags table.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.DetectWayTagsTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Returns true if the way tags table exists.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.DetectRelationTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Returns true if the relation table exists.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.CreateRelationTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Creates the relation table.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.DetectRelationMembersTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Returns true if the relation members table exists.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.CreateRelationMembersTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Creates the relation members table.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.DetectRelationTagsTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Returns true if the relation tags table exists.
+            </summary>
+            <param name="connection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.CreateRelationTagsTable(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Creates relation tags.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="M:OsmSharp.Osm.Data.Oracle.Osm.OracleSimpleSchemaTools.CreateAndDetect(Oracle.ManagedDataAccess.Client.OracleConnection)">
+            <summary>
+            Creates the entire schema but also detects existing tables.
+            </summary>
+            <param name="connection"></param>
+        </member>
+        <member name="T:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget">
+            <summary>
+            A changeset apply target to apply changesets to an oracle database.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget._connection">
+            <summary>
+            Holds the connection.
+            </summary>
+        </member>
+        <member name="F:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget._pragmatic">
+            <summary>
+            Does pragmatic changes.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a new changeset target.
+            </summary>
+            <param name="connection_string"></param>
+            <param name="pragmatic"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget.ApplyChange(OsmSharp.Osm.Simple.ChangeSet)">
+            <summary>
+            Apply the given changeset.
+            </summary>
+            <param name="change_set"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget.Modify(OsmSharp.Osm.Simple.Node)">
+            <summary>
+            Modifies the given node.
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget.Modify(OsmSharp.Osm.Simple.Way)">
+            <summary>
+            Modifies the given way.
+            </summary>
+            <param name="way"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget.CreateTags(System.Int64,OsmSharp.Collections.Tags.TagsCollection,System.String,System.String)">
+            <summary>
+            Creates the tags in the given table.
+            </summary>
+            <param name="id"></param>
+            <param name="new_tags"></param>
+            <param name="table"></param>
+            <param name="ref_column"></param>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget.Close">
+            <summary>
+            Closes this changeset target.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget.Initialize">
+            <summary>
+            Initializes this change set apply target.
+            </summary>
+        </member>
+        <member name="M:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget.RaiseChange(OsmSharp.Osm.Simple.ChangeType,OsmSharp.Osm.Simple.OsmGeoType,System.Int64)">
+            <summary>
+            Raises the chance event.
+            </summary>
+            <param name="type"></param>
+            <param name="object_type"></param>
+            <param name="id"></param>
+        </member>
+        <member name="E:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget.Change">
+            <summary>
+            Event raised when an object was changed.
+            </summary>
+        </member>
+        <member name="T:OsmSharp.Data.Oracle.Osm.Stream.OracleSimpleChangeSetApplyTarget.ChangeDelegate">
+            <summary>
+            Delegate for raising changes to objects.
+            </summary>
+            <param name="type"></param>
+            <param name="object_type"></param>
+            <param name="id"></param>
+        </member>
+    </members>
+</doc>
