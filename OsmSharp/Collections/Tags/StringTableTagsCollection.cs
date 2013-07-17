@@ -200,12 +200,24 @@ namespace OsmSharp.Collections.Tags
         }
 
         /// <summary>
+        /// Removes all tags with the given key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public override bool RemoveKey(string key)
+        {
+            uint keyInt = _stringTable.Add(key);
+
+            return _tagsList.RemoveAll(tagEncoded => tagEncoded.Key == keyInt) > 0;
+        }
+
+        /// <summary>
         /// Removes the given key-value pair.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public override bool Remove(string key, string value)
+        public override bool RemoveKeyValue(string key, string value)
         {
             uint keyInt = _stringTable.Add(key);
             uint valueInt = _stringTable.Add(value);

@@ -543,7 +543,7 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
                 {
                     // there is at least an update or no insert.
                     string new_value = tagsToInsert[k];
-                    tagsToInsert.Remove(new Tag(k, v));
+                    tagsToInsert.RemoveKeyValue(new Tag(k, v));
 
                     // see if there is an update needed.
                     if (new_value != v)

@@ -148,13 +148,20 @@ namespace OsmSharp.Collections.Tags
         }
 
         /// <summary>
+        /// Removes all tags with the given key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public abstract bool RemoveKey(string key);
+
+        /// <summary>
         /// Removes the given tag.
         /// </summary>
         /// <param name="tag"></param>
         /// <returns></returns>
-        public virtual bool Remove(Tag tag)
+        public virtual bool RemoveKeyValue(Tag tag)
         {
-            return this.Remove(tag.Key, tag.Value);
+            return this.RemoveKeyValue(tag.Key, tag.Value);
         }
 
         /// <summary>
@@ -163,7 +170,7 @@ namespace OsmSharp.Collections.Tags
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public abstract bool Remove(string key, string value);
+        public abstract bool RemoveKeyValue(string key, string value);
 
         /// <summary>
         /// Clears all tags.

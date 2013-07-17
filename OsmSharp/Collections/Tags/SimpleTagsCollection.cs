@@ -165,12 +165,22 @@ namespace OsmSharp.Collections.Tags
         }
 
         /// <summary>
+        /// Removes all tags with the given key.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public override bool RemoveKey(string key)
+        {
+            return _tags.RemoveAll(tag => tag.Key == key) > 0;
+        }
+
+        /// <summary>
         /// Removes all tags with given key and value.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public override bool Remove(string key, string value)
+        public override bool RemoveKeyValue(string key, string value)
         {
             return _tags.RemoveAll(tag => tag.Key == key && tag.Value == value) > 0;
         }
