@@ -23,6 +23,7 @@ using System.Linq;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Data;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Data.SQLite.Osm
 {
@@ -60,6 +61,15 @@ namespace OsmSharp.Data.SQLite.Osm
 			_connectionString = connectionString;
 			_id = Guid.NewGuid();
 		}
+
+        /// <summary>
+        /// Creates a new SQLite simple data source using an existing connection.
+        /// </summary>
+        /// <param name="connection"></param>
+        public SQLiteDataSource(SQLiteConnection connection)
+        {
+            _connection = connection;
+        }
 
         /// <summary>
         /// Holds the connection.
@@ -181,7 +191,8 @@ namespace OsmSharp.Data.SQLite.Osm
 					string ids_string = ConstructIdList(ids, start_idx, stop_idx);
 					if (ids_string.Length > 0)
 					{
-						string sql = "SELECT node.id, node.latitude, node.longitude, node.changeset_id, node.timestamp, node.version, node_tags.key, node_tags.value " +
+						string sql = "SELECT node.id, node.latitude, node.longitude, node.changeset_id, node.timestamp, node.version, " +
+                                                 "node_tags.key, node_tags.value, node.usr, node.usr_id, node.visible " +
 												 "FROM node " +
 												 "LEFT JOIN node_tags ON node_tags.node_id = node.id " +
 												 "WHERE (node.id IN ({0})) ";
@@ -205,11 +216,14 @@ namespace OsmSharp.Data.SQLite.Osm
                                         node.Id = returned_id;
 										int latitude_int = reader.GetInt32(1);
 										int longitude_int = reader.GetInt32(2);
-										node.ChangeSetId = reader.GetInt64(3);
-										node.TimeStamp = reader.GetDateTime(4);
-										node.Version = (ulong)reader.GetInt64(5);
+										node.ChangeSetId = reader.IsDBNull(3) ? null : (long?)reader.GetInt64(3);
+                                        node.TimeStamp = reader.IsDBNull(4) ? null : (DateTime?)this.ConvertDateTime(reader.GetInt64(4));
+										node.Version = reader.IsDBNull(5) ?  null : (ulong?)reader.GetInt64(5);
                                         node.Latitude = latitude_int / 10000000.0;
                                         node.Longitude = longitude_int / 10000000.0;
+                                        node.UserName = reader.IsDBNull(8) ? null : reader.GetString(8);
+                                        node.UserId = reader.IsDBNull(9) ? null : (long?)reader.GetInt64(9);
+                                        node.Visible = reader.IsDBNull(10) ? null : (bool?)reader.GetBoolean(10);
 										nodes.Add(node.Id.Value, node);
 
 										AddCachedNode(node);
@@ -218,9 +232,13 @@ namespace OsmSharp.Data.SQLite.Osm
 									//Tags
 									if (!reader.IsDBNull(6))
 									{
-										string key = reader.GetString(6);
-										if (!node.Tags.ContainsKey(key))
-											node.Tags.Add(key, reader.IsDBNull(7) ? string.Empty : reader.GetString(7));
+                                        if (node.Tags == null)
+                                        {
+                                            node.Tags = new SimpleTagsCollection();
+                                        }
+                                        string key = reader.GetString(6);
+                                        string value = reader.GetString(7);
+                                        node.Tags.Add(key, value);
 									}
 
 								}
@@ -282,9 +300,13 @@ namespace OsmSharp.Data.SQLite.Osm
         /// <param name="id"></param>
         /// <returns></returns>
 		public Relation GetRelation(long id)
-		{
-			// TODO: implement this
-			return null;
+        {
+            IList<Relation> relations = this.GetRelations(new List<long>(new long[] { id }));
+            if (relations.Count > 0)
+            {
+                return relations[0];
+            }
+            return null;
 		}
 
         /// <summary>
@@ -293,10 +315,159 @@ namespace OsmSharp.Data.SQLite.Osm
         /// <param name="ids"></param>
         /// <returns></returns>
 		public IList<Relation> GetRelations(IList<long> ids)
-		{
-			// TODO: implement this
-			return new List<Relation>();
-		}
+        {
+            if (ids.Count > 0)
+            {
+                SQLiteConnection con = this.CreateConnection();
+
+                // STEP2: Load ways.
+                Dictionary<long, Relation> relations = new Dictionary<long, Relation>();
+                string sql;
+                SQLiteCommand com;
+                SQLiteDataReader reader;
+                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
+                {
+                    int start_idx = idx_1000 * 1000;
+                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
+
+                    sql = "SELECT id, changeset_id, visible, timestamp, version, usr, usr_id FROM relation WHERE (id IN ({0})) ";
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
+                    if (ids_string.Length > 0)
+                    {
+                        sql = string.Format(sql, ids_string);
+                        com = new SQLiteCommand(sql);
+                        com.Connection = con;
+                        reader = ExecuteReader(com);
+                        Relation relation;
+                        while (reader.Read())
+                        {
+                            long id = reader.GetInt64(0);
+                            long? changeset_id = reader.IsDBNull(1) ? null : (long?)reader.GetInt64(1);
+                            bool? visible = reader.IsDBNull(2) ? null : (bool?)reader.GetBoolean(2);
+                            DateTime? timestamp = reader.IsDBNull(3) ? null : (DateTime?)this.ConvertDateTime(reader.GetInt64(3));
+                            ulong? version = reader.IsDBNull(4) ? null : (ulong?)reader.GetInt64(4);
+                            string user = reader.IsDBNull(5) ? null : reader.GetString(5);
+                            long? user_id = reader.IsDBNull(6) ? null : (long?)reader.GetInt64(6);
+
+                            // create way.
+                            relation = new Relation();
+                            relation.Id = id;
+                            relation.Version = version;
+                            relation.UserName = user;
+                            relation.UserId = user_id;
+                            relation.Visible = visible;
+                            relation.TimeStamp = timestamp;
+                            relation.ChangeSetId = changeset_id;
+
+                            relations.Add(relation.Id.Value, relation);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                //STEP3: Load all relation-member relations
+                List<long> missing_node_ids = new List<long>();
+                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
+                {
+                    int start_idx = idx_1000 * 1000;
+                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
+
+                    sql = "SELECT relation_id, member_type, member_id, member_role, sequence_id FROM relation_members WHERE (relation_id IN ({0})) ORDER BY sequence_id";
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
+                    if (ids_string.Length > 0)
+                    {
+                        sql = string.Format(sql, ids_string);
+                        com = new SQLiteCommand(sql);
+                        com.Connection = con;
+                        reader = ExecuteReader(com);
+                        while (reader.Read())
+                        {
+                            long relation_id = reader.GetInt64(0);
+                            long member_type = reader.GetInt64(1);
+                            long? member_id = reader.IsDBNull(2) ? null : (long?)reader.GetInt64(2);
+                            string member_role = reader.IsDBNull(3) ? null : reader.GetString(3);
+
+                            Relation relation;
+                            if (relations.TryGetValue(relation_id, out relation))
+                            {
+                                if (relation.Members == null)
+                                {
+                                    relation.Members = new List<RelationMember>();
+                                }
+                                RelationMember member = new RelationMember();
+                                member.MemberId = member_id;
+                                member.MemberRole = member_role;
+                                member.MemberType = this.ConvertMemberType(member_type);
+
+                                relation.Members.Add(member);
+                            }
+                        }
+                        reader.Close();
+                    }
+                }
+
+                //STEP4: Load all tags.
+                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
+                {
+                    int start_idx = idx_1000 * 1000;
+                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
+
+                    sql = "SELECT * FROM relation_tags WHERE (relation_id IN ({0})) ";
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
+                    if (ids_string.Length > 0)
+                    {
+                        sql = string.Format(sql, ids_string);
+                        com = new SQLiteCommand(sql);
+                        com.Connection = con;
+                        reader = ExecuteReader(com);
+                        while (reader.Read())
+                        {
+                            long id = reader.GetInt64(0);
+                            string key = reader.GetString(1);
+                            object value_object = reader[2];
+                            string value = string.Empty;
+                            if (value_object != null && value_object != DBNull.Value)
+                            {
+                                value = (string)value_object;
+                            }
+
+                            Relation relation;
+                            if (relations.TryGetValue(id, out relation))
+                            {
+                                if (relation.Tags == null)
+                                {
+                                    relation.Tags = new SimpleTagsCollection();
+                                }
+                                relation.Tags.Add(key, value);
+                            }
+                        }
+                        reader.Close();
+                    }
+                }
+
+                return relations.Values.ToList<Relation>();
+            }
+            return new List<Relation>();
+        }
+
+        /// <summary>
+        /// Converts the member type id to the relationmembertype enum.
+        /// </summary>
+        /// <param name="member_type"></param>
+        /// <returns></returns>
+        private RelationMemberType? ConvertMemberType(long member_type)
+        {
+            switch(member_type)
+            {
+                case (long)RelationMemberType.Node:
+                    return RelationMemberType.Node;
+                case (long)RelationMemberType.Way:
+                    return RelationMemberType.Way;
+                case (long)RelationMemberType.Relation:
+                    return RelationMemberType.Relation;
+            }
+            throw new ArgumentOutOfRangeException("Invalid member type.");
+        }
 
         /// <summary>
         /// Returns all relations that contain the given object.
@@ -350,7 +521,7 @@ namespace OsmSharp.Data.SQLite.Osm
 					int start_idx = idx_1000 * 1000;
 					int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
 
-					sql = "SELECT * FROM way WHERE (id IN ({0})) ";
+					sql = "SELECT id, changeset_id, visible, timestamp, version, usr, usr_id FROM way WHERE (id IN ({0})) ";
 					string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
 					if (ids_string.Length > 0)
 					{
@@ -362,16 +533,20 @@ namespace OsmSharp.Data.SQLite.Osm
 						while (reader.Read())
 						{
 							long id = reader.GetInt64(0);
-							long changeset_id = reader.GetInt64(1);
-							bool visible = reader.GetInt64(2) == 1;
-							DateTime timestamp = reader.GetDateTime(3);
-							long version = reader.GetInt64(4);
+							long? changeset_id = reader.IsDBNull(1) ? null : (long?)reader.GetInt64(1);
+							bool? visible = reader.IsDBNull(2) ? null : (bool?)reader.GetBoolean(2);
+                            DateTime? timestamp = reader.IsDBNull(3) ? null : (DateTime?)this.ConvertDateTime(reader.GetInt64(3));
+							ulong? version = reader.IsDBNull(4) ? null : (ulong?)reader.GetInt64(4);
+                            string user = reader.IsDBNull(5) ? null : reader.GetString(5);
+                            long? user_id = reader.IsDBNull(6) ? null : (long?)reader.GetInt64(6);
 
 							// create way.
                             way = new Way();
                             way.Id = id;
-                            way.Version = (ulong)version;
-							//node.UserId = user_id;
+                            way.Version = version;
+                            way.UserName = user;
+                            way.UserId = user_id;
+                            way.Visible = visible;
 							way.TimeStamp = timestamp;
 							way.ChangeSetId = changeset_id;
 
@@ -402,61 +577,19 @@ namespace OsmSharp.Data.SQLite.Osm
 							long node_id = reader.GetInt64(1);
 							long sequence_id = reader.GetInt64(2);
 
-							if (nodes == null || !nodes.ContainsKey(node_id))
-							{
-								missing_node_ids.Add(node_id);
-							}
+                            Way way;
+                            if (ways.TryGetValue(id, out way))
+                            {
+                                if(way.Nodes == null)
+                                {
+                                    way.Nodes = new List<long>();
+                                }
+                                way.Nodes.Add(node_id);
+                            }
 						}
 						reader.Close();
 					}
 				}
-
-				//STEP4: Load all missing nodes.
-				IList<Node> missing_nodes = this.GetNodes(missing_node_ids);
-				Dictionary<long, Node> way_nodes = new Dictionary<long, Node>();
-				if (nodes != null)
-				{
-					way_nodes = new Dictionary<long, Node>(nodes);
-				}
-				foreach (Node node in missing_nodes)
-				{
-					way_nodes.Add(node.Id.Value, node);
-				}
-
-				//STEP5: assign nodes to way.
-				for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
-				{
-					int start_idx = idx_1000 * 1000;
-					int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
-
-					sql = "SELECT * FROM way_nodes WHERE (way_id IN ({0})) ORDER BY sequence_id";
-					string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
-					if (ids_string.Length > 0)
-					{
-						sql = string.Format(sql, ids_string);
-						com = new SQLiteCommand(sql);
-						com.Connection = con;
-						reader = ExecuteReader(com);
-						while (reader.Read())
-						{
-							long id = reader.GetInt64(0);
-							long node_id = reader.GetInt64(1);
-							long sequence_id = reader.GetInt64(2);
-
-							Node way_node;
-							if (way_nodes.TryGetValue(node_id, out way_node))
-							{
-								Way way;
-								if (ways.TryGetValue(id, out way))
-								{
-									way.Nodes.Add(way_node.Id.Value);
-								}
-							}
-						}
-						reader.Close();
-					}
-				}
-
 
 				//STEP4: Load all tags.
 				for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
@@ -486,6 +619,10 @@ namespace OsmSharp.Data.SQLite.Osm
 							Way way;
 							if (ways.TryGetValue(id, out way))
 							{
+                                if (way.Tags == null)
+                                {
+                                    way.Tags = new SimpleTagsCollection();
+                                }
 								way.Tags.Add(key, value);
 							}
 						}
@@ -562,7 +699,7 @@ namespace OsmSharp.Data.SQLite.Osm
                                     way = new Way();
                                     way.Id = id;
 									way.Version = (ulong)reader.GetInt64(3);
-									way.TimeStamp = reader.GetDateTime(2);
+                                    way.TimeStamp = this.ConvertDateTime(reader.GetInt64(2));
 									way.ChangeSetId = reader.GetInt64(1);
 									ways.Add(id, way);
 									way_ids.Add(id);
@@ -647,6 +784,21 @@ namespace OsmSharp.Data.SQLite.Osm
 			return new List<Way>();
 		}
 
+        /// <summary>
+        /// Converts a given unix time to a DateTime object.
+        /// </summary>
+        /// <param name="unixTime"></param>
+        /// <returns></returns>
+        private DateTime ConvertDateTime(long unixTime)
+        {
+            return unixTime.FromUnixTime();
+        }
+
+        /// <summary>
+        /// Executes a reader.
+        /// </summary>
+        /// <param name="com"></param>
+        /// <returns></returns>
 		private static SQLiteDataReader ExecuteReader(SQLiteCommand com)
 		{
 			return com.ExecuteReader();

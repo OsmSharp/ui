@@ -130,15 +130,18 @@ namespace OsmSharp.Osm.Data.PBF.Processor
                     + ((double)block.granularity * (double)node.lat));
                 simpleNode.Longitude = .000000001 * ((double)block.lon_offset
                     + ((double)block.granularity * (double)node.lon));
-                simpleNode.Tags = new SimpleTagsCollection();
-                for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
+                if (node.keys.Count > 0)
                 {
-                    string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
-                    string value = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.vals[tag_idx]]);
-
-                    if (!simpleNode.Tags.ContainsKey(key))
+                    simpleNode.Tags = new SimpleTagsCollection();
+                    for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
                     {
-                        simpleNode.Tags.Add(new Tag() { Key = key, Value = value });
+                        string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
+                        string value = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.vals[tag_idx]]);
+
+                        if (!simpleNode.Tags.ContainsKey(key))
+                        {
+                            simpleNode.Tags.Add(new Tag() { Key = key, Value = value });
+                        }
                     }
                 }
                 simpleNode.TimeStamp = Utilities.FromUnixTime((long)node.info.timestamp * 
@@ -165,15 +168,18 @@ namespace OsmSharp.Osm.Data.PBF.Processor
                     node_id = node_id + way.refs[node_idx];
                     simple_way.Nodes.Add(node_id);
                 }
-                simple_way.Tags = new SimpleTagsCollection();
-                for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
+                if (way.keys.Count > 0)
                 {
-                    string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
-                    string value = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.vals[tag_idx]]);
-                    
-                    if (!simple_way.Tags.ContainsKey(key))
+                    simple_way.Tags = new SimpleTagsCollection();
+                    for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
                     {
-                        simple_way.Tags.Add(new Tag(key, value));
+                        string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
+                        string value = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.vals[tag_idx]]);
+
+                        if (!simple_way.Tags.ContainsKey(key))
+                        {
+                            simple_way.Tags.Add(new Tag(key, value));
+                        }
                     }
                 }
                 if (way.info != null)
@@ -195,40 +201,46 @@ namespace OsmSharp.Osm.Data.PBF.Processor
 
                 var simple_relation = new OsmSharp.Osm.Simple.Relation();
                 simple_relation.Id = relation.id;
-                simple_relation.Members = new List<OsmSharp.Osm.Simple.RelationMember>();
-                long member_id = 0;
-                for (int member_idx = 0; member_idx < relation.types.Count; member_idx++)
+                if (relation.types.Count > 0)
                 {
-                    member_id = member_id + relation.memids[member_idx];
-                    string role = ASCIIEncoding.ASCII.GetString(
-                        block.stringtable.s[relation.roles_sid[member_idx]]);
-                    var member = new OsmSharp.Osm.Simple.RelationMember();
-                    member.MemberId = member_id;
-                    member.MemberRole = role;
-                    switch(relation.types[member_idx])
+                    simple_relation.Members = new List<OsmSharp.Osm.Simple.RelationMember>();
+                    long member_id = 0;
+                    for (int member_idx = 0; member_idx < relation.types.Count; member_idx++)
                     {
-                        case Relation.MemberType.NODE:
-                            member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Node;
-                            break;
-                        case Relation.MemberType.WAY:
-                            member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Way;
-                            break;
-                        case Relation.MemberType.RELATION:
-                            member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Relation;
-                            break;
+                        member_id = member_id + relation.memids[member_idx];
+                        string role = ASCIIEncoding.ASCII.GetString(
+                            block.stringtable.s[relation.roles_sid[member_idx]]);
+                        var member = new OsmSharp.Osm.Simple.RelationMember();
+                        member.MemberId = member_id;
+                        member.MemberRole = role;
+                        switch (relation.types[member_idx])
+                        {
+                            case Relation.MemberType.NODE:
+                                member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Node;
+                                break;
+                            case Relation.MemberType.WAY:
+                                member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Way;
+                                break;
+                            case Relation.MemberType.RELATION:
+                                member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Relation;
+                                break;
+                        }
+
+                        simple_relation.Members.Add(member);
                     }
-
-                    simple_relation.Members.Add(member);
                 }
-                simple_relation.Tags = new SimpleTagsCollection();
-                for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
+                if (relation.keys.Count > 0)
                 {
-                    string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
-                    string value = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.vals[tag_idx]]);
-
-                    if (!simple_relation.Tags.ContainsKey(key))
+                    simple_relation.Tags = new SimpleTagsCollection();
+                    for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
                     {
-                        simple_relation.Tags.Add(new Tag(key, value));
+                        string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
+                        string value = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.vals[tag_idx]]);
+
+                        if (!simple_relation.Tags.ContainsKey(key))
+                        {
+                            simple_relation.Tags.Add(new Tag(key, value));
+                        }
                     }
                 }
                 if (relation.info != null)

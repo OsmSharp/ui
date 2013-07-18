@@ -203,6 +203,15 @@ namespace OsmSharp.Osm.Data.Memory
         }
 
         /// <summary>
+        /// Returns all nodes in this memory datasource.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Node> GetNodes()
+        {
+            return _nodes.Values;
+        }
+
+        /// <summary>
         /// Adds a node.
         /// </summary>
         /// <param name="node"></param>
@@ -248,6 +257,15 @@ namespace OsmSharp.Osm.Data.Memory
                 }
             }
             return relations;
+        }
+
+        /// <summary>
+        /// Returns all relations in this memory datasource.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Relation> GetRelations()
+        {
+            return _relations.Values;
         }
 
         /// <summary>
@@ -306,6 +324,15 @@ namespace OsmSharp.Osm.Data.Memory
                 }
             }
             return relations;
+        }
+
+        /// <summary>
+        /// Returns all ways in this memory datasource.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerable<Way> GetWays()
+        {
+            return _ways.Values;
         }
 
         /// <summary>

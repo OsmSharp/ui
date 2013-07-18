@@ -31,14 +31,14 @@ namespace OsmSharp.Osm.Simple
         /// <summary>
         /// Node
         /// </summary>
-        Node,
+        Node = 1,
         /// <summary>
         /// Way
         /// </summary>
-        Way,
+        Way  = 2,
         /// <summary>
         /// Relation
         /// </summary>
-        Relation
+        Relation = 3
     }
 }

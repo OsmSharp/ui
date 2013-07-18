@@ -20,6 +20,7 @@ using System.Data.SQLite;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using OsmSharp;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Collections.Tags;
@@ -46,7 +47,16 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 		private SQLiteCommand _insertRelationMembersCmd;
 		private int _nodecount = 0;
 		private int _waycount = 0;
-		private int _relationcount = 0;
+        private int _relationcount = 0;
+
+        /// <summary>
+        /// Creates a new SQLite target.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        public SQLiteOsmStreamTarget(SQLiteConnection connection)
+        {
+            _connection = connection;
+        }
 
         /// <summary>
         /// Creates a new SQLite target.
@@ -62,20 +72,26 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
         /// </summary>
 		public override void Initialize()
 		{
-			_connection = new SQLiteConnection(_connectionString);
-			_connection.Open();
+            if (_connection == null)
+            {
+                _connection = new SQLiteConnection(_connectionString);
+            }
+            if (_connection.State != ConnectionState.Open)
+            {
+                _connection.Open();
+            }
 
 			using (SQLiteCommand sqliteCmd = _connection.CreateCommand())
 			{
 				sqliteCmd.CommandText =
-					@"CREATE TABLE IF NOT EXISTS [node] ([id] INTEGER  NOT NULL PRIMARY KEY,[latitude] INTEGER  NULL,[longitude] INTEGER NULL,[changeset_id] INTEGER NULL,[visible] INTEGER NULL,[timestamp] datetime NULL,[tile] INTEGER NULL,[version] INTEGER NULL,[usr] varchar(100) NULL,[usr_id] INTEGER NULL); " +
+                    @"CREATE TABLE IF NOT EXISTS [node] ([id] INTEGER  NOT NULL PRIMARY KEY,[latitude] INTEGER  NULL,[longitude] INTEGER NULL,[changeset_id] INTEGER NULL,[visible] INTEGER NULL,[timestamp] INTEGER NULL,[tile] INTEGER NULL,[version] INTEGER NULL,[usr] varchar(100) NULL,[usr_id] INTEGER NULL); " +
 					@"CREATE TABLE IF NOT EXISTS [node_tags] ([node_id] INTEGER  NOT NULL,[key] varchar(100) NOT NULL,[value] varchar(500) NULL, PRIMARY KEY ([node_id],[key])); " +
-					@"CREATE TABLE IF NOT EXISTS [way] ([id] INTEGER  NOT NULL PRIMARY KEY,[changeset_id] INTEGER NULL,[visible] INTEGER NULL,[timestamp] datetime NULL,[version] INTEGER NULL,[usr] varchar(100) NULL,[usr_id] INTEGER NULL); " +
+                    @"CREATE TABLE IF NOT EXISTS [way] ([id] INTEGER  NOT NULL PRIMARY KEY,[changeset_id] INTEGER NULL,[visible] INTEGER NULL,[timestamp] INTEGER NULL,[version] INTEGER NULL,[usr] varchar(100) NULL,[usr_id] INTEGER NULL); " +
 					@"CREATE TABLE IF NOT EXISTS [way_tags] ([way_id] INTEGER  NOT NULL,[key] varchar(100) NOT NULL,[value] varchar(500) NULL, PRIMARY KEY ([way_id],[key])); " +
-					@"CREATE TABLE IF NOT EXISTS [way_nodes] ([way_id] INTEGER  NOT NULL,[node_id] INTEGER  NOT NULL,[sequence_id] INTEGER  NOT NULL, PRIMARY KEY ([way_id],[node_id])); " +
-					@"CREATE TABLE IF NOT EXISTS [relation] ([id] INTEGER  NOT NULL PRIMARY KEY,[changeset_id] INTEGER NULL,[visible] INTEGER NULL,[timestamp] datetime NULL,[version] INTEGER NULL,[usr] varchar(100) NULL,[usr_id] INTEGER NULL); " +
+                    @"CREATE TABLE IF NOT EXISTS [way_nodes] ([way_id] INTEGER  NOT NULL,[node_id] INTEGER  NOT NULL,[sequence_id] INTEGER  NOT NULL, PRIMARY KEY ([way_id],[node_id],[sequence_id])); " +
+                    @"CREATE TABLE IF NOT EXISTS [relation] ([id] INTEGER  NOT NULL PRIMARY KEY,[changeset_id] INTEGER NULL,[visible] INTEGER NULL,[timestamp] INTEGER NULL,[version] INTEGER NULL,[usr] varchar(100) NULL,[usr_id] INTEGER NULL); " +
 					@"CREATE TABLE IF NOT EXISTS [relation_tags] ([relation_id] INTEGER NOT NULL,[key] varchar(100) NOT NULL,[value] varchar(500) NULL, PRIMARY KEY ([relation_id],[key])); " +
-					@"CREATE TABLE IF NOT EXISTS [relation_members] ([relation_id] INTEGER NOT NULL,[member_type] varchar(100) NULL,[member_id] INTEGER  NOT NULL,[member_role] varchar(100) NULL,[sequence_id] INTEGER  NOT NULL, PRIMARY KEY ([relation_id],[member_id])); " +
+                    @"CREATE TABLE IF NOT EXISTS [relation_members] ([relation_id] INTEGER NOT NULL,[member_type]INTEGER NOT NULL,[member_id] INTEGER  NOT NULL,[member_role] varchar(100) NULL,[sequence_id] INTEGER  NOT NULL); " +
 					@"CREATE INDEX IF NOT EXISTS [IDX_NODE_TILE] ON [node]([tile]  ASC); " +
 					@"CREATE INDEX [IDX_WAY_NODES_NODE] ON [way_nodes]([node_id]  ASC); " +
 					@"CREATE INDEX [IDX_WAY_NODES_WAY_SEQUENCE] ON [way_nodes]([way_id]  ASC,[sequence_id]  ASC); " +
@@ -91,7 +107,7 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 			_insertNodeCmd.Parameters.Add(new SQLiteParameter(@"longitude", DbType.Int64));
 			_insertNodeCmd.Parameters.Add(new SQLiteParameter(@"changeset_id", DbType.Int64));
 			_insertNodeCmd.Parameters.Add(new SQLiteParameter(@"visible", DbType.Int64));
-			_insertNodeCmd.Parameters.Add(new SQLiteParameter(@"timestamp", DbType.DateTime));
+            _insertNodeCmd.Parameters.Add(new SQLiteParameter(@"timestamp", DbType.Int64)); // date stored as Unix Time, the number of seconds since 1970-01-01 00:00:00 UTC.
 			_insertNodeCmd.Parameters.Add(new SQLiteParameter(@"tile", DbType.Int64));
 			_insertNodeCmd.Parameters.Add(new SQLiteParameter(@"version", DbType.Int64));
 			_insertNodeCmd.Parameters.Add(new SQLiteParameter(@"usr", DbType.String));
@@ -110,7 +126,7 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 			_insertWayCmd.Parameters.Add(new SQLiteParameter(@"id", DbType.Int64));
 			_insertWayCmd.Parameters.Add(new SQLiteParameter(@"changeset_id", DbType.Int64));
 			_insertWayCmd.Parameters.Add(new SQLiteParameter(@"visible", DbType.Int64));
-			_insertWayCmd.Parameters.Add(new SQLiteParameter(@"timestamp", DbType.DateTime));
+            _insertWayCmd.Parameters.Add(new SQLiteParameter(@"timestamp", DbType.Int64)); // date stored as Unix Time, the number of seconds since 1970-01-01 00:00:00 UTC.
 			_insertWayCmd.Parameters.Add(new SQLiteParameter(@"version", DbType.Int64));
 			_insertWayCmd.Parameters.Add(new SQLiteParameter(@"usr", DbType.String));
 			_insertWayCmd.Parameters.Add(new SQLiteParameter(@"usr_id", DbType.Int64));
@@ -135,7 +151,7 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 			_insertRelationCmd.Parameters.Add(new SQLiteParameter(@"id", DbType.Int64));
 			_insertRelationCmd.Parameters.Add(new SQLiteParameter(@"changeset_id", DbType.Int64));
 			_insertRelationCmd.Parameters.Add(new SQLiteParameter(@"visible", DbType.Int64));
-			_insertRelationCmd.Parameters.Add(new SQLiteParameter(@"timestamp", DbType.DateTime));
+            _insertRelationCmd.Parameters.Add(new SQLiteParameter(@"timestamp", DbType.Int64)); // date stored as Unix Time, the number of seconds since 1970-01-01 00:00:00 UTC.
 			_insertRelationCmd.Parameters.Add(new SQLiteParameter(@"version", DbType.Int64));
 			_insertRelationCmd.Parameters.Add(new SQLiteParameter(@"usr", DbType.String));
 			_insertRelationCmd.Parameters.Add(new SQLiteParameter(@"usr_id", DbType.Int64));
@@ -151,9 +167,9 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 			_insertRelationMembersCmd.Transaction = _insertRelationCmd.Transaction;
 			_insertRelationMembersCmd.CommandText = @"INSERT OR REPLACE INTO relation_members (relation_id,member_type,member_id,member_role,sequence_id) VALUES (:relation_id,:member_type,:member_id,:member_role,:sequence_id);";
 			_insertRelationMembersCmd.Parameters.Add(new SQLiteParameter(@"relation_id", DbType.Int64));
-			_insertRelationMembersCmd.Parameters.Add(new SQLiteParameter(@"member_type", DbType.String));
+            _insertRelationMembersCmd.Parameters.Add(new SQLiteParameter(@"member_type", DbType.Int64));
 			_insertRelationMembersCmd.Parameters.Add(new SQLiteParameter(@"member_id", DbType.Int64));
-			_insertRelationMembersCmd.Parameters.Add(new SQLiteParameter(@"member_role", DbType.String));
+            _insertRelationMembersCmd.Parameters.Add(new SQLiteParameter(@"member_role", DbType.String));
 			_insertRelationMembersCmd.Parameters.Add(new SQLiteParameter(@"sequence_id", DbType.Int64));
 		}
 
@@ -175,15 +191,15 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 	            (node.Latitude.HasValue ? (int) (node.Latitude.GetValueOrDefault()*10000000.0) : (int?) null)
 	                .ConvertToDBValue();
 	        _insertNodeCmd.Parameters[2].Value =
-	            (node.Latitude.HasValue ? (int) (node.Latitude.GetValueOrDefault()*10000000.0) : (int?) null)
+                (node.Longitude.HasValue ? (int)(node.Longitude.GetValueOrDefault() * 10000000.0) : (int?)null)
 	                .ConvertToDBValue();
 	        _insertNodeCmd.Parameters[3].Value = node.ChangeSetId.ConvertToDBValue();
-	        _insertNodeCmd.Parameters[4].Value = node.Visible.HasValue && node.Visible.Value ? 1 : 0;
-	        _insertNodeCmd.Parameters[5].Value = node.TimeStamp.ConvertToDBValue();
+            _insertNodeCmd.Parameters[4].Value = node.Visible.ConvertToDBValue();
+	        _insertNodeCmd.Parameters[5].Value = this.ConvertDateTime(node.TimeStamp);
 	        _insertNodeCmd.Parameters[6].Value = TileCalculations.xy2tile((uint) TileCalculations.lon2x(node.Longitude.Value),
 	                                                                      (uint) TileCalculations.lat2y(node.Latitude.Value));
 	        _insertNodeCmd.Parameters[7].Value = node.Version.ConvertToDBValue();
-	        _insertNodeCmd.Parameters[8].Value = node.UserName.ToStringEmptyWhenNull();
+	        _insertNodeCmd.Parameters[8].Value = node.UserName;
 	        _insertNodeCmd.Parameters[9].Value = node.UserId.ConvertToDBValue();
 	        _insertNodeCmd.ExecuteNonQuery();
 
@@ -219,10 +235,10 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 			bool? visible = way.Visible;
 			_insertWayCmd.Parameters[0].Value = id.ConvertToDBValue();
 			_insertWayCmd.Parameters[1].Value = way.ChangeSetId.ConvertToDBValue();
-			_insertWayCmd.Parameters[2].Value = visible.HasValue && visible.Value ? 1 : 0;
-			_insertWayCmd.Parameters[3].Value = way.TimeStamp.ConvertToDBValue();
+            _insertWayCmd.Parameters[2].Value = visible.ConvertToDBValue();
+			_insertWayCmd.Parameters[3].Value = this.ConvertDateTime(way.TimeStamp);
 			_insertWayCmd.Parameters[4].Value = way.Version.ConvertToDBValue();
-			_insertWayCmd.Parameters[5].Value = way.UserName.ToStringEmptyWhenNull();
+			_insertWayCmd.Parameters[5].Value = way.UserName;
 			_insertWayCmd.Parameters[6].Value = way.UserId.ConvertToDBValue();
 			_insertWayCmd.ExecuteNonQuery();
 			if (way.Tags != null)
@@ -241,7 +257,7 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 			}
 			if (way.Nodes != null)
 			{
-				for (int index = 0; index < way.Nodes.Count; ++index)
+				for (int index = 0; index < way.Nodes.Count; index++)
 				{
 					_insertWayNodesCmd.Parameters[0].Value = id;
 					_insertWayNodesCmd.Parameters[1].Value = way.Nodes[index];
@@ -267,10 +283,10 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 			bool? visible = relation.Visible;
 			_insertRelationCmd.Parameters[0].Value = id.ConvertToDBValue();
 			_insertRelationCmd.Parameters[1].Value = relation.ChangeSetId.ConvertToDBValue();
-			_insertRelationCmd.Parameters[2].Value = visible.HasValue && visible.Value ? 1 : 0;
-			_insertRelationCmd.Parameters[3].Value = relation.TimeStamp.ConvertToDBValue();
+            _insertRelationCmd.Parameters[2].Value = visible.ConvertToDBValue();
+            _insertRelationCmd.Parameters[3].Value = this.ConvertDateTime(relation.TimeStamp);
 			_insertRelationCmd.Parameters[4].Value = relation.Version.ConvertToDBValue();
-			_insertRelationCmd.Parameters[5].Value = relation.UserName.ToStringEmptyWhenNull();
+			_insertRelationCmd.Parameters[5].Value = relation.UserName;
 			_insertRelationCmd.Parameters[6].Value = relation.UserId.ConvertToDBValue();
 			_insertRelationCmd.ExecuteNonQuery();
 			if (relation.Tags != null)
@@ -289,7 +305,7 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 				{
 					RelationMember simpleRelationMember = relation.Members[index];
 					_insertRelationMembersCmd.Parameters[0].Value = id;
-					_insertRelationMembersCmd.Parameters[1].Value = simpleRelationMember.MemberType;
+					_insertRelationMembersCmd.Parameters[1].Value = this.ConvertMemberType(simpleRelationMember.MemberType);
 					_insertRelationMembersCmd.Parameters[2].Value = simpleRelationMember.MemberId;
 					_insertRelationMembersCmd.Parameters[3].Value = simpleRelationMember.MemberRole;
 					_insertRelationMembersCmd.Parameters[4].Value = index;
@@ -304,6 +320,35 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 		}
 
         /// <summary>
+        /// Converts the member type to long.
+        /// </summary>
+        /// <param name="memberType"></param>
+        /// <returns></returns>
+        private long? ConvertMemberType(RelationMemberType? memberType)
+        {
+            if (memberType.HasValue)
+            {
+                return (long)memberType.Value;
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Converts the given datetime object to Unix Time, the number of seconds since 1970-01-01 00:00:00 UTC.
+        /// </summary>
+        /// <param name="dateTime"></param>
+        /// <returns></returns>
+        private object ConvertDateTime(DateTime? dateTime)
+        {
+            if (dateTime.HasValue)
+            {
+                return dateTime.Value.ToUnixTime();
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Closes this target.
         /// </summary>
 		public override void Close()
@@ -313,8 +358,11 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 				_insertNodeCmd.Transaction.Commit();
 				_insertWayCmd.Transaction.Commit();
 				_insertRelationCmd.Transaction.Commit();
-				_connection.Close();
-				_connection.Dispose();
+                if (!string.IsNullOrWhiteSpace(_connectionString))
+                { // the connection was created here, it needs to be destroyed here.
+                    _connection.Close();
+                    _connection.Dispose();
+                }
 			}
 			_connection = (SQLiteConnection)null;
 		}
