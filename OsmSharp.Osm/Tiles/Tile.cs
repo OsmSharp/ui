@@ -225,21 +225,33 @@ namespace OsmSharp.Osm.Tiles
         /// <summary>
         /// Returns the tile at the given location at the given zoom.
         /// </summary>
-        /// <param name="location"></param>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
         /// <param name="zoom"></param>
         /// <returns></returns>
-        public static Tile CreateAroundLocation(GeoCoordinate location, int zoom)
+        public static Tile CreateAroundLocation(double latitude, double longitude, int zoom)
         {
             int n = (int)System.Math.Floor(System.Math.Pow(2, zoom));
 
-            Radian rad = new Degree(location.Latitude);
+            Radian rad = new Degree(latitude);
 
-            int x = (int)(((location.Longitude + 180.0f) / 360.0f) * (double)n);
+            int x = (int)(((longitude + 180.0f) / 360.0f) * (double)n);
             int y = (int)(
                 (1.0f - (System.Math.Log(System.Math.Tan(rad.Value) + (1.0f / System.Math.Cos(rad.Value))))
                 / System.Math.PI) / 2f * (double)n);
 
             return new Tile(x, y, zoom);
+        }
+
+        /// <summary>
+        /// Returns the tile at the given location at the given zoom.
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="zoom"></param>
+        /// <returns></returns>
+        public static Tile CreateAroundLocation(GeoCoordinate location, int zoom)
+        {
+            return Tile.CreateAroundLocation(location.Latitude, location.Longitude, zoom);
         }
 
         /// <summary>

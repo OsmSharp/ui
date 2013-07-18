@@ -290,6 +290,7 @@
     <Compile Include="Relation.cs" />
     <Compile Include="RelationMember.cs" />
     <Compile Include="RelationMemberType.cs" />
+    <Compile Include="Tiles\TileDefaultsForRouting.cs" />
     <Compile Include="Way.cs" />
     <Compile Include="Data\INodeSource.cs" />
     <Compile Include="Data\IRelationSource.cs" />

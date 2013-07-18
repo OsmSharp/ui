@@ -25,76 +25,83 @@ using System.Data.SqlClient;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Osm.Simple;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Data.SQLServer.Osm.SchemaTools;
+using OsmSharp.Osm.Tiles;
 
 namespace OsmSharp.Data.SQLServer.Osm.Streams
 {
     /// <summary>
     /// A data processor target for the SqlServer simple schema.
     /// </summary>
-    public class SQLServerOsmStreamTarget : OsmStreamTarget
-    {
+    public class SQLServerOsmStreamTarget : OsmStreamTarget{
+        
         /// <summary>
         /// Holds the connection.
         /// </summary>
         private SqlConnection _connection;
 
         private DataTable _nodeTable;
-
         private DataTable _nodeTagsTable;
-
         private DataTable _wayTable;
-
         private DataTable _wayTagsTable;
-
         private DataTable _wayNodesTable;
-
         private DataTable _relationTable;
-
         private DataTable _relationMembersTable;
-
         private DataTable _relationTagsTable;
 
         /// <summary>
         /// Flag that indicates if the schema needs to be created if not present.
         /// </summary>
-        private bool _createAndSetectSchema;
+        private readonly bool _createAndDetectSchema;
 
-        int _batch_nodes = 100000;
-        int _batch_ways = 100000;
-        int _batch_relations = 5000;
+        private const int BatchNodes     = 100000;
+        private const int BatchWays      = 10000;
+        private const int BatchRelations = 100000;
 
         //int _batch_nodes = 1;
         //int _batch_ways = 1;
         //int _batch_relations = 1;
 
-        private string _connectionString;
+        private readonly string _connectionString;
 
+        /// <summary>
+        /// Create a SQLServerSimpleSchemaDataProcessorTarget. Schema will not be created.
+        /// </summary>
+        /// <param name="connectionString">Connection string to the database</param>
         public SQLServerOsmStreamTarget(string connectionString)
         {
             _connectionString = connectionString;
-            _createAndSetectSchema = false;
+            _createAndDetectSchema = false;
         }
 
+        /// <summary>
+        /// Create a SQLServerSimpleSchemaDataProcessorTarget
+        /// </summary>
+        /// <param name="connectionString">Connection string to the database</param>
+        /// <param name="createSchema">If true, will drop and re-create the schema</param>
         public SQLServerOsmStreamTarget(string connectionString, bool createSchema)
         {
             _connectionString = connectionString;
-            _createAndSetectSchema = createSchema;
+            _createAndDetectSchema = createSchema;
         }
 
-
+        /// <summary>
+        /// Initializes the target.
+        /// </summary>
         public override void Initialize()
         {
             _connection = new SqlConnection(_connectionString);
             _connection.Open();
 
-            if (_createAndSetectSchema)
-            { // creates or detects the tables.
-                OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools.CreateAndDetect(_connection);
+            if (_createAndDetectSchema)
+            { 
+                // creates or detects the tables.
+                SQLServerSchemaTools.CreateAndDetect(_connection);
             }
 
-            this.CreateNodeTables();
-            this.CreateWayTables();
-            this.CreateRelationTables();
+            CreateNodeTables();
+            CreateWayTables();
+            CreateRelationTables();
         }
 
         #region HelperFunctions
@@ -103,7 +110,7 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
         {
             // create node bulk objects.
             _nodeTable = new DataTable();
-            _nodeTable.Columns.Add(new DataColumn("id", typeof(long)));
+            _nodeTable.Columns.Add(new DataColumn("id", typeof (long)));
             _nodeTable.Columns.Add(new DataColumn("latitude", typeof(int)));
             _nodeTable.Columns.Add(new DataColumn("longitude", typeof(int)));
             _nodeTable.Columns.Add(new DataColumn("changeset_id", typeof(long)));
@@ -116,8 +123,8 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
 
             // create node_tags bulk objects.
             _nodeTagsTable = new DataTable();
-            _nodeTagsTable.Columns.Add(new DataColumn("node_id", typeof(long)));
-            _nodeTagsTable.Columns.Add(new DataColumn("key", typeof(string)));
+            _nodeTagsTable.Columns.Add(new DataColumn("node_id", typeof (long)));
+            _nodeTagsTable.Columns.Add(new DataColumn("key", typeof (string)));
             _nodeTagsTable.Columns.Add(new DataColumn("value", typeof(string)));
         }
 
@@ -125,7 +132,7 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
         {
             // create way bulk objects.
             _wayTable = new DataTable();
-            _wayTable.Columns.Add(new DataColumn("id", typeof(long)));
+            _wayTable.Columns.Add(new DataColumn("id", typeof (long)));
             _wayTable.Columns.Add(new DataColumn("changeset_id", typeof(long)));
             _wayTable.Columns.Add(new DataColumn("timestamp", typeof(DateTime)));
             _wayTable.Columns.Add(new DataColumn("visible", typeof(bool)));
@@ -135,22 +142,22 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
 
             // create way_tags bulk objects.
             _wayTagsTable = new DataTable();
-            _wayTagsTable.Columns.Add(new DataColumn("way_id", typeof(long)));
-            _wayTagsTable.Columns.Add(new DataColumn("key", typeof(string)));
+            _wayTagsTable.Columns.Add(new DataColumn("way_id", typeof (long)));
+            _wayTagsTable.Columns.Add(new DataColumn("key", typeof (string)));
             _wayTagsTable.Columns.Add(new DataColumn("value", typeof(string)));
 
             // create way_nodes bulk objects.
             _wayNodesTable = new DataTable();
-            _wayNodesTable.Columns.Add(new DataColumn("way_id", typeof(long)));
-            _wayNodesTable.Columns.Add(new DataColumn("node_id", typeof(long)));
-            _wayNodesTable.Columns.Add(new DataColumn("sequence_id", typeof(int)));
+            _wayNodesTable.Columns.Add(new DataColumn("way_id", typeof (long)));
+            _wayNodesTable.Columns.Add(new DataColumn("node_id", typeof (long)));
+            _wayNodesTable.Columns.Add(new DataColumn("sequence_id", typeof (int)));
         }
 
         private void CreateRelationTables()
         {
             // create relation bulk objects.
             _relationTable = new DataTable();
-            _relationTable.Columns.Add(new DataColumn("id", typeof(long)));
+            _relationTable.Columns.Add(new DataColumn("id", typeof (long)));
             _relationTable.Columns.Add(new DataColumn("changeset_id", typeof(long)));
             _relationTable.Columns.Add(new DataColumn("timestamp", typeof(DateTime)));
             _relationTable.Columns.Add(new DataColumn("visible", typeof(bool)));
@@ -160,175 +167,190 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
 
             // create relation_tags bulk objects.
             _relationTagsTable = new DataTable();
-            _relationTagsTable.Columns.Add(new DataColumn("relation_id", typeof(long)));
+            _relationTagsTable.Columns.Add(new DataColumn("relation_id", typeof (long)));
             _relationTagsTable.Columns.Add(new DataColumn("key", typeof(string)));
             _relationTagsTable.Columns.Add(new DataColumn("value", typeof(string)));
 
             // create relation_members bulk objects.
             _relationMembersTable = new DataTable();
-            _relationMembersTable.Columns.Add(new DataColumn("relation_id", typeof(long)));
+            _relationMembersTable.Columns.Add(new DataColumn("relation_id", typeof (long)));
             _relationMembersTable.Columns.Add(new DataColumn("member_type", typeof(string)));
             _relationMembersTable.Columns.Add(new DataColumn("member_id", typeof(long)));
             _relationMembersTable.Columns.Add(new DataColumn("member_role", typeof(string)));
-            _relationMembersTable.Columns.Add(new DataColumn("sequence_id", typeof(int)));
+            _relationMembersTable.Columns.Add(new DataColumn("sequence_id", typeof (int)));
         }
 
         /// <summary>
         /// Does the actual bulk copy.
         /// </summary>
         /// <param name="table"></param>
-        /// <param name="table_name"></param>
-        private void BulkCopy(DataTable table, string table_name)
+        /// <param name="tableName"></param>
+        private void BulkCopy(DataTable table, string tableName)
         {
-            this.BulkCopy(table, table_name, table.Rows.Count + 1);
+            BulkCopy(table, tableName, table.Rows.Count + 1);
         }
 
         /// <summary>
         /// Does the actual bulk inserts.
         /// </summary>
         /// <param name="table"></param>
-        /// <param name="table_name"></param>
-        /// <param name="batch_size"></param>
-        private void BulkCopy(DataTable table, string table_name, int batch_size)
+        /// <param name="tableName"></param>
+        /// <param name="batchSize"></param>
+        private void BulkCopy(DataTable table, string tableName, int batchSize)
         {
-            if (table != null && table.Rows.Count > 0)
-            {
+            if (table == null || table.Rows.Count < 1)
+                return;
 
-                using (SqlBulkCopy bulkCopy = new SqlBulkCopy(_connection))
+            using (var bulkCopy = new SqlBulkCopy(_connection))
+            {
+                bulkCopy.BulkCopyTimeout = 1200; // 20 minutes. Use a long time as the database can expand, or can be busy
+                bulkCopy.DestinationTableName = tableName;
+                bulkCopy.BatchSize = batchSize;
+
+                try
                 {
-                    bulkCopy.DestinationTableName = table_name;
-                    bulkCopy.BatchSize = batch_size;
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
+                        "Inserting {0} records into {1}.", table.Rows.Count, tableName);
                     bulkCopy.WriteToServer(table);
                 }
-
-
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.PostgreSQL.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
-                    "Inserted {0} records into {1}!", table.Rows.Count, table_name);
+                catch (Exception e)
+                {
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Error,
+                        e.ToString());
+                }
             }
         }
 
         #endregion
 
+        /// <summary>
+        /// Adds a node to the target.
+        /// </summary>
+        /// <param name="node"></param>
         public override void AddNode(Node node)
         {
-            DataRow node_row = _nodeTable.NewRow();
+            if (!node.Id.HasValue || !node.Latitude.HasValue || !node.Longitude.HasValue)
+                return;
+
+            DataRow nodeRow = _nodeTable.NewRow();
 
             // format data and create parameters.
-            long? id = node.Id;
-            node_row["id"] = id.ConvertToDBValue<long>();
+            long id = node.Id.Value;
+            nodeRow["id"] = id;
 
-            int? latitude = (int)(node.Latitude * 10000000); // latitude should always contain a value.
-            node_row["latitude"] = latitude.ConvertToDBValue<int>();
+            var latitude = (int)(node.Latitude.Value * 10000000); // latitude should always contain a value.
+            nodeRow["latitude"] = latitude;
 
-            int? longitude = (int)(node.Longitude * 10000000); // longitude should always containt a value.
-            node_row["longitude"] = longitude.ConvertToDBValue<int>();
+            var longitude = (int)(node.Longitude.Value * 10000000); // longitude should always containt a value.
+            nodeRow["longitude"] = longitude;
 
-            long? changeset_id = node.ChangeSetId;
-            node_row["changeset_id"] = changeset_id.ConvertToDBValue<long>();
+            long? changesetID = node.ChangeSetId;
+            nodeRow["changeset_id"] = changesetID.ConvertToDBValue();
 
             bool? visible = node.Visible;
-            int visible_int = 1;
+            int visibleInt = 1;
             if (!visible.HasValue || !visible.Value)
             {
-                visible_int = 0;
+                visibleInt = 0;
             }
-            node_row["visible"] = visible_int;
+            nodeRow["visible"] = visibleInt;
 
             DateTime? timestamp = node.TimeStamp;
-            node_row["timestamp"] = timestamp.ConvertToDBValue<DateTime>();
+            nodeRow["timestamp"] = timestamp.ConvertToDBValue();
 
             ulong? version = node.Version;
-            node_row["version"] = version.ConvertToDBValue<ulong>();
+            nodeRow["version"] = version.ConvertToDBValue();
 
             // calculate the tile the node belongs to.
-            long tile = TileCalculations.xy2tile(TileCalculations.lon2x(node.Longitude.Value), TileCalculations.lat2y(node.Latitude.Value));
-            node_row["tile"] = tile;
+            nodeRow["tile"] = Tile.CreateAroundLocation(node.Latitude.Value, node.Longitude.Value, TileDefaultsForRouting.Zoom).Id;
 
-            // set the usr
-            node_row["usr"] = node.UserName.ToStringEmptyWhenNull();
-            node_row["usr_id"] = node.UserId.ConvertToDBValue<long>();
+            // list the usr
+            nodeRow["usr"] = node.UserName.ToStringEmptyWhenNull().Truncate(SQLServerSchemaConstants.NodeUsr);
+            nodeRow["usr_id"] = node.UserId.ConvertToDBValue();
 
             // add the node and it's tags.
-            _nodeTable.Rows.Add(node_row);
+            _nodeTable.Rows.Add(nodeRow);
 
             // tags.
             if (node.Tags != null)
             {
                 foreach (Tag tag in node.Tags)
                 {
-                    string key = tag.Key;
-                    string value = tag.Value;
+                    DataRow tagRow = _nodeTagsTable.NewRow();
+                    tagRow["key"] = tag.Key.Trim().Truncate(SQLServerSchemaConstants.NodeTagsKey);
+                    tagRow["node_id"] = id;
+                    tagRow["value"] = tag.Value.Trim().Truncate(SQLServerSchemaConstants.NodeTagsValue);
 
-                    DataRow tag_row = _nodeTagsTable.NewRow();
-                    tag_row["node_id"] = id;
-                    tag_row["key"] = key.Truncate(255);
-                    tag_row["value"] = value.Truncate(255);
-
-                    _nodeTagsTable.Rows.Add(tag_row);
+                    _nodeTagsTable.Rows.Add(tagRow);
                 }
             }
 
             // bulk insert if needed.
-            if (_nodeTable.Rows.Count >= _batch_nodes)
+            if (_nodeTable.Rows.Count >= BatchNodes)
             {
-                this.BulkCopy(_nodeTable, "node", _batch_nodes);
-                this.BulkCopy(_nodeTagsTable, "node_tags");
-                this.CreateNodeTables();
+                BulkCopy(_nodeTable, "node");
+                BulkCopy(_nodeTagsTable, "node_tags");
+                CreateNodeTables();
             }
         }
 
+        /// <summary>
+        /// Adds a way to the target.
+        /// </summary>
+        /// <param name="way"></param>
         public override void AddWay(Way way)
         {
-            DataRow way_row = _wayTable.NewRow();
+            if (!way.Id.HasValue)
+                return; // id should always contain a value.
+
+            DataRow wayRow = _wayTable.NewRow();
 
             // format data and create parameters.
-            long? id = way.Id.Value; // id should always contain a value.
-            way_row["id"] = id.ConvertToDBValue<long>();
+            long id = way.Id.Value; // id should always contain a value.
+            wayRow["id"] = id;
 
-            long? changeset_id = way.ChangeSetId;
-            way_row["changeset_id"] = changeset_id.ConvertToDBValue<long>();
+            long? changesetID = way.ChangeSetId;
+            wayRow["changeset_id"] = changesetID.ConvertToDBValue();
 
             bool? visible = way.Visible;
-            int visible_int = 1;
+            int visibleInt = 1;
             if (!visible.HasValue || !visible.Value)
             {
-                visible_int = 0;
+                visibleInt = 0;
             }
-            way_row["visible"] = visible_int;
+            wayRow["visible"] = visibleInt;
 
             DateTime? timestamp = way.TimeStamp;
-            way_row["timestamp"] = timestamp.ConvertToDBValue<DateTime>();
+            wayRow["timestamp"] = timestamp.ConvertToDBValue();
 
             ulong? version = way.Version;
-            way_row["version"] = version.ConvertToDBValue<ulong>();
+            wayRow["version"] = version.ConvertToDBValue();
 
-            // set the usr
-            way_row["usr"] = way.UserName.ToStringEmptyWhenNull();
-            way_row["usr_id"] = way.UserId.ConvertToDBValue<long>();
+            // list the usr
+            wayRow["usr"] = way.UserName.ToStringEmptyWhenNull().Truncate(SQLServerSchemaConstants.WayUsr);
+            wayRow["usr_id"] = way.UserId.ConvertToDBValue();
 
             // add the way and it's tags.
-            _wayTable.Rows.Add(way_row);
+            _wayTable.Rows.Add(wayRow);
 
             // tags.
             if (way.Tags != null)
             {
                 foreach (Tag tag in way.Tags)
                 {
-                    string key = tag.Key;
-                    string value = tag.Value;
-
-                    if (key == null || key.Length == 0)
+                    string key = tag.Key.Truncate(SQLServerSchemaConstants.WayTagsKey);
+                    if (string.IsNullOrEmpty(key))
                     {
                         //throw new Exception();
                     }
                     else
                     {
-                        DataRow tag_row = _wayTagsTable.NewRow();
-                        tag_row["way_id"] = id;
-                        tag_row["key"] = key.Truncate(255);
-                        tag_row["value"] = value.Truncate(255);
+                        DataRow tagRow = _wayTagsTable.NewRow();
+                        tagRow["way_id"] = id;
+                        tagRow["key"] = key;
+                        tagRow["value"] = tag.Value.Truncate(SQLServerSchemaConstants.WayTagsValue);
 
-                        _wayTagsTable.Rows.Add(tag_row);
+                        _wayTagsTable.Rows.Add(tagRow);
                     }
                 }
             }
@@ -336,136 +358,139 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
             // insert way nodes.
             if (way.Nodes != null)
             {
-                long way_id = way.Id.Value;
                 for (int idx = 0; idx < way.Nodes.Count; idx++)
                 {
-                    long node_id = way.Nodes[idx];
+                    long nodeID = way.Nodes[idx];
+                    DataRow tagRow = _wayNodesTable.NewRow();
+                    tagRow["way_id"] = id;
+                    tagRow["node_id"] = nodeID;
+                    tagRow["sequence_id"] = idx;
 
-                    DataRow tag_row = _wayNodesTable.NewRow();
-                    tag_row["way_id"] = id;
-                    tag_row["node_id"] = node_id;
-                    tag_row["sequence_id"] = idx;
-
-                    _wayNodesTable.Rows.Add(tag_row);
+                    _wayNodesTable.Rows.Add(tagRow);
                 }
             }
 
             // bulk insert if needed.
-            if (_wayTable.Rows.Count >= _batch_ways)
+            if (_wayTable.Rows.Count >= BatchWays)
             {
-                this.BulkCopy(_wayTable, "way", _batch_ways);
-                this.BulkCopy(_wayTagsTable, "way_tags");
-                this.BulkCopy(_wayNodesTable, "way_nodes");
-                this.CreateWayTables();
+                BulkCopy(_wayTable, "way");
+                BulkCopy(_wayTagsTable, "way_tags");
+                BulkCopy(_wayNodesTable, "way_nodes");
+                CreateWayTables();
             }
         }
 
+        /// <summary>
+        /// Adds a relation to the target.
+        /// </summary>
+        /// <param name="relation"></param>
         public override void AddRelation(Relation relation)
         {
-            DataRow relation_row = _relationTable.NewRow();
+            if (!relation.Id.HasValue)
+                return;
+
+            DataRow relationRow = _relationTable.NewRow();
 
             // format data and create parameters.
-            long? id = relation.Id.Value; // id should alrelations contain a value.
-            relation_row["id"] = id.ConvertToDBValue<long>();
+            long id = relation.Id.Value; // id should alrelations contain a value.
+            relationRow["id"] = id;
 
-            long? changeset_id = relation.ChangeSetId;
-            relation_row["changeset_id"] = changeset_id.ConvertToDBValue<long>();
+            long? changesetID = relation.ChangeSetId;
+            relationRow["changeset_id"] = changesetID.ConvertToDBValue();
 
             bool? visible = relation.Visible;
-            int visible_int = 1;
+            int visibleInt = 1;
             if (!visible.HasValue || !visible.Value)
             {
-                visible_int = 0;
+                visibleInt = 0;
             }
-            relation_row["visible"] = visible_int;
+            relationRow["visible"] = visibleInt;
 
             DateTime? timestamp = relation.TimeStamp;
-            relation_row["timestamp"] = timestamp.ConvertToDBValue<DateTime>();
+            relationRow["timestamp"] = timestamp.ConvertToDBValue();
 
             ulong? version = relation.Version;
-            relation_row["version"] = version.ConvertToDBValue<ulong>();
+            relationRow["version"] = version.ConvertToDBValue();
 
-            // set the usr
-            relation_row["usr"] = relation.UserName.ToStringEmptyWhenNull();
-            relation_row["usr_id"] = relation.UserId.ConvertToDBValue<long>();
-
+            // list the usr
+            relationRow["usr"] = relation.UserName.ToStringEmptyWhenNull().Truncate(SQLServerSchemaConstants.RelationUsr);
+            relationRow["usr_id"] = relation.UserId.ConvertToDBValue();
 
             // add the node and it's tags.
-            _relationTable.Rows.Add(relation_row);
+            _relationTable.Rows.Add(relationRow);
 
             // tags.
             if (relation.Tags != null)
             {
                 foreach (Tag tag in relation.Tags)
                 {
-                    string key = tag.Key;
-                    string value = tag.Value;
+                    DataRow tagRow = _relationTagsTable.NewRow();
+                    tagRow["relation_id"] = id;
+                    tagRow["key"] = tag.Key.Truncate(SQLServerSchemaConstants.RelationTagsKey);
+                    tagRow["value"] = tag.Value.Truncate(SQLServerSchemaConstants.RelationTagsValue);
 
-                    DataRow tag_row = _relationTagsTable.NewRow();
-                    tag_row["relation_id"] = id;
-                    tag_row["key"] = key.Truncate(255);
-                    tag_row["value"] = value.Truncate(255);
-
-                    _relationTagsTable.Rows.Add(tag_row);
+                    _relationTagsTable.Rows.Add(tagRow);
                 }
             }
 
             // member.
             if (relation.Members != null)
             {
-                long relation_id = relation.Id.Value;
-
                 for (int idx = 0; idx < relation.Members.Count; idx++)
                 {
-                    RelationMember member = relation.Members[idx]; ;
+                    RelationMember member = relation.Members[idx];
 
-                    DataRow tag_row = _relationMembersTable.NewRow();
-                    tag_row["relation_id"] = id;
-                    tag_row["member_type"] = member.MemberType;
-                    tag_row["member_id"] = member.MemberId;
-                    tag_row["member_role"] = member.MemberRole;
-                    tag_row["sequence_id"] = idx;
+                    DataRow tagRow = _relationMembersTable.NewRow();
+                    tagRow["relation_id"] = id;
+                    tagRow["member_type"] = member.MemberType;
+                    tagRow["member_id"] = member.MemberId;
+                    tagRow["member_role"] = member.MemberRole.Truncate(SQLServerSchemaConstants.RelationMemberRole);
+                    tagRow["sequence_id"] = idx;
 
-                    _relationMembersTable.Rows.Add(tag_row);
+                    _relationMembersTable.Rows.Add(tagRow);
                 }
             }
 
             // bulk insert if needed.
-            if (_relationTable.Rows.Count >= _batch_relations)
+            if (_relationTable.Rows.Count >= BatchRelations)
             {
-                this.BulkCopy(_relationTable, "relation");
-                this.BulkCopy(_relationTagsTable, "relation_tags");
-                this.BulkCopy(_relationMembersTable, "relation_members");
-                this.CreateRelationTables();
+                BulkCopy(_relationTable, "relation");
+                BulkCopy(_relationTagsTable, "relation_tags");
+                BulkCopy(_relationMembersTable, "relation_members");
+                CreateRelationTables();
             }
         }
 
+        /// <summary>
+        /// Closes the current target.
+        /// </summary>
         public override void Close()
         {
-            if (_connection != null)
+            if(_connection != null)
             {
-                if (_nodeTable.Rows.Count > 0)
-                {
-                    this.BulkCopy(_nodeTable, "node");
-                    this.BulkCopy(_nodeTagsTable, "node_tags");
-                }
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
+                    "Flushing remaining data");
+                BulkCopy(_nodeTable, "node");
+                BulkCopy(_nodeTagsTable, "node_tags");
 
-                if (_wayTable.Rows.Count > 0)
-                {
-                    this.BulkCopy(_wayTable, "way");
-                    this.BulkCopy(_wayTagsTable, "way_tags");
-                    this.BulkCopy(_wayNodesTable, "way_nodes");
-                }
+                BulkCopy(_wayTable, "way");
+                BulkCopy(_wayTagsTable, "way_tags");
+                BulkCopy(_wayNodesTable, "way_nodes");
 
-                if (_relationTable.Rows.Count > 0)
+                BulkCopy(_relationTable, "relation");
+                BulkCopy(_relationTagsTable, "relation_tags");
+                BulkCopy(_relationMembersTable, "relation_members");
+
+                if(_createAndDetectSchema)
                 {
-                    this.BulkCopy(_relationTable, "relation");
-                    this.BulkCopy(_relationTagsTable, "relation_tags");
-                    this.BulkCopy(_relationMembersTable, "relation_members");
+                    // Adds constraints
+                    SQLServerSchemaTools.AddConstraints(_connection);
                 }
 
                 _connection.Close();
                 _connection.Dispose();
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
+                    "Database connection closed");
             }
             _connection = null;
         }

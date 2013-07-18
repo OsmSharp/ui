@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Data.SQLite", "Osm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Data.Redis", "OsmSharp.Data.Redis\OsmSharp.Data.Redis.csproj", "{9152A85F-61AC-486F-B5F6-E2C969132738}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OsmSharp.Data.Unittests", "OsmSharp.Data.Unittests\OsmSharp.Data.Unittests.csproj", "{EDBF254D-931A-4B3F-8062-56506AA56E1A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -215,6 +217,17 @@ Global
 		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release|x64.Build.0 = Release|x64
 		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release|x86.ActiveCfg = Release|x86
 		{9152A85F-61AC-486F-B5F6-E2C969132738}.Release|x86.Build.0 = Release|x86
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A}.Debug|x64.ActiveCfg = Debug|x86
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A}.Debug|x86.ActiveCfg = Debug|x86
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A}.Debug|x86.Build.0 = Debug|x86
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A}.Release|x64.ActiveCfg = Release|x64
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A}.Release|x64.Build.0 = Release|x64
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A}.Release|x86.ActiveCfg = Release|x86
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -235,6 +248,7 @@ Global
 		{269551D7-97AC-464B-930E-1CD338DF790B} = {2077896F-7039-42EC-8316-263286837E41}
 		{5C4BCE30-FBB8-408A-B702-33DFF5CC4A36} = {2077896F-7039-42EC-8316-263286837E41}
 		{9152A85F-61AC-486F-B5F6-E2C969132738} = {2077896F-7039-42EC-8316-263286837E41}
+		{EDBF254D-931A-4B3F-8062-56506AA56E1A} = {2077896F-7039-42EC-8316-263286837E41}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Core\OsmSharp.Osm\OsmSharp.Osm.csproj

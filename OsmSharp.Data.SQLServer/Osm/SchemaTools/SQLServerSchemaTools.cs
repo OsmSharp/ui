@@ -20,42 +20,92 @@
 
 using System;
 using System.Data.SqlClient;
-using System.Reflection;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 
 namespace OsmSharp.Data.SQLServer.Osm.SchemaTools
 {
     /// <summary>
     /// Tools for creation/detection of the simple schema in PostgreSQL.
     /// </summary>
-    internal static class SQLServerSchemaTools
+    public static class SQLServerSchemaTools
     {
         /// <summary>
-        /// Creates/detects the simple schema.
+        /// Creates/detects the simple schema. Does not create the indexes and constraints. That is done after the data is loaded
         /// </summary>
         /// <param name="connection"></param>
         public static void CreateAndDetect(SqlConnection connection)
         {
             //check if Simple Schema table exists
-            string sql = "select object_id('dbo.node', 'U')";
-            object res = null;
-            using (SqlCommand cmd = new SqlCommand(sql, connection))
+            const string sql = "select object_id('dbo.node', 'U')";
+            object res;
+            using (var cmd = new SqlCommand(sql, connection))
             {
                 res = cmd.ExecuteScalar();
             }
             //if table exists, we are OK
             if (!DBNull.Value.Equals(res))
                 return;
-            //in other case let's run script to recreate tables
-            //obtain DDL script from resources
-            using (System.IO.Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Osm.Data.SQLServer.SchemaTools." + "SimpleSchemaDDL.sql"))
-            using (StreamReader reader = new StreamReader(stream))
-            using (SqlCommand cmd = new SqlCommand("", connection))
+
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information,
+                "Creating database schema");
+            ExecuteSQL(connection, "SimpleSchemaDDL.sql");
+        }
+
+        /// <summary>
+        /// Removes the simple schema.
+        /// </summary>
+        public static void Remove(SqlConnection connection)
+        {
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information, 
+                "Removing database schema");
+            ExecuteSQL(connection, "SimpleSchemaDROP.sql");
+        }
+
+        /// <summary>
+        /// Removes non-routing data from the database. For the UK, this resulted in 34.4 million records being deleted.
+        /// </summary>
+        public static void RemoveNonRoutingData(SqlConnection connection)
+        {
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information, 
+                "Removing non-routing data");
+            ExecuteSQL(connection, "SimpleSchemaDeleteNonRouting.sql");
+        }
+
+        /// <summary>
+        /// Add indexes, removed duplicates and adds constraints
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void AddConstraints(SqlConnection connection)
+        {
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information, 
+                "Adding database constraints");
+            ExecuteSQL(connection, "SimpleSchemaConstraints.sql");
+        }
+
+        private static void ExecuteSQL(SqlConnection connection, string resourceFilename)
+        {
+            foreach (string resource in Assembly.GetExecutingAssembly().GetManifestResourceNames().Where(resource => resource.EndsWith(resourceFilename)))
             {
-                cmd.CommandText = reader.ReadToEnd();
-                res = cmd.ExecuteNonQuery();
+                using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resource))
+                {
+                    if (stream != null)
+                    {
+                        using (var reader = new StreamReader(stream))
+                        {
+                            using (var cmd = new SqlCommand("", connection))
+                            {
+                                cmd.CommandTimeout = 1800;  // 30 minutes. Adding constraints can be time consuming
+                                cmd.CommandText = reader.ReadToEnd();
+                                cmd.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+
+                break;
             }
-            
         }
     }
 }

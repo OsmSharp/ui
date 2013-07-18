@@ -1,5 +1,6 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2013 Abelshausen Ben
+//
+// Copyright (C) 2013 Simon Hughes
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,26 +17,18 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace OsmSharp
+namespace OsmSharp.Osm.Tiles
 {
     /// <summary>
-    /// Contains generic constants.
+    /// Provides default values for routing
     /// </summary>
-    public static class Constants
+    public static class TileDefaultsForRouting
     {
         /// <summary>
-        /// The radius of earth in meters.
+        /// This is the default zoom level for routing.
+        /// Do not alter this value if reading from a database.
+        /// If you do, you will have to recalibrate the tiles for your database.
         /// </summary>
-        public static double RadiusOfEarth = 6371000;
-
-        /// <summary>
-        /// 2.0 * Math.PI
-        /// </summary>
-        public const double TwoPi = 6.283185307179586476925286766559;  // 2.0 * Math.PI;
+        public const int Zoom = 14;
     }
 }
