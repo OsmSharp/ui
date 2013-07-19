@@ -69,7 +69,6 @@
     <Compile Include="Change.cs" />
     <Compile Include="ChangeSet.cs" />
     <Compile Include="ChangeSetInfo.cs" />
-    <Compile Include="ChangeType.cs" />
     <Compile Include="Data\IDataSource.cs" />
     <Compile Include="Data\IDataSourceReadOnly.cs" />
     <Compile Include="Data\KeyGenerator.cs" />
