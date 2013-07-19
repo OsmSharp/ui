@@ -24,10 +24,9 @@ using System.Data;
 using Npgsql;
 using System.IO;
 using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.Tiles;
 
 namespace OsmSharp.Data.PostgreSQL.Osm.Streams
 {
@@ -41,36 +40,32 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// </summary>
         private NpgsqlConnection _connection;
 
-        private DataTable _node_table;
+        private DataTable _nodeTable;
 
-        private DataTable _node_tags_table;
+        private DataTable _nodeTagsTable;
 
-        private DataTable _way_table;
+        private DataTable _wayTable;
 
-        private DataTable _way_tags_table;
+        private DataTable _wayTagsTable;
 
-        private DataTable _way_nodes_table;
+        private DataTable _wayNodesTable;
 
-        private DataTable _relation_table;
+        private DataTable _relationTable;
 
-        private DataTable _relation_members_table;
+        private DataTable _relationMembersTable;
 
-        private DataTable _relation_tags_table;
+        private DataTable _relationTagsTable;
 
         /// <summary>
         /// Flag that indicates if the schema needs to be created if not present.
         /// </summary>
-        private bool _create_and_detect_schema;
+        private bool _createAndDetectSchema;
 
         int _batch_nodes = 100000;
         int _batch_ways = 100000;
         int _batch_relations = 5000;
 
-        //int _batch_nodes = 1;
-        //int _batch_ways = 1;
-        //int _batch_relations = 1;
-
-        private string _connection_string;
+        private string _connectionString;
 
         /// <summary>
         /// Creates a new target.
@@ -78,8 +73,8 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// <param name="connectionString"></param>
         public PostgreSQLOsmStreamTarget(string connectionString)
         {
-            _connection_string = connectionString;
-            _create_and_detect_schema = false;
+            _connectionString = connectionString;
+            _createAndDetectSchema = false;
         }
 
         /// <summary>
@@ -89,21 +84,44 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// <param name="createSchema"></param>
         public PostgreSQLOsmStreamTarget(string connectionString, bool createSchema)
         {
-            _connection_string = connectionString;
-            _create_and_detect_schema = createSchema;
+            _connectionString = connectionString;
+            _createAndDetectSchema = createSchema;
         }
+
+        /// <summary>
+        /// Creates a new target.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <param name="createSchema"></param>
+        public PostgreSQLOsmStreamTarget(NpgsqlConnection connection, bool createSchema)
+        {
+            _connection = connection;
+            _createAndDetectSchema = createSchema;
+        }
+
+        /// <summary>
+        /// Creates a new target.
+        /// </summary>
+        /// <param name="connection"></param>
+        public PostgreSQLOsmStreamTarget(NpgsqlConnection connection) : this(connection, true) { }
 
         /// <summary>
         /// Initializes this target.
         /// </summary>
         public override void Initialize()
         {
-            _connection = new NpgsqlConnection(_connection_string);
-            _connection.Open();
+            if (_connection == null)
+            {
+                _connection = new NpgsqlConnection(_connectionString);
+            }
+            if (_connection.State != ConnectionState.Open)
+            {
+                _connection.Open();
+            }
 
-            if (_create_and_detect_schema)
+            if (_createAndDetectSchema)
             { // creates or detects the tables.
-                PostgreSQLSimpleSchemaTools.CreateAndDetect(_connection);
+                PostgreSQLSchemaTools.CreateAndDetect(_connection);
             }
 
             this.CreateNodeTables();
@@ -116,75 +134,75 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         private void CreateNodeTables()
         {
             // create node bulk objects.
-            _node_table = new DataTable();
-            _node_table.Columns.Add(new DataColumn("id", typeof(long)));
-            _node_table.Columns.Add(new DataColumn("latitude", typeof(int)));
-            _node_table.Columns.Add(new DataColumn("longitude", typeof(int)));
-            _node_table.Columns.Add(new DataColumn("changeset_id", typeof(long)));
-            _node_table.Columns.Add(new DataColumn("visible", typeof(bool)));
-            _node_table.Columns.Add(new DataColumn("timestamp", typeof(DateTime)));
-            _node_table.Columns.Add(new DataColumn("tile", typeof(long)));
-            _node_table.Columns.Add(new DataColumn("version", typeof(int)));
-            _node_table.Columns.Add(new DataColumn("usr", typeof(string)));
-            _node_table.Columns.Add(new DataColumn("usr_id", typeof(int)));
+            _nodeTable = new DataTable();
+            _nodeTable.Columns.Add(new DataColumn("id", typeof(long)));
+            _nodeTable.Columns.Add(new DataColumn("latitude", typeof(int)));
+            _nodeTable.Columns.Add(new DataColumn("longitude", typeof(int)));
+            _nodeTable.Columns.Add(new DataColumn("changeset_id", typeof(long)));
+            _nodeTable.Columns.Add(new DataColumn("visible", typeof(bool)));
+            _nodeTable.Columns.Add(new DataColumn("timestamp", typeof(DateTime)));
+            _nodeTable.Columns.Add(new DataColumn("tile", typeof(long)));
+            _nodeTable.Columns.Add(new DataColumn("version", typeof(int)));
+            _nodeTable.Columns.Add(new DataColumn("usr", typeof(string)));
+            _nodeTable.Columns.Add(new DataColumn("usr_id", typeof(int)));
 
             // create node_tags bulk objects.
-            _node_tags_table = new DataTable();
-            _node_tags_table.Columns.Add(new DataColumn("node_id", typeof(long)));
-            _node_tags_table.Columns.Add(new DataColumn("key", typeof(string)));
-            _node_tags_table.Columns.Add(new DataColumn("value", typeof(string)));
+            _nodeTagsTable = new DataTable();
+            _nodeTagsTable.Columns.Add(new DataColumn("node_id", typeof(long)));
+            _nodeTagsTable.Columns.Add(new DataColumn("key", typeof(string)));
+            _nodeTagsTable.Columns.Add(new DataColumn("value", typeof(string)));
         }
 
         private void CreateWayTables()
         {
             // create way bulk objects.
-            _way_table = new DataTable();
-            _way_table.Columns.Add(new DataColumn("id", typeof(long)));
-            _way_table.Columns.Add(new DataColumn("changeset_id", typeof(long)));
-            _way_table.Columns.Add(new DataColumn("timestamp", typeof(DateTime)));
-            _way_table.Columns.Add(new DataColumn("visible", typeof(bool)));
-            _way_table.Columns.Add(new DataColumn("version", typeof(int)));
-            _way_table.Columns.Add(new DataColumn("usr", typeof(string)));
-            _way_table.Columns.Add(new DataColumn("usr_id", typeof(int)));
+            _wayTable = new DataTable();
+            _wayTable.Columns.Add(new DataColumn("id", typeof(long)));
+            _wayTable.Columns.Add(new DataColumn("changeset_id", typeof(long)));
+            _wayTable.Columns.Add(new DataColumn("timestamp", typeof(DateTime)));
+            _wayTable.Columns.Add(new DataColumn("visible", typeof(bool)));
+            _wayTable.Columns.Add(new DataColumn("version", typeof(int)));
+            _wayTable.Columns.Add(new DataColumn("usr", typeof(string)));
+            _wayTable.Columns.Add(new DataColumn("usr_id", typeof(int)));
 
             // create way_tags bulk objects.
-            _way_tags_table = new DataTable();
-            _way_tags_table.Columns.Add(new DataColumn("way_id", typeof(long)));
-            _way_tags_table.Columns.Add(new DataColumn("key", typeof(string)));
-            _way_tags_table.Columns.Add(new DataColumn("value", typeof(string)));
+            _wayTagsTable = new DataTable();
+            _wayTagsTable.Columns.Add(new DataColumn("way_id", typeof(long)));
+            _wayTagsTable.Columns.Add(new DataColumn("key", typeof(string)));
+            _wayTagsTable.Columns.Add(new DataColumn("value", typeof(string)));
 
             // create way_nodes bulk objects.
-            _way_nodes_table = new DataTable();
-            _way_nodes_table.Columns.Add(new DataColumn("way_id", typeof(long)));
-            _way_nodes_table.Columns.Add(new DataColumn("node_id", typeof(long)));
-            _way_nodes_table.Columns.Add(new DataColumn("sequence_id", typeof(int)));
+            _wayNodesTable = new DataTable();
+            _wayNodesTable.Columns.Add(new DataColumn("way_id", typeof(long)));
+            _wayNodesTable.Columns.Add(new DataColumn("node_id", typeof(long)));
+            _wayNodesTable.Columns.Add(new DataColumn("sequence_id", typeof(int)));
         }
 
         private void CreateRelationTables()
         {
             // create relation bulk objects.
-            _relation_table = new DataTable();
-            _relation_table.Columns.Add(new DataColumn("id", typeof(long)));
-            _relation_table.Columns.Add(new DataColumn("changeset_id", typeof(long)));
-            _relation_table.Columns.Add(new DataColumn("timestamp", typeof(DateTime)));
-            _relation_table.Columns.Add(new DataColumn("visible", typeof(bool)));
-            _relation_table.Columns.Add(new DataColumn("version", typeof(int)));
-            _relation_table.Columns.Add(new DataColumn("usr", typeof(string)));
-            _relation_table.Columns.Add(new DataColumn("usr_id", typeof(int)));
+            _relationTable = new DataTable();
+            _relationTable.Columns.Add(new DataColumn("id", typeof(long)));
+            _relationTable.Columns.Add(new DataColumn("changeset_id", typeof(long)));
+            _relationTable.Columns.Add(new DataColumn("timestamp", typeof(DateTime)));
+            _relationTable.Columns.Add(new DataColumn("visible", typeof(bool)));
+            _relationTable.Columns.Add(new DataColumn("version", typeof(int)));
+            _relationTable.Columns.Add(new DataColumn("usr", typeof(string)));
+            _relationTable.Columns.Add(new DataColumn("usr_id", typeof(int)));
 
             // create relation_tags bulk objects.
-            _relation_tags_table = new DataTable();
-            _relation_tags_table.Columns.Add(new DataColumn("relation_id", typeof(long)));
-            _relation_tags_table.Columns.Add(new DataColumn("key", typeof(string)));
-            _relation_tags_table.Columns.Add(new DataColumn("value", typeof(string)));
+            _relationTagsTable = new DataTable();
+            _relationTagsTable.Columns.Add(new DataColumn("relation_id", typeof(long)));
+            _relationTagsTable.Columns.Add(new DataColumn("key", typeof(string)));
+            _relationTagsTable.Columns.Add(new DataColumn("value", typeof(string)));
 
             // create relation_members bulk objects.
-            _relation_members_table = new DataTable();
-            _relation_members_table.Columns.Add(new DataColumn("relation_id", typeof(long)));
-            _relation_members_table.Columns.Add(new DataColumn("member_type", typeof(string)));
-            _relation_members_table.Columns.Add(new DataColumn("member_id", typeof(long)));
-            _relation_members_table.Columns.Add(new DataColumn("member_role", typeof(string)));
-            _relation_members_table.Columns.Add(new DataColumn("sequence_id", typeof(int)));
+            _relationMembersTable = new DataTable();
+            _relationMembersTable.Columns.Add(new DataColumn("relation_id", typeof(long)));
+            _relationMembersTable.Columns.Add(new DataColumn("member_type", typeof(int)));
+            _relationMembersTable.Columns.Add(new DataColumn("member_id", typeof(long)));
+            _relationMembersTable.Columns.Add(new DataColumn("member_role", typeof(string)));
+            _relationMembersTable.Columns.Add(new DataColumn("sequence_id", typeof(int)));
         }
 
         /// <summary>
@@ -252,7 +270,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
                             byte[] field_data = null;
                             object value = table.Rows[row_idx][column_idx];
                             bool reverse = false;
-                            if (value == null)
+                            if (value == null || value == DBNull.Value)
                             {
                                 // do nothing: just leave the field_data null.
                             }
@@ -283,7 +301,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
                             }
                             else if (value is DateTime)
                             { // convert the string data into bytes postgres can understand.
-                                long microseconds = (long)((DateTime)value - (new DateTime(2000, 01, 01))).TotalSeconds 
+                                long microseconds = (long)((DateTime)value - (new DateTime(2000, 01, 01))).TotalSeconds
                                     * 1000000;
                                 //field_data = System.Text.Encoding.ASCII.GetBytes(((DateTime)value).ToString(
                                 //    System.Globalization.CultureInfo.InvariantCulture));
@@ -313,19 +331,25 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
                             }
 
                             // write the length of the field.
-                            int length = field_data.Length;
+                            int length = -1; // represents NULL.
+                            if (field_data != null)
+                            { // the lenght is non-zero.
+                                length = field_data.Length;
+                            }
                             byte[] length_data = BitConverter.GetBytes(length);
                             this.ReverseEndianness(target, length_data);
-                            //target.Write(length_data, 0, length_data.Length);
 
                             // write the data.
-                            if (reverse)
-                            { // write the data in reverse.
-                                this.ReverseEndianness(target, field_data);
-                            }
-                            else
-                            { // write the data in order.
-                                target.Write(field_data, 0, field_data.Length);
+                            if (field_data != null)
+                            {
+                                if (reverse)
+                                { // write the data in reverse.
+                                    this.ReverseEndianness(target, field_data);
+                                }
+                                else
+                                { // write the data in order.
+                                    target.Write(field_data, 0, field_data.Length);
+                                }
                             }
                         }
 
@@ -380,7 +404,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// <param name="node"></param>
         public override void AddNode(Node node)
         {
-            DataRow node_row = _node_table.NewRow();
+            DataRow node_row = _nodeTable.NewRow();
 
             // format data and create parameters.
             long? id = node.Id;
@@ -395,13 +419,14 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
             long? changeset_id = node.ChangeSetId;
             node_row["changeset_id"] = changeset_id.ConvertToDBValue<long>();
 
-            bool? visible = node.Visible;
-            int visible_int = 1;
-            if (!visible.HasValue || !visible.Value)
+            if (!node.Visible.HasValue)
             {
-                visible_int = 0;
+                node_row["visible"] = DBNull.Value;
             }
-            node_row["visible"] = visible_int;
+            else
+            {
+                node_row["visible"] = node.Visible.Value ? 1 : 0;
+            }
 
             DateTime? timestamp = node.TimeStamp;
             node_row["timestamp"] = timestamp.ConvertToDBValue<DateTime>();
@@ -410,15 +435,15 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
             node_row["version"] = version.ConvertToDBValue<ulong>();
 
             // calculate the tile the node belongs to.
-            long tile = TileCalculations.xy2tile(TileCalculations.lon2x(node.Longitude.Value), TileCalculations.lat2y(node.Latitude.Value));
+            ulong tile = Tile.CreateAroundLocation(new Math.Geo.GeoCoordinate(node.Latitude.Value, node.Longitude.Value), 14).Id;
             node_row["tile"] = tile;
 
             // set the usr
-            node_row["usr"] = node.UserName.ToStringEmptyWhenNull();
+            node_row["usr"] = node.UserName;
             node_row["usr_id"] = node.UserId.ConvertToDBValue<long>();
 
             // add the node and it's tags.
-            _node_table.Rows.Add(node_row);
+            _nodeTable.Rows.Add(node_row);
 
             // tags.
             if (node.Tags != null)
@@ -428,20 +453,20 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
                     string key = tag.Key;
                     string value = tag.Value;
 
-                    DataRow tag_row = _node_tags_table.NewRow();
+                    DataRow tag_row = _nodeTagsTable.NewRow();
                     tag_row["node_id"] = id;
                     tag_row["key"] = key.Truncate(255);
                     tag_row["value"] = value.Truncate(255);
 
-                    _node_tags_table.Rows.Add(tag_row);
+                    _nodeTagsTable.Rows.Add(tag_row);
                 }
             }
 
             // bulk insert if needed.
-            if (_node_table.Rows.Count >= _batch_nodes)
+            if (_nodeTable.Rows.Count >= _batch_nodes)
             {
-                this.BulkCopy(_node_table, "node", _batch_nodes);
-                this.BulkCopy(_node_tags_table, "node_tags");
+                this.BulkCopy(_nodeTable, "node", _batch_nodes);
+                this.BulkCopy(_nodeTagsTable, "node_tags");
                 this.CreateNodeTables();
             }
         }
@@ -452,7 +477,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// <param name="way"></param>
         public override void AddWay(Way way)
         {
-            DataRow way_row = _way_table.NewRow();
+            DataRow way_row = _wayTable.NewRow();
 
             // format data and create parameters.
             long? id = way.Id.Value; // id should always contain a value.
@@ -461,13 +486,14 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
             long? changeset_id = way.ChangeSetId;
             way_row["changeset_id"] = changeset_id.ConvertToDBValue<long>();
 
-            bool? visible = way.Visible;
-            int visible_int = 1;
-            if (!visible.HasValue || !visible.Value)
+            if (!way.Visible.HasValue)
             {
-                visible_int = 0;
+                way_row["visible"] = DBNull.Value;
             }
-            way_row["visible"] = visible_int;
+            else
+            {
+                way_row["visible"] = way.Visible.Value ? 1 : 0;
+            }
 
             DateTime? timestamp = way.TimeStamp;
             way_row["timestamp"] = timestamp.ConvertToDBValue<DateTime>();
@@ -476,11 +502,11 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
             way_row["version"] = version.ConvertToDBValue<ulong>();
 
             // set the usr
-            way_row["usr"] = way.UserName.ToStringEmptyWhenNull();
+            way_row["usr"] = way.UserName;
             way_row["usr_id"] = way.UserId.ConvertToDBValue<long>();
 
             // add the way and it's tags.
-            _way_table.Rows.Add(way_row);
+            _wayTable.Rows.Add(way_row);
 
             // tags.
             if (way.Tags != null)
@@ -496,12 +522,12 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
                     }
                     else
                     {
-                        DataRow tag_row = _way_tags_table.NewRow();
+                        DataRow tag_row = _wayTagsTable.NewRow();
                         tag_row["way_id"] = id;
                         tag_row["key"] = key.Truncate(255);
                         tag_row["value"] = value.Truncate(255);
 
-                        _way_tags_table.Rows.Add(tag_row);
+                        _wayTagsTable.Rows.Add(tag_row);
                     }
                 }
             }
@@ -514,21 +540,21 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
                 {
                     long node_id = way.Nodes[idx];
 
-                    DataRow tag_row = _way_nodes_table.NewRow();
+                    DataRow tag_row = _wayNodesTable.NewRow();
                     tag_row["way_id"] = id;
                     tag_row["node_id"] = node_id;
                     tag_row["sequence_id"] = idx;
 
-                    _way_nodes_table.Rows.Add(tag_row);
+                    _wayNodesTable.Rows.Add(tag_row);
                 }
             }
 
             // bulk insert if needed.
-            if (_way_table.Rows.Count >= _batch_ways)
+            if (_wayTable.Rows.Count >= _batch_ways)
             {
-                this.BulkCopy(_way_table, "way", _batch_ways);
-                this.BulkCopy(_way_tags_table, "way_tags");
-                this.BulkCopy(_way_nodes_table, "way_nodes");
+                this.BulkCopy(_wayTable, "way", _batch_ways);
+                this.BulkCopy(_wayTagsTable, "way_tags");
+                this.BulkCopy(_wayNodesTable, "way_nodes");
                 this.CreateWayTables();
             }
         }
@@ -539,7 +565,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         /// <param name="relation"></param>
         public override void AddRelation(Relation relation)
         {
-            DataRow relation_row = _relation_table.NewRow();
+            DataRow relation_row = _relationTable.NewRow();
 
             // format data and create parameters.
             long? id = relation.Id.Value; // id should alrelations contain a value.
@@ -548,13 +574,14 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
             long? changeset_id = relation.ChangeSetId;
             relation_row["changeset_id"] = changeset_id.ConvertToDBValue<long>();
 
-            bool? visible = relation.Visible;
-            int visible_int = 1;
-            if (!visible.HasValue || !visible.Value)
+            if (!relation.Visible.HasValue)
             {
-                visible_int = 0;
+                relation_row["visible"] = DBNull.Value;
             }
-            relation_row["visible"] = visible_int;
+            else
+            {
+                relation_row["visible"] = relation.Visible.Value ? 1 : 0;
+            }
 
             DateTime? timestamp = relation.TimeStamp;
             relation_row["timestamp"] = timestamp.ConvertToDBValue<DateTime>();
@@ -563,12 +590,11 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
             relation_row["version"] = version.ConvertToDBValue<ulong>();
 
             // set the usr
-            relation_row["usr"] = relation.UserName.ToStringEmptyWhenNull();
+            relation_row["usr"] = relation.UserName;
             relation_row["usr_id"] = relation.UserId.ConvertToDBValue<long>();
 
-
             // add the node and it's tags.
-            _relation_table.Rows.Add(relation_row);
+            _relationTable.Rows.Add(relation_row);
 
             // tags.
             if (relation.Tags != null)
@@ -578,12 +604,12 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
                     string key = tag.Key;
                     string value = tag.Value;
 
-                    DataRow tag_row = _relation_tags_table.NewRow();
+                    DataRow tag_row = _relationTagsTable.NewRow();
                     tag_row["relation_id"] = id;
                     tag_row["key"] = key.Truncate(255);
                     tag_row["value"] = value.Truncate(255);
 
-                    _relation_tags_table.Rows.Add(tag_row);
+                    _relationTagsTable.Rows.Add(tag_row);
                 }
             }
 
@@ -596,23 +622,23 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
                 {
                     RelationMember member = relation.Members[idx]; ;
 
-                    DataRow tag_row = _relation_members_table.NewRow();
+                    DataRow tag_row = _relationMembersTable.NewRow();
                     tag_row["relation_id"] = id;
                     tag_row["member_type"] = member.MemberType;
                     tag_row["member_id"] = member.MemberId;
                     tag_row["member_role"] = member.MemberRole;
                     tag_row["sequence_id"] = idx;
 
-                    _relation_members_table.Rows.Add(tag_row);
+                    _relationMembersTable.Rows.Add(tag_row);
                 }
             }
 
             // bulk insert if needed.
-            if (_relation_table.Rows.Count >= _batch_relations)
+            if (_relationTable.Rows.Count >= _batch_relations)
             {
-                this.BulkCopy(_relation_table, "relation");
-                this.BulkCopy(_relation_tags_table, "relation_tags");
-                this.BulkCopy(_relation_members_table, "relation_members");
+                this.BulkCopy(_relationTable, "relation");
+                this.BulkCopy(_relationTagsTable, "relation_tags");
+                this.BulkCopy(_relationMembersTable, "relation_members");
                 this.CreateRelationTables();
             }
         }
@@ -624,28 +650,31 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         {
             if (_connection != null)
             {
-                if (_node_table.Rows.Count > 0)
+                if (_nodeTable.Rows.Count > 0)
                 {
-                    this.BulkCopy(_node_table, "node");
-                    this.BulkCopy(_node_tags_table, "node_tags");
+                    this.BulkCopy(_nodeTable, "node");
+                    this.BulkCopy(_nodeTagsTable, "node_tags");
                 }
 
-                if (_way_table.Rows.Count > 0)
+                if (_wayTable.Rows.Count > 0)
                 {
-                    this.BulkCopy(_way_table, "way");
-                    this.BulkCopy(_way_tags_table, "way_tags");
-                    this.BulkCopy(_way_nodes_table, "way_nodes");
+                    this.BulkCopy(_wayTable, "way");
+                    this.BulkCopy(_wayTagsTable, "way_tags");
+                    this.BulkCopy(_wayNodesTable, "way_nodes");
                 }
 
-                if (_relation_table.Rows.Count > 0)
+                if (_relationTable.Rows.Count > 0)
                 {
-                    this.BulkCopy(_relation_table, "relation");
-                    this.BulkCopy(_relation_tags_table, "relation_tags");
-                    this.BulkCopy(_relation_members_table, "relation_members");
+                    this.BulkCopy(_relationTable, "relation");
+                    this.BulkCopy(_relationTagsTable, "relation_tags");
+                    this.BulkCopy(_relationMembersTable, "relation_members");
                 }
 
-                _connection.Close();
-                _connection.Dispose();
+                if (!string.IsNullOrWhiteSpace(_connectionString))
+                { // the connection was 
+                    _connection.Close();
+                    _connection.Dispose();
+                }
             }
             _connection = null;
         }

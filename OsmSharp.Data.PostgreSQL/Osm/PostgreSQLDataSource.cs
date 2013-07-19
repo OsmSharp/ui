@@ -21,18 +21,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Npgsql;
-using OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Data;
+using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
+namespace OsmSharp.Data.PostgreSQL.Osm
 {
     /// <summary>
     /// Allows a version of the OsmSharp simple schema to be queried in PostgreSQL.
     /// 
     /// http://www.osmsharp.com/wiki/simpleschema
     /// </summary>
-    public class PostgreSQLSimpleSchemaSource : IDataSourceReadOnly, IDisposable
+    public class PostgreSQLDataSource : IDataSourceReadOnly, IDisposable
     {
         /// <summary>
         /// Holds the connection string.
@@ -47,17 +48,17 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
         /// <summary>
         /// Flag that indicates if the schema needs to be created if not present.
         /// </summary>
-        private bool _create_and_detect_schema;
+        private bool _createAndDetectSchema;
 
         /// <summary>
         /// Creates a new simple schema datasource.
         /// </summary>
         /// <param name="connectionString"></param>
-        public PostgreSQLSimpleSchemaSource(string connectionString)
+        public PostgreSQLDataSource(string connectionString)
         {
             _connectionString = connectionString;
             _id = Guid.NewGuid();
-            _create_and_detect_schema = false;
+            _createAndDetectSchema = false;
         }
 
         /// <summary>
@@ -65,11 +66,22 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
         /// <param name="createSchema">Creates all the needed tables if true.</param>
-        public PostgreSQLSimpleSchemaSource(string connectionString, bool createSchema)
+        public PostgreSQLDataSource(string connectionString, bool createSchema)
         {
             _connectionString = connectionString;
             _id = Guid.NewGuid();
-            _create_and_detect_schema = createSchema;
+            _createAndDetectSchema = createSchema;
+        }
+
+        /// <summary>
+        /// Creates a datasource.
+        /// </summary>
+        /// <param name="_connection"></param>
+        public PostgreSQLDataSource(NpgsqlConnection connection)
+        {
+            _connection = connection;
+            _id = Guid.NewGuid();
+            _createAndDetectSchema = false;
         }
 
         /// <summary>
@@ -88,10 +100,14 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                 _connection = new NpgsqlConnection(_connectionString);
                 _connection.Open();
 
-                if (_create_and_detect_schema)
+                if (_createAndDetectSchema)
                 { // creates or detects the tables.
-                    PostgreSQLSimpleSchemaTools.CreateAndDetect(_connection);
+                    PostgreSQLSchemaTools.CreateAndDetect(_connection);
                 }
+            }
+            if (_connection.State != System.Data.ConnectionState.Open)
+            {
+                _connection.Open();
             }
             return _connection;
         }
@@ -181,16 +197,14 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                 // initialize connection.
                 NpgsqlConnection con = this.CreateConnection();
                 // STEP 1: query nodes table.
-                //id	latitude	longitude	changeset_id	visible	timestamp	tile	version
+                // id, latitude, longitude, changeset_id, visible, timestamp, tile, version, usr, usr_id
 
                 Dictionary<long, Node> nodes = new Dictionary<long, Node>();
                 for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
                 {
                     int start_idx = idx_1000 * 1000;
                     int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
-                    string sql
-                        = "SELECT * FROM node WHERE (id IN ({0})) ";
-                    ;
+                    string sql = "SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version, usr, usr_id FROM node WHERE (id IN ({0})) ";
                     string ids_string = this.ConstructIdList(ids,start_idx,stop_idx);
                     if (ids_string.Length > 0)
                     {
@@ -207,23 +221,27 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                             long returned_id = reader.GetInt64(0);
                             int latitude_int = reader.GetInt32(1);
                             int longitude_int = reader.GetInt32(2);
-                            long changeset_id = reader.GetInt64(3);
-                            bool visible = reader.GetBoolean(4);
-                            DateTime timestamp = reader.GetDateTime(5);
+                            long? changeset_id = reader.IsDBNull(3) ? null : (long?)reader.GetInt64(3);
+                            bool? visible = reader.IsDBNull(4) ? null : (bool?)reader.GetBoolean(4);
+                            DateTime? timestamp = reader.IsDBNull(5) ? null : (DateTime?)reader.GetDateTime(5);
                             long tile = reader.GetInt64(6);
-                            long version = reader.GetInt32(7);
+                            ulong? version = reader.IsDBNull(7) ? null : (ulong?)reader.GetInt32(7);
+                            string usr = reader.IsDBNull(8) ? null : reader.GetString(8);
+                            long? usr_id = reader.IsDBNull(9) ? null : (long?)reader.GetInt32(9);
 
                             if (!nodes.ContainsKey(returned_id))
                             {
                                 // create node.
                                 node = new Node();
                                 node.Id = returned_id;
-                                node.Version = (ulong)version;
-                                //node.UserId = user_id;
+                                node.Version = version;
+                                node.UserId = usr_id;
+                                node.UserName = usr;
                                 node.TimeStamp = timestamp;
                                 node.ChangeSetId = changeset_id;
                                 node.Latitude = ((double)latitude_int) / 10000000.0;
                                 node.Longitude = ((double)longitude_int) / 10000000.0;
+                                node.Visible = visible;
 
                                 nodes.Add(node.Id.Value, node);
                                 node_ids.Add(node.Id.Value);
@@ -241,26 +259,180 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
             return return_list;
         }
 
+
         /// <summary>
-        /// Returns the relation with the given id.
+        /// Returns the relation for the given if.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public Relation GetRelation(long id)
         {
-            // TODO: implement this
+            IList<Relation> relations = this.GetRelations(new List<long>(new long[] { id }));
+            if (relations.Count > 0)
+            {
+                return relations[0];
+            }
             return null;
         }
 
         /// <summary>
-        /// Returns all the relations with the given ids.
+        /// Returns the relations for the given ids.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
         public IList<Relation> GetRelations(IList<long> ids)
         {
-            // TODO: implement this
+            if (ids.Count > 0)
+            {
+                NpgsqlConnection con = this.CreateConnection();
+
+                // STEP2: Load ways.
+                Dictionary<long, Relation> relations = new Dictionary<long, Relation>();
+                string sql;
+                NpgsqlCommand com;
+                NpgsqlDataReader reader;
+                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
+                {
+                    int start_idx = idx_1000 * 1000;
+                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
+
+                    sql = "SELECT id, changeset_id, visible, timestamp, version, usr, usr_id FROM relation WHERE (id IN ({0})) ";
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
+                    if (ids_string.Length > 0)
+                    {
+                        sql = string.Format(sql, ids_string);
+                        com = new NpgsqlCommand(sql);
+                        com.Connection = con;
+                        reader = com.ExecuteReader();
+                        Relation relation;
+                        while (reader.Read())
+                        {
+                            long id = reader.GetInt64(0);
+                            long? changeset_id = reader.IsDBNull(1) ? null : (long?)reader.GetInt64(1);
+                            bool? visible = reader.IsDBNull(2) ? null : (bool?)reader.GetBoolean(2);
+                            DateTime? timestamp = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3);
+                            ulong? version = reader.IsDBNull(4) ? null : (ulong?)reader.GetInt32(4);
+                            string user = reader.IsDBNull(5) ? null : reader.GetString(5);
+                            long? user_id = reader.IsDBNull(6) ? null : (long?)reader.GetInt32(6);
+
+                            // create way.
+                            relation = new Relation();
+                            relation.Id = id;
+                            relation.Version = version;
+                            relation.UserName = user;
+                            relation.UserId = user_id;
+                            relation.Visible = visible;
+                            relation.TimeStamp = timestamp;
+                            relation.ChangeSetId = changeset_id;
+
+                            relations.Add(relation.Id.Value, relation);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                //STEP3: Load all relation-member relations
+                List<long> missing_node_ids = new List<long>();
+                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
+                {
+                    int start_idx = idx_1000 * 1000;
+                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
+
+                    sql = "SELECT relation_id, member_type, member_id, member_role, sequence_id FROM relation_members WHERE (relation_id IN ({0})) ORDER BY sequence_id";
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
+                    if (ids_string.Length > 0)
+                    {
+                        sql = string.Format(sql, ids_string);
+                        com = new NpgsqlCommand(sql);
+                        com.Connection = con;
+                        reader = com.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            long relation_id = reader.GetInt64(0);
+                            long member_type = reader.GetInt32(1);
+                            long? member_id = reader.IsDBNull(2) ? null : (long?)reader.GetInt64(2);
+                            string member_role = reader.IsDBNull(3) ? null : reader.GetString(3);
+
+                            Relation relation;
+                            if (relations.TryGetValue(relation_id, out relation))
+                            {
+                                if (relation.Members == null)
+                                {
+                                    relation.Members = new List<RelationMember>();
+                                }
+                                RelationMember member = new RelationMember();
+                                member.MemberId = member_id;
+                                member.MemberRole = member_role;
+                                member.MemberType = this.ConvertMemberType(member_type);
+
+                                relation.Members.Add(member);
+                            }
+                        }
+                        reader.Close();
+                    }
+                }
+
+                //STEP4: Load all tags.
+                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
+                {
+                    int start_idx = idx_1000 * 1000;
+                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
+
+                    sql = "SELECT * FROM relation_tags WHERE (relation_id IN ({0})) ";
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
+                    if (ids_string.Length > 0)
+                    {
+                        sql = string.Format(sql, ids_string);
+                        com = new NpgsqlCommand(sql);
+                        com.Connection = con;
+                        reader = com.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            long id = reader.GetInt64(0);
+                            string key = reader.GetString(1);
+                            object value_object = reader[2];
+                            string value = string.Empty;
+                            if (value_object != null && value_object != DBNull.Value)
+                            {
+                                value = (string)value_object;
+                            }
+
+                            Relation relation;
+                            if (relations.TryGetValue(id, out relation))
+                            {
+                                if (relation.Tags == null)
+                                {
+                                    relation.Tags = new SimpleTagsCollection();
+                                }
+                                relation.Tags.Add(key, value);
+                            }
+                        }
+                        reader.Close();
+                    }
+                }
+
+                return relations.Values.ToList<Relation>();
+            }
             return new List<Relation>();
+        }
+
+        /// <summary>
+        /// Converts the member type id to the relationmembertype enum.
+        /// </summary>
+        /// <param name="member_type"></param>
+        /// <returns></returns>
+        private RelationMemberType? ConvertMemberType(long member_type)
+        {
+            switch (member_type)
+            {
+                case (long)RelationMemberType.Node:
+                    return RelationMemberType.Node;
+                case (long)RelationMemberType.Way:
+                    return RelationMemberType.Way;
+                case (long)RelationMemberType.Relation:
+                    return RelationMemberType.Relation;
+            }
+            throw new ArgumentOutOfRangeException("Invalid member type.");
         }
 
         /// <summary>
@@ -321,7 +493,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                     int start_idx = idx_1000 * 1000;
                     int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
 
-                    sql = "SELECT * FROM way WHERE (id IN ({0})) ";
+                    sql = "SELECT id, changeset_id, visible, timestamp, version, usr, usr_id FROM way WHERE (id IN ({0})) ";
                     string ids_string = this.ConstructIdList(ids,start_idx,stop_idx);
                     if(ids_string.Length > 0)
                     {
@@ -332,19 +504,25 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                         Way way;
                         while (reader.Read())
                         {
-                            long id = reader.GetInt64(0);
-                            long changeset_id = reader.GetInt64(1);
-                            DateTime timestamp = reader.GetDateTime(2);
-                            bool visible = reader.GetBoolean(3);
-                            long version = reader.GetInt32(4);
+                            // load/parse data.
+                            // id, changeset_id, visible, timestamp, tile, version, usr, usr_id
+                            long returned_id = reader.GetInt64(0);
+                            long? changeset_id = reader.IsDBNull(1) ? null : (long?)reader.GetInt64(1);
+                            bool? visible = reader.IsDBNull(2) ? null : (bool?)reader.GetBoolean(2);
+                            DateTime? timestamp = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3);
+                            ulong? version = reader.IsDBNull(4) ? null : (ulong?)reader.GetInt32(4);
+                            string usr = reader.IsDBNull(5) ? null : reader.GetString(5);
+                            long? usr_id = reader.IsDBNull(6) ? null : (long?)reader.GetInt32(6);
 
                             // create way.
                             way = new Way();
-                            way.Id = id;
-                            way.Version = (ulong)version;
-                            //node.UserId = user_id;
+                            way.Id = returned_id;
+                            way.Version = version;
+                            way.UserId = usr_id;
+                            way.UserName = usr;
                             way.TimeStamp = timestamp;
                             way.ChangeSetId = changeset_id;
+                            way.Visible = visible;
 
                             ways.Add(way.Id.Value, way);
                         }
@@ -373,61 +551,19 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                             long node_id = reader.GetInt64(1);
                             long sequence_id = reader.GetInt32(2);
 
-                            if (nodes == null || !nodes.ContainsKey(node_id))
+                            Way way;
+                            if (ways.TryGetValue(id, out way))
                             {
-                                missing_node_ids.Add(node_id);
-                            }
-                        }
-                        reader.Close();
-                    }
-                }
-
-                //STEP4: Load all missing nodes.
-                IList<Node> missing_nodes = this.GetNodes(missing_node_ids);
-                Dictionary<long, Node> way_nodes = new Dictionary<long, Node>();
-                if (nodes != null)
-                {
-                    way_nodes = new Dictionary<long, Node>(nodes);
-                }
-                foreach (Node node in missing_nodes)
-                {
-                    way_nodes.Add(node.Id.Value, node);
-                }
-
-                //STEP5: assign nodes to way.
-                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
-                {
-                    int start_idx = idx_1000 * 1000;
-                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
-
-                    sql = "SELECT * FROM way_nodes WHERE (way_id IN ({0})) ORDER BY sequence_id";
-                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
-                    if (ids_string.Length > 0)
-                    {
-                        sql = string.Format(sql, ids_string);
-                        com = new NpgsqlCommand(sql);
-                        com.Connection = con;
-                        reader = com.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            long id = reader.GetInt64(0);
-                            long node_id = reader.GetInt64(1);
-                            long sequence_id = reader.GetInt32(2);
-
-                            Node way_node;
-                            if (way_nodes.TryGetValue(node_id, out way_node))
-                            {
-                                Way way;
-                                if (ways.TryGetValue(id, out way))
+                                if (way.Nodes == null)
                                 {
-                                    way.Nodes.Add(way_node.Id.Value);
+                                    way.Nodes = new List<long>();
                                 }
+                                way.Nodes.Add(node_id);
                             }
                         }
                         reader.Close();
                     }
                 }
-
 
                 //STEP4: Load all tags.
                 for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
@@ -457,6 +593,10 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                             Way way;
                             if (ways.TryGetValue(id, out way))
                             {
+                                if (way.Tags == null)
+                                {
+                                    way.Tags = new SimpleTagsCollection();
+                                }
                                 way.Tags.Add(key, value);
                             }
                         }
@@ -708,12 +848,20 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
                             string key = reader.GetString(1);
                             object val = reader.GetValue(2);
                             string value = string.Empty;
-                            if (val is string)
+                            Node node;
+                            if(nodes.TryGetValue(returned_id, out node))
                             {
-                                value = val as string;
-                            }
+                                if (val is string)
+                                {
+                                    value = val as string;
+                                }
+                                if(node.Tags == null)
+                                {
+                                    node.Tags = new SimpleTagsCollection();
+                                }
 
-                            nodes[returned_id].Tags.Add(key, value);
+                                nodes[returned_id].Tags.Add(key, value);
+                            }
 
                         }
                         reader.Close();
@@ -729,8 +877,8 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
         /// </summary>
         public void Close()
         {
-            if (_connection != null)
-            {
+            if (_connection != null && !string.IsNullOrWhiteSpace(_connectionString))
+            { // connection exists and was created here; close it here!
                 _connection.Close();
                 _connection = null;
             }

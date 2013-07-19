@@ -176,12 +176,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
-    <Compile Include="Osm\PostgreSQLAPIDataSource.cs" />
     <Compile Include="Osm\PostgreSQLDataSource.cs" />
-    <Compile Include="Osm\PostgreSQLSnapshotDataSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Osm\Streams\PostgreSQLOsmStreamTarget.cs" />
-    <Compile Include="Osm\TileCalculations.cs" />
     <Compile Include="Osm\PostgreSQLSchemaTools.cs" />
   </ItemGroup>
   <ItemGroup>

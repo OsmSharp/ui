@@ -22,12 +22,12 @@ using System.Linq;
 using System.Text;
 using Npgsql;
 
-namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
+namespace OsmSharp.Data.PostgreSQL.Osm
 {
     /// <summary>
     /// Tools for creation/detection of the simple schema in PostgreSQL.
     /// </summary>
-    internal static class PostgreSQLSimpleSchemaTools
+    public static class PostgreSQLSchemaTools
     {
         /// <summary>
         /// SQL to detect the existence of a table.
@@ -42,15 +42,20 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
                                                     "    id            bigint NOT NULL, " +
                                                     "    latitude      integer NOT NULL, " +
                                                     "    longitude     integer NOT NULL, " +
-                                                    "    changeset_id  bigint NOT NULL, " +
-                                                    "    visible       boolean NOT NULL, " +
-                                                    "    timestamp     timestamp NOT NULL, " +
+                                                    "    changeset_id  bigint, " +
+                                                    "    visible       boolean, " +
+                                                    "    timestamp     timestamp, " +
                                                     "    tile          bigint NOT NULL, " +
-                                                    "    version       integer NOT NULL, " +
+                                                    "    version       integer, " +
                                                     "    usr           varchar(510), " +
                                                     "    usr_id        integer, " +
                                                     "    CONSTRAINT    pk_node PRIMARY KEY (id) " +
                                                     " );";
+
+        /// <summary>
+        /// SQL to drop the nodes table.
+        /// </summary>
+        private const string TABLE_NODE_DROP = "DROP TABLE node;";
 
         /// <summary>
         /// SQL to create the node tags table.
@@ -63,19 +68,29 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
                                                         ");   ";
 
         /// <summary>
+        /// SQL to drop the node_tags table.
+        /// </summary>
+        private const string TABLE_NODE_TAGS_DROP = "DROP TABLE node_tags;";
+
+        /// <summary>
         /// SQL to create the way table.
         /// </summary>
         private const string TABLE_WAY_CREATION =   "CREATE TABLE way " +
                                                     "( " +
                                                     "	id            bigint NOT NULL, " +
-                                                    "	changeset_id  bigint NOT NULL, " +
-                                                    "	timestamp     timestamp NOT NULL, " +
-                                                    "	visible       boolean NOT NULL, " +
-                                                    "	version       integer NOT NULL, " +
+                                                    "	changeset_id  bigint, " +
+                                                    "	timestamp     timestamp, " +
+                                                    "	visible       boolean, " +
+                                                    "	version       integer, " +
                                                     "	usr           varchar(510), " +
                                                     "	usr_id        integer, " +
                                                     "   CONSTRAINT    pk_way PRIMARY KEY (id) " +
                                                     "); ";
+
+        /// <summary>
+        /// SQL to drop the way table.
+        /// </summary>
+        private const string TABLE_WAY_DROP = "DROP TABLE way;";
 
         /// <summary>
         /// SQL to create way nodes table.
@@ -96,6 +111,11 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
                                                         " (way_id);";
 
         /// <summary>
+        /// SQL to drop the way_nodes table.
+        /// </summary>
+        private const string TABLE_WAY_NODES_DROP = "DROP TABLE way_nodes;";
+
+        /// <summary>
         /// SQL to create way tags table.
         /// </summary>
         private const string TABLE_WAY_TAGS_CREATION =  "CREATE TABLE way_tags " +
@@ -106,19 +126,29 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
                                                         ");";
 
         /// <summary>
+        /// SQL to drop the way_tags table.
+        /// </summary>
+        private const string TABLE_WAY_TAGS_DROP = "DROP TABLE way_tags;";
+
+        /// <summary>
         /// SQL to create relation table.
         /// </summary>
         private const string TABLE_RELATION_CREATION =  "CREATE TABLE relation " +
                                                         "( " +
                                                         "	id            bigint NOT NULL, " +
-                                                        "	changeset_id  bigint NOT NULL, " +
-                                                        "	timestamp     timestamp NOT NULL, " +
-                                                        "	visible       boolean NOT NULL, " +
-                                                        "	version       integer NOT NULL, " +
+                                                        "	changeset_id  bigint, " +
+                                                        "	timestamp     timestamp, " +
+                                                        "	visible       boolean, " +
+                                                        "	version       integer, " +
                                                         "	usr           varchar(510), " +
                                                         "	usr_id        integer, " +
                                                         "   CONSTRAINT    pk_relation PRIMARY KEY (id) " +
                                                         ");";
+
+        /// <summary>
+        /// SQL to drop the relation table.
+        /// </summary>
+        private const string TABLE_RELATION_DROP = "DROP TABLE relation;";
 
         /// <summary>
         /// SQL to create relation members table.
@@ -126,11 +156,16 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         private const string TABLE_RELATION_MEMBERS_CREATION =  "CREATE TABLE relation_members " +
                                                                 "( " +
                                                                 "	relation_id  bigint NOT NULL, " +
-                                                                "	member_type  varchar(20) NOT NULL, " +
+                                                                "	member_type  integer NOT NULL, " +
                                                                 "	member_id    bigint NOT NULL, " +
                                                                 "	member_role  varchar(510), " +
                                                                 "	sequence_id  integer NOT NULL " +
                                                                 ");";
+
+        /// <summary>
+        /// SQL to drop the relation_members table.
+        /// </summary>
+        private const string TABLE_RELATION_MEMBERS_DROP = "DROP TABLE relation_members;";
 
         /// <summary>
         /// SQL to create relation tags table.
@@ -141,6 +176,11 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
                                                             "	key          varchar(510) NOT NULL, " +
                                                             "	value        varchar(510) " +
                                                             ");";
+
+        /// <summary>
+        /// SQL to drop the relation_tags table.
+        /// </summary>
+        private const string TABLE_RELATION_TAGS_DROP = "DROP TABLE relation_tags;";
 
         /// <summary>
         /// Returns true if the table with the given name exists in the database connected to.
@@ -180,7 +220,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <returns></returns>
         public static bool DetectNodeTable(NpgsqlConnection connection)
         {
-            return PostgreSQLSimpleSchemaTools.DetectTable(connection, "node");
+            return PostgreSQLSchemaTools.DetectTable(connection, "node");
         }
 
         /// <summary>
@@ -190,7 +230,16 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <returns></returns>
         public static void CreateNodeTable(NpgsqlConnection connection)
         {
-            PostgreSQLSimpleSchemaTools.ExecuteScript(connection, TABLE_NODE_CREATION);
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_NODE_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the nodes table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropNodeTable(NpgsqlConnection connection)
+        {
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_NODE_DROP);
         }
 
         /// <summary>
@@ -200,7 +249,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <returns></returns>
         public static bool DetectNodeTagsTable(NpgsqlConnection connection)
         {
-            return PostgreSQLSimpleSchemaTools.DetectTable(connection, "node_tags");
+            return PostgreSQLSchemaTools.DetectTable(connection, "node_tags");
         }
 
         /// <summary>
@@ -209,7 +258,16 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <param name="connection"></param>
         public static void CreateNodeTagsTable(NpgsqlConnection connection)
         {
-            PostgreSQLSimpleSchemaTools.ExecuteScript(connection, TABLE_NODE_TAGS_CREATION);
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_NODE_TAGS_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the node tags table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropNodeTagsTable(NpgsqlConnection connection)
+        {
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_NODE_TAGS_DROP);
         }
 
         /// <summary>
@@ -218,7 +276,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <param name="connection"></param>
         public static bool DetectWayTable(NpgsqlConnection connection)
         {
-            return PostgreSQLSimpleSchemaTools.DetectTable(connection, "way");
+            return PostgreSQLSchemaTools.DetectTable(connection, "way");
         }
 
         /// <summary>
@@ -227,7 +285,16 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <param name="connection"></param>
         public static void CreateWayTable(NpgsqlConnection connection)
         {
-            PostgreSQLSimpleSchemaTools.ExecuteScript(connection, TABLE_WAY_CREATION);
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_WAY_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the way table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropWayTable(NpgsqlConnection connection)
+        {
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_WAY_DROP);
         }
 
         /// <summary>
@@ -236,7 +303,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <param name="connection"></param>
         public static bool DetectWayNodesTable(NpgsqlConnection connection)
         {
-            return PostgreSQLSimpleSchemaTools.DetectTable(connection, "way_nodes");
+            return PostgreSQLSchemaTools.DetectTable(connection, "way_nodes");
         }
 
         /// <summary>
@@ -245,7 +312,16 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <param name="connection"></param>
         public static void CreateWayNodesTable(NpgsqlConnection connection)
         {
-            PostgreSQLSimpleSchemaTools.ExecuteScript(connection, TABLE_WAY_NODES_CREATION);
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_WAY_NODES_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the way nodes table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropWayNodesTable(NpgsqlConnection connection)
+        {
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_WAY_NODES_DROP);
         }
 
         /// <summary>
@@ -254,7 +330,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <param name="connection"></param>
         public static void CreateWayTagsTable(NpgsqlConnection connection)
         {
-            PostgreSQLSimpleSchemaTools.ExecuteScript(connection, TABLE_WAY_TAGS_CREATION);
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_WAY_TAGS_CREATION);
         }
 
         /// <summary>
@@ -263,7 +339,16 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <param name="connection"></param>
         public static bool DetectWayTagsTable(NpgsqlConnection connection)
         {
-            return PostgreSQLSimpleSchemaTools.DetectTable(connection, "way_tags");
+            return PostgreSQLSchemaTools.DetectTable(connection, "way_tags");
+        }
+
+        /// <summary>
+        /// Drops the way tags table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropWayTagsTable(NpgsqlConnection connection)
+        {
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_WAY_TAGS_DROP);
         }
 
         /// <summary>
@@ -273,7 +358,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <returns></returns>
         public static bool DetectRelationTable(NpgsqlConnection connection)
         {
-            return PostgreSQLSimpleSchemaTools.DetectTable(connection, "relation");
+            return PostgreSQLSchemaTools.DetectTable(connection, "relation");
         }
 
         /// <summary>
@@ -282,7 +367,16 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <param name="connection"></param>
         public static void CreateRelationTable(NpgsqlConnection connection)
         {
-            PostgreSQLSimpleSchemaTools.ExecuteScript(connection, TABLE_RELATION_CREATION);
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_RELATION_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the relation table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropRelationTable(NpgsqlConnection connection)
+        {
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_RELATION_DROP);
         }
 
         /// <summary>
@@ -292,7 +386,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <returns></returns>
         public static bool DetectRelationMembersTable(NpgsqlConnection connection)
         {
-            return PostgreSQLSimpleSchemaTools.DetectTable(connection, "relation_members");
+            return PostgreSQLSchemaTools.DetectTable(connection, "relation_members");
         }
 
         /// <summary>
@@ -302,7 +396,16 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <returns></returns>
         public static void CreateRelationMembersTable(NpgsqlConnection connection)
         {
-            PostgreSQLSimpleSchemaTools.ExecuteScript(connection, TABLE_RELATION_MEMBERS_CREATION);
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_RELATION_MEMBERS_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the relation members table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropRelationMembersTable(NpgsqlConnection connection)
+        {
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_RELATION_MEMBERS_DROP);
         }
 
         /// <summary>
@@ -312,7 +415,7 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <returns></returns>
         public static bool DetectRelationTagsTable(NpgsqlConnection connection)
         {
-            return PostgreSQLSimpleSchemaTools.DetectTable(connection, "relation_tags");
+            return PostgreSQLSchemaTools.DetectTable(connection, "relation_tags");
         }
 
         /// <summary>
@@ -321,7 +424,16 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <param name="connection"></param>
         public static void CreateRelationTagsTable(NpgsqlConnection connection)
         {
-            PostgreSQLSimpleSchemaTools.ExecuteScript(connection, TABLE_RELATION_TAGS_CREATION);
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_RELATION_TAGS_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the relation tags table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropRelationTagsTable(NpgsqlConnection connection)
+        {
+            PostgreSQLSchemaTools.ExecuteScript(connection, TABLE_RELATION_TAGS_DROP);
         }
 
         /// <summary>
@@ -330,39 +442,80 @@ namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools
         /// <param name="connection"></param>
         public static void CreateAndDetect(NpgsqlConnection connection)
         {
-            if (!PostgreSQLSimpleSchemaTools.DetectNodeTable(connection))
+            if (!PostgreSQLSchemaTools.DetectNodeTable(connection))
             {
-                PostgreSQLSimpleSchemaTools.CreateNodeTable(connection);
+                PostgreSQLSchemaTools.CreateNodeTable(connection);
             }
-            if (!PostgreSQLSimpleSchemaTools.DetectNodeTagsTable(connection))
+            if (!PostgreSQLSchemaTools.DetectNodeTagsTable(connection))
             {
-                PostgreSQLSimpleSchemaTools.CreateNodeTagsTable(connection);
-            }
-
-            if(!PostgreSQLSimpleSchemaTools.DetectWayTable(connection))
-            {
-                PostgreSQLSimpleSchemaTools.CreateWayTable(connection);
-            }
-            if(!PostgreSQLSimpleSchemaTools.DetectWayTagsTable(connection))
-            {
-                PostgreSQLSimpleSchemaTools.CreateWayTagsTable(connection);
-            }
-            if(!PostgreSQLSimpleSchemaTools.DetectWayNodesTable(connection))
-            {
-                PostgreSQLSimpleSchemaTools.CreateWayNodesTable(connection);
+                PostgreSQLSchemaTools.CreateNodeTagsTable(connection);
             }
 
-            if(!PostgreSQLSimpleSchemaTools.DetectRelationTable(connection))
+            if (!PostgreSQLSchemaTools.DetectWayTable(connection))
             {
-                PostgreSQLSimpleSchemaTools.CreateRelationTable(connection);
+                PostgreSQLSchemaTools.CreateWayTable(connection);
             }
-            if(!PostgreSQLSimpleSchemaTools.DetectRelationTagsTable(connection))
+            if (!PostgreSQLSchemaTools.DetectWayTagsTable(connection))
             {
-                PostgreSQLSimpleSchemaTools.CreateRelationTagsTable(connection);
+                PostgreSQLSchemaTools.CreateWayTagsTable(connection);
             }
-            if(!PostgreSQLSimpleSchemaTools.DetectRelationMembersTable(connection))
+            if (!PostgreSQLSchemaTools.DetectWayNodesTable(connection))
             {
-                PostgreSQLSimpleSchemaTools.CreateRelationMembersTable(connection);
+                PostgreSQLSchemaTools.CreateWayNodesTable(connection);
+            }
+
+            if (!PostgreSQLSchemaTools.DetectRelationTable(connection))
+            {
+                PostgreSQLSchemaTools.CreateRelationTable(connection);
+            }
+            if (!PostgreSQLSchemaTools.DetectRelationTagsTable(connection))
+            {
+                PostgreSQLSchemaTools.CreateRelationTagsTable(connection);
+            }
+            if (!PostgreSQLSchemaTools.DetectRelationMembersTable(connection))
+            {
+                PostgreSQLSchemaTools.CreateRelationMembersTable(connection);
+            }
+        }
+
+        /// <summary>
+        /// Drops the entire schema.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void Drop(NpgsqlConnection connection)
+        {
+            if (PostgreSQLSchemaTools.DetectRelationMembersTable(connection))
+            {
+                PostgreSQLSchemaTools.DropRelationMembersTable(connection);
+            }
+            if (PostgreSQLSchemaTools.DetectRelationTagsTable(connection))
+            {
+                PostgreSQLSchemaTools.DropRelationTagsTable(connection);
+            }
+            if (PostgreSQLSchemaTools.DetectRelationTable(connection))
+            {
+                PostgreSQLSchemaTools.DropRelationTable(connection);
+            }
+            if (PostgreSQLSchemaTools.DetectWayNodesTable(connection))
+            {
+
+                PostgreSQLSchemaTools.DropWayNodesTable(connection);
+            }
+            if (PostgreSQLSchemaTools.DetectWayTagsTable(connection))
+            {
+                PostgreSQLSchemaTools.DropWayTagsTable(connection);
+            }
+            if (PostgreSQLSchemaTools.DetectWayTable(connection))
+            {
+                PostgreSQLSchemaTools.DropWayTable(connection);
+            }
+            if (PostgreSQLSchemaTools.DetectNodeTagsTable(connection))
+            {
+                PostgreSQLSchemaTools.DropNodeTagsTable(connection);
+            }
+            if (PostgreSQLSchemaTools.DetectNodeTable(connection))
+            {
+                PostgreSQLSchemaTools.DropNodeTable(connection);
             }
         }
     }

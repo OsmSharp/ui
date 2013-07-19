@@ -502,11 +502,6 @@ namespace OsmSharp.Data.SQLite.Osm
         /// <returns></returns>
 		public IList<Way> GetWays(IList<long> ids)
 		{
-			return this.GetWays(ids, null);
-		}
-
-		private IList<Way> GetWays(IList<long> ids, Dictionary<long, Node> nodes)
-		{
 			if (ids.Count > 0)
 			{
 				SQLiteConnection con = this.CreateConnection();

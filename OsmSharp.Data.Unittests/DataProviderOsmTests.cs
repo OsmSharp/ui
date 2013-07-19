@@ -170,7 +170,8 @@ namespace OsmSharp.Data.Unittests
             node.UserId = 10;
             node.Version = 1;
             node.Visible = true;
-            node.TimeStamp = DateTime.Now.ToUnixTime().FromUnixTime(); // make sure the time is rounded.
+            node.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
             // create a target, add the node, create a source and verify node in db.
             target = this.CreateDataStreamTarget();
@@ -193,7 +194,8 @@ namespace OsmSharp.Data.Unittests
             node.UserId = 10;
             node.Version = 1;
             node.Visible = true;
-            node.TimeStamp = DateTime.Now.ToUnixTime().FromUnixTime(); // make sure the time is rounded.
+            node.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             node.Tags = new SimpleTagsCollection();
             node.Tags.Add("tag", "value");
 
@@ -306,7 +308,8 @@ namespace OsmSharp.Data.Unittests
             way.UserId = 10;
             way.Version = 1;
             way.Visible = true;
-            way.TimeStamp = DateTime.Now.ToUnixTime().FromUnixTime(); // make sure the time is rounded.
+            way.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
             // create a target, add the way, create a source and verify way in db.
             target = this.CreateDataStreamTarget();
@@ -327,7 +330,8 @@ namespace OsmSharp.Data.Unittests
             way.UserId = 10;
             way.Version = 1;
             way.Visible = true;
-            way.TimeStamp = DateTime.Now.ToUnixTime().FromUnixTime(); // make sure the time is rounded.
+            way.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             way.Tags = new SimpleTagsCollection();
             way.Tags.Add("tag", "value");
 
@@ -349,7 +353,8 @@ namespace OsmSharp.Data.Unittests
             way.UserId = 10;
             way.Version = 1;
             way.Visible = true;
-            way.TimeStamp = DateTime.Now.ToUnixTime().FromUnixTime(); // make sure the time is rounded.
+            way.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             way.Nodes = new List<long>();
             way.Nodes.Add(1);
             way.Nodes.Add(2);
@@ -465,7 +470,8 @@ namespace OsmSharp.Data.Unittests
             relation.UserId = 10;
             relation.Version = 1;
             relation.Visible = true;
-            relation.TimeStamp = DateTime.Now.ToUnixTime().FromUnixTime(); // make sure the time is rounded.
+            relation.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
 
             // create a target, add the relation, create a source and verify relation in db.
             target = this.CreateDataStreamTarget();
@@ -486,7 +492,8 @@ namespace OsmSharp.Data.Unittests
             relation.UserId = 10;
             relation.Version = 1;
             relation.Visible = true;
-            relation.TimeStamp = DateTime.Now.ToUnixTime().FromUnixTime(); // make sure the time is rounded.
+            relation.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             relation.Tags = new SimpleTagsCollection();
             relation.Tags.Add("tag", "value");
 
@@ -508,7 +515,8 @@ namespace OsmSharp.Data.Unittests
             relation.UserId = 10;
             relation.Version = 1;
             relation.Visible = true;
-            relation.TimeStamp = DateTime.Now.ToUnixTime().FromUnixTime(); // make sure the time is rounded.
+            relation.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             relation.Members = new List<RelationMember>();
             relation.Members.Add(new RelationMember() { MemberId = 1, MemberRole = "node1", MemberType = RelationMemberType.Node });
             relation.Members.Add(new RelationMember() { MemberId = 2, MemberRole = "node2", MemberType = RelationMemberType.Node });
