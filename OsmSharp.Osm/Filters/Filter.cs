@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Filters.Tags;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 
 namespace OsmSharp.Osm.Filters
 {

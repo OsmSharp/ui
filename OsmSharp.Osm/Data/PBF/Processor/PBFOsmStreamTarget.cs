@@ -21,7 +21,7 @@
 //using System.Linq;
 //using System.Text;
 //using OsmSharp.Osm.Data.Core.Processor;
-//using OsmSharp.Osm.Simple;
+//using OsmSharp.Osm;
 //using OsmSharp.Osm.Xml.v0_6;
 
 //namespace OsmSharp.Osm.Data.PBF.Processor

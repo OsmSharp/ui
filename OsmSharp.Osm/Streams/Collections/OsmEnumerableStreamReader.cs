@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 
 namespace OsmSharp.Osm.Data.Streams.Collections
 {

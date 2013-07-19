@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Geo.Geometries;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data;
 
 namespace OsmSharp.Osm.Interpreter

@@ -24,7 +24,7 @@ using Npgsql;
 using System.Text.RegularExpressions;
 using OsmSharp.Osm.Data;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Data.PostgreSQL.Osm

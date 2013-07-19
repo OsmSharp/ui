@@ -20,8 +20,8 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using OsmSharp.Osm.Simple;
-//using OsmSharp.Osm.Simple.Cache;
+//using OsmSharp.Osm;
+//using OsmSharp.Osm.Cache;
 //using OsmSharp.Osm.Data.Streams.OsmGeoStream;
 
 //namespace OsmSharp.Osm.Data.Streams

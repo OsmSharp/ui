@@ -24,7 +24,7 @@ using OsmSharp.Geo.Geometries;
 using OsmSharp.Osm.Data;
 using OsmSharp.Osm.Interpreter;
 
-namespace OsmSharp.Osm.Simple
+namespace OsmSharp.Osm
 {
     /// <summary>
     /// Represents a simple node.

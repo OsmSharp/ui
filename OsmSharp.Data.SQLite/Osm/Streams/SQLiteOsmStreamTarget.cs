@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Data;
 using OsmSharp;
 using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Data.SQLite.Osm.Streams

@@ -23,7 +23,7 @@ using System.Text;
 using ServiceStack.Redis;
 using ServiceStack.Redis.Generic;
 using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Data.Redis.Osm.Primitives;
 
 namespace OsmSharp.Data.Redis.Osm.Streams

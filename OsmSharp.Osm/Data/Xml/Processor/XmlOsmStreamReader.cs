@@ -24,7 +24,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.IO.Compression;
 using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Core.Processor;
 
 namespace OsmSharp.Osm.Data.Xml.Processor

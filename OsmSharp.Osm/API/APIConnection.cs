@@ -23,7 +23,7 @@ using System.Net;
 using System.IO;
 using OsmSharp.Osm.Data.Core.API;
 using OsmSharp.Osm.Xml.v0_6;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Xml.Sources;
 using OsmSharp.Osm.Xml;
@@ -683,10 +683,10 @@ namespace OsmSharp.Osm.API
 
                     if (changed_objects.Count > 0)
                     { // there are actually changed objects.
-                        changes.Add(new OsmSharp.Osm.Simple.Change()
+                        changes.Add(new OsmSharp.Osm.Change()
                         {
                             OsmGeo = changed_objects,
-                            Type = OsmSharp.Osm.Simple.ChangeType.Create
+                            Type = OsmSharp.Osm.ChangeType.Create
                         });
                     }
                 }

@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data;
 using OsmSharp.Collections.Tags;
 

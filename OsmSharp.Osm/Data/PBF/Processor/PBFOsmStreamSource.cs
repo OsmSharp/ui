@@ -74,13 +74,13 @@ namespace OsmSharp.Osm.Data.PBF.Processor
         /// <summary>
         /// Holds the current object.
         /// </summary>
-        private OsmSharp.Osm.Simple.OsmGeo _current;
+        private OsmSharp.Osm.OsmGeo _current;
 
         /// <summary>
         /// Returns the current geometry.
         /// </summary>
         /// <returns></returns>
-        public override OsmSharp.Osm.Simple.OsmGeo Current()
+        public override OsmSharp.Osm.OsmGeo Current()
         {
             return _current;
         }
@@ -112,7 +112,7 @@ namespace OsmSharp.Osm.Data.PBF.Processor
         /// </summary>
         /// <param name="pbfPrimitive"></param>
         /// <returns></returns>
-        internal OsmSharp.Osm.Simple.OsmGeo Convert(KeyValuePair<PrimitiveBlock, object> pbfPrimitive)
+        internal OsmSharp.Osm.OsmGeo Convert(KeyValuePair<PrimitiveBlock, object> pbfPrimitive)
         {
             if (pbfPrimitive.Value == null || pbfPrimitive.Key == null)
             {
@@ -123,7 +123,7 @@ namespace OsmSharp.Osm.Data.PBF.Processor
             if (pbfPrimitive.Value is OsmSharp.Osm.Data.PBF.Node)
             {
                 var node = (pbfPrimitive.Value as OsmSharp.Osm.Data.PBF.Node);
-                var simpleNode = new OsmSharp.Osm.Simple.Node();
+                var simpleNode = new OsmSharp.Osm.Node();
                 simpleNode.ChangeSetId = node.info.changeset;
                 simpleNode.Id = node.id;
                 simpleNode.Latitude = .000000001 * ((double)block.lat_offset 
@@ -159,7 +159,7 @@ namespace OsmSharp.Osm.Data.PBF.Processor
             {
                 var way = (pbfPrimitive.Value as OsmSharp.Osm.Data.PBF.Way);
 
-                var simple_way = new OsmSharp.Osm.Simple.Way();
+                var simple_way = new OsmSharp.Osm.Way();
                 simple_way.Id = way.id;
                 simple_way.Nodes = new List<long>(way.refs.Count);
                 long node_id = 0;
@@ -199,30 +199,30 @@ namespace OsmSharp.Osm.Data.PBF.Processor
             {
                 var relation = (pbfPrimitive.Value as OsmSharp.Osm.Data.PBF.Relation);
 
-                var simple_relation = new OsmSharp.Osm.Simple.Relation();
+                var simple_relation = new OsmSharp.Osm.Relation();
                 simple_relation.Id = relation.id;
                 if (relation.types.Count > 0)
                 {
-                    simple_relation.Members = new List<OsmSharp.Osm.Simple.RelationMember>();
+                    simple_relation.Members = new List<OsmSharp.Osm.RelationMember>();
                     long member_id = 0;
                     for (int member_idx = 0; member_idx < relation.types.Count; member_idx++)
                     {
                         member_id = member_id + relation.memids[member_idx];
                         string role = ASCIIEncoding.ASCII.GetString(
                             block.stringtable.s[relation.roles_sid[member_idx]]);
-                        var member = new OsmSharp.Osm.Simple.RelationMember();
+                        var member = new OsmSharp.Osm.RelationMember();
                         member.MemberId = member_id;
                         member.MemberRole = role;
                         switch (relation.types[member_idx])
                         {
                             case Relation.MemberType.NODE:
-                                member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Node;
+                                member.MemberType = OsmSharp.Osm.RelationMemberType.Node;
                                 break;
                             case Relation.MemberType.WAY:
-                                member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Way;
+                                member.MemberType = OsmSharp.Osm.RelationMemberType.Way;
                                 break;
                             case Relation.MemberType.RELATION:
-                                member.MemberType = OsmSharp.Osm.Simple.RelationMemberType.Relation;
+                                member.MemberType = OsmSharp.Osm.RelationMemberType.Relation;
                                 break;
                         }
 

@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 
 namespace OsmSharp.Osm.Data.Core.Processor.ChangeSets
 {

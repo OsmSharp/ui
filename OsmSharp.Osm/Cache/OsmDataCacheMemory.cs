@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Collections;
 
-namespace OsmSharp.Osm.Simple.Cache
+namespace OsmSharp.Osm.Cache
 {
     /// <summary>
     /// An osm data cache for simple OSM objects kept in memory.

@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
 using OsmSharp.Osm.Data.Xml.Processor;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;

@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using System.Diagnostics;
 
 namespace OsmSharp.Osm.Data.Streams.Filters

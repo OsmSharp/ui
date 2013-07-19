@@ -24,7 +24,6 @@ using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
-using OsmSharp.Osm.Simple;
 using OsmSharp.Osm.Interpreter;
 using System.IO;
 

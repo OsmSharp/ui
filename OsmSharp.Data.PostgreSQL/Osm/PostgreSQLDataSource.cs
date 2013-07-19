@@ -23,7 +23,7 @@ using System.Text;
 using Npgsql;
 using OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 
 namespace OsmSharp.Osm.Data.PostgreSQL.SimpleSchema
 {

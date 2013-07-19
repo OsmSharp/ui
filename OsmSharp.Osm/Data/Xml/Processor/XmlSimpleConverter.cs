@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm.Data.Xml.Processor
@@ -32,11 +32,11 @@ namespace OsmSharp.Osm.Data.Xml.Processor
         internal static ChangeSet ConvertToSimple(Osm.Xml.v0_6.delete delete)
         {
             // create change set record.
-            OsmSharp.Osm.Simple.ChangeSet change_set = new OsmSharp.Osm.Simple.ChangeSet();
+            OsmSharp.Osm.ChangeSet change_set = new OsmSharp.Osm.ChangeSet();
 
             // create change record.
-            OsmSharp.Osm.Simple.Change change = new OsmSharp.Osm.Simple.Change();
-            change.Type = OsmSharp.Osm.Simple.ChangeType.Delete;
+            OsmSharp.Osm.Change change = new OsmSharp.Osm.Change();
+            change.Type = OsmSharp.Osm.ChangeType.Delete;
             change.OsmGeo = new List<OsmGeo>();
 
             // add all relations to the list.
@@ -80,8 +80,8 @@ namespace OsmSharp.Osm.Data.Xml.Processor
             ChangeSet change_set = new ChangeSet();
 
             // create change record.
-            OsmSharp.Osm.Simple.Change change = new OsmSharp.Osm.Simple.Change();
-            change.Type = OsmSharp.Osm.Simple.ChangeType.Modify;
+            OsmSharp.Osm.Change change = new OsmSharp.Osm.Change();
+            change.Type = OsmSharp.Osm.ChangeType.Modify;
             change.OsmGeo = new List<OsmGeo>();
 
             // add all relations to the list.
@@ -124,8 +124,8 @@ namespace OsmSharp.Osm.Data.Xml.Processor
             ChangeSet change_set = new ChangeSet();
 
             // create change record.
-            OsmSharp.Osm.Simple.Change change = new OsmSharp.Osm.Simple.Change();
-            change.Type = OsmSharp.Osm.Simple.ChangeType.Create;
+            OsmSharp.Osm.Change change = new OsmSharp.Osm.Change();
+            change.Type = OsmSharp.Osm.ChangeType.Create;
             change.OsmGeo = new List<OsmGeo>();
 
 

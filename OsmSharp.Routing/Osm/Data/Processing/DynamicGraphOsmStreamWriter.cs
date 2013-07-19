@@ -18,7 +18,7 @@
 using System;
 using System.Collections.Generic;
 using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Collections.Tags;

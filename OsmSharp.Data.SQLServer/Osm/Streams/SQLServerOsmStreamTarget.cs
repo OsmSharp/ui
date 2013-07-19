@@ -23,7 +23,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Data.SQLServer.Osm.SchemaTools;
 using OsmSharp.Osm.Tiles;

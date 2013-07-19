@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace OsmSharp.Osm.Simple.Cache
+namespace OsmSharp.Osm.Cache
 {
     /// <summary>
     /// An osm data cache for simple OSM objects.

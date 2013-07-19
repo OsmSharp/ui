@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using OsmSharp.Osm.API;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 

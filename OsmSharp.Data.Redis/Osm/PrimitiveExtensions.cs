@@ -18,7 +18,7 @@
 
 using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Data.Redis.Osm.Primitives;
 

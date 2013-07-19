@@ -20,7 +20,7 @@
 //using System.Linq;
 //using System.Text;
 //using OsmSharp.Math.Geo;
-//using OsmSharp.Osm.Simple;
+//using OsmSharp.Osm;
 //using OsmSharp.Osm.Data.Core.Processor.ChangeSets;
 //using OsmSharp.Collections;
 

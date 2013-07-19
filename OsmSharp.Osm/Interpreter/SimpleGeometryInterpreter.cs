@@ -23,7 +23,7 @@ using System.Text;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm.Interpreter

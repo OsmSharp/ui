@@ -23,7 +23,7 @@
 //using System.Net;
 //using System.IO;
 //using System.IO.Compression;
-//using OsmSharp.Osm.Simple;
+//using OsmSharp.Osm;
 
 //namespace OsmSharp.Osm.Data.Xml.Processor.Replication
 //{

@@ -25,7 +25,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using OsmSharp.Data.SQLServer.Osm.SchemaTools;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Xml.Processor;
 using System.Reflection;
 using System.Data.SqlClient;

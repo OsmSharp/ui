@@ -8,7 +8,7 @@ using OsmSharp.Osm.Data.PBF.Processor;
 using System.Reflection;
 using OsmSharp.Data.SQLite.Osm;
 using OsmSharp.Osm.Data.Memory;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 using System.Data.SQLite;
 using OsmSharp.Osm.Data;

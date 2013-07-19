@@ -23,8 +23,8 @@ using System.Text;
 using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Simple;
-using OsmSharp.Osm.Simple.Cache;
+using OsmSharp.Osm;
+using OsmSharp.Osm.Cache;
 
 namespace OsmSharp.Osm
 {

@@ -25,7 +25,7 @@ using Npgsql;
 using System.IO;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.SchemaTools;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data.PostgreSQL.SimpleSchema.Processor;
 using OsmSharp.Collections.Tags;
 

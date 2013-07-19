@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Osm.Simple
+namespace OsmSharp.Osm
 {
     /// <summary>
     /// Represents a simple way.

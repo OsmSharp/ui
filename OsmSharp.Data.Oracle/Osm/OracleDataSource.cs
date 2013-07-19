@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 using Oracle.ManagedDataAccess.Client;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 
 namespace OsmSharp.Osm.Data.Oracle.Osm
 {

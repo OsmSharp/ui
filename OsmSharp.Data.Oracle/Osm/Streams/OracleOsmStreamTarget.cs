@@ -23,7 +23,7 @@ using System.Text;
 using OsmSharp.Osm.Data.Streams;
 using Oracle.ManagedDataAccess.Client;
 using System.Data;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Data.Oracle.Osm;
 using OsmSharp.Collections.Tags;
 

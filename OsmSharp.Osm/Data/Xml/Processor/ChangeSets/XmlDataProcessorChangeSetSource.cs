@@ -22,7 +22,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Core.Processor.ChangeSets;
 
 namespace OsmSharp.Osm.Data.Xml.Processor.ChangeSets

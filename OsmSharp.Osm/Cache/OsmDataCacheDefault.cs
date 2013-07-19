@@ -4,7 +4,7 @@
 //using System.Text;
 //using System.Runtime.Caching;
 
-//namespace OsmSharp.Osm.Simple.Cache
+//namespace OsmSharp.Osm.Cache
 //{
 //    public class OsmDataCacheDefault : OsmDataCache
 //    {

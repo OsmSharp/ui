@@ -25,7 +25,7 @@ using System.Data.SqlClient;
 using OsmSharp.Osm.Data;
 using OsmSharp.Data.SQLServer.Osm.SchemaTools;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 
 namespace OsmSharp.Data.SQLServer.Osm
 {

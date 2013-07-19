@@ -7,7 +7,7 @@
 //using OsmSharp.Math.Geo;
 //using OsmSharp.Osm.Tiles;
 
-//namespace OsmSharp.Osm.Simple.Cache
+//namespace OsmSharp.Osm.Cache
 //{
 //    /// <summary>
 //    /// An osm data cache for simple OSM objects kept in memory.

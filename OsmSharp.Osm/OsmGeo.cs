@@ -25,7 +25,7 @@ using OsmSharp.Osm.Data;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Osm.Interpreter;
 
-namespace OsmSharp.Osm.Simple
+namespace OsmSharp.Osm
 {
     /// <summary>
     /// Primive used as a base class for any osm object that has a meaning on the map (Nodes, Ways and Relations).

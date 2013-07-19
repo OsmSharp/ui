@@ -73,7 +73,7 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         /// </summary>
         /// <param name="simpleOsmGeo"></param>
         /// <param name="param"></param>
-        public delegate void SimpleOsmGeoDelegate(Simple.OsmGeo simpleOsmGeo, object param);
+        public delegate void SimpleOsmGeoDelegate(OsmGeo simpleOsmGeo, object param);
 
         /// <summary>
         /// Event raised when the move is made to the next object.
@@ -101,7 +101,7 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         /// Returns the current object.
         /// </summary>
         /// <returns></returns>
-        public override Simple.OsmGeo Current()
+        public override OsmGeo Current()
         {
             return this.Reader.Current();
         }

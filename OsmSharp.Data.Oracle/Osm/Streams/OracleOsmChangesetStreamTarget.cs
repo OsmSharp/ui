@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data.Core.Processor.ChangeSets;
 using Oracle.ManagedDataAccess.Client;
 using OsmSharp.Collections.Tags;

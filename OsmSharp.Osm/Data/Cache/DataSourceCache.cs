@@ -25,7 +25,6 @@ using OsmSharp.Math.Units.Angle;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Osm.Tiles;
-using OsmSharp.Osm.Simple;
 using OsmSharp.Collections.Cache;
 
 namespace OsmSharp.Osm.Data.Cache

@@ -24,7 +24,7 @@ using ServiceStack.Redis;
 using ServiceStack.Redis.Generic;
 using OsmSharp.Osm.Data;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Data.Redis.Osm.Primitives;
 

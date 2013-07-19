@@ -24,7 +24,6 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Sources;
 using System.Globalization;
-using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Xml.v0_6
 {
@@ -546,7 +545,7 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="dom_obj"></param>
         /// <returns></returns>
-        public static node ConvertTo(this OsmSharp.Osm.Simple.Node dom_obj)
+        public static node ConvertTo(this OsmSharp.Osm.Node dom_obj)
         {
             node xml_obj = new node();
 
@@ -618,7 +617,7 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="dom_obj"></param>
         /// <returns></returns>
-        public static way ConvertTo(this OsmSharp.Osm.Simple.Way dom_obj)
+        public static way ConvertTo(this OsmSharp.Osm.Way dom_obj)
         {
             way xml_obj = new way();
 
@@ -705,7 +704,7 @@ namespace OsmSharp.Osm.Xml.v0_6
         /// </summary>
         /// <param name="dom_obj"></param>
         /// <returns></returns>
-        public static relation ConvertTo(this OsmSharp.Osm.Simple.Relation dom_obj)
+        public static relation ConvertTo(this OsmSharp.Osm.Relation dom_obj)
         {
             relation xml_obj = new relation();
 
@@ -778,22 +777,22 @@ namespace OsmSharp.Osm.Xml.v0_6
             xml_obj.member = new member[dom_obj.Members.Count];
             for (int idx = 0; idx < dom_obj.Members.Count; idx++)
             {
-                Simple.RelationMember dom_member = dom_obj.Members[idx];
+                RelationMember dom_member = dom_obj.Members[idx];
                 member m = new member();
 
                 if (dom_member.MemberType.HasValue)
                 {
                     switch (dom_member.MemberType.Value)
                     {
-                        case Simple.RelationMemberType.Node:
+                        case RelationMemberType.Node:
                             m.type = memberType.node;
                             m.typeSpecified = true;
                             break;
-                        case Simple.RelationMemberType.Relation:
+                        case RelationMemberType.Relation:
                             m.type = memberType.relation;
                             m.typeSpecified = true;
                             break;
-                        case Simple.RelationMemberType.Way:
+                        case RelationMemberType.Way:
                             m.type = memberType.way;
                             m.typeSpecified = true;
                             break;

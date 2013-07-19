@@ -23,7 +23,6 @@ using System.Text;
 using OsmSharp.Osm;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
-using OsmSharp.Osm.Simple;
 
 namespace OsmSharp.Osm.Data
 {

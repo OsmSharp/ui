@@ -6,7 +6,7 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
 using OsmSharp.UI.Renderer;
 using OsmSharp;
-using OsmSharp.Osm.Simple;
+using OsmSharp.Osm;
 using OsmSharp.Osm.Data;
 
 namespace OsmSharp.UI.Map.Styles
