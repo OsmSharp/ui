@@ -20,27 +20,28 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Osm.Simple;
 
-namespace OsmSharp.Data.Redis.Osm.Streams.Primitives
+namespace OsmSharp.Data.Redis.Osm.Primitives
 {
-    public class OsmTag
+    /// <summary>
+    /// A serializable type to keep in the redis db.
+    /// </summary>
+    public class RedisRelationMember
     {
-        public OsmTag()
-        {
-        }
+        /// <summary>
+        /// The type of the object in this relation member.
+        /// </summary>
+        public RelationMemberType Type { get; set; }
 
-        public OsmTag(string k, string v)
-        {
-            this.Key = k;
-            this.Value = v;
-        }
+        /// <summary>
+        /// The id of the object in this relation member.
+        /// </summary>
+        public long Ref { get; set; }
 
-        public string Key { get; set; }
-        public string Value { get; set; }
-
-        public override string ToString()
-        {
-            return this.Key + " = " + this.Value;
-        }
+        /// <summary>
+        /// The role of the object in this relation member.
+        /// </summary>
+        public string Role { get; set; }
     }
 }

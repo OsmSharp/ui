@@ -23,41 +23,58 @@ using System.Text;
 using ServiceStack.Redis;
 using ServiceStack.Redis.Generic;
 using OsmSharp.Osm.Data;
-using OsmSharp.Data.Redis.Osm.Streams.Primitives;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Simple;
+using OsmSharp.Osm.Tiles;
+using OsmSharp.Data.Redis.Osm.Primitives;
 
 namespace OsmSharp.Data.Redis.Osm
 {
-    public class RedisSimpleSource : IDataSourceReadOnly, IDisposable
+    /// <summary>
+    /// A datasource for OSM-objects for redis.
+    /// </summary>
+    public class RedisDataSource : IDataSourceReadOnly, IDisposable
     {
+        /// <summary>
+        /// Holds the id of this datasource.
+        /// </summary>
         private Guid _id;
 
         private RedisClient _client;
-        private IRedisTypedClient<OsmNode> _client_node = null;
-        private IRedisTypedClient<OsmWay> _client_way = null;
-        //private IRedisTypedClient<SimpleRelation> _client_relation = null;
+        private IRedisTypedClient<RedisNode> _clientNode = null;
+        private IRedisTypedClient<RedisWay> _clientWay = null;
+        private IRedisTypedClient<RedisRelation> _clientRelation = null;
 
-        public RedisSimpleSource()
+        /// <summary>
+        /// Creates a new datasource.
+        /// </summary>
+        public RedisDataSource()
         {
             _id = Guid.NewGuid();
 
             _client = new RedisClient();
-            _client_node = _client.As<OsmNode>();
-            _client_way = _client.As<OsmWay>();
-            //_client_relation = _client.GetTypedClient<SimpleRelation>();
+            _clientNode = _client.As<RedisNode>();
+            _clientWay = _client.As<RedisWay>();
+            _clientRelation = _client.As<RedisRelation>();
         }
 
-        public RedisSimpleSource(RedisClient client)
+        /// <summary>
+        /// Creates a new datasource.
+        /// </summary>
+        /// <param name="client"></param>
+        public RedisDataSource(RedisClient client)
         {
             _id = Guid.NewGuid();
 
             _client = client;
-            _client_node = _client.As<OsmNode>();
-            _client_way = _client.As<OsmWay>();
-            //_client_relation = _client.GetTypedClient<SimpleRelation>();
+            _clientNode = _client.As<RedisNode>();
+            _clientWay = _client.As<RedisWay>();
+            _clientRelation = _client.As<RedisRelation>();
         }
 
+        /// <summary>
+        /// Returns the boundingbox if any.
+        /// </summary>
         public GeoCoordinateBox BoundingBox
         {
             get 
@@ -66,14 +83,20 @@ namespace OsmSharp.Data.Redis.Osm
             }
         }
 
+        /// <summary>
+        /// Returns the name of this datasource.
+        /// </summary>
         public string Name
         {
             get 
             {
-                return "Redis Simple Source";
+                return "Redis Data Source";
             }
         }
 
+        /// <summary>
+        /// Returns the id of this datasource.
+        /// </summary>
         public Guid Id
         {
             get 
@@ -82,6 +105,9 @@ namespace OsmSharp.Data.Redis.Osm
             }
         }
 
+        /// <summary>
+        /// Returns true if there is a boundingbox available.
+        /// </summary>
         public bool HasBoundinBox
         {
             get 
@@ -89,7 +115,10 @@ namespace OsmSharp.Data.Redis.Osm
                 return false; 
             }
         }
-
+        
+        /// <summary>
+        /// Returns true if readonly.
+        /// </summary>
         public bool IsReadOnly
         {
             get 
@@ -147,243 +176,202 @@ namespace OsmSharp.Data.Redis.Osm
             }
         }
 
-
+        /// <summary>
+        /// Returns the node for the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Node GetNode(long id)
         {
-            string node_key = OsmNode.BuildRedisKey(id);
-            OsmNode simple_node = _client_node.GetValue(node_key);
+            string nodeKey = PrimitiveExtensions.BuildNodeRedisKey(id);
+            RedisNode redisNode = _clientNode.GetValue(nodeKey);
             Node node = null;
-            if (simple_node != null)
+            if (redisNode != null)
             {
-                node = this.ConvertTo(simple_node);
+                node = PrimitiveExtensions.ConvertFrom(redisNode);
             }
             return node;
         }
 
+        /// <summary>
+        /// Returns all the nodes with the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Node> GetNodes(IList<long> ids)
         {
             List<string> keys = new List<string>();
             foreach (int id in ids)
             {
-                string node_key = OsmNode.BuildRedisKey(id);
-                keys.Add(node_key);
+                string nodeKey = PrimitiveExtensions.BuildNodeRedisKey(id);
+                keys.Add(nodeKey);
             }
-            List<OsmNode> simple_nodes = _client_node.GetValues(keys);
+            List<RedisNode> redisNodes = _clientNode.GetValues(keys);
             List<Node> nodes = new List<Node>();
-            foreach (OsmNode simple_node in simple_nodes)
+            foreach (RedisNode redisNode in redisNodes)
             {
-                Node node = this.ConvertTo(simple_node);
-
+                Node node = PrimitiveExtensions.ConvertFrom(redisNode);
                 nodes.Add(node);
             }
             return nodes;
         }
 
-        private Node ConvertTo(OsmNode simple_node)
-        {
-            Node node = new Node();
-            node.Id = simple_node.Id;
-            node.Latitude = simple_node.Latitude;
-            node.Longitude = simple_node.Longitude;
-            node.ChangeSetId = -1;//simple_node.ChangeSetId;
-            foreach (OsmTag tag in simple_node.Tags)
-            {
-                node.Tags.Add(tag.Key, tag.Value);
-            }
-            node.TimeStamp = null;
-            node.UserName = string.Empty;
-            node.UserId = -1;
-            node.Version = 0; //simple_node.Version;
-            node.Visible = true;
-
-            return node;
-        } 
-
+        /// <summary>
+        /// Returns the relation with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Relation GetRelation(long id)
         {
-            return null;
+            string relationKey = PrimitiveExtensions.BuildRelationRedisKey(id);
+            RedisRelation redisRelation = _clientRelation.GetValue(relationKey);
+            Relation relation = null;
+            if (redisRelation != null)
+            {
+                relation = PrimitiveExtensions.ConvertFrom(redisRelation);
+            }
+            return relation;
         }
 
+        /// <summary>
+        /// Returns all relations for the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Relation> GetRelations(IList<long> ids)
         {
+            List<string> keys = new List<string>();
+            foreach (int id in ids)
+            {
+                string relationKey = PrimitiveExtensions.BuildRelationRedisKey(id);
+                keys.Add(relationKey);
+            }
+            List<RedisRelation> redisRelations = _clientRelation.GetValues(keys);
             List<Relation> relations = new List<Relation>();
+            foreach (RedisRelation redisRelation in redisRelations)
+            {
+                Relation relation = PrimitiveExtensions.ConvertFrom(redisRelation);
+                relations.Add(relation);
+            }
             return relations;
         }
 
+        /// <summary>
+        /// Returns all relations containing the given object.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public IList<Relation> GetRelationsFor(OsmGeo obj)
         {
-            return new List<Relation>();
+            throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// Returns the way for the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Way GetWay(long id)
         {
-            string way_key = OsmWay.BuildRedisKey(id);
-            OsmWay simple_way = _client_way.GetValue(way_key);
+            string wayKey = PrimitiveExtensions.BuildWayRedisKey(id);
+            RedisWay redisWay = _clientWay.GetValue(wayKey);
             Way way = null;
-            if (simple_way != null)
+            if (redisWay != null)
             {
-                IList<Node> nodes = this.GetNodes(simple_way.Nds);
-                Dictionary<long, Node> nodes_dic = new Dictionary<long, Node>();
-                foreach (Node node in nodes)
-                {
-                    nodes_dic[node.Id.Value] = node;
-                }
-                way = this.ConvertTo(simple_way, nodes_dic);
+                way = PrimitiveExtensions.ConvertFrom(redisWay);
             }
             return way;
         }
 
+        /// <summary>
+        /// Returns all ways for the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
         public IList<Way> GetWays(IList<long> ids)
         {
             List<string> keys = new List<string>();
             foreach (int id in ids)
             {
-                string way_key = OsmWay.BuildRedisKey(id);
-                keys.Add(way_key);
+                string wayKey = PrimitiveExtensions.BuildWayRedisKey(id);
+                keys.Add(wayKey);
             }
-            List<OsmWay> simple_ways = _client_way.GetValues(keys);
+            List<RedisWay> redisWays = _clientWay.GetValues(keys);
             List<Way> ways = new List<Way>();
-            HashSet<long> node_ids = new HashSet<long>();
-            foreach (OsmWay simple_way in simple_ways)
+            foreach (RedisWay redisWay in redisWays)
             {
-                foreach (long node_id in simple_way.Nds)
-                {
-                    node_ids.Add(node_id);
-                }
-            }
-            IList<Node> nodes = this.GetNodes(new List<long>(node_ids));
-            Dictionary<long, Node> nodes_dic = new Dictionary<long, Node>();
-            foreach (Node node in nodes)
-            {
-                nodes_dic[node.Id.Value] = node;
-            }
-            foreach (OsmWay simple_way in simple_ways)
-            {
-                Way way = this.ConvertTo(simple_way, nodes_dic);
+                Way way = PrimitiveExtensions.ConvertFrom(redisWay);
                 ways.Add(way);
             }
             return ways;
         }
 
-        private Way ConvertTo(OsmWay simple_way, Dictionary<long, Node> nodes_dic)
-        {
-            Way way = new Way();
-            way.Id = simple_way.Id;
-            way.ChangeSetId = -1; // simple_way.ChangeSetId;
-            foreach (OsmTag tag in simple_way.Tags)
-            {
-                way.Tags.Add(tag.Key, tag.Value);
-            }
-            foreach (long node_id in simple_way.Nds)
-            {
-                Node node = null;
-                if (nodes_dic.TryGetValue(node_id, out node))
-                {
-                    way.Nodes.Add(node.Id.Value);
-                }
-            }
-            way.TimeStamp = null; // simple_way.TimeStamp;
-            way.UserName = string.Empty; // simple_way.UserName;
-            way.UserId = -1;// simple_way.UserId;
-            way.Version = 0; // (simple_way.Version != null && simple_way.Version.HasValue) ? (long)simple_way.Version.Value : 0;
-            way.Visible = true;// (simple_way.Visible == true) ? true : false;
-
-            return way;
-        }
-
+        /// <summary>
+        /// Returns all ways containing the given node.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         public IList<Way> GetWaysFor(Node node)
         {
-            if (node != null)
-            {
-                string node_key = OsmNode.BuildRedisKey(node.Id.Value);
-                OsmNode new_node = _client_node.GetValue(node_key);
+            throw new NotSupportedException();
+            //if (node != null)
+            //{
+            //    string node_key = PrimitiveExtensions.BuildRedisKey(node.Id.Value);
+            //    RedisNode new_node = _clientNode.GetValue(node_key);
 
-                return this.GetWays(new_node.Ways);
-            }
-            return new List<Way>();
+            //    return this.GetWays(new_node.Ways);
+            //}
+            //return new List<Way>();
         }
 
         public IList<OsmGeo> Get(GeoCoordinateBox box, OsmSharp.Osm.Filters.Filter filter)
         {
-            // TODO: improve this to allow loading of bigger bb's. 
-            uint x_min = lon2x(box.MinLon);
-            uint x_max = lon2x(box.MaxLon);
-            uint y_min = lat2y(box.MinLat);
-            uint y_max = lat2y(box.MaxLat);
-
-            IList<long> boxes = new List<long>();
-
             List<OsmGeo> result = new List<OsmGeo>();
-            HashSet<long> way_ids = new HashSet<long>();
 
-            var hash_keys = new List<string>();
-            for (uint x = x_min; x <= x_max; x++)
-                for (uint y = y_min; y <= y_max; y++)
-                    hash_keys.Add(OsmNode.BuildOsmHashRedisKey(x, y));
+            // create a range or tiles around the given bounding box.
+            TileRange range = TileRange.CreateAroundBoundingBox(box, 14);
 
-            byte[][] box_members = _client.SUnion(hash_keys.ToArray());
-            HashSet<string> node_keys = new HashSet<string>();
+            // build all redis keys for the given boxes.
+            var hashKeys = new List<string>();
+            foreach (Tile tile in range)
+            {
+                hashKeys.Add(tile.Id.ToString());
+            }
+
+            byte[][] box_members = _client.SUnion(hashKeys.ToArray());
+            HashSet<string> nodeKeys = new HashSet<string>();
             foreach (byte[] box_member in box_members)
             {
                 long node_id = BitConverter.ToInt64(box_member, 0);
-                string node_key = OsmNode.BuildRedisKey(node_id);
-                node_keys.Add(node_key);
+                string node_key = PrimitiveExtensions.BuildNodeRedisKey(node_id);
+                nodeKeys.Add(node_key);
             }
 
-            List<OsmNode> simple_nodes = _client_node.GetValues(new List<string>(node_keys));
-            foreach (OsmNode simple_node in simple_nodes)
+            List<RedisNode> redisNodes = _clientNode.GetValues(new List<string>(nodeKeys));
+            foreach (RedisNode redisNode in redisNodes)
             {
                 // test if the node is in the given bb. 
-                GeoCoordinate coordinate = new GeoCoordinate(simple_node.Latitude, simple_node.Longitude);
+                GeoCoordinate coordinate = new GeoCoordinate(redisNode.Latitude.Value, redisNode.Longitude.Value);
                 if (box.IsInside(coordinate))
                 {
-                    result.Add(this.ConvertTo(simple_node));
-
-                    foreach (long way_id in simple_node.Ways)
-                    {
-                        way_ids.Add(way_id);
-                    }
+                    result.Add(PrimitiveExtensions.ConvertFrom(redisNode));
                 }
             }
 
-            // get all ways. 
-            result.AddRange(this.GetWays(new List<long>(way_ids)));
+            //// get all ways. 
+            ////result.AddRange(this.GetWays(new List<long>(way_ids)));
 
             return result;
         }
-            
-        #region Tile Calculations
 
-        uint xy2tile(uint x, uint y)
-        {
-            uint tile = 0;
-            int i;
-
-            for (i = 15; i >= 0; i--)
-            {
-                tile = (tile << 1) | ((x >> i) & 1);
-                tile = (tile << 1) | ((y >> i) & 1);
-            }
-
-            return tile;
-        }
-
-        uint lon2x(double lon)
-        {
-            return (uint)System.Math.Floor(((lon + 180.0) * 65536.0 / 360.0));
-        }
-
-        uint lat2y(double lat)
-        {
-            return (uint)System.Math.Floor(((lat + 90.0) * 65536.0 / 180.0));
-        }
-
-        #endregion
-
+        /// <summary>
+        /// Disposes of all resource associated with this datasource.
+        /// </summary>
         public void Dispose()
         {
-            _client_node.Dispose();
-            _client_way.Dispose();
+            _clientNode.Dispose();
+            _clientWay.Dispose();
+            _clientRelation.Dispose();
 
             _client.Dispose();
         }

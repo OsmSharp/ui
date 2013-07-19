@@ -156,11 +156,11 @@
     <Compile Include="Osm\GeoHash.cs" />
     <Compile Include="Osm\OsmHash.cs" />
     <Compile Include="Osm\PrimitiveExtensions.cs" />
-    <Compile Include="Osm\Streams\Primitives\OsmMember.cs" />
-    <Compile Include="Osm\Streams\Primitives\OsmNode.cs" />
-    <Compile Include="Osm\Streams\Primitives\OsmRelation.cs" />
-    <Compile Include="Osm\Streams\Primitives\OsmTag.cs" />
-    <Compile Include="Osm\Streams\Primitives\OsmWay.cs" />
+    <Compile Include="Osm\Primitives\RedisRelationMember.cs" />
+    <Compile Include="Osm\Primitives\RedisNode.cs" />
+    <Compile Include="Osm\Primitives\RedisRelation.cs" />
+    <Compile Include="Osm\Primitives\RedisTag.cs" />
+    <Compile Include="Osm\Primitives\RedisWay.cs" />
     <Compile Include="Osm\Streams\RedisOsmStreamTarget.cs" />
     <Compile Include="Osm\RedisDataSource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -178,9 +178,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SimpleSchema\Processor\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

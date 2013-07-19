@@ -129,7 +129,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataProviderOsmTests.cs" />
-    <Compile Include="SQLite\SQLiteServerOsm.cs" />
+    <Compile Include="Redis\RedisProviderOsmTests.cs" />
+    <Compile Include="SQLite\SQLiteProviderOsmTests.cs" />
     <Compile Include="SQLServer\Osm\SQLServerDDLChecks.cs" />
     <Compile Include="SQLServer\Osm\SQLServerDDLChecksStreamTarget.cs" />
     <Compile Include="SQLServer\Osm\SQLServerRoutingTests.cs" />
@@ -137,6 +138,18 @@
   <ItemGroup>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Common, Version=3.9.55.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Common.3.9.55\lib\net35\ServiceStack.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=3.9.55.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Common.3.9.55\lib\net35\ServiceStack.Interfaces.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Redis, Version=3.9.55.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Redis.3.9.55\lib\net35\ServiceStack.Redis.dll</HintPath>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=3.9.55.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.3.9.55\lib\net35\ServiceStack.Text.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />

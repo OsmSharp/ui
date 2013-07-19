@@ -20,7 +20,7 @@ namespace OsmSharp.Data.Unittests.SQLite
     /// Contains database tests for SQLite and osm-data.
     /// </summary>
     [TestFixture]
-    public class SQLiteServerOsm : DataProviderOsmTests
+    public class SQLiteProviderOsmTests : DataProviderOsmTests
     {
         /// <summary>
         /// Tests read/write node.

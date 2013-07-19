@@ -23,15 +23,15 @@ using System.Text;
 using ServiceStack.Redis;
 using ServiceStack.Redis.Generic;
 using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Data.Redis.Osm.Streams.Primitives;
 using OsmSharp.Osm.Simple;
+using OsmSharp.Data.Redis.Osm.Primitives;
 
 namespace OsmSharp.Data.Redis.Osm.Streams
 {
     /// <summary>
     /// A data processor target using Redis.
     /// </summary>
-    public class RedisDataProcessorTarget : OsmStreamTarget
+    public class RedisOsmStreamTarget : OsmStreamTarget
     {
         /// <summary>
         /// Holds the redis client.
@@ -41,7 +41,7 @@ namespace OsmSharp.Data.Redis.Osm.Streams
         /// <summary>
         /// Creates a new data processor target.
         /// </summary>
-        public RedisDataProcessorTarget()
+        public RedisOsmStreamTarget()
         {
             _redisClient = new RedisClient();
         }
@@ -51,49 +51,44 @@ namespace OsmSharp.Data.Redis.Osm.Streams
         /// </summary>
         /// <param name="host"></param>
         /// <param name="port"></param>
-        public RedisDataProcessorTarget(string host, int port)
+        public RedisOsmStreamTarget(string host, int port)
         {
             _redisClient = new RedisClient(host, port);
         }
 
         /// <summary>
-        /// The redist node clients.
+        /// Creates a new data processor target.
         /// </summary>
-        private IRedisTypedClient<OsmNode> _node_type_client;
+        /// <param name="redisClient"></param>
+        public RedisOsmStreamTarget(RedisClient redisClient)
+        {
+            _redisClient = redisClient;
+        }
 
         /// <summary>
         /// The redist node clients.
         /// </summary>
-        private IRedisTypedClient<OsmWay> _way_type_client;
+        private IRedisTypedClient<RedisNode> _nodeTypeClient;
 
-        ///// <summary>
-        ///// The redist node clients.
-        ///// </summary>
-        //private IRedisTypedClient<SimpleRelation> _relation_type_client;
+        /// <summary>
+        /// The redist node clients.
+        /// </summary>
+        private IRedisTypedClient<RedisWay> _wayTypeClient;
+
+        /// <summary>
+        /// The redist node clients.
+        /// </summary>
+        private IRedisTypedClient<RedisRelation> _relationTypeClient;
 
         /// <summary>
         /// Initializes this data processor.
         /// </summary>
         public override void Initialize()
         {
-            _node_type_client = _redisClient.As<OsmNode>();
-            _way_type_client = _redisClient.As<OsmWay>();
-            //_relation_type_client = _redis_client.GetTypedClient<SimpleRelation>();
-            
-             //redis = redisClient.GetTypedClient<OsmNode>()
-            _cached_nodes = new Dictionary<long, Node>();
-            _nodes_in_ways = new Dictionary<long, OsmNode>();
+            _nodeTypeClient = _redisClient.As<RedisNode>();
+            _wayTypeClient = _redisClient.As<RedisWay>();
+            _relationTypeClient = _redisClient.As<RedisRelation>();
         }
-
-        /// <summary>
-        /// Holds the nodes in memory.
-        /// </summary>
-        private Dictionary<long, Node> _cached_nodes;
-
-        /// <summary>
-        /// Holds the nodes in the ways.
-        /// </summary>
-        private Dictionary<long, OsmNode> _nodes_in_ways;
 
         /// <summary>
         /// Adds a node to this database.
@@ -101,7 +96,13 @@ namespace OsmSharp.Data.Redis.Osm.Streams
         /// <param name="node"></param>
         public override void AddNode(Node node)
         {
-            _cached_nodes[node.Id.Value] = node;
+            // save the node in the current redis key.
+            string nodeKey = node.GetRedisKey();
+            _nodeTypeClient.SetEntry(nodeKey, PrimitiveExtensions.ConvertTo(node));
+
+            // save the node in the correct osmhash location.
+            var idBytes = BitConverter.GetBytes(node.Id.Value);
+            _redisClient.SAdd(node.GetOsmHash(), idBytes);
         }
 
         /// <summary>
@@ -110,33 +111,9 @@ namespace OsmSharp.Data.Redis.Osm.Streams
         /// <param name="way"></param>
         public override void AddWay(Way way)
         {
-            // converts the way.
-            OsmWay newWay = PrimitiveExtensions.ConvertTo(way, way.Nodes);
-
-            // only insert it if it is an highway.
-            if (newWay.IsHighway)
-            {
-                string way_key = newWay.GetRedisKey();
-                _way_type_client.SetEntry(way_key, newWay);
-
-                // add all the needed nodes.
-                foreach (long id in way.Nodes)
-                {
-                    Node node = null;
-                    OsmNode new_node = null;
-                    if (_cached_nodes.TryGetValue(id, out node)
-                        && !_nodes_in_ways.TryGetValue(id, out new_node))
-                    {
-                        // convert to the new node.
-                        new_node = PrimitiveExtensions.ConvertTo(node);
-                        _nodes_in_ways.Add(id, new_node);
-                    }
-                    if (new_node != null)
-                    {
-                        new_node.Ways.Add(way.Id.Value);
-                    }
-                }
-            }
+            // save the way in the current redis key.
+            string wayKey = way.GetRedisKey();
+            _wayTypeClient.SetEntry(wayKey, PrimitiveExtensions.ConvertTo(way));
         }
 
         /// <summary>
@@ -145,8 +122,9 @@ namespace OsmSharp.Data.Redis.Osm.Streams
         /// <param name="relation"></param>
         public override void AddRelation(Relation relation)
         {
-            //string relation_key = relation.GetRedisKey();
-            //_relation_type_client.SetEntry(relation_key, relation);
+            // save the relation in the current redis key.
+            string relationKey = relation.GetRedisKey();
+            _relationTypeClient.SetEntry(relationKey, PrimitiveExtensions.ConvertTo(relation));
         }
 
         /// <summary>
@@ -154,23 +132,9 @@ namespace OsmSharp.Data.Redis.Osm.Streams
         /// </summary>
         public override void Close()
         {
-            long node_idx = 0;
-            foreach (OsmNode new_node in _nodes_in_ways.Values)
-            {
-                node_idx++;
-                string node_key = new_node.GetRedisKey();
-                _node_type_client.SetEntry(node_key, new_node);
-
-                var idBytes = BitConverter.GetBytes(new_node.Id);
-                _redisClient.SAdd(new_node.GetOsmHash(), idBytes);
-
-                if ((node_idx % 1000) == 0)
-                {
-                    Console.WriteLine("Node[{0}]", node_idx);
-                }
-            }
-            _node_type_client.Dispose();
-            _way_type_client.Dispose();
+            _nodeTypeClient.Dispose();
+            _wayTypeClient.Dispose();
+            _relationTypeClient.Dispose();
 
             _redisClient.Dispose();
         }
