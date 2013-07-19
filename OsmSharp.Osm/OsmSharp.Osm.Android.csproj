@@ -149,7 +149,6 @@
     <Compile Include="Interpreter\SimpleGeometryInterpreter.cs" />
     <Compile Include="RelationMemberType.cs" />
     <Compile Include="ChangeSetInfo.cs" />
-    <Compile Include="ChangeType.cs" />
     <Compile Include="Interpreter\GeometryInterpreter.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -9,7 +9,6 @@ using Android.OS;
 using OsmSharp.UI.Renderer;
 using System.Reflection;
 using System.IO;
-using OsmSharp.Osm.Simple;
 using System.Collections.Generic;
 using OsmSharp.UI;
 using OsmSharp.UI.Map.Styles.MapCSS;
