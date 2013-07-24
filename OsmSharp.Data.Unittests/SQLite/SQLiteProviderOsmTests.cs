@@ -58,6 +58,33 @@ namespace OsmSharp.Data.Unittests.SQLite
             base.TestReadWriteData();
         }
 
+        /// <summary>
+        /// Tests a write to a sqlite database and gets ways using it's nodes.
+        /// </summary>
+        [Test]
+        public void SQLiteTestGetWaysForNode()
+        {
+            base.TestGetWaysForNode();
+        }
+
+        /// <summary>
+        /// Tests a write to a sqlite database and gets relations using it's members.
+        /// </summary>
+        [Test]
+        public void SQLiteTestGetRelationsForMember()
+        {
+            base.TestGetRelationsForMember();
+        }
+
+        /// <summary>
+        /// Tests a bounding box query.
+        /// </summary>
+        [Test]
+        public void SQLiteTestBoundingBoxQueries()
+        {
+            base.TestBoundingBoxQueries();
+        }
+
         #region SQLite Implementations
 
         private SQLiteConnection _connection = null;

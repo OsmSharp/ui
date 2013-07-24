@@ -47,9 +47,9 @@
     <DocumentationFile>..\OutputWindowsPhone\OsmSharp.Routing.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="protobuf-net, Version=2.0.0.640, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+    <Reference Include="protobuf-net, Version=2.0.0.651, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\protobuf-net.2.0.0.640\lib\sl4-windowsphone71\protobuf-net.dll</HintPath>
+      <HintPath>..\..\..\..\protobuf-net-read-only\protobuf-net_Phone7\Bin\Debug\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />

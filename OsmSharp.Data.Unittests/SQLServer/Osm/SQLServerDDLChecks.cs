@@ -128,14 +128,14 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
         [Test]
         public void RelationMemberTypeStringLengths()
         {
-            Console.WriteLine(RelationMemberType.Node.ToString().Length);
-            Assert.LessOrEqual(RelationMemberType.Node.ToString().Length, SQLServerSchemaConstants.RelationMemberType);
+            Console.WriteLine(OsmGeoType.Node.ToString().Length);
+            Assert.LessOrEqual(OsmGeoType.Node.ToString().Length, SQLServerSchemaConstants.RelationMemberType);
 
-            Console.WriteLine(RelationMemberType.Relation.ToString().Length);
-            Assert.LessOrEqual(RelationMemberType.Relation.ToString().Length, SQLServerSchemaConstants.RelationMemberType);
+            Console.WriteLine(OsmGeoType.Relation.ToString().Length);
+            Assert.LessOrEqual(OsmGeoType.Relation.ToString().Length, SQLServerSchemaConstants.RelationMemberType);
 
-            Console.WriteLine(RelationMemberType.Way.ToString().Length);
-            Assert.LessOrEqual(RelationMemberType.Way.ToString().Length, SQLServerSchemaConstants.RelationMemberType);
+            Console.WriteLine(OsmGeoType.Way.ToString().Length);
+            Assert.LessOrEqual(OsmGeoType.Way.ToString().Length, SQLServerSchemaConstants.RelationMemberType);
         }
     }
 }

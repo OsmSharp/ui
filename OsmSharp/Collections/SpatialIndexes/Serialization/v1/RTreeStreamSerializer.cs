@@ -60,6 +60,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             {
                 // build the run time type model.
                 _typeModel = TypeModel.Create();
+                //_typeModel.SetDefaultFactory(typeof(Factory).GetMethod("Create"));
                 _typeModel.Add(typeof(ChildrenIndex), true); // the tile metadata.
                 this.BuildRuntimeTypeModel(_typeModel);
             }
@@ -214,55 +215,6 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
         }
 
         /// <summary>
-        /// Represents a reserializable index of children of an R-tree node.
-        /// </summary>
-        [ProtoContract]
-        public class ChildrenIndex
-        {
-            /// <summary>
-            /// The min X of each child.
-            /// </summary>
-            [ProtoMember(1)]
-            public float[] MinX { get; set; }
-
-            /// <summary>
-            /// The min Y of each child.
-            /// </summary>
-            [ProtoMember(2)]
-            public float[] MinY { get; set; }
-
-            /// <summary>
-            /// The max X of each child.
-            /// </summary>
-            [ProtoMember(3)]
-            public float[] MaxX { get; set; }
-
-            /// <summary>
-            /// The max Y of each child.
-            /// </summary>
-            [ProtoMember(4)]
-            public float[] MaxY { get; set; }
-
-            /// <summary>
-            /// The start position of each node in the stream.
-            /// </summary>
-            [ProtoMember(5)]
-            public int[] Starts { get; set; }
-
-            /// <summary>
-            /// The end of this node in the stream.
-            /// </summary>
-            [ProtoMember(6)]
-            public int End { get; set; }
-
-            /// <summary>
-            /// Gets or sets the type flags.
-            /// </summary>
-            [ProtoMember(7)]
-            public bool[] IsLeaf { get; set; }
-        }
-
-        /// <summary>
         /// Deserializes the data that is relevant for the given box.
         /// </summary>
         /// <param name="stream"></param>
@@ -368,5 +320,62 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             }
             throw new Exception("Cannot deserialize node!");
         }
+    }
+
+    /// <summary>
+    /// Represents a reserializable index of children of an R-tree node.
+    /// </summary>
+    [ProtoContract]
+    public class ChildrenIndex
+    {
+        /// <summary>
+        /// Creates a new children index.
+        /// </summary>
+        public ChildrenIndex()
+        {
+
+        }
+
+        /// <summary>
+        /// The min X of each child.
+        /// </summary>
+        [ProtoMember(1)]
+        public float[] MinX { get; set; }
+
+        /// <summary>
+        /// The min Y of each child.
+        /// </summary>
+        [ProtoMember(2)]
+        public float[] MinY { get; set; }
+
+        /// <summary>
+        /// The max X of each child.
+        /// </summary>
+        [ProtoMember(3)]
+        public float[] MaxX { get; set; }
+
+        /// <summary>
+        /// The max Y of each child.
+        /// </summary>
+        [ProtoMember(4)]
+        public float[] MaxY { get; set; }
+
+        /// <summary>
+        /// The start position of each node in the stream.
+        /// </summary>
+        [ProtoMember(5)]
+        public int[] Starts { get; set; }
+
+        /// <summary>
+        /// The end of this node in the stream.
+        /// </summary>
+        [ProtoMember(6)]
+        public int End { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type flags.
+        /// </summary>
+        [ProtoMember(7)]
+        public bool[] IsLeaf { get; set; }
     }
 }

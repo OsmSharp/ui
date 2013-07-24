@@ -179,7 +179,7 @@ namespace OsmSharp.Math.Primitives
         /// <summary>
         /// Returns all the corners of this box.
         /// </summary>
-        public PointF2D[] Corners
+        public virtual PointF2D[] Corners
         {
             get
             {

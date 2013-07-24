@@ -193,6 +193,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\DataSourceReadOnlyBase.cs" />
     <Compile Include="Interpreter\Complete\CompleteChange.cs" />
     <Compile Include="Interpreter\Complete\CompleteChangeSet.cs" />
     <Compile Include="API\APICapabilities.cs" />
@@ -288,7 +289,6 @@
     <Compile Include="OsmGeoType.cs" />
     <Compile Include="Relation.cs" />
     <Compile Include="RelationMember.cs" />
-    <Compile Include="RelationMemberType.cs" />
     <Compile Include="Tiles\TileDefaultsForRouting.cs" />
     <Compile Include="Way.cs" />
     <Compile Include="Data\INodeSource.cs" />

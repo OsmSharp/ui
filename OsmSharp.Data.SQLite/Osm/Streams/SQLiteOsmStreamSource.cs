@@ -205,13 +205,13 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
                         switch (memberType)
                         {
                             case "Node":
-                                member.MemberType = RelationMemberType.Node;
+                                member.MemberType = OsmGeoType.Node;
                                 break;
                             case "Way":
-                                member.MemberType = RelationMemberType.Way;
+                                member.MemberType = OsmGeoType.Way;
                                 break;
                             case "Relation":
-                                member.MemberType = RelationMemberType.Relation;
+                                member.MemberType = OsmGeoType.Relation;
                                 break;
                         }
 

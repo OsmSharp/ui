@@ -95,13 +95,13 @@ namespace OsmSharp.Osm.Xml.v0_6
                     switch (member.type)
                     {
                         case memberType.node:
-                            simpleMember.MemberType = RelationMemberType.Node;
+                            simpleMember.MemberType = OsmGeoType.Node;
                             break;
                         case memberType.relation:
-                            simpleMember.MemberType = RelationMemberType.Relation;
+                            simpleMember.MemberType = OsmGeoType.Relation;
                             break;
                         case memberType.way:
-                            simpleMember.MemberType = RelationMemberType.Way;
+                            simpleMember.MemberType = OsmGeoType.Way;
                             break;
                     }
                 }
@@ -784,15 +784,15 @@ namespace OsmSharp.Osm.Xml.v0_6
                 {
                     switch (dom_member.MemberType.Value)
                     {
-                        case RelationMemberType.Node:
+                        case OsmGeoType.Node:
                             m.type = memberType.node;
                             m.typeSpecified = true;
                             break;
-                        case RelationMemberType.Relation:
+                        case OsmGeoType.Relation:
                             m.type = memberType.relation;
                             m.typeSpecified = true;
                             break;
-                        case RelationMemberType.Way:
+                        case OsmGeoType.Way:
                             m.type = memberType.way;
                             m.typeSpecified = true;
                             break;

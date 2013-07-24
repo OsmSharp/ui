@@ -791,17 +791,17 @@ namespace OsmSharp.Osm.API
                 relation.Members = new List<RelationMember>();
                 foreach (Osm.Xml.v0_6.member xml_member in xml_relation.member)
                 {
-                    RelationMemberType? member_type = null;
+                    OsmGeoType? member_type = null;
                     switch (xml_member.type)
                     {
                         case memberType.node:
-                            member_type = RelationMemberType.Node;
+                            member_type = OsmGeoType.Node;
                             break;
                         case memberType.way:
-                            member_type = RelationMemberType.Way;
+                            member_type = OsmGeoType.Way;
                             break;
                         case memberType.relation:
-                            member_type = RelationMemberType.Relation;
+                            member_type = OsmGeoType.Relation;
                             break;
                     }
 

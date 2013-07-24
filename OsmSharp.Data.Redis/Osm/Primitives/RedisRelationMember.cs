@@ -32,7 +32,7 @@ namespace OsmSharp.Data.Redis.Osm.Primitives
         /// <summary>
         /// The type of the object in this relation member.
         /// </summary>
-        public RelationMemberType Type { get; set; }
+        public OsmGeoType Type { get; set; }
 
         /// <summary>
         /// The id of the object in this relation member.

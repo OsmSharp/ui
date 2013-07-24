@@ -33,7 +33,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
     /// 
     /// http://www.osmsharp.com/wiki/simpleschema
     /// </summary>
-    public class PostgreSQLDataSource : IDataSourceReadOnly, IDisposable
+    public class PostgreSQLDataSource : DataSourceReadOnlyBase, IDisposable
     {
         /// <summary>
         /// Holds the connection string.
@@ -117,7 +117,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// <summary>
         /// Not supported.
         /// </summary>
-        public GeoCoordinateBox BoundingBox
+        public override GeoCoordinateBox BoundingBox
         {
             get
             {
@@ -139,7 +139,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// <summary>
         /// Returns the id.
         /// </summary>
-        public Guid Id
+        public override Guid Id
         {
             get
             {
@@ -150,7 +150,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// <summary>
         /// Returns false; database sources have no bounding box.
         /// </summary>
-        public bool HasBoundinBox
+        public override bool HasBoundinBox
         {
             get
             {
@@ -161,7 +161,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// <summary>
         /// Return true; source is readonly.
         /// </summary>
-        public bool IsReadOnly
+        public override bool IsReadOnly
         {
             get
             {
@@ -170,26 +170,11 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         }
 
         /// <summary>
-        /// Returns the node with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Node GetNode(long id)
-        {
-            IList<Node> nodes = this.GetNodes(new List<long>(new long[] { id }));
-            if (nodes.Count > 0)
-            {
-                return nodes[0];
-            }
-            return null;
-        }
-
-        /// <summary>
         /// Returns all the nodes with the given ids.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Node> GetNodes(IList<long> ids)
+        public override IList<Node> GetNodes(IList<long> ids)
         {
             IList<Node> return_list = new List<Node>();
             if (ids.Count > 0)
@@ -259,28 +244,12 @@ namespace OsmSharp.Data.PostgreSQL.Osm
             return return_list;
         }
 
-
-        /// <summary>
-        /// Returns the relation for the given if.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Relation GetRelation(long id)
-        {
-            IList<Relation> relations = this.GetRelations(new List<long>(new long[] { id }));
-            if (relations.Count > 0)
-            {
-                return relations[0];
-            }
-            return null;
-        }
-
         /// <summary>
         /// Returns the relations for the given ids.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Relation> GetRelations(IList<long> ids)
+        public override IList<Relation> GetRelations(IList<long> ids)
         {
             if (ids.Count > 0)
             {
@@ -421,16 +390,16 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// </summary>
         /// <param name="member_type"></param>
         /// <returns></returns>
-        private RelationMemberType? ConvertMemberType(long member_type)
+        private OsmGeoType? ConvertMemberType(long member_type)
         {
             switch (member_type)
             {
-                case (long)RelationMemberType.Node:
-                    return RelationMemberType.Node;
-                case (long)RelationMemberType.Way:
-                    return RelationMemberType.Way;
-                case (long)RelationMemberType.Relation:
-                    return RelationMemberType.Relation;
+                case (long)OsmGeoType.Node:
+                    return OsmGeoType.Node;
+                case (long)OsmGeoType.Way:
+                    return OsmGeoType.Way;
+                case (long)OsmGeoType.Relation:
+                    return OsmGeoType.Relation;
             }
             throw new ArgumentOutOfRangeException("Invalid member type.");
         }
@@ -438,37 +407,13 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// <summary>
         /// Returns all relations for the given objects.
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public IList<Relation> GetRelationsFor(OsmGeo obj)
+        public override IList<Relation> GetRelationsFor(OsmGeoType type, long id)
         {
             // TODO: implement this
             return new List<Relation>();
-        }
-
-        /// <summary>
-        /// Returns the way with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Way GetWay(long id)
-        {
-            IList<Way> ways = this.GetWays(new List<long>(new long[] { id }));
-            if (ways.Count > 0)
-            {
-                return ways[0];
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Returns all ways with the given ids.
-        /// </summary>
-        /// <param name="ids"></param>
-        /// <returns></returns>
-        public IList<Way> GetWays(IList<long> ids)
-        {
-            return this.GetWays(ids, null);
         }
 
         /// <summary>
@@ -477,7 +422,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// <param name="ids"></param>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        private IList<Way> GetWays(IList<long> ids, Dictionary<long,Node> nodes)
+        public override IList<Way> GetWays(IList<long> ids)
         {
             if (ids.Count > 0)
             {
@@ -612,12 +557,12 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// <summary>
         /// Returns all ways using the given node.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public IList<Way> GetWaysFor(Node node)
+        public override IList<Way> GetWaysFor(long id)
         {
-            Dictionary<long,Node> nodes = new Dictionary<long,Node>();
-            nodes.Add(node.Id.Value, node);
+            List<long> nodes = new List<long>();
+            nodes.Add(id);
             return this.GetWaysForNodes(nodes);
         }
 
@@ -626,20 +571,20 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// </summary>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        public IList<Way> GetWaysForNodes(Dictionary<long,Node> nodes)
+        public IList<Way> GetWaysForNodes(List<long> ids)
         {
-            if (nodes.Count > 0)
+            if (ids.Count > 0)
             {
                 NpgsqlConnection con = this.CreateConnection();
 
                 List<long> way_ids = new List<long>();
-                for (int idx_100 = 0; idx_100 <= nodes.Count / 100; idx_100++)
+                for (int idx_100 = 0; idx_100 <= ids.Count / 100; idx_100++)
                 {
                     // STEP1: Load ways that exist for the given nodes.
                     string sql = "SELECT * FROM way_nodes WHERE (node_id IN ({0})) ";
                     int start_idx = idx_100 * 100;
-                    int stop_idx = System.Math.Min((idx_100 + 1) * 100, nodes.Count);
-                    string ids_string = this.ConstructIdList(nodes.Keys.ToList<long>(), start_idx, stop_idx);
+                    int stop_idx = System.Math.Min((idx_100 + 1) * 100, ids.Count);
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
                     if (ids_string.Length > 0)
                     {
                         sql = string.Format(sql, ids_string);
@@ -660,7 +605,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                     }
                 }
 
-                return this.GetWays(way_ids, nodes);
+                return this.GetWays(way_ids);
             }
             return new List<Way>();
         }
@@ -699,7 +644,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IList<OsmGeo> Get(GeoCoordinateBox box, OsmSharp.Osm.Filters.Filter filter)
+        public override IList<OsmGeo> Get(GeoCoordinateBox box, OsmSharp.Osm.Filters.Filter filter)
         {
             // initialize connection.
             NpgsqlConnection con = this.CreateConnection();
@@ -744,7 +689,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
             NpgsqlDataReader reader = com.ExecuteReader();
             Node node = null;
             Dictionary<long, Node> nodes = new Dictionary<long, Node>();
-            List<long> node_ids = new List<long>();
+            List<long> nodeIds = new List<long>();
             while (reader.Read())
             {
                 // load/parse data.
@@ -768,7 +713,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                 node.Longitude = ((double)longitude_int) / 10000000.0;
 
                 nodes.Add(node.Id.Value,node);
-                node_ids.Add(node.Id.Value);
+                nodeIds.Add(node.Id.Value);
             }
             reader.Close();
 
@@ -776,7 +721,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
             this.LoadNodeTags(nodes);            
 
             // STEP3: Load all ways for the given nodes.
-            IList<Way> ways = this.GetWaysForNodes(nodes);
+            IList<Way> ways = this.GetWaysForNodes(nodeIds);
 
             // Add all objects to the base list.
             foreach (Node node_result in nodes.Values.ToList<Node>())

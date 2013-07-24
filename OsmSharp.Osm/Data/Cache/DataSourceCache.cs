@@ -32,7 +32,7 @@ namespace OsmSharp.Osm.Data.Cache
     /// <summary>
     /// Class used for caching data using bounding boxes.
     /// </summary>
-    public class DataSourceCache : IDataSourceReadOnly
+    public class DataSourceCache : DataSourceReadOnlyBase
     {
         /// <summary>
         /// Holds the id of this datasource.
@@ -71,7 +71,7 @@ namespace OsmSharp.Osm.Data.Cache
         /// <summary>
         /// Returns the boundingbox.
         /// </summary>
-        public GeoCoordinateBox BoundingBox
+        public override GeoCoordinateBox BoundingBox
         {
             get { return _source.BoundingBox; }
         }
@@ -79,7 +79,7 @@ namespace OsmSharp.Osm.Data.Cache
         /// <summary>
         /// Returns the id of this datasource.
         /// </summary>
-        public Guid Id
+        public override Guid Id
         {
             get { return _id; }
         }
@@ -87,17 +87,9 @@ namespace OsmSharp.Osm.Data.Cache
         /// <summary>
         /// Returns true if this datasource is bounded.
         /// </summary>
-        public bool HasBoundinBox
+        public override bool HasBoundinBox
         {
             get { return _source.HasBoundinBox; }
-        }
-
-        /// <summary>
-        /// Returns true.
-        /// </summary>
-        public bool IsReadOnly
-        {
-            get { return true; }
         }
 
         /// <summary>
@@ -105,7 +97,7 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Node GetNode(long id)
+        public override Node GetNode(long id)
         {
             Node node;
             if(!_nodesCache.TryGet(id, out node))
@@ -121,7 +113,7 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Node> GetNodes(IList<long> ids)
+        public override IList<Node> GetNodes(IList<long> ids)
         {
             List<Node> nodes = new List<Node>(ids.Count);
             for (int idx = 0; idx < nodes.Count; idx++)
@@ -136,7 +128,7 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Relation GetRelation(long id)
+        public override Relation GetRelation(long id)
         {
             Relation relation;
             if (!_relationsCache.TryGet(id, out relation))
@@ -152,7 +144,7 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Relation> GetRelations(IList<long> ids)
+        public override IList<Relation> GetRelations(IList<long> ids)
         {
             List<Relation> relations = new List<Relation>(ids.Count);
             for (int idx = 0; idx < relations.Count; idx++)
@@ -165,11 +157,12 @@ namespace OsmSharp.Osm.Data.Cache
         /// <summary>
         /// Returns all relations for the given object.
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public IList<Relation> GetRelationsFor(OsmGeo obj)
+        public override IList<Relation> GetRelationsFor(OsmGeoType type, long id)
         {
-            IList<Relation> relations = _source.GetRelationsFor(obj);
+            IList<Relation> relations = _source.GetRelationsFor(type, id);
             foreach (Relation relation in relations)
             {
                 _relationsCache.Add(relation.Id.Value, relation);
@@ -182,7 +175,7 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Way GetWay(long id)
+        public override Way GetWay(long id)
         {
             Way way;
             if (!_waysCache.TryGet(id, out way))
@@ -198,7 +191,7 @@ namespace OsmSharp.Osm.Data.Cache
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Way> GetWays(IList<long> ids)
+        public override IList<Way> GetWays(IList<long> ids)
         {
             List<Way> ways = new List<Way>(ids.Count);
             for (int idx = 0; idx < ways.Count; idx++)
@@ -209,13 +202,23 @@ namespace OsmSharp.Osm.Data.Cache
         }
 
         /// <summary>
-        /// Returns all ways containing the given node.
+        /// Returns all the ways for a given node.
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public IList<Way> GetWaysFor(Node node)
+        public override IList<Way> GetWaysFor(Node node)
         {
-            IList<Way> ways = _source.GetWaysFor(node);
+            return this.GetWaysFor(node.Id.Value);
+        }
+
+        /// <summary>
+        /// Returns all ways containing the given node.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public override IList<Way> GetWaysFor(long id)
+        {
+            IList<Way> ways = _source.GetWaysFor(id);
             foreach (Way way in ways)
             {
                 _waysCache.Add(way.Id.Value, way);
@@ -229,7 +232,7 @@ namespace OsmSharp.Osm.Data.Cache
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
+        public override IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
             IList<OsmGeo> objects = _source.Get(box, filter);
             foreach (OsmGeo osmGeo in objects)

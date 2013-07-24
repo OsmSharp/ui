@@ -28,6 +28,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Data.PBF.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Memory;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Data.Unittests
 {
@@ -518,10 +519,10 @@ namespace OsmSharp.Data.Unittests
             relation.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
                 DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
             relation.Members = new List<RelationMember>();
-            relation.Members.Add(new RelationMember() { MemberId = 1, MemberRole = "node1", MemberType = RelationMemberType.Node });
-            relation.Members.Add(new RelationMember() { MemberId = 2, MemberRole = "node2", MemberType = RelationMemberType.Node });
-            relation.Members.Add(new RelationMember() { MemberId = 1, MemberRole = "node1", MemberType = RelationMemberType.Node });
-            relation.Members.Add(new RelationMember() { MemberId = 1, MemberRole = "way", MemberType = RelationMemberType.Way });
+            relation.Members.Add(new RelationMember() { MemberId = 1, MemberRole = "node1", MemberType = OsmGeoType.Node });
+            relation.Members.Add(new RelationMember() { MemberId = 2, MemberRole = "node2", MemberType = OsmGeoType.Node });
+            relation.Members.Add(new RelationMember() { MemberId = 1, MemberRole = "node1", MemberType = OsmGeoType.Node });
+            relation.Members.Add(new RelationMember() { MemberId = 1, MemberRole = "way", MemberType = OsmGeoType.Way });
 
             // create a target, add the relation, create a source and verify relation in db.
             target = this.CreateDataStreamTarget();
@@ -566,7 +567,232 @@ namespace OsmSharp.Data.Unittests
             }
         }
 
+        /// <summary>
+        /// Tests writing data and getting ways using it's nodes.
+        /// </summary>
+        protected void TestGetWaysForNode()
+        {
+            this.NotifyEmptyExpected(); // empty test database.
+
+            // create the target and pull the data from the test-file into the sqlite database.
+            OsmStreamTarget target = this.CreateDataStreamTarget();
+            target.Initialize();
+            PBFOsmStreamSource source = new PBFOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Data.Unittests.Data.Osm.test.osm.pbf"));
+            IDataSourceReadOnly dataSource = this.CreateDataSource();
+            source.Initialize();
+            while (source.MoveNext())
+            {
+                switch (source.Current().Type)
+                {
+                    case OsmGeoType.Way:
+                        Way way = (source.Current() as Way);
+                        target.AddWay(way);
+
+                        if (way.Nodes != null)
+                        {
+                            foreach (long nodeId in way.Nodes)
+                            {
+                                IList<Way> ways = dataSource.GetWaysFor(nodeId);
+                                Assert.IsNotNull(ways);
+                                Assert.IsTrue(ways.Count > 0);
+                                List<Way> foundWays = new List<Way>(ways.Where<Way>(x => x.Id == way.Id));
+                                Assert.AreEqual(1, foundWays.Count);
+                            }
+                        }
+                        break;
+                }
+            }
+
+            MemoryDataSource memorySource = MemoryDataSource.CreateFrom(source);
+            foreach (Way way in memorySource.GetWays())
+            {
+                if (way.Nodes != null)
+                {
+                    foreach (long nodeId in way.Nodes)
+                    {
+                        IList<Way> ways = dataSource.GetWaysFor(nodeId);
+                        Assert.IsNotNull(ways);
+                        Assert.IsTrue(ways.Count > 0);
+                        List<Way> foundWays = new List<Way>(ways.Where<Way>(x => x.Id == way.Id));
+                        Assert.AreEqual(1, foundWays.Count);
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Tests writing data and getting relations using it's members.
+        /// </summary>
+        protected void TestGetRelationsForMember()
+        {
+            this.NotifyEmptyExpected(); // empty test database.
+
+            // create the target and pull the data from the test-file into the sqlite database.
+            OsmStreamTarget target = this.CreateDataStreamTarget();
+            target.Initialize();
+            PBFOsmStreamSource source = new PBFOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Data.Unittests.Data.Osm.test.osm.pbf"));
+            IDataSourceReadOnly dataSource = this.CreateDataSource();
+            source.Initialize();
+            while (source.MoveNext())
+            {
+                switch (source.Current().Type)
+                {
+                    case OsmGeoType.Relation:
+                        Relation relation = (source.Current() as Relation);
+                        target.AddRelation(relation);
+
+                        if (relation.Members != null)
+                        {
+                            foreach (var member in relation.Members)
+                            {
+                                OsmGeoType type = OsmGeoType.Node;
+                                switch (member.MemberType.Value)
+                                {
+                                    case OsmGeoType.Node:
+                                        type = OsmGeoType.Node;
+                                        break;
+                                    case OsmGeoType.Way:
+                                        type = OsmGeoType.Way;
+                                        break;
+                                    case OsmGeoType.Relation:
+                                        type = OsmGeoType.Relation;
+                                        break;
+                                }
+                                IList<Relation> relations = dataSource.GetRelationsFor(type, member.MemberId.Value);
+                                Assert.IsNotNull(relations);
+                                Assert.IsTrue(relations.Count > 0);
+                                List<Relation> foundRelations = new List<Relation>(relations.Where<Relation>(x => x.Id == relation.Id));
+                                Assert.AreEqual(1, foundRelations.Count);
+                            }
+                        }
+                        break;
+                }
+            }
+
+            MemoryDataSource memorySource = MemoryDataSource.CreateFrom(source);
+            foreach (Relation relation in memorySource.GetRelations())
+            {
+                if (relation.Members != null)
+                {
+                    foreach (var member in relation.Members)
+                    {
+                        OsmGeoType type = OsmGeoType.Node;
+                        switch (member.MemberType.Value)
+                        {
+                            case OsmGeoType.Node:
+                                type = OsmGeoType.Node;
+                                break;
+                            case OsmGeoType.Way:
+                                type = OsmGeoType.Way;
+                                break;
+                            case OsmGeoType.Relation:
+                                type = OsmGeoType.Relation;
+                                break;
+                        }
+                        IList<Relation> relations = dataSource.GetRelationsFor(type, member.MemberId.Value);
+                        Assert.IsNotNull(relations);
+                        Assert.IsTrue(relations.Count > 0);
+                        List<Relation> foundRelations = new List<Relation>(relations.Where<Relation>(x => x.Id == relation.Id));
+                        Assert.AreEqual(1, foundRelations.Count);
+                    }
+                }
+                break;
+            }
+
+        }
+        /// <summary>
+        /// Tests a few boundingbox queries.
+        /// </summary>
+        protected void TestBoundingBoxQueries()
+        {
+            this.NotifyEmptyExpected(); // empty test database.
+
+            // create the target and pull the data from the test-file into the sqlite database.
+            OsmStreamTarget target = this.CreateDataStreamTarget();
+            PBFOsmStreamSource source = new PBFOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Data.Unittests.Data.Osm.test.osm.pbf"));
+            target.RegisterSource(source);
+            target.Pull();
+
+            IDataSourceReadOnly dataSource = this.CreateDataSource();
+            MemoryDataSource memorySource = MemoryDataSource.CreateFrom(source);
+
+            // get reference data and compare to the real thing!
+            GeoCoordinateBox box = memorySource.BoundingBox;
+            IList<OsmGeo> referenceBoxData = memorySource.Get(box, null);
+            IList<OsmGeo> boxData = dataSource.Get(box, null);
+            this.CompareResults(referenceBoxData, boxData);
+
+            // increase box size and compare again.
+            box = memorySource.BoundingBox.Resize(0.1);
+            referenceBoxData = memorySource.Get(box, null);
+            boxData = dataSource.Get(box, null);
+            this.CompareResults(referenceBoxData, boxData);
+
+            // descrese box size and compare again.
+            box = memorySource.BoundingBox.Scale(0.5);
+            referenceBoxData = memorySource.Get(box, null);
+            boxData = dataSource.Get(box, null);
+            this.CompareResults(referenceBoxData, boxData);
+
+            // descrese box size and compare again.
+            box = memorySource.BoundingBox.Scale(0.25);
+            referenceBoxData = memorySource.Get(box, null);
+            boxData = dataSource.Get(box, null);
+            this.CompareResults(referenceBoxData, boxData);
+
+            // descrese box size and compare again.
+            box = memorySource.BoundingBox.Scale(0.1);
+            referenceBoxData = memorySource.Get(box, null);
+            boxData = dataSource.Get(box, null);
+            this.CompareResults(referenceBoxData, boxData);
+        }
+
         #region Comparison Methods
+
+        /// <summary>
+        /// Compares the two collection to check if they contain the same objects.
+        /// </summary>
+        /// <param name="expected"></param>
+        /// <param name="found"></param>
+        private void CompareResults(IList<OsmGeo> expected, IList<OsmGeo> found)
+        {
+            Assert.AreEqual(expected.Count, found.Count);
+            Dictionary<string, OsmGeo> referenceBoxDataIndex = new Dictionary<string, OsmGeo>();
+            foreach (OsmGeo osmGeo in expected)
+            {
+                referenceBoxDataIndex.Add(string.Format("{0}:{1}", osmGeo.Type.ToString(), osmGeo.Id.Value), osmGeo);
+            }
+
+            foreach (OsmGeo osmGeo in found)
+            {
+                string refString = string.Format("{0}:{1}", osmGeo.Type.ToString(), osmGeo.Id.Value);
+                OsmGeo refOsmGeo;
+                if (referenceBoxDataIndex.TryGetValue(refString, out refOsmGeo))
+                {
+                    Assert.IsNotNull(refOsmGeo);
+                    switch (osmGeo.Type)
+                    {
+                        case OsmGeoType.Node:
+                            this.CompareNodes(refOsmGeo as Node, osmGeo as Node);
+                            break;
+                        case OsmGeoType.Way:
+                            this.CompareWays(refOsmGeo as Way, osmGeo as Way);
+                            break;
+                        case OsmGeoType.Relation:
+                            this.CompareRelations(refOsmGeo as Relation, osmGeo as Relation);
+                            break;
+                    }
+                }
+                else
+                {
+                    Assert.Fail("Reference data not found!");
+                }
+            }
+        }
 
         /// <summary>
         /// Compares a found node to an expected node.

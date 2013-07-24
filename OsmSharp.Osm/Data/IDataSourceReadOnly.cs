@@ -92,6 +92,14 @@ namespace OsmSharp.Osm.Data
         /// <summary>
         /// Returns all the relations for the given object.
         /// </summary>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        IList<Relation> GetRelationsFor(OsmGeoType type, long id);
+
+        /// <summary>
+        /// Returns all the relations for the given object.
+        /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
         IList<Relation> GetRelationsFor(OsmGeo obj);
@@ -113,6 +121,13 @@ namespace OsmSharp.Osm.Data
         /// <param name="ids"></param>
         /// <returns></returns>
         IList<Way> GetWays(IList<long> ids);
+
+        /// <summary>
+        /// Returns the way(s) for a given node.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        IList<Way> GetWaysFor(long id);
 
         /// <summary>
         /// Returns the way(s) for a given node.

@@ -462,7 +462,7 @@ namespace OsmSharp.UnitTests.API
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = RelationMemberType.Node
+                MemberType = OsmGeoType.Node
             });
             node = new Node();
             node.Latitude = -0.494497 + 0.0001f;
@@ -475,7 +475,7 @@ namespace OsmSharp.UnitTests.API
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = RelationMemberType.Node
+                MemberType = OsmGeoType.Node
             });
 
             // save the relation.
@@ -537,7 +537,7 @@ namespace OsmSharp.UnitTests.API
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = RelationMemberType.Node
+                MemberType = OsmGeoType.Node
             });
             node = new Node();
             node.Latitude = -0.494497 + 0.0001f;
@@ -550,7 +550,7 @@ namespace OsmSharp.UnitTests.API
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = RelationMemberType.Node
+                MemberType = OsmGeoType.Node
             });
 
             // save the relation.
@@ -616,7 +616,7 @@ namespace OsmSharp.UnitTests.API
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = RelationMemberType.Node
+                MemberType = OsmGeoType.Node
             });
             node = new Node();
             node.Latitude = -0.494497 + 0.0001f;
@@ -629,7 +629,7 @@ namespace OsmSharp.UnitTests.API
             {
                 MemberId = node.Id.Value,
                 MemberRole = "some_nodes_role",
-                MemberType = RelationMemberType.Node
+                MemberType = OsmGeoType.Node
             });
 
             // save the relation.

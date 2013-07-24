@@ -330,13 +330,13 @@ namespace OsmSharp.Osm.Data.Xml.Processor
                     {
                         switch (memberToAdd.MemberType.Value)
                         {
-                            case RelationMemberType.Node:
+                            case OsmGeoType.Node:
                                 mem.type = OsmSharp.Osm.Xml.v0_6.memberType.node;
                                 break;
-                            case RelationMemberType.Way:
+                            case OsmGeoType.Way:
                                 mem.type = OsmSharp.Osm.Xml.v0_6.memberType.way;
                                 break;
-                            case RelationMemberType.Relation:
+                            case OsmGeoType.Relation:
                                 mem.type = OsmSharp.Osm.Xml.v0_6.memberType.relation;
                                 break;
                         }

@@ -301,21 +301,21 @@ namespace OsmSharp.Osm.Data.Streams.Filters
                         {
                             switch (member.MemberType.Value)
                             {
-                                case RelationMemberType.Node:
+                                case OsmGeoType.Node:
                                     if (_nodesIn.Contains(member.MemberId.Value))
                                     {
                                         isIn = true;
                                         break;
                                     }
                                     break;
-                                case RelationMemberType.Way:
+                                case OsmGeoType.Way:
                                     if (_waysIn.Contains(member.MemberId.Value))
                                     {
                                         isIn = true;
                                         break;
                                     }
                                     break;
-                                case RelationMemberType.Relation:
+                                case OsmGeoType.Relation:
                                     if (_relationIn.Contains(member.MemberId.Value))
                                     {
                                         isIn = true;
@@ -331,13 +331,13 @@ namespace OsmSharp.Osm.Data.Streams.Filters
                             {
                                 switch (member.MemberType.Value)
                                 {
-                                    case RelationMemberType.Node:
+                                    case OsmGeoType.Node:
                                         _nodesToInclude.Add(member.MemberId.Value);
                                         break;
-                                    case RelationMemberType.Way:
+                                    case OsmGeoType.Way:
                                         _waysToInclude.Add(member.MemberId.Value);
                                         break;
-                                    case RelationMemberType.Relation:
+                                    case OsmGeoType.Relation:
                                         _relationsToInclude.Add(member.MemberId.Value);
                                         break;
                                 }

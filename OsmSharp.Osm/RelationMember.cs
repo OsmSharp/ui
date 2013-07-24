@@ -31,7 +31,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// The type of this relation member.
         /// </summary>
-        public RelationMemberType? MemberType { get; set; }
+        public OsmGeoType? MemberType { get; set; }
 
         /// <summary>
         /// The member id.

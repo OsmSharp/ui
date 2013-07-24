@@ -33,7 +33,7 @@ namespace OsmSharp.Data.Redis.Osm
     /// <summary>
     /// A datasource for OSM-objects for redis.
     /// </summary>
-    public class RedisDataSource : IDataSourceReadOnly, IDisposable
+    public class RedisDataSource : DataSourceReadOnlyBase, IDisposable
     {
         /// <summary>
         /// Holds the id of this datasource.
@@ -75,7 +75,7 @@ namespace OsmSharp.Data.Redis.Osm
         /// <summary>
         /// Returns the boundingbox if any.
         /// </summary>
-        public GeoCoordinateBox BoundingBox
+        public override GeoCoordinateBox BoundingBox
         {
             get 
             { 
@@ -97,7 +97,7 @@ namespace OsmSharp.Data.Redis.Osm
         /// <summary>
         /// Returns the id of this datasource.
         /// </summary>
-        public Guid Id
+        public override Guid Id
         {
             get 
             { 
@@ -108,22 +108,11 @@ namespace OsmSharp.Data.Redis.Osm
         /// <summary>
         /// Returns true if there is a boundingbox available.
         /// </summary>
-        public bool HasBoundinBox
+        public override bool HasBoundinBox
         {
             get 
             { 
                 return false; 
-            }
-        }
-        
-        /// <summary>
-        /// Returns true if readonly.
-        /// </summary>
-        public bool IsReadOnly
-        {
-            get 
-            { 
-                return true;
             }
         }
 
@@ -181,7 +170,7 @@ namespace OsmSharp.Data.Redis.Osm
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Node GetNode(long id)
+        public override Node GetNode(long id)
         {
             string nodeKey = PrimitiveExtensions.BuildNodeRedisKey(id);
             RedisNode redisNode = _clientNode.GetValue(nodeKey);
@@ -198,7 +187,7 @@ namespace OsmSharp.Data.Redis.Osm
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Node> GetNodes(IList<long> ids)
+        public override IList<Node> GetNodes(IList<long> ids)
         {
             List<string> keys = new List<string>();
             foreach (int id in ids)
@@ -221,7 +210,7 @@ namespace OsmSharp.Data.Redis.Osm
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Relation GetRelation(long id)
+        public override Relation GetRelation(long id)
         {
             string relationKey = PrimitiveExtensions.BuildRelationRedisKey(id);
             RedisRelation redisRelation = _clientRelation.GetValue(relationKey);
@@ -238,7 +227,7 @@ namespace OsmSharp.Data.Redis.Osm
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Relation> GetRelations(IList<long> ids)
+        public override IList<Relation> GetRelations(IList<long> ids)
         {
             List<string> keys = new List<string>();
             foreach (int id in ids)
@@ -259,9 +248,10 @@ namespace OsmSharp.Data.Redis.Osm
         /// <summary>
         /// Returns all relations containing the given object.
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public IList<Relation> GetRelationsFor(OsmGeo obj)
+        public override IList<Relation> GetRelationsFor(OsmGeoType type, long id)
         {
             throw new NotSupportedException();
         }
@@ -271,7 +261,7 @@ namespace OsmSharp.Data.Redis.Osm
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Way GetWay(long id)
+        public override Way GetWay(long id)
         {
             string wayKey = PrimitiveExtensions.BuildWayRedisKey(id);
             RedisWay redisWay = _clientWay.GetValue(wayKey);
@@ -288,7 +278,7 @@ namespace OsmSharp.Data.Redis.Osm
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Way> GetWays(IList<long> ids)
+        public override IList<Way> GetWays(IList<long> ids)
         {
             List<string> keys = new List<string>();
             foreach (int id in ids)
@@ -309,9 +299,9 @@ namespace OsmSharp.Data.Redis.Osm
         /// <summary>
         /// Returns all ways containing the given node.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public IList<Way> GetWaysFor(Node node)
+        public override IList<Way> GetWaysFor(long id)
         {
             throw new NotSupportedException();
             //if (node != null)
@@ -324,7 +314,7 @@ namespace OsmSharp.Data.Redis.Osm
             //return new List<Way>();
         }
 
-        public IList<OsmGeo> Get(GeoCoordinateBox box, OsmSharp.Osm.Filters.Filter filter)
+        public override IList<OsmGeo> Get(GeoCoordinateBox box, OsmSharp.Osm.Filters.Filter filter)
         {
             List<OsmGeo> result = new List<OsmGeo>();
 

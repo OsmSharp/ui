@@ -167,7 +167,7 @@ namespace OsmSharp.Math.Geo
         /// </summary>
         public GeoCoordinate TopLeft
         {
-            get { return new GeoCoordinate(this.MinLon, this.MaxLat); }
+            get { return new GeoCoordinate(this.MaxLat, this.MinLon); }
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace OsmSharp.Math.Geo
         /// </summary>
         public GeoCoordinate TopRight
         {
-            get { return new GeoCoordinate(this.MaxLon, this.MaxLat); }
+            get { return new GeoCoordinate(this.MaxLat, this.MaxLon); }
         }
 
         /// <summary>
@@ -183,7 +183,7 @@ namespace OsmSharp.Math.Geo
         /// </summary>
         public GeoCoordinate BottomLeft
         {
-            get { return new GeoCoordinate(this.MinLon, this.MinLat); }
+            get { return new GeoCoordinate(this.MinLat, this.MinLon); }
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace OsmSharp.Math.Geo
         /// </summary>
         public GeoCoordinate BottomRight
         {
-            get { return new GeoCoordinate(this.MaxLon, this.MinLat); }
+            get { return new GeoCoordinate(this.MinLat, this.MaxLon); }
         }
 
         /// <summary>
@@ -229,9 +229,40 @@ namespace OsmSharp.Math.Geo
             }
         }
 
+        /// <summary>
+        /// Returns all the corners of this box.
+        /// </summary>
+        public override PointF2D[] Corners
+        {
+            get
+            {
+                PointF2D[] corners = new PointF2D[4];
+                corners[0] = this.TopLeft;
+                corners[1] = this.TopRight;
+                corners[2] = this.BottomLeft;
+                corners[3] = this.BottomRight;
+                return corners;
+            }
+        }
+
         #endregion
 
         #region Operators
+
+        /// <summary>
+        /// Adds two bounding boxes together yielding as result the smallest box that surrounds both.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static GeoCoordinateBox operator +(GeoCoordinateBox a, GeoCoordinate b)
+        {
+            List<GeoCoordinate> points = new List<GeoCoordinate>();
+            points.AddRange(a.Corners.Cast<GeoCoordinate>());
+            points.Add(b);
+
+            return new GeoCoordinateBox(points);
+        }
 
         /// <summary>
         /// Adds two bounding boxes together yielding as result the smallest box that surrounds both.

@@ -30,12 +30,13 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>Bin\Debug</OutputPath>
+    <OutputPath>..\OutputWindowsPhone\</OutputPath>
     <DefineConstants>DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\OutputWindowsPhone\OsmSharp.WindowsPhone.UI.Sample.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,9 +56,9 @@
     <Reference Include="Microsoft.Xna.Framework.Graphics" />
     <Reference Include="Microsoft.Xna.Framework.Input.Touch" />
     <Reference Include="microsoft.xna.framework.interop" />
-    <Reference Include="protobuf-net, Version=2.0.0.621, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+    <Reference Include="protobuf-net, Version=2.0.0.651, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+      <HintPath>..\..\..\..\..\protobuf-net-read-only\protobuf-net_Phone7\Bin\Debug\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
@@ -112,10 +113,12 @@
     <ProjectReference Include="..\..\OsmSharp.Osm\OsmSharp.Osm.WindowsPhone.csproj">
       <Project>{B050A8E0-25FF-4FA1-B01E-0A06D7090863}</Project>
       <Name>OsmSharp.Osm.WindowsPhone</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
     <ProjectReference Include="..\..\OsmSharp.Routing\OsmSharp.Routing.WindowsPhone.csproj">
       <Project>{BEDE3991-D151-48D0-BAB2-D04369CD1711}</Project>
       <Name>OsmSharp.Routing.WindowsPhone</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
     <ProjectReference Include="..\..\OsmSharp\OsmSharp.WindowsPhone.csproj">
       <Project>{5F0F6567-835D-4807-893C-F4B6C3E58CE8}</Project>
@@ -125,10 +128,12 @@
     <ProjectReference Include="..\..\OsmSharp.UI\OsmSharp.UI.WindowsPhone.csproj">
       <Project>{E3BB9FEF-3728-4944-9229-CD486C19BDD5}</Project>
       <Name>OsmSharp.UI.WindowsPhone</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
     <ProjectReference Include="..\..\OsmSharp.WindowsPhone.UI\OsmSharp.WindowsPhone.UI.csproj">
       <Project>{5ED8F316-9B5A-46DB-BDB6-73269D361969}</Project>
       <Name>OsmSharp.WindowsPhone.UI</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />

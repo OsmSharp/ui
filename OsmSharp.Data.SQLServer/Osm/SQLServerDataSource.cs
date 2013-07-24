@@ -26,6 +26,7 @@ using OsmSharp.Osm.Data;
 using OsmSharp.Data.SQLServer.Osm.SchemaTools;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Filters;
 
 namespace OsmSharp.Data.SQLServer.Osm
 {
@@ -34,7 +35,7 @@ namespace OsmSharp.Data.SQLServer.Osm
     /// 
     /// http://www.osmsharp.com/wiki/simpleschema
     /// </summary>
-    public class SQLServerDataSource : IDataSourceReadOnly, IDisposable
+    public class SQLServerDataSource : DataSourceReadOnlyBase, IDisposable
     {
         /// <summary>
         /// Holds the connection string.
@@ -103,7 +104,7 @@ namespace OsmSharp.Data.SQLServer.Osm
         /// <summary>
         /// Not supported.
         /// </summary>
-        public GeoCoordinateBox BoundingBox
+        public override GeoCoordinateBox BoundingBox
         {
             get
             {
@@ -125,7 +126,7 @@ namespace OsmSharp.Data.SQLServer.Osm
         /// <summary>
         /// Returns the id.
         /// </summary>
-        public Guid Id
+        public override Guid Id
         {
             get
             {
@@ -136,7 +137,7 @@ namespace OsmSharp.Data.SQLServer.Osm
         /// <summary>
         /// Returns false; database sources have no bounding box.
         /// </summary>
-        public bool HasBoundinBox
+        public override bool HasBoundinBox
         {
             get
             {
@@ -145,37 +146,11 @@ namespace OsmSharp.Data.SQLServer.Osm
         }
 
         /// <summary>
-        /// Return true; source is readonly.
-        /// </summary>
-        public bool IsReadOnly
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        /// <summary>
-        /// Returns the node with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Node GetNode(long id)
-        {
-            IList<Node> nodes = this.GetNodes(new List<long>(new long[] { id }));
-            if (nodes.Count > 0)
-            {
-                return nodes[0];
-            }
-            return null;
-        }
-
-        /// <summary>
         /// Returns all the nodes with the given ids.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Node> GetNodes(IList<long> ids)
+        public override IList<Node> GetNodes(IList<long> ids)
         {
             IList<Node> return_list = new List<Node>();
             if (ids.Count > 0)
@@ -244,22 +219,11 @@ namespace OsmSharp.Data.SQLServer.Osm
         }
 
         /// <summary>
-        /// Returns the relation with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Relation GetRelation(long id)
-        {
-            // TODO: implement this
-            return null;
-        }
-
-        /// <summary>
         /// Returns all the relations with the given ids.
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Relation> GetRelations(IList<long> ids)
+        public override IList<Relation> GetRelations(IList<long> ids)
         {
             // TODO: implement this
             return new List<Relation>();
@@ -268,27 +232,13 @@ namespace OsmSharp.Data.SQLServer.Osm
         /// <summary>
         /// Returns all relations for the given objects.
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public IList<Relation> GetRelationsFor(OsmGeo obj)
+        public override IList<Relation> GetRelationsFor(OsmGeoType type, long id)
         {
             // TODO: implement this
             return new List<Relation>();
-        }
-
-        /// <summary>
-        /// Returns the way with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public Way GetWay(long id)
-        {
-            IList<Way> ways = this.GetWays(new List<long>(new long[] { id }));
-            if (ways.Count > 0)
-            {
-                return ways[0];
-            }
-            return null;
         }
 
         /// <summary>
@@ -296,18 +246,7 @@ namespace OsmSharp.Data.SQLServer.Osm
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Way> GetWays(IList<long> ids)
-        {
-            return this.GetWays(ids, null);
-        }
-
-        /// <summary>
-        /// Returns all ways but use the existing nodes to fill the Nodes-lists.
-        /// </summary>
-        /// <param name="ids"></param>
-        /// <param name="nodes"></param>
-        /// <returns></returns>
-        private IList<Way> GetWays(IList<long> ids, Dictionary<long,Node> nodes)
+        public override IList<Way> GetWays(IList<long> ids)
         {
             if (ids.Count > 0)
             {
@@ -375,61 +314,19 @@ namespace OsmSharp.Data.SQLServer.Osm
                             long node_id = reader.GetInt64(1);
                             long sequence_id = reader.GetInt32(2);
 
-                            if (nodes == null || !nodes.ContainsKey(node_id))
+                            Way way;
+                            if (ways.TryGetValue(id, out way))
                             {
-                                missing_node_ids.Add(node_id);
-                            }
-                        }
-                        reader.Close();
-                    }
-                }
-
-                //STEP4: Load all missing nodes.
-                IList<Node> missing_nodes = this.GetNodes(missing_node_ids);
-                Dictionary<long, Node> way_nodes = new Dictionary<long, Node>();
-                if (nodes != null)
-                {
-                    way_nodes = new Dictionary<long, Node>(nodes);
-                }
-                foreach (Node node in missing_nodes)
-                {
-                    way_nodes.Add(node.Id.Value, node);
-                }
-
-                //STEP5: assign nodes to way.
-                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
-                {
-                    int start_idx = idx_1000 * 1000;
-                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
-
-                    sql = "SELECT * FROM way_nodes WHERE (way_id IN ({0})) ORDER BY sequence_id";
-                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
-                    if (ids_string.Length > 0)
-                    {
-                        sql = string.Format(sql, ids_string);
-                        com = new SqlCommand(sql);
-                        com.Connection = con;
-                        reader = com.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            long id = reader.GetInt64(0);
-                            long node_id = reader.GetInt64(1);
-                            long sequence_id = reader.GetInt32(2);
-
-                            Node way_node;
-                            if (way_nodes.TryGetValue(node_id, out way_node))
-                            {
-                                Way way;
-                                if (ways.TryGetValue(id, out way))
+                                if (way.Nodes == null)
                                 {
-                                    way.Nodes.Add(way_node.Id.Value);
+                                    way.Nodes = new List<long>();
                                 }
+                                way.Nodes.Add(id);
                             }
                         }
                         reader.Close();
                     }
                 }
-
 
                 //STEP4: Load all tags.
                 for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
@@ -476,11 +373,11 @@ namespace OsmSharp.Data.SQLServer.Osm
         /// </summary>
         /// <param name="node"></param>
         /// <returns></returns>
-        public IList<Way> GetWaysFor(Node node)
+        public override IList<Way> GetWaysFor(long id)
         {
-            Dictionary<long,Node> nodes = new Dictionary<long,Node>();
-            nodes.Add(node.Id.Value, node);
-            return this.GetWaysForNodes(nodes);
+            List<long> ids = new List<long>();
+            ids.Add(id);
+            return this.GetWaysForNodes(ids);
         }
 
         /// <summary>
@@ -488,20 +385,20 @@ namespace OsmSharp.Data.SQLServer.Osm
         /// </summary>
         /// <param name="nodes"></param>
         /// <returns></returns>
-        public IList<Way> GetWaysForNodes(Dictionary<long,Node> nodes)
+        public IList<Way> GetWaysForNodes(List<long> ids)
         {
-            if (nodes.Count > 0)
+            if (ids.Count > 0)
             {
                 SqlConnection con = this.CreateConnection();
 
                 List<long> way_ids = new List<long>();
-                for (int idx_100 = 0; idx_100 <= nodes.Count / 100; idx_100++)
+                for (int idx_100 = 0; idx_100 <= ids.Count / 100; idx_100++)
                 {
                     // STEP1: Load ways that exist for the given nodes.
                     string sql = "SELECT * FROM way_nodes WHERE (node_id IN ({0})) ";
                     int start_idx = idx_100 * 100;
-                    int stop_idx = System.Math.Min((idx_100 + 1) * 100, nodes.Count);
-                    string ids_string = this.ConstructIdList(nodes.Keys.ToList<long>(), start_idx, stop_idx);
+                    int stop_idx = System.Math.Min((idx_100 + 1) * 100, ids.Count);
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
                     if (ids_string.Length > 0)
                     {
                         sql = string.Format(sql, ids_string);
@@ -522,7 +419,7 @@ namespace OsmSharp.Data.SQLServer.Osm
                     }
                 }
 
-                return this.GetWays(way_ids, nodes);
+                return this.GetWays(way_ids);
             }
             return new List<Way>();
         }
@@ -561,7 +458,7 @@ namespace OsmSharp.Data.SQLServer.Osm
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IList<OsmGeo> Get(GeoCoordinateBox box, OsmSharp.Osm.Filters.Filter filter)
+        public override IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
             // initialize connection.
             SqlConnection con = this.CreateConnection();
@@ -606,7 +503,7 @@ namespace OsmSharp.Data.SQLServer.Osm
                 SqlDataReader reader = com.ExecuteReader();
             Node node = null;
             Dictionary<long, Node> nodes = new Dictionary<long, Node>();
-            List<long> node_ids = new List<long>();
+            List<long> nodeIds = new List<long>();
             while (reader.Read())
             {
                 // load/parse data.
@@ -630,7 +527,7 @@ namespace OsmSharp.Data.SQLServer.Osm
                 node.Latitude = ((double)latitude_int) / 10000000.0;
 
                 nodes.Add(node.Id.Value,node);
-                node_ids.Add(node.Id.Value);
+                nodeIds.Add(node.Id.Value);
             }
             reader.Close();
 
@@ -638,7 +535,7 @@ namespace OsmSharp.Data.SQLServer.Osm
             this.LoadNodeTags(nodes);            
 
             // STEP3: Load all ways for the given nodes.
-            IList<Way> ways = this.GetWaysForNodes(nodes);
+            IList<Way> ways = this.GetWaysForNodes(nodeIds);
 
             // Add all objects to the base list.
             foreach (Node node_result in nodes.Values.ToList<Node>())

@@ -32,9 +32,9 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 	/// </summary>
 	public class SQLiteOsmStreamTarget : OsmStreamTarget
 	{
-	    private const int BatchNodes = 500000;
-	    private const int BatchWays = 100000;
-	    private const int BatchRelations = 50000;
+        //private const int BatchNodes = 500000;
+        //private const int BatchWays = 100000;
+        //private const int BatchRelations = 50000;
 	    private SQLiteConnection _connection;
 		private readonly string _connectionString;
 		private SQLiteCommand _insertNodeCmd;
@@ -45,9 +45,9 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 		private SQLiteCommand _insertRelationCmd;
 		private SQLiteCommand _insertRelationTagsCmd;
 		private SQLiteCommand _insertRelationMembersCmd;
-		private int _nodecount = 0;
-		private int _waycount = 0;
-        private int _relationcount = 0;
+        //private int _nodecount = 0;
+        //private int _waycount = 0;
+        //private int _relationcount = 0;
 
         /// <summary>
         /// Creates a new SQLite target.
@@ -215,14 +215,14 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 	            }
 	        }
 
-            // commit nodes in batch.
-	        _nodecount++;
-	        if (_nodecount < BatchNodes)
-	            return;
+            //// commit nodes in batch.
+            //_nodecount++;
+            //if (_nodecount < BatchNodes)
+            //    return;
 
-	        _insertNodeCmd.Transaction.Commit();
-	        _insertNodeTagsCmd.Transaction = 
-                _insertNodeCmd.Transaction = _connection.BeginTransaction();
+            //_insertNodeCmd.Transaction.Commit();
+            //_insertNodeTagsCmd.Transaction = 
+            //    _insertNodeCmd.Transaction = _connection.BeginTransaction();
 	    }
 
 	    /// <summary>
@@ -265,12 +265,12 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 					_insertWayNodesCmd.ExecuteNonQuery();
 				}
 			}
-			_waycount++;
-			if (_waycount < BatchWays)
-				return;
+            //_waycount++;
+            //if (_waycount < BatchWays)
+            //    return;
 
-			_insertWayCmd.Transaction.Commit();
-			_insertWayTagsCmd.Transaction = _insertWayNodesCmd.Transaction = _insertWayCmd.Transaction = _connection.BeginTransaction();
+            //_insertWayCmd.Transaction.Commit();
+            //_insertWayTagsCmd.Transaction = _insertWayNodesCmd.Transaction = _insertWayCmd.Transaction = _connection.BeginTransaction();
 		}
 
         /// <summary>
@@ -312,11 +312,10 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 					_insertRelationMembersCmd.ExecuteNonQuery();
 				}
 			}
-			_relationcount++;
-			if (_relationcount < BatchRelations)
-				return;
-			_insertRelationCmd.Transaction.Commit();
-			_insertRelationTagsCmd.Transaction = _insertRelationMembersCmd.Transaction = _insertRelationCmd.Transaction = _connection.BeginTransaction();
+            //_relationcount++;
+
+            //_insertRelationCmd.Transaction.Commit();
+            //_insertRelationTagsCmd.Transaction = _insertRelationMembersCmd.Transaction = _insertRelationCmd.Transaction = _connection.BeginTransaction();
 		}
 
         /// <summary>
@@ -324,7 +323,7 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
         /// </summary>
         /// <param name="memberType"></param>
         /// <returns></returns>
-        private long? ConvertMemberType(RelationMemberType? memberType)
+        private long? ConvertMemberType(OsmGeoType? memberType)
         {
             if (memberType.HasValue)
             {
@@ -355,9 +354,9 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
 		{
 			if (_connection != null)
 			{
-				_insertNodeCmd.Transaction.Commit();
-				_insertWayCmd.Transaction.Commit();
-				_insertRelationCmd.Transaction.Commit();
+                //_insertNodeCmd.Transaction.Commit();
+                //_insertWayCmd.Transaction.Commit();
+                //_insertRelationCmd.Transaction.Commit();
                 if (!string.IsNullOrWhiteSpace(_connectionString))
                 { // the connection was created here, it needs to be destroyed here.
                     _connection.Close();

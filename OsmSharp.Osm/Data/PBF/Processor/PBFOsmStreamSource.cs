@@ -216,13 +216,13 @@ namespace OsmSharp.Osm.Data.PBF.Processor
                         switch (relation.types[member_idx])
                         {
                             case Relation.MemberType.NODE:
-                                member.MemberType = OsmSharp.Osm.RelationMemberType.Node;
+                                member.MemberType = OsmSharp.Osm.OsmGeoType.Node;
                                 break;
                             case Relation.MemberType.WAY:
-                                member.MemberType = OsmSharp.Osm.RelationMemberType.Way;
+                                member.MemberType = OsmSharp.Osm.OsmGeoType.Way;
                                 break;
                             case Relation.MemberType.RELATION:
-                                member.MemberType = OsmSharp.Osm.RelationMemberType.Relation;
+                                member.MemberType = OsmSharp.Osm.OsmGeoType.Relation;
                                 break;
                         }
 

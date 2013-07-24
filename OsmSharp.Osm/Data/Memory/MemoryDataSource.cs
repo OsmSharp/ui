@@ -32,26 +32,13 @@ namespace OsmSharp.Osm.Data.Memory
     /// <summary>
     /// An in-memory data repository of OSM data primitives.
     /// </summary>
-    public class MemoryDataSource : IDataSourceReadOnly
+    public class MemoryDataSource : DataSourceReadOnlyBase
     {
-        /// <summary>
-        /// Holds geometry interpreter.
-        /// </summary>
-        private GeometryInterpreter _geometryInterpreter = null;
-
         /// <summary>
         /// Creates a new memory data structure using the default geometry interpreter.
         /// </summary>
-        public MemoryDataSource() : this(GeometryInterpreter.DefaultInterpreter) { }
-
-        /// <summary>
-        /// Creates a new memory data structure.
-        /// </summary>
-        /// <param name="geometryInterpreter">The geometry interpreter.</param>
-        public MemoryDataSource(GeometryInterpreter geometryInterpreter)
+        public MemoryDataSource()
         {
-            _geometryInterpreter = geometryInterpreter;
-
             this.InitializeDataStructures();
         }
 
@@ -65,58 +52,29 @@ namespace OsmSharp.Osm.Data.Memory
             _nodes = new Dictionary<long, Node>();
             _ways = new Dictionary<long, Way>();
             _relations = new Dictionary<long, Relation>();
-            _ways_per_node = new Dictionary<long, IList<Way>>();
+
+            _waysPerNode = new Dictionary<long, HashSet<long>>();
+
+            _relationsPerNode = new Dictionary<long, HashSet<long>>();
+            _relationsPerWay = new Dictionary<long, HashSet<long>>();
+            _relationsPerRelation = new Dictionary<long, HashSet<long>>();
         }
 
         #region Objects Cache
 
         private Dictionary<long, Node> _nodes;
-        private void NodeCachePut(Node node)
-        {
-            _nodes.Add(node.Id.Value, node);
-        }
-        private Node NodeCacheTryGet(long id)
-        {
-            Node output = null;
-            _nodes.TryGetValue(id, out output);
-            return output;
-        }
 
         private Dictionary<long, Way> _ways;
-        private void WayCachePut(Way way)
-        {
-            _ways.Add(way.Id.Value, way);
-        }
-        private Way WayCacheTryGet(long id)
-        {
-            Way output = null;
-            _ways.TryGetValue(id, out output);
-            return output;
-        }
 
         private Dictionary<long, Relation> _relations;
-        private void RelationCachePut(Relation relation)
-        {
-            _relations.Add(relation.Id.Value, relation);
-        }
-        private Relation RelationCacheTryGet(long id)
-        {
-            Relation output = null;
-            _relations.TryGetValue(id, out output);
-            return output;
-        }
 
-        private Dictionary<long, IList<Way>> _ways_per_node;
-        private void WaysPerNodeCachePut(long node_id, IList<Way> ways)
-        {
-            _ways_per_node.Add(node_id, ways);
-        }
-        private IList<Way> WaysPerNodeCacheTryGet(long node_id)
-        {
-            IList<Way> output = null;
-            _ways_per_node.TryGetValue(node_id, out output);
-            return output;
-        }
+        private Dictionary<long, HashSet<long>> _waysPerNode;
+
+        private Dictionary<long, HashSet<long>> _relationsPerNode;
+
+        private Dictionary<long, HashSet<long>> _relationsPerWay;
+
+        private Dictionary<long, HashSet<long>> _relationsPerRelation;
 
         #endregion
 
@@ -128,7 +86,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// <summary>
         /// Returns the bounding box around all nodes.
         /// </summary>
-        public GeoCoordinateBox BoundingBox
+        public override GeoCoordinateBox BoundingBox
         {
             get { return _box; }
         }
@@ -150,7 +108,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// <summary>
         /// Returns the id.
         /// </summary>
-        public Guid Id
+        public override Guid Id
         {
             get { return _id; }
         }
@@ -158,7 +116,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// <summary>
         /// Returns true if there is a bounding box.
         /// </summary>
-        public bool HasBoundinBox
+        public override bool HasBoundinBox
         {
             get { return true; }
         }
@@ -166,7 +124,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// <summary>
         /// Returns true if this source is readonly.
         /// </summary>
-        public bool IsReadOnly
+        public override bool IsReadOnly
         {
             get { return true; }
         }
@@ -176,7 +134,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Node GetNode(long id)
+        public override Node GetNode(long id)
         {
             Node node = null;
             _nodes.TryGetValue(id, out node);
@@ -188,7 +146,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Node> GetNodes(IList<long> ids)
+        public override IList<Node> GetNodes(IList<long> ids)
         {
             List<Node> nodes = new List<Node>();
             if (ids != null)
@@ -216,7 +174,21 @@ namespace OsmSharp.Osm.Data.Memory
         /// <param name="node"></param>
         public void AddNode(Node node)
         {
+            if (node == null) throw new ArgumentNullException();
+            if (!node.Id.HasValue) throw new ArgumentException("Nodes without a valid id cannot be saved!");
+            if (!node.Latitude.HasValue || !node.Longitude.HasValue) throw new ArgumentException("Nodes without a valid longitude/latitude pair cannot be saved!");
+
             _nodes[node.Id.Value] = node;
+
+            if (_box == null)
+            {
+                _box = new GeoCoordinateBox(new GeoCoordinate(node.Latitude.Value, node.Longitude.Value),
+                    new GeoCoordinate(node.Latitude.Value, node.Longitude.Value));
+            }
+            else
+            {
+                _box = _box + new GeoCoordinate(node.Latitude.Value, node.Longitude.Value);
+            }
         }
 
         /// <summary>
@@ -233,7 +205,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Relation GetRelation(long id)
+        public override Relation GetRelation(long id)
         {
             Relation relation = null;
             _relations.TryGetValue(id, out relation);
@@ -245,7 +217,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Relation> GetRelations(IList<long> ids)
+        public override IList<Relation> GetRelations(IList<long> ids)
         {
             List<Relation> relations = new List<Relation>();
             if (ids != null)
@@ -273,7 +245,43 @@ namespace OsmSharp.Osm.Data.Memory
         /// <param name="relation"></param>
         public void AddRelation(Relation relation)
         {
+            if (relation == null) throw new ArgumentNullException();
+            if (!relation.Id.HasValue) throw new ArgumentException("Relations without a valid id cannot be saved!");
+
             _relations[relation.Id.Value] = relation;
+
+            if (relation.Members != null)
+            {
+                foreach (var member in relation.Members)
+                {
+                    HashSet<long> relationsIds = null;
+                    switch(member.MemberType.Value)
+                    {
+                        case OsmGeoType.Node:
+                            if (!_relationsPerNode.TryGetValue(member.MemberId.Value, out relationsIds))
+                            {
+                                relationsIds = new HashSet<long>();
+                                _relationsPerNode.Add(member.MemberId.Value, relationsIds);
+                            }
+                            break;
+                        case OsmGeoType.Way:
+                            if (!_relationsPerWay.TryGetValue(member.MemberId.Value, out relationsIds))
+                            {
+                                relationsIds = new HashSet<long>();
+                                _relationsPerWay.Add(member.MemberId.Value, relationsIds);
+                            }
+                            break;
+                        case OsmGeoType.Relation:
+                            if (!_relationsPerRelation.TryGetValue(member.MemberId.Value, out relationsIds))
+                            {
+                                relationsIds = new HashSet<long>();
+                                _relationsPerRelation.Add(member.MemberId.Value, relationsIds);
+                            }
+                            break;
+                    }
+                    relationsIds.Add(relation.Id.Value);
+                }
+            }
         }
 
         /// <summary>
@@ -288,11 +296,39 @@ namespace OsmSharp.Osm.Data.Memory
         /// <summary>
         /// Returns all relations that have the given object as a member.
         /// </summary>
-        /// <param name="obj"></param>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public IList<Relation> GetRelationsFor(OsmGeo obj)
+        public override IList<Relation> GetRelationsFor(OsmGeoType type, long id)
         {
-            throw new NotImplementedException();
+            List<Relation> relations = new List<Relation>();
+            HashSet<long> relationIds = null;
+            switch(type)
+            {
+                case OsmGeoType.Node:
+                    if (!_relationsPerNode.TryGetValue(id, out relationIds))
+                    {
+                        return relations;
+                    }
+                    break;
+                case OsmGeoType.Way:
+                    if (!_relationsPerWay.TryGetValue(id, out relationIds))
+                    {
+                        return relations;
+                    }
+                    break;
+                case OsmGeoType.Relation:
+                    if (!_relationsPerRelation.TryGetValue(id, out relationIds))
+                    {
+                        return relations;
+                    }
+                    break;
+            }
+            foreach (long relationId in relationIds)
+            {
+                relations.Add(this.GetRelation(relationId));
+            }
+            return relations;
         }
 
         /// <summary>
@@ -300,7 +336,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Way GetWay(long id)
+        public override Way GetWay(long id)
         {
             Way way = null;
             _ways.TryGetValue(id, out way);
@@ -312,7 +348,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Way> GetWays(IList<long> ids)
+        public override IList<Way> GetWays(IList<long> ids)
         {
             List<Way> relations = new List<Way>();
             if (ids != null)
@@ -337,22 +373,73 @@ namespace OsmSharp.Osm.Data.Memory
         /// <summary>
         /// Returns all the ways for a given node.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        public IList<Way> GetWaysFor(Node node)
+        public override IList<Way> GetWaysFor(long id)
         {
-            IList<Way> ways = null;
-            _ways_per_node.TryGetValue(node.Id.Value, out ways);
+            HashSet<long> wayIds = null;
+            List<Way> ways = new List<Way>();
+            if (_waysPerNode.TryGetValue(id, out wayIds))
+            {
+                foreach (long wayId in wayIds)
+                {
+                    ways.Add(this.GetWay(wayId));
+                }
+            }
             return ways;
         }
 
         /// <summary>
-        /// Adds a relation.
+        /// Returns all ways containing one or more of the given idx.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public IList<Way> GetWaysFor(IEnumerable<long> ids)
+        {
+            HashSet<long> allWayIds = new HashSet<long>();
+            foreach (long id in ids)
+            {
+                HashSet<long> wayIds;
+                if (_waysPerNode.TryGetValue(id, out wayIds))
+                {
+                    foreach (long wayId in wayIds)
+                    {
+                        allWayIds.Add(wayId);
+                    }
+                }
+            }
+            List<Way> ways = new List<Way>();
+            foreach (long wayId in allWayIds)
+            {
+                ways.Add(this.GetWay(wayId));
+            }
+            return ways;
+        }
+
+        /// <summary>
+        /// Adds a way.
         /// </summary>
         /// <param name="way"></param>
         public void AddWay(Way way)
         {
+            if (way == null) throw new ArgumentNullException();
+            if (!way.Id.HasValue) throw new ArgumentException("Ways without a valid id cannot be saved!");
+
             _ways[way.Id.Value] = way;
+
+            if(way.Nodes != null)
+            {
+                foreach(long nodeId in way.Nodes)
+                {
+                    HashSet<long> wayIds;
+                    if (!_waysPerNode.TryGetValue(nodeId, out wayIds))
+                    {
+                        wayIds = new HashSet<long>();
+                        _waysPerNode.Add(nodeId, wayIds);
+                    }
+                    wayIds.Add(way.Id.Value);
+                }
+            }
         }
 
         /// <summary>
@@ -370,31 +457,70 @@ namespace OsmSharp.Osm.Data.Memory
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
+        public override IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
-            IList<OsmGeo> res = new List<OsmGeo>();
+            List<OsmGeo> res = new List<OsmGeo>();
+
+            // load all nodes and keep the ids in a collection.
+            HashSet<long> ids = new HashSet<long>();
             foreach (Node node in _nodes.Values)
             {
                 if ((filter == null || filter.Evaluate(node)) && 
-                    _geometryInterpreter.Interpret(node, this).IsInside(box))
+                    box.IsInside(new GeoCoordinate(node.Latitude.Value, node.Longitude.Value)))
                 {
                     res.Add(node);
+                    ids.Add(node.Id.Value);
                 }
             }
-            foreach (Way way in _ways.Values)
+
+            // load all ways that contain the nodes that have been found.
+            res.AddRange(this.GetWaysFor(ids));
+
+            // get relations containing any of the nodes or ways in the current results-list.
+            List<Relation> relations = new List<Relation>();
+            HashSet<long> relationIds = new HashSet<long>();
+            foreach (OsmGeo osmGeo in res)
             {
-                if ((filter == null || filter.Evaluate(way)) &&
-                    _geometryInterpreter.Interpret(way, this).IsInside(box))
+                IList<Relation> relationsFor = this.GetRelationsFor(osmGeo);
+                foreach (Relation relation in relationsFor)
                 {
-                    res.Add(way);
+                    if (!relationIds.Contains(relation.Id.Value))
+                    {
+                        relations.Add(relation);
+                        relationIds.Add(relation.Id.Value);
+                    }
                 }
             }
-            foreach (Relation relation in _relations.Values)
+
+            // recursively add all relations containing other relations as a member.
+            do
             {
-                if ((filter == null || filter.Evaluate(relation)) &&
-                    _geometryInterpreter.Interpret(relation, this).IsInside(box))
+                res.AddRange(relations); // add previous relations-list.
+                List<Relation> newRelations = new List<Relation>();
+                foreach (OsmGeo osmGeo in relations)
                 {
-                    res.Add(relation);
+                    IList<Relation> relationsFor = this.GetRelationsFor(osmGeo);
+                    foreach (Relation relation in relationsFor)
+                    {
+                        if (!relationIds.Contains(relation.Id.Value))
+                        {
+                            newRelations.Add(relation);
+                            relationIds.Add(relation.Id.Value);
+                        }
+                    }
+                }
+                relations = newRelations;
+            } while (relations.Count > 0);
+
+            if (filter != null)
+            {
+                List<OsmGeo> filtered = new List<OsmGeo>();
+                foreach (OsmGeo geo in res)
+                {
+                    if (filter.Evaluate(geo))
+                    {
+                        filtered.Add(geo);
+                    }
                 }
             }
 

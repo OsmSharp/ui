@@ -365,13 +365,13 @@ namespace OsmSharp.Osm.Data.Xml.Processor
                         switch (mem.type)
                         {
                             case OsmSharp.Osm.Xml.v0_6.memberType.node:
-                                relation_member.MemberType = RelationMemberType.Node;
+                                relation_member.MemberType = OsmGeoType.Node;
                                 break;
                             case OsmSharp.Osm.Xml.v0_6.memberType.way:
-                                relation_member.MemberType = RelationMemberType.Way;
+                                relation_member.MemberType = OsmGeoType.Way;
                                 break;
                             case OsmSharp.Osm.Xml.v0_6.memberType.relation:
-                                relation_member.MemberType = RelationMemberType.Relation;
+                                relation_member.MemberType = OsmGeoType.Relation;
                                 break;
                         }
                     }

@@ -244,7 +244,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
         /// Holds primitives.
         /// </summary>
         [ProtoContract]
-        internal class PrimitivesCollection
+        public class PrimitivesCollection
         {
             /// <summary>
             /// Holds the icons.
@@ -290,7 +290,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
         }
 
         [ProtoContract]
-        internal class Icon2DEntry
+        public class Icon2DEntry
         {
             [ProtoMember(1)]
             public Icon2D Primitive { get; set; }
@@ -303,7 +303,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
         }
 
         [ProtoContract]
-        internal class Image2DEntry
+        public class Image2DEntry
         {
             [ProtoMember(1)]
             public Image2D Primitive { get; set; }
@@ -316,7 +316,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
         }
 
         [ProtoContract]
-        internal class Line2DEntry
+        public class Line2DEntry
         {
             [ProtoMember(1)]
             public Line2D Primitive { get; set; }
@@ -329,7 +329,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
         }
 
         [ProtoContract]
-        internal class Point2DEntry
+        public class Point2DEntry
         {
             [ProtoMember(1)]
             public Point2D Primitive { get; set; }
@@ -342,7 +342,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
         }
 
         [ProtoContract]
-        internal class Polygon2DEntry
+        public class Polygon2DEntry
         {
             [ProtoMember(1)]
             public Polygon2D Primitive { get; set; }
@@ -355,7 +355,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
         }
 
         [ProtoContract]
-        internal class LineText2DEntry
+        public class LineText2DEntry
         {
             [ProtoMember(1)]
             public LineText2D Primitive { get; set; }
@@ -368,7 +368,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
         }
 
         [ProtoContract]
-        internal class Text2DEntry
+        public class Text2DEntry
         {
             [ProtoMember(1)]
             public Text2D Primitive { get; set; }

@@ -124,13 +124,13 @@ namespace OsmSharp.Osm
                 switch (member.Member.Type)
                 {
                     case CompleteOsmType.Node:
-                        simple_member.MemberType = RelationMemberType.Node;
+                        simple_member.MemberType = OsmGeoType.Node;
                         break;
                     case CompleteOsmType.Relation:
-                        simple_member.MemberType = RelationMemberType.Relation;
+                        simple_member.MemberType = OsmGeoType.Relation;
                         break;
                     case CompleteOsmType.Way:
-                        simple_member.MemberType = RelationMemberType.Way;
+                        simple_member.MemberType = OsmGeoType.Way;
                         break;
                 }
                 relation.Members.Add(simple_member);
@@ -215,7 +215,7 @@ namespace OsmSharp.Osm
                 member.Role = role;
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
-                    case RelationMemberType.Node:
+                    case OsmGeoType.Node:
                         CompleteNode node = null;
                         if (nodes.TryGetValue(memberId, out node))
                         {
@@ -226,7 +226,7 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case RelationMemberType.Way:
+                    case OsmGeoType.Way:
                         CompleteWay way = null;
                         if (ways.TryGetValue(memberId, out way))
                         {
@@ -237,7 +237,7 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case RelationMemberType.Relation:
+                    case OsmGeoType.Relation:
                         CompleteRelation relationMember = null;
                         if (relations.TryGetValue(memberId, out relationMember))
                         {
@@ -288,7 +288,7 @@ namespace OsmSharp.Osm
                 member.Role = role;
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
-                    case RelationMemberType.Node:
+                    case OsmGeoType.Node:
                         Node simpleNode = cache.GetNode(memberId);
                         if (simpleNode != null)
                         {
@@ -299,7 +299,7 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case RelationMemberType.Way:
+                    case OsmGeoType.Way:
                         Way simpleWay = cache.GetWay(memberId);
                         if (simpleWay != null)
                         {
@@ -310,7 +310,7 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case RelationMemberType.Relation:
+                    case OsmGeoType.Relation:
                         Relation simpleRelationMember = cache.GetRelation(memberId);
                         if (simpleRelationMember != null)
                         {
@@ -380,7 +380,7 @@ namespace OsmSharp.Osm
                 member.Role = role;
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
-                    case RelationMemberType.Node:
+                    case OsmGeoType.Node:
                         CompleteNode node = null;
                         if (nodes.TryGetValue(memberId, out node))
                         {
@@ -391,7 +391,7 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case RelationMemberType.Way:
+                    case OsmGeoType.Way:
                         CompleteWay way = null;
                         if (ways.TryGetValue(memberId, out way))
                         {
@@ -402,7 +402,7 @@ namespace OsmSharp.Osm
                             return null;
                         }
                         break;
-                    case RelationMemberType.Relation:
+                    case OsmGeoType.Relation:
                         CompleteRelation relationMember = null;
                         if (relations.TryGetValue(memberId, out relationMember))
                         {
