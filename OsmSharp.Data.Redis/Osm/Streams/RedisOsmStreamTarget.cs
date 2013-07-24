@@ -114,6 +114,16 @@ namespace OsmSharp.Data.Redis.Osm.Streams
             // save the way in the current redis key.
             string wayKey = way.GetRedisKey();
             _wayTypeClient.SetEntry(wayKey, PrimitiveExtensions.ConvertTo(way));
+
+            // save the way-node relation.
+            if (way.Nodes != null)
+            {
+                foreach (long nodeId in way.Nodes)
+                {
+                    _redisClient.AddItemToSet(PrimitiveExtensions.BuildNodeWayListRedisKey(nodeId),
+                        way.Id.Value.ToString());
+                }
+            }
         }
 
         /// <summary>
@@ -125,6 +135,16 @@ namespace OsmSharp.Data.Redis.Osm.Streams
             // save the relation in the current redis key.
             string relationKey = relation.GetRedisKey();
             _relationTypeClient.SetEntry(relationKey, PrimitiveExtensions.ConvertTo(relation));
+
+            // save the relation-member relation.
+            if (relation.Members != null)
+            {
+                foreach (var member in relation.Members)
+                {
+                    _redisClient.AddItemToSet(PrimitiveExtensions.BuildMemberRelationListRedisKey(member),
+                        relation.Id.Value.ToString());
+                }
+            }
         }
 
         /// <summary>

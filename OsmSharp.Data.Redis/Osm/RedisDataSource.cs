@@ -253,7 +253,19 @@ namespace OsmSharp.Data.Redis.Osm
         /// <returns></returns>
         public override IList<Relation> GetRelationsFor(OsmGeoType type, long id)
         {
-            throw new NotSupportedException();
+            string listKey = PrimitiveExtensions.BuildMemberRelationListRedisKey(type, id);
+
+            HashSet<string> relationIdStrings = _client.GetAllItemsFromSet(listKey);
+            List<long> relationIds = new List<long>();
+            if (relationIdStrings != null)
+            {
+                foreach (string relationIdString in relationIdStrings)
+                {
+                    relationIds.Add(long.Parse(relationIdString, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture));
+                }
+            }
+
+            return this.GetRelations(relationIds);
         }
 
         /// <summary>
@@ -303,20 +315,55 @@ namespace OsmSharp.Data.Redis.Osm
         /// <returns></returns>
         public override IList<Way> GetWaysFor(long id)
         {
-            throw new NotSupportedException();
-            //if (node != null)
-            //{
-            //    string node_key = PrimitiveExtensions.BuildRedisKey(node.Id.Value);
-            //    RedisNode new_node = _clientNode.GetValue(node_key);
+            string listKey = PrimitiveExtensions.BuildNodeWayListRedisKey(id);
 
-            //    return this.GetWays(new_node.Ways);
-            //}
-            //return new List<Way>();
+            HashSet<string> wayIdStrings = _client.GetAllItemsFromSet(listKey);
+            List<long> wayIds = new List<long>();
+            if (wayIdStrings != null)
+            {
+                foreach (string wayIdString in wayIdStrings)
+                {
+                    wayIds.Add(long.Parse(wayIdString, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture));
+                }
+            }
+
+            return this.GetWays(wayIds);
         }
 
+        /// <summary>
+        /// Returns all ways containing one or more of the given nodes.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public IList<Way> GetWaysFor(List<long> ids)
+        {
+            HashSet<long> wayIds = new HashSet<long>();
+            foreach (long id in ids)
+            {
+                string listKey = PrimitiveExtensions.BuildNodeWayListRedisKey(id);
+
+                HashSet<string> wayIdStrings = _client.GetAllItemsFromSet(listKey);
+                if (wayIdStrings != null)
+                {
+                    foreach (string wayIdString in wayIdStrings)
+                    {
+                        wayIds.Add(long.Parse(wayIdString, System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture));
+                    }
+                }
+            }
+
+            return this.GetWays(wayIds.ToList());
+        }
+
+        /// <summary>
+        /// Returns all objects in the given bounding box and that pass the given filter.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public override IList<OsmGeo> Get(GeoCoordinateBox box, OsmSharp.Osm.Filters.Filter filter)
         {
-            List<OsmGeo> result = new List<OsmGeo>();
+            List<OsmGeo> res = new List<OsmGeo>();
 
             // create a range or tiles around the given bounding box.
             TileRange range = TileRange.CreateAroundBoundingBox(box, 14);
@@ -338,20 +385,70 @@ namespace OsmSharp.Data.Redis.Osm
             }
 
             List<RedisNode> redisNodes = _clientNode.GetValues(new List<string>(nodeKeys));
+            var nodeIds = new List<long>();
             foreach (RedisNode redisNode in redisNodes)
             {
                 // test if the node is in the given bb. 
                 GeoCoordinate coordinate = new GeoCoordinate(redisNode.Latitude.Value, redisNode.Longitude.Value);
                 if (box.IsInside(coordinate))
                 {
-                    result.Add(PrimitiveExtensions.ConvertFrom(redisNode));
+                    res.Add(PrimitiveExtensions.ConvertFrom(redisNode));
+                    nodeIds.Add(redisNode.Id.Value);
                 }
             }
 
-            //// get all ways. 
-            ////result.AddRange(this.GetWays(new List<long>(way_ids)));
+            // load all ways that contain the nodes that have been found.
+            res.AddRange(this.GetWaysFor(nodeIds));
 
-            return result;
+            // get relations containing any of the nodes or ways in the current results-list.
+            List<Relation> relations = new List<Relation>();
+            HashSet<long> relationIds = new HashSet<long>();
+            foreach (OsmGeo osmGeo in res)
+            {
+                IList<Relation> relationsFor = this.GetRelationsFor(osmGeo);
+                foreach (Relation relation in relationsFor)
+                {
+                    if (!relationIds.Contains(relation.Id.Value))
+                    {
+                        relations.Add(relation);
+                        relationIds.Add(relation.Id.Value);
+                    }
+                }
+            }
+
+            // recursively add all relations containing other relations as a member.
+            do
+            {
+                res.AddRange(relations); // add previous relations-list.
+                List<Relation> newRelations = new List<Relation>();
+                foreach (OsmGeo osmGeo in relations)
+                {
+                    IList<Relation> relationsFor = this.GetRelationsFor(osmGeo);
+                    foreach (Relation relation in relationsFor)
+                    {
+                        if (!relationIds.Contains(relation.Id.Value))
+                        {
+                            newRelations.Add(relation);
+                            relationIds.Add(relation.Id.Value);
+                        }
+                    }
+                }
+                relations = newRelations;
+            } while (relations.Count > 0);
+
+            if (filter != null)
+            {
+                List<OsmGeo> filtered = new List<OsmGeo>();
+                foreach (OsmGeo geo in res)
+                {
+                    if (filter.Evaluate(geo))
+                    {
+                        filtered.Add(geo);
+                    }
+                }
+            }
+
+            return res;
         }
 
         /// <summary>

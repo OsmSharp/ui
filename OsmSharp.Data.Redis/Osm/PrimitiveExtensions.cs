@@ -21,6 +21,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Data.Redis.Osm.Primitives;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Data.Redis.Osm
 {
@@ -296,6 +297,16 @@ namespace OsmSharp.Data.Redis.Osm
         }
 
         /// <summary>
+        /// Builds a redis key for the node with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string BuildNodeWayListRedisKey(long id)
+        {
+            return string.Format("n:{0}.ways", id);
+        }
+
+        /// <summary>
         /// Builds an Osm-hash.
         /// </summary>
         /// <param name="node"></param>
@@ -305,6 +316,22 @@ namespace OsmSharp.Data.Redis.Osm
             Tile tile = Tile.CreateAroundLocation(new Math.Geo.GeoCoordinate(node.Latitude.Value, node.Longitude.Value),
                 14);
             return tile.Id.ToString();
+        }
+
+        /// <summary>
+        /// Builds a list of osm-hashes.
+        /// </summary>
+        /// <param name="box"></param>
+        /// <returns></returns>
+        public static List<string> GetOsmHashes(GeoCoordinateBox box)
+        {
+            List<string> hashes = new List<string>();
+            TileRange tiles = TileRange.CreateAroundBoundingBox(box, 14);
+            foreach (Tile tile in tiles)
+            {
+                hashes.Add(tile.Id.ToString());
+            }
+            return hashes;
         }
 
         /// <summary>
@@ -345,6 +372,37 @@ namespace OsmSharp.Data.Redis.Osm
         public static string BuildRelationRedisKey(long id)
         {
             return string.Format("r:{0}", id);
+        }
+
+        /// <summary>
+        /// Builds a redis key for the relation members relation list.
+        /// </summary>
+        /// <param name="member"></param>
+        /// <returns></returns>
+        public static string BuildMemberRelationListRedisKey(RelationMember member)
+        {
+            return PrimitiveExtensions.BuildMemberRelationListRedisKey(member.MemberType.Value, member.MemberId.Value);
+        }
+
+        /// <summary>
+        /// Builds a redis key for the relation members relation list.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static string BuildMemberRelationListRedisKey(OsmGeoType type, long id)
+        {
+            string typeString = "1";
+            switch (type)
+            {
+                case OsmGeoType.Way:
+                    typeString = "2";
+                    break;
+                case OsmGeoType.Relation:
+                    typeString = "3";
+                    break;
+            }
+            return string.Format("m:{0}.{1}", typeString, id);
         }
 
         #endregion
