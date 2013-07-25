@@ -474,7 +474,7 @@ namespace OsmSharp.Osm.Data.Memory
             }
 
             // load all ways that contain the nodes that have been found.
-            res.AddRange(this.GetWaysFor(ids));
+            res.AddRange(this.GetWaysFor(ids).Cast<OsmGeo>()); // the .Cast<> is here for Windows Phone.
 
             // get relations containing any of the nodes or ways in the current results-list.
             List<Relation> relations = new List<Relation>();
@@ -495,7 +495,7 @@ namespace OsmSharp.Osm.Data.Memory
             // recursively add all relations containing other relations as a member.
             do
             {
-                res.AddRange(relations); // add previous relations-list.
+                res.AddRange(relations.Cast<OsmGeo>()); // the .Cast<> is here for Windows Phone.
                 List<Relation> newRelations = new List<Relation>();
                 foreach (OsmGeo osmGeo in relations)
                 {

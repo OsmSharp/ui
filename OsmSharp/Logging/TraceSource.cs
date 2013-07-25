@@ -38,6 +38,9 @@ namespace System.Diagnostics
         }
     }
 
+#endif
+#if WINDOWS_PHONE
+
     /// <summary>
     /// Another enum for compatibility with windows phone.
     /// </summary>

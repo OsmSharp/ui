@@ -56,6 +56,7 @@
     <Compile Include="Change.cs" />
     <Compile Include="ChangeSet.cs" />
     <Compile Include="Data\Cache\DataSourceCache.cs" />
+    <Compile Include="Data\DataSourceReadOnlyBase.cs" />
     <Compile Include="Data\IDataSource.cs" />
     <Compile Include="Data\IDataSourceReadOnly.cs" />
     <Compile Include="Data\KeyGenerator.cs" />
@@ -147,7 +148,6 @@
     <Compile Include="Interpreter\Complete\CompleteWay.cs" />
     <Compile Include="Interpreter\Complete\OsmBaseIdGenerator.cs" />
     <Compile Include="Interpreter\SimpleGeometryInterpreter.cs" />
-    <Compile Include="RelationMemberType.cs" />
     <Compile Include="ChangeSetInfo.cs" />
     <Compile Include="Interpreter\GeometryInterpreter.cs" />
   </ItemGroup>
@@ -162,13 +162,12 @@
     <Folder Include="Data\Xml\OsmSource\OsmSource\" />
     <Folder Include="Data\Xml\Processor\Processor\ChangeSets\" />
     <Folder Include="Data\Xml\Processor\Processor\Replication\" />
-    <Folder Include="Data\PBF\Processor\" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.Android.csproj">
       <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
       <Name>OsmSharp.Android</Name>
     </ProjectReference>
   </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
 </Project>
