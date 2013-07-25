@@ -650,26 +650,6 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
         {
             if (_connection != null)
             {
-                if (_nodeTable.Rows.Count > 0)
-                {
-                    this.BulkCopy(_nodeTable, "node");
-                    this.BulkCopy(_nodeTagsTable, "node_tags");
-                }
-
-                if (_wayTable.Rows.Count > 0)
-                {
-                    this.BulkCopy(_wayTable, "way");
-                    this.BulkCopy(_wayTagsTable, "way_tags");
-                    this.BulkCopy(_wayNodesTable, "way_nodes");
-                }
-
-                if (_relationTable.Rows.Count > 0)
-                {
-                    this.BulkCopy(_relationTable, "relation");
-                    this.BulkCopy(_relationTagsTable, "relation_tags");
-                    this.BulkCopy(_relationMembersTable, "relation_members");
-                }
-
                 if (!string.IsNullOrWhiteSpace(_connectionString))
                 { // the connection was 
                     _connection.Close();
@@ -677,6 +657,35 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
                 }
             }
             _connection = null;
+        }
+
+        /// <summary>
+        /// Flushes all data.
+        /// </summary>
+        public override void Flush()
+        {
+            if (_nodeTable.Rows.Count > 0)
+            {
+                this.BulkCopy(_nodeTable, "node");
+                this.BulkCopy(_nodeTagsTable, "node_tags");
+                this.CreateNodeTables();
+            }
+
+            if (_wayTable.Rows.Count > 0)
+            {
+                this.BulkCopy(_wayTable, "way");
+                this.BulkCopy(_wayTagsTable, "way_tags");
+                this.BulkCopy(_wayNodesTable, "way_nodes");
+                this.CreateWayTables();
+            }
+
+            if (_relationTable.Rows.Count > 0)
+            {
+                this.BulkCopy(_relationTable, "relation");
+                this.BulkCopy(_relationTagsTable, "relation_tags");
+                this.BulkCopy(_relationMembersTable, "relation_members");
+                this.CreateRelationTables();
+            }
         }
     }
 }

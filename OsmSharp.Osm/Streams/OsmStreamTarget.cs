@@ -104,6 +104,7 @@ namespace OsmSharp.Osm.Data.Streams
                     this.AddRelation(sourceObject as Relation);
                 }
             }
+            this.Flush();
             this.Close();
         }
 
@@ -137,6 +138,14 @@ namespace OsmSharp.Osm.Data.Streams
         /// Closes the current target.
         /// </summary>
         public virtual void Close()
+        {
+
+        }
+
+        /// <summary>
+        /// Flushes the current target.
+        /// </summary>
+        public virtual void Flush()
         {
 
         }

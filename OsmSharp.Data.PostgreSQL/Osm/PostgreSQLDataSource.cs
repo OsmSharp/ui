@@ -25,6 +25,8 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Data;
 using OsmSharp.Collections.Tags;
+using System.Data;
+using OsmSharp.Osm.Tiles;
 
 namespace OsmSharp.Data.PostgreSQL.Osm
 {
@@ -176,7 +178,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// <returns></returns>
         public override IList<Node> GetNodes(IList<long> ids)
         {
-            IList<Node> return_list = new List<Node>();
+            IList<Node> returnList = new List<Node>();
             if (ids.Count > 0)
             {
                 // initialize connection.
@@ -187,10 +189,10 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                 Dictionary<long, Node> nodes = new Dictionary<long, Node>();
                 for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
                 {
-                    int start_idx = idx_1000 * 1000;
-                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
+                    int startIdx = idx_1000 * 1000;
+                    int stopIdx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
                     string sql = "SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version, usr, usr_id FROM node WHERE (id IN ({0})) ";
-                    string ids_string = this.ConstructIdList(ids,start_idx,stop_idx);
+                    string ids_string = this.ConstructIdList(ids,startIdx,stopIdx);
                     if (ids_string.Length > 0)
                     {
                         sql = string.Format(sql, ids_string);
@@ -199,7 +201,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                         com.Connection = con;
                         NpgsqlDataReader reader = com.ExecuteReader();
                         Node node = null;
-                        List<long> node_ids = new List<long>();
+                        List<long> nodeIds = new List<long>();
                         while (reader.Read())
                         {
                             // load/parse data.
@@ -229,7 +231,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                                 node.Visible = visible;
 
                                 nodes.Add(node.Id.Value, node);
-                                node_ids.Add(node.Id.Value);
+                                nodeIds.Add(node.Id.Value);
                             }
                         }
                         reader.Close();
@@ -239,9 +241,9 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                 // STEP2: Load all node tags.
                 this.LoadNodeTags(nodes);
 
-                return_list = nodes.Values.ToList<Node>();
+                returnList = nodes.Values.ToList<Node>();
             }
-            return return_list;
+            return returnList;
         }
 
         /// <summary>
@@ -412,8 +414,41 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// <returns></returns>
         public override IList<Relation> GetRelationsFor(OsmGeoType type, long id)
         {
-            // TODO: implement this
-            return new List<Relation>();
+            NpgsqlConnection con = CreateConnection();
+            NpgsqlCommand com;
+            NpgsqlDataReader reader;
+
+            string sql = "SELECT relation_id FROM relation_members WHERE (member_id = :member_id and member_type = :member_type) ORDER BY sequence_id";
+            com = new NpgsqlCommand(sql);
+            com.Connection = con;
+            com.Parameters.Add(new NpgsqlParameter(@"member_type", DbType.Int64));
+            com.Parameters.Add(new NpgsqlParameter(@"member_id", DbType.Int64));
+            com.Parameters[0].Value = this.ConvertMemberType(type).Value;
+            com.Parameters[1].Value = id;
+
+            HashSet<long> ids = new HashSet<long>();
+            reader = com.ExecuteReader();
+            while (reader.Read())
+            {
+                ids.Add(reader.GetInt64(0));
+            }
+            reader.Close();
+
+            return this.GetRelations(ids.ToList<long>());
+        }
+
+        /// <summary>
+        /// Converts the member type to long.
+        /// </summary>
+        /// <param name="memberType"></param>
+        /// <returns></returns>
+        private long? ConvertMemberType(OsmGeoType? memberType)
+        {
+            if (memberType.HasValue)
+            {
+                return (long)memberType.Value;
+            }
+            return null;
         }
 
         /// <summary>
@@ -563,25 +598,25 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         {
             List<long> nodes = new List<long>();
             nodes.Add(id);
-            return this.GetWaysForNodes(nodes);
+            return this.GetWaysFor(nodes);
         }
 
         /// <summary>
         /// Returns all ways using any of the given nodes.
         /// </summary>
-        /// <param name="nodes"></param>
+        /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Way> GetWaysForNodes(List<long> ids)
+        public IList<Way> GetWaysFor(List<long> ids)
         {
             if (ids.Count > 0)
             {
                 NpgsqlConnection con = this.CreateConnection();
 
-                List<long> way_ids = new List<long>();
+                List<long> wayIds = new List<long>();
                 for (int idx_100 = 0; idx_100 <= ids.Count / 100; idx_100++)
                 {
                     // STEP1: Load ways that exist for the given nodes.
-                    string sql = "SELECT * FROM way_nodes WHERE (node_id IN ({0})) ";
+                    string sql = "SELECT way_id FROM way_nodes WHERE (node_id IN ({0})) ";
                     int start_idx = idx_100 * 100;
                     int stop_idx = System.Math.Min((idx_100 + 1) * 100, ids.Count);
                     string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
@@ -595,9 +630,9 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                         while (reader.Read())
                         {
                             long id = reader.GetInt64(0);
-                            if (!way_ids.Contains(id))
+                            if (!wayIds.Contains(id))
                             {
-                                way_ids.Add(id);
+                                wayIds.Add(id);
                             }
                         }
                         reader.Close();
@@ -605,7 +640,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                     }
                 }
 
-                return this.GetWays(way_ids);
+                return this.GetWays(wayIds);
             }
             return new List<Way>();
         }
@@ -648,7 +683,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         {
             // initialize connection.
             NpgsqlConnection con = this.CreateConnection();
-            List<OsmGeo> base_list = new List<OsmGeo>();
+            List<OsmGeo> res = new List<OsmGeo>();
 
             // calculate bounding box parameters to query db.
             long latitude_min = (long)(box.MinLat * 10000000.0);
@@ -656,26 +691,20 @@ namespace OsmSharp.Data.PostgreSQL.Osm
             long latitude_max = (long)(box.MaxLat * 10000000.0);
             long longitude_max = (long)(box.MaxLon * 10000000.0);
 
-            // TODO: improve this to allow loading of bigger bb's.
-            uint x_min = lon2x(box.MinLon);
-            uint x_max = lon2x(box.MaxLon);
-            uint y_min = lat2y(box.MinLat);
-            uint y_max = lat2y(box.MaxLat);
+            // calculate bounding box parameters to query db.
+            TileRange range = TileRange.CreateAroundBoundingBox(box, 14);
 
             IList<long> boxes = new List<long>();
 
-            for (uint x = x_min; x <= x_max; x++)
+            foreach (Tile tile in range)
             {
-                for (uint y = y_min; y <= y_max; y++)
-                {
-                    boxes.Add(this.xy2tile(x, y));
-                }
+                boxes.Add((long)tile.Id);
             }
 
             // STEP 1: query nodes table.
             //id	latitude	longitude	changeset_id	visible	timestamp	tile	version
             string sql
-                = "SELECT * FROM node WHERE (visible = true) AND  (tile IN ({4})) AND (latitude BETWEEN {0} AND {1} AND longitude BETWEEN {2} AND {3})";
+                = "SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version, usr, usr_id FROM node WHERE (visible = true) AND  (tile IN ({4})) AND (latitude >= {0} AND latitude < {1} AND longitude >= {2} AND longitude < {3})";
             sql = string.Format(sql,
                     latitude_min.ToString(),
                     latitude_max.ToString(),
@@ -696,43 +725,90 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                 long returned_id = reader.GetInt64(0);
                 int latitude_int = reader.GetInt32(1);
                 int longitude_int = reader.GetInt32(2);
-                long changeset_id = reader.GetInt64(3);
-                bool visible = reader.GetBoolean(4);
-                DateTime timestamp = reader.GetDateTime(5);
+                long? changeset_id = reader.IsDBNull(3) ? null : (long?)reader.GetInt64(3);
+                bool? visible = reader.IsDBNull(4) ? null : (bool?)reader.GetBoolean(4);
+                DateTime? timestamp = reader.IsDBNull(5) ? null : (DateTime?)reader.GetDateTime(5);
                 long tile = reader.GetInt64(6);
-                long version = reader.GetInt32(7);
+                ulong? version = reader.IsDBNull(7) ? null : (ulong?)reader.GetInt32(7);
+                string usr = reader.IsDBNull(8) ? null : reader.GetString(8);
+                long? usr_id = reader.IsDBNull(9) ? null : (long?)reader.GetInt32(9);
 
-                // create node.
-                node = new Node();
-                node.Id = returned_id;
-                node.Version = (ulong)version;
-                //node.UserId = user_id;
-                node.TimeStamp = timestamp;
-                node.ChangeSetId = changeset_id;
-                node.Latitude = ((double)latitude_int) / 10000000.0;
-                node.Longitude = ((double)longitude_int) / 10000000.0;
+                if (!nodes.ContainsKey(returned_id))
+                {
+                    // create node.
+                    node = new Node();
+                    node.Id = returned_id;
+                    node.Version = version;
+                    node.UserId = usr_id;
+                    node.UserName = usr;
+                    node.TimeStamp = timestamp;
+                    node.ChangeSetId = changeset_id;
+                    node.Latitude = ((double)latitude_int) / 10000000.0;
+                    node.Longitude = ((double)longitude_int) / 10000000.0;
+                    node.Visible = visible;
 
-                nodes.Add(node.Id.Value,node);
-                nodeIds.Add(node.Id.Value);
+                    nodes.Add(node.Id.Value, node);
+                    nodeIds.Add(node.Id.Value);
+                }
             }
             reader.Close();
 
             // STEP2: Load all node tags.
-            this.LoadNodeTags(nodes);            
+            this.LoadNodeTags(nodes);
+            res.AddRange(nodes.Values);
 
-            // STEP3: Load all ways for the given nodes.
-            IList<Way> ways = this.GetWaysForNodes(nodeIds);
+            // load all ways that contain the nodes that have been found.
+            res.AddRange(this.GetWaysFor(nodeIds));
 
-            // Add all objects to the base list.
-            foreach (Node node_result in nodes.Values.ToList<Node>())
+            // get relations containing any of the nodes or ways in the current results-list.
+            List<Relation> relations = new List<Relation>();
+            HashSet<long> relationIds = new HashSet<long>();
+            foreach (OsmGeo osmGeo in res)
             {
-                base_list.Add(node_result);
+                IList<Relation> relationsFor = this.GetRelationsFor(osmGeo);
+                foreach (Relation relation in relationsFor)
+                {
+                    if (!relationIds.Contains(relation.Id.Value))
+                    {
+                        relations.Add(relation);
+                        relationIds.Add(relation.Id.Value);
+                    }
+                }
             }
-            foreach (Way way in ways)
+
+            // recursively add all relations containing other relations as a member.
+            do
             {
-                base_list.Add(way);
+                res.AddRange(relations); // add previous relations-list.
+                List<Relation> newRelations = new List<Relation>();
+                foreach (OsmGeo osmGeo in relations)
+                {
+                    IList<Relation> relationsFor = this.GetRelationsFor(osmGeo);
+                    foreach (Relation relation in relationsFor)
+                    {
+                        if (!relationIds.Contains(relation.Id.Value))
+                        {
+                            newRelations.Add(relation);
+                            relationIds.Add(relation.Id.Value);
+                        }
+                    }
+                }
+                relations = newRelations;
+            } while (relations.Count > 0);
+
+            if (filter != null)
+            {
+                List<OsmGeo> filtered = new List<OsmGeo>();
+                foreach (OsmGeo geo in res)
+                {
+                    if (filter.Evaluate(geo))
+                    {
+                        filtered.Add(geo);
+                    }
+                }
             }
-            return base_list;
+
+            return res;
         }
 
         /// <summary>

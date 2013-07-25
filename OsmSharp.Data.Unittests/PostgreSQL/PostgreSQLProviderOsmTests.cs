@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -69,6 +69,33 @@ namespace OsmSharp.Data.Unittests.PostgreSQL
         public void PostgreSQLTestReadWriteData()
         {
             base.TestReadWriteData();
+        }
+
+        /// <summary>
+        /// Tests a write to a PostgreSQL database and gets ways using it's nodes.
+        /// </summary>
+        [Test]
+        public void PostgreSQLTestGetWaysForNode()
+        {
+            base.TestGetWaysForNode();
+        }
+
+        /// <summary>
+        /// Tests a write to a PostgreSQL database and gets relations using it's members.
+        /// </summary>
+        [Test]
+        public void PostgreSQLTestGetRelationsForMember()
+        {
+            base.TestGetRelationsForMember();
+        }
+
+        /// <summary>
+        /// Tests a bounding box query.
+        /// </summary>
+        [Test]
+        public void SQLiteTestBoundingBoxQueries()
+        {
+            base.TestBoundingBoxQueries();
         }
 
         #region PostgreSQL Implementations

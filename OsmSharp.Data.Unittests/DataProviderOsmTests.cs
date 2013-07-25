@@ -77,6 +77,7 @@ namespace OsmSharp.Data.Unittests
             var target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddNode(node);
+            target.Flush();
             target.Close();
             var dataSource = this.CreateDataSource();
             Node foundNode = dataSource.GetNode(1);
@@ -95,6 +96,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddNode(node);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
@@ -114,6 +116,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddNode(node);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
@@ -134,6 +137,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddNode(node);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
@@ -155,6 +159,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddNode(node);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
@@ -178,6 +183,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddNode(node);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
@@ -204,6 +210,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddNode(node);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
@@ -387,6 +394,7 @@ namespace OsmSharp.Data.Unittests
             var target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddRelation(relation);
+            target.Flush();
             target.Close();
             var dataSource = this.CreateDataSource();
             Relation foundRelation = dataSource.GetRelation(1);
@@ -403,6 +411,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddRelation(relation);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
@@ -420,6 +429,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddRelation(relation);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
@@ -438,6 +448,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddRelation(relation);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
@@ -457,6 +468,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddRelation(relation);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
@@ -478,6 +490,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddRelation(relation);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
@@ -502,6 +515,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddRelation(relation);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
@@ -528,6 +542,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddRelation(relation);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
@@ -588,6 +603,7 @@ namespace OsmSharp.Data.Unittests
                     case OsmGeoType.Way:
                         Way way = (source.Current() as Way);
                         target.AddWay(way);
+                        target.Flush();
 
                         if (way.Nodes != null)
                         {
@@ -643,6 +659,7 @@ namespace OsmSharp.Data.Unittests
                     case OsmGeoType.Relation:
                         Relation relation = (source.Current() as Relation);
                         target.AddRelation(relation);
+                        target.Flush();
 
                         if (relation.Members != null)
                         {
@@ -760,7 +777,7 @@ namespace OsmSharp.Data.Unittests
         /// <param name="found"></param>
         private void CompareResults(IList<OsmGeo> expected, IList<OsmGeo> found)
         {
-            //Assert.AreEqual(expected.Count, found.Count);
+            Assert.AreEqual(expected.Count, found.Count);
             Dictionary<string, OsmGeo> referenceBoxDataIndex = new Dictionary<string, OsmGeo>();
             foreach (OsmGeo osmGeo in expected)
             {
