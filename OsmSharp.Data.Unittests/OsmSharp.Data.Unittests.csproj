@@ -129,12 +129,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataProviderOsmTests.cs" />
+    <Compile Include="Oracle\OracleProviderOsmTests.cs" />
     <Compile Include="PostgreSQL\PostgreSQLProviderOsmTests.cs" />
     <Compile Include="Redis\RedisProviderOsmTests.cs" />
     <Compile Include="SQLite\SQLiteProviderOsmTests.cs" />
     <Compile Include="SQLServer\Osm\SQLServerDDLChecks.cs" />
     <Compile Include="SQLServer\Osm\SQLServerDDLChecksStreamTarget.cs" />
     <Compile Include="SQLServer\Osm\SQLServerRoutingTests.cs" />
+    <Compile Include="SQLServer\SQLServerProviderOsmTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Mono.Security, Version=2.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
@@ -145,6 +147,9 @@
     </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.112.3.60, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <HintPath>..\packages\odp.net.managed.112.3.60\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
     </Reference>
     <Reference Include="policy.2.0.Npgsql">
       <HintPath>..\packages\Npgsql.2.0.12.1\lib\net40\policy.2.0.Npgsql.dll</HintPath>
@@ -186,6 +191,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

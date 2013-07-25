@@ -232,6 +232,7 @@ namespace OsmSharp.Data.Unittests
             var target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddWay(way);
+            target.Flush();
             target.Close();
             var dataSource = this.CreateDataSource();
             Way foundWay = dataSource.GetWay(1);
@@ -248,6 +249,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddWay(way);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
@@ -265,6 +267,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddWay(way);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
@@ -283,6 +286,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddWay(way);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
@@ -302,6 +306,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddWay(way);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
@@ -323,6 +328,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddWay(way);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
@@ -347,6 +353,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddWay(way);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
@@ -373,6 +380,7 @@ namespace OsmSharp.Data.Unittests
             target = this.CreateDataStreamTarget();
             target.Initialize();
             target.AddWay(way);
+            target.Flush();
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
@@ -496,7 +504,6 @@ namespace OsmSharp.Data.Unittests
             foundRelation = dataSource.GetRelation(1);
             this.CompareRelations(relation, foundRelation);
 
-
             this.NotifyEmptyExpected(); // empty test database.
 
             // create a test-relation.
@@ -537,6 +544,30 @@ namespace OsmSharp.Data.Unittests
             relation.Members.Add(new RelationMember() { MemberId = 2, MemberRole = "node2", MemberType = OsmGeoType.Node });
             relation.Members.Add(new RelationMember() { MemberId = 1, MemberRole = "node1", MemberType = OsmGeoType.Node });
             relation.Members.Add(new RelationMember() { MemberId = 1, MemberRole = "way", MemberType = OsmGeoType.Way });
+
+            // create a target, add the relation, create a source and verify relation in db.
+            target = this.CreateDataStreamTarget();
+            target.Initialize();
+            target.AddRelation(relation);
+            target.Flush();
+            target.Close();
+            dataSource = this.CreateDataSource();
+            foundRelation = dataSource.GetRelation(1);
+            this.CompareRelations(relation, foundRelation);
+
+            this.NotifyEmptyExpected(); // empty test database.
+
+            // create a test-relation.
+            relation = new Relation();
+            relation.Id = 1;
+            relation.UserName = "ben";
+            relation.UserId = 10;
+            relation.Version = 1;
+            relation.Visible = true;
+            relation.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
+                DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
+            relation.Members = new List<RelationMember>();
+            relation.Members.Add(new RelationMember() { MemberId = 1, MemberRole = string.Empty, MemberType = OsmGeoType.Node });
 
             // create a target, add the relation, create a source and verify relation in db.
             target = this.CreateDataStreamTarget();
@@ -898,7 +929,17 @@ namespace OsmSharp.Data.Unittests
                 for (int idx = 0; idx < expected.Members.Count; idx++)
                 {
                     Assert.AreEqual(expected.Members[idx].MemberId, found.Members[idx].MemberId);
-                    Assert.AreEqual(expected.Members[idx].MemberRole, found.Members[idx].MemberRole);
+                    // the oracle database converts empty strings to null and does not follow standards.
+                    // this is why there is this ugly code here matching empty strings to null.
+                    if (expected.Members[idx].MemberRole == string.Empty &&
+                        found.Members[idx].MemberRole == null)
+                    { // only for oracle!
+                        Assert.AreEqual(null, found.Members[idx].MemberRole);
+                    }
+                    else
+                    { 
+                        Assert.AreEqual(expected.Members[idx].MemberRole, found.Members[idx].MemberRole);
+                    }
                     Assert.AreEqual(expected.Members[idx].MemberType, found.Members[idx].MemberType);
                 }
             }
@@ -919,6 +960,7 @@ namespace OsmSharp.Data.Unittests
             }
             else
             {
+                Assert.IsNotNull(foundTags);
                 Assert.AreEqual(expectedTags.Count, foundTags.Count);
                 foreach (Tag expectedTag in expectedTags)
                 {

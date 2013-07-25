@@ -23,8 +23,12 @@ using System.Text;
 using Oracle.ManagedDataAccess.Client;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Data;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.Tiles;
+using OsmSharp.Osm.Filters;
 
-namespace OsmSharp.Osm.Data.Oracle.Osm
+namespace OsmSharp.Data.Oracle.Osm
 {
     /// <summary>
     /// An OSM data source implementation that can read imported data from and Oracle database.
@@ -48,6 +52,16 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         public OracleDataSource(string connectionString)
         {
             _connectionString = connectionString;
+            _id = Guid.NewGuid();
+        }
+
+        /// <summary>
+        /// Creates a new oracle data source.
+        /// </summary>
+        /// <param name="connection"></param>
+        public OracleDataSource(OracleConnection connection)
+        {
+            _connection = connection;
             _id = Guid.NewGuid();
         }
 
@@ -148,7 +162,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                     int start_idx = idx_1000 * 1000;
                     int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
                     string sql
-                        = "SELECT * FROM node WHERE (id IN ({0})) ";
+                        = "SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version, usr, usr_id FROM node WHERE (id IN ({0})) ";
                     ;
                     string ids_string = this.ConstructIdList(ids,start_idx,stop_idx);
                     if (ids_string.Length > 0)
@@ -166,23 +180,27 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                             long returned_id = reader.GetInt64(0);
                             int latitude_int = reader.GetInt32(1);
                             int longitude_int = reader.GetInt32(2);
-                            long changeset_id = reader.GetInt64(3);
-                            bool visible = reader.GetInt32(4) == 1;
-                            DateTime timestamp = reader.GetDateTime(5);
+                            long? changeset_id = reader.IsDBNull(3) ? null : (long?)reader.GetInt64(3);
+                            bool? visible = reader.IsDBNull(4) ? null : (bool?)(reader.GetInt32(4) == 1);
+                            DateTime? timestamp = reader.IsDBNull(5) ? null : (DateTime?)reader.GetDateTime(5);
                             long tile = reader.GetInt64(6);
-                            long version = reader.GetInt64(7);
+                            ulong? version = reader.IsDBNull(7) ? null : (ulong?)(ulong)reader.GetInt64(7);
+                            string usr = reader.IsDBNull(8) ? null : reader.GetString(8);
+                            long? usr_id = reader.IsDBNull(9) ? null : (long?)reader.GetInt64(9);
 
                             if (!nodes.ContainsKey(returned_id))
                             {
                                 // create node.
                                 node = new Node();
                                 node.Id = returned_id;
-                                node.Version = (ulong)version;
-                                //node.UserId = user_id;
+                                node.Version = version;
+                                node.UserId = usr_id;
                                 node.TimeStamp = timestamp;
                                 node.ChangeSetId = changeset_id;
+                                node.Visible = visible;
                                 node.Latitude = ((double)latitude_int) / 10000000.0;
                                 node.Longitude = ((double)longitude_int) / 10000000.0;
+                                node.UserName = usr;
 
                                 nodes.Add(node.Id.Value, node);
                                 node_ids.Add(node.Id.Value);
@@ -198,29 +216,6 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                 return_list = nodes.Values.ToList<Node>();
             }
             return return_list;
-        }
-
-        /// <summary>
-        /// Returns all relations with the given ids.
-        /// </summary>
-        /// <param name="ids"></param>
-        /// <returns></returns>
-        public override IList<Relation> GetRelations(IList<long> ids)
-        {
-            // TODO: implement this
-            return new List<Relation>();
-        }
-
-        /// <summary>
-        /// Returns all relation containing the given object.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public override IList<Relation> GetRelationsFor(OsmGeoType type, long id)
-        {
-            // TODO: implement this
-            return new List<Relation>();
         }
         
         /// <summary>
@@ -245,7 +240,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                     int start_idx = idx_1000 * 1000;
                     int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
 
-                    sql = "SELECT * FROM way WHERE (id IN ({0})) ";
+                    sql = "SELECT id, changeset_id, timestamp, visible, version, usr, usr_id FROM way WHERE (id IN ({0})) ";
                     string ids_string = this.ConstructIdList(ids,start_idx,stop_idx);
                     if(ids_string.Length > 0)
                     {
@@ -257,16 +252,20 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                         while (reader.Read())
                         {
                             long id = reader.GetInt64(0);
-                            long changeset_id = reader.GetInt64(1);
-                            DateTime timestamp = reader.GetDateTime(2);
-                            bool visible = reader.GetInt64(3) == 1;
-                            long version = reader.GetInt64(4);
+                            long? changeset_id = reader.IsDBNull(1) ? null : (long?)reader.GetInt64(1);
+                            DateTime? timestamp = reader.IsDBNull(2) ? null : (DateTime?)reader.GetDateTime(2);
+                            bool? visible = reader.IsDBNull(3) ? null : (bool?)(reader.GetInt16(3) == 1);
+                            ulong? version = reader.IsDBNull(4) ? null : (ulong?)reader.GetInt64(4);
+                            string user = reader.IsDBNull(5) ? null : reader.GetString(5);
+                            long? user_id = reader.IsDBNull(6) ? null : (long?)reader.GetInt64(6);
 
                             // create way.
                             way = new Way();
                             way.Id = id;
-                            way.Version = (ulong)version;
-                            //node.UserId = user_id;
+                            way.Version = version;
+                            way.UserName = user;
+                            way.UserId = user_id;
+                            way.Visible = visible;
                             way.TimeStamp = timestamp;
                             way.ChangeSetId = changeset_id;
 
@@ -283,7 +282,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                     int start_idx = idx_1000 * 1000;
                     int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
 
-                    sql = "SELECT * FROM way_nodes WHERE (way_id IN ({0})) ORDER BY sequence_id";
+                    sql = "SELECT way_id, node_id, sequence_id FROM way_nodes WHERE (way_id IN ({0})) ORDER BY sequence_id";
                     string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
                     if (ids_string.Length > 0)
                     {
@@ -328,18 +327,17 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                         while (reader.Read())
                         {
                             long id = reader.GetInt64(0);
-                            string key = reader.GetString(1);
-                            object value_object = reader[2];
-                            string value = string.Empty;
-                            if (value_object != null && value_object != DBNull.Value)
-                            {
-                                value = (string)value_object;
-                            }
+                            string key = reader.IsDBNull(1) ? null : reader.GetString(1);
+                            string val = reader.IsDBNull(2) ? null : reader.GetString(2);
 
                             Way way;
                             if (ways.TryGetValue(id, out way))
                             {
-                                way.Tags.Add(key, value);
+                                if (way.Tags == null)
+                                {
+                                    way.Tags = new SimpleTagsCollection();
+                                }
+                                way.Tags.Add(key, val);
                             }
                         }
                         reader.Close();
@@ -352,182 +350,403 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         }
 
         /// <summary>
-        /// Returns all ways containing the given node.
+        /// Returns all the ways that contain the given node.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         public override IList<Way> GetWaysFor(long id)
         {
-            List<long> nodes = new List<long>();
-            return this.GetWaysForNodes(nodes);
+            List<long> ids = new List<long>();
+            ids.Add(id);
+            return this.GetWaysFor(ids);
         }
 
         /// <summary>
-        /// Returns all ways that have the given nodes in them.
+        /// Returns all the ways that contain any of the given nodes.
         /// </summary>
-        /// <param name="nodes"></param>
+        /// <param name="ids"></param>
         /// <returns></returns>
-        public IList<Way> GetWaysForNodes(List<long> nodes)
+        public IList<Way> GetWaysFor(List<long> ids)
         {
-            if (nodes.Count > 0)
+            if (ids.Count > 0)
             {
-                OracleConnection con = this.CreateConnection();
+                OracleConnection con = CreateConnection();
+                OracleCommand com;
+                OracleDataReader reader;
 
-                List<long> way_ids = new List<long>();
-                for (int idx_1000 = 0; idx_1000 <= nodes.Count / 1000; idx_1000++)
+                HashSet<long> wayIds = new HashSet<long>();
+                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
                 {
-                    // STEP1: Load ways that exist for the given nodes.
-                    string sql = "SELECT * FROM way_nodes WHERE (node_id IN ({0})) ";
                     int start_idx = idx_1000 * 1000;
-                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, nodes.Count);
-                    string ids_string = this.ConstructIdList(nodes, start_idx, stop_idx);
+                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
+
+                    string sql = "SELECT * FROM way_nodes WHERE (node_id IN ({0})) ORDER BY sequence_id";
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
                     if (ids_string.Length > 0)
                     {
                         sql = string.Format(sql, ids_string);
-                        OracleCommand com = new OracleCommand(sql);
+                        com = new OracleCommand(sql);
                         com.Connection = con;
-                        OracleDataReader reader = com.ExecuteReader();
-
+                        reader = com.ExecuteReader();
                         while (reader.Read())
                         {
                             long id = reader.GetInt64(0);
-                            if (!way_ids.Contains(id))
+                            wayIds.Add(id);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                return this.GetWays(wayIds.ToList<long>());
+            }
+
+            return new List<Way>();
+        }
+
+        /// <summary>
+        /// Returns the relations for the given ids.
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public override IList<Relation> GetRelations(IList<long> ids)
+        {
+            if (ids.Count > 0)
+            {
+                OracleConnection con = this.CreateConnection();
+
+                // STEP2: Load ways.
+                Dictionary<long, Relation> relations = new Dictionary<long, Relation>();
+                string sql;
+                OracleCommand com;
+                OracleDataReader reader;
+                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
+                {
+                    int start_idx = idx_1000 * 1000;
+                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
+
+                    sql = "SELECT id, changeset_id, visible, timestamp, version, usr, usr_id FROM relation WHERE (id IN ({0})) ";
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
+                    if (ids_string.Length > 0)
+                    {
+                        sql = string.Format(sql, ids_string);
+                        com = new OracleCommand(sql);
+                        com.Connection = con;
+                        reader = com.ExecuteReader();
+                        Relation relation;
+                        while (reader.Read())
+                        {
+                            long id = reader.GetInt64(0);
+                            long? changeset_id = reader.IsDBNull(1) ? null : (long?)reader.GetInt64(1);
+                            bool? visible = reader.IsDBNull(2) ? null : (bool?)(reader.GetInt16(2) == 1);
+                            DateTime? timestamp = reader.IsDBNull(3) ? null : (DateTime?)reader.GetDateTime(3);
+                            ulong? version = reader.IsDBNull(4) ? null : (ulong?)reader.GetInt64(4);
+                            string user = reader.IsDBNull(5) ? null : reader.GetString(5);
+                            long? user_id = reader.IsDBNull(6) ? null : (long?)reader.GetInt64(6);
+
+                            // create way.
+                            relation = new Relation();
+                            relation.Id = id;
+                            relation.Version = version;
+                            relation.UserName = user;
+                            relation.UserId = user_id;
+                            relation.Visible = visible;
+                            relation.TimeStamp = timestamp;
+                            relation.ChangeSetId = changeset_id;
+
+                            relations.Add(relation.Id.Value, relation);
+                        }
+                        reader.Close();
+                    }
+                }
+
+                //STEP3: Load all relation-member relations
+                List<long> missing_node_ids = new List<long>();
+                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
+                {
+                    int start_idx = idx_1000 * 1000;
+                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
+
+                    sql = "SELECT relation_id, member_type, member_id, member_role, sequence_id FROM relation_members WHERE (relation_id IN ({0})) ORDER BY sequence_id";
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
+                    if (ids_string.Length > 0)
+                    {
+                        sql = string.Format(sql, ids_string);
+                        com = new OracleCommand(sql);
+                        com.Connection = con;
+                        reader = com.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            long relation_id = reader.GetInt64(0);
+                            long member_type = reader.GetInt16(1);
+                            long? member_id = reader.IsDBNull(2) ? null : (long?)reader.GetInt64(2);
+                            string member_role = reader.IsDBNull(3) ? null : reader.GetString(3);
+
+                            Relation relation;
+                            if (relations.TryGetValue(relation_id, out relation))
                             {
-                                way_ids.Add(id);
+                                if (relation.Members == null)
+                                {
+                                    relation.Members = new List<RelationMember>();
+                                }
+                                RelationMember member = new RelationMember();
+                                member.MemberId = member_id;
+                                member.MemberRole = member_role;
+                                member.MemberType = this.ConvertMemberType(member_type);
+
+                                relation.Members.Add(member);
                             }
                         }
                         reader.Close();
                     }
                 }
 
-                return this.GetWays(way_ids);
+                //STEP4: Load all tags.
+                for (int idx_1000 = 0; idx_1000 <= ids.Count / 1000; idx_1000++)
+                {
+                    int start_idx = idx_1000 * 1000;
+                    int stop_idx = System.Math.Min((idx_1000 + 1) * 1000, ids.Count);
+
+                    sql = "SELECT * FROM relation_tags WHERE (relation_id IN ({0})) ";
+                    string ids_string = this.ConstructIdList(ids, start_idx, stop_idx);
+                    if (ids_string.Length > 0)
+                    {
+                        sql = string.Format(sql, ids_string);
+                        com = new OracleCommand(sql);
+                        com.Connection = con;
+                        reader = com.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            long id = reader.GetInt64(0);
+                            string key = reader.GetString(1);
+                            object value_object = reader[2];
+                            string value = string.Empty;
+                            if (value_object != null && value_object != DBNull.Value)
+                            {
+                                value = (string)value_object;
+                            }
+
+                            Relation relation;
+                            if (relations.TryGetValue(id, out relation))
+                            {
+                                if (relation.Tags == null)
+                                {
+                                    relation.Tags = new SimpleTagsCollection();
+                                }
+                                relation.Tags.Add(key, value);
+                            }
+                        }
+                        reader.Close();
+                    }
+                }
+
+                return relations.Values.ToList<Relation>();
             }
-            return new List<Way>();
+            return new List<Relation>();
         }
-
-        #region Tile Calculations
-
-        uint xy2tile(uint x, uint y)
-        {
-            uint tile = 0;
-            int i;
-
-            for (i = 15; i >= 0; i--)
-            {
-                tile = (tile << 1) | ((x >> i) & 1);
-                tile = (tile << 1) | ((y >> i) & 1);
-            }
-
-            return tile;
-        }
-
-        uint lon2x(double lon)
-        {
-            return (uint)System.Math.Floor(((lon + 180.0) * 65536.0 / 360.0));
-        }
-
-        uint lat2y(double lat)
-        {
-            return (uint)System.Math.Floor(((lat + 90.0) * 65536.0 / 180.0));
-        }
-
-        #endregion
 
         /// <summary>
-        /// Returns all objects in the given bounding box that are valid according to the given filter.
+        /// Converts the member type id to the relationmembertype enum.
+        /// </summary>
+        /// <param name="member_type"></param>
+        /// <returns></returns>
+        private OsmGeoType? ConvertMemberType(long member_type)
+        {
+            switch (member_type)
+            {
+                case (long)OsmGeoType.Node:
+                    return OsmGeoType.Node;
+                case (long)OsmGeoType.Way:
+                    return OsmGeoType.Way;
+                case (long)OsmGeoType.Relation:
+                    return OsmGeoType.Relation;
+            }
+            throw new ArgumentOutOfRangeException("Invalid member type.");
+        }
+
+        /// <summary>
+        /// Converts the member type to long.
+        /// </summary>
+        /// <param name="memberType"></param>
+        /// <returns></returns>
+        private long? ConvertMemberType(OsmGeoType? memberType)
+        {
+            if (memberType.HasValue)
+            {
+                return (long)memberType.Value;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Returns all relations that contain the given object.
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public override IList<Relation> GetRelationsFor(OsmGeoType type, long id)
+        {
+            OracleConnection con = CreateConnection();
+            OracleCommand com;
+            OracleDataReader reader;
+
+            string sql = "SELECT relation_id FROM relation_members WHERE (member_id = :member_id and member_type = :member_type) ORDER BY sequence_id";
+            com = new OracleCommand(sql);
+            com.Connection = con;
+            com.Parameters.Add(new OracleParameter("member_id", OracleDbType.Int64));
+            com.Parameters.Add(new OracleParameter("member_type", OracleDbType.Int64));
+            com.Parameters[0].Value = id;
+            com.Parameters[1].Value = this.ConvertMemberType(type).Value;
+
+            HashSet<long> ids = new HashSet<long>();
+            reader = com.ExecuteReader();
+            while (reader.Read())
+            {
+                ids.Add(reader.GetInt64(0));
+            }
+            reader.Close();
+
+            return this.GetRelations(ids.ToList<long>());
+        }
+
+        /// <summary>
+        /// Returns all objects with the given bounding box and valid for the given filter;
         /// </summary>
         /// <param name="box"></param>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public override IList<OsmGeo> Get(GeoCoordinateBox box, OsmSharp.Osm.Filters.Filter filter)
+        public override IList<OsmGeo> Get(GeoCoordinateBox box, Filter filter)
         {
             // initialize connection.
             OracleConnection con = this.CreateConnection();
-            List<OsmGeo> base_list = new List<OsmGeo>();
+            List<OsmGeo> res = new List<OsmGeo>();
 
             // calculate bounding box parameters to query db.
-            long latitude_min = (long)(box.MinLat * 10000000.0);
-            long longitude_min = (long)(box.MinLon * 10000000.0);
-            long latitude_max = (long)(box.MaxLat * 10000000.0);
-            long longitude_max = (long)(box.MaxLon * 10000000.0);
-
-            // TODO: improve this to allow loading of bigger bb's.
-            uint x_min = lon2x(box.MinLon);
-            uint x_max = lon2x(box.MaxLon);
-            uint y_min = lat2y(box.MinLat);
-            uint y_max = lat2y(box.MaxLat);
+            long latitudeMin = (long)(box.MinLat * 10000000.0);
+            long longitudeMin = (long)(box.MinLon * 10000000.0);
+            long latitudeMax = (long)(box.MaxLat * 10000000.0);
+            long longitudeMax = (long)(box.MaxLon * 10000000.0);
 
             IList<long> boxes = new List<long>();
 
-            for (uint x = x_min; x <= x_max; x++)
+            TileRange tileRange = TileRange.CreateAroundBoundingBox(box, 14);
+            foreach (Tile tile in tileRange)
             {
-                for (uint y = y_min; y <= y_max; y++)
-                {
-                    boxes.Add(this.xy2tile(x, y));
-                }
+                boxes.Add((long)tile.Id);
             }
 
             // STEP 1: query nodes table.
             //id	latitude	longitude	changeset_id	visible	timestamp	tile	version
+            //string sql
+            //        = "SELECT node.id, node.latitude, node.longitude, node.changeset_id, node.timestamp, node.version, " +
+            //          "node.usr, node.usr_id, node.visible FROM node WHERE  (tile IN ({4})) AND (visible = 1) AND (latitude BETWEEN {0} AND {1} AND longitude BETWEEN {2} AND {3})";
+            // remove this nasty BETWEEN operation because it depends on the database (!) what results are returned (including or excluding bounds!!!)
             string sql
-                = "SELECT * FROM node WHERE (visible = 1) AND  (tile IN ({4})) AND (latitude BETWEEN {0} AND {1} AND longitude BETWEEN {2} AND {3})";
+                = "SELECT id, latitude, longitude, changeset_id, visible, timestamp, tile, version, usr, usr_id " +
+                  "FROM node WHERE  (tile IN ({4})) AND (visible = 1) AND (latitude >= {0} AND latitude < {1} AND longitude >= {2} AND longitude < {3})";
             sql = string.Format(sql,
-                    latitude_min.ToString(),
-                    latitude_max.ToString(),
-                    longitude_min.ToString(),
-                    longitude_max.ToString(),
-                    this.ConstructIdList(boxes));
+                        latitudeMin.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        latitudeMax.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        longitudeMin.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        longitudeMax.ToString(System.Globalization.CultureInfo.InvariantCulture),
+                        this.ConstructIdList(boxes));
 
             // TODO: parameters.
-            OracleCommand com = new OracleCommand(sql);
+            var com = new OracleCommand(sql);
             com.Connection = con;
             OracleDataReader reader = com.ExecuteReader();
             Node node = null;
-            Dictionary<long, Node> nodes = new Dictionary<long, Node>();
-            List<long> node_ids = new List<long>();
+            var nodes = new Dictionary<long, Node>();
+            var nodeIds = new List<long>();
             while (reader.Read())
             {
                 // load/parse data.
                 long returned_id = reader.GetInt64(0);
                 int latitude_int = reader.GetInt32(1);
                 int longitude_int = reader.GetInt32(2);
-                long changeset_id = reader.GetInt64(3);
-                bool visible = reader.GetInt64(4)==1;
-                DateTime timestamp = reader.GetDateTime(5);
+                long? changeset_id = reader.IsDBNull(3) ? null : (long?)reader.GetInt64(3);
+                bool? visible = reader.IsDBNull(4) ? null : (bool?)(reader.GetInt32(4) == 1);
+                DateTime? timestamp = reader.IsDBNull(5) ? null : (DateTime?)reader.GetDateTime(5);
                 long tile = reader.GetInt64(6);
-                long version = reader.GetInt64(7);
+                ulong? version = reader.IsDBNull(7) ? null : (ulong?)(ulong)reader.GetInt64(7);
+                string usr = reader.IsDBNull(8) ? null : reader.GetString(8);
+                long? usr_id = reader.IsDBNull(9) ? null : (long?)reader.GetInt64(9);
 
-                // create node.
-                node = new Node(); // OsmBaseFactory.CreateNode(returned_id);
-                node.Id = returned_id;
-                node.Version = (ulong)version;
-                //node.UserId = user_id;
-                node.TimeStamp = timestamp;
-                node.ChangeSetId = changeset_id;
-                node.Latitude = ((double)latitude_int) / 10000000.0;
-                node.Longitude = ((double)longitude_int) / 10000000.0;
+                if (!nodes.ContainsKey(returned_id))
+                {
+                    // create node.
+                    node = new Node();
+                    node.Id = returned_id;
+                    node.Version = version;
+                    node.UserId = usr_id;
+                    node.TimeStamp = timestamp;
+                    node.ChangeSetId = changeset_id;
+                    node.Visible = visible;
+                    node.Latitude = ((double)latitude_int) / 10000000.0;
+                    node.Longitude = ((double)longitude_int) / 10000000.0;
+                    node.UserName = usr;
 
-                nodes.Add(node.Id.Value,node);
-                node_ids.Add(node.Id.Value);
+                    nodeIds.Add(node.Id.Value);
+                    nodes.Add(node.Id.Value, node);
+                }
             }
             reader.Close();
 
             // STEP2: Load all node tags.
-            this.LoadNodeTags(nodes);            
+            this.LoadNodeTags(nodes);
+            res.AddRange(nodes.Values);
 
-            // STEP3: Load all ways for the given nodes.
-            IList<Way> ways = this.GetWaysForNodes(node_ids);
+            // load all ways that contain the nodes that have been found.
+            res.AddRange(this.GetWaysFor(nodeIds));
 
-            // Add all objects to the base list.
-            foreach (Node node_result in nodes.Values.ToList<Node>())
+            // get relations containing any of the nodes or ways in the current results-list.
+            List<Relation> relations = new List<Relation>();
+            HashSet<long> relationIds = new HashSet<long>();
+            foreach (OsmGeo osmGeo in res)
             {
-                base_list.Add(node_result);
+                IList<Relation> relationsFor = this.GetRelationsFor(osmGeo);
+                foreach (Relation relation in relationsFor)
+                {
+                    if (!relationIds.Contains(relation.Id.Value))
+                    {
+                        relations.Add(relation);
+                        relationIds.Add(relation.Id.Value);
+                    }
+                }
             }
-            foreach (Way way in ways)
+
+            // recursively add all relations containing other relations as a member.
+            do
             {
-                base_list.Add(way);
+                res.AddRange(relations); // add previous relations-list.
+                List<Relation> newRelations = new List<Relation>();
+                foreach (OsmGeo osmGeo in relations)
+                {
+                    IList<Relation> relationsFor = this.GetRelationsFor(osmGeo);
+                    foreach (Relation relation in relationsFor)
+                    {
+                        if (!relationIds.Contains(relation.Id.Value))
+                        {
+                            newRelations.Add(relation);
+                            relationIds.Add(relation.Id.Value);
+                        }
+                    }
+                }
+                relations = newRelations;
+            } while (relations.Count > 0);
+
+            if (filter != null)
+            {
+                List<OsmGeo> filtered = new List<OsmGeo>();
+                foreach (OsmGeo geo in res)
+                {
+                    if (filter.Evaluate(geo))
+                    {
+                        filtered.Add(geo);
+                    }
+                }
             }
-            return base_list;
+
+            return res;
         }
 
         private string ConstructIdList(IList<long> ids)
@@ -569,16 +788,18 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                         while (reader.Read())
                         {
                             long returned_id = reader.GetInt64(0);
-                            string key = reader.GetString(1);
-                            object val = reader.GetValue(2);
-                            string value = string.Empty;
-                            if (val is string)
+                            string key = reader.IsDBNull(1) ? null : reader.GetString(1);
+                            string val = reader.IsDBNull(2) ? null : reader.GetString(2);
+
+                            Node node;
+                            if (nodes.TryGetValue(returned_id, out node))
                             {
-                                value = val as string;
+                                if (node.Tags == null)
+                                {
+                                    node.Tags = new SimpleTagsCollection();
+                                }
+                                node.Tags.Add(key, val);
                             }
-
-                            nodes[returned_id].Tags.Add(key, value);
-
                         }
                         reader.Close();
                     }

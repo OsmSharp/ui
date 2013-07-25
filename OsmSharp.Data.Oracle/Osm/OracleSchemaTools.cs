@@ -22,17 +22,17 @@ using System.Linq;
 using System.Text;
 using Oracle.ManagedDataAccess.Client;
 
-namespace OsmSharp.Osm.Data.Oracle.Osm
+namespace OsmSharp.Data.Oracle.Osm
 {
     /// <summary>
-    /// Tools for creation/detection of the simple schema in Oracle.
+    /// Tools for creation/detection of the schema in Oracle.
     /// </summary>
-    internal static class OracleSimpleSchemaTools
+    public static class OracleSchemaTools
     {
         /// <summary>
         /// SQL to detect the existence of a table.
         /// </summary>
-        private const string TABLE_DETECTION_SQL = "SELECT COUNT (relname) as a FROM pg_class WHERE relname = :table_name";
+        private const string TABLE_DETECTION_SQL = "select count(tname) from tab where tname = upper(:table_name)";
 
         /// <summary>
         /// SQL to create the nodes table.
@@ -42,14 +42,19 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                                                     "    id            NUMBER(11) NOT NULL, " +
                                                     "    latitude      NUMBER(11) NOT NULL, " +
                                                     "    longitude     NUMBER(11) NOT NULL, " +
-                                                    "    changeset_id  NUMBER(11) NOT NULL, " +
-                                                    "    visible       NUMBER(1) NOT NULL, " +
-                                                    "    timestamp     DATE NOT NULL, " +
+                                                    "    changeset_id  NUMBER(11) NULL, " +
+                                                    "    visible       NUMBER(1) NULL, " +
+                                                    "    timestamp     DATE NULL, " +
                                                     "    tile          NUMBER(11) NOT NULL, " +
-                                                    "    version       NUMBER(11) NOT NULL, " +
+                                                    "    version       NUMBER(11) NULL, " +
                                                     "    usr           VARCHAR2(255), " +
                                                     "    usr_id        NUMBER(11) " +
-                                                    " );";
+                                                    ")";
+
+        /// <summary>
+        /// SQL to drop the nodes table.
+        /// </summary>
+        private const string TABLE_NODE_DROP = "DROP TABLE node";
 
         /// <summary>
         /// SQL to create the node tags table.
@@ -59,7 +64,12 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                                                         "	node_id  NUMBER(11) NOT NULL, " +
                                                         "	key      VARCHAR2(255) NOT NULL, " +
                                                         "	value    VARCHAR2(255) " +
-                                                        ");   ";
+                                                        ")";
+
+        /// <summary>
+        /// SQL to drop the node_tags table.
+        /// </summary>
+        private const string TABLE_NODE_TAGS_DROP = "DROP TABLE node_tags";
 
         /// <summary>
         /// SQL to create the way table.
@@ -67,13 +77,18 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         private const string TABLE_WAY_CREATION = "CREATE TABLE way " +
                                                     "( " +
                                                     "	id            NUMBER(11) NOT NULL, " +
-                                                    "	changeset_id  NUMBER(11) NOT NULL, " +
-                                                    "	timestamp     DATE NOT NULL, " +
-                                                    "	visible       NUMBER(1) NOT NULL, " +
-                                                    "	version       NUMBER(11) NOT NULL, " +
+                                                    "	changeset_id  NUMBER(11) NULL, " +
+                                                    "	timestamp     DATE NULL, " +
+                                                    "	visible       NUMBER(1) NULL, " +
+                                                    "	version       NUMBER(11) NULL, " +
                                                     "	usr           VARCHAR2(255), " +
                                                     "	usr_id        NUMBER(11) " +
-                                                    "); ";
+                                                    ")";
+
+        /// <summary>
+        /// SQL to drop the ways table.
+        /// </summary>
+        private const string TABLE_WAY_DROP = "DROP TABLE way";
 
         /// <summary>
         /// SQL to create way nodes table.
@@ -83,7 +98,12 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                                                         "    way_id       NUMBER(11) NOT NULL, " +
                                                         "    node_id      NUMBER(11) NOT NULL, " +
                                                         "    sequence_id  NUMBER(11) NOT NULL " +
-                                                        ");";
+                                                        ")";
+
+        /// <summary>
+        /// SQL to drop the ways table.
+        /// </summary>
+        private const string TABLE_WAY_NODES_DROP = "DROP TABLE way_nodes";
 
         /// <summary>
         /// SQL to create way tags table.
@@ -93,7 +113,12 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                                                         "	way_id  NUMBER(11) NOT NULL, " +
                                                         "	key     VARCHAR2(255) NOT NULL, " +
                                                         "	value   VARCHAR2(255) " +
-                                                        ");";
+                                                        ")";
+
+        /// <summary>
+        /// SQL to drop the ways table.
+        /// </summary>
+        private const string TABLE_WAY_TAGS_DROP = "DROP TABLE way_tags";
 
         /// <summary>
         /// SQL to create relation table.
@@ -101,13 +126,18 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         private const string TABLE_RELATION_CREATION = "CREATE TABLE relation " +
                                                         "( " +
                                                         "	id            NUMBER(11) NOT NULL, " +
-                                                        "	changeset_id  NUMBER(11) NOT NULL, " +
-                                                        "	timestamp     DATE NOT NULL, " +
-                                                        "	visible       NUMBER(1) NOT NULL, " +
-                                                        "	version       NUMBER(11) NOT NULL, " +
+                                                        "	changeset_id  NUMBER(11) NULL, " +
+                                                        "	timestamp     DATE NULL, " +
+                                                        "	visible       NUMBER(1) NULL, " +
+                                                        "	version       NUMBER(11) NULL, " +
                                                         "	usr           VARCHAR2(255), " +
                                                         "	usr_id        NUMBER(11) " +
-                                                        ");";
+                                                        ")";
+
+        /// <summary>
+        /// SQL to drop the relation table.
+        /// </summary>
+        private const string TABLE_RELATION_DROP = "DROP TABLE relation";
 
         /// <summary>
         /// SQL to create relation members table.
@@ -115,11 +145,16 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         private const string TABLE_RELATION_MEMBERS_CREATION = "CREATE TABLE relation_members " +
                                                                 "( " +
                                                                 "	relation_id  NUMBER(11) NOT NULL, " +
-                                                                "	member_type  VARCHAR2(20) NOT NULL, " +
+                                                                "	member_type  NUMBER(1) NOT NULL, " +
                                                                 "	member_id    NUMBER(11) NOT NULL, " +
                                                                 "	member_role  VARCHAR2(255), " +
                                                                 "	sequence_id  NUMBER(11) NOT NULL " +
-                                                                ");";
+                                                                ")";
+
+        /// <summary>
+        /// SQL to drop the relation_members table.
+        /// </summary>
+        private const string TABLE_RELATION_MEMBERS_DROP = "DROP TABLE relation_members";
 
         /// <summary>
         /// SQL to create relation tags table.
@@ -129,7 +164,12 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
                                                             "	relation_id  NUMBER(11) NOT NULL, " +
                                                             "	key          VARCHAR2(255) NOT NULL, " +
                                                             "	value        VARCHAR2(255) " +
-                                                            ");";
+                                                            ")";
+
+        /// <summary>
+        /// SQL to drop the relation_tags table.
+        /// </summary>
+        private const string TABLE_RELATION_TAGS_DROP = "DROP TABLE relation_tags";
 
         /// <summary>
         /// Returns true if the table with the given name exists in the database connected to.
@@ -144,7 +184,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
             command.Connection = connection;
 
             // execute the query.
-            long count = (long)command.ExecuteScalar();
+            decimal count = (decimal)command.ExecuteScalar();
             command.Dispose();
             return count == 1;
         }
@@ -157,7 +197,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <returns></returns>
         private static void ExecuteScript(OracleConnection connection, string sql)
         {
-            OracleCommand command = new OracleCommand(TABLE_NODE_CREATION);
+            OracleCommand command = new OracleCommand(sql);
             command.Connection = connection;
             command.ExecuteNonQuery();
         }
@@ -169,7 +209,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <returns></returns>
         public static bool DetectNodeTable(OracleConnection connection)
         {
-            return OracleSimpleSchemaTools.DetectTable(connection, "node");
+            return OracleSchemaTools.DetectTable(connection, "node");
         }
 
         /// <summary>
@@ -179,7 +219,17 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <returns></returns>
         public static void CreateNodeTable(OracleConnection connection)
         {
-            OracleSimpleSchemaTools.ExecuteScript(connection, TABLE_NODE_CREATION);
+            OracleSchemaTools.ExecuteScript(connection, TABLE_NODE_CREATION);
+        }
+
+        /// <summary>
+        /// Drop the nodes table.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        public static void DropNodeTable(OracleConnection connection)
+        {
+            OracleSchemaTools.ExecuteScript(connection, TABLE_NODE_DROP);
         }
 
         /// <summary>
@@ -189,7 +239,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <returns></returns>
         public static bool DetectNodeTagsTable(OracleConnection connection)
         {
-            return OracleSimpleSchemaTools.DetectTable(connection, "node_tags");
+            return OracleSchemaTools.DetectTable(connection, "node_tags");
         }
 
         /// <summary>
@@ -198,7 +248,16 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <param name="connection"></param>
         public static void CreateNodeTagsTable(OracleConnection connection)
         {
-            OracleSimpleSchemaTools.ExecuteScript(connection, TABLE_NODE_TAGS_CREATION);
+            OracleSchemaTools.ExecuteScript(connection, TABLE_NODE_TAGS_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the node tags table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropNodeTagsTable(OracleConnection connection)
+        {
+            OracleSchemaTools.ExecuteScript(connection, TABLE_NODE_TAGS_DROP);
         }
 
         /// <summary>
@@ -207,7 +266,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <param name="connection"></param>
         public static bool DetectWayTable(OracleConnection connection)
         {
-            return OracleSimpleSchemaTools.DetectTable(connection, "way");
+            return OracleSchemaTools.DetectTable(connection, "way");
         }
 
         /// <summary>
@@ -216,7 +275,16 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <param name="connection"></param>
         public static void CreateWayTable(OracleConnection connection)
         {
-            OracleSimpleSchemaTools.ExecuteScript(connection, TABLE_WAY_CREATION);
+            OracleSchemaTools.ExecuteScript(connection, TABLE_WAY_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the way table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropWayTable(OracleConnection connection)
+        {
+            OracleSchemaTools.ExecuteScript(connection, TABLE_WAY_DROP);
         }
 
         /// <summary>
@@ -225,7 +293,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <param name="connection"></param>
         public static bool DetectWayNodesTable(OracleConnection connection)
         {
-            return OracleSimpleSchemaTools.DetectTable(connection, "way_nodes");
+            return OracleSchemaTools.DetectTable(connection, "way_nodes");
         }
 
         /// <summary>
@@ -234,7 +302,16 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <param name="connection"></param>
         public static void CreateWayNodesTable(OracleConnection connection)
         {
-            OracleSimpleSchemaTools.ExecuteScript(connection, TABLE_WAY_NODES_CREATION);
+            OracleSchemaTools.ExecuteScript(connection, TABLE_WAY_NODES_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the way nodes table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropWayNodesTable(OracleConnection connection)
+        {
+            OracleSchemaTools.ExecuteScript(connection, TABLE_WAY_NODES_DROP);
         }
 
         /// <summary>
@@ -243,7 +320,16 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <param name="connection"></param>
         public static void CreateWayTagsTable(OracleConnection connection)
         {
-            OracleSimpleSchemaTools.ExecuteScript(connection, TABLE_WAY_TAGS_CREATION);
+            OracleSchemaTools.ExecuteScript(connection, TABLE_WAY_TAGS_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the way tags table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropWayTagsTable(OracleConnection connection)
+        {
+            OracleSchemaTools.ExecuteScript(connection, TABLE_WAY_TAGS_DROP);
         }
 
         /// <summary>
@@ -252,7 +338,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <param name="connection"></param>
         public static bool DetectWayTagsTable(OracleConnection connection)
         {
-            return OracleSimpleSchemaTools.DetectTable(connection, "way_tags");
+            return OracleSchemaTools.DetectTable(connection, "way_tags");
         }
 
         /// <summary>
@@ -262,7 +348,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <returns></returns>
         public static bool DetectRelationTable(OracleConnection connection)
         {
-            return OracleSimpleSchemaTools.DetectTable(connection, "relation");
+            return OracleSchemaTools.DetectTable(connection, "relation");
         }
 
         /// <summary>
@@ -271,7 +357,16 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <param name="connection"></param>
         public static void CreateRelationTable(OracleConnection connection)
         {
-            OracleSimpleSchemaTools.ExecuteScript(connection, TABLE_RELATION_CREATION);
+            OracleSchemaTools.ExecuteScript(connection, TABLE_RELATION_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the relation table.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropRelationTable(OracleConnection connection)
+        {
+            OracleSchemaTools.ExecuteScript(connection, TABLE_RELATION_DROP);
         }
 
         /// <summary>
@@ -281,7 +376,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <returns></returns>
         public static bool DetectRelationMembersTable(OracleConnection connection)
         {
-            return OracleSimpleSchemaTools.DetectTable(connection, "relation_members");
+            return OracleSchemaTools.DetectTable(connection, "relation_members");
         }
 
         /// <summary>
@@ -291,7 +386,17 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <returns></returns>
         public static void CreateRelationMembersTable(OracleConnection connection)
         {
-            OracleSimpleSchemaTools.ExecuteScript(connection, TABLE_RELATION_MEMBERS_CREATION);
+            OracleSchemaTools.ExecuteScript(connection, TABLE_RELATION_MEMBERS_CREATION);
+        }
+
+        /// <summary>
+        /// Drops the relation members table.
+        /// </summary>
+        /// <param name="connection"></param>
+        /// <returns></returns>
+        public static void DropRelationMembersTable(OracleConnection connection)
+        {
+            OracleSchemaTools.ExecuteScript(connection, TABLE_RELATION_MEMBERS_DROP);
         }
 
         /// <summary>
@@ -301,7 +406,7 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <returns></returns>
         public static bool DetectRelationTagsTable(OracleConnection connection)
         {
-            return OracleSimpleSchemaTools.DetectTable(connection, "relation_tags");
+            return OracleSchemaTools.DetectTable(connection, "relation_tags");
         }
 
         /// <summary>
@@ -310,7 +415,16 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <param name="connection"></param>
         public static void CreateRelationTagsTable(OracleConnection connection)
         {
-            OracleSimpleSchemaTools.ExecuteScript(connection, TABLE_RELATION_TAGS_CREATION);
+            OracleSchemaTools.ExecuteScript(connection, TABLE_RELATION_TAGS_CREATION);
+        }
+
+        /// <summary>
+        /// Drops relation tags.
+        /// </summary>
+        /// <param name="connection"></param>
+        public static void DropRelationTagsTable(OracleConnection connection)
+        {
+            OracleSchemaTools.ExecuteScript(connection, TABLE_RELATION_TAGS_DROP);
         }
 
         /// <summary>
@@ -319,39 +433,81 @@ namespace OsmSharp.Osm.Data.Oracle.Osm
         /// <param name="connection"></param>
         public static void CreateAndDetect(OracleConnection connection)
         {
-            if (!OracleSimpleSchemaTools.DetectNodeTable(connection))
+            if (!OracleSchemaTools.DetectNodeTable(connection))
             {
-                OracleSimpleSchemaTools.CreateNodeTable(connection);
+                OracleSchemaTools.CreateNodeTable(connection);
             }
-            if (!OracleSimpleSchemaTools.DetectNodeTagsTable(connection))
+            if (!OracleSchemaTools.DetectNodeTagsTable(connection))
             {
-                OracleSimpleSchemaTools.CreateNodeTagsTable(connection);
-            }
-
-            if (!OracleSimpleSchemaTools.DetectWayTable(connection))
-            {
-                OracleSimpleSchemaTools.CreateWayTable(connection);
-            }
-            if (!OracleSimpleSchemaTools.DetectWayTagsTable(connection))
-            {
-                OracleSimpleSchemaTools.CreateWayTagsTable(connection);
-            }
-            if (!OracleSimpleSchemaTools.DetectWayNodesTable(connection))
-            {
-                OracleSimpleSchemaTools.CreateWayNodesTable(connection);
+                OracleSchemaTools.CreateNodeTagsTable(connection);
             }
 
-            if (!OracleSimpleSchemaTools.DetectRelationTable(connection))
+            if (!OracleSchemaTools.DetectWayTable(connection))
             {
-                OracleSimpleSchemaTools.CreateRelationTable(connection);
+                OracleSchemaTools.CreateWayTable(connection);
             }
-            if (!OracleSimpleSchemaTools.DetectRelationTagsTable(connection))
+            if (!OracleSchemaTools.DetectWayTagsTable(connection))
             {
-                OracleSimpleSchemaTools.CreateRelationTagsTable(connection);
+                OracleSchemaTools.CreateWayTagsTable(connection);
             }
-            if (!OracleSimpleSchemaTools.DetectRelationMembersTable(connection))
+            if (!OracleSchemaTools.DetectWayNodesTable(connection))
             {
-                OracleSimpleSchemaTools.CreateRelationMembersTable(connection);
+                OracleSchemaTools.CreateWayNodesTable(connection);
+            }
+
+            if (!OracleSchemaTools.DetectRelationTable(connection))
+            {
+                OracleSchemaTools.CreateRelationTable(connection);
+            }
+            if (!OracleSchemaTools.DetectRelationTagsTable(connection))
+            {
+                OracleSchemaTools.CreateRelationTagsTable(connection);
+            }
+            if (!OracleSchemaTools.DetectRelationMembersTable(connection))
+            {
+                OracleSchemaTools.CreateRelationMembersTable(connection);
+            }
+        }
+
+        /// <summary>
+        /// Drops objects in this schema.
+        /// </summary>
+        /// <param name="_connection"></param>
+        public static void Drop(OracleConnection connection)
+        {
+            if (OracleSchemaTools.DetectNodeTable(connection))
+            {
+                OracleSchemaTools.DropNodeTable(connection);
+            }
+            if (OracleSchemaTools.DetectNodeTagsTable(connection))
+            {
+                OracleSchemaTools.DropNodeTagsTable(connection);
+            }
+
+            if (OracleSchemaTools.DetectWayTable(connection))
+            {
+                OracleSchemaTools.DropWayTable(connection);
+            }
+            if (OracleSchemaTools.DetectWayTagsTable(connection))
+            {
+                OracleSchemaTools.DropWayTagsTable(connection);
+            }
+            if (OracleSchemaTools.DetectWayNodesTable(connection))
+            {
+                OracleSchemaTools.DropWayNodesTable(connection);
+            }
+
+            if (OracleSchemaTools.DetectRelationTable(connection))
+            {
+                OracleSchemaTools.DropRelationTable(connection);
+            }
+            if (OracleSchemaTools.DetectRelationTagsTable(connection))
+            {
+                OracleSchemaTools.DropRelationTagsTable(connection);
+            }
+            if (OracleSchemaTools.DetectRelationMembersTable(connection))
+            {
+                OracleSchemaTools.DropRelationMembersTable(connection);
             }
         }
     }

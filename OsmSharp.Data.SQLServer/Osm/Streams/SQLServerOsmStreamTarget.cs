@@ -86,12 +86,36 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
         }
 
         /// <summary>
+        /// Create a SQLServerSimpleSchemaDataProcessorTarget
+        /// </summary>
+        /// <param name="connectionString">Connection to the database</param>
+        public SQLServerOsmStreamTarget(SqlConnection connection)
+        {
+            _connection = connection;
+            _createAndDetectSchema = false;
+        }
+
+        /// <summary>
+        /// Create a SQLServerSimpleSchemaDataProcessorTarget
+        /// </summary>
+        /// <param name="connectionString">Connection to the database</param>
+        /// <param name="createSchema">If true, will drop and re-create the schema</param>
+        public SQLServerOsmStreamTarget(SqlConnection connection, bool createSchema)
+        {
+            _connection = connection;
+            _createAndDetectSchema = createSchema;
+        }
+
+        /// <summary>
         /// Initializes the target.
         /// </summary>
         public override void Initialize()
         {
-            _connection = new SqlConnection(_connectionString);
-            _connection.Open();
+            if (_connection == null)
+            {
+                _connection = new SqlConnection(_connectionString);
+                _connection.Open();
+            }
 
             if (_createAndDetectSchema)
             { 
@@ -462,35 +486,44 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
         }
 
         /// <summary>
+        /// Flushes all data to the db.
+        /// </summary>
+        public override void Flush()
+        {
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
+                "Flushing remaining data");
+            BulkCopy(_nodeTable, "node");
+            BulkCopy(_nodeTagsTable, "node_tags");
+
+            BulkCopy(_wayTable, "way");
+            BulkCopy(_wayTagsTable, "way_tags");
+            BulkCopy(_wayNodesTable, "way_nodes");
+
+            BulkCopy(_relationTable, "relation");
+            BulkCopy(_relationTagsTable, "relation_tags");
+            BulkCopy(_relationMembersTable, "relation_members");
+        }
+
+        /// <summary>
         /// Closes the current target.
         /// </summary>
         public override void Close()
         {
             if(_connection != null)
             {
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
-                    "Flushing remaining data");
-                BulkCopy(_nodeTable, "node");
-                BulkCopy(_nodeTagsTable, "node_tags");
-
-                BulkCopy(_wayTable, "way");
-                BulkCopy(_wayTagsTable, "way_tags");
-                BulkCopy(_wayNodesTable, "way_nodes");
-
-                BulkCopy(_relationTable, "relation");
-                BulkCopy(_relationTagsTable, "relation_tags");
-                BulkCopy(_relationMembersTable, "relation_members");
-
                 if(_createAndDetectSchema)
                 {
                     // Adds constraints
                     SQLServerSchemaTools.AddConstraints(_connection);
                 }
 
-                _connection.Close();
-                _connection.Dispose();
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
-                    "Database connection closed");
+                if (!string.IsNullOrWhiteSpace(_connectionString))
+                {
+                    _connection.Close();
+                    _connection.Dispose();
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
+                        "Database connection closed");
+                }
             }
             _connection = null;
         }

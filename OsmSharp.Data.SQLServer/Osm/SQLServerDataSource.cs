@@ -66,6 +66,29 @@ namespace OsmSharp.Data.SQLServer.Osm
         /// <summary>
         /// Creates a new simple schema datasource.
         /// </summary>
+        /// <param name="connection">The connection.</param>
+        public SQLServerDataSource(SqlConnection connection)
+        {
+            _connection = connection;
+            _id = Guid.NewGuid();
+            _createAndDetectSchema = false;
+        }
+
+        /// <summary>
+        /// Creates a new simple schema datasource.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <param name="createSchema">Creates all the needed tables if true.</param>
+        public SQLServerDataSource(SqlConnection connection, bool createSchema)
+        {
+            _connection = connection;
+            _id = Guid.NewGuid();
+            _createAndDetectSchema = createSchema;
+        }
+
+        /// <summary>
+        /// Creates a new simple schema datasource.
+        /// </summary>
         /// <param name="connectionString">The connection string.</param>
         /// <param name="createSchema">Creates all the needed tables if true.</param>
         public SQLServerDataSource(string connectionString, bool createSchema)
@@ -630,8 +653,12 @@ namespace OsmSharp.Data.SQLServer.Osm
         {
             if (_connection != null)
             {
-                _connection.Close();
-                _connection = null;
+                if (!string.IsNullOrWhiteSpace(_connectionString))
+                { // only close connection if it was created here!
+                    _connection.Close();
+                    _connection.Dispose();
+                    _connection = null;
+                }
             }
         }
 
