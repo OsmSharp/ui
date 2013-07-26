@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using OsmSharp.Math;
 using OsmSharp.Math.Geo;
 
-namespace OsmSharp.Routing.Routers
+namespace OsmSharp.Routing
 {
     /// <summary>
     /// Represents a resolved point. A hook for the router to route on.

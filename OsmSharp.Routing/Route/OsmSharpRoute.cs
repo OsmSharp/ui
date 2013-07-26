@@ -205,7 +205,8 @@ namespace OsmSharp.Routing.Route
             if (route2 == null) return route1;
             if (route1.Entries.Length == 0) return route2;
             if (route2.Entries.Length == 0) return route1;
-            
+            if (route1.Vehicle != route2.Vehicle) { throw new ArgumentException("Route vechicles do not match!"); }
+
             // get the end/start point.
             RoutePointEntry end = route1.Entries[route1.Entries.Length - 1];
             RoutePointEntry start = route2.Entries[0];
@@ -231,8 +232,37 @@ namespace OsmSharp.Routing.Route
                         entries.Add(route1.Entries[idx]);
                     }
                 }
+
+                // merge last and first entry.
+                RoutePointEntry mergedEntry =
+                    route1.Entries[route1.Entries.Length - 1].Clone() as RoutePointEntry;
+                mergedEntry.Type = RoutePointEntryType.Along;
+                if (route2.Entries[0].Points != null && route2.Entries[0].Points.Length > 0)
+                { // merge in important points from the second route too but do not keep duplicates.
+                    List<RoutePoint> points = new List<RoutePoint>(mergedEntry.Points);
+                    for (int otherIdx = 0; otherIdx < route2.Entries[0].Points.Length; otherIdx++)
+                    {
+                        bool found = false;
+                        for (int idx = 0; idx < points.Count; idx++)
+                        {
+                            if (points[idx].RepresentsSame(
+                                route2.Entries[0].Points[otherIdx]))
+                            { // the points represent the same info!
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found)
+                        { // the point was not in there yet!
+                            points.Add(route2.Entries[0].Points[otherIdx]);
+                        }
+                    }
+                    mergedEntry.Points = points.ToArray();
+                }
+                entries.Add(mergedEntry);
+
                 // add points of the next route.
-                for (int idx = 0; idx < route2.Entries.Length; idx++)
+                for (int idx = 1; idx < route2.Entries.Length; idx++)
                 {
                     if (clone)
                     {
@@ -250,13 +280,15 @@ namespace OsmSharp.Routing.Route
                 if (route1.Tags != null) { tags.AddRange(route1.Tags); }
                 if (route2.Tags != null) { tags.AddRange(route2.Tags); }
                 route.Tags = tags.ToArray();
-                
+
                 //// calculate metrics.
                 //Routing.Core.Metrics.Time.TimeCalculator calculator = new OsmSharp.Routing.Metrics.Time.TimeCalculator();
                 //Dictionary<string, double> metrics = calculator.Calculate(route);
                 //route.TotalDistance = metrics[Routing.Core.Metrics.Time.TimeCalculator.DISTANCE_KEY];
                 //route.TotalTime = metrics[Routing.Core.Metrics.Time.TimeCalculator.TIME_KEY];
 
+                // set the vehicle.
+                route.Vehicle = route1.Vehicle;
                 return route;
             }
             else
@@ -391,6 +423,43 @@ namespace OsmSharp.Routing.Route
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns true if the given point has the same name tags and positiong.
+        /// </summary>
+        /// <param name="routePoint"></param>
+        /// <returns></returns>
+        internal bool RepresentsSame(RoutePoint routePoint)
+        {
+            if (routePoint == null) return false;
+
+            if (this.Longitude == routePoint.Longitude &&
+                this.Latitude == routePoint.Latitude &&
+                this.Name == routePoint.Name)
+            {
+                if (routePoint.Tags != null || routePoint.Tags.Length == 0)
+                { // there are tags in the other point.
+                    if (this.Tags != null || this.Tags.Length == 0)
+                    { // there are also tags in this point.
+                        if (this.Tags.Length == routePoint.Tags.Length)
+                        { // and they have the same number of tags!
+                            for (int idx = 0; idx < this.Tags.Length; idx++)
+                            {
+                                if (this.Tags[idx].Key != routePoint.Tags[idx].Key ||
+                                    this.Tags[idx].Value != routePoint.Tags[idx].Value)
+                                { // tags don't equal.
+                                    return false;
+                                }
+                            }
+                            return true;
+                        }
+                        return false;
+                    }
+                }
+                return (this.Tags != null || this.Tags.Length == 0);
+            }
+            return false;
+        }
     }
 
     /// <summary>

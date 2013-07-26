@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Routing.Route;
+using OsmSharp.Routing;
 
 namespace OsmSharp.Osm.UnitTests
 {
@@ -37,6 +38,7 @@ namespace OsmSharp.Osm.UnitTests
         public void RouteConcatenateTagsTest()
         {
             OsmSharpRoute route1 = new OsmSharpRoute();
+            route1.Vehicle = Vehicle.Car;
             RoutePointEntry route1entry1 = new RoutePointEntry();
             route1entry1.Distance = 10;
             route1entry1.Latitude = -1;
@@ -87,6 +89,7 @@ namespace OsmSharp.Osm.UnitTests
 
 
             OsmSharpRoute route2 = new OsmSharpRoute();
+            route2.Vehicle = Vehicle.Car;
             RoutePointEntry route2entry1 = new RoutePointEntry();
             route2entry1.Distance = 10;
             route2entry1.Latitude = -1;
@@ -140,9 +143,11 @@ namespace OsmSharp.Osm.UnitTests
             // test the result.
             Assert.IsNotNull(concatenated);
             Assert.IsNotNull(concatenated.Entries);
+            Assert.AreEqual(route1.Vehicle, concatenated.Vehicle);
             Assert.AreEqual(3, concatenated.Entries.Length);
             Assert.AreEqual("TestPoint1", concatenated.Entries[0].Points[0].Name);
-            Assert.AreEqual("TestPoint3", concatenated.Entries[1].Points[0].Name);
+            Assert.AreEqual("TestPoint2", concatenated.Entries[1].Points[0].Name);
+            Assert.AreEqual("TestPoint3", concatenated.Entries[1].Points[1].Name);
             Assert.AreEqual("TestPoint4", concatenated.Entries[2].Points[0].Name);
         }
 

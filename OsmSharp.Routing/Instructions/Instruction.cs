@@ -63,5 +63,10 @@ namespace OsmSharp.Routing.Instructions
         /// The instruction text.
         /// </summary>
         public string Text { get; set; }
+
+        /// <summary>
+        /// Gets/sets some extras if needed.
+        /// </summary>
+        public Dictionary<string, object> Extras { get; set; }
     }
 }

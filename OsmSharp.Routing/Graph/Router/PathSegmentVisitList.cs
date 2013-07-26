@@ -44,6 +44,23 @@ namespace OsmSharp.Routing.Graph.Router
         {
             _visit_list = new SortedList<double, Dictionary<long, PathSegment<long>>>();
             _visited = new Dictionary<long, double>();
+
+            this.Neighbour1 = -1;
+            this.Neighbour2 = -1;
+        }
+
+        /// <summary>
+        /// Creates a new visit list.
+        /// </summary>
+        /// <param name="neighbour1"></param>
+        /// <param name="neighbour2"></param>
+        public PathSegmentVisitList(long neighbour1, long neighbour2)
+        {
+            _visit_list = new SortedList<double, Dictionary<long, PathSegment<long>>>();
+            _visited = new Dictionary<long, double>();
+
+            this.Neighbour1 = neighbour1;
+            this.Neighbour2 = neighbour2;
         }
 
         /// <summary>
@@ -69,6 +86,9 @@ namespace OsmSharp.Routing.Graph.Router
             {
                 _visited.Add(pair.Key, pair.Value);
             }
+
+            this.Neighbour1 = source.Neighbour1;
+            this.Neighbour2 = source.Neighbour2;
         }
 
         /// <summary>
@@ -182,6 +202,24 @@ namespace OsmSharp.Routing.Graph.Router
             {
                 return _visited.Count;
             }
+        }
+
+        /// <summary>
+        /// Gets/sets the Neighbour1.
+        /// </summary>
+        public long Neighbour1
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets/sets the Neighbour2.
+        /// </summary>
+        public long Neighbour2
+        {
+            get;
+            set;
         }
 
         /// <summary>

@@ -454,7 +454,7 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
-        /// Generates a list of entries.
+        ///     Generates a list of entries.
         /// </summary>
         /// <param name="vehicle"></param>
         /// <param name="vertices"></param>
@@ -477,12 +477,12 @@ namespace OsmSharp.Routing.Routers
 
             // create all the other entries except the last one.
             long nodePrevious = vertices[0];
-            for (int idx = 0; idx < vertices.Length - 2; idx++)
+            for (int idx = 1; idx < vertices.Length - 1; idx++)
             {
                 // get all the data needed to calculate the next route entry.
                 long nodeCurrent = vertices[idx];
-                long nodeNext = vertices[idx + 1];
-                IDynamicGraphEdgeData edge = this.GetEdgeData(vehicle, nodeCurrent, nodeNext);
+                //long nodeNext = vertices[idx + 1];
+                IDynamicGraphEdgeData edge = this.GetEdgeData(vehicle, nodePrevious, nodeCurrent);
 
                 // FIRST CALCULATE ALL THE ENTRY METRICS!
 
@@ -497,9 +497,9 @@ namespace OsmSharp.Routing.Routers
                 if (neighbours.Count > 2)
                 {
                     // construct neighbours list.
-                    foreach (KeyValuePair<long, IDynamicGraphEdgeData> neighbour in neighbours)
+                    foreach (var neighbour in neighbours)
                     {
-                        if (neighbour.Key != nodePrevious && neighbour.Key != nodeNext)
+                        if (neighbour.Key != nodePrevious && neighbour.Key != vertices[idx + 1])
                         {
                             var sideStreet = new RoutePointEntrySideStreet();
 
@@ -518,11 +518,12 @@ namespace OsmSharp.Routing.Routers
                 }
 
                 // create the route entry.
-                GeoCoordinate nextCoordinate = this.GetCoordinate(vehicle, nodeNext);
+                GeoCoordinate nextCoordinate = this.GetCoordinate(vehicle, nodeCurrent);
+
                 var routeEntry = new RoutePointEntry();
                 routeEntry.Latitude = (float)nextCoordinate.Latitude;
                 routeEntry.Longitude = (float)nextCoordinate.Longitude;
-                routeEntry.SideStreets = sideStreets.ToArray<RoutePointEntrySideStreet>();
+                routeEntry.SideStreets = sideStreets.ToArray();
                 routeEntry.Tags = currentTags.ConvertFrom();
                 routeEntry.Type = RoutePointEntryType.Along;
                 routeEntry.WayFromName = name;
@@ -536,10 +537,10 @@ namespace OsmSharp.Routing.Routers
             // create the last entry.
             if (vertices.Length > 1)
             {
-                int lastIdx = vertices.Length - 1;
-                IDynamicGraphEdgeData edge = this.GetEdgeData(vehicle, vertices[lastIdx - 1], vertices[lastIdx]);
+                int last_idx = vertices.Length - 1;
+                IDynamicGraphEdgeData edge = this.GetEdgeData(vehicle, vertices[last_idx - 1], vertices[last_idx]);
                 TagsCollection tags = _dataGraph.TagsIndex.Get(edge.Tags);
-                coordinate = this.GetCoordinate(vehicle, vertices[lastIdx]);
+                coordinate = this.GetCoordinate(vehicle, vertices[last_idx]);
                 var last = new RoutePointEntry();
                 last.Latitude = (float)coordinate.Latitude;
                 last.Longitude = (float)coordinate.Longitude;
@@ -1067,6 +1068,7 @@ namespace OsmSharp.Routing.Routers
                             if (currentPosition > position)
                             { // the position is found.
                                 positionIdx = idx - 1;
+                                break;
                             }
                         }
                         else
@@ -1241,23 +1243,24 @@ namespace OsmSharp.Routing.Routers
             TypedRouterResolvedGraph graph = this.GetForProfile(vehicle);
 
             var settled = new HashSet<long>();
-            var visitList = new PathSegmentVisitList();
-
             var current = new PathSegment<long>(vertex1);
-            visitList.UpdateVertex(current);
+            var visit_list = new PathSegmentVisitList(vertex1, vertex1);
+            visit_list.UpdateVertex(current);
 
             while (true)
             {
                 // return the vertex on top of the list.
-                current = visitList.GetFirst();
+                current = visit_list.GetFirst();
 
                 // check if it is the target.
                 if (current == null)
-                { // current is empty; target not found!
+                {
+                    // current is empty; target not found!
                     return null;
                 }
                 if (current.VertexId == vertex2)
-                { // current is the target.
+                {
+                    // current is the target.
                     return current;
                 }
 
@@ -1265,30 +1268,22 @@ namespace OsmSharp.Routing.Routers
                 settled.Add(current.VertexId);
 
                 // get the neighbours.
-                KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] arcs =
+                KeyValuePair<long, OsmSharp.Routing.Routers.TypedRouterResolvedGraph.RouterResolvedGraphEdge>[] arcs = 
                     graph.GetArcs(current.VertexId);
-                float latitude, longitude;
-                graph.GetVertex(current.VertexId, out latitude, out longitude);
-                var currentCoordinates = new GeoCoordinate(latitude, longitude);
+                float latitudeCurrent, longitudeCurrent;
+                graph.GetVertex(current.VertexId, out latitudeCurrent, out longitudeCurrent);
                 for (int idx = 0; idx < arcs.Length; idx++)
                 {
-                    KeyValuePair<long, TypedRouterResolvedGraph.RouterResolvedGraphEdge> arc = arcs[idx];
-                    if (!settled.Contains(arc.Key))
+                    KeyValuePair<long, OsmSharp.Routing.Routers.TypedRouterResolvedGraph.RouterResolvedGraphEdge> arc = arcs[idx];
+                    if (!settled.Contains(arc.Key) && (arc.Key < 0 || arc.Key == vertex2))
                     {
-                        // check oneway.
-                        TagsCollection tags = _dataGraph.TagsIndex.Get(arc.Value.Tags);
-                        bool? oneway = vehicle.IsOneWay(tags);
-                        if (!oneway.HasValue || oneway.Value == arc.Value.Forward)
-                        { // ok edge is not oneway or oneway in the right direction.
-                            graph.GetVertex(arc.Key, out latitude, out longitude);
-                            var neighbourCoordinates = new GeoCoordinate(latitude, longitude);
+                        float latitudeNeighbour, longitudeNeighbour;
+                        graph.GetVertex(arc.Key, out latitudeNeighbour, out longitudeNeighbour);
 
-                            // calculate the weight.
-                            double weight = vehicle.Weight(tags, currentCoordinates, neighbourCoordinates);
+                        double arcWeight = vehicle.Weight(_dataGraph.TagsIndex.Get(arc.Value.Tags),
+                            new GeoCoordinate(latitudeCurrent, longitudeCurrent), new GeoCoordinate(latitudeNeighbour, longitudeNeighbour));
 
-                            visitList.UpdateVertex(new PathSegment<long>(arc.Key,
-                                                                         weight + current.Weight, current));
-                        }
+                        visit_list.UpdateVertex(new PathSegment<long>(arc.Key, arcWeight + current.Weight, current));
                     }
                 }
             }

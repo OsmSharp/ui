@@ -161,6 +161,7 @@
     <Compile Include="Routing\CH\CHSparseRoutingTest.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceRoutingTest.cs" />
     <Compile Include="Routing\CH\CHVerifiedContractionTests.cs" />
+    <Compile Include="Routing\Instructions\LanguageTestGenerator.cs" />
     <Compile Include="Routing\RoutingConditionalAccessTests.cs" />
     <Compile Include="Routing\Dykstra\DykstraLiveRoutingTests.cs" />
     <Compile Include="Routing\DynamicGraphTests.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Routing\OsmSharpRouteTests.cs" />
     <Compile Include="Routing\Dykstra\OsmSourceRoutingTest.cs" />
     <Compile Include="Routing\RoutingComparisonTests.cs" />
+    <Compile Include="Routing\RoutingRegressionTests.cs" />
     <Compile Include="Routing\RoutingTests.cs" />
     <Compile Include="Routing\Serialization\RoutingSerializationTests.cs" />
     <Compile Include="Routing\TSP\TSPWrapperTest.cs" />
@@ -242,6 +244,7 @@
     <EmbeddedResource Include="test_network_conditional.osm" />
     <EmbeddedResource Include="tsp_real.csv" />
     <EmbeddedResource Include="tsp_real.osm" />
+    <EmbeddedResource Include="test_routing_regression1.osm" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
@@ -257,9 +260,7 @@
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Routing\Osm\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

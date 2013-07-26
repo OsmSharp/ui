@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -14,7 +14,8 @@
 // GNU General Public License for more details.
 // 
 // You should have received a copy of the GNU General Public License
-// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>..
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,25 +34,25 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// Generates a direct turn instruction.
         /// </summary>
         /// <param name="instruction"></param>
-        /// <param name="street_count_before_turn"></param>
-        /// <param name="street_to"></param>
+        /// <param name="streetCountBeforeTurn"></param>
+        /// <param name="streetTo"></param>
         /// <param name="direction"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        Instruction GenerateDirectTurn(Instruction instruction, int street_count_before_turn,
-            TagsCollection street_to, RelativeDirectionEnum direction, List<Routing.ArcAggregation.Output.PointPoi> list);
+        Instruction GenerateDirectTurn(Instruction instruction, int streetCountBeforeTurn,
+            TagsCollection streetTo, RelativeDirectionEnum direction, List<Routing.ArcAggregation.Output.PointPoi> list);
 
         /// <summary>
         /// Generates an indirect turn instruction.
         /// </summary>
         /// <param name="instruction"></param>
-        /// <param name="street_count_turn"></param>
-        /// <param name="street_count_before_turn"></param>
+        /// <param name="streetCountTurn"></param>
+        /// <param name="streetCountBeforeTurn"></param>
         /// <param name="street_to"></param>
         /// <param name="direction"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        Instruction GenerateIndirectTurn(Instruction instruction, int street_count_turn, int street_count_before_turn, 
+        Instruction GenerateIndirectTurn(Instruction instruction, int streetCountTurn, int streetCountBeforeTurn, 
             TagsCollection street_to, RelativeDirectionEnum direction, List<Routing.ArcAggregation.Output.PointPoi> list);
 
         /// <summary>
@@ -61,55 +62,56 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <param name="list"></param>
         /// <param name="direction"></param>
         /// <returns></returns>
-        Instruction GeneratePoi(Instruction instruction, List<Routing.ArcAggregation.Output.PointPoi> list, RelativeDirectionEnum? direction);
+        Instruction GeneratePoi(Instruction instruction, List<Routing.ArcAggregation.Output.PointPoi> list, 
+            RelativeDirectionEnum? direction);
 
         /// <summary>
         /// Generates an indirect turn instruction.
         /// </summary>
         /// <param name="instruction"></param>
-        /// <param name="street_count_before_turn"></param>
-        /// <param name="street_to"></param>
+        /// <param name="streetCountBeforeTurn"></param>
+        /// <param name="streetTo"></param>
         /// <param name="relativeDirectionEnum"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        Instruction GenerateDirectFollowTurn(Instruction instruction, int street_count_before_turn, 
-             TagsCollection street_to, RelativeDirectionEnum relativeDirectionEnum, List<Routing.ArcAggregation.Output.PointPoi> list);
+        Instruction GenerateDirectFollowTurn(Instruction instruction, int streetCountBeforeTurn, 
+             TagsCollection streetTo, RelativeDirectionEnum relativeDirectionEnum, List<Routing.ArcAggregation.Output.PointPoi> list);
 
         /// <summary>
         /// Generates and indirect turn instruction.
         /// </summary>
         /// <param name="instruction"></param>
-        /// <param name="street_count_turn"></param>
+        /// <param name="streetCountTurn"></param>
         /// <param name="street_count_before_turn"></param>
-        /// <param name="street_to"></param>
+        /// <param name="streetTo"></param>
         /// <param name="relativeDirectionEnum"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        Instruction GenerateIndirectFollowTurn(Instruction instruction, int street_count_turn, int street_count_before_turn,
-            TagsCollection street_to, RelativeDirectionEnum relativeDirectionEnum, List<Routing.ArcAggregation.Output.PointPoi> list);
+        Instruction GenerateIndirectFollowTurn(Instruction instruction, int streetCountTurn, int street_count_before_turn,
+            TagsCollection streetTo, RelativeDirectionEnum relativeDirectionEnum, List<Routing.ArcAggregation.Output.PointPoi> list);
 
         /// <summary>
         /// Generates an immidiate turn instruction.
         /// </summary>
         /// <param name="instruction"></param>
-        /// <param name="first_street_count_to"></param>
+        /// <param name="firstStreetCountTo"></param>
         /// <param name="first_street_to"></param>
-        /// <param name="first_direction"></param>
-        /// <param name="second_street_to"></param>
-        /// <param name="second_direction"></param>
+        /// <param name="firstDirection"></param>
+        /// <param name="secondStreetTo"></param>
+        /// <param name="secondDirection"></param>
         /// <returns></returns>
-        Instruction GenerateImmidiateTurn(Instruction instruction, int first_street_count_to, 
-            TagsCollection first_street_to, RelativeDirection first_direction, TagsCollection second_street_to, 
-            RelativeDirection second_direction);
+        Instruction GenerateImmidiateTurn(Instruction instruction, int firstStreetCountTo, 
+            TagsCollection first_street_to, RelativeDirection firstDirection, TagsCollection secondStreetTo, 
+            RelativeDirection secondDirection);
 
         /// <summary>
         /// Generates a roundabout instruction.
         /// </summary>
         /// <param name="instruction"></param>
         /// <param name="count"></param>
-        /// <param name="next_street"></param>
+        /// <param name="nextStreet"></param>
         /// <returns></returns>
-        Instruction GenerateRoundabout(Instruction instruction, int count, TagsCollection next_street);
+        Instruction GenerateRoundabout(Instruction instruction, int count, TagsCollection nextStreet);
 
         /// <summary>
         /// Generates a simple turn instructions.
