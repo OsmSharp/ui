@@ -257,8 +257,8 @@
     <Compile Include="Data\Xml\OsmSource\OsmDataSource.cs" />
     <Compile Include="Data\Xml\Processor\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
     <Compile Include="Data\Xml\Processor\Replication\Replicator.cs" />
-    <Compile Include="Data\Xml\Processor\XmlOsmStreamReader.cs" />
-    <Compile Include="Data\Xml\Processor\XmlOsmStreamWriter.cs" />
+    <Compile Include="Data\Xml\Processor\XmlOsmStreamSource.cs" />
+    <Compile Include="Data\Xml\Processor\XmlOsmStreamTarget.cs" />
     <Compile Include="Data\Xml\Processor\XmlFragmentWriter.cs" />
     <Compile Include="Data\Xml\Processor\XmlSimpleConverter.cs" />
     <Compile Include="Filters\Filter.cs" />

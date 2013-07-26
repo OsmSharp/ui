@@ -36,7 +36,7 @@ namespace OsmSharp.UnitTests.Data.Streams
         public void XmlDataProcessorSourceReset()
         {
             // generate the source.
-            var source = new XmlOsmStreamReader(
+            var source = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     "OsmSharp.UnitTests.api.osm"));
 

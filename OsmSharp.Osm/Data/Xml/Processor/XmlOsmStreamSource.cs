@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
     /// <summary>
     /// A stream reader that reads from OSM Xml.
     /// </summary>
-    public class XmlOsmStreamReader : OsmStreamSource
+    public class XmlOsmStreamSource : OsmStreamSource
     {
         private XmlReader _reader;
 
@@ -54,7 +55,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
         /// Creates a new Xml data processor source.
         /// </summary>
         /// <param name="fileName"></param>
-        public XmlOsmStreamReader(string fileName) :
+        public XmlOsmStreamSource(string fileName) :
             this(fileName,false)
         {
 
@@ -64,7 +65,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
         /// Creates a new OSM Xml processor source.
         /// </summary>
         /// <param name="stream"></param>
-        public XmlOsmStreamReader(Stream stream) :
+        public XmlOsmStreamSource(Stream stream) :
             this(stream, false)
         {
 
@@ -75,7 +76,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="gzip"></param>
-        public XmlOsmStreamReader(Stream stream, bool gzip)
+        public XmlOsmStreamSource(Stream stream, bool gzip)
         {
             _stream = stream;
             _gzip = gzip;
@@ -86,7 +87,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="gzip"></param>
-        public XmlOsmStreamReader(string fileName, bool gzip)
+        public XmlOsmStreamSource(string fileName, bool gzip)
         {
             _fileName = fileName;
             _gzip = gzip;

@@ -52,7 +52,7 @@ namespace OsmSharp.Osm.UnitTests.Routing.CH
                 data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
                 var targetData = new CHEdgeGraphOsmStreamWriter(
                     data, interpreter, data.TagsIndex, Vehicle.Car);
-                var dataProcessorSource = new XmlOsmStreamReader(
+                var dataProcessorSource = new XmlOsmStreamSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test_network.osm"));
                 var sorter = new OsmStreamFilterSort();
                 sorter.RegisterSource(dataProcessorSource);

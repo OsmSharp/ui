@@ -32,7 +32,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
     /// <summary>
     /// A data processor target that write OSM XML.
     /// </summary>
-    public class XmlOsmStreamWriter : OsmStreamTarget
+    public class XmlOsmStreamTarget : OsmStreamTarget
     {
         private XmlFragmentWriter _writer;
 
@@ -50,7 +50,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
         /// Creates a new Xml data processor target.
         /// </summary>
         /// <param name="fileName"></param>
-        public XmlOsmStreamWriter(string fileName)
+        public XmlOsmStreamTarget(string fileName)
             :base()
         {
             _fileName = fileName;
@@ -60,7 +60,7 @@ namespace OsmSharp.Osm.Data.Xml.Processor
         /// Creates a new Xml data processor target.
         /// </summary>
         /// <param name="textWriter"></param>
-        public XmlOsmStreamWriter(TextWriter textWriter)
+        public XmlOsmStreamTarget(TextWriter textWriter)
             : base()
         {
             _textWriter = textWriter;

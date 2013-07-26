@@ -49,7 +49,7 @@ namespace OsmSharp.WinForms.UI.Sample
             // load test osm file.
             Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 "OsmSharp.WinForms.UI.Sample.test.osm");
-            var xmlDataProcessorSource = new XmlOsmStreamReader(stream);
+            var xmlDataProcessorSource = new XmlOsmStreamSource(stream);
             ICollection<OsmGeo> osmList = xmlDataProcessorSource.PullToCollection();
 
             // build a scene using spherical mercator.
