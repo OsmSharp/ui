@@ -33,8 +33,8 @@ namespace OsmSharp.UnitTests.Tools
 
                 double scaleFactor = mercator.ToZoomFactor(zoomLevel);
 
-                Assert.AreEqual(256, (topleft[0] - bottomright[0]) * scaleFactor, 0.01);
-                Assert.AreEqual(256, (topleft[1] - bottomright[1]) * scaleFactor, 0.01);
+                Assert.AreEqual(-256, (topleft[0] - bottomright[0]) * scaleFactor, 0.01);
+                Assert.AreEqual(-256, (topleft[1] - bottomright[1]) * scaleFactor, 0.01);
             }
 
             var coordinate = new GeoCoordinate(51.26337, 4.78739);
