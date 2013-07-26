@@ -50,7 +50,7 @@ namespace OsmSharp.Data.SQLServer.Osm.SchemaTools
 
             OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information,
                 "Creating database schema");
-            ExecuteSQL(connection, "SimpleSchemaDDL.sql");
+            ExecuteSQL(connection, "SchemaDDL.sql");
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace OsmSharp.Data.SQLServer.Osm.SchemaTools
         {
             OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information, 
                 "Removing database schema");
-            ExecuteSQL(connection, "SimpleSchemaDROP.sql");
+            ExecuteSQL(connection, "SchemaDROP.sql");
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace OsmSharp.Data.SQLServer.Osm.SchemaTools
         {
             OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information, 
                 "Removing non-routing data");
-            ExecuteSQL(connection, "SimpleSchemaDeleteNonRouting.sql");
+            ExecuteSQL(connection, "SchemaDeleteNonRouting.sql");
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace OsmSharp.Data.SQLServer.Osm.SchemaTools
         {
             OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.SchemaTools.SQLServerSchemaTools", System.Diagnostics.TraceEventType.Information, 
                 "Adding database constraints");
-            ExecuteSQL(connection, "SimpleSchemaConstraints.sql");
+            ExecuteSQL(connection, "SchemaConstraints.sql");
         }
 
         private static void ExecuteSQL(SqlConnection connection, string resourceFilename)

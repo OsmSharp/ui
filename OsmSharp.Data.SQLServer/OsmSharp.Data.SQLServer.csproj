@@ -112,7 +112,7 @@
     <Compile Include="Osm\SQLServerDataSource.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Osm\SchemaTools\SimpleSchemaDDL.sql" />
+    <EmbeddedResource Include="Osm\SchemaTools\SchemaDDL.sql" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
@@ -124,7 +124,11 @@
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Osm\SchemaTools\SchemaConstraints.sql" />
+    <EmbeddedResource Include="Osm\SchemaTools\SchemaDeleteNonRouting.sql" />
+    <EmbeddedResource Include="Osm\SchemaTools\SchemaDROP.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

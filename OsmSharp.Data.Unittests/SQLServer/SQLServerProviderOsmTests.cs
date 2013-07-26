@@ -117,7 +117,7 @@ namespace OsmSharp.Data.Unittests.SQLServer
         {
             if (_connection == null)
             {
-                _connection = new SqlConnection("Server=10.0.0.11;Port=5432;Database=osm;User Id=osmsharp;Password=osmsharp;");
+                _connection = new SqlConnection(@"Server=TestDataWindows\SQLEXPRESS;Database=osmsharp;User Id=osmsharp;Password=osmsharp;");
                 _connection.Open();
 
                 SQLServerSchemaTools.Remove(_connection);
@@ -132,7 +132,7 @@ namespace OsmSharp.Data.Unittests.SQLServer
 
         public override OsmStreamTarget CreateDataStreamTarget()
         {
-            return new SQLServerOsmStreamTarget(this.GetConnection());
+            return new SQLServerOsmStreamTarget(this.GetConnection(), true);
         }
 
         #endregion
