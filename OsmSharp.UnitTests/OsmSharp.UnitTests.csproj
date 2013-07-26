@@ -184,6 +184,7 @@
     <Compile Include="BinairyHeapTests.cs" />
     <Compile Include="GZipStreamTests.cs" />
     <Compile Include="SparseArrayTests.cs" />
+    <Compile Include="UtilitiesTest.cs" />
     <Compile Include="WebMercatorTests.cs" />
     <Compile Include="FibonacciHeapTests.cs" />
     <Compile Include="Xml\Gpx\GpxXmlTest.cs" />
