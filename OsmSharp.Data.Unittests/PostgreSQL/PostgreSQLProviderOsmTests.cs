@@ -116,7 +116,7 @@ namespace OsmSharp.Data.Unittests.PostgreSQL
         {
             if (_connection == null)
             {
-                _connection = new NpgsqlConnection("Server=10.0.0.11;Port=5432;Database=osm;User Id=osmsharp;Password=osmsharp;");
+                _connection = new NpgsqlConnection("Server=TestDataLinux;Port=5432;Database=osm;User Id=osmsharp;Password=osmsharp;");
                 _connection.Open();
 
                 PostgreSQLSchemaTools.Drop(_connection);

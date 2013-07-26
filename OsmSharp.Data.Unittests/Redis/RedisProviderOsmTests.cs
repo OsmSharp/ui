@@ -111,7 +111,7 @@ namespace OsmSharp.Data.Unittests.Redis
         {
             if (_client == null)
             {
-                _client = new RedisClient("10.0.0.11", 6379);
+                _client = new RedisClient("TestDataLinux", 6379);
                 _client.FlushDb();
             }
             return _client;
