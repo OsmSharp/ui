@@ -133,7 +133,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\Cache\LRUCacheTests.cs" />
-    <Compile Include="Collections\SerializableArrayTests.cs" />
     <Compile Include="Collections\SparseArrayTests.cs" />
     <Compile Include="Collections\SpatialIndexes\IndexReferenceImplementation.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndexTests.cs" />
@@ -179,6 +178,7 @@
     <Compile Include="Routing\RoutingTests.cs" />
     <Compile Include="Routing\RoutingInterpreterTests.cs" />
     <Compile Include="Routing\Serialization\RoutingSerializationTests.cs" />
+    <Compile Include="Routing\TSP\TSPWrapperTest.cs" />
     <Compile Include="StaticDictionary.cs" />
     <Compile Include="Tiles\TilesTests.cs" />
     <Compile Include="BinairyHeapTests.cs" />
@@ -201,7 +201,7 @@
     <Compile Include="StringTreeDictionaryTest.cs" />
     <Compile Include="Tags\SimpleTagsCollectionTests.cs" />
     <Compile Include="Tags\TagsCollectionTests.cs" />
-    <Compile Include="TSP\BruteForceTSPTest.cs" />
+    <Compile Include="Routing\TSP\BruteForceTSPTest.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurveTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -241,6 +241,8 @@
     <EmbeddedResource Include="test_tsp_6.tsp" />
     <EmbeddedResource Include="test_network_oneway.osm" />
     <EmbeddedResource Include="test_network_conditional.osm" />
+    <EmbeddedResource Include="tsp_real.csv" />
+    <EmbeddedResource Include="tsp_real.osm" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">

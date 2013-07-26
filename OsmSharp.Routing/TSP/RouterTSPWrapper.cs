@@ -7,6 +7,8 @@ using OsmSharp.Routing.Routers;
 using OsmSharp.Math.TSP;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.VRP.Core.Routes;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Metrics.Time;
 
 namespace OsmSharp.Routing.TSP
 {
@@ -28,6 +30,11 @@ namespace OsmSharp.Routing.TSP
         private readonly TRouterTSPType _routerTSP;
 
         /// <summary>
+        /// Interpreter for the routing network.
+        /// </summary>
+        private readonly IRoutingInterpreter _interpreter;
+
+        /// <summary>
         /// Creates a new RouterTSPWrapper.
         /// </summary>
         /// <param name="routerTSP"></param>
@@ -36,6 +43,19 @@ namespace OsmSharp.Routing.TSP
         {
             _router = router;
             _routerTSP = routerTSP;
+        }
+
+        /// <summary>
+        /// Creates a new RouterTSPWrapper.
+        /// </summary>
+        /// <param name="routerTSP"></param>
+        /// <param name="router"></param>
+        /// <param name="interpreter"></param>
+        public RouterTSPWrapper(TRouterTSPType routerTSP, Router router, IRoutingInterpreter interpreter)
+        {
+            _router = router;
+            _routerTSP = routerTSP;
+            _interpreter = interpreter;
         }
 
         /// <summary>
@@ -196,12 +216,24 @@ namespace OsmSharp.Routing.TSP
                 tsp = OsmSharpRoute.Concatenate(tsp, route);
             }
 
-            tsp.Tags = new RouteTags[1];
-            tsp.Tags[0] = new RouteTags();
-            tsp.Tags[0].Key = "internal_weight";
-            tsp.Tags[0].Value = weight.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            if (tsp != null)
+            {
+                tsp.Vehicle = vehicle; // set the correct vehicle type.
 
-            tsp.Vehicle = vehicle; // set the correct vehicle type.
+                if (_interpreter != null)
+                { // there is an interpreter set: calculate time/distance.
+                    // calculate metrics.
+                    var calculator = new TimeCalculator(_interpreter);
+                    Dictionary<string, double> metrics = calculator.Calculate(tsp);
+                    tsp.TotalDistance = metrics[TimeCalculator.DISTANCE_KEY];
+                    tsp.TotalTime = metrics[TimeCalculator.TIME_KEY];
+                }
+
+                tsp.Tags = new RouteTags[1];
+                tsp.Tags[0] = new RouteTags();
+                tsp.Tags[0].Key = "internal_weight";
+                tsp.Tags[0].Value = weight.ToString(System.Globalization.CultureInfo.InvariantCulture);
+            }
 
             return tsp;
         }

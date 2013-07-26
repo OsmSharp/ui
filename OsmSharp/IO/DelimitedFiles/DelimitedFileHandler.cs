@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap tools & library.
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
-using OsmSharp.DelimitedFiles;
 using OsmSharp.Progress;
 
 namespace OsmSharp.IO.DelimitedFiles
