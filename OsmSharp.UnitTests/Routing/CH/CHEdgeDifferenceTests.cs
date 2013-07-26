@@ -29,7 +29,7 @@ using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing;
 
-namespace OsmSharp.Osm.UnitTests.Routing.CH
+namespace OsmSharp.UnitTests.Routing.CH
 {
     /// <summary>
     /// Tests the EdgeDifference calculator.

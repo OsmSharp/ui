@@ -18,7 +18,7 @@
 
 //using NUnit.Framework;
 //using OsmSharp.Osm.Data.Xml.OsmSource;
-//using OsmSharp.Osm.UnitTests.Routing;
+//using OsmSharp.UnitTests.Routing;
 //using OsmSharp.Routing;
 //using System.Reflection;
 //using OsmSharp.Routing.Interpreter;

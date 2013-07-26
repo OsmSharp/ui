@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Text;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Math;
 
-namespace OsmSharp.Osm.UnitTests.Routing
+namespace OsmSharp.UnitTests.Routing
 {
     /// <summary>
     /// Base class with tests around IRouter objects.

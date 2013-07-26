@@ -31,7 +31,7 @@ using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Osm.UnitTests.Routing.CH
+namespace OsmSharp.UnitTests.Routing.CH
 {
     /// <summary>
     /// Tests the CH Sparse routing against a reference implementation.

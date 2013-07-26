@@ -23,7 +23,7 @@ using NUnit.Framework;
 using OsmSharp.Routing.Route;
 using OsmSharp.Routing;
 
-namespace OsmSharp.Osm.UnitTests
+namespace OsmSharp.UnitTests
 {
     /// <summary>
     /// Does some unittesting on the OsmSharpRoute data format.

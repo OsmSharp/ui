@@ -33,7 +33,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Math;
 
-namespace OsmSharp.Osm.UnitTests.Routing
+namespace OsmSharp.UnitTests.Routing
 {
     /// <summary>
     /// Base class with tests around IRouter objects.
