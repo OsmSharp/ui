@@ -93,7 +93,7 @@ namespace OsmSharp.Data.Unittests.Oracle
         /// Tests a bounding box query.
         /// </summary>
         [Test]
-        public void SQLiteTestBoundingBoxQueries()
+        public void OracleTestBoundingBoxQueries()
         {
             base.TestBoundingBoxQueries();
         }
