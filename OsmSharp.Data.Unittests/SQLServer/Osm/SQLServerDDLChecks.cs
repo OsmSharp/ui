@@ -41,7 +41,7 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
         public void FixtureSetUp()
         {
             // Arrange
-            const string connectionString = @"Server=.;User Id=OsmSharp;Password=OsmSharp;Database=OsmData;";
+            const string connectionString = @"Server=TestDataWindows\SQLEXPRESS;Database=osmsharp;User Id=osmsharp;Password=osmsharp;";
 
             var sqlConnection = new SqlConnection(connectionString);
             sqlConnection.Open();
