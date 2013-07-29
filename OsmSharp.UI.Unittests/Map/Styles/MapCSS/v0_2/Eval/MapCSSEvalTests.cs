@@ -14,17 +14,17 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2.Eval
     [TestFixture]
     public class MapCSSEvalTests
     {
-        /// <summary>
-        /// Tests a simple tag evaluation.
-        /// </summary>
-        [Test]
-        public void MapCSSEvalTagTest()
-        {
-            string function = "tag('width')";
-            TagsCollection tags = new SimpleTagsCollection();
-            tags.Add("width", "2");
+        ///// <summary>
+        ///// Tests a simple tag evaluation.
+        ///// </summary>
+        //[Test]
+        //public void MapCSSEvalTagTest()
+        //{
+        //    string function = "tag('width')";
+        //    TagsCollection tags = new SimpleTagsCollection();
+        //    tags.Add("width", "2");
 
-            Assert.AreEqual("2", EvalInterpreter.Instance.Interpret<string>(function, tags));
-        }
+        //    Assert.AreEqual("2", EvalInterpreter.Instance.Interpret<string>(function, tags));
+        //}
     }
 }
