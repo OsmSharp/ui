@@ -25,6 +25,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data;
 using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Geo.Attributes;
 
 namespace OsmSharp.Osm.Interpreter
 {
@@ -84,7 +85,8 @@ namespace OsmSharp.Osm.Interpreter
                             tags.ContainsKey("waterway") ||
                             tags.ContainsKey("wetland") ||
                             tags.ContainsKey("water") ||
-                            tags.ContainsKey("aeroway"))
+                            tags.ContainsKey("aeroway") ||
+                            tags.ContainsKeyValue("natural", "water"))
                         { // these tags usually indicate an area.
                             isArea = true;
                         }
@@ -103,13 +105,15 @@ namespace OsmSharp.Osm.Interpreter
 
                         if (isArea)
                         { // area tags leads to simple polygon
-                            collection.Add(
-                                new LineairRing((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>()));
+                            LineairRing lineairRing = new LineairRing((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>());
+                            lineairRing.Attributes = new SimpleGeometryAttributeCollection(tags);
+                            collection.Add(lineairRing);
                         }
                         else
                         { // no area tag leads to just a line.
-                            collection.Add(
-                                new LineString((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>()));
+                            LineString lineString = new LineString((osmObject as CompleteWay).GetCoordinates().ToArray<GeoCoordinate>());
+                            lineString.Attributes = new SimpleGeometryAttributeCollection(tags);
+                            collection.Add(lineString);
                         }
                         break;
                     case CompleteOsmType.Relation:

@@ -146,6 +146,7 @@
     <Compile Include="Geo\IO\Kml\KmlGeometryTests.cs" />
     <Compile Include="IO\ByteCache\ByteCacheTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
+    <Compile Include="Osm\Interpreter\SimpleGeometryInterpreterTests.cs" />
     <Compile Include="Routes\DepotRouteTests.cs" />
     <Compile Include="API\APITests.cs" />
     <Compile Include="Routes\DynamicAsymmetricMultiRouteTests.cs" />

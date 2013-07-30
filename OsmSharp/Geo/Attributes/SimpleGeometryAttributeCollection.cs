@@ -34,6 +34,23 @@ namespace OsmSharp.Geo.Attributes
         }
 
         /// <summary>
+        /// Creates a new attributes collection initialized with the given existing key-value tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        public SimpleGeometryAttributeCollection(IEnumerable<OsmSharp.Collections.Tags.Tag> tags)
+        {
+            _attributes = new List<GeometryAttribute>();
+            foreach (OsmSharp.Collections.Tags.Tag tag in tags)
+            {
+                _attributes.Add(new GeometryAttribute()
+                {
+                    Key = tag.Key,
+                    Value = tag.Value
+                });
+            }
+        }
+
+        /// <summary>
         /// Returns the number of attributes in this collection.
         /// </summary>
         public override int Count

@@ -84,6 +84,19 @@ namespace OsmSharp.Geo.Geometries
         }
 
         /// <summary>
+        /// Returns the geometry at the given idx.
+        /// </summary>
+        /// <param name="idx"></param>
+        /// <returns></returns>
+        public Geometry this[int idx]
+        {
+            get
+            {
+                return _geometries[idx];
+            }
+        }
+
+        /// <summary>
         /// Returns the smallest bounding box containing all geometries in this collection.
         /// </summary>
         public override GeoCoordinateBox Box
