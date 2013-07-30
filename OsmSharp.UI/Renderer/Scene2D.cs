@@ -45,6 +45,38 @@ namespace OsmSharp.UI.Renderer
 			_primitives.Clear ();
 		}
 
+        /// <summary>
+        /// Returns the number of objects in this scene.
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                int count = 0;
+                foreach (KeyValuePair<int, Dictionary<uint, IScene2DPrimitive>> keyValuePair in _primitives)
+                {
+                    count = count + keyValuePair.Value.Count;
+                }
+                return count;
+            }
+        }
+
+        /// <summary>
+        /// Returns the layer count.
+        /// </summary>
+        public int LayerCount
+        {
+            get
+            {
+                return _primitives.Count;
+            }
+        }
+
+        /// <summary>
+        /// Gets/sets the backcolor of the scene.
+        /// </summary>
+        public int BackColor { get; set; }
+
 	    /// <summary>
 	    /// Gets all objects in this scene for the specified view.
 	    /// </summary>
@@ -65,24 +97,28 @@ namespace OsmSharp.UI.Renderer
                             primitivesInView.Add(primitivePair.Value);
                         }
                     }
-                    //var viewRectangle = new RectangleF2D(view.Left, view.Top, view.Right, view.Bottom);
-                    //var primitivesInLayer = layer.Value.Get(viewRectangle);
-                    //foreach (var scene2DPrimitive in primitivesInLayer)
-                    //{			        
-                    //    if (scene2DPrimitive.IsVisibleIn(view, zoom))
-                    //    {
-                    //        primitivesInView.Add(scene2DPrimitive);
-                    //    }
-                    //}
 			    }
 			}
 		    return primitivesInView;
 		}
 
         /// <summary>
-        /// Gets/sets the backcolor of the scene.
+        /// Returns the primitive with the given id if andy.
         /// </summary>
-	    public int BackColor { get; set; }
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public IScene2DPrimitive Get(uint id)
+        {
+            foreach (var layer in _primitives)
+            {
+                IScene2DPrimitive value;
+                if (layer.Value.TryGetValue(id, out value))
+                {
+                    return value;
+                }
+            }
+            return null;
+        }
 
         /// <summary>
         /// Removes the primitive with the given id.

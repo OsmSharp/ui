@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp;
 using OsmSharp.Osm;
+using OsmSharp.Geo.Geometries;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
 {
@@ -26,6 +27,60 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// The selector rule.
         /// </summary>
         public SelectorRule SelectorRule { get; set; }
+
+        /// <summary>
+        /// Returns true if this selector 'selects' the given object.
+        /// </summary>
+        /// <param name="zooms">The zooms selected.</param>
+        /// <param name="geometry">The object to 'select'.</param>
+        /// <returns></returns>
+        public virtual bool Selects(Geometry geometry, out KeyValuePair<int?, int?> zooms)
+        {
+            // store the zooms.
+            if (this.Zoom == null)
+            { // there are no zooms.
+                zooms = new KeyValuePair<int?, int?>(
+                    null, null);
+            }
+            else
+            { // there are zooms.
+                zooms = new KeyValuePair<int?, int?>(
+                    this.Zoom.ZoomMin, this.Zoom.ZoomMax);
+            }
+
+            // check rule.
+            if (this.SelectorRule != null &&
+                !this.SelectorRule.Selects(geometry))
+            { // oeps: the zoom was not valid.
+                return false;
+            }
+
+            // check the type.
+            switch (this.Type)
+            {
+                case SelectorTypeEnum.Area:
+                    if (geometry is Polygon &&
+                        geometry is LineairRing &&
+                        geometry is MultiPolygon)
+                    { // the geometry is an area!
+                        return true;
+                    }
+                    break;
+                case SelectorTypeEnum.Canvas:
+                    // no way the canvas can be here!
+                    break;
+                case SelectorTypeEnum.Line:
+                    if (geometry is LineString &&
+                        geometry is MultiLineString)
+                    { // the geometry is a line!
+                        return true;
+                    }
+                    break;
+                case SelectorTypeEnum.Star:
+                    return true;
+            }
+            return false;
+        }
 
         /// <summary>
         /// Returns true if this selector 'selects' the given object.
@@ -58,34 +113,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
             switch (this.Type)
             {
                 case SelectorTypeEnum.Area:
-                    if (osmGeo.Type == CompleteOsmType.Way)
-                    { // this can be an area.
-                        if (osmGeo.IsOfType(MapCSSTypes.Area))
-                        {
-                            return true;
-                        }
-                    }
-                    else if (osmGeo.Type == CompleteOsmType.Relation)
-                    {
-                        // TODO: implement relation support.
-                    }
-                    break;
+                    return false;
                 case SelectorTypeEnum.Canvas:
                     // no way the canvas can be here!
                     break;
                 case SelectorTypeEnum.Line:
-                    if (osmGeo.Type == CompleteOsmType.Way)
-                    { // this can be a line.
-                        if (osmGeo.IsOfType(MapCSSTypes.Line))
-                        {
-                            return true;
-                        }
-                    }
-                    else if (osmGeo.Type == CompleteOsmType.Relation)
-                    {
-                        // TODO: implement relation support.
-                    }
-                    break;
+                    return false;
                 case SelectorTypeEnum.Node:
                     if (osmGeo.Type == CompleteOsmType.Node)
                     {
@@ -94,7 +127,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                     break;
                 case SelectorTypeEnum.Star:
                     return true;
-                    break;
                 case SelectorTypeEnum.Way:
                     if (osmGeo.Type == CompleteOsmType.Way)
                     {

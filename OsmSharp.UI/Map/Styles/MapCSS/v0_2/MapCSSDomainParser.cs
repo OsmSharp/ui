@@ -1,4 +1,22 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -42,8 +60,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                             child.Children[0] is CommonTree &&
                             (child.Children[0] as CommonTree).Children[0].Text == "canvas")
                         { // this child represents the canvas rule.
-                            file.CanvasFillColor =
-                                MapCSSDomainParser.ParseCanvasRule((child as CommonTree));
+                            MapCSSDomainParser.ParseCanvasRule(file, child as CommonTree);
+                        }
+                        else if (child.ChildCount == 2 &&
+                            child.Children[0].Text == "SIMPLE_SELECTOR" &&
+                            child.Children[0].ChildCount == 1 &&
+                            child.Children[0] is CommonTree &&
+                            (child.Children[0] as CommonTree).Children[0].Text == "meta")
+                        { // this child represents the canvas rule.
+                            MapCSSDomainParser.ParseMetaRule(file, child as CommonTree);
                         }
                         else
                         { // this child can only be a regular rule.
@@ -64,24 +89,74 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
         /// </summary>
         /// <param name="ruleTree"></param>
         /// <returns></returns>
-        private static int ParseCanvasRule(CommonTree ruleTree)
+        private static void ParseCanvasRule(MapCSSFile file, CommonTree ruleTree)
         {
-            IList<ITree> declarationChildren = MapCSSDomainParser.GetDeclarationChildren(ruleTree);
-
-            if (declarationChildren[0].Text == "fill-color" &&
-                declarationChildren[1].Text == "VALUE_RGB")
-            {
-                string rString = declarationChildren[1].GetChild(0).Text;
-                string gString = declarationChildren[1].GetChild(1).Text;
-                string bString = declarationChildren[1].GetChild(2).Text;
-
-                int r = int.Parse(rString);
-                int g = int.Parse(gString);
-                int b = int.Parse(bString);
-
-                return SimpleColor.FromArgb(r, g, b).Value;
+            if (ruleTree.ChildCount >= 2 &&
+                ruleTree.Children[1] != null)
+            { // loop over all declaration rules in canvas.
+                foreach (CommonTree rule in (ruleTree.Children[1] as CommonTree).Children)
+                {
+                    if (rule.Text == "DECLARATION" &&
+                        rule.Children != null &&
+                        rule.Children.Count > 0)
+                    { // parse the decalaration.
+                        // support both JOSM's background-color and fill-color.
+                        if (rule.Children[0].Text == "background-color")
+                        { // parse the background color.
+                            file.CanvasFillColor = MapCSSDomainParser.ParseColor(rule.Children[1] as CommonTree);
+                        }
+                        else if (rule.Children[0].Text == "fill-color")
+                        { // parse the background color.
+                            file.CanvasFillColor = MapCSSDomainParser.ParseColor(rule.Children[1] as CommonTree);
+                        }
+                        else if (rule.Children[0].Text == "default-points")
+                        { // parse the default points-setting.
+                            file.DefaultPoints = false;
+                            if(rule.Children[1].Text == "true")
+                            {
+                                file.DefaultPoints = true;
+                            }
+                        }
+                        else if (rule.Children[0].Text == "default-lines")
+                        { // parse the default lines-setting.
+                            file.DefaultLines = false;
+                            if (rule.Children[1].Text == "true")
+                            {
+                                file.DefaultLines = true;
+                            }
+                        }
+                    }
+                }
             }
-            return 0;
+        }
+
+        /// <summary>
+        /// Parses the meta rule.
+        /// </summary>
+        /// <param name="ruleTree"></param>
+        /// <returns></returns>
+        private static void ParseMetaRule(MapCSSFile file, CommonTree ruleTree)
+        {
+            if (ruleTree.ChildCount >= 2 &&
+                ruleTree.Children[1] != null)
+            { // loop over all declaration rules in canvas.
+                foreach (CommonTree rule in (ruleTree.Children[1] as CommonTree).Children)
+                {
+                    if (rule.Text == "DECLARATION" &&
+                        rule.Children != null &&
+                        rule.Children.Count > 0)
+                    { // parse the decalaration.
+                        if (rule.Children[0].Text == "title")
+                        { // parse the background color.
+                            file.Title = MapCSSDomainParser.ParseURL(rule.Children[1].Text);
+                        }
+                        else if (rule.Children[0].Text == "icon")
+                        { // parse the default points-setting.
+                            file.Icon = MapCSSDomainParser.ParseURL(rule.Children[1].Text);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -1399,24 +1474,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                 throw new MapCSSDomainParserException(colorTree,
                                                             string.Format("Color value cannot be parsed!"));
             }
-        }
-
-        /// <summary>
-        /// Returns only the declaration children of the rule.
-        /// </summary>
-        /// <param name="ruleTree"></param>
-        /// <returns></returns>
-        private static IList<ITree> GetDeclarationChildren(CommonTree ruleTree)
-        {
-            if (ruleTree.Children.Count == 2 &&
-                ruleTree.Children[1].ChildCount == 1 &&
-                ruleTree.Children[1] is CommonTree &&
-                (ruleTree.Children[1] as CommonTree).Children[0].Text == "DECLARATION" &&
-                (ruleTree.Children[1] as CommonTree).Children[0] is CommonTree)
-            {
-                return ((ruleTree.Children[1] as CommonTree).Children[0] as CommonTree).Children;
-            }
-            throw new MapCSSDomainParserException(ruleTree, "Cannot find declaration!");
         }
     }
 

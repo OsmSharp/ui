@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using OsmSharp.Geo.Geometries;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
 {
@@ -54,6 +55,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <param name="osmGeo"></param>
         /// <returns></returns>
         internal abstract bool Selects(Osm.CompleteOsmGeo osmGeo);
+
+        /// <summary>
+        /// Returns true if the given object is selected by this selector rule.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        internal abstract bool Selects(Geometry geometry);
     }
 
     /// <summary>
@@ -110,6 +118,24 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         }
 
         /// <summary>
+        /// Returns true if the given object is selected by this selector rule.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        internal override bool Selects(Geometry geometry)
+        {
+            switch (this.Operator)
+            {
+                case SelectorRuleOperator.And:
+                    return this.Left.Selects(geometry) && this.Right.Selects(geometry);
+                case SelectorRuleOperator.Or:
+                    return this.Left.Selects(geometry) || this.Right.Selects(geometry);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
         /// Returns a description of the selector rule.
         /// </summary>
         /// <returns></returns>
@@ -142,6 +168,20 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
             if (osmGeo.Tags != null)
             {
                 return osmGeo.Tags.ContainsKey(this.Tag);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the given object is selected by this selector rule.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        internal override bool Selects(Geometry geometry)
+        {
+            if (geometry.Attributes != null)
+            {
+                return geometry.Attributes.ContainsKey(this.Tag);
             }
             return false;
         }
@@ -225,6 +265,68 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                             throw new ArgumentOutOfRangeException();
                     }
                     return osmGeo.Tags.ContainsKey(this.Tag);
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the given object is selected by this selector rule.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        internal override bool Selects(Geometry geometry)
+        {
+            if (geometry.Attributes != null)
+            {
+                object attributeObjectValue;
+                if (geometry.Attributes.TryGetValue(this.Tag, out attributeObjectValue))
+                {
+                    string attributeValue = string.Empty;
+                    if (attributeObjectValue is string)
+                    {
+                        attributeValue = attributeObjectValue as string;
+                    }
+                    double valueDouble;
+                    double tagValueDouble;
+                    switch (this.Comparator)
+                    {
+                        case SelectorRuleTagValueComparisonEnum.Equal:
+                            return attributeValue == this.Value;
+                        case SelectorRuleTagValueComparisonEnum.NotEqual:
+                            return attributeValue != this.Value;
+                        case SelectorRuleTagValueComparisonEnum.GreaterThan:
+                            if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                                (double.TryParse(attributeValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                            {
+                                return tagValueDouble > valueDouble;
+                            }
+                            break;
+                        case SelectorRuleTagValueComparisonEnum.GreaterThanOrEqual:
+                            if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                                (double.TryParse(attributeValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                            {
+                                return tagValueDouble >= valueDouble;
+                            }
+                            break;
+                        case SelectorRuleTagValueComparisonEnum.SmallerThan:
+                            if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                                (double.TryParse(attributeValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                            {
+                                return tagValueDouble < valueDouble;
+                            }
+                            break;
+                        case SelectorRuleTagValueComparisonEnum.SmallerThanOrEqual:
+                            if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                                (double.TryParse(attributeValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                            {
+                                return tagValueDouble <= valueDouble;
+                            }
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
+                    return geometry.Attributes.ContainsKey(this.Tag);
                 }
             }
             return false;

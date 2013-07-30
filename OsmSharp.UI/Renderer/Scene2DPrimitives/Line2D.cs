@@ -11,7 +11,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 	/// <summary>
 	/// A simple 2D line.
 	/// </summary>
-	internal class Line2D : IScene2DPrimitive
+	public class Line2D : IScene2DPrimitive
 	{
         /// <summary>
         /// Creates a new line2D.

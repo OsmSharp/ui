@@ -1,8 +1,23 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Antlr.Runtime;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
@@ -18,6 +33,27 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         public MapCSSFile()
         {
             this.Rules = new List<Rule>();
+
+            this.DefaultPoints = false;
+            this.DefaultLines = false;
+        }
+
+        /// <summary>
+        /// Creates and parses mapcss from a string.
+        /// </summary>
+        /// <param name="css"></param>
+        /// <returns></returns>
+        public static MapCSSFile FromString(string css)
+        {
+            var input = new ANTLRStringStream(css);
+            var lexer = new MapCSSLexer(input);
+            var tokens = new CommonTokenStream(lexer);
+            var parser = new MapCSSParser(tokens);
+
+            var tree = parser.stylesheet().Tree as Antlr.Runtime.Tree.CommonTree;
+
+            // parse into domain.
+            return MapCSSDomainParser.Parse(tree);
         }
 
         /// <summary>
@@ -31,21 +67,33 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
             var reader = new StreamReader(stream);
             string s = reader.ReadToEnd();
 
-            var input = new ANTLRStringStream(s);
-            var lexer = new MapCSSLexer(input);
-            var tokens = new CommonTokenStream(lexer);
-            var parser = new MapCSSParser(tokens);
-
-            var tree = parser.stylesheet().Tree as Antlr.Runtime.Tree.CommonTree;
-
-            // parse into domain.
-            return MapCSSDomainParser.Parse(tree);
+            return MapCSSFile.FromString(s);
         }
 
         /// <summary>
         /// The canvas fill color.
         /// </summary>
 	    public int? CanvasFillColor { get; set; }
+
+        /// <summary>
+        /// Gets/sets the default points.
+        /// </summary>
+        public bool DefaultPoints { get; set; }
+
+        /// <summary>
+        /// Gets/sets the default lines.
+        /// </summary>
+        public bool DefaultLines { get; set; }
+
+        /// <summary>
+        /// Gets/sets the title.
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Gets/sets the icon.
+        /// </summary>
+        public string Icon { get; set; }
 
         /// <summary>
         /// Holds a list of all MapCSS rules.

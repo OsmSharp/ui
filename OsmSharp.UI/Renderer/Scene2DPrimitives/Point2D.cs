@@ -10,7 +10,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 	/// <summary>
 	/// A simple 2D point.
 	/// </summary>
-	internal class Point2D : IScene2DPrimitive
+	public class Point2D : IScene2DPrimitive
 	{
         /// <summary>
         /// Creates a new point 2D.

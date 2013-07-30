@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSDomainParserTests.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSInterpretationTests.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParserTests.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Eval\MapCSSEvalTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

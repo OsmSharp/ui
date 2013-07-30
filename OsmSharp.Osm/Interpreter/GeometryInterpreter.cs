@@ -44,7 +44,7 @@ namespace OsmSharp.Osm.Interpreter
             get
             {
                 if (_defaultInterpreter == null)
-                { // TODO: replace this with a more intelligent geometry interpreter.
+                { 
                     _defaultInterpreter = new SimpleGeometryInterpreter();
                 }
                 return _defaultInterpreter;

@@ -22,6 +22,7 @@ using Antlr.Runtime;
 using NUnit.Framework;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 {
@@ -80,8 +81,43 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 
             // instantiate color.
             var simpleColor = new SimpleColor();
-            simpleColor.Value = declarationInt.Eval(null);
+            simpleColor.Value = declarationInt.Eval((TagsCollection)null);
             Assert.AreEqual("#FFFFFF", simpleColor.HexRgb);
+        }
+
+        /// <summary>
+        /// Tests a meta settings CSS.
+        /// 
+        /// Meta settings example:
+        /// meta {
+        ///     title: "Parking lanes";   /* title shown in the menu */
+        ///     icon: "images/logo.png";  /* small icon shown in the menu next to the title */
+        /// }
+        /// </summary>
+        [Test]
+        public void TestMetaSettingsCSS()
+        {
+            // create CSS.
+            string css = "meta { " +
+                "   title: \"Parking lanes\"; /* title shown in the menu */ " +
+                "   icon: \"images/logo.png\"; /* small icon shown in the menu next to the title */ " + 
+                "} ";
+
+            // parses the MapCSS.
+            AstParserRuleReturnScope<object, IToken> result = this.TestMapCSSParsingString(css);
+
+            // Test the very minimum; no errors during parsing says a lot already!
+            var tree = result.Tree as Antlr.Runtime.Tree.CommonTree;
+            Assert.NotNull(tree);
+            Assert.AreEqual(1, tree.ChildCount);
+
+            // parse into domain.
+            MapCSSFile file = MapCSSDomainParser.Parse(tree);
+            Assert.IsNotNull(file);
+            Assert.AreEqual(0, file.Rules.Count);
+
+            Assert.AreEqual("Parking lanes", file.Title);
+            Assert.AreEqual("images/logo.png", file.Icon);
         }
 
         /// <summary>
@@ -113,7 +149,7 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 
             // instantiate color.
             var simpleColor = new SimpleColor();
-            simpleColor.Value = declarationInt.Eval(null);
+            simpleColor.Value = declarationInt.Eval((TagsCollection)null);
             Assert.AreEqual("#665555", simpleColor.HexRgb);
         }
 
@@ -146,7 +182,7 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 
             // instantiate color.
             var simpleColor = new SimpleColor();
-            simpleColor.Value = declarationInt.Eval(null);
+            simpleColor.Value = declarationInt.Eval((TagsCollection)null);
             Assert.AreEqual("#00FF00", simpleColor.HexRgb);
         }
 
@@ -162,7 +198,17 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
             var reader = new StreamReader(stream);
             string s = reader.ReadToEnd();
 
-            var input = new ANTLRStringStream(s);
+            return this.TestMapCSSParsingString(s);
+        }
+
+        /// <summary>
+        /// Test-parses the MapCSS.
+        /// </summary>
+        /// <param name="css"></param>
+        /// <returns></returns>
+        private AstParserRuleReturnScope<object, IToken> TestMapCSSParsingString(string css)
+        {
+            var input = new ANTLRStringStream(css);
             var lexer = new MapCSSLexer(input);
             var tokens = new CommonTokenStream(lexer);
             var parser = new MapCSSParser(tokens);

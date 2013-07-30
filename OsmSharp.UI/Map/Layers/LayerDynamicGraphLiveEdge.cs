@@ -168,7 +168,7 @@ namespace OsmSharp.UI.Map.Layers
                     }
                     way.Tags.AddOrReplace(_dataSource.TagsIndex.Get(arc.Value.Value.Tags));
 
-                    _styleInterpreter.Translate(this.Scene, map.Projection, zoomFactor, way);
+                    _styleInterpreter.Translate(this.Scene, map.Projection, way);
                     interpretedObjects.Add(arcId);
                 }
             }

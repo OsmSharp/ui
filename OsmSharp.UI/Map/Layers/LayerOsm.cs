@@ -16,12 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Osm.Data;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Data;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
 
@@ -139,7 +136,7 @@ namespace OsmSharp.UI.Map.Layers
             { // translate each object into scene object.
                 if (!interpretedObjects.Contains(osmGeo.Id.Value))
                 {
-                    _styleInterpreter.Translate(this.Scene, map.Projection, zoomFactor, _dataSource, osmGeo);
+                    _styleInterpreter.Translate(this.Scene, map.Projection, _dataSource, osmGeo);
                     interpretedObjects.Add(osmGeo.Id.Value);
                 }
             }
