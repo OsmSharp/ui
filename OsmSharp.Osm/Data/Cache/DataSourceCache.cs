@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
-using OsmSharp.Math.Units.Angle;
+using OsmSharp.Units.Angle;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Osm.Tiles;

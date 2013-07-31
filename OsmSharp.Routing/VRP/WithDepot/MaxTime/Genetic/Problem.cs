@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 //using OsmSharp.Math.VRP.MultiSalesman.Problems;
-using OsmSharp.Math.Units.Time;
+using OsmSharp.Units.Time;
 using OsmSharp.Math.TSP.Problems;
 using OsmSharp.Math.VRP.Core;
 

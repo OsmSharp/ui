@@ -15,30 +15,29 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Math.Units.Distance;
-using OsmSharp.Math.Units.Speed;
 
-namespace OsmSharp.Math.Units.Time
+namespace OsmSharp.Units.Weight
 {
     /// <summary>
-    /// Represents a unit of time in seconds.
+    /// Represents a weight in grams.
     /// </summary>
-    public class Second : Unit
-    {
+    public class Gram : Unit
+    {        
         /// <summary>
-        /// Creates a new second.
+        /// Creates a new weight.
         /// </summary>
-        public Second()
-            :base(0.0d)
+        public Gram()
+            : base(0.0d)
         {
 
         }
 
-        private Second(double value)
+        private Gram(double value)
             : base(value)
         {
 
@@ -47,49 +46,35 @@ namespace OsmSharp.Math.Units.Time
         #region Conversions
 
         /// <summary>
-        /// Converts the given value to seconds.
+        /// Converts a value to grams.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static implicit operator Second(double value)
+        public static implicit operator Gram(double value)
         {
-            Second sec = new Second(value);
-            return sec;
+            return new Gram(value);
         }
 
         /// <summary>
-        /// Converts the given value to seconds.
+        /// Converts a value to grams.
         /// </summary>
-        /// <param name="timespan"></param>
+        /// <param name="kilogram"></param>
         /// <returns></returns>
-        public static implicit operator Second(TimeSpan timespan)
+        public static implicit operator Gram(Kilogram kilogram)
         {
-            Second sec = new Second();
-            sec = timespan.TotalMilliseconds / 1000.0d;
-            return sec;
-        }
-
-        /// <summary>
-        /// Converts the given value to seconds.
-        /// </summary>
-        /// <param name="hour"></param>
-        /// <returns></returns>
-        public static implicit operator Second(Hour hour)
-        {
-            Second sec = new Second();
-            sec = hour.Value * 3600.0d;
-            return sec;
+            return kilogram.Value * 1000d;
         }
 
         #endregion
-        
+
         /// <summary>
-        /// Returns a description of this seconds.
+        /// Returns a description of this weight.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return this.Value.ToString() + "s";
+            return this.Value.ToString() + "g";
         }
+        
     }
 }

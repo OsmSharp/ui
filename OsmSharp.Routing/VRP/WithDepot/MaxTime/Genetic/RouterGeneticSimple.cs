@@ -19,7 +19,7 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using System.Text;
-//using OsmSharp.Math.Units.Time;
+//using OsmSharp.Units.Time;
 //using OsmSharp.Math.AI.Genetic.Solvers;
 //using OsmSharp.Math.VRP.Core;
 //using OsmSharp.Math.VRP.Core.Routes.ASymmetric;

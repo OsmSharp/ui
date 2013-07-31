@@ -19,10 +19,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Math.Units.Time;
-using OsmSharp.Math.Units.Speed;
+using OsmSharp.Units.Time;
+using OsmSharp.Units.Speed;
 
-namespace OsmSharp.Math.Units.Distance
+namespace OsmSharp.Units.Distance
 {
     /// <summary>
     /// Represents a distance in meters.

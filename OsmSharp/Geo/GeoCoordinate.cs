@@ -20,8 +20,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Math.Units.Distance;
-using OsmSharp.Math.Units.Angle;
+using OsmSharp.Units.Distance;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Math.Geo
 {

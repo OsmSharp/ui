@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Math.Units.Angle
+namespace OsmSharp.Units.Angle
 {
     /// <summary>
     /// Represents an angle in degress.

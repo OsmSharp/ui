@@ -9,7 +9,7 @@ using OsmSharp.UI.Renderer;
 using LineJoin = OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math;
-using OsmSharp.Math.Units.Angle;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.WinForms.UI.Renderer
 {

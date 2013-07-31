@@ -23,7 +23,7 @@ using NUnit.Framework;
 using OsmSharp.Math;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
-using OsmSharp.Math.Units.Distance;
+using OsmSharp.Units.Distance;
 
 namespace OsmSharp.UnitTests
 {

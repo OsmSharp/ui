@@ -19,7 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Math.Units.Angle;
+using OsmSharp.Units.Angle;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Meta;
 

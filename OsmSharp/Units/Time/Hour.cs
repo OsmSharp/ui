@@ -15,92 +15,80 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Math.Units.Time;
-using OsmSharp.Math.Units.Speed;
 
-namespace OsmSharp.Math.Units.Distance
+namespace OsmSharp.Units.Time
 {
     /// <summary>
-    /// Represents a distance in kilometers.
+    /// Represents a unit of time in hours.
     /// </summary>
-    public class Kilometer : Unit
+    public class Hour : Unit
     {
         /// <summary>
-        /// Creates a new kilometer.
+        /// Creates a new hour.
         /// </summary>
-        public Kilometer()
+        public Hour()
             : base(0.0d)
         {
 
         }
 
-        private Kilometer(double value)
+        private Hour(double value)
             : base(value)
         {
 
         }
 
-        #region Conversions
+        #region Time-Conversions
 
         /// <summary>
-        /// Converts the given value to kilometers.
+        /// Converts a value to an hour.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static implicit operator Kilometer(double value)
+        public static implicit operator Hour(double value)
         {
-            return new Kilometer(value);
+            Hour hr = new Hour(value);
+            return hr;
         }
 
         /// <summary>
-        /// Converts the given value to kilometers.
+        /// Converts a value to an hour.
         /// </summary>
-        /// <param name="meter"></param>
+        /// <param name="timespan"></param>
         /// <returns></returns>
-        public static implicit operator Kilometer(Meter meter)
+        public static implicit operator Hour(TimeSpan timespan)
         {
-            return meter.Value / 1000d;
-        }
-
-        #endregion
-        
-        #region Division
-
-        /// <summary>
-        /// Divides a distance to a time resulting in a speed.
-        /// </summary>
-        /// <param name="kilometer"></param>
-        /// <param name="hour"></param>
-        /// <returns></returns>
-        public static KilometerPerHour operator /(Kilometer kilometer, Hour hour)
-        {
-            return kilometer.Value / hour.Value;
+            Hour hr = new Hour();
+            hr = timespan.TotalMilliseconds * 1000.0d * 3600.0d;
+            return hr;
         }
 
         /// <summary>
-        /// Divides a distance to a speed resulting in a time.
+        /// Converts a value to an hour.
         /// </summary>
-        /// <param name="distance"></param>
-        /// <param name="speed"></param>
+        /// <param name="sec"></param>
         /// <returns></returns>
-        public static Hour operator /(Kilometer distance, KilometerPerHour speed)
+        public static implicit operator Hour(Second sec)
         {
-            return distance.Value / speed.Value;
+            Hour hr = new Hour();
+            hr = sec.Value / 3600.0d;
+            return hr;
         }
 
         #endregion
 
         /// <summary>
-        /// Returns a description of this kilometer.
+        /// Returns a description of this hour.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return this.Value.ToString() + "Km";
+            return this.Value.ToString() + "H";
         }
     }
 }

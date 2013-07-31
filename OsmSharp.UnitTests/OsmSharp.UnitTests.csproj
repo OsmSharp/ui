@@ -147,6 +147,7 @@
     <Compile Include="IO\ByteCache\ByteCacheTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
     <Compile Include="Osm\Interpreter\SimpleGeometryInterpreterTests.cs" />
+    <Compile Include="Osm\TagParsingTests.cs" />
     <Compile Include="Routes\DepotRouteTests.cs" />
     <Compile Include="API\APITests.cs" />
     <Compile Include="Routes\DynamicAsymmetricMultiRouteTests.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="BinairyHeapTests.cs" />
     <Compile Include="GZipStreamTests.cs" />
     <Compile Include="SparseArrayTests.cs" />
+    <Compile Include="Units\SpeedUnitTests.cs" />
     <Compile Include="UtilitiesTest.cs" />
     <Compile Include="WebMercatorTests.cs" />
     <Compile Include="FibonacciHeapTests.cs" />

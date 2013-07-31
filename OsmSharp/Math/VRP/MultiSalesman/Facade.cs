@@ -19,7 +19,7 @@
 using System;
 using System.Collections.Generic;
 using OsmSharp.Progress;
-using OsmSharp.Math.Units.Time;
+using OsmSharp.Units.Time;
 using OsmSharp.Math.Random;
 using OsmSharp.Math.AI.Genetic.Solvers;
 using OsmSharp.Math.VRP.MultiSalesman.Solver.Operations.Mutation;

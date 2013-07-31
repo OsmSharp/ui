@@ -20,9 +20,9 @@
 //using System.Linq;
 //using System.Text;
 //using OsmSharp.Routing.Interpreter.Vehicles;
-//using OsmSharp.Math.Units.Distance;
+//using OsmSharp.Units.Distance;
 //using OsmSharp.Math.Geo;
-//using OsmSharp.Math.Units.Speed;
+//using OsmSharp.Units.Speed;
 
 //namespace OsmSharp.Routing.Interpreter.Default
 //{

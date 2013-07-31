@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Math.AI.Genetic;
-using OsmSharp.Math.Units.Time;
+using OsmSharp.Units.Time;
 
 namespace OsmSharp.Math.VRP.MultiSalesman.Genetic
 {

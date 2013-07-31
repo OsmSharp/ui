@@ -20,60 +20,63 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Math.Units.Weight
+namespace OsmSharp.Units.Angle
 {
     /// <summary>
-    /// Represents a weight in grams.
+    /// Represents an angle in radians.
     /// </summary>
-    public class Gram : Unit
-    {        
-        /// <summary>
-        /// Creates a new weight.
-        /// </summary>
-        public Gram()
+    public class Radian : Unit
+    {
+        private Radian()
             : base(0.0d)
         {
 
         }
 
-        private Gram(double value)
-            : base(value)
+        /// <summary>
+        /// Creates a new angle in radians.
+        /// </summary>
+        /// <param name="radians"></param>
+        public Radian(double radians)
+            : base(radians)
         {
 
         }
 
-        #region Conversions
+        #region Conversion
 
         /// <summary>
-        /// Converts a value to grams.
+        /// Converts the given value to radians.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static implicit operator Gram(double value)
+        public static implicit operator Radian(double value)
         {
-            return new Gram(value);
+            return new Radian(value);
         }
 
         /// <summary>
-        /// Converts a value to grams.
+        /// Converts the given value to radians.
         /// </summary>
-        /// <param name="kilogram"></param>
+        /// <param name="deg"></param>
         /// <returns></returns>
-        public static implicit operator Gram(Kilogram kilogram)
+        public static implicit operator Radian(Degree deg)
         {
-            return kilogram.Value * 1000d;
+            double value = (deg.Value / 180d) * System.Math.PI;
+            return new Radian(value);
         }
 
         #endregion
 
         /// <summary>
-        /// Returns a description of this weight.
+        /// Subtracts two radians.
         /// </summary>
+        /// <param name="rad1"></param>
+        /// <param name="rad2"></param>
         /// <returns></returns>
-        public override string ToString()
+        public static Radian operator -(Radian rad1, Radian rad2)
         {
-            return this.Value.ToString() + "g";
+            return rad1.Value - rad2.Value;
         }
-        
     }
 }

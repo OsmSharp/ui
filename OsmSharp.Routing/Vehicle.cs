@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.Units.Speed;
+using OsmSharp.Units.Speed;
 using OsmSharp.Routing.Interpreter.Roads;
 
 namespace OsmSharp.Routing

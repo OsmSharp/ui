@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Units.Distance;
+using OsmSharp.Units.Distance;
 
 namespace OsmSharp.Routing.ArcAggregation.Output
 {

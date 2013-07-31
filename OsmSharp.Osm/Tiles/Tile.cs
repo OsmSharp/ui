@@ -1,5 +1,5 @@
 ﻿using OsmSharp.Math.Geo;
-using OsmSharp.Math.Units.Angle;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Osm.Tiles
 {

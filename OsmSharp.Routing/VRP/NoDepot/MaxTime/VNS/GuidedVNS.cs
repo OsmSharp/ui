@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Math.VRP.Core;
-using OsmSharp.Math.Units.Time;
+using OsmSharp.Units.Time;
 using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Routing;
 using OsmSharp.Routing.VRP.NoDepot.MaxTime.CheapestInsertion;

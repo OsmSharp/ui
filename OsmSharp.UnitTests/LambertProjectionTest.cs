@@ -24,7 +24,7 @@ using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Lambert;
 using OsmSharp.Math.Geo.Lambert.Ellipsoids;
-using OsmSharp.Math.Units.Angle;
+using OsmSharp.Units.Angle;
 using OsmSharp.Math.Geo.Lambert.International.Belgium;
 
 namespace OsmSharp.UnitTests

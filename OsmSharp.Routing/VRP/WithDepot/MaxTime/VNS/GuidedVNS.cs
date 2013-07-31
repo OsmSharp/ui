@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Math.TSP;
-using OsmSharp.Math.Units.Time;
+using OsmSharp.Units.Time;
 using OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt;
 using OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements;
 using OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion;

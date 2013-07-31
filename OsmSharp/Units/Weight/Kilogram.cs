@@ -15,79 +15,66 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Math.Units.Time
+namespace OsmSharp.Units.Weight
 {
     /// <summary>
-    /// Represents a unit of time in hours.
+    /// Represents a weight in kilograms.
     /// </summary>
-    public class Hour : Unit
+    public class Kilogram : Unit
     {
         /// <summary>
-        /// Creates a new hour.
+        /// Creates a new kilogram.
         /// </summary>
-        public Hour()
+        public Kilogram()
             : base(0.0d)
         {
 
         }
 
-        private Hour(double value)
+        private Kilogram(double value)
             : base(value)
         {
 
         }
 
-        #region Time-Conversions
+        #region Conversions
 
         /// <summary>
-        /// Converts a value to an hour.
+        /// Converts a value to kilograms.
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static implicit operator Hour(double value)
+        public static implicit operator Kilogram(double value)
         {
-            Hour hr = new Hour(value);
-            return hr;
+            return new Kilogram(value);
         }
 
         /// <summary>
-        /// Converts a value to an hour.
+        /// Converts a value to kilograms.
         /// </summary>
-        /// <param name="timespan"></param>
+        /// <param name="gram"></param>
         /// <returns></returns>
-        public static implicit operator Hour(TimeSpan timespan)
+        public static implicit operator Kilogram(Gram gram)
         {
-            Hour hr = new Hour();
-            hr = timespan.TotalMilliseconds * 1000.0d * 3600.0d;
-            return hr;
-        }
-
-        /// <summary>
-        /// Converts a value to an hour.
-        /// </summary>
-        /// <param name="sec"></param>
-        /// <returns></returns>
-        public static implicit operator Hour(Second sec)
-        {
-            Hour hr = new Hour();
-            hr = sec.Value / 3600.0d;
-            return hr;
+            return gram.Value / 1000d;
         }
 
         #endregion
 
         /// <summary>
-        /// Returns a description of this hour.
+        /// Returns a description of this kilogram.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return this.Value.ToString() + "H";
+            return this.Value.ToString() + "Kg";
         }
+
     }
 }
