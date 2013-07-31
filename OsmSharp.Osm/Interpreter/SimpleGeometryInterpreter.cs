@@ -181,14 +181,11 @@ namespace OsmSharp.Osm.Interpreter
                                 relation.Members[idx + 1].Role == member.Role &&
                                 relation.Members[idx + 1].Member is CompleteWay)
                             {
-                                // move to the next index.
-                                idx++;
-
                                 // check if the way starting coordinate matches the way end coordinate.
                                 CompleteWay nextWay = relation.Members[idx + 1].Member as CompleteWay;
                                 if (!nextWay.IsClosed())
                                 { // the next way is not closed.
-                                    List<GeoCoordinate> nextCoordinates = way.GetCoordinates();
+                                    List<GeoCoordinate> nextCoordinates = nextWay.GetCoordinates();
                                     if (way.Nodes[way.Nodes.Count - 1].Id == nextWay.Nodes[0].Id)
                                     { // last node of the previous way is the first node of the next way.
                                         nextCoordinates = nextCoordinates.GetRange(1, way.Nodes.Count - 1);
@@ -202,7 +199,6 @@ namespace OsmSharp.Osm.Interpreter
                                     { // the next way did not connect to the previous one.
                                         OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", System.Diagnostics.TraceEventType.Error,
                                             "Unclosed way found in multipolygon relation without a way following it to close it.");
-                                        idx--;
                                         break;
                                     }
 
@@ -211,9 +207,10 @@ namespace OsmSharp.Osm.Interpreter
 
                                     // check if polygon is closed now.
                                     if (coordinates.Count > 1 &&
-                                        coordinates[0] == coordinates[coordinates.Count - 1])
+                                        coordinates[0].Latitude == coordinates[coordinates.Count - 1].Latitude &&
+                                        coordinates[0].Longitude == coordinates[coordinates.Count - 1].Longitude)
                                     { // ok create the lineair ring.
-                                        LineairRing lineairRing = new LineairRing(way.GetCoordinates().ToArray<GeoCoordinate>());
+                                        LineairRing lineairRing = new LineairRing(coordinates.ToArray<GeoCoordinate>());
                                         rings.Add(lineairRing);
                                         ringRoles.Add(member.Role);
                                         break;
@@ -223,15 +220,13 @@ namespace OsmSharp.Osm.Interpreter
                                 { // the next way is closed, this should not be!
                                     OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", System.Diagnostics.TraceEventType.Error,
                                         "Unclosed way found in multipolygon relation without a way following it to close it.");
-                                    idx--;
                                     break;
                                 }
+                                idx++;
                             }
                         }
                     }
                 }
-
-                // move to next member.
                 idx++;
             }
 
