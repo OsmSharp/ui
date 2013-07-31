@@ -110,6 +110,7 @@ namespace OsmSharp.UnitTests.Osm
         [Test]
         public void TestBooleanParsing()
         {
+            // test IsTrue.
             TagsCollection tags = new SimpleTagsCollection();
             tags.Add("area", "yes");
             Assert.IsTrue(tags.IsTrue("area"));
@@ -133,6 +134,31 @@ namespace OsmSharp.UnitTests.Osm
             tags = new SimpleTagsCollection();
             tags.Add("area", "no");
             Assert.IsFalse(tags.IsTrue("area"));
+
+            // test IsFalse.
+            tags = new SimpleTagsCollection();
+            tags.Add("area", "yes");
+            Assert.IsFalse(tags.IsFalse("area"));
+
+            tags = new SimpleTagsCollection();
+            tags.Add("area", "1");
+            Assert.IsFalse(tags.IsFalse("area"));
+
+            tags = new SimpleTagsCollection();
+            tags.Add("area", "true");
+            Assert.IsFalse(tags.IsFalse("area"));
+
+            tags = new SimpleTagsCollection();
+            tags.Add("area", "false");
+            Assert.IsTrue(tags.IsFalse("area"));
+
+            tags = new SimpleTagsCollection();
+            tags.Add("area", "0");
+            Assert.IsTrue(tags.IsFalse("area"));
+
+            tags = new SimpleTagsCollection();
+            tags.Add("area", "no");
+            Assert.IsTrue(tags.IsFalse("area"));
         }
     }
 }

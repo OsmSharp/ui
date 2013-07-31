@@ -64,6 +64,7 @@ namespace OsmSharp.UnitTests.Osm.Interpreter
             Assert.AreEqual(1, geometries.Count);
             Geometry geometry = geometries[0];
             Assert.IsInstanceOf<LineairRing>(geometry);
+            Assert.IsTrue(geometry.Attributes.ContainsKeyValue("area", "yes"));
         }
 
         /// <summary>
@@ -112,6 +113,74 @@ namespace OsmSharp.UnitTests.Osm.Interpreter
             Assert.AreEqual(1, geometries.Count);
             Geometry geometry = geometries[0];
             Assert.IsInstanceOf<LineairRing>(geometry);
+            Assert.IsTrue(geometry.Attributes.ContainsKeyValue("natural", "water"));
+        }
+
+        /// <summary>
+        /// Tests the interpretation of a multipolygon relation.
+        /// Relation(type=multipolygon) => area
+        /// 
+        /// http://wiki.openstreetmap.org/wiki/Relation:multipolygon
+        /// </summary>
+        [Test]
+        public void TestRelationMultipolygonAreaOneInner()
+        {
+            // tests a multipolygon containing one 'outer' member.
+            MemoryDataSource source = new MemoryDataSource(
+                Node.Create(1, 0, 0),
+                Node.Create(2, 1, 0),
+                Node.Create(3, 0, 1),
+                Way.Create(1, 1, 2, 3, 1),
+                Relation.Create(1, 
+                    new SimpleTagsCollection(
+                        Tag.Create("type", "multipolygon")),
+                    RelationMember.Create(1, "outer", OsmGeoType.Way)));
+
+            GeometryInterpreter interpreter = new SimpleGeometryInterpreter();
+            GeometryCollection geometries = interpreter.Interpret(source.GetRelation(1), source);
+            Assert.IsNotNull(geometries);
+            Assert.AreEqual(1, geometries.Count);
+            Geometry geometry = geometries[0];
+            Assert.IsInstanceOf<LineairRing>(geometry);
+            Assert.IsTrue(geometry.Attributes.ContainsKeyValue("type", "multipolygon"));
+        }
+        
+        /// <summary>
+        /// Tests the interpretation of a multipolygon containing one 'outer' member and one 'inner' member.
+        /// Relation(type=multipolygon) => area
+        /// 
+        /// http://wiki.openstreetmap.org/wiki/Relation:multipolygon
+        /// </summary>
+        [Test]
+        public void TestRelationMultipolygonAreaOneInnerOneOuter()
+        {
+            MemoryDataSource source = new MemoryDataSource(
+                Node.Create(1, 0, 0),
+                Node.Create(2, 0, 1),
+                Node.Create(3, 1, 1),
+                Node.Create(4, 1, 0),
+                Node.Create(5, 0.25, 0.25),
+                Node.Create(6, 0.25, 0.75),
+                Node.Create(7, 0.75, 0.75),
+                Node.Create(8, 0.75, 0.25),
+                Way.Create(1, 1, 2, 3, 4, 1),
+                Way.Create(2, 5, 6, 7, 8, 5),
+                Relation.Create(1,
+                    new SimpleTagsCollection(
+                        Tag.Create("type", "multipolygon")),
+                    RelationMember.Create(1, "outer", OsmGeoType.Way),
+                    RelationMember.Create(2, "inner", OsmGeoType.Way)));
+
+            GeometryInterpreter interpreter = new SimpleGeometryInterpreter();
+            GeometryCollection geometries = interpreter.Interpret(source.GetRelation(1), source);
+            Assert.IsNotNull(geometries);
+            Assert.AreEqual(1, geometries.Count);
+            Geometry geometry = geometries[0];
+            Assert.IsInstanceOf<Polygon>(geometry);
+            Polygon polygon = geometry as Polygon;
+            Assert.IsNotNull(polygon.Holes);
+            Assert.AreEqual(1, polygon.Holes.Count());
+            Assert.IsTrue(geometry.Attributes.ContainsKeyValue("type", "multipolygon"));
         }
     }
 }

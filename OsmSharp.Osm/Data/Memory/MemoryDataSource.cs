@@ -43,6 +43,19 @@ namespace OsmSharp.Osm.Data.Memory
         }
 
         /// <summary>
+        /// Creates a new memory data structure using the default geometry interpreter.
+        /// </summary>
+        public MemoryDataSource(params OsmGeo[] initial)
+        {
+            this.InitializeDataStructures();
+
+            foreach (OsmGeo osmGeo in initial)
+            {
+                this.Add(osmGeo);
+            }
+        }
+
+        /// <summary>
         /// Initializes the data cache.
         /// </summary>
         private void InitializeDataStructures()
@@ -127,6 +140,26 @@ namespace OsmSharp.Osm.Data.Memory
         public override bool IsReadOnly
         {
             get { return true; }
+        }
+
+        /// <summary>
+        /// Adds a new osmgeo object.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        public void Add(OsmGeo osmGeo)
+        {
+            if (osmGeo is Node)
+            {
+                this.AddNode(osmGeo as Node);
+            }
+            else if (osmGeo is Way)
+            {
+                this.AddWay(osmGeo as Way);
+            }
+            else if (osmGeo is Relation)
+            {
+                this.AddRelation(osmGeo as Relation);
+            }
         }
 
         /// <summary>

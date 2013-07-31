@@ -22,6 +22,16 @@ namespace OsmSharp.Geo.Geometries
         /// Creates a new multipolygon string.
         /// </summary>
         /// <param name="polygons"></param>
+        public MultiPolygon(params Polygon[] polygons)
+            : base(polygons.Cast<Geometry>())
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new multipolygon string.
+        /// </summary>
+        /// <param name="polygons"></param>
         public MultiPolygon(IEnumerable<Polygon> polygons)
             : base(polygons.Cast<Geometry>())
         {

@@ -83,7 +83,7 @@ namespace OsmSharp.Osm
         /// Returns all the coordinates in this way in the same order as the nodes.
         /// </summary>
         /// <returns></returns>
-        public IList<GeoCoordinate> GetCoordinates()
+        public List<GeoCoordinate> GetCoordinates()
         {
             var coordinates = new List<GeoCoordinate>();
 
@@ -134,6 +134,17 @@ namespace OsmSharp.Osm
         public bool HasNode(CompleteNode node)
         {
             return this.Nodes.Contains(node);
+        }
+        
+        /// <summary>
+        /// Returns true if this way is closed (firstnode == lastnode).
+        /// </summary>
+        /// <returns></returns>
+        public bool IsClosed()
+        {
+            return this.Nodes != null &&
+                this.Nodes.Count > 1 &&
+                this.Nodes[0].Id == this.Nodes[this.Nodes.Count - 1].Id;
         }
 
         /// <summary>

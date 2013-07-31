@@ -40,6 +40,14 @@ namespace OsmSharp.Collections.Tags
         }
 
         /// <summary>
+        /// Creates a new tags collection.
+        /// </summary>
+        public SimpleTagsCollection(params Tag[] tags)
+        {
+            _tags = new List<Tag>(tags);
+        }
+
+        /// <summary>
         /// Creates a new tags collection initialized with the given existing tags.
         /// </summary>
         /// <param name="tags"></param>

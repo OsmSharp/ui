@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm
 {
@@ -48,6 +49,36 @@ namespace OsmSharp.Osm
         public override string ToString()
         {
             return string.Format("Relation[{0}]", this.Id.Value);
+        }
+
+        /// <summary>
+        /// Creates a new relation.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="members"></param>
+        /// <returns></returns>
+        public static Relation Create(long id, params RelationMember[] members)
+        {
+            Relation relation = new Relation();
+            relation.Id = id;
+            relation.Members = new List<RelationMember>(members);
+            return relation;
+        }
+
+        /// <summary>
+        /// Creates a new relation.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tags"></param>
+        /// <param name="members"></param>
+        /// <returns></returns>
+        public static Relation Create(long id, TagsCollection tags, params RelationMember[] members)
+        {
+            Relation relation = new Relation();
+            relation.Id = id;
+            relation.Members = new List<RelationMember>(members);
+            relation.Tags = tags;
+            return relation;
         }
     }
 }

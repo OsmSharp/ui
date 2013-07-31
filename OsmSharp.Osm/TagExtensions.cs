@@ -32,8 +32,8 @@ namespace OsmSharp.Osm
     /// </summary>
     public static class TagExtensions
     {
-        private static string[] BOOLEAN_TRUE_VALUES = { "yes", "true", "1" };
-        private static string[] BOOLEAN_FALSE_VALUES = { "no", "false", "0" };
+        private static string[] BooleanTrueValues = { "yes", "true", "1" };
+        private static string[] BooleanFalseValues = { "no", "false", "0" };
 
         private const string REGEX_DECIMAL = @"\s*(\d+(?:\.\d*)?)\s*";
 
@@ -54,12 +54,26 @@ namespace OsmSharp.Osm
             if (tags == null || string.IsNullOrWhiteSpace(tagKey))
                 return false;
 
-            string tagValue;
-
             // TryGetValue tests if the 'tagKey' is present, returns true if the associated value can be interpreted as true.
             //                                               returns false if the associated value can be interpreted as false.
+            string tagValue;
             return tags.TryGetValue(tagKey, out tagValue) && 
-                BOOLEAN_TRUE_VALUES.Contains(tagValue.ToLowerInvariant());
+                BooleanTrueValues.Contains(tagValue.ToLowerInvariant());
+        }
+
+        /// <summary>
+        /// Returns true if the given tags key has an associated value that can be interpreted as false.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="tagKey"></param>
+        /// <returns></returns>
+        public static bool IsFalse(this TagsCollection tags, string tagKey)
+        {
+            if (tags == null || string.IsNullOrWhiteSpace(tagKey))
+                return false;
+            string tagValue;
+            return tags.TryGetValue(tagKey, out tagValue) &&
+                BooleanFalseValues.Contains(tagValue.ToLowerInvariant());
         }
 
         /// <summary>

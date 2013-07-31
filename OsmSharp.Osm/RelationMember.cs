@@ -42,5 +42,21 @@ namespace OsmSharp.Osm
         /// The member role.
         /// </summary>
         public string MemberRole { get; set; }
+
+        /// <summary>
+        /// Creates a new relation member.
+        /// </summary>
+        /// <param name="memberId"></param>
+        /// <param name="memberRole"></param>
+        /// <param name="memberType"></param>
+        /// <returns></returns>
+        public static RelationMember Create(int memberId, string memberRole, OsmGeoType memberType)
+        {
+            RelationMember member = new RelationMember();
+            member.MemberId = memberId;
+            member.MemberRole = memberRole;
+            member.MemberType = memberType;
+            return member;
+        }
     }
 }

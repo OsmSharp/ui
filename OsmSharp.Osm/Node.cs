@@ -61,5 +61,25 @@ namespace OsmSharp.Osm
             }
             return string.Format("Node[{0}]", this.Id.Value);
         }
+
+        #region Construction Methods
+
+        /// <summary>
+        /// Creates a new node.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <returns></returns>
+        public static Node Create(long id, double latitude, double longitude)
+        {
+            Node node = new Node();
+            node.Id = id;
+            node.Latitude = latitude;
+            node.Longitude = longitude;
+            return node;
+        }
+
+        #endregion
     }
 }

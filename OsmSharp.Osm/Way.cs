@@ -49,5 +49,19 @@ namespace OsmSharp.Osm
         {
             return string.Format("Way[{0}]", this.Id.Value);
         }
+
+        /// <summary>
+        /// Creates a new way.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="nodes"></param>
+        /// <returns></returns>
+        public static Way Create(long id, params long[] nodes)
+        {
+            Way way = new Way();
+            way.Id = id;
+            way.Nodes = new List<long>(nodes);
+            return way;
+        }
     }
 }

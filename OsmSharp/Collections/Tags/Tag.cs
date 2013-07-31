@@ -44,5 +44,16 @@ namespace OsmSharp.Collections.Tags
         /// The value of the tag.
         /// </summary>
         public string Value { get; set; }
+
+        /// <summary>
+        /// Creates a new tag.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Tag Create(string key, string value)
+        {
+            return new Tag(key, value);
+        }
     }
 }
