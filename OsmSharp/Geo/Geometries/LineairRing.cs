@@ -56,5 +56,16 @@ namespace OsmSharp.Geo.Geometries
         {
 
         }
+
+        /// <summary>
+        /// Returns true if the given ring is contained in this ring.
+        /// </summary>
+        /// <param name="lineairRing"></param>
+        /// <returns></returns>
+        public bool Contains(LineairRing lineairRing)
+        {
+            // TODO: implement a contains method.
+            return false;
+        }
     }
 }
