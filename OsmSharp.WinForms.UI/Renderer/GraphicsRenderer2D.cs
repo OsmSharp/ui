@@ -346,9 +346,29 @@ namespace OsmSharp.WinForms.UI.Renderer
         {
             float sizeInPixels = this.ToPixels(size);
             Color textColor = Color.FromArgb(color);
+            Font font = new Font(FontFamily.GenericSansSerif, sizeInPixels);
+            SolidBrush brush = new SolidBrush(textColor);
+            float transformedX = this.TransformX(x);
+            float transformedY = this.TransformY(y);
+            Brush haloBrush = null;
+            GraphicsPath characterPath = new GraphicsPath();
+            characterPath.AddString(text, font.FontFamily, (int)font.Style, font.Size, new PointF(transformedX, transformedY),
+                                            StringFormat.GenericTypographic);
+            if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
+            {
+                haloBrush = new SolidBrush(Color.FromArgb(haloColor.Value));
 
-            target.Target.DrawString(text, new Font(FontFamily.GenericSansSerif, sizeInPixels), new SolidBrush(textColor),
-                this.TransformX(x), this.TransformY(y));
+                GraphicsPath haloPath = characterPath.Clone() as GraphicsPath;
+                using (haloPath)
+                {
+                    haloPath.Widen(new Pen(haloBrush, haloRadius.Value * 2));
+
+                    // Draw the character
+                    target.Target.FillPath(haloBrush, haloPath);
+                }
+            }
+            // Draw the character
+            target.Target.FillPath(brush, characterPath);
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
 	/// <summary>
 	/// A simple 2D polygon.
 	/// </summary>
-	internal class Polygon2D : IScene2DPrimitive
+	public class Polygon2D : IScene2DPrimitive
 	{
         /// <summary>
         /// Creates a new Polygon2D.

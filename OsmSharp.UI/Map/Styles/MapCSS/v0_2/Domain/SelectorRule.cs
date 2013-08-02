@@ -52,16 +52,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <summary>
         /// Returns true if the given object is selected by this selector rule.
         /// </summary>
-        /// <param name="osmGeo"></param>
+        /// <param name="mapCSSObject"></param>
         /// <returns></returns>
-        internal abstract bool Selects(Osm.CompleteOsmGeo osmGeo);
-
-        /// <summary>
-        /// Returns true if the given object is selected by this selector rule.
-        /// </summary>
-        /// <param name="osmGeo"></param>
-        /// <returns></returns>
-        internal abstract bool Selects(Geometry geometry);
+        internal abstract bool Selects(MapCSSObject mapCSSObject);
     }
 
     /// <summary>
@@ -102,34 +95,16 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <summary>
         /// Returns true if the given object is selected by this selector rule.
         /// </summary>
-        /// <param name="osmGeo"></param>
+        /// <param name="mapCSSObject"></param>
         /// <returns></returns>
-        internal override bool Selects(Osm.CompleteOsmGeo osmGeo)
+        internal override bool Selects(MapCSSObject mapCSSObject)
         {
             switch (this.Operator)
             {
                 case SelectorRuleOperator.And:
-                    return this.Left.Selects(osmGeo) && this.Right.Selects(osmGeo);
+                    return this.Left.Selects(mapCSSObject) && this.Right.Selects(mapCSSObject);
                 case SelectorRuleOperator.Or:
-                    return this.Left.Selects(osmGeo) || this.Right.Selects(osmGeo);
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        /// <summary>
-        /// Returns true if the given object is selected by this selector rule.
-        /// </summary>
-        /// <param name="osmGeo"></param>
-        /// <returns></returns>
-        internal override bool Selects(Geometry geometry)
-        {
-            switch (this.Operator)
-            {
-                case SelectorRuleOperator.And:
-                    return this.Left.Selects(geometry) && this.Right.Selects(geometry);
-                case SelectorRuleOperator.Or:
-                    return this.Left.Selects(geometry) || this.Right.Selects(geometry);
+                    return this.Left.Selects(mapCSSObject) || this.Right.Selects(mapCSSObject);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -161,29 +136,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <summary>
         /// Returns true if the given object is selected by this selector rule.
         /// </summary>
-        /// <param name="osmGeo"></param>
+        /// <param name="mapCSSObject"></param>
         /// <returns></returns>
-        internal override bool Selects(Osm.CompleteOsmGeo osmGeo)
+        internal override bool Selects(MapCSSObject mapCSSObject)
         {
-            if (osmGeo.Tags != null)
-            {
-                return osmGeo.Tags.ContainsKey(this.Tag);
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Returns true if the given object is selected by this selector rule.
-        /// </summary>
-        /// <param name="osmGeo"></param>
-        /// <returns></returns>
-        internal override bool Selects(Geometry geometry)
-        {
-            if (geometry.Attributes != null)
-            {
-                return geometry.Attributes.ContainsKey(this.Tag);
-            }
-            return false;
+            return mapCSSObject.ContainsKey(this.Tag);
         }
 
         /// <summary>
@@ -216,118 +173,53 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <summary>
         /// Returns true if the given object is selected by this selector rule.
         /// </summary>
-        /// <param name="osmGeo"></param>
+        /// <param name="mapCSSObject"></param>
         /// <returns></returns>
-        internal override bool Selects(Osm.CompleteOsmGeo osmGeo)
+        internal override bool Selects(MapCSSObject mapCSSObject)
         {
-            if (osmGeo.Tags != null)
+            string tagValue;
+            if (mapCSSObject.TryGetValue(this.Tag, out tagValue))
             {
-                string tagValue;
-                if (osmGeo.Tags.TryGetValue(this.Tag, out tagValue))
+                double valueDouble;
+                double tagValueDouble;
+                switch (this.Comparator)
                 {
-                    double valueDouble;
-                    double tagValueDouble;
-                    switch (this.Comparator)
-                    {
-                        case SelectorRuleTagValueComparisonEnum.Equal:
-                            return tagValue == this.Value;
-                        case SelectorRuleTagValueComparisonEnum.NotEqual:
-                            return tagValue != this.Value;
-                        case SelectorRuleTagValueComparisonEnum.GreaterThan:
-                            if(double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
-                                (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
-                            {
-                                return tagValueDouble > valueDouble;
-                            }
-                            break;
-                        case SelectorRuleTagValueComparisonEnum.GreaterThanOrEqual:
-                            if(double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
-                                (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
-                            {
-                                return tagValueDouble >= valueDouble;
-                            }
-                            break;
-                        case SelectorRuleTagValueComparisonEnum.SmallerThan:
-                            if(double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
-                                (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
-                            {
-                                return tagValueDouble < valueDouble;
-                            }
-                            break;
-                        case SelectorRuleTagValueComparisonEnum.SmallerThanOrEqual:
-                            if(double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
-                                (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
-                            {
-                                return tagValueDouble <= valueDouble;
-                            }
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                    return osmGeo.Tags.ContainsKey(this.Tag);
+                    case SelectorRuleTagValueComparisonEnum.Equal:
+                        return tagValue == this.Value;
+                    case SelectorRuleTagValueComparisonEnum.NotEqual:
+                        return tagValue != this.Value;
+                    case SelectorRuleTagValueComparisonEnum.GreaterThan:
+                        if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                            (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                        {
+                            return tagValueDouble > valueDouble;
+                        }
+                        break;
+                    case SelectorRuleTagValueComparisonEnum.GreaterThanOrEqual:
+                        if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                            (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                        {
+                            return tagValueDouble >= valueDouble;
+                        }
+                        break;
+                    case SelectorRuleTagValueComparisonEnum.SmallerThan:
+                        if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                            (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                        {
+                            return tagValueDouble < valueDouble;
+                        }
+                        break;
+                    case SelectorRuleTagValueComparisonEnum.SmallerThanOrEqual:
+                        if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
+                            (double.TryParse(tagValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
+                        {
+                            return tagValueDouble <= valueDouble;
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Returns true if the given object is selected by this selector rule.
-        /// </summary>
-        /// <param name="osmGeo"></param>
-        /// <returns></returns>
-        internal override bool Selects(Geometry geometry)
-        {
-            if (geometry.Attributes != null)
-            {
-                object attributeObjectValue;
-                if (geometry.Attributes.TryGetValue(this.Tag, out attributeObjectValue))
-                {
-                    string attributeValue = string.Empty;
-                    if (attributeObjectValue is string)
-                    {
-                        attributeValue = attributeObjectValue as string;
-                    }
-                    double valueDouble;
-                    double tagValueDouble;
-                    switch (this.Comparator)
-                    {
-                        case SelectorRuleTagValueComparisonEnum.Equal:
-                            return attributeValue == this.Value;
-                        case SelectorRuleTagValueComparisonEnum.NotEqual:
-                            return attributeValue != this.Value;
-                        case SelectorRuleTagValueComparisonEnum.GreaterThan:
-                            if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
-                                (double.TryParse(attributeValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
-                            {
-                                return tagValueDouble > valueDouble;
-                            }
-                            break;
-                        case SelectorRuleTagValueComparisonEnum.GreaterThanOrEqual:
-                            if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
-                                (double.TryParse(attributeValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
-                            {
-                                return tagValueDouble >= valueDouble;
-                            }
-                            break;
-                        case SelectorRuleTagValueComparisonEnum.SmallerThan:
-                            if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
-                                (double.TryParse(attributeValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
-                            {
-                                return tagValueDouble < valueDouble;
-                            }
-                            break;
-                        case SelectorRuleTagValueComparisonEnum.SmallerThanOrEqual:
-                            if (double.TryParse(this.Value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out valueDouble) &&
-                                (double.TryParse(attributeValue, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out tagValueDouble)))
-                            {
-                                return tagValueDouble <= valueDouble;
-                            }
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                    return geometry.Attributes.ContainsKey(this.Tag);
-                }
+                return mapCSSObject.ContainsKey(this.Tag);
             }
             return false;
         }

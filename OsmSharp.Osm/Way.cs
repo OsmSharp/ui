@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm
 {
@@ -61,6 +62,22 @@ namespace OsmSharp.Osm
             Way way = new Way();
             way.Id = id;
             way.Nodes = new List<long>(nodes);
+            return way;
+        }
+
+        /// <summary>
+        /// Creates a new way.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="nodes"></param>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public static Way Create(long id, TagsCollection tags, params long[] nodes)
+        {
+            Way way = new Way();
+            way.Id = id;
+            way.Nodes = new List<long>(nodes);
+            way.Tags = tags;
             return way;
         }
     }

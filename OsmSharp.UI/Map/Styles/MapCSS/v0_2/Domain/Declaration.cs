@@ -38,25 +38,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public TValue Eval(TagsCollection tags)
-        {
-            if (!string.IsNullOrWhiteSpace(this.EvalFunction))
-            { // parse and execute the eval function.
-                //throw new NotImplementedException();
-                return default(TValue);
-            }
-            else
-            { // return the regular value.
-                return this.Value;
-            }
-        }
-
-        /// <summary>
-        /// Evalues the value in this declaration or returns the regular value when there is no eval function.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
-        public TValue Eval(GeometryAttributeCollection tags)
+        public TValue Eval(MapCSSObject mapCSSObject)
         {
             if (!string.IsNullOrWhiteSpace(this.EvalFunction))
             { // parse and execute the eval function.

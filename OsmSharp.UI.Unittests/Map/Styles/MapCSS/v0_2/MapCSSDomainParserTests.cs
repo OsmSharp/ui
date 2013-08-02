@@ -23,6 +23,7 @@ using NUnit.Framework;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 using OsmSharp.Collections.Tags;
+using OsmSharp.UI.Map.Styles.MapCSS;
 
 namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 {
@@ -81,7 +82,7 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 
             // instantiate color.
             var simpleColor = new SimpleColor();
-            simpleColor.Value = declarationInt.Eval((TagsCollection)null);
+            simpleColor.Value = declarationInt.Eval((MapCSSObject)null);
             Assert.AreEqual("#FFFFFF", simpleColor.HexRgb);
         }
 
@@ -149,7 +150,7 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 
             // instantiate color.
             var simpleColor = new SimpleColor();
-            simpleColor.Value = declarationInt.Eval((TagsCollection)null);
+            simpleColor.Value = declarationInt.Eval((MapCSSObject)null);
             Assert.AreEqual("#665555", simpleColor.HexRgb);
         }
 
@@ -182,7 +183,7 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 
             // instantiate color.
             var simpleColor = new SimpleColor();
-            simpleColor.Value = declarationInt.Eval((TagsCollection)null);
+            simpleColor.Value = declarationInt.Eval((MapCSSObject)null);
             Assert.AreEqual("#00FF00", simpleColor.HexRgb);
         }
 

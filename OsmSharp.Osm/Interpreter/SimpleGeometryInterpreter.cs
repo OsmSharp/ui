@@ -423,7 +423,7 @@ namespace OsmSharp.Osm.Interpreter
                         if (assignedFlags[idx])
                         { // yep, way was assigned!
                             nodes.AddRange(nextNodes);
-                            if (nextNodes[nextNodes.Count - 1].Id == nodes[0].Id)
+                            if (nodes[nodes.Count - 1].Id == nodes[0].Id)
                             { // yes! a closed ring was found!
                                 return true;
                             }

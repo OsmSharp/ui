@@ -32,6 +32,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.Y = y;
             this.Text = text;
             this.Size = size;
+            this.Color = color;
 
             this.MinZoom = float.MinValue;
             this.MaxZoom = float.MaxValue;
@@ -52,6 +53,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives
             this.Y = y;
             this.Text = text;
             this.Size = size;
+            this.Color = color;
             this.HaloColor = haloColor;
             this.HaloRadius = haloRadius;
 
