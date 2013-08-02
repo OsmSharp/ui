@@ -80,7 +80,6 @@ namespace OsmSharp.Math.Primitives
             _is_segment2 = is_segment;
         }
 
-
         /// <summary>
         /// Creates a new line.
         /// </summary>
@@ -98,6 +97,38 @@ namespace OsmSharp.Math.Primitives
             _is_segment2 = is_segment2;
         }
 
+        /// <summary>
+        /// Creates a new line.
+        /// </summary>
+        /// <param name="xa"></param>
+        /// <param name="ya"></param>
+        /// <param name="xb"></param>
+        /// <param name="yb"></param>
+        public LineF2D(double xa, double ya, double xb, double yb)
+            : this(new PointF2D(xa, ya), new PointF2D(xb, yb)) { }
+        
+        /// <summary>
+        /// Creates a new line.
+        /// </summary>
+        /// <param name="xa"></param>
+        /// <param name="ya"></param>
+        /// <param name="xb"></param>
+        /// <param name="yb"></param>
+        /// <param name="is_segment"></param>
+        public LineF2D(double xa, double ya, double xb, double yb, bool is_segment)
+            : this(new PointF2D(xa, ya), new PointF2D(xb, yb), is_segment) { }
+
+        /// <summary>
+        /// Creates a new line.
+        /// </summary>
+        /// <param name="xa"></param>
+        /// <param name="ya"></param>
+        /// <param name="xb"></param>
+        /// <param name="yb"></param>
+        /// <param name="is_segment1"></param>
+        /// <param name="is_segment2"></param>
+        public LineF2D(double xa, double ya, double xb, double yb, bool is_segment1, bool is_segment2)
+            : this(new PointF2D(xa, ya), new PointF2D(xb, yb), is_segment1, is_segment2) { }
 
         #endregion
 
@@ -378,14 +409,75 @@ namespace OsmSharp.Math.Primitives
                     point1 = temp;
                 }
 
+                // this line is a segment.
+                if (do_segment && (this.IsSegment1 || this.IsSegment2))
+                { // test where the intersection lies.
+                    double this_distance =
+                        this.Point1.Distance(this.Point2);
+                    if (this.IsSegment)
+                    { // if in any directions one of the points are further away from the point.
+                        double this_distance_1 = System.Math.Min(this.Point1.Distance(point1.Value),
+                            this.Point1.Distance(point2.Value));
+                        if (this_distance_1 > this_distance)
+                        { // the point is further away.
+                            return null;
+                        }
+                    }
+                    else if (this.IsSegment1)
+                    { // if in any directions one of the points are further away from the point.
+                        double this_distance_1 = this.Point1.Distance(point1.Value);
+                        if (this_distance_1 > this_distance)
+                        { // the point is further away.
+                            return null;
+                        }
+                    }
+                    else if (this.IsSegment2)
+                    { // if in any directions one of the points are further away from the point.
+                        double this_distance_2 = this.Point2.Distance(point1.Value);
+                        if (this_distance_2 > this_distance)
+                        { // the point is further away.
+                            return null;
+                        }
+                    }
+                }
+                // other line is a segment.
+                if (do_segment && (line.IsSegment1 || line.IsSegment2))
+                { // test where the intersection lies.
+                    double this_distance =
+                        line.Point1.Distance(line.Point2);
+                    if (line.IsSegment)
+                    {// if in any directions one of the points are further away from the point.
+                        double this_distance_1 = System.Math.Min(line.Point1.Distance(point1.Value),
+                            line.Point1.Distance(point2.Value));
+                        if (this_distance_1 > this_distance)
+                        { // the point is further away.
+                            return null;
+                        }
+                    }
+                    else if (line.IsSegment1)
+                    { // if in any directions one of the points are further away from the point.
+                        double this_distance_1 = line.Point1.Distance(point1.Value);
+                        if (this_distance_1 > this_distance)
+                        { // the point is further away.
+                            return null;
+                        }
+                    }
+                    else if (line.IsSegment2)
+                    { // if in any directions one of the points are further away from the point.
+                        double this_distance_2 = line.Point2.Distance(point2.Value);
+                        if (this_distance_2 > this_distance)
+                        { // the point is further away.
+                            return null;
+                        }
+                    }
+                }
                 return new LineF2D(
                     point1.Value,
                     point2.Value,
                     true);
             }
             else
-            {
-                // line.A = A1, line.B = B1, line.C = C1, this.A = A2, this.B = B2, this.C = C2
+            { // line.A = A1, line.B = B1, line.C = C1, this.A = A2, this.B = B2, this.C = C2
                 double det = (line.A * this.B - this.A * line.B);
                 if (det == 0) // TODO: implement an accuracy threshold epsilon.
                 { // lines are parallel; no intersections.
@@ -400,46 +492,48 @@ namespace OsmSharp.Math.Primitives
                     PointF2D point = new PointF2D(new double[]{x, y});
 
                     // this line is a segment.
-                    if (do_segment && this.IsSegment)
+                    if (do_segment && (this.IsSegment1 || this.IsSegment2))
                     { // test where the intersection lies.
                         double this_distance =
                             this.Point1.Distance(this.Point2);
-
-                        // if in any directions one of the points are further away from the point.
-                        double this_distance_1 = this.Point1.Distance(point);
-                        if (this_distance_1 > this_distance)
-                        { // the point is further away.
-                            return null;
+                        if (this.IsSegment1)
+                        { // if in any directions one of the points are further away from the point.
+                            double this_distance_1 = this.Point1.Distance(point);
+                            if (this_distance_1 > this_distance)
+                            { // the point is further away.
+                                return null;
+                            }
                         }
-
-                        // if in any directions one of the points are further away from the point.
-                        double this_distance_2 = this.Point2.Distance(point);
-                        if (this_distance_2 > this_distance)
-                        { // the point is further away.
-                            return null;
-                        }                        
+                        if (this.IsSegment1)
+                        { // if in any directions one of the points are further away from the point.
+                            double this_distance_2 = this.Point2.Distance(point);
+                            if (this_distance_2 > this_distance)
+                            { // the point is further away.
+                                return null;
+                            }
+                        }
                     }
-
-                    // TODO: implement partial segment.
                     // other line is a segment.
-                    if (do_segment && line.IsSegment)
+                    if (do_segment && (line.IsSegment1 || line.IsSegment2))
                     { // test where the intersection lies.
                         double this_distance =
                             line.Point1.Distance(line.Point2);
-
-                        // if in any directions one of the points are further away from the point.
-                        double this_distance_1 = line.Point1.Distance(point);
-                        if (this_distance_1 > this_distance)
-                        { // the point is further away.
-                            return null;
+                        if (this.IsSegment1)
+                        { // if in any directions one of the points are further away from the point.
+                            double this_distance_1 = line.Point1.Distance(point);
+                            if (this_distance_1 > this_distance)
+                            { // the point is further away.
+                                return null;
+                            }
                         }
-
-                        // if in any directions one of the points are further away from the point.
-                        double this_distance_2 = line.Point2.Distance(point);
-                        if (this_distance_2 > this_distance)
-                        { // the point is further away.
-                            return null;
-                        }     
+                        if (this.IsSegment2)
+                        { // if in any directions one of the points are further away from the point.
+                            double this_distance_2 = line.Point2.Distance(point);
+                            if (this_distance_2 > this_distance)
+                            { // the point is further away.
+                                return null;
+                            }
+                        }
                     }
 
                     // the intersection is valid.

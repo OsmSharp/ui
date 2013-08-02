@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Units.Distance;
 using OsmSharp.Units.Angle;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Math.Geo
 {

@@ -1,6 +1,7 @@
 using System;
 using NUnit.Framework;
 using OsmSharp.Math;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UnitTests.Math.Algorithms
 {

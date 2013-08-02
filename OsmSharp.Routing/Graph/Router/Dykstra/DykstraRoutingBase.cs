@@ -24,6 +24,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Routing.Graph.Router.Dykstra
 {

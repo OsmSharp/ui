@@ -28,6 +28,7 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Math;
 using OsmSharp.Collections.PriorityQueues;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Routing.CH
 {

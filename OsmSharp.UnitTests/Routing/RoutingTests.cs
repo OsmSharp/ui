@@ -27,6 +27,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Math;
 using OsmSharp.Routing.Routers;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UnitTests.Routing
 {

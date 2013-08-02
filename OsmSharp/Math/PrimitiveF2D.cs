@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Math.Primitives;
 
-namespace OsmSharp.Math
+namespace OsmSharp.Math.Primitives
 {
     /// <summary>
     /// An abstract class serving as the base-type for all primitives.

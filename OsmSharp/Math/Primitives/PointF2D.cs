@@ -17,8 +17,9 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Globalization;
 
-namespace OsmSharp.Math
+namespace OsmSharp.Math.Primitives
 {
     /// <summary>
     /// Represents a point in 2 dimensions.
@@ -170,6 +171,17 @@ namespace OsmSharp.Math
 
         #endregion
 
+        /// <summary>
+        /// Returns a description of this point.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("Point[{0},{1}]",
+                _values[0].ToString(CultureInfo.InvariantCulture),
+                _values[1].ToString(CultureInfo.InvariantCulture));
+        }
+
         #region Equals/GetHashCode
 
         /// <summary>
@@ -181,18 +193,18 @@ namespace OsmSharp.Math
         {
             if (obj is PointF2D)
             {
-                return this == (obj as PointF2D);
+                return this._values[0] == (obj as PointF2D)[0] &&
+                    this._values[1] == (obj as PointF2D)[1];
             }
             return false;
         }
 
         /// <summary>
-        /// Returns a unique hascode for this point.
+        /// Returns a unique hashcode for this point.
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()
         {
-            // this is possible because a point is immutable.
             return "point".GetHashCode() ^ this[0].GetHashCode() ^ this[1].GetHashCode();
         }
 
