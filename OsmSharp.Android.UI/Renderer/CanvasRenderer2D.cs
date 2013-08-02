@@ -16,8 +16,8 @@ using OsmSharp.UI.Renderer.Scene2DPrimitives;
 using System.IO;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math;
-using OsmSharp.Math.Units.Angle;
 using Android.Graphics;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Android.UI
 {

@@ -147,6 +147,7 @@
     <Compile Include="Streams\OsmStreamTarget.cs" />
     <Compile Include="Streams\OsmStreamTargetEmpty.cs" />
     <Compile Include="Streams\OsmStreamTargetOsmGeo.cs" />
+    <Compile Include="TagExtensions.cs" />
     <Compile Include="Tiles\Tile.cs" />
     <Compile Include="Tiles\TileRange.cs" />
     <Compile Include="Way.cs" />

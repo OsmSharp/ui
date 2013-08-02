@@ -236,17 +236,6 @@
     <Compile Include="Math\TSP\RandomizedArbitraryInsertion\RandomizedArbitraryInsertionSolver.cs" />
     <Compile Include="Math\TSP\Random\RandomSolver.cs" />
     <Compile Include="Math\TSP\SolverBase.cs" />
-    <Compile Include="Math\Units\Angle\Degree.cs" />
-    <Compile Include="Math\Units\Angle\Radian.cs" />
-    <Compile Include="Math\Units\Distance\Kilometer.cs" />
-    <Compile Include="Math\Units\Distance\Meter.cs" />
-    <Compile Include="Math\Units\Speed\KilometerPerHour.cs" />
-    <Compile Include="Math\Units\Speed\MeterPerSecond.cs" />
-    <Compile Include="Math\Units\Time\Hour.cs" />
-    <Compile Include="Math\Units\Time\Second.cs" />
-    <Compile Include="Math\Units\Unit.cs" />
-    <Compile Include="Math\Units\Weight\Gram.cs" />
-    <Compile Include="Math\Units\Weight\Kilogram.cs" />
     <Compile Include="Math\VectorF2D.cs" />
     <Compile Include="Math\VRP\Core\BestPlacement\CheapestInsertionHelper.cs" />
     <Compile Include="Math\VRP\Core\BestPlacement\CheapestInsertionResult.cs" />
@@ -312,6 +301,20 @@
     <Compile Include="Progress\ProgressStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
+    <Compile Include="Units\Angle\Degree.cs" />
+    <Compile Include="Units\Angle\Radian.cs" />
+    <Compile Include="Units\Distance\Kilometer.cs" />
+    <Compile Include="Units\Distance\Meter.cs" />
+    <Compile Include="Units\Speed\KilometerPerHour.cs" />
+    <Compile Include="Units\Speed\Knots.cs" />
+    <Compile Include="Units\Speed\MeterPerSecond.cs" />
+    <Compile Include="Units\Speed\MilesPerHour.cs" />
+    <Compile Include="Units\Speed\Speed.cs" />
+    <Compile Include="Units\Time\Hour.cs" />
+    <Compile Include="Units\Time\Second.cs" />
+    <Compile Include="Units\Unit.cs" />
+    <Compile Include="Units\Weight\Gram.cs" />
+    <Compile Include="Units\Weight\Kilogram.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
