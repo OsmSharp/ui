@@ -179,9 +179,14 @@ namespace OsmSharp.Osm.Interpreter
                 OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", System.Diagnostics.TraceEventType.Error,
                     "Ring assignment failed: invalid multipolygon relation detected!");
             }
-
             // group the rings and create a multipolygon.
-            return this.GroupRings(rings);
+            geometry = this.GroupRings(rings);
+            if (geometry != null)
+            {
+                // assign attributes.
+                geometry.Attributes = new SimpleGeometryAttributeCollection(relation.Tags);
+            }
+            return geometry;
         }
 
         /// <summary>
@@ -204,7 +209,7 @@ namespace OsmSharp.Osm.Interpreter
             }
             bool[] used = new bool[rings.Count];
             MultiPolygon multiPolygon = null;
-            while (rings.Count > 0)
+            while (used.Contains(false))
             { // select a ring not contained by any other.
                 LineairRing outer = null;
                 int outerIdx = -1;
@@ -238,8 +243,8 @@ namespace OsmSharp.Osm.Interpreter
                     }
 
                     bool unused = !used.Contains(false);
-                    if (multiPolygon == null && 
-                        inners.Count == 0 && 
+                    if (multiPolygon == null &&
+                        inners.Count == 0 &&
                         unused)
                     { // there is just one lineair ring.
                         geometry = outer;
@@ -255,7 +260,6 @@ namespace OsmSharp.Osm.Interpreter
                     }
                     else
                     { // there have to be other polygons.
-                        if (multiPolygon != null)
                         {
                             multiPolygon = new MultiPolygon();
                             geometry = multiPolygon;
@@ -265,12 +269,18 @@ namespace OsmSharp.Osm.Interpreter
                         multiPolygon.Add(polygon);
                     }
                 }
+                else
+                { // unused rings left but they cannot be designated as 'outer'.
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", System.Diagnostics.TraceEventType.Error,
+                        "Invalid multipolygon relation: Unassigned rings left.");
+                    break;
+                }
             }
             return geometry;
         }
 
         /// <summary>
-        /// Checks if a ring is not contained by any other ring.
+        /// Checks if a ring is not contained by any other unused ring.
         /// </summary>
         /// <param name="rings"></param>
         /// <param name="containsFlags"></param>
@@ -282,7 +292,7 @@ namespace OsmSharp.Osm.Interpreter
         {
             for (int idx = 0; idx < rings.Count; idx++)
             {
-                if (idx != ringIdx && containsFlags[idx][ringIdx])
+                if (idx != ringIdx && !used[idx] && containsFlags[idx][ringIdx])
                 { // oeps: the ring at index 'ringIdx' is contained inside another.
                     return false;
                 }
