@@ -401,6 +401,36 @@ namespace OsmSharp.Math
 
         #endregion
 
+        #region Comparison Methods
+
+        /// <summary>
+        /// Compares the two vectors just based on their direction.
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool CompareNormalized(VectorF2D other)
+        { // be a sensitive as possible.
+            return this.CompareNormalized(other, 0);
+        }
+
+        /// <summary>
+        /// Compares the two vectors just based on their direction.
+        /// </summary>
+        /// <param name="other">The other vector to compare to.</param>
+        /// <param name="epsilon">The tolerance on the total difference between the normalized vectors.</param>
+        /// <returns></returns>
+        public bool CompareNormalized(VectorF2D other, double epsilon)
+        {
+            VectorF2D normalizedThis = this.Normalize();
+            VectorF2D normalizedOther = other.Normalize();
+
+            double difference = System.Math.Abs(normalizedThis[0] - normalizedOther[0]) +
+                System.Math.Abs(normalizedThis[1] - normalizedOther[1]);
+            return difference < epsilon;
+        }
+
+        #endregion
+
         #region Equals/GetHashCode
 
         /// <summary>
@@ -428,5 +458,6 @@ namespace OsmSharp.Math
         }
 
         #endregion
+
     }
 }

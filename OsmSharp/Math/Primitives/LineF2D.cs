@@ -37,7 +37,7 @@ namespace OsmSharp.Math.Primitives
         private PointF2D _b;
 
         /// <summary>
-        /// The direction of this line.
+        /// The direction of this line from point1 -> point2.
         /// </summary>
         private VectorF2D _dir;
 
@@ -157,7 +157,7 @@ namespace OsmSharp.Math.Primitives
         }
 
         /// <summary>
-        /// Returns the direction of this line.
+        /// Returns the direction of this line (point1 -> point2).
         /// </summary>
         public VectorF2D Direction
         {
@@ -496,41 +496,71 @@ namespace OsmSharp.Math.Primitives
                     { // test where the intersection lies.
                         double this_distance =
                             this.Point1.Distance(this.Point2);
-                        if (this.IsSegment1)
-                        { // if in any directions one of the points are further away from the point.
+                        if (this.IsSegment)
+                        {// if in any directions one of the points are further away from the point.
                             double this_distance_1 = this.Point1.Distance(point);
                             if (this_distance_1 > this_distance)
                             { // the point is further away.
                                 return null;
                             }
-                        }
-                        if (this.IsSegment1)
-                        { // if in any directions one of the points are further away from the point.
                             double this_distance_2 = this.Point2.Distance(point);
                             if (this_distance_2 > this_distance)
                             { // the point is further away.
                                 return null;
                             }
                         }
+                        else if (this.IsSegment1 && this.Point2.Distance(point) > this_distance)
+                        { // only check this direction and only if the points lies far enough away from point2.
+                            VectorF2D pointDirection = point - this.Point2;
+                            VectorF2D point2ToPoint1 = this.Direction.Inverse;
+                            if (pointDirection.CompareNormalized(point2ToPoint1, 0.001))
+                            { // point lies in the direction of the segmented point1 and far away from point2
+                                return null;
+                            }
+                        }
+                        else if (this.IsSegment1 && this.Point1.Distance(point) > this_distance)
+                        { // only check this direction and only if the points lies far enough away from point1.
+                            VectorF2D pointDirection = point - this.Point1;
+                            VectorF2D point1ToPoint2 = this.Direction;
+                            if (pointDirection.CompareNormalized(point1ToPoint2, 0.001))
+                            { // point lies in the direction of the segmented point1 and far away from point2
+                                return null;
+                            }
+                        }
                     }
-                    // other line is a segment.
+                    // line this is a segment.
                     if (do_segment && (line.IsSegment1 || line.IsSegment2))
                     { // test where the intersection lies.
-                        double this_distance =
+                        double line_distance =
                             line.Point1.Distance(line.Point2);
-                        if (this.IsSegment1)
-                        { // if in any directions one of the points are further away from the point.
-                            double this_distance_1 = line.Point1.Distance(point);
-                            if (this_distance_1 > this_distance)
+                        if (line.IsSegment)
+                        {// if in any directions one of the points are further away from the point.
+                            double line_distance_1 = line.Point1.Distance(point);
+                            if (line_distance_1 > line_distance)
+                            { // the point is further away.
+                                return null;
+                            }
+                            double line_distance_2 = line.Point2.Distance(point);
+                            if (line_distance_2 > line_distance)
                             { // the point is further away.
                                 return null;
                             }
                         }
-                        if (this.IsSegment2)
-                        { // if in any directions one of the points are further away from the point.
-                            double this_distance_2 = line.Point2.Distance(point);
-                            if (this_distance_2 > this_distance)
-                            { // the point is further away.
+                        else if (line.IsSegment1 && line.Point2.Distance(point) > line_distance)
+                        { // only check line direction and only if the points lies far enough away from point2.
+                            VectorF2D pointDirection = point - line.Point2;
+                            VectorF2D point2ToPoint1 = line.Direction.Inverse;
+                            if (pointDirection.CompareNormalized(point2ToPoint1, 0.001))
+                            { // point lies in the direction of the segmented point1 and far away from point2
+                                return null;
+                            }
+                        }
+                        else if (line.IsSegment1 && line.Point1.Distance(point) > line_distance)
+                        { // only check line direction and only if the points lies far enough away from point1.
+                            VectorF2D pointDirection = point - line.Point1;
+                            VectorF2D point1ToPoint2 = line.Direction;
+                            if (pointDirection.CompareNormalized(point1ToPoint2, 0.001))
+                            { // point lies in the direction of the segmented point1 and far away from point2
                                 return null;
                             }
                         }
@@ -595,6 +625,19 @@ namespace OsmSharp.Math.Primitives
         #endregion
 
         #endregion
+
+        /// <summary>
+        /// Returns a description of this line.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("Line{0}{1},{2}{3}",
+                this.IsSegment1 ? "[" : "]",
+                this.Point1.ToString(),
+                this.Point2.ToString(),
+                this.IsSegment2 ? "]" : "[");
+        }
     }
 
     /// <summary>

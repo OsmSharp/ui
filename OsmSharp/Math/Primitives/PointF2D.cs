@@ -177,7 +177,7 @@ namespace OsmSharp.Math.Primitives
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("Point[{0},{1}]",
+            return string.Format("Point({0},{1})",
                 _values[0].ToString(CultureInfo.InvariantCulture),
                 _values[1].ToString(CultureInfo.InvariantCulture));
         }

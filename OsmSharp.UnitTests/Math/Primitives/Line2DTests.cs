@@ -32,7 +32,6 @@ namespace OsmSharp.UnitTests.Math.Primitives
     [TestFixture]
     public class Line2DTests
     {
-
         /// <summary>
         /// Tests if the line position test is correct.
         /// </summary>
@@ -269,6 +268,17 @@ namespace OsmSharp.UnitTests.Math.Primitives
             Assert.IsNull(primitive);
             primitive = segment3.Intersection(segment8);
             Assert.IsNull(primitive);
+
+            LineF2D segment11 = new LineF2D(-1, 1, 0, 1, true, false);
+            LineF2D segment12 = new LineF2D(0, 3, 3, 0, true, true);
+            primitive = segment11.Intersection(segment12);
+            Assert.IsNotNull(primitive);
+            Assert.IsInstanceOf<PointF2D>(primitive);
+            Assert.AreEqual(new PointF2D(2, 1), primitive as PointF2D);
+            primitive = segment12.Intersection(segment11);
+            Assert.IsNotNull(primitive);
+            Assert.IsInstanceOf<PointF2D>(primitive);
+            Assert.AreEqual(new PointF2D(2, 1), primitive as PointF2D);
         }
     }
 }
