@@ -80,12 +80,14 @@ namespace OsmSharp.Geo.Geometries
                 { // the given point is one of the corners.
                     return true;
                 }
-                bool idxRight = this.Coordinates[idx].Longitude >= coordinate.Longitude;
-                bool idx1Right = this.Coordinates[idx + 1].Longitude >= coordinate.Longitude;
+                bool idxRight = this.Coordinates[idx].Longitude > coordinate.Longitude;
+                bool idx1Right = this.Coordinates[idx + 1].Longitude > coordinate.Longitude;
                 if (idxRight || idx1Right)
                 { // at least on of the coordinates is to the right of the point to calculate for.
-                    if (this.Coordinates[idx].Latitude <= coordinate.Latitude &&
-                        this.Coordinates[idx + 1].Latitude >= coordinate.Latitude)
+                    if ((this.Coordinates[idx].Latitude <= coordinate.Latitude &&
+                        this.Coordinates[idx + 1].Latitude >= coordinate.Latitude) && 
+                        !(this.Coordinates[idx].Latitude == coordinate.Latitude &&
+                        this.Coordinates[idx + 1].Latitude == coordinate.Latitude))
                     { // idx is lower than idx+1
                         if (idxRight && idx1Right)
                         { // no need for the left/right algorithm the result is already known.
@@ -100,8 +102,10 @@ namespace OsmSharp.Geo.Geometries
                             }
                         }
                     }
-                    else if (this.Coordinates[idx].Latitude >= coordinate.Latitude &&
-                        this.Coordinates[idx + 1].Latitude <= coordinate.Latitude)
+                    else if ((this.Coordinates[idx].Latitude >= coordinate.Latitude &&
+                        this.Coordinates[idx + 1].Latitude <= coordinate.Latitude) &&
+                        !(this.Coordinates[idx].Latitude == coordinate.Latitude &&
+                        this.Coordinates[idx + 1].Latitude == coordinate.Latitude))
                     { // idx is higher than idx+1
                         if (idxRight && idx1Right)
                         { // no need for the left/right algorithm the result is already known.

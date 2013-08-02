@@ -143,6 +143,7 @@
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndexTests.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeStreamIndexTests.cs" />
     <Compile Include="Geo\Geometries\LineairRingTests.cs" />
+    <Compile Include="Geo\Geometries\PolygonTests.cs" />
     <Compile Include="Geo\IO\Gpx\GpxGeometryTests.cs" />
     <Compile Include="Geo\IO\Kml\KmlGeometryTests.cs" />
     <Compile Include="IO\ByteCache\ByteCacheTests.cs" />

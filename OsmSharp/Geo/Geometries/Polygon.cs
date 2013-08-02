@@ -93,6 +93,73 @@ namespace OsmSharp.Geo.Geometries
         }
 
         /// <summary>
+        /// Returns true if the point is inside this polygon.
+        /// </summary>
+        /// <param name="point"></param>
+        /// <returns></returns>
+        public bool Contains(GeoCoordinate point)
+        {
+            if (this.Ring.Contains(point))
+            {
+                foreach (LineairRing hole in this.Holes)
+                {
+                    if (hole.Contains(point))
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the given ring is contained in this polygon.
+        /// </summary>
+        /// <param name="lineairRing"></param>
+        /// <returns></returns>
+        public bool Contains(LineairRing lineairRing)
+        {
+            // check if all points are inside this polygon.
+            foreach (var coordinate in lineairRing.Coordinates)
+            {
+                if (!this.Contains(coordinate))
+                { // a coordinate ouside of this ring can never be part of a contained inner ring.
+                    return false;
+                }
+            }
+            // check if none of the points of this ring are inside the other ring.
+            foreach (var coordinate in this.Ring.Coordinates)
+            {
+                if (lineairRing.Contains(coordinate))
+                { // a coordinate ouside of this ring can never be part of a contained inner ring.
+                    return false;
+                }
+            }
+            foreach (LineairRing hole in this.Holes)
+            {
+                foreach (var coordinate in hole.Coordinates)
+                {
+                    if (lineairRing.Contains(coordinate))
+                    { // a coordinate ouside of this ring can never be part of a contained inner ring.
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if the given polygon is contained in this polygon.
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <returns></returns>
+        public bool Contains(Polygon polygon)
+        {
+            return this.Contains(polygon);
+        }
+
+        /// <summary>
         /// Returns true if this polygon is inside the given bounding box.
         /// </summary>
         /// <param name="box"></param>

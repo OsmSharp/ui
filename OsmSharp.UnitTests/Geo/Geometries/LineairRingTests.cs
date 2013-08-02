@@ -53,6 +53,10 @@ namespace OsmSharp.UnitTests.Geo.Geometries
             Assert.IsFalse(ring.Contains(coordinate));
             coordinate = new GeoCoordinate(-1, 1);
             Assert.IsFalse(ring.Contains(coordinate));
+            coordinate = new GeoCoordinate(0, 1);
+            Assert.IsTrue(ring.Contains(coordinate));
+            coordinate = new GeoCoordinate(1, 0);
+            Assert.IsTrue(ring.Contains(coordinate));
         }
 
         /// <summary>
