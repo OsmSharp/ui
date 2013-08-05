@@ -27,6 +27,7 @@ using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene2DPrimitives;
+using OsmSharp.Math.Algorithms;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {

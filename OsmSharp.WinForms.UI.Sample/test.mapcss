@@ -49,7 +49,7 @@ area[waterway=riverbank], area[waterway=dock]	{ fill-color: #00D6E6;  fill-opaci
 way[highway]		{ text: name; text-color: black; font-size: 14; text-position: line; text-halo-color: white; text-halo-radius: 1; }
 
 /* widths per zoom-level */
-way|z-14[highway]	{ width: 1; color: gray; }
+way|z-13[highway]	{ width: 1; color: gray; }
 way|z14[highway]	{ width: 3; }
 way|z15-16[highway] { width: 5; }
 way|z17-20[highway] { width: 10; }
@@ -57,9 +57,9 @@ way|z17-20[highway] { width: 10; }
 /* colors and styles per highway type. */
 way[highway=motorway],way[highway=motorway_link],
 way[highway=trunk],way[highway=trunk_link],
-way[highway=primary],way[highway=primary_link]				{ color: red; casing-color: gray; casing-width: 1; z-index: 6; }
-way[highway=secondary],way[highway=secondary_link]		{ color: orange; casing-color: gray; casing-width: 1; z-index: 5; }
-way[highway=tertiary],way[highway=tertiary_link]		{ color: orange; casing-color: gray; casing-width: 1; z-index: 5; }
+way[highway=primary],way[highway=primary_link]				{ color: red;	 casing-color: gray; casing-width: 1; z-index: 6; }
+way[highway=secondary],way[highway=secondary_link]			{ color: orange; casing-color: gray; casing-width: 1; z-index: 5; }
+way[highway=tertiary],way[highway=tertiary_link]			{ color: orange; casing-color: gray; casing-width: 1; z-index: 5; }
 way|z14-[highway=residential],way[highway=service],
 way|z14-[highway=road],way|z14-[highway=living_street],
 way|z14-[highway=unclassified]								{ color: white; casing-color: gray; casing-width: 1; z-index: 4; }
