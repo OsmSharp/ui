@@ -140,6 +140,10 @@
     <Compile Include="Collections\DictionaryWithEvents.cs" />
     <Compile Include="Collections\HugeDictionary.cs" />
     <Compile Include="Collections\LimitedStack.cs" />
+    <Compile Include="Collections\LongIndex\ILongIndexNode.cs" />
+    <Compile Include="Collections\LongIndex\LongIndex.cs" />
+    <Compile Include="Collections\LongIndex\LongIndexLeaf.cs" />
+    <Compile Include="Collections\LongIndex\LongIndexNode.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeap.cs" />
     <Compile Include="Collections\PriorityQueues\IPriorityQueue.cs" />
     <Compile Include="Collections\SortedSet.cs" />

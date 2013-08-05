@@ -52,6 +52,10 @@
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Collections\HugeDictionary.cs" />
+    <Compile Include="Collections\LongIndex\ILongIndexNode.cs" />
+    <Compile Include="Collections\LongIndex\LongIndex.cs" />
+    <Compile Include="Collections\LongIndex\LongIndexLeaf.cs" />
+    <Compile Include="Collections\LongIndex\LongIndexNode.cs" />
     <Compile Include="Collections\Tags\ITagsIndex.cs" />
     <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
     <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />

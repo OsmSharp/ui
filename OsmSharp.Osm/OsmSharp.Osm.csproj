@@ -244,10 +244,6 @@
     <Compile Include="Streams\ChangeSets\Filters\BoundingBox\DataProcessorChangeSetFilterBoundingBox.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterBoundingBox.cs" />
     <Compile Include="Streams\ChangeSets\Filters\BoundingBox\IChangeSetFilterListener.cs" />
-    <Compile Include="Streams\Filters\LongIndex\ILongIndexNode.cs" />
-    <Compile Include="Streams\Filters\LongIndex\LongIndex.cs" />
-    <Compile Include="Streams\Filters\LongIndex\LongIndexLeaf.cs" />
-    <Compile Include="Streams\Filters\LongIndex\LongIndexNode.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterWithEvents.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterSort.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterTags.cs" />

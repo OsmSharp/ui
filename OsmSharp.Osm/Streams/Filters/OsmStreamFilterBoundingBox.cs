@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
+using OsmSharp.Collections.LongIndex.LongIndex;
 
 namespace OsmSharp.Osm.Data.Streams.Filters
 {
@@ -46,8 +47,8 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         /// <summary>
         /// An index of the actual nodes inside the bounding box.
         /// </summary>
-        private readonly Streams.Filters.LongIndex.LongIndex _nodesIn = 
-            new Streams.Filters.LongIndex.LongIndex();
+        private readonly LongIndex _nodesIn = 
+            new  LongIndex();
 
         /// <summary>
         /// An index of the actual ways inside the bounding box.
@@ -62,8 +63,8 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         /// <summary>
         /// An index of extra nodes to include.
         /// </summary>
-        private readonly Streams.Filters.LongIndex.LongIndex _nodesToInclude = 
-            new Streams.Filters.LongIndex.LongIndex();
+        private readonly LongIndex _nodesToInclude = 
+            new LongIndex();
 
         /// <summary>
         /// An index of extra ways to include.

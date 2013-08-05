@@ -18,7 +18,7 @@
 
 using System;
 
-namespace OsmSharp.Osm.Data.Streams.Filters.LongIndex
+namespace OsmSharp.Collections.LongIndex.LongIndex
 {
     internal class LongIndexLeaf : ILongIndexNode
     {

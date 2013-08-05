@@ -21,7 +21,6 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
-using OsmSharp.Osm.Data.Streams.Filters.LongIndex;
 
 namespace OsmSharp.UI.Map.Layers
 {

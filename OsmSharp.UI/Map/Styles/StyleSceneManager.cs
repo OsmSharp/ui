@@ -21,10 +21,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.UI.Renderer;
-using OsmSharp.Osm.Data.Streams.Filters.LongIndex;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data;
 using OsmSharp.Math.Geo;
+using OsmSharp.Collections.LongIndex.LongIndex;
 
 namespace OsmSharp.UI.Map.Styles
 {
