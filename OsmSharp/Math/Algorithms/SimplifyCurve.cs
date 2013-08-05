@@ -20,7 +20,7 @@ using System;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math;
 
-namespace OsmSharp
+namespace OsmSharp.Math.Algorithms
 {
 	/// <summary>
 	/// Contains an algorithm to simplify a curve based on the Ramer–Douglas–Peucker algorithm.

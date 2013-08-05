@@ -1,7 +1,26 @@
+// OsmSharp - OpenStreetMap tools & library.
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using NUnit.Framework;
 using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
+using OsmSharp.Math.Algorithms;
 
 namespace OsmSharp.UnitTests.Math.Algorithms
 {
@@ -29,6 +48,13 @@ namespace OsmSharp.UnitTests.Math.Algorithms
 			Assert.AreEqual (0, simpleTestCurve [0] [1]);
 			Assert.AreEqual (1, simpleTestCurve [1] [0]);
 			Assert.AreEqual (1, simpleTestCurve [1] [1]);
+
+            // simple 1-point line should remain identical.
+            testCurve = new PointF2D[] {
+				new PointF2D(0, 0),
+				new PointF2D(1, 1)
+			};
+            PointF2D[] simpleTextCurve = SimplifyCurve.SimplifyBetween(testCurve, epsilon, 0, 0);
 
 			// simple straight line should be simplified to only 2 points.
 			testCurve = new PointF2D[] {
@@ -90,6 +116,15 @@ namespace OsmSharp.UnitTests.Math.Algorithms
             Assert.AreEqual(0, simpleTestCurve[1][0]);
             Assert.AreEqual(1, simpleTestCurve[0][1]);
             Assert.AreEqual(1, simpleTestCurve[1][1]);
+
+            // between with identical start-end should return one point.
+            testCurve = new double[][] {
+				new double[]{ 0, 1 },
+				new double[]{ 0, 1 }
+			};
+            simpleTestCurve = SimplifyCurve.SimplifyBetween(testCurve, epsilon, 0,0);
+            Assert.AreEqual(0, simpleTestCurve[0][0]);
+            Assert.AreEqual(0, simpleTestCurve[1][0]);
 
             // simple straight line should be simplified to only 2 points.
             testCurve = new double[][] {
