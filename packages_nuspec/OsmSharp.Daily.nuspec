@@ -23,6 +23,8 @@
         <file src="Output\Release\Any CPU\OsmSharp.Osm.dll" target="lib\net40\OsmSharp.Osm.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.Routing.dll" target="lib\net40\OsmSharp.Routing.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.UI.dll" target="lib\net40\OsmSharp.UI.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.WinForms.UI.dll" target="lib\net40\OsmSharp.WinForms.UI.dll" />
         <file src="OutputWindowsPhone\OsmSharp.Osm.dll" target="lib\sl4-wp71\OsmSharp.Osm.dll" />
         <file src="OutputWindowsPhone\OsmSharp.Routing.dll" target="lib\sl4-wp71\OsmSharp.Routing.dll" />
         <file src="OutputWindowsPhone\OsmSharp.dll" target="lib\sl4-wp71\OsmSharp.dll" />
