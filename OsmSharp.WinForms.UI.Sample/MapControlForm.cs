@@ -35,6 +35,7 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Osm.Data.Memory;
+using OsmSharp.WinForms.UI.Map.Layers;
 
 namespace OsmSharp.WinForms.UI.Sample
 {
@@ -80,10 +81,10 @@ namespace OsmSharp.WinForms.UI.Sample
             //Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm"));
 
             // initialize map.
-            var map = new Map();
-            map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
+            var map = new OsmSharp.UI.Map.Map();
+            //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
-            //map.AddLayer(new LayerMBTile(@"C:\Users\xivk\Documents\Nostalgeo.mbtiles"));
+            map.AddLayer(new LayerMBTile(@"C:\Users\xivk\Documents\Nostalgeo.mbtiles"));
             //map.AddLayer(
             //    new LayerScene(
             //        Scene2D.Deserialize(new FileInfo(@"c:\OSM\bin\test.osm.pbf.scene").OpenRead(), true)));

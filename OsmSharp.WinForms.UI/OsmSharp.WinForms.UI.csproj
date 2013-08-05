@@ -47,6 +47,12 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.1.0.87.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\packages\System.Data.SQLite.1.0.87.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -58,6 +64,7 @@
     <Compile Include="MapControl.Designer.cs">
       <DependentUpon>MapControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="Map\Layers\LayerMBTile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\GraphicsRenderer2D.cs" />
   </ItemGroup>
@@ -67,6 +74,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
+      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
+      <Name>OsmSharp.Osm</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
       <Name>OsmSharp</Name>
@@ -75,6 +86,17 @@
       <Project>{76BD9027-A67C-4D1B-8439-BE25E533C50D}</Project>
       <Name>OsmSharp.UI</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

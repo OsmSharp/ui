@@ -46,12 +46,15 @@ namespace OsmSharp.WinForms.UI
         /// <summary>
         /// Holds the map.
         /// </summary>
-        private Map _map;
+        private OsmSharp.UI.Map.Map _map;
 
         /// <summary>
         /// Gets/sets the map.
         /// </summary>
-        public Map Map { get { return _map; }set
+        public OsmSharp.UI.Map.Map Map
+        {
+            get { return _map; }
+            set
         {
             if (_map != null)
             {
