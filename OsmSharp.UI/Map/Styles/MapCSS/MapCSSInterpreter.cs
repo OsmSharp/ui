@@ -285,16 +285,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             IEnumerable<MapCSSRuleProperties> rules =
                 this.BuildRules(new MapCSSObject(node));
 
-            // validate what's there.
-
-            //// calculate the layer to render on if any.
-            //int sceneLayer = 0;
-            //double? osmLayer = node.Tags.GetNumericValue("layer");
-            //if (osmLayer.HasValue)
-            //{ // multiply by 100, allow another 100 sub divisions for each OSM layer.
-            //    sceneLayer = (int) osmLayer*100;
-            //}
-
             // interpret the results.
             foreach (var rule in rules)
             {
@@ -482,8 +472,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     int textColor;
                     int fontSize;
                     string nameTag;
+                    if (!rule.TryGetProperty("fontSize", out fontSize))
+                    {
+                        fontSize = 10;
+                    }
                     if (rule.TryGetProperty("text", out nameTag) &&
-                        rule.TryGetProperty("fontSize", out fontSize) &&
                         rule.TryGetProperty("textColor", out textColor))
                     {
                         int haloColor;

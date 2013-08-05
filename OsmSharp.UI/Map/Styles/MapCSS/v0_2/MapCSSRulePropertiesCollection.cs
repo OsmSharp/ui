@@ -100,16 +100,20 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
                         currentRule.MaxZoom = maxZoom + 1;
 
                         rules.Add(currentRule);
+                        currentRule = null;
                     }
 
-                    minZoom = zoomLevel; // set the min zoom.
-                    MapCSSRuleProperties props = this.GetRulesForZoom(zoomLevel);
-                    if (props != null)
-                    {
-                        currentRule = new MapCSSRuleProperties(minZoom, 25);
-                        currentRule = currentRule.Merge(props);
-                        previousRuleString = currentRuleString;
+                    if (!string.IsNullOrWhiteSpace(currentRuleString))
+                    { // only do this part when string is not empty.
+                        minZoom = zoomLevel; // set the min zoom.
+                        MapCSSRuleProperties props = this.GetRulesForZoom(zoomLevel);
+                        if (props != null)
+                        {
+                            currentRule = new MapCSSRuleProperties(minZoom, 25);
+                            currentRule = currentRule.Merge(props);
+                        }
                     }
+                    previousRuleString = currentRuleString;
                 }
                 maxZoom = zoomLevel; // set the max zoom.
             }

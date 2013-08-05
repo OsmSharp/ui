@@ -21,7 +21,7 @@ namespace OsmSharp.Osm.Data.Streams.Filters.LongIndex
     /// <summary>
     /// An efficient index for OSM object ids.
     /// </summary>
-    internal class LongIndex
+    public class LongIndex
     {
         /// <summary>
         /// The root of the positive ids.

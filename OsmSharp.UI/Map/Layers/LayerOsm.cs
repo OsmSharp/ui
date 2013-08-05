@@ -21,6 +21,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
+using OsmSharp.Osm.Data.Streams.Filters.LongIndex;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -35,9 +36,9 @@ namespace OsmSharp.UI.Map.Layers
         private readonly IDataSourceReadOnly _dataSource;
 
         /// <summary>
-        /// Holds the style interpreter.
+        /// Holds the style scene manager.
         /// </summary>
-        private readonly StyleInterpreter _styleInterpreter;
+        private readonly StyleSceneManager _styleSceneManager;
 
         /// <summary>
         /// Creates a new OSM data layer.
@@ -47,10 +48,7 @@ namespace OsmSharp.UI.Map.Layers
         public OsmLayer(IDataSourceReadOnly dataSource, StyleInterpreter styleInterpreter)
         {
             _dataSource = dataSource;
-            _styleInterpreter = styleInterpreter;
-
-            this.Scene = new Scene2D();
-            _interpretedObjects = new Dictionary<int, HashSet<long>>();
+            _styleSceneManager = new StyleSceneManager(styleInterpreter);
         }
 
         /// <summary>
@@ -66,7 +64,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Gets the scene of this layer containing the objects already projected.
         /// </summary>
-        public Scene2D Scene { get; private set; }
+        public Scene2D Scene { get { return _styleSceneManager.Scene; } }
 
         /// <summary>
         /// Called when the view on the map containing this layer has changed.
@@ -89,16 +87,6 @@ namespace OsmSharp.UI.Map.Layers
         #region Scene Building
 
         /// <summary>
-        /// Holds al id's of all already interpreted objects.
-        /// </summary>
-        private readonly Dictionary<int, HashSet<long>> _interpretedObjects;
-
-        /// <summary>
-        /// Holds all previously requested boxes.
-        /// </summary>
-        private HashSet<GeoCoordinateBox> _requestedBoxes = new HashSet<GeoCoordinateBox>();
-
-        /// <summary>
         /// Builds the scene.
         /// </summary>
         /// <param name="map"></param>
@@ -107,39 +95,11 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="view"></param>
         private void BuildScene(Map map, float zoomFactor, GeoCoordinate center, View2D view)
         {
-            // get the indexed object at this zoom.
-            HashSet<long> interpretedObjects;
-            if (!_interpretedObjects.TryGetValue((int)zoomFactor, out interpretedObjects))
-            {
-                interpretedObjects = new HashSet<long>();
-                _interpretedObjects.Add((int)zoomFactor, interpretedObjects);
-            }
-
             // build the boundingbox.
             var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(view.Left, view.Top),
                 map.Projection.ToGeoCoordinates(view.Right, view.Bottom));
-            foreach (var requestedBox in _requestedBoxes)
-            {
-                if (requestedBox.IsInside(box))
-                {
-                    return;
-                }
-            }
-            _requestedBoxes.Add(box);
 
-            // set the scene backcolor.
-            SimpleColor? color = _styleInterpreter.GetCanvasColor();
-            this.Scene.BackColor = color.HasValue ? color.Value.Value : SimpleColor.FromArgb(0, 255, 255, 255).Value;
-
-            // get data.
-            foreach (var osmGeo in _dataSource.Get(box, null))
-            { // translate each object into scene object.
-                if (!interpretedObjects.Contains(osmGeo.Id.Value))
-                {
-                    _styleInterpreter.Translate(this.Scene, map.Projection, _dataSource, osmGeo);
-                    interpretedObjects.Add(osmGeo.Id.Value);
-                }
-            }
+            _styleSceneManager.FillScene(_dataSource, box, map.Projection);
         }
 
         #endregion
