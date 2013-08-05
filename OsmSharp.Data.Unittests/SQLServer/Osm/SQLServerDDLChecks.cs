@@ -46,7 +46,8 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             var sqlConnection = new SqlConnection(connectionString);
             sqlConnection.Open();
 
-            var source = new XmlOsmStreamSource(Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Osm.Data.SQLServer.Unittests.SQLServer.Data.ukraine1.osm"));
+            var source = new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Data.Unittests.SQLServer.Data.ukraine1.osm"));
             //var source = new PBFDataProcessorSource(new FileInfo("C:\\great-britain-latest.osm.pbf").OpenRead());
 
             // Act
