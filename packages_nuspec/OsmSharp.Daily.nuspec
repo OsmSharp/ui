@@ -3,24 +3,32 @@
     <metadata>
         <id>OsmSharp</id>
         <version>$version$</version>
-        <title>OsmSharp - OpenStreetMap Libary &amp; Tools!</title>
+        <title>OsmSharp - OpenStreetMap-based Mapping Tools!</title>
         <authors>Ben Abelshausen</authors>
         <owners>Ben Abelshausen</owners>
         <licenseUrl>https://osmsharp.codeplex.com/license</licenseUrl>
         <projectUrl>http://www.osmsharp.com/</projectUrl>
         <iconUrl>http://www.osmsharp.com/sites/default/files/osmsharp_logo64.png</iconUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>OsmSharp is an open-source project with a focus on routing and logistics optimization using OpenStreetMap (OSM). Many functionalities and features exist to process OSM data, to access the OSM API...</description>
-        <summary>OsmSharp is an open-source project with a focus on routing and logistics optimization using OpenStreetMap (OSM).</summary>
+        <description>OsmSharp is an open-source mapping project designed to work with OpenStreetMap-data.</description>
+        <summary>OsmSharp is an open-source mapping project designed to work with OpenStreetMap-data. Most important features are offline rendering of OpenStreetMap-data and routing on OpenStreetMap-data in a completely cross-platform way. Available on Android, iOS, Windows Phone, Mac OSX, Windows and Linux using Mono.</summary>
         <copyright>Ben Abelshausen</copyright>
-        <tags>osm, openstreetmap, routing</tags>
+        <tags>osm, openstreetmap, routing, rendering, mapcss</tags>
+        <dependencies>
+            <dependency id="protobuf-net" version="2.0.0.621" />
+            <dependency id="Zlib.Portable" version="1.9.2" />
+        </dependencies>
     </metadata>
     <files>
         <file src="Output\Release\Any CPU\OsmSharp.Osm.dll" target="lib\net40\OsmSharp.Osm.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.Routing.dll" target="lib\net40\OsmSharp.Routing.dll" />
-        <file src="Output\Release\Any CPU\OsmSharp.Tools.dll" target="lib\net40\OsmSharp.Tools.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
         <file src="OutputWindowsPhone\OsmSharp.Osm.dll" target="lib\sl4-wp71\OsmSharp.Osm.dll" />
         <file src="OutputWindowsPhone\OsmSharp.Routing.dll" target="lib\sl4-wp71\OsmSharp.Routing.dll" />
         <file src="OutputWindowsPhone\OsmSharp.Tools.dll" target="lib\sl4-wp71\OsmSharp.Tools.dll" />
+	<file src="OutputAndroid\OsmSharp.dll" target="lib\MonoAndroid16\OsmSharp.dll" />
+	<file src="OutputAndroid\OsmSharp.Osm.dll" target="lib\MonoAndroid16\OsmSharp.Osm.dll" />
+	<file src="OutputAndroid\OsmSharp.Routing.dll" target="lib\MonoAndroid16\OsmSharp.Routing.dll" />
+	<file src="OutputAndroid\OsmSharp.UI.dll" target="lib\MonoAndroid16\OsmSharp.UI.dll" />
     </files>
 </package>
