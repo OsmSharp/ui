@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Collections.Generic;
 
 namespace System.Diagnostics
 {
@@ -10,6 +11,11 @@ namespace System.Diagnostics
     public class TraceSource
     {
         public TraceSource(string name)
+        {
+
+        }
+
+        public TraceSource(string name, SourceLevels level)
         {
 
         }
@@ -36,6 +42,8 @@ namespace System.Diagnostics
         {
 
         }
+
+        public List<TraceListener> Listeners { get; set; }
     }
 
 #endif
@@ -56,6 +64,22 @@ namespace System.Diagnostics
         Suspend = 1024,
         Resume = 2048,
         Transfer = 4096
+    }
+
+    /// <summary>
+    /// A trace listener.
+    /// </summary>
+    public class TraceListener
+    {
+
+    }
+
+    /// <summary>
+    /// A source levels enum.
+    /// </summary>
+    public enum SourceLevels
+    {
+        All
     }
 #endif
 }

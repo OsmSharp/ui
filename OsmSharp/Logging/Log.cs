@@ -62,6 +62,7 @@ namespace OsmSharp.Logging
             _source.Listeners.Add(listener);
         }
 
+#if !(WINDOWS_PHONE || __ANDROID__)
         /// <summary>
         /// Registers a console trace listener.
         /// </summary>
@@ -73,5 +74,6 @@ namespace OsmSharp.Logging
                 new EventTypeFilter(SourceLevels.All);
             console.Name = "console";
         }
+#endif
     }
 }
