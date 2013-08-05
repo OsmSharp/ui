@@ -97,6 +97,7 @@ namespace OsmSharp.UI.Renderer.Scene2DPrimitives.Storage
             textMetaType.Add(6, "MaxZoom");
             textMetaType.Add(7, "HaloRadius");
             textMetaType.Add(8, "HaloColor");
+            textMetaType.Add(9, "Color");
 
             MetaType lineTextMetaType = typeModel.Add(typeof(LineText2D), false);
             lineTextMetaType.Add(1, "X");
