@@ -28,7 +28,7 @@ namespace OsmSharp.Logging
         /// <summary>
         /// Holds the tracesource.
         /// </summary>
-        private static TraceSource _source = new TraceSource("Log");
+        private static TraceSource _source = new TraceSource("OsmSharp", SourceLevels.All);
 
         /// <summary>
         /// Writes a trace event message.
@@ -51,6 +51,27 @@ namespace OsmSharp.Logging
         public static void TraceEvent(string name, TraceEventType type, string message, params object[] args)
         {
             _source.TraceEvent(type, 0, message, args);
+        }
+
+        /// <summary>
+        /// Registers a trace listener.
+        /// </summary>
+        /// <param name="listener"></param>
+        public static void RegisterListener(TraceListener listener)
+        {
+            _source.Listeners.Add(listener);
+        }
+
+        /// <summary>
+        /// Registers a console trace listener.
+        /// </summary>
+        public static void RegisterConsoleListener()
+        {
+            ConsoleTraceListener console =
+                new ConsoleTraceListener(false);
+            console.Filter =
+                new EventTypeFilter(SourceLevels.All);
+            console.Name = "console";
         }
     }
 }
