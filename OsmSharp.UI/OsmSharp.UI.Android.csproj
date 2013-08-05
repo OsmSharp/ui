@@ -51,6 +51,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Map\Styles\MapCSS\MapCSSObject.cs" />
+    <Compile Include="Map\Styles\MapCSS\MapCSSType.cs" />
+    <Compile Include="Map\Styles\StyleSceneManager.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Declaration.cs" />
