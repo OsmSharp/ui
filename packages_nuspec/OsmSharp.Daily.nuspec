@@ -25,7 +25,7 @@
         <file src="Output\Release\Any CPU\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
         <file src="OutputWindowsPhone\OsmSharp.Osm.dll" target="lib\sl4-wp71\OsmSharp.Osm.dll" />
         <file src="OutputWindowsPhone\OsmSharp.Routing.dll" target="lib\sl4-wp71\OsmSharp.Routing.dll" />
-        <file src="OutputWindowsPhone\OsmSharp.Tools.dll" target="lib\sl4-wp71\OsmSharp.Tools.dll" />
+        <file src="OutputWindowsPhone\OsmSharp.dll" target="lib\sl4-wp71\OsmSharp.dll" />
 	<file src="OutputAndroid\OsmSharp.dll" target="lib\MonoAndroid16\OsmSharp.dll" />
 	<file src="OutputAndroid\OsmSharp.Osm.dll" target="lib\MonoAndroid16\OsmSharp.Osm.dll" />
 	<file src="OutputAndroid\OsmSharp.Routing.dll" target="lib\MonoAndroid16\OsmSharp.Routing.dll" />
