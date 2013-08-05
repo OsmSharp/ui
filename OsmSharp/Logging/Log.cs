@@ -73,6 +73,7 @@ namespace OsmSharp.Logging
             console.Filter =
                 new EventTypeFilter(SourceLevels.All);
             console.Name = "console";
+            _source.Listeners.Add(console);
         }
 #endif
     }
