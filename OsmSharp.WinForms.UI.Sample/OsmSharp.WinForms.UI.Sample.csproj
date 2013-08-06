@@ -137,6 +137,7 @@
     <EmbeddedResource Include="test.osm" />
     <EmbeddedResource Include="test.gpx" />
     <EmbeddedResource Include="test.osm.pbf.routing.3" />
+    <EmbeddedResource Include="wvl.osm.pbf.routing.ch.4" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="images\parking.png" />
