@@ -100,7 +100,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraph<TEdgeData> dynamicGraph,
-            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsIndex tagsIndex, 
+            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsIndex tagsIndex,
             IDictionary<long, uint> idTransformations)
             : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, idTransformations, null)
         {
@@ -242,26 +242,24 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                                 }
                             }
 
-                            uint? from = this.AddRoadNode(way.Nodes[0]);
-                            for (int idx = 1; idx < way.Nodes.Count; idx++)
-                            { // the to-node.
-                                uint? to = this.AddRoadNode(way.Nodes[idx]);
 
-                                if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _tagsIndex, 
-                                    relevantTags))
-                                { // the edge is traversable, add the edges.
+                            if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _tagsIndex,
+                                relevantTags))
+                            { // the edge is traversable, add the edges.
+                                uint? from = this.AddRoadNode(way.Nodes[0]);
+                                for (int idx = 1; idx < way.Nodes.Count; idx++)
+                                { // the to-node.
+                                    uint? to = this.AddRoadNode(way.Nodes[idx]);
                                     // add the edge(s).
                                     if (from.HasValue && to.HasValue)
-                                    {
-                                        // 
+                                    { // add a road edge.
                                         if (!this.AddRoadEdge(relevantTags, true, from.Value, to.Value))
-                                        {
+                                        { // add the reverse too if it has been indicated that this was needed.
                                             this.AddRoadEdge(relevantTags, false, to.Value, from.Value);
                                         }
                                     }
+                                    from = to; // the to node becomes the from.
                                 }
-
-                                from = to; // the to node becomes the from.
                             }
                         }
                     }

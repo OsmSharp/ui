@@ -294,5 +294,299 @@ namespace OsmSharp.WinForms.UI
         }
 
         #endregion
+
+        #region Events
+
+        /// <summary>
+        /// Delegate used to define events from this map control.
+        /// </summary>
+        /// <param name="e"></param>
+        public delegate void MapMouseEventDelegate(MapControlEventArgs e);
+
+        #region MapMouseUp
+
+        /// <summary>
+        /// The map mouse up event.
+        /// </summary>
+        public event MapMouseEventDelegate MapMouseUp;
+
+        /// <summary>
+        /// Raises the OnMapMouseUp event.
+        /// </summary>
+        /// <param name="e"></param>
+        private void RaiseOnMapMouseUp(MouseEventArgs e)
+        {
+            if (this.Map != null)
+            {
+                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                    (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
+
+                // get scene coordinates.
+                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
+                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
+                    scenCoordinates[1]);
+
+                // create map user control event args.
+                MapControlEventArgs args
+                    = new MapControlEventArgs(e, geoCoordinates);
+
+                this.OnMapMouseUp(args);
+                if (MapMouseUp != null)
+                {
+                    MapMouseUp(args);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called on a mouse up event.
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnMapMouseUp(MapControlEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region MapMouseDown
+
+        /// <summary>
+        /// The map mouse up event.
+        /// </summary>
+        public event MapMouseEventDelegate MapMouseDown;
+
+        /// <summary>
+        /// Raises the OnMapMouseDown event.
+        /// </summary>
+        /// <param name="e"></param>
+        private void RaiseOnMapMouseDown(MouseEventArgs e)
+        {
+            if (this.Map != null)
+            {
+                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                    (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
+
+                // get scene coordinates.
+                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
+                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
+                    scenCoordinates[1]);
+
+                // create map user control event args.
+                MapControlEventArgs args
+                    = new MapControlEventArgs(e, geoCoordinates);
+
+                this.OnMapMouseDown(args);
+                if (MapMouseDown != null)
+                {
+                    MapMouseDown(args);
+                }
+            }
+        }
+        /// <summary>
+        /// Called on a mouse up event.
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnMapMouseDown(MapControlEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region MapMouseMove
+
+        /// <summary>
+        /// The map mouse up event.
+        /// </summary>
+        public event MapMouseEventDelegate MapMouseMove;
+
+        /// <summary>
+        /// Raises the OnMapMouseMove event.
+        /// </summary>
+        /// <param name="e"></param>
+        private void RaiseOnMapMouseMove(MouseEventArgs e)
+        {
+            if (this.Map != null)
+            {
+                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                    (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
+
+                // get scene coordinates.
+                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
+                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
+                    scenCoordinates[1]);
+
+                // create map user control event args.
+                MapControlEventArgs args
+                    = new MapControlEventArgs(e, geoCoordinates);
+
+                this.OnMapMouseMove(args);
+                if (MapMouseMove != null)
+                {
+                    MapMouseMove(args);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called on a mouse up event.
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnMapMouseMove(MapControlEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region MapMouseWheel
+
+        /// <summary>
+        /// The map mouse up event.
+        /// </summary>
+        public event MapMouseEventDelegate MapMouseWheel;
+
+        /// <summary>
+        /// Raises the OnMapMouseWheel event.
+        /// </summary>
+        /// <param name="e"></param>
+        private void RaiseOnMapMouseWheel(MouseEventArgs e)
+        {
+            if (this.Map != null)
+            {
+                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                    (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
+
+                // get scene coordinates.
+                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
+                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
+                    scenCoordinates[1]);
+
+                // create map user control event args.
+                MapControlEventArgs args
+                    = new MapControlEventArgs(e, geoCoordinates);
+
+                this.OnMapMouseWheel(args);
+                if (MapMouseWheel != null)
+                {
+                    MapMouseWheel(args);
+                }
+            }
+        }
+        /// <summary>
+        /// Called on a mouse up event.
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnMapMouseWheel(MapControlEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region MapMouseDoubleClick
+
+        /// <summary>
+        /// The map mouse up event.
+        /// </summary>
+        public event MapMouseEventDelegate MapMouseDoubleClick;
+
+        /// <summary>
+        /// Raises the OnMapMouseDoubleClick event.
+        /// </summary>
+        /// <param name="e"></param>
+        private void RaiseOnMapMouseDoubleClick(MouseEventArgs e)
+        {
+            if (this.Map != null)
+            {
+                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                    (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
+
+                // get scene coordinates.
+                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
+                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
+                    scenCoordinates[1]);
+
+                // create map user control event args.
+                MapControlEventArgs args
+                    = new MapControlEventArgs(e, geoCoordinates);
+
+                this.OnMapMouseDoubleClick(args);
+                if (MapMouseDoubleClick != null)
+                {
+                    MapMouseDoubleClick(args);
+                }
+            }
+        }
+
+        protected override void OnMouseDoubleClick(MouseEventArgs e)
+        {
+            this.RaiseOnMapMouseDoubleClick(e);
+        }
+
+        /// <summary>
+        /// Called on a mouse up event.
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnMapMouseDoubleClick(MapControlEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #region MapMouseClick
+
+        /// <summary>
+        /// The map mouse up event.
+        /// </summary>
+        public event MapMouseEventDelegate MapMouseClick;
+
+        /// <summary>
+        /// Raises the OnMapMouseClick event.
+        /// </summary>
+        /// <param name="e"></param>
+        private void RaiseOnMapMouseClick(MouseEventArgs e)
+        {
+            if (this.Map != null)
+            {
+                View2D view = _renderer.Create(this.Width, this.Height, this.Map,
+                    (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
+
+                // get scene coordinates.
+                double[] scenCoordinates = view.FromViewPort(this.Width, this.Height, e.X, e.Y);
+                GeoCoordinate geoCoordinates = this.Map.Projection.ToGeoCoordinates(scenCoordinates[0],
+                    scenCoordinates[1]);
+
+                // create map user control event args.
+                MapControlEventArgs args
+                    = new MapControlEventArgs(e, geoCoordinates);
+
+                this.OnMapMouseClick(args);
+                if (MapMouseClick != null)
+                {
+                    MapMouseClick(args);
+                }
+            }
+        }
+
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            this.RaiseOnMapMouseClick(e);
+        }
+
+        /// <summary>
+        /// Called on a mouse up event.
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnMapMouseClick(MapControlEventArgs e)
+        {
+
+        }
+
+        #endregion
+
+        #endregion
     }
 }

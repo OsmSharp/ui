@@ -86,9 +86,9 @@ namespace OsmSharp.Android.UI.Sample
 //				graphSerialized,
 //				new OsmRoutingInterpreter());
 			
-			var routingSerializer = new CHEdgeDataDataSourceSerializer(true);
+			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
 			var graphDeserialized = routingSerializer.Deserialize(
-				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.osm.pbf.routing.ch.4"), true);
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.osm.pbf.routing.ch.5"), true);
 
 			var router = Router.CreateCHFrom(
 				graphDeserialized, new CHRouter(graphDeserialized),
@@ -98,19 +98,21 @@ namespace OsmSharp.Android.UI.Sample
 			//GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
 			//GeoCoordinate point3 = new GeoCoordinate(51.175967, 2.93733);
 			GeoCoordinate point1 = new GeoCoordinate (50.885726, 3.253426);
-			GeoCoordinate point2 = new GeoCoordinate (50.88602, 3.218149);
+			//GeoCoordinate point2 = new GeoCoordinate (50.88602, 3.218149);
+			GeoCoordinate point2 = new GeoCoordinate (51.1515, 2.9563);
+			GeoCoordinate point3 = new GeoCoordinate(51.34643, 3.28837);
 
 			OsmSharpRoute route1 = router.Calculate(Vehicle.Car, 
 			                                       router.Resolve(Vehicle.Car, point1),
 			                                       router.Resolve(Vehicle.Car, point2));
 			
-//			OsmSharpRoute route2 = router.Calculate(Vehicle.Car, 
-//			                                       router.Resolve(Vehicle.Car, point1),
-//			                                       router.Resolve(Vehicle.Car, point3));
-////
-//			OsmSharpRoute route3 = router.Calculate(Vehicle.Car, 
-//			                                        router.Resolve(Vehicle.Car, point2),
-//			                                        router.Resolve(Vehicle.Car, point3));
+			OsmSharpRoute route2 = router.Calculate(Vehicle.Car, 
+			                                       router.Resolve(Vehicle.Car, point1),
+			                                       router.Resolve(Vehicle.Car, point3));
+
+			OsmSharpRoute route3 = router.Calculate(Vehicle.Car, 
+			                                        router.Resolve(Vehicle.Car, point2),
+			                                        router.Resolve(Vehicle.Car, point3));
 //
 //			OsmSharpRoute route = router.Calculate(Vehicle.Car, 
 //			                                       router.Resolve(Vehicle.Car, new GeoCoordinate(51.15136, 3.19462)),
@@ -123,8 +125,8 @@ namespace OsmSharp.Android.UI.Sample
 //			                         router.Resolve(Vehicle.Car, new GeoCoordinate(51.075023, 3.096632)));
 			var osmSharpLayer = new LayerOsmSharpRoute(map.Projection);
 			osmSharpLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
-//			osmSharpLayer.AddRoute (route2, SimpleColor.FromKnownColor(KnownColor.Red).Value);
-//			osmSharpLayer.AddRoute (route3, SimpleColor.FromKnownColor(KnownColor.YellowGreen).Value);
+			osmSharpLayer.AddRoute (route2, SimpleColor.FromKnownColor(KnownColor.Red).Value);
+			osmSharpLayer.AddRoute (route3, SimpleColor.FromKnownColor(KnownColor.YellowGreen).Value);
 			map.AddLayer(osmSharpLayer);
 
 //			// create gpx layer.

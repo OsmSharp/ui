@@ -394,7 +394,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
         /// Tests serializing/deserializing RoutingSerializationRoutingComparisonTest using the V1 routing serializer.
         /// </summary>
         [Test]
-        public void RoutingSerializationCHRoutingComparisonTest()
+        public void RoutingSerializationV1CHRoutingComparisonTest()
         {
             const string embeddedString = "OsmSharp.UnitTests.test_network_real1.osm";
 
@@ -414,7 +414,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
                 original, basicRouterOriginal, interpreter);
 
             // create serializer.
-            var routingSerializer = new OsmSharp.Routing.CH.Serialization.CHEdgeDataDataSourceSerializer(true);
+            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Tiled.CHEdgeDataDataSourceSerializer(true);
 
             // serialize/deserialize.
             byte[] byteArray;
@@ -483,6 +483,106 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             //            //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
             //        }
             //    }
+        }
+
+        /// <summary>
+        /// Tests serializing/deserializing RoutingSerializationRoutingComparisonTest using the V1 routing serializer.
+        /// </summary>
+        [Test]
+        public void RoutingSerializationV2CHRoutingComparisonTest()
+        {
+            const string embeddedString = "OsmSharp.UnitTests.test_network_real1.osm";
+
+            // creates a new interpreter.
+            var interpreter = new OsmRoutingInterpreter();
+
+            // do the data processing.
+            var original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
+                                                                   Assembly.GetExecutingAssembly()
+                                                                           .GetManifestResourceStream(embeddedString)),
+                                                               interpreter,
+                                                               Vehicle.Car);
+
+            // create serializer.
+            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(true);
+
+            // serialize/deserialize.
+            byte[] byteArray;
+            using (var stream = new MemoryStream())
+            {
+                try
+                {
+                    routingSerializer.Serialize(stream, original);
+                    byteArray = stream.ToArray();
+                }
+                catch (Exception)
+                {
+                    if (Debugger.IsAttached)
+                    {
+                        Debugger.Break();
+                    }
+                    throw;
+                }
+            }
+
+            IBasicRouterDataSource<CHEdgeData> deserializedVersion =
+                routingSerializer.Deserialize(new MemoryStream(byteArray));
+            Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
+
+            // create reference router.
+            original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
+                                                                   Assembly.GetExecutingAssembly()
+                                                                           .GetManifestResourceStream(embeddedString)),
+                                                               interpreter,
+                                                               Vehicle.Car);
+            var basicRouterOriginal = new CHRouter(original);
+            Router referenceRouter = Router.CreateCHFrom(
+                original, basicRouterOriginal, interpreter);
+
+            // try to do some routing on the deserialized version.
+            var basicRouter =
+                new CHRouter(deserializedVersion);
+            Router router = Router.CreateCHFrom(
+                deserializedVersion, basicRouter, interpreter);
+
+            // loop over all nodes and resolve their locations.
+            var resolvedReference = new RouterPoint[original.VertexCount];
+            var resolved = new RouterPoint[original.VertexCount];
+            for (uint idx = 1; idx < original.VertexCount + 1; idx++)
+            { // resolve each vertex.
+                float latitude, longitude;
+                if (original.GetVertex(idx, out latitude, out longitude))
+                {
+                    resolvedReference[idx - 1] = referenceRouter.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+                    resolved[idx - 1] = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+                }
+
+                Assert.IsNotNull(resolvedReference[idx - 1]);
+                Assert.IsNotNull(resolved[idx - 1]);
+
+                //Assert.AreEqual(resolvedReference[idx - 1].Location.Latitude,
+                //    resolved[idx - 1].Location.Latitude, 0.0001);
+                //Assert.AreEqual(resolvedReference[idx - 1].Location.Longitude,
+                //    resolved[idx - 1].Location.Longitude, 0.0001);
+            }
+
+            // check all the routes having the same weight(s).
+            for (int fromIdx = 0; fromIdx < resolved.Length; fromIdx++)
+            {
+                for (int toIdx = 0; toIdx < resolved.Length; toIdx++)
+                {
+                    OsmSharpRoute referenceRoute = referenceRouter.Calculate(Vehicle.Car,
+                        resolvedReference[fromIdx], resolvedReference[toIdx]);
+                    OsmSharpRoute route = router.Calculate(Vehicle.Car,
+                        resolved[fromIdx], resolved[toIdx]);
+
+                    Assert.IsNotNull(referenceRoute);
+                    Assert.IsNotNull(route);
+                    //Assert.AreEqual(referenceRoute.TotalDistance, route.TotalDistance, 0.1);
+                    // TODO: meta data is missing in some CH routing; see issue 
+                    //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
+                }
+            }
         }
     }
 }

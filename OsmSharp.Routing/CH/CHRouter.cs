@@ -1420,8 +1420,7 @@ namespace OsmSharp.Routing.CH
                             if (contractedArc.Key == uncontracted.Key)
                             { // the edge is and edge to the target.
                                 var data = new CHEdgeData();
-                                data.Forward = contractedArc.Value.Backward;
-                                data.Backward = contractedArc.Value.Forward;
+                                data.Direction = contractedArc.Value.Direction;
                                 data.ContractedVertexId = contractedArc.Value.ContractedVertexId;
                                 data.Tags = contractedArc.Value.Tags;
                                 data.Weight = contractedArc.Value.Weight;

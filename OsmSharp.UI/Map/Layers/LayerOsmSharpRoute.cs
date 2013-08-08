@@ -144,5 +144,13 @@ namespace OsmSharp.UI.Map.Layers
 		}
 
         #endregion
+
+        /// <summary>
+        /// Removes all objects from this layer.
+        /// </summary>
+        public void Clear()
+        {
+            this.Scene.Clear();
+        }
     }
 }

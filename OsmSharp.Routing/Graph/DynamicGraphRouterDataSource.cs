@@ -68,6 +68,15 @@ namespace OsmSharp.Routing.Graph
             _tagsIndex = tagsIndex;
 
             _supportedVehicles = new HashSet<Vehicle>();
+
+            // add the current graph's vertices to the vertex index.
+            for (uint newVertexId = 1; newVertexId < graph.VertexCount + 1; newVertexId++)
+            {
+                // add to the CHRegions.
+                float latitude, longitude;
+                graph.GetVertex(newVertexId, out latitude, out longitude);
+                _vertexIndex.Add(new GeoCoordinate(latitude, longitude), newVertexId);
+            }
         }
 
         /// <summary>

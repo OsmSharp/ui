@@ -171,6 +171,8 @@
     <Compile Include="Routing\CH\CHSparseRoutingTest.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceRoutingTest.cs" />
     <Compile Include="Routing\CH\CHVerifiedContractionTests.cs" />
+    <Compile Include="Routing\CH\Serialization\Sorted\CHDataSourceSerializeSortTests.cs" />
+    <Compile Include="Routing\CH\Serialization\Sorted\CHDepthFirstEnumeratorTests.cs" />
     <Compile Include="Routing\Instructions\LanguageTestGenerator.cs" />
     <Compile Include="Routing\RoutingConditionalAccessTests.cs" />
     <Compile Include="Routing\Dykstra\DykstraLiveRoutingTests.cs" />

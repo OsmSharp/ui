@@ -70,6 +70,12 @@
     <Compile Include="CH\PreProcessing\Ordering\LimitedLevelOrdering\SparseOrdering.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\CHRouterWitnessCalculator.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
+    <Compile Include="CH\Serialization\Sorted\CHBlock.cs" />
+    <Compile Include="CH\Serialization\Sorted\CHDepthFirstEnumerator.cs" />
+    <Compile Include="CH\Serialization\Sorted\CHEdgeDataDataSource.cs" />
+    <Compile Include="CH\Serialization\Sorted\CHEdgeDataSerializer.cs" />
+    <Compile Include="CH\Serialization\Tiled\CHEdgeDataDataSource.cs" />
+    <Compile Include="CH\Serialization\Tiled\CHEdgeDataSerializer.cs" />
     <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingLive.cs" />
@@ -218,12 +224,9 @@
     <Compile Include="Graph\Serialization\RoutingDataSourceSerializerStream.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
-    <Compile Include="CH\Serialization\CHEdgeDataDataSource.cs" />
-    <Compile Include="CH\Serialization\CHEdgeDataSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interpreter\Roads\Tags\" />
-    <Folder Include="Osm\Data\Processing\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.Android.csproj">

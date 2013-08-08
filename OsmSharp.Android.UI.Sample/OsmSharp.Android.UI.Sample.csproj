@@ -70,8 +70,8 @@
     <EmbeddedResource Include="test.osm.pbf.routing.3" />
     <EmbeddedResource Include="test.osm.pbf" />
     <EmbeddedResource Include="test.osm.pbf.scene.simple" />
-    <EmbeddedResource Include="wvl.osm.pbf.routing.ch.4" />
     <EmbeddedResource Include="wvl.osm.pbf.scene.simple" />
+    <EmbeddedResource Include="wvl.osm.pbf.routing.ch.5" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
