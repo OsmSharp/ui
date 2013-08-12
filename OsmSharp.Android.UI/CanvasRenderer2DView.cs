@@ -14,6 +14,7 @@ using Android.Widget;
 
 using OsmSharp.Math.Geo;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.Android.UI
 {

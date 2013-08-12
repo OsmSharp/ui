@@ -285,11 +285,19 @@ namespace OsmSharp.WinForms.UI
         /// </summary>
         private void NotifyMapViewChanged()
         {
+            long ticksBefore = DateTime.Now.Ticks;
+
             if (this.Height == 0 || this.Width == 0) { return; }
 
             // notify the map.
             this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, _renderer.Create(this.Width, this.Height, this.Map,
                                                                                   (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center));
+
+            long ticksAfter = DateTime.Now.Ticks;
+
+            Console.WriteLine("Map view changed notification took: {0}ms @ zoom level {1}",
+                (new TimeSpan(ticksAfter - ticksBefore).TotalMilliseconds), this.ZoomLevel);
+
             this.Invalidate();
         }
 

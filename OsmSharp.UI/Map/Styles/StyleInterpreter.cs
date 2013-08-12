@@ -25,6 +25,7 @@ using OsmSharp.Osm;
 using OsmSharp.UI.Renderer;
 using OsmSharp;
 using OsmSharp.Osm.Data;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Styles
 {

@@ -199,6 +199,7 @@
     <Compile Include="GeoCoding\Nominatim\GeoCoderQuery.cs" />
     <Compile Include="GeoCoding\Nominatim\GeoCoderResult.cs" />
     <Compile Include="IO\CappedStream.cs" />
+    <Compile Include="IO\LimitedStream.cs" />
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
     <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
     <Compile Include="Logging\Log.cs" />

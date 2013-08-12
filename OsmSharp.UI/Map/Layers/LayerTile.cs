@@ -28,6 +28,7 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -48,7 +49,7 @@ namespace OsmSharp.UI.Map.Layers
         {
             _tilesURL = tilesURL;
 
-            this.Scene = new Scene2D();
+            this.Scene = new Scene2DSimple();
             _lastAccessed = new Dictionary<Tile, DateTime>();
             _primitivePerTile = new Dictionary<Tile, uint>();
             _tilesStack = new Stack<Tile>();

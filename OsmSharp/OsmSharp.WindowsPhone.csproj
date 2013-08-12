@@ -152,6 +152,7 @@
     <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
     <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
+    <Compile Include="IO\LimitedStream.cs" />
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
     <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
     <Compile Include="Logging\Log.cs" />

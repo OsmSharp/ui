@@ -152,7 +152,6 @@
     <Compile Include="Graph\Router\IBasicRouter.cs" />
     <Compile Include="Graph\Router\IDynamicGraphRouterDataSource.cs" />
     <Compile Include="Graph\Serialization\RoutingDataSourceSerializer.cs" />
-    <Compile Include="Graph\Serialization\RoutingDataSourceSerializerStream.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
     <Compile Include="Instructions\Instruction.cs" />

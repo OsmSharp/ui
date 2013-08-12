@@ -8,6 +8,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.UI.Map.Layers;
 using System.Collections.Generic;
 using Android.Views;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.Android.UI
 {
@@ -74,7 +75,7 @@ namespace OsmSharp.Android.UI
 				new OpenGLRenderer2D());
 
 			// initialize the scene.
-			_scene = new Scene2D ();
+			_scene = new Scene2DSimple ();
 			_scene.BackColor = SimpleColor.FromKnownColor (KnownColor.White).Value;
 		}
 

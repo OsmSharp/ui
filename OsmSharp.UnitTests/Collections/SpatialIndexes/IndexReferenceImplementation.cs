@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using OsmSharp.Collections.SpatialIndexes;
 using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
+using System.Linq;
 
 namespace OsmSharp.UnitTests.Collections.SpatialIndexes
 {
@@ -92,6 +93,16 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
                     return;
                 }
             }
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return _list.Select(x => x.Value).GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return _list.Select(x => x.Value).GetEnumerator();
         }
     }
 }

@@ -16,29 +16,37 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
-using OsmSharp.Math;
-using OsmSharp.Math.Primitives;
+using System.Linq;
+using System.Text;
+using ProtoBuf;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 
-namespace OsmSharp.Collections.SpatialIndexes
+namespace OsmSharp.UI.Renderer.Scene.Storage
 {
     /// <summary>
-    /// Abstract representation of a spatial index.
+    /// Represents an entry or object in a Scene2D.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface ISpatialIndex<T> : ISpatialIndexReadonly<T>, IEnumerable<T>
+    [ProtoContract]
+    internal class Scene2DEntry
     {
         /// <summary>
-        /// Adds a new item with the corresponding box.
+        /// Gets or sets the id of this object.
         /// </summary>
-        /// <param name="box"></param>
-        /// <param name="item"></param>
-        void Add(RectangleF2D box, T item);
+        [ProtoMember(1)]
+        public uint Id { get; set; }
 
         /// <summary>
-        /// Removes the given item.
+        /// Gets or sets the layer.
         /// </summary>
-        /// <param name="item"></param>
-        void Remove(T item);
+        [ProtoMember(2)]
+        public int Layer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the primitive.
+        /// </summary>
+        [ProtoMember(3)]
+        public IScene2DPrimitive Scene2DPrimitive { get; set; }
     }
 }

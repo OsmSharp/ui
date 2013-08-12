@@ -108,7 +108,7 @@ namespace PhoneClassLibrary4.Renderer
             throw new NotImplementedException();
         }
 
-        protected override void DrawLine(Target2DWrapper<GraphicsDevice> target, double[] x, double[] y, int color, double width, OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
+        protected override void DrawLine(Target2DWrapper<GraphicsDevice> target, double[] x, double[] y, int color, double width, OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
         {
             throw new NotImplementedException();
         }

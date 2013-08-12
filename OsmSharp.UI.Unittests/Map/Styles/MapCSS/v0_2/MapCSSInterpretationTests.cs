@@ -27,7 +27,8 @@ using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data.Memory;
-using OsmSharp.UI.Renderer.Scene2DPrimitives;
+using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 
 namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 {
@@ -77,7 +78,7 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2D();
+            Scene2D scene = new Scene2DSimple();
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(string.Empty,
@@ -127,7 +128,7 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2D();
+            Scene2D scene = new Scene2DSimple();
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -179,7 +180,7 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2D();
+            Scene2D scene = new Scene2DSimple();
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -249,7 +250,7 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2D();
+            Scene2D scene = new Scene2DSimple();
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -282,10 +283,10 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2D();            
+            Scene2D scene = new Scene2DSimple();            
 
             // create the projection and scene objects.
-            scene = new Scene2D();
+            scene = new Scene2DSimple();
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,

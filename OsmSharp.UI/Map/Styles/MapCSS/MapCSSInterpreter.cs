@@ -26,8 +26,9 @@ using OsmSharp.Osm.Interpreter;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene2DPrimitives;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 using OsmSharp.Math.Algorithms;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {
@@ -468,35 +469,35 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             scene.AddLine(this.CalculateSceneLayer(OffsetCasing, zIndex),
                                 minZoom, maxZoom, x, y, casingColor, width + (2 * casingWidth), lineJoin, dashes);
                         }
-                    }
 
-                    int textColor;
-                    int fontSize;
-                    string nameTag;
-                    if (!rule.TryGetProperty("fontSize", out fontSize))
-                    {
-                        fontSize = 10;
-                    }
-                    if (rule.TryGetProperty("text", out nameTag) &&
-                        rule.TryGetProperty("textColor", out textColor))
-                    {
-                        int haloColor;
-                        int? haloColorNullable = null;
-                        if (rule.TryGetProperty("textHaloColor", out haloColor))
+                        int textColor;
+                        int fontSize;
+                        string nameTag;
+                        if (!rule.TryGetProperty("fontSize", out fontSize))
                         {
-                            haloColorNullable = haloColor;
+                            fontSize = 10;
                         }
-                        int haloRadius;
-                        int? haloRadiusNullable = null;
-                        if (rule.TryGetProperty("textHaloRadius", out haloRadius))
+                        if (rule.TryGetProperty("text", out nameTag) &&
+                            rule.TryGetProperty("textColor", out textColor))
                         {
-                            haloRadiusNullable = haloRadius;
-                        }
-                        string name;
-                        if (way.Tags.TryGetValue(nameTag, out name))
-                        {
-                            scene.AddTextLine(this.CalculateSceneLayer(OffsetLineText, zIndex), 
-                                minZoom, maxZoom, x, y, textColor, fontSize, name, haloColorNullable, haloRadiusNullable);
+                            int haloColor;
+                            int? haloColorNullable = null;
+                            if (rule.TryGetProperty("textHaloColor", out haloColor))
+                            {
+                                haloColorNullable = haloColor;
+                            }
+                            int haloRadius;
+                            int? haloRadiusNullable = null;
+                            if (rule.TryGetProperty("textHaloRadius", out haloRadius))
+                            {
+                                haloRadiusNullable = haloRadius;
+                            }
+                            string name;
+                            if (way.Tags.TryGetValue(nameTag, out name))
+                            {
+                                scene.AddTextLine(this.CalculateSceneLayer(OffsetLineText, zIndex),
+                                    minZoom, maxZoom, x, y, textColor, fontSize, name, haloColorNullable, haloRadiusNullable);
+                            }
                         }
                     }
                 }

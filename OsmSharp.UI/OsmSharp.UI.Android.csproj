@@ -54,6 +54,11 @@
     <Compile Include="Map\Styles\MapCSS\MapCSSObject.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSType.cs" />
     <Compile Include="Map\Styles\StyleSceneManager.cs" />
+    <Compile Include="Renderer\Scene\Storage\Layered\Scene2DLayeredSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\Layered\Scene2DLayeredSource.cs" />
+    <Compile Include="Renderer\Scene\Storage\Scene2DEntry.cs" />
+    <Compile Include="Renderer\Scene\Storage\Scene2DPrimitivesSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\Scene2DPrimitivesSource.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Declaration.cs" />
@@ -89,19 +94,11 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSLexer.cs" />
     <Compile Include="Renderer\Renderer2D.cs" />
     <Compile Include="Renderer\View2D.cs" />
-    <Compile Include="Renderer\Scene2D.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Point2D.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitive.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Line2D.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Polygon2D.cs" />
     <Compile Include="Map\MapRenderer.cs" />
     <Compile Include="Renderer\Target2DWrapper.cs" />
     <Compile Include="Map\Styles\MapCSS\IMapCSSImageSource.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSDictionaryImageSource.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSDirectoryImageSource.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Icon2D.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Image2D.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Text2D.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRuleProperties.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSRulePropertiesCollection.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
@@ -110,13 +107,20 @@
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
     <Compile Include="Map\Layers\LayerTile.cs" />
     <Compile Include="Map\Layers\LayerOsmSharpRoute.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DEntry.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSerializer.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSource.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitivesSource.cs" />
     <Compile Include="Map\Layers\LayerScene.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\LineText2D.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationCustom.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Icon2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Image2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\IScene2DPrimitive.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Line2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\LineText2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Point2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Polygon2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Text2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DSimple.cs" />
+    <Compile Include="Renderer\Scene\IScene2DPrimitivesSource.cs" />
+    <Compile Include="Renderer\Scene\Scene2DLayered.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

@@ -107,7 +107,7 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
         }
 
         /// <summary>
-        /// Tests an empty R-tree.
+        /// Tests adding stuff to the R-tree.
         /// </summary>
         [Test]
         public void RTreeMemoryIndexAddTests()
@@ -172,6 +172,45 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
         }
 
         /// <summary>
+        /// Tests adding stuff to the R-tree and then enumerating.
+        /// </summary>
+        [Test]
+        public void RTreeMemoryIndexEnumerationTests()
+        {
+            // create the index.
+            var index = new RTreeMemoryIndex<DataTestClass>();
+
+            // build test-data.
+            var testDataList = new HashSet<DataTestClass>();
+            const int count = 10000;
+            var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
+            for (int idx = 0; idx < count; idx++)
+            {
+                double x1 = randomGenerator.Generate(1.0);
+                double x2 = randomGenerator.Generate(1.0);
+                double y1 = randomGenerator.Generate(1.0);
+                double y2 = randomGenerator.Generate(1.0);
+
+                var box = new RectangleF2D(new PointF2D(x1, y1), new PointF2D(x2, y2));
+                var testData = new DataTestClass();
+                testData.Data = idx.ToString(System.Globalization.CultureInfo.InvariantCulture);
+                testDataList.Add(testData);
+
+                index.Add(box, testData);
+            }
+
+            // compare and check if all data gets enumerated.
+            HashSet<DataTestClass> reference = new HashSet<DataTestClass>();
+            foreach (DataTestClass dataTestClass in index)
+            {
+                reference.Add(dataTestClass);
+                Assert.IsTrue(testDataList.Contains(dataTestClass));
+            }
+            Assert.AreEqual(testDataList.Count, reference.Count);
+            Assert.AreEqual(testDataList.Count, index.Count);
+        }
+
+        /// <summary>
         /// Data test class.
         /// </summary>
         private class DataTestClass
@@ -180,6 +219,45 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
             /// Gets/sets data.
             /// </summary>
             public string Data { get; set; }
+
+            /// <summary>
+            /// Returns true if both contain the same data.
+            /// </summary>
+            /// <param name="obj"></param>
+            /// <returns></returns>
+            public override bool Equals(object obj)
+            {
+                if (obj is DataTestClass)
+                {
+                    DataTestClass testClass = obj as DataTestClass;
+                    if (string.IsNullOrEmpty(testClass.Data))
+                    {
+                        return string.IsNullOrEmpty(this.Data);
+                    }
+                    else if (string.IsNullOrEmpty(this.Data))
+                    {
+                        return string.IsNullOrEmpty(testClass.Data);
+                    }
+                    else
+                    {
+                        return this.Data.Equals(testClass.Data);
+                    }
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// Returns the hashcode.
+            /// </summary>
+            /// <returns></returns>
+            public override int GetHashCode()
+            {
+                if (this.Data != null)
+                {
+                    return this.Data.GetHashCode();
+                }
+                return string.Empty.GetHashCode();
+            }
         }
     }
 }

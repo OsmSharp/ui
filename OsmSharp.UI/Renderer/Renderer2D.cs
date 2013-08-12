@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using OsmSharp.UI.Renderer.Scene2DPrimitives;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Renderer
 {

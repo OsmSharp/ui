@@ -44,7 +44,7 @@
 //            IEnumerable<OsmGeo> dataSource = xmlSource.GetOsmGeoEnumerable();
 
 //            // get data.
-//            var scene = new Scene2D();
+//            var scene = new Scene2DSimple();
 //            var projection = new WebMercator();
 //            GeoCoordinateBox box = null;
 //            foreach (var osmGeo in dataSource)
@@ -85,7 +85,7 @@
 //                        projection.LongitudeToX(queryBox.MinLon), 
 //                        projection.LatitudeToY(queryBox.MinLat),
 //                        projection.LongitudeToX(queryBox.MaxLon));
-//                    var testScene= new Scene2D();
+//                    var testScene= new Scene2DSimple();
 //                    sceneSource.Get(testScene, testView, zoomFactor);
                     
 //                    var resultIndex = new HashSet<IScene2DPrimitive>(testScene.Get(testView, zoomFactor));

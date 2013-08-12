@@ -24,7 +24,7 @@
     <DebugType>full</DebugType>
     <Optimize>False</Optimize>
     <OutputPath>..\OutputAndroid\</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG; __ANDROID__;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
@@ -71,6 +71,7 @@
     <Compile Include="GeoCoding\Memory\IndexPostalCodes.cs" />
     <Compile Include="GeoCoding\Memory\IndexStreets.cs" />
     <Compile Include="GeoCoding\Memory\InMemoryGeoCoder.cs" />
+    <Compile Include="IO\LimitedStream.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\TraceSource.cs" />
     <Compile Include="Math\AI\Genetic\Fitness\IFitnessCalculator.cs" />

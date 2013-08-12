@@ -22,6 +22,7 @@ using OsmSharp.UI.Map;
 using OsmSharp.Math.Geo;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Geo.Projections;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -47,7 +48,7 @@ namespace OsmSharp.UI.Map.Layers
 		{
 			_projection = projection;
 
-			_scene = new Scene2D();
+            _scene = new Scene2DSimple();
 		}
 
 //		/// <summary>
@@ -77,17 +78,17 @@ namespace OsmSharp.UI.Map.Layers
 			return id;
 		}
 
-		/// <summary>
-		/// Remove the object with the specified id.
-		/// </summary>
-		/// <param name="id">Identifier.</param>
-		private void Remove(uint id)
-		{
-			if(_scene.Remove(id))
-			{
-				this.RaiseLayerChanged();
-			}
-		}
+//		/// <summary>
+//		/// Remove the object with the specified id.
+//		/// </summary>
+//		/// <param name="id">Identifier.</param>
+//		private void Remove(uint id)
+//		{
+//			if(_scene.Remove(id))
+//			{
+//				this.RaiseLayerChanged();
+//			}
+//		}
 
 		#region ILayer implementation
 
@@ -145,7 +146,7 @@ namespace OsmSharp.UI.Map.Layers
 		/// Gets the scene.
 		/// </summary>
 		/// <value>The scene.</value>
-		public OsmSharp.UI.Renderer.Scene2D Scene {
+		public Scene2D Scene {
 			get {
 				return _scene;
 			}

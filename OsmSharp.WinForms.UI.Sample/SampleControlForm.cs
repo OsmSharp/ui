@@ -16,6 +16,7 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI;
 using OsmSharp.UI.Renderer;
 using KnownColor = System.Drawing.KnownColor;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.WinForms.UI.Sample
 {
@@ -35,7 +36,7 @@ namespace OsmSharp.WinForms.UI.Sample
             this.sampleControl1.ZoomFactor = 1;
 
             // initialize a test-scene.
-            var scene2D = new Scene2D();
+            var scene2D = new Scene2DSimple();
             scene2D.BackColor = Color.White.ToArgb();
             scene2D.AddPoint(float.MinValue, float.MaxValue, 0, 0, Color.Blue.ToArgb(), 1);
 

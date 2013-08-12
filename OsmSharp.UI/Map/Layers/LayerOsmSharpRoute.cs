@@ -20,6 +20,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Route;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Geo.Projections;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -41,7 +42,7 @@ namespace OsmSharp.UI.Map.Layers
         {
             _projection = projection;
 
-            this.Scene = new Scene2D();
+            this.Scene = new Scene2DSimple();
             this.Scene.BackColor = 
                 SimpleColor.FromKnownColor(KnownColor.Transparent).Value;
         }

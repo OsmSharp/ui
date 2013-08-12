@@ -6,10 +6,10 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using OsmSharp.UI.Renderer;
-using LineJoin = OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math;
 using OsmSharp.Units.Angle;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.WinForms.UI.Renderer
 {
@@ -73,7 +73,7 @@ namespace OsmSharp.WinForms.UI.Renderer
         protected override Scene2D BuildSceneCache(Target2DWrapper<Graphics> target, Scene2D currentCache, 
             List<Scene2D> currentScenes, View2D view)
         {
-            var scene = new Scene2D();
+            var scene = new Scene2DSimple();
             scene.BackColor = currentScenes[0].BackColor;
 
 	        var bitmap = target.Tag as Bitmap;
@@ -210,7 +210,7 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <param name="lineJoin"></param>
 	    /// <param name="dashes"></param>
 	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width, 
-            LineJoin lineJoin, int[] dashes)
+            OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
 	    {
 	        float widthInPixels = this.ToPixels(width);
 
@@ -229,16 +229,16 @@ namespace OsmSharp.WinForms.UI.Renderer
             }
 		    switch (lineJoin)
 		    {
-		        case LineJoin.Round:
+                case OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin.Round:
                     _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 		            break;
-		        case LineJoin.Miter:
+                case OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin.Miter:
                     _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Miter;
 		            break;
-		        case LineJoin.Bevel:
+                case OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin.Bevel:
                     _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Bevel;
 		            break;
-		        case LineJoin.None:
+                case OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin.None:
 		            // just keep the default.
                     _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 		            break;

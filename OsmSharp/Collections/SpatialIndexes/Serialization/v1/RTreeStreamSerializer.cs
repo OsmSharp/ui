@@ -248,6 +248,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
             if (index != null)
             { // the index was deserialized.
                 long position = stream.Position;
+                int leafs = 0;
                 for (int idx = 0; idx < index.IsLeaf.Length; idx++)
                 {
                     var localBox = new RectangleF2D(index.MinX[idx], index.MinY[idx],
@@ -269,6 +270,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                             }
                             this.SearchInLeaf(stream, position + index.Starts[idx] + 1, 
                                 size, box, result);
+                            leafs++;
                         }
                         else
                         { // deserialize the node and the children.
@@ -304,6 +306,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
 
             if (size > 0)
             { // the data is a leaf and can be read.
+                int before = result.Count;
                 var dataBytes = new byte[size];
                 stream.Read(dataBytes, 0, dataBytes.Length);
                 List<RectangleF2D> boxes;
@@ -316,6 +319,9 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v1
                         result.Add(data[idx]);
                     }
                 }
+                //OsmSharp.Logging.Log.TraceEvent("RTreeStreamSerializer", System.Diagnostics.TraceEventType.Verbose,
+                //    string.Format("Deserialized leaf@{1} and added {0} objects.", result.Count - before,
+                //        offset));
                 return;
             }
             throw new Exception("Cannot deserialize node!");

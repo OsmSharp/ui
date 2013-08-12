@@ -20,6 +20,7 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI;
 using System.IO;
 using System.Threading;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.Android.UI
 {
@@ -96,7 +97,7 @@ namespace OsmSharp.Android.UI
 			_previousCache = null;
 			_cacheRenderer = new MapRenderer<global::Android.Graphics.Canvas>(
 				new CanvasRenderer2D());
-			_scene = new Scene2D ();
+			_scene = new Scene2DSimple ();
 			_scene.BackColor = SimpleColor.FromKnownColor (KnownColor.White).Value;
 
 			System.Threading.Timer timer = new Timer(InvalidateSimple,

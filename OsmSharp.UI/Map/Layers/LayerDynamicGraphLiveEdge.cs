@@ -8,6 +8,7 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -37,7 +38,7 @@ namespace OsmSharp.UI.Map.Layers
             _dataSource = dataSource;
             _styleInterpreter = styleInterpreter;
 
-            this.Scene = new Scene2D();
+            this.Scene = new Scene2DSimple();
             _interpretedObjects = new Dictionary<int, HashSet<ArcId>>();
             this.Cache = false;
         }

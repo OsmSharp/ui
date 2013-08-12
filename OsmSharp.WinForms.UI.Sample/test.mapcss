@@ -10,46 +10,28 @@ node|z16-[place=suburb]						{ text: name; text-color: black; text-halo-radius: 
 node|z16-[place=farm]						{ text: name; text-color: black; text-halo-radius: 1; text-halo-color: white; font-size: 12; }
 node|z16-[place=isolated_dwelling]			{ text: name; text-color: black; text-halo-radius: 1; text-halo-color: white; font-size: 12; }
 node|z15-[place=hamlet]						{ text: name; text-color: black; text-halo-radius: 1; text-halo-color: white; font-size: 14; }
-node|z14-[place=village]						{ text: name; text-color: black; text-halo-radius: 2; text-halo-color: white; font-size: 16; }
+node|z14-[place=village]					{ text: name; text-color: black; text-halo-radius: 2; text-halo-color: white; font-size: 16; }
 node|z10-[place=town]						{ text: name; text-color: black; text-halo-radius: 2; text-halo-color: white; font-size: 18; }
-node[place=city]						{ text: name; text-color: black; text-halo-radius: 2; text-halo-color: white; font-size: 22; }
+node[place=city]							{ text: name; text-color: black; text-halo-radius: 2; text-halo-color: white; font-size: 22; }
 
 /* ===== Landuse ===== */
-area[landuse=meadow], area[landuse=farmland]		{ z-index: -5; fill-color: #96E6C2; fill-opacity: 0.3; }
-area[landuse=forest], area[natural=wood]			{ z-index: -4; fill-color: #8CD6B5; fill-opacity: 0.3; }
-area[landuse=residential]							{ z-index: -6; fill-color: gray;	fill-opacity: 0.2; }
+area|z14-[landuse=meadow], area|z14-[landuse=farmland]		{ z-index: -5; fill-color: #96E6C2; fill-opacity: 0.3; }
+area|z14-[landuse=forest], area|z14-[natural=wood]			{ z-index: -4; fill-color: #8CD6B5; fill-opacity: 0.3; }
+area|z14-[landuse=residential]							{ z-index: -6; fill-color: gray;	fill-opacity: 0.2; }
 
-/*
-area[amenity],area[shop]				                { z-index: -5; fill-color: #ADCEB5; fill-opacity: 0.4; }
-way|z14-[leisure]                            { z-index: -3; color: #ADDEB9; width: 1; fill-color: #ADDEB9; fill-opacity: 0.2; }
-way|z14-[sport] :area                        { z-index: -3; color: #8CD6B5; width: 1; fill-color: #8CD6B5; fill-opacity: 0.2; }    
-way|z14-[tourism] :area                     { z-index: -3; color: #F7CECE; width: 1; fill-color: #F7CECE; fill-opacity: 0.2; }
-way[historic],way[ruins] :area              { z-index: -5; color: #F7F7DE; width: 1; fill-color: #F7F7DE; fill-opacity: 0.2; }
-way[military] :area                         { z-index: -5; color: #D6D6D6; width: 1; fill-color: #D6D6D6; fill-opacity: 0.2; }
-way[landuse=residential] :area                { z-index: -5; fill-color: #EAEAEA;   fill-opacity: 0.2; }
-way[leisure=pitch]                            { z-index: -3; color: #8CD6B5; width: 1; fill-color: #8CD6B5; fill-opacity: 0.2; }
-way|z16-[amenity=parking] :area                  { z-index: -3; color: gray;    width: 1; fill-color: gray;    fill-opacity: 0.2; }
-way|z16-[public_transport=pay_scale_area] :area  { z-index: -2; color: gray;    width: 1; fill-color: gray;    fill-opacity: 0.1; }
-way[amenity=place_of_worship] :area         { z-index: 9; color: #CCCCCC; width: 1; fill-color: #CCCCCC; fill-opacity: 0.2; }
-way[waterway]                                { z-index: 9; color: #00D6E6; width: eval("tag('width')"); }
-way[natural=water] :area                    { z-index: 9; color: #00D6E6; width: 3; fill-color: #00D6E6;  fill-opacity: 0.2; }
-way[waterway=riverbank] :area                { z-index: 9; color: #00D6E6; width: 3; fill-color: #00D6E6;  fill-opacity: 0.2; }
-way[waterway=dock] :area                    { z-index: 9; color: #00D6E6; width: 3; fill-color: #00D6E6;  fill-opacity: 0.2; }
-*/
 
-area|z13-[building]								{ z-index: -1; fill-color: gray; fill-opacity: 0.3; }
+area|z14-[building]											{ z-index: -1; fill-color: gray; fill-opacity: 0.3; }
 
 /* ===== Water ==== */
-area[natural=water]								{ fill-color: #00D6E6;  fill-opacity: 0.4; }
-way[waterway]									{ color: #00D6E6; width: eval("tag('width')"); }
-area[waterway=riverbank], area[waterway=dock]	{ fill-color: #00D6E6;  fill-opacity: 0.4; }
+area|z14-[natural=water]									{ fill-color: #00D6E6;  fill-opacity: 0.4; }
+way|z14-[waterway]											{ color: #00D6E6; width: eval("tag('width')"); }
+area|z14-[waterway=riverbank], area|z14-[waterway=dock]		{ fill-color: #00D6E6;  fill-opacity: 0.4; }
 
 /* ===== Roads (highway=*) ===== */
 /* default text */
-way[highway]		{ text: name; text-color: black; font-size: 14; text-position: line; text-halo-color: white; text-halo-radius: 1; }
 
 /* widths per zoom-level */
-way|z-13[highway]	{ width: 1; color: gray; }
+way|z-13[highway]	{ width: 1; }
 way|z14[highway]	{ width: 3; }
 way|z15-16[highway] { width: 5; }
 way|z17-20[highway] { width: 10; }
@@ -57,15 +39,15 @@ way|z17-20[highway] { width: 10; }
 /* colors and styles per highway type. */
 way[highway=motorway],way[highway=motorway_link],
 way[highway=trunk],way[highway=trunk_link],
-way[highway=primary],way[highway=primary_link]				{ color: red;	 casing-color: gray; casing-width: 1; z-index: 6; }
-way[highway=secondary],way[highway=secondary_link]			{ color: orange; casing-color: gray; casing-width: 1; z-index: 5; }
-way[highway=tertiary],way[highway=tertiary_link]			{ color: orange; casing-color: gray; casing-width: 1; z-index: 5; }
-way|z14-[highway=residential],way[highway=service],
+way[highway=primary],way[highway=primary_link]						{ color: red;	 casing-color: gray; casing-width: 1; z-index: 6; }
+way|z10-[highway=secondary],way|z10-[highway=secondary_link]		{ color: orange; casing-color: gray; casing-width: 1; z-index: 5; }
+way|z12-[highway=tertiary],way|z12-[highway=tertiary_link]			{ color: orange; casing-color: gray; casing-width: 1; z-index: 5; }
+way|z14-[highway=residential],way|z14-[highway=service],
 way|z14-[highway=road],way|z14-[highway=living_street],
-way|z14-[highway=unclassified]								{ color: white; casing-color: gray; casing-width: 1; z-index: 4; }
-way|z14-[highway=track]                                     { color: gray; width: 1; dashes: 6,2; z-index: 5; }
+way|z14-[highway=unclassified]									{ color: white; casing-color: gray; casing-width: 1; z-index: 4; }
+way|z14-[highway=track]											{ color: gray; width: 1; dashes: 6,2; z-index: 5; }
 
 /* pedestrian/cycleway styling */
 way|z15-[highway=foot], way|z15-[highway=path], 
-way|z15-[highway=footway]									{ color: gray; width: 1; dashes: 6,2; z-index: 3; }
-way|z14-[highway=cycleway]									{ color: blue; width: 1; dashes: 2,2; z-index: 3; }
+way|z15-[highway=footway]										{ color: gray; width: 1; dashes: 6,2; z-index: 3; }
+way|z14-[highway=cycleway]										{ color: blue; width: 1; dashes: 2,2; z-index: 3; }

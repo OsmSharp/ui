@@ -24,6 +24,7 @@ using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Osm.Data.Memory;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -70,7 +71,7 @@ namespace OsmSharp.Android.UI.Sample
 			var map = new Map();
 			//map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
 			//map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter));
-			map.AddLayer(new LayerScene(Scene2D.Deserialize(
+			map.AddLayer(new LayerScene(Scene2DSimple.Deserialize(
 							Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.osm.pbf.scene.simple"), true)));
 
 //			var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);

@@ -25,6 +25,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map
 {

@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using OsmSharp.UI.Renderer;
 using OsmSharp.WinForms.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.WinForms.UI.Sample
 {

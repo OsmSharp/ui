@@ -221,7 +221,6 @@
     <Compile Include="Routers\TypedRouterCHEdge.cs" />
     <Compile Include="Vehicle.cs" />
     <Compile Include="Graph\Serialization\RoutingDataSourceSerializer.cs" />
-    <Compile Include="Graph\Serialization\RoutingDataSourceSerializerStream.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
   </ItemGroup>

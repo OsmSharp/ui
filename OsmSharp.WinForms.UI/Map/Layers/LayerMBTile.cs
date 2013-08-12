@@ -8,6 +8,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.UI.Map;
 using OsmSharp.Osm.Tiles;
 using System.Data.SQLite;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.WinForms.UI.Map.Layers
 {
@@ -26,7 +27,7 @@ namespace OsmSharp.WinForms.UI.Map.Layers
         /// </summary>
         public LayerMBTile(string databasePath)
         {
-            this.Scene = new Scene2D();
+            this.Scene = new Scene2DSimple();
 
             // create the connection.
             _connection = new SQLiteConnection(string.Format("Data Source=\"{0}\";Version=3;", databasePath));
@@ -70,7 +71,7 @@ namespace OsmSharp.WinForms.UI.Map.Layers
             DateTime now = DateTime.Now;
 
             // build the new scene.
-            Scene2D newScene = new Scene2D();
+            Scene2D newScene = new Scene2DSimple();
             if (_connection.State == System.Data.ConnectionState.Closed)
             {
                 _connection.Open();

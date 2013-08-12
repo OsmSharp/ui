@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
 using OsmSharp.Routing.Graph.Router;
+using OsmSharp.IO;
 
 namespace OsmSharp.Routing.Graph.Serialization
 {
@@ -106,7 +107,7 @@ namespace OsmSharp.Routing.Graph.Serialization
             this.WriteVersionHeader(stream);
 
             // wrap the stream.
-            var routingSerializerStream = new RoutingDataSourceSerializerStream(stream);
+            var routingSerializerStream = new LimitedStream(stream);
 
             // do the version-specific serialization.
             this.DoSerialize(routingSerializerStream, graph);
@@ -117,7 +118,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="graph"></param>
-        protected abstract void DoSerialize(RoutingDataSourceSerializerStream stream, DynamicGraphRouterDataSource<TEdgeData> graph);
+        protected abstract void DoSerialize(LimitedStream stream, DynamicGraphRouterDataSource<TEdgeData> graph);
 
 
         /// <summary>
@@ -137,7 +138,7 @@ namespace OsmSharp.Routing.Graph.Serialization
                 this.ReadAndValidateHeader(stream);
 
                 // wrap the stream.
-                var routingSerializerStream = new RoutingDataSourceSerializerStream(stream);
+                var routingSerializerStream = new LimitedStream(stream);
 
                 // do the actual version-specific deserialization.
                 return this.DoDeserialize(routingSerializerStream, lazy);
@@ -152,6 +153,6 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// <param name="stream"></param>
         /// <param name="lazy"></param>
         /// <returns></returns>
-        protected abstract IBasicRouterDataSource<TEdgeData> DoDeserialize(RoutingDataSourceSerializerStream stream, bool lazy);
+        protected abstract IBasicRouterDataSource<TEdgeData> DoDeserialize(LimitedStream stream, bool lazy);
     }
 }

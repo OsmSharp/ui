@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
+using System.IO;
 
-namespace OsmSharp.Routing.Graph.Serialization
+namespace OsmSharp.IO
 {
     /// <summary>
     /// Wraps a stream to prevent some fixed data from being overwritten.
     /// </summary>
-    public class RoutingDataSourceSerializerStream : Stream
+    public class LimitedStream : Stream
     {
         /// <summary>
         /// Holds the offset or the header length.
@@ -25,7 +25,7 @@ namespace OsmSharp.Routing.Graph.Serialization
         /// Creates a new routing serializer stream.
         /// </summary>
         /// <param name="stream"></param>
-        public RoutingDataSourceSerializerStream(Stream stream)
+        public LimitedStream(Stream stream)
         {
             _stream = stream;
             _offset = _stream.Position;

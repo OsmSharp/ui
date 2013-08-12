@@ -10,6 +10,7 @@ using Java.Lang;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI;
 using OsmSharp.Math;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 
 namespace OsmSharp.Android.UI
 {
@@ -106,7 +107,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="lineJoin"></param>
 		/// <param name="dashes"></param>
 		protected override void DrawLine (Target2DWrapper<OpenGLTarget2D> target, double[] x, double[] y, int color, 
-		                                  double width, OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
+		                                  double width, LineJoin lineJoin, int[] dashes)
 		{
 			float[] points = new float[x.Length * 3];
 			for(int idx = 0; idx < x.Length; idx++)

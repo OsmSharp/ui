@@ -17,6 +17,7 @@ using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using System.Reflection;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.WindowsPhone.UI.Sample
 {
@@ -32,7 +33,7 @@ namespace OsmSharp.WindowsPhone.UI.Sample
         {
             // initialize a test-map.
             var map = new Map();
-            map.AddLayer(new LayerScene(Scene2D.Deserialize(
+            map.AddLayer(new LayerScene(Scene2DSimple.Deserialize(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 "OsmSharp.WindowsPhone.UI.Sample.wvl.osm.pbf.scene.simple"), true)));
 

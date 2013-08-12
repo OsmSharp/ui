@@ -72,7 +72,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="stream"></param>
         /// <param name="graph"></param>
         /// <returns></returns>
-        protected override void DoSerialize(RoutingDataSourceSerializerStream stream,
+        protected override void DoSerialize(LimitedStream stream,
             DynamicGraphRouterDataSource<LiveEdge> graph)
         {
             // create an index per tile.
@@ -256,7 +256,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <param name="lazy"></param>
         /// <returns></returns>
         protected override IBasicRouterDataSource<LiveEdge> DoDeserialize(
-            RoutingDataSourceSerializerStream stream, bool lazy)
+            LimitedStream stream, bool lazy)
         {
             // serialize all tile meta data.
             stream.Seek(0, SeekOrigin.Begin);

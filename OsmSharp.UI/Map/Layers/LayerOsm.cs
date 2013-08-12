@@ -21,6 +21,8 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Math.Geo.Projections;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -44,10 +46,19 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
-        public OsmLayer(IDataSourceReadOnly dataSource, StyleInterpreter styleInterpreter)
+        public OsmLayer(IDataSourceReadOnly dataSource, StyleInterpreter styleInterpreter, IProjection projection)
         {
+            // build the zoom-level cutoffs.
+            List<float> zoomLevelCutoffs = new List<float>();
+            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(18));
+            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(16));
+            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(14));
+            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(12));
+            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(10));
+            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(8));
+
             _dataSource = dataSource;
-            _styleSceneManager = new StyleSceneManager(styleInterpreter);
+            _styleSceneManager = new StyleSceneManager(styleInterpreter, zoomLevelCutoffs);
         }
 
         /// <summary>
@@ -81,7 +92,6 @@ namespace OsmSharp.UI.Map.Layers
         /// Event raised when this layer's content has changed.
         /// </summary>
         public event Map.LayerChanged LayerChanged;
-
 
         #region Scene Building
 

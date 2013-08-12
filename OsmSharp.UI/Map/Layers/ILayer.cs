@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Geo;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Layers
 {

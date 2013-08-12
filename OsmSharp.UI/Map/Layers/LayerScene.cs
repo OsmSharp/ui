@@ -24,7 +24,8 @@ using OsmSharp.Osm.Data;
 using OsmSharp.Math.Geo;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene2DPrimitives;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -33,6 +34,11 @@ namespace OsmSharp.UI.Map.Layers
     /// </summary>
     public class LayerScene : ILayer
     {
+		/// <summary>
+		/// Holds the scene.
+		/// </summary>
+		private Scene2DSimple _scene2DSimple;
+
         /// <summary>
         /// Holds the scene primitives source.
         /// </summary>
@@ -45,7 +51,7 @@ namespace OsmSharp.UI.Map.Layers
         public LayerScene(IScene2DPrimitivesSource index)
         {
             _index = index;
-            this.Scene = new Scene2D();
+			_scene2DSimple = new Scene2DSimple();
         }
 
         /// <summary>
@@ -61,7 +67,11 @@ namespace OsmSharp.UI.Map.Layers
         /// <summary>
         /// Gets the scene of this layer containing the objects already projected.
         /// </summary>
-        public Scene2D Scene { get; private set; }
+		public Scene2D Scene { 
+			get {
+				return _scene2DSimple;
+			}
+		}
 
         /// <summary>
         /// Called when the view on the map containing this layer has changed.
@@ -105,11 +115,11 @@ namespace OsmSharp.UI.Map.Layers
 //			_lastBox = box;
 
             // reset the scene.
-            this.Scene = new Scene2D();
+			_scene2DSimple = new Scene2DSimple();
 
             // get from the index.
             this.Scene.BackColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
-            _index.Get(this.Scene, view, zoomFactor);
+			_index.Get(_scene2DSimple, view, zoomFactor);
         }
 
         #endregion

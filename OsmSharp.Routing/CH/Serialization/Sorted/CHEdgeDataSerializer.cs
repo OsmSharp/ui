@@ -99,7 +99,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="stream"></param>
         /// <param name="graph"></param>
         /// <returns></returns>
-        protected override void DoSerialize(RoutingDataSourceSerializerStream stream,
+        protected override void DoSerialize(LimitedStream stream,
             DynamicGraphRouterDataSource<CHEdgeData> graph)
         {
             // sort the graph.
@@ -356,7 +356,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="lazy"></param>
         /// <returns></returns>
         protected override IBasicRouterDataSource<CHEdgeData> DoDeserialize(
-            RoutingDataSourceSerializerStream stream, bool lazy)
+            LimitedStream stream, bool lazy)
         {
             var intBytes = new byte[4];
             stream.Read(intBytes, 0, 4);

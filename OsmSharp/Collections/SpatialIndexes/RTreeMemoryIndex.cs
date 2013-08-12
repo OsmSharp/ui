@@ -34,6 +34,11 @@ namespace OsmSharp.Collections.SpatialIndexes
     public class RTreeMemoryIndex<T> : ISpatialIndex<T>
     {
         /// <summary>
+        /// Holds the number of objects in this index.
+        /// </summary>
+        private int _count = 0;
+
+        /// <summary>
         /// Holds the root node.
         /// </summary>
         private Node _root;
@@ -68,12 +73,19 @@ namespace OsmSharp.Collections.SpatialIndexes
         }
 
         /// <summary>
+        /// Returns the number of objects in this index.
+        /// </summary>
+        public int Count { get { return _count; } }
+
+        /// <summary>
         /// Adds a new item with the corresponding box.
         /// </summary>
         /// <param name="box"></param>
         /// <param name="item"></param>
         public void Add(RectangleF2D box, T item)
         {
+            _count++;
+
             if (_root == null)
             { // create the root.
                 _root = new Node();
@@ -96,7 +108,7 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// <param name="item"></param>
         public void Remove(T item)
         {
-
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -564,5 +576,153 @@ namespace OsmSharp.Collections.SpatialIndexes
         #endregion
 
         #endregion
+
+        /// <summary>
+        /// Returns an enumerator.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<T> GetEnumerator()
+        {
+            return new RTreeMemoryIndexEnumerator(_root);
+        }
+
+        /// <summary>
+        /// Returns a enumerator.
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return new RTreeMemoryIndexEnumerator(_root);
+        }
+
+        /// <summary>
+        /// Enumerates everything in this index.
+        /// </summary>
+        internal class RTreeMemoryIndexEnumerator : IEnumerator<T>
+        {
+            /// <summary>
+            /// Holds the root node.
+            /// </summary>
+            private Node _root;
+
+            /// <summary>
+            /// Holds the current position.
+            /// </summary>
+            private NodePosition _current;
+
+            /// <summary>
+            /// Creates a new enumerator.
+            /// </summary>
+            /// <param name="root"></param>
+            public RTreeMemoryIndexEnumerator(Node root)
+            {
+                _root = root;
+            }
+
+            /// <summary>
+            /// Returns the current node.
+            /// </summary>
+            public T Current
+            {
+                get { return (T)_current.Node.Children[_current.NodeIdx]; }
+            }
+
+            /// <summary>
+            /// Diposes all resource associtated with this enumerator.
+            /// </summary>
+            public void Dispose()
+            {
+                _root = null;
+                _current = null;
+            }
+
+            /// <summary>
+            /// Returns the current object.
+            /// </summary>
+            object IEnumerator.Current
+            {
+                get { return this.Current; }
+            }
+
+            /// <summary>
+            /// Move next.
+            /// </summary>
+            /// <returns></returns>
+            public bool MoveNext()
+            {
+                NodePosition position = null;
+                if (_current == null)
+                { // start with the root.
+                    _current = new NodePosition() { Node = _root, Parent = null, NodeIdx = -1 }; 
+                }
+                position = MoveNextFrom(_current);
+
+                _current = position;
+                return _current != null;
+            }
+
+            /// <summary>
+            /// Move to the next position from the given position.
+            /// </summary>
+            /// <param name="position"></param>
+            /// <returns></returns>
+            private static NodePosition MoveNextFrom(NodePosition position)
+            {
+                position.NodeIdx++; // move to the next position.
+                while (position.Node.Children == null ||
+                    position.Node.Children.Count <= position.NodeIdx ||
+                    position.Node.Children[position.NodeIdx] is Node)
+                { // there is a need to move to the next object because the current one does not exist.
+                    if (position.Node.Children != null && 
+                        position.Node.Children.Count > position.NodeIdx &&
+                        position.Node.Children[position.NodeIdx] is Node)
+                    { // the current child is not of type T move to the child of the child.
+                        NodePosition nextPosition = new NodePosition();
+                        nextPosition.Parent = position;
+                        nextPosition.NodeIdx = -1;
+                        nextPosition.Node = position.Node.Children[position.NodeIdx] as Node;
+
+                        position = nextPosition;
+                    }
+                    else
+                    { // there are no children or the children are finished, move to the parent.
+                        position = position.Parent;
+                    }
+
+                    if (position == null)
+                    { // the position is null, no more next position.
+                        break;
+                    }
+                    position.NodeIdx++; // move to the next position.
+                }
+                return position;
+            }
+
+            /// <summary>
+            /// Reset this enumerator.
+            /// </summary>
+            public void Reset()
+            {
+                _current = null;
+            }
+
+            private class NodePosition
+            {
+                /// <summary>
+                /// Gets/sets the parent.
+                /// </summary>
+                public NodePosition Parent { get; set; }
+
+                /// <summary>
+                /// Gets/sets the node.
+                /// </summary>
+                public Node Node { get; set; }
+
+                /// <summary>
+                /// Gets/sets the current node index.
+                /// </summary>
+                public int NodeIdx { get; set; }
+            }
+        }
     }
 }

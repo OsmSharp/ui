@@ -12,12 +12,13 @@ using Android.Views;
 using Android.Widget;
 
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene2DPrimitives;
 using System.IO;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math;
 using Android.Graphics;
 using OsmSharp.Units.Angle;
+using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 
 namespace OsmSharp.Android.UI
 {
@@ -110,7 +111,7 @@ namespace OsmSharp.Android.UI
 		protected override Scene2D BuildSceneCache(Target2DWrapper<global::Android.Graphics.Canvas> target, Scene2D currentCache, 
 		                                           List<Scene2D> currentScenes, View2D view)
 		{
-			var scene = new Scene2D();
+			var scene = new Scene2DSimple();
 //			scene.BackColor = currentScenes[0].BackColor;
 //			
 //			var bitmap = target.Tag as global::Android.Graphics.Bitmap;

@@ -25,6 +25,7 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data;
 using OsmSharp.Math.Geo;
 using OsmSharp.Collections.LongIndex.LongIndex;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Styles
 {
@@ -36,7 +37,7 @@ namespace OsmSharp.UI.Map.Styles
         /// <summary>
         /// Holds the scene.
         /// </summary>
-        private Scene2D _scene;
+		private Scene2D _scene;
 
         /// <summary>
         /// Holds the style interpreter.
@@ -62,7 +63,8 @@ namespace OsmSharp.UI.Map.Styles
         /// Creates a new style scene manager.
         /// </summary>
         /// <param name="interpreter">The intepreter converting OSM-objects into scene-objects.</param>
-        public StyleSceneManager(StyleInterpreter interpreter) : this(new Scene2D(), interpreter) { }
+        public StyleSceneManager(StyleInterpreter interpreter, List<float> zoomLevelCutoffs) : this(
+            new Scene2DLayered(zoomLevelCutoffs), interpreter) { }
 
         /// <summary>
         /// Creates a new style scene manager.
