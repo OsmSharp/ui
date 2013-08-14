@@ -90,7 +90,7 @@ namespace OsmSharp.WinForms.UI.Sample
                     if (x.Count > 0)
                     {
                         scene2D.AddLine(float.MinValue, float.MaxValue, x.ToArray(), y.ToArray(),
-                            Color.Blue.ToArgb(), 2);
+                            Color.Blue.ToArgb(), 2, 0, -1);
                     }
                 }
             }

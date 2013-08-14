@@ -105,10 +105,12 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="color">Color.</param>
 		/// <param name="width">Width.</param>
-		/// <param name="minZoom"></param>
-		public virtual uint AddLine(float minZoom, float maxZoom, double[] x, double[] y, int color, double width)
+        /// <param name="minZoom"></param>
+        /// <param name="casingWidth"></param>
+        /// <param name="casingColor"></param>
+        public virtual uint AddLine(float minZoom, float maxZoom, double[] x, double[] y, int color, double width, float casingWidth, int casingColor)
 		{
-			return this.AddLine(0, minZoom, maxZoom, x, y, color, width);
+			return this.AddLine(0, minZoom, maxZoom, x, y, color, width, casingWidth, casingColor);
 		}
 
 		/// <summary>
@@ -121,10 +123,12 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="width">Width.</param>
 		/// <param name="lineJoin"></param>
 		/// <param name="dashes"></param>
-		/// <param name="minZoom"></param>
-		public virtual uint AddLine(float minZoom, float maxZoom, double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes)
+        /// <param name="minZoom"></param>
+        /// <param name="casingWidth"></param>
+        /// <param name="casingColor"></param>
+        public virtual uint AddLine(float minZoom, float maxZoom, double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes, float casingWidth, int casingColor)
 		{
-			return this.AddLine(0, minZoom, maxZoom, x, y, color, width, lineJoin, dashes);
+            return this.AddLine(0, minZoom, maxZoom, x, y, color, width, lineJoin, dashes, casingWidth, casingColor);
 		}
 
 		/// <summary>
@@ -136,11 +140,13 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="color">Color.</param>
 		/// <param name="width">Width.</param>
-		/// <param name="minZoom"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="casingWidth"></param>
+        /// <param name="casingColor"></param>
 		/// <returns></returns>
-		public virtual uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width)
+        public virtual uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width, float casingWidth, int casingColor)
 		{
-			return this.AddLine(layer, minZoom, maxZoom, x, y, color, width, LineJoin.None, null);
+            return this.AddLine(layer, minZoom, maxZoom, x, y, color, width, LineJoin.None, null, casingWidth, casingColor);
 		}
 
 	    /// <summary>
@@ -154,8 +160,11 @@ namespace OsmSharp.UI.Renderer.Scene
 	    /// <param name="width">Width.</param>
 	    /// <param name="lineJoin"></param>
 	    /// <param name="dashes"></param>
-	    /// <param name="minZoom"></param>
-        public abstract uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes);
+        /// <param name="minZoom"></param>
+        /// <param name="casingWidth"></param>
+        /// <param name="casingColor"></param>
+        public abstract uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width,
+            LineJoin lineJoin, int[] dashes, float casingWidth, int casingColor);
 
 		/// <summary>
 		/// Adds the polygon.

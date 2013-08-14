@@ -153,6 +153,8 @@
     <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\ISpatialIndexReadonly.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamSerializer.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializer.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializerStream.cs" />

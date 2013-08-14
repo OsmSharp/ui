@@ -265,7 +265,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         }
                     }
                     scene.AddLine(this.CalculateSceneLayer(OffsetLine, 0), float.MinValue, float.MaxValue, 
-                        x, y, SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, null);
+                        x, y, SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, null, 0, -1);
                 }
             }
         }
@@ -446,6 +446,16 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     }
                     if (rule.TryGetProperty("color", out color))
                     {
+                        float casingWidth;
+                        int casingColor;
+                        if (!rule.TryGetProperty("casingWidth", out casingWidth))
+                        {
+                            casingWidth = 0;
+                        }
+                        if(!rule.TryGetProperty("casingColor", out casingColor))
+                        { // casing: use the casing layer.
+                            casingColor = -1;
+                        }
                         float width;
                         if (!rule.TryGetProperty("width", out width))
                         {
@@ -454,20 +464,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         if (dashes == null)
                         { // dashes not set, use line offset.
                             scene.AddLine(this.CalculateSceneLayer(OffsetLine, zIndex),
-                                minZoom, maxZoom, x, y, color, width, lineJoin, dashes);
+                                minZoom, maxZoom, x, y, color, width, lineJoin, dashes, casingWidth, casingColor);
                         }
                         else
                         { // dashes set, use line pattern offset.
                             scene.AddLine(this.CalculateSceneLayer(OffsetLinePattern, zIndex),
-                                minZoom, maxZoom, x, y, color, width, lineJoin, dashes);
-                        }
-                        float casingWidth;
-                        int casingColor;
-                        if (rule.TryGetProperty("casingWidth", out casingWidth) && 
-                            rule.TryGetProperty("casingColor", out casingColor))
-                        { // casing: use the casing layer.
-                            scene.AddLine(this.CalculateSceneLayer(OffsetCasing, zIndex),
-                                minZoom, maxZoom, x, y, casingColor, width + (2 * casingWidth), lineJoin, dashes);
+                                minZoom, maxZoom, x, y, color, width, lineJoin, dashes, casingWidth, casingColor);
                         }
 
                         int textColor;

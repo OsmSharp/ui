@@ -36,7 +36,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
         /// <param name="scenes"></param>
         /// <param name="zoomCutoffs"></param>
         /// <param name="compress"></param>
-        public void Serialize(Stream stream, 
+        public void Serialize(Stream stream, Scene2DSimple nonSimplifiedScene,
             Scene2DSimple[] scenes, List<float> zoomCutoffs, bool compress)
         {
             // first move to store the position of the index.
@@ -44,18 +44,26 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
 
             // serialize all the scenes.
             List<long> sceneIndexes = new List<long>();
+            MemoryStream sceneStream;
             for(int idx = 0; idx < scenes.Length; idx++)
             {
                 if(scenes[idx] != null)
                 {
-                    MemoryStream sceneStream = new MemoryStream();
+                    sceneStream = new MemoryStream();
                     scenes[idx].Serialize(sceneStream, compress);
 
                     sceneIndexes.Add(stream.Position);
                     sceneStream.WriteTo(stream);
+                    sceneStream.Dispose();
                 }
             }
             sceneIndexes.Add(stream.Position);
+
+            // serialize the non-simplified scene.
+            sceneStream = new MemoryStream();
+            nonSimplifiedScene.Serialize(sceneStream, compress);
+            sceneStream.WriteTo(stream);
+            sceneStream.Dispose();
 
             // serialize the index.
             Scene2DLayeredIndex sceneIndex = new Scene2DLayeredIndex();

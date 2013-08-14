@@ -22,7 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Ionic.Zlib;
-using OsmSharp.Collections.SpatialIndexes.Serialization.v1;
+using OsmSharp.Collections.SpatialIndexes.Serialization.v2;
 using OsmSharp.Math.Primitives;
 using ProtoBuf;
 using ProtoBuf.Meta;
@@ -85,6 +85,8 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             lineMetaType.Add(10, "MaxX");
             lineMetaType.Add(11, "MinY");
             lineMetaType.Add(12, "MaxY");
+            lineMetaType.Add(13, "CasingColor");
+            lineMetaType.Add(14, "CasingWidth");
 
             MetaType pointMetaType = typeModel.Add(typeof (Point2D), false);
             pointMetaType.Add(1, "X");
@@ -411,13 +413,18 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             out List<RectangleF2D> boxes)
         {
             // decompress if needed.
+            Stream stream = null;
             if (_compress)
             {
-                data = GZipStream.UncompressBuffer(data);
+                stream = new GZipStream(new MemoryStream(data), CompressionMode.Decompress);
+                //data = GZipStream.UncompressBuffer(data);
+            }
+            else
+            { // uncompressed stream.
+                stream = new MemoryStream(data);
             }
 
             // create the memory stream.
-            var stream = new MemoryStream(data);
             var collection = typeModel.Deserialize(stream, null, 
                 typeof(PrimitivesCollection)) as PrimitivesCollection;
             if (collection == null)

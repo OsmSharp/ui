@@ -30,7 +30,7 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
 	    /// <param name="width"></param>
 	    /// <param name="lineJoin"></param>
 	    /// <param name="dashes"></param>
-	    public Line2D(double[] x, double[] y, int color, float width, LineJoin lineJoin, int[] dashes)
+        public Line2D(double[] x, double[] y, int color, float width, LineJoin lineJoin, int[] dashes, float casingWidth, int casingColor)
         {
             this.X = x;
             this.Y = y;
@@ -38,6 +38,8 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
             this.Width = width;
             this.LineJoin = lineJoin;
             this.Dashes = dashes;
+            this.CasingColor = casingColor;
+            this.CasingWidth = casingWidth;
 
             MinX = int.MaxValue;
             MaxX = int.MinValue;
@@ -81,7 +83,8 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
 	    /// <param name="dashes"></param>
 	    /// <param name="minZoom"></param>
 	    /// <param name="maxZoom"></param>
-		public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes, float minZoom, float maxZoom)
+        public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes, float casingWidth, int casingColor, 
+            float minZoom, float maxZoom)
             : this()
         {
             this.X = x;
@@ -90,6 +93,8 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
             this.Width = width;
             this.LineJoin = lineJoin;
             this.Dashes = dashes;
+            this.CasingColor = casingColor;
+            this.CasingWidth = casingWidth;
 
             MinX = int.MaxValue;
             MaxX = int.MinValue;
@@ -134,7 +139,7 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// <param name="maxX"></param>
         /// <param name="minY"></param>
         /// <param name="maxY"></param>
-		public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes,
+        public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes, float casingWidth, int casingColor,
             int minX, int maxX, int minY, int maxY)
             : this()
         {
@@ -144,6 +149,8 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
             this.Width = width;
             this.LineJoin = lineJoin;
             this.Dashes = dashes;
+            this.CasingColor = casingColor;
+            this.CasingWidth = casingWidth;
 
             MinX = minX;
             MaxX = maxX;
@@ -208,6 +215,16 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// Gets or sets the line dashses.
         /// </summary>
         public int[] Dashes { get; set; }
+
+        /// <summary>
+        /// Gets or sets the casing width.
+        /// </summary>
+        public float CasingWidth { get; set; }
+
+        /// <summary>
+        /// Gets or sets the casing color.
+        /// </summary>
+        public int CasingColor { get; set; }
 
         /// <summary>
         /// The minimum zoom.

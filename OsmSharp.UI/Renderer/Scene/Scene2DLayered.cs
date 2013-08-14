@@ -56,7 +56,7 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <summary>
 		/// Holds a scene containing objects that cannot be simplified.
 		/// </summary>
-		private readonly Scene2D _nonSimplifiedScene;
+		private readonly Scene2DSimple _nonSimplifiedScene;
 
 		/// <summary>
 		/// Searches for the scene appropriate for the given zoomFactor.
@@ -260,8 +260,8 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="width">Width.</param>
 		/// <param name="minZoom"></param>
 		/// <returns>The line.</returns>
-		public override uint AddLine (int layer, float minZoom, float maxZoom, double[] x, double[] y, 
-            int color, double width, LineJoin lineJoin, int[] dashes)
+		public override uint AddLine (int layer, float minZoom, float maxZoom, double[] x, double[] y,
+            int color, double width, LineJoin lineJoin, int[] dashes, float casingWidth, int casingColor)
 		{ // add the line but simplify it for higher zoom levels.
 			float currentMaxZoom = float.MaxValue;
             for (int idx = 0; idx < _zoomLevelCutoffs.Count; idx++)
@@ -293,7 +293,7 @@ namespace OsmSharp.UI.Renderer.Scene
                             _scenes[idx] = new Scene2DSimple();
                         }
                         _scenes[idx].AddLine(layer, thisMinZoom, thisMaxZoom, simplified[0], simplified[1],
-                            color, width, lineJoin, dashes);
+                            color, width, lineJoin, dashes, casingWidth, casingColor);
                     }
                 }
                 currentMaxZoom = currentMinZoom; // move to the next cutoff.
@@ -392,7 +392,7 @@ namespace OsmSharp.UI.Renderer.Scene
         public void Serialize(Stream stream, bool compress)
         {
             Scene2DLayeredSerializer serializer = new Scene2DLayeredSerializer();
-            serializer.Serialize(stream, _scenes, _zoomLevelCutoffs, compress);
+            serializer.Serialize(stream, _nonSimplifiedScene, _scenes, _zoomLevelCutoffs, compress);
         }
 
         /// <summary>

@@ -51,6 +51,8 @@
     <Compile Include="Renderer\OpenGLRenderer2D.cs" />
     <Compile Include="MapGLView.cs" />
     <Compile Include="Renderer\OpenGLTarget2D.cs" />
+    <Compile Include="MapLayout.cs" />
+    <Compile Include="MapMarker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -69,5 +71,12 @@
       <Project>{87AF65F0-A706-4145-9779-E810A717AD5A}</Project>
       <Name>OsmSharp.UI.Android</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\layout\" />
+    <Folder Include="Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Images\marker.png" />
   </ItemGroup>
 </Project>

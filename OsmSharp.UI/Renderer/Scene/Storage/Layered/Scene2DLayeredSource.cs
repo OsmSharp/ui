@@ -77,6 +77,28 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
         private Dictionary<int, Scene2DPrimitivesSource> _loadedScenes;
 
         /// <summary>
+        /// Holds the non-simplified scene.
+        /// </summary>
+        private Scene2DPrimitivesSource _nonSimplifiedScene;
+
+        /// <summary>
+        /// Returns the non-simplified scene.
+        /// </summary>
+        /// <returns></returns>
+        private Scene2DPrimitivesSource GetNonSimplifiedStream()
+        {
+            if (_nonSimplifiedScene == null)
+            {
+                long position = _index.SceneIndexes[_index.SceneIndexes.Length - 1];
+                _stream.Seek(position, SeekOrigin.Begin);
+                LimitedStream stream = new LimitedStream(_stream);
+                Scene2DPrimitivesSerializer serializer = new Scene2DPrimitivesSerializer(true);
+                _nonSimplifiedScene = new Scene2DPrimitivesSource(serializer.Deserialize(stream));
+            }
+            return _nonSimplifiedScene;
+        }
+
+        /// <summary>
         /// Fills the given simple scene with objects inside the given view and for the given zoomFactor.
         /// </summary>
         /// <param name="scene"></param>
@@ -84,11 +106,14 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
         /// <param name="zoomFactor"></param>
         public void Get(Scene2DSimple scene, View2D view, float zoomFactor)
         {
+            // check what is in the non-simplified scene.
+            Scene2DPrimitivesSource simpleSource = this.GetNonSimplifiedStream();
+            simpleSource.Get(scene, view, zoomFactor);
+
             // check what index this zoomfactor is for.
             int idx = this.SearchForScene(zoomFactor);
             if (idx >= 0)
             { // the index was found.
-                Scene2DPrimitivesSource simpleSource;
                 if (!_loadedScenes.TryGetValue(idx, out simpleSource))
                 { // the scene was not found.
                     long position = _index.SceneIndexes[idx];

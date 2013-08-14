@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using OsmSharp.Collections.SpatialIndexes.Serialization.v1;
+using OsmSharp.Collections.SpatialIndexes.Serialization.v2;
 using OsmSharp.Collections.Tags;
 using OsmSharp.IO;
 using OsmSharp.Math.Geo;

@@ -320,6 +320,8 @@
     <Compile Include="Collections\Cache\LRUCache.cs" />
     <Compile Include="Math\Primitives\PointF2D.cs" />
     <Compile Include="Math\Primitives\Polyline2D.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="IO\Xml\Gpx\v1_0\gpx.xsd" />

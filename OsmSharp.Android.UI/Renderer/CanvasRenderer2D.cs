@@ -244,16 +244,14 @@ namespace OsmSharp.Android.UI
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="color">Color.</param>
 		/// <param name="width">Width.</param>
+		/// <param name="casingWidth">Casing width.</param>
+		/// <param name="casingColor">Casing color.</param>
 		protected override void DrawLine (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, 
-		                                  int color, double width, LineJoin lineJoine, int[] dashes)
+		                                  int color, double width, LineJoin lineJoine, int[] dashes, double casingWidth, int casingColor)
 		{
 			if(x.Length > 1)
 			{
-				float widthInPixels = this.ToPixels(width);
-
 				_paint.AntiAlias = true;
-				_paint.Color = new global::Android.Graphics.Color(color);
-				_paint.StrokeWidth = widthInPixels;
 				_paint.SetStyle(global::Android.Graphics.Paint.Style.Stroke);
 				if(dashes != null && dashes.Length > 0)
 				{ // set the dashes effect.
@@ -285,6 +283,15 @@ namespace OsmSharp.Android.UI
 //				lineCoordinates[lineCoordinates.Length - 2] = this.TransformX(x[x.Length - 1]);
 //				lineCoordinates[lineCoordinates.Length - 1] = this.TransformY(y[y.Length - 1]);
 //				target.Target.DrawLines(lineCoordinates, 0, lineCoordinates.Length, _paint);
+				if (casingWidth > 0) {
+					float casingWidthInPixels = this.ToPixels(casingWidth + width);
+					_paint.Color = new global::Android.Graphics.Color(casingColor);
+					_paint.StrokeWidth = casingWidthInPixels;
+					target.Target.DrawPath (path, _paint);
+				}
+				float widthInPixels = this.ToPixels(width);
+				_paint.Color = new global::Android.Graphics.Color(color);
+				_paint.StrokeWidth = widthInPixels;
 				target.Target.DrawPath (path, _paint);
 				_paint.Reset ();
 			}

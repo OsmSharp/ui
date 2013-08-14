@@ -108,7 +108,7 @@ namespace OsmSharp.UI.Map.Layers
                                                                    blue.R, blue.G, blue.B);
 
                 this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
-                                   transparantBlue.Value, 16);
+                                   transparantBlue.Value, 16, 0, -1);
             }
 		}
 
@@ -140,7 +140,7 @@ namespace OsmSharp.UI.Map.Layers
 				                                                   blue.R, blue.G, blue.B);
 
 				this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
-				                   transparantBlue.Value, 16);
+				                   transparantBlue.Value, 16, 0, -1);
 			}
 		}
 

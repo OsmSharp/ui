@@ -90,12 +90,17 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         public event Map.LayerChanged LayerChanged;
 
+        #region Scene Building
+
 		/// <summary>
 		/// Holds the last box.
 		/// </summary>
 		private GeoCoordinateBox _lastBox;
 
-        #region Scene Building
+		/// <summary>
+		/// Holds the last zoom level.
+		/// </summary>
+		private int _lastZoom;
         
         /// <summary>
         /// Builds the scene.
@@ -109,10 +114,13 @@ namespace OsmSharp.UI.Map.Layers
 			// build the boundingbox.
 			var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(view.Left, view.Top),
 			                               map.Projection.ToGeoCoordinates(view.Right, view.Bottom));
-//			if (_lastBox != null && _lastBox.IsInside (box)) {
-//				return;
-//			}
-//			_lastBox = box;
+			var zoomLevel = (int)map.Projection.ToZoomLevel (zoomFactor);
+			if (_lastBox != null && _lastBox.IsInside (box) &&
+			    zoomLevel == _lastZoom) {
+				return;
+			}
+			_lastBox = box;
+			_lastZoom = zoomLevel;
 
             // reset the scene.
 			_scene2DSimple = new Scene2DSimple();

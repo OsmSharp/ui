@@ -36,8 +36,10 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <summary>
         /// Holds all primitives indexed per layer and by id.
         /// </summary>
+        //private readonly SortedDictionary<int,
+        //    RTreeMemoryIndex<IScene2DPrimitive>> _primitives;
         private readonly SortedDictionary<int,
-            RTreeMemoryIndex<IScene2DPrimitive>> _primitives;
+            List<IScene2DPrimitive>> _primitives;
 
         /// <summary>
         /// Holds the next primitive id.
@@ -49,7 +51,8 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         public Scene2DSimple()
         {
-            _primitives = new SortedDictionary<int, RTreeMemoryIndex<IScene2DPrimitive>>();
+            //_primitives = new SortedDictionary<int, RTreeMemoryIndex<IScene2DPrimitive>>();
+            _primitives = new SortedDictionary<int, List<IScene2DPrimitive>>();
 
             this.BackColor = SimpleColor.FromArgb(0, 255, 255, 255).Value; // fully transparent.
         }
@@ -70,7 +73,7 @@ namespace OsmSharp.UI.Renderer.Scene
             get
             {
                 int count = 0;
-                foreach (KeyValuePair<int, RTreeMemoryIndex<IScene2DPrimitive>> keyValuePair in _primitives)
+                foreach (KeyValuePair<int, List<IScene2DPrimitive>> keyValuePair in _primitives)
                 {
                     count = count + keyValuePair.Value.Count;
                 }
@@ -102,21 +105,21 @@ namespace OsmSharp.UI.Renderer.Scene
             {
                 foreach (var layer in _primitives)
                 { // loop over all layers in order.
-                    //foreach (KeyValuePair<uint, IScene2DPrimitive> primitivePair in layer.Value)
-                    //{ // loop over all primitives in order.
-                    //    if (primitivePair.Value.IsVisibleIn(view, zoom))
-                    //    {
-                    //        primitivesInView.Add(primitivePair.Value);
-                    //    }
-                    //}
-                    foreach (IScene2DPrimitive primitive in layer.Value.Get(new RectangleF2D(
-                        view.Left, view.Top, view.Right, view.Bottom)))
+                    foreach (IScene2DPrimitive primitivePair in layer.Value)
                     { // loop over all primitives in order.
-                        if (primitive.IsVisibleIn(view, zoom))
+                        if (primitivePair.IsVisibleIn(view, zoom))
                         {
-                            primitivesInView.Add(primitive);
+                            primitivesInView.Add(primitivePair);
                         }
                     }
+                    //foreach (IScene2DPrimitive primitive in layer.Value.Get(new RectangleF2D(
+                    //    view.Left, view.Top, view.Right, view.Bottom)))
+                    //{ // loop over all primitives in order.
+                    //    if (primitive.IsVisibleIn(view, zoom))
+                    //    {
+                    //        primitivesInView.Add(primitive);
+                    //    }
+                    //}
                 }
             }
             return primitivesInView;
@@ -165,20 +168,20 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="primitive"></param>
         internal void AddPrimitive(int layer, uint id, IScene2DPrimitive primitive)
         {
-            RTreeMemoryIndex<IScene2DPrimitive> layerDic;
-            if (!_primitives.TryGetValue(layer, out layerDic))
+            //RTreeMemoryIndex<IScene2DPrimitive> layerDic;
+            //if (!_primitives.TryGetValue(layer, out layerDic))
+            //{
+            //    layerDic = new RTreeMemoryIndex<IScene2DPrimitive>();
+            //    _primitives.Add(layer, layerDic);
+            //}
+            //layerDic.Add(primitive.GetBox(), primitive);
+            List<IScene2DPrimitive> layerList;
+            if (!_primitives.TryGetValue(layer, out layerList))
             {
-                layerDic = new RTreeMemoryIndex<IScene2DPrimitive>();
-                _primitives.Add(layer, layerDic);
+                layerList = new List<IScene2DPrimitive>();
+                _primitives.Add(layer, layerList);
             }
-            layerDic.Add(primitive.GetBox(), primitive);
-//            ISpatialIndex<IScene2DPrimitive> layer;
-//            if (!_primitives.TryGetValue(layerIdx, out layer))
-//            {
-//                layer = new RTreeMemoryIndex<IScene2DPrimitive>();
-//                _primitives.Add(layerIdx, layer);
-//            }
-//            layer.Add(primitive.GetBox(), primitive);
+            layerList.Add(primitive);
         }
 
         /// <summary>
@@ -223,7 +226,8 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="lineJoin"></param>
         /// <param name="dashes"></param>
         /// <param name="minZoom"></param>
-        public override uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes)
+        public override uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width,
+            LineJoin lineJoin, int[] dashes, float casingWidth, int casingColor)
         {
             if (y == null)
                 throw new ArgumentNullException("y");
@@ -237,7 +241,7 @@ namespace OsmSharp.UI.Renderer.Scene
 
             lock (_primitives)
             {
-                this.AddPrimitive(layer, id, new Line2D(x, y, color, width, lineJoin, dashes, minZoom, maxZoom));
+                this.AddPrimitive(layer, id, new Line2D(x, y, color, width, lineJoin, dashes, casingWidth, casingColor, minZoom, maxZoom));
             }
             return id;
         }

@@ -79,16 +79,16 @@ namespace OsmSharp.WinForms.UI.Renderer
 	        var bitmap = target.Tag as Bitmap;
 	        if (bitmap != null)
 	        {
-	            byte[] imageData = null;
-	            using (var stream = new MemoryStream())
-	            {
-	                bitmap.Save(stream, ImageFormat.Png);
-	                stream.Close();
+                //byte[] imageData = null;
+                //using (var stream = new MemoryStream())
+                //{
+                //    bitmap.Save(stream, ImageFormat.Png);
+                //    stream.Close();
 
-	                imageData = stream.ToArray();
-	            }
-	            scene.AddImage(0, float.MinValue, float.MaxValue, 
-                    view.Left, view.Top, view.Right, view.Bottom, imageData);
+                //    imageData = stream.ToArray();
+                //}
+	            scene.AddImage(0, float.MinValue, float.MaxValue,
+                    view.Left, view.Top, view.Right, view.Bottom, new byte[0], bitmap);
 	        }
 	        return scene;
         }
@@ -210,12 +210,10 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <param name="lineJoin"></param>
 	    /// <param name="dashes"></param>
 	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width, 
-            OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
+            OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin lineJoin, int[] dashes, double casingWidth, int casingColor)
 	    {
 	        float widthInPixels = this.ToPixels(width);
 
-	        _pen.Color = Color.FromArgb(color);
-            _pen.Width = this.ToPixels(width);
             _pen.DashStyle = DashStyle.Solid;
             if (dashes != null)
             {
@@ -253,6 +251,15 @@ namespace OsmSharp.WinForms.UI.Renderer
                 points[idx] = new PointF(this.TransformX(x[idx]), 
                     this.TransformY(y[idx]));
 		    }
+            if (casingWidth > 0)
+            { // draw casing.
+                _pen.Color = Color.FromArgb(casingColor);
+                _pen.Width = this.ToPixels(casingWidth + width);
+                target.Target.DrawLines(_pen, points);
+            }
+            // set color/width.
+            _pen.Color = Color.FromArgb(color);
+            _pen.Width = this.ToPixels(width);
             target.Target.DrawLines(_pen, points);
 		}
 

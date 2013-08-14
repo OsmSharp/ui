@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using OsmSharp.Collections.SpatialIndexes;
-using OsmSharp.Collections.SpatialIndexes.Serialization.v1;
+using OsmSharp.Collections.SpatialIndexes.Serialization.v2;
 using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math.Random;

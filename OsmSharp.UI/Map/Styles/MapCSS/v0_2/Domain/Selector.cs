@@ -48,53 +48,51 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
                     this.Zoom.ZoomMin, this.Zoom.ZoomMax);
             }
 
-            // check rule.
-            if (this.SelectorRule != null &&
-                !this.SelectorRule.Selects(mapCSSObject))
-            { // oeps: the zoom was not valid.
-                return false;
-            }
-
             // check the type.
             switch (this.Type)
             {
                 case SelectorTypeEnum.Area:
-                    if (mapCSSObject.MapCSSType == MapCSSType.Area)
+                    if (mapCSSObject.MapCSSType != MapCSSType.Area)
                     {
-                        return true;
+                        return false;
                     }
                     break;
                 case SelectorTypeEnum.Canvas:
                     // no way the canvas can be here!
                     break;
                 case SelectorTypeEnum.Line:
-                    if (mapCSSObject.MapCSSType == MapCSSType.Line)
+                    if (mapCSSObject.MapCSSType != MapCSSType.Line)
                     {
-                        return true;
+                        return false;
                     }
                     break;
                 case SelectorTypeEnum.Node:
-                    if (mapCSSObject.MapCSSType == MapCSSType.Node)
+                    if (mapCSSObject.MapCSSType != MapCSSType.Node)
                     {
-                        return true;
+                        return false;
                     }
                     break;
-                case SelectorTypeEnum.Star:
-                    return true;
                 case SelectorTypeEnum.Way:
-                    if (mapCSSObject.MapCSSType == MapCSSType.Way)
+                    if (mapCSSObject.MapCSSType != MapCSSType.Way)
                     {
-                        return true;
+                        return false;
                     }
                     break;
                 case SelectorTypeEnum.Relation:
-                    if (mapCSSObject.MapCSSType == MapCSSType.Relation)
+                    if (mapCSSObject.MapCSSType != MapCSSType.Relation)
                     {
-                        return true;
+                        return false;
                     }
                     break;
             }
-            return false;
+
+            // object is of correct type: check rule.
+            if (this.SelectorRule != null &&
+                !this.SelectorRule.Selects(mapCSSObject))
+            { // oeps: the zoom was not valid.
+                return false;
+            }
+            return true; // object is of correct and selected by rule.
         }
 
         /// <summary>

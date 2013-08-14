@@ -135,10 +135,13 @@ namespace OsmSharp.Collections.Tags
         /// <returns></returns>
         public override bool TryGetValue(string key, out string value)
         {
-            foreach (var tag in _tags.Where(tag => tag.Key == key))
+            foreach(var tag in _tags)
             {
-                value = tag.Value;
-                return true;
+                if(tag.Key == key)
+                {
+                    value = tag.Value;
+                    return true;
+                }
             }
             value = string.Empty;
             return false;

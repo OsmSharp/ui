@@ -214,8 +214,8 @@ namespace OsmSharp.UI.Renderer
                 else if (primitive is Line2D)
                 {
                     var line = (Line2D)(primitive);
-                    this.DrawLine(target, line.X, line.Y, line.Color, 
-                        this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
+                    this.DrawLine(target, line.X, line.Y, line.Color,
+                        this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes, this.FromPixels(target, view, line.CasingWidth), line.CasingColor);
                 }
                 else if (primitive is Polygon2D)
                 {
@@ -333,9 +333,11 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="color">Color.</param>
 	    /// <param name="width">Width.</param>
 	    /// <param name="lineJoin"></param>
-	    /// <param name="dashes"></param>
+        /// <param name="dashes"></param>
+        /// <param name="casingWidth"></param>
+        /// <param name="casingColor"></param>
 		protected abstract void DrawLine(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, 
-            LineJoin lineJoin, int[] dashes);
+            LineJoin lineJoin, int[] dashes, double casingWidth, int casingColor);
 
 	    /// <summary>
 	    /// Draws a polygon on the target. The coordinates given are scene coordinates.

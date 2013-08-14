@@ -25,9 +25,9 @@ using OsmSharp.UI.Renderer.Scene;
 namespace OsmSharp.Android.UI
 {
 	/// <summary>
-	/// Map view.
+	/// Map view surface.
 	/// </summary>
-	public class MapView : global::Android.Views.View, 
+	public class MapView : View, 
 			GestureDetector.IOnGestureListener, ScaleGestureDetector.IOnScaleGestureListener, 
 			global::Android.Views.View.IOnTouchListener
 	{
@@ -46,10 +46,19 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private ScaleGestureDetector _scaleGestureDetector;
 
-		public MapView (Context context) :
+		/// <summary>
+		/// Holds the maplayout.
+		/// </summary>
+		private MapLayout _mapLayout;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapViewSurface"/> class.
+		/// </summary>
+		/// <param name="context">Context.</param>
+		public MapView (Context context, MapLayout mapLayout) :
 			base (context)
 		{
-			Initialize ();
+			Initialize (mapLayout);
 		}
 
 		/// <summary>
@@ -57,29 +66,23 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <param name="context">Context.</param>
 		/// <param name="attrs">Attrs.</param>
-		public MapView (Context context, IAttributeSet attrs) :
+		public MapView (Context context, IAttributeSet attrs, MapLayout mapLayout) :
 			base (context, attrs)
 		{
-			Initialize ();
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapView"/> class.
-		/// </summary>
-		/// <param name="context">Context.</param>
-		/// <param name="attrs">Attrs.</param>
-		/// <param name="defStyle">Def style.</param>
-		public MapView (Context context, IAttributeSet attrs, int defStyle) :
-			base (context, attrs, defStyle)
-		{
-			Initialize ();
+			Initialize (mapLayout);
 		}
 
 		/// <summary>
 		/// Initialize this instance.
 		/// </summary>
-		void Initialize ()
+		void Initialize (MapLayout mapLayout)
 		{
+			_mapLayout = mapLayout;
+			this.SetWillNotDraw (false);
+
+			this.MapMinZoomLevel = 10;
+			this.MapMaxZoomLevel = 20;
+
 			_renderer = new MapRenderer<global::Android.Graphics.Canvas>(
 				new CanvasRenderer2D());
 
@@ -101,7 +104,11 @@ namespace OsmSharp.Android.UI
 			_scene.BackColor = SimpleColor.FromKnownColor (KnownColor.White).Value;
 
 			System.Threading.Timer timer = new Timer(InvalidateSimple,
-			                                         null, 0, 150);
+			                                         null, 0, 50);
+
+//			Button mButton = new Button(this.Context);   
+//			mButton.Text = "Test";
+//			this.AddView (mButton);
 		}
 
 		/// <summary>
@@ -137,11 +144,18 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Notifies change.
 		/// </summary>
-		void Change()
+		internal void Change()
 		{
 			if (_cacheRenderer.IsRunning) {
 				_cacheRenderer.Cancel ();
 			}
+
+//			// notify map layout of changes.
+//			if (this.Width > 0 && this.Height > 0) {
+//				View2D view = _cacheRenderer.Create (this.Width, this.Height,
+//				                                    this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter);
+//				_mapLayout.NotifyMapChange (this.Width, this.Height, view, this.Map.Projection);
+//			}
 
 			_render = true;
 		}
@@ -178,10 +192,6 @@ namespace OsmSharp.Android.UI
 			// make sure only on thread at the same time is using the renderer.
 			lock (_cacheRenderer) {
 				double extra = 1.25;
-				long before = DateTime.Now.Ticks;
-
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-                    "Rendering Start");
 
 				// build the layers list.
 				var layers = new List<ILayer> ();
@@ -212,11 +222,19 @@ namespace OsmSharp.Android.UI
 
 				// create the view.
 				View2D view = _cacheRenderer.Create (canvas.Width, canvas.Height,
-				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center);
+				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter);
+				long before = DateTime.Now.Ticks;
+
+				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+				                                "Rendering Start");
 
 				// notify the map that the view has changed.
-				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, 
+				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor(this.MapZoomLevel), this.MapCenter, 
 				                      view);
+				long afterViewChanged = DateTime.Now.Ticks;
+				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+				                                "View change took: {0}ms @ zoom level {1}",
+				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoomLevel);
 
 				// add the current canvas to the scene.
 				uint canvasId = _scene.AddImage (-1, float.MinValue, float.MaxValue, 
@@ -224,8 +242,12 @@ namespace OsmSharp.Android.UI
 
 				// does the rendering.
 				bool complete = _cacheRenderer.Render (canvas, this.Map.Projection, 
-				                      layers, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center);
+				                      layers, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter);
 
+				long afterRendering = DateTime.Now.Ticks;
+				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+				                                "Rendering took: {0}ms @ zoom level {1}",
+				                                (new TimeSpan(afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoomLevel);
 				if(complete)
 				{ // there was no cancellation, the rendering completely finished.
 					// add the result to the scene cache.
@@ -264,7 +286,7 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the center.
 		/// </summary>
 		/// <value>The center.</value>
-		public GeoCoordinate Center {
+		public GeoCoordinate MapCenter {
 			get;
 			set;
 		}
@@ -279,10 +301,41 @@ namespace OsmSharp.Android.UI
 		}
 
 		/// <summary>
+		/// Holds the map zoom level.
+		/// </summary>
+		private float _mapZoomLevel;
+
+		/// <summary>
 		/// Gets or sets the zoom factor.
 		/// </summary>
 		/// <value>The zoom factor.</value>
-		public float ZoomLevel {
+		public float MapZoomLevel {
+			get { return _mapZoomLevel; }
+			set { 
+				if (value > this.MapMaxZoomLevel) {
+					_mapZoomLevel = this.MapMaxZoomLevel;
+				} else if (value < this.MapMinZoomLevel) {
+					_mapZoomLevel = this.MapMinZoomLevel;
+				} else {
+					_mapZoomLevel = value;
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the map max zoom level.
+		/// </summary>
+		/// <value>The map max zoom level.</value>
+		public float MapMaxZoomLevel {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the map minimum zoom level.
+		/// </summary>
+		/// <value>The map minimum zoom level.</value>
+		public float MapMinZoomLevel {
 			get;
 			set;
 		}
@@ -311,7 +364,7 @@ namespace OsmSharp.Android.UI
 					canvas, 
 					_scene,
 					_renderer.Create (canvas.Width, canvas.Height,
-				                  this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center));
+				                  this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter));
 			}
 
 //			long after = DateTime.Now.Ticks;
@@ -329,8 +382,8 @@ namespace OsmSharp.Android.UI
 		public View2D CreateView()
 		{
 			// calculate the center/zoom in scene coordinates.
-			double[] sceneCenter = this.Map.Projection.ToPixel(this.Center.Latitude, this.Center.Longitude);
-			float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel);
+			double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
+			float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoomLevel);
 			
 			// create the view for this control.
 			return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
@@ -361,6 +414,13 @@ namespace OsmSharp.Android.UI
 		{		
 			// invalidate the current view.
 			this.Invalidate ();
+
+			// notify map layout of changes.
+			if (this.Width > 0 && this.Height > 0) {
+				View2D view = _cacheRenderer.Create (this.Width, this.Height,
+				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter);
+				_mapLayout.NotifyMapChange (this.Width, this.Height, view, this.Map.Projection);
+			}
 		}
 
 		#region IOnScaleGestureListener implementation
@@ -377,9 +437,9 @@ namespace OsmSharp.Android.UI
 		/// <param name="detector">Detector.</param>
 		public bool OnScale (ScaleGestureDetector detector)
 		{
-			double zoomFactor = this.Map.Projection.ToZoomFactor(this.ZoomLevel);
+			double zoomFactor = this.Map.Projection.ToZoomFactor(this.MapZoomLevel);
 			zoomFactor = zoomFactor * detector.ScaleFactor;
-			this.ZoomLevel = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
+			this.MapZoomLevel = (float)this.Map.Projection.ToZoomLevel(zoomFactor);
 
 			_scaled = true;
 			this.NotifyMovement();
@@ -468,7 +528,7 @@ namespace OsmSharp.Android.UI
 			                              centerXPixels, centerYPixles);
 
 			// convert to the projected center.
-			this.Center = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
+			this.MapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
 
 //			_highQuality = false;
 
