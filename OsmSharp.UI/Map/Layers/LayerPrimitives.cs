@@ -96,6 +96,16 @@ namespace OsmSharp.UI.Map.Layers
 		/// Raised when the content of this layer has changed.
 		/// </summary>
 		public event OsmSharp.UI.Map.Map.LayerChanged LayerChanged;
+		
+		/// <summary>
+		/// Invalidates this layer.
+		/// </summary>
+		public void Invalidate()
+		{
+			if (this.LayerChanged != null) {
+				this.LayerChanged (this);
+			}
+		}
 
 		/// <summary>
 		/// Raises the layer changed event.

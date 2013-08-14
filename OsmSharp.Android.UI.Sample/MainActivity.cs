@@ -34,6 +34,16 @@ namespace OsmSharp.Android.UI.Sample
     public class MainActivity : Activity
 	{
 		/// <summary>
+		/// Holds the router.
+		/// </summary>
+		private Router _router;
+
+		/// <summary>
+		/// Holds the route layer.
+		/// </summary>
+		private LayerOsmSharpRoute _routeLayer;
+
+		/// <summary>
 		/// Raises the create event.
 		/// </summary>
 		/// <param name="bundle">Bundle.</param>
@@ -75,7 +85,7 @@ namespace OsmSharp.Android.UI.Sample
 			map.AddLayer(
 				new LayerScene(
 				Scene2DLayered.Deserialize(
-					Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.wvl.osm.pbf.scene.layered"), true)));
+					Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen.osm.pbf.scene.layered"), true)));
 
 //			var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
 //			var graphSerialized = routingSerializer.Deserialize(
@@ -90,13 +100,13 @@ namespace OsmSharp.Android.UI.Sample
 //				graphSerialized,
 //				new OsmRoutingInterpreter());
 			
-//			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
-//			var graphDeserialized = routingSerializer.Deserialize(
-//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.osm.pbf.routing.ch.5"), true);
+			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+			var graphDeserialized = routingSerializer.Deserialize(
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.kempen.osm.pbf.routing.ch"), true);
 //
-//			var router = Router.CreateCHFrom(
-//				graphDeserialized, new CHRouter(graphDeserialized),
-//				new OsmRoutingInterpreter());
+			_router = Router.CreateCHFrom(
+				graphDeserialized, new CHRouter(graphDeserialized),
+				new OsmRoutingInterpreter());
 //
 //			//GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
 //			//GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
@@ -127,11 +137,11 @@ namespace OsmSharp.Android.UI.Sample
 ////			route = router.Calculate(Vehicle.Car, 
 ////			                         router.Resolve(Vehicle.Car, new GeoCoordinate(51.15136, 3.19462)),
 ////			                         router.Resolve(Vehicle.Car, new GeoCoordinate(51.075023, 3.096632)));
-//			var osmSharpLayer = new LayerOsmSharpRoute(map.Projection);
+			_routeLayer = new LayerOsmSharpRoute(map.Projection);
 //			osmSharpLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
 //			osmSharpLayer.AddRoute (route2, SimpleColor.FromKnownColor(KnownColor.Red).Value);
 //			osmSharpLayer.AddRoute (route3, SimpleColor.FromKnownColor(KnownColor.YellowGreen).Value);
-//			map.AddLayer(osmSharpLayer);
+			map.AddLayer(_routeLayer);
 
 //			// create gpx layer.
 //			LayerGpx gpxLayer = new LayerGpx(map.Projection);
@@ -156,8 +166,20 @@ namespace OsmSharp.Android.UI.Sample
 
 			//var mapGLView = new MapGLView(this);
 
-			var mapLayout = new MapLayout (this);
+			var mapLayout = new MapView (this);
 			mapLayout.Map = map;
+			
+			mapLayout.MapMaxZoomLevel = 20;
+			mapLayout.MapMinZoomLevel = 12;
+			//var mapView = new MapGLView (this);
+			//mapView.Center = new GeoCoordinate(51.158075, 2.961545); // gistel
+			//mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
+			mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
+			//mapView.Center = new GeoCoordinate(51.156803, 2.958887);
+			mapLayout.MapZoomLevel = 15;
+			mapLayout.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {
+				mapLayout.AddMarker(geoCoordinate).Click  += new EventHandler (MapMarkerClicked);
+			};
 
 			//Create the user interface in code
 			var layout = new RelativeLayout (this);
@@ -166,14 +188,36 @@ namespace OsmSharp.Android.UI.Sample
 			//layout.AddView(mapGLView);
 			layout.AddView (mapLayout);
 
-			mapLayout.AddMarker (new GeoCoordinate (51.26337, 4.78739)).Click += delegate {
-				OsmSharp.Logging.Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information, "Button 1 clicked.");
-			};
-			mapLayout.AddMarker (new GeoCoordinate (51.26785, 4.78025)).Click += delegate {
-				OsmSharp.Logging.Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information, "Button 2 clicked.");
-			};
+//			mapLayout.AddMarker (new GeoCoordinate (51.26337, 4.78739)).Click += new EventHandler (MapMarkerClicked);
+//			mapLayout.AddMarker (new GeoCoordinate (51.26785, 4.78025)).Click += new EventHandler (MapMarkerClicked);
 
 			SetContentView (layout);
+		}
+
+		/// <summary>
+		/// Holds the previous point.
+		/// </summary>
+		private RouterPoint _previousPoint;
+
+		private void MapMarkerClicked(object sender, EventArgs e)
+		{
+			if (sender is MapMarker) {
+				lock (_router) {
+					MapMarker marker = sender as MapMarker;
+					RouterPoint point = _router.Resolve (Vehicle.Car, marker.Location);
+					if (point != null) {
+						if (_previousPoint != null) {
+							_routeLayer.Clear ();
+							OsmSharpRoute route = _router.Calculate (Vehicle.Car, _previousPoint, point);
+							if (route != null) {
+								_routeLayer.AddRoute (route);
+							}
+							_routeLayer.Invalidate ();
+						}
+						_previousPoint = point;
+					}
+				}
+			}
 		}
 	}
 }

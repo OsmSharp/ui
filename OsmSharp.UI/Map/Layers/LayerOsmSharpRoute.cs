@@ -80,6 +80,16 @@ namespace OsmSharp.UI.Map.Layers
         /// Event raised when this layer's content has changed.
         /// </summary>
         public event Map.LayerChanged LayerChanged;
+		
+		/// <summary>
+		/// Invalidates this layer.
+		/// </summary>
+		public void Invalidate()
+		{
+			if (this.LayerChanged != null) {
+				this.LayerChanged (this);
+			}
+		}
 
         #region Scene Building
 
@@ -88,28 +98,11 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="route">Stream.</param>
         public void AddRoute(OsmSharpRoute route)
-        {
-            if (route.Entries != null && route.Entries.Length > 0)
-            { // there are entries.
-                // get x/y.
-                var x = new double[route.Entries.Length];
-                var y = new double[route.Entries.Length];
-                for (int idx = 0; idx < route.Entries.Length; idx++)
-                {
-                    x[idx] = _projection.LongitudeToX(
-                        route.Entries[idx].Longitude);
-                    y[idx] = _projection.LatitudeToY(
-                        route.Entries[idx].Latitude);
-                }
-
-                // set the default color if none is given.
-                SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
-                SimpleColor transparantBlue = SimpleColor.FromArgb(128,
-                                                                   blue.R, blue.G, blue.B);
-
-                this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
-                                   transparantBlue.Value, 16, 0, -1);
-            }
+		{
+			// set the default color if none is given.
+			SimpleColor blue = SimpleColor.FromKnownColor (KnownColor.Blue);
+			SimpleColor transparantBlue = SimpleColor.FromArgb (128, blue.R, blue.G, blue.B);
+			this.AddRoute (route, transparantBlue.Value);
 		}
 
 		/// <summary>
@@ -136,11 +129,9 @@ namespace OsmSharp.UI.Map.Layers
 				SimpleColor blue = new SimpleColor () {
 					Value = argb
 				};
-				SimpleColor transparantBlue = SimpleColor.FromArgb(128,
-				                                                   blue.R, blue.G, blue.B);
-
+				SimpleColor color = SimpleColor.FromArgb (argb);
 				this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
-				                   transparantBlue.Value, 16, 0, -1);
+				                   color.Value, 4, 0, -1);
 			}
 		}
 
@@ -151,7 +142,7 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         public void Clear()
         {
-            this.Scene.Clear();
+			this.Scene.Clear();
         }
     }
 }

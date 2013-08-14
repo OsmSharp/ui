@@ -85,6 +85,16 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         public event Map.LayerChanged LayerChanged;
 
+		/// <summary>
+		/// Invalidates this layer.
+		/// </summary>
+		public void Invalidate()
+		{
+			if (this.LayerChanged != null) {
+				this.LayerChanged (this);
+			}
+		}
+
 
         #region Scene Building
 

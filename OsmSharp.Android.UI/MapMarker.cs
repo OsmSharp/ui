@@ -27,25 +27,45 @@ namespace OsmSharp.Android.UI
 		private static global::Android.Graphics.Bitmap _bitmap = null;
 
 		/// <summary>
+		/// Gets the default image.
+		/// </summary>
+		/// <returns>The default image.</returns>
+		private static global::Android.Graphics.Bitmap GetDefaultImage()
+		{
+			if (_bitmap == null) {
+				_bitmap = global::Android.Graphics.BitmapFactory.DecodeStream (
+					Assembly.GetExecutingAssembly ().GetManifestResourceStream (
+					"OsmSharp.Android.UI.Images.marker.png"));
+			}
+			return _bitmap;
+		}
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
 		/// </summary>
 		/// <param name="context">Context.</param>
 		/// <param name="coordinate">Coordinate.</param>
-		public MapMarker (Context context, GeoCoordinate coordinate)
-			: base(context)
+		internal MapMarker (Context context, GeoCoordinate coordinate)
+			: this(context, coordinate, MapMarker.GetDefaultImage())
 		{
+
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
+		/// </summary>
+		/// <param name="context">Context.</param>
+		/// <param name="coordinate">Coordinate.</param>
+		/// <param name="bitmap">Bitmap.</param>
+		internal MapMarker(Context context, GeoCoordinate coordinate, global::Android.Graphics.Bitmap bitmap)
+			: base(context){
 			this.Location = coordinate;
 			this.SetBackgroundColor (global::Android.Graphics.Color.Transparent);
 
-			if (_bitmap == null) {
-				_bitmap = global::Android.Graphics.BitmapFactory.DecodeStream (
-					Assembly.GetExecutingAssembly ().GetManifestResourceStream (
-						"OsmSharp.Android.UI.Images.marker.png"));
-			}
 			this.SetScaleType (ScaleType.Center);
-			this.SetImageBitmap (_bitmap);
-			this.SetMinimumWidth (_bitmap.Width);
-			this.SetMinimumHeight (_bitmap.Height);
+			this.SetImageBitmap (bitmap);
+			this.SetMinimumWidth (bitmap.Width);
+			this.SetMinimumHeight (bitmap.Height);
 		}
 
 		/// <summary>
@@ -64,7 +84,7 @@ namespace OsmSharp.Android.UI
 		/// <value>The location.</value>
 		public GeoCoordinate Location {
 			get;
-			set;
+			private set;
 		}
 
 		/// <summary>

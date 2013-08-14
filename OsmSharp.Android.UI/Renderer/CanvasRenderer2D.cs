@@ -566,7 +566,7 @@ namespace OsmSharp.Android.UI
 				}
 				var characterHeight = (float)size;
 				var textLength = characterWidths.Sum();
-				var avgCharacterWidth = textLength / characterWidths.Length;
+				//var avgCharacterWidth = textLength / characterWidths.Length;
 
 				// calculate line length.
 				var lineLength = Polyline2D.Length(x, y);

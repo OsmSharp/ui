@@ -47,5 +47,10 @@ namespace OsmSharp.UI.Map.Layers
         /// An event raised when the content of this layer has changed.
         /// </summary>
         event OsmSharp.UI.Map.Map.LayerChanged LayerChanged;
+
+		/// <summary>
+		/// Invalidate this layer.
+		/// </summary>
+		void Invalidate();
     }
 }

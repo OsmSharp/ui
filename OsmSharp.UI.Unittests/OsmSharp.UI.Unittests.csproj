@@ -52,11 +52,15 @@
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>..\Output\Debug\x64\</OutputPath>
     <DocumentationFile>..\Output\Debug\x64\OsmSharp.UI.Unittests.XML</DocumentationFile>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>..\Output\Release\x64\</OutputPath>
     <DocumentationFile>..\Output\Release\x64\OsmSharp.UI.Unittests.XML</DocumentationFile>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">

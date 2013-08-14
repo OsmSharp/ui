@@ -84,6 +84,19 @@ namespace OsmSharp.Math.Primitives
 
         }
 
+		/// <summary>
+		/// Creates a new box around the given points.
+		/// </summary>
+		/// <param name="points"></param>
+		public RectangleF2D(double[] x, double[] y)
+		{
+			PointF2D[] points = new PointF2D[x.Length];
+			for (int idx = 0; idx < x.Length; idx++) {
+				points [idx] = new PointF2D (x [idx], y [idx]);
+			}
+			this.Mutate (points);
+		}
+
         #endregion
 
         #region Mutators

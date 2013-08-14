@@ -116,6 +116,16 @@ namespace OsmSharp.WinForms.UI.Map.Layers
         /// <summary>
         /// Raised when the contents of this layer have changed.
         /// </summary>
-        public event OsmSharp.UI.Map.Map.LayerChanged LayerChanged;
+		public event OsmSharp.UI.Map.Map.LayerChanged LayerChanged;
+
+		/// <summary>
+		/// Invalidates this layer.
+		/// </summary>
+		public void Invalidate()
+		{
+			if (this.LayerChanged != null) {
+				this.LayerChanged (this);
+			}
+		}
     }
 }

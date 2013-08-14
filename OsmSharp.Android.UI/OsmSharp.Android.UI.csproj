@@ -25,7 +25,6 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AndroidLinkMode>None</AndroidLinkMode>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentation>true</GenerateDocumentation>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -47,12 +46,12 @@
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Renderer\CanvasRenderer2D.cs" />
     <Compile Include="CanvasRenderer2DView.cs" />
-    <Compile Include="MapView.cs" />
     <Compile Include="Renderer\OpenGLRenderer2D.cs" />
     <Compile Include="MapGLView.cs" />
     <Compile Include="Renderer\OpenGLTarget2D.cs" />
-    <Compile Include="MapLayout.cs" />
     <Compile Include="MapMarker.cs" />
+    <Compile Include="MapViewSurface.cs" />
+    <Compile Include="MapView.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

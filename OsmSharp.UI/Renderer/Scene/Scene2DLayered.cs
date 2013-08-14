@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.IO;
 using ProtoBuf.Meta;
 using OsmSharp.UI.Renderer.Scene.Storage.Layered;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer.Scene
 {
@@ -82,6 +83,22 @@ namespace OsmSharp.UI.Renderer.Scene
 		private float CalculateSimplificationEpsilon(float zoomFactor)
 		{
             return (1.0f / zoomFactor) * 2;
+		}
+
+		/// <summary>
+		/// Calculates the simplification surface condition.
+		/// </summary>
+		/// <returns><c>true</c>, if simplification surface was calculated, <c>false</c> otherwise.</returns>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
+		private bool CalculateSimplificationSurfaceCondition(float zoomFactor, double[] x, double[] y)
+		{
+			RectangleF2D rectangle = new RectangleF2D (x, y);
+			float epsilon = (1.0f / zoomFactor) * 10;
+			if (rectangle.Delta [0] < epsilon && rectangle.Delta [1] < epsilon) {
+				return false;
+			}
+			return true;
 		}
 
 		#endregion
@@ -285,7 +302,8 @@ namespace OsmSharp.UI.Renderer.Scene
                             simplified[1][0], simplified[0][1]);
                         distance = point1.Distance(point2);
                     }
-                    if (distance > epsilon)
+                    if (distance > epsilon &&
+					    this.CalculateSimplificationSurfaceCondition(currentMaxZoom, x, y))
                     {
                         // add to the scene.
                         if (_scenes[idx] == null)
@@ -327,7 +345,8 @@ namespace OsmSharp.UI.Renderer.Scene
 					double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify (new double[][] { x, y },
 					this.CalculateSimplificationEpsilon(thisMaxZoom));
 
-                    if (simplified[0].Length > 2)
+					if (simplified[0].Length > 2 &&
+					    this.CalculateSimplificationSurfaceCondition(currentMaxZoom, x, y))
                     {
                         // add to the scene.
                         if (_scenes[idx] == null)
@@ -368,14 +387,15 @@ namespace OsmSharp.UI.Renderer.Scene
 
 					// simplify the algorithm.
 					double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify (new double[][] { x, y },
-					this.CalculateSimplificationEpsilon(thisMaxZoom));
-
-					// add to the scene.
-					if (_scenes [idx] == null) {
-						_scenes [idx] = new Scene2DSimple ();
+						this.CalculateSimplificationEpsilon(thisMaxZoom));
+					if (this.CalculateSimplificationSurfaceCondition (currentMaxZoom, x, y)) {
+						// add to the scene.
+						if (_scenes [idx] == null) {
+							_scenes [idx] = new Scene2DSimple ();
+						}
+						_scenes [idx].AddTextLine (layer, thisMinZoom, thisMaxZoom, simplified [0], simplified [1], color, font_size, text,
+						                          haloColor, haloRadius);
 					}
-					_scenes [idx].AddTextLine (layer, thisMinZoom, thisMaxZoom, simplified [0], simplified [1], color, font_size, text,
-					                          haloColor, haloRadius);
 				}
 				currentMaxZoom = currentMinZoom; // move to the next cutoff.
 			}
