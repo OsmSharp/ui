@@ -166,12 +166,12 @@ namespace OsmSharp.Android.UI.Sample
 			//layout.AddView(mapGLView);
 			layout.AddView (mapLayout);
 
-//			mapLayout.AddMarker (new GeoCoordinate (51.26337, 4.78739)).Click += delegate {
-//				OsmSharp.Logging.Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information, "Button 1 clicked.");
-//			};
-//			mapLayout.AddMarker (new GeoCoordinate (51.26785, 4.78025)).Click += delegate {
-//				OsmSharp.Logging.Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information, "Button 2 clicked.");
-//			};
+			mapLayout.AddMarker (new GeoCoordinate (51.26337, 4.78739)).Click += delegate {
+				OsmSharp.Logging.Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information, "Button 1 clicked.");
+			};
+			mapLayout.AddMarker (new GeoCoordinate (51.26785, 4.78025)).Click += delegate {
+				OsmSharp.Logging.Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information, "Button 2 clicked.");
+			};
 
 			SetContentView (layout);
 		}
