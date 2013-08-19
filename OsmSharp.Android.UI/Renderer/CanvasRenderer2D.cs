@@ -54,6 +54,11 @@ namespace OsmSharp.Android.UI
 		
 		#region Caching Implementation
 
+		/// <summary>
+		/// Holds a reusable path.
+		/// </summary>
+		private global::Android.Graphics.Path _path;
+
 //		/// <summary>
 //		/// Holds the bitmap cache.
 //		/// </summary>
@@ -80,6 +85,7 @@ namespace OsmSharp.Android.UI
 //			target.Target.DrawColor(global::Android.Graphics.Color.Transparent);
 //			
 //			target.Tag = _cache;
+			_path = new global::Android.Graphics.Path ();
 		}
 		
 		/// <summary>
@@ -265,34 +271,40 @@ namespace OsmSharp.Android.UI
 							intervals, 0));
 				}
 
+				float minX = float.MaxValue, maxX = float.MinValue, minY = float.MaxValue, maxY = float.MinValue;
+				float xT, yT;
+
 				// convert to the weid android api array!
-				global::Android.Graphics.Path path = new global::Android.Graphics.Path ();
-				path.MoveTo (this.TransformX(x[0]), this.TransformY (y[0]));
-//				float[] lineCoordinates = new float[(x.Length - 2) * 4 + 4];
-//				lineCoordinates[0] = ;
-//				lineCoordinates[1] = ;
+				_path.Rewind ();
+				xT = this.TransformX (x [0]);
+				yT = this.TransformY (y [0]);
+				_path.MoveTo (xT, yT);
+				if (xT < minX) { minX = xT; }
+				if (xT > maxX) { maxX = xT; }
+				if (yT < minY) { minY = yT; }
+				if (yT > maxY) { maxY = yT; }
 				for(int idx = 1; idx < x.Length; idx++)
 				{		
-					path.LineTo (this.TransformX(x[idx]), this.TransformY (y[idx]));
-//					int androidApiIndex = (idx - 1) * 4 + 2;
-//					lineCoordinates[androidApiIndex] = ;
-//					lineCoordinates[androidApiIndex + 1] = ;
-//					lineCoordinates[androidApiIndex + 2] = this.TransformX(x[idx]);
-//					lineCoordinates[androidApiIndex + 3] = this.TransformY(y[idx]);
+					xT = this.TransformX (x [idx]);
+					yT = this.TransformY (y [idx]);
+					_path.LineTo (xT, yT);
+					if (xT < minX) { minX = xT; }
+					if (xT > maxX) { maxX = xT; }
+					if (yT < minY) { minY = yT; }
+					if (yT > maxY) { maxY = yT; }
 				}
-//				lineCoordinates[lineCoordinates.Length - 2] = this.TransformX(x[x.Length - 1]);
-//				lineCoordinates[lineCoordinates.Length - 1] = this.TransformY(y[y.Length - 1]);
-//				target.Target.DrawLines(lineCoordinates, 0, lineCoordinates.Length, _paint);
-				if (casingWidth > 0) {
-					float casingWidthInPixels = this.ToPixels(casingWidth + width);
-					_paint.Color = new global::Android.Graphics.Color(casingColor);
-					_paint.StrokeWidth = casingWidthInPixels;
-					target.Target.DrawPath (path, _paint);
+				if ((maxX - minX) > 1 || (maxY - minY) > 1) {
+					if (casingWidth > 0) {
+						float casingWidthInPixels = this.ToPixels (casingWidth + width);
+						_paint.Color = new global::Android.Graphics.Color (casingColor);
+						_paint.StrokeWidth = casingWidthInPixels;
+						target.Target.DrawPath (_path, _paint);
+					}
+					float widthInPixels = this.ToPixels (width);
+					_paint.Color = new global::Android.Graphics.Color (color);
+					_paint.StrokeWidth = widthInPixels;
+					target.Target.DrawPath (_path, _paint);
 				}
-				float widthInPixels = this.ToPixels(width);
-				_paint.Color = new global::Android.Graphics.Color(color);
-				_paint.StrokeWidth = widthInPixels;
-				target.Target.DrawPath (path, _paint);
 				_paint.Reset ();
 			}
 		}
@@ -321,16 +333,39 @@ namespace OsmSharp.Android.UI
 					_paint.SetStyle(global::Android.Graphics.Paint.Style.Stroke);
 				}
 
+				float minX = float.MaxValue, maxX = float.MinValue, minY = float.MaxValue, maxY = float.MinValue;
+				float xT, yT;
+
 				// convert android path object.
-				global::Android.Graphics.Path path = new global::Android.Graphics.Path();
-				path.MoveTo(this.TransformX(x[0]), this.TransformY(y[0]));
+				_path.Rewind ();
+				xT = this.TransformX (x [0]);
+				yT = this.TransformY (y [0]);
+				_path.MoveTo (xT, yT);
+				if (xT < minX) { minX = xT; }
+				if (xT > maxX) { maxX = xT; }
+				if (yT < minY) { minY = yT; }
+				if (yT > maxY) { maxY = yT; }
 				for(int idx = 1; idx < x.Length; idx++)
 				{
-					path.LineTo(this.TransformX(x[idx]), this.TransformY(y[idx]));
+					xT = this.TransformX (x [idx]);
+					yT = this.TransformY (y [idx]);
+					_path.LineTo (xT, yT);
+					if (xT < minX) { minX = xT; }
+					if (xT > maxX) { maxX = xT; }
+					if (yT < minY) { minY = yT; }
+					if (yT > maxY) { maxY = yT; }
 				}
-				path.LineTo(this.TransformX(x[0]), this.TransformY(y[0]));
-
-				target.Target.DrawPath(path, _paint);
+				xT = this.TransformX (x [0]);
+				yT = this.TransformY (y [0]);
+				_path.LineTo (xT, yT);
+				if (xT < minX) { minX = xT; }
+				if (xT > maxX) { maxX = xT; }
+				if (yT < minY) { minY = yT; }
+				if (yT > maxY) { maxY = yT; }
+				
+				if ((maxX - minX) > 5 && (maxY - minY) > 5) {
+					target.Target.DrawPath(_path, _paint);
+				}
 			}
 		}
 
