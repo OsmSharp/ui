@@ -107,6 +107,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             _mapCSSImageSource = imageSource;
             _geometryInterpreter = GeometryInterpreter.DefaultInterpreter;
         }
+
         /// <summary>
         /// Creates a new MapCSS interpreter.
         /// </summary>
@@ -265,7 +266,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         }
                     }
                     scene.AddLine(this.CalculateSceneLayer(OffsetLine, 0), float.MinValue, float.MaxValue, 
-                        x, y, SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, null, 0, -1);
+                        x, y, SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, null);
                 }
             }
         }
@@ -461,15 +462,20 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         {
                             width = 1;
                         }
+                        if (casingWidth > 0)
+                        { // adds the casing
+                            scene.AddLine(this.CalculateSceneLayer(OffsetCasing, zIndex),
+                                minZoom, maxZoom, x, y, casingColor, width + (casingWidth * 2), lineJoin, dashes);
+                        }
                         if (dashes == null)
                         { // dashes not set, use line offset.
                             scene.AddLine(this.CalculateSceneLayer(OffsetLine, zIndex),
-                                minZoom, maxZoom, x, y, color, width, lineJoin, dashes, casingWidth, casingColor);
+                                minZoom, maxZoom, x, y, color, width, lineJoin, dashes);
                         }
                         else
                         { // dashes set, use line pattern offset.
                             scene.AddLine(this.CalculateSceneLayer(OffsetLinePattern, zIndex),
-                                minZoom, maxZoom, x, y, color, width, lineJoin, dashes, casingWidth, casingColor);
+                                minZoom, maxZoom, x, y, color, width, lineJoin, dashes);
                         }
 
                         int textColor;

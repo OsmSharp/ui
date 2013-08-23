@@ -210,7 +210,7 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <param name="lineJoin"></param>
 	    /// <param name="dashes"></param>
 	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width, 
-            OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin lineJoin, int[] dashes, double casingWidth, int casingColor)
+            OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
 	    {
 	        float widthInPixels = this.ToPixels(width);
 
@@ -251,12 +251,12 @@ namespace OsmSharp.WinForms.UI.Renderer
                 points[idx] = new PointF(this.TransformX(x[idx]), 
                     this.TransformY(y[idx]));
 		    }
-            if (casingWidth > 0)
-            { // draw casing.
-                _pen.Color = Color.FromArgb(casingColor);
-                _pen.Width = this.ToPixels(casingWidth + width);
-                target.Target.DrawLines(_pen, points);
-            }
+            //if (casingWidth > 0)
+            //{ // draw casing.
+            //    _pen.Color = Color.FromArgb(casingColor);
+            //    _pen.Width = this.ToPixels(casingWidth + width);
+            //    target.Target.DrawLines(_pen, points);
+            //}
             // set color/width.
             _pen.Color = Color.FromArgb(color);
             _pen.Width = this.ToPixels(width);

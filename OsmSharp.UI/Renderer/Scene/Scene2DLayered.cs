@@ -128,15 +128,15 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// </summary>
 		/// <param name="view">View.</param>
 		/// <param name="zoom"></param>
-		public override IEnumerable<IScene2DPrimitive> Get(View2D view, float zoom)
+        public override IEnumerable<Scene2DPrimitive> Get(View2D view, float zoom)
 		{
 			Scene2D scene = this.SearchForScene (zoom);
-            List<IScene2DPrimitive> primitives = new List<IScene2DPrimitive>(
-                _nonSimplifiedScene.Get(view, zoom));
+            List<IEnumerable<Scene2DPrimitive>> primitives = new List<IEnumerable<Scene2DPrimitive>>();
+            primitives.Add(_nonSimplifiedScene.Get(view, zoom));
 			if (scene != null) {
-				primitives.AddRange(scene.Get (view, zoom));
+				primitives.Add(scene.Get (view, zoom));
 			}
-            return primitives;
+            return new Scene2DPrimitiveEnumerable(primitives);
 		}
 
 		/// <summary>
@@ -278,7 +278,7 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="minZoom"></param>
 		/// <returns>The line.</returns>
 		public override uint AddLine (int layer, float minZoom, float maxZoom, double[] x, double[] y,
-            int color, double width, LineJoin lineJoin, int[] dashes, float casingWidth, int casingColor)
+            int color, double width, LineJoin lineJoin, int[] dashes)
 		{ // add the line but simplify it for higher zoom levels.
 			float currentMaxZoom = float.MaxValue;
             for (int idx = 0; idx < _zoomLevelCutoffs.Count; idx++)
@@ -311,7 +311,7 @@ namespace OsmSharp.UI.Renderer.Scene
                             _scenes[idx] = new Scene2DSimple();
                         }
                         _scenes[idx].AddLine(layer, thisMinZoom, thisMaxZoom, simplified[0], simplified[1],
-                            color, width, lineJoin, dashes, casingWidth, casingColor);
+                            color, width, lineJoin, dashes);
                     }
                 }
                 currentMaxZoom = currentMinZoom; // move to the next cutoff.

@@ -22,6 +22,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using OsmSharp.IO;
+using OsmSharp.UI.Renderer.Scene.Storage.RTree;
 
 namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
 {
@@ -50,7 +51,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
             _stream = stream;
             _index = index;
 
-            _loadedScenes = new Dictionary<int, Scene2DPrimitivesSource>();
+            _loadedScenes = new Dictionary<int, IScene2DPrimitivesSource>();
         }
 
         /// <summary>
@@ -74,26 +75,29 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
         /// <summary>
         /// Holds the loaded scenes.
         /// </summary>
-        private Dictionary<int, Scene2DPrimitivesSource> _loadedScenes;
+        private Dictionary<int, IScene2DPrimitivesSource> _loadedScenes;
 
         /// <summary>
         /// Holds the non-simplified scene.
         /// </summary>
-        private Scene2DPrimitivesSource _nonSimplifiedScene;
+        private IScene2DPrimitivesSource _nonSimplifiedScene;
 
         /// <summary>
         /// Returns the non-simplified scene.
         /// </summary>
         /// <returns></returns>
-        private Scene2DPrimitivesSource GetNonSimplifiedStream()
+        private IScene2DPrimitivesSource GetNonSimplifiedStream()
         {
             if (_nonSimplifiedScene == null)
             {
                 long position = _index.SceneIndexes[_index.SceneIndexes.Length - 1];
                 _stream.Seek(position, SeekOrigin.Begin);
                 LimitedStream stream = new LimitedStream(_stream);
-                Scene2DPrimitivesSerializer serializer = new Scene2DPrimitivesSerializer(true);
-                _nonSimplifiedScene = new Scene2DPrimitivesSource(serializer.Deserialize(stream));
+                //Scene2DRTreeSerializer serializer = new Scene2DRTreeSerializer(true);
+                //_nonSimplifiedScene = new Scene2DPrimitivesSource(serializer.Deserialize(stream));
+                OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DStyledSerializer serializer =
+                    new Styled.Scene2DStyledSerializer();
+                _nonSimplifiedScene = serializer.Deserialize(stream, true);
             }
             return _nonSimplifiedScene;
         }
@@ -107,7 +111,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
         public void Get(Scene2DSimple scene, View2D view, float zoomFactor)
         {
             // check what is in the non-simplified scene.
-            Scene2DPrimitivesSource simpleSource = this.GetNonSimplifiedStream();
+            IScene2DPrimitivesSource simpleSource = this.GetNonSimplifiedStream();
             simpleSource.Get(scene, view, zoomFactor);
 
             // check what index this zoomfactor is for.
@@ -119,8 +123,11 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
                     long position = _index.SceneIndexes[idx];
                     _stream.Seek(position, SeekOrigin.Begin);
                     LimitedStream stream = new LimitedStream(_stream);
-                    Scene2DPrimitivesSerializer serializer = new Scene2DPrimitivesSerializer(true);
-                    simpleSource = new Scene2DPrimitivesSource(serializer.Deserialize(stream));
+                    //Scene2DRTreeSerializer serializer = new Scene2DRTreeSerializer(true);
+                    //simpleSource = new Scene2DPrimitivesSource(serializer.Deserialize(stream));
+                    OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DStyledSerializer serializer =
+                        new Styled.Scene2DStyledSerializer();
+                    simpleSource = serializer.Deserialize(stream, true);
                     _loadedScenes.Add(idx, simpleSource);
                 }
                 simpleSource.Get(scene, view, zoomFactor);

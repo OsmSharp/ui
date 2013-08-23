@@ -100,13 +100,13 @@ namespace OsmSharp.Android.UI.Sample
 //				graphSerialized,
 //				new OsmRoutingInterpreter());
 			
-			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
-			var graphDeserialized = routingSerializer.Deserialize(
-				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.kempen.osm.pbf.routing.ch"), true);
-//
-			_router = Router.CreateCHFrom(
-				graphDeserialized, new CHRouter(graphDeserialized),
-				new OsmRoutingInterpreter());
+//			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+//			var graphDeserialized = routingSerializer.Deserialize(
+//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.kempen.osm.pbf.routing.ch"), true);
+////
+//			_router = Router.CreateCHFrom(
+//				graphDeserialized, new CHRouter(graphDeserialized),
+//				new OsmRoutingInterpreter());
 //
 //			//GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
 //			//GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);

@@ -107,7 +107,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="lineJoin"></param>
 		/// <param name="dashes"></param>
 		protected override void DrawLine (Target2DWrapper<OpenGLTarget2D> target, double[] x, double[] y, int color, 
-		                                  double width, LineJoin lineJoin, int[] dashes, double casingColor, int casingWidth)
+		                                  double width, LineJoin lineJoin, int[] dashes)
 		{
 			float[] points = new float[x.Length * 3];
 			for(int idx = 0; idx < x.Length; idx++)

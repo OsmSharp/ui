@@ -131,7 +131,7 @@ namespace OsmSharp.UI.Map.Layers
 				};
 				SimpleColor color = SimpleColor.FromArgb (argb);
 				this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
-				                   color.Value, 4, 0, -1);
+				                   color.Value, 4);
 			}
 		}
 

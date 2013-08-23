@@ -29,7 +29,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
     /// Represents an entry or object in a Scene2D.
     /// </summary>
     [ProtoContract]
-    internal class Scene2DEntry
+    class Scene2DEntry
     {
         /// <summary>
         /// Gets or sets the id of this object.

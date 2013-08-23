@@ -1,4 +1,4 @@
-// OsmSharp - OpenStreetMap tools & library.
+﻿// OsmSharp - OpenStreetMap tools & library.
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
@@ -20,34 +20,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer.Scene
 {
-    public interface IScene2DPrimitive
+    /// <summary>
+    /// Represents a scene primitive with corresponding layer.
+    /// </summary>
+    public struct Scene2DPrimitive
     {
         /// <summary>
-        /// Returns true if the object is visible on the view.
+        /// Gets the layer.
         /// </summary>
-        /// <returns><c>true</c> if this instance is visible in the specified view; otherwise, <c>false</c>.</returns>
-        /// <param name="view">View.</param>
-        /// <param name="zoom"></param>
-        bool IsVisibleIn(View2D view, float zoom);
+        public int Layer { get; set; }
 
         /// <summary>
-        /// Returns the bounding box for this primitive.
+        /// Gets the primitive.
         /// </summary>
-        /// <returns></returns>
-        RectangleF2D GetBox();
-
-        /// <summary>
-        /// Gets or sets the tag.
-        /// </summary>
-        /// <value>The tag.</value>
-        object Tag
-        {
-            get;
-            set;
-        }
+        public IScene2DPrimitive Primitive { get; set; }
     }
 }

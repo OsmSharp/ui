@@ -57,8 +57,6 @@
     <Compile Include="Renderer\Scene\Storage\Layered\Scene2DLayeredSerializer.cs" />
     <Compile Include="Renderer\Scene\Storage\Layered\Scene2DLayeredSource.cs" />
     <Compile Include="Renderer\Scene\Storage\Scene2DEntry.cs" />
-    <Compile Include="Renderer\Scene\Storage\Scene2DPrimitivesSerializer.cs" />
-    <Compile Include="Renderer\Scene\Storage\Scene2DPrimitivesSource.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Declaration.cs" />
@@ -121,6 +119,14 @@
     <Compile Include="Renderer\Scene\Scene2DSimple.cs" />
     <Compile Include="Renderer\Scene\IScene2DPrimitivesSource.cs" />
     <Compile Include="Renderer\Scene\Scene2DLayered.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DRTreeSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledIndex.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledSource.cs" />
+    <Compile Include="Renderer\Scene\Storage\RTree\Scene2DRTreeSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\RTree\Scene2DRTreeSource.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitive.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitiveEnumerable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

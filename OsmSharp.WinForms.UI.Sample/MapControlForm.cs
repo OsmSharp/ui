@@ -83,7 +83,7 @@ namespace OsmSharp.WinForms.UI.Sample
                 imageSource);
 
             // initialize the data source.
-            //var dataSource = MemoryDataSource.CreateFromXmlStream(new FileInfo(@"c:\OSM\bin\wechel.osm").OpenRead());
+            var dataSource = MemoryDataSource.CreateFromXmlStream(new FileInfo(@"c:\OSM\bin\wechel.osm").OpenRead());
             //var dataSource = MemoryDataSource.CreateFromPBFStream(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf").OpenRead());
             //var dataSource = MemoryDataSource.CreateFromPBFStream(new FileInfo(@"c:\OSM\bin\lebbeke.osm.pbf").OpenRead());
             //Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm"));
@@ -95,7 +95,7 @@ namespace OsmSharp.WinForms.UI.Sample
             //map.AddLayer(new LayerMBTile(@"C:\Users\xivk\Documents\Nostalgeo.mbtiles"));
             map.AddLayer(
                 new LayerScene(
-                    Scene2DLayered.Deserialize(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf.scene.layered").OpenRead(), true)));
+                    Scene2DLayered.Deserialize(new FileInfo(@"c:\OSM\bin\kempen.osm.pbf.scene.layered").OpenRead(), true)));
             //map.AddLayer(
             //    new LayerScene(
             //        Scene2DSimple.Deserialize(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf.scene.simple").OpenRead(), true)));
@@ -110,8 +110,8 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // set control properties.
             this.mapControl1.Map = map;
-            //this.mapControl1.Center = new GeoCoordinate(51.26371, 4.7854); //51.26371&lon=4.7854 // wechel.osm
-            this.mapControl1.Center = new GeoCoordinate(50.88672, 3.23899); // lendelede
+            this.mapControl1.Center = new GeoCoordinate(51.26371, 4.7854); //51.26371&lon=4.7854 // wechel.osm
+            //this.mapControl1.Center = new GeoCoordinate(50.88672, 3.23899); // lendelede
             //this.mapControl1.Center = new GeoCoordinate(50.9523195, 3.0997436);
             //this.mapControl1.Center = new GeoCoordinate(51.156803, 2.958887); //50.9969&lon=4.1201
             //this.mapControl1.Center = new GeoCoordinate(50.9969, 4.1201);

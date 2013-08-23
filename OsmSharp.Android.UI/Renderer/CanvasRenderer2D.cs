@@ -253,7 +253,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="casingWidth">Casing width.</param>
 		/// <param name="casingColor">Casing color.</param>
 		protected override void DrawLine (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, 
-		                                  int color, double width, LineJoin lineJoine, int[] dashes, double casingWidth, int casingColor)
+		                                  int color, double width, LineJoin lineJoine, int[] dashes)
 		{
 			if(x.Length > 1)
 			{
@@ -294,12 +294,12 @@ namespace OsmSharp.Android.UI
 					if (yT > maxY) { maxY = yT; }
 				}
 				if ((maxX - minX) > 1 || (maxY - minY) > 1) {
-					if (casingWidth > 0) {
-						float casingWidthInPixels = this.ToPixels (casingWidth + width);
-						_paint.Color = new global::Android.Graphics.Color (casingColor);
-						_paint.StrokeWidth = casingWidthInPixels;
-						target.Target.DrawPath (_path, _paint);
-					}
+//					if (casingWidth > 0) {
+//						float casingWidthInPixels = this.ToPixels (casingWidth + width);
+//						_paint.Color = new global::Android.Graphics.Color (casingColor);
+//						_paint.StrokeWidth = casingWidthInPixels;
+//						target.Target.DrawPath (_path, _paint);
+//					}
 					float widthInPixels = this.ToPixels (width);
 					_paint.Color = new global::Android.Graphics.Color (color);
 					_paint.StrokeWidth = widthInPixels;

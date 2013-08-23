@@ -51,11 +51,11 @@ namespace OsmSharp.UI.Renderer.Scene
         public int BackColor { get; set; }
 
 	    /// <summary>
-	    /// Gets all objects in this scene for the specified view.
+	    /// Gets all objects in this scene for the specified view sorted according to layer number.
 	    /// </summary>
 	    /// <param name="view">View.</param>
 	    /// <param name="zoom"></param>
-        public abstract IEnumerable<IScene2DPrimitive> Get(View2D view, float zoom);
+        public abstract IEnumerable<Scene2DPrimitive> Get(View2D view, float zoom);
 
         /// <summary>
         /// Returns the primitive with the given id if any.
@@ -63,13 +63,6 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="id"></param>
         /// <returns></returns>
         public abstract IScene2DPrimitive Get(uint id);
-
-//        /// <summary>
-//        /// Removes the primitive with the given id.
-//        /// </summary>
-//        /// <param name="id"></param>
-//        /// <returns></returns>
-//        public abstract bool Remove(uint id);
 
 	    /// <summary>
 	    /// Adds a point.
@@ -106,16 +99,14 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="color">Color.</param>
 		/// <param name="width">Width.</param>
         /// <param name="minZoom"></param>
-        /// <param name="casingWidth"></param>
-        /// <param name="casingColor"></param>
-        public virtual uint AddLine(float minZoom, float maxZoom, double[] x, double[] y, int color, double width, float casingWidth, int casingColor)
+        public virtual uint AddLine(float minZoom, float maxZoom, double[] x, double[] y, int color, double width)
 		{
-			return this.AddLine(0, minZoom, maxZoom, x, y, color, width, casingWidth, casingColor);
+			return this.AddLine(0, minZoom, maxZoom, x, y, color, width);
 		}
 
 		/// <summary>
 		/// Adds a line.
-		/// </summary>
+		/// </summary>§
 		/// <param name="maxZoom"></param>
 		/// <param name="x">The x coordinate.</param>
 		/// <param name="y">The y coordinate.</param>
@@ -124,11 +115,9 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="lineJoin"></param>
 		/// <param name="dashes"></param>
         /// <param name="minZoom"></param>
-        /// <param name="casingWidth"></param>
-        /// <param name="casingColor"></param>
-        public virtual uint AddLine(float minZoom, float maxZoom, double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes, float casingWidth, int casingColor)
+        public virtual uint AddLine(float minZoom, float maxZoom, double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes)
 		{
-            return this.AddLine(0, minZoom, maxZoom, x, y, color, width, lineJoin, dashes, casingWidth, casingColor);
+            return this.AddLine(0, minZoom, maxZoom, x, y, color, width, lineJoin, dashes);
 		}
 
 		/// <summary>
@@ -141,12 +130,10 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="color">Color.</param>
 		/// <param name="width">Width.</param>
         /// <param name="minZoom"></param>
-        /// <param name="casingWidth"></param>
-        /// <param name="casingColor"></param>
 		/// <returns></returns>
-        public virtual uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width, float casingWidth, int casingColor)
+        public virtual uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width)
 		{
-            return this.AddLine(layer, minZoom, maxZoom, x, y, color, width, LineJoin.None, null, casingWidth, casingColor);
+            return this.AddLine(layer, minZoom, maxZoom, x, y, color, width, LineJoin.None, null);
 		}
 
 	    /// <summary>
@@ -164,7 +151,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="casingWidth"></param>
         /// <param name="casingColor"></param>
         public abstract uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width,
-            LineJoin lineJoin, int[] dashes, float casingWidth, int casingColor);
+            LineJoin lineJoin, int[] dashes);
 
 		/// <summary>
 		/// Adds the polygon.
@@ -263,51 +250,5 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="text"></param>
         public abstract uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double font_size,
             string text, int? haloColor, int? haloRadius);
-
-        //#region Serialization/Deserialization
-
-        ///// <summary>
-        ///// Serializes this scene2D to the given stream.
-        ///// </summary>
-        ///// <param name="stream"></param>
-        ///// <param name="compress"></param>
-        //public void Serialize(Stream stream, bool compress)
-        //{
-        //    // build the index.
-        //    var index = new RTreeMemoryIndex<Scene2DEntry>();
-        //    foreach (var primitiveLayer in _primitives)
-        //    {
-        //        foreach (var primitive in primitiveLayer.Value)
-        //        {
-        //            index.Add(primitive.Value.GetBox(), new Scene2DEntry()
-        //                                                    {
-        //                                                        Layer = primitiveLayer.Key,
-        //                                                        Id = primitive.Key,
-        //                                                        Scene2DPrimitive = primitive.Value
-        //                                                    });
-        //        }
-        //    }
-
-        //    // create the serializer.
-        //    var serializer = new Scene2DPrimitivesSerializer(compress);
-        //    serializer.Serialize(stream, index);
-        //}
-
-        ///// <summary>
-        ///// Deserialize a Scene2D from the given stream.
-        ///// </summary>
-        ///// <param name="stream"></param>
-        ///// <param name="compressed"></param>
-        ///// <returns></returns>
-        //public static IScene2DPrimitivesSource Deserialize(Stream stream, bool compressed)
-        //{
-        //    // create the serializer.
-        //    var serializer = new Scene2DPrimitivesSerializer(compressed);
-        //    ISpatialIndexReadonly<Scene2DEntry> index = serializer.Deserialize(stream);
-
-        //    return new Scene2DPrimitivesSource(index);
-        //}
-
-        //#endregion
     }
 }

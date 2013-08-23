@@ -50,7 +50,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
                 if(scenes[idx] != null)
                 {
                     sceneStream = new MemoryStream();
-                    scenes[idx].Serialize(sceneStream, compress);
+                    scenes[idx].SerializeStyled(sceneStream, compress);
 
                     sceneIndexes.Add(stream.Position);
                     sceneStream.WriteTo(stream);
@@ -61,7 +61,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
 
             // serialize the non-simplified scene.
             sceneStream = new MemoryStream();
-            nonSimplifiedScene.Serialize(sceneStream, compress);
+            nonSimplifiedScene.SerializeStyled(sceneStream, compress);
             sceneStream.WriteTo(stream);
             sceneStream.Dispose();
 

@@ -70,12 +70,6 @@
     <EmbeddedResource Include="images\parking.png" />
     <EmbeddedResource Include="images\postbox.png" />
     <EmbeddedResource Include="images\tree.png" />
-    <EmbeddedResource Include="test.osm.pbf.routing.3" />
-    <EmbeddedResource Include="test.osm.pbf" />
-    <EmbeddedResource Include="wvl.osm.pbf.routing.ch.5" />
-    <EmbeddedResource Include="wvl.osm.pbf.scene.layered" />
-    <EmbeddedResource Include="kempen.osm.pbf.routing.ch" />
-    <EmbeddedResource Include="kempen.osm.pbf.scene.layered" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

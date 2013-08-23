@@ -199,8 +199,9 @@ namespace OsmSharp.UI.Renderer
 			float zoom = (float)view.CalculateZoom(target.Width, target.Height);
 
             // loop over all primitives in the scene.
-            foreach (IScene2DPrimitive primitive in scene.Get(view, zoom))
+            foreach (Scene2DPrimitive scenePrimitive in scene.Get(view, zoom))
             { // the primitive is visible.
+                IScene2DPrimitive primitive = scenePrimitive.Primitive;
 				if (_cancelFlag) {
 					return false; // stop rendering on cancel and return false for an incomplete rendering.
 				}
@@ -215,7 +216,7 @@ namespace OsmSharp.UI.Renderer
                 {
                     var line = (Line2D)(primitive);
                     this.DrawLine(target, line.X, line.Y, line.Color,
-                        this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes, this.FromPixels(target, view, line.CasingWidth), line.CasingColor);
+                        this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
                 }
                 else if (primitive is Polygon2D)
                 {
@@ -334,10 +335,8 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="width">Width.</param>
 	    /// <param name="lineJoin"></param>
         /// <param name="dashes"></param>
-        /// <param name="casingWidth"></param>
-        /// <param name="casingColor"></param>
 		protected abstract void DrawLine(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, 
-            LineJoin lineJoin, int[] dashes, double casingWidth, int casingColor);
+            LineJoin lineJoin, int[] dashes);
 
 	    /// <summary>
 	    /// Draws a polygon on the target. The coordinates given are scene coordinates.
