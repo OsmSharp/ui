@@ -82,7 +82,7 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="zoomFactor">Zoom factor.</param>
 		private float CalculateSimplificationEpsilon(float zoomFactor)
 		{
-            return (1.0f / zoomFactor) * 2;
+            return (1.0f / zoomFactor);
 		}
 
 		/// <summary>
@@ -293,7 +293,7 @@ namespace OsmSharp.UI.Renderer.Scene
                     double epsilon = this.CalculateSimplificationEpsilon(thisMaxZoom);
                     double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
                                                                     epsilon);
-                    double distance = epsilon * 2;
+                    double distance = epsilon;
                     if (simplified[0].Length == 2)
                     { // check if the simplified version is smaller than epsilon.
                         OsmSharp.Math.Primitives.PointF2D point1 = new OsmSharp.Math.Primitives.PointF2D(

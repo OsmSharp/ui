@@ -84,10 +84,11 @@ namespace OsmSharp.Math.Primitives
 
         }
 
-		/// <summary>
-		/// Creates a new box around the given points.
-		/// </summary>
-		/// <param name="points"></param>
+        /// <summary>
+        /// Creates a new box around the given points.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
 		public RectangleF2D(double[] x, double[] y)
 		{
 			PointF2D[] points = new PointF2D[x.Length];
