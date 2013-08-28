@@ -35,11 +35,11 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
-    <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="Zlib.Portable">
       <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.640\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -50,13 +50,11 @@
     <Compile Include="Change.cs" />
     <Compile Include="ChangeSet.cs" />
     <Compile Include="ChangeSetInfo.cs" />
-    <Compile Include="ChangeType.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="OsmGeo.cs" />
     <Compile Include="OsmGeoType.cs" />
     <Compile Include="Relation.cs" />
     <Compile Include="RelationMember.cs" />
-    <Compile Include="RelationMemberType.cs" />
     <Compile Include="Way.cs" />
     <Compile Include="Interpreter\Complete\CompleteChange.cs" />
     <Compile Include="Interpreter\Complete\CompleteChangeSet.cs" />
@@ -91,8 +89,6 @@
     <Compile Include="Data\Xml\Processor\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
     <Compile Include="Data\Xml\Processor\Replication\Replicator.cs" />
     <Compile Include="Data\Xml\Processor\XmlFragmentWriter.cs" />
-    <Compile Include="Data\Xml\Processor\XmlOsmStreamReader.cs" />
-    <Compile Include="Data\Xml\Processor\XmlOsmStreamWriter.cs" />
     <Compile Include="Data\Xml\Processor\XmlSimpleConverter.cs" />
     <Compile Include="Data\IDataSource.cs" />
     <Compile Include="Data\IDataSourceReadOnly.cs" />
@@ -108,10 +104,6 @@
     <Compile Include="Streams\Collections\OsmCollectionStreamWriter.cs" />
     <Compile Include="Streams\Collections\OsmEnumerableStreamReader.cs" />
     <Compile Include="Streams\Collections\OsmGeoEnumerableStreamReader.cs" />
-    <Compile Include="Streams\Filters\LongIndex\ILongIndexNode.cs" />
-    <Compile Include="Streams\Filters\LongIndex\LongIndex.cs" />
-    <Compile Include="Streams\Filters\LongIndex\LongIndexLeaf.cs" />
-    <Compile Include="Streams\Filters\LongIndex\LongIndexNode.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterBoundingBox.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterSort.cs" />
@@ -139,6 +131,10 @@
     <Compile Include="Xml\v0_6\Extensions.cs" />
     <Compile Include="Xml\v0_6\osm.cs" />
     <Compile Include="Xml\OsmDocument.cs" />
+    <Compile Include="TagExtensions.cs" />
+    <Compile Include="Data\DataSourceReadOnlyBase.cs" />
+    <Compile Include="Data\Xml\Processor\XmlOsmStreamSource.cs" />
+    <Compile Include="Data\Xml\Processor\XmlOsmStreamTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.iOS.csproj">

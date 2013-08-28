@@ -36,7 +36,7 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+      <HintPath>..\packages\protobuf-net.2.0.0.640\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -152,17 +152,6 @@
     <Compile Include="Math\TSP\IImprovement.cs" />
     <Compile Include="Math\TSP\ISolver.cs" />
     <Compile Include="Math\TSP\SolverBase.cs" />
-    <Compile Include="Math\Units\Angle\Degree.cs" />
-    <Compile Include="Math\Units\Angle\Radian.cs" />
-    <Compile Include="Math\Units\Distance\Kilometer.cs" />
-    <Compile Include="Math\Units\Distance\Meter.cs" />
-    <Compile Include="Math\Units\Speed\KilometerPerHour.cs" />
-    <Compile Include="Math\Units\Speed\MeterPerSecond.cs" />
-    <Compile Include="Math\Units\Time\Hour.cs" />
-    <Compile Include="Math\Units\Time\Second.cs" />
-    <Compile Include="Math\Units\Weight\Gram.cs" />
-    <Compile Include="Math\Units\Weight\Kilogram.cs" />
-    <Compile Include="Math\Units\Unit.cs" />
     <Compile Include="Math\VRP\Core\BestPlacement\InsertionCosts\BinaryHeapInsertionCosts.cs" />
     <Compile Include="Math\VRP\Core\BestPlacement\InsertionCosts\IInsertionCosts.cs" />
     <Compile Include="Math\VRP\Core\BestPlacement\SeedCustomers\ISeedCustomerSelector.cs" />
@@ -240,10 +229,6 @@
     <Compile Include="IO\DelimitedFiles\DelimitedFileHandler.cs" />
     <Compile Include="IO\DelimitedFiles\DelimiterType.cs" />
     <Compile Include="IO\DelimitedFiles\IDelimitedFormat.cs" />
-    <Compile Include="IO\Output\ConsoleOutputStream.cs" />
-    <Compile Include="IO\Output\FileOutputStream.cs" />
-    <Compile Include="IO\Output\IOutputStream.cs" />
-    <Compile Include="IO\Output\OutputStreamHost.cs" />
     <Compile Include="IO\StreamCache\IStreamCache.cs" />
     <Compile Include="IO\StreamCache\MemoryCachedStream.cs" />
     <Compile Include="IO\CappedStream.cs" />
@@ -291,5 +276,28 @@
     <Compile Include="IO\Xml\Sources\XmlReaderSource.cs" />
     <Compile Include="IO\Xml\Sources\XmlStreamSource.cs" />
     <Compile Include="IO\Xml\Sources\XmlStringSource.cs" />
+    <Compile Include="Units\Angle\Degree.cs" />
+    <Compile Include="Units\Angle\Radian.cs" />
+    <Compile Include="Units\Distance\Kilometer.cs" />
+    <Compile Include="Units\Distance\Meter.cs" />
+    <Compile Include="Units\Speed\KilometerPerHour.cs" />
+    <Compile Include="Units\Speed\Knots.cs" />
+    <Compile Include="Units\Speed\MeterPerSecond.cs" />
+    <Compile Include="Units\Speed\MilesPerHour.cs" />
+    <Compile Include="Units\Speed\Speed.cs" />
+    <Compile Include="Units\Time\Hour.cs" />
+    <Compile Include="Units\Time\Second.cs" />
+    <Compile Include="Units\Weight\Gram.cs" />
+    <Compile Include="Units\Weight\Kilogram.cs" />
+    <Compile Include="Units\Unit.cs" />
+    <Compile Include="Logging\Log.cs" />
+    <Compile Include="Logging\TraceSource.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamSerializer.cs" />
+    <Compile Include="Collections\LongIndex\ILongIndexNode.cs" />
+    <Compile Include="Collections\LongIndex\LongIndex.cs" />
+    <Compile Include="Collections\LongIndex\LongIndexLeaf.cs" />
+    <Compile Include="Collections\LongIndex\LongIndexNode.cs" />
+    <Compile Include="IO\LimitedStream.cs" />
   </ItemGroup>
 </Project>

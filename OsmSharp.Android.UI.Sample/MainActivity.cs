@@ -85,7 +85,7 @@ namespace OsmSharp.Android.UI.Sample
 			map.AddLayer(
 				new LayerScene(
 				Scene2DLayered.Deserialize(
-					Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.kempen.osm.pbf.scene.layered"), true)));
+					Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.wvl.osm.pbf.scene.layered"), true)));
 
 //			var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
 //			var graphSerialized = routingSerializer.Deserialize(
@@ -100,13 +100,13 @@ namespace OsmSharp.Android.UI.Sample
 //				graphSerialized,
 //				new OsmRoutingInterpreter());
 			
-//			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
-//			var graphDeserialized = routingSerializer.Deserialize(
-//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.kempen.osm.pbf.routing.ch"), true);
-////
-//			_router = Router.CreateCHFrom(
-//				graphDeserialized, new CHRouter(graphDeserialized),
-//				new OsmRoutingInterpreter());
+			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+			var graphDeserialized = routingSerializer.Deserialize(
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.osm.pbf.routing.ch"), true);
+//
+			_router = Router.CreateCHFrom(
+				graphDeserialized, new CHRouter(graphDeserialized),
+				new OsmRoutingInterpreter());
 //
 //			//GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
 //			//GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
@@ -172,9 +172,9 @@ namespace OsmSharp.Android.UI.Sample
 			mapLayout.MapMaxZoomLevel = 20;
 			mapLayout.MapMinZoomLevel = 12;
 			//var mapView = new MapGLView (this);
-			//mapView.Center = new GeoCoordinate(51.158075, 2.961545); // gistel
+			mapLayout.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
 			//mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
-			mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
+			//mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
 			//mapView.Center = new GeoCoordinate(51.156803, 2.958887);
 			mapLayout.MapZoomLevel = 15;
 			mapLayout.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {

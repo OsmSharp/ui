@@ -83,8 +83,6 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.RTree
             lineMetaType.Add(10, "MaxX");
             lineMetaType.Add(11, "MinY");
             lineMetaType.Add(12, "MaxY");
-            lineMetaType.Add(13, "CasingColor");
-            lineMetaType.Add(14, "CasingWidth");
 
             MetaType pointMetaType = typeModel.Add(typeof (Point2D), false);
             pointMetaType.Add(1, "X");

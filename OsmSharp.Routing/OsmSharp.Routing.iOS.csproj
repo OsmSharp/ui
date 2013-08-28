@@ -39,11 +39,12 @@
       <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+      <HintPath>..\packages\protobuf-net.2.0.0.640\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="CH\Serialization\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -68,8 +69,6 @@
     <Compile Include="CH\PreProcessing\CHPriorityQueue.cs" />
     <Compile Include="CH\PreProcessing\INodeWeightCalculator.cs" />
     <Compile Include="CH\PreProcessing\INodeWitnessCalculator.cs" />
-    <Compile Include="CH\Serialization\CHEdgeDataDataSource.cs" />
-    <Compile Include="CH\Serialization\CHEdgeDataSerializer.cs" />
     <Compile Include="CH\CHQueue.cs" />
     <Compile Include="CH\CHRouter.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />
@@ -80,7 +79,6 @@
     <Compile Include="Graph\Router\PathSegment.cs" />
     <Compile Include="Graph\Router\PathSegmentVisitList.cs" />
     <Compile Include="Graph\Serialization\RoutingDataSourceSerializer.cs" />
-    <Compile Include="Graph\Serialization\RoutingDataSourceSerializerStream.cs" />
     <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
     <Compile Include="Graph\IDynamicGraph.cs" />
     <Compile Include="Graph\IDynamicGraphEdgeData.cs" />
@@ -212,6 +210,12 @@
     <Compile Include="VRP\WithDepot\RouterDepot.cs" />
     <Compile Include="VRP\RouterVRP.cs" />
     <Compile Include="VRP\RouterVRPWrapper.cs" />
+    <Compile Include="CH\Serialization\Sorted\CHBlock.cs" />
+    <Compile Include="CH\Serialization\Sorted\CHDepthFirstEnumerator.cs" />
+    <Compile Include="CH\Serialization\Sorted\CHEdgeDataDataSource.cs" />
+    <Compile Include="CH\Serialization\Sorted\CHEdgeDataSerializer.cs" />
+    <Compile Include="CH\Serialization\Tiled\CHEdgeDataDataSource.cs" />
+    <Compile Include="CH\Serialization\Tiled\CHEdgeDataSerializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.iOS.csproj">

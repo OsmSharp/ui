@@ -62,7 +62,7 @@ namespace OsmSharp.Logging
             _source.Listeners.Add(listener);
         }
 
-#if !(WINDOWS_PHONE || __ANDROID__)
+#if !(WINDOWS_PHONE || __ANDROID__ || IOS)
         /// <summary>
         /// Registers a console trace listener.
         /// </summary>

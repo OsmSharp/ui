@@ -6,6 +6,7 @@ using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using System.Reflection;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.iOS.UI.Sample
 {
@@ -23,24 +24,34 @@ namespace OsmSharp.iOS.UI.Sample
 			// Release any cached data, images, etc that aren't in use.
 		}
 
+		public override void LoadView ()
+		{
+			base.LoadView ();
+
+			// initialize a test-map.
+			var map = new Map ();
+			map.AddLayer (new LayerScene (Scene2DLayered.Deserialize (
+				Assembly.GetExecutingAssembly ().GetManifestResourceStream ("OsmSharp.iOS.UI.Sample.kempen.osm.pbf.scene.layered"), 
+					true)));
+
+			// Perform any additional setup after loading the view, typically from a nib.
+			MapView mapView = new MapView ();
+			mapView.Map = map;
+			mapView.MapCenter = new OsmSharp.Math.Geo.GeoCoordinate (51.26337, 4.78739);
+			mapView.MapZoomLevel = 16;
+
+			View = mapView;
+
+//			View.BackgroundColor = UIColor.Black;
+//			mapView.Bounds = this.View.Bounds;
+//			View.AddSubview (mapView);
+		}
+
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
 
-			// initialize a test-map.
-			var map = new Map ();
-			map.AddLayer (new LayerScene (Scene2D.Deserialize (
-				Assembly.GetExecutingAssembly ().GetManifestResourceStream ("OsmSharp.iOS.UI.Sample.wvl.osm.pbf.scene.simple"), true)));
-			
-			// Perform any additional setup after loading the view, typically from a nib.
-			MapView mapView = new MapView ();
-			mapView.Map = map;
-			mapView.MapCenter = new OsmSharp.Math.Geo.GeoCoordinate (51.158075, 2.961545);
-			mapView.ZoomLevel = 16;
 
-			View.BackgroundColor = UIColor.Black;
-			mapView.Bounds = this.View.Bounds;
-			View.AddSubview (mapView);
 		}
 
 		public override bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation)

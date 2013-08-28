@@ -48,7 +48,7 @@ namespace System.Diagnostics
 
 #endif
 #if __ANDROID__
-    /// <summary>
+	/// <summary>
     /// Another class for compatibility with windows phone.
     /// </summary>
     public class TraceSource
@@ -119,6 +119,78 @@ namespace System.Diagnostics
     }
 
 #endif
+#if IOS
+	/// <summary>
+	/// Another class for compatibility with windows phone.
+	/// </summary>
+	public class TraceSource
+	{
+		/// <summary>
+		/// Holds the tag.
+		/// </summary>
+		private string _tag;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="System.Diagnostics.TraceSource"/> class.
+		/// </summary>
+		/// <param name="name">Name.</param>
+		public TraceSource(string name)
+		{
+			_tag = name;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="System.Diagnostics.TraceSource"/> class.
+		/// </summary>
+		/// <param name="name">Name.</param>
+		/// <param name="level">Level.</param>
+		public TraceSource(string name, SourceLevels level)
+		{
+			_tag = name;
+		}
+
+		/// <summary>
+		/// Traces an event.
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="id"></param>
+		/// <param name="message"></param>
+		internal void TraceEvent(TraceEventType type, int id, string message)
+		{
+			switch (type) {
+				case TraceEventType.Critical:
+				case TraceEventType.Error:
+					Console.WriteLine(string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
+				                                             DateTime.Now.Ticks));
+				break;
+				case TraceEventType.Warning:
+					Console.WriteLine(string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
+				                                            DateTime.Now.Ticks));
+				break;
+				default:
+					Console.WriteLine(string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
+				                                            DateTime.Now.Ticks));
+				break;
+			}
+		}
+
+		/// <summary>
+		/// Traces an event.
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="id"></param>
+		/// <param name="messageWithParams"></param>
+		/// <param name="args"></param>
+		internal void TraceEvent(TraceEventType type, int id, string messageWithParams, object[] args)
+		{
+			string message = string.Format (messageWithParams, args);
+			this.TraceEvent (type, id, message);
+		}
+
+		public List<TraceListener> Listeners { get; set; }
+	}
+
+	#endif
 #if WINDOWS_PHONE
 
     /// <summary>

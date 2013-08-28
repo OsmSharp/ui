@@ -38,11 +38,11 @@
     <Reference Include="Antlr3.Runtime">
       <HintPath>..\packages\Antlr3.Runtime.PCL.3.5.0.3\lib\portable-win+net40+sl40+wp\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.621\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
-    </Reference>
     <Reference Include="Zlib.Portable">
       <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
+    <Reference Include="protobuf-net">
+      <HintPath>..\packages\protobuf-net.2.0.0.640\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -94,24 +94,37 @@
     <Compile Include="Map\Styles\StyleInterpreter.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\MapRenderer.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DEntry.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSerializer.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSource.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Icon2D.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Image2D.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitive.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\IScene2DPrimitivesSource.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Line2D.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\LineText2D.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Point2D.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Polygon2D.cs" />
-    <Compile Include="Renderer\Scene2DPrimitives\Text2D.cs" />
     <Compile Include="Renderer\Renderer2D.cs" />
-    <Compile Include="Renderer\Scene2D.cs" />
     <Compile Include="Renderer\Target2DWrapper.cs" />
     <Compile Include="Renderer\View2D.cs" />
     <Compile Include="KnownColor.cs" />
     <Compile Include="SimpleColor.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Icon2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Image2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\IScene2DPrimitive.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Line2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\LineText2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Point2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Polygon2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\Text2D.cs" />
+    <Compile Include="Renderer\Scene\Storage\Layered\Scene2DLayeredSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\Layered\Scene2DLayeredSource.cs" />
+    <Compile Include="Renderer\Scene\Storage\RTree\Scene2DRTreeSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\RTree\Scene2DRTreeSource.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DRTreeSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledIndex.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledSource.cs" />
+    <Compile Include="Renderer\Scene\Storage\Scene2DEntry.cs" />
+    <Compile Include="Renderer\Scene\IScene2DPrimitivesSource.cs" />
+    <Compile Include="Renderer\Scene\Scene2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DLayered.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitive.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitiveEnumerable.cs" />
+    <Compile Include="Renderer\Scene\Scene2DSimple.cs" />
+    <Compile Include="Map\Styles\StyleSceneManager.cs" />
+    <Compile Include="Map\Styles\MapCSS\MapCSSObject.cs" />
+    <Compile Include="Map\Styles\MapCSS\MapCSSType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Map\Styles\MapCSS\v0_2\MapCSS.g" />

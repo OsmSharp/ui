@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="MapView.cs" />
     <Compile Include="Renderer\CGContextRenderer.cs" />
+    <Compile Include="Renderer\CGContextWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.iOS.csproj">

@@ -21,23 +21,21 @@ using OsmSharp.UI.Renderer;
 using MonoTouch.CoreGraphics;
 using OsmSharp.UI;
 using System.Drawing;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
+using MonoTouch.UIKit;
+using MonoTouch.Foundation;
+using MonoTouch.CoreText;
 
 namespace OsmSharp.iOS.UI
 {
-	public class CGContextRenderer : Renderer2D<CGContext>
+	public class CGContextRenderer : Renderer2D<CGContextWrapper>
 	{
-		/// <summary>
-		/// Holds the bounds.
-		/// </summary>
-		private System.Drawing.RectangleF _bounds;
-
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.CGContextRenderer"/> class.
 		/// </summary>
-		/// <param name="rect">Rect.</param>
-		public CGContextRenderer (System.Drawing.RectangleF rect)
+		public CGContextRenderer ()
 		{
-			_bounds = rect;
+
 		}
 
 		#region implemented abstract members of Renderer2D
@@ -50,14 +48,14 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Holds the target.
 		/// </summary>
-		private Target2DWrapper<CGContext> _target;
+		private Target2DWrapper<CGContextWrapper> _target;
 
 		/// <summary>
 		/// Transforms the target using the specified view.
 		/// </summary>
 		/// <param name="target"></param>
 		/// <param name="view">View.</param>
-		protected override void Transform (Target2DWrapper<CGContext> target, View2D view)
+		protected override void Transform (Target2DWrapper<CGContextWrapper> target, View2D view)
 		{
 			_view = view;
 			_target = target;
@@ -68,9 +66,9 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		/// <param name="target"></param>
 		/// <returns></returns>
-		public override Target2DWrapper<CGContext> CreateTarget2DWrapper (CGContext target)
+		public override Target2DWrapper<CGContextWrapper> CreateTarget2DWrapper (CGContextWrapper target)
 		{
-			return new Target2DWrapper<CGContext> (target, (float)_bounds.Width, (float)_bounds.Height);
+			return new Target2DWrapper<CGContextWrapper> (target, target.Width, target.Height);
 		}
 
 		/// <summary>
@@ -80,7 +78,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="target"></param>
 		/// <param name="view">View.</param>
 		/// <param name="sizeInPixels">Size in pixels.</param>
-		protected override double FromPixels (Target2DWrapper<CGContext> target, View2D view, double sizeInPixels)
+		protected override double FromPixels (Target2DWrapper<CGContextWrapper> target, View2D view, double sizeInPixels)
 		{
 			double scaleX = target.Width / view.Width;
 
@@ -124,11 +122,13 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		/// <param name="target"></param>
 		/// <param name="backColor"></param>
-		protected override void DrawBackColor (Target2DWrapper<CGContext> target, int backColor)
+		protected override void DrawBackColor (Target2DWrapper<CGContextWrapper> target, int backColor)
 		{
 			SimpleColor backColorSimple = SimpleColor.FromArgb(backColor);
-			target.Target.SetFillColor (backColorSimple.R / 256.0f, backColorSimple.G / 256.0f, backColorSimple.B / 256.0f,
+			target.Target.CGContext.SetFillColor (backColorSimple.R / 256.0f, backColorSimple.G / 256.0f, backColorSimple.B / 256.0f,
 			                            backColorSimple.A / 256.0f);
+			target.Target.CGContext.FillRect (new RectangleF (0, 0, 
+			                                                target.Width, target.Height));
 		}
 
 		/// <summary>
@@ -139,8 +139,8 @@ namespace OsmSharp.iOS.UI
 		/// <param name="y">The y coordinate.</param>
 		/// <param name="color">Color.</param>
 		/// <param name="size">Size.</param>
-		protected override void DrawPoint (Target2DWrapper<CGContext> target, double x, double y, int color, double size)
-		{
+		protected override void DrawPoint (Target2DWrapper<CGContextWrapper> target, double x, double y, int color, double size)
+		{			
 
 		}
 
@@ -154,16 +154,16 @@ namespace OsmSharp.iOS.UI
 		/// <param name="width">Width.</param>
 		/// <param name="lineJoin"></param>
 		/// <param name="dashes"></param>
-		protected override void DrawLine (Target2DWrapper<CGContext> target, double[] x, double[] y, int color, double width, 
-		                                  OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
+		protected override void DrawLine (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, int color, double width, 
+		                                  LineJoin lineJoin, int[] dashes)
 		{
 			float widthInPixels = this.ToPixels (width);
 
 			SimpleColor simpleColor = SimpleColor.FromArgb(color);
-			target.Target.SetLineWidth (widthInPixels);
-			target.Target.SetStrokeColor (simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
+			target.Target.CGContext.SetLineWidth (widthInPixels);
+			target.Target.CGContext.SetStrokeColor (simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
 			                              simpleColor.A / 256.0f);
-			target.Target.SetLineDash (0, new float[0]);
+			target.Target.CGContext.SetLineDash (0, new float[0]);
 			if(dashes != null && dashes.Length > 1)
 			{
 				float[] intervals = new float[dashes.Length];
@@ -171,22 +171,22 @@ namespace OsmSharp.iOS.UI
 				{
 					intervals [idx] = dashes [idx];
 				}
-				target.Target.SetLineDash (0.0f, intervals);
+				target.Target.CGContext.SetLineDash (0.0f, intervals);
 			}
 
 			switch(lineJoin)
 			{
-				case OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin.Bevel:
-					target.Target.SetLineJoin (CGLineJoin.Bevel);
+				case LineJoin.Bevel:
+				target.Target.CGContext.SetLineJoin (CGLineJoin.Bevel);
 					break;
-				case OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin.Miter:
-					target.Target.SetLineJoin (CGLineJoin.Miter);
+				case LineJoin.Miter:
+				target.Target.CGContext.SetLineJoin (CGLineJoin.Miter);
 					break;
-				case OsmSharp.UI.Renderer.Scene2DPrimitives.LineJoin.Round:
-					target.Target.SetLineJoin (CGLineJoin.Round);
+				case LineJoin.Round:
+				target.Target.CGContext.SetLineJoin (CGLineJoin.Round);
 					break;
 			}
-			target.Target.BeginPath ();
+			target.Target.CGContext.BeginPath ();
 
 			PointF[] points = new PointF[x.Length];
 			for(int idx = 0; idx < x.Length; idx++)
@@ -196,8 +196,8 @@ namespace OsmSharp.iOS.UI
 					this.TransformY (y [idx]));
 			}
 
-			target.Target.AddLines (points);
-			target.Target.DrawPath (CGPathDrawingMode.Stroke);
+			target.Target.CGContext.AddLines (points);
+			target.Target.CGContext.DrawPath (CGPathDrawingMode.Stroke);
 			//target.Target.E
 		}
 
@@ -210,9 +210,34 @@ namespace OsmSharp.iOS.UI
 		/// <param name="color">Color.</param>
 		/// <param name="width">Width.</param>
 		/// <param name="fill">If set to <c>true</c> fill.</param>
-		protected override void DrawPolygon (Target2DWrapper<CGContext> target, double[] x, double[] y, int color, double width, bool fill)
+		protected override void DrawPolygon (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, int color, double width, 
+		                                     bool fill)
 		{
+			float widthInPixels = this.ToPixels (width);
 
+			SimpleColor simpleColor = SimpleColor.FromArgb(color);
+			target.Target.CGContext.SetLineWidth (widthInPixels);
+			target.Target.CGContext.SetFillColor (simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
+			                              simpleColor.A / 256.0f);
+			target.Target.CGContext.SetStrokeColor (simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
+			                            simpleColor.A / 256.0f);
+			//target.Target.SetLineDash (0, new float[0]);
+			target.Target.CGContext.BeginPath ();
+
+			PointF[] points = new PointF[x.Length];
+			for(int idx = 0; idx < x.Length; idx++)
+			{
+				points [idx] = new PointF (
+					this.TransformX (x [idx]),
+					this.TransformY (y [idx]));
+			}
+
+			target.Target.CGContext.AddLines (points);
+			target.Target.CGContext.ClosePath ();
+
+			//target.Target.DrawPath (CGPathDrawingMode.Stroke);
+			target.Target.CGContext.FillPath ();
+			//target.Target.E
 		}
 
 		/// <summary>
@@ -222,7 +247,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <param name="imageData"></param>
-		protected override void DrawIcon (Target2DWrapper<CGContext> target, double x, double y, byte[] imageData)
+		protected override void DrawIcon (Target2DWrapper<CGContextWrapper> target, double x, double y, byte[] imageData)
 		{
 
 		}
@@ -238,10 +263,39 @@ namespace OsmSharp.iOS.UI
 		/// <param name="imageData"></param>
 		/// <returns>The image.</returns>
 		/// <param name="tag">Tag.</param>
-		protected override object DrawImage (Target2DWrapper<CGContext> target, double left, double top, double right, 
+		protected override object DrawImage (Target2DWrapper<CGContextWrapper> target, double left, double top, double right, 
 		                                     double bottom, byte[] imageData, object tag)
 		{
-			return null;
+			CGImage image = null;
+			CGLayer layer = null;
+			if (tag != null && tag is CGImage) {
+				image = (tag as CGImage);
+			} else if (tag != null && tag is CGLayer) {
+				layer = (tag as CGLayer);
+			}
+			else {
+				// TODO: figurate out how to use this horroble IOS api to instantiate an image from a bytearray.
+				//CGImage image = CGImage.FromPNG(
+			}
+
+			if (image != null) { // there is an image. draw it!
+				float leftPixels = this.TransformX (left);
+				float topPixels = this.TransformY (top);
+				float rightPixels = this.TransformX (right);
+				float bottomPixels = this.TransformY (bottom);
+
+				target.Target.CGContext.DrawImage (new RectangleF (leftPixels, topPixels, (rightPixels - leftPixels),
+				                                                   (bottomPixels - topPixels)), image);
+			} else if (layer != null) {
+				float leftPixels = this.TransformX(left);
+				float topPixels = this.TransformY(top);
+				float rightPixels = this.TransformX(right);
+				float bottomPixels = this.TransformY(bottom);
+
+				target.Target.CGContext.DrawLayer (layer, new RectangleF (leftPixels, topPixels, (rightPixels - leftPixels),
+				                                                   (bottomPixels - topPixels)));
+			}
+			return image;
 		}
 
 		/// <summary>
@@ -253,9 +307,38 @@ namespace OsmSharp.iOS.UI
 		/// <param name="text"></param>
 		/// <param name="size"></param>
 		/// <param name="color">Color.</param>
-		protected override void DrawText (Target2DWrapper<CGContext> target, double x, double y, string text, int color, double size)
+		protected override void DrawText (Target2DWrapper<CGContextWrapper> target, double x, double y, string text, int color, double size,
+		                                  int? haloColor, int? haloRadius)
 		{
+			float xPixels = this.TransformX (x);
+			float yPixels = this.TransformY (y);
+			float textSize = this.TransformX (x + size) - xPixels;
+//
+			SimpleColor simpleColor = SimpleColor.FromArgb(color);
+//			target.Target.SetTextDrawingMode (CGTextDrawingMode.Fill);
+//			target.Target.SetLineWidth (2.0f);
+//			target.Target.SelectFont ("Helvetica", textSize, CGTextEncoding.MacRoman);
+//			target.Target.SetStrokeColor (simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
+//			                            simpleColor.A / 256.0f);
+//
+//			target.Target.ShowTextAtPoint (xPixels, yPixels, text);
 
+			CGAffineTransform textTransform = new CGAffineTransform(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
+			target.Target.CGContext.TextMatrix = textTransform;
+			target.Target.CGContext.SetFillColor (simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
+			                            simpleColor.A / 256.0f);
+			var attributedString = new NSAttributedString (text,
+			                                               new CTStringAttributes{
+				ForegroundColorFromContext =  true,
+				Font = new CTFont ("Arial", textSize)
+			});
+			target.Target.CGContext.SaveState ();
+			target.Target.CGContext.TranslateCTM (xPixels, yPixels);
+
+			using (var textLine = new CTLine (attributedString)) {
+				textLine.Draw (target.Target.CGContext);
+			}
+			target.Target.CGContext.RestoreState ();
 		}
 
 		/// <summary>
@@ -267,7 +350,8 @@ namespace OsmSharp.iOS.UI
 		/// <param name="color"></param>
 		/// <param name="size"></param>
 		/// <param name="text">Text.</param>
-		protected override void DrawLineText (Target2DWrapper<CGContext> target, double[] x, double[] y, string text, int color, double size)
+		protected override void DrawLineText (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, string text, int color, 
+		                                      double size, int? haloColor, int? haloRadius)
 		{
 
 		}
