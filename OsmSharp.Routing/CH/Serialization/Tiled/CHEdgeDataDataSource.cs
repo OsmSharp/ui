@@ -412,14 +412,17 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
                             {
                                 // create the tags collection.
                                 TagsCollection tagsCollection = new SimpleTagsCollection();
-                                for (int tagsIdx = 0;
-                                     tagsIdx < tileData.Arcs[vertexIdx].Tags[idx].Keys.Length;
-                                     tagsIdx++)
+                                if (tileData.Arcs[vertexIdx].Tags[idx].Keys != null)
                                 {
-                                    string key = tileData.StringTable[tileData.Arcs[vertexIdx].Tags[idx].Keys[tagsIdx]];
-                                    string value = tileData.StringTable[tileData.Arcs[vertexIdx].Tags[idx].Values[tagsIdx]];
+                                    for (int tagsIdx = 0;
+                                         tagsIdx < tileData.Arcs[vertexIdx].Tags[idx].Keys.Length;
+                                         tagsIdx++)
+                                    {
+                                        string key = tileData.StringTable[tileData.Arcs[vertexIdx].Tags[idx].Keys[tagsIdx]];
+                                        string value = tileData.StringTable[tileData.Arcs[vertexIdx].Tags[idx].Values[tagsIdx]];
 
-                                    tagsCollection.Add(key, value);
+                                        tagsCollection.Add(key, value);
+                                    }
                                 }
                                 uint tags = _tagsIndex.Add(tagsCollection);
 
