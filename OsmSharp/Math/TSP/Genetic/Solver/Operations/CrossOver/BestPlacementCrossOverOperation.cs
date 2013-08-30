@@ -150,7 +150,7 @@ namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver
                 if (temp_fitness.CompareTo(best_fitness) > 0)
                 {
                     temp_distance = solver.FitnessCalculator.Fitness(solver.Problem, temp_genome);
-                    best_distance = temp_distance;
+                    //best_distance = temp_distance;
                     best_fitness = temp_fitness;
                     best_genome = temp_genome;
                 }
