@@ -262,9 +262,10 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="color">Color.</param>
 		/// <param name="haloColor">Halo color.</param>
 		/// <param name="haloRadius">Halo radius.</param>
-		public override uint AddText (int layer, float minZoom, float maxZoom, double x, double y, double size, string text, int color, int? haloColor, int? haloRadius)
+		public override uint AddText (int layer, float minZoom, float maxZoom, double x, double y, double size, string text, int color, 
+		                              int? haloColor, int? haloRadius, string font)
 		{
-			return _nonSimplifiedScene.AddText (layer, minZoom, maxZoom, x, y, size, text, color, haloColor, haloRadius);
+			return _nonSimplifiedScene.AddText (layer, minZoom, maxZoom, x, y, size, text, color, haloColor, haloRadius, font);
 		}
 
 		/// <summary>

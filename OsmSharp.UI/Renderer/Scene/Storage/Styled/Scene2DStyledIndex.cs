@@ -973,6 +973,12 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         /// </summary>
         [ProtoMember(7)]
         public float MaxZoom { get; set; }
+		
+		/// <summary>
+		/// The font.
+		/// </summary>
+		[ProtoMember(8)]
+		public string Font { get; set; }
 
         /// <summary>
         /// Extracts style information.
@@ -990,6 +996,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
             newStyle.HaloRadius = text.HaloRadius;
             newStyle.Size = text.Size;
             newStyle.Layer = layer;
+			newStyle.Font = text.Font;
             return newStyle;
         }
 
@@ -1004,6 +1011,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
             text.HaloColor = this.HaloColor;
             text.HaloRadius = this.HaloRadius;
             text.Size = this.Size;
+			text.Font = this.Font;
         }
 
         /// <summary>

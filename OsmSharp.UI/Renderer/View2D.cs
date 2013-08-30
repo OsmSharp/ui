@@ -148,7 +148,6 @@ namespace OsmSharp.UI.Renderer
 
 		#endregion
 
-
 		/// <summary>
 		/// Gets the width.
 		/// </summary>

@@ -367,7 +367,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="minZoom"></param>
         /// <returns></returns>
         public override uint AddText(int layer, float minZoom, float maxZoom, double x, double y, double size, string text, int color,
-            int? haloColor, int? haloRadius)
+            int? haloColor, int? haloRadius, string font)
         {
             if (text == null)
                 throw new ArgumentNullException("text");
@@ -377,7 +377,7 @@ namespace OsmSharp.UI.Renderer.Scene
                 uint id = _nextId;
                 _nextId++;
 
-                this.AddPrimitive(layer, id, new Text2D(x, y, text, color, size, haloColor, haloRadius, minZoom, maxZoom));
+                this.AddPrimitive(layer, id, new Text2D(x, y, text, color, size, haloColor, haloRadius, font, minZoom, maxZoom));
                 return id;
             }
         }

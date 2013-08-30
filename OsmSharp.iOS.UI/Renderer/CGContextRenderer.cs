@@ -313,7 +313,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="size"></param>
 		/// <param name="color">Color.</param>
 		protected override void DrawText (Target2DWrapper<CGContextWrapper> target, double x, double y, string text, int color, double size,
-		                                  int? haloColor, int? haloRadius)
+		                                  int? haloColor, int? haloRadius, string fontName)
 		{
 			float xPixels = this.TransformX (x);
 			float yPixels = this.TransformY (y);
@@ -333,7 +333,10 @@ namespace OsmSharp.iOS.UI
 			}
 
 			// get the glyhps/paths from the font.
-			CTFont font = new CTFont ("Arial", textSize);
+			if (string.IsNullOrWhiteSpace (fontName)) {
+				fontName = "Arial";
+			}
+			CTFont font = new CTFont (fontName, textSize);
 			CTStringAttributes stringAttributes = new CTStringAttributes {
 				ForegroundColorFromContext =  true,
 				Font = font
@@ -380,7 +383,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="size"></param>
 		/// <param name="text">Text.</param>
 		protected override void DrawLineText (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, string text, int color, 
-		                                      double size, int? haloColor, int? haloRadius)
+		                                      double size, int? haloColor, int? haloRadius, string fontName)
 		{
 			float xPixels = this.TransformX (x[0]);
 			float yPixels = this.TransformY (y[0]);
@@ -403,7 +406,10 @@ namespace OsmSharp.iOS.UI
 			}
 
 			// get the glyhps/paths from the font.
-			CTFont font = new CTFont ("Arial", textSize);
+			if (string.IsNullOrWhiteSpace (fontName)) {
+				fontName = "Arial";
+			}
+			CTFont font = new CTFont (fontName, textSize);
 			CTStringAttributes stringAttributes = new CTStringAttributes {
 				ForegroundColorFromContext =  true,
 				Font = font

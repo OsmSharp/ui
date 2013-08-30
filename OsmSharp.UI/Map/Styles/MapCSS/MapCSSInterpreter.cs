@@ -351,6 +351,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     {
                         fontSize = 10;
                     }
+					string fontFamily;
+					if (!rule.TryGetProperty ("fontFamily", out fontFamily)) {
+						fontFamily = "Arial"; // just some default font.
+					}
 
                     // a text is to be drawn.
                     string value;
@@ -358,7 +362,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     {
                         scene.AddText(this.CalculateSceneLayer(OffsetPointText, zIndex), minZoom, maxZoom, projection.LongitudeToX(node.Coordinate.Longitude),
                                       projection.LatitudeToY(node.Coordinate.Latitude), fontSize, value, textColor, 
-                                      haloColorNullable, haloRadiusNullable);
+						              haloColorNullable, haloRadiusNullable, fontFamily);
                     }
                 }
             }

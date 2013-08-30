@@ -197,7 +197,12 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// Gets or sets the size.
         /// </summary>
         /// <value>The size.</value>
-        public double Size { get; set; }
+		public double Size { get; set; }
+
+		/// <summary>
+		/// Gets or sets the font name.
+		/// </summary>
+		public string Font { get; set; }
 
         /// <summary>
         /// The minimum zoom.

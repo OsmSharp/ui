@@ -235,7 +235,7 @@ namespace OsmSharp.UI.Renderer.Scene
 	    /// <param name="minZoom"></param>
 	    /// <returns></returns>
         public abstract uint AddText(int layer, float minZoom, float maxZoom, double x, double y, double size, string text, int color,
-            int? haloColor, int? haloRadius);
+            int? haloColor, int? haloRadius, string font);
 
         /// <summary>
         /// Adds a text along a line to this scene.
