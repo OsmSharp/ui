@@ -177,8 +177,8 @@ namespace OsmSharp.Math.Primitives
         {
             // http://en.wikipedia.org/wiki/Even-odd_rule
             // create a line parallel to the x-axis.
-            PointF2D second_point = new PointF2D(
-                new double[]{point[0] + 10,point[1]});
+//            PointF2D second_point = new PointF2D(
+//                new double[]{point[0] + 10,point[1]});
 
             // intersect line with polygon.
 

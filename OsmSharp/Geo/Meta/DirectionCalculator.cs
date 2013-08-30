@@ -40,16 +40,16 @@ namespace OsmSharp.Math.Geo.Meta
             double offset = 0.01;
 
             // calculate the angle with the horizontal and vertical axes.
-            GeoCoordinate horizonal_from = new GeoCoordinate(from.Latitude, from.Longitude + offset);
+            //GeoCoordinate horizonal_from = new GeoCoordinate(from.Latitude, from.Longitude + offset);
             GeoCoordinate vertical_from = new GeoCoordinate(from.Latitude + offset, from.Longitude);
 
             // create line.
             GeoCoordinateLine line = new GeoCoordinateLine(from, to);
             GeoCoordinateLine vertical_line = new GeoCoordinateLine(from,vertical_from);
-            GeoCoordinateLine horizontal_line= new GeoCoordinateLine(from,horizonal_from);
+            //GeoCoordinateLine horizontal_line= new GeoCoordinateLine(from,horizonal_from);
 
             // calculate angle.
-            Degree horizontal_angle = line.Direction.Angle(horizontal_line.Direction);
+            //Degree horizontal_angle = line.Direction.Angle(horizontal_line.Direction);
             Degree vertical_angle = line.Direction.Angle(vertical_line.Direction);
 
             if (vertical_angle < new Degree(22.5)

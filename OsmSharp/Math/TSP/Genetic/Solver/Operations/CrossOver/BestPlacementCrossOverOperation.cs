@@ -127,7 +127,7 @@ namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver
             // insert the source_piece at the best location.
             List<int> best_genome = null;
             Fitness best_fitness = null;
-            Fitness best_distance = null;
+            //Fitness best_distance = null;
 
             for (int idx = 0; idx <= new_genome.Count; idx++)
             {

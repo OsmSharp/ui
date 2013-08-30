@@ -124,7 +124,7 @@ namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver
             }
 
             // apply best placement algorithm to place the selected genomes.
-            List<int> genome = new List<int>();
+            //List<int> genome = new List<int>();
             BestPlacementHelper helper = BestPlacementHelper.Instance();
             helper.DoFast(
                 solver.Problem,

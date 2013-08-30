@@ -107,6 +107,7 @@ namespace OsmSharp.Android.UI.Sample
 			_router = Router.CreateCHFrom(
 				graphDeserialized, new CHRouter(graphDeserialized),
 				new OsmRoutingInterpreter());
+
 //
 //			//GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
 //			//GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);

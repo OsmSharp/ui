@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Linq;
 using OsmSharp.UI.Renderer;
 using MonoTouch.CoreGraphics;
 using OsmSharp.UI;
@@ -25,6 +26,9 @@ using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
 using MonoTouch.CoreText;
+using OsmSharp.Math.Primitives;
+using OsmSharp.Math;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.iOS.UI
 {
@@ -160,6 +164,7 @@ namespace OsmSharp.iOS.UI
 			float widthInPixels = this.ToPixels (width);
 
 			SimpleColor simpleColor = SimpleColor.FromArgb(color);
+			target.Target.CGContext.SetLineJoin (CGLineJoin.Round);
 			target.Target.CGContext.SetLineWidth (widthInPixels);
 			target.Target.CGContext.SetStrokeColor (simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
 			                              simpleColor.A / 256.0f);
@@ -174,18 +179,18 @@ namespace OsmSharp.iOS.UI
 				target.Target.CGContext.SetLineDash (0.0f, intervals);
 			}
 
-			switch(lineJoin)
-			{
-				case LineJoin.Bevel:
-				target.Target.CGContext.SetLineJoin (CGLineJoin.Bevel);
-					break;
-				case LineJoin.Miter:
-				target.Target.CGContext.SetLineJoin (CGLineJoin.Miter);
-					break;
-				case LineJoin.Round:
-				target.Target.CGContext.SetLineJoin (CGLineJoin.Round);
-					break;
-			}
+//			switch(lineJoin)
+//			{
+//				case LineJoin.Bevel:
+//				target.Target.CGContext.SetLineJoin (CGLineJoin.Bevel);
+//					break;
+//				case LineJoin.Miter:
+//				target.Target.CGContext.SetLineJoin (CGLineJoin.Miter);
+//					break;
+//				case LineJoin.Round:
+//				target.Target.CGContext.SetLineJoin (CGLineJoin.Round);
+//					break;
+//			}
 			target.Target.CGContext.BeginPath ();
 
 			PointF[] points = new PointF[x.Length];
@@ -313,31 +318,55 @@ namespace OsmSharp.iOS.UI
 			float xPixels = this.TransformX (x);
 			float yPixels = this.TransformY (y);
 			float textSize = this.TransformX (x + size) - xPixels;
-//
-			SimpleColor simpleColor = SimpleColor.FromArgb(color);
-//			target.Target.SetTextDrawingMode (CGTextDrawingMode.Fill);
-//			target.Target.SetLineWidth (2.0f);
-//			target.Target.SelectFont ("Helvetica", textSize, CGTextEncoding.MacRoman);
-//			target.Target.SetStrokeColor (simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
-//			                            simpleColor.A / 256.0f);
-//
-//			target.Target.ShowTextAtPoint (xPixels, yPixels, text);
 
-			CGAffineTransform textTransform = new CGAffineTransform(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f);
-			target.Target.CGContext.TextMatrix = textTransform;
-			target.Target.CGContext.SetFillColor (simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
-			                            simpleColor.A / 256.0f);
-			var attributedString = new NSAttributedString (text,
-			                                               new CTStringAttributes{
+			// set the fill color as the regular text-color.
+			SimpleColor simpleColor = SimpleColor.FromArgb(color);
+			target.Target.CGContext.SetFillColor(simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
+	  			                                 simpleColor.A / 256.0f);
+			if (haloColor.HasValue) { // set the stroke color as the halo color.
+				SimpleColor haloSimpleColor = SimpleColor.FromArgb (haloColor.Value);
+				target.Target.CGContext.SetStrokeColor (haloSimpleColor.R / 256.0f, haloSimpleColor.G / 256.0f, haloSimpleColor.B / 256.0f,
+				                                       haloSimpleColor.A / 256.0f);
+			}
+			if (haloRadius.HasValue) { // set the halo radius as line width.
+				target.Target.CGContext.SetLineWidth (haloRadius.Value);
+			}
+
+			// get the glyhps/paths from the font.
+			CTFont font = new CTFont ("Arial", textSize);
+			CTStringAttributes stringAttributes = new CTStringAttributes {
 				ForegroundColorFromContext =  true,
-				Font = new CTFont ("Arial", textSize)
-			});
+				Font = font
+			};
+			NSAttributedString attributedString = new NSAttributedString (text, stringAttributes);
+			CTLine line = new CTLine (attributedString);
+			CTRun[] runs = line.GetGlyphRuns ();
+
+			// set the correct tranformations to draw the resulting paths.
 			target.Target.CGContext.SaveState ();
 			target.Target.CGContext.TranslateCTM (xPixels, yPixels);
+			target.Target.CGContext.ConcatCTM (new CGAffineTransform (1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+			foreach (CTRun run in runs) {
+				ushort[] glyphs = run.GetGlyphs ();
+				PointF[] positions = run.GetPositions ();
 
-			using (var textLine = new CTLine (attributedString)) {
-				textLine.Draw (target.Target.CGContext);
+				float previousOffset = 0;
+				for (int idx = 0; idx < glyphs.Length; idx++) {
+					CGPath path = font.GetPathForGlyph (glyphs [idx]);
+					target.Target.CGContext.TranslateCTM (positions [idx].X - previousOffset, 0);
+					previousOffset = positions [idx].X;
+
+					target.Target.CGContext.BeginPath ();
+
+					target.Target.CGContext.AddPath (path);
+					if (haloRadius.HasValue && haloColor.HasValue) { // also draw the halo.
+						target.Target.CGContext.DrawPath (CGPathDrawingMode.FillStroke);
+					} else {
+						target.Target.CGContext.DrawPath (CGPathDrawingMode.Fill);
+					}
+				}
 			}
+
 			target.Target.CGContext.RestoreState ();
 		}
 
@@ -353,7 +382,146 @@ namespace OsmSharp.iOS.UI
 		protected override void DrawLineText (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, string text, int color, 
 		                                      double size, int? haloColor, int? haloRadius)
 		{
+			float xPixels = this.TransformX (x[0]);
+			float yPixels = this.TransformY (y[0]);
+			float textSize = this.TransformX (x[0] + (size * 2)) - xPixels;
 
+			// set the fill color as the regular text-color.
+			SimpleColor simpleColor = SimpleColor.FromArgb(color);
+			target.Target.CGContext.InterpolationQuality = CGInterpolationQuality.High;
+			target.Target.CGContext.SetAllowsFontSubpixelQuantization (true);
+			target.Target.CGContext.SetAllowsFontSmoothing (true);
+			target.Target.CGContext.SetFillColor(simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
+			                                     simpleColor.A / 256.0f);
+			if (haloColor.HasValue) { // set the stroke color as the halo color.
+				SimpleColor haloSimpleColor = SimpleColor.FromArgb (haloColor.Value);
+				target.Target.CGContext.SetStrokeColor (haloSimpleColor.R / 256.0f, haloSimpleColor.G / 256.0f, haloSimpleColor.B / 256.0f,
+				                                        haloSimpleColor.A / 256.0f);
+			}
+			if (haloRadius.HasValue) { // set the halo radius as line width.
+				target.Target.CGContext.SetLineWidth (haloRadius.Value);
+			}
+
+			// get the glyhps/paths from the font.
+			CTFont font = new CTFont ("Arial", textSize);
+			CTStringAttributes stringAttributes = new CTStringAttributes {
+				ForegroundColorFromContext =  true,
+				Font = font
+			};
+			NSAttributedString attributedString = new NSAttributedString (text, stringAttributes);
+			CTLine line = new CTLine (attributedString);
+			RectangleF textBounds = line.GetBounds (CTLineBoundsOptions.UseOpticalBounds);
+			CTRun[] runs = line.GetGlyphRuns ();
+			var lineLength = Polyline2D.Length (x, y);
+
+			// set the correct tranformations to draw the resulting paths.
+			target.Target.CGContext.SaveState ();
+			//target.Target.CGContext.TranslateCTM (xPixels, yPixels);
+			//target.Target.CGContext.ConcatCTM (new CGAffineTransform (1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+			foreach (CTRun run in runs) {
+				ushort[] glyphs = run.GetGlyphs ();
+				PointF[] positions = run.GetPositions ();
+				float[] characterWidths = new float[glyphs.Length];
+				float previous = 0;
+				float textLength = (float)this.FromPixels(_target, _view, positions [positions.Length - 1].X);
+				if (lineLength > textLength * 1.2f) {
+					for (int idx = 0; idx < characterWidths.Length - 1; idx++) {
+						characterWidths [idx] = (float)this.FromPixels(_target, _view, positions [idx + 1].X - previous);
+						previous = positions [idx + 1].X;
+					}
+					characterWidths [characterWidths.Length - 1] = characterWidths[characterWidths.Length - 2];
+					float characterHeight = textBounds.Height;
+
+					this.DrawLineTextSegment (target, x, y, glyphs, color, haloColor, haloRadius,
+					                          lineLength / 2f, characterWidths, textLength, characterHeight, font);
+				}
+			}
+
+			target.Target.CGContext.RestoreState ();
+		}
+
+		private void DrawLineTextSegment(Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, ushort[] glyphs, int color, 
+		                                 int? haloColor, int? haloRadius, double middlePosition, float[] characterWidths,
+		                                 double textLength, float charachterHeight, CTFont font)
+		{
+			// see if text is 'upside down'
+			double averageAngle = 0;
+			double first = middlePosition - (textLength / 2.0);
+			PointF2D current = Polyline2D.PositionAtPosition (x, y, first);
+			for (int idx = 0; idx < glyphs.Length; idx++) {
+				double nextPosition = middlePosition - (textLength / 2.0) + ((textLength / (glyphs.Length)) * (idx + 1));
+				PointF2D next = Polyline2D.PositionAtPosition (x, y, nextPosition);
+
+				// translate to the final position, the center of the line segment between 'current' and 'next'.
+				//PointF2D position = current + ((next - current) / 2.0);
+
+				// calculate the angle.
+				VectorF2D vector = next - current;
+				VectorF2D horizontal = new VectorF2D (1, 0);
+				double angleDegrees = ((Degree)horizontal.Angle (vector)).Value;
+				averageAngle = averageAngle + angleDegrees;
+				current = next;
+			}
+			averageAngle = averageAngle / glyphs.Length;
+
+
+			// revers if 'upside down'
+			double[] xText = x;
+			double[] yText = y;
+			if (averageAngle > 90 && averageAngle < 180 + 90) {
+				xText = x.Reverse ().ToArray ();
+				yText = y.Reverse ().ToArray ();
+			}
+
+			first = middlePosition - (textLength / 2.0);
+			current = Polyline2D.PositionAtPosition (xText, yText, first);
+			
+			//target.Target.CGContext.SaveState ();
+			//target.Target.CGContext.TranslateCTM (xText[0], yText[0]);
+
+			double nextPosition2 = first;
+			for (int idx = 0; idx < glyphs.Length; idx++) {
+				nextPosition2 = nextPosition2 + characterWidths [idx];
+				PointF2D next = Polyline2D.PositionAtPosition (xText, yText, nextPosition2);
+				//ushort currentChar = glyphs [idx];
+
+				PointF2D position = current;
+				
+				target.Target.CGContext.SaveState ();
+
+				// translate to the final position, the center of the line segment between 'current' and 'next'.
+				target.Target.CGContext.TranslateCTM (
+					this.TransformX (position [0]),
+					this.TransformY (position [1]));
+
+				// calculate the angle.
+				VectorF2D vector = next - current;
+				VectorF2D horizontal = new VectorF2D (1, 0);
+				double angleDegrees = (horizontal.Angle (vector)).Value;
+
+				// rotate the character.
+				target.Target.CGContext.RotateCTM ((float)angleDegrees);
+//
+//				// translate the character so the center of its base is over the origin.
+				target.Target.CGContext.TranslateCTM (0, charachterHeight / 3.0f);
+
+				// rotate 'upside down'
+				target.Target.CGContext.ConcatCTM (new CGAffineTransform (1.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f));
+
+				target.Target.CGContext.BeginPath ();
+
+				CGPath path = font.GetPathForGlyph (glyphs [idx]);
+				target.Target.CGContext.AddPath (path);
+				if (haloRadius.HasValue && haloColor.HasValue) { // also draw the halo.
+					target.Target.CGContext.DrawPath (CGPathDrawingMode.FillStroke);
+				} else {
+					target.Target.CGContext.DrawPath (CGPathDrawingMode.Fill);
+				}
+				//target.Target.CGContext.ClosePath ();
+				target.Target.CGContext.RestoreState ();
+
+				current = next;
+			}
 		}
 
 		#endregion

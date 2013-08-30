@@ -31,13 +31,18 @@ namespace OsmSharp.iOS.UI.Sample
 			// initialize a test-map.
 			var map = new Map ();
 			map.AddLayer (new LayerScene (Scene2DLayered.Deserialize (
-				Assembly.GetExecutingAssembly ().GetManifestResourceStream ("OsmSharp.iOS.UI.Sample.kempen.osm.pbf.scene.layered"), 
+				Assembly.GetExecutingAssembly ().GetManifestResourceStream ("OsmSharp.iOS.UI.Sample.wvl.map"), 
 					true)));
 
 			// Perform any additional setup after loading the view, typically from a nib.
 			MapView mapView = new MapView ();
 			mapView.Map = map;
-			mapView.MapCenter = new OsmSharp.Math.Geo.GeoCoordinate (51.26337, 4.78739);
+			//mapView.MapCenter = new OsmSharp.Math.Geo.GeoCoordinate (51.26337, 4.78739);
+			mapView.MapCenter = new OsmSharp.Math.Geo.GeoCoordinate(51.158075, 2.961545); // gistel
+			//mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
+			//mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
+			//mapView.Center = new GeoCoordinate(51.156803, 2.958887);
+
 			mapView.MapZoomLevel = 16;
 
 			View = mapView;

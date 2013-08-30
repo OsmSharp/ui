@@ -116,7 +116,7 @@ namespace OsmSharp.Math.Primitives
             _min = new double[2];
 
             // intialize with the first point.
-            PointF2D a = points[0];
+            //PointF2D a = points[0];
 
             // loop over all points and store the max and minimum.
             for (int idx = 0; idx < 2; idx++)

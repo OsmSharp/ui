@@ -222,7 +222,7 @@ namespace OsmSharp.Math.TSP.ArbitraryInsertion
                 // loop over all customers and try cheapest insertion.
                 for (int customer = 0; customer < problem.Size; customer++)
                 {
-                    string route_string = route.ToString();
+                    //string route_string = route.ToString();
                     //IRoute previous = route.Clone() as IRoute;
                     if (route.Contains(customer))
                     {

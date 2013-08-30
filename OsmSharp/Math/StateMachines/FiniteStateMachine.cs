@@ -95,7 +95,7 @@ namespace OsmSharp.Math.Automata
                 if (!_current_state.ConsumeAll)
                 {
                     this.NotifyReset(even, _current_state);
-                    FiniteStateMachineState<EventType> from_state = _current_state;
+                    //FiniteStateMachineState<EventType> from_state = _current_state;
                     this.Reset();
 
                     //if (!_reconsuming && from_state != _initial_state)
