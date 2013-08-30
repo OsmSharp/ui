@@ -239,13 +239,13 @@ namespace OsmSharp.Android.UI
 		}
 
 		protected override void DrawText (Target2DWrapper<OpenGLTarget2D> target, double x, double y, string text, int color, 
-		                                  double size, int? haloColor, int? haloRadius)
+		                                  double size, int? haloColor, int? haloRadius, string fontName)
 		{
 
 		}
 
 		protected override void DrawLineText (Target2DWrapper<OpenGLTarget2D> target, double[] x, double[] y, string text, int color, 
-		                                      double size, int? haloColor, int? haloRadius)
+		                                      double size, int? haloColor, int? haloRadius, string fontName)
 		{
 
 		}

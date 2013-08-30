@@ -349,7 +349,7 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="text"></param>
         /// <param name="size"></param>
         protected override void DrawText(Target2DWrapper<Graphics> target, double x, double y, string text, int color, double size,
-            int? haloColor, int? haloRadius)
+            int? haloColor, int? haloRadius, string fontName)
         {
             float sizeInPixels = this.ToPixels(size);
             Color textColor = Color.FromArgb(color);
@@ -387,7 +387,7 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="color"></param>
         /// <param name="size"></param>
         protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color, 
-            double size, int? haloColor, int? haloRadius)
+            double size, int? haloColor, int? haloRadius, string fontName)
         {
             if (x.Length > 1)
             {
