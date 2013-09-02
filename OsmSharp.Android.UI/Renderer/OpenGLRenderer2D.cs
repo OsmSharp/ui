@@ -82,8 +82,8 @@ namespace OsmSharp.Android.UI
 			_view = view;
 			_target = target;
 
-			_target.Target.SetOrtho((float)_view.Left, (float)_view.Right, 
-			                        (float)_view.Bottom, (float)_view.Top);
+			_target.Target.SetOrtho((float)_view.LeftTop[0], (float)_view.RightTop[0], 
+			                        (float)_view.LeftBottom[1], (float)_view.LeftTop[1]);
 		}
 
 		protected override void DrawBackColor (Target2DWrapper<OpenGLTarget2D> target, int backColor)

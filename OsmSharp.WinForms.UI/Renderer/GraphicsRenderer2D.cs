@@ -74,22 +74,20 @@ namespace OsmSharp.WinForms.UI.Renderer
             List<Scene2D> currentScenes, View2D view)
         {
             var scene = new Scene2DSimple();
-            scene.BackColor = currentScenes[0].BackColor;
-
-	        var bitmap = target.Tag as Bitmap;
-	        if (bitmap != null)
-	        {
-                //byte[] imageData = null;
-                //using (var stream = new MemoryStream())
-                //{
-                //    bitmap.Save(stream, ImageFormat.Png);
-                //    stream.Close();
-
-                //    imageData = stream.ToArray();
-                //}
-	            scene.AddImage(0, float.MinValue, float.MaxValue,
-                    view.Left, view.Top, view.Right, view.Bottom, new byte[0], bitmap);
-	        }
+//            scene.BackColor = currentScenes[0].BackColor;
+//
+//	        var bitmap = target.Tag as Bitmap;
+//	        if (bitmap != null)
+//	        {
+//				
+//				// build the boundingbox.
+//				var viewBox = view.OuterBox;
+//				var box = new GeoCoordinateBox (map.Projection.ToGeoCoordinates (viewBox.Min [0], viewBox.Min [1]),
+//				                                map.Projection.ToGeoCoordinates (viewBox.Max [0], viewBox.Max [1]));
+//
+//	            scene.AddImage(0, float.MinValue, float.MaxValue,
+//                    view.Left, view.Top, view.Right, view.Bottom, new byte[0], bitmap);
+//	        }
 	        return scene;
         }
 

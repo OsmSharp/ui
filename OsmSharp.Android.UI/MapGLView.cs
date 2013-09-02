@@ -142,8 +142,8 @@ namespace OsmSharp.Android.UI
 			View2D view = _renderer.Create (this.Width, this.Height,
 			                                this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center);
 
-			_target.SetOrtho((float)view.Left, (float)view.Right, 
-			                 (float)view.Bottom, (float)view.Top);
+			_target.SetOrtho((float)view.LeftTop[0], (float)view.RightTop[0], 
+			                 (float)view.LeftBottom[1], (float)view.LeftTop[1]);
 		}
 
 		/// <summary>

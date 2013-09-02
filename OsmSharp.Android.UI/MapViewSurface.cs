@@ -237,8 +237,12 @@ namespace OsmSharp.Android.UI
 				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoomLevel);
 
 				// add the current canvas to the scene.
+				double left = view.LeftTop [0];
+				double right = view.RightTop [0];
+				double top = view.LeftTop [1];
+				double bottom = view.LeftBottom [1];
 				uint canvasId = _scene.AddImage (-1, float.MinValue, float.MaxValue, 
-				                                view.Left, view.Top, view.Right, view.Bottom, new byte[0], _canvasBitmap);
+				                                left, top, right, bottom, new byte[0], _canvasBitmap);
 
 				// does the rendering.
 				bool complete = _cacheRenderer.Render (canvas, this.Map.Projection, 
@@ -260,8 +264,12 @@ namespace OsmSharp.Android.UI
 						// add the newly rendered image again.
 						_scene.Clear ();
 						//_previousCache = 
+						left = view.LeftTop [0];
+						right = view.RightTop [0];
+						top = view.LeftTop [1];
+						bottom = view.LeftBottom [1];
 						_scene.AddImage (0, float.MinValue, float.MaxValue, 
-						                                  view.Left, view.Top, view.Right, view.Bottom, new byte[0], _canvasBitmap);
+						                                  left, top, right, bottom, new byte[0], _canvasBitmap);
 
 						// switch cache and canvas to prevent re-allocation of bitmaps.
 						global::Android.Graphics.Bitmap newCanvas = _cache;

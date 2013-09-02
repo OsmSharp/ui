@@ -25,4 +25,5 @@ Output*/
 OutputAndroid*/
 OutputWindowsPhone*/
 *.psess
+test-results*/
 *.vsp

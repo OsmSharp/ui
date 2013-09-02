@@ -60,11 +60,11 @@ namespace OsmSharp.WinForms.UI.Map.Layers
         {
             // calculate the current zoom level.
             var zoomLevel = (int)System.Math.Round(map.Projection.ToZoomLevel(zoomFactor), 0);
-
-            // build the boundingbox.
-            var box = new GeoCoordinateBox(
-                    map.Projection.ToGeoCoordinates(view.Left, view.Top),
-                    map.Projection.ToGeoCoordinates(view.Right, view.Bottom));
+			
+			// build the boundingbox.
+			var viewBox = view.OuterBox;
+			var box = new GeoCoordinateBox (map.Projection.ToGeoCoordinates (viewBox.Min [0], viewBox.Min [1]),
+			                                map.Projection.ToGeoCoordinates (viewBox.Max [0], viewBox.Max [1]));
 
             // build the tile range.
             TileRange range = TileRange.CreateAroundBoundingBox(box, zoomLevel);
