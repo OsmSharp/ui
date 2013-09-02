@@ -1,4 +1,4 @@
-﻿// OsmSharp - OpenStreetMap tools & library.
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2012 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
