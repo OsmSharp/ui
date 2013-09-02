@@ -85,7 +85,7 @@ namespace OsmSharp.Android.UI.Sample
 			map.AddLayer(
 				new LayerScene(
 				Scene2DLayered.Deserialize(
-					Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.wvl.osm.pbf.scene.layered"), true)));
+					Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.wvl.map"), true)));
 
 //			var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
 //			var graphSerialized = routingSerializer.Deserialize(
@@ -100,13 +100,13 @@ namespace OsmSharp.Android.UI.Sample
 //				graphSerialized,
 //				new OsmRoutingInterpreter());
 			
-			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
-			var graphDeserialized = routingSerializer.Deserialize(
-				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.osm.pbf.routing.ch"), true);
-//
-			_router = Router.CreateCHFrom(
-				graphDeserialized, new CHRouter(graphDeserialized),
-				new OsmRoutingInterpreter());
+//			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+//			var graphDeserialized = routingSerializer.Deserialize(
+//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.osm.pbf.routing.ch"), true);
+////
+//			_router = Router.CreateCHFrom(
+//				graphDeserialized, new CHRouter(graphDeserialized),
+//				new OsmRoutingInterpreter());
 
 //
 //			//GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);

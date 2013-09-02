@@ -276,7 +276,11 @@ namespace OsmSharp.UI.Renderer
 		/// <param name="bottom">Bottom.</param>
 		public bool OverlapsWithBox(double left, double top, double right, double bottom)
 		{
-			throw new NotSupportedException ();
+			if (this.Direction == null || this.Direction.Value == 0) {
+				return this.OuterBox.Overlaps (new BoxF2D (left, top, right, bottom));
+			}
+			// TODO: support custom directions.
+			return false; 
 		}
 
         /// <summary>
