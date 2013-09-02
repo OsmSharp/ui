@@ -35,17 +35,6 @@ namespace OsmSharp.Math.Primitives
         private PointF2D[] _points;
 
         /// <summary>
-        /// Creates a new box.
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        protected PolygonF2D(PointF2D a, PointF2D b)
-            : this(new PointF2D[] { a, b })
-        {
-            
-        }
-
-        /// <summary>
         /// Creates a new polygon.
         /// </summary>
         /// <param name="points"></param>

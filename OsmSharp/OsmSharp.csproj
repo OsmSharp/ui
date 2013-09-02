@@ -430,6 +430,7 @@
     <Compile Include="Geo\Projections\SphericalMercator.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
     <Compile Include="Math\Primitives\BoxF2D.cs" />
+    <Compile Include="Math\Primitives\RectangleF2D.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

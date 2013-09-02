@@ -299,5 +299,6 @@
     <Compile Include="Collections\LongIndex\LongIndexNode.cs" />
     <Compile Include="IO\LimitedStream.cs" />
     <Compile Include="Math\Primitives\BoxF2D.cs" />
+    <Compile Include="Math\Primitives\RectangleF2D.cs" />
   </ItemGroup>
 </Project>

@@ -250,6 +250,19 @@ namespace OsmSharp.Math
             return VectorF2D.Angle(this, v);
         }
 
+		/// <summary>
+		/// Froms the angle y.
+		/// </summary>
+		/// <returns>The angle y.</returns>
+		/// <param name="direction">Direction.</param>
+		public static VectorF2D FromAngleY (Degree angle)
+		{
+			double sinX = System.Math.Sin (((Radian)angle).Value);
+			double cosX = System.Math.Cos (((Radian)angle).Value);
+
+			return new VectorF2D (sinX, cosX);
+		}
+
         /// <summary>
         /// Rotates a vector 90 degrees.
         /// </summary>
