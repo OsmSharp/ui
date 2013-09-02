@@ -254,7 +254,7 @@ namespace OsmSharp.Math
 		/// Froms the angle y.
 		/// </summary>
 		/// <returns>The angle y.</returns>
-		/// <param name="direction">Direction.</param>
+		/// <param name="angle">Direction.</param>
 		public static VectorF2D FromAngleY (Degree angle)
 		{
 			double sinX = System.Math.Sin (((Radian)angle).Value);
