@@ -57,7 +57,7 @@ namespace OsmSharp.Math.Structures.QTree
         /// <param name="bounds"></param>
         /// <returns></returns>
         public QuadTree(
-            int dept, RectangleF2D bounds)
+			int dept, BoxF2D bounds)
         {
             _root = new QuadTreeNode(dept, bounds);
         }
@@ -159,7 +159,7 @@ namespace OsmSharp.Math.Structures.QTree
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public IEnumerable<TDataType> GetInside(RectangleF2D box)
+		public IEnumerable<TDataType> GetInside(BoxF2D box)
         {
             if (_root == null)
             { // this can only mean not data was added yet to this index.
@@ -214,7 +214,7 @@ namespace OsmSharp.Math.Structures.QTree
             /// <summary>
             /// The bounds of this node.
             /// </summary>
-            private readonly RectangleF2D _bounds;
+			private readonly BoxF2D _bounds;
 
             /// <summary>
             /// The middle of this node in dimension 0.
@@ -241,11 +241,11 @@ namespace OsmSharp.Math.Structures.QTree
             /// </summary>
             /// <param name="dept"></param>
             /// <param name="bounds"></param>
-            public QuadTreeNode(int dept, RectangleF2D bounds)
+			public QuadTreeNode(int dept, BoxF2D bounds)
             {
                 _depth = dept;
 
-                _bounds = new RectangleF2D(new PointF2D(bounds.Max[0], bounds.Max[1]),
+				_bounds = new BoxF2D(new PointF2D(bounds.Max[0], bounds.Max[1]),
                     new PointF2D(bounds.Min[0], bounds.Min[1]));
                 //_max_0 = bounds.Max[0]; // max x = right.
                 //_max_1 = bounds.Max[1]; // max y = top.
@@ -275,7 +275,7 @@ namespace OsmSharp.Math.Structures.QTree
             {
                 _depth = dept;
 
-                _bounds = new RectangleF2D(new PointF2D(max0, max1),
+				_bounds = new BoxF2D(new PointF2D(max0, max1),
                     new PointF2D(min0, min1));
                 //_max_1 = max_1; // max y = top.
                 //_max_0 = max_0; // max x = right.
@@ -353,7 +353,7 @@ namespace OsmSharp.Math.Structures.QTree
                 _middle0 = (min_0 + max_0) / 2.0;
                 _middle1 = (min_1 + max_1) / 2.0;
 
-                _bounds = new RectangleF2D(new PointF2D(max_0, max_1),
+				_bounds = new BoxF2D(new PointF2D(max_0, max_1),
                     new PointF2D(min_0, min_1));
 
                 if (_depth == 0)
@@ -426,7 +426,7 @@ namespace OsmSharp.Math.Structures.QTree
             /// <param name="data"></param>
             /// <param name="node"></param>
             /// <param name="box"></param>
-            public void AddInsideAtNode(IList<TDataType> data, QuadTreeNode node, RectangleF2D box)
+			public void AddInsideAtNode(IList<TDataType> data, QuadTreeNode node, BoxF2D box)
             {
                 if (box.Overlaps(_bounds))
                 { // ok there is an overlap.

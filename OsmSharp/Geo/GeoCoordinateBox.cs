@@ -30,7 +30,7 @@ namespace OsmSharp.Math.Geo
     /// 0: longitude.
     /// 1: latitude.
     /// </summary>
-    public class GeoCoordinateBox : RectangleF2D
+	public class GeoCoordinateBox : BoxF2D
     {
         /// <summary>
         /// Creates a new box.

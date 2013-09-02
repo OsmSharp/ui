@@ -96,7 +96,6 @@
     <Compile Include="Math\Primitives\Enumerators\Points\PointEnumerator.cs" />
     <Compile Include="Math\Primitives\LineF2D.cs" />
     <Compile Include="Math\Primitives\PolygonF2D.cs" />
-    <Compile Include="Math\Primitives\RectangleF2D.cs" />
     <Compile Include="Math\Random\IRandomGenerator.cs" />
     <Compile Include="Math\Random\RandomGenerator.cs" />
     <Compile Include="Math\Random\StaticRandomGenerator.cs" />
@@ -322,6 +321,7 @@
     <Compile Include="Math\Primitives\Polyline2D.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamSerializer.cs" />
+    <Compile Include="Math\Primitives\BoxF2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="IO\Xml\Gpx\v1_0\gpx.xsd" />

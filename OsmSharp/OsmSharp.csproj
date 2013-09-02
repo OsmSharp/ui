@@ -254,7 +254,6 @@
     <Compile Include="Math\Primitives\LineF2D.cs" />
     <Compile Include="Math\Primitives\PolygonF2D.cs" />
     <Compile Include="Math\Primitives\Polyline2D.cs" />
-    <Compile Include="Math\Primitives\RectangleF2D.cs" />
     <Compile Include="Math\Random\IRandomGenerator.cs" />
     <Compile Include="Math\Random\RandomGenerator.cs" />
     <Compile Include="Math\Random\StaticRandomGenerator.cs" />
@@ -430,6 +429,7 @@
     <Compile Include="Geo\Projections\EllipticalMercator.cs" />
     <Compile Include="Geo\Projections\SphericalMercator.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
+    <Compile Include="Math\Primitives\BoxF2D.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -42,7 +42,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         /// <summary>
         /// Holds the cached leaves.
         /// </summary>
-        private readonly LRUCache<long, KeyValuePair<List<RectangleF2D>, List<T>>> _cachedLeaves;
+		private readonly LRUCache<long, KeyValuePair<List<BoxF2D>, List<T>>> _cachedLeaves;
 
         /// <summary>
         /// Holds the cached indexes.
@@ -56,7 +56,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         {
             _streamCache = new MemoryCachedStream();
 
-            _cachedLeaves = new LRUCache<long, KeyValuePair<List<RectangleF2D>, List<T>>>(1000);
+			_cachedLeaves = new LRUCache<long, KeyValuePair<List<BoxF2D>, List<T>>>(1000);
             _cachedIndexes = new LRUCache<long, KeyValuePair<ChildrenIndex, long>>(1000);
         }
 
@@ -131,7 +131,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
                 for (int idx = 0; idx < nodeBase.Children.Count; idx++)
                 {
                     var child = (node.Children[idx] as RTreeMemoryIndex<T>.Node);
-                    RectangleF2D box = node.Boxes[idx];
+					BoxF2D box = node.Boxes[idx];
                     childrenIndex.MinX[idx] = (float) box.Min[0];
                     childrenIndex.MinY[idx] = (float) box.Min[1];
                     childrenIndex.MaxX[idx] = (float) box.Max[0];
@@ -203,7 +203,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         /// <param name="boxes"></param>
         /// <returns></returns>
         protected abstract byte[] Serialize(RuntimeTypeModel typeModel, List<T> data, 
-            List<RectangleF2D> boxes);
+		                                    List<BoxF2D> boxes);
 
         /// <summary>
         /// Deserializes all data on one leaf.
@@ -213,7 +213,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         /// <param name="boxes"></param>
         /// <returns></returns>
         protected abstract List<T> DeSerialize(RuntimeTypeModel typeModel, byte[] data,
-            out List<RectangleF2D> boxes);
+		                                       out List<BoxF2D> boxes);
 
         /// <summary>
         /// Deserializes the given stream into an index.
@@ -237,12 +237,12 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         /// <param name="result"></param>
         /// <returns></returns>
         public void Search(SpatialIndexSerializerStream stream, 
-            RectangleF2D box, HashSet<T> result)
+		                   BoxF2D box, HashSet<T> result)
         {
             // check if the current leaf/index exists.
             long position = stream.Position;
             KeyValuePair<ChildrenIndex, long> index;
-            KeyValuePair<List<RectangleF2D>, List<T>> leaf;
+			KeyValuePair<List<BoxF2D>, List<T>> leaf;
             if (_cachedIndexes.TryGet(position + 1 + 4, out index))
             { // at this position is an index.
                 stream.Seek(index.Value, SeekOrigin.Begin);
@@ -300,7 +300,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
                 int leafs = 0;
                 for (int idx = 0; idx < index.Key.IsLeaf.Length; idx++)
                 {
-                    var localBox = new RectangleF2D(index.Key.MinX[idx], index.Key.MinY[idx],
+					var localBox = new BoxF2D(index.Key.MinX[idx], index.Key.MinY[idx],
                         index.Key.MaxX[idx], index.Key.MaxY[idx]);
                     if (localBox.Overlaps(box))
                     { // there will be data in one of the children.
@@ -353,7 +353,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         /// <param name="offset"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-        protected KeyValuePair<List<RectangleF2D>, List<T>> SearchInLeaf(SpatialIndexSerializerStream stream, long offset, long size)
+		protected KeyValuePair<List<BoxF2D>, List<T>> SearchInLeaf(SpatialIndexSerializerStream stream, long offset, long size)
         {
             // position the stream.
             stream.Seek(offset, SeekOrigin.Begin);
@@ -365,11 +365,11 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
             { // the data is a leaf and can be read.
                 var dataBytes = new byte[size];
                 stream.Read(dataBytes, 0, dataBytes.Length);
-                List<RectangleF2D> boxes;
+				List<BoxF2D> boxes;
                 List<T> data = this.DeSerialize(typeModel, dataBytes, out boxes);
-                _cachedLeaves.Add(offset, new KeyValuePair<List<RectangleF2D>, List<T>>(
+				_cachedLeaves.Add(offset, new KeyValuePair<List<BoxF2D>, List<T>>(
                     boxes, data)); // add to cache.
-                return new KeyValuePair<List<RectangleF2D>,List<T>>(boxes, data);
+				return new KeyValuePair<List<BoxF2D>,List<T>>(boxes, data);
             }
             throw new Exception("Cannot deserialize node!");
         }

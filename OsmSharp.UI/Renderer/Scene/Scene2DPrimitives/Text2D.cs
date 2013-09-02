@@ -146,9 +146,9 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// Returns the bounding box for this primitive.
         /// </summary>
         /// <returns></returns>
-        public RectangleF2D GetBox()
+		public BoxF2D GetBox()
         {
-            return new RectangleF2D(this.X, this.Y, this.X, this.Y);
+			return new BoxF2D(this.X, this.Y, this.X, this.Y);
         }
 
         #endregion

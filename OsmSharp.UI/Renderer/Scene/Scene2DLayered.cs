@@ -93,7 +93,7 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="y">The y coordinate.</param>
 		private bool CalculateSimplificationSurfaceCondition(float zoomFactor, double[] x, double[] y)
 		{
-			RectangleF2D rectangle = new RectangleF2D (x, y);
+			BoxF2D rectangle = new BoxF2D (x, y);
 			float epsilon = (1.0f / zoomFactor) * 10;
 			if (rectangle.Delta [0] < epsilon && rectangle.Delta [1] < epsilon) {
 				return false;

@@ -205,7 +205,7 @@ namespace OsmSharp.iOS.UI
 						// add the newly rendered image again.
 						//this.Layer.Contents = gctx.ToImage ();
 
-						RectangleF2D rectangle = view.OuterBox;
+						BoxF2D rectangle = view.OuterBox;
 
 						_cachedScene.Clear ();
 						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, 

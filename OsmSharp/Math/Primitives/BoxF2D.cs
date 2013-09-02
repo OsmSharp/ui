@@ -25,17 +25,17 @@ using OsmSharp.Math.Primitives.Enumerators.Points;
 namespace OsmSharp.Math.Primitives
 {
     /// <summary>
-    /// Class representing a retangular box.
+    /// Represents a retangular box with edges always parallel to x- and y-axis.
     /// </summary>
-    public class RectangleF2D : PrimitiveF2D, IPointList, ILineList, IEnumerable<PointF2D>, IEnumerable<LineF2D>
+    public class BoxF2D : PrimitiveF2D, IPointList, ILineList, IEnumerable<PointF2D>, IEnumerable<LineF2D>
     {        
         /// <summary>
-        /// Holds the maximum values of the rectangle.
+        /// Holds the maximum values of the box.
         /// </summary>
         private double[] _max;
 
         /// <summary>
-        /// Holds the minimum values of the rectangle.
+        /// Holds the minimum values of the box.
         /// </summary>
         private double[] _min;
 
@@ -48,7 +48,7 @@ namespace OsmSharp.Math.Primitives
         /// <param name="y1"></param>
         /// <param name="x2"></param>
         /// <param name="y2"></param>
-        public RectangleF2D(double x1, double y1, double x2, double y2)
+		public BoxF2D(double x1, double y1, double x2, double y2)
             : this(new PointF2D(x1, y1), new PointF2D(x2, y2))
         {
 
@@ -59,7 +59,7 @@ namespace OsmSharp.Math.Primitives
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
-        public RectangleF2D(PointF2D a, PointF2D b)
+		public BoxF2D(PointF2D a, PointF2D b)
             :this(new PointF2D[] { a, b })
         {
             
@@ -69,7 +69,7 @@ namespace OsmSharp.Math.Primitives
         /// Creates a new box around the given points.
         /// </summary>
         /// <param name="points"></param>
-        public RectangleF2D(PointF2D[] points)
+		public BoxF2D(PointF2D[] points)
         {
             this.Mutate(points);
         }
@@ -78,7 +78,7 @@ namespace OsmSharp.Math.Primitives
         /// Creates a new box around the given points.
         /// </summary>
         /// <param name="points"></param>
-        public RectangleF2D(IList<PointF2D> points)
+		public BoxF2D(IList<PointF2D> points)
             : this(points.ToArray<PointF2D>())
         {
 
@@ -89,7 +89,7 @@ namespace OsmSharp.Math.Primitives
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-		public RectangleF2D(double[] x, double[] y)
+		public BoxF2D(double[] x, double[] y)
 		{
 			PointF2D[] points = new PointF2D[x.Length];
 			for (int idx = 0; idx < x.Length; idx++) {
@@ -314,7 +314,7 @@ namespace OsmSharp.Math.Primitives
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public bool IsInside(RectangleF2D box)
+		public bool IsInside(BoxF2D box)
         {
             foreach (PointF2D p in box.Corners)
             {
@@ -393,7 +393,7 @@ namespace OsmSharp.Math.Primitives
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public bool Overlaps(RectangleF2D box)
+		public bool Overlaps(BoxF2D box)
         {
 			double minX = System.Math.Max(this.Min[0], box.Min[0]);
 			double minY = System.Math.Max(this.Min[1], box.Min[1]);
@@ -627,7 +627,7 @@ namespace OsmSharp.Math.Primitives
 		/// Calculates the intersection between this box and the given box.
 		/// </summary>
 		/// <param name="box">Box.</param>
-		public RectangleF2D Intersection (RectangleF2D box)
+		public BoxF2D Intersection (BoxF2D box)
 		{// get the highest minimums and the lowest maximums.
 			double minX = System.Math.Max(this.Min[0], box.Min[0]);
 			double minY = System.Math.Max(this.Min[1], box.Min[1]);
@@ -636,7 +636,7 @@ namespace OsmSharp.Math.Primitives
 
             if (minX <= maxX && minY <= maxY)
             {
-                return new RectangleF2D(new PointF2D(minX, minY), new PointF2D(maxX, maxY));
+				return new BoxF2D(new PointF2D(minX, minY), new PointF2D(maxX, maxY));
             }
 		    return null;
 		}
@@ -645,14 +645,14 @@ namespace OsmSharp.Math.Primitives
 		/// Calculates the union of this box and the given box or the box that encompasses both original boxes.
 		/// </summary>
 		/// <param name="box">Box.</param>
-		public RectangleF2D Union(RectangleF2D box)
+		public BoxF2D Union(BoxF2D box)
 		{// get the lowest minimums and the highest maximums.
 			double minX = System.Math.Min(this.Min[0], box.Min[0]);
 			double minY = System.Math.Min(this.Min[1], box.Min[1]);
 			double maxX = System.Math.Max(this.Max[0], box.Max[0]);
 			double maxY = System.Math.Max(this.Max[1], box.Max[1]);
 			
-			return new RectangleF2D(new PointF2D(minX, minY), new PointF2D(maxX, maxY));
+			return new BoxF2D(new PointF2D(minX, minY), new PointF2D(maxX, maxY));
 		}
 
         /// <summary>

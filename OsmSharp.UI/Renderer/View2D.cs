@@ -274,7 +274,7 @@ namespace OsmSharp.UI.Renderer
 		/// <param name="top">Top.</param>
 		/// <param name="right">Right.</param>
 		/// <param name="bottom">Bottom.</param>
-		public bool OverlapsWithRectangle(double left, double top, double right, double bottom)
+		public bool OverlapsWithBox(double left, double top, double right, double bottom)
 		{
 			throw new NotSupportedException ();
 		}
@@ -480,7 +480,7 @@ namespace OsmSharp.UI.Renderer
 		/// Returns the smallest rectangular box containing the entire view. Will be larger when turned in a non-zero direction.
 		/// </summary>
 		/// <value>The outer box.</value>
-		public RectangleF2D OuterBox
+		public BoxF2D OuterBox
 		{
 			get{
 				double left = this.LeftTop [0];
@@ -488,7 +488,7 @@ namespace OsmSharp.UI.Renderer
 				double top = this.LeftTop [1];
 				double bottom = this.LeftBottom [1];
 
-				return new RectangleF2D (left, top, right, bottom);
+				return new BoxF2D (left, top, right, bottom);
 			}
 		}
     }

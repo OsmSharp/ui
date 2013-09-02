@@ -97,7 +97,6 @@
     <Compile Include="Math\Primitives\PointF2D.cs" />
     <Compile Include="Math\Primitives\PolygonF2D.cs" />
     <Compile Include="Math\Primitives\Polyline2D.cs" />
-    <Compile Include="Math\Primitives\RectangleF2D.cs" />
     <Compile Include="Math\Random\IRandomGenerator.cs" />
     <Compile Include="Math\Random\RandomGenerator.cs" />
     <Compile Include="Math\Random\StaticRandomGenerator.cs" />
@@ -299,5 +298,6 @@
     <Compile Include="Collections\LongIndex\LongIndexLeaf.cs" />
     <Compile Include="Collections\LongIndex\LongIndexNode.cs" />
     <Compile Include="IO\LimitedStream.cs" />
+    <Compile Include="Math\Primitives\BoxF2D.cs" />
   </ItemGroup>
 </Project>

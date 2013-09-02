@@ -33,14 +33,14 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
         /// <summary>
         /// Holds the list of objects.
         /// </summary>
-        private readonly List<KeyValuePair<RectangleF2D, T>> _list;
+		private readonly List<KeyValuePair<BoxF2D, T>> _list;
 
         /// <summary>
         /// Creates a new reference spatial implementation.
         /// </summary>
         public ReferenceImplementation()
         {
-            _list = new List<KeyValuePair<RectangleF2D, T>>();
+			_list = new List<KeyValuePair<BoxF2D, T>>();
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public IEnumerable<T> Get(RectangleF2D box)
+		public IEnumerable<T> Get(BoxF2D box)
         {
             var result = new HashSet<T>();
             foreach (var entry in _list)
@@ -66,9 +66,9 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
         /// </summary>
         /// <param name="box"></param>
         /// <param name="item"></param>
-        public void Add(RectangleF2D box, T item)
+		public void Add(BoxF2D box, T item)
         {
-            _list.Add(new KeyValuePair<RectangleF2D, T>(box, item));
+			_list.Add(new KeyValuePair<BoxF2D, T>(box, item));
         }
 
         /// <summary>

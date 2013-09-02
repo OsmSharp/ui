@@ -33,7 +33,7 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// </summary>
         /// <param name="box"></param>
         /// <param name="item"></param>
-        void Add(RectangleF2D box, T item);
+		void Add(BoxF2D box, T item);
 
         /// <summary>
         /// Removes the given item.

@@ -39,7 +39,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public IEnumerable<T> Get(RectangleF2D box)
+		public IEnumerable<T> Get(BoxF2D box)
         {
             var results = new HashSet<T>();
 

@@ -252,7 +252,7 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
                 return false;
             }
 
-			if (view.OverlapsWithRectangle (MinX, MinY, MaxX, MaxY)) {
+			if (view.OverlapsWithBox (MinX, MinY, MaxX, MaxY)) {
 				return true; // maybe a better hittest?
 			}
 			return false;
@@ -262,9 +262,9 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// Returns the bounding box for this primitive.
         /// </summary>
         /// <returns></returns>
-        public RectangleF2D GetBox()
+		public BoxF2D GetBox()
         {
-            return new RectangleF2D(MinX, MinY, MaxX, MaxY);
+			return new BoxF2D(MinX, MinY, MaxX, MaxY);
         }
 
         #endregion

@@ -38,12 +38,12 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
         [Test]
         public void RTreeMemoryIndexSmall1Tests()
         {
-            var rect1 = new RectangleF2D(0, 0, 2, 2);
-            var rect2 = new RectangleF2D(4, 0, 6, 2);
-            var rect3 = new RectangleF2D(0, 4, 2, 6);
-            var rect4 = new RectangleF2D(4, 4, 6, 6);
+			var rect1 = new BoxF2D(0, 0, 2, 2);
+			var rect2 = new BoxF2D(4, 0, 6, 2);
+			var rect3 = new BoxF2D(0, 4, 2, 6);
+			var rect4 = new BoxF2D(4, 4, 6, 6);
 
-            var rect5 = new RectangleF2D(1, 1, 3, 3);
+			var rect5 = new BoxF2D(1, 1, 3, 3);
 
             // create the index and reference index.
             var index = new RTreeMemoryIndex<string>(4, 1);
@@ -113,7 +113,7 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
         public void RTreeMemoryIndexAddTests()
         {
             // build test-data.
-            var testDataList = new List<KeyValuePair<RectangleF2D, DataTestClass>>();
+			var testDataList = new List<KeyValuePair<BoxF2D, DataTestClass>>();
             const int count = 10000;
             var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
             for (int idx = 0; idx < count; idx++)
@@ -123,11 +123,11 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
                 double y1 = randomGenerator.Generate(1.0);
                 double y2 = randomGenerator.Generate(1.0);
 
-                var box = new RectangleF2D(new PointF2D(x1, y1), new PointF2D(x2, y2));
+				var box = new BoxF2D(new PointF2D(x1, y1), new PointF2D(x2, y2));
                 var testData = new DataTestClass();
                 testData.Data = idx.ToString(System.Globalization.CultureInfo.InvariantCulture);
 
-                testDataList.Add(new KeyValuePair<RectangleF2D, DataTestClass>(
+				testDataList.Add(new KeyValuePair<BoxF2D, DataTestClass>(
                     box, testData));
             }
 
@@ -155,7 +155,7 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
                 double y1 = randomGenerator.Generate(1.0);
                 double y2 = randomGenerator.Generate(1.0);
 
-                var box = new RectangleF2D(new PointF2D(x1, y1), new PointF2D(x2, y2));
+				var box = new BoxF2D(new PointF2D(x1, y1), new PointF2D(x2, y2));
 
                 var resultIndex = new HashSet<DataTestClass>(index.Get(box));
                 var resultReference = new HashSet<DataTestClass>(reference.Get(box));
@@ -191,7 +191,7 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
                 double y1 = randomGenerator.Generate(1.0);
                 double y2 = randomGenerator.Generate(1.0);
 
-                var box = new RectangleF2D(new PointF2D(x1, y1), new PointF2D(x2, y2));
+				var box = new BoxF2D(new PointF2D(x1, y1), new PointF2D(x2, y2));
                 var testData = new DataTestClass();
                 testData.Data = idx.ToString(System.Globalization.CultureInfo.InvariantCulture);
                 testDataList.Add(testData);

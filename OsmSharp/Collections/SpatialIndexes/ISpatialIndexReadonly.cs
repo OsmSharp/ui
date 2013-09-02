@@ -35,6 +35,6 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        IEnumerable<T> Get(RectangleF2D box);
+		IEnumerable<T> Get(BoxF2D box);
     }
 }

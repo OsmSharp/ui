@@ -148,7 +148,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.RTree
         /// <param name="boxes"></param>
         /// <returns></returns>
         protected override byte[] Serialize(RuntimeTypeModel typeModel, List<Scene2DEntry> data,
-                                            List<RectangleF2D> boxes)
+		                                    List<BoxF2D> boxes)
         {
             var icons = new List<Icon2DEntry>();
             var images = new List<Image2DEntry>();
@@ -406,7 +406,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.RTree
         /// <param name="boxes"></param>
         /// <returns></returns>
         protected override List<Scene2DEntry> DeSerialize(RuntimeTypeModel typeModel, byte[] data, 
-            out List<RectangleF2D> boxes)
+		                                                  out List<BoxF2D> boxes)
         {
             // decompress if needed.
             Stream stream = null;
@@ -516,7 +516,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.RTree
             }
 
             // build the boxes list.
-            boxes = new List<RectangleF2D>();
+			boxes = new List<BoxF2D>();
             for (int idx = 0; idx < primitives.Count; idx++)
             {
                 boxes.Add(primitives[idx].Scene2DPrimitive.GetBox());

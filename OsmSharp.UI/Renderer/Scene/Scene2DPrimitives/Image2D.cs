@@ -121,16 +121,16 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
                 return false;
             }
 
-			return view.OverlapsWithRectangle (this.Left, this.Top, this.Right, this.Bottom);
+			return view.OverlapsWithBox (this.Left, this.Top, this.Right, this.Bottom);
         }
 
         /// <summary>
         /// Returns the bounding box for this primitive.
         /// </summary>
         /// <returns></returns>
-        public RectangleF2D GetBox()
+		public BoxF2D GetBox()
         {
-            return new RectangleF2D(this.Left, this.Top, this.Right, this.Bottom);
+			return new BoxF2D(this.Left, this.Top, this.Right, this.Bottom);
         }
 
         #endregion

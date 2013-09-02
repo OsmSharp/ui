@@ -38,7 +38,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// Returns the bounding box for this primitive.
         /// </summary>
         /// <returns></returns>
-        RectangleF2D GetBox();
+		BoxF2D GetBox();
 
         /// <summary>
         /// Gets or sets the tag.

@@ -41,10 +41,10 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
         [Test]
         public void RTreeStreamSerializeSmallTest()
         {
-            var rect1 = new RectangleF2D(0, 0, 2, 2);
-            var rect2 = new RectangleF2D(4, 0, 6, 2);
-            var rect3 = new RectangleF2D(0, 4, 2, 6);
-            var rect4 = new RectangleF2D(4, 4, 6, 6);
+			var rect1 = new BoxF2D(0, 0, 2, 2);
+			var rect2 = new BoxF2D(4, 0, 6, 2);
+			var rect3 = new BoxF2D(0, 4, 2, 6);
+			var rect4 = new BoxF2D(4, 4, 6, 6);
 
             // create the index and reference index.
             var index = new RTreeMemoryIndex<string>();
@@ -119,7 +119,7 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
         public void RTreeStreamSerializeIndexAddTests()
         {
             // build test-data.
-            var testDataList = new List<KeyValuePair<RectangleF2D, string>>();
+			var testDataList = new List<KeyValuePair<BoxF2D, string>>();
             const int count = 10000;
             var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
             for (int idx = 0; idx < count; idx++)
@@ -129,9 +129,9 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
                 double y1 = randomGenerator.Generate(1.0);
                 double y2 = randomGenerator.Generate(1.0);
 
-                var box = new RectangleF2D(new PointF2D(x1, y1), new PointF2D(x2, y2));
+				var box = new BoxF2D(new PointF2D(x1, y1), new PointF2D(x2, y2));
 
-                testDataList.Add(new KeyValuePair<RectangleF2D, string>(
+				testDataList.Add(new KeyValuePair<BoxF2D, string>(
                     box, idx.ToString(System.Globalization.CultureInfo.InvariantCulture)));
             }
 
@@ -159,7 +159,7 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
                 serializer.Deserialize(stream, true);
 
             // query all.
-            var totalBox = new RectangleF2D(0, 0, 1, 1);
+			var totalBox = new BoxF2D(0, 0, 1, 1);
             var resultIndex = new HashSet<string>(deserialized.Get(totalBox));
             var resultReference = new HashSet<string>(reference.Get(totalBox));
             foreach (var data in resultIndex)
@@ -179,7 +179,7 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
                 double y1 = randomGenerator.Generate(1.0);
                 double y2 = randomGenerator.Generate(1.0);
 
-                var box = new RectangleF2D(new PointF2D(x1, y1), new PointF2D(x2, y2));
+				var box = new BoxF2D(new PointF2D(x1, y1), new PointF2D(x2, y2));
 
                 resultIndex = new HashSet<string>(deserialized.Get(box));
                 resultReference = new HashSet<string>(reference.Get(box));
@@ -223,7 +223,7 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
             /// <param name="boxes"></param>
             /// <returns></returns>
             protected override byte[] Serialize(RuntimeTypeModel typeModel, List<string> data, 
-                List<RectangleF2D> boxes)
+			                                    List<BoxF2D> boxes)
             {
                 var collection = new PrimitivesCollection();
                 collection.Data = data.ToArray();
@@ -252,7 +252,7 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
             /// <param name="data"></param>
             /// <param name="boxes"></param>
             /// <returns></returns>
-            protected override List<string> DeSerialize(RuntimeTypeModel typeModel, byte[] data, out List<RectangleF2D> boxes)
+			protected override List<string> DeSerialize(RuntimeTypeModel typeModel, byte[] data, out List<BoxF2D> boxes)
             {
                 // deserialize data.
                 var collection =
@@ -261,10 +261,10 @@ namespace OsmSharp.UnitTests.Collections.SpatialIndexes
                 if (collection == null) throw new Exception("Cannot deserialize data!");
 
                 // fill boxes.
-                boxes = new List<RectangleF2D>(collection.Data.Length);
+				boxes = new List<BoxF2D>(collection.Data.Length);
                 for (int idx = 0; idx < collection.Data.Length; idx++)
                 {
-                    boxes.Add(new RectangleF2D(collection.MinX[idx], collection.MinY[idx], 
+					boxes.Add(new BoxF2D(collection.MinX[idx], collection.MinY[idx], 
                         collection.MaxX[idx], collection.MaxY[idx]));
                 }
                 return new List<string>(collection.Data);

@@ -82,14 +82,14 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// </summary>
         /// <param name="box"></param>
         /// <param name="item"></param>
-        public void Add(RectangleF2D box, T item)
+		public void Add(BoxF2D box, T item)
         {
             _count++;
 
             if (_root == null)
             { // create the root.
                 _root = new Node();
-                _root.Boxes = new List<RectangleF2D>();
+				_root.Boxes = new List<BoxF2D>();
                 _root.Children = new List<T>();
             }
 
@@ -116,7 +116,7 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-        public IEnumerable<T> Get(RectangleF2D box)
+		public IEnumerable<T> Get(BoxF2D box)
         {
             var result = new HashSet<T>();
             RTreeMemoryIndex<T>.Get(_root, box, result);
@@ -138,7 +138,7 @@ namespace OsmSharp.Collections.SpatialIndexes
             /// <summary>
             /// Gets or sets boxes.
             /// </summary>
-            public List<RectangleF2D> Boxes { get; set; }
+			public List<BoxF2D> Boxes { get; set; }
 
             /// <summary>
             /// Gets or sets the children.
@@ -154,9 +154,9 @@ namespace OsmSharp.Collections.SpatialIndexes
             /// Returns the bounding box for this node.
             /// </summary>
             /// <returns></returns>
-            public RectangleF2D GetBox()
+			public BoxF2D GetBox()
             {
-                RectangleF2D box = this.Boxes[0];
+				BoxF2D box = this.Boxes[0];
                 for (int idx = 1; idx < this.Boxes.Count; idx++)
                 {
                     box = box.Union(this.Boxes[idx]);
@@ -173,7 +173,7 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// <param name="node"></param>
         /// <param name="box"></param>
         /// <param name="result"></param>
-        private static void Get(Node node, RectangleF2D box, HashSet<T> result)
+		private static void Get(Node node, BoxF2D box, HashSet<T> result)
         {
             if (node.Children is List<Node>)
             {
@@ -249,7 +249,7 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// <param name="item"></param>
         /// <param name="minimumSize"></param>
         /// <param name="maximumSize"></param>
-        private static Node Add(Node leaf, RectangleF2D box, T item, int minimumSize, int maximumSize)
+		private static Node Add(Node leaf, BoxF2D box, T item, int minimumSize, int maximumSize)
         {
             if (box == null) throw new ArgumentNullException("box");
             if (leaf == null) throw new ArgumentNullException("leaf");
@@ -308,7 +308,7 @@ namespace OsmSharp.Collections.SpatialIndexes
             if (nn != null)
             { // create a new root node and 
                 var root = new Node();
-                root.Boxes = new List<RectangleF2D>();
+				root.Boxes = new List<BoxF2D>();
                 root.Boxes.Add(n.GetBox());
                 root.Boxes.Add(nn.GetBox());
                 root.Children = new List<Node>();
@@ -343,7 +343,7 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// <param name="box"></param>
         /// <param name="node"></param>
         /// <returns></returns>
-        private static Node ChooseLeaf(Node node, RectangleF2D box)
+		private static Node ChooseLeaf(Node node, BoxF2D box)
         {
             if (box == null) throw new ArgumentNullException("box");
             if (node == null) throw new ArgumentNullException("node");
@@ -352,12 +352,12 @@ namespace OsmSharp.Collections.SpatialIndexes
             while (node.Children is List<Node>)
             { // choose the best leaf.
                 Node bestChild = null;
-                RectangleF2D bestBox = null;
+				BoxF2D bestBox = null;
                 double bestIncrease = double.MaxValue;
                 var children = node.Children as List<Node>; // cast just once.
                 for (int idx = 0; idx < node.Boxes.Count; idx++)
                 {
-                    RectangleF2D union = node.Boxes[idx].Union(box);
+					BoxF2D union = node.Boxes[idx].Union(box);
                     double increase = union.Surface - node.Boxes[idx].Surface; // calculates the increase.
                     if (bestIncrease > increase)
                     {
@@ -415,7 +415,7 @@ namespace OsmSharp.Collections.SpatialIndexes
             // create the target nodes.
             var nodes = new Node[2];
             nodes[0] = new Node();
-            nodes[0].Boxes = new List<RectangleF2D>();
+			nodes[0].Boxes = new List<BoxF2D>();
             if (leaf)
             {
                 nodes[0].Children = new List<T>();
@@ -425,7 +425,7 @@ namespace OsmSharp.Collections.SpatialIndexes
                 nodes[0].Children = new List<Node>();
             }
             nodes[1] = new Node();
-            nodes[1].Boxes = new List<RectangleF2D>();
+			nodes[1].Boxes = new List<BoxF2D>();
             if (leaf)
             {
                 nodes[1].Children = new List<T>();
@@ -445,7 +445,7 @@ namespace OsmSharp.Collections.SpatialIndexes
             nodes[1].Children.Add(node.Children[seeds[1]]);
 
             // create the boxes.
-            var boxes = new RectangleF2D[2]
+			var boxes = new BoxF2D[2]
                             {
                                 node.Boxes[seeds[0]], node.Boxes[seeds[1]]
                             };
@@ -509,14 +509,14 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// <param name="boxes"></param>
         /// <param name="nodeBoxIndex"></param>
         /// <returns></returns>
-        protected static int PickNext(RectangleF2D[] nodeBoxes, IList<RectangleF2D> boxes, out int nodeBoxIndex)
+		protected static int PickNext(BoxF2D[] nodeBoxes, IList<BoxF2D> boxes, out int nodeBoxIndex)
         {
             double difference = double.MinValue;
             nodeBoxIndex = 0;
             int pickedIdx = -1;
             for (int idx = 0; idx < boxes.Count; idx++)
             {
-                RectangleF2D item = boxes[idx];
+				BoxF2D item = boxes[idx];
                 double d1 = item.Union(nodeBoxes[0]).Surface -
                             item.Surface;
                 double d2 = item.Union(nodeBoxes[1]).Surface -
@@ -545,7 +545,7 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// </summary>
         /// <param name="boxes"></param>
         /// <returns></returns>
-        private static int[] SelectSeeds(List<RectangleF2D> boxes)
+		private static int[] SelectSeeds(List<BoxF2D> boxes)
         {
             if (boxes == null) throw new ArgumentNullException("boxes");
             if (boxes.Count < 2) throw new ArgumentException("Cannot select seeds from a list with less than two items.");

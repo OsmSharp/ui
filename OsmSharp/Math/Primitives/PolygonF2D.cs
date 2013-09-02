@@ -110,25 +110,25 @@ namespace OsmSharp.Math.Primitives
         {
             get
             {
-                return _points.Length;
+				return _points.Length;
             }
         }
 
         /// <summary>
         /// Holds the bounding box for this polygon.
         /// </summary>
-        private RectangleF2D _bounding_box;
+		private BoxF2D _bounding_box;
 
         /// <summary>
         /// Returns the bouding box around this polygon.
         /// </summary>
-        public RectangleF2D BoundingBox
+		public BoxF2D BoundingBox
         {
             get
             {
                 if (_bounding_box == null)
                 {
-                    _bounding_box = new RectangleF2D(_points);
+					_bounding_box = new BoxF2D(_points);
                 }
                 return _bounding_box;
             }
