@@ -107,10 +107,6 @@
       <Project>{CF2AE65D-56A8-4577-807B-6FC9B1630489}</Project>
       <Name>OsmSharp.iOS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.csproj">
-      <Project>{A26528D6-7296-4AE5-ABDD-29EDDDCC2888}</Project>
-      <Name>OsmSharp.iOS.UI</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.iOS.csproj">
       <Project>{1F1A6D47-3499-47F5-8FDA-98C0BCBAFD5F}</Project>
       <Name>OsmSharp.Osm.iOS</Name>
@@ -122,6 +118,10 @@
     <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.iOS.csproj">
       <Project>{1943198A-45C1-44CD-9D5B-2F3417D6E3C6}</Project>
       <Name>OsmSharp.UI.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.csproj">
+      <Project>{2308AF80-AF15-4CBE-8222-E499DF12DCC4}</Project>
+      <Name>OsmSharp.iOS.UI</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
