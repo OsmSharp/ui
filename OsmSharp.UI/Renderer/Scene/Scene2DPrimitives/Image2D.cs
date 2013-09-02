@@ -121,36 +121,7 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
                 return false;
             }
 
-            if (view.Contains(this.Left, this.Bottom) ||
-                view.Contains(this.Left, this.Top) ||
-                view.Contains(this.Right, this.Bottom) ||
-                view.Contains(this.Right, this.Top))
-            {
-                return true;
-            }
-            if (this.Left < view.Left && view.Left < this.Right)
-            {
-                if (this.Bottom <= view.Top && view.Top <= this.Top)
-                {
-                    return true;
-                }
-                else if (this.Bottom <= view.Bottom && view.Bottom <= this.Top)
-                {
-                    return true;
-                }
-            }
-            else if (this.Left <= view.Right && view.Right <= this.Right)
-            {
-                if (this.Bottom <= view.Top && view.Top <= this.Top)
-                {
-                    return true;
-                }
-                else if (this.Bottom <= view.Bottom && view.Bottom <= this.Top)
-                {
-                    return true;
-                }
-            }
-			return this.GetBox().Overlaps(new RectangleF2D(view.Left, view.Top, view.Right, view.Bottom));
+			return view.OverlapsWithRectangle (this.Left, this.Top, this.Right, this.Bottom);
         }
 
         /// <summary>

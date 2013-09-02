@@ -20,6 +20,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Units.Angle;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer
 {
@@ -37,7 +39,7 @@ namespace OsmSharp.UI.Renderer
 		/// </summary>
 		private View2D()
 		{
-
+			this.Direction = 0;
 		}
 
 		#region Create From
@@ -73,27 +75,33 @@ namespace OsmSharp.UI.Renderer
 			// calculate the derived properties.
             double halfX = view.Width / 2.0f;
             double halfY = view.Height / 2.0f;
+			double left, right, bottom, top;
 	        if (directionX)
 	        {
-	            view.Left = view.CenterX - halfX;
-	            view.Right = view.CenterX + halfX;
+	            left = view.CenterX - halfX;
+	            right = view.CenterX + halfX;
 	        }
 	        else
             {
-                view.Left = view.CenterX + halfX;
-                view.Right = view.CenterX - halfX;
+                left = view.CenterX + halfX;
+                right = view.CenterX - halfX;
 	        }
 
             if (directionY)
             {
-                view.Top = view.CenterY + halfY;
-                view.Bottom = view.CenterY - halfY;
+                top = view.CenterY + halfY;
+                bottom = view.CenterY - halfY;
             }
             else
             {
-                view.Top = view.CenterY - halfY;
-                view.Bottom = view.CenterY + halfY;
+               	top = view.CenterY - halfY;
+                bottom = view.CenterY + halfY;
             }
+
+			view.LeftTop = new double[] { left, top };
+			view.RightTop = new double[] { right, top };
+			view.LeftBottom = new double[] { left, bottom };
+			view.RightBottom = new double[] { right, bottom };
 
 			return view;
 		}
@@ -110,11 +118,11 @@ namespace OsmSharp.UI.Renderer
 		{
 			var view = new View2D();
 			
-			view.Top = top;
-			view.Bottom = bottom;
-			view.Left = left;
-			view.Right = right;
-			
+			view.LeftTop = new double[] { left, top };
+			view.RightTop = new double[] { right, top };
+			view.LeftBottom = new double[] { left, bottom };
+			view.RightBottom = new double[] { right, bottom };
+
 			// calculate the derived properties.
 			view.CenterX = (left + right) / 2.0;
 			view.CenterY = (bottom + top) / 2.0;
@@ -189,43 +197,49 @@ namespace OsmSharp.UI.Renderer
 		}
 
 		/// <summary>
-		/// Gets the bottom.
+		/// Gets the direction relative to the north.
 		/// </summary>
-		/// <value>The bottom.</value>
-        public double Bottom
-        {
+		/// <value>The angle.</value>
+		public Degree Direction {
+			get;
+			private set;
+		}
+
+
+		/// <summary>
+		/// Gets the top left corner relative to the direction.
+		/// </summary>
+		/// <value>The top left.</value>
+		public double[] LeftTop {
 			get;
 			private set;
 		}
 
 		/// <summary>
-		/// Gets the top.
+		/// Gets the top right corner relative to the direction.
 		/// </summary>
-		/// <value>The top.</value>
-        public double Top
-        {
+		/// <value>The top right.</value>
+		public double[] RightTop {
 			get;
 			private set;
 		}
 
 		/// <summary>
-		/// Gets the left.
+		/// Gets the bottom left corner relative to the direction.
 		/// </summary>
-		/// <value>The left.</value>
-        public double Left
-        {
+		/// <value>The bottom left.</value>
+		public double[] LeftBottom {
 			get;
 			private set;
 		}
 
 		/// <summary>
-		/// Gets the right.
+		/// Gets the bottom right corner relative to the direction.
 		/// </summary>
-		/// <value>The right.</value>
-        public double Right
-        {
+		/// <value>The bottom right.</value>
+		public double[] RightBottom {
 			get;
-			private set;
+			set;
 		}
 		
 		/// <summary>
@@ -236,18 +250,37 @@ namespace OsmSharp.UI.Renderer
 		/// <param name="y">The y coordinate.</param>
 		public bool Contains (double x, double y)
 		{
-			if((this.Top > this.Bottom && (y > this.Top || y < this.Bottom)) ||
-                (this.Top < this.Bottom && (y < this.Top || y > this.Bottom)) ||
-                (this.Left < this.Right && (x < this.Left || x > this.Right)) ||
-                (this.Left > this.Right && (x > this.Left || x < this.Right)))
-			{ // one of the bounds was violated.
-				return false;
+			if (this.Direction == null || this.Direction.Value == 0) {
+				double left = this.LeftTop [0];
+				double right = this.RightTop [0];
+				double top = this.LeftTop [1];
+				double bottom = this.LeftBottom [1];
+
+				if ((top > bottom && (y > top || y < bottom)) ||
+					(top < bottom && (y < top || y > bottom)) ||
+					(left < right && (x < left || x > right)) ||
+					(left > right && (x > left || x < right))) { // one of the bounds was violated.
+					return false;
+				}
 			}
 			return true;
 		}
 
+		/// <summary>
+		/// Returns true if the given rectangle overlaps with this view.
+		/// </summary>
+		/// <returns><c>true</c>, if with rectangle overlaps, <c>false</c> otherwise.</returns>
+		/// <param name="left">Left.</param>
+		/// <param name="top">Top.</param>
+		/// <param name="right">Right.</param>
+		/// <param name="bottom">Bottom.</param>
+		public bool OverlapsWithRectangle(double left, double top, double right, double bottom)
+		{
+			throw new NotSupportedException ();
+		}
+
         /// <summary>
-        /// Returns the coordinates represents by the given pixel in the given viewport.
+        /// Returns the coordinates represented by the given pixel in the given viewport.
         /// </summary>
         /// <param name="pixelX"></param>
         /// <param name="pixelY"></param>
@@ -263,27 +296,28 @@ namespace OsmSharp.UI.Renderer
             double offsetXScene = pixelX / scaleX;
             double offsetYScene = pixelY / scaleY;
 
-            double x;
-            if (this.Left < this.Right)
-            {
-                x = (this.Left + offsetXScene);
-            }
-            else
-            {
-                x = (this.Left - offsetXScene);
-            }
+			if (this.Direction == null || this.Direction.Value == 0) {
+				double left = this.LeftTop [0];
+				double right = this.RightTop [0];
+				double top = this.LeftTop [1];
+				double bottom = this.LeftBottom [1];
+				double x;
+				if (left < right) {
+					x = (left + offsetXScene);
+				} else {
+					x = (left - offsetXScene);
+				}
 
-            double y;
-            if (this.Top > this.Bottom)
-            {
-                y = (this.Top - offsetYScene);
-            }
-            else
-            {
-                y =  (this.Top + offsetYScene);
-            }
+				double y;
+				if (top > bottom) {
+					y = (top - offsetYScene);
+				} else {
+					y = (top + offsetYScene);
+				}
 
-            return new double[]{ x ,y  };
+				return new double[] { x, y };
+			}
+			throw new NotSupportedException ("Direction not supported yet!");
         }
 
         /// <summary>
@@ -298,17 +332,19 @@ namespace OsmSharp.UI.Renderer
             double scaleX = pixelsWidth / this.Width;
 
             double offsetXScene = pixelX / scaleX;
-
-            double x;
-            if (this.Left < this.Right)
-            {
-                x = (this.Left + offsetXScene);
-            }
-            else
-            {
-                x = (this.Left - offsetXScene);
-            }
-            return x;
+			
+			if (this.Direction == null || this.Direction.Value == 0) {
+				double left = this.LeftTop [0];
+				double right = this.RightTop [0];
+				double x;
+				if (left < right) {
+					x = (left + offsetXScene);
+				} else {
+					x = (left - offsetXScene);
+				}
+				return x;
+			}
+			throw new NotSupportedException ("Direction not supported yet!");
         }
 
         /// <summary>
@@ -322,18 +358,20 @@ namespace OsmSharp.UI.Renderer
             double scaleY = pixelsHeight / this.Height;
 
             double offsetYScene = pixelY / scaleY;
+			
+			if (this.Direction == null || this.Direction.Value == 0) {
+				double top = this.LeftTop [1];
+				double bottom = this.LeftBottom [1];
+				double y;
+				if (top > bottom) {
+					y = (top - offsetYScene);
+				} else {
+					y = (top + offsetYScene);
+				}
 
-            double y;
-            if (this.Top > this.Bottom)
-            {
-                y = (this.Top - offsetYScene);
-            }
-            else
-            {
-                y = (this.Top + offsetYScene);
-            }
-
-            return y;
+				return y;
+			}
+			throw new NotSupportedException ("Direction not supported yet!");
         }
 
         /// <summary>
@@ -349,27 +387,29 @@ namespace OsmSharp.UI.Renderer
             double scaleX = pixelsWidth / this.Width;
             double scaleY = pixelsHeight / this.Height;
 
-            double pixelsX;
-            if (this.Left < this.Right)
-            {
-                pixelsX = (sceneX - this.Left) * scaleX;
-            }
-            else
-            { // left < right
-                pixelsX = (this.Width - (sceneX - this.Right)) * scaleX;
-            }
+			if (this.Direction == null || this.Direction.Value == 0) {
+				double left = this.LeftTop [0];
+				double right = this.RightTop [0];
+				double top = this.LeftTop [1];
+				double bottom = this.LeftBottom [1];
 
-            double pixelsY;
-            if (this.Bottom < this.Top)
-            {
-                pixelsY = (this.Height - (sceneY - this.Bottom)) * scaleY;
-            }
-            else
-            { // left < right
-                pixelsY = ((sceneY - this.Top)) * scaleY;
-            }
+				double pixelsX;
+				if (left < right) {
+					pixelsX = (sceneX - left) * scaleX;
+				} else { // left < right
+					pixelsX = (this.Width - (sceneX - right)) * scaleX;
+				}
 
-            return new double[] { pixelsX, pixelsY };
+				double pixelsY;
+				if (bottom < top) {
+					pixelsY = (this.Height - (sceneY - bottom)) * scaleY;
+				} else { // left < right
+					pixelsY = ((sceneY - top)) * scaleY;
+				}
+
+				return new double[] { pixelsX, pixelsY };
+			}
+			throw new NotSupportedException ("Direction not supported yet!");
         }
 
         /// <summary>
@@ -382,17 +422,20 @@ namespace OsmSharp.UI.Renderer
         {
             double scaleX = pixelsWidth / this.Width;
 
-            double pixelsX;
-            if (this.Left < this.Right)
-            {
-                pixelsX = (sceneX - this.Left) * scaleX;
-            }
-            else
-            { // left < right
-                pixelsX = (this.Width - (sceneX - this.Right)) * scaleX;
-            }
+			if (this.Direction == null || this.Direction.Value == 0) {
+				double left = this.LeftTop [0];
+				double right = this.RightTop [0];
 
-            return pixelsX;
+				double pixelsX;
+				if (left < right) {
+					pixelsX = (sceneX - left) * scaleX;
+				} else { // left < right
+					pixelsX = (this.Width - (sceneX - right)) * scaleX;
+				}
+
+				return pixelsX;
+			}
+			throw new NotSupportedException ("Direction not supported yet!");
         }
 
         /// <summary>
@@ -405,17 +448,20 @@ namespace OsmSharp.UI.Renderer
         {
             double scaleY = pixelsHeight / this.Height;
 
-            double pixelsY;
-            if (this.Bottom < this.Top)
-            {
-                pixelsY = (this.Height - (sceneY - this.Bottom)) * scaleY;
-            }
-            else
-            { // left < right
-                pixelsY = ((sceneY - this.Top)) * scaleY;
-            }
+			if (this.Direction == null || this.Direction.Value == 0) {
+				double top = this.LeftTop [1];
+				double bottom = this.LeftBottom [1];
 
-            return pixelsY;
+				double pixelsY;
+				if (bottom < top) {
+					pixelsY = (this.Height - (sceneY - bottom)) * scaleY;
+				} else { // left < right
+					pixelsY = ((sceneY - top)) * scaleY;
+				}
+
+				return pixelsY;
+			}
+			throw new NotSupportedException ("Direction not supported yet!");
         }
 
         /// <summary>
@@ -429,5 +475,21 @@ namespace OsmSharp.UI.Renderer
             double realZoom = pixelsWidth / this.Width;
             return realZoom;
         }
+
+		/// <summary>
+		/// Returns the smallest rectangular box containing the entire view. Will be larger when turned in a non-zero direction.
+		/// </summary>
+		/// <value>The outer box.</value>
+		public RectangleF2D OuterBox
+		{
+			get{
+				double left = this.LeftTop [0];
+				double right = this.RightTop [0];
+				double top = this.LeftTop [1];
+				double bottom = this.LeftBottom [1];
+
+				return new RectangleF2D (left, top, right, bottom);
+			}
+		}
     }
 }

@@ -27,6 +27,7 @@ using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI;
 using System.Collections.Generic;
 using OsmSharp.UI.Map.Layers;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.iOS.UI
 {
@@ -204,9 +205,11 @@ namespace OsmSharp.iOS.UI
 						// add the newly rendered image again.
 						//this.Layer.Contents = gctx.ToImage ();
 
+						RectangleF2D rectangle = view.OuterBox;
+
 						_cachedScene.Clear ();
 						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, 
-						                       view.Left, view.Top, view.Right, view.Bottom, new byte[0], gctx.ToImage());
+						                       rectangle.Min[0], rectangle.Min[1], rectangle.Max[0], rectangle.Max[1], new byte[0], gctx.ToImage());
 //						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, 
 //						                       view.Left, view.Top, view.Right, view.Bottom, new byte[0], _layer);
 					}

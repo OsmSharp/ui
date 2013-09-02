@@ -116,74 +116,66 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="center"></param>
         /// <param name="view"></param>
         private void BuildScene(Map map, float zoomFactor, GeoCoordinate center, View2D view)
-        {
-            // get the indexed object at this zoom.
-                HashSet<ArcId> interpretedObjects;
-                if (!_interpretedObjects.TryGetValue((int) zoomFactor, out interpretedObjects))
-                {
-                    interpretedObjects = new HashSet<ArcId>();
-                    _interpretedObjects.Add((int) zoomFactor, interpretedObjects);
-                }
+		{
+			// get the indexed object at this zoom.
+			HashSet<ArcId> interpretedObjects;
+			if (!_interpretedObjects.TryGetValue ((int)zoomFactor, out interpretedObjects)) {
+				interpretedObjects = new HashSet<ArcId> ();
+				_interpretedObjects.Add ((int)zoomFactor, interpretedObjects);
+			}
 
-                // build the boundingbox.
-                var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(view.Left, view.Top),
-                                               map.Projection.ToGeoCoordinates(view.Right, view.Bottom));
-                foreach (var requestedBox in _requestedBoxes)
-                {
-                    if (requestedBox.IsInside(box))
-                    {
-                        return;
-                    }
-                }
-                _requestedBoxes.Add(box);
+			// build the boundingbox.
+			var viewBox = view.OuterBox;
+			var box = new GeoCoordinateBox (map.Projection.ToGeoCoordinates (viewBox.Min [0], viewBox.Min [1]),
+			                                            map.Projection.ToGeoCoordinates (viewBox.Max [0], viewBox.Max [1]));
+			foreach (var requestedBox in _requestedBoxes) {
+				if (requestedBox.IsInside (box)) {
+					return;
+				}
+			}
+			_requestedBoxes.Add (box);
 
-                // set the scene backcolor.
-                SimpleColor? color = _styleInterpreter.GetCanvasColor();
-                this.Scene.BackColor = color.HasValue
+			// set the scene backcolor.
+			SimpleColor? color = _styleInterpreter.GetCanvasColor ();
+			this.Scene.BackColor = color.HasValue
                                            ? color.Value.Value
-                                           : SimpleColor.FromArgb(0, 255, 255, 255).Value;
+                                           : SimpleColor.FromArgb (0, 255, 255, 255).Value;
 
-            // get data.
-            foreach (var arc in _dataSource.GetArcs(box))
-            {
-                // translate each object into scene object.
-                var arcId = new ArcId()
-                                {
-                                    Vertex1 = arc.Key,
-                                    Vertex2 = arc.Value.Key
-                                };
-                if (!interpretedObjects.Contains(arcId))
-                {
-                    interpretedObjects.Add(arcId);
+			// get data.
+			foreach (var arc in _dataSource.GetArcs(box)) {
+				// translate each object into scene object.
+				var arcId = new ArcId () {
+					Vertex1 = arc.Key,
+					Vertex2 = arc.Value.Key
+				};
+				if (!interpretedObjects.Contains (arcId)) {
+					interpretedObjects.Add (arcId);
 
-                    // create nodes.
-                    float latitude, longitude;
-                    _dataSource.GetVertex(arcId.Vertex1, out latitude, out longitude);
-                    var node1 = CompleteNode.Create(arcId.Vertex1);
-                    node1.Coordinate = new GeoCoordinate(latitude, longitude);
-                    _dataSource.GetVertex(arcId.Vertex2, out latitude, out longitude);
-                    var node2 = CompleteNode.Create(arcId.Vertex2);
-                    node2.Coordinate = new GeoCoordinate(latitude, longitude);
+					// create nodes.
+					float latitude, longitude;
+					_dataSource.GetVertex (arcId.Vertex1, out latitude, out longitude);
+					var node1 = CompleteNode.Create (arcId.Vertex1);
+					node1.Coordinate = new GeoCoordinate (latitude, longitude);
+					_dataSource.GetVertex (arcId.Vertex2, out latitude, out longitude);
+					var node2 = CompleteNode.Create (arcId.Vertex2);
+					node2.Coordinate = new GeoCoordinate (latitude, longitude);
 
-                    // create way.
-                    var way = CompleteWay.Create(-1);
-                    if (arc.Value.Value.Forward)
-                    {
-                        way.Nodes.Add(node1);
-                        way.Nodes.Add(node2);
-                    }
-                    else
-                    {
-                        way.Nodes.Add(node2);
-                        way.Nodes.Add(node1);
-                    }
-                    way.Tags.AddOrReplace(_dataSource.TagsIndex.Get(arc.Value.Value.Tags));
+					// create way.
+					var way = CompleteWay.Create (-1);
+					if (arc.Value.Value.Forward) {
+						way.Nodes.Add (node1);
+						way.Nodes.Add (node2);
+					} else {
+						way.Nodes.Add (node2);
+						way.Nodes.Add (node1);
+					}
+					way.Tags.AddOrReplace (_dataSource.TagsIndex.Get (arc.Value.Value.Tags));
 
-                    _styleInterpreter.Translate(this.Scene, map.Projection, way);
-                    interpretedObjects.Add(arcId);
-                }
-            }
-        }
+					_styleInterpreter.Translate (this.Scene, map.Projection, way);
+					interpretedObjects.Add (arcId);
+				}
+			}
+		}
 
         private struct ArcId
         {

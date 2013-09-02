@@ -233,36 +233,10 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
                 return false;
             }
 
-            if (view.Contains(MinX, MinY) ||
-                view.Contains(MinX, MaxY) ||
-                view.Contains(MaxX, MinY) ||
-                view.Contains(MaxX, MaxY))
-            {
-                return true;
-            }
-            if (MinX < view.Left && view.Left < MaxX)
-            {
-                if (MinY < view.Top && view.Top < MaxY)
-                {
-                    return true;
-                }
-                else if (MinY < view.Bottom && view.Bottom < MaxY)
-                {
-                    return true;
-                }
-            }
-            else if (MinX < view.Right && view.Right < MaxX)
-            {
-                if (MinY < view.Top && view.Top < MaxY)
-                {
-                    return true;
-                }
-                else if (MinY < view.Bottom && view.Bottom < MaxY)
-                {
-                    return true;
-                }
+			if (view.OverlapsWithRectangle (MinX, MinY, MaxX, MaxY)) {
+				return true; // maybe a better hittest?
 			}
-			return this.GetBox().Overlaps(new RectangleF2D(view.Left, view.Top, view.Right, view.Bottom));
+			return false;
 		}
 
         /// <summary>

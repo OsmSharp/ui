@@ -54,7 +54,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         {
             // get all primitives.
             IEnumerable<Scene2DEntry> entries = 
-                _index.Get(new RectangleF2D(view.Left, view.Top, view.Right, view.Bottom));
+                _index.Get(view.OuterBox);
 
             foreach (var scene2DEntry in entries)
             {
