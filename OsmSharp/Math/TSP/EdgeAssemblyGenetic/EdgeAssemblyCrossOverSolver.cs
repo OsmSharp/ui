@@ -42,11 +42,8 @@ namespace OsmSharp.Math.TSP.EdgeAssemblyGenetic
         /// <summary>
         /// Keeps an orginal list of customers.
         /// </summary>
-        private IList<int> _customers;
+        //private IList<int> _customers;
 
-        /// <summary>
-        /// Holds the population size.
-        /// </summary>
         private int _population_size;
 
         /// <summary>
@@ -91,7 +88,7 @@ namespace OsmSharp.Math.TSP.EdgeAssemblyGenetic
         public EdgeAssemblyCrossOverSolver(OsmSharp.Math.TSP.Problems.IProblem problem, IList<int> customers)
         {
             //_stopped = false;
-            _customers = customers;
+            //_customers = customers;
         }
 
         /// <summary>

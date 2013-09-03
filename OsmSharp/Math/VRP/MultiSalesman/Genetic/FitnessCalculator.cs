@@ -191,8 +191,8 @@ namespace OsmSharp.Math.VRP.MultiSalesman.Genetic
             result.Vehicles = times.Count;
 
             // the latest round is taken.
-            int longest_round = 0;
-            int smallest_round = 0;
+            //int longest_round = 0;
+            //int smallest_round = 0;
 
             double smallest_round_time = double.MaxValue;
             double longest_round_time = double.MinValue;
@@ -255,12 +255,12 @@ namespace OsmSharp.Math.VRP.MultiSalesman.Genetic
                 // find smallest/largest round.
                 if (smallest_round_time > round_time)
                 {
-                    smallest_round = round_idx;
+                    //smallest_round = round_idx;
                     smallest_round_time = round_time;
                 }
                 if (longest_round_time < round_time)
                 {
-                    longest_round = round_idx;
+                    //longest_round = round_idx;
                     longest_round_time = round_time;
                 }
             }

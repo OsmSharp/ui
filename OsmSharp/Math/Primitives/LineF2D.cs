@@ -336,6 +336,23 @@ namespace OsmSharp.Math.Primitives
 
         #region Intersections
 
+		/// <summary>
+		/// Return true if the given line intersects with this line.
+		/// </summary>
+		/// <param name="line">Line.</param>
+		public bool Intersects(LineF2D line){
+			return this.Intersection (line) != null;
+		}
+
+		/// <summary>
+		/// Return true if the given line intersects with this line.
+		/// </summary>
+		/// <param name="line">Line.</param>
+		/// <param name="doSegment"></param>
+		public bool Intersects(LineF2D line, bool doSegment){
+			return this.Intersection (line, doSegment) != null;
+		}
+
         /// <summary>
         /// Calculates and returns the line intersection.
         /// </summary>
@@ -350,9 +367,9 @@ namespace OsmSharp.Math.Primitives
         /// Calculates and returns the line intersection.
         /// </summary>
         /// <param name="line"></param>
-        /// <param name="do_segment"></param>
+		/// <param name="doSegment"></param>
         /// <returns></returns>
-        public PrimitiveF2D Intersection(LineF2D line, bool do_segment)
+		public PrimitiveF2D Intersection(LineF2D line, bool doSegment)
         {
             if (line == this)
             { // if the lines equal, the full lines intersect.
@@ -410,7 +427,7 @@ namespace OsmSharp.Math.Primitives
                 }
 
                 // this line is a segment.
-                if (do_segment && (this.IsSegment1 || this.IsSegment2))
+                if (doSegment && (this.IsSegment1 || this.IsSegment2))
                 { // test where the intersection lies.
                     double this_distance =
                         this.Point1.Distance(this.Point2);
@@ -441,7 +458,7 @@ namespace OsmSharp.Math.Primitives
                     }
                 }
                 // other line is a segment.
-                if (do_segment && (line.IsSegment1 || line.IsSegment2))
+                if (doSegment && (line.IsSegment1 || line.IsSegment2))
                 { // test where the intersection lies.
                     double this_distance =
                         line.Point1.Distance(line.Point2);
@@ -492,7 +509,7 @@ namespace OsmSharp.Math.Primitives
                     PointF2D point = new PointF2D(new double[]{x, y});
 
                     // this line is a segment.
-                    if (do_segment && (this.IsSegment1 || this.IsSegment2))
+                    if (doSegment && (this.IsSegment1 || this.IsSegment2))
                     { // test where the intersection lies.
                         double this_distance =
                             this.Point1.Distance(this.Point2);
@@ -529,7 +546,7 @@ namespace OsmSharp.Math.Primitives
                         }
                     }
                     // line this is a segment.
-                    if (do_segment && (line.IsSegment1 || line.IsSegment2))
+                    if (doSegment && (line.IsSegment1 || line.IsSegment2))
                     { // test where the intersection lies.
                         double line_distance =
                             line.Point1.Distance(line.Point2);

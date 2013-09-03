@@ -266,7 +266,7 @@ namespace OsmSharp.Math
         /// <summary>
         /// Rotates a vector 90 degrees.
         /// </summary>
-        /// <param name="direction">True when rotation has to be clockwize.</param>
+        /// <param name="clockwise">True when rotation has to be clockwize.</param>
         /// <returns></returns>
         public VectorF2D Rotate90(bool clockwise)
         {

@@ -278,7 +278,7 @@ namespace OsmSharp.Math.TSP.LocalSearch.HillClimbing3Opt
                         if (weight - weight_new > _epsilon)
                         { // actually do replace the vertices.
                             int count_before = route.Count;
-                            string route_string = route.ToString();
+                            //string route_string = route.ToString();
 
                             route.ReplaceEdgeFrom(v1, v_4);
                             route.ReplaceEdgeFrom(v_3, v_6);

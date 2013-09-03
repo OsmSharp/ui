@@ -46,7 +46,7 @@ namespace OsmSharp.Math.VRP.Core.LocalSearch
 
             // try re-placement of one customer.
             int before = -1;
-            int after = -1;
+            //int after = -1;
             int found_customer = -1;
 
             // loop over all customers and try to place it better.
@@ -77,7 +77,7 @@ namespace OsmSharp.Math.VRP.Core.LocalSearch
                                 other_cost = cost;
 
                                 before = previous_before;
-                                after = previous;
+                                //after = previous;
                                 found_customer = customer;
                             }
                         }
@@ -98,7 +98,7 @@ namespace OsmSharp.Math.VRP.Core.LocalSearch
                 else
                 { // current cost is not better.                        
                     before = -1;
-                    after = -1;
+                    //after = -1;
                     found_customer = -1;
                 }
             }

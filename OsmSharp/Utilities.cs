@@ -338,7 +338,7 @@ namespace OsmSharp
             string ret_string = string.Empty;
             if (value != null && value.Length > 0)
             {
-                StringBuilder numbers = new StringBuilder();
+                //StringBuilder numbers = new StringBuilder();
                 for (int c = 1;c <= value.Length;c++)
                 {
                     float result_never_used;
@@ -366,7 +366,7 @@ namespace OsmSharp
             string ret_string = string.Empty;
             if (value != null && value.Length > 0)
             {
-                StringBuilder numbers = new StringBuilder();
+                //StringBuilder numbers = new StringBuilder();
                 for (int c = 1; c <= value.Length; c++)
                 {
                     int result_never_used;

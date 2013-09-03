@@ -144,12 +144,12 @@ namespace OsmSharp.Math.TSP.Genetic.Solver.Operations.CrossOver
 
                 // calculate weight.
                 Fitness temp_fitness = solver.FitnessCalculator.Fitness(solver.Problem, temp_genome);
-                Fitness temp_distance = null;
+                //Fitness temp_distance = null;
 
                 // select or not.
                 if (temp_fitness.CompareTo(best_fitness) > 0)
                 {
-                    temp_distance = solver.FitnessCalculator.Fitness(solver.Problem, temp_genome);
+                    //temp_distance = solver.FitnessCalculator.Fitness(solver.Problem, temp_genome);
                     //best_distance = temp_distance;
                     best_fitness = temp_fitness;
                     best_genome = temp_genome;

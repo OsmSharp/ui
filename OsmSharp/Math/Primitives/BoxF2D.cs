@@ -292,6 +292,15 @@ namespace OsmSharp.Math.Primitives
 
         #region Is Inside
 
+		/// <summary>
+		/// Returns true if the given coordinates are inside this box.
+		/// </summary>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
+		public bool IsInside(double x, double y){
+			return this.IsInside (new PointF2D (x, y));
+		}
+
         /// <summary>
         /// Returns true if the point lies inside this box.
         /// </summary>
@@ -689,7 +698,12 @@ namespace OsmSharp.Math.Primitives
         /// <returns></returns>
         IEnumerator<LineF2D> IEnumerable<LineF2D>.GetEnumerator()
         {
-            throw new NotImplementedException();
+			List<LineF2D> lines = new List<LineF2D> ();
+			lines.Add (new LineF2D (this.Corners [0], this.Corners [1]));
+			lines.Add (new LineF2D (this.Corners [1], this.Corners [2]));
+			lines.Add (new LineF2D (this.Corners [2], this.Corners [3]));
+			lines.Add (new LineF2D (this.Corners [3], this.Corners [0]));
+			return lines.GetEnumerator ();
         }
     }
 }

@@ -135,6 +135,25 @@ namespace OsmSharp.UnitTests.Math.Primitives
 			Assert.AreEqual (25, convertedBack [0], delta);
 			Assert.AreEqual (75, convertedBack [1], delta);
 		}
+
+		/// <summary>
+		/// Tests transformations with coordinates outside of the given coordinate box.
+		/// </summary>
+		[Test]
+		public void TestRectangleD2DOutsideTransforms(){
+			RectangleF2D rectangle = new RectangleF2D (0, 0, 1, 1);
+
+			double[] converted = rectangle.TransformFrom (100, 100, false, false,
+			                                              new double[] { -100, -100 });
+			Assert.AreEqual (2, converted.Length);
+			Assert.AreEqual (-1, converted [0]);
+			Assert.AreEqual (-1, converted [1]);
+			double[] convertedBack = rectangle.TransformTo (100, 100, false, false,
+			                                                converted);
+			Assert.AreEqual (2, convertedBack.Length);
+			Assert.AreEqual (-100, convertedBack [0]);
+			Assert.AreEqual (-100, convertedBack [1]);
+		}
 	}
 }
 

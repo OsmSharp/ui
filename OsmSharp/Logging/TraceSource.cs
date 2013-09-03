@@ -158,18 +158,18 @@ namespace System.Diagnostics
 		internal void TraceEvent(TraceEventType type, int id, string message)
 		{
 			switch (type) {
-				case TraceEventType.Critical:
-				case TraceEventType.Error:
-					Console.WriteLine(string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-				                                             DateTime.Now.Ticks));
+			case TraceEventType.Critical:
+			case TraceEventType.Error:
+				Console.WriteLine (string.Format ("{4}[{0}:{2}@{3}]:{1}", id, message, type.ToString (),
+				                                 DateTime.Now.Ticks, _tag));
 				break;
-				case TraceEventType.Warning:
-					Console.WriteLine(string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-				                                            DateTime.Now.Ticks));
+			case TraceEventType.Warning:
+				Console.WriteLine (string.Format ("{4}[{0}:{2}@{3}]:{1}", id, message, type.ToString (),
+				                                 DateTime.Now.Ticks, _tag));
 				break;
-				default:
-					Console.WriteLine(string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-				                                            DateTime.Now.Ticks));
+			default:
+				Console.WriteLine (string.Format ("{4}[{0}:{2}@{3}]:{1}", id, message, type.ToString (),
+				                                  DateTime.Now.Ticks, _tag));
 				break;
 			}
 		}
@@ -187,6 +187,10 @@ namespace System.Diagnostics
 			this.TraceEvent (type, id, message);
 		}
 
+		/// <summary>
+		/// Gets or sets the listeners.
+		/// </summary>
+		/// <value>The listeners.</value>
 		public List<TraceListener> Listeners { get; set; }
 	}
 
