@@ -28,10 +28,6 @@ namespace OsmSharp.UI.Renderer
 	/// <summary>
 	/// Represents a view on a 2D scene.
 	/// </summary>
-	/// <remarks>This view has nothing to do with the control/canvas/whatever being rendered on. It is only related to the 2D scene object
-	/// and represents just a location and size of the viewing window on the current scene.
-	/// The x-coordinates increase when moving right, the y-coordinates increase when moving up.
-	/// </remarks>
 	public class View2D
 	{
 		/// <summary>
@@ -51,8 +47,8 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="height">The height.</param>
 	    /// <param name="centerX">The center x.</param>
 	    /// <param name="centerY">The center y.</param>
-	    /// <param name="directionX"></param>
-	    /// <param name="directionY"></param>
+	    /// <param name="directionX">When true x increases from left to right, when false otherwise.</param>
+		/// <param name="directionY">When true y increases from bottom to top, when false otherwise.</param>
         public static View2D CreateFromCenterAndSize(double width, double height, double centerX, double centerY,
             bool directionX, bool directionY)
 		{

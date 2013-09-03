@@ -251,7 +251,7 @@ namespace OsmSharp.Math
         }
 
 		/// <summary>
-		/// Froms the angle y.
+		/// Returns a normalized vector with a direction equal to the given angle relative to the y-axis.
 		/// </summary>
 		/// <returns>The angle y.</returns>
 		/// <param name="angle">Direction.</param>
@@ -268,9 +268,9 @@ namespace OsmSharp.Math
         /// </summary>
         /// <param name="direction">True when rotation has to be clockwize.</param>
         /// <returns></returns>
-        public VectorF2D Rotate90(bool direction)
+        public VectorF2D Rotate90(bool clockwise)
         {
-            if (direction)
+            if (clockwise)
             {
                 double y = -this[0];
                 double x = this[1];

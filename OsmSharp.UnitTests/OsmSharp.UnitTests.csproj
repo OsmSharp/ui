@@ -217,6 +217,7 @@
     <Compile Include="Tags\TagsCollectionTests.cs" />
     <Compile Include="Routing\TSP\BruteForceTSPTest.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurveTests.cs" />
+    <Compile Include="Math\Primitives\BoxF2DTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="test_network.osm" />
