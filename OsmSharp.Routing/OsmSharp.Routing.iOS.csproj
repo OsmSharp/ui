@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
-    <Folder Include="CH\Serialization\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -106,14 +105,8 @@
     <Compile Include="Interpreter\Constraints\Highways\DefaultHighwayConstraints.cs" />
     <Compile Include="Interpreter\Constraints\IRoutingConstraints.cs" />
     <Compile Include="Interpreter\Constraints\RoutingLabel.cs" />
-    <Compile Include="Interpreter\Default\DefaultVehicleInterpreter.cs" />
-    <Compile Include="Interpreter\Default\DefaultWayInterpreter.cs" />
     <Compile Include="Interpreter\Roads\IEdgeInterpreter.cs" />
-    <Compile Include="Interpreter\Roads\RoadInterpreter.cs" />
-    <Compile Include="Interpreter\Roads\RoadTagsInterpreterBase.cs" />
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
-    <Compile Include="Interpreter\Vehicles\RoutingVehicleBase.cs" />
-    <Compile Include="Interpreter\Vehicles\RoutingVehicleSimple.cs" />
     <Compile Include="Interpreter\IRoutingInterpreter.cs" />
     <Compile Include="Osm\Data\Processing\CHEdgeGraphOsmStreamWriter.cs" />
     <Compile Include="Osm\Data\Processing\DynamicGraphOsmStreamWriter.cs" />

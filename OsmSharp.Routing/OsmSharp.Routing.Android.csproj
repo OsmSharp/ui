@@ -104,15 +104,9 @@
     <Compile Include="Interpreter\Constraints\Highways\DefaultHighwayConstraints.cs" />
     <Compile Include="Interpreter\Constraints\IRoutingConstraints.cs" />
     <Compile Include="Interpreter\Constraints\RoutingLabel.cs" />
-    <Compile Include="Interpreter\Default\DefaultVehicleInterpreter.cs" />
-    <Compile Include="Interpreter\Default\DefaultWayInterpreter.cs" />
     <Compile Include="Interpreter\IRoutingInterpreter.cs" />
     <Compile Include="Interpreter\Roads\IEdgeInterpreter.cs" />
-    <Compile Include="Interpreter\Roads\RoadInterpreter.cs" />
-    <Compile Include="Interpreter\Roads\RoadTagsInterpreterBase.cs" />
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
-    <Compile Include="Interpreter\Vehicles\RoutingVehicleBase.cs" />
-    <Compile Include="Interpreter\Vehicles\RoutingVehicleSimple.cs" />
     <Compile Include="IRouterExtensions.cs" />
     <Compile Include="Osm\Dykstra\DykstraRouting.cs" />
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
@@ -222,9 +216,6 @@
     <Compile Include="Graph\Serialization\RoutingDataSourceSerializer.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interpreter\Roads\Tags\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.Android.csproj">

@@ -87,7 +87,7 @@ namespace OsmSharp
         /// Returns a trucated string if the string is larger than the given max length.
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="max_length"></param>
+        /// <param name="maxLength"></param>
         /// <returns></returns>
         public static string Truncate(this string value, int maxLength)
         {

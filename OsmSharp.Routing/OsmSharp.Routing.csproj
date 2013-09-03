@@ -175,12 +175,8 @@
     <Compile Include="Interpreter\Constraints\Highways\DefaultHighwayConstraints.cs" />
     <Compile Include="Interpreter\Constraints\IRoutingConstraints.cs" />
     <Compile Include="Interpreter\Constraints\RoutingLabel.cs" />
-    <Compile Include="Interpreter\Default\DefaultVehicleInterpreter.cs" />
-    <Compile Include="Interpreter\Default\DefaultWayInterpreter.cs" />
     <Compile Include="Interpreter\Roads\IEdgeInterpreter.cs" />
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
-    <Compile Include="Interpreter\Vehicles\RoutingVehicleBase.cs" />
-    <Compile Include="Interpreter\Vehicles\RoutingVehicleSimple.cs" />
     <Compile Include="Router.cs" />
     <Compile Include="IRouterExtensions.cs" />
     <Compile Include="Interpreter\IRoutingInterpreter.cs" />
@@ -197,8 +193,6 @@
     <Compile Include="Graph\Router\IBasicRouterDataSource.cs" />
     <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
     <Compile Include="IEdgeMatcher.cs" />
-    <Compile Include="Interpreter\Roads\RoadInterpreter.cs" />
-    <Compile Include="Interpreter\Roads\RoadTagsInterpreterBase.cs" />
     <Compile Include="RouterPoint.cs" />
     <Compile Include="Routers\ITypedRouter.cs" />
     <Compile Include="Routers\TypedRouterCHEdge.cs" />
@@ -284,9 +278,7 @@
     <Compile Include="VRP\WithDepot\MaxTime\VNS\GuidedVNS.cs" />
     <Compile Include="VRP\WithDepot\RouterDepot.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Interpreter\Roads\Tags\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>

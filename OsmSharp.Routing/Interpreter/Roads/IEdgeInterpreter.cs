@@ -18,14 +18,6 @@ namespace OsmSharp.Routing.Interpreter.Roads
         /// <returns></returns>
         bool IsRoutable(TagsCollection tags);
 
-        ///// <summary>
-        ///// Returns true if the tags represent a oneway edge, false if oneway reverse and null if none.
-        ///// </summary>
-        ///// <param name="tags"></param>
-        ///// <param name="vehicle"></param>
-        ///// <returns></returns>
-        //bool? IsOneWay(IDictionary<string, string> tags, VehicleEnum vehicle);
-
         /// <summary>
         /// Returns true if the edge with given tags can be traversed by the given vehicle.
         /// </summary>

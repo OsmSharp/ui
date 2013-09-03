@@ -16,7 +16,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <summary>
         /// Holds the edge interpreter.
         /// </summary>
-        private readonly IEdgeInterpreter _edge_interpreter;
+        private readonly IEdgeInterpreter _edgeInterpreter;
 
         /// <summary>
         /// Holds the routing constraints.
@@ -33,7 +33,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// </summary>
         public OsmRoutingInterpreter()
         {
-            _edge_interpreter = new Edge.EdgeInterpreter();
+            _edgeInterpreter = new Edge.EdgeInterpreter();
             _constraints = null;
 
             this.FillRelevantTags();
@@ -45,11 +45,21 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <param name="constraints"></param>
         public OsmRoutingInterpreter(IRoutingConstraints constraints)
         {
-            _edge_interpreter = new Edge.EdgeInterpreter();
+            _edgeInterpreter = new Edge.EdgeInterpreter();
             _constraints = constraints;
             
             this.FillRelevantTags();
-        }
+        } 
+	        
+        /// <summary>
+        /// Creates a new routing interpreter a custom edge interpreter.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        public OsmRoutingInterpreter(IEdgeInterpreter interpreter)
+        {
+            _edgeInterpreter = interpreter;
+            _constraints = null;
+        }	  
 
         /// <summary>
         /// Builds the list of relevant tags.
@@ -88,7 +98,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
         {
             get 
             {
-                return _edge_interpreter; 
+                return _edgeInterpreter; 
             }
         }
 
