@@ -96,5 +96,29 @@ namespace OsmSharp.UnitTests.Math.Primitives
             Assert.IsTrue(rect1.Overlaps(rect2));
             Assert.AreEqual(rect1.Overlaps(rect2), rect2.Overlaps(rect1));
         }
+
+        /// <summary>
+        /// Line enumeration (regression) test.
+        /// </summary>
+        [Test]
+        public void TestBoxF2DLineEnumeration()
+        {
+            var rect1 = new BoxF2D(0, 0, 2, 2);
+
+            List<LineF2D> lines = new List<LineF2D>(rect1 as IEnumerable<LineF2D>);
+            Assert.AreEqual(4, lines.Count);
+            Assert.IsTrue(lines[0].IsSegment);
+            Assert.IsTrue(lines[1].IsSegment);
+            Assert.IsTrue(lines[2].IsSegment);
+            Assert.IsTrue(lines[3].IsSegment);
+            Assert.IsTrue(lines.Exists(x => (x.Point1 == rect1.Corners[0] && x.Point2 == rect1.Corners[1]) ||
+                (x.Point2 == rect1.Corners[0] && x.Point1 == rect1.Corners[1])));
+            Assert.IsTrue(lines.Exists(x => (x.Point1 == rect1.Corners[1] && x.Point2 == rect1.Corners[2]) ||
+                (x.Point2 == rect1.Corners[2] && x.Point1 == rect1.Corners[1])));
+            Assert.IsTrue(lines.Exists(x => (x.Point1 == rect1.Corners[2] && x.Point2 == rect1.Corners[3]) ||
+                (x.Point2 == rect1.Corners[3] && x.Point1 == rect1.Corners[2])));
+            Assert.IsTrue(lines.Exists(x => (x.Point1 == rect1.Corners[3] && x.Point2 == rect1.Corners[0]) ||
+                (x.Point2 == rect1.Corners[0] && x.Point1 == rect1.Corners[3])));
+        }
     }
 }

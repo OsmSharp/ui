@@ -169,6 +169,30 @@ namespace OsmSharp.Math.Primitives
 			return new PointF2D(c);
 		}
 
+        /// <summary>
+        /// Returns true if both points represent the same point.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static bool operator ==(PointF2D a, PointF2D b)
+        {
+            return a._values[0] == b._values[0] &&
+                a._values[1] == b._values[1];
+        }
+
+        /// <summary>
+        /// Returns false if both points represent the same point.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static bool operator !=(PointF2D a, PointF2D b)
+        {
+            return a._values[0] != b._values[0] ||
+                a._values[1] != b._values[1];
+        }
+
         #endregion
 
         /// <summary>

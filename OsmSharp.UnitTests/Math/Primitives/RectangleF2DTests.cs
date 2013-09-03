@@ -19,6 +19,7 @@
 using System;
 using NUnit.Framework;
 using OsmSharp.Math.Primitives;
+using OsmSharp.Math;
 
 namespace OsmSharp.UnitTests.Math.Primitives
 {
@@ -35,6 +36,39 @@ namespace OsmSharp.UnitTests.Math.Primitives
 		public void TestRectangleF2DNoDirection()
 		{
 			RectangleF2D rectangle = new RectangleF2D (0, 0, 1, 1);
+            Assert.AreEqual(0, rectangle.BottomLeft[0]);
+            Assert.AreEqual(0, rectangle.BottomLeft[1]);
+            Assert.AreEqual(1, rectangle.BottomRight[0]);
+            Assert.AreEqual(0, rectangle.BottomRight[1]);
+            Assert.AreEqual(0, rectangle.TopLeft[0]);
+            Assert.AreEqual(1, rectangle.TopLeft[1]);
+            Assert.AreEqual(1, rectangle.TopRight[0]);
+            Assert.AreEqual(1, rectangle.TopRight[1]);
+
+            BoxF2D box = rectangle.BoundingBox;
+            Assert.AreEqual(0, box.Min[0]);
+            Assert.AreEqual(0, box.Min[1]);
+            Assert.AreEqual(1, box.Max[0]);
+            Assert.AreEqual(1, box.Max[1]);
+
+            Assert.IsTrue(rectangle.Contains(0.25, 0.75));
+            Assert.IsFalse(rectangle.Contains(1.2, 0.25));
+            Assert.IsFalse(rectangle.Contains(0.25, 1.2));
+
+            Assert.IsTrue(rectangle.Contains(new PointF2D(0.25, 0.75)));
+            Assert.IsFalse(rectangle.Contains(new PointF2D(1.2, 0.25)));
+            Assert.IsFalse(rectangle.Contains(new PointF2D(0.25, 1.2)));
+
+            Assert.AreEqual(1, rectangle.Distance(new PointF2D(2, 0)));
+            Assert.AreEqual(0, rectangle.Distance(new PointF2D(1, 0)));
+            Assert.AreEqual(1, rectangle.Distance(new PointF2D(0, 2)));
+            Assert.AreEqual(0, rectangle.Distance(new PointF2D(0, 1)));
+
+            Assert.AreEqual(1, rectangle.Distance(new PointF2D(-1, 0.5)));
+            Assert.AreEqual(0, rectangle.Distance(new PointF2D(0, 0.5)));
+
+            Assert.AreEqual(1, rectangle.Height);
+            Assert.AreEqual(1, rectangle.Width);
 
 			double[] converted = rectangle.TransformFrom (100, 100, false, false,
 			                                             new double[] { 25, 75 });
@@ -134,13 +168,60 @@ namespace OsmSharp.UnitTests.Math.Primitives
 			Assert.AreEqual (2, convertedBack.Length);
 			Assert.AreEqual (25, convertedBack [0], delta);
 			Assert.AreEqual (75, convertedBack [1], delta);
+
+            rectangle = new RectangleF2D(new PointF2D(1, 1), System.Math.Sqrt(2) * 2,
+                                                       System.Math.Sqrt(2) * 2, new VectorF2D(1,1));
+
+            converted = rectangle.TransformFrom(100, 100, false, false,
+                                                          new double[] { 25, 75 });
+            Assert.AreEqual(2, converted.Length);
+            Assert.AreEqual(3, converted[0], delta);
+            Assert.AreEqual(2, converted[1], delta);
+            convertedBack = rectangle.TransformTo(100, 100, false, false,
+                                                            converted);
+            Assert.AreEqual(2, convertedBack.Length);
+            Assert.AreEqual(25, convertedBack[0], delta);
+            Assert.AreEqual(75, convertedBack[1], delta);
+
+            converted = rectangle.TransformFrom(100, 100, true, false,
+                                                          new double[] { 25, 75 });
+            Assert.AreEqual(2, converted.Length);
+            Assert.AreEqual(4, converted[0], delta);
+            Assert.AreEqual(1, converted[1], delta);
+            convertedBack = rectangle.TransformTo(100, 100, true, false,
+                                                            converted);
+            Assert.AreEqual(2, convertedBack.Length);
+            Assert.AreEqual(25, convertedBack[0], delta);
+            Assert.AreEqual(75, convertedBack[1], delta);
+
+            converted = rectangle.TransformFrom(100, 100, false, true,
+                                                 new double[] { 25, 75 });
+            Assert.AreEqual(2, converted.Length);
+            Assert.AreEqual(2, converted[0], delta);
+            Assert.AreEqual(1, converted[1], delta);
+            convertedBack = rectangle.TransformTo(100, 100, false, true,
+                                                   converted);
+            Assert.AreEqual(2, convertedBack.Length);
+            Assert.AreEqual(25, convertedBack[0], delta);
+            Assert.AreEqual(75, convertedBack[1], delta);
+
+            converted = rectangle.TransformFrom(100, 100, true, true,
+                                                 new double[] { 25, 75 });
+            Assert.AreEqual(2, converted.Length);
+            Assert.AreEqual(3, converted[0], delta);
+            Assert.AreEqual(0, converted[1], delta);
+            convertedBack = rectangle.TransformTo(100, 100, true, true,
+                                                   converted);
+            Assert.AreEqual(2, convertedBack.Length);
+            Assert.AreEqual(25, convertedBack[0], delta);
+            Assert.AreEqual(75, convertedBack[1], delta);
 		}
 
 		/// <summary>
 		/// Tests transformations with coordinates outside of the given coordinate box.
 		/// </summary>
 		[Test]
-		public void TestRectangleD2DOutsideTransforms(){
+		public void TestRectangleF2DOutsideTransforms(){
 			RectangleF2D rectangle = new RectangleF2D (0, 0, 1, 1);
 
 			double[] converted = rectangle.TransformFrom (100, 100, false, false,
@@ -154,6 +235,35 @@ namespace OsmSharp.UnitTests.Math.Primitives
 			Assert.AreEqual (-100, convertedBack [0]);
 			Assert.AreEqual (-100, convertedBack [1]);
 		}
+
+        /// <summary>
+        /// Tests the rectangle overlap function.
+        /// </summary>
+        [Test]
+        public void TestRectangleF2DOverlaps()
+        {
+            double delta = 0.00001;
+            RectangleF2D rectangle = new RectangleF2D(1, 1, System.Math.Sqrt(2) * 2,
+                                                       System.Math.Sqrt(2) * 2, 45);
+
+            double[] converted = rectangle.TransformFrom(100, 100, false, false,
+                                                          new double[] { 25, 75 });
+            Assert.AreEqual(2, converted.Length);
+            Assert.AreEqual(3, converted[0], delta);
+            Assert.AreEqual(2, converted[1], delta);
+            double[] convertedBack = rectangle.TransformTo(100, 100, false, false,
+                                                            converted);
+            Assert.AreEqual(2, convertedBack.Length);
+            Assert.AreEqual(25, convertedBack[0], delta);
+            Assert.AreEqual(75, convertedBack[1], delta);
+
+            Assert.IsFalse(rectangle.Overlaps(new BoxF2D(5, 3, 6, 4)));
+            Assert.IsTrue(rectangle.Overlaps(new BoxF2D(3.5, 1.5, 4.5, 2.5)));
+            Assert.IsTrue(rectangle.Overlaps(new BoxF2D(2, 0.5, 3, 1.5)));
+            Assert.IsTrue(rectangle.Overlaps(new BoxF2D(0, -2, 4, 6)));
+            Assert.IsTrue(rectangle.Overlaps(new BoxF2D(4, -2, 6, 4)));
+            Assert.IsTrue(rectangle.Overlaps(new BoxF2D(1.5, -2, 2.5, 4)));
+        }
 	}
 }
 

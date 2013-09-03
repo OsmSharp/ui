@@ -166,7 +166,7 @@ namespace OsmSharp.Math.Primitives
 		public bool Contains(PointF2D point){
 			double[] coordinates = this.TransformTo (100, 100, false, false, point);
 			return (coordinates [0] >= 0 && coordinates [0] <= 100 &&
-				coordinates [0] >= 0 && coordinates [0] <= 100);
+				coordinates [1] >= 0 && coordinates [1] <= 100);
 		}                                      
 
 		/// <summary>
@@ -189,10 +189,15 @@ namespace OsmSharp.Math.Primitives
 				return true;
 			}
 			if (this.Contains (box.Corners [0]) || this.Contains (box.Corners [2]) ||
-			    this.Contains (box.Corners [3]) || this.Contains (box.Corners [4])) {
+			    this.Contains (box.Corners [3]) || this.Contains (box.Corners [0])) {
 				return true;
 			}
+
 			List<LineF2D> lines = new List<LineF2D> ();
+            lines.Add(new LineF2D(this.BottomLeft, this.BottomRight, true));
+            lines.Add(new LineF2D(this.BottomRight, this.TopRight, true));
+            lines.Add(new LineF2D(this.TopRight, this.TopLeft, true));
+            lines.Add(new LineF2D(this.TopLeft, this.BottomLeft, true));
 			foreach (LineF2D line in (box as IEnumerable<LineF2D>)) {
 				foreach (LineF2D otherLine in lines) {
 					if (line.Intersects (otherLine)) {
