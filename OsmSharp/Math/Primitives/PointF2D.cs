@@ -177,6 +177,21 @@ namespace OsmSharp.Math.Primitives
         /// <returns></returns>
         public static bool operator ==(PointF2D a, PointF2D b)
         {
+            if ((object)a != null &&
+                (object)b == null)
+            {
+                return false;
+            }
+            if ((object)b != null &&
+                (object)a == null)
+            {
+                return false;
+            }
+            if ((object)a == null &&
+                (object)b == null)
+            {
+                return true;
+            }
             return a._values[0] == b._values[0] &&
                 a._values[1] == b._values[1];
         }
@@ -189,6 +204,21 @@ namespace OsmSharp.Math.Primitives
         /// <returns></returns>
         public static bool operator !=(PointF2D a, PointF2D b)
         {
+            if ((object)a != null &&
+                (object)b == null)
+            {
+                return true;
+            }
+            if ((object)b != null &&
+                (object)a == null)
+            {
+                return true;
+            }
+            if ((object)a == null &&
+                (object)b == null)
+            {
+                return false;
+            }
             return a._values[0] != b._values[0] ||
                 a._values[1] != b._values[1];
         }

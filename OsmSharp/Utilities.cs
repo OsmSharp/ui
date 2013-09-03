@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -29,90 +29,6 @@ namespace OsmSharp
     /// </summary>
     public static class Utilities
     {
-        /// <summary>
-        /// Removes one element from an array and returns the result.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="array"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static T[] Remove<T>(this T[] array, T value)
-        {
-            List<T> list = new List<T>(array);
-            list.Remove(value);
-            return list.ToArray();
-        }
-
-        /// <summary>
-        /// Removes one element from an array and returns the result.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="array"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static T[] Add<T>(this T[] array, T value)
-        {
-            List<T> list = new List<T>(array);
-            list.Add(value);
-            return list.ToArray();
-        }
-
-        /// <summary>
-        /// Removes one element from an array and returns the result.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="array"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static T[] AddRange<T>(this T[] array, IEnumerable<T> value)
-        {
-            List<T> list = new List<T>(array);
-            list.AddRange(value);
-            return list.ToArray();
-        }
-
-        /// <summary>
-        /// Tests two IEnumerables for equal values and equal count.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="self"></param>
-        /// <param name="items"></param>
-        /// <returns></returns>
-        public static Boolean EqualValues<T>(this IEnumerable<T> self, IEnumerable<T> items)
-            where T : IEquatable<T>
-        {
-            // get enumerator.
-            IEnumerator<T> enum1 = self.GetEnumerator();
-            IEnumerator<T> enum2 = items.GetEnumerator();
-            bool enum1_has_next = enum1.MoveNext();
-            bool enum2_has_next = enum2.MoveNext();
-            
-            // start comparing.
-            bool equals = true;
-            if (enum1_has_next && enum2_has_next)
-            { // at least one in collections.
-                while (equals
-                    && (enum1_has_next && enum2_has_next))
-                {
-                    if (!enum1.Current.Equals(enum2.Current))
-                    {
-                        equals = false;
-                    }
-                    else
-                    {
-                        enum1_has_next = enum1.MoveNext();
-                        enum2_has_next = enum2.MoveNext();
-                    }
-                }
-
-                return equals && (enum1_has_next == enum2_has_next);
-            }
-            else 
-            { // one of the collection or both have zero elements.
-                return (enum1_has_next != enum2_has_next);
-            }
-        }
-
         /// <summary>
         /// Shuffles the list using Fisher-Yates shuffle.
         /// </summary>
@@ -173,28 +89,13 @@ namespace OsmSharp
         /// <param name="value"></param>
         /// <param name="max_length"></param>
         /// <returns></returns>
-        public static string Truncate(this string value, int max_length)
+        public static string Truncate(this string value, int maxLength)
         {
-            if (value != null && value.Length > max_length)
+            if (value != null && value.Length > maxLength)
             {
-                return value.Substring(0, max_length);
+                return value.Substring(0, maxLength);
             }
             return value;
-        }
-
-        /// <summary>
-        /// Converts a list of tags to a dictionary of tags.
-        /// </summary>
-        /// <param name="tags"></param>
-        /// <returns></returns>
-        public static IDictionary<string, string> ConvertFrom(this List<KeyValuePair<string, string>> tags)
-        {
-            Dictionary<string, string> new_tags = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, string> tag in tags)
-            {
-                new_tags[tag.Key] = tag.Value;
-            }
-            return new_tags;
         }
 
         /// <summary>
@@ -345,7 +246,10 @@ namespace OsmSharp
                     string value_tested = value.Substring(0, c);
                     if (float.TryParse(value_tested, out result_never_used))
                     {
-                        ret_string = value_tested;
+                        if (value[c - 1] != '.')
+                        {
+                            ret_string = value_tested;
+                        }
                     }
                     else
                     {
