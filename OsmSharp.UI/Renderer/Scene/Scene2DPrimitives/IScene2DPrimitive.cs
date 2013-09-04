@@ -24,8 +24,16 @@ using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer.Scene
 {
+    /// <summary>
+    /// A common interface for all scene primitives.
+    /// </summary>
     public interface IScene2DPrimitive
     {
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        uint Id { get; set; }
+
         /// <summary>
         /// Returns true if the object is visible on the view.
         /// </summary>

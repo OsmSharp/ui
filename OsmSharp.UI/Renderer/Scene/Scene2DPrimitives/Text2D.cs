@@ -64,6 +64,11 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         }
 
         /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        public uint Id { get; set; }
+
+        /// <summary>
         /// Gets or sets the tag.
         /// </summary>
         /// <value>The tag.</value>

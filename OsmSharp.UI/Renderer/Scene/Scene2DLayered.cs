@@ -149,23 +149,49 @@ namespace OsmSharp.UI.Renderer.Scene
 			}
 		}
 
+        /// <summary>
+        /// Returns the readonly flag.
+        /// </summary>
+        public override bool IsReadOnly
+        {
+            get { return true; }
+        }
+
 		/// <summary>
 		/// Returns the primitive with the given id if any.
 		/// </summary>
 		/// <param name="id"></param>
 		/// <returns></returns>
-		public override IScene2DPrimitive Get (uint id)
-		{			
-			for (int idx = 0; idx < _scenes.Length; idx++) {
-				if (_scenes [idx] != null) {
-					IScene2DPrimitive primitive = _scenes [idx].Get (id);
-					if (primitive != null) {
-						return primitive;
-					}
-				}
-			}
-			return null;
+		public override List<IScene2DPrimitive> Get (uint id)
+		{
+            throw new NotSupportedException("This scene is readonly and does not keep object ids. Check readonly flag.");
+            //List<IScene2DPrimitive> primitives = new List<IScene2DPrimitive>();
+            //for (int idx = 0; idx < _scenes.Length; idx++) {
+            //    if (_scenes [idx] != null) {
+            //        primitives.AddRange(_scenes [idx].Get (id));
+            //    }
+            //}
+            //return primitives;
 		}
+
+        /// <summary>
+        /// Returns the primitive with the given id if any.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public override bool Remove(uint id)
+        {
+            throw new NotSupportedException("This scene is readonly and does not keep object ids. Check readonly flag.");
+            //bool removed = false;
+            //for (int idx = 0; idx < _scenes.Length; idx++)
+            //{
+            //    if (_scenes[idx] != null)
+            //    {
+            //        removed = removed || _scenes[idx].Remove(id);
+            //    }
+            //}
+            //return removed;
+        }
 
 		/// <summary>
 		/// Adds an icon.

@@ -34,6 +34,11 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
             this.MaxZoom = float.MaxValue;
         }
 
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        public uint Id { get; set; }
+
 		/// <summary>
 		/// Gets or sets the tag.
 		/// </summary>

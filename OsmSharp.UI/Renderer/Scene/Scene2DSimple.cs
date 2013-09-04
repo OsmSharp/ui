@@ -46,7 +46,7 @@ namespace OsmSharp.UI.Renderer.Scene
         private uint _nextId = 0;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OsmSharp.UI.Renderer.Scene2D"/> class.
+        /// Initializes a new instance of the <see cref="OsmSharp.UI.Renderer.Scene2DSimple"/> class.
         /// </summary>
         public Scene2DSimple()
         {
@@ -117,39 +117,50 @@ namespace OsmSharp.UI.Renderer.Scene
         }
 
         /// <summary>
-        /// Returns the primitive with the given id if andy.
+        /// Returns the readonly flag.
+        /// </summary>
+        public override bool IsReadOnly
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Returns the primitives with the given id if andy.
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public override IScene2DPrimitive Get(uint id)
+        public override List<IScene2DPrimitive> Get(uint id)
         {
-            //foreach (var layer in _primitives)
-            //{
-            //    //IScene2DPrimitive value;
-            //    //if (layer.Value.TryGetValue(id, out value))
-            //    //{
-            //    //    return value;
-            //    //}
-            //}
-            return null;
+            List<IScene2DPrimitive> primitives = new List<IScene2DPrimitive>();
+            foreach (var layer in _primitives)
+            {
+                foreach (var primitive in layer.Value)
+                {
+                    if (primitive.Id == id)
+                    {
+                        primitives.Add(primitive);
+                    }
+                }
+            }
+            return primitives;
         }
 
-//        /// <summary>
-//        /// Removes the primitive with the given id.
-//        /// </summary>
-//        /// <param name="id"></param>
-//        /// <returns></returns>
-//        public override bool Remove(uint id)
-//        {
-//            foreach (var layer in _primitives)
-//            {
-//                if (layer.Value.Remove(id))
-//                {
-//                    return true;
-//                }
-//            }
-//            return false;
-//        }
+        /// <summary>
+        /// Removes the primitive with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public override bool Remove(uint id)
+        {
+            List<IScene2DPrimitive> primitives = this.Get(id);
+            bool removed = false;
+            foreach (var layer in _primitives)
+            {
+                removed = removed || 
+                    layer.Value.RemoveAll(x => primitives.Contains(x)) > 0;
+            }
+            return false;
+        }
 
         /// <summary>
         /// Adds a new primitive with a given id and layer.
@@ -159,13 +170,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="primitive"></param>
         internal void AddPrimitive(int layer, uint id, IScene2DPrimitive primitive)
         {
-            //RTreeMemoryIndex<IScene2DPrimitive> layerDic;
-            //if (!_primitives.TryGetValue(layer, out layerDic))
-            //{
-            //    layerDic = new RTreeMemoryIndex<IScene2DPrimitive>();
-            //    _primitives.Add(layer, layerDic);
-            //}
-            //layerDic.Add(primitive.GetBox(), primitive);
+            primitive.Id = id;
             List<IScene2DPrimitive> layerList;
             if (!_primitives.TryGetValue(layer, out layerList))
             {

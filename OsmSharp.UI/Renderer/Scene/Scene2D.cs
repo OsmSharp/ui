@@ -50,6 +50,11 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         public int BackColor { get; set; }
 
+        /// <summary>
+        /// Returns true if this scene is readonly.
+        /// </summary>
+        public abstract bool IsReadOnly { get; }
+
 	    /// <summary>
 	    /// Gets all objects in this scene for the specified view sorted according to layer number.
 	    /// </summary>
@@ -62,7 +67,14 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public abstract IScene2DPrimitive Get(uint id);
+        public abstract List<IScene2DPrimitive> Get(uint id);
+
+        /// <summary>
+        /// Removes all primitives associated with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public abstract bool Remove(uint id);
 
 	    /// <summary>
 	    /// Adds a point.
