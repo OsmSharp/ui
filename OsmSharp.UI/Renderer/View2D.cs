@@ -147,6 +147,23 @@ namespace OsmSharp.UI.Renderer
 
 		#region Create From
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="OsmSharp.UI.Renderer.View2D"/> class.
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <param name="centerX"></param>
+        /// <param name="centerY"></param>
+        /// <param name="directionX"></param>
+        /// <param name="directionY"></param>
+        /// <param name="angleY"></param>
+        /// <returns></returns>
+        public static View2D CreateFromCenterAndSize(double width, double height, double centerX, double centerY,
+            bool directionX, bool directionY)
+        {
+            return View2D.CreateFromCenterAndSize(width, height, centerX, centerY, directionX, directionY, 0);
+        }
+
 	    /// <summary>
 	    /// Creates a new instance of the <see cref="OsmSharp.UI.Renderer.View2D"/> class.
 	    /// </summary>
@@ -155,9 +172,10 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="centerX">The center x.</param>
 	    /// <param name="centerY">The center y.</param>
 	    /// <param name="directionX">When true x increases from left to right, when false otherwise.</param>
-		/// <param name="directionY">When true y increases from bottom to top, when false otherwise.</param>
+        /// <param name="directionY">When true y increases from bottom to top, when false otherwise.</param>
+        /// <param name="angle"></param>
         public static View2D CreateFromCenterAndSize(double width, double height, double centerX, double centerY,
-            bool directionX, bool directionY)
+            bool directionX, bool directionY, Degree angleY)
 		{
 			if(width <= 0)
 			{
@@ -169,7 +187,7 @@ namespace OsmSharp.UI.Renderer
 			}
 
 			return new View2D(new RectangleF2D(centerX - (width / 2.0), centerY - (height / 2.0),
-			                                   width, height), !directionX, !directionY);
+			                                   width, height, angleY), !directionX, !directionY);
 		}
 
 		/// <summary>
@@ -217,17 +235,36 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="pixelsHeight"></param>
 	    /// <param name="zoomFactor"></param>
 	    /// <param name="directionX"></param>
-	    /// <param name="directionY"></param>
+        /// <param name="directionY"></param>
+        /// <param name="angleY"></param>
 	    /// <returns></returns>
         public static View2D CreateFrom(double centerX, double centerY, double pixelsWidth, double pixelsHeight,
             double zoomFactor, bool directionX, bool directionY)
+        {
+            return View2D.CreateFrom(centerX, centerY, pixelsWidth, pixelsHeight, zoomFactor, directionX, directionY, 0);
+        }
+
+	    /// <summary>
+	    /// Creates a view based on a center location a zoomfactor and the size of the current viewport.
+	    /// </summary>
+	    /// <param name="centerX"></param>
+	    /// <param name="centerY"></param>
+	    /// <param name="pixelsWidth"></param>
+	    /// <param name="pixelsHeight"></param>
+	    /// <param name="zoomFactor"></param>
+	    /// <param name="directionX"></param>
+        /// <param name="directionY"></param>
+        /// <param name="angleY"></param>
+	    /// <returns></returns>
+        public static View2D CreateFrom(double centerX, double centerY, double pixelsWidth, double pixelsHeight,
+            double zoomFactor, bool directionX, bool directionY, Degree angleY)
         {
             double realZoom = zoomFactor;
 
             double width = pixelsWidth / realZoom;
             double height = pixelsHeight / realZoom;
 
-            return View2D.CreateFromCenterAndSize(width, height, centerX, centerY, directionX, directionY);
+            return View2D.CreateFromCenterAndSize(width, height, centerX, centerY, directionX, directionY, angleY);
         }
 
 		#endregion

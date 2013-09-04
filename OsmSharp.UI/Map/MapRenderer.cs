@@ -26,6 +26,7 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.UI.Map
 {
@@ -158,6 +159,21 @@ namespace OsmSharp.UI.Map
         /// <returns></returns>
         public View2D Create(float width, float height, Map map, float zoomFactor, GeoCoordinate center)
         {
+            return this.Create(width, height, map, zoomFactor, center, 0);
+        }
+
+        /// <summary>
+        /// Creates a view.
+        /// </summary>
+        /// <param name="height"></param>
+        /// <param name="map"></param>
+        /// <param name="zoomFactor"></param>
+        /// <param name="center"></param>
+        /// <param name="width"></param>
+        /// <param name="angle"></param>
+        /// <returns></returns>
+        public View2D Create(float width, float height, Map map, float zoomFactor, GeoCoordinate center, Degree angle)
+        {
             // get the projection.
             IProjection projection = map.Projection;
 
@@ -167,7 +183,8 @@ namespace OsmSharp.UI.Map
 
             // create the view for this control.
             return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                                             width, height, sceneZoomFactor, projection.DirectionX, projection.DirectionY);
+                                             width, height, sceneZoomFactor, 
+                                             projection.DirectionX, projection.DirectionY);
         }
 
 		/// <summary>
