@@ -264,6 +264,32 @@ namespace OsmSharp.UnitTests.Math.Primitives
             Assert.IsTrue(rectangle.Overlaps(new BoxF2D(4, -2, 6, 4)));
             Assert.IsTrue(rectangle.Overlaps(new BoxF2D(1.5, -2, 2.5, 4)));
         }
+
+        /// <summary>
+        /// Tests the create from bounds and center.
+        /// </summary>
+        [Test]
+        public void TestRectangleF2DCreateFromBoundsAndCenter()
+        {
+            double delta = 0.00001;
+            // this should create the exact same rectangle as in the other tests.
+            RectangleF2D rectangle = RectangleF2D.FromBoundsAndCenter(System.Math.Sqrt(2) * 2,
+                                                       System.Math.Sqrt(2) * 2, 3, 1, 45);
+
+            RectangleF2D rectangleReference = new RectangleF2D(1, 1, System.Math.Sqrt(2) * 2,
+                                           System.Math.Sqrt(2) * 2, 45);
+
+            Assert.AreEqual(rectangleReference.Height, rectangle.Height);
+            Assert.AreEqual(rectangleReference.Width, rectangle.Width);
+            Assert.AreEqual(rectangleReference.BottomLeft[0], rectangle.BottomLeft[0], delta);
+            Assert.AreEqual(rectangleReference.BottomLeft[1], rectangle.BottomLeft[1], delta);
+            Assert.AreEqual(rectangleReference.TopLeft[0], rectangle.TopLeft[0], delta);
+            Assert.AreEqual(rectangleReference.TopLeft[1], rectangle.TopLeft[1], delta);
+            Assert.AreEqual(rectangleReference.TopRight[0], rectangle.TopRight[0], delta);
+            Assert.AreEqual(rectangleReference.TopRight[1], rectangle.TopRight[1], delta);
+            Assert.AreEqual(rectangleReference.BottomRight[0], rectangle.BottomRight[0], delta);
+            Assert.AreEqual(rectangleReference.BottomRight[1], rectangle.BottomRight[1], delta);
+        }
 	}
 }
 

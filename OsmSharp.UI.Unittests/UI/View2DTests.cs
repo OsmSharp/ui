@@ -208,5 +208,20 @@ namespace OsmSharp.UI.Unittests.UI
             Assert.AreEqual(viewBottomRight[0], view.ToViewPortX(1000, view.RightTop[0]));
             Assert.AreEqual(viewBottomRight[1], view.ToViewPortY(1000, view.RightBottom[1]));
         }
+
+        
+        /// <summary>
+        /// Tests CreateFrom with a direction.
+        /// </summary>
+        [Test]
+        public void View2DTestCreateFromWithDirection()
+        {
+            // create a new view that is tilted.
+            View2D view = View2D.CreateFrom(0, 0, 
+                System.Math.Sqrt(2), System.Math.Sqrt(2), 1, true, true, 45);
+
+
+        }
+
     }
 }

@@ -88,6 +88,38 @@ namespace OsmSharp.Math.Primitives
 			_vectorX = directionYNormal.Rotate90 (true) * width;
 		}
 
+        /// <summary>
+        /// Creates a new RectangleF2D from given bounds, center and angle.
+        /// </summary>
+        /// <param name="centerX"></param>
+        /// <param name="centerY"></param>
+        /// <param name="width">Width.</param>
+        /// <param name="height">Height.</param>
+        /// <param name="angleY">The angle relative to the y-axis.</param>
+        /// <returns></returns>
+        public static RectangleF2D FromBoundsAndCenter(double width, double height, double centerX, double centerY, Degree angleY)
+        {
+            return RectangleF2D.FromBoundsAndCenter(width, height, centerX, centerY, VectorF2D.FromAngleY(angleY));
+        }
+
+        /// <summary>
+        /// Creates a new RectangleF2D from given bounds, center and direction.
+        /// </summary>
+        /// <param name="centerX"></param>
+        /// <param name="centerY"></param>
+        /// <param name="width">Width.</param>
+        /// <param name="height">Height.</param>
+        /// <param name="directionY">The direction.</param>
+        /// <returns></returns>
+        public static RectangleF2D FromBoundsAndCenter(double width, double height, double centerX, double centerY, VectorF2D directionY)
+        {
+            VectorF2D directionYNormal = directionY.Normalize();
+            VectorF2D directionXNormal = directionYNormal.Rotate90(true);
+            PointF2D center = new PointF2D(centerX, centerY);
+            PointF2D bottomLeft = center - (directionYNormal * (height / 2)) - (directionXNormal * (width / 2));
+            return new RectangleF2D(bottomLeft, width, height, directionY);
+        }
+
 		/// <summary>
 		/// Gets the bottom left.
 		/// </summary>

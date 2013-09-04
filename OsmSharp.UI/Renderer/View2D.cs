@@ -186,8 +186,8 @@ namespace OsmSharp.UI.Renderer
 				throw new ArgumentOutOfRangeException("height", "height has to be larger and not equal to zero.");
 			}
 
-			return new View2D(new RectangleF2D(centerX - (width / 2.0), centerY - (height / 2.0),
-			                                   width, height, angleY), !directionX, !directionY);
+			return new View2D(RectangleF2D.FromBoundsAndCenter(width, height,
+                centerX, centerY, angleY), !directionX, !directionY);
 		}
 
 		/// <summary>
