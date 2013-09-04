@@ -171,11 +171,11 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="height">The height.</param>
 	    /// <param name="centerX">The center x.</param>
 	    /// <param name="centerY">The center y.</param>
-	    /// <param name="directionX">When true x increases from left to right, when false otherwise.</param>
-        /// <param name="directionY">When true y increases from bottom to top, when false otherwise.</param>
-        /// <param name="angle"></param>
+	    /// <param name="xInverted">When true x increases from left to right, when false otherwise.</param>
+        /// <param name="yInverted">When true y increases from bottom to top, when false otherwise.</param>
+        /// <param name="angleY"></param>
         public static View2D CreateFromCenterAndSize(double width, double height, double centerX, double centerY,
-            bool directionX, bool directionY, Degree angleY)
+            bool xInverted, bool yInverted, Degree angleY)
 		{
 			if(width <= 0)
 			{
@@ -187,7 +187,7 @@ namespace OsmSharp.UI.Renderer
 			}
 
 			return new View2D(RectangleF2D.FromBoundsAndCenter(width, height,
-                centerX, centerY, angleY), !directionX, !directionY);
+                centerX, centerY, angleY), xInverted, yInverted);
 		}
 
 		/// <summary>
@@ -201,29 +201,29 @@ namespace OsmSharp.UI.Renderer
         public static View2D CreateFromBounds(double top, double left, double bottom, double right)
 		{
 			double width;
-			bool directionX;
+			bool xInverted;
 			double centerX = (left + right) / 2.0;
 			if (left > right) {
-				directionX = false;
+				xInverted = true;
 				width = left - right;
 			} else {			
 				width = right - left;
-				directionX = true;
+				xInverted = false;
 			}
 
 			double height;
-			bool directionY;
+			bool yInverted;
 			double centerY = (top + bottom) / 2.0;
 			if(bottom > top){
-				directionY = false;
+				yInverted = true;
 				height = bottom - top;
 			}
 			else {
-				directionY = true;
+				yInverted = false;
 				height = top - bottom;
 			}
 			return View2D.CreateFromCenterAndSize(width, height, centerX, centerY,
-			                                      directionX, directionY);
+			                                      xInverted, yInverted);
 		}
 
 	    /// <summary>
@@ -234,14 +234,14 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="pixelsWidth"></param>
 	    /// <param name="pixelsHeight"></param>
 	    /// <param name="zoomFactor"></param>
-	    /// <param name="directionX"></param>
-        /// <param name="directionY"></param>
+	    /// <param name="xInverted"></param>
+        /// <param name="yInverted"></param>
         /// <param name="angleY"></param>
 	    /// <returns></returns>
         public static View2D CreateFrom(double centerX, double centerY, double pixelsWidth, double pixelsHeight,
-            double zoomFactor, bool directionX, bool directionY)
+            double zoomFactor, bool xInverted, bool yInverted)
         {
-            return View2D.CreateFrom(centerX, centerY, pixelsWidth, pixelsHeight, zoomFactor, directionX, directionY, 0);
+            return View2D.CreateFrom(centerX, centerY, pixelsWidth, pixelsHeight, zoomFactor, xInverted, yInverted, 0);
         }
 
 	    /// <summary>
@@ -252,19 +252,19 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="pixelsWidth"></param>
 	    /// <param name="pixelsHeight"></param>
 	    /// <param name="zoomFactor"></param>
-	    /// <param name="directionX"></param>
-        /// <param name="directionY"></param>
+	    /// <param name="xInverted"></param>
+        /// <param name="yInverted"></param>
         /// <param name="angleY"></param>
 	    /// <returns></returns>
         public static View2D CreateFrom(double centerX, double centerY, double pixelsWidth, double pixelsHeight,
-            double zoomFactor, bool directionX, bool directionY, Degree angleY)
+            double zoomFactor, bool xInverted, bool yInverted, Degree angleY)
         {
             double realZoom = zoomFactor;
 
             double width = pixelsWidth / realZoom;
             double height = pixelsHeight / realZoom;
 
-            return View2D.CreateFromCenterAndSize(width, height, centerX, centerY, directionX, directionY, angleY);
+            return View2D.CreateFromCenterAndSize(width, height, centerX, centerY, xInverted, yInverted, angleY);
         }
 
 		#endregion
@@ -310,29 +310,7 @@ namespace OsmSharp.UI.Renderer
         /// <returns></returns>
         public double[] FromViewPort(double pixelsWidth, double pixelsHeight, double pixelX, double pixelY)
         { // assumed that the coordinate system of the viewport starts at (0,0) in the topleft corner and increases to 
-			return _rectangle.TransformFrom (pixelsWidth, pixelsHeight, _invertX, !_invertY, pixelX, pixelY);
-        }
-
-        /// <summary>
-        /// Returns the scene x-coordinates represents by the given x-coordinate for the given viewport width.
-        /// </summary>
-        /// <param name="pixelX"></param>
-        /// <param name="pixelsWidth"></param>
-        /// <returns></returns>
-        public double FromViewPortX(double pixelsWidth, double pixelX)
-        {
-			return this.FromViewPort (pixelsWidth, pixelsWidth, pixelX, pixelX) [0];
-        }
-
-        /// <summary>
-        /// Returns the scene y-coordinates represents by the given y-coordinate for the given viewport height.
-        /// </summary>
-        /// <param name="pixelY"></param>
-        /// <param name="pixelsHeight"></param>
-        /// <returns></returns>
-        public double FromViewPortY(double pixelsHeight, double pixelY)
-		{
-			return this.FromViewPort (pixelsHeight, pixelsHeight, pixelY, pixelY) [1];
+			return _rectangle.TransformFrom (pixelsWidth, pixelsHeight, _invertX, _invertY, pixelX, pixelY);
         }
 
         /// <summary>
@@ -345,29 +323,7 @@ namespace OsmSharp.UI.Renderer
         /// <returns></returns>
         public double[] ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY)
         { // the right and going down.
-			return _rectangle.TransformTo (pixelsWidth, pixelsHeight, _invertX, !_invertY, sceneX, sceneY);
-        }
-
-        /// <summary>
-        /// Returns the viewport x-coordinate for the given viewport width that corresponds with the given scene x-coordinate.
-        /// </summary>
-        /// <param name="pixelsWidth"></param>
-        /// <param name="sceneX"></param>
-        /// <returns></returns>
-        public double ToViewPortX(double pixelsWidth, double sceneX)
-		{
-			return this.ToViewPort (pixelsWidth, pixelsWidth, sceneX, sceneX) [0];
-        }
-
-        /// <summary>
-        /// Returns the viewport y-coordinate for the given viewport height that corresponds with the given scene y-coordinate.
-        /// </summary>
-        /// <param name="pixelsHeight"></param>
-        /// <param name="sceneY"></param>
-        /// <returns></returns>
-        public double ToViewPortY(double pixelsHeight, double sceneY)
-		{
-			return this.ToViewPort (pixelsHeight, pixelsHeight, sceneY, sceneY) [1];
+			return _rectangle.TransformTo (pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY);
         }
 
         /// <summary>

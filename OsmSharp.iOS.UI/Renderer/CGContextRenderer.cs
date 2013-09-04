@@ -101,25 +101,16 @@ namespace OsmSharp.iOS.UI
 			return (float)(sceneSize * scaleX) * 2;
 		}
 
-		/// <summary>
-		/// Transforms the x.
-		/// </summary>
-		/// <returns>The x.</returns>
-		/// <param name="x">The x coordinate.</param>
-		private float TransformX(double x)
-		{
-			return (float)_view.ToViewPortX (_target.Width, x);
-		}
-
-		/// <summary>
-		/// Transforms the y.
-		/// </summary>
-		/// <returns>The y.</returns>
-		/// <param name="y">The y coordinate.</param>
-		private float TransformY(double y)
-		{
-			return (float)_view.ToViewPortY (_target.Height, y);
-		}
+        /// <summary>
+        /// Transforms the y-coordinate to screen coordinates.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        private double[] Tranform(double x, double y)
+        {
+            return _view.ToViewPort(_target.Width, _target.Height, x, y);
+        }
 
 		/// <summary>
 		/// Draws the backcolor.
@@ -178,32 +169,17 @@ namespace OsmSharp.iOS.UI
 				}
 				target.Target.CGContext.SetLineDash (0.0f, intervals);
 			}
-
-//			switch(lineJoin)
-//			{
-//				case LineJoin.Bevel:
-//				target.Target.CGContext.SetLineJoin (CGLineJoin.Bevel);
-//					break;
-//				case LineJoin.Miter:
-//				target.Target.CGContext.SetLineJoin (CGLineJoin.Miter);
-//					break;
-//				case LineJoin.Round:
-//				target.Target.CGContext.SetLineJoin (CGLineJoin.Round);
-//					break;
-//			}
 			target.Target.CGContext.BeginPath ();
 
 			PointF[] points = new PointF[x.Length];
 			for(int idx = 0; idx < x.Length; idx++)
-			{
-				points [idx] = new PointF (
-					this.TransformX (x [idx]),
-					this.TransformY (y [idx]));
+            {
+                double[] transformed = this.Tranform(x[idx], y[idx]);
+                points[idx] = new PointF((float)transformed[0], (float)transformed[1]);
 			}
 
 			target.Target.CGContext.AddLines (points);
 			target.Target.CGContext.DrawPath (CGPathDrawingMode.Stroke);
-			//target.Target.E
 		}
 
 		/// <summary>
@@ -231,10 +207,9 @@ namespace OsmSharp.iOS.UI
 
 			PointF[] points = new PointF[x.Length];
 			for(int idx = 0; idx < x.Length; idx++)
-			{
-				points [idx] = new PointF (
-					this.TransformX (x [idx]),
-					this.TransformY (y [idx]));
+            {
+                double[] transformed = this.Tranform(x[idx], y[idx]);
+                points[idx] = new PointF((float)transformed[0], (float)transformed[1]);
 			}
 
 			target.Target.CGContext.AddLines (points);
@@ -283,19 +258,26 @@ namespace OsmSharp.iOS.UI
 				//CGImage image = CGImage.FromPNG(
 			}
 
-			if (image != null) { // there is an image. draw it!
-				float leftPixels = this.TransformX (left);
-				float topPixels = this.TransformY (top);
-				float rightPixels = this.TransformX (right);
-				float bottomPixels = this.TransformY (bottom);
+            if (image != null)
+            { // there is an image. draw it!
+                double[] topleft = this.Tranform(left, top);
+                double[] bottomright = this.Tranform(right, bottom);
+                float leftPixels = (float)topleft[0];
+                float topPixels = (float)topleft[1];
+                float rightPixels = (float)bottomright[0];
+                float bottomPixels = (float)bottomright[1];
 
 				target.Target.CGContext.DrawImage (new RectangleF (leftPixels, topPixels, (rightPixels - leftPixels),
 				                                                   (bottomPixels - topPixels)), image);
-			} else if (layer != null) {
-				float leftPixels = this.TransformX(left);
-				float topPixels = this.TransformY(top);
-				float rightPixels = this.TransformX(right);
-				float bottomPixels = this.TransformY(bottom);
+            }
+            else if (layer != null)
+            {
+                double[] topleft = this.Tranform(left, top);
+                double[] bottomright = this.Tranform(right, bottom);
+                float leftPixels = (float)topleft[0];
+                float topPixels = (float)topleft[1];
+                float rightPixels = (float)bottomright[0];
+                float bottomPixels = (float)bottomright[1];
 
 				target.Target.CGContext.DrawLayer (layer, new RectangleF (leftPixels, topPixels, (rightPixels - leftPixels),
 				                                                   (bottomPixels - topPixels)));
@@ -314,10 +296,11 @@ namespace OsmSharp.iOS.UI
 		/// <param name="color">Color.</param>
 		protected override void DrawText (Target2DWrapper<CGContextWrapper> target, double x, double y, string text, int color, double size,
 		                                  int? haloColor, int? haloRadius, string fontName)
-		{
-			float xPixels = this.TransformX (x);
-			float yPixels = this.TransformY (y);
-			float textSize = this.TransformX (x + size) - xPixels;
+        {
+            double[] transformed = this.Tranform(x, y);
+            float xPixels = (float)transformed[0];
+            float yPixels = (float)transformed[1];
+            float textSize = this.ToPixels(size);
 
 			// set the fill color as the regular text-color.
 			SimpleColor simpleColor = SimpleColor.FromArgb(color);
@@ -384,10 +367,11 @@ namespace OsmSharp.iOS.UI
 		/// <param name="text">Text.</param>
 		protected override void DrawLineText (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, string text, int color, 
 		                                      double size, int? haloColor, int? haloRadius, string fontName)
-		{
-			float xPixels = this.TransformX (x[0]);
-			float yPixels = this.TransformY (y[0]);
-			float textSize = this.TransformX (x[0] + (size * 2)) - xPixels;
+        {
+            double[] transformed = this.Tranform(x[0], y[0]);
+            float xPixels = (float)transformed[0];
+            float yPixels = (float)transformed[1];
+            float textSize = this.ToPixels(size);
 
 			// set the fill color as the regular text-color.
 			SimpleColor simpleColor = SimpleColor.FromArgb(color);
@@ -495,10 +479,11 @@ namespace OsmSharp.iOS.UI
 				
 				target.Target.CGContext.SaveState ();
 
-				// translate to the final position, the center of the line segment between 'current' and 'next'.
+                // translate to the final position, the center of the line segment between 'current' and 'next'.
+                double[] transformed = this.Tranform(position[0], position[1]);
 				target.Target.CGContext.TranslateCTM (
-					this.TransformX (position [0]),
-					this.TransformY (position [1]));
+					(float)transformed [0],
+					(float)transformed [1]);
 
 				// calculate the angle.
 				VectorF2D vector = next - current;

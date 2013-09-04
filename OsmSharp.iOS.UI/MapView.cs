@@ -172,7 +172,8 @@ namespace OsmSharp.iOS.UI
 
 				// create the view.
 				View2D view = _cacheRenderer.Create (_rect.Width, _rect.Height,
-				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter);
+				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
+                                                     this.MapCenter, false, true);
 				long before = DateTime.Now.Ticks;
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
 				                                "Rendering Start");
@@ -191,9 +192,7 @@ namespace OsmSharp.iOS.UI
 
 				// does the rendering.
 				bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx, new RectangleF(0,0,_rect.Width, _rect.Height)), 
-				                                                             this.Map.Projection, 
-				                                       layers, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
-				                                       this.MapCenter);
+				                                       layers, view);
 
 				long afterRendering = DateTime.Now.Ticks;
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,

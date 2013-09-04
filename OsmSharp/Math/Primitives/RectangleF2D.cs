@@ -187,7 +187,7 @@ namespace OsmSharp.Math.Primitives
 		{
 			get
 			{
-				return new BoxF2D(new PointF2D[] { this.BottomLeft, this.TopRight });
+				return new BoxF2D(new PointF2D[] { this.BottomLeft, this.TopRight, this.BottomRight, this.TopLeft });
 			}
 		}
 

@@ -21,6 +21,7 @@ using OsmSharp.UI;
 using System.IO;
 using System.Threading;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Android.UI
 {
@@ -31,6 +32,9 @@ namespace OsmSharp.Android.UI
 			GestureDetector.IOnGestureListener, ScaleGestureDetector.IOnScaleGestureListener, 
 			global::Android.Views.View.IOnTouchListener
 	{
+		private bool _invertX = false;
+		private bool _invertY = false;
+
 		/// <summary>
 		/// Holds the gesture detector.
 		/// </summary>
@@ -222,7 +226,8 @@ namespace OsmSharp.Android.UI
 
 				// create the view.
 				View2D view = _cacheRenderer.Create (canvas.Width, canvas.Height,
-				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter);
+				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
+				                                     this.MapCenter, _invertX, _invertY);
 				long before = DateTime.Now.Ticks;
 
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
@@ -245,8 +250,7 @@ namespace OsmSharp.Android.UI
 				                                left, top, right, bottom, new byte[0], _canvasBitmap);
 
 				// does the rendering.
-				bool complete = _cacheRenderer.Render (canvas, this.Map.Projection, 
-				                      layers, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter);
+				bool complete = _cacheRenderer.Render (canvas, layers, view);
 
 				long afterRendering = DateTime.Now.Ticks;
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
@@ -264,12 +268,9 @@ namespace OsmSharp.Android.UI
 						// add the newly rendered image again.
 						_scene.Clear ();
 						//_previousCache = 
-						left = view.LeftTop [0];
-						right = view.RightTop [0];
-						top = view.LeftTop [1];
-						bottom = view.LeftBottom [1];
+						BoxF2D viewBox = view.OuterBox;
 						_scene.AddImage (0, float.MinValue, float.MaxValue, 
-						                                  left, top, right, bottom, new byte[0], _canvasBitmap);
+						                 viewBox.Min[0], viewBox.Min[1], viewBox.Max[0], viewBox.Max[1], new byte[0], _canvasBitmap);
 
 						// switch cache and canvas to prevent re-allocation of bitmaps.
 						global::Android.Graphics.Bitmap newCanvas = _cache;
@@ -383,7 +384,7 @@ namespace OsmSharp.Android.UI
 					canvas, 
 					_scene,
 					_renderer.Create (canvas.Width, canvas.Height,
-				                  this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter));
+				                  this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter, _invertX, _invertY));
 			}
 
 //			long after = DateTime.Now.Ticks;
@@ -404,10 +405,13 @@ namespace OsmSharp.Android.UI
 			double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
 			float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoomLevel);
 			
+//			return _cacheRenderer.Create (this.Width, this.Height,
+//			                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
+//			                                     this.MapCenter, _invertX, _invertY);
 			// create the view for this control.
 			return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
 			                         this.Width, this.Height, sceneZoomFactor, 
-			                         this.Map.Projection.DirectionX, this.Map.Projection.DirectionY);
+			                         _invertX, _invertY);
 		}
 
 		/// <summary>
@@ -439,7 +443,8 @@ namespace OsmSharp.Android.UI
 			// notify map layout of changes.
 			if (this.Width > 0 && this.Height > 0) {
 				View2D view = _cacheRenderer.Create (this.Width, this.Height,
-				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter);
+				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
+				                                     this.MapCenter, _invertX, _invertY);
 				_mapLayout.NotifyMapChange (this.Width, this.Height, view, this.Map.Projection);
 			}
 		}

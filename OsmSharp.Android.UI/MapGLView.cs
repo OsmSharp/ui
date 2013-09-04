@@ -113,7 +113,7 @@ namespace OsmSharp.Android.UI
 
 			// create the view.
 			View2D view = _renderer.Create (this.Width, this.Height,
-			                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center);
+			                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center, false, true);
 
 			// notify the map that the view has changed.
 			this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center, 
@@ -127,10 +127,8 @@ namespace OsmSharp.Android.UI
 			}
 
 			_renderer.Render (_target,
-			                  this.Map.Projection,
 			                  layers,
-			                  (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), 
-			                  this.Center);
+			                  view);
 		}
 
 		/// <summary>
@@ -140,7 +138,7 @@ namespace OsmSharp.Android.UI
 		{
 			// create the view.
 			View2D view = _renderer.Create (this.Width, this.Height,
-			                                this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center);
+			                                this.Map, (float)this.Map.Projection.ToZoomFactor (this.ZoomLevel), this.Center, false, true);
 
 			_target.SetOrtho((float)view.LeftTop[0], (float)view.RightTop[0], 
 			                 (float)view.LeftBottom[1], (float)view.LeftTop[1]);

@@ -55,19 +55,11 @@ namespace OsmSharp.UI.Map
 		/// <param name="target">Target.</param>
 		/// <param name="projection">Projection.</param>
 		/// <param name="layers">Layers.</param>
-		/// <param name="zoomFactor">Zoom factor.</param>
-		/// <param name="coordinate">Coordinate.</param>
-		public bool Render(TTarget target, IProjection projection, List<ILayer> layers, float zoomFactor, GeoCoordinate center)
-		{			
-			// calculate the center/zoom in scene coordinates.
-			double[] sceneCenter = projection.ToPixel(center.Latitude, center.Longitude);
-			float sceneZoomFactor = zoomFactor; // TODO: find out the conversion rate and see if this is related to the projection?
-			
+		/// <param name="view">View</param>
+		public bool Render(TTarget target, List<ILayer> layers, View2D view)
+		{	
 			// create the view for this control.
 			Target2DWrapper<TTarget> target2DWrapper = _renderer.CreateTarget2DWrapper(target);
-			View2D view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-			                                target2DWrapper.Width, target2DWrapper.Height, sceneZoomFactor, projection.DirectionX,
-			                                projection.DirectionY);
 			
 			// draw all layers seperatly but in the correct order.
 			var scenes = new List<Scene2D>();
@@ -82,27 +74,13 @@ namespace OsmSharp.UI.Map
 		}
 
         /// <summary>
-        /// Renders the given map using the given zoom factor and center.
+        /// Renders the given map on the target using the given view.
         /// </summary>
         /// <param name="target"></param>
         /// <param name="map"></param>
-        /// <param name="zoomFactor"></param>
-        /// <param name="center"></param>
-        public bool Render(TTarget target, Map map, float zoomFactor, GeoCoordinate center)
+        /// <param name="view"></param>
+        public bool Render(TTarget target, Map map, View2D view)
         {
-            // get the projection.
-            IProjection projection = map.Projection;
-
-            // calculate the center/zoom in scene coordinates.
-            double[] sceneCenter = projection.ToPixel(center.Latitude, center.Longitude);
-            float sceneZoomFactor = zoomFactor; // TODO: find out the conversion rate and see if this is related to the projection?
-
-            // create the view for this control.
-            Target2DWrapper<TTarget> target2DWrapper = _renderer.CreateTarget2DWrapper(target);
-            View2D view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                                            target2DWrapper.Width, target2DWrapper.Height, sceneZoomFactor, projection.DirectionX,
-                                            projection.DirectionY);
-
             // draw all layers seperatly but in the correct order.
             var scenes = new List<Scene2D>();
             for (int layerIdx = 0; layerIdx < map.LayerCount; layerIdx++)
@@ -120,23 +98,9 @@ namespace OsmSharp.UI.Map
         /// </summary>
         /// <param name="target"></param>
         /// <param name="map"></param>
-        /// <param name="zoomFactor"></param>
-        /// <param name="center"></param>
-        public void RenderCache(TTarget target, Map map, float zoomFactor, GeoCoordinate center)
+        /// <param name="view"></param>
+        public void RenderCache(TTarget target, Map map, View2D view)
         {
-            // get the projection.
-            IProjection projection = map.Projection;
-
-            // calculate the center/zoom in scene coordinates.
-            double[] sceneCenter = projection.ToPixel(center.Latitude, center.Longitude);
-            float sceneZoomFactor = zoomFactor; // TODO: find out the conversion rate and see if this is related to the projection?
-
-            // create the view for this control.
-            Target2DWrapper<TTarget> target2DWrapper = _renderer.CreateTarget2DWrapper(target);
-            View2D view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                                             target2DWrapper.Width, target2DWrapper.Height, sceneZoomFactor,
-                                             projection.DirectionX, projection.DirectionY);
-
             // draw all layers seperatly but in the correct order.
             for (int layerIdx = 0; layerIdx < map.LayerCount; layerIdx++)
             {
@@ -156,10 +120,12 @@ namespace OsmSharp.UI.Map
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="width"></param>
+        /// <param name="xInverted">True when the x-axis on the target is inverted (right->left).</param>
+        /// <param name="yInverted">True when the y-axis on the target is inverted (top->bottom).</param>
         /// <returns></returns>
-        public View2D Create(float width, float height, Map map, float zoomFactor, GeoCoordinate center)
+        public View2D Create(float width, float height, Map map, float zoomFactor, GeoCoordinate center, bool xInverted, bool yInverted)
         {
-            return this.Create(width, height, map, zoomFactor, center, 0);
+            return this.Create(width, height, map, zoomFactor, center, xInverted, yInverted);
         }
 
         /// <summary>
@@ -171,8 +137,10 @@ namespace OsmSharp.UI.Map
         /// <param name="center"></param>
         /// <param name="width"></param>
         /// <param name="angle"></param>
+        /// <param name="xInverted">True when the x-axis on the target is inverted (right->left).</param>
+        /// <param name="yInverted">True when the y-axis on the target is inverted (top->bottom).</param>
         /// <returns></returns>
-        public View2D Create(float width, float height, Map map, float zoomFactor, GeoCoordinate center, Degree angle)
+        public View2D Create(float width, float height, Map map, float zoomFactor, GeoCoordinate center, bool xInverted, bool yInverted, Degree angle)
         {
             // get the projection.
             IProjection projection = map.Projection;
@@ -181,10 +149,14 @@ namespace OsmSharp.UI.Map
             double[] sceneCenter = projection.ToPixel(center.Latitude, center.Longitude);
             float sceneZoomFactor = zoomFactor;
 
+            // inversion flags for view: only invert when different.
+            bool invertX = xInverted && (xInverted != !projection.DirectionX);
+            bool invertY = yInverted && (yInverted != !projection.DirectionY);
+
             // create the view for this control.
             return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                                             width, height, sceneZoomFactor, 
-                                             projection.DirectionX, projection.DirectionY);
+                                             width, height, sceneZoomFactor,
+                                             invertX, invertY, angle);
         }
 
 		/// <summary>

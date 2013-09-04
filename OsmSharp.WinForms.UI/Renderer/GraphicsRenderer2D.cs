@@ -128,23 +128,14 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    }
 
         /// <summary>
-        /// Transforms the x-coordinate to screen coordinates.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <returns></returns>
-        private float TransformX(double x)
-        {
-            return (float)_view.ToViewPortX(_target.Width, x);
-        }
-
-        /// <summary>
         /// Transforms the y-coordinate to screen coordinates.
         /// </summary>
+        /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        private float TransformY(double y)
+        private double[] Tranform(double x, double y)
         {
-            return (float) _view.ToViewPortY(_target.Height, y);
+            return _view.ToViewPort(_target.Width, _target.Height, x, y);
         }
 
         /// <summary>
@@ -192,8 +183,9 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <param name="size">Size.</param>
 	    protected override void DrawPoint(Target2DWrapper<Graphics> target, double x, double y, int color, double size)
 	    {
+            double[] transformed = this.Tranform(x, y);
 	        float sizeInPixels = this.ToPixels(size);
-            target.Target.FillEllipse(new SolidBrush(Color.FromArgb(color)), this.TransformX(x), this.TransformY(y),
+            target.Target.FillEllipse(new SolidBrush(Color.FromArgb(color)), (float)transformed[0], (float)transformed[0],
                 sizeInPixels, sizeInPixels);
         }
 
@@ -246,8 +238,8 @@ namespace OsmSharp.WinForms.UI.Renderer
 		    var points = new PointF[x.Length];
 		    for (int idx = 0; idx < x.Length; idx++)
 		    {
-                points[idx] = new PointF(this.TransformX(x[idx]), 
-                    this.TransformY(y[idx]));
+                double[] transformed = this.Tranform(x[idx], y[idx]);
+                points[idx] = new PointF((float)transformed[0], (float)transformed[1]);
 		    }
             //if (casingWidth > 0)
             //{ // draw casing.
@@ -278,8 +270,8 @@ namespace OsmSharp.WinForms.UI.Renderer
             var points = new PointF[x.Length];
             for (int idx = 0; idx < x.Length; idx++)
             {
-                points[idx] = new PointF(this.TransformX(x[idx]), 
-                    this.TransformY(y[idx]));
+                double[] transformed = this.Tranform(x[idx], y[idx]);
+                points[idx] = new PointF((float)transformed[0], (float)transformed[1]);
             }
             if (fill)
             {
@@ -306,7 +298,8 @@ namespace OsmSharp.WinForms.UI.Renderer
             Image image = Image.FromStream(new MemoryStream(imageData));
 
             // draw the image.
-            target.Target.DrawImage(image, this.TransformX(x), this.TransformY(y));
+            double[] transformed = this.Tranform(x, y);
+            target.Target.DrawImage(image, (float)transformed[0], (float)transformed[1]);
         }
 
 	    /// <summary>
@@ -329,10 +322,12 @@ namespace OsmSharp.WinForms.UI.Renderer
                 image = Image.FromStream(new MemoryStream(imageData));
             }
 
-	        float x = this.TransformX(left);
-	        float y = this.TransformY(top);
-	        float width = this.TransformX(right) - x;
-	        float height = this.TransformY(bottom) - y;
+            double[] topleft = this.Tranform(left, top);
+            double[] bottomright = this.Tranform(right, bottom);
+	        float x = (float)topleft[0];
+            float y = (float)topleft[1];
+            float width = (float)bottomright[0] - x;
+            float height = (float)bottomright[1] - y;
             target.Target.DrawImage(image, new RectangleF(x, y,
                 width, height));
             return image;
@@ -353,8 +348,9 @@ namespace OsmSharp.WinForms.UI.Renderer
             Color textColor = Color.FromArgb(color);
             Font font = new Font(FontFamily.GenericSansSerif, sizeInPixels);
             SolidBrush brush = new SolidBrush(textColor);
-            float transformedX = this.TransformX(x);
-            float transformedY = this.TransformY(y);
+            double[] transformed = this.Tranform(x, y);
+            float transformedX = (float)transformed[0];
+            float transformedY = (float)transformed[1];
             Brush haloBrush = null;
             GraphicsPath characterPath = new GraphicsPath();
             characterPath.AddString(text, font.FontFamily, (int)font.Style, font.Size, new PointF(transformedX, transformedY),
@@ -487,7 +483,8 @@ namespace OsmSharp.WinForms.UI.Renderer
                     // Translate to the final position, the center of line-segment between 'current' and 'next'
                     PointF2D position = current;
                     //PointF2D position = current + ((next - current) / 2.0);
-                    transform.Translate(this.TransformX(position[0]), this.TransformY(position[1]));
+                    double[] transformed = this.Tranform(position[0], position[1]);
+                    transform.Translate((float)transformed[0], (float)transformed[1]);
 
                     // calculate the angle.
                     VectorF2D vector = next - current;

@@ -17,6 +17,20 @@ namespace OsmSharp.UnitTests.Tools
     public class WebMercatorTests
     {
         /// <summary>
+        /// Tests simple webmercator projection results.
+        /// </summary>
+        [Test]
+        public void TestWebMercator()
+        {
+            var mercator = new WebMercator();
+
+            double[] zerozero = mercator.ToPixel(new GeoCoordinate(0, 0));
+            double[] oneone = mercator.ToPixel(new GeoCoordinate(1, 1));
+
+            
+        }
+
+        /// <summary>
         /// Tests simple web mercator projection projecting a tile nicely onto 256x256 squares.
         /// </summary>
         [Test]

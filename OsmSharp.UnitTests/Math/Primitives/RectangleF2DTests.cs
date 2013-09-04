@@ -290,6 +290,25 @@ namespace OsmSharp.UnitTests.Math.Primitives
             Assert.AreEqual(rectangleReference.BottomRight[0], rectangle.BottomRight[0], delta);
             Assert.AreEqual(rectangleReference.BottomRight[1], rectangle.BottomRight[1], delta);
         }
+
+        /// <summary>
+        /// Tests the outerbox.
+        /// </summary>
+        [Test]
+        public void TestRectangleF2DOuterBox()
+        {
+            double delta = 0.00001;
+            // this should create the exact same rectangle as in the other tests.
+            RectangleF2D rectangle = RectangleF2D.FromBoundsAndCenter(System.Math.Sqrt(2) * 2,
+                                                       System.Math.Sqrt(2) * 2, 3, 1, 45);
+
+            // get the box and tests it's bounds.
+            BoxF2D box = rectangle.BoundingBox;
+            Assert.AreEqual(1, box.Min[0], delta);
+            Assert.AreEqual(-1, box.Min[1], delta);
+            Assert.AreEqual(5, box.Max[0], delta);
+            Assert.AreEqual(3, box.Max[1], delta);
+        }
 	}
 }
 

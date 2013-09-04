@@ -30,23 +30,14 @@ namespace OsmSharp.Android.UI
 		private Target2DWrapper<OpenGLTarget2D> _target;
 
 		/// <summary>
-		/// Transforms the x-coordinate to screen coordinates.
-		/// </summary>
-		/// <param name="x"></param>
-		/// <returns></returns>
-		private float TransformX(double x)
-		{
-			return (float)_view.ToViewPortX(_target.Width, x);
-		}
-
-		/// <summary>
 		/// Transforms the y-coordinate to screen coordinates.
 		/// </summary>
+		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <returns></returns>
-		private float TransformY(double y)
+		private double[] Tranform(double x, double y)
 		{
-			return (float)_view.ToViewPortY(_target.Height, y);
+			return _view.ToViewPort(_target.Width, _target.Height, x, y);
 		}
 
 		/// <summary>
@@ -109,16 +100,16 @@ namespace OsmSharp.Android.UI
 		protected override void DrawLine (Target2DWrapper<OpenGLTarget2D> target, double[] x, double[] y, int color, 
 		                                  double width, LineJoin lineJoin, int[] dashes)
 		{
-			float[] points = new float[x.Length * 3];
-			for(int idx = 0; idx < x.Length; idx++)
-			{
-				int pathIdx = idx * 3;
-				points [pathIdx + 0] = (float)x [idx];
-				points [pathIdx + 1] = (float)y [idx];
-				points [pathIdx + 2] = 0;
-			}
-
-			_target.Target.AddLine(points, this.ToPixels(width), color);
+//			float[] points = new float[x.Length * 3];
+//			for(int idx = 0; idx < x.Length; idx++)
+//			{
+//				int pathIdx = idx * 3;
+//				points [pathIdx + 0] = (float)x [idx];
+//				points [pathIdx + 1] = (float)y [idx];
+//				points [pathIdx + 2] = 0;
+//			}
+//
+//			_target.Target.AddLine(points, this.ToPixels(width), color);
 
 //			double epsilon = 0.00001; // define this value properly.
 //			//double semiwidth = this.ToPixels(width) / 2.0;
@@ -200,16 +191,16 @@ namespace OsmSharp.Android.UI
 		protected override void DrawPolygon (Target2DWrapper<OpenGLTarget2D> target, double[] x, double[] y, 
 		                                     int color, double width, bool fill)
 		{
-			float[] points = new float[x.Length * 3];
-			for(int idx = 0; idx < x.Length; idx++)
-			{
-				int pathIdx = idx * 3;
-				points [pathIdx + 0] = (float)x [idx];
-				points [pathIdx + 1] = (float)y [idx];
-				points [pathIdx + 2] = 0;
-			}
-
-			_target.Target.AddLine(points, 1, color);
+//			float[] points = new float[x.Length * 3];
+//			for(int idx = 0; idx < x.Length; idx++)
+//			{
+//				int pathIdx = idx * 3;
+//				points [pathIdx + 0] = (float)x [idx];
+//				points [pathIdx + 1] = (float)y [idx];
+//				points [pathIdx + 2] = 0;
+//			}
+//
+//			_target.Target.AddLine(points, 1, color);
 
 //			for(int idx = 0; idx < 3; idx++)
 //			{
