@@ -71,9 +71,6 @@
     <EmbeddedResource Include="images\parking.png" />
     <EmbeddedResource Include="images\postbox.png" />
     <EmbeddedResource Include="images\tree.png" />
-    <EmbeddedResource Include="..\..\..\..\..\Users\xivk\Dropbox\SharpSoftware\Projects\Westtour WOI\wvl.map">
-      <Link>wvl.map</Link>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

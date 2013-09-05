@@ -444,6 +444,7 @@ namespace OsmSharp.Android.UI
 			transformed = this.Tranform(x + size, y);
 			float textSize = (float)transformed [0] - xPixels;
 
+			_paint.AntiAlias = true;
 			_paint.SubpixelText = true;
 			_paint.TextSize = textSize;
 
@@ -524,6 +525,7 @@ namespace OsmSharp.Android.UI
 				float sizeInPixels = this.ToPixels(size);	
 				_paint.SubpixelText = true;
 				_paint.TextSize = (float)sizeInPixels;
+				_paint.AntiAlias = true;
 
 				// get some metrics on the texts.
 				float[] characterWidths = new float[text.Length];
