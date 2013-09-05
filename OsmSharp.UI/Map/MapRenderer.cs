@@ -125,7 +125,7 @@ namespace OsmSharp.UI.Map
         /// <returns></returns>
         public View2D Create(float width, float height, Map map, float zoomFactor, GeoCoordinate center, bool xInverted, bool yInverted)
         {
-            return this.Create(width, height, map, zoomFactor, center, xInverted, yInverted);
+            return this.Create(width, height, map, zoomFactor, center, xInverted, yInverted, 0);
         }
 
         /// <summary>

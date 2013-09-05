@@ -109,10 +109,6 @@ namespace OsmSharp.Android.UI
 
 			System.Threading.Timer timer = new Timer(InvalidateSimple,
 			                                         null, 0, 50);
-
-//			Button mButton = new Button(this.Context);   
-//			mButton.Text = "Test";
-//			this.AddView (mButton);
 		}
 
 		/// <summary>
@@ -153,13 +149,6 @@ namespace OsmSharp.Android.UI
 			if (_cacheRenderer.IsRunning) {
 				_cacheRenderer.Cancel ();
 			}
-
-//			// notify map layout of changes.
-//			if (this.Width > 0 && this.Height > 0) {
-//				View2D view = _cacheRenderer.Create (this.Width, this.Height,
-//				                                    this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter);
-//				_mapLayout.NotifyMapChange (this.Width, this.Height, view, this.Map.Projection);
-//			}
 
 			_render = true;
 		}

@@ -441,12 +441,70 @@ namespace OsmSharp.Android.UI
 			double[] transformed = this.Tranform(x, y);
 			float xPixels = (float)transformed[0];
 			float yPixels = (float)transformed[1];
-			float textSize = this.ToPixels (size);
+			transformed = this.Tranform(x + size, y);
+			float textSize = (float)transformed [0] - xPixels;
 
-			_paint.Color = new global::Android.Graphics.Color(color);
-			_paint.FakeBoldText = true;
-			_paint.TextSize = textSize * 2;
-			target.Target.DrawText (text, xPixels, yPixels, _paint);
+			_paint.SubpixelText = true;
+			_paint.TextSize = textSize;
+
+			// get some metrics on the texts.
+			float[] characterWidths = new float[text.Length];
+			_paint.GetTextWidths (text, characterWidths);
+			for (int idx = 0; idx < characterWidths.Length; idx++)
+			{
+				characterWidths[idx] = (float)this.FromPixels(_target, _view, characterWidths[idx]);
+			}
+			var characterHeight = (float)size;
+			var textLength = characterWidths.Sum();
+
+			// center is default.
+			x = x - (textLength / 2.0f);
+
+			PointF2D current = new PointF2D (x, y);
+			for (int idx = 0; idx < text.Length; idx++)
+			{
+				char currentChar = text[idx];
+				global::Android.Graphics.Path characterPath = new global::Android.Graphics.Path ();
+				_paint.GetTextPath (text, idx, idx + 1, 0, 0, characterPath);
+				using (characterPath)
+				{
+					// Transformation matrix to move the character to the correct location. 
+					// Note that all actions on the Matrix class are prepended, so we apply them in reverse.
+					var transform = new Matrix();
+
+					// Translate to the final position, the center of line-segment between 'current' and 'next'
+					PointF2D position = current;
+					transformed = this.Tranform(position[0], position[1]);
+					transform.SetTranslate((float)transformed[0], (float)transformed[1]);
+
+					// Translate the character so the centre of its base is over the origin
+					transform.PreTranslate(0, characterHeight / 2.5f);
+
+					//transform.Scale((float)this.FromPixels(_target, _view, 1), 
+					//    (float)this.FromPixels(_target, _view, 1));
+					characterPath.Transform(transform);
+
+					if (haloColor.HasValue && haloRadius.HasValue && haloRadius.Value > 0)
+					{
+						_paint.SetStyle (global::Android.Graphics.Paint.Style.FillAndStroke);
+						_paint.StrokeWidth = haloRadius.Value;
+						_paint.Color = new global::Android.Graphics.Color(haloColor.Value);
+						using (global::Android.Graphics.Path haloPath = new global::Android.Graphics.Path())
+						{
+							_paint.GetFillPath (characterPath, haloPath);
+							// Draw the character
+							target.Target.DrawPath(haloPath, _paint);
+						}
+					}
+
+					// Draw the character
+					_paint.SetStyle (global::Android.Graphics.Paint.Style.Fill);
+					_paint.StrokeWidth = 0;
+					_paint.Color = new global::Android.Graphics.Color(color);
+					target.Target.DrawPath(characterPath, _paint);
+				}
+				current = new PointF2D(current[0] + characterWidths[idx], current[1]);
+			}
 		}
 
 		/// <summary>
@@ -476,7 +534,6 @@ namespace OsmSharp.Android.UI
 				}
 				var characterHeight = (float)size;
 				var textLength = characterWidths.Sum();
-				//var avgCharacterWidth = textLength / characterWidths.Length;
 
 				// calculate line length.
 				var lineLength = Polyline2D.Length(x, y);
