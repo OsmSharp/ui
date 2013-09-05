@@ -313,5 +313,47 @@ namespace OsmSharp.UI.Unittests.Map.Styles.MapCSS.v0_2
             IScene2DPrimitive primitive = primitives[0];
             Assert.IsInstanceOf<Polygon2D>(primitive);
         }
+
+		/// <summary>
+		/// Tests a width eval functions on a way.
+		/// </summary>
+		[Test]
+		public void TestMapCSSSimpleEval()
+		{
+			MemoryDataSource source = new MemoryDataSource(
+				Node.Create(1, 0, 0),
+				Node.Create(2, 1, 0),
+				Node.Create(3, 0, 1),
+				Way.Create(1, new SimpleTagsCollection(
+				Tag.Create("width", "10")), 1, 2, 3, 1));
+
+			// test closed way.
+			string css = "way { " +
+				"   width:  eval(\"tag('width')\"); " +
+				"   color: green; " +
+				"} ";
+
+			// create the projection and scene objects.
+			var mercator = new WebMercator();
+			Scene2D scene = new Scene2DSimple();            
+
+			// create the projection and scene objects.
+			scene = new Scene2DSimple();
+
+			// create the interpreter.
+			MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
+			                                                      new MapCSSDictionaryImageSource());
+			interpreter.Translate(scene, mercator, source, source.GetWay(1));
+
+			// test the scene contents.
+			Assert.AreEqual(1, scene.Count);
+			List<IScene2DPrimitive> primitives = scene.Get(0);
+			Assert.IsNotNull(primitives);
+			Assert.AreEqual(1, primitives.Count);
+			IScene2DPrimitive primitive = primitives[0];
+			Assert.IsInstanceOf<Line2D>(primitive);
+			Line2D line = (primitive as Line2D);
+			Assert.AreEqual (10, line.Width);
+		}
     }
 }

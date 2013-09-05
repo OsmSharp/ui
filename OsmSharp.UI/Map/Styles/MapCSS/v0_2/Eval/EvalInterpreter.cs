@@ -52,6 +52,22 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
 
         private const string MIN_TOKEN = "min";
 
+		/// <summary>
+		/// Interpreters the given eval function.
+		/// </summary>
+		/// <returns>The string.</returns>
+		/// <param name="evalFunction">Eval function.</param>
+		/// <param name="tags">Tags.</param>
+		public string InterpretString(string evalFunction, ITagsSource tags){
+			if (string.IsNullOrWhiteSpace(evalFunction)) { throw new ArgumentOutOfRangeException("evalFunction cannot be null"); }
+
+			// trim eval function.
+			evalFunction = evalFunction.Trim();
+
+			// calculate the result.
+			return this.Interpreter (evalFunction, tags);
+		}
+
         /// <summary>
         /// Interpreters the given eval function.
         /// </summary>
@@ -59,16 +75,55 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
         /// <param name="evalFunction"></param>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public TValue Interpret<TValue>(string evalFunction, TagsCollection tags)
+        public double InterpretDouble(string evalFunction, ITagsSource tags)
         {
-            if (!string.IsNullOrWhiteSpace(evalFunction)) { throw new ArgumentOutOfRangeException("evalFunction cannot be null"); }
+			string result = this.InterpretString (evalFunction, tags);
 
-            // trim eval function.
-            evalFunction = evalFunction.Trim();
+			// parse to double.
+			double resultDouble = 0;
+			if (!double.TryParse (result, out resultDouble)) {
+				throw new Exception (string.Format ("Cannot convert '{0}' to double.", result));
+			}
+			return resultDouble;
+		}
 
-            throw new NotImplementedException();
-            //return (TValue)this.Interpreter(evalFunction, tags);
-        }
+		/// <summary>
+		/// Interpreters the given eval function.
+		/// </summary>
+		/// <typeparam name="TValue"></typeparam>
+		/// <param name="evalFunction"></param>
+		/// <param name="tags"></param>
+		/// <returns></returns>
+		public float InterpretFloat(string evalFunction, ITagsSource tags)
+		{
+			string result = this.InterpretString (evalFunction, tags);
+
+			// parse to float.
+			float resultFloat = 0;
+			if (!float.TryParse (result, out resultFloat)) {
+				throw new Exception (string.Format ("Cannot convert '{0}' to float.", result));
+			}
+			return resultFloat;
+		}
+
+		/// <summary>
+		/// Interpreters the given eval function.
+		/// </summary>
+		/// <typeparam name="TValue"></typeparam>
+		/// <param name="evalFunction"></param>
+		/// <param name="tags"></param>
+		/// <returns></returns>
+		public int InterpretInt(string evalFunction, ITagsSource tags)
+		{
+			string result = this.InterpretString (evalFunction, tags);
+
+			// parse to double.
+			int resultInt = 0;
+			if (!int.TryParse (result, out resultInt)) {
+				throw new Exception (string.Format ("Cannot convert '{0}' to int.", result));
+			}
+			return resultInt;
+		}
 
         /// <summary>
         /// Interpreters the given expression.
@@ -76,7 +131,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
         /// <param name="function"></param>
         /// <param name="tags"></param>
         /// <returns></returns>
-        private string Interpreter(string expression, TagsCollection tags)
+        private string Interpreter(string expression, ITagsSource tags)
         {
             // test for one of the tokens.
             if (expression.StartsWith(TAG_TOKEN))
@@ -84,7 +139,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
                 string[] args = this.ParseFunction(expression);
                 if (args.Length != 1) { throw new EvalInterpreterException("Invalid argument count: {0}", expression); }
                 string tagValue;
-                if (tags.TryGetValue(args[0], out tagValue))
+                if (!tags.TryGetValue(args[0], out tagValue))
                 { // the tag value.
                     tagValue = null;
                 }
@@ -208,7 +263,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
         /// <returns></returns>
         private string[] ParseFunction(string function)
         {
-            throw new NotImplementedException();
+			// find string until first '(' and the argument until last ')'
+			int firstBracket = function.IndexOf ('(') + 1 + 1; // + 1 for the ( + 1 for the '
+			int lastBracket = function.LastIndexOf (')') - 1; // -1 for the '
+
+			return new string[] { function.Substring(firstBracket, lastBracket - firstBracket) };
         }
     }
 }

@@ -35,7 +35,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>3</WarningLevel>
     <DocumentationFile>..\Output\Debug\Any CPU\OsmSharp.xml</DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -432,6 +431,7 @@
     <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
     <Compile Include="Math\Primitives\BoxF2D.cs" />
     <Compile Include="Math\Primitives\RectangleF2D.cs" />
+    <Compile Include="Collections\Tags\ITagsSource.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -127,6 +127,8 @@
     <Compile Include="Renderer\Scene\Storage\RTree\Scene2DRTreeSource.cs" />
     <Compile Include="Renderer\Scene\Scene2DPrimitive.cs" />
     <Compile Include="Renderer\Scene\Scene2DPrimitiveEnumerable.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Eval\EvalInterpreter.cs" />
+    <Compile Include="Map\Styles\MapCSS\v0_2\Eval\EvalInterpreterException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

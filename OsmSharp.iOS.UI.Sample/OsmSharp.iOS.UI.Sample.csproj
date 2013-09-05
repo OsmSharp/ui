@@ -129,4 +129,9 @@
     <BundleResource Include="Resources\Icon-72.png" />
     <BundleResource Include="Resources\Icon-72%402x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\..\..\..\Dropbox\SharpSoftware\Projects\Westtour WOI\wvl.map">
+      <Link>wvl.map</Link>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

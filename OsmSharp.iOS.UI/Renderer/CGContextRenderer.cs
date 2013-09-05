@@ -312,7 +312,7 @@ namespace OsmSharp.iOS.UI
 				                                       haloSimpleColor.A / 256.0f);
 			}
 			if (haloRadius.HasValue) { // set the halo radius as line width.
-				target.Target.CGContext.SetLineWidth (haloRadius.Value);
+				target.Target.CGContext.SetLineWidth (haloRadius.Value * 2);
 			}
 
 			// get the glyhps/paths from the font.

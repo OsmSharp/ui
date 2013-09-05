@@ -323,6 +323,7 @@
     <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamSerializer.cs" />
     <Compile Include="Math\Primitives\BoxF2D.cs" />
     <Compile Include="Math\Primitives\RectangleF2D.cs" />
+    <Compile Include="Collections\Tags\ITagsSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="IO\Xml\Gpx\v1_0\gpx.xsd" />

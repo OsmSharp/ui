@@ -36,6 +36,9 @@ namespace OsmSharp.iOS.UI
 	/// </summary>
 	public class MapView : UIView
 	{
+		private bool _invertX = false;
+		private bool _invertY = false;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.MapView"/> class.
 		/// </summary>
@@ -55,10 +58,6 @@ namespace OsmSharp.iOS.UI
 			this.AddGestureRecognizer (panGesture);
 			var pinchGesture = new UIPinchGestureRecognizer (Pinch);
 			this.AddGestureRecognizer (pinchGesture);
-
-//			// create the renderer
-//			_renderer = new MapRenderer<CGContextWrapper> (
-//				new CGContextRenderer());
 //
 			// create the cache renderer.
 			_cacheRenderer = new MapRenderer<CGContextWrapper> (
@@ -173,7 +172,7 @@ namespace OsmSharp.iOS.UI
 				// create the view.
 				View2D view = _cacheRenderer.Create (_rect.Width, _rect.Height,
 				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
-                                                     this.MapCenter, false, true);
+                                                     this.MapCenter, _invertX, _invertY);
 				long before = DateTime.Now.Ticks;
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
 				                                "Rendering Start");
@@ -185,11 +184,6 @@ namespace OsmSharp.iOS.UI
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
 				                                "View change took: {0}ms @ zoom level {1}",
 				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoomLevel);
-
-//				// add the current canvas to the scene.
-//				uint canvasId = _scene.AddImage (-1, float.MinValue, float.MaxValue, 
-//				                                 view.Left, view.Top, view.Right, view.Bottom, new byte[0], _canvasBitmap);
-
 				// does the rendering.
 				bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx, new RectangleF(0,0,_rect.Width, _rect.Height)), 
 				                                       layers, view);
@@ -209,10 +203,7 @@ namespace OsmSharp.iOS.UI
 						_cachedScene.Clear ();
 						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, 
 						                       rectangle.Min[0], rectangle.Min[1], rectangle.Max[0], rectangle.Max[1], new byte[0], gctx.ToImage());
-//						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, 
-//						                       view.Left, view.Top, view.Right, view.Bottom, new byte[0], _layer);
 					}
-					
 					this.InvokeOnMainThread (Test);
 				}
 
@@ -356,7 +347,7 @@ namespace OsmSharp.iOS.UI
 
 			return View2D.CreateFrom (sceneCenter [0], sceneCenter [1],
 			                         rect.Width, rect.Height, sceneZoomFactor,
-			                         this.Map.Projection.DirectionX, this.Map.Projection.DirectionY);
+			                         _invertX, _invertY);
 		}
 
 		private void Test()

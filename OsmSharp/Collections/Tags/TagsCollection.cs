@@ -25,7 +25,7 @@ namespace OsmSharp.Collections.Tags
     /// <summary>
     /// Represents a generic tags collection.
     /// </summary>
-    public abstract class TagsCollection : IEnumerable<Tag>, IEnumerable<KeyValuePair<string, string>>
+    public abstract class TagsCollection : IEnumerable<Tag>, IEnumerable<KeyValuePair<string, string>>, ITagsSource
     {
         /// <summary>
         /// Returns the number of tags in this collection.

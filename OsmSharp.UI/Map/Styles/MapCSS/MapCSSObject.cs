@@ -10,7 +10,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
     /// <summary>
     /// Represents a MapCSS object that can be interpreted by the MapCSS interpreter.
     /// </summary>
-    public class MapCSSObject
+    public class MapCSSObject : ITagsSource
     {
         /// <summary>
         /// Creates a new MapCSS object with an osmgeo object.

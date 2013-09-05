@@ -26,7 +26,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <summary>
         /// The value of this declaration.
         /// </summary>
-        public TValue Value { private get; set; }
+        public TValue Value { get; set; }
 
         /// <summary>
         /// Holds the eval function.
@@ -38,17 +38,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public TValue Eval(MapCSSObject mapCSSObject)
+        public virtual TValue Eval(MapCSSObject mapCSSObject)
         {
-            if (!string.IsNullOrWhiteSpace(this.EvalFunction))
-            { // parse and execute the eval function.
-                //throw new NotImplementedException();
-                return default(TValue);
-            }
-            else
-            { // return the regular value.
-                return this.Value;
-            }
+			if (!string.IsNullOrWhiteSpace (this.EvalFunction)) {
+				throw new NotSupportedException (string.Format("Eval function not supported on this value declaration type: {0}.",
+				                                this.GetType ().ToString ()));
+			}
+			return this.Value;
         }
 
         /// <summary>
