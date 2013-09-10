@@ -96,8 +96,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
             stream.Seek(sceneIndexIndex, SeekOrigin.Begin);
             RuntimeTypeModel typeModel = TypeModel.Create();
             typeModel.Add(typeof(Scene2DLayeredIndex), true); // the tile metadata.
-            Scene2DLayeredIndex index =
-                typeModel.Deserialize(stream, null, typeof(Scene2DLayeredIndex)) as Scene2DLayeredIndex;
+			Scene2DLayeredIndex index = typeModel.Deserialize(stream, null, typeof(Scene2DLayeredIndex)) as Scene2DLayeredIndex;
 
             return new Scene2DLayeredSource(stream, index);
         }
