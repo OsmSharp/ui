@@ -93,11 +93,12 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="y">The y coordinate.</param>
 		private bool CalculateSimplificationSurfaceCondition(float zoomFactor, double[] x, double[] y)
 		{
-			BoxF2D rectangle = new BoxF2D (x, y);
-			float epsilon = (1.0f / zoomFactor) * 10;
-			if (rectangle.Delta [0] < epsilon && rectangle.Delta [1] < epsilon) {
-				return false;
-			}
+            BoxF2D rectangle = new BoxF2D(x, y);
+            float epsilon = (1.0f / zoomFactor) * 10;
+            if (rectangle.Delta[0] < epsilon && rectangle.Delta[1] < epsilon)
+            {
+                return false;
+            }
 			return true;
 		}
 
@@ -329,7 +330,7 @@ namespace OsmSharp.UI.Renderer.Scene
                             simplified[1][0], simplified[0][1]);
                         distance = point1.Distance(point2);
                     }
-                    if (distance > epsilon &&
+                    if (distance >= epsilon &&
 					    this.CalculateSimplificationSurfaceCondition(currentMaxZoom, x, y))
                     {
                         // add to the scene.

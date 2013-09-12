@@ -18,6 +18,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace OsmSharp.Collections.Tags
 {
@@ -194,6 +195,25 @@ namespace OsmSharp.Collections.Tags
         public override bool RemoveKeyValue(string key, string value)
         {
             return _tags.RemoveAll(tag => tag.Key == key && tag.Value == value) > 0;
+        }
+
+        /// <summary>
+        /// Returns a string that represents this tags collection.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder tags = new StringBuilder();
+            foreach (Tag tag in this)
+            {
+                tags.Append(tag.ToString());
+                tags.Append(',');
+            }
+            if (tags.Length > 0)
+            {
+                return tags.ToString(0, tags.Length - 1);
+            }
+            return "empty";
         }
     }
 }

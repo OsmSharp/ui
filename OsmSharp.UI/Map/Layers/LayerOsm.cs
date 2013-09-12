@@ -51,14 +51,16 @@ namespace OsmSharp.UI.Map.Layers
             // build the zoom-level cutoffs.
             List<float> zoomLevelCutoffs = new List<float>();
             zoomLevelCutoffs.Add((float)projection.ToZoomFactor(18));
-            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(16));
-            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(14));
-            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(12));
-            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(10));
-            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(8));
+            //zoomLevelCutoffs.Add((float)projection.ToZoomFactor(16));
+            //zoomLevelCutoffs.Add((float)projection.ToZoomFactor(14));
+            //zoomLevelCutoffs.Add((float)projection.ToZoomFactor(12));
+            //zoomLevelCutoffs.Add((float)projection.ToZoomFactor(10));
+            //zoomLevelCutoffs.Add((float)projection.ToZoomFactor(8));
+            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(0));
 
             _dataSource = dataSource;
             _styleSceneManager = new StyleSceneManager(styleInterpreter, zoomLevelCutoffs);
+            //_styleSceneManager = new StyleSceneManager(styleInterpreter);
         }
 
         /// <summary>

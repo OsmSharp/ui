@@ -100,7 +100,7 @@ namespace OsmSharp.WinForms.UI.Sample
             //    new LayerScene(
             //        Scene2DSimple.Deserialize(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf.scene.simple").OpenRead(), true)));
 
-            this.InitializeRouting(map);
+            //this.InitializeRouting(map);
 
             //// create gpx layer.
             //var gpxLayer = new LayerGpx(map.Projection);
@@ -115,7 +115,7 @@ namespace OsmSharp.WinForms.UI.Sample
             //this.mapControl1.Center = new GeoCoordinate(50.9523195, 3.0997436);
             //this.mapControl1.Center = new GeoCoordinate(51.156803, 2.958887); //50.9969&lon=4.1201
             //this.mapControl1.Center = new GeoCoordinate(50.9969, 4.1201);
-            this.mapControl1.ZoomLevel = 16;
+            this.mapControl1.ZoomLevel = 19;
         }
 
         #region Routing Tests

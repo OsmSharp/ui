@@ -69,6 +69,13 @@ namespace OsmSharp.UI.Map.Styles
         /// <summary>
         /// Creates a new style scene manager.
         /// </summary>
+        /// <param name="interpreter">The intepreter converting OSM-objects into scene-objects.</param>
+        public StyleSceneManager(StyleInterpreter interpreter)
+            : this(new Scene2DSimple(), interpreter) { }
+
+        /// <summary>
+        /// Creates a new style scene manager.
+        /// </summary>
         /// <param name="scene">The scene to manage.</param>
         /// <param name="interpreter">The intepreter converting OSM-objects into scene-objects.</param>
         public StyleSceneManager(Scene2D scene,
@@ -104,7 +111,8 @@ namespace OsmSharp.UI.Map.Styles
         /// <param name="projection"></param>
         public void FillScene(IDataSourceReadOnly dataSource, GeoCoordinateBox box, IProjection projection)
         {
-            foreach (var osmGeo in dataSource.Get(box, null))
+            IList<Osm.OsmGeo> osmGeos = dataSource.Get(box, null);
+            foreach (var osmGeo in osmGeos)
             { // translate each object into scene object.
                 LongIndex index = null;
                 switch (osmGeo.Type)

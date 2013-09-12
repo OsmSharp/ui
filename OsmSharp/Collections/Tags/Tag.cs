@@ -55,5 +55,14 @@ namespace OsmSharp.Collections.Tags
         {
             return new Tag(key, value);
         }
+
+        /// <summary>
+        /// Returns a description of this tag.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("{0}={1}", this.Key, this.Value);
+        }
     }
 }

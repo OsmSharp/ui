@@ -55,11 +55,16 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public override string ToString()
         {
+            string tags = "{no tags}";
+            if (this.Tags != null && this.Tags.Count > 0)
+            {
+                tags = this.Tags.ToString();
+            }
             if (!this.Id.HasValue)
             {
-                return "Node[null]";
+                return string.Format("Node[null]{0}", tags);
             }
-            return string.Format("Node[{0}]", this.Id.Value);
+            return string.Format("Node[{0}]{1}", this.Id.Value, tags);
         }
 
         #region Construction Methods

@@ -98,6 +98,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// Creates a new MapCSS interpreter from a string.
         /// </summary>
         /// <param name="css"></param>
+        public MapCSSInterpreter(string css) : this(css, new MapCSSDictionaryImageSource()) { }
+
+
+        /// <summary>
+        /// Creates a new MapCSS interpreter from a string.
+        /// </summary>
+        /// <param name="css"></param>
         /// <param name="imageSource"></param>
         public MapCSSInterpreter(string css, IMapCSSImageSource imageSource)
         {

@@ -48,7 +48,16 @@ namespace OsmSharp.Osm
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Format("Way[{0}]", this.Id.Value);
+            string tags = "{no tags}";
+            if (this.Tags != null && this.Tags.Count > 0)
+            {
+                tags = this.Tags.ToString();
+            }
+            if (!this.Id.HasValue)
+            {
+                return string.Format("Way[null]{0}", tags);
+            }
+            return string.Format("Way[{0}]{1}", this.Id.Value, tags);
         }
 
         /// <summary>
