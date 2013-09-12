@@ -98,7 +98,7 @@ namespace OsmSharp.iOS.UI
 		{
 			double scaleX = _target.Width / _view.Width;
 
-			return (float)(sceneSize * scaleX) * 2;
+			return (float)(sceneSize * scaleX);
 		}
 
         /// <summary>
@@ -302,19 +302,6 @@ namespace OsmSharp.iOS.UI
             float yPixels = (float)transformed[1];
             float textSize = this.ToPixels(size);
 
-			// set the fill color as the regular text-color.
-			SimpleColor simpleColor = SimpleColor.FromArgb(color);
-			target.Target.CGContext.SetFillColor(simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
-	  			                                 simpleColor.A / 256.0f);
-			if (haloColor.HasValue) { // set the stroke color as the halo color.
-				SimpleColor haloSimpleColor = SimpleColor.FromArgb (haloColor.Value);
-				target.Target.CGContext.SetStrokeColor (haloSimpleColor.R / 256.0f, haloSimpleColor.G / 256.0f, haloSimpleColor.B / 256.0f,
-				                                       haloSimpleColor.A / 256.0f);
-			}
-			if (haloRadius.HasValue) { // set the halo radius as line width.
-				target.Target.CGContext.SetLineWidth (haloRadius.Value * 2);
-			}
-
 			// get the glyhps/paths from the font.
 			if (string.IsNullOrWhiteSpace (fontName)) {
 				fontName = "Arial";
@@ -341,15 +328,27 @@ namespace OsmSharp.iOS.UI
 					CGPath path = font.GetPathForGlyph (glyphs [idx]);
 					target.Target.CGContext.TranslateCTM (positions [idx].X - previousOffset, 0);
 					previousOffset = positions [idx].X;
-
-					target.Target.CGContext.BeginPath ();
-
-					target.Target.CGContext.AddPath (path);
 					if (haloRadius.HasValue && haloColor.HasValue) { // also draw the halo.
-						target.Target.CGContext.DrawPath (CGPathDrawingMode.FillStroke);
-					} else {
-						target.Target.CGContext.DrawPath (CGPathDrawingMode.Fill);
+						using (CGPath haloPath = path.CopyByStrokingPath(
+							haloRadius.Value * 2, CGLineCap.Round, CGLineJoin.Round, 0)) {
+							SimpleColor haloSimpleColor = SimpleColor.FromArgb (haloColor.Value);
+							target.Target.CGContext.SetFillColor (haloSimpleColor.R / 256.0f, haloSimpleColor.G / 256.0f, haloSimpleColor.B / 256.0f,
+							                                      haloSimpleColor.A / 256.0f);
+							target.Target.CGContext.BeginPath ();
+							target.Target.CGContext.AddPath (haloPath);
+							target.Target.CGContext.DrawPath (CGPathDrawingMode.Fill);
+						}
 					}
+					
+					// set the fill color as the regular text-color.
+					SimpleColor simpleColor = SimpleColor.FromArgb (color);
+					target.Target.CGContext.SetFillColor (simpleColor.R / 256.0f, simpleColor.G / 256.0f, simpleColor.B / 256.0f,
+					                                     simpleColor.A / 256.0f);
+
+					// draw the text paths.
+					target.Target.CGContext.BeginPath ();
+					target.Target.CGContext.AddPath (path);
+					target.Target.CGContext.DrawPath (CGPathDrawingMode.Fill);
 				}
 			}
 
@@ -368,26 +367,12 @@ namespace OsmSharp.iOS.UI
 		protected override void DrawLineText (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, string text, int color, 
 		                                      double size, int? haloColor, int? haloRadius, string fontName)
         {
-            double[] transformed = this.Tranform(x[0], y[0]);
-            float xPixels = (float)transformed[0];
-            float yPixels = (float)transformed[1];
             float textSize = this.ToPixels(size);
 
 			// set the fill color as the regular text-color.
-			SimpleColor simpleColor = SimpleColor.FromArgb(color);
 			target.Target.CGContext.InterpolationQuality = CGInterpolationQuality.High;
 			target.Target.CGContext.SetAllowsFontSubpixelQuantization (true);
 			target.Target.CGContext.SetAllowsFontSmoothing (true);
-			target.Target.CGContext.SetFillColor(simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
-			                                     simpleColor.A / 256.0f);
-			if (haloColor.HasValue) { // set the stroke color as the halo color.
-				SimpleColor haloSimpleColor = SimpleColor.FromArgb (haloColor.Value);
-				target.Target.CGContext.SetStrokeColor (haloSimpleColor.R / 256.0f, haloSimpleColor.G / 256.0f, haloSimpleColor.B / 256.0f,
-				                                        haloSimpleColor.A / 256.0f);
-			}
-			if (haloRadius.HasValue) { // set the halo radius as line width.
-				target.Target.CGContext.SetLineWidth (haloRadius.Value);
-			}
 
 			// get the glyhps/paths from the font.
 			if (string.IsNullOrWhiteSpace (fontName)) {
@@ -502,12 +487,35 @@ namespace OsmSharp.iOS.UI
 				target.Target.CGContext.BeginPath ();
 
 				CGPath path = font.GetPathForGlyph (glyphs [idx]);
-				target.Target.CGContext.AddPath (path);
+
 				if (haloRadius.HasValue && haloColor.HasValue) { // also draw the halo.
-					target.Target.CGContext.DrawPath (CGPathDrawingMode.FillStroke);
-				} else {
-					target.Target.CGContext.DrawPath (CGPathDrawingMode.Fill);
+					using (CGPath haloPath = path.CopyByStrokingPath(
+						haloRadius.Value * 2, CGLineCap.Round, CGLineJoin.Round, 0)) {
+						SimpleColor haloSimpleColor = SimpleColor.FromArgb (haloColor.Value);
+						target.Target.CGContext.SetFillColor (haloSimpleColor.R / 256.0f, haloSimpleColor.G / 256.0f, haloSimpleColor.B / 256.0f,
+						                                      haloSimpleColor.A / 256.0f);
+						target.Target.CGContext.BeginPath ();
+						target.Target.CGContext.AddPath (haloPath);
+						target.Target.CGContext.DrawPath (CGPathDrawingMode.Fill);
+					}
 				}
+
+				// set the fill color as the regular text-color.
+				SimpleColor simpleColor = SimpleColor.FromArgb (color);
+				target.Target.CGContext.SetFillColor (simpleColor.R / 256.0f, simpleColor.G / 256.0f, simpleColor.B / 256.0f,
+				                                      simpleColor.A / 256.0f);
+
+				// draw the text paths.
+				target.Target.CGContext.BeginPath ();
+				target.Target.CGContext.AddPath (path);
+				target.Target.CGContext.DrawPath (CGPathDrawingMode.Fill);
+
+//				target.Target.CGContext.AddPath (path);
+//				if (haloRadius.HasValue && haloColor.HasValue) { // also draw the halo.
+//					target.Target.CGContext.DrawPath (CGPathDrawingMode.FillStroke);
+//				} else {
+//					target.Target.CGContext.DrawPath (CGPathDrawingMode.Fill);
+//				}
 				//target.Target.CGContext.ClosePath ();
 				target.Target.CGContext.RestoreState ();
 

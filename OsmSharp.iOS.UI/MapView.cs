@@ -58,7 +58,7 @@ namespace OsmSharp.iOS.UI
 			this.AddGestureRecognizer (panGesture);
 			var pinchGesture = new UIPinchGestureRecognizer (Pinch);
 			this.AddGestureRecognizer (pinchGesture);
-//
+
 			// create the cache renderer.
 			_cacheRenderer = new MapRenderer<CGContextWrapper> (
 				new CGContextRenderer ());
@@ -140,7 +140,7 @@ namespace OsmSharp.iOS.UI
 				_cacheRenderer.CancelAndWait ();
 			}
 
-			if (_rect == null) { // only render if a proper size is known.
+			if (_rect == null || _rect.Width == 0) { // only render if a proper size is known.
 				return;
 			}
 
@@ -196,7 +196,6 @@ namespace OsmSharp.iOS.UI
 					// add the result to the scene cache.
 					lock (_cachedScene) {
 						// add the newly rendered image again.
-						//this.Layer.Contents = gctx.ToImage ();
 
 						BoxF2D rectangle = view.OuterBox;
 
@@ -271,15 +270,15 @@ namespace OsmSharp.iOS.UI
 				PointF offset = pan.TranslationInView (this);
 				if (pan.State == UIGestureRecognizerState.Ended) {
 					_beforePan = null;
-					View2D view = this.CreateView (_rect);
-					double centerXPixels = _rect.Width / 2.0f - offset.X;
-					double centerYPixels = _rect.Height / 2.0f - offset.Y;
-
-					double[] sceneCenter = view.FromViewPort (_rect.Width, _rect.Height, 
-					                                          centerXPixels, centerYPixels);
-
-					this.MapCenter = this.Map.Projection.ToGeoCoordinates (
-						sceneCenter [0], sceneCenter [1]);
+//					View2D view = this.CreateView (_rect);
+//					double centerXPixels = _rect.Width / 2.0f - offset.X;
+//					double centerYPixels = _rect.Height / 2.0f - offset.Y;
+//
+//					double[] sceneCenter = view.FromViewPort (_rect.Width, _rect.Height, 
+//					                                          centerXPixels, centerYPixels);
+//
+//					this.MapCenter = this.Map.Projection.ToGeoCoordinates (
+//						sceneCenter [0], sceneCenter [1]);
 					
 					this.Change (); // notifies change.
 				} else if (pan.State == UIGestureRecognizerState.Began) {

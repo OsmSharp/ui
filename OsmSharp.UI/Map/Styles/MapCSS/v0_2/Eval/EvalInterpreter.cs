@@ -82,7 +82,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
 			// parse to double.
 			double resultDouble = 0;
 			if (!double.TryParse (result, out resultDouble)) {
-				throw new Exception (string.Format ("Cannot convert '{0}' to double.", result));
+				OsmSharp.Logging.Log.TraceEvent("EvalInterpreter", System.Diagnostics.TraceEventType.Error,
+				                                string.Format ("Cannot convert '{0}' to double.", result));
 			}
 			return resultDouble;
 		}
@@ -101,7 +102,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
 			// parse to float.
 			float resultFloat = 0;
 			if (!float.TryParse (result, out resultFloat)) {
-				throw new Exception (string.Format ("Cannot convert '{0}' to float.", result));
+				OsmSharp.Logging.Log.TraceEvent("EvalInterpreter", System.Diagnostics.TraceEventType.Error,
+												string.Format ("Cannot convert '{0}' to float.", result));
 			}
 			return resultFloat;
 		}
@@ -120,7 +122,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Eval
 			// parse to double.
 			int resultInt = 0;
 			if (!int.TryParse (result, out resultInt)) {
-				throw new Exception (string.Format ("Cannot convert '{0}' to int.", result));
+				OsmSharp.Logging.Log.TraceEvent("EvalInterpreter", System.Diagnostics.TraceEventType.Error,
+												string.Format ("Cannot convert '{0}' to int.", result));
 			}
 			return resultInt;
 		}
