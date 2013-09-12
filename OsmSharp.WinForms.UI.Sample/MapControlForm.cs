@@ -90,17 +90,17 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
-            //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter, map.Projection));
+            map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter, map.Projection));
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
             //map.AddLayer(new LayerMBTile(@"C:\Users\xivk\Documents\Nostalgeo.mbtiles"));
-            map.AddLayer(
-                new LayerScene(
-                    Scene2DLayered.Deserialize(new FileInfo(@"c:\OSM\bin\kempen.osm.pbf.scene.layered").OpenRead(), true)));
+            //map.AddLayer(
+            //    new LayerScene(
+            //        Scene2DLayered.Deserialize(new FileInfo(@"c:\OSM\bin\kempen.osm.pbf.scene.layered").OpenRead(), true)));
             //map.AddLayer(
             //    new LayerScene(
             //        Scene2DSimple.Deserialize(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf.scene.simple").OpenRead(), true)));
 
-            //this.InitializeRouting(map);
+            this.InitializeRouting(map);
 
             //// create gpx layer.
             //var gpxLayer = new LayerGpx(map.Projection);
@@ -137,12 +137,13 @@ namespace OsmSharp.WinForms.UI.Sample
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();
             var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(true);
-            //var original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
-            //                                                       new FileInfo(@"c:\OSM\bin\wechel.osm").OpenRead()),
-            //                                                   interpreter,
-            //                                                   Vehicle.Car);
+            var original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
+                                                                   new FileInfo(@"c:\OSM\bin\wechel.osm").OpenRead()),
+                                                               interpreter,
+                                                               Vehicle.Car);
             //byte[] byteArray;
-            //using (var stream = new MemoryStream())
+            //var stream = new MemoryStream();
+            //using (stream)
             //{
             //    try
             //    {
@@ -154,15 +155,15 @@ namespace OsmSharp.WinForms.UI.Sample
             //        throw;
             //    }
             //}
-            // Stream stream = new MemoryStream(byteArray);
-            Stream stream = new FileInfo(@"c:\OSM\bin\wvl.osm.pbf.routing.ch.5").OpenRead();
+            //stream = new MemoryStream(byteArray);
+            //Stream stream = new FileInfo(@"c:\OSM\bin\test.osm.pbf.routing.3").OpenRead();
 
-            IBasicRouterDataSource<CHEdgeData> deserializedVersion =
-                routingSerializer.Deserialize(stream);
+            //IBasicRouterDataSource<CHEdgeData> deserializedVersion =
+            //    routingSerializer.Deserialize(stream);
             var basicRouter =
-                new CHRouter(deserializedVersion);
+                new CHRouter(original);
             _router = Router.CreateCHFrom(
-                deserializedVersion, basicRouter, interpreter);
+                original, basicRouter, interpreter);
 
             _routeLayer = new LayerOsmSharpRoute(map.Projection);
             map.AddLayer(_routeLayer);
