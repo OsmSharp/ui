@@ -34,7 +34,7 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map;
 
-namespace OsmSharp.WinForms.UI.Test.Renderer
+namespace OsmSharp.WinForms.UI.Unittests.Renderer
 {
     /// <summary>
     /// Holds test for the entire rendering pipeline: OSM -> MapCSS -> Scene -> Graphics -> Bitmap.
