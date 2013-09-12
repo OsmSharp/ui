@@ -147,7 +147,7 @@ namespace OsmSharp.WinForms.UI.Test.Renderer
             // ... and finally do the actual rendering.
             renderer.Render(Graphics.FromImage(rendering), map, view);
 
-            rendering.Save(@"c:\temp\rendering.bmp");
+            //rendering.Save(@"c:\temp\rendering.bmp");
 
             return rendering;
         }
