@@ -1,5 +1,5 @@
 canvas {
-	background-color: white;
+	background-color: #e7e6df;
 	default-points: false;
 	default-lines: false;
 }
@@ -27,7 +27,7 @@ area|z12-[waterway=riverbank], area|z14-[waterway=dock]		{ fill-color: #a3c3ec; 
 
 /* ===== Roads (highway=*) ===== */
 /* default text */
-way|z14-[highway]											{ text-color: black; text-position: line; text-halo-color: white; text-halo-radius: 1; }
+way|z14-[highway]											{ text-color: #534d38; text-position: line; text-halo-color: white; text-halo-radius: 1; }
 
 /* widths per zoom-level */
 way|z-13[highway]											{ width: 1; }
@@ -38,7 +38,7 @@ way|z17-20[highway]											{ width: 10; }
 /* colors and styles per highway type. */
 way[highway=motorway],way[highway=motorway_link],
 way[highway=trunk],way[highway=trunk_link],
-way[highway=primary],way[highway=primary_link]						{ color: red;	 casing-color: gray; casing-width: 1; z-index: 6; font-size: 14; text: name; }
+way[highway=primary],way[highway=primary_link]						{ color: #ecd13e; casing-color: #ddbb2b; casing-width: 1; z-index: 6; font-size: 14; text: name; }
 
 way|z-9[highway=secondary], way|z-9[highway=secondary_link]			{ color: #f1f1ec; z-index: 5; font-size: 14; }
 way|z10-[highway=secondary],way|z10-[highway=secondary_link]		{ color: #f1f1ec; casing-color: #cecab8; casing-width: 1; z-index: 5; font-size: 14; text: name; }
