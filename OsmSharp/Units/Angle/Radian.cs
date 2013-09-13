@@ -72,7 +72,7 @@ namespace OsmSharp.Units.Angle
 		/// <returns>A <see cref="System.String"/> that represents the current <see cref="OsmSharp.Units.Angle.Radian"/>.</returns>
 		public override string ToString ()
 		{
-			return string.Format ("{0} rad");
+			return string.Format ("{0} rad", this.Value);
 		}
 
         #endregion

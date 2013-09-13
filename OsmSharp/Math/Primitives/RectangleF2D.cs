@@ -77,6 +77,21 @@ namespace OsmSharp.Math.Primitives
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Math.Primitives.RectangleF2D"/> class.
 		/// </summary>
+		/// <param name="x">The x coordinate.</param>
+		/// <param name="y">The y coordinate.</param>
+		/// <param name="width">Width.</param>
+		/// <param name="height">Height.</param>
+		/// <param name="directionY">Direction y.</param>
+		public RectangleF2D(double x, double y, double width, double height, VectorF2D directionY) {
+			_bottomLeft = new PointF2D (x, y);
+			directionY = directionY.Normalize ();
+			_vectorY = directionY * height;
+			_vectorX = directionY.Rotate90 (true) * width;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OsmSharp.Math.Primitives.RectangleF2D"/> class.
+		/// </summary>
 		/// <param name="bottomLeft">Bottom left.</param>
 		/// <param name="width">Width.</param>
 		/// <param name="height">Height.</param>
@@ -198,6 +213,26 @@ namespace OsmSharp.Math.Primitives
 			get
 			{
 				return new BoxF2D(new PointF2D[] { this.BottomLeft, this.TopRight, this.BottomRight, this.TopLeft });
+			}
+		}
+
+		/// <summary>
+		/// Gets the direction x.
+		/// </summary>
+		/// <value>The direction x.</value>
+		public VectorF2D DirectionX {
+			get{
+				return _vectorX;
+			}
+		}
+
+		/// <summary>
+		/// Gets the direction y.
+		/// </summary>
+		/// <value>The direction y.</value>
+		public VectorF2D DirectionY {
+			get{
+				return _vectorY;
 			}
 		}
 

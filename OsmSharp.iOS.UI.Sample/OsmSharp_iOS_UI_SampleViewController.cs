@@ -7,6 +7,7 @@ using OsmSharp.UI.Map.Layers;
 using System.Reflection;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
+using System.Timers;
 
 namespace OsmSharp.iOS.UI.Sample
 {
@@ -44,12 +45,27 @@ namespace OsmSharp.iOS.UI.Sample
 			//mapView.Center = new GeoCoordinate(51.156803, 2.958887);
 
 			mapView.MapZoomLevel = 16;
+			mapView.MapTilt = 30;
 
 			View = mapView;
 
 //			View.BackgroundColor = UIColor.Black;
 //			mapView.Bounds = this.View.Bounds;
 //			View.AddSubview (mapView);
+
+			Timer timer = new Timer (5000);
+			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
+			timer.Start ();
+		}
+
+		private void TimerHandler(object sender, ElapsedEventArgs e)
+		{
+			//this.InvokeOnMainThread (IncreaseMapTilt);
+		}
+
+		private void IncreaseMapTilt()
+		{
+			(this.View as MapView).MapTilt = (this.View as MapView).MapTilt + 5;
 		}
 
 		public override void ViewDidLoad ()

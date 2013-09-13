@@ -351,6 +351,19 @@ namespace OsmSharp.WinForms.UI.Renderer
             return image;
         }
 
+		/// <summary>
+		/// Draws the image.
+		/// </summary>
+		/// <returns>The image.</returns>
+		/// <param name="target">Target.</param>
+		/// <param name="bounds">Bounds.</param>
+		/// <param name="imageData">Image data.</param>
+		/// <param name="tag">Tag.</param>
+		protected override object DrawImage (Target2DWrapper<Graphics> target, RectangleF2D bounds, byte[] imageData, object tag)
+		{
+			return tag;
+		}
+
         /// <summary>
         /// Draws text.
         /// </summary>

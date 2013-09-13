@@ -235,6 +235,18 @@ namespace OsmSharp.UI.Renderer.Scene
         public abstract uint AddImage(int layer, float minZoom, float maxZoom, double left, double top, double right, double bottom,
                              byte[] imageData, object tag);
 
+		/// <summary>
+		/// Adds the image.
+		/// </summary>
+		/// <returns>The image.</returns>
+		/// <param name="layer">Layer.</param>
+		/// <param name="minZoom">Minimum zoom.</param>
+		/// <param name="maxZoom">Max zoom.</param>
+		/// <param name="rectangle">Rectangle.</param>
+		/// <param name="imageData">Image data.</param>
+		/// <param name="tag">Tag.</param>
+		public abstract uint AddImage (int layer, float minZoom, float maxZoom, RectangleF2D rectangle, byte[] imageData, object tag);
+
 	    /// <summary>
 	    /// Adds texts.
 	    /// </summary>

@@ -23,6 +23,7 @@ using System.Text;
 
 using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.UI.Renderer
 {
@@ -223,35 +224,29 @@ namespace OsmSharp.UI.Renderer
 					return false; // stop rendering on cancel and return false for an incomplete rendering.
 				}
 
-                if (primitive is Point2D)
-                {
-                    var point = (Point2D)(primitive);
-                    this.DrawPoint(target, point.X, point.Y, point.Color, 
-                        this.FromPixels(target, view, point.Size));
-                }
-                else if (primitive is Line2D)
-                {
-                    var line = (Line2D)(primitive);
-                    this.DrawLine(target, line.X, line.Y, line.Color,
-                        this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
-                }
-                else if (primitive is Polygon2D)
-                {
-                    var polygon = (Polygon2D)(primitive);
-                    this.DrawPolygon(target, polygon.X, polygon.Y, polygon.Color, 
-                        this.FromPixels(target, view, polygon.Width), polygon.Fill);
-                }
-                else if (primitive is Icon2D)
-                {
-                    var icon = (Icon2D)(primitive);
-                    this.DrawIcon(target, icon.X, icon.Y, icon.Image);
-                }
-                else if (primitive is Image2D)
-                {
-                    var image = (Image2D)(primitive);
-                    image.Tag = this.DrawImage(target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData, 
-                        image.Tag);
-                }
+				if (primitive is Point2D) {
+					var point = (Point2D)(primitive);
+					this.DrawPoint (target, point.X, point.Y, point.Color, 
+					                              this.FromPixels (target, view, point.Size));
+				} else if (primitive is Line2D) {
+					var line = (Line2D)(primitive);
+					this.DrawLine (target, line.X, line.Y, line.Color,
+					                             this.FromPixels (target, view, line.Width), line.LineJoin, line.Dashes);
+				} else if (primitive is Polygon2D) {
+					var polygon = (Polygon2D)(primitive);
+					this.DrawPolygon (target, polygon.X, polygon.Y, polygon.Color, 
+					                                this.FromPixels (target, view, polygon.Width), polygon.Fill);
+				} else if (primitive is Icon2D) {
+					var icon = (Icon2D)(primitive);
+					this.DrawIcon (target, icon.X, icon.Y, icon.Image);
+				} else if (primitive is Image2D) {
+					var image = (Image2D)(primitive);
+					image.Tag = this.DrawImage (target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData, 
+					                                          image.Tag);
+				} else if (primitive is ImageTilted2D) {
+					var imageTilted = (ImageTilted2D)primitive;
+					imageTilted.Tag = this.DrawImage (target, imageTilted.Bounds, imageTilted.ImageData, imageTilted.Tag);
+				}
                 else if (primitive is Text2D)
                 {
                     var text = (Text2D)(primitive);
@@ -386,6 +381,16 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="bottom"></param>
 	    /// <param name="imageData"></param>
 		protected abstract object DrawImage(Target2DWrapper<TTarget> target, double left, double top, double right, double bottom, byte[] imageData, object tag);
+
+		/// <summary>
+		/// Draws the image.
+		/// </summary>
+		/// <returns>The image.</returns>
+		/// <param name="target">Target.</param>
+		/// <param name="bounds">Bounds.</param>
+		/// <param name="imageData">Image data.</param>
+		/// <param name="tag">Tag.</param>
+		protected abstract object DrawImage (Target2DWrapper<TTarget> target, RectangleF2D bounds, byte[] imageData, object tag);
 
         /// <summary>
         /// Draws text.

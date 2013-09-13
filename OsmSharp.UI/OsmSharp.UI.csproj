@@ -156,6 +156,7 @@
     <Compile Include="Renderer\Scene\Scene2DPrimitives\Polygon2D.cs" />
     <Compile Include="Renderer\Renderer2D.cs" />
     <Compile Include="Renderer\Scene\Scene2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\ImageTilted2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <Antlr3 Include="Map\Styles\MapCSS\v0_2\MapCSS.g">

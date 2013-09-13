@@ -229,6 +229,11 @@ namespace OsmSharp.Android.UI
 			return null;
 		}
 
+		protected override object DrawImage (Target2DWrapper<OpenGLTarget2D> target, OsmSharp.Math.Primitives.RectangleF2D bounds, byte[] imageData, object tag)
+		{
+			return tag;
+		}
+
 		protected override void DrawText (Target2DWrapper<OpenGLTarget2D> target, double x, double y, string text, int color, 
 		                                  double size, int? haloColor, int? haloRadius, string fontName)
 		{

@@ -155,6 +155,16 @@ namespace OsmSharp.UI.Renderer
 			}
 		}
 
+		/// <summary>
+		/// Gets the rectangle.
+		/// </summary>
+		/// <value>The rectangle.</value>
+		public RectangleF2D Rectangle {
+			get {
+				return _rectangle;
+			}
+		}
+
 		#region Create From
 
         /// <summary>

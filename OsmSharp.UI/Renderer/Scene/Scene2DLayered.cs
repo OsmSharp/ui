@@ -245,6 +245,21 @@ namespace OsmSharp.UI.Renderer.Scene
 		}
 
 		/// <summary>
+		/// Adds the image.
+		/// </summary>
+		/// <returns>The image.</returns>
+		/// <param name="layer">Layer.</param>
+		/// <param name="minZoom">Minimum zoom.</param>
+		/// <param name="maxZoom">Max zoom.</param>
+		/// <param name="rectangle">Rectangle.</param>
+		/// <param name="imageData">Image data.</param>
+		/// <param name="tag">Tag.</param>
+		public override uint AddImage (int layer, float minZoom, float maxZoom, RectangleF2D rectangle, byte[] imageData, object tag)
+		{
+			return _nonSimplifiedScene.AddImage (layer, minZoom, maxZoom, rectangle, imageData, tag);
+		}
+
+		/// <summary>
 		/// Adds a point.
 		/// </summary>
 		/// <param name="maxZoom"></param>

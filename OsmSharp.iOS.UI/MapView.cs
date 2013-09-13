@@ -28,6 +28,7 @@ using OsmSharp.UI;
 using System.Collections.Generic;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.Math.Primitives;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.iOS.UI
 {
@@ -58,6 +59,8 @@ namespace OsmSharp.iOS.UI
 			this.AddGestureRecognizer (panGesture);
 			var pinchGesture = new UIPinchGestureRecognizer (Pinch);
 			this.AddGestureRecognizer (pinchGesture);
+			var rotationGesture = new UIRotationGestureRecognizer (Rotate);
+			this.AddGestureRecognizer (rotationGesture);
 
 			// create the cache renderer.
 			_cacheRenderer = new MapRenderer<CGContextWrapper> (
@@ -68,7 +71,7 @@ namespace OsmSharp.iOS.UI
 			// create invalidation timer.
 			_render = true;
 			System.Threading.Timer timer = new System.Threading.Timer (InvalidateSimple,
-			                                                           null, 0, 50);
+			                                                           null, 0, 200);
 		}
 
 		/// <summary>
@@ -145,6 +148,8 @@ namespace OsmSharp.iOS.UI
 			}
 
 			lock (_cacheRenderer) { // make sure only on thread at the same time is using the renderer.
+				System.Threading.Thread.Sleep (5000);
+
 				double extra = 1.25;
 
 				// build the layers list.
@@ -196,12 +201,10 @@ namespace OsmSharp.iOS.UI
 					// add the result to the scene cache.
 					lock (_cachedScene) {
 						// add the newly rendered image again.
-
-						BoxF2D rectangle = view.OuterBox;
-
 						_cachedScene.Clear ();
-						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, 
-						                       rectangle.Min[0], rectangle.Min[1], rectangle.Max[0], rectangle.Max[1], new byte[0], gctx.ToImage());
+						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, view.Rectangle, new byte[0], gctx.ToImage ());
+//						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, 
+//						                       rectangle.Min[0], rectangle.Min[1], rectangle.Max[0], rectangle.Max[1], new byte[0], gctx.ToImage());
 					}
 					this.InvokeOnMainThread (Test);
 				}
@@ -218,6 +221,35 @@ namespace OsmSharp.iOS.UI
 		}
 
 		/// <summary>
+		/// Holds the map rotation before rotating.
+		/// </summary>
+		private float? _mapRotationBefore;
+
+		/// <summary>
+		/// Rotate the specified rotation.
+		/// </summary>
+		/// <param name="rotation">Rotation.</param>
+		private void Rotate(UIRotationGestureRecognizer rotation){
+			if (_rect.Width > 0) {
+				if (rotation.State == UIGestureRecognizerState.Ended) { 
+					_mapTilt = _mapRotationBefore.Value;
+					_mapTilt = _mapTilt - (float)((Degree)(Radian)rotation.Rotation).Value;
+
+					this.Change ();
+
+					_mapRotationBefore = null;
+				} else if (rotation.State == UIGestureRecognizerState.Began) {
+					_mapRotationBefore = this.MapTilt;
+				} else {
+					_mapTilt = _mapRotationBefore.Value;
+					_mapTilt = _mapTilt - (float)((Degree)(Radian)rotation.Rotation).Value;
+
+					this.InvokeOnMainThread (Test);
+				}
+			}
+		}
+
+		/// <summary>
 		/// Holds the map zoom level before pinching.
 		/// </summary>
 		private float? _mapZoomLevelBefore;
@@ -228,7 +260,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="pinch">Pinch.</param>
 		private void Pinch(UIPinchGestureRecognizer pinch)
 		{
-			if (_rect != null) {
+			if (_rect.Width > 0) {
 				if (pinch.State == UIGestureRecognizerState.Ended) {
 					this.MapZoomLevel = _mapZoomLevelBefore.Value;
 
@@ -323,12 +355,23 @@ namespace OsmSharp.iOS.UI
 		}
 
 		/// <summary>
-		/// Gets or sets the map tilt (the angle relative to north).
+		/// Holds the map tilte angle.
+		/// </summary>
+		private float _mapTilt;
+
+		/// <summary>
+		/// Gets or sets the map tilt.
 		/// </summary>
 		/// <value>The map tilt.</value>
-		public int MapTilt {
-			get;
-			set;
+		public float MapTilt {
+			get{
+				return _mapTilt;
+			}
+			set {
+				_mapTilt = value;
+
+				this.Change ();
+			}
 		}
 
 		/// <summary>

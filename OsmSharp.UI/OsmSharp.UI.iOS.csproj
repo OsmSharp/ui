@@ -122,6 +122,7 @@
     <Compile Include="Map\Styles\StyleSceneManager.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSObject.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSType.cs" />
+    <Compile Include="Renderer\Scene\Scene2DPrimitives\ImageTilted2D.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Map\Styles\MapCSS\v0_2\MapCSS.g" />

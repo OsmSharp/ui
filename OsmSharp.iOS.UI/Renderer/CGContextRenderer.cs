@@ -286,6 +286,73 @@ namespace OsmSharp.iOS.UI
 		}
 
 		/// <summary>
+		/// Draws the image.
+		/// </summary>
+		/// <returns>The image.</returns>
+		/// <param name="target">Target.</param>
+		/// <param name="bounds">Bounds.</param>
+		/// <param name="imageData">Image data.</param>
+		/// <param name="tag">Tag.</param>
+		protected override object DrawImage (Target2DWrapper<CGContextWrapper> target, RectangleF2D bounds, byte[] imageData, object tag)
+		{
+			PointF2D bottomLeft = new PointF2D(this.Tranform (bounds.BottomLeft [0], bounds.BottomLeft [1]));
+			PointF2D bottomRight = new PointF2D(this.Tranform (bounds.BottomRight [0], bounds.BottomRight [1]));
+			PointF2D topLeft = new PointF2D(this.Tranform (bounds.TopLeft [0], bounds.TopLeft [1]));
+			PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
+
+			RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
+			                                            topLeft - bottomLeft);
+
+
+			target.Target.CGContext.SaveState ();
+			target.Target.CGContext.TranslateCTM ((float)transformed.BottomLeft [0], (float)transformed.BottomLeft [1]);
+			target.Target.CGContext.RotateCTM ((float)((Radian)transformed.Angle).Value);
+
+			if (tag is CGImage) {
+				CGImage image = tag as CGImage;
+
+				target.Target.CGContext.DrawImage (new RectangleF (0, 0, 
+				                                                   (float)transformed.Width, (float)transformed.Height), image);
+
+			}
+
+			target.Target.CGContext.RestoreState ();
+
+			return tag;
+
+//			double[] bottomLeft = this.Tranform (bounds.BottomLeft [0], bounds.BottomLeft [1]);
+//			double[] bottomRight = this.Tranform (bounds.BottomLeft [0], bounds.BottomLeft [1]);
+//
+//			VectorF2D direction = bounds.DirectionY;
+//			//VectorF2D viewDirection = _view.Rectangle.Direction;
+//
+//
+//			//direction = direction.InverseY;
+//
+//			// transform the rectangle.
+//			RectangleF2D transformed = new RectangleF2D (bottomLeft [0], bottomLeft [1],
+//			                                            this.ToPixels (bounds.Width), this.ToPixels (bounds.Height), 
+//			                                             direction);
+//
+//			target.Target.CGContext.SaveState ();
+//			//target.Target.CGContext.TranslateCTM ((float)transformed.BottomLeft [0], (float)transformed.BottomLeft [1]);
+//			//target.Target.CGContext.RotateCTM ((float)((Radian)transformed.Angle).Value);
+//
+//			if (tag is CGImage) {
+//				CGImage image = tag as CGImage;
+//
+//				target.Target.CGContext.DrawImage (new RectangleF (0, 0, 
+//				                                                   (float)transformed.Width, (float)transformed.Height), image);
+//
+//			}
+//
+//			target.Target.CGContext.RestoreState ();
+//
+//			return tag;
+			//return this.DrawImage (target, bounds.BottomLeft [0], bounds.TopLeft [1], bounds.BottomRight [0], bounds.BottomRight [1], imageData, tag);
+		}
+
+		/// <summary>
 		/// Draws text.
 		/// </summary>
 		/// <param name="target"></param>
@@ -304,7 +371,7 @@ namespace OsmSharp.iOS.UI
 
 			// get the glyhps/paths from the font.
 			if (string.IsNullOrWhiteSpace (fontName)) {
-				fontName = "Arial";
+				fontName = "ArialMT";
 			}
 			CTFont font = new CTFont (fontName, textSize);
 			CTStringAttributes stringAttributes = new CTStringAttributes {
@@ -385,7 +452,7 @@ namespace OsmSharp.iOS.UI
 
 			// get the glyhps/paths from the font.
 			if (string.IsNullOrWhiteSpace (fontName)) {
-				fontName = "Arial";
+				fontName = "ArialMT";
 			}
 			CTFont font = new CTFont (fontName, textSize);
 			CTStringAttributes stringAttributes = new CTStringAttributes {

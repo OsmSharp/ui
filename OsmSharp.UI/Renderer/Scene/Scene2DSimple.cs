@@ -328,6 +328,34 @@ namespace OsmSharp.UI.Renderer.Scene
             }
         }
 
+		/// <summary>
+		/// Adds the image.
+		/// </summary>
+		/// <returns>The image.</returns>
+		/// <param name="layer">Layer.</param>
+		/// <param name="minZoom">Minimum zoom.</param>
+		/// <param name="maxZoom">Max zoom.</param>
+		/// <param name="rectangle">Rectangle.</param>
+		/// <param name="imageData">Image data.</param>
+		/// <param name="tag">Tag.</param>
+		public override uint AddImage (int layer, float minZoom, float maxZoom, RectangleF2D rectangle, byte[] imageData, object tag)
+		{
+			if (imageData == null)
+				throw new ArgumentNullException("imageData");
+
+
+			lock (_primitives)
+			{
+				uint id = _nextId;
+				_nextId++;
+
+				var imageTilted2D = new ImageTilted2D (rectangle, imageData, minZoom, maxZoom);
+				imageTilted2D.Tag = tag;
+				this.AddPrimitive(layer, id, imageTilted2D);
+				return id;
+			}
+		}
+
         /// <summary>
         /// Adds the image.
         /// </summary>

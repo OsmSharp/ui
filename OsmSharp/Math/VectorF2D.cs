@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Units.Angle;
+using System.Globalization;
 
 namespace OsmSharp.Math
 {
@@ -107,18 +108,43 @@ namespace OsmSharp.Math
         public VectorF2D Inverse
         {
             get
-            {
-                double[] inverse = new double[2];
-
-                for (int idx = 0; idx < 2; idx++)
-                {
-                    inverse[idx] = -1f * _values[idx];
-                }
-
-                return new VectorF2D(inverse);
+			{
+				return new VectorF2D (new double[] { -_values[0], -_values[1] });
             }
         }
 
+		/// <summary>
+		/// Gets the inverse x.
+		/// </summary>
+		/// <value>The inverse x.</value>
+		public VectorF2D InverseX
+		{
+			get{
+				return new VectorF2D (new double[] { -_values[0], _values[1] });
+			}
+		}
+
+		/// <summary>
+		/// Gets the inverse y.
+		/// </summary>
+		/// <value>The inverse y.</value>
+		public VectorF2D InverseY
+		{
+			get{
+				return new VectorF2D (new double[] { _values[0], -_values[1] });
+			}
+		}
+
+		/// <summary>
+		/// Returns a description of this vector.
+		/// </summary>
+		/// <returns></returns>
+		public override string ToString()
+		{
+			return string.Format("Vector({0},{1})",
+			                     _values[0].ToString(CultureInfo.InvariantCulture),
+			                     _values[1].ToString(CultureInfo.InvariantCulture));
+		}
 
         #endregion
 

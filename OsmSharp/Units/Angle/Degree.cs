@@ -55,7 +55,7 @@ namespace OsmSharp.Units.Angle
 		/// <returns>A <see cref="System.String"/> that represents the current <see cref="OsmSharp.Units.Angle.Degree"/>.</returns>
 		public override string ToString ()
 		{
-			return string.Format ("{0}°");
+			return string.Format ("{0}°", this.Value);
 		}
 
         #region Conversion
