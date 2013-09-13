@@ -145,6 +145,16 @@ namespace OsmSharp.UI.Renderer
 			}
 		}
 
+		/// <summary>
+		/// Gets the angle.
+		/// </summary>
+		/// <value>The angle.</value>
+		public Degree Angle {
+			get{
+				return _rectangle.Angle;
+			}
+		}
+
 		#region Create From
 
         /// <summary>

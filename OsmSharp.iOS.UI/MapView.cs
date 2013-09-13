@@ -172,7 +172,7 @@ namespace OsmSharp.iOS.UI
 				// create the view.
 				View2D view = _cacheRenderer.Create (_rect.Width, _rect.Height,
 				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
-                                                     this.MapCenter, _invertX, _invertY);
+				                                     this.MapCenter, _invertX, _invertY, this.MapTilt);
 				long before = DateTime.Now.Ticks;
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
 				                                "Rendering Start");
@@ -270,15 +270,6 @@ namespace OsmSharp.iOS.UI
 				PointF offset = pan.TranslationInView (this);
 				if (pan.State == UIGestureRecognizerState.Ended) {
 					_beforePan = null;
-//					View2D view = this.CreateView (_rect);
-//					double centerXPixels = _rect.Width / 2.0f - offset.X;
-//					double centerYPixels = _rect.Height / 2.0f - offset.Y;
-//
-//					double[] sceneCenter = view.FromViewPort (_rect.Width, _rect.Height, 
-//					                                          centerXPixels, centerYPixels);
-//
-//					this.MapCenter = this.Map.Projection.ToGeoCoordinates (
-//						sceneCenter [0], sceneCenter [1]);
 					
 					this.Change (); // notifies change.
 				} else if (pan.State == UIGestureRecognizerState.Began) {
@@ -331,6 +322,18 @@ namespace OsmSharp.iOS.UI
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the map tilt (the angle relative to north).
+		/// </summary>
+		/// <value>The map tilt.</value>
+		public int MapTilt {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Holds the drawing rectangle.
+		/// </summary>
 		private System.Drawing.RectangleF _rect;
 
 		/// <summary>
@@ -346,7 +349,7 @@ namespace OsmSharp.iOS.UI
 
 			return View2D.CreateFrom (sceneCenter [0], sceneCenter [1],
 			                         rect.Width, rect.Height, sceneZoomFactor,
-			                         _invertX, _invertY);
+			                         _invertX, _invertY, this.MapTilt);
 		}
 
 		private void Test()
@@ -355,8 +358,6 @@ namespace OsmSharp.iOS.UI
 			                                "SetNeedsDisplay called on main thread!");
 			this.SetNeedsDisplay ();
 		}
-
-		private CGLayer _layer;
 
 		/// <summary>
 		/// Draws the view within the specified rectangle.

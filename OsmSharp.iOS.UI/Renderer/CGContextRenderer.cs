@@ -364,10 +364,19 @@ namespace OsmSharp.iOS.UI
 		/// <param name="color"></param>
 		/// <param name="size"></param>
 		/// <param name="text">Text.</param>
-		protected override void DrawLineText (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, string text, int color, 
+		protected override void DrawLineText (Target2DWrapper<CGContextWrapper> target, double[] xa, double[] ya, string text, int color, 
 		                                      double size, int? haloColor, int? haloRadius, string fontName)
         {
             float textSize = this.ToPixels(size);
+			
+			// transform first.
+			double[] xTransformed = new double[xa.Length];
+			double[] yTransformed = new double[ya.Length];
+			for (int idx = 0; idx < xa.Length; idx++) {
+				double[] transformed = this.Tranform (xa[idx], ya[idx]);
+				xTransformed [idx] = transformed [0];
+				yTransformed [idx] = transformed [1];
+			}
 
 			// set the fill color as the regular text-color.
 			target.Target.CGContext.InterpolationQuality = CGInterpolationQuality.High;
@@ -387,7 +396,7 @@ namespace OsmSharp.iOS.UI
 			CTLine line = new CTLine (attributedString);
 			RectangleF textBounds = line.GetBounds (CTLineBoundsOptions.UseOpticalBounds);
 			CTRun[] runs = line.GetGlyphRuns ();
-			var lineLength = Polyline2D.Length (x, y);
+			var lineLength = Polyline2D.Length (xTransformed, yTransformed);
 
 			// set the correct tranformations to draw the resulting paths.
 			target.Target.CGContext.SaveState ();
@@ -398,16 +407,18 @@ namespace OsmSharp.iOS.UI
 				PointF[] positions = run.GetPositions ();
 				float[] characterWidths = new float[glyphs.Length];
 				float previous = 0;
-				float textLength = (float)this.FromPixels(_target, _view, positions [positions.Length - 1].X);
+				float textLength = (float)positions [positions.Length - 1].X;
+				//float textLength = (float)this.FromPixels(_target, _view, positions [positions.Length - 1].X);
 				if (lineLength > textLength * 1.2f) {
 					for (int idx = 0; idx < characterWidths.Length - 1; idx++) {
-						characterWidths [idx] = (float)this.FromPixels(_target, _view, positions [idx + 1].X - previous);
+						//characterWidths [idx] = (float)this.FromPixels(_target, _view, positions [idx + 1].X - previous);
+						characterWidths [idx] = (float)(positions [idx + 1].X - previous);
 						previous = positions [idx + 1].X;
 					}
 					characterWidths [characterWidths.Length - 1] = characterWidths[characterWidths.Length - 2];
 					float characterHeight = textBounds.Height;
 
-					this.DrawLineTextSegment (target, x, y, glyphs, color, haloColor, haloRadius,
+					this.DrawLineTextSegment (target, xTransformed, yTransformed, glyphs, color, haloColor, haloRadius,
 					                          lineLength / 2f, characterWidths, textLength, characterHeight, font);
 				}
 			}
@@ -415,17 +426,18 @@ namespace OsmSharp.iOS.UI
 			target.Target.CGContext.RestoreState ();
 		}
 
-		private void DrawLineTextSegment(Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, ushort[] glyphs, int color, 
+		private void DrawLineTextSegment(Target2DWrapper<CGContextWrapper> target, double[] xTransformed, double[] yTransformed, ushort[] glyphs, int color, 
 		                                 int? haloColor, int? haloRadius, double middlePosition, float[] characterWidths,
 		                                 double textLength, float charachterHeight, CTFont font)
 		{
+
 			// see if text is 'upside down'
 			double averageAngle = 0;
 			double first = middlePosition - (textLength / 2.0);
-			PointF2D current = Polyline2D.PositionAtPosition (x, y, first);
+			PointF2D current = Polyline2D.PositionAtPosition (xTransformed, yTransformed, first);
 			for (int idx = 0; idx < glyphs.Length; idx++) {
 				double nextPosition = middlePosition - (textLength / 2.0) + ((textLength / (glyphs.Length)) * (idx + 1));
-				PointF2D next = Polyline2D.PositionAtPosition (x, y, nextPosition);
+				PointF2D next = Polyline2D.PositionAtPosition (xTransformed, yTransformed, nextPosition);
 
 				// translate to the final position, the center of the line segment between 'current' and 'next'.
 				//PointF2D position = current + ((next - current) / 2.0);
@@ -441,18 +453,14 @@ namespace OsmSharp.iOS.UI
 
 
 			// revers if 'upside down'
-			double[] xText = x;
-			double[] yText = y;
+			double[] xText = xTransformed;
+			double[] yText = yTransformed;
 			if (averageAngle > 90 && averageAngle < 180 + 90) {
-				xText = x.Reverse ().ToArray ();
-				yText = y.Reverse ().ToArray ();
+				xText = xTransformed.Reverse ().ToArray ();
+				yText = yTransformed.Reverse ().ToArray ();
 			}
-
 			first = middlePosition - (textLength / 2.0);
 			current = Polyline2D.PositionAtPosition (xText, yText, first);
-			
-			//target.Target.CGContext.SaveState ();
-			//target.Target.CGContext.TranslateCTM (xText[0], yText[0]);
 
 			double nextPosition2 = first;
 			for (int idx = 0; idx < glyphs.Length; idx++) {
@@ -465,10 +473,11 @@ namespace OsmSharp.iOS.UI
 				target.Target.CGContext.SaveState ();
 
                 // translate to the final position, the center of the line segment between 'current' and 'next'.
-                double[] transformed = this.Tranform(position[0], position[1]);
-				target.Target.CGContext.TranslateCTM (
-					(float)transformed [0],
-					(float)transformed [1]);
+//                double[] transformed = this.Tranform(position[0], position[1]);
+//				target.Target.CGContext.TranslateCTM (
+//					(float)transformed [0],
+//					(float)transformed [1]);
+				target.Target.CGContext.TranslateCTM ((float)position [0], (float)position [1]);
 
 				// calculate the angle.
 				VectorF2D vector = next - current;
@@ -477,8 +486,11 @@ namespace OsmSharp.iOS.UI
 
 				// rotate the character.
 				target.Target.CGContext.RotateCTM ((float)angleDegrees);
-//
-//				// translate the character so the center of its base is over the origin.
+
+				// rotate the text to point down no matter what the map tilt is.
+				//target.Target.CGContext.RotateCTM ((float)_view.Angle.Value);
+
+				// translate the character so the center of its base is over the origin.
 				target.Target.CGContext.TranslateCTM (0, charachterHeight / 3.0f);
 
 				// rotate 'upside down'
