@@ -66,6 +66,15 @@ namespace OsmSharp.Units.Angle
             return new Radian(value);
         }
 
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="OsmSharp.Units.Angle.Radian"/>.
+		/// </summary>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="OsmSharp.Units.Angle.Radian"/>.</returns>
+		public override string ToString ()
+		{
+			return string.Format ("{0} rad");
+		}
+
         #endregion
 
         /// <summary>

@@ -95,7 +95,7 @@ namespace OsmSharp.Math.Primitives
         /// <param name="centerY"></param>
         /// <param name="width">Width.</param>
         /// <param name="height">Height.</param>
-        /// <param name="angleY">The angle relative to the y-axis.</param>
+        /// <param name="angleY">The angle.</param>
         /// <returns></returns>
         public static RectangleF2D FromBoundsAndCenter(double width, double height, double centerX, double centerY, Degree angleY)
         {
@@ -109,7 +109,7 @@ namespace OsmSharp.Math.Primitives
         /// <param name="centerY"></param>
         /// <param name="width">Width.</param>
         /// <param name="height">Height.</param>
-        /// <param name="directionY">The direction.</param>
+        /// <param name="directionY">The direction of the y-axis.</param>
         /// <returns></returns>
         public static RectangleF2D FromBoundsAndCenter(double width, double height, double centerX, double centerY, VectorF2D directionY)
         {
@@ -177,6 +177,16 @@ namespace OsmSharp.Math.Primitives
 		public double Height{
 			get{
 				return _vectorY.Size;
+			}
+		}
+
+		/// <summary>
+		/// Gets the angle.
+		/// </summary>
+		/// <value>The angle.</value>
+		public Degree Angle {
+			get {
+				return _vectorY.Angle (new VectorF2D (0, 1));
 			}
 		}
 

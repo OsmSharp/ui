@@ -49,6 +49,15 @@ namespace OsmSharp.Units.Angle
             return value - (count_360 * 360.0);
         }
 
+		/// <summary>
+		/// Returns a <see cref="System.String"/> that represents the current <see cref="OsmSharp.Units.Angle.Degree"/>.
+		/// </summary>
+		/// <returns>A <see cref="System.String"/> that represents the current <see cref="OsmSharp.Units.Angle.Degree"/>.</returns>
+		public override string ToString ()
+		{
+			return string.Format ("{0}°");
+		}
+
         #region Conversion
 
         /// <summary>

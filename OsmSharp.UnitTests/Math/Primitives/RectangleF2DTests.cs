@@ -44,6 +44,7 @@ namespace OsmSharp.UnitTests.Math.Primitives
             Assert.AreEqual(1, rectangle.TopLeft[1]);
             Assert.AreEqual(1, rectangle.TopRight[0]);
             Assert.AreEqual(1, rectangle.TopRight[1]);
+			Assert.AreEqual (0, rectangle.Angle.Value);
 
             BoxF2D box = rectangle.BoundingBox;
             Assert.AreEqual(0, box.Min[0]);
@@ -124,6 +125,7 @@ namespace OsmSharp.UnitTests.Math.Primitives
 			double delta = 0.00001;
 			RectangleF2D rectangle = new RectangleF2D (1, 1, System.Math.Sqrt (2) * 2,
 			                                           System.Math.Sqrt (2) * 2, 45);
+			Assert.AreEqual (45, rectangle.Angle.Value, delta);
 
 			double[] converted = rectangle.TransformFrom (100, 100, false, false,
 			                                              new double[] { 25, 75 });
