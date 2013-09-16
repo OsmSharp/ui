@@ -218,6 +218,7 @@
     <Compile Include="Routing\TSP\BruteForceTSPTest.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurveTests.cs" />
     <Compile Include="Math\Primitives\BoxF2DTests.cs" />
+    <Compile Include="Math\Algorithms\RotationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="test_network.osm" />

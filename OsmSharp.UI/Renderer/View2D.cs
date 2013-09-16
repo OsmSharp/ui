@@ -359,6 +359,16 @@ namespace OsmSharp.UI.Renderer
         }
 
 		/// <summary>
+		/// Rotates this view around it's center with a given angle and returns the modified version.
+		/// </summary>
+		/// <returns>The around center.</returns>
+		/// <param name="angle">Angle.</param>
+		public View2D RotateAroundCenter(Radian angle) {
+			RectangleF2D rotated = this.Rectangle.RotateAroundCenter (angle);
+			return new View2D (rotated, _invertX, _invertY);
+		}
+
+		/// <summary>
 		/// Returns the smallest rectangular box containing the entire view. Will be larger when turned in a non-zero direction.
 		/// </summary>
 		/// <value>The outer box.</value>

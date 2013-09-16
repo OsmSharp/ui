@@ -311,6 +311,26 @@ namespace OsmSharp.UnitTests.Math.Primitives
             Assert.AreEqual(5, box.Max[0], delta);
             Assert.AreEqual(3, box.Max[1], delta);
         }
+
+		/// <summary>
+		/// Tests a rotation around a given point of a rectangle.
+		/// </summary>
+		[Test]
+		public void TestRectangleF2DRotationAroundPoint() {
+			double delta = 0.00001;
+
+			RectangleF2D rectangle = new RectangleF2D (2, 2, 1, 1);
+			RectangleF2D rotatedRectangle = rectangle.RotateAround (90, new PointF2D (2, 2));
+
+			Assert.AreEqual (2, rotatedRectangle.BottomLeft [0], delta);
+			Assert.AreEqual (2, rotatedRectangle.BottomLeft [1], delta);
+			Assert.AreEqual (2, rotatedRectangle.BottomRight [0], delta);
+			Assert.AreEqual (1, rotatedRectangle.BottomRight [1], delta);
+			Assert.AreEqual (3, rotatedRectangle.TopLeft [0], delta);
+			Assert.AreEqual (2, rotatedRectangle.TopLeft [1], delta);
+			Assert.AreEqual (3, rotatedRectangle.TopRight [0], delta);
+			Assert.AreEqual (1, rotatedRectangle.TopRight [1], delta);
+		}
 	}
 }
 

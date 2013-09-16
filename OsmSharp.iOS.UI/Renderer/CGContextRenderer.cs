@@ -298,7 +298,7 @@ namespace OsmSharp.iOS.UI
 			PointF2D bottomLeft = new PointF2D(this.Tranform (bounds.BottomLeft [0], bounds.BottomLeft [1]));
 			PointF2D bottomRight = new PointF2D(this.Tranform (bounds.BottomRight [0], bounds.BottomRight [1]));
 			PointF2D topLeft = new PointF2D(this.Tranform (bounds.TopLeft [0], bounds.TopLeft [1]));
-			PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
+			//PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
 
 			RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
 			                                            topLeft - bottomLeft);
@@ -306,7 +306,7 @@ namespace OsmSharp.iOS.UI
 
 			target.Target.CGContext.SaveState ();
 			target.Target.CGContext.TranslateCTM ((float)transformed.BottomLeft [0], (float)transformed.BottomLeft [1]);
-			target.Target.CGContext.RotateCTM ((float)((Radian)transformed.Angle).Value);
+			target.Target.CGContext.RotateCTM (-(float)((Radian)transformed.Angle).Value);
 
 			if (tag is CGImage) {
 				CGImage image = tag as CGImage;

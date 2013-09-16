@@ -19,6 +19,7 @@
 using System;
 using OsmSharp.Units.Angle;
 using System.Collections.Generic;
+using OsmSharp.Math.Algorithms;
 
 namespace OsmSharp.Math.Primitives
 {
@@ -166,12 +167,22 @@ namespace OsmSharp.Math.Primitives
 		}
 
 		/// <summary>
-		/// Sets the top right.
+		/// Gets the top right.
 		/// </summary>
 		/// <value>The top right.</value>
 		public PointF2D TopRight {
 			get{
 				return _bottomLeft + _vectorX + _vectorY;
+			}
+		}
+
+		/// <summary>
+		/// Gets the center.
+		/// </summary>
+		/// <value>The center.</value>
+		public PointF2D Center {
+			get{
+				return _bottomLeft + _vectorX / 2.0 + _vectorY / 2.0;
 			}
 		}
 
@@ -284,6 +295,30 @@ namespace OsmSharp.Math.Primitives
 			}
 			return false;
 		}
+
+		/// <summary>
+		/// Rotates this rectangle around it's center point with a given angle in clockwise direction.
+		/// </summary>
+		/// <returns>The around center.</returns>
+		/// <param name="angle">Angle.</param>
+		public RectangleF2D RotateAroundCenter(Degree angle){
+			return this.RotateAround (angle, this.Center);
+		}
+
+		/// <summary>
+		/// Rotates this rectangle around the given center point with a given angle in clockwise direction.
+		/// </summary>
+		/// <returns>The around.</returns>
+		/// <param name="angle">Angle.</param>
+		/// <param name="center">Center.</param>
+		public RectangleF2D RotateAround(Degree angle, PointF2D center) {
+			PointF2D[] corners = new PointF2D[] { this.TopLeft, this.TopRight, this.BottomLeft, this.BottomRight };
+			PointF2D[] cornersRotated = Rotation.RotateAroundPoint (angle, center, corners);
+
+			return new RectangleF2D (cornersRotated [2], this.Width, this.Height,	
+			                        cornersRotated [0] - cornersRotated [2]);
+		}
+
 
 		#region Affine Transformations
 

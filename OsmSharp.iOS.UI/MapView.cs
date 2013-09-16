@@ -56,10 +56,13 @@ namespace OsmSharp.iOS.UI
 			this.BackgroundColor = UIColor.White;
 
 			var panGesture = new UIPanGestureRecognizer (Pan);
+			panGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
 			this.AddGestureRecognizer (panGesture);
 			var pinchGesture = new UIPinchGestureRecognizer (Pinch);
+			pinchGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
 			this.AddGestureRecognizer (pinchGesture);
 			var rotationGesture = new UIRotationGestureRecognizer (Rotate);
+			rotationGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
 			this.AddGestureRecognizer (rotationGesture);
 
 			// create the cache renderer.
@@ -71,7 +74,12 @@ namespace OsmSharp.iOS.UI
 			// create invalidation timer.
 			_render = true;
 			System.Threading.Timer timer = new System.Threading.Timer (InvalidateSimple,
-			                                                           null, 0, 200);
+			                                                           null, 0, 50);
+		}
+
+		public override bool GestureRecognizerShouldBegin (UIGestureRecognizer gestureRecognizer)
+		{
+			return true;
 		}
 
 		/// <summary>
@@ -221,9 +229,9 @@ namespace OsmSharp.iOS.UI
 		}
 
 		/// <summary>
-		/// Holds the map rotation before rotating.
+		/// Holds the map view before rotating.
 		/// </summary>
-		private float? _mapRotationBefore;
+		private View2D _mapViewBefore;
 
 		/// <summary>
 		/// Rotate the specified rotation.
@@ -232,17 +240,23 @@ namespace OsmSharp.iOS.UI
 		private void Rotate(UIRotationGestureRecognizer rotation){
 			if (_rect.Width > 0) {
 				if (rotation.State == UIGestureRecognizerState.Ended) { 
-					_mapTilt = _mapRotationBefore.Value;
-					_mapTilt = _mapTilt - (float)((Degree)(Radian)rotation.Rotation).Value;
-
+					View2D rotatedView = _mapViewBefore.RotateAroundCenter ((Radian)rotation.Rotation);
+					_mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
+					PointF2D sceneCenter = rotatedView.Rectangle.Center;
+					this.MapCenter = this.Map.Projection.ToGeoCoordinates (
+						sceneCenter [0], sceneCenter [1]);
 					this.Change ();
 
-					_mapRotationBefore = null;
+					_mapViewBefore = null;
 				} else if (rotation.State == UIGestureRecognizerState.Began) {
-					_mapRotationBefore = this.MapTilt;
+					_mapViewBefore = this.CreateView (_rect);
 				} else {
-					_mapTilt = _mapRotationBefore.Value;
-					_mapTilt = _mapTilt - (float)((Degree)(Radian)rotation.Rotation).Value;
+					//_mapViewBefore = this.CreateView (_rect);
+					View2D rotatedView = _mapViewBefore.RotateAroundCenter ((Radian)rotation.Rotation);
+					_mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
+					PointF2D sceneCenter = rotatedView.Rectangle.Center;
+					this.MapCenter = this.Map.Projection.ToGeoCoordinates (
+						sceneCenter [0], sceneCenter [1]);
 
 					this.InvokeOnMainThread (Test);
 				}

@@ -80,9 +80,9 @@ namespace OsmSharp.UnitTests
         /// </summary>
         [Test]
         public void TestConversion()
-        {
-            double x = 180246.6;
-            double y = 217666.77;
+		{
+			double x = 150902.43;
+			double y = 204110.2;
 
             GeoCoordinate coordinate = LambertProjectionBase.Belgium1972LambertProjection.ConvertToWGS84(x, y);
             //return new GeoCoordinate(result2, result1);
