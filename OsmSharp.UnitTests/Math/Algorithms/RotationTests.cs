@@ -35,18 +35,20 @@ namespace OsmSharp.UnitTests.Math.Algorithms
 		/// </summary>
 		[Test]
 		public void RotationSimpleTest(){
+			double delta = 0.00001;
+
 			PointF2D center = new PointF2D (1, 1);
 			PointF2D point = new PointF2D (1, 2);
 
 			PointF2D rotated = Rotation.RotateAroundPoint ((Degree)90, center, point);
 
-			Assert.AreEqual (2, rotated [0]);
-			Assert.AreEqual (1, rotated [1]);
+			Assert.AreEqual (2, rotated [0], delta);
+			Assert.AreEqual (1, rotated [1], delta);
 
 			rotated = Rotation.RotateAroundPoint ((Degree)180, center, point);
 
-			Assert.AreEqual (1, rotated [0]);
-			Assert.AreEqual (-1, rotated [1]);
+			Assert.AreEqual (1, rotated [0], delta);
+			Assert.AreEqual (-1, rotated [1], delta);
 		}
 	}
 }
