@@ -48,7 +48,7 @@ namespace OsmSharp.UnitTests.Math.Algorithms
 			rotated = Rotation.RotateAroundPoint ((Degree)180, center, point);
 
 			Assert.AreEqual (1, rotated [0], delta);
-			Assert.AreEqual (-1, rotated [1], delta);
+			Assert.AreEqual (0, rotated [1], delta);
 		}
 	}
 }
