@@ -144,6 +144,19 @@ namespace OsmSharp.Android.UI
 		}
 
 		/// <summary>
+		/// Gets or sets the map tilt.
+		/// </summary>
+		/// <value>The map tilt.</value>
+		public float MapTilt {
+			get{
+				return _mapView.MapTilt;
+			}
+			set{
+				_mapView.MapTilt = value;
+			}
+		}
+
+		/// <summary>
 		/// Notifies the map change.
 		/// </summary>
 		/// <param name="pixelsWidth">Pixels width.</param>

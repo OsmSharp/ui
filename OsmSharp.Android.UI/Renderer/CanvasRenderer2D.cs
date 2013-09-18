@@ -437,6 +437,31 @@ namespace OsmSharp.Android.UI
 		/// <param name="tag">Tag.</param>
 		protected override object DrawImage (Target2DWrapper<Canvas> target, RectangleF2D bounds, byte[] imageData, object tag)
 		{
+			global::Android.Graphics.Bitmap image = (tag as global::Android.Graphics.Bitmap);
+			if(image == null)
+			{
+				image = global::Android.Graphics.BitmapFactory.DecodeByteArray(
+					imageData, 0, imageData.Length);
+			}
+
+			PointF2D bottomLeft = new PointF2D(this.Tranform (bounds.BottomLeft [0], bounds.BottomLeft [1]));
+			PointF2D bottomRight = new PointF2D(this.Tranform (bounds.BottomRight [0], bounds.BottomRight [1]));
+			PointF2D topLeft = new PointF2D(this.Tranform (bounds.TopLeft [0], bounds.TopLeft [1]));
+			//PointF2D topRight = new PointF2D(this.Tranform (bounds.TopRight [0], bounds.TopRight [1])); 
+
+			RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
+			                                            topLeft - bottomLeft);
+
+
+			target.Target.Save ();
+			target.Target.Translate ((float)transformed.BottomLeft [0], (float)transformed.BottomLeft [1]);
+			target.Target.Rotate (-(float)((Degree)transformed.Angle).Value);
+			target.Target.DrawBitmap(image,new global::Android.Graphics.Rect(0, 0, image.Width, image.Height),
+			                         new global::Android.Graphics.RectF(0, 0, 
+			                                   (float)transformed.Width, (float)transformed.Height),
+			                         null);
+			target.Target.Restore ();
+
 			return tag;
 		}
 
@@ -530,28 +555,37 @@ namespace OsmSharp.Android.UI
 		/// <param name="color"></param>
 		/// <param name="size"></param>
 		/// <param name="text">Text.</param>
-		protected override void DrawLineText (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, string text, int color, 
+		protected override void DrawLineText (Target2DWrapper<global::Android.Graphics.Canvas> target, double[] xa, double[] ya, string text, int color, 
 		                                      double size, int? haloColor, int? haloRadius, string fontName)
 		{
-			if (x.Length > 1)
+			if (xa.Length > 1)
 			{
 				float sizeInPixels = this.ToPixels(size);	
 				_paint.SubpixelText = true;
 				_paint.TextSize = (float)sizeInPixels;
 				_paint.AntiAlias = true;
 
+				// transform first.
+				double[] xTransformed = new double[xa.Length];
+				double[] yTransformed = new double[ya.Length];
+				for (int idx = 0; idx < xa.Length; idx++) {
+					double[] transformed = this.Tranform (xa[idx], ya[idx]);
+					xTransformed [idx] = transformed [0];
+					yTransformed [idx] = transformed [1];
+				}
+
 				// get some metrics on the texts.
 				float[] characterWidths = new float[text.Length];
 				_paint.GetTextWidths (text, characterWidths);
-				for (int idx = 0; idx < characterWidths.Length; idx++)
-				{
-					characterWidths[idx] = (float)this.FromPixels(_target, _view, characterWidths[idx]);
-				}
+//				for (int idx = 0; idx < characterWidths.Length; idx++)
+//				{
+//					characterWidths[idx] = _target, _view, characterWidths[idx];
+//				}
 				var characterHeight = (float)size;
 				var textLength = characterWidths.Sum();
 
 				// calculate line length.
-				var lineLength = Polyline2D.Length(x, y);
+				var lineLength = Polyline2D.Length(xTransformed, yTransformed);
 				if (lineLength > textLength * 1.2f)
 				{
 					// calculate the number of labels.
@@ -563,14 +597,14 @@ namespace OsmSharp.Android.UI
 					// draw each label.
 					for (double position = positionGap; position < lineLength; position = position + positionGap)
 					{
-						this.DrawLineTextSegment(target, x, y, text, color, size, haloColor, haloRadius, position, characterWidths,
+						this.DrawLineTextSegment(target, xTransformed, yTransformed, text, color, size, haloColor, haloRadius, position, characterWidths,
 						                         textLength, characterHeight);
 					}
 				}
 			}
 		}
 
-		public void DrawLineTextSegment(Target2DWrapper<global::Android.Graphics.Canvas> target, double[] x, double[] y, string text, int color,
+		public void DrawLineTextSegment(Target2DWrapper<global::Android.Graphics.Canvas> target, double[] xTransformed, double[] yTransformed, string text, int color,
 		                                double size, int? haloColor, int? haloRadius, double middlePosition, float[] characterWidths, double textLength,
 		                                float characterHeight)
 		{
@@ -580,14 +614,14 @@ namespace OsmSharp.Android.UI
 			// see if the text is 'upside down'.
 			double averageAngle = 0;
 			double first = middlePosition - (textLength / 2.0);
-			PointF2D current = Polyline2D.PositionAtPosition(x, y, first);
+			PointF2D current = Polyline2D.PositionAtPosition(xTransformed, yTransformed, first);
 			for (int idx = 0; idx < text.Length; idx++)
 			{
 				double nextPosition = middlePosition - (textLength / 2.0) + ((textLength / (text.Length)) * (idx + 1));
-				PointF2D next = Polyline2D.PositionAtPosition(x, y, nextPosition);
+				PointF2D next = Polyline2D.PositionAtPosition(xTransformed, yTransformed, nextPosition);
 
 				// Translate to the final position, the center of line-segment between 'current' and 'next'
-				PointF2D position = current + ((next - current) / 2.0);
+				//PointF2D position = current + ((next - current) / 2.0);
 
 				// calculate the angle.
 				VectorF2D vector = next - current;
@@ -599,12 +633,12 @@ namespace OsmSharp.Android.UI
 			averageAngle = averageAngle / text.Length;
 
 			// reverse if 'upside down'.
-			double[] xText = x;
-			double[] yText = y;
+			double[] xText = xTransformed;
+			double[] yText = yTransformed;
 			if (averageAngle > 90 && averageAngle < 180 + 90)
 			{ // the average angle is > PI => means upside down.
-				xText = x.Reverse<double>().ToArray<double>();
-				yText = y.Reverse<double>().ToArray<double>();
+				xText = xTransformed.Reverse<double>().ToArray<double>();
+				yText = yTransformed.Reverse<double>().ToArray<double>();
 			}
 
 			// calculate a central position along the line.
@@ -628,8 +662,8 @@ namespace OsmSharp.Android.UI
 					// Translate to the final position, the center of line-segment between 'current' and 'next'
 					PointF2D position = current;
 					//PointF2D position = current + ((next - current) / 2.0);
-					double[] transformed = this.Tranform(position[0], position[1]);
-					transform.SetTranslate((float)transformed[0], (float)transformed[1]);
+					//double[] transformed = this.Tranform(position[0], position[1]);
+					transform.SetTranslate((float)position[0], (float)position[1]);
 
 					// calculate the angle.
 					VectorF2D vector = next - current;

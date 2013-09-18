@@ -172,6 +172,7 @@ namespace OsmSharp.Android.UI.Sample
 			
 			mapLayout.MapMaxZoomLevel = 20;
 			mapLayout.MapMinZoomLevel = 12;
+			mapLayout.MapTilt = 90;
 			//var mapView = new MapGLView (this);
 			mapLayout.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
 			//mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);

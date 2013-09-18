@@ -214,9 +214,8 @@ namespace OsmSharp.Android.UI
 					SimpleColor.FromKnownColor(KnownColor.Transparent).Value));
 
 				// create the view.
-				View2D view = _cacheRenderer.Create (canvas.Width, canvas.Height,
-				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
-				                                     this.MapCenter, _invertX, _invertY);
+				View2D view = this.CreateView ();
+
 				long before = DateTime.Now.Ticks;
 
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
@@ -231,12 +230,14 @@ namespace OsmSharp.Android.UI
 				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoomLevel);
 
 				// add the current canvas to the scene.
-				double left = view.LeftTop [0];
-				double right = view.RightTop [0];
-				double top = view.LeftTop [1];
-				double bottom = view.LeftBottom [1];
-				uint canvasId = _scene.AddImage (-1, float.MinValue, float.MaxValue, 
-				                                left, top, right, bottom, new byte[0], _canvasBitmap);
+//				double left = view.LeftTop [0];
+//				double right = view.RightTop [0];
+//				double top = view.LeftTop [1];
+//				double bottom = view.LeftBottom [1];
+//				uint canvasId = _scene.AddImage (-1, float.MinValue, float.MaxValue, 
+//				                                left, top, right, bottom, new byte[0], _canvasBitmap);
+				uint canvasId = _scene.AddImage (-1, float.MaxValue, float.MinValue, view.Rectangle,
+				                                 new byte[0], _canvasBitmap);
 
 				// does the rendering.
 				bool complete = _cacheRenderer.Render (canvas, layers, view);
@@ -257,9 +258,10 @@ namespace OsmSharp.Android.UI
 						// add the newly rendered image again.
 						_scene.Clear ();
 						//_previousCache = 
-						BoxF2D viewBox = view.OuterBox;
-						_scene.AddImage (0, float.MinValue, float.MaxValue, 
-						                 viewBox.Min[0], viewBox.Min[1], viewBox.Max[0], viewBox.Max[1], new byte[0], _canvasBitmap);
+						//BoxF2D viewBox = view.OuterBox;
+						//_scene.AddImage (0, float.MinValue, float.MaxValue, 
+						//                 viewBox.Min[0], viewBox.Min[1], viewBox.Max[0], viewBox.Max[1], new byte[0], _canvasBitmap);
+						_scene.AddImage (0, float.MinValue, float.MaxValue, view.Rectangle, new byte[0], _canvasBitmap);
 
 						// switch cache and canvas to prevent re-allocation of bitmaps.
 						global::Android.Graphics.Bitmap newCanvas = _cache;
@@ -306,6 +308,26 @@ namespace OsmSharp.Android.UI
 				_map.MapChanged += delegate() {
 					_render = true;
 				};
+			}
+		}
+
+		/// <summary>
+		/// Holds the map tilte angle.
+		/// </summary>
+		private float _mapTilt;
+
+		/// <summary>
+		/// Gets or sets the map tilt.
+		/// </summary>
+		/// <value>The map tilt.</value>
+		public float MapTilt {
+			get{
+				return _mapTilt;
+			}
+			set {
+				_mapTilt = value;
+
+				this.Change ();
 			}
 		}
 
@@ -372,8 +394,7 @@ namespace OsmSharp.Android.UI
 				_renderer.SceneRenderer.Render (
 					canvas, 
 					_scene,
-					_renderer.Create (canvas.Width, canvas.Height,
-				                  this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), this.MapCenter, _invertX, _invertY));
+					this.CreateView());
 			}
 
 //			long after = DateTime.Now.Ticks;
@@ -400,7 +421,7 @@ namespace OsmSharp.Android.UI
 			// create the view for this control.
 			return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
 			                         this.Width, this.Height, sceneZoomFactor, 
-			                         _invertX, _invertY);
+			                         _invertX, _invertY, this.MapTilt);
 		}
 
 		/// <summary>
@@ -431,9 +452,8 @@ namespace OsmSharp.Android.UI
 
 			// notify map layout of changes.
 			if (this.Width > 0 && this.Height > 0) {
-				View2D view = _cacheRenderer.Create (this.Width, this.Height,
-				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
-				                                     this.MapCenter, _invertX, _invertY);
+				View2D view = this.CreateView ();
+
 				_mapLayout.NotifyMapChange (this.Width, this.Height, view, this.Map.Projection);
 			}
 		}
