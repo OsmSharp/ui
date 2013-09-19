@@ -542,7 +542,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="multiPolygon"></param>
         private void TranslateMultiPolygon(Scene2D scene, IProjection projection, MultiPolygon multiPolygon)
         {
-
+            foreach(Polygon polygon in multiPolygon)
+            {
+                polygon.Attributes = multiPolygon.Attributes;
+                this.TranslatePolygon(scene, projection, polygon);
+            }
         }
 
         /// <summary>
@@ -553,15 +557,17 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="polygon"></param>
         private void TranslatePolygon(Scene2D scene, IProjection projection, Polygon polygon)
         {
-            // build the rules.
-            List<MapCSSRuleProperties> rules =
-                this.BuildRules(new MapCSSObject(polygon));
+            polygon.Ring.Attributes = polygon.Attributes;
+            this.TranslateLineairRing(scene, projection, polygon.Ring);
+            //// build the rules.
+            //List<MapCSSRuleProperties> rules =
+            //    this.BuildRules(new MapCSSObject(polygon));
 
-            // validate what's there.
-            if (rules.Count == 0)
-            {
-                return;
-            }
+            //// validate what's there.
+            //if (rules.Count == 0)
+            //{
+            //    return;
+            //}
         }
 
         /// <summary>

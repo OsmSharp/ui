@@ -177,7 +177,7 @@ namespace OsmSharp.Osm.Interpreter
             if (!this.AssignRings(ways, out rings))
             {
                 OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", System.Diagnostics.TraceEventType.Error,
-                    "Ring assignment failed: invalid multipolygon relation detected!");
+                    string.Format("Ring assignment failed: invalid multipolygon relation [{0}] detected!", relation.Id));
             }
             // group the rings and create a multipolygon.
             geometry = this.GroupRings(rings);
@@ -414,7 +414,7 @@ namespace OsmSharp.Osm.Interpreter
                         }
                         else if (nodes[nodes.Count - 1].Id == nextWay.Nodes[nextWay.Nodes.Count - 1].Id)
                         { // last node of the previous way is the last node of the next way.
-                            nextNodes = nextWay.Nodes.GetRange(0, nextWay.Nodes.Count - 2);
+                            nextNodes = nextWay.Nodes.GetRange(0, nextWay.Nodes.Count - 1);
                             nextNodes.Reverse();
                             assignedFlags[idx] = true;
                         }

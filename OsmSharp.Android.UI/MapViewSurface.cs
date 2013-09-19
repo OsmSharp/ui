@@ -1,3 +1,20 @@
+// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
 using System.Collections.Generic;
@@ -111,7 +128,6 @@ namespace OsmSharp.Android.UI
 				new WebMercator());
 			
 			// initialize all the caching stuff.
-			//_previousCache = null;
 			_cacheRenderer = new MapRenderer<global::Android.Graphics.Canvas>(
 				new CanvasRenderer2D());
 			_scene = new Scene2DSimple ();
@@ -140,11 +156,6 @@ namespace OsmSharp.Android.UI
 		/// Holds the cache renderer.
 		/// </summary>
 		private MapRenderer<global::Android.Graphics.Canvas> _cacheRenderer;
-
-		/// <summary>
-		/// Holds the previous cache id.
-		/// </summary>
-		//private uint? _previousCache;
 
 		/// <summary>
 		/// Does the rendering.
@@ -240,12 +251,6 @@ namespace OsmSharp.Android.UI
 				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoomLevel);
 
 				// add the current canvas to the scene.
-//				double left = view.LeftTop [0];
-//				double right = view.RightTop [0];
-//				double top = view.LeftTop [1];
-//				double bottom = view.LeftBottom [1];
-//				uint canvasId = _scene.AddImage (-1, float.MinValue, float.MaxValue, 
-//				                                left, top, right, bottom, new byte[0], _canvasBitmap);
 				uint canvasId = _scene.AddImage (-1, float.MaxValue, float.MinValue, view.Rectangle,
 				                                 new byte[0], _canvasBitmap);
 
@@ -260,17 +265,8 @@ namespace OsmSharp.Android.UI
 				{ // there was no cancellation, the rendering completely finished.
 					// add the result to the scene cache.
 					lock (_scene) {
-//						if (_previousCache.HasValue) {
-//							_scene.Remove (_previousCache.Value);
-//						}
-//						_scene.Remove (canvasId);
-//
 						// add the newly rendered image again.
 						_scene.Clear ();
-						//_previousCache = 
-						//BoxF2D viewBox = view.OuterBox;
-						//_scene.AddImage (0, float.MinValue, float.MaxValue, 
-						//                 viewBox.Min[0], viewBox.Min[1], viewBox.Max[0], viewBox.Max[1], new byte[0], _canvasBitmap);
 						_scene.AddImage (0, float.MinValue, float.MaxValue, view.Rectangle, new byte[0], _canvasBitmap);
 
 						// switch cache and canvas to prevent re-allocation of bitmaps.
@@ -283,13 +279,6 @@ namespace OsmSharp.Android.UI
 				this.PostInvalidate ();
 				
 				long after = DateTime.Now.Ticks;
-				if (!complete) {
-                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering in {0}ms after cancellation!", 
-					                                                             new TimeSpan (after - before).TotalMilliseconds);
-				} else {
-                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering in {0}ms", 
-					                                                             new TimeSpan (after - before).TotalMilliseconds);
-				}
 			}
 		}
 
@@ -393,23 +382,16 @@ namespace OsmSharp.Android.UI
 		protected override void OnDraw (global::Android.Graphics.Canvas canvas)
 		{
 			base.OnDraw (canvas);
-			
-//			long before = DateTime.Now.Ticks;
 
 			// render only the cached scene.
 			lock(_scene)
 			{
-//				OsmSharp.IO.Output.OutputStreamHost.WriteLine ("OnDraw");
 				canvas.DrawColor (new global::Android.Graphics.Color(_scene.BackColor));
 				_renderer.SceneRenderer.Render (
 					canvas, 
 					_scene,
 					this.CreateView());
 			}
-
-//			long after = DateTime.Now.Ticks;
-//			OsmSharp.IO.Output.OutputStreamHost.WriteLine(string.Format("Rendering in {0}ms", 
-//			                                   new TimeSpan (after - before).TotalMilliseconds));
 		}
 		
 		/// <summary>
@@ -427,10 +409,7 @@ namespace OsmSharp.Android.UI
 			// calculate the center/zoom in scene coordinates.
 			double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
 			float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoomLevel);
-			
-//			return _cacheRenderer.Create (this.Width, this.Height,
-//			                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
-//			                                     this.MapCenter, _invertX, _invertY);
+
 			// create the view for this control.
 			return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
 			                         this.Width, this.Height, sceneZoomFactor, 
@@ -554,86 +533,7 @@ namespace OsmSharp.Android.UI
 		}
 
 		#endregion
-
-//		#region IOnGestureListener implementation
-//		
-//		/// <summary>
-//		/// Raises the down event.
-//		/// </summary>
-//		/// <param name="e">E.</param>
-//		public bool OnDown (MotionEvent e)
-//		{
-//			return true;
-//		}
-//		
-//		/// <summary>
-//		/// Raises the fling event.
-//		/// </summary>
-//		/// <param name="e1">E1.</param>
-//		/// <param name="e2">E2.</param>
-//		/// <param name="velocityX">Velocity x.</param>
-//		/// <param name="velocityY">Velocity y.</param>
-//		public bool OnFling (MotionEvent e1, MotionEvent e2, float velocityX, float velocityY)
-//		{
-//			return true;
-//		}
-//		
-//		/// <summary>
-//		/// Raises the long press event.
-//		/// </summary>
-//		/// <param name="e">E.</param>
-//		public void OnLongPress (MotionEvent e)
-//		{
-//
-//		}
-//		
-//		/// <summary>
-//		/// Raises the scroll event.
-//		/// </summary>
-//		/// <param name="e1">E1.</param>
-//		/// <param name="e2">E2.</param>
-//		/// <param name="distanceX">Distance x.</param>
-//		/// <param name="distanceY">Distance y.</param>
-//		public bool OnScroll (MotionEvent e1, MotionEvent e2, float distanceX, float distanceY)
-//		{
-//			// recreate the view.
-//			View2D view = this.CreateView();
-//			
-//			// calculate the new center in pixels.
-//			double centerXPixels = this.Width / 2.0f + distanceX;
-//			double centerYPixles = this.Height / 2.0f + distanceY;
-//			
-//			// calculate the new center from the view.
-//			double[] sceneCenter = view.FromViewPort(this.Width, this.Height, 
-//			                              centerXPixels, centerYPixles);
-//
-//			// convert to the projected center.
-//			this.MapCenter = this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]);
-//
-//			this.NotifyMovement();
-//			return true;
-//		}
-//		
-//		/// <summary>
-//		/// Raises the show press event.
-//		/// </summary>
-//		/// <param name="e">E.</param>
-//		public void OnShowPress (MotionEvent e)
-//		{
-//
-//		}
-//		
-//		/// <summary>
-//		/// Raises the single tap up event.
-//		/// </summary>
-//		/// <param name="e">E.</param>
-//		public bool OnSingleTapUp (MotionEvent e)
-//		{
-//			return true;
-//		}
-//		
-//		#endregion
-
+		
 		/// <summary>
 		/// Raises the touch event event.
 		/// </summary>
