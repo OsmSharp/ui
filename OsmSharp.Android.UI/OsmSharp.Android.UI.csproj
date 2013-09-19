@@ -52,6 +52,10 @@
     <Compile Include="MapMarker.cs" />
     <Compile Include="MapViewSurface.cs" />
     <Compile Include="MapView.cs" />
+    <Compile Include="Gestures\BaseGestureDetector.cs" />
+    <Compile Include="Gestures\TwoFingerGestureDetector.cs" />
+    <Compile Include="Gestures\MoveGestureDetector.cs" />
+    <Compile Include="Gestures\RotateGestureDetector.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -74,6 +78,7 @@
   <ItemGroup>
     <Folder Include="Resources\layout\" />
     <Folder Include="Images\" />
+    <Folder Include="Gestures\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Images\marker.png" />

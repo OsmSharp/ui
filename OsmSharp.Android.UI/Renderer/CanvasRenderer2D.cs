@@ -479,8 +479,9 @@ namespace OsmSharp.Android.UI
 			double[] transformed = this.Tranform(x, y);
 			float xPixels = (float)transformed[0];
 			float yPixels = (float)transformed[1];
-			transformed = this.Tranform(x + size, y);
-			float textSize = (float)transformed [0] - xPixels;
+            float textSize = this.ToPixels(size);
+            //transformed = this.Tranform(x + size, y);
+            //float textSize = 10;
 
 			_paint.AntiAlias = true;
 			_paint.SubpixelText = true;
@@ -489,17 +490,17 @@ namespace OsmSharp.Android.UI
 			// get some metrics on the texts.
 			float[] characterWidths = new float[text.Length];
 			_paint.GetTextWidths (text, characterWidths);
-			for (int idx = 0; idx < characterWidths.Length; idx++)
-			{
-				characterWidths[idx] = (float)this.FromPixels(_target, _view, characterWidths[idx]);
-			}
+            //for (int idx = 0; idx < characterWidths.Length; idx++)
+            //{
+            //    characterWidths[idx] = _target, _view, characterWidths[idx];
+            //}
 			var characterHeight = (float)size;
 			var textLength = characterWidths.Sum();
 
 			// center is default.
-			x = x - (textLength / 2.0f);
+			xPixels = xPixels - (textLength / 2.0f);
 
-			PointF2D current = new PointF2D (x, y);
+			PointF2D current = new PointF2D (xPixels, yPixels);
 			for (int idx = 0; idx < text.Length; idx++)
 			{
 				char currentChar = text[idx];
@@ -513,8 +514,8 @@ namespace OsmSharp.Android.UI
 
 					// Translate to the final position, the center of line-segment between 'current' and 'next'
 					PointF2D position = current;
-					transformed = this.Tranform(position[0], position[1]);
-					transform.SetTranslate((float)transformed[0], (float)transformed[1]);
+					//transformed = this.Tranform(position[0], position[1]);
+                    transform.SetTranslate((float)position[0], (float)position[1]);
 
 					// Translate the character so the centre of its base is over the origin
 					transform.PreTranslate(0, characterHeight / 2.5f);
