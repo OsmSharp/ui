@@ -50,6 +50,15 @@ namespace OsmSharp.Data.Redis.Osm.Streams
         /// Creates a new data processor target.
         /// </summary>
         /// <param name="host"></param>
+        public RedisOsmStreamTarget(string host)
+        {
+            _redisClient = new RedisClient(host);
+        }
+
+        /// <summary>
+        /// Creates a new data processor target.
+        /// </summary>
+        /// <param name="host"></param>
         /// <param name="port"></param>
         public RedisOsmStreamTarget(string host, int port)
         {
