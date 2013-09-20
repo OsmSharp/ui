@@ -25,9 +25,15 @@
         <file src="Output\Release\Any CPU\OsmSharp.dll" target="lib\net40\OsmSharp.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.UI.dll" target="lib\net40\OsmSharp.UI.dll" />
         <file src="Output\Release\Any CPU\OsmSharp.WinForms.UI.dll" target="lib\net40\OsmSharp.WinForms.UI.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Data.Oracle.dll" target="lib\net40\OsmSharp.Data.Oracle.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Data.PostgreSQL.dll" target="lib\net40\OsmSharp.Data.PostgreSQL.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Data.Redis.dll" target="lib\net40\OsmSharp.Data.Redis.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Data.SQLite.dll" target="lib\net40\OsmSharp.Data.SQLite.dll" />
+        <file src="Output\Release\Any CPU\OsmSharp.Data.SQLServer.dll" target="lib\net40\OsmSharp.Data.SQLServer.dll" />
 	<file src="OutputAndroid\OsmSharp.dll" target="lib\MonoAndroid16\OsmSharp.dll" />
 	<file src="OutputAndroid\OsmSharp.Osm.dll" target="lib\MonoAndroid16\OsmSharp.Osm.dll" />
 	<file src="OutputAndroid\OsmSharp.Routing.dll" target="lib\MonoAndroid16\OsmSharp.Routing.dll" />
 	<file src="OutputAndroid\OsmSharp.UI.dll" target="lib\MonoAndroid16\OsmSharp.UI.dll" />
+	<file src="OutputAndroid\OsmSharp.Android.UI.dll" target="lib\MonoAndroid16\OsmSharp.Android.UI.dll" />
     </files>
 </package>
