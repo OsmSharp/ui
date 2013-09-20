@@ -297,7 +297,7 @@ namespace OsmSharp.UI.Renderer
 		/// <param name="y">The y coordinate.</param>
 		public bool Contains (double x, double y)
 		{
-			if (_rectangle.BoundingBox.IsInside (x, y)) {
+			if (_rectangle.BoundingBox.Contains (x, y)) {
 				return _rectangle.Contains (x, y);
 			}
 			return false;

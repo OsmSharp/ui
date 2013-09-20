@@ -499,7 +499,7 @@ namespace OsmSharp.Osm.Data.Memory
             foreach (Node node in _nodes.Values)
             {
                 if ((filter == null || filter.Evaluate(node)) && 
-                    box.IsInside(new GeoCoordinate(node.Latitude.Value, node.Longitude.Value)))
+                    box.Contains(new GeoCoordinate(node.Latitude.Value, node.Longitude.Value)))
                 {
                     res.Add(node);
                     ids.Add(node.Id.Value);

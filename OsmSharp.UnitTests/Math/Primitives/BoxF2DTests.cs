@@ -56,7 +56,7 @@ namespace OsmSharp.UnitTests.Math.Primitives
             
 			foreach (BoxF2D rectangleF2D in testDataList)
             {
-                box.IsInside(rectangleF2D);
+                box.Contains(rectangleF2D);
             }
         }
 

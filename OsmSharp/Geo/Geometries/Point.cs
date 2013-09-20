@@ -60,7 +60,7 @@ namespace OsmSharp.Geo.Geometries
         {
             if (box == null) { throw new ArgumentNullException(); }
 
-            return box.IsInside(this.Coordinate);
+            return box.Contains(this.Coordinate);
         }
     }
 }

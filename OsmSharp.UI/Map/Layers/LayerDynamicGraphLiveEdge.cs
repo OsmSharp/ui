@@ -129,7 +129,7 @@ namespace OsmSharp.UI.Map.Layers
 			var box = new GeoCoordinateBox (map.Projection.ToGeoCoordinates (viewBox.Min [0], viewBox.Min [1]),
 			                                            map.Projection.ToGeoCoordinates (viewBox.Max [0], viewBox.Max [1]));
 			foreach (var requestedBox in _requestedBoxes) {
-				if (requestedBox.IsInside (box)) {
+				if (requestedBox.Contains (box)) {
 					return;
 				}
 			}

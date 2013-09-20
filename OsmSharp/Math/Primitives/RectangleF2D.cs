@@ -272,8 +272,8 @@ namespace OsmSharp.Math.Primitives
 		/// <param name="box">Box.</param>
 		public bool Overlaps(BoxF2D box){
 			// Yes, I know this code can be shorter but it would turn into a mess!
-			if (box.IsInside (this.BottomLeft) || box.IsInside (this.BottomRight) ||
-				box.IsInside (this.TopLeft) || box.IsInside (this.TopRight)) {
+			if (box.Contains (this.BottomLeft) || box.Contains (this.BottomRight) ||
+				box.Contains (this.TopLeft) || box.Contains (this.TopRight)) {
 				return true;
 			}
 			if (this.Contains (box.Corners [0]) || this.Contains (box.Corners [2]) ||

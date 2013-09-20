@@ -390,7 +390,7 @@ namespace OsmSharp.Data.Redis.Osm
             {
                 // test if the node is in the given bb. 
                 GeoCoordinate coordinate = new GeoCoordinate(redisNode.Latitude.Value, redisNode.Longitude.Value);
-                if (box.IsInside(coordinate))
+                if (box.Contains(coordinate))
                 {
                     res.Add(PrimitiveExtensions.ConvertFrom(redisNode));
                     nodeIds.Add(redisNode.Id.Value);

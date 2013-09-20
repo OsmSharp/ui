@@ -453,7 +453,7 @@ namespace OsmSharp.Math.Structures.QTree
                     {
                         foreach (KeyValuePair<TPointType, TDataType> data_pair in _data)
                         {
-                            if (box.IsInside(data_pair.Key))
+                            if (box.Contains(data_pair.Key))
                             {
                                 data.Add(data_pair.Value);
                             }
@@ -582,7 +582,7 @@ namespace OsmSharp.Math.Structures.QTree
             /// <returns></returns>
             internal bool IsInsideBox(TPointType point)
             {
-                return _bounds.IsInside(point);
+                return _bounds.Contains(point);
             }
         }
     }

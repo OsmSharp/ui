@@ -297,8 +297,8 @@ namespace OsmSharp.Math.Primitives
 		/// </summary>
 		/// <param name="x">The x coordinate.</param>
 		/// <param name="y">The y coordinate.</param>
-		public bool IsInside(double x, double y){
-			return this.IsInside (new PointF2D (x, y));
+		public bool Contains(double x, double y){
+			return this.Contains (new PointF2D (x, y));
 		}
 
         /// <summary>
@@ -306,7 +306,7 @@ namespace OsmSharp.Math.Primitives
         /// </summary>
         /// <param name="a"></param>
         /// <returns></returns>
-        public bool IsInside(PointF2D a)
+        public bool Contains(PointF2D a)
         {
             bool isInside = true;
 
@@ -323,11 +323,11 @@ namespace OsmSharp.Math.Primitives
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-		public bool IsInside(BoxF2D box)
+		public bool Contains(BoxF2D box)
         {
             foreach (PointF2D p in box.Corners)
             {
-                if (!this.IsInside(p))
+                if (!this.Contains(p))
                 {
                     return false;
                 }
@@ -341,13 +341,13 @@ namespace OsmSharp.Math.Primitives
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public List<PointF2D> IsInside(List<PointF2D> points)
+        public List<PointF2D> Contains(List<PointF2D> points)
         {
             List<PointF2D> points_inside = new List<PointF2D>();
 
             foreach (PointF2D point in points)
             {
-                if (this.IsInside(point))
+                if (this.Contains(point))
                 {
                     points_inside.Add(point);
                 }
@@ -361,13 +361,13 @@ namespace OsmSharp.Math.Primitives
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public List<PointF2D> IsInside(PointF2D[] points)
+        public List<PointF2D> Contains(PointF2D[] points)
         {
             List<PointF2D> points_inside = new List<PointF2D>();
 
             foreach (PointF2D point in points)
             {
-                if (this.IsInside(point))
+                if (this.Contains(point))
                 {
                     points_inside.Add(point);
                 }
@@ -381,13 +381,13 @@ namespace OsmSharp.Math.Primitives
         /// </summary>
         /// <param name="points"></param>
         /// <returns></returns>
-        public bool IsInsideAny(PointF2D[] points)
+        public bool ContainsAny(PointF2D[] points)
         {
             if (points != null)
             {
                 for (int idx = 0; idx < points.Length; idx++)
                 {
-                    if (this.IsInside(points[idx]))
+                    if (this.Contains(points[idx]))
                     {
                         return true;
                     }
@@ -395,6 +395,7 @@ namespace OsmSharp.Math.Primitives
             }
             return false;
         }
+
         #region Overlaps
 
         /// <summary>
@@ -417,7 +418,6 @@ namespace OsmSharp.Math.Primitives
         }
 
         #endregion
-
 
         #endregion
 

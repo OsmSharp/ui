@@ -182,7 +182,7 @@ namespace OsmSharp.Collections.SpatialIndexes
                 {
                     if (box.Overlaps(node.Boxes[idx]))
                     {
-                        if (box.IsInside(node.Boxes[idx]))
+                        if (box.Contains(node.Boxes[idx]))
                         { // add all the data from the child.
                             RTreeMemoryIndex<T>.GetAll(children[idx],
                                 result);

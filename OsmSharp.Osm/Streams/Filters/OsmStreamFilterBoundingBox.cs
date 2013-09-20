@@ -274,7 +274,7 @@ namespace OsmSharp.Osm.Data.Streams.Filters
             switch (osmGeo.Type)
             {
                 case OsmGeoType.Node:
-                    isIn = _box.IsInside(new GeoCoordinate(
+                    isIn = _box.Contains(new GeoCoordinate(
                         (osmGeo as Node).Latitude.Value,
                         (osmGeo as Node).Longitude.Value));
                     break;

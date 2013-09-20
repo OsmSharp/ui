@@ -38,7 +38,7 @@ namespace OsmSharp.Math.Structures
             HashSet<DataType> dataset = new HashSet<DataType>();
             foreach (KeyValuePair<PointType, DataType> data in _data)
             {
-                if (box.IsInside(data.Key))
+                if (box.Contains(data.Key))
                 {
                     dataset.Add(data.Value);
                 }

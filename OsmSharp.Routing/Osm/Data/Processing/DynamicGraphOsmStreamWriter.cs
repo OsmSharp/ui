@@ -180,7 +180,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                     // save the node-coordinates.
                     // add the relevant nodes.
 
-                    if (_box == null || _box.IsInside(new GeoCoordinate((float)node.Latitude.Value, (float)node.Longitude.Value)))
+                    if (_box == null || _box.Contains(new GeoCoordinate((float)node.Latitude.Value, (float)node.Longitude.Value)))
                     { // the coordinate is acceptable.
                         _coordinates[node.Id.Value] = new float[] { (float)node.Latitude.Value, (float)node.Longitude.Value };
                         if (_coordinates.Count == _preIndex.Count)
