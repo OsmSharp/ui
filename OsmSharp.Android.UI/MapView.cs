@@ -92,10 +92,24 @@ namespace OsmSharp.Android.UI
 		/// <param name="coordinate">Coordinate.</param>
 		public MapMarker AddMarker(GeoCoordinate coordinate)
 		{
-			MapMarker marker = new MapMarker (this.Context, coordinate);
+			MapMarker marker = new MapMarker (this, coordinate);
 			this.AddMarker (marker);
 			return marker;
 		}
+
+        /// <summary>
+        /// Notifies this MapView that a map marker has changed.
+        /// </summary>
+        /// <param name="mapMarker"></param>
+        internal void NotifyMarkerChange(MapMarker mapMarker)
+        {
+			// notify map layout of changes.
+			if (_mapView.Width > 0 && _mapView.Height > 0) {
+				View2D view = _mapView.CreateView ();
+
+				this.NotifyMapChangeToMarker (this.Width, this.Height, view, this.Map.Projection, mapMarker);
+			}
+        }
 
 		/// <summary>
 		/// Initialize this instance.
@@ -185,13 +199,30 @@ namespace OsmSharp.Android.UI
 		{
 			if (_markers != null) {
 				foreach (var marker in _markers) {
-					this.RemoveView (marker);
-					if (marker.SetLayout (pixelsWidth, pixelsHeight, view, projection)) {
-						this.AddView (marker, marker.LayoutParameters);
-					}
+                    this.NotifyMapChangeToMarker(pixelsWidth, pixelsHeight, view, projection, marker);
 				}
 			}
 		}
+
+        /// <summary>
+        /// Notifies the map change.
+        /// </summary>
+        /// <param name="pixelWidth"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <param name="view"></param>
+        /// <param name="projection"></param>
+        /// <param name="mapMarker"></param>
+        internal void NotifyMapChangeToMarker(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, MapMarker mapMarker)
+        {
+            if (mapMarker != null)
+            {
+                this.RemoveView(mapMarker);
+                if (mapMarker.SetLayout(pixelsWidth, pixelsHeight, view, projection))
+                {
+                    this.AddView(mapMarker, mapMarker.LayoutParameters);
+                }
+            }
+        }
 	}
 }
 

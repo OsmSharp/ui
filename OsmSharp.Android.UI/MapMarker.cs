@@ -44,6 +44,11 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private static global::Android.Graphics.Bitmap _bitmap = null;
 
+        /// <summary>
+        /// Holds the view where this 
+        /// </summary>
+        private MapView _mapView;
+
 		/// <summary>
 		/// Gets the default image.
 		/// </summary>
@@ -61,10 +66,10 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
 		/// </summary>
-		/// <param name="context">Context.</param>
+        /// <param name="mapView">The mapView containing this marker.</param>
 		/// <param name="coordinate">Coordinate.</param>
-		internal MapMarker (Context context, GeoCoordinate coordinate)
-			: this(context, coordinate, MapMarker.GetDefaultImage())
+		internal MapMarker (MapView mapView, GeoCoordinate coordinate)
+            : this(mapView, coordinate, MapMarker.GetDefaultImage())
 		{
 
 		}
@@ -72,11 +77,12 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
 		/// </summary>
-		/// <param name="context">Context.</param>
+        /// <param name="mapView">The mapView containing this marker.</param>
 		/// <param name="coordinate">Coordinate.</param>
 		/// <param name="bitmap">Bitmap.</param>
-		internal MapMarker(Context context, GeoCoordinate coordinate, global::Android.Graphics.Bitmap bitmap)
-			: base(context){
+        internal MapMarker(MapView mapView, GeoCoordinate coordinate, global::Android.Graphics.Bitmap bitmap)
+			: base(mapView.Context){
+                _mapView = mapView;
 			this.Location = coordinate;
 			this.SetBackgroundColor (global::Android.Graphics.Color.Transparent);
 
@@ -96,13 +102,24 @@ namespace OsmSharp.Android.UI
 			}
 		}
 
+        /// <summary>
+        /// Holds this markers location.
+        /// </summary>
+        private GeoCoordinate _location;
+
 		/// <summary>
 		/// Gets or sets the location.
 		/// </summary>
 		/// <value>The location.</value>
 		public GeoCoordinate Location {
-			get;
-			private set;
+            get {
+                return _location;
+            }
+            set {
+                _location = value;
+
+				_mapView.NotifyMarkerChange (this);
+            }
 		}
 
 		/// <summary>
