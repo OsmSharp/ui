@@ -54,6 +54,7 @@
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
     <Compile Include="Map\Layers\LayerScene.cs" />
     <Compile Include="Map\Layers\LayerTile.cs" />
+    <Compile Include="Map\Styles\MapCSS\Streams\MapCSSSceneOsmStreamTarget.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Declaration.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationAntiAliasing.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationCustom.cs" />

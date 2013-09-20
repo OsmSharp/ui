@@ -130,6 +130,7 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\Eval\EvalInterpreter.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Eval\EvalInterpreterException.cs" />
     <Compile Include="Renderer\Scene\Scene2DPrimitives\ImageTilted2D.cs" />
+    <Compile Include="Map\Styles\MapCSS\Streams\MapCSSSceneOsmStreamTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -154,5 +155,8 @@
       <Project>{BE27CB1F-873A-4971-9C84-A81C7DAD04CD}</Project>
       <Name>OsmSharp.Routing.Android</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Map\Styles\MapCSS\Streams\" />
   </ItemGroup>
 </Project>

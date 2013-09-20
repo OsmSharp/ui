@@ -274,5 +274,12 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="text"></param>
         public abstract uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double font_size,
             string text, int? haloColor, int? haloRadius);
+        
+        /// <summary>
+        /// Serializes this scene2D to the given stream.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="compress"></param>
+        public abstract void Serialize(Stream stream, bool compress);
     }
 }

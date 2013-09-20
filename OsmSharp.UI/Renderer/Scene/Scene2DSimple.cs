@@ -449,7 +449,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="compress"></param>
-        public void Serialize(Stream stream, bool compress)
+        public override void Serialize(Stream stream, bool compress)
         {
             // build the index.
             var index = new RTreeMemoryIndex<Scene2DEntry>();

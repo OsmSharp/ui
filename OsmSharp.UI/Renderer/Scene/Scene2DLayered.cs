@@ -452,7 +452,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="compress"></param>
-        public void Serialize(Stream stream, bool compress)
+        public override void Serialize(Stream stream, bool compress)
         {
             Scene2DLayeredSerializer serializer = new Scene2DLayeredSerializer();
             serializer.Serialize(stream, _nonSimplifiedScene, _scenes, _zoomLevelCutoffs, compress);
