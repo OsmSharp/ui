@@ -42,7 +42,7 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Holds the default marker bitmap.
 		/// </summary>
-		private static global::Android.Graphics.Bitmap _bitmap = null;
+		private static global::Android.Graphics.Bitmap _defaultImage = null;
 
         /// <summary>
         /// Holds the view where this 
@@ -55,13 +55,18 @@ namespace OsmSharp.Android.UI
 		/// <returns>The default image.</returns>
 		private static global::Android.Graphics.Bitmap GetDefaultImage()
 		{
-			if (_bitmap == null) {
-				_bitmap = global::Android.Graphics.BitmapFactory.DecodeStream (
+			if (_defaultImage == null) {
+				_defaultImage = global::Android.Graphics.BitmapFactory.DecodeStream (
 					Assembly.GetExecutingAssembly ().GetManifestResourceStream (
 					"OsmSharp.Android.UI.Images.marker.png"));
 			}
-			return _bitmap;
+			return _defaultImage;
 		}
+
+		/// <summary>
+		/// Holds the image for this marker.
+		/// </summary>
+		private global::Android.Graphics.Bitmap _image;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
@@ -83,10 +88,11 @@ namespace OsmSharp.Android.UI
         internal MapMarker(MapView mapView, GeoCoordinate coordinate, global::Android.Graphics.Bitmap bitmap)
 			: base(mapView.Context){
                 _mapView = mapView;
-			this.Location = coordinate;
+			_location = coordinate;
 			this.SetBackgroundColor (global::Android.Graphics.Color.Transparent);
 
 			this.SetScaleType (ScaleType.Center);
+			_image = bitmap;
 			this.SetImageBitmap (bitmap);
 			this.SetMinimumWidth (bitmap.Width);
 			this.SetMinimumHeight (bitmap.Height);
@@ -98,7 +104,7 @@ namespace OsmSharp.Android.UI
 		/// <value>The bitmap.</value>
 		public global::Android.Graphics.Bitmap Bitmap {
 			get {
-				return _bitmap;
+				return _image;
 			}
 		}
 
