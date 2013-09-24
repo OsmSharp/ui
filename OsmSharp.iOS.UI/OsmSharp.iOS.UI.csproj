@@ -46,6 +46,7 @@
     <Compile Include="Renderer\CGContextWrapper.cs" />
     <Compile Include="MapView.cs" />
     <Compile Include="MapMarker.cs" />
+    <Compile Include="MapMarkerAlignmentType.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.iOS.csproj">

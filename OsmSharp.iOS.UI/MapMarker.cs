@@ -41,7 +41,7 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Holds the default marker image.
 		/// </summary>
-		private static UIImage _bitmap;
+		private static UIImage _defaultImage;
 
 		/// <summary>
 		/// Gets the default image.
@@ -49,11 +49,16 @@ namespace OsmSharp.iOS.UI
 		/// <returns>The default image.</returns>
 		private static UIImage GetDefaultImage() 
 		{
-			if (_bitmap == null) {
-				_bitmap = UIImage.FromFile ("Images/marker.png");
+			if (_defaultImage == null) {
+				_defaultImage = UIImage.FromFile ("Images/marker.png");
 			}
-			return _bitmap;
+			return _defaultImage;
 		}
+
+		/// <summary>
+		/// Holds the image for this marker.
+		/// </summary>
+		private UIImage _image;  		/// <summary> 		/// Holds the default alignment. 		/// </summary> 		private MapMarkerAlignmentType _alignment;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SomeTestProject.MapMarker"/> class.
@@ -61,7 +66,19 @@ namespace OsmSharp.iOS.UI
 		/// <param name="mapView">Map view.</param>
 		/// <param name="coordinate">Coordinate.</param>
 		internal MapMarker (MapView mapView, GeoCoordinate coordinate)
-			: this(mapView, coordinate, MapMarker.GetDefaultImage())
+			: this(mapView, coordinate, MapMarkerAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
+		{
+
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SomeTestProject.MapMarker"/> class.
+		/// </summary>
+		/// <param name="mapView">Map view.</param>
+		/// <param name="coordinate">Coordinate.</param>
+		/// <param name="marker">Alignment.</param>
+		internal MapMarker (MapView mapView, GeoCoordinate coordinate, MapMarkerAlignmentType alignment)
+			: this(mapView, coordinate, alignment, MapMarker.GetDefaultImage())
 		{
 
 		}
@@ -72,12 +89,14 @@ namespace OsmSharp.iOS.UI
 		/// <param name="mapView">Map view.</param>
 		/// <param name="coordinate">Coordinate.</param>
 		/// <param name="bitmap">Bitmap.</param>
-		internal MapMarker(MapView mapView, GeoCoordinate coordinate, UIImage bitmap)
+		/// <param name="alignment">Alignment.</param>
+		internal MapMarker(MapView mapView, GeoCoordinate coordinate, MapMarkerAlignmentType alignment, UIImage bitmap)
 			: base(UIButtonType.Custom){
 			_mapView = mapView;
+			_image = bitmap;
 			this.Location = coordinate;
+			_alignment = alignment;
 
-			
 			this.Frame = new System.Drawing.RectangleF (new System.Drawing.PointF (0, 0), bitmap.Size);
 			this.SetImage (bitmap, UIControlState.Normal);
 			this.SetImage (bitmap, UIControlState.Highlighted);
@@ -107,7 +126,7 @@ namespace OsmSharp.iOS.UI
 
 				_mapView.NotifyMarkerChange (this);
 			}
-		}
+		}  		/// <summary> 		/// Gets the bitmap. 		/// </summary> 		/// <value>The bitmap.</value> 		public UIImage Bitmap { 			get { 				return _image; 			} 		}
 
 		/// <summary>
 		/// Sets the layout.
@@ -123,7 +142,9 @@ namespace OsmSharp.iOS.UI
 
 			if (locationPixel [0] > 0 && locationPixel [0] < pixelsWidth &&
 			    locationPixel [1] > 0 && locationPixel [1] < pixelsHeight) {
-				this.Center = new System.Drawing.PointF ((float)locationPixel [0], (float)locationPixel [1]);
+
+				// set the new location depending on the size of the image and the alignment parameter. 				double leftMargin = locationPixel [0];// - this.Bitmap.Size.Width / 2.0; 				double topMargin = locationPixel [1]; 				switch (_alignment) { 				case MapMarkerAlignmentType.CenterTop: 					topMargin = locationPixel [1] + this.Bitmap.Size.Height / 2.0; 					break; 				case MapMarkerAlignmentType.CenterBottom: 					topMargin = locationPixel [1] - this.Bitmap.Size.Height / 2.0; 					break; 				}
+				this.Center = new System.Drawing.PointF ((float)leftMargin, (float)topMargin);
 
 				return true;
 			}

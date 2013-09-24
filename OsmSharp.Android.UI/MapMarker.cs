@@ -69,12 +69,30 @@ namespace OsmSharp.Android.UI
 		private global::Android.Graphics.Bitmap _image;
 
 		/// <summary>
+		/// Holds the default alignment.
+		/// </summary>
+		private MapMarkerAlignmentType _alignment;
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
 		/// </summary>
         /// <param name="mapView">The mapView containing this marker.</param>
 		/// <param name="coordinate">Coordinate.</param>
 		internal MapMarker (MapView mapView, GeoCoordinate coordinate)
-            : this(mapView, coordinate, MapMarker.GetDefaultImage())
+			: this(mapView, coordinate, MapMarkerAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
+		{
+
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
+		/// </summary>
+		/// <param name="mapView">The mapView containing this marker.</param>
+		/// <param name="coordinate">Coordinate.</param>
+		/// <param name="alignment">The alignment.</param>
+		internal MapMarker (MapView mapView, GeoCoordinate coordinate, 
+		                    MapMarkerAlignmentType alignment)
+			: this(mapView, coordinate, alignment, MapMarker.GetDefaultImage())
 		{
 
 		}
@@ -85,10 +103,13 @@ namespace OsmSharp.Android.UI
         /// <param name="mapView">The mapView containing this marker.</param>
 		/// <param name="coordinate">Coordinate.</param>
 		/// <param name="bitmap">Bitmap.</param>
-        internal MapMarker(MapView mapView, GeoCoordinate coordinate, global::Android.Graphics.Bitmap bitmap)
+		/// <param name="alignment">The alignment.</param>
+        internal MapMarker(MapView mapView, GeoCoordinate coordinate, 
+		                   MapMarkerAlignmentType alignment, global::Android.Graphics.Bitmap bitmap)
 			: base(mapView.Context){
                 _mapView = mapView;
 			_location = coordinate;
+			_alignment = alignment;
 			this.SetBackgroundColor (global::Android.Graphics.Color.Transparent);
 
 			this.SetScaleType (ScaleType.Center);
@@ -142,10 +163,22 @@ namespace OsmSharp.Android.UI
 
 			if (locationPixel [0] > 0 && locationPixel [0] < pixelsWidth &&
 			    locationPixel [1] > 0 && locationPixel [1] < pixelsHeight) {
-				(this.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)(locationPixel [0] - 
-					(this.LayoutParameters as FrameLayout.LayoutParams).Width / 2.0);
-				(this.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)locationPixel [1] - 
-					(this.LayoutParameters as FrameLayout.LayoutParams).Height;
+
+				// set the new location depending on the size of the image and the alignment parameter.
+				double leftMargin = locationPixel [0];
+				double topMargin = locationPixel [1];
+
+				switch (_alignment) {
+				case MapMarkerAlignmentType.CenterBottom:
+					topMargin = locationPixel [1] - (this.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
+					break;
+				case MapMarkerAlignmentType.CenterTop:
+					topMargin = locationPixel [1] + (this.LayoutParameters as FrameLayout.LayoutParams).Height / 2.0;
+					break;
+				}
+
+				(this.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftMargin;
+				(this.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topMargin;
 				return true;
 			}
 			return false;

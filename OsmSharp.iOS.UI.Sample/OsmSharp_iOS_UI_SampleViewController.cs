@@ -53,7 +53,7 @@ namespace OsmSharp.iOS.UI.Sample
 //			mapView.Bounds = this.View.Bounds;
 //			View.AddSubview (mapView);
 
-			MapMarker marker = mapView.AddMarker(new OsmSharp.Math.Geo.GeoCoordinate(51.158075, 2.961545));
+			MapMarker marker = mapView.AddMarker(new OsmSharp.Math.Geo.GeoCoordinate(51.1575282, 2.9621705));
 			marker.TouchDown += HandleTouchDown;
 
 			Timer timer = new Timer (5000);

@@ -56,6 +56,7 @@
     <Compile Include="Gestures\TwoFingerGestureDetector.cs" />
     <Compile Include="Gestures\MoveGestureDetector.cs" />
     <Compile Include="Gestures\RotateGestureDetector.cs" />
+    <Compile Include="MapMarkerAlignment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
