@@ -119,10 +119,10 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		/// <param name="state">State.</param>
 		private void InvalidateSimple(object state) {
-			//this.InvokeOnMainThread (Test);
-			if (_cacheRenderer.IsRunning) {
-				this.InvokeOnMainThread (InvalidateMap);
-			}
+//			//this.InvokeOnMainThread (Test);
+//			if (_cacheRenderer.IsRunning) {
+//				this.InvokeOnMainThread (InvalidateMap);
+//			}
 
 			if (_render) {
 				_render = false;
@@ -154,18 +154,20 @@ namespace OsmSharp.iOS.UI
 		/// Render the current complete scene.
 		/// </summary>
 		void Render(){
+			
+			long before = DateTime.Now.Ticks;
+			OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+			                                "Rendering Start");
+
 			if (_cacheRenderer.IsRunning) {
 				_cacheRenderer.CancelAndWait ();
 			}
 
-			if (_rect == null || _rect.Width == 0) { // only render if a proper size is known.
+			if (_rect.Width == 0) { // only render if a proper size is known.
 				return;
 			}
 
 			lock (_cacheRenderer) { // make sure only on thread at the same time is using the renderer.
-				System.Threading.Thread.Sleep (5000);
-
-				double extra = 1.25;
 
 				// build the layers list.
 				var layers = new List<ILayer> ();
@@ -193,9 +195,6 @@ namespace OsmSharp.iOS.UI
 				View2D view = _cacheRenderer.Create (_rect.Width, _rect.Height,
 				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
 				                                     this.MapCenter, _invertX, _invertY, this.MapTilt);
-				long before = DateTime.Now.Ticks;
-				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-				                                "Rendering Start");
 
 				// notify the map that the view has changed.
 				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor(this.MapZoomLevel), this.MapCenter, 
@@ -218,8 +217,6 @@ namespace OsmSharp.iOS.UI
 						// add the newly rendered image again.
 						_cachedScene.Clear ();
 						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, view.Rectangle, new byte[0], gctx.ToImage ());
-//						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, 
-//						                       rectangle.Min[0], rectangle.Min[1], rectangle.Max[0], rectangle.Max[1], new byte[0], gctx.ToImage());
 					}
 					this.InvokeOnMainThread (InvalidateMap);
 				}
@@ -449,7 +446,6 @@ namespace OsmSharp.iOS.UI
 
 				this.NotifyMapChangeToMarkers (_rect.Width, _rect.Height, view, this.Map.Projection);
 			}
-
 			this.SetNeedsDisplay ();
 		}
 
