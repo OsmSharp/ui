@@ -140,16 +140,15 @@ namespace OsmSharp.iOS.UI
 			double[] projected = projection.ToPixel (this.Location);
 			double[] locationPixel = view.ToViewPort (pixelsWidth, pixelsHeight, projected [0], projected [1]);
 
-			if (locationPixel [0] > 0 && locationPixel [0] < pixelsWidth &&
-			    locationPixel [1] > 0 && locationPixel [1] < pixelsHeight) {
+//			if (locationPixel [0] > 0 && locationPixel [0] < pixelsWidth &&
+//			    locationPixel [1] > 0 && locationPixel [1] < pixelsHeight) {
 
 				// set the new location depending on the size of the image and the alignment parameter. 				double leftMargin = locationPixel [0];// - this.Bitmap.Size.Width / 2.0; 				double topMargin = locationPixel [1]; 				switch (_alignment) { 				case MapMarkerAlignmentType.CenterTop: 					topMargin = locationPixel [1] + this.Bitmap.Size.Height / 2.0; 					break; 				case MapMarkerAlignmentType.CenterBottom: 					topMargin = locationPixel [1] - this.Bitmap.Size.Height / 2.0; 					break; 				}
 				this.Center = new System.Drawing.PointF ((float)leftMargin, (float)topMargin);
 
 				return true;
-			}
-			return false;
+//			}
+//			return false;
 		}
 	}
 }
-

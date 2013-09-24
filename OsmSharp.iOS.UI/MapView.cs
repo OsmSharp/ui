@@ -55,6 +55,7 @@ namespace OsmSharp.iOS.UI
 		public void Initialize()
 		{
 			this.BackgroundColor = UIColor.White;
+			this.UserInteractionEnabled = true;
 
 			_markers = new List<MapMarker> ();
 
@@ -67,6 +68,9 @@ namespace OsmSharp.iOS.UI
 			var rotationGesture = new UIRotationGestureRecognizer (Rotate);
 			rotationGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
 			this.AddGestureRecognizer (rotationGesture);
+			var tapGesture = new UITapGestureRecognizer (Tap);
+			tapGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return other != null; };
+			this.AddGestureRecognizer (tapGesture);
 
 			// create the cache renderer.
 			_cacheRenderer = new MapRenderer<CGContextWrapper> (
@@ -344,6 +348,28 @@ namespace OsmSharp.iOS.UI
 			}
 		}
 
+		public delegate void MapTapEventDelegate(GeoCoordinate geoCoordinate);
+
+		/// <summary>
+		/// Occurs when the map was tapped at a certain location.
+		/// </summary>
+		public event MapTapEventDelegate MapTapEvent;
+
+		/// <summary>
+		/// Tap the specified tap.
+		/// </summary>
+		/// <param name="tap">Tap.</param>
+		private void Tap(UITapGestureRecognizer tap){
+			if(_rect.Width > 0 && _rect.Height > 0) {
+				if (this.MapTapEvent != null) {
+					View2D view = this.CreateView (_rect);
+					PointF location = tap.LocationInView (this);
+				    double[] sceneCoordinates = view.FromViewPort (_rect.Width, _rect.Height, location.X, location.Y);
+					this.MapTapEvent (this.Map.Projection.ToGeoCoordinates (sceneCoordinates [0], sceneCoordinates [1]));
+				}
+			}
+		}
+
 		/// <summary>
 		/// Gets or sets the center.
 		/// </summary>
@@ -479,8 +505,12 @@ namespace OsmSharp.iOS.UI
 		public void AddMarker(MapMarker marker)
 		{
 			_markers.Add (marker);
-
 			this.Add (marker);
+
+			if (_rect.Width > 0 && _rect.Height > 0) {
+				View2D view = this.CreateView (_rect);
+				this.NotifyMapChangeToMarker (_rect.Width, _rect.Height, view, this.Map.Projection, marker);
+			}
 		}
 
 		/// <summary>

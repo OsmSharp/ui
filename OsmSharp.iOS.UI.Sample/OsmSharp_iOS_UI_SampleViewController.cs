@@ -8,6 +8,7 @@ using System.Reflection;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 using System.Timers;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.iOS.UI.Sample
 {
@@ -38,37 +39,31 @@ namespace OsmSharp.iOS.UI.Sample
 			// Perform any additional setup after loading the view, typically from a nib.
 			MapView mapView = new MapView ();
 			mapView.Map = map;
-			//mapView.MapCenter = new OsmSharp.Math.Geo.GeoCoordinate (51.26337, 4.78739);
 			mapView.MapCenter = new OsmSharp.Math.Geo.GeoCoordinate(51.158075, 2.961545); // gistel
-			//mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
-			//mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
-			//mapView.Center = new GeoCoordinate(51.156803, 2.958887);
+			mapView.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {
+				mapView.AddMarker(geoCoordinate).TouchDown  += MapMarkerClicked;
+			};
 
 			mapView.MapZoomLevel = 16;
 			mapView.MapTilt = 30;
 
 			View = mapView;
 
-//			View.BackgroundColor = UIColor.Black;
-//			mapView.Bounds = this.View.Bounds;
-//			View.AddSubview (mapView);
-
-			MapMarker marker = mapView.AddMarker(new OsmSharp.Math.Geo.GeoCoordinate(51.1575282, 2.9621705));
-			marker.TouchDown += HandleTouchDown;
-
 			Timer timer = new Timer (5000);
 			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
 			timer.Start ();
 		}
 
+		private void MapMarkerClicked(object sender, EventArgs e)
+		{
+			if (sender is MapMarker) {
+				OsmSharp.Logging.Log.TraceEvent ("Temp", System.Diagnostics.TraceEventType.Verbose, "Marker was touched!");
+			}
+		}
+
 		private void TimerHandler(object sender, ElapsedEventArgs e)
 		{
 			//this.InvokeOnMainThread (IncreaseMapTilt);
-		}
-
-		protected void HandleTouchDown (object sender, System.EventArgs e)
-		{
-			OsmSharp.Logging.Log.TraceEvent ("Temp", System.Diagnostics.TraceEventType.Verbose, "Marker was touched!");
 		}
 
 		private void IncreaseMapTilt()
