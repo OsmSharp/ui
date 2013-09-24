@@ -29,6 +29,7 @@ using System.Collections.Generic;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Units.Angle;
+using OsmSharp.Math.Geo.Projections;
 
 namespace OsmSharp.iOS.UI
 {
@@ -54,6 +55,8 @@ namespace OsmSharp.iOS.UI
 		public void Initialize()
 		{
 			this.BackgroundColor = UIColor.White;
+
+			_markers = new List<MapMarker> ();
 
 			var panGesture = new UIPanGestureRecognizer (Pan);
 			panGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
@@ -114,7 +117,7 @@ namespace OsmSharp.iOS.UI
 		private void InvalidateSimple(object state) {
 			//this.InvokeOnMainThread (Test);
 			if (_cacheRenderer.IsRunning) {
-				this.InvokeOnMainThread (Test);
+				this.InvokeOnMainThread (InvalidateMap);
 			}
 
 			if (_render) {
@@ -214,7 +217,7 @@ namespace OsmSharp.iOS.UI
 //						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, 
 //						                       rectangle.Min[0], rectangle.Min[1], rectangle.Max[0], rectangle.Max[1], new byte[0], gctx.ToImage());
 					}
-					this.InvokeOnMainThread (Test);
+					this.InvokeOnMainThread (InvalidateMap);
 				}
 
 				long after = DateTime.Now.Ticks;
@@ -258,7 +261,7 @@ namespace OsmSharp.iOS.UI
 					this.MapCenter = this.Map.Projection.ToGeoCoordinates (
 						sceneCenter [0], sceneCenter [1]);
 
-					this.InvokeOnMainThread (Test);
+					this.InvokeOnMainThread (InvalidateMap);
 				}
 			}
 		}
@@ -296,7 +299,7 @@ namespace OsmSharp.iOS.UI
 					this.MapZoomLevel = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
 
 					//this.Change (); // notifies change.
-					this.InvokeOnMainThread (Test);
+					this.InvokeOnMainThread (InvalidateMap);
 				}
 			}
 		}
@@ -336,7 +339,7 @@ namespace OsmSharp.iOS.UI
 					this.MapCenter = this.Map.Projection.ToGeoCoordinates (
 						sceneCenter [0], sceneCenter [1]);
 					
-					this.InvokeOnMainThread (Test);
+					this.InvokeOnMainThread (InvalidateMap);
 				}
 			}
 		}
@@ -409,10 +412,18 @@ namespace OsmSharp.iOS.UI
 			                         _invertX, _invertY, this.MapTilt);
 		}
 
-		private void Test()
+		private void InvalidateMap()
 		{
 			OsmSharp.Logging.Log.TraceEvent ("MapView", System.Diagnostics.TraceEventType.Information,
 			                                "SetNeedsDisplay called on main thread!");
+
+			// change the map markers.
+			if (_rect.Width > 0 && _rect.Height > 0) {
+				View2D view = this.CreateView (_rect);
+
+				this.NotifyMapChangeToMarkers (_rect.Width, _rect.Height, view, this.Map.Projection);
+			}
+
 			this.SetNeedsDisplay ();
 		}
 
@@ -453,6 +464,84 @@ namespace OsmSharp.iOS.UI
 				}
 			}
 		}
+
+		#region Map Markers
+
+		/// <summary>
+		/// Holds the markers.
+		/// </summary>
+		private List<MapMarker> _markers;
+
+		/// <summary>
+		/// Returns the mapmarkers list.
+		/// </summary>
+		/// <value>The markers.</value>
+		public void AddMarker(MapMarker marker)
+		{
+			_markers.Add (marker);
+
+			this.Add (marker);
+		}
+
+		/// <summary>
+		/// Adds the marker.
+		/// </summary>
+		/// <returns>The marker.</returns>
+		/// <param name="coordinate">Coordinate.</param>
+		public MapMarker AddMarker(GeoCoordinate coordinate)
+		{
+			MapMarker marker = new MapMarker (this, coordinate);
+			this.AddMarker (marker);
+			return marker;
+		}
+
+		/// <summary>
+		/// Notifies the map change to markers.
+		/// </summary>
+		/// <param name="pixelsWidth">Pixels width.</param>
+		/// <param name="pixelsHeight">Pixels height.</param>
+		/// <param name="view">View.</param>
+		/// <param name="projection">Projection.</param>
+		internal void NotifyMapChangeToMarkers(double pixelsWidth, double pixelsHeight, View2D view, 
+		                                      IProjection projection) {
+			foreach (MapMarker marker in _markers) {
+				this.NotifyMapChangeToMarker (pixelsWidth, pixelsHeight, view, projection, marker);
+			}
+		}
+
+		/// <summary>
+		/// Notifies this MapView that a map marker has changed.
+		/// </summary>
+		/// <param name="mapMarker"></param>
+		internal void NotifyMarkerChange(MapMarker mapMarker)
+		{
+			// notify map layout of changes.
+			if (_rect.Width > 0 && _rect.Height > 0) {
+				View2D view = this.CreateView (_rect);
+
+				this.NotifyMapChangeToMarker (_rect.Width, _rect.Height, view, this.Map.Projection, mapMarker);
+			}
+		}
+
+		/// <summary>
+		/// Notifies the map change.
+		/// </summary>
+		/// <param name="pixelWidth"></param>
+		/// <param name="pixelsHeight"></param>
+		/// <param name="view"></param>
+		/// <param name="projection"></param>
+		/// <param name="mapMarker"></param>
+		internal void NotifyMapChangeToMarker(double pixelsWidth, double pixelsHeight, View2D view, 
+		                                      IProjection projection, MapMarker mapMarker)
+		{
+			if (mapMarker != null)
+			{
+				mapMarker.SetLayout (pixelsWidth, pixelsHeight, view, projection);
+			}
+		}
+
+		#endregion
+
 	}
 }
 

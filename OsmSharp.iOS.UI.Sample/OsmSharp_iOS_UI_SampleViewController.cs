@@ -53,6 +53,9 @@ namespace OsmSharp.iOS.UI.Sample
 //			mapView.Bounds = this.View.Bounds;
 //			View.AddSubview (mapView);
 
+			MapMarker marker = mapView.AddMarker(new OsmSharp.Math.Geo.GeoCoordinate(51.158075, 2.961545));
+			marker.TouchDown += HandleTouchDown;
+
 			Timer timer = new Timer (5000);
 			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
 			timer.Start ();
@@ -63,6 +66,11 @@ namespace OsmSharp.iOS.UI.Sample
 			//this.InvokeOnMainThread (IncreaseMapTilt);
 		}
 
+		protected void HandleTouchDown (object sender, System.EventArgs e)
+		{
+			OsmSharp.Logging.Log.TraceEvent ("Temp", System.Diagnostics.TraceEventType.Verbose, "Marker was touched!");
+		}
+
 		private void IncreaseMapTilt()
 		{
 			(this.View as MapView).MapTilt = (this.View as MapView).MapTilt + 5;
@@ -71,8 +79,6 @@ namespace OsmSharp.iOS.UI.Sample
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-
-
 		}
 
 		public override bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation)
@@ -82,4 +88,3 @@ namespace OsmSharp.iOS.UI.Sample
 		}
 	}
 }
-

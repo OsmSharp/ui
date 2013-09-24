@@ -38,12 +38,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Images\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Renderer\CGContextRenderer.cs" />
     <Compile Include="Renderer\CGContextWrapper.cs" />
     <Compile Include="MapView.cs" />
+    <Compile Include="MapMarker.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.iOS.csproj">
@@ -62,5 +64,8 @@
       <Project>{1943198A-45C1-44CD-9D5B-2F3417D6E3C6}</Project>
       <Name>OsmSharp.UI.iOS</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Images\marker.png" />
   </ItemGroup>
 </Project>
