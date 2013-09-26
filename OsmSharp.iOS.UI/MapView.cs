@@ -368,12 +368,30 @@ namespace OsmSharp.iOS.UI
 		}
 
 		/// <summary>
+		/// The map center.
+		/// </summary>
+		private GeoCoordinate _mapCenter;
+
+		/// <summary>
+		/// The map center on the previous rendering.
+		/// </summary>
+		private GeoCoordinate _previousRenderingMapCenter;
+
+		/// <summary>
 		/// Gets or sets the center.
 		/// </summary>
 		/// <value>The center.</value>
 		public GeoCoordinate MapCenter {
-			get;
-			set;
+			get { return _mapCenter; }
+			set { 
+				_mapCenter = value;
+				this.InvalidateMap ();
+				if (_previousRenderingMapCenter == null || 
+				    _previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 20) { // TODO: update this with a more resonable measure depending on the zoom.
+					this.Change ();
+					_previousRenderingMapCenter = _mapCenter;
+				} 
+			}
 		}
 
 		/// <summary>
@@ -397,20 +415,19 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Holds the map tilte angle.
 		/// </summary>
-		private float _mapTilt;
+		private Degree _mapTilt;
 
 		/// <summary>
 		/// Gets or sets the map tilt.
 		/// </summary>
 		/// <value>The map tilt.</value>
-		public float MapTilt {
+		public Degree MapTilt {
 			get{
 				return _mapTilt;
 			}
 			set {
 				_mapTilt = value;
-
-				this.Change ();
+				this.InvalidateMap ();
 			}
 		}
 
@@ -437,8 +454,8 @@ namespace OsmSharp.iOS.UI
 
 		private void InvalidateMap()
 		{
-			OsmSharp.Logging.Log.TraceEvent ("MapView", System.Diagnostics.TraceEventType.Information,
-			                                "SetNeedsDisplay called on main thread!");
+			//OsmSharp.Logging.Log.TraceEvent ("MapView", System.Diagnostics.TraceEventType.Information,
+			//                                "SetNeedsDisplay called on main thread!");
 
 			// change the map markers.
 			if (_rect.Width > 0 && _rect.Height > 0) {
@@ -472,17 +489,17 @@ namespace OsmSharp.iOS.UI
 					context.SetBlendMode (CGBlendMode.Copy);
 					context.SetAlpha (1);
 
-					OsmSharp.Logging.Log.TraceEvent ("MapView", System.Diagnostics.TraceEventType.Information,
-					                                 "Renderer called in Draw(rect)!");
+					//OsmSharp.Logging.Log.TraceEvent ("MapView", System.Diagnostics.TraceEventType.Information,
+					//                                 "Renderer called in Draw(rect)!");
 					long afterViewChanged = DateTime.Now.Ticks;
 					CGContextRenderer renderer = new CGContextRenderer ();
 					renderer.Render (new CGContextWrapper (context, _rect),
 					                _cachedScene, view);
 					long afterRendering = DateTime.Now.Ticks;
 
-					OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-					                                "Rendering cache took: {0}ms @ zoom level {1}",
-					                                (new TimeSpan(afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoomLevel);
+					//OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+					//                                "Rendering cache took: {0}ms @ zoom level {1}",
+					//                                (new TimeSpan(afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoomLevel);
 				}
 			}
 		}

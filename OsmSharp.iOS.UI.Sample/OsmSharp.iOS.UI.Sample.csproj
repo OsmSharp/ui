@@ -138,5 +138,8 @@
     <EmbeddedResource Include="..\..\..\..\Dropbox\SharpSoftware\Projects\Westtour WOI\wvl.map">
       <Link>wvl.map</Link>
     </EmbeddedResource>
+    <EmbeddedResource Include="..\..\..\..\Dropbox\SharpSoftware\Projects\Westtour WOI\wvl.routing">
+      <Link>wvl.routing</Link>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

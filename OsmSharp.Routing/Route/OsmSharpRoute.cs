@@ -371,6 +371,7 @@ namespace OsmSharp.Routing.Route
                     PointF2D position = points[idx] + direction;
                     return new GeoCoordinate(position[1], position[0]);
                 }
+				distanceMeter += currentDistance;
             }
             return null;
         }
