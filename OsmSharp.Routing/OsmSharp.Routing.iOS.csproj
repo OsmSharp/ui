@@ -51,6 +51,7 @@
     <Compile Include="IRouterExtensions.cs" />
     <Compile Include="Router.cs" />
     <Compile Include="RouterPoint.cs" />
+    <Compile Include="Route\OsmSharpRouteEnumerator.cs" />
     <Compile Include="Vehicle.cs" />
     <Compile Include="ArcAggregation\Output\Aggregated.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />

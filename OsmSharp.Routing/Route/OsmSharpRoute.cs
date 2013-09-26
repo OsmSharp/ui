@@ -15,13 +15,16 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
-//using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Primitives;
+using OsmSharp.Units.Distance;
+using OsmSharp.Math;
 
 namespace OsmSharp.Routing.Route
 {
@@ -347,6 +350,65 @@ namespace OsmSharp.Routing.Route
         #endregion
 
         #endregion
+
+        /// <summary>
+        /// Calculates the position on the route after the given distance from the starting point.
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
+        public GeoCoordinate PositionAfter(Meter m)
+        {
+            double distanceMeter = 0;
+            List<GeoCoordinate> points = this.GetPoints();
+            for (int idx = 0; idx < points.Count - 1; idx++)
+            {
+                double currentDistance = points[idx].DistanceReal(points[idx + 1]).Value;
+                if (distanceMeter + currentDistance >= m.Value)
+                { // the current distance should be in this segment.
+                    double segmentDistance = m.Value - distanceMeter;
+                    VectorF2D direction = points[idx + 1] - points[idx];
+                    direction = direction * (segmentDistance / currentDistance);
+                    PointF2D position = points[idx] + direction;
+                    return new GeoCoordinate(position[1], position[0]);
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Calculates the closest point on the route.
+        /// </summary>
+        /// <param name="coordinates"></param>
+        /// <returns></returns>
+        public GeoCoordinate ProjectOn(GeoCoordinate coordinates)
+        {
+            double distance = double.MaxValue;
+            GeoCoordinate closests = null;
+            List<GeoCoordinate> points = this.GetPoints();
+            for (int idx = 0; idx < points.Count - 1; idx++)
+            {
+                GeoCoordinateLine line = new GeoCoordinateLine(points[idx], points[idx + 1]);
+                PointF2D projectedPoint = line.ProjectOn(coordinates);
+                GeoCoordinate projected = new GeoCoordinate(projectedPoint[1], projectedPoint[0]);
+                double currentDistance = coordinates.Distance(projected);
+                if (currentDistance < distance)
+                {
+                    closests = projected;
+                    distance = currentDistance;
+                }
+            }
+            return closests;
+        }
+
+        /// <summary>
+        /// Returns an enumerable of route positions with the given interval between them.
+        /// </summary>
+        /// <param name="interval"></param>
+        /// <returns></returns>
+        public IEnumerable<GeoCoordinate> GetRouteEnumerable(Meter interval)
+        {
+            return new OsmSharpRouteEnumerable(this, interval);
+        }
     }
 
     /// <summary>

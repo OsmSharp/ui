@@ -99,50 +99,27 @@ namespace OsmSharp.Android.UI.Sample
 //			Router router = Router.CreateLiveFrom(
 //				graphSerialized,
 //				new OsmRoutingInterpreter());
-			
-//			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
-//			var graphDeserialized = routingSerializer.Deserialize(
-//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.osm.pbf.routing.ch"), true);
-////
-//			_router = Router.CreateCHFrom(
-//				graphDeserialized, new CHRouter(graphDeserialized),
-//				new OsmRoutingInterpreter());
 
-//
-//			//GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
-//			//GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
-//			//GeoCoordinate point3 = new GeoCoordinate(51.175967, 2.93733);
-//			GeoCoordinate point1 = new GeoCoordinate (50.885726, 3.253426);
-//			//GeoCoordinate point2 = new GeoCoordinate (50.88602, 3.218149);
-//			GeoCoordinate point2 = new GeoCoordinate (51.1515, 2.9563);
-//			GeoCoordinate point3 = new GeoCoordinate(51.34643, 3.28837);
-//
-//			OsmSharpRoute route1 = router.Calculate(Vehicle.Car, 
-//			                                       router.Resolve(Vehicle.Car, point1),
-//			                                       router.Resolve(Vehicle.Car, point2));
-//			
-//			OsmSharpRoute route2 = router.Calculate(Vehicle.Car, 
-//			                                       router.Resolve(Vehicle.Car, point1),
-//			                                       router.Resolve(Vehicle.Car, point3));
-//
-//			OsmSharpRoute route3 = router.Calculate(Vehicle.Car, 
-//			                                        router.Resolve(Vehicle.Car, point2),
-//			                                        router.Resolve(Vehicle.Car, point3));
-////
-////			OsmSharpRoute route = router.Calculate(Vehicle.Car, 
-////			                                       router.Resolve(Vehicle.Car, new GeoCoordinate(51.15136, 3.19462)),
-////			                                       router.Resolve(Vehicle.Car, new GeoCoordinate(51.075023, 3.096632)));
-//////			route = router.Calculate(Vehicle.Car, 
-//////			                         router.Resolve(Vehicle.Car, new GeoCoordinate(51.075023, 3.096632)),
-//////			                         router.Resolve(Vehicle.Car, new GeoCoordinate(51.15136, 3.19462)));
-////			route = router.Calculate(Vehicle.Car, 
-////			                         router.Resolve(Vehicle.Car, new GeoCoordinate(51.15136, 3.19462)),
-////			                         router.Resolve(Vehicle.Car, new GeoCoordinate(51.075023, 3.096632)));
+            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+            var graphDeserialized = routingSerializer.Deserialize(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.routing"), true);
+
+            _router = Router.CreateCHFrom(
+                graphDeserialized, new CHRouter(graphDeserialized),
+                new OsmRoutingInterpreter());
+
+            GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
+            GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
+            RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
+            RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
+            OsmSharpRoute route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
+
 			_routeLayer = new LayerOsmSharpRoute(map.Projection);
-//			osmSharpLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
+            _routeLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
 //			osmSharpLayer.AddRoute (route2, SimpleColor.FromKnownColor(KnownColor.Red).Value);
 //			osmSharpLayer.AddRoute (route3, SimpleColor.FromKnownColor(KnownColor.YellowGreen).Value);
 			map.AddLayer(_routeLayer);
+
 
 //			// create gpx layer.
 //			LayerGpx gpxLayer = new LayerGpx(map.Projection);
@@ -182,6 +159,11 @@ namespace OsmSharp.Android.UI.Sample
 			mapLayout.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {
 				mapLayout.AddMarker(geoCoordinate).Click  += new EventHandler (MapMarkerClicked);
 			};
+
+            if (route1 != null)
+            {
+                mapLayout.MapCenter = route1.GetBox().Center;
+            }
 
 			//Create the user interface in code
 			var layout = new RelativeLayout (this);

@@ -112,7 +112,9 @@ namespace OsmSharp.UI.Map.Layers
 		/// <param name="argb">Stream.</param>
 		public void AddRoute(OsmSharpRoute route, int argb)
 		{
-			if (route.Entries != null && route.Entries.Length > 0)
+			if (route != null && 
+                route.Entries != null && 
+                route.Entries.Length > 0)
 			{ // there are entries.
 				// get x/y.
 				var x = new double[route.Entries.Length];

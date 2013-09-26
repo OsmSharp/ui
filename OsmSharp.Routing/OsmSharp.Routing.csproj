@@ -204,6 +204,7 @@
     <Compile Include="Route\Metrics\OsmSharpRouteMetricCalculator.cs" />
     <Compile Include="Route\Metrics\Time\TimeCalculator.cs" />
     <Compile Include="Route\OsmSharpRoute.cs" />
+    <Compile Include="Route\OsmSharpRouteEnumerator.cs" />
     <Compile Include="Route\OsmSharpRouteGenerator.cs" />
     <Compile Include="TSP\Genetic\RouterTSPAEXGenetic.cs" />
     <Compile Include="TSP\Genetic\RouterTSPGenetic.cs" />
