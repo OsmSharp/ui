@@ -30,13 +30,15 @@ using OsmSharp.UI.Map;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Android.UI
 {
 	/// <summary>
 	/// Map view handling the map display and pan-zoon markers and touch-events.
 	/// </summary>
-	public class MapView : FrameLayout
+	public class MapView : FrameLayout, IMapView
 	{
 		/// <summary>
 		/// Holds the mapview.
@@ -129,7 +131,7 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map zoom level.
 		/// </summary>
 		/// <value>The map zoom level.</value>
-		public float MapZoomLevel {
+		public float MapZoom {
 			get { return _mapView.MapZoomLevel; }
 			set { _mapView.MapZoomLevel = value; }
 		}
@@ -179,7 +181,7 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map tilt.
 		/// </summary>
 		/// <value>The map tilt.</value>
-		public float MapTilt {
+		public Degree MapTilt {
 			get{
 				return _mapView.MapTilt;
 			}

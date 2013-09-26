@@ -155,7 +155,7 @@ namespace OsmSharp.Android.UI.Sample
 			//mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
 			//mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
 			//mapView.Center = new GeoCoordinate(51.156803, 2.958887);
-			mapLayout.MapZoomLevel = 15;
+			mapLayout.MapZoom = 15;
 			mapLayout.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {
 				mapLayout.AddMarker(geoCoordinate).Click  += new EventHandler (MapMarkerClicked);
 			};

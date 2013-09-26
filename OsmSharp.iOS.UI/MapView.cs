@@ -36,7 +36,7 @@ namespace OsmSharp.iOS.UI
 	/// <summary>
 	/// Map view.
 	/// </summary>
-	public class MapView : UIView
+	public class MapView : UIView, IMapView
 	{
 		private bool _invertX = false;
 		private bool _invertY = false;
@@ -193,16 +193,16 @@ namespace OsmSharp.iOS.UI
 
 				// create the view.
 				View2D view = _cacheRenderer.Create (_rect.Width, _rect.Height,
-				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel), 
+				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoom), 
 				                                     this.MapCenter, _invertX, _invertY, this.MapTilt);
 
 				// notify the map that the view has changed.
-				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor(this.MapZoomLevel), this.MapCenter, 
+				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, 
 				                      view);
 				long afterViewChanged = DateTime.Now.Ticks;
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
 				                                "View change took: {0}ms @ zoom level {1}",
-				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoomLevel);
+				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 				// does the rendering.
 				bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx, new RectangleF(0,0,_rect.Width, _rect.Height)), 
 				                                       layers, view);
@@ -210,7 +210,7 @@ namespace OsmSharp.iOS.UI
 				long afterRendering = DateTime.Now.Ticks;
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
 				                                "Rendering took: {0}ms @ zoom level {1}",
-				                                (new TimeSpan(afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoomLevel);
+				                                (new TimeSpan(afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
 				if (complete) { // there was no cancellation, the rendering completely finished.
 					// add the result to the scene cache.
 					lock (_cachedScene) {
@@ -280,24 +280,24 @@ namespace OsmSharp.iOS.UI
 		{
 			if (_rect.Width > 0) {
 				if (pinch.State == UIGestureRecognizerState.Ended) {
-					this.MapZoomLevel = _mapZoomLevelBefore.Value;
+					this.MapZoom = _mapZoomLevelBefore.Value;
 
-					double zoomFactor = this.Map.Projection.ToZoomFactor (this.MapZoomLevel);
+					double zoomFactor = this.Map.Projection.ToZoomFactor (this.MapZoom);
 					zoomFactor = zoomFactor * pinch.Scale;
-					this.MapZoomLevel = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
+					this.MapZoom = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
 
 					this.Change (); // notifies change.
 
 					_mapZoomLevelBefore = null;
 				} else if (pinch.State == UIGestureRecognizerState.Began) {
-					_mapZoomLevelBefore = this.MapZoomLevel;
+					_mapZoomLevelBefore = this.MapZoom;
 				}
 				else {
-					this.MapZoomLevel = _mapZoomLevelBefore.Value;
+					this.MapZoom = _mapZoomLevelBefore.Value;
 
-					double zoomFactor = this.Map.Projection.ToZoomFactor (this.MapZoomLevel);
+					double zoomFactor = this.Map.Projection.ToZoomFactor (this.MapZoom);
 					zoomFactor = zoomFactor * pinch.Scale;
-					this.MapZoomLevel = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
+					this.MapZoom = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
 
 					//this.Change (); // notifies change.
 					this.InvokeOnMainThread (InvalidateMap);
@@ -407,7 +407,7 @@ namespace OsmSharp.iOS.UI
 		/// Gets or sets the zoom level.
 		/// </summary>
 		/// <value>The zoom level.</value>
-		public float MapZoomLevel {
+		public float MapZoom {
 			get;
 			set;
 		}
@@ -445,7 +445,7 @@ namespace OsmSharp.iOS.UI
 			_rect = rect;
 
 			double[] sceneCenter = this.Map.Projection.ToPixel (this.MapCenter.Latitude, this.MapCenter.Longitude);
-			float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor (this.MapZoomLevel);
+			float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor (this.MapZoom);
 
 			return View2D.CreateFrom (sceneCenter [0], sceneCenter [1],
 			                         rect.Width, rect.Height, sceneZoomFactor,

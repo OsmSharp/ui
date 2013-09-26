@@ -313,13 +313,14 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Holds the map tilte angle.
 		/// </summary>
-		private float _mapTilt;
+		private Degree _mapTilt;
 
 		/// <summary>
 		/// Gets or sets the map tilt.
 		/// </summary>
 		/// <value>The map tilt.</value>
-		public float MapTilt {
+        public Degree MapTilt
+        {
 			get{
 				return _mapTilt;
 			}
