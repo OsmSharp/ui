@@ -79,6 +79,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Animations\MapViewAnimator.cs" />
     <Compile Include="IMapView.cs" />
     <Compile Include="KnownColor.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />

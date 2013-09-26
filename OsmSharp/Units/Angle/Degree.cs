@@ -97,6 +97,17 @@ namespace OsmSharp.Units.Angle
         }
 
         /// <summary>
+        /// Adds two angles.
+        /// </summary>
+        /// <param name="deg1"></param>
+        /// <param name="deg2"></param>
+        /// <returns></returns>
+        public static Degree operator +(Degree deg1, Degree deg2)
+        {
+            return deg1.Value + deg2.Value;
+        }
+
+        /// <summary>
         /// Returns the absolute value of the angle.
         /// </summary>
         /// <returns></returns>

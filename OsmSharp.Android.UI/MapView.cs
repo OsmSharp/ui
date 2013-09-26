@@ -173,8 +173,12 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <value>The map center.</value>
 		public GeoCoordinate MapCenter {
-			get { return _mapView.MapCenter; }
-			set { _mapView.MapCenter = value; }
+			get { 
+                return _mapView.MapCenter; 
+            }
+			set { 
+                _mapView.MapCenter = value; 
+            }
 		}
 
 		/// <summary>
