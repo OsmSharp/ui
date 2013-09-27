@@ -46,14 +46,44 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		public MapView ()
 		{
-			this.Initialize ();
+			this.Initialize (new GeoCoordinate(0,0), new Map(), 0, 16);
 		}
 
 		/// <summary>
-		/// Initialize this instance.
+		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.MapView"/> class.
 		/// </summary>
-		public void Initialize()
+		/// <param name="mapCenter">Map center.</param>
+		/// <param name="map">Map.</param>
+		/// <param name="defaultZoom">Default zoom.</param>
+		public MapView (GeoCoordinate mapCenter, Map map, float defaultZoom)
 		{
+			this.Initialize (mapCenter, map, 0, defaultZoom);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.MapView"/> class.
+		/// </summary>
+		/// <param name="mapCenter">Map center.</param>
+		/// <param name="map">Map.</param>
+		/// <param name="mapTilt">Map tilt.</param>
+		/// <param name="defaultZoom">Default zoom.</param>
+		public MapView (GeoCoordinate mapCenter, Map map, Degree mapTilt, float defaultZoom)
+		{
+			this.Initialize (mapCenter, map, mapTilt, defaultZoom);
+		}
+
+		/// <summary>
+		/// Initialize the specified defaultMapCenter, defaultMap, defaultMapTilt and defaultMapZoom.
+		/// </summary>
+		/// <param name="defaultMapCenter">Default map center.</param>
+		/// <param name="defaultMap">Default map.</param>
+		/// <param name="defaultMapTilt">Default map tilt.</param>
+		/// <param name="defaultMapZoom">Default map zoom.</param>
+		public void Initialize(GeoCoordinate defaultMapCenter, Map defaultMap, Degree defaultMapTilt, float defaultMapZoom)
+		{
+			_mapCenter = defaultMapCenter;
+			this.Map = defaultMap;
+
 			this.BackgroundColor = UIColor.White;
 			this.UserInteractionEnabled = true;
 
@@ -119,11 +149,6 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		/// <param name="state">State.</param>
 		private void InvalidateSimple(object state) {
-//			//this.InvokeOnMainThread (Test);
-//			if (_cacheRenderer.IsRunning) {
-//				this.InvokeOnMainThread (InvalidateMap);
-//			}
-
 			if (_render) {
 				_render = false;
 				
@@ -395,12 +420,22 @@ namespace OsmSharp.iOS.UI
 		}
 
 		/// <summary>
+		/// Holds the map.
+		/// </summary>
+		private Map _map;
+
+		/// <summary>
 		/// Gets or sets the map.
 		/// </summary>
 		/// <value>The map.</value>
 		public Map Map {
-			get;
-			set;
+			get{
+				return _map;
+			}
+			set {
+				_map = value;
+				this.InvalidateMap ();
+			}
 		}
 
 		/// <summary>
