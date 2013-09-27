@@ -113,8 +113,7 @@ namespace OsmSharp.iOS.UI
 			// create invalidation timer.
 			_render = true;
 
-			new System.Threading.Timer (InvalidateSimple,
-			                                                           null, 0, 50);
+			new System.Threading.Timer (InvalidateSimple, new object(), 0, 50);
 		}
 
 		public override bool GestureRecognizerShouldBegin (UIGestureRecognizer gestureRecognizer)
@@ -142,14 +141,14 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		/// <param name="state">State.</param>
 		private void InvalidateSimple(object state) {
-			if (_render) {
-				_render = false;
-				
-				if (_cacheRenderer.IsRunning) {
-					_cacheRenderer.Cancel ();
-				}
+			lock (state) {
+				if (_render) {
+					if (_cacheRenderer.IsRunning) {
+						_cacheRenderer.Cancel ();
+					}
 
-				this.Render ();
+					this.Render ();
+				}
 			}
 		}
 
@@ -172,10 +171,6 @@ namespace OsmSharp.iOS.UI
 		/// Render the current complete scene.
 		/// </summary>
 		void Render(){
-			
-			long before = DateTime.Now.Ticks;
-			OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-			                                "Rendering Start");
 
 			if (_cacheRenderer.IsRunning) {
 				_cacheRenderer.CancelAndWait ();
@@ -186,6 +181,13 @@ namespace OsmSharp.iOS.UI
 			}
 
 			lock (_cacheRenderer) { // make sure only on thread at the same time is using the renderer.
+				_render = false;
+
+				long before = DateTime.Now.Ticks;
+				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+				                                "Rendering Start");
+
+				float extra = 1.25f;
 
 				// build the layers list.
 				var layers = new List<ILayer> ();
@@ -199,18 +201,18 @@ namespace OsmSharp.iOS.UI
 				// create a new bitmap context.
 				CGColorSpace space = CGColorSpace.CreateDeviceRGB ();
 				int bytesPerPixel = 4;
-				int bytesPerRow = bytesPerPixel * (int)_rect.Width;
+				int bytesPerRow = bytesPerPixel * (int)(_rect.Width * extra);
 				int bitsPerComponent = 8;
 				if (_bytescache == null) {
-					_bytescache = new byte[bytesPerRow * (int)_rect.Height];
+					_bytescache = new byte[bytesPerRow * (int)(_rect.Height * extra)];
 				}
-				CGBitmapContext gctx = new CGBitmapContext (null, (int)_rect.Width, (int)_rect.Height,
+				CGBitmapContext gctx = new CGBitmapContext (null, (int)(_rect.Width * extra), (int)(_rect.Height * extra),
 				                                           bitsPerComponent, bytesPerRow,
 				                                            space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
 				                                            CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
 
 				// create the view.
-				View2D view = _cacheRenderer.Create (_rect.Width, _rect.Height,
+				View2D view = _cacheRenderer.Create ((int)(_rect.Width * extra), (int)(_rect.Height * extra),
 				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoom), 
 				                                     this.MapCenter, _invertX, _invertY, this.MapTilt);
 
@@ -222,7 +224,7 @@ namespace OsmSharp.iOS.UI
 				                                "View change took: {0}ms @ zoom level {1}",
 				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 				// does the rendering.
-				bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx, new RectangleF(0,0,_rect.Width, _rect.Height)), 
+				bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx, new RectangleF(0,0,(int)(_rect.Width * extra), (int)(_rect.Height * extra))), 
 				                                       layers, view);
 
 				long afterRendering = DateTime.Now.Ticks;
@@ -241,7 +243,7 @@ namespace OsmSharp.iOS.UI
 
 				long after = DateTime.Now.Ticks;
 				if (!complete) {
-					OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering in {0}ms after cancellation!", 
+					OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering CANCELLED!", 
 					                                new TimeSpan (after - before).TotalMilliseconds);
 				} else {
 					OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering in {0}ms", 
@@ -405,7 +407,7 @@ namespace OsmSharp.iOS.UI
 				_mapCenter = value;
 				this.InvalidateMap ();
 				if (_previousRenderingMapCenter == null || 
-				    _previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 20) { // TODO: update this with a more resonable measure depending on the zoom.
+				    _previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 40) { // TODO: update this with a more resonable measure depending on the zoom.
 					this.Change ();
 					_previousRenderingMapCenter = _mapCenter;
 				} 
@@ -524,6 +526,10 @@ namespace OsmSharp.iOS.UI
 		/// <param name="rect">Rect.</param>
 		public override void Draw (System.Drawing.RectangleF rect)
 		{
+			if (_rect.Width == 0) {
+				_rect = rect;
+				this.Render ();
+			}
 			_rect = rect;
 
 			base.Draw (rect);

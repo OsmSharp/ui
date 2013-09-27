@@ -52,7 +52,7 @@ namespace OsmSharp.iOS.UI.Sample
 				mapView.AddMarker(geoCoordinate).TouchDown  += MapMarkerClicked;
 			};
 
-			mapView.MapZoomLevel = 16;
+			mapView.MapZoom = 18;
 			mapView.MapTilt = 30;
 
 			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
@@ -81,9 +81,9 @@ namespace OsmSharp.iOS.UI.Sample
 
 			View = mapView;
 
-			Timer timer = new Timer (100);
-			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
-			timer.Start ();
+//			Timer timer = new Timer (50);
+//			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
+//			timer.Start ();
 
 			mapView.SetNeedsDisplay ();
 		}
