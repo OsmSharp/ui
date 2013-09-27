@@ -14,10 +14,6 @@
         <summary>OsmSharp is an open-source mapping project designed to work with OpenStreetMap-data. Most important features are offline rendering of OpenStreetMap-data and routing on OpenStreetMap-data in a completely cross-platform way. Available on Android, iOS, Windows Phone, Mac OSX, Windows and Linux using Mono.</summary>
         <copyright>Ben Abelshausen</copyright>
         <tags>osm, openstreetmap, routing, rendering, mapcss</tags>
-        <dependencies>
-            <dependency id="protobuf-net" version="2.0.0.621" />
-            <dependency id="Zlib.Portable" version="1.9.2" />
-        </dependencies>
     </metadata>
     <files>
         <file src="Output\Release\Any CPU\OsmSharp.Osm.dll" target="lib\net40\OsmSharp.Osm.dll" />
