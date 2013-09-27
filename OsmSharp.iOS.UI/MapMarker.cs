@@ -31,14 +31,6 @@ namespace OsmSharp.iOS.UI
 	public class MapMarker : UIButton
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="SomeTestProject.MapMarker"/> class.
-		/// </summary>
-		public MapMarker ()
-		{
-
-		}
-
-		/// <summary>
 		/// Holds the default marker image.
 		/// </summary>
 		private static UIImage _defaultImage;
@@ -63,10 +55,9 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SomeTestProject.MapMarker"/> class.
 		/// </summary>
-		/// <param name="mapView">Map view.</param>
-		/// <param name="coordinate">Coordinate.</param>
-		internal MapMarker (MapView mapView, GeoCoordinate coordinate)
-			: this(mapView, coordinate, MapMarkerAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
+		/// <param name="location">Coordinate.</param>
+		public MapMarker (GeoCoordinate location)
+			: this(location, MapMarkerAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
 		{
 
 		}
@@ -74,11 +65,10 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SomeTestProject.MapMarker"/> class.
 		/// </summary>
-		/// <param name="mapView">Map view.</param>
-		/// <param name="coordinate">Coordinate.</param>
+		/// <param name="location">Coordinate.</param>
 		/// <param name="marker">Alignment.</param>
-		internal MapMarker (MapView mapView, GeoCoordinate coordinate, MapMarkerAlignmentType alignment)
-			: this(mapView, coordinate, alignment, MapMarker.GetDefaultImage())
+		public MapMarker (GeoCoordinate location, MapMarkerAlignmentType alignment)
+			: this(location, alignment, MapMarker.GetDefaultImage())
 		{
 
 		}
@@ -86,27 +76,33 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SomeTestProject.MapMarker"/> class.
 		/// </summary>
-		/// <param name="mapView">Map view.</param>
-		/// <param name="coordinate">Coordinate.</param>
-		/// <param name="bitmap">Bitmap.</param>
+		/// <param name="location">Coordinate.</param>
+		/// <param name="image">Bitmap.</param>
 		/// <param name="alignment">Alignment.</param>
-		internal MapMarker(MapView mapView, GeoCoordinate coordinate, MapMarkerAlignmentType alignment, UIImage bitmap)
+		public MapMarker(GeoCoordinate location, MapMarkerAlignmentType alignment, UIImage image)
 			: base(UIButtonType.Custom){
-			_mapView = mapView;
-			_image = bitmap;
-			this.Location = coordinate;
+			_image = image;
+			this.Location = location;
 			_alignment = alignment;
 
-			this.Frame = new System.Drawing.RectangleF (new System.Drawing.PointF (0, 0), bitmap.Size);
-			this.SetImage (bitmap, UIControlState.Normal);
-			this.SetImage (bitmap, UIControlState.Highlighted);
-			this.SetImage (bitmap, UIControlState.Disabled);
+			this.Frame = new System.Drawing.RectangleF (new System.Drawing.PointF (0, 0), image.Size);
+			this.SetImage (image, UIControlState.Normal);
+			this.SetImage (image, UIControlState.Highlighted);
+			this.SetImage (image, UIControlState.Disabled);
 		}
 
 		/// <summary>
 		/// Holds the parent map view.
 		/// </summary>
 		private MapView _mapView;
+
+		/// <summary>
+		/// Attaches this button to the given map view.
+		/// </summary>
+		/// <param name="mapView">Map view.</param>
+		internal void AttachTo(MapView mapView){
+			_mapView = mapView;
+		}
 
 		/// <summary>
 		/// Holds this markers location.
@@ -124,9 +120,11 @@ namespace OsmSharp.iOS.UI
 			set {
 				_location = value;
 
-				_mapView.NotifyMarkerChange (this);
+				if (_mapView != null) {
+					_mapView.NotifyMarkerChange (this);
+				}
 			}
-		}  		/// <summary> 		/// Gets the bitmap. 		/// </summary> 		/// <value>The bitmap.</value> 		public UIImage Bitmap { 			get { 				return _image; 			} 		}
+		}  		/// <summary> 		/// Gets the image. 		/// </summary> 		/// <value>The i.</value> 		public UIImage Image { 			get { 				return _image; 			} 		}
 
 		/// <summary>
 		/// Sets the layout.
@@ -143,7 +141,7 @@ namespace OsmSharp.iOS.UI
 //			if (locationPixel [0] > 0 && locationPixel [0] < pixelsWidth &&
 //			    locationPixel [1] > 0 && locationPixel [1] < pixelsHeight) {
 
-				// set the new location depending on the size of the image and the alignment parameter. 				double leftMargin = locationPixel [0];// - this.Bitmap.Size.Width / 2.0; 				double topMargin = locationPixel [1]; 				switch (_alignment) { 				case MapMarkerAlignmentType.CenterTop: 					topMargin = locationPixel [1] + this.Bitmap.Size.Height / 2.0; 					break; 				case MapMarkerAlignmentType.CenterBottom: 					topMargin = locationPixel [1] - this.Bitmap.Size.Height / 2.0; 					break; 				}
+				// set the new location depending on the size of the image and the alignment parameter. 				double leftMargin = locationPixel [0];// - this.Bitmap.Size.Width / 2.0; 				double topMargin = locationPixel [1]; 				switch (_alignment) { 				case MapMarkerAlignmentType.CenterTop: 					topMargin = locationPixel [1] + this.Image.Size.Height / 2.0; 					break; 				case MapMarkerAlignmentType.CenterBottom: 					topMargin = locationPixel [1] - this.Image.Size.Height / 2.0; 					break; 				}
 				this.Center = new System.Drawing.PointF ((float)leftMargin, (float)topMargin);
 
 				return true;

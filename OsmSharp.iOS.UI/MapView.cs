@@ -82,7 +82,9 @@ namespace OsmSharp.iOS.UI
 		public void Initialize(GeoCoordinate defaultMapCenter, Map defaultMap, Degree defaultMapTilt, float defaultMapZoom)
 		{
 			_mapCenter = defaultMapCenter;
-			this.Map = defaultMap;
+			_map = defaultMap;
+			_mapTilt = defaultMapTilt;
+			_mapZoom = defaultMapZoom;
 
 			this.BackgroundColor = UIColor.White;
 			this.UserInteractionEnabled = true;
@@ -110,7 +112,8 @@ namespace OsmSharp.iOS.UI
 
 			// create invalidation timer.
 			_render = true;
-			System.Threading.Timer timer = new System.Threading.Timer (InvalidateSimple,
+
+			new System.Threading.Timer (InvalidateSimple,
 			                                                           null, 0, 50);
 		}
 
@@ -133,16 +136,6 @@ namespace OsmSharp.iOS.UI
 		/// Holds the cached scene.
 		/// </summary>
 		private Scene2D _cachedScene;
-
-		/// <summary>
-		/// Holds the canvas bitmap.
-		/// </summary>
-		private CGImage _canvasBitmap;
-
-		/// <summary>
-		/// Holds the rendering cache.
-		/// </summary>
-		private CGImage _cache;
 
 		/// <summary>
 		/// Invalidates while rendering.
@@ -341,7 +334,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="some">Some.</param>
 		private void Pan(UIPanGestureRecognizer pan)
 		{
-			if (_rect != null) {
+			if (_rect.Width > 0) {
 				PointF offset = pan.TranslationInView (this);
 				if (pan.State == UIGestureRecognizerState.Ended) {
 					_beforePan = null;
@@ -434,17 +427,29 @@ namespace OsmSharp.iOS.UI
 			}
 			set {
 				_map = value;
+
 				this.InvalidateMap ();
 			}
 		}
+
+		/// <summary>
+		/// Holds the map zoom.
+		/// </summary>
+		private float _mapZoom;
 
 		/// <summary>
 		/// Gets or sets the zoom level.
 		/// </summary>
 		/// <value>The zoom level.</value>
 		public float MapZoom {
-			get;
-			set;
+			get {
+				return _mapZoom;
+			}
+			set{
+				_mapZoom = value;
+
+				this.InvalidateMap ();
+			}
 		}
 
 		/// <summary>
@@ -462,6 +467,7 @@ namespace OsmSharp.iOS.UI
 			}
 			set {
 				_mapTilt = value;
+
 				this.InvalidateMap ();
 			}
 		}
@@ -492,9 +498,6 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		private void InvalidateMap()
 		{
-			//OsmSharp.Logging.Log.TraceEvent ("MapView", System.Diagnostics.TraceEventType.Information,
-			//                                "SetNeedsDisplay called on main thread!");
-
 			// change the map markers.
 			if (_rect.Width > 0 && _rect.Height > 0) {
 				View2D view = this.CreateView (_rect);
@@ -538,17 +541,11 @@ namespace OsmSharp.iOS.UI
 					context.SetBlendMode (CGBlendMode.Copy);
 					context.SetAlpha (1);
 
-					//OsmSharp.Logging.Log.TraceEvent ("MapView", System.Diagnostics.TraceEventType.Information,
-					//                                 "Renderer called in Draw(rect)!");
 					long afterViewChanged = DateTime.Now.Ticks;
 					CGContextRenderer renderer = new CGContextRenderer ();
 					renderer.Render (new CGContextWrapper (context, _rect),
 					                _cachedScene, view);
 					long afterRendering = DateTime.Now.Ticks;
-
-					//OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-					//                                "Rendering cache took: {0}ms @ zoom level {1}",
-					//                                (new TimeSpan(afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoomLevel);
 				}
 			}
 		}
@@ -566,8 +563,9 @@ namespace OsmSharp.iOS.UI
 		/// <value>The markers.</value>
 		public void AddMarker(MapMarker marker)
 		{
-			_markers.Add (marker);
-			this.Add (marker);
+			marker.AttachTo (this); // attach this view to the marker.
+			_markers.Add (marker); // add to markers list.
+			this.Add (marker); // add to this view.
 
 			if (_rect.Width > 0 && _rect.Height > 0) {
 				View2D view = this.CreateView (_rect);
@@ -579,10 +577,10 @@ namespace OsmSharp.iOS.UI
 		/// Adds the marker.
 		/// </summary>
 		/// <returns>The marker.</returns>
-		/// <param name="coordinate">Coordinate.</param>
-		public MapMarker AddMarker(GeoCoordinate coordinate)
+		/// <param name="location">Location.</param>
+		public MapMarker AddMarker(GeoCoordinate location)
 		{
-			MapMarker marker = new MapMarker (this, coordinate);
+			MapMarker marker = new MapMarker (location);
 			this.AddMarker (marker);
 			return marker;
 		}

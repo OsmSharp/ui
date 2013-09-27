@@ -26,11 +26,11 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using OsmSharp.UI.Map;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
-using OsmSharp.UI.Renderer;
 using OsmSharp.UI;
+using OsmSharp.UI.Map;
+using OsmSharp.UI.Renderer;
 using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Android.UI
@@ -62,7 +62,6 @@ namespace OsmSharp.Android.UI
 			_markers = new List<MapMarker> ();
 		}
 
-		
 		public delegate void MapTapEventDelegate(GeoCoordinate geoCoordinate);
 
 		/// <summary>
@@ -76,9 +75,10 @@ namespace OsmSharp.Android.UI
 		/// <value>The markers.</value>
 		public void AddMarker(MapMarker marker)
 		{
-			_markers.Add (marker);
+			_markers.Add (marker); // add to marker list.
+			marker.AttachTo(this); // attach to this view.
 
-			var layoutParams = new FrameLayout.LayoutParams(marker.Bitmap.Width, marker.Bitmap.Height + 5);
+			var layoutParams = new FrameLayout.LayoutParams(marker.Image.Width, marker.Image.Height + 5);
 			layoutParams.LeftMargin = -1;
 			layoutParams.TopMargin = -1;
 			layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left ;
@@ -94,7 +94,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="coordinate">Coordinate.</param>
 		public MapMarker AddMarker(GeoCoordinate coordinate)
 		{
-			MapMarker marker = new MapMarker (this, coordinate);
+			MapMarker marker = new MapMarker (this.Context, coordinate);
 			this.AddMarker (marker);
 			return marker;
 		}

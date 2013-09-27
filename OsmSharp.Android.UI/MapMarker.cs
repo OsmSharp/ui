@@ -18,7 +18,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using Android.App;
 using Android.Content;
@@ -27,10 +29,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using OsmSharp.Math.Geo;
-using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Geo.Projections;
-using System.Reflection;
-using System.IO;
+using OsmSharp.UI.Renderer;
 
 namespace OsmSharp.Android.UI
 {
@@ -76,10 +76,9 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
 		/// </summary>
-        /// <param name="mapView">The mapView containing this marker.</param>
-		/// <param name="coordinate">Coordinate.</param>
-		internal MapMarker (MapView mapView, GeoCoordinate coordinate)
-			: this(mapView, coordinate, MapMarkerAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
+		/// <param name="location">Coordinate.</param>
+		public MapMarker (Context context, GeoCoordinate location)
+			: this(context, location, MapMarkerAlignmentType.CenterBottom, MapMarker.GetDefaultImage())
 		{
 
 		}
@@ -87,12 +86,11 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
 		/// </summary>
-		/// <param name="mapView">The mapView containing this marker.</param>
-		/// <param name="coordinate">Coordinate.</param>
+		/// <param name="location">Coordinate.</param>
 		/// <param name="alignment">The alignment.</param>
-		internal MapMarker (MapView mapView, GeoCoordinate coordinate, 
-		                    MapMarkerAlignmentType alignment)
-			: this(mapView, coordinate, alignment, MapMarker.GetDefaultImage())
+		public MapMarker (Context context, GeoCoordinate location, 
+		                  MapMarkerAlignmentType alignment)
+			: this(context, location, alignment, MapMarker.GetDefaultImage())
 		{
 
 		}
@@ -100,30 +98,36 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapMarker"/> class.
 		/// </summary>
-        /// <param name="mapView">The mapView containing this marker.</param>
 		/// <param name="coordinate">Coordinate.</param>
 		/// <param name="bitmap">Bitmap.</param>
 		/// <param name="alignment">The alignment.</param>
-        internal MapMarker(MapView mapView, GeoCoordinate coordinate, 
-		                   MapMarkerAlignmentType alignment, global::Android.Graphics.Bitmap bitmap)
-			: base(mapView.Context){
-                _mapView = mapView;
-			_location = coordinate;
+        public MapMarker(Context context, GeoCoordinate location, 
+		                 MapMarkerAlignmentType alignment, global::Android.Graphics.Bitmap image)
+			: base(context){
+			_location = location;
 			_alignment = alignment;
 			this.SetBackgroundColor (global::Android.Graphics.Color.Transparent);
 
 			this.SetScaleType (ScaleType.Center);
-			_image = bitmap;
-			this.SetImageBitmap (bitmap);
-			this.SetMinimumWidth (bitmap.Width);
-			this.SetMinimumHeight (bitmap.Height);
+			_image = image;
+			this.SetImageBitmap (image);
+			this.SetMinimumWidth (image.Width);
+			this.SetMinimumHeight (image.Height);
 		}
 
 		/// <summary>
-		/// Gets the bitmap.
+		/// Attaches this maker to the given map view.
 		/// </summary>
-		/// <value>The bitmap.</value>
-		public global::Android.Graphics.Bitmap Bitmap {
+		/// <param name="mapView">Map view.</param>
+		internal void AttachTo(MapView mapView) {
+			_mapView = mapView;
+		}
+
+		/// <summary>
+		/// Gets the image.
+		/// </summary>
+		/// <value>The image.</value>
+		public global::Android.Graphics.Bitmap Image {
 			get {
 				return _image;
 			}
@@ -145,7 +149,9 @@ namespace OsmSharp.Android.UI
             set {
                 _location = value;
 
-				_mapView.NotifyMarkerChange (this);
+				if (_mapView != null) {
+					_mapView.NotifyMarkerChange (this);
+				}
             }
 		}
 
@@ -161,8 +167,8 @@ namespace OsmSharp.Android.UI
 			double[] projected = projection.ToPixel (this.Location);
 			double[] locationPixel = view.ToViewPort (pixelsWidth, pixelsHeight, projected [0], projected [1]);
 
-			if (locationPixel [0] > 0 && locationPixel [0] < pixelsWidth &&
-			    locationPixel [1] > 0 && locationPixel [1] < pixelsHeight) {
+//			if (locationPixel [0] > 0 && locationPixel [0] < pixelsWidth &&
+//			    locationPixel [1] > 0 && locationPixel [1] < pixelsHeight) {
 
 				// set the new location depending on the size of the image and the alignment parameter.
 				double leftMargin = locationPixel [0];
@@ -180,8 +186,8 @@ namespace OsmSharp.Android.UI
 				(this.LayoutParameters as FrameLayout.LayoutParams).LeftMargin = (int)leftMargin;
 				(this.LayoutParameters as FrameLayout.LayoutParams).TopMargin = (int)topMargin;
 				return true;
-			}
-			return false;
+//			}
+//			return false;
 		}
 	}
 }
