@@ -452,6 +452,9 @@ namespace OsmSharp.iOS.UI
 			                         _invertX, _invertY, this.MapTilt);
 		}
 
+		/// <summary>
+		/// Invalidates the map.
+		/// </summary>
 		private void InvalidateMap()
 		{
 			//OsmSharp.Logging.Log.TraceEvent ("MapView", System.Diagnostics.TraceEventType.Information,
@@ -464,6 +467,17 @@ namespace OsmSharp.iOS.UI
 				this.NotifyMapChangeToMarkers (_rect.Width, _rect.Height, view, this.Map.Projection);
 			}
 			this.SetNeedsDisplay ();
+		}
+
+		/// <Docs>Lays out subviews.</Docs>
+		/// <summary>
+		/// Layouts the subviews.
+		/// </summary>
+		public override void LayoutSubviews ()
+		{
+			base.LayoutSubviews ();
+
+			this.InvalidateMap ();
 		}
 
 		/// <summary>
