@@ -47,6 +47,8 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="Animations\MapViewAnimator.cs" />
+    <Compile Include="IMapView.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
     <Compile Include="Map\Layers\LayerOsm.cs" />

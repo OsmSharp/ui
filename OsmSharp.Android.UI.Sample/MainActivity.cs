@@ -23,6 +23,7 @@ using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Osm.Data.Memory;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Animations;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -32,15 +33,15 @@ namespace OsmSharp.Android.UI.Sample
 	[Activity]
     public class MainActivity : Activity
 	{
-		/// <summary>
-		/// Holds the router.
-		/// </summary>
-		private Router _router;
+        ///// <summary>
+        ///// Holds the router.
+        ///// </summary>
+        //private Router _router;
 
-		/// <summary>
-		/// Holds the route layer.
-		/// </summary>
-		private LayerOsmSharpRoute _routeLayer;
+        ///// <summary>
+        ///// Holds the route layer.
+        ///// </summary>
+        //private LayerOsmSharpRoute _routeLayer;
 
 		/// <summary>
 		/// Raises the create event.
@@ -99,25 +100,26 @@ namespace OsmSharp.Android.UI.Sample
 //				graphSerialized,
 //				new OsmRoutingInterpreter());
 
-            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
-            var graphDeserialized = routingSerializer.Deserialize(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.routing"), true);
+//            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+//            var graphDeserialized = routingSerializer.Deserialize(
+//                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.routing"), true);
 
-            _router = Router.CreateCHFrom(
-                graphDeserialized, new CHRouter(graphDeserialized),
-                new OsmRoutingInterpreter());
+//            _router = Router.CreateCHFrom(
+//                graphDeserialized, new CHRouter(graphDeserialized),
+//                new OsmRoutingInterpreter());
 
-            GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
-            GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
-            RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
-            RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
-            Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
+//            GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
+//            GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
+//            RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
+//            RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
+//            Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
 
-			_routeLayer = new LayerOsmSharpRoute(map.Projection);
-            _routeLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
-//			osmSharpLayer.AddRoute (route2, SimpleColor.FromKnownColor(KnownColor.Red).Value);
-//			osmSharpLayer.AddRoute (route3, SimpleColor.FromKnownColor(KnownColor.YellowGreen).Value);
-			map.AddLayer(_routeLayer);
+
+//            _routeLayer = new LayerOsmSharpRoute(map.Projection);
+//            _routeLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
+////			osmSharpLayer.AddRoute (route2, SimpleColor.FromKnownColor(KnownColor.Red).Value);
+////			osmSharpLayer.AddRoute (route3, SimpleColor.FromKnownColor(KnownColor.YellowGreen).Value);
+//            map.AddLayer(_routeLayer);
 
 
 //			// create gpx layer.
@@ -141,63 +143,34 @@ namespace OsmSharp.Android.UI.Sample
 //			var mapView = new OpenGLRenderer2D(
 //				this, null);
 
-			//var mapGLView = new MapGLView(this);
+            //var mapGLView = new MapGLView(this);
 
 			var mapLayout = new MapView (this);
 			mapLayout.Map = map;
 			
 			mapLayout.MapMaxZoomLevel = 20;
 			mapLayout.MapMinZoomLevel = 12;
-			mapLayout.MapTilt = 90;
+			mapLayout.MapTilt = 0;
 			//var mapView = new MapGLView (this);
 			mapLayout.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
 			//mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
 			//mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
 			//mapView.Center = new GeoCoordinate(51.156803, 2.958887);
-			mapLayout.MapZoomLevel = 15;
-			mapLayout.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {
-				mapLayout.AddMarker(geoCoordinate).Click  += new EventHandler (MapMarkerClicked);
-			};
-
-            if (route1 != null)
+            mapLayout.MapZoom = 17;
+            //MapViewAnimator mapViewAnimator = new MapViewAnimator(mapLayout);
+            mapLayout.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
             {
-                mapLayout.MapCenter = route1.GetBox().Center;
-            }
+                //mapViewAnimator.Stop();
+                //mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
+			};
 
 			//Create the user interface in code
 			var layout = new RelativeLayout (this);
-			//layout.Orientation = Orientation.Vertical;
 
 			//layout.AddView(mapGLView);
 			layout.AddView (mapLayout);
 
 			SetContentView (layout);
-		}
-
-		/// <summary>
-		/// Holds the previous point.
-		/// </summary>
-		private RouterPoint _previousPoint;
-
-		private void MapMarkerClicked(object sender, EventArgs e)
-		{
-			if (sender is MapMarker) {
-				lock (_router) {
-					MapMarker marker = sender as MapMarker;
-					RouterPoint point = _router.Resolve (Vehicle.Car, marker.Location);
-					if (point != null) {
-						if (_previousPoint != null) {
-							_routeLayer.Clear ();
-							Route route = _router.Calculate (Vehicle.Car, _previousPoint, point);
-							if (route != null) {
-								_routeLayer.AddRoute (route);
-							}
-							_routeLayer.Invalidate ();
-						}
-						_previousPoint = point;
-					}
-				}
-			}
 		}
 	}
 }

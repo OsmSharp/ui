@@ -318,6 +318,7 @@
     <Compile Include="Units\Speed\MilesPerHour.cs" />
     <Compile Include="Units\Speed\Speed.cs" />
     <Compile Include="Units\Time\Hour.cs" />
+    <Compile Include="Units\Time\MilliSecond.cs" />
     <Compile Include="Units\Time\Second.cs" />
     <Compile Include="Units\Unit.cs" />
     <Compile Include="Units\Weight\Gram.cs" />

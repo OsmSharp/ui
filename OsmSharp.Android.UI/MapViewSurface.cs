@@ -282,14 +282,41 @@ namespace OsmSharp.Android.UI
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets the center.
-		/// </summary>
-		/// <value>The center.</value>
-		public GeoCoordinate MapCenter {
-			get;
-			set;
-		}
+        /// <summary>
+        /// The map center.
+        /// </summary>
+        private GeoCoordinate _mapCenter;
+
+        /// <summary>
+        /// The map center on the previous rendering.
+        /// </summary>
+        private GeoCoordinate _previousRenderingMapCenter;
+
+        /// <summary>
+        /// Gets or sets the center.
+        /// </summary>
+        /// <value>The center.</value>
+        public GeoCoordinate MapCenter
+        {
+            get 
+            { 
+                return _mapCenter; 
+            }
+            set
+            {
+                _mapCenter = value;
+                (this.Context as Activity).RunOnUiThread(Invalidate);
+                if (_previousRenderingMapCenter == null ||
+                _previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 20)
+                { // TODO: update this with a more resonable measure depending on the zoom.
+                    if (!_render && !_cacheRenderer.IsRunning)
+                    {
+                        this.Change();
+                        _previousRenderingMapCenter = _mapCenter;
+                    }
+                }
+            }
+        }
 
 		/// <summary>
 		/// Holds the map.
@@ -313,20 +340,21 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Holds the map tilte angle.
 		/// </summary>
-		private float _mapTilt;
+		private Degree _mapTilt;
 
 		/// <summary>
 		/// Gets or sets the map tilt.
 		/// </summary>
 		/// <value>The map tilt.</value>
-		public float MapTilt {
+        public Degree MapTilt
+        {
 			get{
 				return _mapTilt;
 			}
 			set {
-				_mapTilt = value;
+                _mapTilt = value;
 
-				this.Change ();
+                (this.Context as Activity).RunOnUiThread(Invalidate);
 			}
 		}
 
@@ -348,7 +376,9 @@ namespace OsmSharp.Android.UI
 					_mapZoomLevel = this.MapMinZoomLevel;
 				} else {
 					_mapZoomLevel = value;
-				}
+                }
+
+                (this.Context as Activity).RunOnUiThread(Invalidate);
 			}
 		}
 
