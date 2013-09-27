@@ -32,7 +32,7 @@ namespace OsmSharp.Routing.Metrics.Time
     /// <summary>
     /// A calculator to accurately estimate timings of a route.
     /// </summary>
-    public class TimeCalculator : OsmSharpRouteMetricCalculator
+    public class TimeCalculator : RouteMetricCalculator
     {
         /// <summary>
         /// Constant identifier for Time.

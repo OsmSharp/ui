@@ -23,7 +23,6 @@ using OsmSharp.Math.TSP.Problems;
 using OsmSharp.Math.TSP;
 using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Route;
 using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Routing.TSP

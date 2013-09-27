@@ -25,7 +25,6 @@ using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Constraints;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Route;
 using System.Reflection;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Data;
@@ -85,7 +84,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint source = router.Resolve(vehicle, new GeoCoordinate(51.0582205, 3.7192647)); // -52
             RouterPoint target = router.Resolve(vehicle, new GeoCoordinate(51.0579530, 3.7196168)); // -56
 
-            OsmSharpRoute route = router.Calculate(vehicle, source, target);
+            Route route = router.Calculate(vehicle, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(4, route.Entries.Length);
 
@@ -126,7 +125,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint source = router.Resolve(vehicle, new GeoCoordinate(51.0579530, 3.7196168)); // -56
             RouterPoint target = router.Resolve(vehicle, new GeoCoordinate(51.0582205, 3.7192647)); // -52
 
-            OsmSharpRoute route = router.Calculate(vehicle, source, target);
+            Route route = router.Calculate(vehicle, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(6, route.Entries.Length);
 

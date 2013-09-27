@@ -24,7 +24,6 @@ using OsmSharp.Units.Time;
 using OsmSharp.Math.VRP.Core;
 using OsmSharp.Math.VRP.Core.Routes;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Route;
 using OsmSharp.Math.Geo;
 using OsmSharp.Collections;
 

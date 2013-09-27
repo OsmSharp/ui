@@ -26,7 +26,6 @@ using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
@@ -125,9 +124,9 @@ namespace OsmSharp.UnitTests.Routing
             {
                 for (int toIdx = 0; toIdx < resolved.Length; toIdx++)
                 {
-                    OsmSharpRoute referenceRoute = referenceRouter.Calculate(Vehicle.Car, 
+                    Route referenceRoute = referenceRouter.Calculate(Vehicle.Car, 
                         resolvedReference[fromIdx], resolvedReference[toIdx]);
-                    OsmSharpRoute route = router.Calculate(Vehicle.Car, 
+                    Route route = router.Calculate(Vehicle.Car, 
                         resolved[fromIdx], resolved[toIdx]);
 
                     Assert.IsNotNull(referenceRoute);

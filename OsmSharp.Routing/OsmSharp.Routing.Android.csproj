@@ -114,13 +114,6 @@
     <Compile Include="Osm\IRoutingProgressConsumer.cs" />
     <Compile Include="Osm\Router.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Route\Gpx\OsmSharpRouteGpx.cs" />
-    <Compile Include="Route\Kml\OsmSharpRouteKml.cs" />
-    <Compile Include="Route\Metrics\OsmSharpRouteMetricCalculator.cs" />
-    <Compile Include="Route\Metrics\Time\TimeCalculator.cs" />
-    <Compile Include="Route\OsmSharpRoute.cs" />
-    <Compile Include="Route\OsmSharpRouteEnumerator.cs" />
-    <Compile Include="Route\OsmSharpRouteGenerator.cs" />
     <Compile Include="TSP\Genetic\RouterTSPAEXGenetic.cs" />
     <Compile Include="TSP\Genetic\RouterTSPGenetic.cs" />
     <Compile Include="TSP\RandomizedArbitraryInsertion\RouteTSPRAI.cs" />
@@ -217,6 +210,14 @@
     <Compile Include="Graph\Serialization\RoutingDataSourceSerializer.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
+    <Compile Include="IO\Gpx\RouteGpx.cs" />
+    <Compile Include="IO\Kml\RouteKml.cs" />
+    <Compile Include="Metrics\Time\TimeCalculator.cs" />
+    <Compile Include="Metrics\RouteMetricCalculator.cs" />
+    <Compile Include="Route.cs" />
+    <Compile Include="RouteEnumerable.cs" />
+    <Compile Include="RouteGenerator.cs" />
+    <Compile Include="RouteTracker.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.Android.csproj">

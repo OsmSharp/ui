@@ -199,13 +199,6 @@
     <Compile Include="Routers\TypedRouterResolvedGraph.cs" />
     <Compile Include="Routers\TypedRouter.cs" />
     <Compile Include="Routers\TypedRouterLiveEdge.cs" />
-    <Compile Include="Route\Gpx\OsmSharpRouteGpx.cs" />
-    <Compile Include="Route\Kml\OsmSharpRouteKml.cs" />
-    <Compile Include="Route\Metrics\OsmSharpRouteMetricCalculator.cs" />
-    <Compile Include="Route\Metrics\Time\TimeCalculator.cs" />
-    <Compile Include="Route\OsmSharpRoute.cs" />
-    <Compile Include="Route\OsmSharpRouteEnumerator.cs" />
-    <Compile Include="Route\OsmSharpRouteGenerator.cs" />
     <Compile Include="TSP\Genetic\RouterTSPAEXGenetic.cs" />
     <Compile Include="TSP\Genetic\RouterTSPGenetic.cs" />
     <Compile Include="TSP\RandomizedArbitraryInsertion\RouteTSPRAI.cs" />
@@ -278,6 +271,14 @@
     <Compile Include="VRP\WithDepot\MaxTime\MaxTimeSolution.cs" />
     <Compile Include="VRP\WithDepot\MaxTime\VNS\GuidedVNS.cs" />
     <Compile Include="VRP\WithDepot\RouterDepot.cs" />
+    <Compile Include="Metrics\RouteMetricCalculator.cs" />
+    <Compile Include="Metrics\Time\TimeCalculator.cs" />
+    <Compile Include="Route.cs" />
+    <Compile Include="RouteEnumerable.cs" />
+    <Compile Include="RouteGenerator.cs" />
+    <Compile Include="RouteTracker.cs" />
+    <Compile Include="IO\Gpx\RouteGpx.cs" />
+    <Compile Include="IO\Kml\RouteKml.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -301,4 +302,7 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="IO\" />
+  </ItemGroup>
 </Project>

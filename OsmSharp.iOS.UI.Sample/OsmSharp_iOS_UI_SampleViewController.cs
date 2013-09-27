@@ -13,7 +13,6 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.UI;
-using OsmSharp.Routing.Route;
 using System.Collections.Generic;
 using OsmSharp.Math;
 using OsmSharp.Math.Geo.Projections;
@@ -68,7 +67,7 @@ namespace OsmSharp.iOS.UI.Sample
 			GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
 			RouterPoint routerPoint1 = router.Resolve(Vehicle.Car, point1);
 			RouterPoint routerPoint2 = router.Resolve(Vehicle.Car, point2);
-			OsmSharpRoute route1 = router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
+			Route route1 = router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
 			_enumerator = route1.GetRouteEnumerable(2).GetEnumerator();
 			_enumeratorNext = route1.GetRouteEnumerable(2).GetEnumerator();
 			for (int idx = 0; idx < 20; idx++) {

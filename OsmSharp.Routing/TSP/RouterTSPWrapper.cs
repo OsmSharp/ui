@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Math.TSP;
 using OsmSharp.Math.Geo;
@@ -77,7 +76,7 @@ namespace OsmSharp.Routing.TSP
         /// <param name="first">The index of the point to start from.</param>
         /// <param name="isRound">Return back to the first point or not.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(Vehicle vehicle, RouterPoint[] points, int first, bool isRound)
+        public Route CalculateTSP(Vehicle vehicle, RouterPoint[] points, int first, bool isRound)
         {
             // calculate the weights.
             double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
@@ -111,7 +110,7 @@ namespace OsmSharp.Routing.TSP
         /// <param name="first">The index of the point to start from.</param>
         /// <param name="last">The index of the point to end at.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(Vehicle vehicle, RouterPoint[] points, int first, int last)
+        public Route CalculateTSP(Vehicle vehicle, RouterPoint[] points, int first, int last)
         {
             // calculate the weights.
             double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
@@ -144,7 +143,7 @@ namespace OsmSharp.Routing.TSP
         /// <param name="points">The points to travel along.</param>
         /// <param name="isRound">Make the route return to the start-point or not.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(Vehicle vehicle, RouterPoint[] points, bool isRound)
+        public Route CalculateTSP(Vehicle vehicle, RouterPoint[] points, bool isRound)
         {
             // calculate the weights.
             double[][] weights = this.CalculateManyToManyWeight(vehicle, points);
@@ -176,7 +175,7 @@ namespace OsmSharp.Routing.TSP
         /// <param name="vehicle">The vehicle type.</param>
         /// <param name="points">The points to travel along.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateTSP(Vehicle vehicle, RouterPoint[] points)
+        public Route CalculateTSP(Vehicle vehicle, RouterPoint[] points)
         {
             return this.CalculateTSP(vehicle, points, true);
         }
@@ -189,12 +188,12 @@ namespace OsmSharp.Routing.TSP
         /// <param name="tspSolution"></param>
         /// <param name="weight"></param>
         /// <returns></returns>
-        public OsmSharpRoute BuildRoute(Vehicle vehicle, RouterPoint[] points, IRoute tspSolution, double weight)
+        public Route BuildRoute(Vehicle vehicle, RouterPoint[] points, IRoute tspSolution, double weight)
         {
             int[] solution = tspSolution.ToArray();
 
-            OsmSharpRoute tsp = null;
-            OsmSharpRoute route;
+            Route tsp = null;
+            Route route;
             for (int idx = 0; idx < solution.Length - 1; idx++)
             {
                 route = _router.Calculate(Vehicle.Car, points[solution[idx]],
@@ -205,7 +204,7 @@ namespace OsmSharp.Routing.TSP
                 }
                 else
                 { // concatenate.
-                    tsp = OsmSharpRoute.Concatenate(tsp, route);
+                    tsp = Route.Concatenate(tsp, route);
                 }
             }
             if (tspSolution.IsRound)
@@ -213,7 +212,7 @@ namespace OsmSharp.Routing.TSP
                 // concatenate the route from the last to the first point again.
                 route = _router.Calculate(Vehicle.Car, points[solution[solution.Length - 1]],
                             points[solution[0]]);
-                tsp = OsmSharpRoute.Concatenate(tsp, route);
+                tsp = Route.Concatenate(tsp, route);
             }
 
             if (tsp != null)
@@ -245,7 +244,7 @@ namespace OsmSharp.Routing.TSP
         /// </summary>
         /// <param name="result"></param>
         /// <param name="weight"></param>
-        public delegate void IntermidiateDelegate(OsmSharpRoute result, double weight);
+        public delegate void IntermidiateDelegate(Route result, double weight);
 
         /// <summary>
         /// Raised when an intermidiate result is available.
@@ -266,7 +265,7 @@ namespace OsmSharp.Routing.TSP
         /// </summary>
         /// <param name="result"></param>
         /// <param name="weight"></param>
-        protected void RaiseIntermidiateResult(OsmSharpRoute result, double weight)
+        protected void RaiseIntermidiateResult(Route result, double weight)
         {
             if (IntermidiateResult != null)
             {

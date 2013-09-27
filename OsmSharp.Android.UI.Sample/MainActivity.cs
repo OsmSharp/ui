@@ -18,7 +18,6 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.Serialization;
@@ -112,7 +111,7 @@ namespace OsmSharp.Android.UI.Sample
             GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
             RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
             RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
-            OsmSharpRoute route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
+            Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
 
 			_routeLayer = new LayerOsmSharpRoute(map.Projection);
             _routeLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
@@ -172,9 +171,6 @@ namespace OsmSharp.Android.UI.Sample
 			//layout.AddView(mapGLView);
 			layout.AddView (mapLayout);
 
-//			mapLayout.AddMarker (new GeoCoordinate (51.26337, 4.78739)).Click += new EventHandler (MapMarkerClicked);
-//			mapLayout.AddMarker (new GeoCoordinate (51.26785, 4.78025)).Click += new EventHandler (MapMarkerClicked);
-
 			SetContentView (layout);
 		}
 
@@ -192,7 +188,7 @@ namespace OsmSharp.Android.UI.Sample
 					if (point != null) {
 						if (_previousPoint != null) {
 							_routeLayer.Clear ();
-							OsmSharpRoute route = _router.Calculate (Vehicle.Car, _previousPoint, point);
+							Route route = _router.Calculate (Vehicle.Car, _previousPoint, point);
 							if (route != null) {
 								_routeLayer.AddRoute (route);
 							}

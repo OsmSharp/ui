@@ -20,7 +20,6 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
-using OsmSharp.Routing.Route;
 using OsmSharp.Routing;
 
 namespace OsmSharp.UnitTests
@@ -37,7 +36,7 @@ namespace OsmSharp.UnitTests
         [Test]
         public void RouteConcatenateTagsTest()
         {
-            OsmSharpRoute route1 = new OsmSharpRoute();
+            Route route1 = new Route();
             route1.Vehicle = Vehicle.Car;
             RoutePointEntry route1entry1 = new RoutePointEntry();
             route1entry1.Distance = 10;
@@ -88,7 +87,7 @@ namespace OsmSharp.UnitTests
             route1.Entries[1] = route1entry2;
 
 
-            OsmSharpRoute route2 = new OsmSharpRoute();
+            Route route2 = new Route();
             route2.Vehicle = Vehicle.Car;
             RoutePointEntry route2entry1 = new RoutePointEntry();
             route2entry1.Distance = 10;
@@ -138,7 +137,7 @@ namespace OsmSharp.UnitTests
             route2.Entries[0] = route2entry1;
             route2.Entries[1] = route2entry2;
 
-            OsmSharpRoute concatenated = OsmSharpRoute.Concatenate(route1, route2);
+            Route concatenated = Route.Concatenate(route1, route2);
 
             // test the result.
             Assert.IsNotNull(concatenated);
@@ -157,7 +156,7 @@ namespace OsmSharp.UnitTests
         [Test]
         public void RouteConcatenateTagsIdenticalTest()
         {
-            OsmSharpRoute route1 = new OsmSharpRoute();
+            Route route1 = new Route();
             RoutePointEntry route1entry1 = new RoutePointEntry();
             route1entry1.Distance = 10;
             route1entry1.Latitude = -1;
@@ -207,7 +206,7 @@ namespace OsmSharp.UnitTests
             route1.Entries[1] = route1entry2;
 
 
-            OsmSharpRoute route2 = new OsmSharpRoute();
+            Route route2 = new Route();
             RoutePointEntry route2entry1 = new RoutePointEntry();
             route2entry1.Distance = 10;
             route2entry1.Latitude = -1;
@@ -256,7 +255,7 @@ namespace OsmSharp.UnitTests
             route2.Entries[0] = route2entry1;
             route2.Entries[1] = route2entry2;
 
-            OsmSharpRoute concatenated = OsmSharpRoute.Concatenate(route1, route2);
+            Route concatenated = Route.Concatenate(route1, route2);
 
             // test the result.
             Assert.IsNotNull(concatenated);

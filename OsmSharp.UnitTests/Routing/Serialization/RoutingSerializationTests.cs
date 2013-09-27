@@ -15,7 +15,6 @@ using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
@@ -175,7 +174,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
                 new GeoCoordinate(51.0576193, 3.7191801));
 
             // calculate the route.
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
@@ -265,7 +264,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
                 new GeoCoordinate(51.0576193, 3.7191801));
 
             // calculate the route.
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 

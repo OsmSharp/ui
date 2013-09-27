@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Route;
 using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Interpreter;
@@ -29,7 +28,7 @@ namespace OsmSharp.Routing.Instructions
     /// <summary>
     /// Instruction generator.
     /// </summary>
-    public class InstructionGenerator
+    public static class InstructionGenerator
     {
         /// <summary>
         /// Generates instructions.
@@ -37,9 +36,9 @@ namespace OsmSharp.Routing.Instructions
         /// <param name="route"></param>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public List<Instruction> Generate(OsmSharpRoute route, IRoutingInterpreter interpreter)
+        public static List<Instruction> Generate(Route route, IRoutingInterpreter interpreter)
         {
-            return this.Generate(route, interpreter,
+            return InstructionGenerator.Generate(route, interpreter,
                 new OsmSharp.Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
         }
 
@@ -50,14 +49,14 @@ namespace OsmSharp.Routing.Instructions
         /// <param name="interpreter"></param>
         /// <param name="language_generator"></param>
         /// <returns></returns>
-        public List<Instruction> Generate(OsmSharpRoute route, IRoutingInterpreter interpreter, ILanguageGenerator language_generator)
+        public static List<Instruction> Generate(Route route, IRoutingInterpreter interpreter, ILanguageGenerator language_generator)
         {
             OsmSharp.Routing.ArcAggregation.ArcAggregator aggregator = 
                 new OsmSharp.Routing.ArcAggregation.ArcAggregator(interpreter);
             AggregatedPoint point = 
                 aggregator.Aggregate(route);
 
-            return this.Generate(point, interpreter, language_generator);
+			return InstructionGenerator.Generate(point, interpreter, language_generator);
         }
 
         /// <summary>
@@ -66,9 +65,9 @@ namespace OsmSharp.Routing.Instructions
         /// <param name="aggregate_point"></param>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public List<Instruction> Generate(AggregatedPoint aggregate_point, IRoutingInterpreter interpreter)
+        public static List<Instruction> Generate(AggregatedPoint aggregate_point, IRoutingInterpreter interpreter)
         {
-            return this.Generate(aggregate_point, interpreter,
+			return InstructionGenerator.Generate(aggregate_point, interpreter,
                 new OsmSharp.Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
         }
 
@@ -79,7 +78,7 @@ namespace OsmSharp.Routing.Instructions
         /// <param name="interpreter"></param>
         /// <param name="language_generator"></param>
         /// <returns></returns>
-        public List<Instruction> Generate(AggregatedPoint point, IRoutingInterpreter interpreter, ILanguageGenerator language_generator)
+        public static List<Instruction> Generate(AggregatedPoint point, IRoutingInterpreter interpreter, ILanguageGenerator language_generator)
         {
             MicroPlanning.MicroPlanner planner = new MicroPlanning.MicroPlanner(language_generator, interpreter);
             return planner.Plan(point);

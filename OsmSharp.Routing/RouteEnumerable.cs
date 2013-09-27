@@ -23,17 +23,17 @@ using System.Text;
 using OsmSharp.Math.Geo;
 using OsmSharp.Units.Distance;
 
-namespace OsmSharp.Routing.Route
+namespace OsmSharp.Routing
 {
     /// <summary>
     /// An enumerator for an OsmSharpRoute.
     /// </summary>
-    internal class OsmSharpRouteEnumerable : IEnumerable<GeoCoordinate>
+    internal class RouteEnumerable : IEnumerable<GeoCoordinate>
     {
         /// <summary>
         /// Holds the router being enumerated.
         /// </summary>
-        private OsmSharpRoute _route;
+        private Route _route;
 
         /// <summary>
         /// Holds the interval.
@@ -44,7 +44,7 @@ namespace OsmSharp.Routing.Route
         /// Creates a new OsmSharpRoute enumerable.
         /// </summary>
         /// <param name="route"></param>
-        internal OsmSharpRouteEnumerable(OsmSharpRoute route)
+        internal RouteEnumerable(Route route)
         {
             _route = route;
             _intervalMeter = 10;
@@ -54,7 +54,7 @@ namespace OsmSharp.Routing.Route
         /// Creates a new OsmSharpRoute enumerable.
         /// </summary>
         /// <param name="route"></param>
-        internal OsmSharpRouteEnumerable(OsmSharpRoute route, Meter interval)
+        internal RouteEnumerable(Route route, Meter interval)
         {
             _route = route;
             _intervalMeter = interval.Value;
@@ -87,7 +87,7 @@ namespace OsmSharp.Routing.Route
         /// <summary>
         /// Holds the router being enumerator.
         /// </summary>
-        private OsmSharpRoute _route;
+        private Route _route;
 
         /// <summary>
         /// Holds the interval between enumerations.
@@ -98,7 +98,7 @@ namespace OsmSharp.Routing.Route
         /// Creates a new OsmSharpRoute enumerator.
         /// </summary>
         /// <param name="route"></param>
-        public OsmSharpRouteEnumerator(OsmSharpRoute route, double intervalMeter)
+        public OsmSharpRouteEnumerator(Route route, double intervalMeter)
         {
             _route = route;
             _currentMeter = 0;

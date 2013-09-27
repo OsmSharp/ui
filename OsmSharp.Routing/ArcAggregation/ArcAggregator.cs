@@ -25,7 +25,6 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Units.Angle;
 using OsmSharp.Math.Geo.Meta;
 using OsmSharp.Units.Distance;
-using OsmSharp.Routing.Route;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Interpreter;
 
@@ -59,7 +58,7 @@ namespace OsmSharp.Routing.ArcAggregation
         /// </summary>
         /// <param name="route"></param>
         /// <returns></returns>
-        public AggregatedPoint Aggregate(OsmSharpRoute route)
+        public AggregatedPoint Aggregate(Route route)
         {
             // create the enumerator.
             AggregatedPointEnumerator enumerator = new AggregatedPointEnumerator(route);
@@ -96,7 +95,7 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <param name="previous"></param>
         /// <param name="current"></param>
         /// <param name="next"></param>
-        private void Process(OsmSharpRoute route, AggregatedRoutePoint previous, AggregatedRoutePoint current, AggregatedRoutePoint next)
+        private void Process(Route route, AggregatedRoutePoint previous, AggregatedRoutePoint current, AggregatedRoutePoint next)
         {
             // process the current point.
             if (current != null)
@@ -292,9 +291,9 @@ namespace OsmSharp.Routing.ArcAggregation
     {
         private int _idx;
 
-        private OsmSharpRoute _route;
+        private Route _route;
 
-        public AggregatedPointEnumerator(OsmSharpRoute route)
+        public AggregatedPointEnumerator(Route route)
         {
             _idx = -1;
 

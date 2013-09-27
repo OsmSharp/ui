@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,12 +15,12 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using OsmSharp.Routing.Route;
 using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Interpreter;
@@ -30,7 +30,7 @@ namespace OsmSharp.Routing.Metrics
     /// <summary>
     /// Calculates route metrics.
     /// </summary>
-    public abstract class OsmSharpRouteMetricCalculator
+    public abstract class RouteMetricCalculator
     {
         /// <summary>
         /// Holds a routing interpreter.
@@ -41,7 +41,7 @@ namespace OsmSharp.Routing.Metrics
         /// Creates a new metrics calculator.
         /// </summary>
         /// <param name="interpreter"></param>
-        protected OsmSharpRouteMetricCalculator(IRoutingInterpreter interpreter)
+        protected RouteMetricCalculator(IRoutingInterpreter interpreter)
         {
             _interpreter = interpreter;
         }
@@ -51,7 +51,7 @@ namespace OsmSharp.Routing.Metrics
         /// </summary>
         /// <param name="route"></param>
         /// <returns></returns>
-        public Dictionary<string, double> Calculate(OsmSharpRoute route)
+        public Dictionary<string, double> Calculate(Route route)
         {
             OsmSharp.Routing.ArcAggregation.ArcAggregator aggregator = 
                 new OsmSharp.Routing.ArcAggregation.ArcAggregator(_interpreter);

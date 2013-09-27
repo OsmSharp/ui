@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Math.VRP.Core.Routes;
 
@@ -77,14 +76,14 @@ namespace OsmSharp.Routing.VRP
         /// <param name="vehicle"></param>
         /// <param name="solution"></param>
         /// <param name="points"></param>
-        protected OsmSharpRoute[] ConvertSolution(Vehicle vehicle, int[][] solution, RouterPoint[] points)
+        protected Route[] ConvertSolution(Vehicle vehicle, int[][] solution, RouterPoint[] points)
         {
-            var routes = new OsmSharpRoute[solution.Length];
+            var routes = new Route[solution.Length];
             for (int routeIdx = 0; routeIdx < solution.Length; routeIdx++)
             {
                 // concatenate the route(s).
-                OsmSharpRoute tsp = null;
-                OsmSharpRoute route;
+                Route tsp = null;
+                Route route;
                 for (int idx = 0; idx < solution[routeIdx].Length - 1; idx++)
                 {
                     route = _router.Calculate(Vehicle.Car, points[solution[routeIdx][idx]],
@@ -97,7 +96,7 @@ namespace OsmSharp.Routing.VRP
                         }
                         else
                         { // concatenate.
-                            tsp = OsmSharpRoute.Concatenate(tsp, route);
+                            tsp = Route.Concatenate(tsp, route);
                         }
                     }
                 }
@@ -107,7 +106,7 @@ namespace OsmSharp.Routing.VRP
                             points[solution[routeIdx][0]]);
                 if (route.Entries.Length > 0)
                 {
-                    tsp = OsmSharpRoute.Concatenate(tsp, route);
+                    tsp = Route.Concatenate(tsp, route);
                 }
 
                 // set the result.
@@ -148,7 +147,7 @@ namespace OsmSharp.Routing.VRP
         /// Delegate to pass on an array of routes.
         /// </summary>
         /// <param name="result"></param>
-        public delegate void OsmSharpRoutesDelegate(OsmSharpRoute[] result);
+        public delegate void OsmSharpRoutesDelegate(Route[] result);
 
         /// <summary>
         /// Raised when an intermidiate result is available.
@@ -168,7 +167,7 @@ namespace OsmSharp.Routing.VRP
         /// Raises the intermidiate results event.
         /// </summary>
         /// <param name="result"></param>
-        protected void RaiseIntermidiateResult(OsmSharpRoute[] result)
+        protected void RaiseIntermidiateResult(Route[] result)
         {
             if (IntermidiateResult != null)
             {

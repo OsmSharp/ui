@@ -31,7 +31,6 @@ using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Route;
 
 namespace OsmSharp.UnitTests.Routing.CH.Serialization.Sorted
 {

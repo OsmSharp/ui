@@ -20,7 +20,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Route;
 using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Routing.VRP.WithDepot

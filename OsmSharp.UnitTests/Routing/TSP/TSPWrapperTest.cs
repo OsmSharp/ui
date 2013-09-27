@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Route;
 using System.Reflection;
 using OsmSharp.Routing;
 using NUnit.Framework;
@@ -34,7 +33,7 @@ namespace OsmSharp.UnitTests.Routing.TSP
         public void TestTSPWrapperVehicle()
         {
             // calculate TSP.
-            OsmSharpRoute route = this.CalculateTSP(Assembly.GetExecutingAssembly()
+            Route route = this.CalculateTSP(Assembly.GetExecutingAssembly()
                                                             .GetManifestResourceStream(
                                                                 @"OsmSharp.UnitTests.tsp_real.osm"),
                                                     Assembly.GetExecutingAssembly()
@@ -54,7 +53,7 @@ namespace OsmSharp.UnitTests.Routing.TSP
         public void TestTSPWrapperMetric()
         {
             // calculate TSP.
-            OsmSharpRoute route = this.CalculateTSP(Assembly.GetExecutingAssembly()
+            Route route = this.CalculateTSP(Assembly.GetExecutingAssembly()
                                                             .GetManifestResourceStream(
                                                                 @"OsmSharp.UnitTests.tsp_real.osm"),
                                                     Assembly.GetExecutingAssembly()
@@ -76,7 +75,7 @@ namespace OsmSharp.UnitTests.Routing.TSP
         /// <param name="pbf"></param>
         /// <param name="vehicleEnum"></param>
         /// <returns></returns>
-        private OsmSharpRoute CalculateTSP(Stream dataStream, Stream csvStream, bool pbf, Vehicle vehicleEnum)
+        private Route CalculateTSP(Stream dataStream, Stream csvStream, bool pbf, Vehicle vehicleEnum)
         {
             // create the router.
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();

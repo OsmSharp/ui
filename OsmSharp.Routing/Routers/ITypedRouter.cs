@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Route;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 
@@ -33,7 +32,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source">The source point.</param>
         /// <param name="target">The target point.</param>
         /// <returns></returns>
-        OsmSharpRoute Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target);
+        Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target);
 
         /// <summary>
         /// Calculates a route between two given points.
@@ -43,7 +42,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="target">The target point.</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
         /// <returns></returns>
-        OsmSharpRoute Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max);
+        Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max);
 
         /// <summary>
         /// Calculates a shortest route from a given point to any of the targets points.
@@ -52,7 +51,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source">The source point.</param>
         /// <param name="targets">The target point(s).</param>
         /// <returns></returns>
-        OsmSharpRoute CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets);
+        Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets);
 
         /// <summary>
         /// Calculates a shortest route from a given point to any of the targets points.
@@ -62,7 +61,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="targets">The target point(s).</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
         /// <returns></returns>
-        OsmSharpRoute CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max);
+        Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max);
 
         /// <summary>
         /// Calculates all routes between one source and many target points.
@@ -71,7 +70,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        OsmSharpRoute[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets);
+        Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets);
 
         /// <summary>
         /// Calculates all routes between many sources/targets.
@@ -80,7 +79,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        OsmSharpRoute[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets);
+        Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets);
 
         /// <summary>
         /// Calculates the weight between two given points.

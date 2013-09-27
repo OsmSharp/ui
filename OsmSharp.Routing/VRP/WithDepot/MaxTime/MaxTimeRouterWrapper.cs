@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Math.Geo;
 
@@ -31,7 +30,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
         /// <param name="points"></param>
         /// <param name="weights"></param>
         /// <returns></returns>
-        public OsmSharpRoute[] CalculateNoDepot(Vehicle vehicle, RouterPoint[] points, double[][] weights)
+        public Route[] CalculateNoDepot(Vehicle vehicle, RouterPoint[] points, double[][] weights)
         {
             // build the points array.
             var locations = new GeoCoordinate[points.Length];

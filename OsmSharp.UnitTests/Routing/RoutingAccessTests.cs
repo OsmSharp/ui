@@ -9,7 +9,6 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Route;
 using NUnit.Framework;
 
 namespace OsmSharp.UnitTests.Routing
@@ -359,7 +358,7 @@ namespace OsmSharp.UnitTests.Routing
 
             if (resolvedFrom != null && resolvedTo != null)
             {
-                OsmSharpRoute route = router.Calculate(vehicle, resolvedFrom, resolvedTo);
+                Route route = router.Calculate(vehicle, resolvedFrom, resolvedTo);
                 return route != null;
             }
             return false;

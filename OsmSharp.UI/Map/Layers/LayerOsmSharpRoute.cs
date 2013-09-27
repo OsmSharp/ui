@@ -17,10 +17,10 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Route;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Routing;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -97,7 +97,7 @@ namespace OsmSharp.UI.Map.Layers
         /// Adds a new OsmSharpRoute.
         /// </summary>
         /// <param name="route">Stream.</param>
-        public void AddRoute(OsmSharpRoute route)
+        public void AddRoute(Route route)
 		{
 			// set the default color if none is given.
 			SimpleColor blue = SimpleColor.FromKnownColor (KnownColor.Blue);
@@ -110,7 +110,7 @@ namespace OsmSharp.UI.Map.Layers
 		/// </summary>
 		/// <param name="route">Stream.</param>
 		/// <param name="argb">Stream.</param>
-		public void AddRoute(OsmSharpRoute route, int argb)
+		public void AddRoute(Route route, int argb)
 		{
 			if (route != null && 
                 route.Entries != null && 

@@ -51,7 +51,6 @@
     <Compile Include="IRouterExtensions.cs" />
     <Compile Include="Router.cs" />
     <Compile Include="RouterPoint.cs" />
-    <Compile Include="Route\OsmSharpRouteEnumerator.cs" />
     <Compile Include="Vehicle.cs" />
     <Compile Include="ArcAggregation\Output\Aggregated.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
@@ -122,12 +121,6 @@
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
     <Compile Include="Osm\IRoutingProgressConsumer.cs" />
     <Compile Include="Osm\Router.cs" />
-    <Compile Include="Route\Gpx\OsmSharpRouteGpx.cs" />
-    <Compile Include="Route\Kml\OsmSharpRouteKml.cs" />
-    <Compile Include="Route\Metrics\Time\TimeCalculator.cs" />
-    <Compile Include="Route\Metrics\OsmSharpRouteMetricCalculator.cs" />
-    <Compile Include="Route\OsmSharpRoute.cs" />
-    <Compile Include="Route\OsmSharpRouteGenerator.cs" />
     <Compile Include="Routers\ITypedRouter.cs" />
     <Compile Include="Routers\TypedRouter.cs" />
     <Compile Include="Routers\TypedRouterCHEdge.cs" />
@@ -210,6 +203,14 @@
     <Compile Include="CH\Serialization\Sorted\CHEdgeDataSerializer.cs" />
     <Compile Include="CH\Serialization\Tiled\CHEdgeDataDataSource.cs" />
     <Compile Include="CH\Serialization\Tiled\CHEdgeDataSerializer.cs" />
+    <Compile Include="Route.cs" />
+    <Compile Include="RouteEnumerable.cs" />
+    <Compile Include="RouteGenerator.cs" />
+    <Compile Include="RouteTracker.cs" />
+    <Compile Include="Metrics\Time\TimeCalculator.cs" />
+    <Compile Include="Metrics\RouteMetricCalculator.cs" />
+    <Compile Include="IO\Gpx\RouteGpx.cs" />
+    <Compile Include="IO\Kml\RouteKml.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.iOS.csproj">

@@ -28,7 +28,6 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
-using OsmSharp.Routing.Route;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Map.Layers;
@@ -192,7 +191,7 @@ namespace OsmSharp.WinForms.UI.Sample
                 }
                 if (_point1 != null && _point2 != null)
                 {
-                    OsmSharpRoute route = _router.Calculate(Vehicle.Car,
+                    Route route = _router.Calculate(Vehicle.Car,
                         _point1, _point2);
                     if (route != null)
                     {

@@ -29,7 +29,6 @@ using OsmSharp.Osm.Data.Streams.Filters;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Route;
 using OsmSharp.Collections;
 using System.Collections.Generic;
 using OsmSharp.Routing.Instructions;
@@ -78,13 +77,13 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint point45resolved = router.Resolve(Vehicle.Car, point45);
 
             // route between 35 and 45.
-            OsmSharpRoute routebefore = router.Calculate(Vehicle.Car, point35resolved, point45resolved);
+            Route routebefore = router.Calculate(Vehicle.Car, point35resolved, point45resolved);
 
             GeoCoordinate point129 = new GeoCoordinate(51.01239, 3.999573);
             RouterPoint point129resolved = router.Resolve(Vehicle.Car, point129);
 
             // route between 35 and 45.
-            OsmSharpRoute routeafter = router.Calculate(Vehicle.Car, point35resolved, point45resolved);
+            Route routeafter = router.Calculate(Vehicle.Car, point35resolved, point45resolved);
             Assert.AreEqual(routebefore.TotalDistance, routeafter.TotalDistance);
         }
 
@@ -123,11 +122,11 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint point40resolved = router.Resolve(Vehicle.Car, point40);
 
             // calculate two smaller routes.
-            OsmSharpRoute route3545 = router.Calculate(Vehicle.Car, point35resolved, point45resolved);
-            OsmSharpRoute route4540 = router.Calculate(Vehicle.Car, point45resolved, point40resolved);
-            OsmSharpRoute route3540concatenated = OsmSharpRoute.Concatenate(route3545, route4540);
+            Route route3545 = router.Calculate(Vehicle.Car, point35resolved, point45resolved);
+            Route route4540 = router.Calculate(Vehicle.Car, point45resolved, point40resolved);
+            Route route3540concatenated = Route.Concatenate(route3545, route4540);
 
-            OsmSharpRoute route3540 = router.Calculate(Vehicle.Car, point35resolved, point40resolved);
+            Route route3540 = router.Calculate(Vehicle.Car, point35resolved, point40resolved);
 
             // check if both routes are equal.
             Assert.AreEqual(route3540.Entries.Length, route3540concatenated.Entries.Length);
@@ -220,11 +219,10 @@ namespace OsmSharp.UnitTests.Routing
             var languageGenerator = new LanguageTestGenerator();
 
             // generate the instructions.
-            var instructionGenerator = new InstructionGenerator();
             List<Instruction> instructions =
-                instructionGenerator.Generate(route3540, interpreter, languageGenerator);
+                InstructionGenerator.Generate(route3540, interpreter, languageGenerator);
             List<Instruction> instructionsConcatenated =
-                instructionGenerator.Generate(route3540concatenated, interpreter, languageGenerator);
+                InstructionGenerator.Generate(route3540concatenated, interpreter, languageGenerator);
 
             Assert.AreEqual(instructions.Count, instructionsConcatenated.Count);
             for (int idx = 0; idx < instructions.Count; idx++)
@@ -277,12 +275,12 @@ namespace OsmSharp.UnitTests.Routing
             testPoints.Add(new GeoCoordinate(51.0581628, 3.7196889));
 
             // build a matrix of routes between all points.
-            OsmSharpRoute[][] referenceRoutes = new OsmSharpRoute[testPoints.Count][];
+            Route[][] referenceRoutes = new Route[testPoints.Count][];
             int[] permuationArray = new int[testPoints.Count];
             for (int fromIdx = 0; fromIdx < testPoints.Count; fromIdx++)
             {
                 permuationArray[fromIdx] = fromIdx;
-                referenceRoutes[fromIdx] = new OsmSharpRoute[testPoints.Count];
+                referenceRoutes[fromIdx] = new Route[testPoints.Count];
                 for (int toIdx = 0; toIdx < testPoints.Count; toIdx++)
                 {
                     // create router from scratch.
@@ -346,7 +344,7 @@ namespace OsmSharp.UnitTests.Routing
                     for (int toIdx = 0; toIdx < testPoints.Count; toIdx++)
                     {
                         // calculate route.
-                        OsmSharpRoute route = router.Calculate(Vehicle.Car, resolvedPoints[fromIdx], resolvedPoints[toIdx]);
+                        Route route = router.Calculate(Vehicle.Car, resolvedPoints[fromIdx], resolvedPoints[toIdx]);
 
                         Assert.AreEqual(referenceRoutes[fromIdx][toIdx].TotalDistance, route.TotalDistance, 0.1);
                     }
@@ -388,12 +386,12 @@ namespace OsmSharp.UnitTests.Routing
             testPoints.Add(new GeoCoordinate(51.0581862, 3.7203758));
 
             // build a matrix of routes between all points.
-            OsmSharpRoute[][] referenceRoutes = new OsmSharpRoute[testPoints.Count][];
+            Route[][] referenceRoutes = new Route[testPoints.Count][];
             int[] permuationArray = new int[testPoints.Count];
             for (int fromIdx = 0; fromIdx < testPoints.Count; fromIdx++)
             {
                 permuationArray[fromIdx] = fromIdx;
-                referenceRoutes[fromIdx] = new OsmSharpRoute[testPoints.Count];
+                referenceRoutes[fromIdx] = new Route[testPoints.Count];
                 for (int toIdx = 0; toIdx < testPoints.Count; toIdx++)
                 {
                     // create router from scratch.
@@ -430,7 +428,7 @@ namespace OsmSharp.UnitTests.Routing
                     for (int toIdx = 0; toIdx < testPoints.Count; toIdx++)
                     {
                         // calculate route.
-                        OsmSharpRoute route = router.Calculate(Vehicle.Car, resolvedPoints[fromIdx], resolvedPoints[toIdx]);
+                        Route route = router.Calculate(Vehicle.Car, resolvedPoints[fromIdx], resolvedPoints[toIdx]);
 
                         Assert.AreEqual(referenceRoutes[fromIdx][toIdx].TotalDistance, route.TotalDistance, 0.1);
                     }

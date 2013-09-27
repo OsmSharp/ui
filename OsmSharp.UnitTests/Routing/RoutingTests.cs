@@ -21,7 +21,6 @@ using NUnit.Framework;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Route;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
@@ -76,7 +75,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
             RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
@@ -122,7 +121,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
             target.Tags.Add(new KeyValuePair<string, string>("name", "target"));
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
@@ -159,7 +158,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
             target.Tags.Add(new KeyValuePair<string, string>("name", "target"));
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
 
@@ -186,7 +185,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
             RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(6, route.Entries.Length);
         }
@@ -204,7 +203,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
             RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578532, 3.7192229));
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(6, route.Entries.Length);
         }
@@ -222,7 +221,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
             RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(6, route.Entries.Length);
         }
@@ -240,7 +239,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0579235, 3.7199811));
             RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(6, route.Entries.Length);
         }
@@ -258,7 +257,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
             RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0581001, 3.7200612));
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(7, route.Entries.Length);
         }
@@ -276,7 +275,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0578153, 3.7193937));
             RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0582408, 3.7194636));
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(10, route.Entries.Length);
         }
@@ -294,7 +293,7 @@ namespace OsmSharp.UnitTests.Routing
             RouterPoint source = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0581843, 3.7201209)); // between 2 - 3
             RouterPoint target = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0581484, 3.7194957)); // between 9 - 8
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, source, target);
+            Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
             Assert.AreEqual(5, route.Entries.Length);
         }
@@ -481,7 +480,7 @@ namespace OsmSharp.UnitTests.Routing
             
             // first test a non-between node.
             RouterPoint resolved = router.Resolve(Vehicle.Car, new GeoCoordinate(51.0576193, 3.7191801));
-            OsmSharpRoute route = router.Calculate(Vehicle.Car, resolved, resolved);
+            Route route = router.Calculate(Vehicle.Car, resolved, resolved);
             Assert.AreEqual(1, route.Entries.Length);
             Assert.AreEqual(0, route.TotalDistance);
             Assert.AreEqual(0, route.TotalTime);
@@ -532,7 +531,7 @@ namespace OsmSharp.UnitTests.Routing
                     IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
                     Router router = this.BuildRouter(data, interpreter, basicRouter);
 
-                    OsmSharpRoute route = router.Calculate(Vehicle.Car, 
+                    Route route = router.Calculate(Vehicle.Car, 
                         router.Resolve(Vehicle.Car, vertex2021),
                         router.Resolve(Vehicle.Car, vertex2116));
 
@@ -573,7 +572,7 @@ namespace OsmSharp.UnitTests.Routing
                 IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
                 Router router = this.BuildRouter(data, interpreter, basicRouter);
 
-                OsmSharpRoute route = router.Calculate(Vehicle.Car,
+                Route route = router.Calculate(Vehicle.Car,
                     router.Resolve(Vehicle.Car, vertex2021),
                     router.Resolve(Vehicle.Car, vertex2120));
 
@@ -615,7 +614,7 @@ namespace OsmSharp.UnitTests.Routing
             IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(data, interpreter, basicRouter);
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car,
+            Route route = router.Calculate(Vehicle.Car,
                 router.Resolve(Vehicle.Car, vertex2021),
                 router.Resolve(Vehicle.Car, vertex2116));
 
@@ -655,7 +654,7 @@ namespace OsmSharp.UnitTests.Routing
             IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
             Router router = this.BuildRouter(data, interpreter, basicRouter);
 
-            OsmSharpRoute route = router.Calculate(Vehicle.Car,
+            Route route = router.Calculate(Vehicle.Car,
                 router.Resolve(Vehicle.Car, vertex20211),
                 router.Resolve(Vehicle.Car, vertex20212));
 

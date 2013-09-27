@@ -35,7 +35,6 @@ using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Route;
 using OsmSharp.Math;
 using OsmSharp.Collections;
 using OsmSharp.Osm.Data.Core.Processor;
@@ -158,7 +157,7 @@ namespace OsmSharp.Routing
         /// <param name="source">The source point.</param>
         /// <param name="target">The target point.</param>
         /// <returns></returns>
-        public OsmSharpRoute Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target)
+        public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target)
         {
             return _router.Calculate(vehicle, source, target);
         }
@@ -171,7 +170,7 @@ namespace OsmSharp.Routing
         /// <param name="target">The target point.</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
         /// <returns></returns>
-        public OsmSharpRoute Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max)
+        public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max)
         {
             return _router.Calculate(vehicle, source, target, max);
         }
@@ -183,7 +182,7 @@ namespace OsmSharp.Routing
         /// <param name="source">The source point.</param>
         /// <param name="targets">The target point(s).</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
             return _router.CalculateToClosest(vehicle, source, targets);
         }
@@ -196,7 +195,7 @@ namespace OsmSharp.Routing
         /// <param name="targets">The target point(s).</param>
         /// <param name="max">The maximum weight to stop the calculation.</param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max)
+        public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max)
         {
             return _router.CalculateToClosest(vehicle, source, targets, max);
         }
@@ -208,7 +207,7 @@ namespace OsmSharp.Routing
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public OsmSharpRoute[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        public Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
             return _router.CalculateOneToMany(vehicle, source, targets);
         }
@@ -220,7 +219,7 @@ namespace OsmSharp.Routing
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public OsmSharpRoute[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        public Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
         {
             return _router.CalculateManyToMany(vehicle, sources, targets);
         }

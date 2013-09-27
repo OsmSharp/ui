@@ -23,7 +23,6 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Metrics.Time;
-using OsmSharp.Routing.Route;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 
@@ -97,7 +96,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        public OsmSharpRoute Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target)
+        public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target)
         {
             return this.Calculate(vehicle, source, target, float.MaxValue);
         }
@@ -110,7 +109,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="target"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public OsmSharpRoute Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max)
+        public Route Calculate(Vehicle vehicle, RouterPoint source, RouterPoint target, float max)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -134,7 +133,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
             return this.CalculateToClosest(vehicle, source, targets, float.MaxValue);
         }
@@ -147,7 +146,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="targets"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public OsmSharpRoute CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max)
+        public Route CalculateToClosest(Vehicle vehicle, RouterPoint source, RouterPoint[] targets, float max)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -174,7 +173,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public OsmSharpRoute[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
+        public Route[] CalculateOneToMany(Vehicle vehicle, RouterPoint source, RouterPoint[] targets)
         {
             return this.CalculateManyToMany(vehicle, new[] { source }, targets)[0];
         }
@@ -186,7 +185,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="sources"></param>
         /// <param name="targets"></param>
         /// <returns></returns>
-        public OsmSharpRoute[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
+        public Route[][] CalculateManyToMany(Vehicle vehicle, RouterPoint[] sources, RouterPoint[] targets)
         {
             // check routing profiles.
             if (!this.SupportsVehicle(vehicle))
@@ -198,10 +197,10 @@ namespace OsmSharp.Routing.Routers
             PathSegment<long>[][] routes = _router.CalculateManyToMany(_dataGraph, _interpreter, vehicle, this.RouteResolvedGraph(vehicle, sources),
                 this.RouteResolvedGraph(vehicle, targets), double.MaxValue);
 
-            var constructedRoutes = new OsmSharpRoute[sources.Length][];
+            var constructedRoutes = new Route[sources.Length][];
             for (int x = 0; x < sources.Length; x++)
             {
-                constructedRoutes[x] = new OsmSharpRoute[targets.Length];
+                constructedRoutes[x] = new Route[targets.Length];
                 for (int y = 0; y < targets.Length; y++)
                 {
                     constructedRoutes[x][y] =
@@ -369,7 +368,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="source"></param>
         /// <param name="target"></param>
         /// <returns></returns>
-        private OsmSharpRoute ConstructRoute(Vehicle vehicle, PathSegment<long> route, RouterPoint source, RouterPoint target)
+        private Route ConstructRoute(Vehicle vehicle, PathSegment<long> route, RouterPoint source, RouterPoint target)
         {
             if (route != null)
             {
@@ -389,18 +388,18 @@ namespace OsmSharp.Routing.Routers
         /// <param name="toResolved"></param>
         /// <param name="vertices"></param>
         /// <returns></returns>
-        internal OsmSharpRoute Generate(
+        internal Route Generate(
             Vehicle vehicle,
             RouterPoint fromResolved,
             RouterPoint toResolved,
             long[] vertices)
         {
             // create the route.
-            OsmSharpRoute route = null;
+            Route route = null;
 
             if (vertices != null)
             {
-                route = new OsmSharpRoute();
+                route = new Route();
 
                 // set the vehicle.
                 route.Vehicle = vehicle;
