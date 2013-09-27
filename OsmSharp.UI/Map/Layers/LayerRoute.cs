@@ -108,9 +108,18 @@ namespace OsmSharp.UI.Map.Layers
 		/// <summary>
 		/// Adds a new OsmSharpRoute.
 		/// </summary>
+		/// <param name="route">Route.</param>
+		/// <param name="argb">ARGB.</param>
+		public void AddRoute(Route route, int argb){
+			this.AddRoute (route, argb, 8);
+		}
+
+		/// <summary>
+		/// Adds a new OsmSharpRoute.
+		/// </summary>
 		/// <param name="route">Stream.</param>
 		/// <param name="argb">Stream.</param>
-		public void AddRoute(Route route, int argb)
+		public void AddRoute(Route route, int argb, double width)
 		{
 			if (route != null && 
                 route.Entries != null && 
@@ -133,7 +142,7 @@ namespace OsmSharp.UI.Map.Layers
 				};
 				SimpleColor color = SimpleColor.FromArgb (argb);
 				this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
-				                   color.Value, 8);
+				                   color.Value, width);
 			}
 		}
 

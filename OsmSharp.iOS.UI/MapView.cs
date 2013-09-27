@@ -184,8 +184,8 @@ namespace OsmSharp.iOS.UI
 				_render = false;
 
 				long before = DateTime.Now.Ticks;
-				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-				                                "Rendering Start");
+//				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+//				                                "Rendering Start");
 
 				float extra = 1.25f;
 
@@ -220,17 +220,17 @@ namespace OsmSharp.iOS.UI
 				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, 
 				                      view);
 				long afterViewChanged = DateTime.Now.Ticks;
-				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-				                                "View change took: {0}ms @ zoom level {1}",
-				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
+//				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+//				                                "View change took: {0}ms @ zoom level {1}",
+//				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 				// does the rendering.
 				bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx, new RectangleF(0,0,(int)(_rect.Width * extra), (int)(_rect.Height * extra))), 
 				                                       layers, view);
 
 				long afterRendering = DateTime.Now.Ticks;
-				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-				                                "Rendering took: {0}ms @ zoom level {1}",
-				                                (new TimeSpan(afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
+//				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+//				                                "Rendering took: {0}ms @ zoom level {1}",
+//				                                (new TimeSpan(afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
 				if (complete) { // there was no cancellation, the rendering completely finished.
 					// add the result to the scene cache.
 					lock (_cachedScene) {
@@ -242,13 +242,13 @@ namespace OsmSharp.iOS.UI
 				}
 
 				long after = DateTime.Now.Ticks;
-				if (!complete) {
-					OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering CANCELLED!", 
-					                                new TimeSpan (after - before).TotalMilliseconds);
-				} else {
-					OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering in {0}ms", 
-					                                new TimeSpan (after - before).TotalMilliseconds);
-				}
+//				if (!complete) {
+//					OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering CANCELLED!", 
+//					                                new TimeSpan (after - before).TotalMilliseconds);
+//				} else {
+//					OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering in {0}ms", 
+//					                                new TimeSpan (after - before).TotalMilliseconds);
+//				}
 			}
 		}
 

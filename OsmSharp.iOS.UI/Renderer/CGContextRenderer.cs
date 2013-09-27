@@ -152,11 +152,6 @@ namespace OsmSharp.iOS.UI
 		protected override void DrawLine (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, int color, double width, 
 		                                  LineJoin lineJoin, int[] dashes)
 		{
-			target.Target.CGContext.InterpolationQuality = CGInterpolationQuality.None;
-			target.Target.CGContext.SetAllowsAntialiasing (false);
-			target.Target.CGContext.SetAllowsSubpixelPositioning (false);
-			target.Target.CGContext.SetShouldAntialias (false);
-
 			float widthInPixels = this.ToPixels (width);
 
 			SimpleColor simpleColor = SimpleColor.FromArgb(color);
@@ -199,11 +194,6 @@ namespace OsmSharp.iOS.UI
 		protected override void DrawPolygon (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, int color, double width, 
 		                                     bool fill)
 		{
-			target.Target.CGContext.InterpolationQuality = CGInterpolationQuality.None;
-			target.Target.CGContext.SetAllowsAntialiasing (false);
-			target.Target.CGContext.SetAllowsSubpixelPositioning (false);
-			target.Target.CGContext.SetShouldAntialias (false);
-
 			float widthInPixels = this.ToPixels (width);
 
 			SimpleColor simpleColor = SimpleColor.FromArgb(color);
@@ -256,11 +246,6 @@ namespace OsmSharp.iOS.UI
 		protected override object DrawImage (Target2DWrapper<CGContextWrapper> target, double left, double top, double right, 
 		                                     double bottom, byte[] imageData, object tag)
 		{
-			target.Target.CGContext.InterpolationQuality = CGInterpolationQuality.None;
-			target.Target.CGContext.SetAllowsAntialiasing (false);
-			target.Target.CGContext.SetAllowsSubpixelPositioning (false);
-			target.Target.CGContext.SetShouldAntialias (false);
-
 			CGImage image = null;
 			CGLayer layer = null;
 			if (tag != null && tag is CGImage) {

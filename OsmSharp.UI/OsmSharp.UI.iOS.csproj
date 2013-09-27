@@ -52,7 +52,6 @@
     <Compile Include="Map\Layers\ILayer.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
     <Compile Include="Map\Layers\LayerOsm.cs" />
-    <Compile Include="Map\Layers\LayerOsmSharpRoute.cs" />
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
     <Compile Include="Map\Layers\LayerScene.cs" />
     <Compile Include="Map\Layers\LayerTile.cs" />
@@ -126,6 +125,7 @@
     <Compile Include="Map\Styles\MapCSS\MapCSSObject.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSType.cs" />
     <Compile Include="Renderer\Scene\Scene2DPrimitives\ImageTilted2D.cs" />
+    <Compile Include="Map\Layers\LayerRoute.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Map\Styles\MapCSS\v0_2\MapCSS.g" />

@@ -16,11 +16,11 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Routing.Instructions;
 using System.Collections.Generic;
+using OsmSharp.Math.Geo;
+using OsmSharp.Routing.Instructions;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Routing
 {
@@ -51,7 +51,13 @@ namespace OsmSharp.Routing
 			_instructions = InstructionGenerator.Generate (route, interpreter, language_generator);
 		}
 
-
+		/// <summary>
+		/// Track the specified location.
+		/// </summary>
+		/// <param name="location">Location.</param>
+		public RouteTrackingPoint Track(GeoCoordinate location) {
+			return null;
+		}
 	}
 
 	/// <summary>
@@ -59,6 +65,20 @@ namespace OsmSharp.Routing
 	/// </summary>
 	public class RouteTrackingPoint
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OsmSharp.Routing.RouteTrackingPoint"/> class.
+		/// </summary>
+		/// <param name="hasToRecalculate">If set to <c>true</c> has to recalculate.</param>
+		/// <param name="location">Location.</param>
+		/// <param name="locationOnRoute">Location on route.</param>
+		/// <param name="instruction">Instruction.</param>
+		internal RouteTrackingPoint(bool hasToRecalculate, GeoCoordinate location, GeoCoordinate locationOnRoute, Instruction instruction) {
+			this.HasToRecalculate = hasToRecalculate;
+			this.Location = location;
+			this.LocationOnRoute = locationOnRoute;
+			this.Instruction = instruction;
+		}
+
 		/// <summary>
 		/// Gets a value indicating whether the route has to be recalculated.
 		/// </summary>
@@ -82,6 +102,15 @@ namespace OsmSharp.Routing
 		/// </summary>
 		/// <value>The location on route.</value>
 		public GeoCoordinate LocationOnRoute {
+			get;
+			private set;
+		}
+
+		/// <summary>
+		/// Gets the instruction.
+		/// </summary>
+		/// <value>The instruction.</value>
+		public Instruction Instruction {
 			get;
 			private set;
 		}
