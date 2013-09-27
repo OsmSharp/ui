@@ -67,6 +67,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\marker.png" />
+    <BundleResource Include="Images\layers.png" />
+    <BundleResource Include="Images\layers%402x.png" />
+    <BundleResource Include="Images\marker-and-shadow%402x.png" />
+    <BundleResource Include="Images\marker-and-shadow.png" />
   </ItemGroup>
 </Project>

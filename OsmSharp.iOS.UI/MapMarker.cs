@@ -42,7 +42,7 @@ namespace OsmSharp.iOS.UI
 		private static UIImage GetDefaultImage() 
 		{
 			if (_defaultImage == null) {
-				_defaultImage = UIImage.FromFile ("Images/marker.png");
+				_defaultImage = UIImage.FromFile ("Images/marker-and-shadow.png");
 			}
 			return _defaultImage;
 		}
