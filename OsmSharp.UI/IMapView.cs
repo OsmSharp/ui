@@ -18,6 +18,7 @@
 
 using OsmSharp.Math.Geo;
 using OsmSharp.Units.Angle;
+using OsmSharp.UI.Animations;
 
 namespace OsmSharp.UI
 {
@@ -26,6 +27,34 @@ namespace OsmSharp.UI
     /// </summary>
     public interface IMapView
     {
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="OsmSharp.UI.IMapView"/> auto invalidate.
+		/// </summary>
+		/// <value><c>true</c> if auto invalidate; otherwise, <c>false</c>.</value>
+	    bool AutoInvalidate {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Invalidates this instance.
+		/// </summary>
+		void Invalidate ();
+
+		/// <summary>
+		/// Registers the animator.
+		/// </summary>
+		/// <param name="mapViewAnimator">Map view animator.</param>
+		void RegisterAnimator (MapViewAnimator mapViewAnimator);
+
+		/// <summary>
+		/// Sets the map view by changing all three parameters at once.
+		/// </summary>
+		/// <param name="center">Center.</param>
+		/// <param name="mapTilt">Map tilt.</param>
+		/// <param name="mapZoom">Map zoom.</param>
+		void SetMapView(GeoCoordinate center, Degree mapTilt, float mapZoom);
+
         /// <summary>
         /// Gets or sets the MapCenter;
         /// </summary>

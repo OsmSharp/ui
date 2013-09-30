@@ -40,6 +40,7 @@ using System.Threading;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Units.Angle;
+using OsmSharp.UI.Animations;
 
 namespace OsmSharp.Android.UI
 {
@@ -306,15 +307,15 @@ namespace OsmSharp.Android.UI
             {
                 _mapCenter = value;
                 (this.Context as Activity).RunOnUiThread(Invalidate);
-                if (_previousRenderingMapCenter == null ||
-                _previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 20)
-                { // TODO: update this with a more resonable measure depending on the zoom.
-                    if (!_render && !_cacheRenderer.IsRunning)
-                    {
-                        this.Change();
-                        _previousRenderingMapCenter = _mapCenter;
-                    }
-                }
+				if (_autoInvalidate) {
+					if (_previousRenderingMapCenter == null ||
+						_previousRenderingMapCenter.DistanceReal (_mapCenter).Value > 20) { // TODO: update this with a more resonable measure depending on the zoom.
+						if (!_render && !_cacheRenderer.IsRunning) {
+							this.Change ();
+							_previousRenderingMapCenter = _mapCenter;
+						}
+					}
+				}
             }
         }
 
@@ -353,8 +354,10 @@ namespace OsmSharp.Android.UI
 			}
 			set {
                 _mapTilt = value;
-
-                (this.Context as Activity).RunOnUiThread(Invalidate);
+				
+				if (_autoInvalidate) {
+					(this.Context as Activity).RunOnUiThread (Invalidate);
+				}
 			}
 		}
 
@@ -377,8 +380,10 @@ namespace OsmSharp.Android.UI
 				} else {
 					_mapZoomLevel = value;
                 }
-
-                (this.Context as Activity).RunOnUiThread(Invalidate);
+				
+				if (_autoInvalidate) {
+					(this.Context as Activity).RunOnUiThread (Invalidate);
+				}
 			}
 		}
 
@@ -596,6 +601,9 @@ namespace OsmSharp.Android.UI
 					this.MapZoomLevel = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
 				}
 
+				// stop the animation.
+				_mapViewAnimator.Stop ();
+
 				// recreate the view.
 				View2D view = this.CreateView ();
 							
@@ -648,6 +656,53 @@ namespace OsmSharp.Android.UI
 		}
 		
 		#endregion
+
+		/// <summary>
+		/// Holds the map view animator.
+		/// </summary>
+		private MapViewAnimator _mapViewAnimator;
+
+		/// <summary>
+		/// Holds the auto invalidate flag.
+		/// </summary>
+		private bool _autoInvalidate = false;
+
+		/// <summary>
+		/// Registers the animator.
+		/// </summary>
+		/// <param name="mapViewAnimator">Map view animator.</param>
+		internal void RegisterAnimator (MapViewAnimator mapViewAnimator)
+		{
+			_mapViewAnimator = mapViewAnimator;
+		}
+
+		/// <summary>
+		/// Sets the map view.
+		/// </summary>
+		/// <param name="center">Center.</param>
+		/// <param name="mapTilt">Map tilt.</param>
+		/// <param name="mapZoom">Map zoom.</param>
+		internal void SetMapView (GeoCoordinate center, Degree mapTilt, float mapZoom)
+		{
+			_mapCenter = center;
+			_mapTilt = mapTilt;
+			_mapZoomLevel = mapZoom;
+
+			(this.Context as Activity).RunOnUiThread(Invalidate);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="OsmSharp.Android.UI.MapViewSurface"/> auto invalidate.
+		/// </summary>
+		/// <value><c>true</c> if auto invalidate; otherwise, <c>false</c>.</value>
+		internal bool AutoInvalidate {
+			get {
+				return _autoInvalidate;
+			}
+			set {
+				_autoInvalidate = value;
+			}
+		}
 
 		/// <summary>
 		/// Occurs when the map was tapped at a certain location.

@@ -30,6 +30,7 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Units.Angle;
 using OsmSharp.Math.Geo.Projections;
+using OsmSharp.UI.Animations;
 
 namespace OsmSharp.iOS.UI
 {
@@ -86,6 +87,8 @@ namespace OsmSharp.iOS.UI
 			_mapTilt = defaultMapTilt;
 			_mapZoom = defaultMapZoom;
 
+			_doubleTapAnimator = new MapViewAnimator (this);
+
 			this.BackgroundColor = UIColor.White;
 			this.UserInteractionEnabled = true;
 
@@ -94,15 +97,28 @@ namespace OsmSharp.iOS.UI
 			var panGesture = new UIPanGestureRecognizer (Pan);
 			panGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
 			this.AddGestureRecognizer (panGesture);
+
 			var pinchGesture = new UIPinchGestureRecognizer (Pinch);
 			pinchGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
 			this.AddGestureRecognizer (pinchGesture);
+
 			var rotationGesture = new UIRotationGestureRecognizer (Rotate);
 			rotationGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
 			this.AddGestureRecognizer (rotationGesture);
-			var tapGesture = new UITapGestureRecognizer (Tap);
-			tapGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return other != null; };
-			this.AddGestureRecognizer (tapGesture);
+
+			var singleTapGesture = new UITapGestureRecognizer (SingleTap);
+			singleTapGesture.NumberOfTapsRequired = 1;
+			//singleTapGesture.ShouldRecognizeSimultaneously += ShouldRecognizeSimultaneouslySingle;
+			//singleTapGesture.ShouldBeRequiredToFailBy += ShouldRecognizeSimultaneouslySingle;
+
+			var doubleTapGesture = new UITapGestureRecognizer (DoubleTap);
+			doubleTapGesture.NumberOfTapsRequired = 2;
+			//doubleTapGesture.ShouldRecognizeSimultaneously += ShouldRecognizeSimultaneouslySingle;
+			//doubleTapGesture.ShouldBeRequiredToFailBy += ShouldRecognizeSimultaneouslyDouble;
+			
+			singleTapGesture.RequireGestureRecognizerToFail (doubleTapGesture);
+			this.AddGestureRecognizer (singleTapGesture);
+			this.AddGestureRecognizer (doubleTapGesture);
 
 			// create the cache renderer.
 			_cacheRenderer = new MapRenderer<CGContextWrapper> (
@@ -116,6 +132,11 @@ namespace OsmSharp.iOS.UI
 			new System.Threading.Timer (InvalidateSimple, new object(), 0, 50);
 		}
 
+		/// <summary>
+		/// Gestures the recognizer should begin.
+		/// </summary>
+		/// <returns><c>true</c>, if recognizer should begin was gestured, <c>false</c> otherwise.</returns>
+		/// <param name="gestureRecognizer">Gesture recognizer.</param>
 		public override bool GestureRecognizerShouldBegin (UIGestureRecognizer gestureRecognizer)
 		{
 			return true;
@@ -263,6 +284,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="rotation">Rotation.</param>
 		private void Rotate(UIRotationGestureRecognizer rotation){
 			if (_rect.Width > 0) {
+				this.StopCurrentAnimation ();
 				if (rotation.State == UIGestureRecognizerState.Ended) { 
 					View2D rotatedView = _mapViewBefore.RotateAroundCenter ((Radian)rotation.Rotation);
 					_mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
@@ -299,6 +321,7 @@ namespace OsmSharp.iOS.UI
 		private void Pinch(UIPinchGestureRecognizer pinch)
 		{
 			if (_rect.Width > 0) {
+				this.StopCurrentAnimation ();
 				if (pinch.State == UIGestureRecognizerState.Ended) {
 					this.MapZoom = _mapZoomLevelBefore.Value;
 
@@ -319,7 +342,6 @@ namespace OsmSharp.iOS.UI
 					zoomFactor = zoomFactor * pinch.Scale;
 					this.MapZoom = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
 
-					//this.Change (); // notifies change.
 					this.InvokeOnMainThread (InvalidateMap);
 				}
 			}
@@ -337,6 +359,7 @@ namespace OsmSharp.iOS.UI
 		private void Pan(UIPanGestureRecognizer pan)
 		{
 			if (_rect.Width > 0) {
+				this.StopCurrentAnimation ();
 				PointF offset = pan.TranslationInView (this);
 				if (pan.State == UIGestureRecognizerState.Ended) {
 					_beforePan = null;
@@ -373,16 +396,51 @@ namespace OsmSharp.iOS.UI
 		public event MapTapEventDelegate MapTapEvent;
 
 		/// <summary>
-		/// Tap the specified tap.
+		/// Called when the map was single tapped at a certain location.
 		/// </summary>
 		/// <param name="tap">Tap.</param>
-		private void Tap(UITapGestureRecognizer tap){
+		private void SingleTap(UITapGestureRecognizer tap){
 			if(_rect.Width > 0 && _rect.Height > 0) {
+				this.StopCurrentAnimation ();
+
 				if (this.MapTapEvent != null) {
 					View2D view = this.CreateView (_rect);
 					PointF location = tap.LocationInView (this);
 				    double[] sceneCoordinates = view.FromViewPort (_rect.Width, _rect.Height, location.X, location.Y);
 					this.MapTapEvent (this.Map.Projection.ToGeoCoordinates (sceneCoordinates [0], sceneCoordinates [1]));
+				}
+			}
+		}
+
+		/// <summary>
+		/// The map view animator to zoom/pan on double tap.
+		/// </summary>
+		private MapViewAnimator _doubleTapAnimator;
+
+		/// <summary>
+		/// Occurs when the map was double tapped at a certain location.
+		/// </summary>
+		public event MapTapEventDelegate DoubleMapTapEvent;
+
+		/// <summary>
+		/// Called when the tap gesture recognizer detects a double tap.
+		/// </summary>
+		/// <param name="tap">Tap.</param>
+		private void DoubleTap(UITapGestureRecognizer tap){
+			if(_rect.Width > 0 && _rect.Height > 0) {
+				this.StopCurrentAnimation ();
+				
+				View2D view = this.CreateView (_rect);
+				PointF location = tap.LocationInView (this);
+				double[] sceneCoordinates = view.FromViewPort (_rect.Width, _rect.Height, location.X, location.Y);
+				GeoCoordinate geoLocation = this.Map.Projection.ToGeoCoordinates (sceneCoordinates [0], sceneCoordinates [1]);
+
+				if (this.DoubleMapTapEvent != null) {
+					this.DoubleMapTapEvent (geoLocation);
+				} else {
+					// minimum zoom.
+					float tapRequestZoom = (float)System.Math.Max (_mapZoom + 1, 19);
+					_doubleTapAnimator.Start (geoLocation, tapRequestZoom, new TimeSpan(0,0,1));
 				}
 			}
 		}
@@ -405,12 +463,14 @@ namespace OsmSharp.iOS.UI
 			get { return _mapCenter; }
 			set { 
 				_mapCenter = value;
-				this.InvalidateMap ();
-				if (_previousRenderingMapCenter == null || 
-				    _previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 40) { // TODO: update this with a more resonable measure depending on the zoom.
-					this.Change ();
-					_previousRenderingMapCenter = _mapCenter;
-				} 
+				this.InvokeOnMainThread (InvalidateMap);
+				if (_autoInvalidate) {
+					if (_previousRenderingMapCenter == null || 
+						_previousRenderingMapCenter.DistanceReal (_mapCenter).Value > 40) { // TODO: update this with a more resonable measure depending on the zoom.
+						this.Change ();
+						_previousRenderingMapCenter = _mapCenter;
+					} 
+				}
 			}
 		}
 
@@ -430,7 +490,7 @@ namespace OsmSharp.iOS.UI
 			set {
 				_map = value;
 
-				this.InvalidateMap ();
+				this.InvokeOnMainThread (InvalidateMap);
 			}
 		}
 
@@ -450,7 +510,7 @@ namespace OsmSharp.iOS.UI
 			set{
 				_mapZoom = value;
 
-				this.InvalidateMap ();
+				this.InvokeOnMainThread (InvalidateMap);
 			}
 		}
 
@@ -470,9 +530,79 @@ namespace OsmSharp.iOS.UI
 			set {
 				_mapTilt = value;
 
-				this.InvalidateMap ();
+				this.InvokeOnMainThread (InvalidateMap);
 			}
 		}
+
+		#region IMapView implementation
+
+
+		/// <summary>
+		/// Sets the map view.
+		/// </summary>
+		/// <param name="center">Center.</param>
+		/// <param name="mapTilt">Map tilt.</param>
+		/// <param name="mapZoom">Map zoom.</param>
+		void IMapView.SetMapView (GeoCoordinate center, Degree mapTilt, float mapZoom)
+		{
+			_mapCenter = center;
+			_mapTilt = mapTilt;
+			_mapZoom = mapZoom;
+
+			this.InvokeOnMainThread (InvalidateMap);
+		}
+
+		/// <summary>
+		/// Holds the current animator.
+		/// </summary>
+		private MapViewAnimator _mapViewAnimator;
+
+		/// <summary>
+		/// Stops the current animation.
+		/// </summary>
+		private void StopCurrentAnimation()
+		{
+			if(_mapViewAnimator != null) {
+				_mapViewAnimator.Stop ();
+			}
+		}
+
+		/// <summary>
+		/// Registers the animator.
+		/// </summary>
+		/// <param name="mapViewAnimator">Map view animator.</param>
+		void IMapView.RegisterAnimator (MapViewAnimator mapViewAnimator)
+		{
+			_mapViewAnimator = mapViewAnimator;
+		}
+
+		/// <summary>
+		/// The auto invalidate flag.
+		/// </summary>
+		private bool _autoInvalidate;
+
+		/// <summary>
+		/// Invalidate this instance.
+		/// </summary>
+		void IMapView.Invalidate ()
+		{
+			this.Change ();
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="OsmSharp.iOS.UI.MapView"/> auto invalidate.
+		/// </summary>
+		/// <value><c>true</c> if auto invalidate; otherwise, <c>false</c>.</value>
+		bool IMapView.AutoInvalidate {
+			get {
+				return _autoInvalidate;
+			}
+			set {
+				_autoInvalidate = value;
+			}
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Holds the drawing rectangle.

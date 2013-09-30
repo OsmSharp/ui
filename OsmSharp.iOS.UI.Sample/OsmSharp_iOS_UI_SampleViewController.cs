@@ -18,6 +18,7 @@ using OsmSharp.Math;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.TSP.Genetic;
+using OsmSharp.UI.Animations;
 
 namespace OsmSharp.iOS.UI.Sample
 {
@@ -34,7 +35,6 @@ namespace OsmSharp.iOS.UI.Sample
 			
 			// Release any cached data, images, etc that aren't in use.
 		}
-
 		public override void LoadView ()
 		{
 			base.LoadView ();
@@ -47,22 +47,24 @@ namespace OsmSharp.iOS.UI.Sample
 
 			// Perform any additional setup after loading the view, typically from a nib.
 			MapView mapView = new MapView ();
+			//mapViewAnimator = new MapViewAnimator (mapView);
 			mapView.Map = map;
 			mapView.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
-			mapView.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {
-				mapView.AddMarker(geoCoordinate).TouchDown  += MapMarkerClicked;
-			};
+//			mapView.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {
+//				_mapViewAnimator.Start(geoCoordinate, 16, new TimeSpan(0,0,2));
+//				mapView.AddMarker(geoCoordinate).TouchDown  += MapMarkerClicked;
+//			};
 
 			mapView.MapZoom = 18;
 			mapView.MapTilt = 30;
 
-			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
-			var graphDeserialized = routingSerializer.Deserialize(
-				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.iOS.UI.Sample.wvl.routing"), true);
-
-			Router router = Router.CreateCHFrom(
-				graphDeserialized, new CHRouter(graphDeserialized),
-				new OsmRoutingInterpreter());
+//			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+//			var graphDeserialized = routingSerializer.Deserialize(
+//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.iOS.UI.Sample.wvl.routing"), true);
+//
+//			Router router = Router.CreateCHFrom(
+//				graphDeserialized, new CHRouter(graphDeserialized),
+//				new OsmRoutingInterpreter());
 
 //			long before = DateTime.Now.Ticks;
 //

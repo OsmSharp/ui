@@ -45,7 +45,7 @@ namespace OsmSharp.UI.Animations
         /// <summary>
         /// Holds the minimum allowed timespan.
         /// </summary>
-        private readonly TimeSpan _minimumTimeSpan = new TimeSpan(0, 0, 0, 0, 100);
+        private readonly TimeSpan _minimumTimeSpan = new TimeSpan(0, 0, 0, 0, 50);
 
         /// <summary>
         /// Creates a new MapView Animator.
@@ -218,6 +218,10 @@ namespace OsmSharp.UI.Animations
                     string.Format("Started new animation with steps z:{0} t:{1} c:{2} to z:{3} t:{4} c:{5}.",
                         _stepZoom, _stepTilt, _stepCenter.ToString(), _targetZoom, _targetTilt, _targetCenter.ToString()));
 
+				// disable auto invalidate.
+				_mapView.AutoInvalidate = false;
+				_mapView.RegisterAnimator (this);
+
                 // start the timer.
                 _timer.Enabled = true;
                 _timer.Start();
@@ -236,6 +240,8 @@ namespace OsmSharp.UI.Animations
                     _timer.Stop();
                     _timer.Dispose();
                     _timer = null;
+
+					_mapView.RegisterAnimator (null);
                 }
             }
         }
@@ -248,24 +254,30 @@ namespace OsmSharp.UI.Animations
         void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", System.Diagnostics.TraceEventType.Verbose,
-                "_timer_Elapsed");
+				string.Format("Animation Step BEGIN: z:{0} -c:{1} - t:{2}", _mapView.MapZoom, _mapView.MapCenter, _mapView.MapTilt));
 
             _currentStep++;
             if (_currentStep < _maxSteps)
-            { // there is still need for a change.
-                _mapView.MapZoom += _stepZoom; // update zoom.
-                _mapView.MapTilt += _stepTilt; // update tilt.
-                _mapView.MapCenter = new GeoCoordinate( // update center.
-                    (_mapView.MapCenter.Latitude + _stepCenter.Latitude),
-                    (_mapView.MapCenter.Longitude + _stepCenter.Longitude));
+			{ // there is still need for a change.
+				GeoCoordinate center = new GeoCoordinate( // update center.
+				                                       (_mapView.MapCenter.Latitude + _stepCenter.Latitude),
+				                                       (_mapView.MapCenter.Longitude + _stepCenter.Longitude));
+				float mapZoom = _mapView.MapZoom + _stepZoom; // update zoom.
+				Degree mapTilt = _mapView.MapTilt + _stepTilt; // update tilt.
+				_mapView.SetMapView (center, mapTilt, mapZoom);
+				OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", System.Diagnostics.TraceEventType.Verbose,
+				                                string.Format("Animation Step END: z:{0} -c:{1} - t:{2}", _mapView.MapZoom, _mapView.MapCenter, _mapView.MapTilt));
                 return;
             }
             else if (_currentStep == _maxSteps)
             { // this is the last step.
-                _mapView.MapZoom = _targetZoom; // update zoom.
-                _mapView.MapTilt = _targetTilt; // update tilt.
-                _mapView.MapCenter = _targetCenter; // update center.
-            }
+				_mapView.SetMapView (_targetCenter, _targetTilt, _targetZoom);
+			}
+
+			// enable auto invalidate.
+			_mapView.Invalidate ();
+			_mapView.AutoInvalidate = true;
+			_mapView.RegisterAnimator (null);
             _timer.Stop(); // stop the timer.
         }
     }

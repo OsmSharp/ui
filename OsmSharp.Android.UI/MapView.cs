@@ -32,6 +32,7 @@ using OsmSharp.UI;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Units.Angle;
+using OsmSharp.UI.Animations;
 
 namespace OsmSharp.Android.UI
 {
@@ -193,6 +194,48 @@ namespace OsmSharp.Android.UI
 				_mapView.MapTilt = value;
 			}
 		}
+
+		#region IMapView implementation
+
+		/// <summary>
+		/// Holds the map view animator.
+		/// </summary>
+		private MapViewAnimator _mapViewAnimator;
+
+		/// <summary>
+		/// Registers the animator.
+		/// </summary>
+		/// <param name="mapViewAnimator">Map view animator.</param>
+		void IMapView.RegisterAnimator (MapViewAnimator mapViewAnimator)
+		{
+			_mapViewAnimator = mapViewAnimator;
+		}
+
+		/// <summary>
+		/// Sets the map view.
+		/// </summary>
+		/// <param name="center">Center.</param>
+		/// <param name="mapTilt">Map tilt.</param>
+		/// <param name="mapZoom">Map zoom.</param>
+		void IMapView.SetMapView (GeoCoordinate center, Degree mapTilt, float mapZoom)
+		{
+			_mapView.SetMapView (center, mapTilt, mapZoom);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="OsmSharp.Android.UI.MapView"/> auto invalidates.
+		/// </summary>
+		/// <value><c>true</c> if auto invalidate; otherwise, <c>false</c>.</value>
+		bool IMapView.AutoInvalidate {
+			get {
+				return _mapView.AutoInvalidate;
+			}
+			set {
+				_mapView.AutoInvalidate = false;
+			}
+		}
+
+		#endregion
 
 		/// <summary>
 		/// Notifies the map change.

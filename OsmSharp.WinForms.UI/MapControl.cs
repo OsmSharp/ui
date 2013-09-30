@@ -623,5 +623,24 @@ namespace OsmSharp.WinForms.UI
         #endregion
 
         #endregion
+
+		#region IMapView implementation
+
+		void IMapView.RegisterAnimator (OsmSharp.UI.Animations.MapViewAnimator mapViewAnimator)
+		{
+
+		}
+
+		void IMapView.SetMapView (GeoCoordinate center, Degree mapTilt, float mapZoom)
+		{
+
+		}
+
+		bool IMapView.AutoInvalidate {
+			get;
+			set;
+		}
+
+		#endregion
     }
 }
