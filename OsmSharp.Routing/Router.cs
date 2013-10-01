@@ -29,7 +29,6 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Routers;
@@ -38,6 +37,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math;
 using OsmSharp.Collections;
 using OsmSharp.Osm.Data.Core.Processor;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.Routing
 {
@@ -74,7 +74,7 @@ namespace OsmSharp.Routing
 
             // read from the OSM-stream.
             var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            var targetData = new LiveGraphOsmStreamWriter(memoryData, interpreter, tagsIndex);
+            var targetData = new LiveGraphOsmStreamTarget(memoryData, interpreter, tagsIndex);
             var sorter = new OsmStreamFilterSort();
             sorter.RegisterSource(reader);
             targetData.RegisterSource(sorter);

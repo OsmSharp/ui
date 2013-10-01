@@ -5,7 +5,6 @@ using System.Text;
 using NUnit.Framework;
 using OsmSharp.Osm;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Interpreter;
 using System.Reflection;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;

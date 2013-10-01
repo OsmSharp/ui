@@ -24,13 +24,12 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph.Router;
-
+using OsmSharp.Routing.Osm.Streams.Graphs;
 namespace OsmSharp.UnitTests.Routing
 {
     /// <summary>
@@ -55,7 +54,7 @@ namespace OsmSharp.UnitTests.Routing
 
             // do the data processing.
             var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            var targetData = new LiveGraphOsmStreamWriter(
+            var targetData = new LiveGraphOsmStreamTarget(
                 data, interpreter, data.TagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(

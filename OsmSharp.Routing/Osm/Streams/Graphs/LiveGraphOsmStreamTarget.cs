@@ -1,20 +1,38 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Interpreter.Roads;
+using OsmSharp.Routing.Osm.Graphs;
 
-namespace OsmSharp.Routing.Osm.Data.Processing
+namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
     /// <summary>
     /// A data processing target containing edges with the orignal OSM-tags and their original OSM-direction.
     /// </summary>
-    public class LiveGraphOsmStreamWriter : DynamicGraphOsmStreamWriter<LiveEdge>
+    public class LiveGraphOsmStreamTarget : DynamicGraphOsmStreamWriter<LiveEdge>
     {
         /// <summary>
         /// Holds the data source.
@@ -27,7 +45,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="dynamicGraph"></param>
         /// <param name="interpreter">Inteprets the OSM-data.</param>
         /// <param name="tagsIndex">Holds all the tags.</param>
-        public LiveGraphOsmStreamWriter(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IRoutingInterpreter interpreter, ITagsIndex tagsIndex)
             : this(dynamicGraph, interpreter, tagsIndex, new Dictionary<long, uint>())
         {
@@ -41,7 +59,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
-        public LiveGraphOsmStreamWriter(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IRoutingInterpreter interpreter, ITagsIndex tagsIndex, IDictionary<long, uint> idTransformations)
             : this(dynamicGraph, interpreter, tagsIndex, idTransformations, null)
         {
@@ -55,7 +73,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="box"></param>
-        public LiveGraphOsmStreamWriter(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IRoutingInterpreter interpreter, ITagsIndex tagsIndex, GeoCoordinateBox box)
             : this(dynamicGraph, interpreter, tagsIndex, new Dictionary<long, uint>(), box)
         {
@@ -70,7 +88,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         /// <param name="box"></param>
-        public LiveGraphOsmStreamWriter(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IRoutingInterpreter interpreter, ITagsIndex tagsIndex, IDictionary<long, uint> idTransformations, 
             GeoCoordinateBox box)
             : base(dynamicGraph, interpreter, null, tagsIndex, idTransformations, box)
@@ -132,7 +150,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         {
             var dynamicGraphRouterDataSource =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            var targetData = new LiveGraphOsmStreamWriter(dynamicGraphRouterDataSource, interpreter, dynamicGraphRouterDataSource.TagsIndex);
+            var targetData = new LiveGraphOsmStreamTarget(dynamicGraphRouterDataSource, interpreter, dynamicGraphRouterDataSource.TagsIndex);
             targetData.RegisterSource(reader);
             targetData.Pull();
 
@@ -148,7 +166,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         public static DynamicGraphRouterDataSource<LiveEdge> Preprocess(OsmStreamSource reader,
                                                                         IRoutingInterpreter interpreter)
         {
-            return LiveGraphOsmStreamWriter.Preprocess(reader, new SimpleTagsIndex(), interpreter);
+            return LiveGraphOsmStreamTarget.Preprocess(reader, new SimpleTagsIndex(), interpreter);
         }
 
         #endregion

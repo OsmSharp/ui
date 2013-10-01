@@ -25,7 +25,6 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.UI.Map;
@@ -41,6 +40,7 @@ using OsmSharp.UI;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.WinForms.UI.Sample
 {
@@ -76,30 +76,30 @@ namespace OsmSharp.WinForms.UI.Sample
             imageSource.Add("styles/default/postbox.png",
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.images.postbox.png"));
 
-            // load mapcss style interpreter.
-            var mapCSSInterpreter = new MapCSSInterpreter(
-                new FileInfo(@"C:\Users\xivk\Dropbox\SharpSoftware\Projects\Westtour WOI\wvl.mapcss").OpenRead(),
-                //Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.mapcss"),
-                imageSource);
+            //// load mapcss style interpreter.
+            //var mapCSSInterpreter = new MapCSSInterpreter(
+            //    new FileInfo(@"C:\Users\xivk\Dropbox\SharpSoftware\Projects\Westtour WOI\wvl.mapcss").OpenRead(),
+            //    //Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.mapcss"),
+            //    imageSource);
 
             // initialize the data source.
             //var dataSource = MemoryDataSource.CreateFromXmlStream(new FileInfo(@"c:\OSM\bin\wechel.osm").OpenRead());
             //var dataSource = MemoryDataSource.CreateFromPBFStream(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf").OpenRead());
-            var dataSource = MemoryDataSource.CreateFromPBFStream(new FileInfo(@"c:\OSM\bin\gent.osm.pbf").OpenRead());
+            //var dataSource = MemoryDataSource.CreateFromPBFStream(new FileInfo(@"c:\OSM\bin\gent.osm.pbf").OpenRead());
             //var dataSource = MemoryDataSource.CreateFromPBFStream(new FileInfo(@"c:\OSM\bin\lebbeke.osm.pbf").OpenRead());
             //Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.WinForms.UI.Sample.test.osm"));
 
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
-            map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter, map.Projection));
+            //map.AddLayer(new OsmLayer(dataSource, mapCSSInterpreter, map.Projection));
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
             //map.AddLayer(new LayerMBTile(@"C:\Users\xivk\Documents\Nostalgeo.mbtiles"));
             //map.AddLayer(
             //    new LayerScene(
             //        Scene2DLayered.Deserialize(new FileInfo(@"c:\OSM\bin\kempen.osm.pbf.scene.layered").OpenRead(), true)));
-            //map.AddLayer(
-            //    new LayerScene(
-            //        Scene2DLayered.Deserialize(new FileInfo(@"c:\OSM\bin\wvl.osm.pbf.scene.layered").OpenRead(), true)));
+            map.AddLayer(
+                new LayerScene(
+                    Scene2DLayered.Deserialize(new FileInfo(@"c:\OSM\bin\gent.map").OpenRead(), true)));
 
             //this.InitializeRouting(map);
 
@@ -139,7 +139,7 @@ namespace OsmSharp.WinForms.UI.Sample
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();
 //            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(true);
-            var original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
+            var original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    new FileInfo(@"c:\OSM\bin\wechel.osm").OpenRead()),
                                                                interpreter,
                                                                Vehicle.Car);

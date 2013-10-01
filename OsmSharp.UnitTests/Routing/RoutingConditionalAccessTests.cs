@@ -27,7 +27,6 @@ using OsmSharp.Routing.Routers;
 using OsmSharp.Math.Geo;
 using System.Reflection;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Data;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Math;

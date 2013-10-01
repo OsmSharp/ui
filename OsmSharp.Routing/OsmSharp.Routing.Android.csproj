@@ -113,6 +113,10 @@
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
     <Compile Include="Osm\IRoutingProgressConsumer.cs" />
     <Compile Include="Osm\Router.cs" />
+    <Compile Include="Osm\Streams\CHEdgeGraphFileStreamTarget.cs" />
+    <Compile Include="Osm\Streams\Graphs\CHEdgeGraphOsmStreamTarget.cs" />
+    <Compile Include="Osm\Streams\Graphs\DynamicGraphOsmStreamTarget.cs" />
+    <Compile Include="Osm\Streams\Graphs\LiveGraphOsmStreamTarget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TSP\Genetic\RouterTSPAEXGenetic.cs" />
     <Compile Include="TSP\Genetic\RouterTSPGenetic.cs" />
@@ -199,9 +203,6 @@
     <Compile Include="Graph\MemoryDynamicGraph.cs" />
     <Compile Include="Graph\Router\PathSegment.cs" />
     <Compile Include="Graph\Router\PathSegmentVisitList.cs" />
-    <Compile Include="Osm\Data\Processing\CHEdgeGraphOsmStreamWriter.cs" />
-    <Compile Include="Osm\Data\Processing\DynamicGraphOsmStreamWriter.cs" />
-    <Compile Include="Osm\Data\Processing\LiveGraphOsmStreamWriter.cs" />
     <Compile Include="Osm\Graphs\LiveEdge.cs" />
     <Compile Include="Osm\Graphs\MemoryDynamicGraphSimpleWeighed.cs" />
     <Compile Include="Osm\Graphs\OsmSourceRouterDataSource.cs" />

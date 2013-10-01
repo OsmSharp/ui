@@ -15,18 +15,17 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+
 using System.Collections.Generic;
-using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Data.Core.Processor;
-using OsmSharp.Routing.Graph;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm;
+using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Interpreter.Roads;
 
-namespace OsmSharp.Routing.Osm.Data.Processing
+namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
     /// <summary>
     /// Data Processor Target to fill a dynamic graph object.

@@ -28,8 +28,8 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.UnitTests.Routing.CH
 {
@@ -89,7 +89,7 @@ namespace OsmSharp.UnitTests.Routing.CH
 
                 // do the data processing.
                 var memoryData = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
-                var targetData = new CHEdgeGraphOsmStreamWriter(
+                var targetData = new CHEdgeGraphOsmStreamTarget(
                     memoryData, interpreter, memoryData.TagsIndex, Vehicle.Car);
                 var dataProcessorSource = new XmlOsmStreamSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));

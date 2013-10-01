@@ -1,4 +1,22 @@
-﻿using System;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -11,13 +29,13 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
-using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Routers;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.UnitTests.Routing.Serialization
 {
@@ -44,7 +62,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             // do the data processing.
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            var targetData = new LiveGraphOsmStreamWriter(
+            var targetData = new LiveGraphOsmStreamTarget(
                 original, interpreter, original.TagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
@@ -132,7 +150,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             // do the data processing.
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            var targetData = new LiveGraphOsmStreamWriter(
+            var targetData = new LiveGraphOsmStreamTarget(
                 original, interpreter, original.TagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
@@ -222,7 +240,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             // do the data processing.
             var original =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            var targetData = new LiveGraphOsmStreamWriter(
+            var targetData = new LiveGraphOsmStreamTarget(
                 original, interpreter, original.TagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
@@ -307,7 +325,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
-            var original = LiveGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
+            var original = LiveGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    Assembly.GetExecutingAssembly()
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter);
@@ -401,7 +419,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
-            var original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
+            var original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    Assembly.GetExecutingAssembly()
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,
@@ -496,7 +514,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
-            var original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
+            var original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    Assembly.GetExecutingAssembly()
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,
@@ -529,7 +547,7 @@ namespace OsmSharp.UnitTests.Routing.Serialization
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
             // create reference router.
-            original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
+            original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    Assembly.GetExecutingAssembly()
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,

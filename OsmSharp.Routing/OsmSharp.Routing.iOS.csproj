@@ -49,6 +49,10 @@
   <ItemGroup>
     <Compile Include="IEdgeMatcher.cs" />
     <Compile Include="IRouterExtensions.cs" />
+    <Compile Include="Osm\Streams\CHEdgeGraphFileStreamTarget.cs" />
+    <Compile Include="Osm\Streams\Graphs\CHEdgeGraphOsmStreamTarget.cs" />
+    <Compile Include="Osm\Streams\Graphs\DynamicGraphOsmStreamTarget.cs" />
+    <Compile Include="Osm\Streams\Graphs\LiveGraphOsmStreamTarget.cs" />
     <Compile Include="Router.cs" />
     <Compile Include="RouterPoint.cs" />
     <Compile Include="Vehicle.cs" />
@@ -108,9 +112,6 @@
     <Compile Include="Interpreter\Roads\IEdgeInterpreter.cs" />
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
     <Compile Include="Interpreter\IRoutingInterpreter.cs" />
-    <Compile Include="Osm\Data\Processing\CHEdgeGraphOsmStreamWriter.cs" />
-    <Compile Include="Osm\Data\Processing\DynamicGraphOsmStreamWriter.cs" />
-    <Compile Include="Osm\Data\Processing\LiveGraphOsmStreamWriter.cs" />
     <Compile Include="Osm\Dykstra\DykstraRouting.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />

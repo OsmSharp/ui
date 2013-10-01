@@ -7,7 +7,6 @@ using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Interpreter;
 using System.IO;
 using NUnit.Framework;
@@ -18,6 +17,7 @@ using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.UnitTests.Routing.CH
 {
@@ -94,7 +94,7 @@ namespace OsmSharp.UnitTests.Routing.CH
 
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
-            var targetData = new CHEdgeGraphOsmStreamWriter(
+            var targetData = new CHEdgeGraphOsmStreamTarget(
                 _data, _interpreter, _data.TagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
             var sorter = new OsmStreamFilterSort();
@@ -134,7 +134,7 @@ namespace OsmSharp.UnitTests.Routing.CH
 
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
-            var targetData = new CHEdgeGraphOsmStreamWriter(
+            var targetData = new CHEdgeGraphOsmStreamTarget(
                 _data, _interpreter, _data.TagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
             var sorter = new OsmStreamFilterSort();

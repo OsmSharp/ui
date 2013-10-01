@@ -1,26 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Routing.Interpreter.Roads;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math;
-using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing;
+using OsmSharp.Routing.Interpreter.Roads;
 
-namespace OsmSharp.Routing.Osm.Data.Processing
+namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
     /// <summary>
     /// A pre-processing target for OSM-data to a CH data structure.
     /// </summary>
-    public class CHEdgeGraphOsmStreamWriter : DynamicGraphOsmStreamWriter<CHEdgeData>
+    public class CHEdgeGraphOsmStreamTarget : DynamicGraphOsmStreamWriter<CHEdgeData>
     {
         /// <summary>
         /// Holds the vehicle profile this pre-processing target is for.
@@ -39,7 +51,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
-        public CHEdgeGraphOsmStreamWriter(IDynamicGraphRouterDataSource<CHEdgeData> dynamicGraph,
+        public CHEdgeGraphOsmStreamTarget(IDynamicGraphRouterDataSource<CHEdgeData> dynamicGraph,
             IRoutingInterpreter interpreter, ITagsIndex tagsIndex, Vehicle vehicle)
             :base(dynamicGraph, interpreter, new CHEdgeDataComparer(), tagsIndex)
         {
@@ -122,7 +134,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
             // pull in the data.
             var dynamicGraphRouterDataSource =
                 new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
-            var targetData = new CHEdgeGraphOsmStreamWriter(
+            var targetData = new CHEdgeGraphOsmStreamTarget(
                 dynamicGraphRouterDataSource, interpreter, dynamicGraphRouterDataSource.TagsIndex, vehicle);
             targetData.RegisterSource(reader);
             targetData.Pull();
@@ -152,7 +164,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                                                                         IRoutingInterpreter interpreter,
                                                                         Vehicle vehicle)
         {
-            return CHEdgeGraphOsmStreamWriter.Preprocess(reader, tagsIndex, interpreter, vehicle, false);
+            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, tagsIndex, interpreter, vehicle, false);
         }
 
         /// <summary>
@@ -166,7 +178,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
                                                                         IRoutingInterpreter interpreter,
                                                                         Vehicle vehicle)
         {
-            return CHEdgeGraphOsmStreamWriter.Preprocess(reader, new SimpleTagsIndex(), interpreter, vehicle);
+            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new SimpleTagsIndex(), interpreter, vehicle);
         }
 
         #endregion

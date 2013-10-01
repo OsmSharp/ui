@@ -22,7 +22,6 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Osm.Data.Xml.Processor;
 using System.Reflection;
 using OsmSharp.Routing;
@@ -31,6 +30,7 @@ using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Math.Geo;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.UnitTests.Routing.CH.Serialization.Sorted
 {
@@ -49,13 +49,13 @@ namespace OsmSharp.UnitTests.Routing.CH.Serialization.Sorted
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
-            var original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
+            var original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    Assembly.GetExecutingAssembly()
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,
                                                                Vehicle.Car);
             var sortedGraph = CHEdgeDataDataSourceSerializer.SortGraph(original);
-            original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
+            original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    Assembly.GetExecutingAssembly()
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,

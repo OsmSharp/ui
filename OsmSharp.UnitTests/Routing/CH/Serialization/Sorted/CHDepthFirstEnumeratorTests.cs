@@ -22,12 +22,12 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Data.Processing;
 using System.Reflection;
 using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH.Serialization.Sorted;
 using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.UnitTests.Routing.CH.Serialization.Sorted
 {
@@ -49,7 +49,7 @@ namespace OsmSharp.UnitTests.Routing.CH.Serialization.Sorted
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
-            var original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
+            var original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    Assembly.GetExecutingAssembly()
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,

@@ -1,4 +1,22 @@
-﻿using NUnit.Framework;
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2012 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using NUnit.Framework;
 using OsmSharp.Osm.Data.Streams.Filters;
 using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
@@ -7,9 +25,9 @@ using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using System.Reflection;
-using OsmSharp.Routing.Osm.Data.Processing;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.UnitTests.Routing.Dykstra
 {
@@ -56,7 +74,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
             // do the data processing.
             var memoryData =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            var targetData = new LiveGraphOsmStreamWriter(
+            var targetData = new LiveGraphOsmStreamTarget(
                 memoryData, interpreter, memoryData.TagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
