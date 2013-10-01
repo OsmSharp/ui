@@ -16,26 +16,20 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Osm.Data.Streams;
 using System.IO;
-using OsmSharp.Osm.Data.Memory;
-using OsmSharp.Math.Geo.Projections;
-using OsmSharp.Osm;
-using OsmSharp.Routing;
-using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Routing;
+using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
+using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.CH.Serialization.Sorted;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Osm;
 
-namespace OsmSharp.UI.Map.Styles.MapCSS.Streams
+namespace OsmSharp.Routing.Osm.Streams
 {
     /// <summary>
     /// Implements a streaming target that converts the given OSM-data into a serialized graph.
@@ -89,7 +83,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.Streams
         /// Adds a new node.
         /// </summary>
         /// <param name="simpleNode"></param>
-        public override void AddNode(Osm.Node simpleNode)
+        public override void AddNode(Node simpleNode)
         {
             _graphTarget.AddNode(simpleNode);
         }
@@ -98,7 +92,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.Streams
         /// Adds a new way.
         /// </summary>
         /// <param name="simpleWay"></param>
-        public override void AddWay(Osm.Way simpleWay)
+        public override void AddWay(Way simpleWay)
         {
             _graphTarget.AddWay(simpleWay);
         }
@@ -107,7 +101,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.Streams
         /// Adds a new relation.
         /// </summary>
         /// <param name="simpleRelation"></param>
-        public override void AddRelation(Osm.Relation simpleRelation)
+        public override void AddRelation(Relation simpleRelation)
         {
             _graphTarget.AddRelation(simpleRelation);
         }
