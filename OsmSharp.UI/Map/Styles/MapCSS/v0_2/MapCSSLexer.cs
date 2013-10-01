@@ -4368,11 +4368,14 @@ public partial class MapCSSLexer : Antlr.Runtime.Lexer
 					if (state.backtracking == 0)
 					{
 
-//							           if (s == null) {
-//							              _type = (d == null ? POSITIVE_INT : POSITIVE_FLOAT);
-//							           } else {
-//							              _type = (d == null ? NEGATIVE_INT : NEGATIVE_FLOAT);
-//							           }
+                        if (s == null)
+                        {
+                            _type = (d == null ? POSITIVE_INT : POSITIVE_FLOAT);
+                        }
+                        else
+                        {
+                            _type = (d == null ? NEGATIVE_INT : NEGATIVE_FLOAT);
+                        }
 						   	        
 					}
 
