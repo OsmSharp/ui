@@ -203,7 +203,7 @@ namespace OsmSharp.Math.TSP.Genetic
             {
                 status.CurrentNumber = stagnation_count + 1;
                 status.TotalNumber = _stagnation_count;
-                status.Message = string.Format("Searching...", generation, stagnation_count + 1);
+                status.Message = "Searching...";
                 status.Status = ProgressStatus.ProgressStatusEnum.Busy;
             }
 

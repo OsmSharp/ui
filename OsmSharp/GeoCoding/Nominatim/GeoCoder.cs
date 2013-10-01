@@ -31,16 +31,16 @@ namespace OsmSharp.GeoCoding.Nominatim
     /// <summary>
     /// Creates this geocoder.
     /// </summary>
-    public class GeoCoder : IGeoCoder
+    public class GeoCoder : IGeoCoder, IDisposable
     {
         /// <summary>
         /// The url of the nomatim service.
         /// </summary>
         private string _geocodingUrl; // = ConfigurationManager.AppSettings["NomatimAddress"] + ;
 
-        /// <summary>
-        /// The default timeout.
-        /// </summary>
+        ///// <summary>
+        ///// The default timeout.
+        ///// </summary>
 //        private int _timeOut = 10000;
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace OsmSharp.GeoCoding.Nominatim
         /// <summary>
         /// Async geocoding result downloader.
         /// </summary>
-        private class AsyncStringDownloader
+        private class AsyncStringDownloader : IDisposable
         {
             /// <summary>
             /// Holds the result when available.
@@ -253,6 +253,18 @@ namespace OsmSharp.GeoCoding.Nominatim
                 // signal the other thread the result is available.
                 _autoResetEvent.Set();
             }
+
+            /// <summary>
+            /// Releases all resources associated with this object.
+            /// </summary>
+            public void Dispose()
+            {
+                if (_autoResetEvent != null)
+                {
+                    _autoResetEvent.Dispose();
+                    _autoResetEvent = null;
+                }
+            }
         }
 
         /// <summary>
@@ -279,5 +291,17 @@ namespace OsmSharp.GeoCoding.Nominatim
         }
 
         #endregion
+        
+        /// <summary>
+        /// Releases all resources associated with this object.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_webClient != null)
+            {
+                _webClient.Dispose();
+                _webClient = null;
+            }
+        }
     }
 }
