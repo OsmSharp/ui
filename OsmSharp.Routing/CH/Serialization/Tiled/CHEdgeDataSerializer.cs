@@ -289,7 +289,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
 
             var tileCountBytes = new byte[4];
             stream.Read(tileCountBytes, 0, tileCountBytes.Length);
-            var tileCount = BitConverter.ToInt32(tileCountBytes, 0);
+//            var tileCount = BitConverter.ToInt32(tileCountBytes, 0);
 
             var tileMetaEndBytes = new byte[8];
             stream.Read(tileMetaEndBytes, 0, tileMetaEndBytes.Length);

@@ -220,7 +220,7 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width, 
             OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
 	    {
-	        float widthInPixels = this.ToPixels(width);
+//	        float widthInPixels = this.ToPixels(width);
 
             _pen.DashStyle = DashStyle.Solid;
             if (dashes != null)
@@ -293,7 +293,7 @@ namespace OsmSharp.WinForms.UI.Renderer
             }
             if (fill)
             {
-                var pen = new Pen(Color.FromArgb(color), widthInPixels);
+//                var pen = new Pen(Color.FromArgb(color), widthInPixels);
                 target.Target.FillPolygon(new SolidBrush(Color.FromArgb(color)), points);
             }
             else
@@ -434,7 +434,7 @@ namespace OsmSharp.WinForms.UI.Renderer
                 }
                 var characterHeight = target.Target.MeasureString(text, font).Height;
                 var textLength = characterWidths.Sum();
-                var avgCharacterWidth = textLength / characterWidths.Length;
+//                var avgCharacterWidth = textLength / characterWidths.Length;
 
                 // calculate line length.
                 var lineLength = Polyline2D.Length(x, y);
@@ -470,7 +470,7 @@ namespace OsmSharp.WinForms.UI.Renderer
                 PointF2D next = Polyline2D.PositionAtPosition(x, y, nextPosition);
 
                 // Translate to the final position, the center of line-segment between 'current' and 'next'
-                PointF2D position = current + ((next - current) / 2.0);
+//                PointF2D position = current + ((next - current) / 2.0);
 
                 // calculate the angle.
                 VectorF2D vector = next - current;
@@ -505,7 +505,7 @@ namespace OsmSharp.WinForms.UI.Renderer
                     characterPath.AddString(currentChar.ToString(), font.FontFamily, (int)font.Style, font.Size, Point.Empty,
                                             StringFormat.GenericTypographic);
 
-                    var pathBounds = characterPath.GetBounds();
+//                    var pathBounds = characterPath.GetBounds();
 
                     // Transformation matrix to move the character to the correct location. 
                     // Note that all actions on the Matrix class are prepended, so we apply them in reverse.

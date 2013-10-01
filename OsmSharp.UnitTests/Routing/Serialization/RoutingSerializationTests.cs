@@ -313,9 +313,9 @@ namespace OsmSharp.UnitTests.Routing.Serialization
                                                                interpreter);
 
             // create the original routing.
-            var basicRouterOriginal = new DykstraRoutingLive(original.TagsIndex);
-            Router referenceRouter = Router.CreateLiveFrom(
-                original, basicRouterOriginal, interpreter);
+//            var basicRouterOriginal = new DykstraRoutingLive(original.TagsIndex);
+//            Router referenceRouter = Router.CreateLiveFrom(
+//                original, basicRouterOriginal, interpreter);
 
             // create serializer.
             var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(false);
@@ -343,11 +343,11 @@ namespace OsmSharp.UnitTests.Routing.Serialization
                 routingSerializer.Deserialize(new MemoryStream(byteArray));
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
-            // try to do some routing on the deserialized version.
-            var basicRouter =
-                new DykstraRoutingLive(deserializedVersion.TagsIndex);
-            Router router = Router.CreateLiveFrom(
-                deserializedVersion, basicRouter, interpreter);
+//            // try to do some routing on the deserialized version.
+//            var basicRouter =
+//                new DykstraRoutingLive(deserializedVersion.TagsIndex);
+//            Router router = Router.CreateLiveFrom(
+//                deserializedVersion, basicRouter, interpreter);
 
             //// loop over all nodes and resolve their locations.
             //var resolvedReference = new RouterPoint[original.VertexCount];

@@ -74,19 +74,5 @@ namespace OsmSharp.UnitTests
         // public void MyTestCleanup() { }
         //
         #endregion
-
-        /// <summary>
-        /// Test a lamber coordinate conversion.
-        /// </summary>
-        [Test]
-        public void TestConversion()
-		{
-			double x = 150902.43;
-			double y = 204110.2;
-
-            GeoCoordinate coordinate = LambertProjectionBase.Belgium1972LambertProjection.ConvertToWGS84(x, y);
-            //return new GeoCoordinate(result2, result1);
-
-        }
     }
 }

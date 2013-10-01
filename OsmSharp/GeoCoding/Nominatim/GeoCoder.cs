@@ -41,7 +41,7 @@ namespace OsmSharp.GeoCoding.Nominatim
         /// <summary>
         /// The default timeout.
         /// </summary>
-        private int _timeOut = 10000;
+//        private int _timeOut = 10000;
 
         /// <summary>
         /// Holds the web client used to access the nomatim service.
@@ -65,7 +65,7 @@ namespace OsmSharp.GeoCoding.Nominatim
         public GeoCoder(string geocodingUrl, int timeOut)
         {
             _geocodingUrl = geocodingUrl;
-            _timeOut = timeOut;
+            //_timeOut = timeOut;
         }
 
         #region IGeoCoder Members

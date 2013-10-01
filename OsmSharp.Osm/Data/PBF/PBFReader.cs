@@ -123,12 +123,11 @@ namespace OsmSharp.Osm.Data.PBF
                     }
 
                     // use the stream to read the block.
-                    HeaderBlock headerBlock;
                     using (source_stream)
                     {
                         if (header.type == "OSMHeader")
                         {
-                            headerBlock = Serializer.Deserialize<HeaderBlock>(source_stream);
+                            Serializer.Deserialize<HeaderBlock>(source_stream);
                             not_found_but = true;
                         }
 

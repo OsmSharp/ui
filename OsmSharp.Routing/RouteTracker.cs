@@ -32,12 +32,12 @@ namespace OsmSharp.Routing
 		/// <summary>
 		/// Holds the route being tracked.
 		/// </summary>
-		private Route _route;
+//		private Route _route;
 
 		/// <summary>
 		/// Holds the list of instructions.
 		/// </summary>
-		private List<Instruction> _instructions;
+//		private List<Instruction> _instructions;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Routing.Route.OsmSharpRouteTracker"/> class.
@@ -47,8 +47,8 @@ namespace OsmSharp.Routing
 		/// <param name="language_generator">Language_generator.</param>
 		public RouteTracker (Route route, IRoutingInterpreter interpreter, ILanguageGenerator language_generator)
 		{
-			_route = route;
-			_instructions = InstructionGenerator.Generate (route, interpreter, language_generator);
+			//_route = route;
+			//_instructions = InstructionGenerator.Generate (route, interpreter, language_generator);
 		}
 
 		/// <summary>

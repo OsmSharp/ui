@@ -137,9 +137,6 @@ namespace OsmSharp.UI.Map.Layers
 				}
 
 				// set the default color if none is given.
-				SimpleColor blue = new SimpleColor () {
-					Value = argb
-				};
 				SimpleColor color = SimpleColor.FromArgb (argb);
 				this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
 				                   color.Value, width);

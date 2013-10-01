@@ -203,7 +203,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.InterImprovements
 
                             if (route1_weight < max && route2_weight < max)
                             {
-                                MaxTimeSolution solution_copy = solution.Clone() as MaxTimeSolution;
+//                                MaxTimeSolution solution_copy = solution.Clone() as MaxTimeSolution;
 
                                 List<int> route1_between = pair1.Between;
                                 List<int> route2_between = pair2.Between;

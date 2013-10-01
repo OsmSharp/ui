@@ -99,7 +99,7 @@ namespace OsmSharp.UI.Renderer.Scene
             /// <summary>
             /// Holds all move next flags.
             /// </summary>
-            private bool[] _moveNextFlags;
+//            private bool[] _moveNextFlags;
 
             /// <summary>
             /// Returns the current object.
@@ -168,7 +168,7 @@ namespace OsmSharp.UI.Renderer.Scene
             public void Dispose()
             {
                 _current = null;
-                _moveNextFlags = null;
+//                _moveNextFlags = null;
                 _enumerables = null;
                 _enumerators.Clear();
                 _enumerators = null;
@@ -186,7 +186,7 @@ namespace OsmSharp.UI.Renderer.Scene
                 {
                     _enumerators.Add(enumerable.GetEnumerator());
                 }
-                _moveNextFlags = new bool[_enumerators.Count];
+//                _moveNextFlags = new bool[_enumerators.Count];
             }
         }
     }

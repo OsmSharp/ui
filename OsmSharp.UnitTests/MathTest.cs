@@ -85,7 +85,7 @@ namespace OsmSharp.UnitTests
 
             // calculate the results
             double sqrt_2 = (double)System.Math.Sqrt(2);
-            double sqrt_2_div_2 = (double)System.Math.Sqrt(2) / 2.0f;
+            //double sqrt_2_div_2 = (double)System.Math.Sqrt(2) / 2.0f;
 
             // test distance.
             Assert.AreEqual(a.Distance(b), sqrt_2, string.Format("Distance should be {0}!", sqrt_2));
@@ -141,16 +141,16 @@ namespace OsmSharp.UnitTests
             Assert.AreEqual(VectorF2D.Dot(a_c, a_b), 0, string.Format("Cross product of two perpendicular vectors should be {0}!", 0));
         }
 
-        /// <summary>
-        /// Tests the geo coordinates.
-        /// </summary>
-        [Test]
-        public void GeoCoordinateTest()
-        {
-            var from = new GeoCoordinate(50.0589533, -122.9576373);
-            var to = new GeoCoordinate(50.058952331543, -122.957633972168);
-
-            Meter m = from.DistanceReal(to);
-        }
+//        /// <summary>
+//        /// Tests the geo coordinates.
+//        /// </summary>
+//        [Test]
+//        public void GeoCoordinateTest()
+//        {
+//            var from = new GeoCoordinate(50.0589533, -122.9576373);
+//            var to = new GeoCoordinate(50.058952331543, -122.957633972168);
+//
+//            Meter m = from.DistanceReal(to);
+//        }
     }
 }

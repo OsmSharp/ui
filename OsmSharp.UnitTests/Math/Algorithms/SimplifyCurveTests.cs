@@ -54,7 +54,7 @@ namespace OsmSharp.UnitTests.Math.Algorithms
 				new PointF2D(0, 0),
 				new PointF2D(1, 1)
 			};
-            PointF2D[] simpleTextCurve = SimplifyCurve.SimplifyBetween(testCurve, epsilon, 0, 0);
+            //PointF2D[] simpleTextCurve = SimplifyCurve.SimplifyBetween(testCurve, epsilon, 0, 0);
 
 			// simple straight line should be simplified to only 2 points.
 			testCurve = new PointF2D[] {

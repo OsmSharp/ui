@@ -678,7 +678,7 @@ namespace OsmSharp.UnitTests.API
             List<OsmGeo> boxObjects = apiInstance.BoundingBoxGet(box);
 
             // delete all objects.
-            long changesetId = apiInstance.ChangeSetOpen("delete test objects again");
+            apiInstance.ChangeSetOpen("delete test objects again");
 
             foreach (OsmGeo geoObject in boxObjects)
             {

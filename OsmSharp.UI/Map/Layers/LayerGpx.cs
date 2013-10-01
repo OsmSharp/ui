@@ -24,7 +24,7 @@ namespace OsmSharp.UI.Map.Layers
 		/// <summary>
 		/// Holds the projection.
 		/// </summary>
-		private readonly IProjection _projection;
+//		private readonly IProjection _projection;
 
 		/// <summary>
 		/// Creates a new OSM data layer.
@@ -32,7 +32,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="projection"></param>
 		public LayerGpx(IProjection projection)
 		{			
-			_projection = projection;
+//			_projection = projection;
 
             this.Scene = new Scene2DSimple();
 			this.Scene.BackColor = SimpleColor.FromKnownColor(KnownColor.Transparent).Value;

@@ -34,17 +34,17 @@ namespace OsmSharp.Routing.Interpreter.Constraints.Highways
         /// </summary>
         private IEdgeInterpreter _edge_intepreter;
 
-        /// <summary>
-        /// Holds the local label.
-        /// </summary>
-        private RoutingLabel _local_label = 
-            new RoutingLabel('L', "OnlyLocalAccessible");
+//        /// <summary>
+//        /// Holds the local label.
+//        /// </summary>
+//        private RoutingLabel _local_label = 
+//            new RoutingLabel('L', "OnlyLocalAccessible");
 
-        /// <summary>
-        /// Holds the general label.
-        /// </summary>
-        private RoutingLabel _general_label = 
-            new RoutingLabel('R', "GeneralAccessible");
+//        /// <summary>
+//        /// Holds the general label.
+//        /// </summary>
+//        private RoutingLabel _general_label = 
+//            new RoutingLabel('R', "GeneralAccessible");
 
         /// <summary>
         /// Creates a new highway constraint.

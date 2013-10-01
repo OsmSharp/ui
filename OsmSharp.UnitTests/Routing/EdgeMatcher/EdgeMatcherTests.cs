@@ -259,9 +259,9 @@ namespace OsmSharp.UnitTests.Routing.EdgeMatcher
             var nonameLocation = new GeoCoordinate(
                 (fromNoname.Latitude + toNoname.Latitude) / 2.0,
                 (fromNoname.Longitude + toNoname.Longitude) / 2.0);
-            var nameLocation = new GeoCoordinate(
-                (fromName.Latitude + toName.Latitude) / 2.0,
-                (fromName.Longitude + toName.Longitude) / 2.0);
+//            var nameLocation = new GeoCoordinate(
+//                (fromName.Latitude + toName.Latitude) / 2.0,
+//                (fromName.Longitude + toName.Longitude) / 2.0);
 
             const float delta = 0.01f;
             SearchClosestResult result = router.SearchClosest(data, interpreter, vehicle, nonameLocation, delta, matcher, pointTags);

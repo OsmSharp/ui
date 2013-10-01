@@ -31,7 +31,7 @@ using Antlr.Runtime.Tree;
 using RewriteRuleITokenStream = Antlr.Runtime.Tree.RewriteRuleTokenStream;
 
 [System.CodeDom.Compiler.GeneratedCode("ANTLR", "3.5.0.1")]
-[System.CLSCompliant(false)]
+//[System.CLSCompliant(false)]
 public partial class MapCSSParser : Antlr.Runtime.Parser
 {
 	internal static readonly string[] tokenNames = new string[] {

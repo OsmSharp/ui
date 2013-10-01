@@ -408,7 +408,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2
 
                     int valueInt;
                     float valueFloat;
-                    string[] strings;
+//                    string[] strings;
                     string evalCall = null;
 
                     // skip all eval calls.

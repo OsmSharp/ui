@@ -58,7 +58,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the compression flag.
         /// </summary>
-        private readonly bool _compress;
+//        private readonly bool _compress;
 
         /// <summary>
         /// Holds the runtime type model.
@@ -71,7 +71,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="compress">Flag telling this serializer to compress it's data.</param>
         public CHEdgeDataDataSourceSerializer(bool compress)
         {
-            _compress = compress;
+//            _compress = compress;
 
             RuntimeTypeModel typeModel = TypeModel.Create();
             typeModel.Add(typeof(CHBlockIndex), true); // the index containing all blocks.

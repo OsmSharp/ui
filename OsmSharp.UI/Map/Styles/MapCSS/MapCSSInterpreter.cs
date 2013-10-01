@@ -286,10 +286,10 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="node"></param>
         private void TranslateNode(Scene2D scene, IProjection projection, CompleteNode node)
         {
-            double? x = projection.LongitudeToX(
-                node.Coordinate.Longitude);
-            double? y = projection.LatitudeToY(
-                node.Coordinate.Latitude);
+//            double? x = projection.LongitudeToX(
+//                node.Coordinate.Longitude);
+//            double? y = projection.LatitudeToY(
+//                node.Coordinate.Latitude);
             
             // build the rules.
             IEnumerable<MapCSSRuleProperties> rules =

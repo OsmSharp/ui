@@ -20,13 +20,13 @@ namespace OsmSharp.UnitTests
         public void TestStringTable_AddStrings()
         {
             ObjectTable<string> table = new ObjectTable<string>(false);
-            uint zero = table.Add("zero");
-            uint one = table.Add("one");
-            uint two = table.Add("two");
-            uint three = table.Add("three");
-            uint four = table.Add("four");
-            uint five = table.Add("five");
-            uint six = table.Add("six");
+            table.Add("zero");
+            table.Add("one");
+            table.Add("two");
+            table.Add("three");
+            table.Add("four");
+            table.Add("five");
+            table.Add("six");
 
             Assert.AreEqual("zero", table.Get(0));
             Assert.AreEqual("one", table.Get(1));
@@ -38,13 +38,13 @@ namespace OsmSharp.UnitTests
 
 
             table = new ObjectTable<string>(true);
-            zero = table.Add("zero");
-            one = table.Add("one");
-            two = table.Add("two");
-            three = table.Add("three");
-            four = table.Add("four");
-            five = table.Add("five");
-            six = table.Add("six");
+            table.Add("zero");
+            table.Add("one");
+            table.Add("two");
+            table.Add("three");
+            table.Add("four");
+            table.Add("five");
+            table.Add("six");
 
             Assert.AreEqual("zero", table.Get(0));
             Assert.AreEqual("one", table.Get(1));
@@ -62,13 +62,13 @@ namespace OsmSharp.UnitTests
         public void TestStringTable_AddStringsTwice()
         {
             ObjectTable<string> table = new ObjectTable<string>(false);
-            uint zero = table.Add("zero");
-            uint one = table.Add("one");
-            uint two = table.Add("two");
-            uint three = table.Add("three");
-            uint four = table.Add("four");
-            uint five = table.Add("five");
-            uint six = table.Add("six");
+            table.Add("zero");
+            table.Add("one");
+            table.Add("two");
+            table.Add("three");
+            table.Add("four");
+            table.Add("five");
+            table.Add("six");
 
             Assert.AreEqual("zero", table.Get(0));
             Assert.AreEqual("one", table.Get(1));
@@ -95,13 +95,13 @@ namespace OsmSharp.UnitTests
             Assert.AreEqual("six", table.Get(6));
 
             table = new ObjectTable<string>(true);
-            zero = table.Add("zero");
-            one = table.Add("one");
-            two = table.Add("two");
-            three = table.Add("three");
-            four = table.Add("four");
-            five = table.Add("five");
-            six = table.Add("six");
+            table.Add("zero");
+            table.Add("one");
+            table.Add("two");
+            table.Add("three");
+            table.Add("four");
+            table.Add("five");
+            table.Add("six");
 
             Assert.AreEqual("zero", table.Get(0));
             Assert.AreEqual("one", table.Get(1));

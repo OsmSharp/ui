@@ -40,9 +40,9 @@ namespace OsmSharp.UnitTests.Tiles
             Tile tile = new Tile(33639, 21862, 16);
             Tile tile2 = Tile.CreateAroundLocation(tile.Box.Center, 16);
 
-            Assert.AreEqual(tile.X, tile.X);
-            Assert.AreEqual(tile.Y, tile.Y);
-            Assert.AreEqual(tile.Zoom, tile.Zoom);
+            Assert.AreEqual(tile.X, tile2.X);
+            Assert.AreEqual(tile.Y, tile2.Y);
+            Assert.AreEqual(tile.Zoom, tile2.Zoom);
         }
 
         /// <summary>
@@ -62,9 +62,9 @@ namespace OsmSharp.UnitTests.Tiles
                     Tile tile2 = Tile.CreateAroundLocation(new GeoCoordinate(
                         latitude, longitude), tile.Zoom);
 
-                    Assert.AreEqual(tile.X, tile.X);
-                    Assert.AreEqual(tile.Y, tile.Y);
-                    Assert.AreEqual(tile.Zoom, tile.Zoom);
+                    Assert.AreEqual(tile.X, tile2.X);
+                    Assert.AreEqual(tile.Y, tile2.Y);
+                    Assert.AreEqual(tile.Zoom, tile2.Zoom);
                 }
             }
         }

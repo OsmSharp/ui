@@ -122,8 +122,8 @@ namespace OsmSharp.UI.Unittests.Renderer.Scene2DPrimitives.Storage
                     var testScene = new Scene2DSimple();
                     sceneSource.Get(testScene, testView, zoomFactor);
 
-                    var resultIndex = new HashSet<Scene2DPrimitive>(testScene.Get(testView, zoomFactor));
-                    var resultReference = new HashSet<Scene2DPrimitive>(scene.Get(testView, zoomFactor));
+//                    var resultIndex = new HashSet<Scene2DPrimitive>(testScene.Get(testView, zoomFactor));
+//                    var resultReference = new HashSet<Scene2DPrimitive>(scene.Get(testView, zoomFactor));
 
                     //Assert.AreEqual(resultReference.Count, resultIndex.Count);
                     //foreach (var data in resultIndex)
@@ -221,9 +221,9 @@ namespace OsmSharp.UI.Unittests.Renderer.Scene2DPrimitives.Storage
                     var testScene = new Scene2DSimple();
                     sceneSource.Get(testScene, testView, zoomFactor);
 
-                    var resultIndex = new HashSet<Scene2DPrimitive>(testScene.Get(testView, zoomFactor));
-                    var resultReference = new HashSet<Scene2DPrimitive>(scene.Get(testView, zoomFactor));
-
+//                    var resultIndex = new HashSet<Scene2DPrimitive>(testScene.Get(testView, zoomFactor));
+//                    var resultReference = new HashSet<Scene2DPrimitive>(scene.Get(testView, zoomFactor));
+//
                     //Assert.AreEqual(resultReference.Count, resultIndex.Count);
                     //foreach (var data in resultIndex)
                     //{

@@ -138,7 +138,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();
-            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(true);
+//            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(true);
             var original = CHEdgeGraphOsmStreamWriter.Preprocess(new XmlOsmStreamSource(
                                                                    new FileInfo(@"c:\OSM\bin\wechel.osm").OpenRead()),
                                                                interpreter,

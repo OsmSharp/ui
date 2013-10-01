@@ -124,7 +124,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
 
         private int _stagnation;
 
-        private ICollection<int> _customers;
+//        private ICollection<int> _customers;
 
         private int _max_generations;
 
@@ -136,7 +136,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
         /// <returns></returns>
         internal override MaxTimeSolution Solve(MaxTimeProblem problem)
         {
-            _customers = problem.Customers;
+//            _customers = problem.Customers;
 
             //float[] solutions = OsmSharp.Math.VRP.Core.BestPlacement.CheapestInsertionHelper.CalculateBestValues(
             //    problem, _customers);
@@ -264,9 +264,9 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
                 }
 
 
-                string settings_string = string.Format("{0};{1};{2};{3};{4};{5};{6};{7};",
-                    _customers.Count, this.Max.Value,
-                    _stagnation, _population, _max_generations, _elitism_percentage, _cross_percentage, _mutation_percentage);
+//                string settings_string = string.Format("{0};{1};{2};{3};{4};{5};{6};{7};",
+//                    _customers.Count, this.Max.Value,
+//                    _stagnation, _population, _max_generations, _elitism_percentage, _cross_percentage, _mutation_percentage);
                 //output.Close();
                 //output.Dispose();
                 //output_file = null;
@@ -302,10 +302,10 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic
                 }
 
 
-                string settings_string = string.Format("{0};{1};{2};{3};{4};{5};{6};{7};",
-                    _customers.Count, this.Max.Value,
-                    _stagnation, _population, _max_generations, _elitism_percentage, _cross_percentage, _mutation_percentage);
-
+//                string settings_string = string.Format("{0};{1};{2};{3};{4};{5};{6};{7};",
+//                    _customers.Count, this.Max.Value,
+//                    _stagnation, _population, _max_generations, _elitism_percentage, _cross_percentage, _mutation_percentage);
+//
                 //output.Close();
                 //output.Dispose();
                 //output_file = null;

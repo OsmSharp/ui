@@ -45,7 +45,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
         /// <summary>
         /// Holds the sigma value.
         /// </summary>
-        private float _sigma;
+//        private float _sigma;
 
         /// <summary>
         /// The threshold percentage.
@@ -67,7 +67,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
         {
             _thresholdPercentage = thresholdPrecentage;
             _lambda = lambda;
-            _sigma = sigma;
+//            _sigma = sigma;
 
             _intra_improvements = new List<IImprovement>();
             //_intra_improvements.Add(

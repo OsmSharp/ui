@@ -113,7 +113,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
         {
             double current_weight = 0;
             int previous = -1;
-            int first = -1;
+//            int first = -1;
             int count = 0;
             foreach (int customer in route)
             {
@@ -127,7 +127,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
                 {
                     current_weight = current_weight + _problem.Weight(
                         0, customer);
-                    first = customer;
+//                    first = customer;
                 }
 
                 previous = customer;
@@ -148,7 +148,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime
         {
             int vehicles = solution.Count;
 
-            List<double> above_max = new List<double>();
+//            List<double> above_max = new List<double>();
             double total = 0;
             double total_above_max = 0;
             int total_count_above_max = 0;

@@ -642,7 +642,7 @@ namespace OsmSharp.UnitTests.Routing
 
             var vertex20 = new GeoCoordinate(51.0578532, 3.7192229);
             var vertex21 = new GeoCoordinate(51.0578518, 3.7195654);
-            var vertex16 = new GeoCoordinate(51.0577299, 3.719745);
+//            var vertex16 = new GeoCoordinate(51.0577299, 3.719745);
 
             PointF2D point = vertex20 + ((vertex21 - vertex20) * 0.25);
             var vertex20211 = new GeoCoordinate(point[1], point[0]);

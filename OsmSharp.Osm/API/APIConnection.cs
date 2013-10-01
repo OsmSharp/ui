@@ -523,7 +523,7 @@ namespace OsmSharp.Osm.API
             byte[] put_data = mem_stream.ToArray();
 
             // do the api call.
-            string response_string = this.DoApiCall(true, string.Format("api/0.6/node/{0}", node.Id.Value),
+            this.DoApiCall(true, string.Format("api/0.6/node/{0}", node.Id.Value),
                 Method.PUT, put_data);
         }
 
@@ -562,7 +562,7 @@ namespace OsmSharp.Osm.API
             byte[] put_data = mem_stream.ToArray();
 
             // do the api call.
-            string response_string = this.DoApiCall(true, string.Format("api/0.6/node/{0}", node.Id.Value),
+            this.DoApiCall(true, string.Format("api/0.6/node/{0}", node.Id.Value),
                 Method.DELETE, put_data);
         }
 
@@ -907,7 +907,7 @@ namespace OsmSharp.Osm.API
             byte[] put_data = mem_stream.ToArray();
 
             // do the api call.
-            string response_string = this.DoApiCall(true, string.Format("api/0.6/way/{0}", way.Id.Value),
+            this.DoApiCall(true, string.Format("api/0.6/way/{0}", way.Id.Value),
                 Method.PUT, put_data);
         }
 
@@ -946,7 +946,7 @@ namespace OsmSharp.Osm.API
             byte[] put_data = mem_stream.ToArray();
 
             // do the api call.
-            string response_string = this.DoApiCall(true, string.Format("api/0.6/way/{0}", way.Id.Value),
+            this.DoApiCall(true, string.Format("api/0.6/way/{0}", way.Id.Value),
                 Method.DELETE, put_data);
         }
 
@@ -1074,7 +1074,7 @@ namespace OsmSharp.Osm.API
             byte[] put_data = mem_stream.ToArray();
 
             // do the api call.
-            string response_string = this.DoApiCall(true, string.Format("api/0.6/relation/{0}", relation.Id.Value),
+            this.DoApiCall(true, string.Format("api/0.6/relation/{0}", relation.Id.Value),
                 Method.PUT, put_data);
         }
 
@@ -1113,7 +1113,7 @@ namespace OsmSharp.Osm.API
             byte[] put_data = mem_stream.ToArray();
 
             // do the api call.
-            string response_string = this.DoApiCall(true, string.Format("api/0.6/relation/{0}", relation.Id.Value),
+            this.DoApiCall(true, string.Format("api/0.6/relation/{0}", relation.Id.Value),
                 Method.DELETE, put_data);
         }
 

@@ -59,7 +59,7 @@ namespace OsmSharp.UI.Map
 		public bool Render(TTarget target, List<ILayer> layers, View2D view)
 		{	
 			// create the view for this control.
-			Target2DWrapper<TTarget> target2DWrapper = _renderer.CreateTarget2DWrapper(target);
+//			Target2DWrapper<TTarget> target2DWrapper = _renderer.CreateTarget2DWrapper(target);
 			
 			// draw all layers seperatly but in the correct order.
 			var scenes = new List<Scene2D>();

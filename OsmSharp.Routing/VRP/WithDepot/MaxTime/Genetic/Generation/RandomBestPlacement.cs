@@ -60,7 +60,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.Genetic.Generation
             {
                 customers.Add(customer);
             }
-            CheapestInsertionHelper helper = new CheapestInsertionHelper();
+//            CheapestInsertionHelper helper = new CheapestInsertionHelper();
 
             List<double> weights = new List<double>();
             for (int i = 0; i < problem.Depots.Count; i++)

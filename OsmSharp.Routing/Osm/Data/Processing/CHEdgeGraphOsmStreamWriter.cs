@@ -30,7 +30,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Holds the data source.
         /// </summary>
-        private readonly IDynamicGraphRouterDataSource<CHEdgeData> _dynamicDataSource;
+//        private readonly IDynamicGraphRouterDataSource<CHEdgeData> _dynamicDataSource;
 
         /// <summary>
         /// Creates a CH data processing target.
@@ -44,7 +44,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
             :base(dynamicGraph, interpreter, new CHEdgeDataComparer(), tagsIndex)
         {
             _vehicle = vehicle;
-            _dynamicDataSource = dynamicGraph;
+//            _dynamicDataSource = dynamicGraph;
         }
 
         /// <summary>

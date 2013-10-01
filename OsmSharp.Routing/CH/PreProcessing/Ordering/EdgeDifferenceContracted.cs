@@ -30,12 +30,12 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Holds the graph.
         /// </summary>
-        private INodeWitnessCalculator _witness_calculator;
+//        private INodeWitnessCalculator _witness_calculator;
 
         /// <summary>
         /// Holds the contracted count.
         /// </summary>
-        private Dictionary<long, long> _contraction_count;
+//        private Dictionary<long, long> _contraction_count;
 
         /// <summary>
         /// Creates a new edge difference calculator.
@@ -43,8 +43,8 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <param name="witness_calculator"></param>
         public EdgeDifferenceContracted(INodeWitnessCalculator witness_calculator)
         {
-            _witness_calculator = witness_calculator;
-            _contraction_count = new Dictionary<long, long>();
+//            _witness_calculator = witness_calculator;
+//            _contraction_count = new Dictionary<long, long>();
         }
 
         /// <summary>

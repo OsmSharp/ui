@@ -26,11 +26,11 @@ namespace OsmSharp.GeoCoding.Nominatim
     /// </summary>
     public class GeoCoderQuery
     {
-        private string _country;
-        private string _postalCode;
-        private string _commune;
-        private string _street;
-        private string _houseNumber;
+//        private string _country;
+//        private string _postalCode;
+//        private string _commune;
+//        private string _street;
+//        private string _houseNumber;
 
         /// <summary>
         /// Creates a new geocoder query.
@@ -46,11 +46,11 @@ namespace OsmSharp.GeoCoding.Nominatim
             string street,
             string houseNumber)
         {
-            _country = country;
-            _postalCode = postalCode;
-            _commune = commune;
-            _street = street;
-            _houseNumber = houseNumber;
+//            _country = country;
+//            _postalCode = postalCode;
+//            _commune = commune;
+//            _street = street;
+//            _houseNumber = houseNumber;
         }
 
         //#region IGeoCoderQuery Members

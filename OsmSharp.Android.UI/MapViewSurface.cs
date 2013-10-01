@@ -134,8 +134,7 @@ namespace OsmSharp.Android.UI
 			_scene = new Scene2DSimple ();
 			_scene.BackColor = SimpleColor.FromKnownColor (KnownColor.White).Value;
 
-			System.Threading.Timer timer = new Timer(InvalidateSimple,
-			                                         null, 0, 50);
+			new Timer(InvalidateSimple, null, 0, 50);
 		}
 
 		/// <summary>
@@ -252,7 +251,7 @@ namespace OsmSharp.Android.UI
 				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoomLevel);
 
 				// add the current canvas to the scene.
-				uint canvasId = _scene.AddImage (-1, float.MaxValue, float.MinValue, view.Rectangle,
+				_scene.AddImage (-1, float.MaxValue, float.MinValue, view.Rectangle,
 				                                 new byte[0], _canvasBitmap);
 
 				// does the rendering.

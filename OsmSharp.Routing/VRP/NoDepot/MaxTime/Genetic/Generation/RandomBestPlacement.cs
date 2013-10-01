@@ -52,7 +52,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.Generation
             // create the solution.
             MaxTimeSolution solution = new MaxTimeSolution(problem.Size, true);
 
-            CheapestInsertionHelper helper = new CheapestInsertionHelper();
+//            CheapestInsertionHelper helper = new CheapestInsertionHelper();
 
             // keep placing customer until none are left.
             List<int> customers = new List<int>(problem.Customers);

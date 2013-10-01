@@ -38,7 +38,7 @@ namespace OsmSharp.UnitTests.Tools
             var decompressedTestString = new byte[decompressedStream.Length];
             decompressedStream.Read(decompressedTestString, 0, decompressedTestString.Length);
 
-            string resultingTestString = ASCIIEncoding.ASCII.GetString(decompressedTestString);
+            ASCIIEncoding.ASCII.GetString(decompressedTestString);
         }
     }
 }

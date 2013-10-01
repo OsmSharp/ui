@@ -95,8 +95,8 @@ namespace OsmSharp.Osm.Data.PBF.Dense
 
                             // get the keys/vals.
                             List<int> keys_vals = primitivegroup.dense.keys_vals;
-                            List<uint> keys = new List<uint>();
-                            List<uint> vals = new List<uint>();
+//                            List<uint> keys = new List<uint>();
+//                            List<uint> vals = new List<uint>();
                             while (keys_vals.Count > key_vals_idx && 
                                 keys_vals[key_vals_idx] != 0)
                             {

@@ -83,8 +83,8 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.CrossOver
                 IRoute current_route = null;
                 foreach (int customer in route)
                 {
-                    MaxTimeSolution copy = (solution.Clone() as MaxTimeSolution);
-                    string solution_string = solution.ToString();
+//                    MaxTimeSolution copy = (solution.Clone() as MaxTimeSolution);
+//                    string solution_string = solution.ToString();
                     if (!solution.Contains(customer))
                     {
                         if (current_route == null)
@@ -101,7 +101,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.Genetic.CrossOver
                         }
                         else
                         { // add the customer.
-                            string current_route_string = current_route.ToString();
+//                            string current_route_string = current_route.ToString();
                             //current_route.InsertAfterAndRemove(previous, customer, current_route.First);
                             current_route.InsertAfter(previous, customer);
                             //current_route.InsertAfter(customer, current_route.First);

@@ -42,7 +42,7 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <summary>
         /// Holds the routing interpreter.
         /// </summary>
-        private IRoutingInterpreter _interpreter;
+//        private IRoutingInterpreter _interpreter;
 
         /// <summary>
         /// Creates a new arc aggregator.
@@ -50,7 +50,7 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <param name="interpreter"></param>
         public ArcAggregator(IRoutingInterpreter interpreter)
         {
-            _interpreter = interpreter;
+//            _interpreter = interpreter;
         }
 
         /// <summary>

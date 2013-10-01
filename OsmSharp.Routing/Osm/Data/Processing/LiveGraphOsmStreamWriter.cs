@@ -19,7 +19,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
         /// <summary>
         /// Holds the data source.
         /// </summary>
-        private readonly IDynamicGraphRouterDataSource<LiveEdge> _dynamicDataSource;
+//        private readonly IDynamicGraphRouterDataSource<LiveEdge> _dynamicDataSource;
 
         /// <summary>
         /// Creates a new osm edge data processing target.
@@ -75,7 +75,7 @@ namespace OsmSharp.Routing.Osm.Data.Processing
             GeoCoordinateBox box)
             : base(dynamicGraph, interpreter, null, tagsIndex, idTransformations, box)
         {
-            _dynamicDataSource = dynamicGraph;
+//            _dynamicDataSource = dynamicGraph;
         }
 
         /// <summary>

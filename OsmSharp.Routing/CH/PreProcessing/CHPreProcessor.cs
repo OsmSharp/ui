@@ -47,7 +47,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Holds a flag telling the pre-processor to keep reverse edges.
         /// </summary>
-        private bool _keepReverseEdges = false;
+//        private bool _keepReverseEdges = false;
 
         /// <summary>
         /// Creates a new pre-processor.
@@ -70,7 +70,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
 
             _queue = new CHPriorityQueue();
             _contracted = new bool[1000];
-            _keepReverseEdges = keepReverseEdges;
+//            _keepReverseEdges = keepReverseEdges;
         }
 
         /// <summary>
@@ -127,12 +127,12 @@ namespace OsmSharp.Routing.CH.PreProcessing
             // loop over the priority queue until it's empty.
             current = 1;
             uint? vertex = this.SelectNext();
-            uint? lastestContracted = 0;
+            //uint? lastestContracted = 0;
             while (vertex != null)
             {
                 // contract the nodes.
                 this.Contract(vertex.Value);
-                lastestContracted = vertex;
+                //lastestContracted = vertex;
 
                 // select the next vertex.
                 vertex = this.SelectNext();

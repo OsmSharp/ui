@@ -149,7 +149,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime
         {
             int vehicles = solution.Count;
 
-            List<double> above_max = new List<double>();
+//            List<double> above_max = new List<double>();
             double total = 0;
             double total_above_max = 0;
             int total_count_above_max = 0;

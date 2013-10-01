@@ -65,7 +65,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
         /// <summary>
         /// The threshold percentage.
         /// </summary>
-        private readonly float _thresholdPercentage;
+//        private readonly float _thresholdPercentage;
 
         /// <summary>
         /// Creates a new best placement min max no depot vrp router.
@@ -85,7 +85,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
             _k = k;
             _deltaPercentage = deltaPercentage;
             _useSeedCost = useSeedCost;
-            _thresholdPercentage = thresholdPrecentage;
+//            _thresholdPercentage = thresholdPrecentage;
 
             _intraImprovements = new List<IImprovement>();
             //_intra_improvements.Add(
@@ -135,7 +135,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
 
             // keep a list of cheapest insertions.
             IInsertionCosts costs = new BinaryHeapInsertionCosts();
-            double percentage = _thresholdPercentage;
+//            double percentage = _thresholdPercentage;
             while (customers.Count > 0)
             {
                 //// try and distribute the remaining customers if there are only a few left.
@@ -222,7 +222,7 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
                         if (((problem.Size - customers.Count) % _k) == 0)
                         { // an improvement is decided.
                             // apply the inter-route improvements.
-                            var copy = (solution.Clone() as MaxTimeSolution);
+//                            var copy = (solution.Clone() as MaxTimeSolution);
 
                             int countBefore = solution.Route(solution.Count - 1).Count;
 

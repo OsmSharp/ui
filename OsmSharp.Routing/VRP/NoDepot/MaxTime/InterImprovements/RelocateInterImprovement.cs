@@ -103,8 +103,8 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.InterImprovements
                     int count_before1 = route1.Count;
                     int count_before2 = route2.Count;
 
-                    string route1_string = route1.ToString();
-                    string route2_string = route2.ToString();
+//                    string route1_string = route1.ToString();
+//                    string route2_string = route2.ToString();
 
                     if (this.ConsiderCustomer(problem, route2, previous, current, next, route2_weight, max))
                     {
@@ -150,7 +150,7 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.InterImprovements
                 if (result.Increase < removal_gain - 0.001 && route_weight + result.Increase < max)
                 { // there is a gain in relocating this customer.
                     int count_before = route.Count;
-                    string route_string = route.ToString();
+//                    string route_string = route.ToString();
 
                     // and the route is still within bounds!
                     route.ReplaceEdgeFrom(result.CustomerBefore, result.Customer);
