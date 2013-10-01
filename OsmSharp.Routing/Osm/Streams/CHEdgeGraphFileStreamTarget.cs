@@ -53,6 +53,8 @@ namespace OsmSharp.Routing.Osm.Streams
         /// <param name="vehicle"></param>
         public CHEdgeGraphFileStreamTarget(Stream stream, Vehicle vehicle)
         {
+            _graphStream = stream;
+
             var tagsIndex = new SimpleTagsIndex();
             var interpreter = new OsmRoutingInterpreter();
             _graph = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
