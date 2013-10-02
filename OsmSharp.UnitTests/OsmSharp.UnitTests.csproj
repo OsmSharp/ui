@@ -200,7 +200,6 @@
     <Compile Include="Units\SpeedUnitTests.cs" />
     <Compile Include="UtilitiesTest.cs" />
     <Compile Include="WebMercatorTests.cs" />
-    <Compile Include="FibonacciHeapTests.cs" />
     <Compile Include="Xml\Gpx\GpxXmlTest.cs" />
     <Compile Include="HugeDictionaryTests.cs" />
     <Compile Include="Xml\Kml\KmlXmlTest.cs" />
