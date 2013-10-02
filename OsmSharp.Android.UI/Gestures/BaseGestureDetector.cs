@@ -164,4 +164,3 @@ namespace Android.Views
 		}
 	}
 }
-

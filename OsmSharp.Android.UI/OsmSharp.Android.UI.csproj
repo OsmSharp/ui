@@ -43,6 +43,7 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Gestures\TapGestureDetector.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Renderer\CanvasRenderer2D.cs" />
     <Compile Include="CanvasRenderer2DView.cs" />
@@ -65,7 +66,9 @@
     <AndroidResource Include="Resources\values\Strings.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\layout\" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.Android.csproj">
       <Project>{D3B6EFCE-9B3C-428E-BAE7-135897887070}</Project>
@@ -76,11 +79,7 @@
       <Name>OsmSharp.UI.Android</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\layout\" />
-    <Folder Include="Images\" />
-    <Folder Include="Gestures\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Images\marker.png" />
   </ItemGroup>

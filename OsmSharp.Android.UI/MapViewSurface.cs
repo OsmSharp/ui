@@ -51,6 +51,7 @@ namespace OsmSharp.Android.UI
 			ScaleGestureDetector.IOnScaleGestureListener, 
 			RotateGestureDetector.IOnRotateGestureListener,
 			MoveGestureDetector.IOnMoveGestureListener,
+            TapGestureDetector.IOnTapGestureListener,
 			global::Android.Views.View.IOnTouchListener
 	{
 		private bool _invertX = false;
@@ -75,6 +76,11 @@ namespace OsmSharp.Android.UI
 		/// Holds the move gesture detector.
 		/// </summary>
 		private MoveGestureDetector _moveGestureDetector;
+
+        /// <summary>
+        /// Holds the tag gesture detector.
+        /// </summary>
+        private TapGestureDetector _tagGestureDetector;
 
 		/// <summary>
 		/// Holds the maplayout.
@@ -124,6 +130,8 @@ namespace OsmSharp.Android.UI
 				this.Context, this);
 			_moveGestureDetector = new MoveGestureDetector (
 				this.Context, this);
+            _tagGestureDetector = new TapGestureDetector(
+                this.Context, this);
 
 			_makerLayer = new LayerPrimitives(
 				new WebMercator());
@@ -508,6 +516,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="detector">Detector.</param>
 		public bool OnScaleBegin (ScaleGestureDetector detector)
 		{
+            _deltaScale = 1;
 			return true;
 		}
 		
@@ -516,8 +525,8 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <param name="detector">Detector.</param>
 		public void OnScaleEnd (ScaleGestureDetector detector)
-		{
-
+        {
+            _deltaScale = 1;
 		}
 		
 		#endregion
@@ -532,12 +541,13 @@ namespace OsmSharp.Android.UI
 
 		public bool OnRotateBegin (RotateGestureDetector detector)
 		{
+            _deltaDegrees = 0;
 			return true;
 		}
 
 		public void OnRotateEnd (RotateGestureDetector detector)
-		{
-
+        {
+            _deltaDegrees = 0;
 		}
 
 		#endregion
@@ -567,6 +577,18 @@ namespace OsmSharp.Android.UI
 		}
 
 		#endregion
+
+        #region IOnTapGestureListener implementation
+
+        public bool OnTap(TapGestureDetector detector)
+        {
+            OsmSharp.Logging.Log.TraceEvent("MapViewSurface", System.Diagnostics.TraceEventType.Information,
+                "Some message...");
+
+            return true;
+        }
+
+        #endregion
 		
 		/// <summary>
 		/// Raises the touch event event.
@@ -586,7 +608,8 @@ namespace OsmSharp.Android.UI
 		/// <param name="e">E.</param>
 		public bool OnTouch (global::Android.Views.View v, MotionEvent e)
 		{
-			_scaleGestureDetector.OnTouchEvent(e);
+            _tagGestureDetector.OnTouchEvent (e);
+			_scaleGestureDetector.OnTouchEvent (e);
 			_rotateGestureDetector.OnTouchEvent (e);
 			_moveGestureDetector.OnTouchEvent (e);
 
@@ -601,7 +624,10 @@ namespace OsmSharp.Android.UI
 				}
 
 				// stop the animation.
-				_mapViewAnimator.Stop ();
+                this.StopCurrentAnimation();
+
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+                    string.Format("OnTouch:[{0},{1}] {2}s {3}d", _deltaX, _deltaY, _deltaScale, _deltaDegrees));
 
 				// recreate the view.
 				View2D view = this.CreateView ();
@@ -630,8 +656,6 @@ namespace OsmSharp.Android.UI
 				if (time > 120) {
 					this.NotifyMovement ();
 
-					OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information, 
-					                                  string.Format ("OnTouch:{0}ms", time));
 					this.Change ();
 				} else { // raise the map tap event here.
 					if (this.MapTapEvent != null) {
@@ -665,6 +689,17 @@ namespace OsmSharp.Android.UI
 		/// Holds the auto invalidate flag.
 		/// </summary>
 		private bool _autoInvalidate = false;
+
+        /// <summary>
+        /// Stops the current animation.
+        /// </summary>
+        private void StopCurrentAnimation()
+        {
+            if (_mapViewAnimator != null)
+            {
+                _mapViewAnimator.Stop();
+            }
+        }
 
 		/// <summary>
 		/// Registers the animator.
@@ -712,6 +747,6 @@ namespace OsmSharp.Android.UI
 		/// Occurs when the map was touched for a longer time at a certain location.
 		/// </summary>
 		public event MapView.MapTapEventDelegate MapHoldEvent;
-	}
+    }
 }
 
