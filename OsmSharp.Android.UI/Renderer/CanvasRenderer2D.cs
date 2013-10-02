@@ -599,7 +599,7 @@ namespace OsmSharp.Android.UI
 //				{
 //					characterWidths[idx] = _target, _view, characterWidths[idx];
 //				}
-				var characterHeight = (float)size;
+                var characterHeight = (float)sizeInPixels;
 				var textLength = characterWidths.Sum();
 
 				// calculate line length.

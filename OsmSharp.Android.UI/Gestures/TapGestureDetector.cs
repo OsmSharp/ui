@@ -16,17 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+using Android.Graphics;
 
 namespace Android.Views
 {
@@ -56,7 +47,15 @@ namespace Android.Views
 			}
 		}
 
+        /// <summary>
+        /// Holds the listener.
+        /// </summary>
         private readonly IOnTapGestureListener _listener;
+
+        /// <summary>
+        /// Holds the tap period.
+        /// </summary>
+        private readonly long _tapPeriod;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MoveGestureDetector"/> class.
@@ -66,7 +65,13 @@ namespace Android.Views
         public TapGestureDetector(Context context, IOnTapGestureListener listener) 
 			: base(context) {
 			_listener = listener;
+            _tapPeriod = 1000;
 		}
+
+        /// <summary>
+        /// Holds the first event time.
+        /// </summary>
+        private long _firstEventTime;
 
 		/// <summary>
 		/// Called when the current event occurred when NO gesture is in progress
@@ -79,10 +84,14 @@ namespace Android.Views
 			switch (actionCode) {
 			case MotionEventActions.Down:
 				ResetState (); // In case we missed an UP/CANCEL event
+                _firstEventTime = e.EventTime;
 
 				_previousEvent = MotionEvent.Obtain (e);
 				_timeDelta = 0;
                 _gestureInProgress = true;
+
+                _x = e.GetX();
+                _y = e.GetY();
 
 				UpdateStateByEvent (e);
 				break;
@@ -101,13 +110,53 @@ namespace Android.Views
 			switch (actionCode) {
 			case MotionEventActions.Up:
 			case MotionEventActions.Cancel:
-				_listener.OnTap (this);
-				ResetState ();
+                if (_tapPeriod > (e.EventTime - _firstEventTime))
+                {
+                    _listener.OnTap(this);
+                    ResetState();
+                }
 				break;
             case MotionEventActions.Move:
-                //ResetState();
+                if (_tapPeriod < (e.EventTime - _firstEventTime))
+                {
+                    ResetState();
+                }
 				break;
 			}
 		}
+
+        /// <summary>
+        /// Holds the x-coordinate of the touch.
+        /// </summary>
+        private float _x;
+
+        /// <summary>
+        /// Holds the y-coordinate of the touch.
+        /// </summary>
+        private float _y;
+
+        /// <summary>
+        /// Gets the x.
+        /// </summary>
+        /// <returns>The x.</returns>
+        public float X
+        {
+            get
+            {
+                return _x;
+            }
+        }
+
+        /// <summary>
+        /// Gets the y.
+        /// </summary>
+        /// <returns>The y.</returns>
+        public float Y
+        {
+            get
+            {
+                return _y;
+            }
+        }
     }
 }

@@ -585,6 +585,22 @@ namespace OsmSharp.Android.UI
             OsmSharp.Logging.Log.TraceEvent("MapViewSurface", System.Diagnostics.TraceEventType.Information,
                 "Some message...");
 
+            if (this.MapTapEvent != null)
+            {
+                // recreate the view.
+                View2D view = this.CreateView();
+
+                // calculate the new center in pixels.
+                double x = detector.X;
+                double y = detector.Y;
+
+                // calculate the new center from the view.
+                double[] sceneCenter = view.FromViewPort(this.Width, this.Height,
+                                                          x, y);
+
+                // convert to the projected center.
+                this.MapTapEvent(this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]));
+            }
             return true;
         }
 
@@ -650,31 +666,32 @@ namespace OsmSharp.Android.UI
 				}
 
 				this.NotifyMovement ();
-			} else {
-				// calculate event time.
-				long time = e.EventTime - e.DownTime;
-				if (time > 120) {
-					this.NotifyMovement ();
+            } 
+            // else {
+            //    // calculate event time.
+            //    long time = e.EventTime - e.DownTime;
+            //    if (time > 120) {
+            //        this.NotifyMovement ();
 
-					this.Change ();
-				} else { // raise the map tap event here.
-					if (this.MapTapEvent != null) {
-						// recreate the view.
-						View2D view = this.CreateView ();
+            //        this.Change ();
+            //    } else { // raise the map tap event here.
+            //        if (this.MapTapEvent != null) {
+            //            // recreate the view.
+            //            View2D view = this.CreateView ();
 
-						// calculate the new center in pixels.
-						double x = e.GetX ();
-						double y = e.GetY ();
+            //            // calculate the new center in pixels.
+            //            double x = e.GetX ();
+            //            double y = e.GetY ();
 
-						// calculate the new center from the view.
-						double[] sceneCenter = view.FromViewPort (this.Width, this.Height, 
-						                                          x, y);
+            //            // calculate the new center from the view.
+            //            double[] sceneCenter = view.FromViewPort (this.Width, this.Height, 
+            //                                                      x, y);
 
-						// convert to the projected center.
-						this.MapTapEvent (this.Map.Projection.ToGeoCoordinates (sceneCenter [0], sceneCenter [1]));
-					}
-				}
-			}
+            //            // convert to the projected center.
+            //            this.MapTapEvent (this.Map.Projection.ToGeoCoordinates (sceneCenter [0], sceneCenter [1]));
+            //        }
+            //    }
+            //}
 			return true;
 		}
 		
