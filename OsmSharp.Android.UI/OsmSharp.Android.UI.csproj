@@ -48,16 +48,19 @@
     <Compile Include="Renderer\CanvasRenderer2D.cs" />
     <Compile Include="CanvasRenderer2DView.cs" />
     <Compile Include="Renderer\OpenGLRenderer2D.cs" />
-    <Compile Include="MapGLView.cs" />
     <Compile Include="Renderer\OpenGLTarget2D.cs" />
-    <Compile Include="MapMarker.cs" />
-    <Compile Include="MapViewSurface.cs" />
     <Compile Include="MapView.cs" />
     <Compile Include="Gestures\BaseGestureDetector.cs" />
     <Compile Include="Gestures\TwoFingerGestureDetector.cs" />
     <Compile Include="Gestures\MoveGestureDetector.cs" />
     <Compile Include="Gestures\RotateGestureDetector.cs" />
-    <Compile Include="MapMarkerAlignment.cs" />
+    <Compile Include="Surfaces\MapViewSurface.cs" />
+    <Compile Include="Surfaces\MapViewGLSurface.cs" />
+    <Compile Include="Surfaces\IMapViewSurface.cs" />
+    <Compile Include="MapViewEvents.cs" />
+    <Compile Include="Markers\IMapMarkerHost.cs" />
+    <Compile Include="Markers\MapMarker.cs" />
+    <Compile Include="Markers\MapMarkerAlignment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -68,6 +71,8 @@
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Resources\layout\" />
+    <Folder Include="Surfaces\" />
+    <Folder Include="Markers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.Android.csproj">

@@ -48,45 +48,16 @@ namespace OsmSharp.Android.UI
 		{
 			_triangles = new List<TriangleProcessed> ();
 			_lines = new List<LineProcessed> ();
-
-//			// Our vertices.
-//			float[] vertices = {
-//				20f, 150f, 0.0f,  // 0, Top Left
-//				20f,  20f, 0.0f,  // 1, Bottom Left
-//				150f,150f, 0.0f  // 3, Top Right
-//				//150f, 20f, 0.0f,  // 2, Bottom Right
-//			};
-//
-//			// a float is 4 bytes, therefore we multiply the number if
-//			// vertices with 4.
-//			ByteBuffer vbb = ByteBuffer.AllocateDirect(vertices.Length * 4);
-//			vbb.Order(ByteOrder.NativeOrder());
-//			FloatBuffer vertexBuffer = vbb.AsFloatBuffer();
-//			vertexBuffer.Put(vertices);
-//			vertexBuffer.Position(0);
-//
-//			// The order we like to connect them.
-//			byte[] colors = {
-//				(byte)0.0, (byte)255, (byte)0.0, (byte)255,  
-//				(byte)0.0, (byte)255, (byte)0.0, (byte)255,  
-//				(byte)0.0, (byte)255, (byte)0.0, (byte)255
-//				//(byte)0.0, (byte)255, (byte)0.0, (byte)255  
-//			};
-//
-//			// a float is 4 bytes, therefore we multiply the number if
-//			// vertices with 4.
-//			ByteBuffer cbb = ByteBuffer.AllocateDirect(colors.Length);
-//			cbb.Order(ByteOrder.NativeOrder());
-//			cbb.Put (colors);
-//			cbb.Position (0);
-//
-//			_triangles.Add (new TriangleProcessed()
-//			                {
-//				Vertices = vertexBuffer,
-//				Colors = cbb,
-//				Count = 3
-//			});
 		}
+
+        public void Clear()
+        {
+            lock (_triangles)
+            {
+                _lines.Clear();
+                _triangles.Clear();
+            }
+        }
 
 		/// <summary>
 		/// Adds the line.
@@ -95,21 +66,25 @@ namespace OsmSharp.Android.UI
 		/// <param name="argb">ARGB.</param>
 		public void AddLine(float[] points, float width, int argb)
 		{
-			// a float is 4 bytes, therefore we multiply the number if
-			// vertices with 4.
-			ByteBuffer vbb = ByteBuffer.AllocateDirect(points.Length * 4);
-			vbb.Order(ByteOrder.NativeOrder());
-			FloatBuffer vertexBuffer = vbb.AsFloatBuffer();
-			vertexBuffer.Put(points);
-			vertexBuffer.Position(0);
+            lock (_triangles)
+            {
+                // a float is 4 bytes, therefore we multiply the number if
+                // vertices with 4.
+                ByteBuffer vbb = ByteBuffer.AllocateDirect(points.Length * 4);
+                vbb.Order(ByteOrder.NativeOrder());
+                FloatBuffer vertexBuffer = vbb.AsFloatBuffer();
+                vertexBuffer.Put(points);
+                vertexBuffer.Position(0);
 
-			LineProcessed line = new LineProcessed () {
-				Vertices = vertexBuffer,
-				Color = argb,
-				Width = width,
-				Count = points.Length / 3
-			};
-			_lines.Add (line);
+                LineProcessed line = new LineProcessed()
+                {
+                    Vertices = vertexBuffer,
+                    Color = argb,
+                    Width = width,
+                    Count = points.Length / 3
+                };
+                _lines.Add(line);
+            }
 		}
 
 		/// <summary>
@@ -119,41 +94,45 @@ namespace OsmSharp.Android.UI
 		/// <param name="argb">The ARGB colors.</param>
 		public void AddTriangles(float[] corners, int argb)
 		{
-			// a float is 4 bytes, therefore we multiply the number if
-			// vertices with 4.
-			ByteBuffer vbb = ByteBuffer.AllocateDirect(corners.Length * 4);
-			vbb.Order(ByteOrder.NativeOrder());
-			FloatBuffer vertexBuffer = vbb.AsFloatBuffer();
-			vertexBuffer.Put(corners);
-			vertexBuffer.Position(0);
+            lock (_triangles)
+            {
+                // a float is 4 bytes, therefore we multiply the number if
+                // vertices with 4.
+                ByteBuffer vbb = ByteBuffer.AllocateDirect(corners.Length * 4);
+                vbb.Order(ByteOrder.NativeOrder());
+                FloatBuffer vertexBuffer = vbb.AsFloatBuffer();
+                vertexBuffer.Put(corners);
+                vertexBuffer.Position(0);
 
-			// The order we like to connect them.
-			SimpleColor color = new SimpleColor () {
-				Value = argb
-			};
-			int count = corners.Length / 3;
-			byte[] colors = new byte[count * 4 ];
-			for (int idx = 0; idx < count; idx++) 
-			{
-				colors [idx * 4] = (byte)color.R;
-				colors [idx * 4 + 1] = (byte)color.G;
-				colors [idx * 4 + 2] = (byte)color.B;
-				colors [idx * 4 + 3] = (byte)color.A;
-			}
+                // The order we like to connect them.
+                SimpleColor color = new SimpleColor()
+                {
+                    Value = argb
+                };
+                int count = corners.Length / 3;
+                byte[] colors = new byte[count * 4];
+                for (int idx = 0; idx < count; idx++)
+                {
+                    colors[idx * 4] = (byte)color.R;
+                    colors[idx * 4 + 1] = (byte)color.G;
+                    colors[idx * 4 + 2] = (byte)color.B;
+                    colors[idx * 4 + 3] = (byte)color.A;
+                }
 
-			// a float is 4 bytes, therefore we multiply the number if
-			// vertices with 4.
-			ByteBuffer cbb = ByteBuffer.AllocateDirect(colors.Length);
-			cbb.Order(ByteOrder.NativeOrder());
-			cbb.Put (colors);
-			cbb.Position (0);
+                // a float is 4 bytes, therefore we multiply the number if
+                // vertices with 4.
+                ByteBuffer cbb = ByteBuffer.AllocateDirect(colors.Length);
+                cbb.Order(ByteOrder.NativeOrder());
+                cbb.Put(colors);
+                cbb.Position(0);
 
-			_triangles.Add (new TriangleProcessed()
-			{
-				Vertices = vertexBuffer,
-				Colors = cbb,
-				Count = corners.Length /  3
-			});
+                _triangles.Add(new TriangleProcessed()
+                {
+                    Vertices = vertexBuffer,
+                    Colors = cbb,
+                    Count = corners.Length / 3
+                });
+            }
 		}
 
 		/// <summary>
@@ -177,36 +156,45 @@ namespace OsmSharp.Android.UI
 		/// Raises the draw frame event.
 		/// </summary>
 		/// <param name="gl">Gl.</param>
-		public void OnDrawFrame (IGL10 gl)
-		{
-			// Replace the current matrix with the identity matrix
-			gl.GlMatrixMode (GL10.GlProjection);
-			gl.GlLoadIdentity(); // OpenGL docs
-			gl.GlOrthof(_left, _right, _bottom, _top, -1, 1);
+        public void OnDrawFrame(IGL10 gl)
+        {
+            lock (_triangles)
+            {
+                // Replace the current matrix with the identity matrix
+                gl.GlMatrixMode(GL10.GlProjection);
+                gl.GlLoadIdentity(); // OpenGL docs
+                gl.GlOrthof(_left, _right, _bottom, _top, -1, 1);
 
-			for(int idx = 0; idx < _triangles.Count; idx++)
-			{
-				gl.GlVertexPointer (3, GL10.GlFloat, 0, _triangles[idx].Vertices);
-				gl.GlEnableClientState (GL10.GlVertexArray);
-				gl.GlColorPointer(4, GL10.GlUnsignedByte, 0, _triangles[idx].Colors);
-				gl.GlEnableClientState (GL10.GlColorArray);
 
-				gl.GlDrawArrays (GL10.GlTriangleStrip, 0, _triangles[idx].Count);
-			}
+                SimpleColor color = SimpleColor.FromKnownColor(KnownColor.White);
+                gl.GlClearColor(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
+                gl.GlClear(GL10.GlColorBufferBit);
 
-			for(int idx = 0; idx < _lines.Count; idx++)
-			{
-				gl.GlVertexPointer (3, GL10.GlFloat, 0, _lines[idx].Vertices);
-				gl.GlEnableClientState (GL10.GlVertexArray);
+                for (int idx = 0; idx < _triangles.Count; idx++)
+                {
+                    gl.GlVertexPointer(3, GL10.GlFloat, 0, _triangles[idx].Vertices);
+                    gl.GlEnableClientState(GL10.GlVertexArray);
+                    gl.GlColorPointer(4, GL10.GlUnsignedByte, 0, _triangles[idx].Colors);
+                    gl.GlEnableClientState(GL10.GlColorArray);
 
-				SimpleColor color = new SimpleColor () {
-					Value = _lines[idx].Color
-				};
-				gl.GlColor4f (color.R / 255f,color.G / 255f,color.B / 255f,color.A / 255f);
-				gl.GlLineWidth (_lines [idx].Width);
-				gl.GlDrawArrays (GL10.GlLineStrip, 0, _lines[idx].Count);
-			}
-		}
+                    gl.GlDrawArrays(GL10.GlTriangleStrip, 0, _triangles[idx].Count);
+                }
+
+                for (int idx = 0; idx < _lines.Count; idx++)
+                {
+                    gl.GlVertexPointer(3, GL10.GlFloat, 0, _lines[idx].Vertices);
+                    gl.GlEnableClientState(GL10.GlVertexArray);
+
+                    color = new SimpleColor()
+                    {
+                        Value = _lines[idx].Color
+                    };
+                    gl.GlColor4f(color.R / 255f, color.G / 255f, color.B / 255f, color.A / 255f);
+                    gl.GlLineWidth(_lines[idx].Width);
+                    gl.GlDrawArrays(GL10.GlLineStrip, 0, _lines[idx].Count);
+                }
+            }
+        }
 
 		/// <summary>
 		/// Sets the orhto transformation.

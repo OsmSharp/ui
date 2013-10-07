@@ -143,26 +143,26 @@ namespace OsmSharp.Android.UI.Sample
 //			var mapView = new OpenGLRenderer2D(
 //				this, null);
 
-            //var mapGLView = new MapGLView(this);
+            //var mapLayout = new MapView<MapGLView>(this, new MapGLView(this));
 
-			var mapLayout = new MapView (this);
+			var mapLayout = new MapView<MapViewSurface> (this, new MapViewSurface(this));
 			mapLayout.Map = map;
-			
-			mapLayout.MapMaxZoomLevel = 20;
-			mapLayout.MapMinZoomLevel = 12;
-			mapLayout.MapTilt = 0;
-			//var mapView = new MapGLView (this);
-			mapLayout.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
-			//mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
-			//mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
-			//mapView.Center = new GeoCoordinate(51.156803, 2.958887);
-            mapLayout.MapZoom = 17;
+
+            mapLayout.MapMaxZoomLevel = 20;
+            mapLayout.MapMinZoomLevel = 12;
+            mapLayout.MapTilt = 0;
+            //var mapView = new MapGLView (this);
+            mapLayout.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
+            //mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
+            //mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
+            //mapView.Center = new GeoCoordinate(51.156803, 2.958887);
+            mapLayout.MapZoom = 14;
             //MapViewAnimator mapViewAnimator = new MapViewAnimator(mapLayout);
             mapLayout.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
             {
                 //mapViewAnimator.Stop();
                 //mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
-			};
+            };
 
 			//Create the user interface in code
 			var layout = new RelativeLayout (this);
