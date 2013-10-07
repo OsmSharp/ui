@@ -142,6 +142,7 @@
     <Compile Include="Graph\IDynamicGraphEdgeData.cs" />
     <Compile Include="Graph\IDynamicGraphReadOnly.cs" />
     <Compile Include="Graph\MemoryDynamicGraph.cs" />
+    <Compile Include="Navigation\RouteTracker.cs" />
     <Compile Include="Osm\Graphs\MemoryDynamicGraphSimpleWeighed.cs" />
     <Compile Include="Osm\Graphs\LiveEdge.cs" />
     <Compile Include="Graph\Router\PathSegment.cs" />
@@ -277,7 +278,6 @@
     <Compile Include="Route.cs" />
     <Compile Include="RouteEnumerable.cs" />
     <Compile Include="RouteGenerator.cs" />
-    <Compile Include="RouteTracker.cs" />
     <Compile Include="IO\Gpx\RouteGpx.cs" />
     <Compile Include="IO\Kml\RouteKml.cs" />
   </ItemGroup>

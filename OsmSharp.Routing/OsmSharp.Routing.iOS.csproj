@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="IEdgeMatcher.cs" />
     <Compile Include="IRouterExtensions.cs" />
+    <Compile Include="Navigation\RouteTracker.cs" />
     <Compile Include="Osm\Streams\CHEdgeGraphFileStreamTarget.cs" />
     <Compile Include="Osm\Streams\Graphs\CHEdgeGraphOsmStreamTarget.cs" />
     <Compile Include="Osm\Streams\Graphs\DynamicGraphOsmStreamTarget.cs" />
@@ -207,7 +208,6 @@
     <Compile Include="Route.cs" />
     <Compile Include="RouteEnumerable.cs" />
     <Compile Include="RouteGenerator.cs" />
-    <Compile Include="RouteTracker.cs" />
     <Compile Include="Metrics\Time\TimeCalculator.cs" />
     <Compile Include="Metrics\RouteMetricCalculator.cs" />
     <Compile Include="IO\Gpx\RouteGpx.cs" />

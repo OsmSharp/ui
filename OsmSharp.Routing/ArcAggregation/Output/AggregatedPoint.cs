@@ -55,11 +55,11 @@ namespace OsmSharp.Routing.ArcAggregation.Output
         /// The angle between the end of the previous arc and the beginning of the next arc.
         /// </summary>
         public RelativeDirection Angle { get; set; }
-        
-        ///// <summary>
-        ///// The tags/properties.
-        ///// </summary>
-        //public List<KeyValuePair<string, string>> Tags { get; set; }
+
+        /// <summary>
+        /// The entry index.
+        /// </summary>
+        public int EntryIdx { get; set; }
 
         /// <summary>
         /// The point of points at this location.

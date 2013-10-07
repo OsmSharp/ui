@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,16 +15,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math.StateMachines;
-using OsmSharp.Math.Geo.Meta;
-using OsmSharp.Math.Geo;
-using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Math.Automata;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Meta;
+using OsmSharp.Math.StateMachines;
+using OsmSharp.Routing.ArcAggregation.Output;
 
 namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 {
@@ -133,41 +131,42 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
         public override void Succes()
         {
             // get the last arc and the last point.
-            AggregatedArc latest_arc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
-            AggregatedPoint latest_point = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
-            AggregatedArc second_latest_arc = (this.FinalMessages[this.FinalMessages.Count - 4] as MicroPlannerMessageArc).Arc;
-            AggregatedPoint second_latest_point = (this.FinalMessages[this.FinalMessages.Count - 3] as MicroPlannerMessagePoint).Point;
+            AggregatedArc latestArc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
+            AggregatedPoint latestPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
+            AggregatedArc secondLatestArc = (this.FinalMessages[this.FinalMessages.Count - 4] as MicroPlannerMessageArc).Arc;
+            AggregatedPoint secondLatestPoint = (this.FinalMessages[this.FinalMessages.Count - 3] as MicroPlannerMessagePoint).Point;
 
             // count the number of streets in the same turning direction as the turn
             // that was found.
             int count = 0;
-            if (MicroPlannerHelper.IsLeft(latest_point.Angle.Direction, this.Planner.Interpreter))
+            if (MicroPlannerHelper.IsLeft(latestPoint.Angle.Direction, this.Planner.Interpreter))
             {
                 count = MicroPlannerHelper.GetLeft(this.FinalMessages, this.Planner.Interpreter);
             }
-            else if (MicroPlannerHelper.IsRight(latest_point.Angle.Direction, this.Planner.Interpreter))
+            else if (MicroPlannerHelper.IsRight(latestPoint.Angle.Direction, this.Planner.Interpreter))
             {
                 count = MicroPlannerHelper.GetRight(this.FinalMessages, this.Planner.Interpreter);
             }
 
             // construct the box indicating the location of the resulting find by this machine.
-            GeoCoordinate point1 = latest_point.Location;
+            GeoCoordinate point1 = latestPoint.Location;
             GeoCoordinateBox box = new GeoCoordinateBox(
                 new GeoCoordinate(point1.Latitude - 0.001f, point1.Longitude - 0.001f),
                 new GeoCoordinate(point1.Latitude + 0.001f, point1.Longitude + 0.001f));
 
             // get all the names/direction/counts.
-            TagsCollection nextName = latest_point.Next.Tags;
-            TagsCollection betweenName = latest_arc.Tags;
-            TagsCollection beforeName = second_latest_arc.Tags;
+            TagsCollection nextName = latestPoint.Next.Tags;
+            TagsCollection betweenName = latestArc.Tags;
+            TagsCollection beforeName = secondLatestArc.Tags;
 
-            int first_count = count;
+            int firstCount = count;
 
-            RelativeDirection first_turn = second_latest_point.Angle;
-            RelativeDirection second_turn = latest_point.Angle;
+            RelativeDirection firstTurn = secondLatestPoint.Angle;
+            RelativeDirection secondTurn = latestPoint.Angle;
             
             // let the scentence planner generate the correct information.
-            this.Planner.SentencePlanner.GenerateImmidiateTurn(box, beforeName, first_turn, first_count, second_turn, betweenName, nextName, latest_point.Points);
+            this.Planner.SentencePlanner.GenerateImmidiateTurn(latestPoint.EntryIdx, box, beforeName, 
+                firstTurn, firstCount, secondTurn, betweenName, nextName, latestPoint.Points);
         }
 
         public override bool Equals(object obj)

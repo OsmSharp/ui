@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,14 +115,14 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 
         public override void Succes()
         {
-            OsmSharp.Routing.ArcAggregation.Output.AggregatedPoint pois_point = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
-            OsmSharp.Routing.ArcAggregation.Output.AggregatedArc previous_arc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
+            OsmSharp.Routing.ArcAggregation.Output.AggregatedPoint poisPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
+            OsmSharp.Routing.ArcAggregation.Output.AggregatedArc previousArc = (this.FinalMessages[this.FinalMessages.Count - 2] as MicroPlannerMessageArc).Arc;
 
             // get the pois list.
             List<Routing.ArcAggregation.Output.PointPoi> pois = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point.Points;
 
             // get the angle from the pois point.
-            RelativeDirection direction = pois_point.Angle;
+            RelativeDirection direction = poisPoint.Angle;
 
             // calculate the box.
             List<GeoCoordinate> coordinates = new List<GeoCoordinate>();
@@ -129,11 +130,11 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
             {
                 coordinates.Add(poi.Location);
             }
-            coordinates.Add(pois_point.Location);
+            coordinates.Add(poisPoint.Location);
             GeoCoordinateBox box = new GeoCoordinateBox(coordinates.ToArray());
 
             // let the scentence planner generate the correct information.
-            this.Planner.SentencePlanner.GeneratePoi(box, pois, direction);
+            this.Planner.SentencePlanner.GeneratePoi(poisPoint.EntryIdx, box, pois, direction);
         }
 
         public override bool Equals(object obj)

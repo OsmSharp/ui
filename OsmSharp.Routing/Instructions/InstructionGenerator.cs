@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,27 +48,27 @@ namespace OsmSharp.Routing.Instructions
         /// </summary>
         /// <param name="route"></param>
         /// <param name="interpreter"></param>
-        /// <param name="language_generator"></param>
+        /// <param name="languageGenerator"></param>
         /// <returns></returns>
-        public static List<Instruction> Generate(Route route, IRoutingInterpreter interpreter, ILanguageGenerator language_generator)
+        public static List<Instruction> Generate(Route route, IRoutingInterpreter interpreter, ILanguageGenerator languageGenerator)
         {
             OsmSharp.Routing.ArcAggregation.ArcAggregator aggregator = 
                 new OsmSharp.Routing.ArcAggregation.ArcAggregator(interpreter);
             AggregatedPoint point = 
                 aggregator.Aggregate(route);
 
-			return InstructionGenerator.Generate(point, interpreter, language_generator);
+			return InstructionGenerator.Generate(point, interpreter, languageGenerator);
         }
 
         /// <summary>
         /// Generates instructions.
         /// </summary>
-        /// <param name="aggregate_point"></param>
+        /// <param name="aggregatePoint"></param>
         /// <param name="interpreter"></param>
         /// <returns></returns>
-        public static List<Instruction> Generate(AggregatedPoint aggregate_point, IRoutingInterpreter interpreter)
+        public static List<Instruction> Generate(AggregatedPoint aggregatePoint, IRoutingInterpreter interpreter)
         {
-			return InstructionGenerator.Generate(aggregate_point, interpreter,
+			return InstructionGenerator.Generate(aggregatePoint, interpreter,
                 new OsmSharp.Routing.Instructions.LanguageGeneration.Defaults.SimpleEnglishLanguageGenerator());
         }
 

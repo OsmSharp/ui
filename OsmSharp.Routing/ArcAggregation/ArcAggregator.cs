@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,18 +15,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Units.Angle;
 using OsmSharp.Math.Geo.Meta;
-using OsmSharp.Units.Distance;
-using OsmSharp.Routing;
+using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Routing.Interpreter;
+using OsmSharp.Units.Distance;
 
 namespace OsmSharp.Routing.ArcAggregation
 {
@@ -35,14 +31,14 @@ namespace OsmSharp.Routing.ArcAggregation
     /// </summary>
     public class ArcAggregator
     {
-        private AggregatedPoint previous_point = null;
-        private AggregatedArc previous_arc = null;
+        private AggregatedPoint previousPoint = null;
+        private AggregatedArc previousArc = null;
         private AggregatedPoint p = null;
 
         /// <summary>
         /// Holds the routing interpreter.
         /// </summary>
-//        private IRoutingInterpreter _interpreter;
+        private IRoutingInterpreter _interpreter;
 
         /// <summary>
         /// Creates a new arc aggregator.
@@ -50,7 +46,7 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <param name="interpreter"></param>
         public ArcAggregator(IRoutingInterpreter interpreter)
         {
-//            _interpreter = interpreter;
+            _interpreter = interpreter;
         }
 
         /// <summary>
@@ -74,7 +70,7 @@ namespace OsmSharp.Routing.ArcAggregation
                 next = enumerator.Current;
 
                 // process 
-                this.Process(route ,previous, current, next);
+                this.Process(route, previous, current, next);
 
                 // make the next, current and the current previous.
                 previous = current;
@@ -95,7 +91,8 @@ namespace OsmSharp.Routing.ArcAggregation
         /// <param name="previous"></param>
         /// <param name="current"></param>
         /// <param name="next"></param>
-        private void Process(Route route, AggregatedRoutePoint previous, AggregatedRoutePoint current, AggregatedRoutePoint next)
+        private void Process(Route route, AggregatedRoutePoint previous, AggregatedRoutePoint current, 
+            AggregatedRoutePoint next)
         {
             // process the current point.
             if (current != null)
@@ -108,50 +105,51 @@ namespace OsmSharp.Routing.ArcAggregation
                     p.ArcsNotTaken = null;
                     p.Location = new GeoCoordinate(current.Entry.Latitude, current.Entry.Longitude);
                     p.Points = new List<PointPoi>();
+                    p.EntryIdx = current.EntryIndex;
 
                     if (current.Entry.Points != null)
                     {
-                        foreach (RoutePoint route_point in current.Entry.Points)
+                        foreach (RoutePoint routePoint in current.Entry.Points)
                         {
                             PointPoi poi = new PointPoi();
-                            poi.Name = route_point.Name;
-                            poi.Tags = route_point.Tags.ConvertTo();
-                            poi.Location = new GeoCoordinate(route_point.Latitude, route_point.Longitude);
+                            poi.Name = routePoint.Name;
+                            poi.Tags = routePoint.Tags.ConvertTo();
+                            poi.Location = new GeoCoordinate(routePoint.Latitude, routePoint.Longitude);
                             poi.Angle = null; // there is no previous point; no angle is specified.
                             p.Points.Add(poi);
                         }
                     }
 
-                    previous_point = p;
+                    previousPoint = p;
                 }
                 else
                 { // test if point is significant.
-                    AggregatedArc next_arc = this.CreateArcAndPoint(previous, current, next);
+                    AggregatedArc nextArc = this.CreateArcAndPoint(previous, current, next);
 
                     // test if the next point is significant.
-                    if (previous_arc == null)
+                    if (previousArc == null)
                     { // this arc is always significant; it is the first arc.
-                        previous_point.Next = next_arc;
-                        previous_arc = next_arc;
+                        previousPoint.Next = nextArc;
+                        previousArc = nextArc;
                     }
                     else
                     { // there is a previous arc; a test can be done if the current point is significant.
-                        if (this.IsSignificant(route.Vehicle, previous_arc, next_arc))
+                        if (this.IsSignificant(route.Vehicle, previousArc, nextArc))
                         { // the arc is significant; append it to the previous arc.
-                            previous_arc.Next.Next = next_arc;
-                            previous_arc = next_arc;
-                            previous_point = next_arc.Next;
+                            previousArc.Next.Next = nextArc;
+                            previousArc = nextArc;
+                            previousPoint = nextArc.Next;
                         }
                         else
                         { // if the arc is not significant compared to the previous one, the previous one can extend until the next point.
                             // THIS IS THE AGGREGATION STEP!
 
                             // add distance.
-                            Meter distance_to_next = previous_arc.Next.Location.DistanceReal(next_arc.Next.Location);
-                            previous_arc.Distance = previous_arc.Distance + distance_to_next;
+                            Meter distance_to_next = previousArc.Next.Location.DistanceReal(nextArc.Next.Location);
+                            previousArc.Distance = previousArc.Distance + distance_to_next;
 
                             // set point.
-                            previous_arc.Next = next_arc.Next;
+                            previousArc.Next = nextArc.Next;
                         }
                     }
                 }
@@ -215,9 +213,9 @@ namespace OsmSharp.Routing.ArcAggregation
             {
                 GeoCoordinate previous_coordinate =
                     new GeoCoordinate(previous.Entry.Latitude, previous.Entry.Longitude);
-                GeoCoordinate current_coordinate = new GeoCoordinate(current.Entry.Latitude, current.Entry.Longitude);
+                GeoCoordinate currentCoordinate = new GeoCoordinate(current.Entry.Latitude, current.Entry.Longitude);
 
-                Meter distance = previous_coordinate.DistanceReal(current_coordinate);
+                Meter distance = previous_coordinate.DistanceReal(currentCoordinate);
                 a.Distance = distance;
             }
 
@@ -226,6 +224,7 @@ namespace OsmSharp.Routing.ArcAggregation
             AggregatedPoint p = new AggregatedPoint();
             p.Location = new GeoCoordinate(current.Entry.Latitude, current.Entry.Longitude);
             p.Points = new List<PointPoi>();
+            p.EntryIdx = current.EntryIndex;
             if (previous != null && next != null && next.Entry != null)
             {
                 GeoCoordinate previous_coordinate =
@@ -238,12 +237,12 @@ namespace OsmSharp.Routing.ArcAggregation
             if (current.Entry.SideStreets != null && current.Entry.SideStreets.Length > 0)
             {
                 p.ArcsNotTaken = new List<KeyValuePair<RelativeDirection, AggregatedArc>>();
-                foreach (RoutePointEntrySideStreet side_street in current.Entry.SideStreets)
+                foreach (RoutePointEntrySideStreet sideStreet in current.Entry.SideStreets)
                 {
                     AggregatedArc side = new AggregatedArc();
-                    side.Name = side_street.WayName;
-                    side.Names = side_street.WayNames.ConvertTo();
-                    side.Tags = side_street.Tags.ConvertToTagsCollection();
+                    side.Name = sideStreet.WayName;
+                    side.Names = sideStreet.WayNames.ConvertTo();
+                    side.Tags = sideStreet.Tags.ConvertToTagsCollection();
 
                     RelativeDirection side_direction = null;
                     if (previous != null)
@@ -251,7 +250,7 @@ namespace OsmSharp.Routing.ArcAggregation
                         GeoCoordinate previous_coordinate =
                             new GeoCoordinate(previous.Entry.Latitude, previous.Entry.Longitude);
                         GeoCoordinate next_coordinate =
-                            new GeoCoordinate(side_street.Latitude, side_street.Longitude);
+                            new GeoCoordinate(sideStreet.Latitude, sideStreet.Longitude);
 
                         side_direction = RelativeDirectionCalculator.Calculate(previous_coordinate, p.Location, next_coordinate);
                     }
@@ -289,13 +288,23 @@ namespace OsmSharp.Routing.ArcAggregation
     /// </summary>
     internal class AggregatedPointEnumerator : IEnumerator<AggregatedRoutePoint>
     {
-        private int _idx;
+        /// <summary>
+        /// Holds the entry index.
+        /// </summary>
+        private int _entryIdx;
 
+        /// <summary>
+        /// Holds the route.
+        /// </summary>
         private Route _route;
 
+        /// <summary>
+        /// Creates a new agregrated point enumerator.
+        /// </summary>
+        /// <param name="route"></param>
         public AggregatedPointEnumerator(Route route)
         {
-            _idx = -1;
+            _entryIdx = -1;
 
             _route = route;
             _current = null;
@@ -303,8 +312,14 @@ namespace OsmSharp.Routing.ArcAggregation
 
         #region IEnumerator<AggregatedRoutePoint> Members
 
+        /// <summary>
+        /// Holds the current point.
+        /// </summary>
         private AggregatedRoutePoint _current;
 
+        /// <summary>
+        /// Returns the current point.
+        /// </summary>
         public AggregatedRoutePoint Current
         {
             get 
@@ -312,7 +327,8 @@ namespace OsmSharp.Routing.ArcAggregation
                 if (_current == null)
                 {
                     _current = new AggregatedRoutePoint();
-                    _current.Entry = _route.Entries[_idx];                    
+                    _current.EntryIndex = _entryIdx;
+                    _current.Entry = _route.Entries[_entryIdx];                    
                 }
                 return _current;
             }
@@ -322,6 +338,9 @@ namespace OsmSharp.Routing.ArcAggregation
 
         #region IDisposable Members
 
+        /// <summary>
+        /// Disposes all resources associated with this enumerator.
+        /// </summary>
         public void Dispose()
         {
 
@@ -331,11 +350,18 @@ namespace OsmSharp.Routing.ArcAggregation
 
         #region IEnumerator Members
 
+        /// <summary>
+        /// Returns the current point.
+        /// </summary>
         object System.Collections.IEnumerator.Current
         {
             get { return this.Current; }
         }
 
+        /// <summary>
+        /// Moves to the next point.
+        /// </summary>
+        /// <returns></returns>
         public bool MoveNext()
         {
             _current = null;
@@ -343,15 +369,18 @@ namespace OsmSharp.Routing.ArcAggregation
             {
                 return false;
             }
-            _idx++;
-            return _route.Entries.Length > _idx;
+            _entryIdx++;
+            return _route.Entries.Length > _entryIdx;
         }
 
+        /// <summary>
+        /// Resets this enumerator.
+        /// </summary>
         public void Reset()
         {
             _current = null;
 
-            _idx = -1;
+            _entryIdx = -1;
         }
 
         #endregion
@@ -362,6 +391,14 @@ namespace OsmSharp.Routing.ArcAggregation
     /// </summary>
     internal class AggregatedRoutePoint
     {
+        /// <summary>
+        /// Gets or sets the entry index.
+        /// </summary>
+        public int EntryIndex { get; set; }
+
+        /// <summary>
+        /// Gets or sets the route point entry.
+        /// </summary>
         public RoutePointEntry Entry { get; set; }
     }
 }

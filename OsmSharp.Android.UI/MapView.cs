@@ -229,7 +229,7 @@ namespace OsmSharp.Android.UI
 				return _mapView.AutoInvalidate;
 			}
 			set {
-				_mapView.AutoInvalidate = false;
+				_mapView.AutoInvalidate = value;
 			}
 		}
 		#endregion
@@ -267,6 +267,10 @@ namespace OsmSharp.Android.UI
 				}
 			}
 		}
-	}
-}
 
+        void IMapView.Invalidate()
+        {
+            _mapView.PostInvalidate();
+        }
+    }
+}
