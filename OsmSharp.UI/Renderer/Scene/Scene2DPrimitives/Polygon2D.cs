@@ -271,5 +271,111 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         }
 		
 		#endregion
-	}
+
+        #region Calculations
+
+        /// <summary>
+        /// Returns true if the given vertex is convex.
+        /// </summary>
+        /// <param name="vertexIdx"></param>
+        /// <returns></returns>
+        public bool IsEar(int vertexIdx)
+        {
+            int previousIdx = vertexIdx == 0 ? this.X.Length - 1 : vertexIdx - 1;
+            int nextIdx = vertexIdx == this.X.Length - 1 ? 0 : vertexIdx + 1;
+
+            return (this.Contains(
+                new double[] { 
+                    (this.X[previousIdx] + this.X[nextIdx]) / 2, 
+                    (this.Y[previousIdx] + this.Y[nextIdx]) / 2 }));
+        }
+
+        /// <summary>
+        /// Returns the neighbours of the given vertex.
+        /// </summary>
+        /// <returns></returns>
+        public double[][] GetNeigbours(int vertexIdx)
+        {
+            int previousIdx = vertexIdx == 0 ? this.X.Length - 1 : vertexIdx - 1;
+            int nextIdx = vertexIdx == this.X.Length - 1 ? 0 : vertexIdx + 1;
+
+            double[] previous = new double[] { this.X[previousIdx], this.Y[previousIdx] };
+            double[] next = new double[] { this.X[nextIdx], this.Y[nextIdx] };
+            return new double[][] { previous, next };
+        }
+
+        /// <summary>
+        /// Returns true if the given coordinate is contained in this ring.
+        /// 
+        /// See: http://geomalgorithms.com/a03-_inclusion.html
+        /// </summary>
+        /// <param name="coordinate"></param>
+        /// <returns></returns>
+        public bool Contains(double[] coordinate)
+        {
+            int number = 0;
+            if (this.X[0] == coordinate[0] && 
+                this.Y[0] == coordinate[1])
+            { // the given point is one of the corners.
+                return true;
+            }
+            // loop over all edges and calculate if they possibly intersect.
+            for (int idx = 0; idx < this.X.Length - 1; idx++)
+            {
+                if (this.X[idx + 1] == coordinate[0] &&
+                    this.Y[idx + 1] == coordinate[1])
+                { // the given point is one of the corners.
+                    return true;
+                }
+                bool idxRight = this.X[idx] > coordinate[0];
+                bool idx1Right = this.X[idx + 1] > coordinate[0];
+                if (idxRight || idx1Right)
+                { // at least one of the coordinates is to the right of the point to calculate for.
+                    if ((this.Y[idx] <= coordinate[1] &&
+                        this.Y[idx + 1] >= coordinate[1]) &&
+                        !(this.Y[idx] == coordinate[1] &&
+                        this.Y[idx + 1] == coordinate[1]))
+                    { // idx is lower than idx+1
+                        if (idxRight && idx1Right)
+                        { // no need for the left/right algorithm the result is already known.
+                            number++;
+                        }
+                        else
+                        { // one of the coordinates is not to the 'right' now we need the left/right algorithm.
+                            LineF2D localLine = new LineF2D(
+                                new PointF2D(this.X[idx], this.Y[idx]),
+                                new PointF2D(this.X[idx + 1], this.Y[idx + 1]));
+                            if (localLine.PositionOfPoint(new PointF2D(coordinate)) == LinePointPosition.Left)
+                            {
+                                number++;
+                            }
+                        }
+                    }
+                    else if ((this.Y[idx] >= coordinate[1] &&
+                        this.Y[idx + 1] <= coordinate[1]) &&
+                        !(this.Y[idx] == coordinate[1] &&
+                        this.Y[idx + 1] == coordinate[1]))
+                    { // idx is higher than idx+1
+                        if (idxRight && idx1Right)
+                        { // no need for the left/right algorithm the result is already known.
+                            number--;
+                        }
+                        else
+                        { // one of the coordinates is not to the 'right' now we need the left/right algorithm.
+                            LineF2D localLine = new LineF2D(
+                                new PointF2D(this.X[idx], this.Y[idx]),
+                                new PointF2D(this.X[idx + 1], this.Y[idx + 1]));
+                            if (localLine.PositionOfPoint(new PointF2D(coordinate)) == LinePointPosition.Right)
+                            {
+                                number--;
+                            }
+                        }
+                    }
+                }
+            }
+            return number != 0;
+        }
+
+        #endregion
+    }
 }
