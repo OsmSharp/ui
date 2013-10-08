@@ -27,7 +27,7 @@ namespace OsmSharp.UI.Map.Layers
     /// <summary>
     /// A layer drawing OsmSharpRoute layer data.
     /// </summary>
-    public class LayerOsmSharpRoute : ILayer
+    public class LayerRoute : ILayer
     {
         /// <summary>
         /// Holds the projection.
@@ -38,7 +38,7 @@ namespace OsmSharp.UI.Map.Layers
         /// Creates a new OsmSharpRoute layer.
         /// </summary>
         /// <param name="projection"></param>
-        public LayerOsmSharpRoute(IProjection projection)
+        public LayerRoute(IProjection projection)
         {
             _projection = projection;
 

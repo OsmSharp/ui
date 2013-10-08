@@ -128,7 +128,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
         private Router _router;
 
-        private LayerOsmSharpRoute _routeLayer;
+        private LayerRoute _routeLayer;
 
         private void InitializeRouting(OsmSharp.UI.Map.Map map)
         {
@@ -167,7 +167,7 @@ namespace OsmSharp.WinForms.UI.Sample
             _router = Router.CreateCHFrom(
                 original, basicRouter, interpreter);
 
-            _routeLayer = new LayerOsmSharpRoute(map.Projection);
+            _routeLayer = new LayerRoute(map.Projection);
             map.AddLayer(_routeLayer);
         }
 
