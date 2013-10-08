@@ -18,29 +18,20 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+using System.Threading;
 using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Util;
 using Android.Views;
-using Android.Widget;
-using OsmSharp.UI.Map;
 using OsmSharp.Math.Geo;
-using OsmSharp;
-using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Map.Layers;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI;
-using System.IO;
-using System.Threading;
-using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.Math.Primitives;
-using OsmSharp.Units.Angle;
 using OsmSharp.UI.Animations;
+using OsmSharp.UI.Map;
+using OsmSharp.UI.Map.Layers;
+using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Android.UI
 {
@@ -224,7 +215,7 @@ namespace OsmSharp.Android.UI
 
 			// make sure only on thread at the same time is using the renderer.
 			lock (_cacheRenderer) {
-				double extra = 1;
+				double extra = 2;
 
 				// build the layers list.
 				var layers = new List<ILayer> ();
@@ -254,7 +245,13 @@ namespace OsmSharp.Android.UI
 					SimpleColor.FromKnownColor(KnownColor.Transparent).Value));
 
 				// create the view.
-				View2D view = this.CreateView ();
+                double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
+                float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
+
+                // create the view for this control.
+                View2D view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
+                                         this.Width * extra, this.Height * extra, sceneZoomFactor,
+                                         _invertX, _invertY, this.MapTilt);
 
 				long before = DateTime.Now.Ticks;
 

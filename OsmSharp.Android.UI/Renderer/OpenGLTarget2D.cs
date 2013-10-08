@@ -94,45 +94,45 @@ namespace OsmSharp.Android.UI
 		/// <param name="argb">The ARGB colors.</param>
 		public void AddTriangles(float[] corners, int argb)
 		{
-            lock (_triangles)
-            {
-                // a float is 4 bytes, therefore we multiply the number if
-                // vertices with 4.
-                ByteBuffer vbb = ByteBuffer.AllocateDirect(corners.Length * 4);
-                vbb.Order(ByteOrder.NativeOrder());
-                FloatBuffer vertexBuffer = vbb.AsFloatBuffer();
-                vertexBuffer.Put(corners);
-                vertexBuffer.Position(0);
+            //lock (_triangles)
+            //{
+            //    // a float is 4 bytes, therefore we multiply the number if
+            //    // vertices with 4.
+            //    ByteBuffer vbb = ByteBuffer.AllocateDirect(corners.Length * 4);
+            //    vbb.Order(ByteOrder.NativeOrder());
+            //    FloatBuffer vertexBuffer = vbb.AsFloatBuffer();
+            //    vertexBuffer.Put(corners);
+            //    vertexBuffer.Position(0);
 
-                // The order we like to connect them.
-                SimpleColor color = new SimpleColor()
-                {
-                    Value = argb
-                };
-                int count = corners.Length / 3;
-                byte[] colors = new byte[count * 4];
-                for (int idx = 0; idx < count; idx++)
-                {
-                    colors[idx * 4] = (byte)color.R;
-                    colors[idx * 4 + 1] = (byte)color.G;
-                    colors[idx * 4 + 2] = (byte)color.B;
-                    colors[idx * 4 + 3] = (byte)color.A;
-                }
+            //    // The order we like to connect them.
+            //    SimpleColor color = new SimpleColor()
+            //    {
+            //        Value = argb
+            //    };
+            //    int count = corners.Length / 3;
+            //    byte[] colors = new byte[count * 4];
+            //    for (int idx = 0; idx < count; idx++)
+            //    {
+            //        colors[idx * 4] = (byte)color.R;
+            //        colors[idx * 4 + 1] = (byte)color.G;
+            //        colors[idx * 4 + 2] = (byte)color.B;
+            //        colors[idx * 4 + 3] = (byte)color.A;
+            //    }
 
-                // a float is 4 bytes, therefore we multiply the number if
-                // vertices with 4.
-                ByteBuffer cbb = ByteBuffer.AllocateDirect(colors.Length);
-                cbb.Order(ByteOrder.NativeOrder());
-                cbb.Put(colors);
-                cbb.Position(0);
+            //    // a float is 4 bytes, therefore we multiply the number if
+            //    // vertices with 4.
+            //    ByteBuffer cbb = ByteBuffer.AllocateDirect(colors.Length);
+            //    cbb.Order(ByteOrder.NativeOrder());
+            //    cbb.Put(colors);
+            //    cbb.Position(0);
 
-                _triangles.Add(new TriangleProcessed()
-                {
-                    Vertices = vertexBuffer,
-                    Colors = cbb,
-                    Count = corners.Length / 3
-                });
-            }
+            //    _triangles.Add(new TriangleProcessed()
+            //    {
+            //        Vertices = vertexBuffer,
+            //        Colors = cbb,
+            //        Count = corners.Length / 3
+            //    });
+            //}
 		}
 
 		/// <summary>

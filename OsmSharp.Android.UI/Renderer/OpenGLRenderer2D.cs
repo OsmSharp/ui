@@ -16,20 +16,10 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Runtime.InteropServices;
-
-using Android.Views;
-using Android.Util;
-using Android.Content;
-using Android.Opengl;
-using Java.Nio;
-using Java.Lang;
-using OsmSharp.UI.Renderer;
-using OsmSharp.UI;
 using OsmSharp.Math;
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 using OsmSharp.Math.Primitives;
+using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 
 namespace OsmSharp.Android.UI
 {
@@ -48,6 +38,8 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private Target2DWrapper<OpenGLTarget2D> _target;
 
+        private float _z;
+
         /// <summary>
         /// Called before rendering starts.
         /// </summary>
@@ -59,6 +51,7 @@ namespace OsmSharp.Android.UI
             base.OnBeforeRender(target, scenes, view);
 
             _target.Target.Clear();
+            _z = 0.0001f;
         }
 
 		/// <summary>
@@ -132,83 +125,85 @@ namespace OsmSharp.Android.UI
 		protected override void DrawLine (Target2DWrapper<OpenGLTarget2D> target, double[] x, double[] y, int color, 
 		                                  double width, LineJoin lineJoin, int[] dashes)
 		{
+            _z = _z + 0.0001f;
+
             float[] points = new float[x.Length * 3];
             for (int idx = 0; idx < x.Length; idx++)
             {
                 int pathIdx = idx * 3;
                 points[pathIdx + 0] = (float)x[idx];
                 points[pathIdx + 1] = (float)y[idx];
-                points[pathIdx + 2] = 0;
+                points[pathIdx + 2] = _z;
             }
 
             _target.Target.AddLine(points, this.ToPixels(width), color);
 
-            double epsilon = 0.00001; // define this value properly.
-            //double semiwidth = this.ToPixels(width) / 2.0;
-            double semiwidth = width / 2.0;
+            //double epsilon = 0.00001; // define this value properly.
+            ////double semiwidth = this.ToPixels(width) / 2.0;
+            //double semiwidth = width / 2.0;
 
-            float[] path = new float[(x.Length - 1) * 2 * 3 * 2];
-            for (int idx = 0; idx < x.Length - 1; idx++)
-            {
-                //				double x1 = this.TransformX (x[idx]);
-                //				double x2 = this.TransformX (x[idx + 1]);
-                //				double y1 = this.TransformY (y[idx]);
-                //				double y2 = this.TransformY (y[idx + 1]);
+            //float[] path = new float[(x.Length - 1) * 2 * 3 * 2];
+            //for (int idx = 0; idx < x.Length - 1; idx++)
+            //{
+            //    //				double x1 = this.TransformX (x[idx]);
+            //    //				double x2 = this.TransformX (x[idx + 1]);
+            //    //				double y1 = this.TransformY (y[idx]);
+            //    //				double y2 = this.TransformY (y[idx + 1]);
 
-                double x1 = x[idx];
-                double x2 = x[idx + 1];
-                double y1 = y[idx];
-                double y2 = y[idx + 1];
+            //    double x1 = x[idx];
+            //    double x2 = x[idx + 1];
+            //    double y1 = y[idx];
+            //    double y2 = y[idx + 1];
 
-                PointF2D p1 = new PointF2D(x1, y1);
-                PointF2D p2 = new PointF2D(x2, y2);
-                // calculate the direction of the current line-segment.
-                VectorF2D vector = p2 - p1;
-                if (vector.Size > epsilon)
-                { // anything below this value will not be feasible to calculate or visible on screen.
-                    vector = vector.Normalize();
+            //    PointF2D p1 = new PointF2D(x1, y1);
+            //    PointF2D p2 = new PointF2D(x2, y2);
+            //    // calculate the direction of the current line-segment.
+            //    VectorF2D vector = p2 - p1;
+            //    if (vector.Size > epsilon)
+            //    { // anything below this value will not be feasible to calculate or visible on screen.
+            //        vector = vector.Normalize();
 
-                    // rotate counter-clockwize and mutliply with width.
-                    VectorF2D ccw1 = vector.Rotate90(false) * semiwidth;
-                    PointF2D p1top = p1 + ccw1;
-                    PointF2D p1bottom = p1 - ccw1;
+            //        // rotate counter-clockwize and mutliply with width.
+            //        VectorF2D ccw1 = vector.Rotate90(false) * semiwidth;
+            //        PointF2D p1top = p1 + ccw1;
+            //        PointF2D p1bottom = p1 - ccw1;
 
-                    // invert vector.
-                    vector = vector.Inverse;
-                    ccw1 = vector.Rotate90(true) * semiwidth;
-                    PointF2D p2top = p2 + ccw1;
-                    PointF2D p2bottom = p2 - ccw1;
+            //        // invert vector.
+            //        vector = vector.Inverse;
+            //        ccw1 = vector.Rotate90(true) * semiwidth;
+            //        PointF2D p2top = p2 + ccw1;
+            //        PointF2D p2bottom = p2 - ccw1;
 
-                    // make triangles out of this.
-                    int pathIdx = idx * 2 * 3 * 2;
-                    //					if(idx % 2 == 0)
-                    //					{
-                    path[pathIdx + 0] = (float)p1bottom[0];
-                    path[pathIdx + 1] = (float)p1bottom[1];
-                    path[pathIdx + 2] = 0;
-                    path[pathIdx + 3] = (float)p1top[0];
-                    path[pathIdx + 4] = (float)p1top[1];
-                    path[pathIdx + 5] = 0;
+            //        // make triangles out of this.
+            //        int pathIdx = idx * 2 * 3 * 2;
+            //        //					if(idx % 2 == 0)
+            //        //					{
+            //        path[pathIdx + 0] = (float)p1bottom[0];
+            //        path[pathIdx + 1] = (float)p1bottom[1];
+            //        path[pathIdx + 2] = 0;
+            //        path[pathIdx + 3] = (float)p1top[0];
+            //        path[pathIdx + 4] = (float)p1top[1];
+            //        path[pathIdx + 5] = 0;
 
-                    path[pathIdx + 0 + 6] = (float)p2bottom[0];
-                    path[pathIdx + 1 + 6] = (float)p2bottom[1];
-                    path[pathIdx + 2 + 6] = 0;
-                    path[pathIdx + 3 + 6] = (float)p2top[0];
-                    path[pathIdx + 4 + 6] = (float)p2top[1];
-                    path[pathIdx + 5 + 6] = 0;
-                    //					}
-                    //					else
-                    //					{
-                    //						path [pathIdx + 0] = (float)p1top [0];
-                    //						path [pathIdx + 1] = (float)p1top [1];
-                    //						path [pathIdx + 2] = 0;
-                    //						path [pathIdx + 3] = (float)p1bottom [0];
-                    //						path [pathIdx + 4] = (float)p1bottom [1];
-                    //						path [pathIdx + 5] = 0;
-                    //					}
-                }
-            }
-            target.Target.AddTriangles(path, color);
+            //        path[pathIdx + 0 + 6] = (float)p2bottom[0];
+            //        path[pathIdx + 1 + 6] = (float)p2bottom[1];
+            //        path[pathIdx + 2 + 6] = 0;
+            //        path[pathIdx + 3 + 6] = (float)p2top[0];
+            //        path[pathIdx + 4 + 6] = (float)p2top[1];
+            //        path[pathIdx + 5 + 6] = 0;
+            //        //					}
+            //        //					else
+            //        //					{
+            //        //						path [pathIdx + 0] = (float)p1top [0];
+            //        //						path [pathIdx + 1] = (float)p1top [1];
+            //        //						path [pathIdx + 2] = 0;
+            //        //						path [pathIdx + 3] = (float)p1bottom [0];
+            //        //						path [pathIdx + 4] = (float)p1bottom [1];
+            //        //						path [pathIdx + 5] = 0;
+            //        //					}
+            //    }
+            //}
+            //target.Target.AddTriangles(path, color);
 		}
 
 		/// <summary>

@@ -156,15 +156,16 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private void NotifyMovement()
 		{
-			// create the view.
-			View2D view = _renderer.Create (this.Width, this.Height,
-			                                this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoom), 
-                                            this.MapCenter, false, true);
+            if (this.Width > 0)
+            {
+                // create the view.
+                View2D view = _renderer.Create(this.Width, this.Height,
+                                                this.Map, (float)this.Map.Projection.ToZoomFactor(this.MapZoom),
+                                                this.MapCenter, false, true);
 
-            //_target.SetOrtho((float)view.LeftTop[0], (float)view.RightTop[0],
-            //                 (float)view.LeftBottom[1], (float)view.LeftTop[1]);
-            _target.SetOrtho((float)view.RightTop[0], (float)view.LeftTop[0],
-                             (float)view.LeftTop[1], (float)view.LeftBottom[1]);
+                _target.SetOrtho((float)view.RightTop[0], (float)view.LeftTop[0],
+                                 (float)view.LeftTop[1], (float)view.LeftBottom[1]);
+            }
 		}
 
 		/// <summary>
@@ -193,13 +194,23 @@ namespace OsmSharp.Android.UI
 
 		}
 
+        private GeoCoordinate _mapCenter;
+
 		/// <summary>
 		/// Gets or sets the center.
 		/// </summary>
 		/// <value>The center.</value>
 		public GeoCoordinate MapCenter {
-			get;
-			set;
+            get
+            {
+                return _mapCenter;
+            }
+            set
+            {
+                _mapCenter = value;
+
+                this.NotifyMovement();
+            }
 		}
 
 		/// <summary>
