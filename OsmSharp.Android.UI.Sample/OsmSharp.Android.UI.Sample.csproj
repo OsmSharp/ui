@@ -52,12 +52,6 @@
     <Compile Include="SplashActivity.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\..\..\..\Users\xivk\Dropbox\SharpSoftware\Projects\Westtour WOI\wvl.map">
-      <Link>wvl.map</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\..\..\..\..\Users\xivk\Dropbox\SharpSoftware\Projects\Westtour WOI\wvl.routing">
-      <Link>wvl.routing</Link>
-    </EmbeddedResource>
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
