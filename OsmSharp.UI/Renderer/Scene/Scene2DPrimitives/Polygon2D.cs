@@ -291,6 +291,22 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         }
 
         /// <summary>
+        /// Returns true if the given vertex is convex.
+        /// </summary>
+        /// <param name="vertexIdx"></param>
+        /// <returns></returns>
+        public static bool IsEar(List<double> X, List<double> Y, int vertexIdx)
+        {
+            int previousIdx = vertexIdx == 0 ? X.Count - 1 : vertexIdx - 1;
+            int nextIdx = vertexIdx == X.Count - 1 ? 0 : vertexIdx + 1;
+
+            return (Polygon2D.Contains(X, Y,
+                new double[] { 
+                    (X[previousIdx] + X[nextIdx]) / 2, 
+                    (Y[previousIdx] + Y[nextIdx]) / 2 }));
+        }
+
+        /// <summary>
         /// Returns the neighbours of the given vertex.
         /// </summary>
         /// <returns></returns>
@@ -301,6 +317,20 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
 
             double[] previous = new double[] { this.X[previousIdx], this.Y[previousIdx] };
             double[] next = new double[] { this.X[nextIdx], this.Y[nextIdx] };
+            return new double[][] { previous, next };
+        }
+
+        /// <summary>
+        /// Returns the neighbours of the given vertex.
+        /// </summary>
+        /// <returns></returns>
+        public static double[][] GetNeigbours(List<double> X, List<double> Y, int vertexIdx)
+        {
+            int previousIdx = vertexIdx == 0 ? X.Count - 1 : vertexIdx - 1;
+            int nextIdx = vertexIdx == X.Count - 1 ? 0 : vertexIdx + 1;
+
+            double[] previous = new double[] { X[previousIdx], Y[previousIdx] };
+            double[] next = new double[] { X[nextIdx], Y[nextIdx] };
             return new double[][] { previous, next };
         }
 
@@ -374,6 +404,128 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
                 }
             }
             return number != 0;
+        }
+
+        /// <summary>
+        /// Returns true if the given coordinate is contained in this ring.
+        /// 
+        /// See: http://geomalgorithms.com/a03-_inclusion.html
+        /// </summary>
+        /// <param name="X"></param>
+        /// <param name="Y"></param>
+        /// <param name="coordinate"></param>
+        public static bool Contains(List<double> X, List<double> Y, double[] coordinate)
+        {
+            int number = 0;
+            if (X[0] == coordinate[0] && 
+                Y[0] == coordinate[1])
+            { // the given point is one of the corners.
+                return true;
+            }
+            // loop over all edges and calculate if they possibly intersect.
+            for (int idx = 0; idx < X.Count - 1; idx++)
+            {
+                if (X[idx + 1] == coordinate[0] &&
+                    Y[idx + 1] == coordinate[1])
+                { // the given point is one of the corners.
+                    return true;
+                }
+                bool idxRight = X[idx] > coordinate[0];
+                bool idx1Right = X[idx + 1] > coordinate[0];
+                if (idxRight || idx1Right)
+                { // at least one of the coordinates is to the right of the point to calculate for.
+                    if ((Y[idx] <= coordinate[1] &&
+                        Y[idx + 1] >= coordinate[1]) &&
+                        !(Y[idx] == coordinate[1] &&
+                        Y[idx + 1] == coordinate[1]))
+                    { // idx is lower than idx+1
+                        if (idxRight && idx1Right)
+                        { // no need for the left/right algorithm the result is already known.
+                            number++;
+                        }
+                        else
+                        { // one of the coordinates is not to the 'right' now we need the left/right algorithm.
+                            LineF2D localLine = new LineF2D(
+                                new PointF2D(X[idx], Y[idx]),
+                                new PointF2D(X[idx + 1], Y[idx + 1]));
+                            if (localLine.PositionOfPoint(new PointF2D(coordinate)) == LinePointPosition.Left)
+                            {
+                                number++;
+                            }
+                        }
+                    }
+                    else if ((Y[idx] >= coordinate[1] &&
+                        Y[idx + 1] <= coordinate[1]) &&
+                        !(Y[idx] == coordinate[1] &&
+                        Y[idx + 1] == coordinate[1]))
+                    { // idx is higher than idx+1
+                        if (idxRight && idx1Right)
+                        { // no need for the left/right algorithm the result is already known.
+                            number--;
+                        }
+                        else
+                        { // one of the coordinates is not to the 'right' now we need the left/right algorithm.
+                            LineF2D localLine = new LineF2D(
+                                new PointF2D(X[idx], Y[idx]),
+                                new PointF2D(X[idx + 1], Y[idx + 1]));
+                            if (localLine.PositionOfPoint(new PointF2D(coordinate)) == LinePointPosition.Right)
+                            {
+                                number--;
+                            }
+                        }
+                    }
+                }
+            }
+            return number != 0;
+        }
+
+        /// <summary>
+        /// Tessellates the given LineairRings.
+        /// </summary>
+        /// <param name="polygon"></param>
+        /// <returns>A list of coordinates grouped per three.</returns>
+        public static double[][] Tessellate(List<double> X, List<double> Y)
+        {
+            // TODO: yes i know this can be more efficient; proof of concept!
+            // TODO: yes i know we know the number of triangles beforehand.
+            // TODO: yes i know we can create a strip instead of duplicating coordinates!!
+
+            List<double[]> triangles = new List<double[]>();
+            if (X.Count < 3)
+            {
+                return new double[0][];
+            }
+            while (X.Count > 3)
+            { // cut an ear.
+                int earIdx = 0;
+                while (!Polygon2D.IsEar(X, Y, earIdx))
+                {
+                    earIdx++;
+
+                    if (X.Count <= earIdx)
+                    {
+                        OsmSharp.Logging.Log.TraceEvent("", System.Diagnostics.TraceEventType.Information, "");
+                        return triangles.ToArray();
+                    }
+                }
+
+                // ear should be found, cut it!
+                double[][] neighbours = Polygon2D.GetNeigbours(X, Y, earIdx);
+                triangles.Add(neighbours[0]);
+                triangles.Add(neighbours[1]);
+                triangles.Add(new double[] { X[earIdx], Y[earIdx] });
+
+                // remove ear and update workring.
+                X.RemoveAt(earIdx);
+                Y.RemoveAt(earIdx);
+            }
+            if (X.Count == 3)
+            { // this ring is already a triangle.
+                triangles.Add(new double[] { X[0], Y[0] });
+                triangles.Add(new double[] { X[1], Y[1] });
+                triangles.Add(new double[] { X[2], Y[2] });
+            }
+            return triangles.ToArray();
         }
 
         #endregion

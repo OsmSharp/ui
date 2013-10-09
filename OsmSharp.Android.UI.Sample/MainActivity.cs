@@ -46,7 +46,7 @@ namespace OsmSharp.Android.UI.Sample
         /// <summary>
         /// Holds the route layer.
         /// </summary>
-        private LayerOsmSharpRoute _routeLayer;
+        private LayerRoute _routeLayer;
 
 		/// <summary>
 		/// Raises the create event.
@@ -125,10 +125,9 @@ namespace OsmSharp.Android.UI.Sample
                 _enumeratorNext.MoveNext();
                 _enumeratorNext.MoveNext();
             }
-            _routeLayer = new LayerOsmSharpRoute(map.Projection);
+            _routeLayer = new LayerRoute(map.Projection);
             _routeLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
             map.AddLayer(_routeLayer);
-
 
 //			// create gpx layer.
 //			LayerGpx gpxLayer = new LayerGpx(map.Projection);
@@ -165,7 +164,7 @@ namespace OsmSharp.Android.UI.Sample
             //mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
             //mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
             //mapView.Center = new GeoCoordinate(51.156803, 2.958887);
-            _mapView.MapZoom = 14;
+            _mapView.MapZoom = 12;
             //MapViewAnimator mapViewAnimator = new MapViewAnimator(mapLayout);
             _mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
             {
@@ -179,9 +178,9 @@ namespace OsmSharp.Android.UI.Sample
 			//layout.AddView(mapGLView);
             layout.AddView(_mapView);
 
-            Timer timer = new Timer(50);
-            timer.Elapsed += new ElapsedEventHandler(TimerHandler);
-            timer.Start();
+            //Timer timer = new Timer(50);
+            //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
+            //timer.Start();
 
 			SetContentView (layout);
 		}
