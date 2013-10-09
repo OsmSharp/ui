@@ -125,7 +125,7 @@ namespace OsmSharp.UnitTests.Routing.Instructions
         /// <param name="instruction"></param>
         /// <param name="streetCountBeforeTurn"></param>
         /// <param name="streetTo"></param>
-        /// <param name="relativeDirectionEnum"></param>
+        /// <param name="direction"></param>
         /// <param name="list"></param>
         /// <returns></returns>
         public Instruction GenerateDirectFollowTurn(Instruction instruction,
@@ -153,7 +153,7 @@ namespace OsmSharp.UnitTests.Routing.Instructions
         /// <param name="streetCountTurn"></param>
         /// <param name="streetCountBeforeTurn"></param>
         /// <param name="streetTo"></param>
-        /// <param name="relativeDirectionEnum"></param>
+        /// <param name="direction"></param>
         /// <param name="list"></param>
         /// <returns></returns>
         public Instruction GenerateIndirectFollowTurn(Instruction instruction,

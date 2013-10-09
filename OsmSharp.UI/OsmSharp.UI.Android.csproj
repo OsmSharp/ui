@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animations\MapViewAnimator.cs" />
+    <Compile Include="Animations\Navigation\RouteTrackerAnimator.cs" />
     <Compile Include="IMapView.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSObject.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSType.cs" />

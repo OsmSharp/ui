@@ -33,7 +33,7 @@ namespace OsmSharp.Math.Algorithms.Tessellation
         /// <summary>
         /// Tessellates the given LineairRings.
         /// </summary>
-        /// <param name="polygon"></param>
+        /// <param name="ring"></param>
         /// <returns>A list of coordinates grouped per three.</returns>
         public GeoCoordinate[] Tessellate(LineairRing ring)
         {
