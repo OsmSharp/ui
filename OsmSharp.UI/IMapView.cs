@@ -73,6 +73,11 @@ namespace OsmSharp.UI
         float MapZoom { get; set; }
 
         /// <summary>
+        /// Gets or sets the Map.
+        /// </summary>
+        Map.Map Map { get; set; }
+
+        /// <summary>
         /// Notifies a map change.
         /// </summary>
         /// <param name="pixelsWidth"></param>

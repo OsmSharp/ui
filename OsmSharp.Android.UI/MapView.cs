@@ -120,12 +120,6 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private void Initialize ()
 		{			
-//			_mapView = new MapViewSurface (this.Context, this);
-//			_mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate) {
-//				if (this.MapTapEvent != null) {
-//					this.MapTapEvent (geoCoordinate);
-//				}
-//			};
 			this.AddView (_mapView);
 		}
 
@@ -271,7 +265,7 @@ namespace OsmSharp.Android.UI
 
         void IMapView.Invalidate()
         {
-            _mapView.PostInvalidate();
+            _mapView.Change();
         }
     }
 }

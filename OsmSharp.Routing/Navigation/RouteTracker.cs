@@ -130,6 +130,32 @@ namespace OsmSharp.Routing.Navigation
         }
 
         /// <summary>
+        /// Holds the distance from the start location.
+        /// </summary>
+        private Meter _distanceFromStart;
+
+        /// <summary>
+        /// Returns the distance between the start position and the current position.
+        /// </summary>
+        public Meter DistanceFromStart
+        {
+            get
+            {
+                return _distanceFromStart;
+            }
+        }
+
+        /// <summary>
+        /// Returns the position after the given distance is travelled relative to the current position.
+        /// </summary>
+        /// <param name="distance"></param>
+        /// <returns></returns>
+        public GeoCoordinate PositionIn(Meter distance)
+        {
+            return _route.PositionAfter(_distanceFromStart + distance);
+        }
+
+        /// <summary>
         /// Holds the distance to the next instruction.
         /// </summary>
         private Meter _distanceNextInstruction;
@@ -194,6 +220,18 @@ namespace OsmSharp.Routing.Navigation
                 previous = next;
             }
             _distanceNextInstruction = distance;
+
+            // calculate the distance from start.
+            previous = (new GeoCoordinate(_route.Entries[0].Latitude, _route.Entries[0].Longitude));
+            distance = 0;
+            for (int idx = 0; idx < projectedResult.Key - 1; idx++)
+            {
+                GeoCoordinate next = (new GeoCoordinate(_route.Entries[idx + 1].Latitude, _route.Entries[idx + 1].Longitude));
+                distance = distance + previous.DistanceReal(next);
+                previous = next;
+            }
+            distance = distance + previous.DistanceReal(projectedResult.Value);
+            _distanceFromStart = distance;
         }
 
         /// <summary>

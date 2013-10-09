@@ -18,6 +18,12 @@
 
 using OsmSharp.Routing.Navigation;
 using OsmSharp.Math.Geo;
+using OsmSharp.Units.Angle;
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Math;
+using OsmSharp.Math.Primitives;
+using System;
+
 namespace OsmSharp.UI.Animations.Navigation
 {
     /// <summary>
@@ -42,7 +48,9 @@ namespace OsmSharp.UI.Animations.Navigation
         /// <param name="routeTracker"></param>
         public RouteTrackerAnimator(IMapView mapView, RouteTracker routeTracker)
         {
+            _mapView = mapView;
             _animator = new MapViewAnimator(mapView);
+            _routeTracker = routeTracker;
         }
 
         /// <summary>
@@ -51,12 +59,46 @@ namespace OsmSharp.UI.Animations.Navigation
         private readonly MapViewAnimator _animator;
 
         /// <summary>
+        /// Holds the zoom level to use.
+        /// </summary>
+        private float _zoom = 18;
+
+        /// <summary>
+        /// Holds the latest ticks 
+        /// </summary>
+        private long? _lastTicks;
+
+        /// <summary>
         /// Starts tracking at a given location.
         /// </summary>
         /// <param name="location"></param>
         public void Track(GeoCoordinate location)
         {
+            TimeSpan lastTrackInterval = new TimeSpan(0, 0, 0, 0, 750);
+            long ticks = DateTime.Now.Ticks;
+            if (_lastTicks.HasValue)
+            { // update the last track interval.
+                lastTrackInterval = TimeSpan.FromTicks(ticks - _lastTicks.Value);
+            }
+            _lastTicks = ticks;
+            OsmSharp.Logging.Log.TraceEvent("", System.Diagnostics.TraceEventType.Information,
+                "Interval: {0}ms", lastTrackInterval.TotalMilliseconds);
 
+            // give location to the route tracker.
+            _routeTracker.Track(location);
+
+            // calculate all map view parameters (zoom, location, tilt) to display the route/direction correctly.
+            float zoom = _zoom; // TODO: do something smarter here to allow the zoom level to be customized.
+            GeoCoordinate center = _routeTracker.PositionRoute;
+            GeoCoordinate next = _routeTracker.PositionIn(100); // TODO: make the dependent on the zoom level/current view.
+            IProjection projection = _mapView.Map.Projection;
+            VectorF2D direction = new PointF2D(projection.ToPixel(next)) -
+                        new PointF2D(projection.ToPixel(center));
+            Degree tilt = direction.Angle(new VectorF2D(0, -1));
+            
+            // animate to the given parameter (zoom, location, tilt).
+            _animator.Stop();
+            _animator.Start(center, zoom, tilt, lastTrackInterval.Subtract(new TimeSpan(0, 0, 0, 0, 50)));
         }
     }
 }

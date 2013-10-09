@@ -215,7 +215,7 @@ namespace OsmSharp.Android.UI
 
 			// make sure only on thread at the same time is using the renderer.
 			lock (_cacheRenderer) {
-				double extra = 2;
+				double extra = 1.25;
 
 				// build the layers list.
 				var layers = new List<ILayer> ();

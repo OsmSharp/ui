@@ -29,6 +29,7 @@ using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
 using System.Timers;
 using OsmSharp.Routing.Navigation;
+using OsmSharp.UI.Animations.Navigation;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -117,14 +118,9 @@ namespace OsmSharp.Android.UI.Sample
             RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
             RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
             Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-            _routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
-            _enumerator = route1.GetRouteEnumerable(3).GetEnumerator();
-            _enumeratorNext = route1.GetRouteEnumerable(3).GetEnumerator();
-            for (int idx = 0; idx < 20; idx++)
-            {
-                _enumeratorNext.MoveNext();
-                _enumeratorNext.MoveNext();
-            }
+            RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
+            _enumerator = route1.GetRouteEnumerable(20).GetEnumerator();
+
             _routeLayer = new LayerRoute(map.Projection);
             _routeLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
             map.AddLayer(_routeLayer);
@@ -150,9 +146,9 @@ namespace OsmSharp.Android.UI.Sample
 //			var mapView = new OpenGLRenderer2D(
 //				this, null);
 
-            _mapView = new MapView<MapGLView>(this, new MapGLView(this));
+//            _mapView = new MapView<MapGLView>(this, new MapGLView(this));
 
-//            _mapView = new MapView<MapViewSurface>(this, new MapViewSurface(this));
+            _mapView = new MapView<MapViewSurface>(this, new MapViewSurface(this));
             _mapView.Map = map;
 
             (_mapView as IMapView).AutoInvalidate = true;
@@ -164,7 +160,7 @@ namespace OsmSharp.Android.UI.Sample
             //mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
             //mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
             //mapView.Center = new GeoCoordinate(51.156803, 2.958887);
-            _mapView.MapZoom = 12;
+            _mapView.MapZoom = 17;
             //MapViewAnimator mapViewAnimator = new MapViewAnimator(mapLayout);
             _mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
             {
@@ -174,22 +170,20 @@ namespace OsmSharp.Android.UI.Sample
 
 			//Create the user interface in code
 			var layout = new RelativeLayout (this);
-
-			//layout.AddView(mapGLView);
             layout.AddView(_mapView);
 
-            //Timer timer = new Timer(50);
-            //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
-            //timer.Start();
+            _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker);
+
+            Timer timer = new Timer(1000);
+            timer.Elapsed += new ElapsedEventHandler(TimerHandler);
+            timer.Start();
 
 			SetContentView (layout);
 		}
 
-        private MapView<MapGLView> _mapView;
+        private MapView<MapViewSurface> _mapView;
 
-        private RouteTracker _routeTracker;
-
-        private IEnumerator<GeoCoordinate> _enumeratorNext;
+        private RouteTrackerAnimator _routeTrackerAnimator;
 
         private IEnumerator<GeoCoordinate> _enumerator;
 
@@ -202,27 +196,7 @@ namespace OsmSharp.Android.UI.Sample
         {
             if (_enumerator.MoveNext())
             {
-                _mapView.MapCenter = _enumerator.Current;
-
-                if (_enumeratorNext.MoveNext())
-                {
-                    IProjection projection = _mapView.Map.Projection;
-
-                    VectorF2D direction = new PointF2D(projection.ToPixel(_enumeratorNext.Current)) -
-                        new PointF2D(projection.ToPixel(_enumerator.Current));
-
-                    _mapView.MapTilt = direction.Angle(new VectorF2D(0, -1));
-                }
-
-                (_mapView as IMapView).Invalidate();
-
-                _routeTracker.Track(_enumerator.Current);
-
-                if(_routeTracker.NextInstruction != null)
-                {
-                    OsmSharp.Logging.Log.TraceEvent("MainActivity", System.Diagnostics.TraceEventType.Information,
-                        "Instruction: {0}@{1}", _routeTracker.NextInstruction.Text, _routeTracker.DistanceNextInstruction.ToString());
-                }
+                _routeTrackerAnimator.Track(_enumerator.Current);
             }
         }
 	}
