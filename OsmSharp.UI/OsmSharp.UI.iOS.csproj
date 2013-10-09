@@ -51,6 +51,7 @@
     <Compile Include="IMapView.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
+    <Compile Include="Map\Layers\LayerGpx.cs" />
     <Compile Include="Map\Layers\LayerOsm.cs" />
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
     <Compile Include="Map\Layers\LayerScene.cs" />

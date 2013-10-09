@@ -6,7 +6,6 @@ using OsmSharp.Osm.Data;
 using OsmSharp.Math.Geo;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
-using OsmSharp.Xml.Gpx;
 using OsmSharp.Xml.Sources;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Osm;
