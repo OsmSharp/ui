@@ -26,7 +26,7 @@ using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Data.Xml.Processor;
+using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;

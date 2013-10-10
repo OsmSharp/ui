@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 using System.Collections.Generic;
 
-namespace OsmSharp.Osm.Data.PBF.Dense
+namespace OsmSharp.Osm.PBF.Dense
 {
     /// <summary>
     /// 'Decompresses' dense formatted primitives to their regular counterparts.

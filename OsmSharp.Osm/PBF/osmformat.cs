@@ -8,7 +8,7 @@
 //-----------------------------------------------------------------------------
 
 // Generated from: osmformat.proto
-namespace OsmSharp.Osm.Data.PBF
+namespace OsmSharp.Osm.PBF
 {
   /// <summary>
   /// 

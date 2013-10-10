@@ -18,8 +18,6 @@
 
 using System;
 using System.Collections.Generic;
-using OsmSharp.Osm.Data.Core.Processor;
-using OsmSharp.Osm;
 
 namespace OsmSharp.Osm.Data.Streams.Collections
 {

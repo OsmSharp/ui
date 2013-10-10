@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -21,7 +21,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
 
-namespace OsmSharp.Osm.Data.Core.Processor.ChangeSets
+namespace OsmSharp.Osm.Streams.ChangeSets
 {
     /// <summary>
     /// A changeset filter.

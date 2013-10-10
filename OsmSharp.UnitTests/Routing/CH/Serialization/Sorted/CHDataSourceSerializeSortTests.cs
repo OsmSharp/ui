@@ -19,7 +19,7 @@
 using System.Reflection;
 using NUnit.Framework;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Data.Xml.Processor;
+using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;

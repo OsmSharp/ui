@@ -603,7 +603,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// <returns></returns>
         public static MemoryDataSource CreateFromXmlStream(Stream stream)
         {
-            return MemoryDataSource.CreateFrom(new Xml.Processor.XmlOsmStreamSource(stream));
+            return MemoryDataSource.CreateFrom(new OsmSharp.Osm.Xml.Streams.XmlOsmStreamSource(stream));
         }
 #endif
 

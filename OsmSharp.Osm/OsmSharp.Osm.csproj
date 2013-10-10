@@ -207,26 +207,26 @@
     <Compile Include="Data\IDataSourceReadOnly.cs" />
     <Compile Include="Data\KeyGenerator.cs" />
     <Compile Include="Data\Memory\MemoryDataSource.cs" />
-    <Compile Include="Data\PBF\Dense\Compressor.cs" />
-    <Compile Include="Data\PBF\Dense\Decompressor.cs" />
-    <Compile Include="Data\PBF\fileformat.cs">
+    <Compile Include="PBF\Dense\Compressor.cs" />
+    <Compile Include="PBF\Dense\Decompressor.cs" />
+    <Compile Include="PBF\fileformat.cs">
       <DependentUpon>fileformat.proto</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Data\PBF\IPBFOsmPrimitiveConsumer.cs" />
-    <Compile Include="Data\PBF\IPBFPrimitiveBlockConsumer.cs" />
-    <Compile Include="Data\PBF\osmformat.cs">
+    <Compile Include="PBF\IPBFOsmPrimitiveConsumer.cs" />
+    <Compile Include="PBF\IPBFPrimitiveBlockConsumer.cs" />
+    <Compile Include="PBF\osmformat.cs">
       <DependentUpon>osmformat.proto</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Data\PBF\PBFReader.cs" />
-    <Compile Include="Data\PBF\PBFWriter.cs" />
-    <Compile Include="Data\PBF\Processor\PBFOsmStreamSource.cs" />
-    <Compile Include="Data\PBF\Processor\PBFOsmStreamTarget.cs">
+    <Compile Include="PBF\PBFReader.cs" />
+    <Compile Include="PBF\PBFWriter.cs" />
+    <Compile Include="PBF\Processor\PBFOsmStreamSource.cs" />
+    <Compile Include="PBF\Processor\PBFOsmStreamTarget.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Streams\ChangeSets\DataProcessorChangeSetFilter.cs" />
@@ -248,13 +248,13 @@
     <Compile Include="Streams\Collections\OsmEnumerableStreamReader.cs" />
     <Compile Include="Streams\Collections\OsmCollectionStreamWriter.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
-    <Compile Include="Data\Xml\OsmSource\OsmDataSource.cs" />
-    <Compile Include="Data\Xml\Processor\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
-    <Compile Include="Data\Xml\Processor\Replication\Replicator.cs" />
-    <Compile Include="Data\Xml\Processor\XmlOsmStreamSource.cs" />
-    <Compile Include="Data\Xml\Processor\XmlOsmStreamTarget.cs" />
-    <Compile Include="Data\Xml\Processor\XmlFragmentWriter.cs" />
-    <Compile Include="Data\Xml\Processor\XmlSimpleConverter.cs" />
+    <Compile Include="Xml\OsmSource\OsmDataSource.cs" />
+    <Compile Include="Xml\Streams\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
+    <Compile Include="Xml\Streams\Replication\Replicator.cs" />
+    <Compile Include="Xml\Streams\XmlOsmStreamSource.cs" />
+    <Compile Include="Xml\Streams\XmlOsmStreamTarget.cs" />
+    <Compile Include="Xml\Streams\XmlFragmentWriter.cs" />
+    <Compile Include="Xml\Streams\XmlSimpleConverter.cs" />
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilterAny.cs" />
     <Compile Include="Filters\FilterBox.cs" />
@@ -300,11 +300,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\PBF\fileformat.proto">
+    <None Include="PBF\fileformat.proto">
       <Generator>ProtoBufTool</Generator>
       <LastGenOutput>fileformat.cs</LastGenOutput>
     </None>
-    <None Include="Data\PBF\osmformat.proto">
+    <None Include="PBF\osmformat.proto">
       <Generator>ProtoBufTool</Generator>
       <LastGenOutput>osmformat.cs</LastGenOutput>
     </None>

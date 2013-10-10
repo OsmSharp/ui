@@ -16,12 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Osm.Data.Streams.Filters;
 using OsmSharp.Routing.CH.PreProcessing;
@@ -30,14 +27,8 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Routers;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math.Geo;
-using OsmSharp.Math;
-using OsmSharp.Collections;
-using OsmSharp.Osm.Data.Core.Processor;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Routers;
 
 namespace OsmSharp.Routing
 {

@@ -23,7 +23,7 @@ using System.IO;
 using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Osm.Data.PBF.Processor
+namespace OsmSharp.Osm.PBF.Processor
 {
     /// <summary>
     /// A source of PBF formatted OSM data.
@@ -120,9 +120,9 @@ namespace OsmSharp.Osm.Data.PBF.Processor
             }
 
             PrimitiveBlock block = pbfPrimitive.Key; // get the block properties this object comes from.
-            if (pbfPrimitive.Value is OsmSharp.Osm.Data.PBF.Node)
+            if (pbfPrimitive.Value is OsmSharp.Osm.PBF.Node)
             {
-                var node = (pbfPrimitive.Value as OsmSharp.Osm.Data.PBF.Node);
+                var node = (pbfPrimitive.Value as OsmSharp.Osm.PBF.Node);
                 var simpleNode = new OsmSharp.Osm.Node();
                 simpleNode.ChangeSetId = node.info.changeset;
                 simpleNode.Id = node.id;
@@ -155,9 +155,9 @@ namespace OsmSharp.Osm.Data.PBF.Processor
 
                 return simpleNode;
             }
-            else if (pbfPrimitive.Value is OsmSharp.Osm.Data.PBF.Way)
+            else if (pbfPrimitive.Value is OsmSharp.Osm.PBF.Way)
             {
-                var way = (pbfPrimitive.Value as OsmSharp.Osm.Data.PBF.Way);
+                var way = (pbfPrimitive.Value as OsmSharp.Osm.PBF.Way);
 
                 var simple_way = new OsmSharp.Osm.Way();
                 simple_way.Id = way.id;
@@ -195,9 +195,9 @@ namespace OsmSharp.Osm.Data.PBF.Processor
 
                 return simple_way;
             }
-            else if (pbfPrimitive.Value is OsmSharp.Osm.Data.PBF.Relation)
+            else if (pbfPrimitive.Value is OsmSharp.Osm.PBF.Relation)
             {
-                var relation = (pbfPrimitive.Value as OsmSharp.Osm.Data.PBF.Relation);
+                var relation = (pbfPrimitive.Value as OsmSharp.Osm.PBF.Relation);
 
                 var simple_relation = new OsmSharp.Osm.Relation();
                 simple_relation.Id = relation.id;
@@ -272,7 +272,7 @@ namespace OsmSharp.Osm.Data.PBF.Processor
         /// <summary>
         /// Holds the primitives decompressor.
         /// </summary>
-        private OsmSharp.Osm.Data.PBF.Dense.Decompressor _decompressor;
+        private OsmSharp.Osm.PBF.Dense.Decompressor _decompressor;
 
         /// <summary>
         /// Initializes the PBF reader.
@@ -280,7 +280,7 @@ namespace OsmSharp.Osm.Data.PBF.Processor
         private void InitializePBFReader()
         {
             _reader = new PBFReader(_stream);
-            _decompressor = new OsmSharp.Osm.Data.PBF.Dense.Decompressor(this);
+            _decompressor = new OsmSharp.Osm.PBF.Dense.Decompressor(this);
 
             this.InitializeBlockCache();
         }

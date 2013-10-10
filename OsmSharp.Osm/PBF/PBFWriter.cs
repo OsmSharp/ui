@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace OsmSharp.Osm.Data.PBF
+namespace OsmSharp.Osm.PBF
 {
     /// <summary>
     /// Writes PBF files.

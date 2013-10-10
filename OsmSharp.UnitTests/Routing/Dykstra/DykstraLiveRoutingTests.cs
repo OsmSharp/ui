@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,17 +16,17 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System.Reflection;
 using NUnit.Framework;
+using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Data.Streams.Filters;
-using OsmSharp.Osm.Data.Xml.Processor;
+using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Interpreter;
-using System.Reflection;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.UnitTests.Routing.Dykstra

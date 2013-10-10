@@ -182,6 +182,7 @@
     <Compile Include="Geo\IO\Gpx\GpxGeometryStreamSource.cs" />
     <Compile Include="Geo\IO\Kml\KmlGeometryStreamSource.cs" />
     <Compile Include="Geo\Streams\GeoCollectionStreamSource.cs" />
+    <Compile Include="Geo\Streams\Gpx\GpxGeoStreamSource.cs" />
     <Compile Include="IO\ByteCache\DiskByteCache.cs" />
     <Compile Include="IO\ByteCache\IByteCache.cs" />
     <Compile Include="IO\ByteCache\MemoryByteCache.cs" />

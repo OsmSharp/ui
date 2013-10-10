@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,17 +15,14 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using System.Xml;
-using System.IO;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Data.Core.Processor.ChangeSets;
 
-namespace OsmSharp.Osm.Data.Xml.Processor.ChangeSets
+using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
+using OsmSharp.Osm.Streams.ChangeSets;
+
+namespace OsmSharp.Osm.Xml.Streams.ChangeSets
 {
     /// <summary>
     /// A changeset source.

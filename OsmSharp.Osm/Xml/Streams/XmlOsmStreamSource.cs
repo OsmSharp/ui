@@ -16,19 +16,14 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
-using System.IO;
-using System.IO.Compression;
 using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Data.Core.Processor;
 
-namespace OsmSharp.Osm.Data.Xml.Processor
+namespace OsmSharp.Osm.Xml.Streams
 {
     /// <summary>
     /// A stream reader that reads from OSM Xml.

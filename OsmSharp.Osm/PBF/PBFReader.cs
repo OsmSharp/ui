@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -20,7 +20,7 @@ using System.IO;
 using Ionic.Zlib;
 using ProtoBuf;
 
-namespace OsmSharp.Osm.Data.PBF
+namespace OsmSharp.Osm.PBF
 {
     /// <summary>
     /// Reads PBF files.

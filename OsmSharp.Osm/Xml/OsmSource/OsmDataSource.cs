@@ -1,5 +1,5 @@
 ﻿//// OsmSharp - OpenStreetMap (OSM) SDK
-//// Copyright (C) 2012 Abelshausen Ben
+//// Copyright (C) 2013 Abelshausen Ben
 //// 
 //// This file is part of OsmSharp.
 //// 
@@ -27,7 +27,7 @@
 //using System.Xml;
 //using System.IO;
 
-//namespace OsmSharp.Osm.Data.Xml.OsmSource
+//namespace OsmSharp.Osm.Xml.OsmSource
 //{
 //    /// <summary>
 //    /// An osm data source for an xml stream.

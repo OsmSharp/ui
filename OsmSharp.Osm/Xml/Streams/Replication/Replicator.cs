@@ -1,5 +1,5 @@
 ﻿//// OsmSharp - OpenStreetMap (OSM) SDK
-//// Copyright (C) 2012 Abelshausen Ben
+//// Copyright (C) 2013 Abelshausen Ben
 //// 
 //// This file is part of OsmSharp.
 //// 
@@ -25,7 +25,7 @@
 //using System.IO.Compression;
 //using OsmSharp.Osm;
 
-//namespace OsmSharp.Osm.Data.Xml.Processor.Replication
+//namespace OsmSharp.Osm.Xml.Processor.Replication
 //{
 //    /// <summary>
 //    /// A replication data changeset source.
