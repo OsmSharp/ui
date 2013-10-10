@@ -35,11 +35,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
     public class LiveGraphOsmStreamTarget : DynamicGraphOsmStreamWriter<LiveEdge>
     {
         /// <summary>
-        /// Holds the data source.
-        /// </summary>
-//        private readonly IDynamicGraphRouterDataSource<LiveEdge> _dynamicDataSource;
-
-        /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
         /// <param name="dynamicGraph"></param>
