@@ -69,7 +69,7 @@ namespace OsmSharp.UI.Renderer
             if (scenes == null ||
                 scenes.Count == 0)
             { // there is nothing to render!
-                return;
+                return true;
             }
 
 			this.SetRunning (true);
