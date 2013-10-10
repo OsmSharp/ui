@@ -72,7 +72,7 @@
     <Compile Include="GeoCoding\Memory\IndexStreets.cs" />
     <Compile Include="GeoCoding\Memory\InMemoryGeoCoder.cs" />
     <Compile Include="Geo\Streams\Gpx\GpxGeoStreamSource.cs" />
-    <Compile Include="Geo\Streams\Kml\KmlGeometryStreamSource.cs" />
+    <Compile Include="Geo\Streams\Kml\KmlGeoStreamSource.cs" />
     <Compile Include="IO\LimitedStream.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\TraceSource.cs" />
