@@ -19,16 +19,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Constraints;
-using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Math;
-using OsmSharp.Math.Geo;
 using OsmSharp.Collections.PriorityQueues;
-using OsmSharp.Collections;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
+using OsmSharp.Routing.Constraints;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Graphs;
 
 namespace OsmSharp.Routing.Graph.Router.Dykstra
 {

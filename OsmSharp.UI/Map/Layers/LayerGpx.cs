@@ -18,11 +18,11 @@
 
 using System.IO;
 using OsmSharp.Geo.Geometries;
+using OsmSharp.Geo.Streams.Gpx;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.Geo.Streams.Gpx;
 
 namespace OsmSharp.UI.Map.Layers
 {
@@ -98,8 +98,9 @@ namespace OsmSharp.UI.Map.Layers
 		/// Adds a new GPX.
 		/// </summary>
 		/// <param name="stream">Stream.</param>
-		public void AddGpx(Stream stream)
+		public GeoCoordinateBox AddGpx(Stream stream)
 		{
+            GeoCoordinateBox bounds = null;
             var gpxStream = new GpxGeoStreamSource(stream);
             foreach (var geometry in gpxStream)
             {
@@ -118,6 +119,15 @@ namespace OsmSharp.UI.Map.Layers
 
                     this.Scene.AddPoint(float.MinValue, float.MaxValue, x, y,
                                        transparantBlue.Value, 8);
+
+                    if (bounds == null)
+                    { // create box.
+                        bounds = point.Box;
+                    }
+                    else
+                    { // add to the current box.
+                        bounds = bounds + point.Box;
+                    }
                 }
                 else if (geometry is LineString)
                 { // add the lineString.
@@ -141,8 +151,18 @@ namespace OsmSharp.UI.Map.Layers
 
                     this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
                                        transparantBlue.Value, 8);
+
+                    if (bounds == null)
+                    { // create box.
+                        bounds = lineString.Box;
+                    }
+                    else
+                    { // add to the current box.
+                        bounds = bounds + lineString.Box;
+                    }
                 }
             }
+            return bounds;
 		}
 		
 		#endregion
