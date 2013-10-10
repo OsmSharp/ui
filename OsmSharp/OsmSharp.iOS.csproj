@@ -74,7 +74,7 @@
     <Compile Include="Collections\SortedSet.cs" />
     <Compile Include="Collections\SparseArray.cs" />
     <Compile Include="Geo\Streams\Gpx\GpxGeoStreamSource.cs" />
-    <Compile Include="Geo\Streams\Kml\KmlGeometryStreamSource.cs" />
+    <Compile Include="Geo\Streams\Kml\KmlGeoStreamSource.cs" />
     <Compile Include="IO\Xml\Gpx\GpxDocument.cs" />
     <Compile Include="IO\Xml\Gpx\v1_0\gpx.cs">
       <DependentUpon>gpx.xsd</DependentUpon>
