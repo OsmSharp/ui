@@ -66,6 +66,12 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="view">View.</param>
         public bool Render(TTarget orginalTarget, List<Scene2D> scenes, View2D view)
 		{
+            if (scenes == null ||
+                scenes.Count == 0)
+            { // there is nothing to render!
+                return;
+            }
+
 			this.SetRunning (true);
 
 			if (view == null)
