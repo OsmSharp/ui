@@ -69,6 +69,28 @@ namespace OsmSharp.UI.Map.Layers
 		}
 
         /// <summary>
+        /// Adds a line.
+        /// </summary>
+        /// <param name="point1"></param>
+        /// <param name="point2"></param>
+        /// <param name="sizePixels"></param>
+        /// <param name="color"></param>
+        /// <returns></returns>
+        public uint AddPoint(GeoCoordinate point1, GeoCoordinate point2, float sizePixels, int color)
+        {
+            double[] projected1 = _projection.ToPixel(point1);
+            double[] projected2 = _projection.ToPixel(point2);
+
+            double[] x = new double[] { projected1[0], projected2[0] };
+            double[] y = new double[] { projected1[1], projected2[1] };
+
+            uint id = _scene.AddLine(float.MinValue, float.MaxValue, x, y,
+                                   color, sizePixels);
+            this.RaiseLayerChanged();
+            return id;
+        }
+
+        /// <summary>
         /// Clears all data from this layer.
         /// </summary>
         public void Clear()
