@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Xml\Streams\Processor\ChangeSets\" />
+    <Folder Include="Xml\Streams\Processor\Replication\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
@@ -53,6 +55,16 @@
     <Compile Include="Node.cs" />
     <Compile Include="OsmGeo.cs" />
     <Compile Include="OsmGeoType.cs" />
+    <Compile Include="PBF\Dense\Compressor.cs" />
+    <Compile Include="PBF\Dense\Decompressor.cs" />
+    <Compile Include="PBF\fileformat.cs" />
+    <Compile Include="PBF\IPBFOsmPrimitiveConsumer.cs" />
+    <Compile Include="PBF\IPBFPrimitiveBlockConsumer.cs" />
+    <Compile Include="PBF\osmformat.cs" />
+    <Compile Include="PBF\PBFReader.cs" />
+    <Compile Include="PBF\PBFWriter.cs" />
+    <Compile Include="PBF\Processor\PBFOsmStreamSource.cs" />
+    <Compile Include="PBF\Processor\PBFOsmStreamTarget.cs" />
     <Compile Include="Relation.cs" />
     <Compile Include="RelationMember.cs" />
     <Compile Include="Way.cs" />
@@ -75,21 +87,6 @@
     <Compile Include="Cache\OsmDiskCache.cs" />
     <Compile Include="Data\Cache\DataSourceCache.cs" />
     <Compile Include="Data\Memory\MemoryDataSource.cs" />
-    <Compile Include="Data\PBF\Dense\Compressor.cs" />
-    <Compile Include="Data\PBF\Dense\Decompressor.cs" />
-    <Compile Include="Data\PBF\Processor\PBFOsmStreamSource.cs" />
-    <Compile Include="Data\PBF\Processor\PBFOsmStreamTarget.cs" />
-    <Compile Include="Data\PBF\fileformat.cs" />
-    <Compile Include="Data\PBF\IPBFOsmPrimitiveConsumer.cs" />
-    <Compile Include="Data\PBF\IPBFPrimitiveBlockConsumer.cs" />
-    <Compile Include="Data\PBF\osmformat.cs" />
-    <Compile Include="Data\PBF\PBFReader.cs" />
-    <Compile Include="Data\PBF\PBFWriter.cs" />
-    <Compile Include="Data\Xml\OsmSource\OsmDataSource.cs" />
-    <Compile Include="Data\Xml\Processor\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
-    <Compile Include="Data\Xml\Processor\Replication\Replicator.cs" />
-    <Compile Include="Data\Xml\Processor\XmlFragmentWriter.cs" />
-    <Compile Include="Data\Xml\Processor\XmlSimpleConverter.cs" />
     <Compile Include="Data\IDataSource.cs" />
     <Compile Include="Data\IDataSourceReadOnly.cs" />
     <Compile Include="Data\INodeSource.cs" />
@@ -128,13 +125,18 @@
     <Compile Include="Filters\FilterType.cs" />
     <Compile Include="Tiles\Tile.cs" />
     <Compile Include="Tiles\TileRange.cs" />
+    <Compile Include="Xml\OsmSource\OsmDataSource.cs" />
+    <Compile Include="Xml\Streams\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
+    <Compile Include="Xml\Streams\Replication\Replicator.cs" />
+    <Compile Include="Xml\Streams\XmlFragmentWriter.cs" />
+    <Compile Include="Xml\Streams\XmlOsmStreamSource.cs" />
+    <Compile Include="Xml\Streams\XmlOsmStreamTarget.cs" />
+    <Compile Include="Xml\Streams\XmlSimpleConverter.cs" />
     <Compile Include="Xml\v0_6\Extensions.cs" />
     <Compile Include="Xml\v0_6\osm.cs" />
     <Compile Include="Xml\OsmDocument.cs" />
     <Compile Include="TagExtensions.cs" />
     <Compile Include="Data\DataSourceReadOnlyBase.cs" />
-    <Compile Include="Data\Xml\Processor\XmlOsmStreamSource.cs" />
-    <Compile Include="Data\Xml\Processor\XmlOsmStreamTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.iOS.csproj">
@@ -143,8 +145,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\PBF\fileformat.proto" />
-    <None Include="Data\PBF\osmformat.proto" />
+    <None Include="PBF\fileformat.proto" />
+    <None Include="PBF\osmformat.proto" />
     <None Include="Xml\v0_6\osm.xsd" />
   </ItemGroup>
 </Project>

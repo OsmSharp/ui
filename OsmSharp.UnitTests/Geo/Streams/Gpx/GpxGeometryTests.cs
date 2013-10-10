@@ -16,16 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using OsmSharp.Geo.IO.Gpx;
-using OsmSharp.Geo.Geometries;
 using System.Reflection;
+using NUnit.Framework;
+using OsmSharp.Geo.Geometries;
+using OsmSharp.Geo.Streams.Gpx;
 
-namespace OsmSharp.UnitTests.Geo.IO.Gpx
+namespace OsmSharp.UnitTests.Geo.Streams.Gpx
 {
     /// <summary>
     /// Contains test to read/write gpx files using geometry streams.
@@ -40,7 +37,7 @@ namespace OsmSharp.UnitTests.Geo.IO.Gpx
         public void GpxReadGeometryv1_0()
         {
             // initialize the geometry source.
-            GpxGeometryStreamSource gpxSource = new GpxGeometryStreamSource(
+            GpxGeoStreamSource gpxSource = new GpxGeoStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test.v1.0.gpx"),
                 false);
 

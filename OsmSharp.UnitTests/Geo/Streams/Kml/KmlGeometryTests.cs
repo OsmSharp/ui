@@ -16,16 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using OsmSharp.Geo.IO.Kml;
-using OsmSharp.Geo.Geometries;
 using System.Reflection;
+using NUnit.Framework;
+using OsmSharp.Geo.Geometries;
+using OsmSharp.Geo.Streams.Kml;
 
-namespace OsmSharp.UnitTests.Geo.IO.Kml
+namespace OsmSharp.UnitTests.Streams.IO.Kml
 {
     /// <summary>
     /// Contains test to read/write Kml files using geometry streams.
@@ -40,7 +37,7 @@ namespace OsmSharp.UnitTests.Geo.IO.Kml
         public void KmlReadGeometryv2_0()
         {
             // initialize the geometry source.
-            KmlGeometryStreamSource kmlSource = new KmlGeometryStreamSource(
+            KmlGeoStreamSource kmlSource = new KmlGeoStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test.v2.0.kml"));
 
             // pull all the objects from the stream into the given collection.
@@ -59,7 +56,7 @@ namespace OsmSharp.UnitTests.Geo.IO.Kml
         public void KmlReadGeometryv2_0_response()
         {
             // initialize the geometry source.
-            KmlGeometryStreamSource kmlSource = new KmlGeometryStreamSource(
+            KmlGeoStreamSource kmlSource = new KmlGeoStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test.v2.0.response.kml"));
 
             // pull all the objects from the stream into the given collection.
@@ -84,7 +81,7 @@ namespace OsmSharp.UnitTests.Geo.IO.Kml
         public void KmlReadGeometryv2_1()
         {
             // initialize the geometry source.
-            KmlGeometryStreamSource kmlSource = new KmlGeometryStreamSource(
+            KmlGeoStreamSource kmlSource = new KmlGeoStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.UnitTests.test.v2.1.kml"));
 
             // pull all the objects from the stream into the given collection.

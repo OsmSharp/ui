@@ -18,11 +18,11 @@
 
 using System.IO;
 using OsmSharp.Geo.Geometries;
-using OsmSharp.Geo.Streams.Gpx;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Geo.Streams.Gpx;
 
 namespace OsmSharp.UI.Map.Layers
 {

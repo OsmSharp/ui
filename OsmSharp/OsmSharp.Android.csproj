@@ -71,6 +71,8 @@
     <Compile Include="GeoCoding\Memory\IndexPostalCodes.cs" />
     <Compile Include="GeoCoding\Memory\IndexStreets.cs" />
     <Compile Include="GeoCoding\Memory\InMemoryGeoCoder.cs" />
+    <Compile Include="Geo\Streams\Gpx\GpxGeoStreamSource.cs" />
+    <Compile Include="Geo\Streams\Kml\KmlGeometryStreamSource.cs" />
     <Compile Include="IO\LimitedStream.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\TraceSource.cs" />
@@ -273,8 +275,6 @@
     <Compile Include="Geo\Geometries\MultiPolygon.cs" />
     <Compile Include="Geo\Geometries\Point.cs" />
     <Compile Include="Geo\Geometries\Polygon.cs" />
-    <Compile Include="Geo\IO\Gpx\GpxGeometryStreamSource.cs" />
-    <Compile Include="Geo\IO\Kml\KmlGeometryStreamSource.cs" />
     <Compile Include="Geo\Meta\DirectionCalculator.cs" />
     <Compile Include="Geo\Meta\DirectionEnum.cs" />
     <Compile Include="Geo\Meta\RelativeDirection.cs" />
