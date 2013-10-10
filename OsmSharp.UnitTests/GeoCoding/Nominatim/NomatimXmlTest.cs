@@ -15,16 +15,10 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Text;
-using System.Collections.Generic;
-using System.Linq;
-using NUnit.Framework;
-using OsmSharp.Xml.Sources;
-using System.IO;
-using OsmSharp.Xml.Nominatim.Search;
 
-namespace OsmSharp.UnitTests
+using NUnit.Framework;
+
+namespace OsmSharp.UnitTests.GeoCoding.Nominatim
 {
     /// <summary>
     /// Summary description for NomatimXmlTest

@@ -19,7 +19,7 @@
 using OsmSharp.Collections;
 using NUnit.Framework;
 
-namespace OsmSharp.UnitTests.Tools
+namespace OsmSharp.UnitTests.Collections
 {
     /// <summary>
     /// Testclass with facilities to test the huge dictionary.

@@ -1,0 +1,4050 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<osm version='0.6' upload='true' generator='JOSM'>
+  <node id='-16992' visible='true' lat='51.0222419' lon='3.992483' />
+  <node id='-16991' visible='true' lat='51.0224816' lon='3.9936315' />
+  <node id='-16990' visible='true' lat='51.0225777' lon='3.9940927' />
+  <node id='-16989' visible='true' lat='51.0226721' lon='3.9945749' />
+  <node id='-16988' visible='true' lat='51.0228885' lon='3.9955877' />
+  <node id='-16987' visible='true' lat='51.0236408' lon='3.9975771' />
+  <node id='-16986' visible='true' lat='51.0237318' lon='3.9978169' />
+  <node id='-16985' visible='true' lat='51.0213693' lon='3.9926512' />
+  <node id='-16984' visible='true' lat='51.0218785' lon='3.990624' />
+  <node id='-16983' visible='true' lat='51.0217579' lon='3.9911159' />
+  <node id='-16982' visible='true' lat='51.0219613' lon='3.9910915' />
+  <node id='-16981' visible='true' lat='51.014599' lon='4.0027833' />
+  <node id='-16980' visible='true' lat='51.0142211' lon='4.0029979' />
+  <node id='-16979' visible='true' lat='51.0141833' lon='4.0032811' />
+  <node id='-16978' visible='true' lat='51.0141995' lon='4.0037703' />
+  <node id='-16977' visible='true' lat='51.01421' lon='4.004152' />
+  <node id='-16976' visible='true' lat='51.01421' lon='4.004281' />
+  <node id='-16975' visible='true' lat='51.0198233' lon='3.9929517' />
+  <node id='-16974' visible='true' lat='51.019844' lon='3.9928034' />
+  <node id='-16973' visible='true' lat='51.0198192' lon='3.9926086' />
+  <node id='-16972' visible='true' lat='51.018502' lon='3.994431' />
+  <node id='-16971' visible='true' lat='51.018448' lon='3.99471' />
+  <node id='-16970' visible='true' lat='51.01862' lon='3.995483' />
+  <node id='-16969' visible='true' lat='51.018746' lon='3.9964781' />
+  <node id='-16968' visible='true' lat='51.0189985' lon='3.9959404' />
+  <node id='-16967' visible='true' lat='51.019178' lon='3.9947481' />
+  <node id='-16966' visible='true' lat='51.0186653' lon='3.9941795' />
+  <node id='-16965' visible='true' lat='51.0160295' lon='4.0069365' />
+  <node id='-16961' visible='true' lat='51.0171209' lon='4.0038535' />
+  <node id='-16960' visible='true' lat='51.0172126' lon='4.0036724' />
+  <node id='-16959' visible='true' lat='51.013963' lon='4.000483' />
+  <node id='-16958' visible='true' lat='51.0136995' lon='3.9997565' />
+  <node id='-16957' visible='true' lat='51.0134644' lon='3.9990523' />
+  <node id='-16956' visible='true' lat='51.013419' lon='3.9988495' />
+  <node id='-16955' visible='true' lat='51.013083' lon='3.996942' />
+  <node id='-16954' visible='true' lat='51.0129643' lon='3.9963841' />
+  <node id='-16953' visible='true' lat='51.012837' lon='3.995826' />
+  <node id='-16952' visible='true' lat='51.012762' lon='3.995247' />
+  <node id='-16951' visible='true' lat='51.0127267' lon='3.9946675' />
+  <node id='-16950' visible='true' lat='51.0126511' lon='3.9939293' />
+  <node id='-16949' visible='true' lat='51.0125827' lon='3.9935443' />
+  <node id='-16948' visible='true' lat='51.0125647' lon='3.9931225' />
+  <node id='-16947' visible='true' lat='51.0223491' lon='3.9895941' />
+  <node id='-16946' visible='true' lat='51.0177206' lon='4.00129' />
+  <node id='-16945' visible='true' lat='51.0176266' lon='4.0014856' />
+  <node id='-16944' visible='true' lat='51.0175288' lon='4.0015688' />
+  <node id='-16943' visible='true' lat='51.0174297' lon='4.0015798' />
+  <node id='-16942' visible='true' lat='51.0173014' lon='4.0015013' />
+  <node id='-16941' visible='true' lat='51.0172665' lon='4.0015731' />
+  <node id='-16940' visible='true' lat='51.0172449' lon='4.0016932' />
+  <node id='-16939' visible='true' lat='51.016893' lon='4.0021421' />
+  <node id='-16938' visible='true' lat='51.016858' lon='4.0017614' />
+  <node id='-16937' visible='true' lat='51.0169494' lon='4.0014986' />
+  <node id='-16936' visible='true' lat='51.0170579' lon='4.00125' />
+  <node id='-16935' visible='true' lat='51.0171159' lon='3.9968144' />
+  <node id='-16934' visible='true' lat='51.0166652' lon='3.9964797' />
+  <node id='-16933' visible='true' lat='51.0163745' lon='3.9964584' />
+  <node id='-16932' visible='true' lat='51.0162224' lon='3.9964265' />
+  <node id='-16931' visible='true' lat='51.0160828' lon='3.9963852' />
+  <node id='-16930' visible='true' lat='51.0189731' lon='3.9994932' />
+  <node id='-16929' visible='true' lat='51.0176608' lon='4.0050415' />
+  <node id='-16928' visible='true' lat='51.017547' lon='4.005482' />
+  <node id='-16927' visible='true' lat='51.0184447' lon='4.0017717' />
+  <node id='-16926' visible='true' lat='51.0160835' lon='4.0084745' />
+  <node id='-16925' visible='true' lat='51.0222013' lon='3.9894278' />
+  <node id='-16924' visible='true' lat='51.0217756' lon='3.9900008' />
+  <node id='-16923' visible='true' lat='51.0204317' lon='3.9914775' />
+  <node id='-16922' visible='true' lat='51.0203526' lon='3.9914842' />
+  <node id='-16921' visible='true' lat='51.0200035' lon='3.9917532' />
+  <node id='-16920' visible='true' lat='51.019692' lon='3.992039' />
+  <node id='-16919' visible='true' lat='51.0203021' lon='3.9914885' />
+  <node id='-16918' visible='true' lat='51.0203438' lon='3.9917455' />
+  <node id='-16917' visible='true' lat='51.020465' lon='3.9925' />
+  <node id='-16916' visible='true' lat='51.0198204' lon='3.9951358' />
+  <node id='-16915' visible='true' lat='51.0197124' lon='3.9953761' />
+  <node id='-16914' visible='true' lat='51.0193539' lon='3.9963173' />
+  <node id='-16913' visible='true' lat='51.0190393' lon='3.9971434' />
+  <node id='-16912' visible='true' lat='51.0190311' lon='3.9989058' />
+  <node id='-16911' visible='true' lat='51.0166829' lon='3.9910009' />
+  <node id='-16910' visible='true' lat='51.0166829' lon='3.9908556' />
+  <node id='-16909' visible='true' lat='51.0166539' lon='3.9907349' />
+  <node id='-16908' visible='true' lat='51.0164716' lon='3.9904168' />
+  <node id='-16907' visible='true' lat='51.016155' lon='3.9899575' />
+  <node id='-16906' visible='true' lat='51.0159014' lon='3.9896304' />
+  <node id='-16905' visible='true' lat='51.0176873' lon='4.0049124' />
+  <node id='-16904' visible='true' lat='51.017675' lon='4.004903' />
+  <node id='-16903' visible='true' lat='51.017472' lon='4.004796' />
+  <node id='-16902' visible='true' lat='51.016409' lon='4.005053' />
+  <node id='-16901' visible='true' lat='51.016302' lon='4.005096' />
+  <node id='-16900' visible='true' lat='51.016192' lon='4.0051609' />
+  <node id='-16899' visible='true' lat='51.0161462' lon='4.0052666' />
+  <node id='-16898' visible='true' lat='51.0161309' lon='4.0055074' />
+  <node id='-16897' visible='true' lat='51.0146865' lon='4.0027322' />
+  <node id='-16896' visible='true' lat='51.0148886' lon='4.0041214' />
+  <node id='-16895' visible='true' lat='51.0148647' lon='4.0042917' />
+  <node id='-16893' visible='true' lat='51.0197178' lon='3.9953847' />
+  <node id='-16872' visible='true' lat='51.0182506' lon='4.0026188' />
+  <node id='-16867' visible='true' lat='51.0190241' lon='3.9992118'>
+    <tag k='traffic_calming' v='table' />
+  </node>
+  <node id='-16854' visible='true' lat='51.0155933' lon='3.9991142'>
+    <tag k='traffic_calming' v='table' />
+  </node>
+  <node id='-16853' visible='true' lat='51.015617' lon='3.9992274' />
+  <node id='-16852' visible='true' lat='51.0148433' lon='4.0031809' />
+  <node id='-16851' visible='true' lat='51.0149361' lon='4.0036861' />
+  <node id='-16850' visible='true' lat='51.0190315' lon='3.9988785' />
+  <node id='-16849' visible='true' lat='51.0185081' lon='3.9982894' />
+  <node id='-16848' visible='true' lat='51.0182747' lon='3.9979674' />
+  <node id='-16847' visible='true' lat='51.0177403' lon='3.9973229' />
+  <node id='-16846' visible='true' lat='51.0174974' lon='3.9969369' />
+  <node id='-16845' visible='true' lat='51.0173592' lon='3.9968331' />
+  <node id='-16844' visible='true' lat='51.016946' lon='3.996212' />
+  <node id='-16843' visible='true' lat='51.016731' lon='3.995826' />
+  <node id='-16842' visible='true' lat='51.016484' lon='3.995569' />
+  <node id='-16841' visible='true' lat='51.0162862' lon='3.9953829' />
+  <node id='-16840' visible='true' lat='51.0149878' lon='3.9964404' />
+  <node id='-16839' visible='true' lat='51.0148906' lon='3.9962172' />
+  <node id='-16838' visible='true' lat='51.014821' lon='3.9960496' />
+  <node id='-16837' visible='true' lat='51.0145958' lon='3.9954045' />
+  <node id='-16836' visible='true' lat='51.0144745' lon='3.9951064' />
+  <node id='-16835' visible='true' lat='51.0143427' lon='3.9948222' />
+  <node id='-16834' visible='true' lat='51.0138535' lon='3.9941515' />
+  <node id='-16831' visible='true' lat='51.0126335' lon='4.0066628' />
+  <node id='-16830' visible='true' lat='51.0128279' lon='4.0066129' />
+  <node id='-16829' visible='true' lat='51.0130847' lon='4.0066401' />
+  <node id='-16828' visible='true' lat='51.013393' lon='4.0068157' />
+  <node id='-16827' visible='true' lat='51.0142212' lon='4.0073456' />
+  <node id='-16826' visible='true' lat='51.0144873' lon='4.0073383' />
+  <node id='-16825' visible='true' lat='51.014859' lon='4.0071986' />
+  <node id='-16824' visible='true' lat='51.014088' lon='4.0064095' />
+  <node id='-16823' visible='true' lat='51.013953' lon='4.006873' />
+  <node id='-16822' visible='true' lat='51.013845' lon='4.007177' />
+  <node id='-16821' visible='true' lat='51.0138364' lon='4.0071983' />
+  <node id='-16820' visible='true' lat='51.0136913' lon='4.007507' />
+  <node id='-16819' visible='true' lat='51.0131841' lon='4.0049144' />
+  <node id='-16818' visible='true' lat='51.0131174' lon='4.0045037' />
+  <node id='-16817' visible='true' lat='51.0131124' lon='4.0041124' />
+  <node id='-16816' visible='true' lat='51.0131206' lon='4.0038742' />
+  <node id='-16815' visible='true' lat='51.0131714' lon='4.0035419' />
+  <node id='-16814' visible='true' lat='51.0132263' lon='4.0032812' />
+  <node id='-16813' visible='true' lat='51.0132914' lon='4.0030132' />
+  <node id='-16812' visible='true' lat='51.0133239' lon='4.0027037' />
+  <node id='-16811' visible='true' lat='51.013366' lon='4.0021859' />
+  <node id='-16810' visible='true' lat='51.0133907' lon='4.0018218' />
+  <node id='-16809' visible='true' lat='51.0134061' lon='4.0014891' />
+  <node id='-16808' visible='true' lat='51.0134012' lon='4.0011234' />
+  <node id='-16807' visible='true' lat='51.0132946' lon='4.0004699' />
+  <node id='-16806' visible='true' lat='51.013283' lon='4.0000946' />
+  <node id='-16805' visible='true' lat='51.0133149' lon='3.9997807' />
+  <node id='-16804' visible='true' lat='51.0227169' lon='3.9947844' />
+  <node id='-16803' visible='true' lat='51.0225558' lon='3.9948452' />
+  <node id='-16802' visible='true' lat='51.0222672' lon='3.9949224' />
+  <node id='-16801' visible='true' lat='51.0221963' lon='3.9949224' />
+  <node id='-16800' visible='true' lat='51.0221541' lon='3.994968' />
+  <node id='-16799' visible='true' lat='51.0221423' lon='3.9950511' />
+  <node id='-16798' visible='true' lat='51.0221609' lon='3.9951397' />
+  <node id='-16797' visible='true' lat='51.0222182' lon='3.9951611' />
+  <node id='-16796' visible='true' lat='51.0222739' lon='3.9951289' />
+  <node id='-16795' visible='true' lat='51.0223093' lon='3.9950511' />
+  <node id='-16794' visible='true' lat='51.0223184' lon='3.9949754' />
+  <node id='-16780' visible='true' lat='51.0123555' lon='4.0015799' />
+  <node id='-16779' visible='true' lat='51.0123778' lon='4.0012509' />
+  <node id='-16778' visible='true' lat='51.0158001' lon='3.9978712' />
+  <node id='-16777' visible='true' lat='51.015669' lon='3.997736' />
+  <node id='-16776' visible='true' lat='51.0153509' lon='3.9974223' />
+  <node id='-16775' visible='true' lat='51.0149176' lon='3.9972043' />
+  <node id='-16774' visible='true' lat='51.0145301' lon='3.9975768' />
+  <node id='-16773' visible='true' lat='51.0139449' lon='3.9980887' />
+  <node id='-16772' visible='true' lat='51.0134787' lon='3.9985078' />
+  <node id='-16771' visible='true' lat='51.0133752' lon='3.9985623' />
+  <node id='-16765' visible='true' lat='51.0151125' lon='3.9961732' />
+  <node id='-16764' visible='true' lat='51.0150175' lon='3.9965812' />
+  <node id='-16763' visible='true' lat='51.0149502' lon='3.996991' />
+  <node id='-16734' visible='true' lat='51.0133226' lon='4.0090327' />
+  <node id='-16733' visible='true' lat='51.013357' lon='4.008802' />
+  <node id='-16732' visible='true' lat='51.0134178' lon='4.0084021' />
+  <node id='-16731' visible='true' lat='51.0134465' lon='4.0082071' />
+  <node id='-16730' visible='true' lat='51.0134966' lon='4.0077896' />
+  <node id='-16729' visible='true' lat='51.0135335' lon='4.0073288' />
+  <node id='-16728' visible='true' lat='51.0135542' lon='4.0069385' />
+  <node id='-16727' visible='true' lat='51.0135391' lon='4.0061773' />
+  <node id='-16722' visible='true' lat='51.0167629' lon='3.9912283' />
+  <node id='-16721' visible='true' lat='51.0166586' lon='3.9911479' />
+  <node id='-16720' visible='true' lat='51.0165508' lon='3.9911802' />
+  <node id='-16719' visible='true' lat='51.0164574' lon='3.9912507' />
+  <node id='-16718' visible='true' lat='51.0160439' lon='3.9917663' />
+  <node id='-16717' visible='true' lat='51.0158826' lon='3.9919035' />
+  <node id='-16716' visible='true' lat='51.0150152' lon='3.992602' />
+  <node id='-16715' visible='true' lat='51.0142951' lon='3.9930907' />
+  <node id='-16714' visible='true' lat='51.0138865' lon='3.9933878' />
+  <node id='-16713' visible='true' lat='51.0136814' lon='3.9934201' />
+  <node id='-16712' visible='true' lat='51.0223761' lon='3.9930892' />
+  <node id='-16711' visible='true' lat='51.0217213' lon='3.9934797' />
+  <node id='-16710' visible='true' lat='51.0216314' lon='3.9934783' />
+  <node id='-16709' visible='true' lat='51.020626' lon='3.993294' />
+  <node id='-16708' visible='true' lat='51.0206158' lon='3.9932989' />
+  <node id='-16707' visible='true' lat='51.0148448' lon='4.0043732' />
+  <node id='-16699' visible='true' lat='51.016442' lon='3.994539' />
+  <node id='-16698' visible='true' lat='51.0166722' lon='3.9934114' />
+  <node id='-16697' visible='true' lat='51.0169077' lon='3.9924198' />
+  <node id='-16696' visible='true' lat='51.0168319' lon='4.001911' />
+  <node id='-16695' visible='true' lat='51.016665' lon='4.001994' />
+  <node id='-16694' visible='true' lat='51.017096' lon='3.99956' />
+  <node id='-16693' visible='true' lat='51.0164923' lon='4.000657' />
+  <node id='-16692' visible='true' lat='51.0163566' lon='4.0009912' />
+  <node id='-16691' visible='true' lat='51.0163108' lon='4.0012437' />
+  <node id='-16690' visible='true' lat='51.0162258' lon='4.0018005' />
+  <node id='-16689' visible='true' lat='51.0162243' lon='4.0019814' />
+  <node id='-16688' visible='true' lat='51.0162763' lon='4.0022523' />
+  <node id='-16687' visible='true' lat='51.0159868' lon='4.0024375' />
+  <node id='-16686' visible='true' lat='51.0158127' lon='4.0024683'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-16685' visible='true' lat='51.0158958' lon='4.0039851' />
+  <node id='-16684' visible='true' lat='51.0159706' lon='4.0040874' />
+  <node id='-16683' visible='true' lat='51.0161084' lon='4.0041741' />
+  <node id='-16682' visible='true' lat='51.0162815' lon='4.0042132' />
+  <node id='-16681' visible='true' lat='51.0164699' lon='4.004199' />
+  <node id='-16680' visible='true' lat='51.0167547' lon='4.0041382' />
+  <node id='-16679' visible='true' lat='51.0170076' lon='4.004014' />
+  <node id='-16678' visible='true' lat='51.0171053' lon='4.0039998' />
+  <node id='-16677' visible='true' lat='51.0172695' lon='4.0038954' />
+  <node id='-16676' visible='true' lat='51.0172226' lon='4.0034493' />
+  <node id='-16675' visible='true' lat='51.0192455' lon='3.9924522' />
+  <node id='-16674' visible='true' lat='51.01902' lon='3.9925296' />
+  <node id='-16673' visible='true' lat='51.0180529' lon='3.9928007' />
+  <node id='-16672' visible='true' lat='51.017826' lon='3.992865' />
+  <node id='-16671' visible='true' lat='51.017654' lon='3.992758' />
+  <node id='-16670' visible='true' lat='51.017418' lon='3.992307' />
+  <node id='-16669' visible='true' lat='51.017296' lon='3.9920003' />
+  <node id='-16668' visible='true' lat='51.0171274' lon='3.9917629' />
+  <node id='-16667' visible='true' lat='51.0188471' lon='4.0000583' />
+  <node id='-16661' visible='true' lat='51.0218352' lon='3.9903744' />
+  <node id='-16660' visible='true' lat='51.020712' lon='3.991449' />
+  <node id='-16659' visible='true' lat='51.0206224' lon='3.9915302' />
+  <node id='-16658' visible='true' lat='51.0127361' lon='4.0051936' />
+  <node id='-16657' visible='true' lat='51.0125528' lon='4.0053423' />
+  <node id='-16656' visible='true' lat='51.0120675' lon='4.0058877' />
+  <node id='-16649' visible='true' lat='51.0174429' lon='4.0058795' />
+  <node id='-16648' visible='true' lat='51.0170376' lon='4.0057852' />
+  <node id='-16647' visible='true' lat='51.016127' lon='4.0056377' />
+  <node id='-16646' visible='true' lat='51.0148332' lon='4.0053814' />
+  <node id='-16645' visible='true' lat='51.0144609' lon='4.0052972' />
+  <node id='-16644' visible='true' lat='51.0142968' lon='4.0052953' />
+  <node id='-16643' visible='true' lat='51.0132672' lon='4.0051379' />
+  <node id='-16642' visible='true' lat='51.0132259' lon='4.0051192' />
+  <node id='-16641' visible='true' lat='51.0129084' lon='4.0051217' />
+  <node id='-16622' visible='true' lat='51.0131288' lon='3.9931913' />
+  <node id='-16621' visible='true' lat='51.0130316' lon='3.9930634' />
+  <node id='-16620' visible='true' lat='51.0128171' lon='3.992812' />
+  <node id='-16619' visible='true' lat='51.0125546' lon='3.9926366' />
+  <node id='-16618' visible='true' lat='51.0170675' lon='3.9991733'>
+    <tag k='traffic_calming' v='table' />
+  </node>
+  <node id='-16617' visible='true' lat='51.0172284' lon='3.9993665' />
+  <node id='-16616' visible='true' lat='51.0176353' lon='3.9997449' />
+  <node id='-16615' visible='true' lat='51.0186699' lon='4.0007597' />
+  <node id='-16614' visible='true' lat='51.014233' lon='3.9946601' />
+  <node id='-16613' visible='true' lat='51.0145819' lon='3.9944919' />
+  <node id='-16612' visible='true' lat='51.015197' lon='3.99441' />
+  <node id='-16611' visible='true' lat='51.0154318' lon='3.9944204' />
+  <node id='-16610' visible='true' lat='51.015723' lon='3.99456' />
+  <node id='-16609' visible='true' lat='51.016259' lon='3.994818' />
+  <node id='-16608' visible='true' lat='51.0163932' lon='3.9948906' />
+  <node id='-16607' visible='true' lat='51.0150298' lon='4.0041968' />
+  <node id='-16606' visible='true' lat='51.0158018' lon='4.0037653' />
+  <node id='-16605' visible='true' lat='51.0170923' lon='4.0028967' />
+  <node id='-16604' visible='true' lat='51.0183574' lon='4.0021607' />
+  <node id='-16603' visible='true' lat='51.0169581' lon='4.0068742' />
+  <node id='-16602' visible='true' lat='51.0168954' lon='4.0068409' />
+  <node id='-16601' visible='true' lat='51.0163035' lon='4.0067247' />
+  <node id='-16600' visible='true' lat='51.0162165' lon='4.0068974' />
+  <node id='-16599' visible='true' lat='51.012247' lon='4.0036823' />
+  <node id='-16598' visible='true' lat='51.0122081' lon='4.0046407' />
+  <node id='-16597' visible='true' lat='51.0122049' lon='4.0048054' />
+  <node id='-16596' visible='true' lat='51.0125535' lon='4.0004673'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-16595' visible='true' lat='51.0129282' lon='4.000743' />
+  <node id='-16594' visible='true' lat='51.0132456' lon='4.0007803' />
+  <node id='-16593' visible='true' lat='51.0133258' lon='4.000777' />
+  <node id='-16590' visible='true' lat='51.0177877' lon='4.0078809' />
+  <node id='-16589' visible='true' lat='51.0161503' lon='4.0086726' />
+  <node id='-16588' visible='true' lat='51.0142748' lon='3.9977942' />
+  <node id='-16587' visible='true' lat='51.0138875' lon='3.9967614' />
+  <node id='-16586' visible='true' lat='51.0136587' lon='3.9961887' />
+  <node id='-16585' visible='true' lat='51.0133323' lon='3.9951455' />
+  <node id='-16584' visible='true' lat='51.0130994' lon='3.9948189' />
+  <node id='-16583' visible='true' lat='51.012837' lon='3.994732' />
+  <node id='-16582' visible='true' lat='51.0127306' lon='3.9947308' />
+  <node id='-16581' visible='true' lat='51.0130375' lon='3.9967283' />
+  <node id='-16580' visible='true' lat='51.012933' lon='3.996792' />
+  <node id='-16579' visible='true' lat='51.012772' lon='3.996921' />
+  <node id='-16578' visible='true' lat='51.0125753' lon='3.9973794' />
+  <node id='-16577' visible='true' lat='51.012386' lon='3.998165' />
+  <node id='-16576' visible='true' lat='51.012322' lon='3.998744' />
+  <node id='-16575' visible='true' lat='51.0123029' lon='3.9990121' />
+  <node id='-16572' visible='true' lat='51.0160017' lon='4.0087491' />
+  <node id='-16571' visible='true' lat='51.0159131' lon='4.0085748' />
+  <node id='-16570' visible='true' lat='51.0152753' lon='4.0075205' />
+  <node id='-16569' visible='true' lat='51.0150431' lon='4.0071772' />
+  <node id='-16568' visible='true' lat='51.0150236' lon='4.0071447' />
+  <node id='-16567' visible='true' lat='51.0149898' lon='4.0071032' />
+  <node id='-16566' visible='true' lat='51.0148321' lon='4.0069146' />
+  <node id='-16565' visible='true' lat='51.0141585' lon='4.0060505' />
+  <node id='-16564' visible='true' lat='51.013807' lon='4.0057721' />
+  <node id='-16563' visible='true' lat='51.0133458' lon='4.0054961' />
+  <node id='-16562' visible='true' lat='51.0154864' lon='4.007763' />
+  <node id='-16561' visible='true' lat='51.0155467' lon='4.0076494' />
+  <node id='-16560' visible='true' lat='51.015465' lon='4.0069757' />
+  <node id='-16559' visible='true' lat='51.0154598' lon='4.0069331' />
+  <node id='-16558' visible='true' lat='51.0152225' lon='4.005479' />
+  <node id='-16557' visible='true' lat='51.0133385' lon='4.0024975' />
+  <node id='-16556' visible='true' lat='51.0132093' lon='4.0024788' />
+  <node id='-16555' visible='true' lat='51.012681' lon='4.0023437' />
+  <node id='-16530' visible='true' lat='51.0157387' lon='4.0055058'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Emiel Hertecantlaan' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Fabriekstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='206278' />
+    <tag k='route_ref' v='29;53;54;355' />
+    <tag k='source' v='survey;bing' />
+  </node>
+  <node id='-16525' visible='true' lat='51.0187426' lon='3.9964834'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-16492' visible='true' lat='51.0142049' lon='4.0043797'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-16489' visible='true' lat='51.015622' lon='4.0055908'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Emiel Hertecantlaan' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Fabriekstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='207278' />
+    <tag k='route_ref' v='29;53;54' />
+    <tag k='source' v='survey;bing' />
+  </node>
+  <node id='-16484' visible='true' lat='51.012263' lon='4.005777'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Emiel Hertecantlaan' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Christiaensstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='207279' />
+    <tag k='route_ref' v='29;54' />
+  </node>
+  <node id='-16483' visible='true' lat='51.0133341' lon='3.9985207'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Bergstraat' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Bunderdreef' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='204162' />
+    <tag k='route_ref' v='55' />
+  </node>
+  <node id='-16481' visible='true' lat='51.020364' lon='3.992061'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Galgenbergstraat' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Sint-Jobstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='204163' />
+    <tag k='route_ref' v='355' />
+  </node>
+  <node id='-16445' visible='true' lat='51.0177788' lon='4.0010845'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-15893' visible='true' lat='51.0222419' lon='3.992483' />
+  <node id='-15892' visible='true' lat='51.0224816' lon='3.9936315' />
+  <node id='-15891' visible='true' lat='51.0225777' lon='3.9940927' />
+  <node id='-15890' visible='true' lat='51.0226721' lon='3.9945749' />
+  <node id='-15889' visible='true' lat='51.0228885' lon='3.9955877' />
+  <node id='-15888' visible='true' lat='51.0236408' lon='3.9975771' />
+  <node id='-15887' visible='true' lat='51.0237318' lon='3.9978169' />
+  <node id='-15886' visible='true' lat='51.0213693' lon='3.9926512' />
+  <node id='-15885' visible='true' lat='51.0218785' lon='3.990624' />
+  <node id='-15884' visible='true' lat='51.0217579' lon='3.9911159' />
+  <node id='-15883' visible='true' lat='51.0219613' lon='3.9910915' />
+  <node id='-15882' visible='true' lat='51.014599' lon='4.0027833' />
+  <node id='-15881' visible='true' lat='51.0142211' lon='4.0029979' />
+  <node id='-15880' visible='true' lat='51.0141833' lon='4.0032811' />
+  <node id='-15879' visible='true' lat='51.0141995' lon='4.0037703' />
+  <node id='-15878' visible='true' lat='51.01421' lon='4.004152' />
+  <node id='-15877' visible='true' lat='51.01421' lon='4.004281' />
+  <node id='-15876' visible='true' lat='51.0198233' lon='3.9929517' />
+  <node id='-15875' visible='true' lat='51.019844' lon='3.9928034' />
+  <node id='-15874' visible='true' lat='51.0198192' lon='3.9926086' />
+  <node id='-15873' visible='true' lat='51.018502' lon='3.994431' />
+  <node id='-15872' visible='true' lat='51.018448' lon='3.99471' />
+  <node id='-15871' visible='true' lat='51.01862' lon='3.995483' />
+  <node id='-15870' visible='true' lat='51.018746' lon='3.9964781' />
+  <node id='-15869' visible='true' lat='51.0189985' lon='3.9959404' />
+  <node id='-15868' visible='true' lat='51.019178' lon='3.9947481' />
+  <node id='-15867' visible='true' lat='51.0186653' lon='3.9941795' />
+  <node id='-15866' visible='true' lat='51.0160295' lon='4.0069365' />
+  <node id='-15862' visible='true' lat='51.0171209' lon='4.0038535' />
+  <node id='-15861' visible='true' lat='51.0172126' lon='4.0036724' />
+  <node id='-15860' visible='true' lat='51.013963' lon='4.000483' />
+  <node id='-15859' visible='true' lat='51.0136995' lon='3.9997565' />
+  <node id='-15858' visible='true' lat='51.0134644' lon='3.9990523' />
+  <node id='-15857' visible='true' lat='51.013419' lon='3.9988495' />
+  <node id='-15856' visible='true' lat='51.013083' lon='3.996942' />
+  <node id='-15855' visible='true' lat='51.0129643' lon='3.9963841' />
+  <node id='-15854' visible='true' lat='51.012837' lon='3.995826' />
+  <node id='-15853' visible='true' lat='51.012762' lon='3.995247' />
+  <node id='-15852' visible='true' lat='51.0127267' lon='3.9946675' />
+  <node id='-15851' visible='true' lat='51.0126511' lon='3.9939293' />
+  <node id='-15850' visible='true' lat='51.0125827' lon='3.9935443' />
+  <node id='-15849' visible='true' lat='51.0125647' lon='3.9931225' />
+  <node id='-15848' visible='true' lat='51.0223491' lon='3.9895941' />
+  <node id='-15847' visible='true' lat='51.0177206' lon='4.00129' />
+  <node id='-15846' visible='true' lat='51.0176266' lon='4.0014856' />
+  <node id='-15845' visible='true' lat='51.0175288' lon='4.0015688' />
+  <node id='-15844' visible='true' lat='51.0174297' lon='4.0015798' />
+  <node id='-15843' visible='true' lat='51.0173014' lon='4.0015013' />
+  <node id='-15842' visible='true' lat='51.0172665' lon='4.0015731' />
+  <node id='-15841' visible='true' lat='51.0172449' lon='4.0016932' />
+  <node id='-15840' visible='true' lat='51.016893' lon='4.0021421' />
+  <node id='-15839' visible='true' lat='51.016858' lon='4.0017614' />
+  <node id='-15838' visible='true' lat='51.0169494' lon='4.0014986' />
+  <node id='-15837' visible='true' lat='51.0170579' lon='4.00125' />
+  <node id='-15836' visible='true' lat='51.0171159' lon='3.9968144' />
+  <node id='-15835' visible='true' lat='51.0166652' lon='3.9964797' />
+  <node id='-15834' visible='true' lat='51.0163745' lon='3.9964584' />
+  <node id='-15833' visible='true' lat='51.0162224' lon='3.9964265' />
+  <node id='-15832' visible='true' lat='51.0160828' lon='3.9963852' />
+  <node id='-15831' visible='true' lat='51.0189731' lon='3.9994932' />
+  <node id='-15830' visible='true' lat='51.0176608' lon='4.0050415' />
+  <node id='-15829' visible='true' lat='51.017547' lon='4.005482' />
+  <node id='-15828' visible='true' lat='51.0184447' lon='4.0017717' />
+  <node id='-15827' visible='true' lat='51.0160835' lon='4.0084745' />
+  <node id='-15826' visible='true' lat='51.0222013' lon='3.9894278' />
+  <node id='-15825' visible='true' lat='51.0217756' lon='3.9900008' />
+  <node id='-15824' visible='true' lat='51.0204317' lon='3.9914775' />
+  <node id='-15823' visible='true' lat='51.0203526' lon='3.9914842' />
+  <node id='-15822' visible='true' lat='51.0200035' lon='3.9917532' />
+  <node id='-15821' visible='true' lat='51.019692' lon='3.992039' />
+  <node id='-15820' visible='true' lat='51.0203021' lon='3.9914885' />
+  <node id='-15819' visible='true' lat='51.0203438' lon='3.9917455' />
+  <node id='-15818' visible='true' lat='51.020465' lon='3.9925' />
+  <node id='-15817' visible='true' lat='51.0198204' lon='3.9951358' />
+  <node id='-15816' visible='true' lat='51.0197124' lon='3.9953761' />
+  <node id='-15815' visible='true' lat='51.0193539' lon='3.9963173' />
+  <node id='-15814' visible='true' lat='51.0190393' lon='3.9971434' />
+  <node id='-15813' visible='true' lat='51.0190311' lon='3.9989058' />
+  <node id='-15812' visible='true' lat='51.0166829' lon='3.9910009' />
+  <node id='-15811' visible='true' lat='51.0166829' lon='3.9908556' />
+  <node id='-15810' visible='true' lat='51.0166539' lon='3.9907349' />
+  <node id='-15809' visible='true' lat='51.0164716' lon='3.9904168' />
+  <node id='-15808' visible='true' lat='51.016155' lon='3.9899575' />
+  <node id='-15807' visible='true' lat='51.0159014' lon='3.9896304' />
+  <node id='-15806' visible='true' lat='51.0176873' lon='4.0049124' />
+  <node id='-15805' visible='true' lat='51.017675' lon='4.004903' />
+  <node id='-15804' visible='true' lat='51.017472' lon='4.004796' />
+  <node id='-15803' visible='true' lat='51.016409' lon='4.005053' />
+  <node id='-15802' visible='true' lat='51.016302' lon='4.005096' />
+  <node id='-15801' visible='true' lat='51.016192' lon='4.0051609' />
+  <node id='-15800' visible='true' lat='51.0161462' lon='4.0052666' />
+  <node id='-15799' visible='true' lat='51.0161309' lon='4.0055074' />
+  <node id='-15798' visible='true' lat='51.0146865' lon='4.0027322' />
+  <node id='-15797' visible='true' lat='51.0148886' lon='4.0041214' />
+  <node id='-15796' visible='true' lat='51.0148647' lon='4.0042917' />
+  <node id='-15794' visible='true' lat='51.0197178' lon='3.9953847' />
+  <node id='-15773' visible='true' lat='51.0182506' lon='4.0026188' />
+  <node id='-15768' visible='true' lat='51.0190241' lon='3.9992118'>
+    <tag k='traffic_calming' v='table' />
+  </node>
+  <node id='-15755' visible='true' lat='51.0155933' lon='3.9991142'>
+    <tag k='traffic_calming' v='table' />
+  </node>
+  <node id='-15754' visible='true' lat='51.015617' lon='3.9992274' />
+  <node id='-15753' visible='true' lat='51.0148433' lon='4.0031809' />
+  <node id='-15752' visible='true' lat='51.0149361' lon='4.0036861' />
+  <node id='-15751' visible='true' lat='51.0190315' lon='3.9988785' />
+  <node id='-15750' visible='true' lat='51.0185081' lon='3.9982894' />
+  <node id='-15749' visible='true' lat='51.0182747' lon='3.9979674' />
+  <node id='-15748' visible='true' lat='51.0177403' lon='3.9973229' />
+  <node id='-15747' visible='true' lat='51.0174974' lon='3.9969369' />
+  <node id='-15746' visible='true' lat='51.0173592' lon='3.9968331' />
+  <node id='-15745' visible='true' lat='51.016946' lon='3.996212' />
+  <node id='-15744' visible='true' lat='51.016731' lon='3.995826' />
+  <node id='-15743' visible='true' lat='51.016484' lon='3.995569' />
+  <node id='-15742' visible='true' lat='51.0162862' lon='3.9953829' />
+  <node id='-15741' visible='true' lat='51.0149878' lon='3.9964404' />
+  <node id='-15740' visible='true' lat='51.0148906' lon='3.9962172' />
+  <node id='-15739' visible='true' lat='51.014821' lon='3.9960496' />
+  <node id='-15738' visible='true' lat='51.0145958' lon='3.9954045' />
+  <node id='-15737' visible='true' lat='51.0144745' lon='3.9951064' />
+  <node id='-15736' visible='true' lat='51.0143427' lon='3.9948222' />
+  <node id='-15735' visible='true' lat='51.0138535' lon='3.9941515' />
+  <node id='-15732' visible='true' lat='51.0126335' lon='4.0066628' />
+  <node id='-15731' visible='true' lat='51.0128279' lon='4.0066129' />
+  <node id='-15730' visible='true' lat='51.0130847' lon='4.0066401' />
+  <node id='-15729' visible='true' lat='51.013393' lon='4.0068157' />
+  <node id='-15728' visible='true' lat='51.0142212' lon='4.0073456' />
+  <node id='-15727' visible='true' lat='51.0144873' lon='4.0073383' />
+  <node id='-15726' visible='true' lat='51.014859' lon='4.0071986' />
+  <node id='-15725' visible='true' lat='51.014088' lon='4.0064095' />
+  <node id='-15724' visible='true' lat='51.013953' lon='4.006873' />
+  <node id='-15723' visible='true' lat='51.013845' lon='4.007177' />
+  <node id='-15722' visible='true' lat='51.0138364' lon='4.0071983' />
+  <node id='-15721' visible='true' lat='51.0136913' lon='4.007507' />
+  <node id='-15720' visible='true' lat='51.0131841' lon='4.0049144' />
+  <node id='-15719' visible='true' lat='51.0131174' lon='4.0045037' />
+  <node id='-15718' visible='true' lat='51.0131124' lon='4.0041124' />
+  <node id='-15717' visible='true' lat='51.0131206' lon='4.0038742' />
+  <node id='-15716' visible='true' lat='51.0131714' lon='4.0035419' />
+  <node id='-15715' visible='true' lat='51.0132263' lon='4.0032812' />
+  <node id='-15714' visible='true' lat='51.0132914' lon='4.0030132' />
+  <node id='-15713' visible='true' lat='51.0133239' lon='4.0027037' />
+  <node id='-15712' visible='true' lat='51.013366' lon='4.0021859' />
+  <node id='-15711' visible='true' lat='51.0133907' lon='4.0018218' />
+  <node id='-15710' visible='true' lat='51.0134061' lon='4.0014891' />
+  <node id='-15709' visible='true' lat='51.0134012' lon='4.0011234' />
+  <node id='-15708' visible='true' lat='51.0132946' lon='4.0004699' />
+  <node id='-15707' visible='true' lat='51.013283' lon='4.0000946' />
+  <node id='-15706' visible='true' lat='51.0133149' lon='3.9997807' />
+  <node id='-15705' visible='true' lat='51.0227169' lon='3.9947844' />
+  <node id='-15704' visible='true' lat='51.0225558' lon='3.9948452' />
+  <node id='-15703' visible='true' lat='51.0222672' lon='3.9949224' />
+  <node id='-15702' visible='true' lat='51.0221963' lon='3.9949224' />
+  <node id='-15701' visible='true' lat='51.0221541' lon='3.994968' />
+  <node id='-15700' visible='true' lat='51.0221423' lon='3.9950511' />
+  <node id='-15699' visible='true' lat='51.0221609' lon='3.9951397' />
+  <node id='-15698' visible='true' lat='51.0222182' lon='3.9951611' />
+  <node id='-15697' visible='true' lat='51.0222739' lon='3.9951289' />
+  <node id='-15696' visible='true' lat='51.0223093' lon='3.9950511' />
+  <node id='-15695' visible='true' lat='51.0223184' lon='3.9949754' />
+  <node id='-15681' visible='true' lat='51.0123555' lon='4.0015799' />
+  <node id='-15680' visible='true' lat='51.0123778' lon='4.0012509' />
+  <node id='-15679' visible='true' lat='51.0158001' lon='3.9978712' />
+  <node id='-15678' visible='true' lat='51.015669' lon='3.997736' />
+  <node id='-15677' visible='true' lat='51.0153509' lon='3.9974223' />
+  <node id='-15676' visible='true' lat='51.0149176' lon='3.9972043' />
+  <node id='-15675' visible='true' lat='51.0145301' lon='3.9975768' />
+  <node id='-15674' visible='true' lat='51.0139449' lon='3.9980887' />
+  <node id='-15673' visible='true' lat='51.0134787' lon='3.9985078' />
+  <node id='-15672' visible='true' lat='51.0133752' lon='3.9985623' />
+  <node id='-15666' visible='true' lat='51.0151125' lon='3.9961732' />
+  <node id='-15665' visible='true' lat='51.0150175' lon='3.9965812' />
+  <node id='-15664' visible='true' lat='51.0149502' lon='3.996991' />
+  <node id='-15635' visible='true' lat='51.0133226' lon='4.0090327' />
+  <node id='-15634' visible='true' lat='51.013357' lon='4.008802' />
+  <node id='-15633' visible='true' lat='51.0134178' lon='4.0084021' />
+  <node id='-15632' visible='true' lat='51.0134465' lon='4.0082071' />
+  <node id='-15631' visible='true' lat='51.0134966' lon='4.0077896' />
+  <node id='-15630' visible='true' lat='51.0135335' lon='4.0073288' />
+  <node id='-15629' visible='true' lat='51.0135542' lon='4.0069385' />
+  <node id='-15628' visible='true' lat='51.0135391' lon='4.0061773' />
+  <node id='-15623' visible='true' lat='51.0167629' lon='3.9912283' />
+  <node id='-15622' visible='true' lat='51.0166586' lon='3.9911479' />
+  <node id='-15621' visible='true' lat='51.0165508' lon='3.9911802' />
+  <node id='-15620' visible='true' lat='51.0164574' lon='3.9912507' />
+  <node id='-15619' visible='true' lat='51.0160439' lon='3.9917663' />
+  <node id='-15618' visible='true' lat='51.0158826' lon='3.9919035' />
+  <node id='-15617' visible='true' lat='51.0150152' lon='3.992602' />
+  <node id='-15616' visible='true' lat='51.0142951' lon='3.9930907' />
+  <node id='-15615' visible='true' lat='51.0138865' lon='3.9933878' />
+  <node id='-15614' visible='true' lat='51.0136814' lon='3.9934201' />
+  <node id='-15613' visible='true' lat='51.0223761' lon='3.9930892' />
+  <node id='-15612' visible='true' lat='51.0217213' lon='3.9934797' />
+  <node id='-15611' visible='true' lat='51.0216314' lon='3.9934783' />
+  <node id='-15610' visible='true' lat='51.020626' lon='3.993294' />
+  <node id='-15609' visible='true' lat='51.0206158' lon='3.9932989' />
+  <node id='-15608' visible='true' lat='51.0148448' lon='4.0043732' />
+  <node id='-15600' visible='true' lat='51.016442' lon='3.994539' />
+  <node id='-15599' visible='true' lat='51.0166722' lon='3.9934114' />
+  <node id='-15598' visible='true' lat='51.0169077' lon='3.9924198' />
+  <node id='-15597' visible='true' lat='51.0168319' lon='4.001911' />
+  <node id='-15596' visible='true' lat='51.016665' lon='4.001994' />
+  <node id='-15595' visible='true' lat='51.017096' lon='3.99956' />
+  <node id='-15594' visible='true' lat='51.0164923' lon='4.000657' />
+  <node id='-15593' visible='true' lat='51.0163566' lon='4.0009912' />
+  <node id='-15592' visible='true' lat='51.0163108' lon='4.0012437' />
+  <node id='-15591' visible='true' lat='51.0162258' lon='4.0018005' />
+  <node id='-15590' visible='true' lat='51.0162243' lon='4.0019814' />
+  <node id='-15589' visible='true' lat='51.0162763' lon='4.0022523' />
+  <node id='-15588' visible='true' lat='51.0159868' lon='4.0024375' />
+  <node id='-15587' visible='true' lat='51.0158127' lon='4.0024683'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-15586' visible='true' lat='51.0158958' lon='4.0039851' />
+  <node id='-15585' visible='true' lat='51.0159706' lon='4.0040874' />
+  <node id='-15584' visible='true' lat='51.0161084' lon='4.0041741' />
+  <node id='-15583' visible='true' lat='51.0162815' lon='4.0042132' />
+  <node id='-15582' visible='true' lat='51.0164699' lon='4.004199' />
+  <node id='-15581' visible='true' lat='51.0167547' lon='4.0041382' />
+  <node id='-15580' visible='true' lat='51.0170076' lon='4.004014' />
+  <node id='-15579' visible='true' lat='51.0171053' lon='4.0039998' />
+  <node id='-15578' visible='true' lat='51.0172695' lon='4.0038954' />
+  <node id='-15577' visible='true' lat='51.0172226' lon='4.0034493' />
+  <node id='-15576' visible='true' lat='51.0192455' lon='3.9924522' />
+  <node id='-15575' visible='true' lat='51.01902' lon='3.9925296' />
+  <node id='-15574' visible='true' lat='51.0180529' lon='3.9928007' />
+  <node id='-15573' visible='true' lat='51.017826' lon='3.992865' />
+  <node id='-15572' visible='true' lat='51.017654' lon='3.992758' />
+  <node id='-15571' visible='true' lat='51.017418' lon='3.992307' />
+  <node id='-15570' visible='true' lat='51.017296' lon='3.9920003' />
+  <node id='-15569' visible='true' lat='51.0171274' lon='3.9917629' />
+  <node id='-15568' visible='true' lat='51.0188471' lon='4.0000583' />
+  <node id='-15562' visible='true' lat='51.0218352' lon='3.9903744' />
+  <node id='-15561' visible='true' lat='51.020712' lon='3.991449' />
+  <node id='-15560' visible='true' lat='51.0206224' lon='3.9915302' />
+  <node id='-15559' visible='true' lat='51.0127361' lon='4.0051936' />
+  <node id='-15558' visible='true' lat='51.0125528' lon='4.0053423' />
+  <node id='-15557' visible='true' lat='51.0120675' lon='4.0058877' />
+  <node id='-15550' visible='true' lat='51.0174429' lon='4.0058795' />
+  <node id='-15549' visible='true' lat='51.0170376' lon='4.0057852' />
+  <node id='-15548' visible='true' lat='51.016127' lon='4.0056377' />
+  <node id='-15547' visible='true' lat='51.0148332' lon='4.0053814' />
+  <node id='-15546' visible='true' lat='51.0144609' lon='4.0052972' />
+  <node id='-15545' visible='true' lat='51.0142968' lon='4.0052953' />
+  <node id='-15544' visible='true' lat='51.0132672' lon='4.0051379' />
+  <node id='-15543' visible='true' lat='51.0132259' lon='4.0051192' />
+  <node id='-15542' visible='true' lat='51.0129084' lon='4.0051217' />
+  <node id='-15523' visible='true' lat='51.0131288' lon='3.9931913' />
+  <node id='-15522' visible='true' lat='51.0130316' lon='3.9930634' />
+  <node id='-15521' visible='true' lat='51.0128171' lon='3.992812' />
+  <node id='-15520' visible='true' lat='51.0125546' lon='3.9926366' />
+  <node id='-15519' visible='true' lat='51.0170675' lon='3.9991733'>
+    <tag k='traffic_calming' v='table' />
+  </node>
+  <node id='-15518' visible='true' lat='51.0172284' lon='3.9993665' />
+  <node id='-15517' visible='true' lat='51.0176353' lon='3.9997449' />
+  <node id='-15516' visible='true' lat='51.0186699' lon='4.0007597' />
+  <node id='-15515' visible='true' lat='51.014233' lon='3.9946601' />
+  <node id='-15514' visible='true' lat='51.0145819' lon='3.9944919' />
+  <node id='-15513' visible='true' lat='51.015197' lon='3.99441' />
+  <node id='-15512' visible='true' lat='51.0154318' lon='3.9944204' />
+  <node id='-15511' visible='true' lat='51.015723' lon='3.99456' />
+  <node id='-15510' visible='true' lat='51.016259' lon='3.994818' />
+  <node id='-15509' visible='true' lat='51.0163932' lon='3.9948906' />
+  <node id='-15508' visible='true' lat='51.0150298' lon='4.0041968' />
+  <node id='-15507' visible='true' lat='51.0158018' lon='4.0037653' />
+  <node id='-15506' visible='true' lat='51.0170923' lon='4.0028967' />
+  <node id='-15505' visible='true' lat='51.0183574' lon='4.0021607' />
+  <node id='-15504' visible='true' lat='51.0169581' lon='4.0068742' />
+  <node id='-15503' visible='true' lat='51.0168954' lon='4.0068409' />
+  <node id='-15502' visible='true' lat='51.0163035' lon='4.0067247' />
+  <node id='-15501' visible='true' lat='51.0162165' lon='4.0068974' />
+  <node id='-15500' visible='true' lat='51.012247' lon='4.0036823' />
+  <node id='-15499' visible='true' lat='51.0122081' lon='4.0046407' />
+  <node id='-15498' visible='true' lat='51.0122049' lon='4.0048054' />
+  <node id='-15497' visible='true' lat='51.0125535' lon='4.0004673'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-15496' visible='true' lat='51.0129282' lon='4.000743' />
+  <node id='-15495' visible='true' lat='51.0132456' lon='4.0007803' />
+  <node id='-15494' visible='true' lat='51.0133258' lon='4.000777' />
+  <node id='-15491' visible='true' lat='51.0177877' lon='4.0078809' />
+  <node id='-15490' visible='true' lat='51.0161503' lon='4.0086726' />
+  <node id='-15489' visible='true' lat='51.0142748' lon='3.9977942' />
+  <node id='-15488' visible='true' lat='51.0138875' lon='3.9967614' />
+  <node id='-15487' visible='true' lat='51.0136587' lon='3.9961887' />
+  <node id='-15486' visible='true' lat='51.0133323' lon='3.9951455' />
+  <node id='-15485' visible='true' lat='51.0130994' lon='3.9948189' />
+  <node id='-15484' visible='true' lat='51.012837' lon='3.994732' />
+  <node id='-15483' visible='true' lat='51.0127306' lon='3.9947308' />
+  <node id='-15482' visible='true' lat='51.0130375' lon='3.9967283' />
+  <node id='-15481' visible='true' lat='51.012933' lon='3.996792' />
+  <node id='-15480' visible='true' lat='51.012772' lon='3.996921' />
+  <node id='-15479' visible='true' lat='51.0125753' lon='3.9973794' />
+  <node id='-15478' visible='true' lat='51.012386' lon='3.998165' />
+  <node id='-15477' visible='true' lat='51.012322' lon='3.998744' />
+  <node id='-15476' visible='true' lat='51.0123029' lon='3.9990121' />
+  <node id='-15473' visible='true' lat='51.0160017' lon='4.0087491' />
+  <node id='-15472' visible='true' lat='51.0159131' lon='4.0085748' />
+  <node id='-15471' visible='true' lat='51.0152753' lon='4.0075205' />
+  <node id='-15470' visible='true' lat='51.0150431' lon='4.0071772' />
+  <node id='-15469' visible='true' lat='51.0150236' lon='4.0071447' />
+  <node id='-15468' visible='true' lat='51.0149898' lon='4.0071032' />
+  <node id='-15467' visible='true' lat='51.0148321' lon='4.0069146' />
+  <node id='-15466' visible='true' lat='51.0141585' lon='4.0060505' />
+  <node id='-15465' visible='true' lat='51.013807' lon='4.0057721' />
+  <node id='-15464' visible='true' lat='51.0133458' lon='4.0054961' />
+  <node id='-15463' visible='true' lat='51.0154864' lon='4.007763' />
+  <node id='-15462' visible='true' lat='51.0155467' lon='4.0076494' />
+  <node id='-15461' visible='true' lat='51.015465' lon='4.0069757' />
+  <node id='-15460' visible='true' lat='51.0154598' lon='4.0069331' />
+  <node id='-15459' visible='true' lat='51.0152225' lon='4.005479' />
+  <node id='-15458' visible='true' lat='51.0133385' lon='4.0024975' />
+  <node id='-15457' visible='true' lat='51.0132093' lon='4.0024788' />
+  <node id='-15456' visible='true' lat='51.012681' lon='4.0023437' />
+  <node id='-15431' visible='true' lat='51.0157387' lon='4.0055058'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Emiel Hertecantlaan' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Fabriekstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='206278' />
+    <tag k='route_ref' v='29;53;54;355' />
+    <tag k='source' v='survey;bing' />
+  </node>
+  <node id='-15426' visible='true' lat='51.0187426' lon='3.9964834'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-15393' visible='true' lat='51.0142049' lon='4.0043797'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-15390' visible='true' lat='51.015622' lon='4.0055908'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Emiel Hertecantlaan' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Fabriekstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='207278' />
+    <tag k='route_ref' v='29;53;54' />
+    <tag k='source' v='survey;bing' />
+  </node>
+  <node id='-15385' visible='true' lat='51.012263' lon='4.005777'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Emiel Hertecantlaan' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Christiaensstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='207279' />
+    <tag k='route_ref' v='29;54' />
+  </node>
+  <node id='-15384' visible='true' lat='51.0133341' lon='3.9985207'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Bergstraat' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Bunderdreef' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='204162' />
+    <tag k='route_ref' v='55' />
+  </node>
+  <node id='-15382' visible='true' lat='51.020364' lon='3.992061'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Galgenbergstraat' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Sint-Jobstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='204163' />
+    <tag k='route_ref' v='355' />
+  </node>
+  <node id='-15346' visible='true' lat='51.0177788' lon='4.0010845'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-15344' visible='true' lat='51.0222419' lon='3.992483' />
+  <node id='-15343' visible='true' lat='51.0224816' lon='3.9936315' />
+  <node id='-15342' visible='true' lat='51.0225777' lon='3.9940927' />
+  <node id='-15341' visible='true' lat='51.0226721' lon='3.9945749' />
+  <node id='-15340' visible='true' lat='51.0228885' lon='3.9955877' />
+  <node id='-15339' visible='true' lat='51.0236408' lon='3.9975771' />
+  <node id='-15338' visible='true' lat='51.0237318' lon='3.9978169' />
+  <node id='-15337' visible='true' lat='51.0213693' lon='3.9926512' />
+  <node id='-15336' visible='true' lat='51.0218785' lon='3.990624' />
+  <node id='-15335' visible='true' lat='51.0217579' lon='3.9911159' />
+  <node id='-15334' visible='true' lat='51.0219613' lon='3.9910915' />
+  <node id='-15333' visible='true' lat='51.014599' lon='4.0027833' />
+  <node id='-15332' visible='true' lat='51.0142211' lon='4.0029979' />
+  <node id='-15331' visible='true' lat='51.0141833' lon='4.0032811' />
+  <node id='-15330' visible='true' lat='51.0141995' lon='4.0037703' />
+  <node id='-15329' visible='true' lat='51.01421' lon='4.004152' />
+  <node id='-15328' visible='true' lat='51.01421' lon='4.004281' />
+  <node id='-15327' visible='true' lat='51.0198233' lon='3.9929517' />
+  <node id='-15326' visible='true' lat='51.019844' lon='3.9928034' />
+  <node id='-15325' visible='true' lat='51.0198192' lon='3.9926086' />
+  <node id='-15324' visible='true' lat='51.018502' lon='3.994431' />
+  <node id='-15323' visible='true' lat='51.018448' lon='3.99471' />
+  <node id='-15322' visible='true' lat='51.01862' lon='3.995483' />
+  <node id='-15321' visible='true' lat='51.018746' lon='3.9964781' />
+  <node id='-15320' visible='true' lat='51.0189985' lon='3.9959404' />
+  <node id='-15319' visible='true' lat='51.019178' lon='3.9947481' />
+  <node id='-15318' visible='true' lat='51.0186653' lon='3.9941795' />
+  <node id='-15317' visible='true' lat='51.0160295' lon='4.0069365' />
+  <node id='-15313' visible='true' lat='51.0171209' lon='4.0038535' />
+  <node id='-15312' visible='true' lat='51.0172126' lon='4.0036724' />
+  <node id='-15311' visible='true' lat='51.013963' lon='4.000483' />
+  <node id='-15310' visible='true' lat='51.0136995' lon='3.9997565' />
+  <node id='-15309' visible='true' lat='51.0134644' lon='3.9990523' />
+  <node id='-15308' visible='true' lat='51.013419' lon='3.9988495' />
+  <node id='-15307' visible='true' lat='51.013083' lon='3.996942' />
+  <node id='-15306' visible='true' lat='51.0129643' lon='3.9963841' />
+  <node id='-15305' visible='true' lat='51.012837' lon='3.995826' />
+  <node id='-15304' visible='true' lat='51.012762' lon='3.995247' />
+  <node id='-15303' visible='true' lat='51.0127267' lon='3.9946675' />
+  <node id='-15302' visible='true' lat='51.0126511' lon='3.9939293' />
+  <node id='-15301' visible='true' lat='51.0125827' lon='3.9935443' />
+  <node id='-15300' visible='true' lat='51.0125647' lon='3.9931225' />
+  <node id='-15299' visible='true' lat='51.0223491' lon='3.9895941' />
+  <node id='-15298' visible='true' lat='51.0177206' lon='4.00129' />
+  <node id='-15297' visible='true' lat='51.0176266' lon='4.0014856' />
+  <node id='-15296' visible='true' lat='51.0175288' lon='4.0015688' />
+  <node id='-15295' visible='true' lat='51.0174297' lon='4.0015798' />
+  <node id='-15294' visible='true' lat='51.0173014' lon='4.0015013' />
+  <node id='-15293' visible='true' lat='51.0172665' lon='4.0015731' />
+  <node id='-15292' visible='true' lat='51.0172449' lon='4.0016932' />
+  <node id='-15291' visible='true' lat='51.016893' lon='4.0021421' />
+  <node id='-15290' visible='true' lat='51.016858' lon='4.0017614' />
+  <node id='-15289' visible='true' lat='51.0169494' lon='4.0014986' />
+  <node id='-15288' visible='true' lat='51.0170579' lon='4.00125' />
+  <node id='-15287' visible='true' lat='51.0171159' lon='3.9968144' />
+  <node id='-15286' visible='true' lat='51.0166652' lon='3.9964797' />
+  <node id='-15285' visible='true' lat='51.0163745' lon='3.9964584' />
+  <node id='-15284' visible='true' lat='51.0162224' lon='3.9964265' />
+  <node id='-15283' visible='true' lat='51.0160828' lon='3.9963852' />
+  <node id='-15282' visible='true' lat='51.0189731' lon='3.9994932' />
+  <node id='-15281' visible='true' lat='51.0176608' lon='4.0050415' />
+  <node id='-15280' visible='true' lat='51.017547' lon='4.005482' />
+  <node id='-15279' visible='true' lat='51.0184447' lon='4.0017717' />
+  <node id='-15278' visible='true' lat='51.0160835' lon='4.0084745' />
+  <node id='-15277' visible='true' lat='51.0222013' lon='3.9894278' />
+  <node id='-15276' visible='true' lat='51.0217756' lon='3.9900008' />
+  <node id='-15275' visible='true' lat='51.0204317' lon='3.9914775' />
+  <node id='-15274' visible='true' lat='51.0203526' lon='3.9914842' />
+  <node id='-15273' visible='true' lat='51.0200035' lon='3.9917532' />
+  <node id='-15272' visible='true' lat='51.019692' lon='3.992039' />
+  <node id='-15271' visible='true' lat='51.0203021' lon='3.9914885' />
+  <node id='-15270' visible='true' lat='51.0203438' lon='3.9917455' />
+  <node id='-15269' visible='true' lat='51.020465' lon='3.9925' />
+  <node id='-15268' visible='true' lat='51.0198204' lon='3.9951358' />
+  <node id='-15267' visible='true' lat='51.0197124' lon='3.9953761' />
+  <node id='-15266' visible='true' lat='51.0193539' lon='3.9963173' />
+  <node id='-15265' visible='true' lat='51.0190393' lon='3.9971434' />
+  <node id='-15264' visible='true' lat='51.0190311' lon='3.9989058' />
+  <node id='-15263' visible='true' lat='51.0166829' lon='3.9910009' />
+  <node id='-15262' visible='true' lat='51.0166829' lon='3.9908556' />
+  <node id='-15261' visible='true' lat='51.0166539' lon='3.9907349' />
+  <node id='-15260' visible='true' lat='51.0164716' lon='3.9904168' />
+  <node id='-15259' visible='true' lat='51.016155' lon='3.9899575' />
+  <node id='-15258' visible='true' lat='51.0159014' lon='3.9896304' />
+  <node id='-15257' visible='true' lat='51.0176873' lon='4.0049124' />
+  <node id='-15256' visible='true' lat='51.017675' lon='4.004903' />
+  <node id='-15255' visible='true' lat='51.017472' lon='4.004796' />
+  <node id='-15254' visible='true' lat='51.016409' lon='4.005053' />
+  <node id='-15253' visible='true' lat='51.016302' lon='4.005096' />
+  <node id='-15252' visible='true' lat='51.016192' lon='4.0051609' />
+  <node id='-15251' visible='true' lat='51.0161462' lon='4.0052666' />
+  <node id='-15250' visible='true' lat='51.0161309' lon='4.0055074' />
+  <node id='-15249' visible='true' lat='51.0146865' lon='4.0027322' />
+  <node id='-15248' visible='true' lat='51.0148886' lon='4.0041214' />
+  <node id='-15247' visible='true' lat='51.0148647' lon='4.0042917' />
+  <node id='-15245' visible='true' lat='51.0197178' lon='3.9953847' />
+  <node id='-15224' visible='true' lat='51.0182506' lon='4.0026188' />
+  <node id='-15219' visible='true' lat='51.0190241' lon='3.9992118'>
+    <tag k='traffic_calming' v='table' />
+  </node>
+  <node id='-15206' visible='true' lat='51.0155933' lon='3.9991142'>
+    <tag k='traffic_calming' v='table' />
+  </node>
+  <node id='-15205' visible='true' lat='51.015617' lon='3.9992274' />
+  <node id='-15204' visible='true' lat='51.0148433' lon='4.0031809' />
+  <node id='-15203' visible='true' lat='51.0149361' lon='4.0036861' />
+  <node id='-15202' visible='true' lat='51.0190315' lon='3.9988785' />
+  <node id='-15201' visible='true' lat='51.0185081' lon='3.9982894' />
+  <node id='-15200' visible='true' lat='51.0182747' lon='3.9979674' />
+  <node id='-15199' visible='true' lat='51.0177403' lon='3.9973229' />
+  <node id='-15198' visible='true' lat='51.0174974' lon='3.9969369' />
+  <node id='-15197' visible='true' lat='51.0173592' lon='3.9968331' />
+  <node id='-15196' visible='true' lat='51.016946' lon='3.996212' />
+  <node id='-15195' visible='true' lat='51.016731' lon='3.995826' />
+  <node id='-15194' visible='true' lat='51.016484' lon='3.995569' />
+  <node id='-15193' visible='true' lat='51.0162862' lon='3.9953829' />
+  <node id='-15192' visible='true' lat='51.0149878' lon='3.9964404' />
+  <node id='-15191' visible='true' lat='51.0148906' lon='3.9962172' />
+  <node id='-15190' visible='true' lat='51.014821' lon='3.9960496' />
+  <node id='-15189' visible='true' lat='51.0145958' lon='3.9954045' />
+  <node id='-15188' visible='true' lat='51.0144745' lon='3.9951064' />
+  <node id='-15187' visible='true' lat='51.0143427' lon='3.9948222' />
+  <node id='-15186' visible='true' lat='51.0138535' lon='3.9941515' />
+  <node id='-15183' visible='true' lat='51.0126335' lon='4.0066628' />
+  <node id='-15182' visible='true' lat='51.0128279' lon='4.0066129' />
+  <node id='-15181' visible='true' lat='51.0130847' lon='4.0066401' />
+  <node id='-15180' visible='true' lat='51.013393' lon='4.0068157' />
+  <node id='-15179' visible='true' lat='51.0142212' lon='4.0073456' />
+  <node id='-15178' visible='true' lat='51.0144873' lon='4.0073383' />
+  <node id='-15177' visible='true' lat='51.014859' lon='4.0071986' />
+  <node id='-15176' visible='true' lat='51.014088' lon='4.0064095' />
+  <node id='-15175' visible='true' lat='51.013953' lon='4.006873' />
+  <node id='-15174' visible='true' lat='51.013845' lon='4.007177' />
+  <node id='-15173' visible='true' lat='51.0138364' lon='4.0071983' />
+  <node id='-15172' visible='true' lat='51.0136913' lon='4.007507' />
+  <node id='-15171' visible='true' lat='51.0131841' lon='4.0049144' />
+  <node id='-15170' visible='true' lat='51.0131174' lon='4.0045037' />
+  <node id='-15169' visible='true' lat='51.0131124' lon='4.0041124' />
+  <node id='-15168' visible='true' lat='51.0131206' lon='4.0038742' />
+  <node id='-15167' visible='true' lat='51.0131714' lon='4.0035419' />
+  <node id='-15166' visible='true' lat='51.0132263' lon='4.0032812' />
+  <node id='-15165' visible='true' lat='51.0132914' lon='4.0030132' />
+  <node id='-15164' visible='true' lat='51.0133239' lon='4.0027037' />
+  <node id='-15163' visible='true' lat='51.013366' lon='4.0021859' />
+  <node id='-15162' visible='true' lat='51.0133907' lon='4.0018218' />
+  <node id='-15161' visible='true' lat='51.0134061' lon='4.0014891' />
+  <node id='-15160' visible='true' lat='51.0134012' lon='4.0011234' />
+  <node id='-15159' visible='true' lat='51.0132946' lon='4.0004699' />
+  <node id='-15158' visible='true' lat='51.013283' lon='4.0000946' />
+  <node id='-15157' visible='true' lat='51.0133149' lon='3.9997807' />
+  <node id='-15156' visible='true' lat='51.0227169' lon='3.9947844' />
+  <node id='-15155' visible='true' lat='51.0225558' lon='3.9948452' />
+  <node id='-15154' visible='true' lat='51.0222672' lon='3.9949224' />
+  <node id='-15153' visible='true' lat='51.0221963' lon='3.9949224' />
+  <node id='-15152' visible='true' lat='51.0221541' lon='3.994968' />
+  <node id='-15151' visible='true' lat='51.0221423' lon='3.9950511' />
+  <node id='-15150' visible='true' lat='51.0221609' lon='3.9951397' />
+  <node id='-15149' visible='true' lat='51.0222182' lon='3.9951611' />
+  <node id='-15148' visible='true' lat='51.0222739' lon='3.9951289' />
+  <node id='-15147' visible='true' lat='51.0223093' lon='3.9950511' />
+  <node id='-15146' visible='true' lat='51.0223184' lon='3.9949754' />
+  <node id='-15132' visible='true' lat='51.0123555' lon='4.0015799' />
+  <node id='-15131' visible='true' lat='51.0123778' lon='4.0012509' />
+  <node id='-15130' visible='true' lat='51.0158001' lon='3.9978712' />
+  <node id='-15129' visible='true' lat='51.015669' lon='3.997736' />
+  <node id='-15128' visible='true' lat='51.0153509' lon='3.9974223' />
+  <node id='-15127' visible='true' lat='51.0149176' lon='3.9972043' />
+  <node id='-15126' visible='true' lat='51.0145301' lon='3.9975768' />
+  <node id='-15125' visible='true' lat='51.0139449' lon='3.9980887' />
+  <node id='-15124' visible='true' lat='51.0134787' lon='3.9985078' />
+  <node id='-15123' visible='true' lat='51.0133752' lon='3.9985623' />
+  <node id='-15117' visible='true' lat='51.0151125' lon='3.9961732' />
+  <node id='-15116' visible='true' lat='51.0150175' lon='3.9965812' />
+  <node id='-15115' visible='true' lat='51.0149502' lon='3.996991' />
+  <node id='-15086' visible='true' lat='51.0133226' lon='4.0090327' />
+  <node id='-15085' visible='true' lat='51.013357' lon='4.008802' />
+  <node id='-15084' visible='true' lat='51.0134178' lon='4.0084021' />
+  <node id='-15083' visible='true' lat='51.0134465' lon='4.0082071' />
+  <node id='-15082' visible='true' lat='51.0134966' lon='4.0077896' />
+  <node id='-15081' visible='true' lat='51.0135335' lon='4.0073288' />
+  <node id='-15080' visible='true' lat='51.0135542' lon='4.0069385' />
+  <node id='-15079' visible='true' lat='51.0135391' lon='4.0061773' />
+  <node id='-15074' visible='true' lat='51.0167629' lon='3.9912283' />
+  <node id='-15073' visible='true' lat='51.0166586' lon='3.9911479' />
+  <node id='-15072' visible='true' lat='51.0165508' lon='3.9911802' />
+  <node id='-15071' visible='true' lat='51.0164574' lon='3.9912507' />
+  <node id='-15070' visible='true' lat='51.0160439' lon='3.9917663' />
+  <node id='-15069' visible='true' lat='51.0158826' lon='3.9919035' />
+  <node id='-15068' visible='true' lat='51.0150152' lon='3.992602' />
+  <node id='-15067' visible='true' lat='51.0142951' lon='3.9930907' />
+  <node id='-15066' visible='true' lat='51.0138865' lon='3.9933878' />
+  <node id='-15065' visible='true' lat='51.0136814' lon='3.9934201' />
+  <node id='-15064' visible='true' lat='51.0223761' lon='3.9930892' />
+  <node id='-15063' visible='true' lat='51.0217213' lon='3.9934797' />
+  <node id='-15062' visible='true' lat='51.0216314' lon='3.9934783' />
+  <node id='-15061' visible='true' lat='51.020626' lon='3.993294' />
+  <node id='-15060' visible='true' lat='51.0206158' lon='3.9932989' />
+  <node id='-15059' visible='true' lat='51.0148448' lon='4.0043732' />
+  <node id='-15051' visible='true' lat='51.016442' lon='3.994539' />
+  <node id='-15050' visible='true' lat='51.0166722' lon='3.9934114' />
+  <node id='-15049' visible='true' lat='51.0169077' lon='3.9924198' />
+  <node id='-15048' visible='true' lat='51.0168319' lon='4.001911' />
+  <node id='-15047' visible='true' lat='51.016665' lon='4.001994' />
+  <node id='-15046' visible='true' lat='51.017096' lon='3.99956' />
+  <node id='-15045' visible='true' lat='51.0164923' lon='4.000657' />
+  <node id='-15044' visible='true' lat='51.0163566' lon='4.0009912' />
+  <node id='-15043' visible='true' lat='51.0163108' lon='4.0012437' />
+  <node id='-15042' visible='true' lat='51.0162258' lon='4.0018005' />
+  <node id='-15041' visible='true' lat='51.0162243' lon='4.0019814' />
+  <node id='-15040' visible='true' lat='51.0162763' lon='4.0022523' />
+  <node id='-15039' visible='true' lat='51.0159868' lon='4.0024375' />
+  <node id='-15038' visible='true' lat='51.0158127' lon='4.0024683'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-15037' visible='true' lat='51.0158958' lon='4.0039851' />
+  <node id='-15036' visible='true' lat='51.0159706' lon='4.0040874' />
+  <node id='-15035' visible='true' lat='51.0161084' lon='4.0041741' />
+  <node id='-15034' visible='true' lat='51.0162815' lon='4.0042132' />
+  <node id='-15033' visible='true' lat='51.0164699' lon='4.004199' />
+  <node id='-15032' visible='true' lat='51.0167547' lon='4.0041382' />
+  <node id='-15031' visible='true' lat='51.0170076' lon='4.004014' />
+  <node id='-15030' visible='true' lat='51.0171053' lon='4.0039998' />
+  <node id='-15029' visible='true' lat='51.0172695' lon='4.0038954' />
+  <node id='-15028' visible='true' lat='51.0172226' lon='4.0034493' />
+  <node id='-15027' visible='true' lat='51.0192455' lon='3.9924522' />
+  <node id='-15026' visible='true' lat='51.01902' lon='3.9925296' />
+  <node id='-15025' visible='true' lat='51.0180529' lon='3.9928007' />
+  <node id='-15024' visible='true' lat='51.017826' lon='3.992865' />
+  <node id='-15023' visible='true' lat='51.017654' lon='3.992758' />
+  <node id='-15022' visible='true' lat='51.017418' lon='3.992307' />
+  <node id='-15021' visible='true' lat='51.017296' lon='3.9920003' />
+  <node id='-15020' visible='true' lat='51.0171274' lon='3.9917629' />
+  <node id='-15019' visible='true' lat='51.0188471' lon='4.0000583' />
+  <node id='-15013' visible='true' lat='51.0218352' lon='3.9903744' />
+  <node id='-15012' visible='true' lat='51.020712' lon='3.991449' />
+  <node id='-15011' visible='true' lat='51.0206224' lon='3.9915302' />
+  <node id='-15010' visible='true' lat='51.0127361' lon='4.0051936' />
+  <node id='-15009' visible='true' lat='51.0125528' lon='4.0053423' />
+  <node id='-15008' visible='true' lat='51.0120675' lon='4.0058877' />
+  <node id='-15001' visible='true' lat='51.0174429' lon='4.0058795' />
+  <node id='-15000' visible='true' lat='51.0170376' lon='4.0057852' />
+  <node id='-14999' visible='true' lat='51.016127' lon='4.0056377' />
+  <node id='-14998' visible='true' lat='51.0148332' lon='4.0053814' />
+  <node id='-14997' visible='true' lat='51.0144609' lon='4.0052972' />
+  <node id='-14996' visible='true' lat='51.0142968' lon='4.0052953' />
+  <node id='-14995' visible='true' lat='51.0132672' lon='4.0051379' />
+  <node id='-14994' visible='true' lat='51.0132259' lon='4.0051192' />
+  <node id='-14993' visible='true' lat='51.0129084' lon='4.0051217' />
+  <node id='-14974' visible='true' lat='51.0131288' lon='3.9931913' />
+  <node id='-14973' visible='true' lat='51.0130316' lon='3.9930634' />
+  <node id='-14972' visible='true' lat='51.0128171' lon='3.992812' />
+  <node id='-14971' visible='true' lat='51.0125546' lon='3.9926366' />
+  <node id='-14970' visible='true' lat='51.0170675' lon='3.9991733'>
+    <tag k='traffic_calming' v='table' />
+  </node>
+  <node id='-14969' visible='true' lat='51.0172284' lon='3.9993665' />
+  <node id='-14968' visible='true' lat='51.0176353' lon='3.9997449' />
+  <node id='-14967' visible='true' lat='51.0186699' lon='4.0007597' />
+  <node id='-14966' visible='true' lat='51.014233' lon='3.9946601' />
+  <node id='-14965' visible='true' lat='51.0145819' lon='3.9944919' />
+  <node id='-14964' visible='true' lat='51.015197' lon='3.99441' />
+  <node id='-14963' visible='true' lat='51.0154318' lon='3.9944204' />
+  <node id='-14962' visible='true' lat='51.015723' lon='3.99456' />
+  <node id='-14961' visible='true' lat='51.016259' lon='3.994818' />
+  <node id='-14960' visible='true' lat='51.0163932' lon='3.9948906' />
+  <node id='-14959' visible='true' lat='51.0150298' lon='4.0041968' />
+  <node id='-14958' visible='true' lat='51.0158018' lon='4.0037653' />
+  <node id='-14957' visible='true' lat='51.0170923' lon='4.0028967' />
+  <node id='-14956' visible='true' lat='51.0183574' lon='4.0021607' />
+  <node id='-14955' visible='true' lat='51.0169581' lon='4.0068742' />
+  <node id='-14954' visible='true' lat='51.0168954' lon='4.0068409' />
+  <node id='-14953' visible='true' lat='51.0163035' lon='4.0067247' />
+  <node id='-14952' visible='true' lat='51.0162165' lon='4.0068974' />
+  <node id='-14951' visible='true' lat='51.012247' lon='4.0036823' />
+  <node id='-14950' visible='true' lat='51.0122081' lon='4.0046407' />
+  <node id='-14949' visible='true' lat='51.0122049' lon='4.0048054' />
+  <node id='-14948' visible='true' lat='51.0125535' lon='4.0004673'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-14947' visible='true' lat='51.0129282' lon='4.000743' />
+  <node id='-14946' visible='true' lat='51.0132456' lon='4.0007803' />
+  <node id='-14945' visible='true' lat='51.0133258' lon='4.000777' />
+  <node id='-14942' visible='true' lat='51.0177877' lon='4.0078809' />
+  <node id='-14941' visible='true' lat='51.0161503' lon='4.0086726' />
+  <node id='-14940' visible='true' lat='51.0142748' lon='3.9977942' />
+  <node id='-14939' visible='true' lat='51.0138875' lon='3.9967614' />
+  <node id='-14938' visible='true' lat='51.0136587' lon='3.9961887' />
+  <node id='-14937' visible='true' lat='51.0133323' lon='3.9951455' />
+  <node id='-14936' visible='true' lat='51.0130994' lon='3.9948189' />
+  <node id='-14935' visible='true' lat='51.012837' lon='3.994732' />
+  <node id='-14934' visible='true' lat='51.0127306' lon='3.9947308' />
+  <node id='-14933' visible='true' lat='51.0130375' lon='3.9967283' />
+  <node id='-14932' visible='true' lat='51.012933' lon='3.996792' />
+  <node id='-14931' visible='true' lat='51.012772' lon='3.996921' />
+  <node id='-14930' visible='true' lat='51.0125753' lon='3.9973794' />
+  <node id='-14929' visible='true' lat='51.012386' lon='3.998165' />
+  <node id='-14928' visible='true' lat='51.012322' lon='3.998744' />
+  <node id='-14927' visible='true' lat='51.0123029' lon='3.9990121' />
+  <node id='-14924' visible='true' lat='51.0160017' lon='4.0087491' />
+  <node id='-14923' visible='true' lat='51.0159131' lon='4.0085748' />
+  <node id='-14922' visible='true' lat='51.0152753' lon='4.0075205' />
+  <node id='-14921' visible='true' lat='51.0150431' lon='4.0071772' />
+  <node id='-14920' visible='true' lat='51.0150236' lon='4.0071447' />
+  <node id='-14919' visible='true' lat='51.0149898' lon='4.0071032' />
+  <node id='-14918' visible='true' lat='51.0148321' lon='4.0069146' />
+  <node id='-14917' visible='true' lat='51.0141585' lon='4.0060505' />
+  <node id='-14916' visible='true' lat='51.013807' lon='4.0057721' />
+  <node id='-14915' visible='true' lat='51.0133458' lon='4.0054961' />
+  <node id='-14914' visible='true' lat='51.0154864' lon='4.007763' />
+  <node id='-14913' visible='true' lat='51.0155467' lon='4.0076494' />
+  <node id='-14912' visible='true' lat='51.015465' lon='4.0069757' />
+  <node id='-14911' visible='true' lat='51.0154598' lon='4.0069331' />
+  <node id='-14910' visible='true' lat='51.0152225' lon='4.005479' />
+  <node id='-14909' visible='true' lat='51.0133385' lon='4.0024975' />
+  <node id='-14908' visible='true' lat='51.0132093' lon='4.0024788' />
+  <node id='-14907' visible='true' lat='51.012681' lon='4.0023437' />
+  <node id='-14882' visible='true' lat='51.0157387' lon='4.0055058'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Emiel Hertecantlaan' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Fabriekstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='206278' />
+    <tag k='route_ref' v='29;53;54;355' />
+    <tag k='source' v='survey;bing' />
+  </node>
+  <node id='-14877' visible='true' lat='51.0187426' lon='3.9964834'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-14844' visible='true' lat='51.0142049' lon='4.0043797'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <node id='-14841' visible='true' lat='51.015622' lon='4.0055908'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Emiel Hertecantlaan' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Fabriekstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='207278' />
+    <tag k='route_ref' v='29;53;54' />
+    <tag k='source' v='survey;bing' />
+  </node>
+  <node id='-14836' visible='true' lat='51.012263' lon='4.005777'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Emiel Hertecantlaan' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Christiaensstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='207279' />
+    <tag k='route_ref' v='29;54' />
+  </node>
+  <node id='-14835' visible='true' lat='51.0133341' lon='3.9985207'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Bergstraat' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Bunderdreef' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='204162' />
+    <tag k='route_ref' v='55' />
+  </node>
+  <node id='-14833' visible='true' lat='51.020364' lon='3.992061'>
+    <tag k='addr:city' v='Berlare' />
+    <tag k='addr:street' v='Galgenbergstraat' />
+    <tag k='highway' v='bus_stop' />
+    <tag k='name' v='Sint-Jobstraat' />
+    <tag k='operator' v='De Lijn' />
+    <tag k='ref' v='204163' />
+    <tag k='route_ref' v='355' />
+  </node>
+  <node id='-14797' visible='true' lat='51.0177788' lon='4.0010845'>
+    <tag k='highway' v='turning_circle' />
+  </node>
+  <way id='-16554' visible='true'>
+    <nd ref='-16986' />
+    <nd ref='-16987' />
+    <nd ref='-16988' />
+    <nd ref='-16804' />
+    <nd ref='-16989' />
+    <nd ref='-16990' />
+    <nd ref='-16991' />
+    <nd ref='-16712' />
+    <nd ref='-16992' />
+    <nd ref='-16982' />
+    <nd ref='-16984' />
+    <nd ref='-16661' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='tertiary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hoogstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16553' visible='true'>
+    <nd ref='-16984' />
+    <nd ref='-16983' />
+    <nd ref='-16985' />
+    <nd ref='-16710' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-16552' visible='true'>
+    <nd ref='-16982' />
+    <nd ref='-16983' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-16551' visible='true'>
+    <nd ref='-16492' />
+    <nd ref='-16976' />
+    <nd ref='-16977' />
+    <nd ref='-16978' />
+    <nd ref='-16979' />
+    <nd ref='-16980' />
+    <nd ref='-16981' />
+    <nd ref='-16897' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hofland' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16550' visible='true'>
+    <nd ref='-16920' />
+    <nd ref='-16973' />
+    <nd ref='-16974' />
+    <nd ref='-16975' />
+    <nd ref='-16967' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Salvialaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16549' visible='true'>
+    <nd ref='-16914' />
+    <nd ref='-16968' />
+    <nd ref='-16970' />
+    <nd ref='-16971' />
+    <nd ref='-16972' />
+    <nd ref='-16966' />
+    <nd ref='-16675' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Rozenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16548' visible='true'>
+    <nd ref='-16968' />
+    <nd ref='-16969' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Rozenlaan' />
+  </way>
+  <way id='-16547' visible='true'>
+    <nd ref='-16966' />
+    <nd ref='-16967' />
+    <nd ref='-16915' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Tulpenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16546' visible='true'>
+    <nd ref='-16559' />
+    <nd ref='-16965' />
+    <nd ref='-16600' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-16544' visible='true'>
+    <nd ref='-16676' />
+    <nd ref='-16960' />
+    <nd ref='-16961' />
+    <nd ref='-16679' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Molenvenne' />
+  </way>
+  <way id='-16543' visible='true'>
+    <nd ref='-16949' />
+    <nd ref='-16950' />
+    <nd ref='-16951' />
+    <nd ref='-16582' />
+    <nd ref='-16952' />
+    <nd ref='-16953' />
+    <nd ref='-16954' />
+    <nd ref='-16581' />
+    <nd ref='-16955' />
+    <nd ref='-16771' />
+    <nd ref='-16956' />
+    <nd ref='-16957' />
+    <nd ref='-16958' />
+    <nd ref='-16959' />
+    <nd ref='-16897' />
+    <nd ref='-16852' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='no' />
+    <tag k='name' v='Bergstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='2' />
+  </way>
+  <way id='-16542' visible='true'>
+    <nd ref='-16619' />
+    <nd ref='-16948' />
+    <nd ref='-16949' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='no' />
+    <tag k='name' v='Bergstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='2' />
+  </way>
+  <way id='-16541' visible='true'>
+    <nd ref='-16661' />
+    <nd ref='-16924' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='tertiary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hoogstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16540' visible='true'>
+    <nd ref='-16925' />
+    <nd ref='-16947' />
+    <tag k='created_by' v='Potlatch 0.10c' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Turfputstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16539' visible='true'>
+    <nd ref='-16936' />
+    <nd ref='-16942' />
+    <nd ref='-16943' />
+    <nd ref='-16944' />
+    <nd ref='-16945' />
+    <nd ref='-16946' />
+    <nd ref='-16445' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bremstraat' />
+    <tag k='noexit' v='yes' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16538' visible='true'>
+    <nd ref='-16940' />
+    <nd ref='-16941' />
+    <nd ref='-16942' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='highway' v='service' />
+  </way>
+  <way id='-16537' visible='true'>
+    <nd ref='-16616' />
+    <nd ref='-16936' />
+    <nd ref='-16937' />
+    <nd ref='-16938' />
+    <nd ref='-16696' />
+    <nd ref='-16939' />
+    <nd ref='-16605' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Boonvennestraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16536' visible='true'>
+    <nd ref='-16931' />
+    <nd ref='-16932' />
+    <nd ref='-16933' />
+    <nd ref='-16934' />
+    <nd ref='-16935' />
+    <nd ref='-16846' />
+    <tag k='created_by' v='Potlatch 0.10b' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-16535' visible='true'>
+    <nd ref='-16649' />
+    <nd ref='-16928' />
+    <nd ref='-16929' />
+    <nd ref='-16905' />
+    <nd ref='-16872' />
+    <nd ref='-16604' />
+    <nd ref='-16927' />
+    <nd ref='-16615' />
+    <nd ref='-16667' />
+    <nd ref='-16930' />
+    <nd ref='-16867' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Galgenbergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16533' visible='true'>
+    <nd ref='-16572' />
+    <nd ref='-16926' />
+    <nd ref='-16603' />
+    <nd ref='-16648' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hoekskensweg' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16532' visible='true'>
+    <nd ref='-16924' />
+    <nd ref='-16925' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='-16531' visible='true'>
+    <nd ref='-16659' />
+    <nd ref='-16918' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Sint-Jobstraat' />
+  </way>
+  <way id='-16529' visible='true'>
+    <nd ref='-16675' />
+    <nd ref='-16920' />
+    <nd ref='-16921' />
+    <nd ref='-16919' />
+    <nd ref='-16922' />
+    <nd ref='-16923' />
+    <nd ref='-16659' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Sint-Jobstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16528' visible='true'>
+    <nd ref='-16867' />
+    <nd ref='-16912' />
+    <nd ref='-16913' />
+    <nd ref='-16914' />
+    <nd ref='-16893' />
+    <nd ref='-16915' />
+    <nd ref='-16916' />
+    <nd ref='-16708' />
+    <nd ref='-16917' />
+    <nd ref='-16918' />
+    <nd ref='-16919' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Galgenbergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16526' visible='true'>
+    <nd ref='-16906' />
+    <nd ref='-16907' />
+    <nd ref='-16908' />
+    <nd ref='-16909' />
+    <nd ref='-16910' />
+    <nd ref='-16911' />
+    <nd ref='-16721' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-16524' visible='true'>
+    <nd ref='-16647' />
+    <nd ref='-16898' />
+    <nd ref='-16899' />
+    <nd ref='-16900' />
+    <nd ref='-16901' />
+    <nd ref='-16902' />
+    <nd ref='-16903' />
+    <nd ref='-16904' />
+    <nd ref='-16905' />
+    <tag k='created_by' v='Potlatch 0.10b' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Fabriekstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16523' visible='true'>
+    <nd ref='-16707' />
+    <nd ref='-16895' />
+    <nd ref='-16896' />
+    <nd ref='-16851' />
+    <nd ref='-16852' />
+    <nd ref='-16897' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Bergstraat' />
+  </way>
+  <way id='-16512' visible='true'>
+    <nd ref='-16558' />
+    <nd ref='-16607' />
+    <nd ref='-16851' />
+    <nd ref='-16852' />
+    <nd ref='-16853' />
+    <nd ref='-16854' />
+    <nd ref='-16778' />
+    <nd ref='-16841' />
+    <nd ref='-16608' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Heidekasteeldreef' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16511' visible='true'>
+    <nd ref='-16841' />
+    <nd ref='-16842' />
+    <nd ref='-16843' />
+    <nd ref='-16844' />
+    <nd ref='-16845' />
+    <nd ref='-16846' />
+    <nd ref='-16847' />
+    <nd ref='-16848' />
+    <nd ref='-16849' />
+    <nd ref='-16850' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-16510' visible='true'>
+    <nd ref='-16622' />
+    <nd ref='-16834' />
+    <nd ref='-16614' />
+    <nd ref='-16835' />
+    <nd ref='-16836' />
+    <nd ref='-16837' />
+    <nd ref='-16838' />
+    <nd ref='-16839' />
+    <nd ref='-16840' />
+    <nd ref='-16764' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kastanjelaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16507' visible='true'>
+    <nd ref='-16646' />
+    <nd ref='-16566' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='J.B. Vander Cruyssenstraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16505' visible='true'>
+    <nd ref='-16567' />
+    <nd ref='-16825' />
+    <nd ref='-16826' />
+    <nd ref='-16827' />
+    <nd ref='-16821' />
+    <nd ref='-16728' />
+    <nd ref='-16828' />
+    <nd ref='-16829' />
+    <nd ref='-16830' />
+    <nd ref='-16831' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-16504' visible='true'>
+    <nd ref='-16730' />
+    <nd ref='-16820' />
+    <nd ref='-16821' />
+    <nd ref='-16822' />
+    <nd ref='-16823' />
+    <nd ref='-16824' />
+    <nd ref='-16565' />
+    <nd ref='-16644' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Marten D&apos;Hoogestraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16503' visible='true'>
+    <nd ref='-16805' />
+    <nd ref='-16806' />
+    <nd ref='-16807' />
+    <nd ref='-16593' />
+    <nd ref='-16808' />
+    <nd ref='-16809' />
+    <nd ref='-16810' />
+    <nd ref='-16811' />
+    <nd ref='-16557' />
+    <nd ref='-16812' />
+    <nd ref='-16813' />
+    <nd ref='-16814' />
+    <nd ref='-16815' />
+    <nd ref='-16816' />
+    <nd ref='-16817' />
+    <nd ref='-16818' />
+    <nd ref='-16819' />
+    <nd ref='-16642' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bunderstraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_single' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16502' visible='true'>
+    <nd ref='-16794' />
+    <nd ref='-16795' />
+    <nd ref='-16796' />
+    <nd ref='-16797' />
+    <nd ref='-16798' />
+    <nd ref='-16799' />
+    <nd ref='-16800' />
+    <nd ref='-16801' />
+    <nd ref='-16802' />
+    <nd ref='-16794' />
+    <nd ref='-16803' />
+    <nd ref='-16804' />
+    <tag k='highway' v='unclassified' />
+  </way>
+  <way id='-16499' visible='true'>
+    <nd ref='-16779' />
+    <nd ref='-16780' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-16498' visible='true'>
+    <nd ref='-16771' />
+    <nd ref='-16772' />
+    <nd ref='-16773' />
+    <nd ref='-16588' />
+    <nd ref='-16774' />
+    <nd ref='-16775' />
+    <nd ref='-16763' />
+    <nd ref='-16776' />
+    <nd ref='-16777' />
+    <nd ref='-16778' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bunderdreef' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16495' visible='true'>
+    <nd ref='-16763' />
+    <nd ref='-16764' />
+    <nd ref='-16765' />
+    <nd ref='-16611' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Eikenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16486' visible='true'>
+    <nd ref='-16643' />
+    <nd ref='-16563' />
+    <nd ref='-16727' />
+    <nd ref='-16728' />
+    <nd ref='-16729' />
+    <nd ref='-16730' />
+    <nd ref='-16731' />
+    <nd ref='-16732' />
+    <nd ref='-16733' />
+    <nd ref='-16734' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Daal' />
+    <tag k='oneway' v='yes' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16482' visible='true'>
+    <nd ref='-16622' />
+    <nd ref='-16713' />
+    <nd ref='-16714' />
+    <nd ref='-16715' />
+    <nd ref='-16716' />
+    <nd ref='-16717' />
+    <nd ref='-16718' />
+    <nd ref='-16719' />
+    <nd ref='-16720' />
+    <nd ref='-16721' />
+    <nd ref='-16722' />
+    <nd ref='-16668' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-16480' visible='true'>
+    <nd ref='-16708' />
+    <nd ref='-16709' />
+    <nd ref='-16710' />
+    <nd ref='-16711' />
+    <nd ref='-16712' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='name' v='Eremijtenwegel' />
+  </way>
+  <way id='-16479' visible='true'>
+    <nd ref='-16607' />
+    <nd ref='-16707' />
+    <nd ref='-16645' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Bergstraat' />
+    <tag k='oneway' v='yes' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='2' />
+  </way>
+  <way id='-16475' visible='true'>
+    <nd ref='-16668' />
+    <nd ref='-16697' />
+    <nd ref='-16698' />
+    <nd ref='-16699' />
+    <nd ref='-16608' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-16474' visible='true'>
+    <nd ref='-16688' />
+    <nd ref='-16695' />
+    <nd ref='-16696' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Biezenstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16473' visible='true'>
+    <nd ref='-16686' />
+    <nd ref='-16687' />
+    <nd ref='-16688' />
+    <nd ref='-16689' />
+    <nd ref='-16690' />
+    <nd ref='-16691' />
+    <nd ref='-16692' />
+    <nd ref='-16693' />
+    <nd ref='-16694' />
+    <nd ref='-16617' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Biezenstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16472' visible='true'>
+    <nd ref='-16605' />
+    <nd ref='-16676' />
+    <nd ref='-16677' />
+    <nd ref='-16678' />
+    <nd ref='-16679' />
+    <nd ref='-16680' />
+    <nd ref='-16681' />
+    <nd ref='-16682' />
+    <nd ref='-16683' />
+    <nd ref='-16684' />
+    <nd ref='-16685' />
+    <nd ref='-16606' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Molenvenne' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16471' visible='true'>
+    <nd ref='-16668' />
+    <nd ref='-16669' />
+    <nd ref='-16670' />
+    <nd ref='-16671' />
+    <nd ref='-16672' />
+    <nd ref='-16673' />
+    <nd ref='-16674' />
+    <nd ref='-16675' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-16469' visible='true'>
+    <nd ref='-16659' />
+    <nd ref='-16660' />
+    <nd ref='-16661' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Sint-Jobstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16468' visible='true'>
+    <nd ref='-16656' />
+    <nd ref='-16657' />
+    <nd ref='-16658' />
+    <nd ref='-16641' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Brugstraat' />
+    <tag k='parking_lane' v='inroad_double' />
+    <tag k='ref' v='N467' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='5' />
+  </way>
+  <way id='-16465' action='modify' visible='true'>
+    <nd ref='-16641' />
+    <nd ref='-16642' />
+    <nd ref='-16643' />
+    <nd ref='-16644' />
+    <nd ref='-16645' />
+    <nd ref='-16646' />
+    <nd ref='-16558' />
+    <nd ref='-16647' />
+    <nd ref='-16648' />
+    <nd ref='-16649' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Emiel Hertecantlaan' />
+    <tag k='parking_lane' v='inroad_double' />
+    <tag k='ref' v='N467' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='5' />
+  </way>
+  <way id='-16460' visible='true'>
+    <nd ref='-16619' />
+    <nd ref='-16620' />
+    <nd ref='-16621' />
+    <nd ref='-16622' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kastanjelaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16459' visible='true'>
+    <nd ref='-16615' />
+    <nd ref='-16616' />
+    <nd ref='-16617' />
+    <nd ref='-16618' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Zandbergstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16458' visible='true'>
+    <nd ref='-16608' />
+    <nd ref='-16609' />
+    <nd ref='-16610' />
+    <nd ref='-16611' />
+    <nd ref='-16612' />
+    <nd ref='-16613' />
+    <nd ref='-16614' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Beukenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16457' visible='true'>
+    <nd ref='-16604' />
+    <nd ref='-16605' />
+    <nd ref='-16606' />
+    <nd ref='-16607' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Molendreef' />
+    <tag k='parking_lane' v='separate_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16456' visible='true'>
+    <nd ref='-16568' />
+    <nd ref='-16560' />
+    <tag k='highway' v='cycleway' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-16455' visible='true'>
+    <nd ref='-16600' />
+    <nd ref='-16601' />
+    <nd ref='-16602' />
+    <nd ref='-16603' />
+    <tag k='highway' v='cycleway' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-16454' visible='true'>
+    <nd ref='-16597' />
+    <nd ref='-16598' />
+    <nd ref='-16599' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kleine Daelvenne' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16453' visible='true'>
+    <nd ref='-16593' />
+    <nd ref='-16594' />
+    <nd ref='-16595' />
+    <nd ref='-16596' />
+    <tag k='created_by' v='Potlatch 0.10d' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bunderstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='separate_single' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16452' action='modify' visible='true'>
+    <nd ref='-16572' />
+    <nd ref='-16589' />
+    <nd ref='-16590' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Alfons de Grauwelaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16450' visible='true'>
+    <nd ref='-16582' />
+    <nd ref='-16583' />
+    <nd ref='-16584' />
+    <nd ref='-16585' />
+    <nd ref='-16586' />
+    <nd ref='-16587' />
+    <nd ref='-16588' />
+    <tag k='created_by' v='Potlatch 0.10d' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Konijnenbergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16449' visible='true'>
+    <nd ref='-16575' />
+    <nd ref='-16576' />
+    <nd ref='-16577' />
+    <nd ref='-16578' />
+    <nd ref='-16579' />
+    <nd ref='-16580' />
+    <nd ref='-16581' />
+    <tag k='created_by' v='Potlatch 0.10d' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kleine Bergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-16447' visible='true'>
+    <nd ref='-16563' />
+    <nd ref='-16564' />
+    <nd ref='-16565' />
+    <nd ref='-16566' />
+    <nd ref='-16567' />
+    <nd ref='-16568' />
+    <nd ref='-16569' />
+    <nd ref='-16570' />
+    <nd ref='-16562' />
+    <nd ref='-16571' />
+    <nd ref='-16572' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Jan-Baptist Courtmansstraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16446' visible='true'>
+    <nd ref='-16558' />
+    <nd ref='-16559' />
+    <nd ref='-16560' />
+    <nd ref='-16561' />
+    <nd ref='-16562' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Pater Heirmanshoek' />
+    <tag k='oneway' v='yes' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-16444' visible='true'>
+    <nd ref='-16555' />
+    <nd ref='-16556' />
+    <nd ref='-16557' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Daelvenne' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15455' visible='true'>
+    <nd ref='-15887' />
+    <nd ref='-15888' />
+    <nd ref='-15889' />
+    <nd ref='-15705' />
+    <nd ref='-15890' />
+    <nd ref='-15891' />
+    <nd ref='-15892' />
+    <nd ref='-15613' />
+    <nd ref='-15893' />
+    <nd ref='-15883' />
+    <nd ref='-15885' />
+    <nd ref='-15562' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='tertiary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hoogstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15454' visible='true'>
+    <nd ref='-15885' />
+    <nd ref='-15884' />
+    <nd ref='-15886' />
+    <nd ref='-15611' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-15453' visible='true'>
+    <nd ref='-15883' />
+    <nd ref='-15884' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-15452' visible='true'>
+    <nd ref='-15393' />
+    <nd ref='-15877' />
+    <nd ref='-15878' />
+    <nd ref='-15879' />
+    <nd ref='-15880' />
+    <nd ref='-15881' />
+    <nd ref='-15882' />
+    <nd ref='-15798' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hofland' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15451' visible='true'>
+    <nd ref='-15821' />
+    <nd ref='-15874' />
+    <nd ref='-15875' />
+    <nd ref='-15876' />
+    <nd ref='-15868' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Salvialaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15450' visible='true'>
+    <nd ref='-15815' />
+    <nd ref='-15869' />
+    <nd ref='-15871' />
+    <nd ref='-15872' />
+    <nd ref='-15873' />
+    <nd ref='-15867' />
+    <nd ref='-15576' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Rozenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15449' visible='true'>
+    <nd ref='-15869' />
+    <nd ref='-15870' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Rozenlaan' />
+  </way>
+  <way id='-15448' visible='true'>
+    <nd ref='-15867' />
+    <nd ref='-15868' />
+    <nd ref='-15816' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Tulpenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15447' visible='true'>
+    <nd ref='-15460' />
+    <nd ref='-15866' />
+    <nd ref='-15501' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-15445' visible='true'>
+    <nd ref='-15577' />
+    <nd ref='-15861' />
+    <nd ref='-15862' />
+    <nd ref='-15580' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Molenvenne' />
+  </way>
+  <way id='-15444' visible='true'>
+    <nd ref='-15850' />
+    <nd ref='-15851' />
+    <nd ref='-15852' />
+    <nd ref='-15483' />
+    <nd ref='-15853' />
+    <nd ref='-15854' />
+    <nd ref='-15855' />
+    <nd ref='-15482' />
+    <nd ref='-15856' />
+    <nd ref='-15672' />
+    <nd ref='-15857' />
+    <nd ref='-15858' />
+    <nd ref='-15859' />
+    <nd ref='-15860' />
+    <nd ref='-15798' />
+    <nd ref='-15753' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='no' />
+    <tag k='name' v='Bergstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='2' />
+  </way>
+  <way id='-15443' visible='true'>
+    <nd ref='-15520' />
+    <nd ref='-15849' />
+    <nd ref='-15850' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='no' />
+    <tag k='name' v='Bergstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='2' />
+  </way>
+  <way id='-15442' visible='true'>
+    <nd ref='-15562' />
+    <nd ref='-15825' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='tertiary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hoogstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15441' visible='true'>
+    <nd ref='-15826' />
+    <nd ref='-15848' />
+    <tag k='created_by' v='Potlatch 0.10c' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Turfputstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15440' visible='true'>
+    <nd ref='-15837' />
+    <nd ref='-15843' />
+    <nd ref='-15844' />
+    <nd ref='-15845' />
+    <nd ref='-15846' />
+    <nd ref='-15847' />
+    <nd ref='-15346' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bremstraat' />
+    <tag k='noexit' v='yes' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15439' visible='true'>
+    <nd ref='-15841' />
+    <nd ref='-15842' />
+    <nd ref='-15843' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='highway' v='service' />
+  </way>
+  <way id='-15438' visible='true'>
+    <nd ref='-15517' />
+    <nd ref='-15837' />
+    <nd ref='-15838' />
+    <nd ref='-15839' />
+    <nd ref='-15597' />
+    <nd ref='-15840' />
+    <nd ref='-15506' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Boonvennestraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15437' visible='true'>
+    <nd ref='-15832' />
+    <nd ref='-15833' />
+    <nd ref='-15834' />
+    <nd ref='-15835' />
+    <nd ref='-15836' />
+    <nd ref='-15747' />
+    <tag k='created_by' v='Potlatch 0.10b' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-15436' visible='true'>
+    <nd ref='-15550' />
+    <nd ref='-15829' />
+    <nd ref='-15830' />
+    <nd ref='-15806' />
+    <nd ref='-15773' />
+    <nd ref='-15505' />
+    <nd ref='-15828' />
+    <nd ref='-15516' />
+    <nd ref='-15568' />
+    <nd ref='-15831' />
+    <nd ref='-15768' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Galgenbergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15434' visible='true'>
+    <nd ref='-15473' />
+    <nd ref='-15827' />
+    <nd ref='-15504' />
+    <nd ref='-15549' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hoekskensweg' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15433' visible='true'>
+    <nd ref='-15825' />
+    <nd ref='-15826' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='-15432' visible='true'>
+    <nd ref='-15560' />
+    <nd ref='-15819' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Sint-Jobstraat' />
+  </way>
+  <way id='-15430' visible='true'>
+    <nd ref='-15576' />
+    <nd ref='-15821' />
+    <nd ref='-15822' />
+    <nd ref='-15820' />
+    <nd ref='-15823' />
+    <nd ref='-15824' />
+    <nd ref='-15560' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Sint-Jobstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15429' visible='true'>
+    <nd ref='-15768' />
+    <nd ref='-15813' />
+    <nd ref='-15814' />
+    <nd ref='-15815' />
+    <nd ref='-15794' />
+    <nd ref='-15816' />
+    <nd ref='-15817' />
+    <nd ref='-15609' />
+    <nd ref='-15818' />
+    <nd ref='-15819' />
+    <nd ref='-15820' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Galgenbergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15427' visible='true'>
+    <nd ref='-15807' />
+    <nd ref='-15808' />
+    <nd ref='-15809' />
+    <nd ref='-15810' />
+    <nd ref='-15811' />
+    <nd ref='-15812' />
+    <nd ref='-15622' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-15425' visible='true'>
+    <nd ref='-15548' />
+    <nd ref='-15799' />
+    <nd ref='-15800' />
+    <nd ref='-15801' />
+    <nd ref='-15802' />
+    <nd ref='-15803' />
+    <nd ref='-15804' />
+    <nd ref='-15805' />
+    <nd ref='-15806' />
+    <tag k='created_by' v='Potlatch 0.10b' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Fabriekstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15424' visible='true'>
+    <nd ref='-15608' />
+    <nd ref='-15796' />
+    <nd ref='-15797' />
+    <nd ref='-15752' />
+    <nd ref='-15753' />
+    <nd ref='-15798' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Bergstraat' />
+  </way>
+  <way id='-15413' visible='true'>
+    <nd ref='-15459' />
+    <nd ref='-15508' />
+    <nd ref='-15752' />
+    <nd ref='-15753' />
+    <nd ref='-15754' />
+    <nd ref='-15755' />
+    <nd ref='-15679' />
+    <nd ref='-15742' />
+    <nd ref='-15509' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Heidekasteeldreef' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15412' visible='true'>
+    <nd ref='-15742' />
+    <nd ref='-15743' />
+    <nd ref='-15744' />
+    <nd ref='-15745' />
+    <nd ref='-15746' />
+    <nd ref='-15747' />
+    <nd ref='-15748' />
+    <nd ref='-15749' />
+    <nd ref='-15750' />
+    <nd ref='-15751' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-15411' visible='true'>
+    <nd ref='-15523' />
+    <nd ref='-15735' />
+    <nd ref='-15515' />
+    <nd ref='-15736' />
+    <nd ref='-15737' />
+    <nd ref='-15738' />
+    <nd ref='-15739' />
+    <nd ref='-15740' />
+    <nd ref='-15741' />
+    <nd ref='-15665' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kastanjelaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15408' visible='true'>
+    <nd ref='-15547' />
+    <nd ref='-15467' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='J.B. Vander Cruyssenstraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15406' visible='true'>
+    <nd ref='-15468' />
+    <nd ref='-15726' />
+    <nd ref='-15727' />
+    <nd ref='-15728' />
+    <nd ref='-15722' />
+    <nd ref='-15629' />
+    <nd ref='-15729' />
+    <nd ref='-15730' />
+    <nd ref='-15731' />
+    <nd ref='-15732' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-15405' visible='true'>
+    <nd ref='-15631' />
+    <nd ref='-15721' />
+    <nd ref='-15722' />
+    <nd ref='-15723' />
+    <nd ref='-15724' />
+    <nd ref='-15725' />
+    <nd ref='-15466' />
+    <nd ref='-15545' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Marten D&apos;Hoogestraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15404' visible='true'>
+    <nd ref='-15706' />
+    <nd ref='-15707' />
+    <nd ref='-15708' />
+    <nd ref='-15494' />
+    <nd ref='-15709' />
+    <nd ref='-15710' />
+    <nd ref='-15711' />
+    <nd ref='-15712' />
+    <nd ref='-15458' />
+    <nd ref='-15713' />
+    <nd ref='-15714' />
+    <nd ref='-15715' />
+    <nd ref='-15716' />
+    <nd ref='-15717' />
+    <nd ref='-15718' />
+    <nd ref='-15719' />
+    <nd ref='-15720' />
+    <nd ref='-15543' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bunderstraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_single' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15403' visible='true'>
+    <nd ref='-15695' />
+    <nd ref='-15696' />
+    <nd ref='-15697' />
+    <nd ref='-15698' />
+    <nd ref='-15699' />
+    <nd ref='-15700' />
+    <nd ref='-15701' />
+    <nd ref='-15702' />
+    <nd ref='-15703' />
+    <nd ref='-15695' />
+    <nd ref='-15704' />
+    <nd ref='-15705' />
+    <tag k='highway' v='unclassified' />
+  </way>
+  <way id='-15400' visible='true'>
+    <nd ref='-15680' />
+    <nd ref='-15681' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-15399' visible='true'>
+    <nd ref='-15672' />
+    <nd ref='-15673' />
+    <nd ref='-15674' />
+    <nd ref='-15489' />
+    <nd ref='-15675' />
+    <nd ref='-15676' />
+    <nd ref='-15664' />
+    <nd ref='-15677' />
+    <nd ref='-15678' />
+    <nd ref='-15679' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bunderdreef' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15396' visible='true'>
+    <nd ref='-15664' />
+    <nd ref='-15665' />
+    <nd ref='-15666' />
+    <nd ref='-15512' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Eikenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15387' visible='true'>
+    <nd ref='-15544' />
+    <nd ref='-15464' />
+    <nd ref='-15628' />
+    <nd ref='-15629' />
+    <nd ref='-15630' />
+    <nd ref='-15631' />
+    <nd ref='-15632' />
+    <nd ref='-15633' />
+    <nd ref='-15634' />
+    <nd ref='-15635' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Daal' />
+    <tag k='oneway' v='yes' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15383' visible='true'>
+    <nd ref='-15523' />
+    <nd ref='-15614' />
+    <nd ref='-15615' />
+    <nd ref='-15616' />
+    <nd ref='-15617' />
+    <nd ref='-15618' />
+    <nd ref='-15619' />
+    <nd ref='-15620' />
+    <nd ref='-15621' />
+    <nd ref='-15622' />
+    <nd ref='-15623' />
+    <nd ref='-15569' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-15381' visible='true'>
+    <nd ref='-15609' />
+    <nd ref='-15610' />
+    <nd ref='-15611' />
+    <nd ref='-15612' />
+    <nd ref='-15613' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='name' v='Eremijtenwegel' />
+  </way>
+  <way id='-15380' visible='true'>
+    <nd ref='-15508' />
+    <nd ref='-15608' />
+    <nd ref='-15546' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Bergstraat' />
+    <tag k='oneway' v='yes' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='2' />
+  </way>
+  <way id='-15376' visible='true'>
+    <nd ref='-15569' />
+    <nd ref='-15598' />
+    <nd ref='-15599' />
+    <nd ref='-15600' />
+    <nd ref='-15509' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-15375' visible='true'>
+    <nd ref='-15589' />
+    <nd ref='-15596' />
+    <nd ref='-15597' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Biezenstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15374' visible='true'>
+    <nd ref='-15587' />
+    <nd ref='-15588' />
+    <nd ref='-15589' />
+    <nd ref='-15590' />
+    <nd ref='-15591' />
+    <nd ref='-15592' />
+    <nd ref='-15593' />
+    <nd ref='-15594' />
+    <nd ref='-15595' />
+    <nd ref='-15518' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Biezenstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15373' visible='true'>
+    <nd ref='-15506' />
+    <nd ref='-15577' />
+    <nd ref='-15578' />
+    <nd ref='-15579' />
+    <nd ref='-15580' />
+    <nd ref='-15581' />
+    <nd ref='-15582' />
+    <nd ref='-15583' />
+    <nd ref='-15584' />
+    <nd ref='-15585' />
+    <nd ref='-15586' />
+    <nd ref='-15507' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Molenvenne' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15372' visible='true'>
+    <nd ref='-15569' />
+    <nd ref='-15570' />
+    <nd ref='-15571' />
+    <nd ref='-15572' />
+    <nd ref='-15573' />
+    <nd ref='-15574' />
+    <nd ref='-15575' />
+    <nd ref='-15576' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-15370' visible='true'>
+    <nd ref='-15560' />
+    <nd ref='-15561' />
+    <nd ref='-15562' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Sint-Jobstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15369' visible='true'>
+    <nd ref='-15557' />
+    <nd ref='-15558' />
+    <nd ref='-15559' />
+    <nd ref='-15542' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Brugstraat' />
+    <tag k='parking_lane' v='inroad_double' />
+    <tag k='ref' v='N467' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='5' />
+  </way>
+  <way id='-15366' action='modify' visible='true'>
+    <nd ref='-15542' />
+    <nd ref='-15543' />
+    <nd ref='-15544' />
+    <nd ref='-15545' />
+    <nd ref='-15546' />
+    <nd ref='-15547' />
+    <nd ref='-15459' />
+    <nd ref='-15548' />
+    <nd ref='-15549' />
+    <nd ref='-15550' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Emiel Hertecantlaan' />
+    <tag k='parking_lane' v='inroad_double' />
+    <tag k='ref' v='N467' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='5' />
+  </way>
+  <way id='-15361' visible='true'>
+    <nd ref='-15520' />
+    <nd ref='-15521' />
+    <nd ref='-15522' />
+    <nd ref='-15523' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kastanjelaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15360' visible='true'>
+    <nd ref='-15516' />
+    <nd ref='-15517' />
+    <nd ref='-15518' />
+    <nd ref='-15519' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Zandbergstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15359' visible='true'>
+    <nd ref='-15509' />
+    <nd ref='-15510' />
+    <nd ref='-15511' />
+    <nd ref='-15512' />
+    <nd ref='-15513' />
+    <nd ref='-15514' />
+    <nd ref='-15515' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Beukenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15358' visible='true'>
+    <nd ref='-15505' />
+    <nd ref='-15506' />
+    <nd ref='-15507' />
+    <nd ref='-15508' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Molendreef' />
+    <tag k='parking_lane' v='separate_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15357' visible='true'>
+    <nd ref='-15469' />
+    <nd ref='-15461' />
+    <tag k='highway' v='cycleway' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-15356' visible='true'>
+    <nd ref='-15501' />
+    <nd ref='-15502' />
+    <nd ref='-15503' />
+    <nd ref='-15504' />
+    <tag k='highway' v='cycleway' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-15355' visible='true'>
+    <nd ref='-15498' />
+    <nd ref='-15499' />
+    <nd ref='-15500' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kleine Daelvenne' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15354' visible='true'>
+    <nd ref='-15494' />
+    <nd ref='-15495' />
+    <nd ref='-15496' />
+    <nd ref='-15497' />
+    <tag k='created_by' v='Potlatch 0.10d' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bunderstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='separate_single' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15353' action='modify' visible='true'>
+    <nd ref='-15473' />
+    <nd ref='-15490' />
+    <nd ref='-15491' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Alfons de Grauwelaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15351' visible='true'>
+    <nd ref='-15483' />
+    <nd ref='-15484' />
+    <nd ref='-15485' />
+    <nd ref='-15486' />
+    <nd ref='-15487' />
+    <nd ref='-15488' />
+    <nd ref='-15489' />
+    <tag k='created_by' v='Potlatch 0.10d' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Konijnenbergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15350' visible='true'>
+    <nd ref='-15476' />
+    <nd ref='-15477' />
+    <nd ref='-15478' />
+    <nd ref='-15479' />
+    <nd ref='-15480' />
+    <nd ref='-15481' />
+    <nd ref='-15482' />
+    <tag k='created_by' v='Potlatch 0.10d' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kleine Bergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-15348' visible='true'>
+    <nd ref='-15464' />
+    <nd ref='-15465' />
+    <nd ref='-15466' />
+    <nd ref='-15467' />
+    <nd ref='-15468' />
+    <nd ref='-15469' />
+    <nd ref='-15470' />
+    <nd ref='-15471' />
+    <nd ref='-15463' />
+    <nd ref='-15472' />
+    <nd ref='-15473' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Jan-Baptist Courtmansstraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15347' visible='true'>
+    <nd ref='-15459' />
+    <nd ref='-15460' />
+    <nd ref='-15461' />
+    <nd ref='-15462' />
+    <nd ref='-15463' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Pater Heirmanshoek' />
+    <tag k='oneway' v='yes' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-15345' visible='true'>
+    <nd ref='-15456' />
+    <nd ref='-15457' />
+    <nd ref='-15458' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Daelvenne' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14906' visible='true'>
+    <nd ref='-15338' />
+    <nd ref='-15339' />
+    <nd ref='-15340' />
+    <nd ref='-15156' />
+    <nd ref='-15341' />
+    <nd ref='-15342' />
+    <nd ref='-15343' />
+    <nd ref='-15064' />
+    <nd ref='-15344' />
+    <nd ref='-15334' />
+    <nd ref='-15336' />
+    <nd ref='-15013' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='tertiary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hoogstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14905' visible='true'>
+    <nd ref='-15336' />
+    <nd ref='-15335' />
+    <nd ref='-15337' />
+    <nd ref='-15062' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-14904' visible='true'>
+    <nd ref='-15334' />
+    <nd ref='-15335' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-14903' visible='true'>
+    <nd ref='-14844' />
+    <nd ref='-15328' />
+    <nd ref='-15329' />
+    <nd ref='-15330' />
+    <nd ref='-15331' />
+    <nd ref='-15332' />
+    <nd ref='-15333' />
+    <nd ref='-15249' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hofland' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14902' visible='true'>
+    <nd ref='-15272' />
+    <nd ref='-15325' />
+    <nd ref='-15326' />
+    <nd ref='-15327' />
+    <nd ref='-15319' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Salvialaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14901' visible='true'>
+    <nd ref='-15266' />
+    <nd ref='-15320' />
+    <nd ref='-15322' />
+    <nd ref='-15323' />
+    <nd ref='-15324' />
+    <nd ref='-15318' />
+    <nd ref='-15027' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Rozenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14900' visible='true'>
+    <nd ref='-15320' />
+    <nd ref='-15321' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Rozenlaan' />
+  </way>
+  <way id='-14899' visible='true'>
+    <nd ref='-15318' />
+    <nd ref='-15319' />
+    <nd ref='-15267' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Tulpenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14898' visible='true'>
+    <nd ref='-14911' />
+    <nd ref='-15317' />
+    <nd ref='-14952' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-14896' visible='true'>
+    <nd ref='-15028' />
+    <nd ref='-15312' />
+    <nd ref='-15313' />
+    <nd ref='-15031' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Molenvenne' />
+  </way>
+  <way id='-14895' visible='true'>
+    <nd ref='-15301' />
+    <nd ref='-15302' />
+    <nd ref='-15303' />
+    <nd ref='-14934' />
+    <nd ref='-15304' />
+    <nd ref='-15305' />
+    <nd ref='-15306' />
+    <nd ref='-14933' />
+    <nd ref='-15307' />
+    <nd ref='-15123' />
+    <nd ref='-15308' />
+    <nd ref='-15309' />
+    <nd ref='-15310' />
+    <nd ref='-15311' />
+    <nd ref='-15249' />
+    <nd ref='-15204' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='no' />
+    <tag k='name' v='Bergstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='2' />
+  </way>
+  <way id='-14894' visible='true'>
+    <nd ref='-14971' />
+    <nd ref='-15300' />
+    <nd ref='-15301' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='no' />
+    <tag k='name' v='Bergstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='2' />
+  </way>
+  <way id='-14893' visible='true'>
+    <nd ref='-15013' />
+    <nd ref='-15276' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='tertiary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hoogstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14892' visible='true'>
+    <nd ref='-15277' />
+    <nd ref='-15299' />
+    <tag k='created_by' v='Potlatch 0.10c' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Turfputstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14891' visible='true'>
+    <nd ref='-15288' />
+    <nd ref='-15294' />
+    <nd ref='-15295' />
+    <nd ref='-15296' />
+    <nd ref='-15297' />
+    <nd ref='-15298' />
+    <nd ref='-14797' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bremstraat' />
+    <tag k='noexit' v='yes' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14890' visible='true'>
+    <nd ref='-15292' />
+    <nd ref='-15293' />
+    <nd ref='-15294' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='highway' v='service' />
+  </way>
+  <way id='-14889' visible='true'>
+    <nd ref='-14968' />
+    <nd ref='-15288' />
+    <nd ref='-15289' />
+    <nd ref='-15290' />
+    <nd ref='-15048' />
+    <nd ref='-15291' />
+    <nd ref='-14957' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Boonvennestraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14888' visible='true'>
+    <nd ref='-15283' />
+    <nd ref='-15284' />
+    <nd ref='-15285' />
+    <nd ref='-15286' />
+    <nd ref='-15287' />
+    <nd ref='-15198' />
+    <tag k='created_by' v='Potlatch 0.10b' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-14887' visible='true'>
+    <nd ref='-15001' />
+    <nd ref='-15280' />
+    <nd ref='-15281' />
+    <nd ref='-15257' />
+    <nd ref='-15224' />
+    <nd ref='-14956' />
+    <nd ref='-15279' />
+    <nd ref='-14967' />
+    <nd ref='-15019' />
+    <nd ref='-15282' />
+    <nd ref='-15219' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Galgenbergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14885' visible='true'>
+    <nd ref='-14924' />
+    <nd ref='-15278' />
+    <nd ref='-14955' />
+    <nd ref='-15000' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Hoekskensweg' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14884' visible='true'>
+    <nd ref='-15276' />
+    <nd ref='-15277' />
+    <tag k='highway' v='residential' />
+  </way>
+  <way id='-14883' visible='true'>
+    <nd ref='-15011' />
+    <nd ref='-15270' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Sint-Jobstraat' />
+  </way>
+  <way id='-14881' visible='true'>
+    <nd ref='-15027' />
+    <nd ref='-15272' />
+    <nd ref='-15273' />
+    <nd ref='-15271' />
+    <nd ref='-15274' />
+    <nd ref='-15275' />
+    <nd ref='-15011' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Sint-Jobstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14880' visible='true'>
+    <nd ref='-15219' />
+    <nd ref='-15264' />
+    <nd ref='-15265' />
+    <nd ref='-15266' />
+    <nd ref='-15245' />
+    <nd ref='-15267' />
+    <nd ref='-15268' />
+    <nd ref='-15060' />
+    <nd ref='-15269' />
+    <nd ref='-15270' />
+    <nd ref='-15271' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Galgenbergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14878' visible='true'>
+    <nd ref='-15258' />
+    <nd ref='-15259' />
+    <nd ref='-15260' />
+    <nd ref='-15261' />
+    <nd ref='-15262' />
+    <nd ref='-15263' />
+    <nd ref='-15073' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-14876' visible='true'>
+    <nd ref='-14999' />
+    <nd ref='-15250' />
+    <nd ref='-15251' />
+    <nd ref='-15252' />
+    <nd ref='-15253' />
+    <nd ref='-15254' />
+    <nd ref='-15255' />
+    <nd ref='-15256' />
+    <nd ref='-15257' />
+    <tag k='created_by' v='Potlatch 0.10b' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Fabriekstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14875' visible='true'>
+    <nd ref='-15059' />
+    <nd ref='-15247' />
+    <nd ref='-15248' />
+    <nd ref='-15203' />
+    <nd ref='-15204' />
+    <nd ref='-15249' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Bergstraat' />
+  </way>
+  <way id='-14864' visible='true'>
+    <nd ref='-14910' />
+    <nd ref='-14959' />
+    <nd ref='-15203' />
+    <nd ref='-15204' />
+    <nd ref='-15205' />
+    <nd ref='-15206' />
+    <nd ref='-15130' />
+    <nd ref='-15193' />
+    <nd ref='-14960' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Heidekasteeldreef' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14863' visible='true'>
+    <nd ref='-15193' />
+    <nd ref='-15194' />
+    <nd ref='-15195' />
+    <nd ref='-15196' />
+    <nd ref='-15197' />
+    <nd ref='-15198' />
+    <nd ref='-15199' />
+    <nd ref='-15200' />
+    <nd ref='-15201' />
+    <nd ref='-15202' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-14862' visible='true'>
+    <nd ref='-14974' />
+    <nd ref='-15186' />
+    <nd ref='-14966' />
+    <nd ref='-15187' />
+    <nd ref='-15188' />
+    <nd ref='-15189' />
+    <nd ref='-15190' />
+    <nd ref='-15191' />
+    <nd ref='-15192' />
+    <nd ref='-15116' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kastanjelaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14859' visible='true'>
+    <nd ref='-14998' />
+    <nd ref='-14918' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='J.B. Vander Cruyssenstraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14857' visible='true'>
+    <nd ref='-14919' />
+    <nd ref='-15177' />
+    <nd ref='-15178' />
+    <nd ref='-15179' />
+    <nd ref='-15173' />
+    <nd ref='-15080' />
+    <nd ref='-15180' />
+    <nd ref='-15181' />
+    <nd ref='-15182' />
+    <nd ref='-15183' />
+    <tag k='highway' v='residential' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-14856' visible='true'>
+    <nd ref='-15082' />
+    <nd ref='-15172' />
+    <nd ref='-15173' />
+    <nd ref='-15174' />
+    <nd ref='-15175' />
+    <nd ref='-15176' />
+    <nd ref='-14917' />
+    <nd ref='-14996' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Marten D&apos;Hoogestraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14855' visible='true'>
+    <nd ref='-15157' />
+    <nd ref='-15158' />
+    <nd ref='-15159' />
+    <nd ref='-14945' />
+    <nd ref='-15160' />
+    <nd ref='-15161' />
+    <nd ref='-15162' />
+    <nd ref='-15163' />
+    <nd ref='-14909' />
+    <nd ref='-15164' />
+    <nd ref='-15165' />
+    <nd ref='-15166' />
+    <nd ref='-15167' />
+    <nd ref='-15168' />
+    <nd ref='-15169' />
+    <nd ref='-15170' />
+    <nd ref='-15171' />
+    <nd ref='-14994' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bunderstraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_single' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14854' visible='true'>
+    <nd ref='-15146' />
+    <nd ref='-15147' />
+    <nd ref='-15148' />
+    <nd ref='-15149' />
+    <nd ref='-15150' />
+    <nd ref='-15151' />
+    <nd ref='-15152' />
+    <nd ref='-15153' />
+    <nd ref='-15154' />
+    <nd ref='-15146' />
+    <nd ref='-15155' />
+    <nd ref='-15156' />
+    <tag k='highway' v='unclassified' />
+  </way>
+  <way id='-14851' visible='true'>
+    <nd ref='-15131' />
+    <nd ref='-15132' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-14850' visible='true'>
+    <nd ref='-15123' />
+    <nd ref='-15124' />
+    <nd ref='-15125' />
+    <nd ref='-14940' />
+    <nd ref='-15126' />
+    <nd ref='-15127' />
+    <nd ref='-15115' />
+    <nd ref='-15128' />
+    <nd ref='-15129' />
+    <nd ref='-15130' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bunderdreef' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14847' visible='true'>
+    <nd ref='-15115' />
+    <nd ref='-15116' />
+    <nd ref='-15117' />
+    <nd ref='-14963' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Eikenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14838' visible='true'>
+    <nd ref='-14995' />
+    <nd ref='-14915' />
+    <nd ref='-15079' />
+    <nd ref='-15080' />
+    <nd ref='-15081' />
+    <nd ref='-15082' />
+    <nd ref='-15083' />
+    <nd ref='-15084' />
+    <nd ref='-15085' />
+    <nd ref='-15086' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Daal' />
+    <tag k='oneway' v='yes' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14834' visible='true'>
+    <nd ref='-14974' />
+    <nd ref='-15065' />
+    <nd ref='-15066' />
+    <nd ref='-15067' />
+    <nd ref='-15068' />
+    <nd ref='-15069' />
+    <nd ref='-15070' />
+    <nd ref='-15071' />
+    <nd ref='-15072' />
+    <nd ref='-15073' />
+    <nd ref='-15074' />
+    <nd ref='-15020' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-14832' visible='true'>
+    <nd ref='-15060' />
+    <nd ref='-15061' />
+    <nd ref='-15062' />
+    <nd ref='-15063' />
+    <nd ref='-15064' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='name' v='Eremijtenwegel' />
+  </way>
+  <way id='-14831' visible='true'>
+    <nd ref='-14959' />
+    <nd ref='-15059' />
+    <nd ref='-14997' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='maxweight' v='3.5' />
+    <tag k='name' v='Bergstraat' />
+    <tag k='oneway' v='yes' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='2' />
+  </way>
+  <way id='-14827' visible='true'>
+    <nd ref='-15020' />
+    <nd ref='-15049' />
+    <nd ref='-15050' />
+    <nd ref='-15051' />
+    <nd ref='-14960' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-14826' visible='true'>
+    <nd ref='-15040' />
+    <nd ref='-15047' />
+    <nd ref='-15048' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Biezenstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14825' visible='true'>
+    <nd ref='-15038' />
+    <nd ref='-15039' />
+    <nd ref='-15040' />
+    <nd ref='-15041' />
+    <nd ref='-15042' />
+    <nd ref='-15043' />
+    <nd ref='-15044' />
+    <nd ref='-15045' />
+    <nd ref='-15046' />
+    <nd ref='-14969' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Biezenstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14824' visible='true'>
+    <nd ref='-14957' />
+    <nd ref='-15028' />
+    <nd ref='-15029' />
+    <nd ref='-15030' />
+    <nd ref='-15031' />
+    <nd ref='-15032' />
+    <nd ref='-15033' />
+    <nd ref='-15034' />
+    <nd ref='-15035' />
+    <nd ref='-15036' />
+    <nd ref='-15037' />
+    <nd ref='-14958' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Molenvenne' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14823' visible='true'>
+    <nd ref='-15020' />
+    <nd ref='-15021' />
+    <nd ref='-15022' />
+    <nd ref='-15023' />
+    <nd ref='-15024' />
+    <nd ref='-15025' />
+    <nd ref='-15026' />
+    <nd ref='-15027' />
+    <tag k='highway' v='track' />
+    <tag k='tracktype' v='grade2' />
+  </way>
+  <way id='-14821' visible='true'>
+    <nd ref='-15011' />
+    <nd ref='-15012' />
+    <nd ref='-15013' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Sint-Jobstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14820' visible='true'>
+    <nd ref='-15008' />
+    <nd ref='-15009' />
+    <nd ref='-15010' />
+    <nd ref='-14993' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Brugstraat' />
+    <tag k='parking_lane' v='inroad_double' />
+    <tag k='ref' v='N467' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='5' />
+  </way>
+  <way id='-14817' action='modify' visible='true'>
+    <nd ref='-14993' />
+    <nd ref='-14994' />
+    <nd ref='-14995' />
+    <nd ref='-14996' />
+    <nd ref='-14997' />
+    <nd ref='-14998' />
+    <nd ref='-14910' />
+    <nd ref='-14999' />
+    <nd ref='-15000' />
+    <nd ref='-15001' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='secondary' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Emiel Hertecantlaan' />
+    <tag k='parking_lane' v='inroad_double' />
+    <tag k='ref' v='N467' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='5' />
+  </way>
+  <way id='-14812' visible='true'>
+    <nd ref='-14971' />
+    <nd ref='-14972' />
+    <nd ref='-14973' />
+    <nd ref='-14974' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kastanjelaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14811' visible='true'>
+    <nd ref='-14967' />
+    <nd ref='-14968' />
+    <nd ref='-14969' />
+    <nd ref='-14970' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Zandbergstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14810' visible='true'>
+    <nd ref='-14960' />
+    <nd ref='-14961' />
+    <nd ref='-14962' />
+    <nd ref='-14963' />
+    <nd ref='-14964' />
+    <nd ref='-14965' />
+    <nd ref='-14966' />
+    <tag k='created_by' v='Potlatch 0.10f' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Beukenlaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14809' visible='true'>
+    <nd ref='-14956' />
+    <nd ref='-14957' />
+    <nd ref='-14958' />
+    <nd ref='-14959' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Molendreef' />
+    <tag k='parking_lane' v='separate_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14808' visible='true'>
+    <nd ref='-14920' />
+    <nd ref='-14912' />
+    <tag k='highway' v='cycleway' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-14807' visible='true'>
+    <nd ref='-14952' />
+    <nd ref='-14953' />
+    <nd ref='-14954' />
+    <nd ref='-14955' />
+    <tag k='highway' v='cycleway' />
+    <tag k='name' v='Rijtewegel' />
+  </way>
+  <way id='-14806' visible='true'>
+    <nd ref='-14949' />
+    <nd ref='-14950' />
+    <nd ref='-14951' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kleine Daelvenne' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14805' visible='true'>
+    <nd ref='-14945' />
+    <nd ref='-14946' />
+    <nd ref='-14947' />
+    <nd ref='-14948' />
+    <tag k='created_by' v='Potlatch 0.10d' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Bunderstraat' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='separate_single' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14804' action='modify' visible='true'>
+    <nd ref='-14924' />
+    <nd ref='-14941' />
+    <nd ref='-14942' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Alfons de Grauwelaan' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14802' visible='true'>
+    <nd ref='-14934' />
+    <nd ref='-14935' />
+    <nd ref='-14936' />
+    <nd ref='-14937' />
+    <nd ref='-14938' />
+    <nd ref='-14939' />
+    <nd ref='-14940' />
+    <tag k='created_by' v='Potlatch 0.10d' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Konijnenbergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14801' visible='true'>
+    <nd ref='-14927' />
+    <nd ref='-14928' />
+    <nd ref='-14929' />
+    <nd ref='-14930' />
+    <nd ref='-14931' />
+    <nd ref='-14932' />
+    <nd ref='-14933' />
+    <tag k='created_by' v='Potlatch 0.10d' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Kleine Bergstraat' />
+    <tag k='parking_lane' v='separate_double' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='4' />
+  </way>
+  <way id='-14799' visible='true'>
+    <nd ref='-14915' />
+    <nd ref='-14916' />
+    <nd ref='-14917' />
+    <nd ref='-14918' />
+    <nd ref='-14919' />
+    <nd ref='-14920' />
+    <nd ref='-14921' />
+    <nd ref='-14922' />
+    <nd ref='-14914' />
+    <nd ref='-14923' />
+    <nd ref='-14924' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Jan-Baptist Courtmansstraat' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14798' visible='true'>
+    <nd ref='-14910' />
+    <nd ref='-14911' />
+    <nd ref='-14912' />
+    <nd ref='-14913' />
+    <nd ref='-14914' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='1' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Pater Heirmanshoek' />
+    <tag k='oneway' v='yes' />
+    <tag k='parking_lane' v='inroad_single' />
+    <tag k='sidewalk' v='separate_double' />
+    <tag k='width' v='3' />
+  </way>
+  <way id='-14796' visible='true'>
+    <nd ref='-14907' />
+    <nd ref='-14908' />
+    <nd ref='-14909' />
+    <tag k='cycleway' v='none' />
+    <tag k='highway' v='residential' />
+    <tag k='lanes' v='2' />
+    <tag k='lit' v='yes' />
+    <tag k='maxspeed' v='50' />
+    <tag k='name' v='Daelvenne' />
+    <tag k='parking_lane' v='none' />
+    <tag k='sidewalk' v='none' />
+    <tag k='width' v='3' />
+  </way>
+</osm>

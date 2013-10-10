@@ -19,12 +19,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
-using NUnit.Framework;
 
-namespace OsmSharp.UnitTests.Tools
+namespace OsmSharp.UnitTests.Math.Structures
 {
     /// <summary>
     /// Contains common test functions for located object index tests.

@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using OsmSharp.Collections.PriorityQueues;
 
-namespace OsmSharp.UnitTests.Tools
+namespace OsmSharp.UnitTests.Collections.PriorityQueues
 {
     /// <summary>
     /// Tests against the binairy heap.

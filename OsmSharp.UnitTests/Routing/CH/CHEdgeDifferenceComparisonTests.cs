@@ -17,8 +17,9 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using NUnit.Framework;
 using System.Reflection;
+using NUnit.Framework;
+using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Data.Streams.Filters;
 using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
@@ -28,8 +29,8 @@ using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.CH.PreProcessing.Ordering;
 
 namespace OsmSharp.UnitTests.Routing.CH
 {
@@ -37,7 +38,7 @@ namespace OsmSharp.UnitTests.Routing.CH
     /// Tests the CH Sparse routing against a reference implementation.
     /// </summary>
     [TestFixture]
-    public class CHSparseComparisonTests : RoutingComparisonTests
+    public class CHEdgeDifferenceComparisonTests : RoutingComparisonTests
     {
         /// <summary>
         /// Holds the data.
@@ -75,8 +76,9 @@ namespace OsmSharp.UnitTests.Routing.CH
                 targetData.Pull();
 
                 // do the pre-processing part.
+                var witnessCalculator = new DykstraWitnessCalculator(data);
                 var preProcessor = new CHPreProcessor(data,
-                    new SparseOrdering(data), new DykstraWitnessCalculator(data));
+                    new EdgeDifference(data, witnessCalculator), witnessCalculator);
                 preProcessor.Start();
 
                 _data[embeddedName] = data;
@@ -89,7 +91,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// Compares all routes possible against a reference implementation.
         /// </summary>
         [Test]
-        public void TestCHSparseAgainstReference()
+        public void TestCHEdgeDifferenceAgainstReference()
         {
             this.TestCompareAll("test_network.osm");
         }
@@ -98,7 +100,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// Compares all routes possible against a reference implementation.
         /// </summary>
         [Test]
-        public void TestCHSparseOneWayAgainstReference()
+        public void TestCHEdgeDifferenceOneWayAgainstReference()
         {
             this.TestCompareAll("test_network_oneway.osm");
         }
@@ -107,7 +109,25 @@ namespace OsmSharp.UnitTests.Routing.CH
         ///// Compares all routes possible against a reference implementation.
         ///// </summary>
         //[Test]
-        //public void TestCHSparseAgainstReferenceRealNetwork()
+        //public void TestCHEdgeDifferenceRegression2()
+        //{
+        //    this.TestCompareAll("test_routing_regression2.osm");
+        //}
+
+        ///// <summary>
+        ///// Compares all routes possible against a reference implementation.
+        ///// </summary>
+        //[Test]
+        //public void TestCHEdgeDifferenceBig()
+        //{
+        //    this.TestCompareAll("test_network_big.osm");
+        //}
+
+        ///// <summary>
+        ///// Compares all routes possible against a reference implementation.
+        ///// </summary>
+        //[Test]
+        //public void TestCHEdgeDifferenceAgainstReferenceRealNetwork()
         //{
         //    this.TestCompareAll("test_network_real1.osm");
         //}

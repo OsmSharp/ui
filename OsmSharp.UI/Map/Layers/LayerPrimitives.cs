@@ -51,16 +51,6 @@ namespace OsmSharp.UI.Map.Layers
             _scene = new Scene2DSimple();
 		}
 
-//		/// <summary>
-//		/// Adds a maker.
-//		/// </summary>
-//		/// <param name="coordinate">Coordinate.</param>
-//		/// <param name="image">Image.</param>
-//		private uint AddMarker(GeoCoordinate coordinate, byte[] image)
-//		{
-//			throw new 
-//		}
-//
 		/// <summary>
 		/// Adds a point.
 		/// </summary>
@@ -78,17 +68,13 @@ namespace OsmSharp.UI.Map.Layers
 			return id;
 		}
 
-//		/// <summary>
-//		/// Remove the object with the specified id.
-//		/// </summary>
-//		/// <param name="id">Identifier.</param>
-//		private void Remove(uint id)
-//		{
-//			if(_scene.Remove(id))
-//			{
-//				this.RaiseLayerChanged();
-//			}
-//		}
+        /// <summary>
+        /// Clears all data from this layer.
+        /// </summary>
+        public void Clear()
+        {
+            _scene.Clear();
+        }
 
 		#region ILayer implementation
 

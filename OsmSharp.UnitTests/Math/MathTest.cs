@@ -25,7 +25,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Units.Distance;
 
-namespace OsmSharp.UnitTests
+namespace OsmSharp.UnitTests.Math
 {
     /// <summary>
     /// Summary description for MathTest
