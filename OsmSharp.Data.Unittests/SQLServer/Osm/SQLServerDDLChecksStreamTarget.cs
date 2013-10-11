@@ -30,7 +30,10 @@ using System.Data.SqlClient;
 
 namespace OsmSharp.Data.Unittests.SQLServer
 {
-    public class SQLServerDDLChecksStreamTarget : OsmStreamTarget
+    /// <summary>
+    /// Helper stream target class for SQLServer.
+    /// </summary>
+    internal class SQLServerDDLChecksStreamTarget : OsmStreamTarget
     {
         private SqlConnection _connection;
         private readonly string _connectionString;

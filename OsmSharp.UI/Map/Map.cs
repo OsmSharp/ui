@@ -243,7 +243,6 @@ namespace OsmSharp.UI.Map
         /// </summary>
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
-        /// <param name="projection"></param>
         /// <returns></returns>
         public LayerOsm AddLayerOsm(IDataSourceReadOnly dataSource, StyleInterpreter styleInterpreter)
         {

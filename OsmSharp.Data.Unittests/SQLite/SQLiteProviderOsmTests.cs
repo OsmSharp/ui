@@ -98,6 +98,9 @@ namespace OsmSharp.Data.Unittests.SQLite
 
         private SQLiteConnection _connection = null;
 
+        /// <summary>
+        /// Notifies that the current test expects an empty database.
+        /// </summary>
         public override void NotifyEmptyExpected()
         {
             _connection = null;
@@ -112,16 +115,19 @@ namespace OsmSharp.Data.Unittests.SQLite
             return _connection;
         }
 
+        /// <summary>
+        /// Creates a data source for this test.
+        /// </summary>
+        /// <returns></returns>
         public override IDataSourceReadOnly CreateDataSource()
         {
             return new SQLiteDataSource(this.GetConnection());
         }
 
-        //public override OsmStreamSource CreateDataStreamSource()
-        //{
-        //    return new SQLiteOsmStreamSource(this.GetConnection());
-        //}
-
+        /// <summary>
+        /// Creates an osm stream target for this test.
+        /// </summary>
+        /// <returns></returns>
         public override OsmStreamTarget CreateDataStreamTarget()
         {
             return new SQLiteOsmStreamTarget(this.GetConnection());

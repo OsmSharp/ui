@@ -32,11 +32,17 @@ using System.Data.SqlClient;
 
 namespace OsmSharp.Data.Unittests.SQLServer.Osm
 {
+    /// <summary>
+    /// Test class for SQL Server DDL
+    /// </summary>
     [TestFixture]
     public class SQLServerDDLChecks
     {
         private SQLServerDDLChecksStreamTarget _testTarget;
 
+        /// <summary>
+        /// Setup the test fixture.
+        /// </summary>
         [TestFixtureSetUp]
         public void FixtureSetUp()
         {
@@ -56,6 +62,9 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             _testTarget.Pull();
         }
 
+        /// <summary>
+        /// Test the nodeusr.
+        /// </summary>
         [Test]
         public void NodeUsr()
         {
@@ -63,6 +72,9 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             Assert.LessOrEqual(_testTarget.NodeUsr, SQLServerSchemaConstants.NodeUsr);
         }
 
+        /// <summary>
+        /// Test the node tags key.
+        /// </summary>
         [Test]
         public void NodeTagsKey()
         {
@@ -70,6 +82,9 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             Assert.LessOrEqual(_testTarget.NodeTagsKey, SQLServerSchemaConstants.NodeTagsKey);
         }
 
+        /// <summary>
+        /// Tests the node tags value.
+        /// </summary>
         [Test]
         public void NodeTagsValue()
         {
@@ -77,6 +92,9 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             Assert.LessOrEqual(_testTarget.NodeTagsValue, SQLServerSchemaConstants.NodeTagsValue);
         }
 
+        /// <summary>
+        /// Tests the way usr.
+        /// </summary>
         [Test]
         public void WayUsr()
         {
@@ -84,6 +102,9 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             Assert.LessOrEqual(_testTarget.WayUsr, SQLServerSchemaConstants.WayUsr);
         }
 
+        /// <summary>
+        /// Tests the way tags key.
+        /// </summary>
         [Test]
         public void WayTagsKey()
         {
@@ -91,6 +112,9 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             Assert.LessOrEqual(_testTarget.WayTagsKey, SQLServerSchemaConstants.WayTagsKey);
         }
 
+        /// <summary>
+        /// Tests the way tags value.
+        /// </summary>
         [Test]
         public void WayTagsValue()
         {
@@ -98,6 +122,9 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             Assert.LessOrEqual(_testTarget.WayTagsValue, SQLServerSchemaConstants.WayTagsValue);
         }
 
+        /// <summary>
+        /// Tests the relation usr.
+        /// </summary>
         [Test]
         public void RelationUsr()
         {
@@ -105,6 +132,9 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             Assert.LessOrEqual(_testTarget.RelationUsr, SQLServerSchemaConstants.RelationUsr);
         }
 
+        /// <summary>
+        /// Tests the relation tags key.
+        /// </summary>
         [Test]
         public void RelationTagsKey()
         {
@@ -112,6 +142,9 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             Assert.LessOrEqual(_testTarget.RelationTagsKey, SQLServerSchemaConstants.RelationTagsKey);
         }
 
+        /// <summary>
+        /// Tests the relaiton tags value.
+        /// </summary>
         [Test]
         public void RelationTagsValue()
         {
@@ -119,6 +152,9 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             Assert.LessOrEqual(_testTarget.RelationTagsValue, SQLServerSchemaConstants.RelationTagsValue);
         }
 
+        /// <summary>
+        /// Tests the relation member role.
+        /// </summary>
         [Test]
         public void RelationMemberRole()
         {
@@ -126,6 +162,9 @@ namespace OsmSharp.Data.Unittests.SQLServer.Osm
             Assert.LessOrEqual(_testTarget.RelationMemberRole, SQLServerSchemaConstants.RelationMemberRole);
         }
 
+        /// <summary>
+        /// Tests the relation member type string lenghts.
+        /// </summary>
         [Test]
         public void RelationMemberTypeStringLengths()
         {

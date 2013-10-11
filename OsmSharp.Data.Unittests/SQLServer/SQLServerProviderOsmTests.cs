@@ -103,6 +103,9 @@ namespace OsmSharp.Data.Unittests.SQLServer
 
         private SqlConnection _connection = null;
 
+        /// <summary>
+        /// Notifies that the current test expects an empty database.
+        /// </summary>
         public override void NotifyEmptyExpected()
         {
             if (_connection != null)
@@ -125,11 +128,19 @@ namespace OsmSharp.Data.Unittests.SQLServer
             return _connection;
         }
 
+        /// <summary>
+        /// Creates a data source for this test.
+        /// </summary>
+        /// <returns></returns>
         public override IDataSourceReadOnly CreateDataSource()
         {
             return new SQLServerDataSource(this.GetConnection());
         }
 
+        /// <summary>
+        /// Creates a stream target for this test.
+        /// </summary>
+        /// <returns></returns>
         public override OsmStreamTarget CreateDataStreamTarget()
         {
             return new SQLServerOsmStreamTarget(this.GetConnection(), true);

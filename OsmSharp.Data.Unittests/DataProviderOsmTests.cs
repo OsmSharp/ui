@@ -55,12 +55,6 @@ namespace OsmSharp.Data.Unittests
         public abstract OsmStreamTarget CreateDataStreamTarget();
 
         /// <summary>
-        /// Creates a data stream source for the current provider.
-        /// </summary>
-        /// <returns></returns>
-        //public abstract OsmStreamSource CreateDataStreamSource();
-
-        /// <summary>
         /// Tests read/writing a node.
         /// </summary>
         protected void TestNodeReadWrite()
