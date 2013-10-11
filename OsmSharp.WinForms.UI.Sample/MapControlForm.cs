@@ -99,7 +99,7 @@ namespace OsmSharp.WinForms.UI.Sample
             //        Scene2DLayered.Deserialize(new FileInfo(@"c:\OSM\bin\kempen.osm.pbf.scene.layered").OpenRead(), true)));
             map.AddLayer(
                 new LayerScene(
-                    Scene2DLayered.Deserialize(new FileInfo(@"c:\OSM\bin\gent.map").OpenRead(), true)));
+                    Scene2DLayered.Deserialize(new FileInfo(@"c:\OSM\bin\wvl.map").OpenRead(), true)));
 
             //this.InitializeRouting(map);
 
@@ -114,8 +114,8 @@ namespace OsmSharp.WinForms.UI.Sample
             //this.mapControl1.Center = new GeoCoordinate(51.26371, 4.7854); //51.26371&lon=4.7854 // wechel.osm
             //this.mapControl1.Center = new GeoCoordinate(50.88672, 3.23899); // lendelede 
             //this.mapControl1.Center = new GeoCoordinate(50.9523195, 3.0997436);
-            //this.mapControl1.Center = new GeoCoordinate(51.156803, 2.958887); // gistel
-            this.mapControl1.MapCenter = new GeoCoordinate(51.05608, 3.72139); // gent
+            this.mapControl1.MapCenter = new GeoCoordinate(51.156803, 2.958887); // gistel
+            //this.mapControl1.MapCenter = new GeoCoordinate(51.05608, 3.72139); // gent
             //this.mapControl1.Center = new GeoCoordinate(50.9969, 4.1201);
             this.mapControl1.MapZoom = 19;
         }

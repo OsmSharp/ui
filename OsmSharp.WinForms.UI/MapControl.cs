@@ -160,7 +160,8 @@ namespace OsmSharp.WinForms.UI
             if (_quickMode)
             { // only render the cached scene.
                 //_renderer.Render(g, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
-                _renderer.RenderCache(g, this.Map, view);
+                //_renderer.RenderCache(g, this.Map, view)
+                _renderer.Render(g, this.Map, view);
             }
             else
             { // render the entire scene.
