@@ -58,13 +58,6 @@ namespace OsmSharp.Osm.Data
         #region Nodes
 
         /// <summary>
-        /// Returns the node with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Node GetNode(long id);
-
-        /// <summary>
         /// Returns the node(s) with the given id(s).
         /// </summary>
         /// <param name="ids"></param>
@@ -74,13 +67,6 @@ namespace OsmSharp.Osm.Data
         #endregion
 
         #region Relation
-
-        /// <summary>
-        /// Returns the relation with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Relation GetRelation(long id);
 
         /// <summary>
         /// Returns the relation(s) with the given id(s).
@@ -107,13 +93,6 @@ namespace OsmSharp.Osm.Data
         #endregion
 
         #region Way
-
-        /// <summary>
-        /// Returns the way with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Way GetWay(long id);
 
         /// <summary>
         /// Returns the way(s) with given id.

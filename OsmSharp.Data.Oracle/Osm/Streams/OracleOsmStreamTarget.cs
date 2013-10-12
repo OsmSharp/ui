@@ -159,6 +159,7 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
         /// Creates a new oracle simple data processor target.
         /// </summary>
         /// <param name="connectionString"></param>
+        /// <param name="createAndDetectSchema"></param>
         public OracleOsmStreamTarget(string connectionString, bool createAndDetectSchema)
         {
             _connectionString = connectionString;
@@ -179,6 +180,7 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
         /// Creates a new oracle simple data processor target.
         /// </summary>
         /// <param name="connection"></param>
+        /// <param name="createAndDetectSchema"></param>
         public OracleOsmStreamTarget(OracleConnection connection, bool createAndDetectSchema)
         {
             _connection = connection;
