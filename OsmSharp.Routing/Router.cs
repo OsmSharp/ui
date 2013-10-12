@@ -19,8 +19,8 @@
 using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Data.Streams;
-using OsmSharp.Osm.Data.Streams.Filters;
+using OsmSharp.Osm.Streams;
+using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;

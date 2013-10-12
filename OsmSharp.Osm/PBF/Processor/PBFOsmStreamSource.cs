@@ -18,10 +18,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using OsmSharp.Osm.Data.Streams;
+using System.Text;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.Streams;
 
 namespace OsmSharp.Osm.PBF.Processor
 {

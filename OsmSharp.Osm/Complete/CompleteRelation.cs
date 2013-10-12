@@ -264,12 +264,12 @@ namespace OsmSharp.Osm
         /// Creates a relation from a SimpleRelation.
         /// </summary>
         /// <param name="simpleRelation"></param>
-        /// <param name="cache"></param>
+        /// <param name="osmGeoSource"></param>
         /// <returns></returns>
-        public static CompleteRelation CreateFrom(Relation simpleRelation, IDataSourceReadOnly cache)
+        public static CompleteRelation CreateFrom(Relation simpleRelation, IOsmGeoSource osmGeoSource)
         {
             if (simpleRelation == null) throw new ArgumentNullException("simpleRelation");
-            if (cache == null) throw new ArgumentNullException("cache");
+            if (osmGeoSource == null) throw new ArgumentNullException("osmGeoSource");
             if (simpleRelation.Id == null) throw new Exception("simpleRelation.Id is null");
 
             CompleteRelation relation = Create(simpleRelation.Id.Value);
@@ -289,7 +289,7 @@ namespace OsmSharp.Osm
                 switch (simpleRelation.Members[idx].MemberType.Value)
                 {
                     case OsmGeoType.Node:
-                        Node simpleNode = cache.GetNode(memberId);
+                        Node simpleNode = osmGeoSource.GetNode(memberId);
                         if (simpleNode != null)
                         {
                             member.Member = CompleteNode.CreateFrom(simpleNode);
@@ -300,10 +300,10 @@ namespace OsmSharp.Osm
                         }
                         break;
                     case OsmGeoType.Way:
-                        Way simpleWay = cache.GetWay(memberId);
+                        Way simpleWay = osmGeoSource.GetWay(memberId);
                         if (simpleWay != null)
                         {
-                            member.Member = CompleteWay.CreateFrom(simpleWay, cache);
+                            member.Member = CompleteWay.CreateFrom(simpleWay, osmGeoSource);
                         }
                         else
                         {
@@ -311,10 +311,10 @@ namespace OsmSharp.Osm
                         }
                         break;
                     case OsmGeoType.Relation:
-                        Relation simpleRelationMember = cache.GetRelation(memberId);
+                        Relation simpleRelationMember = osmGeoSource.GetRelation(memberId);
                         if (simpleRelationMember != null)
                         {
-                            member.Member = CompleteRelation.CreateFrom(simpleRelationMember, cache);
+                            member.Member = CompleteRelation.CreateFrom(simpleRelationMember, osmGeoSource);
                         }
                         else
                         {

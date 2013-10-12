@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Data;
 using OsmSharp.Data.SQLServer.Osm;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Data.SQLServer.Osm.Streams;
 using NUnit.Framework;
 using System.Data.SqlClient;

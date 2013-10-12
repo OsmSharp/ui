@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using Oracle.ManagedDataAccess.Client;
 using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;

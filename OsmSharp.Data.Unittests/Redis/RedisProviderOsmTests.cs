@@ -24,7 +24,7 @@ using NUnit.Framework;
 using ServiceStack.Redis;
 using OsmSharp.Osm.Data;
 using OsmSharp.Data.Redis.Osm;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Data.Redis.Osm.Streams;
 
 namespace OsmSharp.Data.Unittests.Redis

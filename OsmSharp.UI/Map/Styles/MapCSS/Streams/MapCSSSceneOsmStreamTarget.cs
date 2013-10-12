@@ -16,24 +16,19 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Osm.Data.Streams;
-using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 using System.IO;
-using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.Osm.Data.Memory;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Data.Memory;
+using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Osm.Streams.Complete;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS.Streams
 {
     /// <summary>
     /// Implements a streaming target that converts the given OSM-data into a MapCSS translated scene.
     /// </summary>
-    public class MapCSSSceneOsmStreamTarget : OsmStreamTarget
+    public class MapCSSSceneOsmStreamTarget : OsmCompleteStreamTarget
     {
         /// <summary>
         /// Holds the interpreter.
@@ -72,44 +67,38 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.Streams
         }
 
         /// <summary>
-        /// Holds the memory data source.
-        /// </summary>
-        private MemoryDataSource _dataSource;
-
-        /// <summary>
         /// Initializes this target.
         /// </summary>
         public override void Initialize()
         {
-            _dataSource = new MemoryDataSource();
             _sceneStream.Seek(0, SeekOrigin.Begin);
         }
 
         /// <summary>
         /// Adds a new node.
         /// </summary>
-        /// <param name="simpleNode"></param>
-        public override void AddNode(Osm.Node simpleNode)
+        /// <param name="node"></param>
+        public override void AddNode(CompleteNode node)
         {
-            _dataSource.AddNode(simpleNode);
+            _mapCSSInterpreter.Translate(_scene, _projection, node);
         }
 
         /// <summary>
         /// Adds a new way.
         /// </summary>
-        /// <param name="simpleWay"></param>
-        public override void AddWay(Osm.Way simpleWay)
+        /// <param name="way"></param>
+        public override void AddWay(CompleteWay way)
         {
-            _dataSource.AddWay(simpleWay);
+            _mapCSSInterpreter.Translate(_scene, _projection, way);
         }
 
         /// <summary>
         /// Adds a new relation.
         /// </summary>
-        /// <param name="simpleRelation"></param>
-        public override void AddRelation(Osm.Relation simpleRelation)
+        /// <param name="relation"></param>
+        public override void AddRelation(CompleteRelation relation)
         {
-            _dataSource.AddRelation(simpleRelation);
+            _mapCSSInterpreter.Translate(_scene, _projection, relation);
         }
 
         /// <summary>
@@ -118,16 +107,6 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.Streams
         public override void Flush()
         {
             base.Flush();
-
-            // reset the reader.
-            this.Reader.Reset();
-
-            // flush the scene by writing the result.
-            foreach (var osmGeo in this.Reader)
-            {
-                // translate each object into scene object.
-                _mapCSSInterpreter.Translate(_scene, _projection, _dataSource, osmGeo as OsmGeo);
-            }
 
             // create the stream.
             _scene.Serialize(_sceneStream, true);

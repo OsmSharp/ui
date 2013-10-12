@@ -22,7 +22,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Collections.LongIndex.LongIndex;
 
-namespace OsmSharp.Osm.Data.Streams.Filters
+namespace OsmSharp.Osm.Streams.Filters
 {
     /// <summary>
     /// An OSM filter bounding box.

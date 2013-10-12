@@ -16,21 +16,23 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
-using OsmSharp.Osm;
+using System.Linq;
+using System.Text;
 using System.Collections;
 
-namespace OsmSharp.Osm.Streams
+namespace OsmSharp.Osm.Streams.Complete
 {
     /// <summary>
-    /// Base class for any (streamable) source of osm data (Nodes, Ways and Relations).
+    /// Represents a stream source that converts a stream of simple osm objects into a stream of complete osm objects.
     /// </summary>
-    public abstract class OsmStreamSource : IEnumerable<OsmGeo>, IEnumerator<OsmGeo>
+    public abstract class OsmCompleteStreamSource : IEnumerable<CompleteOsmGeo>, IEnumerator<CompleteOsmGeo>
     {
         /// <summary>
         /// Creates a new source.
         /// </summary>
-        protected OsmStreamSource()
+        protected OsmCompleteStreamSource()
         {
 
         }
@@ -39,7 +41,7 @@ namespace OsmSharp.Osm.Streams
         /// Initializes this source.
         /// </summary>
         public abstract void Initialize();
-        
+
         /// <summary>
         /// Move to the next item in the stream.
         /// </summary>
@@ -50,7 +52,7 @@ namespace OsmSharp.Osm.Streams
         /// Returns the current item in the stream.
         /// </summary>
         /// <returns></returns>
-        public abstract OsmGeo Current();
+        public abstract CompleteOsmGeo Current();
 
         /// <summary>
         /// Resets the source to the beginning.
@@ -72,7 +74,7 @@ namespace OsmSharp.Osm.Streams
         /// Returns the enumerator for this enumerable.
         /// </summary>
         /// <returns></returns>
-        public IEnumerator<OsmGeo> GetEnumerator()
+        public IEnumerator<CompleteOsmGeo> GetEnumerator()
         {
             this.Initialize();
 
@@ -93,7 +95,7 @@ namespace OsmSharp.Osm.Streams
         /// <summary>
         /// Returns the current object.
         /// </summary>
-        OsmGeo IEnumerator<OsmGeo>.Current
+        CompleteOsmGeo IEnumerator<CompleteOsmGeo>.Current
         {
             get { return this.Current(); }
         }

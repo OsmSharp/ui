@@ -17,7 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
-using OsmSharp.Osm.Data.Streams.Filters;
+using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;

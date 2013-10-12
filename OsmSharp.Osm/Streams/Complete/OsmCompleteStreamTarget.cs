@@ -17,23 +17,24 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Osm;
+using OsmSharp.Osm.Cache;
 
-namespace OsmSharp.Osm.Streams
+namespace OsmSharp.Osm.Streams.Complete
 {
     /// <summary>
     /// Any target of osm data (Nodes, Ways and Relations).
     /// </summary>
-    public abstract class OsmStreamTarget
+    public abstract class OsmCompleteStreamTarget
     {
         /// <summary>
         /// Holds the source for this target.
         /// </summary>
-        private OsmStreamSource _source;
+        private OsmCompleteStreamSource _source;
 
         /// <summary>
         /// Creates a new target.
         /// </summary>
-        protected OsmStreamTarget()
+        protected OsmCompleteStreamTarget()
         {
 
         }
@@ -46,34 +47,53 @@ namespace OsmSharp.Osm.Streams
         /// <summary>
         /// Adds a node to the target.
         /// </summary>
-        /// <param name="simpleNode"></param>
-        public abstract void AddNode(Node simpleNode);
+        /// <param name="node"></param>
+        public abstract void AddNode(CompleteNode node);
 
         /// <summary>
         /// Adds a way to the target.
         /// </summary>
-        /// <param name="simpleWay"></param>
-        public abstract void AddWay(Way simpleWay);
+        /// <param name="way"></param>
+        public abstract void AddWay(CompleteWay way);
 
         /// <summary>
         /// Adds a relation to the target.
         /// </summary>
-        /// <param name="simpleRelation"></param>
-        public abstract void AddRelation(Relation simpleRelation);
+        /// <param name="relation"></param>
+        public abstract void AddRelation(CompleteRelation relation);
 
         /// <summary>
-        /// Registers a reader on this writer.
+        /// Registers a source on this target.
         /// </summary>
         /// <param name="source"></param>
-        public void RegisterSource(OsmStreamSource source)
+        public void RegisterSource(OsmCompleteStreamSource source)
         {
             _source = source;
         }
 
         /// <summary>
+        /// Registers a simple source on this target.
+        /// </summary>
+        /// <param name="source"></param>
+        public void RegisterSource(OsmStreamSource source)
+        {
+            _source = new OsmSimpleCompleteStreamSource(source);
+        }
+
+        /// <summary>
+        /// Registers a simple source on this target with a given cache.
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="cache"></param>
+        public void RegisterSource(OsmStreamSource source, OsmDataCache cache)
+        {
+            _source = new OsmSimpleCompleteStreamSource(source, cache);
+        }
+
+        /// <summary>
         /// Returns the registered reader.
         /// </summary>
-        protected OsmStreamSource Source
+        protected OsmCompleteStreamSource Source
         {
             get
             {
@@ -91,17 +111,17 @@ namespace OsmSharp.Osm.Streams
             while (_source.MoveNext())
             {
                 object sourceObject = _source.Current();
-                if (sourceObject is Node)
+                if (sourceObject is CompleteNode)
                 {
-                    this.AddNode(sourceObject as Node);
+                    this.AddNode(sourceObject as CompleteNode);
                 }
-                else if (sourceObject is Way)
+                else if (sourceObject is CompleteWay)
                 {
-                    this.AddWay(sourceObject as Way);
+                    this.AddWay(sourceObject as CompleteWay);
                 }
-                else if (sourceObject is Relation)
+                else if (sourceObject is CompleteRelation)
                 {
-                    this.AddRelation(sourceObject as Relation);
+                    this.AddRelation(sourceObject as CompleteRelation);
                 }
             }
             this.Flush();
@@ -117,17 +137,17 @@ namespace OsmSharp.Osm.Streams
             if (_source.MoveNext())
             {
                 object sourceObject = _source.Current();
-                if (sourceObject is Node)
+                if (sourceObject is CompleteNode)
                 {
-                    this.AddNode(sourceObject as Node);
+                    this.AddNode(sourceObject as CompleteNode);
                 }
-                else if (sourceObject is Way)
+                else if (sourceObject is CompleteWay)
                 {
-                    this.AddWay(sourceObject as Way);
+                    this.AddWay(sourceObject as CompleteWay);
                 }
-                else if (sourceObject is Relation)
+                else if (sourceObject is CompleteRelation)
                 {
-                    this.AddRelation(sourceObject as Relation);
+                    this.AddRelation(sourceObject as CompleteRelation);
                 }
                 return true;
             }

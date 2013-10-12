@@ -21,7 +21,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 
 namespace OsmSharp.Osm.Xml.Streams
 {

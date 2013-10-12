@@ -19,7 +19,7 @@
 using System;
 using OsmSharp.Osm;
 
-namespace OsmSharp.Osm.Data.Streams.Filters
+namespace OsmSharp.Osm.Streams.Filters
 {
     /// <summary>
     /// An OSM stream filter sort.

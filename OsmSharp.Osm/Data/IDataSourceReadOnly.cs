@@ -29,7 +29,7 @@ namespace OsmSharp.Osm.Data
     /// <summary>
     /// Represents a generic readonly data source. 
     /// </summary>
-    public interface IDataSourceReadOnly
+    public interface IDataSourceReadOnly : IOsmGeoSource
     {
         /// <summary>
         /// Returns the bounding box of the data in this source if possible.

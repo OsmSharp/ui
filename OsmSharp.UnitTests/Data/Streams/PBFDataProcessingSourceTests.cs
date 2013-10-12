@@ -19,7 +19,7 @@
 using NUnit.Framework;
 using System.Reflection;
 using OsmSharp.Osm.PBF.Processor;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 
 namespace OsmSharp.UnitTests.Data.Streams
 {

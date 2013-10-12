@@ -21,7 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using OsmSharp;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 

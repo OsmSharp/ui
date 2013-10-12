@@ -20,7 +20,7 @@ using System;
 using OsmSharp.Osm;
 using System.Diagnostics;
 
-namespace OsmSharp.Osm.Data.Streams.Filters
+namespace OsmSharp.Osm.Streams.Filters
 {
     /// <summary>
     /// A data source reporting progress.

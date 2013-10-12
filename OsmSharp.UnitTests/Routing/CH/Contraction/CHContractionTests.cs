@@ -21,7 +21,7 @@ using System.IO;
 using System.Reflection;
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Osm.Data.Streams.Filters;
+using OsmSharp.Osm.Streams.Filters;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH.PreProcessing;

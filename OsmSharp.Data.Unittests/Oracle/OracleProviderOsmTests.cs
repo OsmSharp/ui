@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Oracle.ManagedDataAccess.Client;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Data.Oracle.Osm.Streams;
 using OsmSharp.Data.Oracle.Osm;
 using OsmSharp.Osm.Data;

@@ -23,7 +23,7 @@ using System.Text;
 using System.Data;
 using Npgsql;
 using System.IO;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Tiles;

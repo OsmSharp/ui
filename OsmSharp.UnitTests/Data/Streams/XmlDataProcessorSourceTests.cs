@@ -18,7 +18,7 @@
 
 using System.Reflection;
 using NUnit.Framework;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.Xml.Streams;
 
 namespace OsmSharp.UnitTests.Data.Streams

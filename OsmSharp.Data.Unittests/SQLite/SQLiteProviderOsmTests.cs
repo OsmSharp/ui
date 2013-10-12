@@ -21,7 +21,7 @@ using OsmSharp.Data.SQLite.Osm.Streams;
 using OsmSharp.Data.SQLite.Osm;
 using System.Data.SQLite;
 using OsmSharp.Osm.Data;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 
 namespace OsmSharp.Data.Unittests.SQLite
 {

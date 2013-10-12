@@ -21,11 +21,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Data.Streams;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Filters;
 using OsmSharp.Osm.Interpreter;
 using System.IO;
+using OsmSharp.Osm.Streams;
 
 namespace OsmSharp.Osm.Data.Memory
 {

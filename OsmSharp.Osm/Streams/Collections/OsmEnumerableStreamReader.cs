@@ -19,7 +19,7 @@
 using System.Collections.Generic;
 using OsmSharp.Osm;
 
-namespace OsmSharp.Osm.Data.Streams.Collections
+namespace OsmSharp.Osm.Streams.Collections
 {
     /// <summary>
     /// An OSM Stream Reader that wraps around a collection of OSM objects.

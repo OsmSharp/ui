@@ -238,12 +238,12 @@ namespace OsmSharp.Osm
         /// Creates a new way from a SimpleWay.
         /// </summary>
         /// <param name="simpleWay"></param>
-        /// <param name="cache"></param>
+        /// <param name="nodeSource"></param>
         /// <returns></returns>
-        public static CompleteWay CreateFrom(Way simpleWay, IDataSourceReadOnly cache)
+        public static CompleteWay CreateFrom(Way simpleWay, INodeSource nodeSource)
         {
             if (simpleWay == null) throw new ArgumentNullException("simpleWay");
-            if (cache == null) throw new ArgumentNullException("cache");
+            if (nodeSource == null) throw new ArgumentNullException("nodeSource");
             if (simpleWay.Id == null) throw new Exception("simpleWay.id is null");
 
             CompleteWay way = Create(simpleWay.Id.Value);
@@ -259,7 +259,7 @@ namespace OsmSharp.Osm
             for (int idx = 0; idx < simpleWay.Nodes.Count; idx++)
             {
                 long nodeId = simpleWay.Nodes[idx];
-                Node node = cache.GetNode(nodeId);
+                Node node = nodeSource.GetNode(nodeId);
                 if (node != null)
                 {
                     way.Nodes.Add(CompleteNode.CreateFrom(node));

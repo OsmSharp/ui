@@ -16,24 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Streams.Collections;
+using System.Linq;
+using System.Text;
 
-namespace OsmSharp.Osm.Streams
+namespace OsmSharp.Osm.Data
 {
     /// <summary>
-    /// Contains extensions for common OsmStreamReader/Writer/Filter implementations.
+    /// Represents an abstract source of OsmGeo objects.
     /// </summary>
-    public static class OsmStreamExtensions
+    public interface IOsmGeoSource : INodeSource, IWaySource, IRelationSource
     {
-        /// <summary>
-        /// Returns an OSM stream reader for the objects in this enumerable.
-        /// </summary>
-        /// <param name="enumerable"></param>
-        public static OsmStreamSource ToOsmStreamReader(this IEnumerable<OsmGeo> enumerable)
-        {
-            return new OsmEnumerableStreamReader(enumerable);
-        }
+
     }
 }

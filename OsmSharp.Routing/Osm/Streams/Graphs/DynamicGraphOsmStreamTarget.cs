@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Interpreter.Roads;
@@ -389,7 +389,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         {
             if (_preIndexMode)
             {
-                this.Reader.Reset();
+                this.Source.Reset();
                 _preIndexMode = false;
                 this.Pull();
             }
