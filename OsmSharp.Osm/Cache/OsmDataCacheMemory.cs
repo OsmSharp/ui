@@ -168,5 +168,15 @@ namespace OsmSharp.Osm.Cache
         //{
         //    return _relations.Values;
         //}
+
+        /// <summary>
+        /// Clears the data in this cache.
+        /// </summary>
+        public override void Clear()
+        {
+            _nodes.Clear();
+            _ways.Clear();
+            _relations.Clear();
+        }
     }
 }

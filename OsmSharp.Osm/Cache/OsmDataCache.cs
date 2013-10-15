@@ -185,9 +185,9 @@ namespace OsmSharp.Osm.Cache
         ///// <returns></returns>
         //public abstract IEnumerable<Relation> GetRelations();
 
-        internal void Clear()
-        {
-            throw new System.NotImplementedException();
-        }
+        /// <summary>
+        /// Clears all data from this cache.
+        /// </summary>
+        public abstract void Clear();
     }
 }

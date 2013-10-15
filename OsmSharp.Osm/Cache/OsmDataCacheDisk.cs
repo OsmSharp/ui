@@ -18,12 +18,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Collections;
 using System.IO;
-using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Osm.Streams;
+using OsmSharp.Osm.Xml.Streams;
 
 namespace OsmSharp.Osm.Cache
 {
@@ -292,6 +289,17 @@ namespace OsmSharp.Osm.Cache
         public void Dispose()
         {
             _cacheDirectory.Delete(true);
+        }
+
+        /// <summary>
+        /// Clears all data from this cache.
+        /// </summary>
+        public override void Clear()
+        {
+            _cacheDirectory.Delete(true);
+            
+            _cacheDirectory = new DirectoryInfo(Path.Combine(Path.GetTempPath() + Guid.NewGuid().ToString()));
+            _cacheDirectory.Create();
         }
     }
 }

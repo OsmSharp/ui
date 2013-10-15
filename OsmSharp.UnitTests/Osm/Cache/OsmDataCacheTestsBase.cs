@@ -20,6 +20,7 @@ using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Cache;
+using System;
 
 namespace OsmSharp.UnitTests.Osm.Cache
 {
@@ -36,6 +37,11 @@ namespace OsmSharp.UnitTests.Osm.Cache
         {
             Node node = Node.Create(1, new SimpleTagsCollection(
                 Tag.Create("node", "yes")), 1, 2);
+
+            // test invalid stuff.
+            Assert.Throws<ArgumentNullException>(() => cache.AddNode(null));
+            Assert.Throws<Exception>(() => cache.AddNode(new Node()));
+            Assert.IsNull(cache.GetNode(node.Id.Value));
 
             cache.AddNode(node);
 
@@ -58,8 +64,9 @@ namespace OsmSharp.UnitTests.Osm.Cache
             Assert.AreEqual(1, node.Tags.Count);
             Assert.AreEqual("yes", node.Tags["node"]);
 
-            cache.RemoveNode(node.Id.Value);
+            Assert.IsTrue(cache.RemoveNode(node.Id.Value));
             Assert.IsFalse(cache.ContainsNode(node.Id.Value));
+            Assert.IsFalse(cache.RemoveNode(node.Id.Value));
         }
 
         /// <summary>
@@ -70,6 +77,11 @@ namespace OsmSharp.UnitTests.Osm.Cache
         {
             Way way = Way.Create(1, new SimpleTagsCollection(
                 Tag.Create("way", "yes")), 1, 2);
+
+            // test invalid stuff.
+            Assert.Throws<ArgumentNullException>(() => cache.AddWay(null));
+            Assert.Throws<Exception>(() => cache.AddWay(new Way()));
+            Assert.IsNull(cache.GetWay(way.Id.Value));
 
             cache.AddWay(way);
 
@@ -88,8 +100,9 @@ namespace OsmSharp.UnitTests.Osm.Cache
             Assert.AreEqual(1, way.Tags.Count);
             Assert.AreEqual("yes", way.Tags["way"]);
 
-            cache.RemoveNode(way.Id.Value);
-            Assert.IsFalse(cache.ContainsNode(way.Id.Value));
+            Assert.IsTrue(cache.RemoveWay(way.Id.Value));
+            Assert.IsFalse(cache.ContainsWay(way.Id.Value));
+            Assert.IsFalse(cache.RemoveWay(way.Id.Value));
         }
 
         /// <summary>
@@ -100,6 +113,11 @@ namespace OsmSharp.UnitTests.Osm.Cache
         {
             Relation relation = Relation.Create(1, new SimpleTagsCollection(
                 Tag.Create("relation", "yes")), RelationMember.Create(1, "something", OsmGeoType.Node));
+
+            // test invalid stuff.
+            Assert.Throws<ArgumentNullException>(() => cache.AddRelation(null));
+            Assert.Throws<Exception>(() => cache.AddRelation(new Relation()));
+            Assert.IsNull(cache.GetRelation(relation.Id.Value));
 
             cache.AddRelation(relation);
 
@@ -118,8 +136,37 @@ namespace OsmSharp.UnitTests.Osm.Cache
             Assert.AreEqual(1, relation.Tags.Count);
             Assert.AreEqual("yes", relation.Tags["relation"]);
 
-            cache.RemoveNode(relation.Id.Value);
-            Assert.IsFalse(cache.ContainsNode(relation.Id.Value));
+            Assert.IsTrue(cache.RemoveRelation(relation.Id.Value));
+            Assert.IsFalse(cache.ContainsRelation(relation.Id.Value));
+            Assert.IsFalse(cache.RemoveRelation(relation.Id.Value));
+        }
+
+        /// <summary>
+        /// Tests the clear functionality on the datacache.
+        /// </summary>
+        /// <param name="cache"></param>
+        public void DoOsmDataCacheTestClear(OsmDataCache cache)
+        {
+            Node node = Node.Create(1, new SimpleTagsCollection(
+                Tag.Create("node", "yes")), 1, 2);
+            Way way = Way.Create(1, new SimpleTagsCollection(
+                Tag.Create("way", "yes")), 1, 2);
+            Relation relation = Relation.Create(1, new SimpleTagsCollection(
+                Tag.Create("relation", "yes")), RelationMember.Create(1, "something", OsmGeoType.Node));
+
+            cache.AddNode(node);
+            cache.AddWay(way);
+            cache.AddRelation(relation);
+
+            Assert.IsTrue(cache.ContainsNode(node.Id.Value));
+            Assert.IsTrue(cache.ContainsWay(way.Id.Value));
+            Assert.IsTrue(cache.ContainsRelation(relation.Id.Value));
+
+            cache.Clear();
+
+            Assert.IsFalse(cache.ContainsNode(node.Id.Value));
+            Assert.IsFalse(cache.ContainsWay(way.Id.Value));
+            Assert.IsFalse(cache.ContainsRelation(relation.Id.Value));
         }
     }
 }

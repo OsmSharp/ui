@@ -33,7 +33,9 @@ namespace OsmSharp.UnitTests.Osm.Cache
         [Test]
         public void OsmDataCacheDiskNodeTest()
         {
-            base.DoOsmDataCacheTestNode(new OsmDataCacheDisk());
+            OsmDataCacheDisk cache = new OsmDataCacheDisk();
+            base.DoOsmDataCacheTestNode(cache);
+            cache.Dispose();
         }
 
         /// <summary>
@@ -42,7 +44,9 @@ namespace OsmSharp.UnitTests.Osm.Cache
         [Test]
         public void OsmDataCacheDiskWayTest()
         {
-            base.DoOsmDataCacheTestWay(new OsmDataCacheMemory());
+            OsmDataCacheDisk cache = new OsmDataCacheDisk();
+            base.DoOsmDataCacheTestWay(cache);
+            cache.Dispose();
         }
 
         /// <summary>
@@ -51,7 +55,18 @@ namespace OsmSharp.UnitTests.Osm.Cache
         [Test]
         public void OsmDataCacheDiskRelationTest()
         {
-            base.DoOsmDataCacheTestRelation(new OsmDataCacheMemory());
+            OsmDataCacheDisk cache = new OsmDataCacheDisk();
+            base.DoOsmDataCacheTestRelation(cache);
+            cache.Dispose();
+        }
+
+        /// <summary>
+        /// Tests clear.
+        /// </summary>
+        [Test]
+        public void OsmDataCacheDiskClearTest()
+        {
+            base.DoOsmDataCacheTestClear(new OsmDataCacheDisk());
         }
     }
 }

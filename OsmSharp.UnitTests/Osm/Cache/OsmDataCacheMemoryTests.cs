@@ -53,5 +53,14 @@ namespace OsmSharp.UnitTests.Osm.Cache
         {
             base.DoOsmDataCacheTestRelation(new OsmDataCacheMemory());
         }
+
+        /// <summary>
+        /// Tests clear.
+        /// </summary>
+        [Test]
+        public void OsmDataCacheMemoryClearTest()
+        {
+            base.DoOsmDataCacheTestClear(new OsmDataCacheMemory());
+        }
     }
 }
