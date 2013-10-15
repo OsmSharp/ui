@@ -98,7 +98,7 @@
     <Compile Include="Map\Styles\MapCSS\MapCSSObject.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSType.cs" />
     <Compile Include="Map\Styles\Streams\StyleOsmStreamFilter.cs" />
-    <Compile Include="Map\Styles\MapCSS\Streams\MapCSSSceneOsmStreamTarget.cs" />
+    <Compile Include="Map\Styles\Streams\StyleOsmStreamSceneTarget.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationCustom.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Eval\EvalInterpreter.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Eval\EvalInterpreterException.cs" />
@@ -184,6 +184,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

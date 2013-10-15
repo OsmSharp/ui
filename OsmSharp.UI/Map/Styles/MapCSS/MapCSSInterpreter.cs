@@ -19,16 +19,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Geo.Attributes;
 using OsmSharp.Geo.Geometries;
+using OsmSharp.Math.Algorithms;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Interpreter;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
-using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
-using OsmSharp.Math.Algorithms;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {
@@ -878,7 +879,78 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <returns></returns>
         public override bool AppliesTo(OsmGeo osmGeo)
         {
+            if (osmGeo == null) { return false; }
 
+            // interpret the osm-objects.
+            switch (osmGeo.Type)
+            {
+                case OsmGeoType.Node:
+                    return this.AppliesToNode(osmGeo as Node);
+                case OsmGeoType.Way:
+                    if (this.AppliesToWay(osmGeo as Way))
+                    { // this could possibly apply.
+                        return true;
+                    }
+
+                    // test also if it might apply as an area.
+                    return this.AppliesToArea(osmGeo.Tags);
+                case OsmGeoType.Relation:
+                    if (this.AppliesToRelation(osmGeo as Relation))
+                    { // this could possibly apply.
+                        return true;
+                    }
+
+                    // test also if it might apply as an area.
+                    return this.AppliesToArea(osmGeo.Tags);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        /// Returns false if this mapcss interpreter does not contain an interpretation for a way with the given tags.
+        /// </summary>
+        /// <param name="way"></param>
+        /// <returns></returns>
+        private bool AppliesToWay(Way way)
+        {
+            List<MapCSSRuleProperties> rules = this.BuildRules(new MapCSSObject(way));
+            return rules != null && rules.Count > 0;
+        }
+
+        /// <summary>
+        /// Returns false if this mapcss interpreter does not contain an interpretation for a relation with the given tags.
+        /// </summary>
+        /// <param name="relation"></param>
+        /// <returns></returns>
+        private bool AppliesToRelation(Relation relation)
+        {
+            List<MapCSSRuleProperties> rules = this.BuildRules(new MapCSSObject(relation));
+            return rules != null && rules.Count > 0;
+        }
+
+        /// <summary>
+        /// Returns false if this mapcss interpreter does not contain an interpretation for an area with the given tags.
+        /// </summary>
+        /// <param name="tagsCollection"></param>
+        /// <returns></returns>
+        private bool AppliesToArea(TagsCollection tagsCollection)
+        {
+            LineairRing ring = new LineairRing();
+            ring.Attributes = new SimpleGeometryAttributeCollection(tagsCollection);
+            List<MapCSSRuleProperties> rules = this.BuildRules(new MapCSSObject(ring));
+            return rules != null && rules.Count > 0;
+        }
+
+        /// <summary>
+        /// Returns false if this mapcss interpreter does not contain an interpretation for a node with the given tags.
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
+        private bool AppliesToNode(Node node)
+        {
+            List<MapCSSRuleProperties> rules = this.BuildRules(new MapCSSObject(node));
+            return rules != null && rules.Count > 0;
         }
     }
 }
