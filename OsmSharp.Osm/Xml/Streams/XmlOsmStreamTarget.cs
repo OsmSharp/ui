@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -28,7 +29,7 @@ namespace OsmSharp.Osm.Xml.Streams
     /// <summary>
     /// A data processor target that write OSM XML.
     /// </summary>
-    public class XmlOsmStreamTarget : OsmStreamTarget
+    public class XmlOsmStreamTarget : OsmStreamTarget, IDisposable
     {
         private XmlFragmentWriter _writer;
 
@@ -42,6 +43,8 @@ namespace OsmSharp.Osm.Xml.Streams
 
         private readonly string _fileName;
 
+        private readonly bool _disposeStream = false;
+
         /// <summary>
         /// Creates a new Xml data processor target.
         /// </summary>
@@ -50,6 +53,7 @@ namespace OsmSharp.Osm.Xml.Streams
             :base()
         {
             _fileName = fileName;
+            _disposeStream = true;
         }
 
         /// <summary>
@@ -390,6 +394,17 @@ namespace OsmSharp.Osm.Xml.Streams
             _textWriter.Flush();
             _writer.Close();
             _textWriter.Close();
+        }
+
+        /// <summary>
+        /// Disposes all resource associated with this stream target.
+        /// </summary>
+        public void Dispose()
+        {
+            if (_disposeStream && _textWriter != null)
+            {
+                _textWriter.Dispose();
+            }
         }
     }
 }

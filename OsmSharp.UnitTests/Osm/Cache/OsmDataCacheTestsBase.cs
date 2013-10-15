@@ -34,7 +34,7 @@ namespace OsmSharp.UnitTests.Osm.Cache
         /// <param name="cache"></param>
         public void DoOsmDataCacheTestNode(OsmDataCache cache)
         {
-            Node node = Node.Create(1, new SimpleTagsCollection(
+            Node node = Node.Create(10, new SimpleTagsCollection(
                 Tag.Create("node", "yes")), 1, 2);
 
             cache.AddNode(node);
