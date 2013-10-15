@@ -191,6 +191,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Cache\OsmDataCacheDisk.cs" />
     <Compile Include="Data\DataSourceReadOnlyBase.cs" />
     <Compile Include="Complete\CompleteChange.cs" />
     <Compile Include="Complete\CompleteChangeSet.cs" />

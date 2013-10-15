@@ -76,14 +76,14 @@ namespace OsmSharp.Osm.Cache
             return _nodes.TryGetValue(id, out node);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override IEnumerable<Node> GetNodes()
-        {
-            return _nodes.Values;
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns></returns>
+        //public override IEnumerable<Node> GetNodes()
+        //{
+        //    return _nodes.Values;
+        //}
 
         /// <summary>
         /// 
@@ -118,14 +118,14 @@ namespace OsmSharp.Osm.Cache
             return _ways.TryGetValue(id, out way);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override IEnumerable<Way> GetWays()
-        {
-            return _ways.Values;
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns></returns>
+        //public override IEnumerable<Way> GetWays()
+        //{
+        //    return _ways.Values;
+        //}
 
         /// <summary>
         /// 
@@ -160,13 +160,13 @@ namespace OsmSharp.Osm.Cache
             return _relations.TryGetValue(id, out relation);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override IEnumerable<Relation> GetRelations()
-        {
-            return _relations.Values;
-        }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <returns></returns>
+        //public override IEnumerable<Relation> GetRelations()
+        //{
+        //    return _relations.Values;
+        //}
     }
 }

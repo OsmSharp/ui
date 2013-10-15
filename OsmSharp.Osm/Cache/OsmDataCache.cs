@@ -73,11 +73,11 @@ namespace OsmSharp.Osm.Cache
         /// <returns></returns>
         public abstract bool TryGetNode(long id, out Node node);
 
-        /// <summary>
-        /// Returns a enumerable of all nodes in this cache.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IEnumerable<Node> GetNodes();
+        ///// <summary>
+        ///// Returns a enumerable of all nodes in this cache.
+        ///// </summary>
+        ///// <returns></returns>
+        //public abstract IEnumerable<Node> GetNodes();
 
         /// <summary>
         /// Adds a new way.
@@ -126,11 +126,11 @@ namespace OsmSharp.Osm.Cache
         /// <returns></returns>
         public abstract bool TryGetWay(long id, out Way way);
 
-        /// <summary>
-        /// Returns a enumerable of all ways in this cache.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IEnumerable<Way> GetWays();
+        ///// <summary>
+        ///// Returns a enumerable of all ways in this cache.
+        ///// </summary>
+        ///// <returns></returns>
+        //public abstract IEnumerable<Way> GetWays();
 
         /// <summary>
         /// Adds a new relation.
@@ -179,11 +179,11 @@ namespace OsmSharp.Osm.Cache
         /// <returns></returns>
         public abstract bool TryGetRelation(long id, out Relation relation);
 
-        /// <summary>
-        /// Returns an enumerable of all relations in this cache.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IEnumerable<Relation> GetRelations();
+        ///// <summary>
+        ///// Returns an enumerable of all relations in this cache.
+        ///// </summary>
+        ///// <returns></returns>
+        //public abstract IEnumerable<Relation> GetRelations();
 
         internal void Clear()
         {
