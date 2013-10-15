@@ -16,24 +16,27 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Streams.Collections;
+using System.Linq;
+using System.Text;
+using OsmSharp.Osm.Streams.Filters;
 
-namespace OsmSharp.Osm.Streams
+namespace OsmSharp.UnitTests.Osm.Streams.Filters
 {
     /// <summary>
-    /// Contains extensions for common OsmStreamReader/Writer/Filter implementations.
+    /// A simple reference implementation that filters out all objects with even ids.
     /// </summary>
-    public static class OsmStreamExtensions
+    internal class OsmStreamFilterReference : OsmStreamFilterBase
     {
         /// <summary>
-        /// Returns an OSM stream reader for the objects in this enumerable.
+        /// Returns true when the given osmGeo object has an uneven id.
         /// </summary>
-        /// <param name="enumerable"></param>
-        public static OsmStreamSource ToOsmStreamSource(this IEnumerable<OsmGeo> enumerable)
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        public override bool Include(OsmSharp.Osm.OsmGeo osmGeo)
         {
-            return new OsmEnumerableStreamSource(enumerable);
+            return osmGeo.Id.Value % 2 == 1;
         }
     }
 }

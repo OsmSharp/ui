@@ -93,7 +93,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         public override void Initialize()
         {
-            this.Reader.Initialize();
+            this.Source.Initialize();
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace OsmSharp.Osm.Streams.Filters
         {
             if (!_includeExtraMode)
             { // just go over all nodes and ways.
-                if (this.Reader.MoveNext())
+                if (this.Source.MoveNext())
                 {
                     bool finished = false;
                     bool isIn = false;
@@ -112,7 +112,7 @@ namespace OsmSharp.Osm.Streams.Filters
                     // move to the next object of the current type.
                     while (this.Current().Type != _currentType)
                     {
-                        if (!this.Reader.MoveNext())
+                        if (!this.Source.MoveNext())
                         {
                             finished = true;
                             break;
@@ -123,7 +123,7 @@ namespace OsmSharp.Osm.Streams.Filters
                     {
                         while (this.Current().Type == _currentType && !isIn)
                         {
-                            OsmGeo current = this.Reader.Current();
+                            OsmGeo current = this.Source.Current();
                             isIn = this.IsInBB(current); // check and keep the extras.
                             if (isIn)
                             {
@@ -144,14 +144,14 @@ namespace OsmSharp.Osm.Streams.Filters
                             }
 
                             // move to the next object of the current type.
-                            if (!this.Reader.MoveNext())
+                            if (!this.Source.MoveNext())
                             {
                                 finished = true;
                                 break;
                             }
                             while (this.Current().Type != _currentType)
                             {
-                                if (!this.Reader.MoveNext())
+                                if (!this.Source.MoveNext())
                                 {
                                     finished = true;
                                     break;
@@ -176,15 +176,15 @@ namespace OsmSharp.Osm.Streams.Filters
                 switch (_currentType)
                 {
                     case OsmGeoType.Node:
-                        this.Reader.Reset();
+                        this.Source.Reset();
                         _currentType = OsmGeoType.Way;
                         return this.MoveNext();
                     case OsmGeoType.Way:
-                        this.Reader.Reset();
+                        this.Source.Reset();
                         _currentType = OsmGeoType.Relation;
                         return this.MoveNext();
                     case OsmGeoType.Relation:
-                        this.Reader.Reset();
+                        this.Source.Reset();
                         _includeExtraMode = true;
                         return this.MoveNext();
                 }
@@ -192,32 +192,32 @@ namespace OsmSharp.Osm.Streams.Filters
             }
             else
             {
-                while (this.Reader.MoveNext())
+                while (this.Source.MoveNext())
                 {
-                    switch (this.Reader.Current().Type)
+                    switch (this.Source.Current().Type)
                     {
                         case OsmGeoType.Node:
-                            if (_nodesToInclude.Contains(this.Reader.Current().Id.Value))
+                            if (_nodesToInclude.Contains(this.Source.Current().Id.Value))
                             {
-                                if (!_nodesIn.Contains(this.Reader.Current().Id.Value))
+                                if (!_nodesIn.Contains(this.Source.Current().Id.Value))
                                 {
                                     return true;
                                 }
                             }
                             break;
                         case OsmGeoType.Way:
-                            if (_waysToInclude.Contains(this.Reader.Current().Id.Value))
+                            if (_waysToInclude.Contains(this.Source.Current().Id.Value))
                             {
-                                if (!_waysIn.Contains(this.Reader.Current().Id.Value))
+                                if (!_waysIn.Contains(this.Source.Current().Id.Value))
                                 {
                                     return true;
                                 }
                             }
                             break;
                         case OsmGeoType.Relation:
-                            if (_relationsToInclude.Contains(this.Reader.Current().Id.Value))
+                            if (_relationsToInclude.Contains(this.Source.Current().Id.Value))
                             {
-                                if (!_relationIn.Contains(this.Reader.Current().Id.Value))
+                                if (!_relationIn.Contains(this.Source.Current().Id.Value))
                                 {
                                     return true;
                                 }
@@ -235,7 +235,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <returns></returns>
         public override OsmGeo Current()
         {
-            return this.Reader.Current();
+            return this.Source.Current();
         }
 
         /// <summary>
@@ -247,7 +247,7 @@ namespace OsmSharp.Osm.Streams.Filters
             _nodesIn.Clear();
             _currentType = OsmGeoType.Node;
             _includeExtraMode = false;
-            this.Reader.Reset();
+            this.Source.Reset();
         }
 
         /// <summary>
@@ -255,7 +255,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         public override bool CanReset
         {
-            get { return this.Reader.CanReset; }
+            get { return this.Source.CanReset; }
         }
 
         /// <summary>

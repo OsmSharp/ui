@@ -870,5 +870,15 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         }
 
         #endregion
+
+        /// <summary>
+        /// Tests if the given object is usefull in this style.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        public override bool AppliesTo(OsmGeo osmGeo)
+        {
+
+        }
     }
 }

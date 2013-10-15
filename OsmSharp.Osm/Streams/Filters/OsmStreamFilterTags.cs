@@ -93,9 +93,9 @@ namespace OsmSharp.Osm.Streams.Filters
                 const bool filterOk = false;
                 while (!filterOk)
                 {
-                    if (this.Reader.MoveNext())
+                    if (this.Source.MoveNext())
                     {
-                        OsmGeo current = this.Reader.Current();
+                        OsmGeo current = this.Source.Current();
 
                         switch (current.Type)
                         {
@@ -151,7 +151,7 @@ namespace OsmSharp.Osm.Streams.Filters
         {
             _current = null;
 
-            this.Reader.Reset();
+            this.Source.Reset();
         }
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         public override bool CanReset
         {
-            get { return this.Reader.CanReset; }
+            get { return this.Source.CanReset; }
         }
 
         /// <summary>

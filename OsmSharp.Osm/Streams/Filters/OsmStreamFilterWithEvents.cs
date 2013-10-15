@@ -65,7 +65,7 @@ namespace OsmSharp.Osm.Streams.Filters
                 this.InitializeEvent();
             }
 
-            this.Reader.Initialize();
+            this.Source.Initialize();
         }
 
         /// <summary>
@@ -86,11 +86,11 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <returns></returns>
         public override bool MoveNext()
         {
-            if (this.Reader.MoveNext())
+            if (this.Source.MoveNext())
             {
                 if (this.MovedToNextEvent != null)
                 {
-                    this.MovedToNextEvent(this.Reader.Current(), _param);
+                    this.MovedToNextEvent(this.Source.Current(), _param);
                 }
                 return true;
             }
@@ -103,7 +103,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <returns></returns>
         public override OsmGeo Current()
         {
-            return this.Reader.Current();
+            return this.Source.Current();
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         public override void Reset()
         {
-            this.Reader.Reset();
+            this.Source.Reset();
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         public override bool CanReset
         {
-            get { return this.Reader.CanReset; }
+            get { return this.Source.CanReset; }
         }
     }
 }

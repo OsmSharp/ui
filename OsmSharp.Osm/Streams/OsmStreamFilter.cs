@@ -28,7 +28,7 @@ namespace OsmSharp.Osm.Streams
         /// <summary>
         /// Holds the reader.
         /// </summary>
-        private OsmStreamSource _reader;
+        private OsmStreamSource _source;
 
         /// <summary>
         /// Creates a new OSM filter.
@@ -44,17 +44,17 @@ namespace OsmSharp.Osm.Streams
         /// <param name="source"></param>
         public virtual void RegisterSource(OsmStreamSource source)
         {
-            _reader = source;
+            _source = source;
         }
 
         /// <summary>
         /// Returns the reader being filtered.
         /// </summary>
-        protected OsmStreamSource Reader
+        protected OsmStreamSource Source
         {
             get
             {
-                return _reader;
+                return _source;
             }
         }
 

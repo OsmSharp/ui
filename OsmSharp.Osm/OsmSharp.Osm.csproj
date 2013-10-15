@@ -234,6 +234,7 @@
     <Compile Include="Streams\Complete\OsmCompleteStreamSource.cs" />
     <Compile Include="Streams\Complete\OsmCompleteStreamTarget.cs" />
     <Compile Include="Streams\Complete\OsmSimpleCompleteStreamSource.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterBase.cs" />
     <Compile Include="Streams\OsmStreamExtensions.cs" />
     <Compile Include="Streams\OsmStreamFilter.cs" />
     <Compile Include="Streams\OsmStreamSource.cs" />
@@ -246,7 +247,7 @@
     <Compile Include="Streams\Filters\OsmStreamFilterWithEvents.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterSort.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterTags.cs" />
-    <Compile Include="Streams\Collections\OsmEnumerableStreamReader.cs" />
+    <Compile Include="Streams\Collections\OsmEnumerableStreamSource.cs" />
     <Compile Include="Streams\Collections\OsmCollectionStreamWriter.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
     <Compile Include="Xml\OsmSource\OsmDataSource.cs" />

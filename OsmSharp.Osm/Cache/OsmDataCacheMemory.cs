@@ -56,6 +56,16 @@ namespace OsmSharp.Osm.Cache
         }
 
         /// <summary>
+        /// Removes the node with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public override bool RemoveNode(long id)
+        {
+            return _nodes.Remove(id);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
@@ -88,6 +98,16 @@ namespace OsmSharp.Osm.Cache
         }
 
         /// <summary>
+        /// Removes the way with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public override bool RemoveWay(long id)
+        {
+            return _ways.Remove(id);
+        }
+
+        /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
@@ -117,6 +137,16 @@ namespace OsmSharp.Osm.Cache
             if (relation.Id == null) throw new Exception("relation.Id is null");
 
             _relations[relation.Id.Value] = relation;
+        }
+
+        /// <summary>
+        /// Removes the relation with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public override bool RemoveRelation(long id)
+        {
+            return _relations.Remove(id);
         }
 
         /// <summary>

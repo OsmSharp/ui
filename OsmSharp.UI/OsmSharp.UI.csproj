@@ -97,6 +97,7 @@
     <Compile Include="Map\Styles\MapCSS\MapCSSInterpreter.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSObject.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSType.cs" />
+    <Compile Include="Map\Styles\Streams\StyleOsmStreamFilter.cs" />
     <Compile Include="Map\Styles\MapCSS\Streams\MapCSSSceneOsmStreamTarget.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationCustom.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Eval\EvalInterpreter.cs" />

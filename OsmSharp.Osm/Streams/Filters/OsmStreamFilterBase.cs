@@ -21,14 +21,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Cache;
-using OsmSharp.Collections.LongIndex.LongIndex;
 
-namespace OsmSharp.Osm.Streams.Complete
+namespace OsmSharp.Osm.Streams.Filters
 {
     /// <summary>
-    /// Represents a complete stream source that converts a simple stream into a complete stream.
+    /// Base class some filter that keeps used nodes, ways and relations.
     /// </summary>
-    public class OsmSimpleCompleteStreamSource : OsmCompleteStreamSource
+    public abstract class OsmStreamFilterBase : OsmStreamFilter
     {
         /// <summary>
         /// Caches objects that are needed later to complete objects.
@@ -36,19 +35,12 @@ namespace OsmSharp.Osm.Streams.Complete
         private readonly OsmDataCache _dataCache;
 
         /// <summary>
-        /// Holds the simple source of object.
-        /// </summary>
-        private readonly OsmStreamSource _simpleSource;
-
-        /// <summary>
         /// Creates a new osm simple complete stream.
         /// </summary>
-        /// <param name="source"></param>
-        public OsmSimpleCompleteStreamSource(OsmStreamSource source)
+        public OsmStreamFilterBase()
         {
             // create an in-memory cache by default.
             _dataCache = new OsmDataCacheMemory();
-            _simpleSource = source;
 
             _nodesToInclude = new HashSet<long>();
             _nodesUsedTwiceOrMore = new Dictionary<long, int>();
@@ -63,10 +55,9 @@ namespace OsmSharp.Osm.Streams.Complete
         /// </summary>
         /// <param name="source"></param>
         /// <param name="cache"></param>
-        public OsmSimpleCompleteStreamSource(OsmStreamSource source, OsmDataCache cache)
+        public OsmStreamFilterBase(OsmStreamSource source, OsmDataCache cache)
         {
             _dataCache = cache;
-            _simpleSource = source;
 
             _nodesToInclude = new HashSet<long>();
             _nodesUsedTwiceOrMore = new Dictionary<long, int>();
@@ -89,7 +80,7 @@ namespace OsmSharp.Osm.Streams.Complete
             _relationsToInclude.Clear();
             _relationsUsedTwiceOrMore.Clear();
 
-            if (!_simpleSource.CanReset)
+            if (!this.Source.CanReset)
             { // the simple source cannot be reset, each object can be a child, no other option than caching everything!
                 // TODO: support this scenario, can be usefull when streaming data from a non-seekable stream.
                 throw new NotSupportedException("Creating a complete stream from a non-resettable simple stream is not supported. Wrap the source stream and create a resettable stream.");
@@ -99,6 +90,15 @@ namespace OsmSharp.Osm.Streams.Complete
 
             }
         }
+        
+        // TODO: investigate lambda usage for this!
+
+        /// <summary>
+        /// Returns true if the given object has to be kept.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        public abstract bool Include(OsmGeo osmGeo);
 
         /// <summary>
         /// Flag indicating that the caching was done.
@@ -108,7 +108,7 @@ namespace OsmSharp.Osm.Streams.Complete
         /// <summary>
         /// Holds the current complete object.
         /// </summary>
-        private CompleteOsmGeo _current;
+        private OsmGeo _current;
 
         /// <summary>
         /// Moves to the next object.
@@ -123,15 +123,26 @@ namespace OsmSharp.Osm.Streams.Complete
                 _cachingDone = true;
             }
 
-            if (_simpleSource.MoveNext())
+            if (this.Source.MoveNext())
             { // there is data.
-                OsmGeo currentSimple = _simpleSource.Current();
+                OsmGeo currentSimple = this.Source.Current();
+
+                // make sure the object needs to be included.
+                while (! this.IsChild(currentSimple) && 
+                    !this.Include(currentSimple))
+                { // don't include this object!
+                    if (!this.Source.MoveNext())
+                    { // oeps no more data!
+                        return false;
+                    }
+                    currentSimple = this.Source.Current();
+                }
 
                 switch (currentSimple.Type)
                 {
                     case OsmGeoType.Node:
                         // create complete version.
-                        _current = CompleteNode.CreateFrom(currentSimple as Node);
+                        _current = currentSimple;
                         if (_nodesToInclude.Contains(currentSimple.Id.Value))
                         { // node needs to be cached.
                             _dataCache.AddNode(currentSimple as Node);
@@ -140,7 +151,7 @@ namespace OsmSharp.Osm.Streams.Complete
                         break;
                     case OsmGeoType.Way:
                         // create complete way.
-                        _current = CompleteWay.CreateFrom(currentSimple as Way, _dataCache);
+                        _current = currentSimple;
 
                         if (_waysToInclude.Contains(currentSimple.Id.Value))
                         { // keep the way because it is needed later on.
@@ -158,7 +169,7 @@ namespace OsmSharp.Osm.Streams.Complete
                         break;
                     case OsmGeoType.Relation:
                         // create complate relation.
-                        _current = CompleteRelation.CreateFrom(currentSimple as Relation, _dataCache);
+                        _current = currentSimple;
 
                         if(!_relationsToInclude.Contains(currentSimple.Id.Value))
                         { // only report relation usage when the relation can be let go.
@@ -185,6 +196,28 @@ namespace OsmSharp.Osm.Streams.Complete
                         break;
                 }
                 return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the given object is an object that needs to be included.
+        /// </summary>
+        /// <param name="currentSimple"></param>
+        /// <returns></returns>
+        private bool IsChild(OsmGeo currentSimple)
+        {
+            switch (currentSimple.Type)
+            {
+                case OsmGeoType.Node:
+                    return _nodesToInclude.Contains(currentSimple.Id.Value) ||
+                        _dataCache.ContainsNode(currentSimple.Id.Value);
+                case OsmGeoType.Way:
+                    return _waysToInclude.Contains(currentSimple.Id.Value) ||
+                        _dataCache.ContainsWay(currentSimple.Id.Value);
+                case OsmGeoType.Relation:
+                    return _relationsToInclude.Contains(currentSimple.Id.Value) ||
+                        _dataCache.ContainsRelation(currentSimple.Id.Value);
             }
             return false;
         }
@@ -220,40 +253,97 @@ namespace OsmSharp.Osm.Streams.Complete
         private readonly Dictionary<long, int> _relationsUsedTwiceOrMore;
 
         /// <summary>
-        /// Seeks for objects that are children of other objects.
+        /// Seeks for objects that are children of other objects and children of children.
         /// </summary>
         private void Seek()
         {
-            foreach (OsmGeo osmGeo in _simpleSource)
+            HashSet<long> possibleWayChildren = new HashSet<long>();
+            HashSet<long> possibleRelationChildren = new HashSet<long>();
+            foreach (OsmGeo osmGeo in this.Source)
             {
-                switch (osmGeo.Type)
+                if (this.Include(osmGeo))
                 {
-                    case OsmGeoType.Way:
-                        foreach (long nodeId in (osmGeo as Way).Nodes)
-                        {
-                            this.MarkNodeAsChild(nodeId);
-                        }
-                        break;
-                    case OsmGeoType.Relation:
-                        foreach (RelationMember member in (osmGeo as Relation).Members)
-                        {
-                            switch (member.MemberType.Value)
+                    switch (osmGeo.Type)
+                    {
+                        case OsmGeoType.Way:
+                            foreach (long nodeId in (osmGeo as Way).Nodes)
                             {
-                                case OsmGeoType.Node:
-                                    this.MarkNodeAsChild(member.MemberId.Value);
-                                    break;
-                                case OsmGeoType.Way:
-                                    this.MarkWayAsChild(member.MemberId.Value);
-                                    break;
-                                case OsmGeoType.Relation:
-                                    this.MarkRelationAsChild(member.MemberId.Value);
-                                    break;
+                                this.MarkNodeAsChild(nodeId);
                             }
-                        }
-                        break;
+                            break;
+                        case OsmGeoType.Relation:
+                            foreach (RelationMember member in (osmGeo as Relation).Members)
+                            {
+                                switch (member.MemberType.Value)
+                                {
+                                    case OsmGeoType.Node:
+                                        this.MarkNodeAsChild(member.MemberId.Value);
+                                        break;
+                                    case OsmGeoType.Way:
+                                        this.MarkWayAsChild(member.MemberId.Value);
+
+                                        possibleWayChildren.Add(member.MemberId.Value);
+                                        break;
+                                    case OsmGeoType.Relation:
+                                        this.MarkRelationAsChild(member.MemberId.Value);
+
+                                        possibleRelationChildren.Add(member.MemberId.Value);
+                                        break;
+                                }
+                            }
+                            break;
+                    }
                 }
             }
-            _simpleSource.Reset();
+            while (possibleRelationChildren.Count > 0 ||
+                possibleWayChildren.Count > 0)
+            { // keep looping until all children are accounted for.
+                this.Source.Reset();
+                HashSet<long> newPossibleWayChildren = new HashSet<long>();
+                HashSet<long> newPossibleRelationChildren = new HashSet<long>();
+                foreach (OsmGeo osmGeo in this.Source)
+                {
+                    switch (osmGeo.Type)
+                    {
+                        case OsmGeoType.Way:
+                            if (possibleWayChildren.Contains(osmGeo.Id.Value))
+                            {
+                                foreach (long nodeId in (osmGeo as Way).Nodes)
+                                {
+                                    this.MarkNodeAsChild(nodeId);
+                                }
+                            }
+                            break;
+                        case OsmGeoType.Relation:
+                            if (possibleRelationChildren.Contains(osmGeo.Id.Value))
+                            {
+                                foreach (RelationMember member in (osmGeo as Relation).Members)
+                                {
+                                    switch (member.MemberType.Value)
+                                    {
+                                        case OsmGeoType.Node:
+                                            this.MarkNodeAsChild(member.MemberId.Value);
+                                            break;
+                                        case OsmGeoType.Way:
+                                            this.MarkWayAsChild(member.MemberId.Value);
+
+                                            newPossibleWayChildren.Add(member.MemberId.Value);
+                                            break;
+                                        case OsmGeoType.Relation:
+                                            this.MarkRelationAsChild(member.MemberId.Value);
+
+                                            newPossibleRelationChildren.Add(member.MemberId.Value);
+                                            break;
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+                possibleWayChildren = newPossibleWayChildren;
+                possibleRelationChildren = newPossibleRelationChildren;
+            }
+            this.Source.Reset();
         }
 
         /// <summary>
@@ -262,19 +352,22 @@ namespace OsmSharp.Osm.Streams.Complete
         private void CacheRelations()
         {
             // TODO: enhance this to only cache relations that are not in the correct 'order' in the stream.
-            foreach (OsmGeo osmGeo in _simpleSource)
+            foreach (OsmGeo osmGeo in this.Source)
             {
                 switch (osmGeo.Type)
                 {
                     case OsmGeoType.Relation:
-                        if (_relationsToInclude.Contains(osmGeo.Id.Value))
-                        { // yep, cache relation!
-                            _dataCache.AddRelation(osmGeo as Relation);
+                        if (this.Include(osmGeo))
+                        {
+                            if (_relationsToInclude.Contains(osmGeo.Id.Value))
+                            { // yep, cache relation!
+                                _dataCache.AddRelation(osmGeo as Relation);
+                            }
                         }
                         break;
                 }
             }
-            _simpleSource.Reset();
+            this.Source.Reset();
         }
 
         /// <summary>
@@ -449,7 +542,7 @@ namespace OsmSharp.Osm.Streams.Complete
         /// Returns the current object.
         /// </summary>
         /// <returns></returns>
-        public override CompleteOsmGeo Current()
+        public override OsmGeo Current()
         {
             return _current;
         }
@@ -462,7 +555,7 @@ namespace OsmSharp.Osm.Streams.Complete
             _cachingDone = false;
 
             _dataCache.Clear();
-            _simpleSource.Reset();
+            this.Source.Reset();
         }
 
         /// <summary>
@@ -470,7 +563,7 @@ namespace OsmSharp.Osm.Streams.Complete
         /// </summary>
         public override bool CanReset
         {
-            get { return _simpleSource.CanReset; }
+            get { return this.Source.CanReset; }
         }
     }
 }

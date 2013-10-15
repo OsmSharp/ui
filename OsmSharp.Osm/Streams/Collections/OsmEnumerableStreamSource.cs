@@ -24,7 +24,7 @@ namespace OsmSharp.Osm.Streams.Collections
     /// <summary>
     /// An OSM Stream Reader that wraps around a collection of OSM objects.
     /// </summary>
-    internal class OsmEnumerableStreamReader : OsmStreamSource
+    internal class OsmEnumerableStreamSource : OsmStreamSource
     {
         /// <summary>
         /// Holds the list of SimpleOsmGeo objects.
@@ -40,7 +40,7 @@ namespace OsmSharp.Osm.Streams.Collections
         /// Creates a new OsmBase source.
         /// </summary>
         /// <param name="baseObjects"></param>
-        public OsmEnumerableStreamReader(IEnumerable<OsmGeo> baseObjects)
+        public OsmEnumerableStreamSource(IEnumerable<OsmGeo> baseObjects)
         {
             _baseObjects = baseObjects;
         }

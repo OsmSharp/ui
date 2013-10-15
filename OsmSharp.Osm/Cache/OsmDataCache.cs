@@ -48,6 +48,24 @@ namespace OsmSharp.Osm.Cache
         }
 
         /// <summary>
+        /// Removes the node with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public abstract bool RemoveNode(long id);
+
+        /// <summary>
+        /// Retruns true if the node exists.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual bool ContainsNode(long id)
+        {
+            Node node;
+            return (this.TryGetNode(id, out node));
+        }
+
+        /// <summary>
         /// Tries to get the node with the given id.
         /// </summary>
         /// <param name="id"></param>
@@ -68,6 +86,13 @@ namespace OsmSharp.Osm.Cache
         public abstract void AddWay(Way way);
 
         /// <summary>
+        /// Removes the way with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public abstract bool RemoveWay(long id);
+
+        /// <summary>
         /// Returns the way with the given id if present.
         /// </summary>
         /// <param name="id"></param>
@@ -80,6 +105,17 @@ namespace OsmSharp.Osm.Cache
                 return way;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Retruns true if the way exists.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual bool ContainsWay(long id)
+        {
+            Way way;
+            return (this.TryGetWay(id, out way));
         }
 
         /// <summary>
@@ -115,6 +151,24 @@ namespace OsmSharp.Osm.Cache
                 return relation;
             }
             return null;
+        }
+
+        /// <summary>
+        /// Removes the relation with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public abstract bool RemoveRelation(long id);
+
+        /// <summary>
+        /// Retruns true if the relation exists.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual bool ContainsRelation(long id)
+        {
+            Relation relation;
+            return (this.TryGetRelation(id, out relation));
         }
 
         /// <summary>

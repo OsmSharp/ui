@@ -150,6 +150,9 @@
     <Compile Include="Math\Primitives\Line2DTests.cs" />
     <Compile Include="Math\Primitives\RectangleF2DTests.cs" />
     <Compile Include="Osm\Interpreter\SimpleGeometryInterpreterTests.cs" />
+    <Compile Include="Osm\Streams\Complete\OsmSimpleCompleteStreamSourceTests.cs" />
+    <Compile Include="Osm\Streams\Filters\OsmStreamFilterBaseTests.cs" />
+    <Compile Include="Osm\Streams\Filters\OsmStreamFilterReference.cs" />
     <Compile Include="Osm\TagParsingTests.cs" />
     <Compile Include="Routes\DepotRouteTests.cs" />
     <Compile Include="API\APITests.cs" />
