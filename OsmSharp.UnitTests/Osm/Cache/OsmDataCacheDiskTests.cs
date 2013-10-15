@@ -35,5 +35,23 @@ namespace OsmSharp.UnitTests.Osm.Cache
         {
             base.DoOsmDataCacheTestNode(new OsmDataCacheDisk());
         }
+
+        /// <summary>
+        /// Tests simple way read/write.
+        /// </summary>
+        [Test]
+        public void OsmDataCacheDiskWayTest()
+        {
+            base.DoOsmDataCacheTestWay(new OsmDataCacheMemory());
+        }
+
+        /// <summary>
+        /// Tests simple relation read/write.
+        /// </summary>
+        [Test]
+        public void OsmDataCacheDiskRelationTest()
+        {
+            base.DoOsmDataCacheTestRelation(new OsmDataCacheMemory());
+        }
     }
 }

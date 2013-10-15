@@ -34,7 +34,7 @@ namespace OsmSharp.UnitTests.Osm.Cache
         /// <param name="cache"></param>
         public void DoOsmDataCacheTestNode(OsmDataCache cache)
         {
-            Node node = Node.Create(10, new SimpleTagsCollection(
+            Node node = Node.Create(1, new SimpleTagsCollection(
                 Tag.Create("node", "yes")), 1, 2);
 
             cache.AddNode(node);
@@ -60,6 +60,66 @@ namespace OsmSharp.UnitTests.Osm.Cache
 
             cache.RemoveNode(node.Id.Value);
             Assert.IsFalse(cache.ContainsNode(node.Id.Value));
+        }
+
+        /// <summary>
+        /// Tests a simple way read/write operation.
+        /// </summary>
+        /// <param name="cache"></param>
+        public void DoOsmDataCacheTestWay(OsmDataCache cache)
+        {
+            Way way = Way.Create(1, new SimpleTagsCollection(
+                Tag.Create("way", "yes")), 1, 2);
+
+            cache.AddWay(way);
+
+            Assert.IsTrue(cache.ContainsWay(way.Id.Value));
+            Way readWay = cache.GetWay(way.Id.Value);
+            Assert.IsNotNull(readWay);
+            Assert.AreEqual(1, readWay.Id.Value);
+            Assert.IsNotNull(way.Tags);
+            Assert.AreEqual(1, way.Tags.Count);
+            Assert.AreEqual("yes", way.Tags["way"]);
+
+            Assert.IsTrue(cache.TryGetWay(way.Id.Value, out readWay));
+            Assert.IsNotNull(readWay);
+            Assert.AreEqual(1, readWay.Id.Value);
+            Assert.IsNotNull(way.Tags);
+            Assert.AreEqual(1, way.Tags.Count);
+            Assert.AreEqual("yes", way.Tags["way"]);
+
+            cache.RemoveNode(way.Id.Value);
+            Assert.IsFalse(cache.ContainsNode(way.Id.Value));
+        }
+
+        /// <summary>
+        /// Tests a simple relation read/write operation.
+        /// </summary>
+        /// <param name="cache"></param>
+        public void DoOsmDataCacheTestRelation(OsmDataCache cache)
+        {
+            Relation relation = Relation.Create(1, new SimpleTagsCollection(
+                Tag.Create("relation", "yes")), RelationMember.Create(1, "something", OsmGeoType.Node));
+
+            cache.AddRelation(relation);
+
+            Assert.IsTrue(cache.ContainsRelation(relation.Id.Value));
+            Relation readRelation = cache.GetRelation(relation.Id.Value);
+            Assert.IsNotNull(readRelation);
+            Assert.AreEqual(1, readRelation.Id.Value);
+            Assert.IsNotNull(relation.Tags);
+            Assert.AreEqual(1, relation.Tags.Count);
+            Assert.AreEqual("yes", relation.Tags["relation"]);
+
+            Assert.IsTrue(cache.TryGetRelation(relation.Id.Value, out readRelation));
+            Assert.IsNotNull(readRelation);
+            Assert.AreEqual(1, readRelation.Id.Value);
+            Assert.IsNotNull(relation.Tags);
+            Assert.AreEqual(1, relation.Tags.Count);
+            Assert.AreEqual("yes", relation.Tags["relation"]);
+
+            cache.RemoveNode(relation.Id.Value);
+            Assert.IsFalse(cache.ContainsNode(relation.Id.Value));
         }
     }
 }

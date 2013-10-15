@@ -42,9 +42,11 @@ namespace OsmSharp.Osm.Xml.Streams
 
         private readonly string _fileName;
 
-        private readonly Stream _stream;
+        private Stream _stream;
 
         private readonly bool _gzip;
+
+        private readonly bool _disposeStream = false;
 
         /// <summary>
         /// Creates a new Xml data processor source.
@@ -84,6 +86,7 @@ namespace OsmSharp.Osm.Xml.Streams
         /// <param name="gzip"></param>
         public XmlOsmStreamSource(string fileName, bool gzip)
         {
+            _disposeStream = true;
             _fileName = fileName;
             _gzip = gzip;
         }
@@ -115,29 +118,26 @@ namespace OsmSharp.Osm.Xml.Streams
             //settings.IgnoreWhitespace = true;
 
             // create the stream.
-            Stream fileStream = null;
             if (_stream != null)
             { // take the preset stream.
-                fileStream = _stream;
-
                 // seek to the beginning of the stream.
-                if (fileStream.CanSeek)
+                if (_stream.CanSeek)
                 { // if a non-seekable stream is given resetting is disabled.
-                    fileStream.Seek(0, SeekOrigin.Begin);
+                    _stream.Seek(0, SeekOrigin.Begin);
                 }
             }
             else
             { // create a file stream.
-                fileStream = new FileInfo(_fileName).OpenRead();
+                _stream = new FileInfo(_fileName).OpenRead();
             }
 
             // decompress if needed.
             if (_gzip)
             {
-                fileStream = new GZipStream(fileStream, CompressionMode.Decompress);
+                _stream = new GZipStream(_stream, CompressionMode.Decompress);
             }
 
-            TextReader textReader = new StreamReader(fileStream, Encoding.UTF8);
+            TextReader textReader = new StreamReader(_stream, Encoding.UTF8);
             _reader = XmlReader.Create(textReader, settings);     
         }
 
@@ -213,6 +213,22 @@ namespace OsmSharp.Osm.Xml.Streams
         public override OsmGeo Current()
         {
             return _next;
+        }
+
+        /// <summary>
+        /// Disposes all resources associated with this stream.
+        /// </summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            if (_disposeStream)
+            {
+                _reader.Close();
+
+                _stream.Close();
+                _stream.Dispose();
+            }
         }
     }
 }
