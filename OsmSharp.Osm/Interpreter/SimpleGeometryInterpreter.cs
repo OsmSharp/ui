@@ -16,16 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OsmSharp.Geo.Geometries;
-using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Data;
-using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Attributes;
+using OsmSharp.Geo.Geometries;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Osm.Interpreter
 {
@@ -136,6 +132,65 @@ namespace OsmSharp.Osm.Interpreter
                 }
             }
             return collection;
+        }
+
+        /// <summary>
+        /// Returns true if the given tags collection contains tags that could represents an area.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public override bool IsPotentiallyArea(TagsCollection tags)
+        {
+            if (tags == null || tags.Count == 0) { return false; } // no tags, assume no area.
+
+            bool isArea = false;
+            if ((tags.ContainsKey("building") && !tags.IsFalse("building")) ||
+                (tags.ContainsKey("landuse") && !tags.IsFalse("landuse")) ||
+                (tags.ContainsKey("amenity") && !tags.IsFalse("amenity")) ||
+                (tags.ContainsKey("harbour") && !tags.IsFalse("harbour")) ||
+                (tags.ContainsKey("historic") && !tags.IsFalse("historic")) ||
+                (tags.ContainsKey("leisure") && !tags.IsFalse("leisure")) ||
+                (tags.ContainsKey("man_made") && !tags.IsFalse("man_made")) ||
+                (tags.ContainsKey("military") && !tags.IsFalse("military")) ||
+                (tags.ContainsKey("natural") && !tags.IsFalse("natural")) ||
+                (tags.ContainsKey("office") && !tags.IsFalse("office")) ||
+                (tags.ContainsKey("place") && !tags.IsFalse("place")) ||
+                (tags.ContainsKey("power") && !tags.IsFalse("power")) ||
+                (tags.ContainsKey("public_transport") && !tags.IsFalse("public_transport")) ||
+                (tags.ContainsKey("shop") && !tags.IsFalse("shop")) ||
+                (tags.ContainsKey("sport") && !tags.IsFalse("sport")) ||
+                (tags.ContainsKey("tourism") && !tags.IsFalse("tourism")) ||
+                (tags.ContainsKey("waterway") && !tags.IsFalse("waterway")) ||
+                (tags.ContainsKey("wetland") && !tags.IsFalse("wetland")) ||
+                (tags.ContainsKey("water") && !tags.IsFalse("water")) ||
+                (tags.ContainsKey("aeroway") && !tags.IsFalse("aeroway")))
+            { // these tags usually indicate an area.
+                isArea = true;
+            }
+
+            string typeValue;
+            if (tags.TryGetValue("type", out typeValue))
+            { // there is a type in this relation.
+                if (typeValue == "multipolygon")
+                { // this relation is a multipolygon.
+                    isArea = true;
+                }
+                else if (typeValue == "boundary")
+                { // this relation is a boundary.
+                    isArea = true;
+                }
+            }
+
+            if (tags.IsTrue("area"))
+            { // explicitly indicated that this is an area.
+                isArea = true;
+            }
+            else if (tags.IsFalse("area"))
+            { // explicitly indicated that this is not an area.
+                isArea = false;
+            }
+
+            return isArea;
         }
 
         /// <summary>

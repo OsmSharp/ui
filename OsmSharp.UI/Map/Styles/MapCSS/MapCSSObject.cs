@@ -172,8 +172,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 return this.Geometry.Attributes != null &&
                     this.Geometry.Attributes.ContainsKey(key);
             }
-            return this.OsmGeoComplete.Tags != null &&
-                this.OsmGeoComplete.Tags.ContainsKey(key);
+            if (this.OsmGeoComplete != null)
+            {
+                return this.OsmGeoComplete.Tags != null &&
+                    this.OsmGeoComplete.Tags.ContainsKey(key);
+            }
+            return this.OsmGeo.Tags != null &&
+                this.OsmGeo.Tags.ContainsKey(key);
         }
 
         /// <summary>
@@ -201,8 +206,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 return false;
             }
             tagValue = string.Empty;
-            return this.OsmGeoComplete.Tags != null &&
-                this.OsmGeoComplete.Tags.TryGetValue(key, out tagValue);
+            if (this.OsmGeoComplete != null)
+            {
+                return this.OsmGeoComplete.Tags != null &&
+                    this.OsmGeoComplete.Tags.TryGetValue(key, out tagValue);
+            }
+            return this.OsmGeo.Tags != null &&
+                this.OsmGeo.Tags.TryGetValue(key, out tagValue);
         }
     }
 }

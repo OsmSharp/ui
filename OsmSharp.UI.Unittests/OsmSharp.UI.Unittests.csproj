@@ -81,6 +81,7 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSInterpretationTests.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParserTests.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Eval\MapCSSEvalTests.cs" />
+    <Compile Include="Map\Styles\Streams\StyleOsmStreamFilterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Renderer\Scene2DPrimitives\Storage\Scene2DPrimitivesSerializerTests.cs" />
     <Compile Include="SimpleColorTests.cs" />

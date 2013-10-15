@@ -893,7 +893,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     }
 
                     // test also if it might apply as an area.
-                    return this.AppliesToArea(osmGeo.Tags);
+                    if (_geometryInterpreter.IsPotentiallyArea(osmGeo.Tags))
+                    {
+                        return this.AppliesToArea(osmGeo.Tags);
+                    }
+                    return false;
                 case OsmGeoType.Relation:
                     if (this.AppliesToRelation(osmGeo as Relation))
                     { // this could possibly apply.
@@ -901,7 +905,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     }
 
                     // test also if it might apply as an area.
-                    return this.AppliesToArea(osmGeo.Tags);
+                    if (_geometryInterpreter.IsPotentiallyArea(osmGeo.Tags))
+                    {
+                        return this.AppliesToArea(osmGeo.Tags);
+                    }
+                    return false;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

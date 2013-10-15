@@ -23,6 +23,7 @@ using System.Text;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Data;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm.Interpreter
 {
@@ -61,6 +62,13 @@ namespace OsmSharp.Osm.Interpreter
         /// <param name="osmObject"></param>
         /// <returns></returns>
         public abstract GeometryCollection Interpret(CompleteOsmGeo osmObject);
+
+        /// <summary>
+        /// Returns true if the given tags collection contains potential area tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public abstract bool IsPotentiallyArea(TagsCollection tags);
 
         /// <summary>
         /// Interprets an OSM-object and returns the correctponding geometry.
