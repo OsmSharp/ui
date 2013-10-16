@@ -30,6 +30,15 @@ namespace OsmSharp.UnitTests.Osm.Streams.Filters
     internal class OsmStreamFilterReference : OsmStreamFilterBase
     {
         /// <summary>
+        /// Creates a new stream filter reference.
+        /// </summary>
+        public OsmStreamFilterReference()
+            : base(new OsmSharp.Osm.Cache.OsmDataCacheMemory())
+        {
+
+        }
+
+        /// <summary>
         /// Returns true when the given osmGeo object has an uneven id.
         /// </summary>
         /// <param name="osmGeo"></param>

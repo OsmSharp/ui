@@ -40,6 +40,7 @@ namespace OsmSharp.UI.Map.Styles.Streams
         /// </summary>
         /// <param name="styleInterpreter"></param>
         public StyleOsmStreamFilter(StyleInterpreter styleInterpreter)
+            :base(new OsmSharp.Osm.Cache.OsmDataCacheMemory())
         {
             _styleInterpreter = styleInterpreter;
         }

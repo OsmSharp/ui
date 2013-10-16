@@ -37,10 +37,11 @@ namespace OsmSharp.Osm.Streams.Filters
         /// <summary>
         /// Creates a new osm simple complete stream.
         /// </summary>
-        public OsmStreamFilterBase()
+        /// <param name="cache"></param>
+        public OsmStreamFilterBase(OsmDataCache cache)
         {
             // create an in-memory cache by default.
-            _dataCache = new OsmDataCacheMemory();
+            _dataCache = cache;
 
             _nodesToInclude = new HashSet<long>();
             _nodesUsedTwiceOrMore = new Dictionary<long, int>();
