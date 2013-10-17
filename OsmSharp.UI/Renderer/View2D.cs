@@ -333,6 +333,18 @@ namespace OsmSharp.UI.Renderer
 			return _rectangle.TransformFrom (pixelsWidth, pixelsHeight, _invertX, _invertY, pixelX, pixelY);
         }
 
+		/// <summary>
+		/// Froms the view port.
+		/// </summary>
+		/// <returns>The view port.</returns>
+		/// <param name="pixelsWidth">Pixels width.</param>
+		/// <param name="pixelsHeight">Pixels height.</param>
+		/// <param name="pixelsX">Pixels x.</param>
+		/// <param name="pixelsY">Pixels y.</param>
+		public double[][] FromViewPort(double pixelsWidth, double pixelsHeight, double[] pixelsX, double[] pixelsY) {
+			return _rectangle.TransformFrom (pixelsWidth, pixelsHeight, _invertX, _invertY, pixelsX, pixelsY);
+		}
+
         /// <summary>
         /// Returns the viewport coordinates in the given viewport that corresponds with the given scene coordinates.
         /// </summary>
@@ -341,10 +353,23 @@ namespace OsmSharp.UI.Renderer
         /// <param name="sceneX"></param>
         /// <param name="sceneY"></param>
         /// <returns></returns>
-        public double[] ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY)
+        public double[][] ToViewPort(double pixelsWidth, double pixelsHeight, double[] sceneX, double[] sceneY)
         { // the right and going down.
 			return _rectangle.TransformTo (pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY);
-        }
+		}
+
+		/// <summary>
+		/// Returns the viewport coordinates in the given viewport that corresponds with the given scene coordinates.
+		/// </summary>
+		/// <param name="pixelsWidth"></param>
+		/// <param name="pixelsHeight"></param>
+		/// <param name="sceneX"></param>
+		/// <param name="sceneY"></param>
+		/// <returns></returns>
+		public double[] ToViewPort(double pixelsWidth, double pixelsHeight, double sceneX, double sceneY)
+		{ // the right and going down.
+			return _rectangle.TransformTo (pixelsWidth, pixelsHeight, _invertX, _invertY, sceneX, sceneY);
+		}
 
         /// <summary>
         /// Calculates the zoom factor for the given view when at the given resolution.

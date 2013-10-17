@@ -472,6 +472,46 @@ namespace OsmSharp.Math.Primitives
 				(vectorY * heightFactor);
 			return result.ToArray ();
 		}
+
+		/// <summary>
+		/// Transforms the given coordinates to the coordinate system this rectangle is defined in.
+		/// </summary>
+		/// <param name="width">The width of the rectangle in the coordinate system of the given coordinates.</param>
+		/// <param name="height">The height of the rectangle in the coordinate system of the given coordinates.</param>
+		/// <param name="reverseX">Assumes that the origin of the x-axis is on the top of this rectangle if false.</param>
+		/// <param name="reverseY">Assumes that the origin of the y-axis is on the right of this rectangle if false.</param>
+		/// <param name="x">The x-coordinates to transform.</param>
+		/// <param name="y">The y-coordinates to transform.</param>
+		public double[][] TransformFrom(double width, double height, bool reverseX, bool reverseY,
+		                              double[] x, double[] y){
+			PointF2D reference = _bottomLeft;
+			VectorF2D vectorX = _vectorX;
+			VectorF2D vectorY = _vectorY;
+
+			if (reverseX && !reverseY) {
+				reference = this.BottomRight;
+				vectorX = _vectorX * -1;
+			} else if (!reverseX && reverseY) {
+				reference = this.TopLeft;
+				vectorY = _vectorY * -1;
+			} else if (reverseX && reverseY) {
+				reference = this.TopRight;
+				vectorX = _vectorX * -1;
+				vectorY = _vectorY * -1;
+			}
+
+			double[][] transformed = new double[x.Length][];
+			for(int idx = 0; idx < x.Length; idx++) {
+				double widthFactor = x[idx] / width;
+				double heightFactor = y[idx] / height;
+
+				PointF2D result = reference +
+					(vectorX * widthFactor) +
+						(vectorY * heightFactor);
+				transformed[idx] = result.ToArray ();
+			}
+			return transformed;
+		}
 		
 
 		/// <summary>
@@ -499,6 +539,57 @@ namespace OsmSharp.Math.Primitives
 		public double[] TransformTo(double width, double height, bool reverseX, bool reverseY,
 		                            double x, double y){
 			return this.TransformTo (width, height, reverseX, reverseY, new PointF2D (x, y));
+		}
+
+		/// <summary>
+		/// Transforms the given the coordinates to a coordinate system defined inside this rectangle.
+		/// </summary>
+		/// <param name="width">The width of the rectangle in the coordinate system of the given coordinates.</param>
+		/// <param name="height">The height of the rectangle in the coordinate system of the given coordinates.</param>
+		/// <param name="reverseX">Assumes that the origin of the x-axis is on the top of this rectangle if false.</param>
+		/// <param name="reverseY">Assumes that the origin of the y-axis is on the right of this rectangle if false.</param>
+		/// <param name="x">The x-coordinate to transform.</param>
+		/// <param name="y">The y-coordinate to transform.</param>
+		public double[][] TransformTo(double width, double height, bool reverseX, bool reverseY,
+		                            double[] x, double[] y){
+			PointF2D reference = _bottomLeft;
+			VectorF2D vectorX = _vectorX;
+			VectorF2D vectorY = _vectorY;
+
+			if (reverseX && !reverseY) {
+				reference = this.BottomRight;
+				vectorX = _vectorX * -1;
+			} else if (!reverseX && reverseY) {
+				reference = this.TopLeft;
+				vectorY = _vectorY * -1;
+			} else if (reverseX && reverseY) {
+				reference = this.TopRight;
+				vectorX = _vectorX * -1;
+				vectorY = _vectorY * -1;
+			}
+			
+			double[][] transformed = new double[x.Length][];
+			for (int idx = 0; idx < x.Length; idx++) {
+				PointF2D point = new PointF2D (x [idx], y [idx]);
+				LineF2D xLine = new LineF2D (point, point + vectorX, false);
+				PointF2D yIntersection = xLine.Intersection (new LineF2D (reference, reference + vectorY)) as PointF2D;
+				VectorF2D yIntersectionVector = (yIntersection - reference);
+				double yFactor = yIntersectionVector.Size / vectorY.Size;
+				if (!yIntersectionVector.CompareNormalized (vectorY, 0.0001)) {
+					yFactor = -yFactor;
+				}
+
+				LineF2D yLine = new LineF2D (point, point + vectorY);
+				PointF2D xIntersection = yLine.Intersection (new LineF2D (reference, reference + vectorX)) as PointF2D;
+				VectorF2D xIntersectionVector = (xIntersection - reference);
+				double xFactor = xIntersectionVector.Size / vectorX.Size;
+				if (!xIntersectionVector.CompareNormalized (vectorX, 0.0001)) {
+					xFactor = -xFactor;
+				}
+
+				transformed[idx] = new double[] { xFactor * width, yFactor * height };
+			}
+			return transformed;
 		}
 
 		/// <summary>
@@ -574,5 +665,6 @@ namespace OsmSharp.Math.Primitives
 		}
 
 		#endregion
+
     }
 }
