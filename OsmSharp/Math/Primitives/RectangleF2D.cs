@@ -305,6 +305,51 @@ namespace OsmSharp.Math.Primitives
         }
 
         /// <summary>
+        /// Fits this rectangle to this given points and keeps aspect ratio.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public RectangleF2D FitAndKeepAspectRatio(PointF2D[] points, double percentage)
+        {
+            double delta = 0.0001;
+            RectangleF2D fitted = this.Fit(points, percentage);
+            double width = fitted.Width;
+            double height = fitted.Height;
+            if (fitted.Height > delta)
+            { // the height is bigger.
+                double ratio = this.Width / this.Height;
+                double fittedRatio = fitted.Width / fitted.Height;
+                if (ratio > fittedRatio)
+                { // the ratio (width/height) is bigger for the existing rectangle.
+                    // increase width.
+                    width = (ratio / fittedRatio) * fitted.Width;
+                }
+                else
+                { // the fittedRatio (width/height) is bigger for the existing rectangle.
+                    // increase height.
+                    height = (fittedRatio / ratio) * this.Height;
+                }
+            }
+            else if (fitted.Width > delta)
+            { // the width is bigger.
+                double ratio = this.Height / this.Width;
+                double fittedRatio = fitted.Height / fitted.Width;
+                if (ratio > fittedRatio)
+                { // the ratio (height/width) is bigger for the existing rectangle.
+                    // increase width.
+                    height = (fittedRatio / ratio) * this.Height;
+                }
+                else
+                { // the fittedRatio (width/height) is bigger for the existing rectangle.
+                    // increase height.
+                    width = (ratio / fittedRatio) * fitted.Width;
+                }
+            }
+            return RectangleF2D.FromBoundsAndCenter(width, height,
+                fitted.Center[0], fitted.Center[1], fitted.DirectionY);
+        }
+
+        /// <summary>
         /// Returns true if this box contains the specified x, y.
         /// </summary>
         /// <param name="point">The point.</param>
@@ -529,5 +574,5 @@ namespace OsmSharp.Math.Primitives
 		}
 
 		#endregion
-	}
+    }
 }

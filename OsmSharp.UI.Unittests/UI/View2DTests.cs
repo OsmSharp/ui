@@ -141,7 +141,6 @@ namespace OsmSharp.UI.Unittests.UI
             Assert.IsTrue(view.Contains(0, 0));
         }
 
-        
         /// <summary>
         /// Tests CreateFrom with a direction.
         /// </summary>

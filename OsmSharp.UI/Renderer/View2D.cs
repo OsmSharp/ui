@@ -368,6 +368,17 @@ namespace OsmSharp.UI.Renderer
 			return new View2D (rotated, _invertX, _invertY);
 		}
 
+        /// <summary>
+        /// Fites this view around the given points but keeps aspect ratio and 
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public View2D Fit(PointF2D[] points)
+        {
+            RectangleF2D rotated = this.Rectangle.FitAndKeepAspectRatio(points);
+            return new View2D(rotated, _invertX, _invertY);
+        }
+
 		/// <summary>
 		/// Returns the smallest rectangular box containing the entire view. Will be larger when turned in a non-zero direction.
 		/// </summary>

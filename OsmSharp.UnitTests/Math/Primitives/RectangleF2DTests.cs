@@ -338,6 +338,7 @@ namespace OsmSharp.UnitTests.Math.Primitives
         [Test]
         public void TestRectangleF2DFit()
         {
+            double delta = 0.00001;
             RectangleF2D rectangle = new RectangleF2D(0, 0, 1, 1);
 
             PointF2D[] points = new PointF2D[] {
@@ -345,19 +346,58 @@ namespace OsmSharp.UnitTests.Math.Primitives
                 new PointF2D(1, 1)
             };
 
-            RectangleF2D fitted = rectangle.Fit(points, 50);
-            Assert.AreEqual(1.5, fitted.Width);
-            Assert.AreEqual(1.5, fitted.Height);
-            Assert.AreEqual(0.75, fitted.BottomLeft[0]);
-            Assert.AreEqual(0.75, fitted.BottomLeft[1]);
-            Assert.AreEqual(2.25, fitted.TopRight[0]);
-            Assert.AreEqual(2.25, fitted.TopRight[1]);
+            RectangleF2D fitted = rectangle.Fit(points, 0);
+            Assert.AreEqual(1, fitted.Width, delta);
+            Assert.AreEqual(1, fitted.Height, delta);
+            Assert.AreEqual(1, fitted.BottomLeft[0], delta);
+            Assert.AreEqual(1, fitted.BottomLeft[1], delta);
+            Assert.AreEqual(2, fitted.TopRight[0], delta);
+            Assert.AreEqual(2, fitted.TopRight[1], delta);
 
             // this should create the exact same rectangle as in the other tests.
             rectangle = RectangleF2D.FromBoundsAndCenter(System.Math.Sqrt(2) * 2,
-                                                         System.Math.Sqrt(2) * 2, 3, 1, 45);
-            fitted = rectangle.Fit(points, 50);
+                                                         System.Math.Sqrt(2) * 2, 0, 0, 45);
+            fitted = rectangle.Fit(points, 0);
+            Assert.AreEqual(0, fitted.Width, delta);
+            Assert.AreEqual(System.Math.Sqrt(2), fitted.Height, delta);
+            Assert.AreEqual(1, fitted.BottomLeft[0], delta);
+            Assert.AreEqual(1, fitted.BottomLeft[1], delta);
+            Assert.AreEqual(2, fitted.TopRight[0], delta);
+            Assert.AreEqual(2, fitted.TopRight[1], delta);
+        }
 
+        /// <summary>
+        /// Tests a the fit around a given set of points.
+        /// </summary>
+        [Test]
+        public void TestRectangleF2DFitAndKeepAspectRatio()
+        {
+            double delta = 0.00001;
+            RectangleF2D rectangle = new RectangleF2D(0, 0, 1, 1);
+
+            PointF2D[] points = new PointF2D[] {
+                new PointF2D(2, 2),
+                new PointF2D(1, 1)
+            };
+
+            RectangleF2D fitted = rectangle.FitAndKeepAspectRatio(points, 0);
+            Assert.AreEqual(1, fitted.Width, delta);
+            Assert.AreEqual(1, fitted.Height, delta);
+            Assert.AreEqual(1, fitted.BottomLeft[0], delta);
+            Assert.AreEqual(1, fitted.BottomLeft[1], delta);
+            Assert.AreEqual(2, fitted.TopRight[0], delta);
+            Assert.AreEqual(2, fitted.TopRight[1], delta);
+
+            // this should create the exact same rectangle as in the other tests.
+            rectangle = RectangleF2D.FromBoundsAndCenter(System.Math.Sqrt(2) * 2,
+                                                         System.Math.Sqrt(2) * 2, 0, 0, 45);
+            fitted = rectangle.FitAndKeepAspectRatio(points, 0);
+            Assert.AreEqual(0, fitted.Width, delta);
+            Assert.AreEqual(System.Math.Sqrt(2), fitted.Height, delta);
+            Assert.AreEqual(1, fitted.BottomLeft[0], delta);
+            Assert.AreEqual(1, fitted.BottomLeft[1], delta);
+            Assert.AreEqual(2, fitted.TopRight[0], delta);
+            Assert.AreEqual(2, fitted.TopRight[1], delta);
         }
 	}
 }
