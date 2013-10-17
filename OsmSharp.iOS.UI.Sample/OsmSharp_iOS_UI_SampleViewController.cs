@@ -24,6 +24,16 @@ namespace OsmSharp.iOS.UI.Sample
 {
 	public partial class OsmSharp_iOS_UI_SampleViewController : UIViewController
 	{
+		/// <summary>
+		/// Holds the router.
+		/// </summary>
+		private Router _router;
+
+		/// <summary>
+		/// Holds the route layer.
+		/// </summary>
+		private LayerOsmSharpRoute _routeLayer;
+
 		public OsmSharp_iOS_UI_SampleViewController () : base ("OsmSharp_iOS_UI_SampleViewController", null)
 		{
 		}
@@ -50,21 +60,20 @@ namespace OsmSharp.iOS.UI.Sample
 			//mapViewAnimator = new MapViewAnimator (mapView);
 			mapView.Map = map;
 			mapView.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
-//			mapView.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {
-//				_mapViewAnimator.Start(geoCoordinate, 16, new TimeSpan(0,0,2));
-//				mapView.AddMarker(geoCoordinate).TouchDown  += MapMarkerClicked;
-//			};
+			mapView.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {
+				mapView.AddMarker(geoCoordinate).TouchDown  += MapMarkerClicked;
+			};
 
 			mapView.MapZoom = 18;
 			mapView.MapTilt = 30;
 
-//			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
-//			var graphDeserialized = routingSerializer.Deserialize(
-//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.iOS.UI.Sample.wvl.routing"), true);
-//
-//			Router router = Router.CreateCHFrom(
-//				graphDeserialized, new CHRouter(graphDeserialized),
-//				new OsmRoutingInterpreter());
+			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+			var graphDeserialized = routingSerializer.Deserialize(
+				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.iOS.UI.Sample.wvl.routing"), true);
+
+			_router = Router.CreateCHFrom(
+				graphDeserialized, new CHRouter(graphDeserialized),
+				new OsmRoutingInterpreter());
 
 //			long before = DateTime.Now.Ticks;
 //
@@ -92,27 +101,28 @@ namespace OsmSharp.iOS.UI.Sample
 //			                                new TimeSpan (after - before).TotalMilliseconds);
 
 
-//			GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
-//			GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
-//			RouterPoint routerPoint1 = router.Resolve(Vehicle.Car, point1);
-//			RouterPoint routerPoint2 = router.Resolve(Vehicle.Car, point2);
-//			Route route1 = router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-//			_enumerator = route.GetRouteEnumerable(3).GetEnumerator();
-//			_enumeratorNext = route.GetRouteEnumerable(3).GetEnumerator();
-//			for (int idx = 0; idx < 20; idx++) {
-//				_enumeratorNext.MoveNext ();
-//				_enumeratorNext.MoveNext ();
-//			}
+			GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
+			GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
+			RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
+			RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
+			Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
+			_enumerator = route1.GetRouteEnumerable(2).GetEnumerator();
+			_enumeratorNext = route1.GetRouteEnumerable(2).GetEnumerator();
+			for (int idx = 0; idx < 20; idx++) {
+				_enumeratorNext.MoveNext ();
+				_enumeratorNext.MoveNext ();
+				_enumeratorNext.MoveNext ();
+			}
 //
-//			LayerOsmSharpRoute routeLayer = new LayerOsmSharpRoute(map.Projection);
-//			routeLayer.AddRoute (route, SimpleColor.FromKnownColor(KnownColor.Blue, 75).Value, 16);
-//			map.AddLayer(routeLayer);
+			_routeLayer = new LayerOsmSharpRoute(map.Projection);
+			_routeLayer.AddRoute (route1);
+			map.AddLayer(_routeLayer);
 
 			View = mapView;
 
-//			Timer timer = new Timer (100);
-//			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
-//			timer.Start ();
+			Timer timer = new Timer (150);
+			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
+			timer.Start ();
 
 			mapView.SetNeedsDisplay ();
 		}
@@ -121,10 +131,26 @@ namespace OsmSharp.iOS.UI.Sample
 
 		private IEnumerator<GeoCoordinate> _enumerator;
 
+		/// <summary>
+		/// Holds the previous router point.
+		/// </summary>
+		private RouterPoint _previousRouterPoint = null;
+
 		private void MapMarkerClicked(object sender, EventArgs e)
 		{
 			if (sender is MapMarker) {
-				OsmSharp.Logging.Log.TraceEvent ("Temp", System.Diagnostics.TraceEventType.Verbose, "Marker was touched!");
+				MapMarker marker = (sender as MapMarker);
+				lock (_router) {
+					RouterPoint resolved = _router.Resolve (Vehicle.Car, marker.Location);
+					if (_previousRouterPoint != null) {
+						Route route = _router.Calculate (Vehicle.Car, _previousRouterPoint, resolved);
+						_routeLayer.Clear ();
+						_routeLayer.AddRoute (route, SimpleColor.FromKnownColor (KnownColor.Blue, 75).Value, 16);
+
+						(this.View as IMapView).Invalidate ();
+					}
+					_previousRouterPoint = resolved;
+				}
 			}
 		}
 

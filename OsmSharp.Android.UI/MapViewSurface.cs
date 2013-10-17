@@ -215,6 +215,10 @@ namespace OsmSharp.Android.UI
 			lock (_cacheRenderer) {
 				double extra = 1;
 
+				// build dimensions.
+				int width = (int)(this.Width * extra);
+				int height = (int)(this.Height * extra);
+
 				// build the layers list.
 				var layers = new List<ILayer> ();
 				for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++) {
@@ -227,11 +231,10 @@ namespace OsmSharp.Android.UI
 
 				// create a new cache if size has changed.
 				if (_canvasBitmap == null || 
-				    _canvasBitmap.Width != (int)(this.Width * extra) || 
-				    _canvasBitmap.Height != (int)(this.Height * extra)) {
+				    _canvasBitmap.Width != width || 
+				    _canvasBitmap.Height != height) {
 					// create a bitmap and render there.
-					_canvasBitmap = global::Android.Graphics.Bitmap.CreateBitmap ((int)(this.Width * extra), 
-					                                                              (int)(this.Height * extra),
+					_canvasBitmap = global::Android.Graphics.Bitmap.CreateBitmap (width, height,
 					                                                             global::Android.Graphics.Bitmap.Config.Argb8888);
 				} else {
 					// clear the cache???
@@ -242,8 +245,14 @@ namespace OsmSharp.Android.UI
 				canvas.DrawColor (new global::Android.Graphics.Color(
 					SimpleColor.FromKnownColor(KnownColor.Transparent).Value));
 
-				// create the view.
-				View2D view = this.CreateView ();
+				// calculate the center/zoom in scene coordinates.
+				double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
+				float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoomLevel);
+
+				// create the view for this control.
+				View2D view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
+				                         width, height, sceneZoomFactor, 
+				                         _invertX, _invertY, this.MapTilt);
 
 				long before = DateTime.Now.Ticks;
 
@@ -666,32 +675,7 @@ namespace OsmSharp.Android.UI
 				}
 
 				this.NotifyMovement ();
-            } 
-            // else {
-            //    // calculate event time.
-            //    long time = e.EventTime - e.DownTime;
-            //    if (time > 120) {
-            //        this.NotifyMovement ();
-
-            //        this.Change ();
-            //    } else { // raise the map tap event here.
-            //        if (this.MapTapEvent != null) {
-            //            // recreate the view.
-            //            View2D view = this.CreateView ();
-
-            //            // calculate the new center in pixels.
-            //            double x = e.GetX ();
-            //            double y = e.GetY ();
-
-            //            // calculate the new center from the view.
-            //            double[] sceneCenter = view.FromViewPort (this.Width, this.Height, 
-            //                                                      x, y);
-
-            //            // convert to the projected center.
-            //            this.MapTapEvent (this.Map.Projection.ToGeoCoordinates (sceneCenter [0], sceneCenter [1]));
-            //        }
-            //    }
-            //}
+            }
 			return true;
 		}
 		

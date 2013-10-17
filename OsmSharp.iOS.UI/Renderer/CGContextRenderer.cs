@@ -55,6 +55,11 @@ namespace OsmSharp.iOS.UI
 		private Target2DWrapper<CGContextWrapper> _target;
 
 		/// <summary>
+		/// Holds the scale x.
+		/// </summary>
+		private float _scaleX;
+
+		/// <summary>
 		/// Transforms the target using the specified view.
 		/// </summary>
 		/// <param name="target"></param>
@@ -63,6 +68,8 @@ namespace OsmSharp.iOS.UI
 		{
 			_view = view;
 			_target = target;
+
+			_scaleX = (float)(target.Width / view.Width);
 		}
 
 		/// <summary>
@@ -84,9 +91,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="sizeInPixels">Size in pixels.</param>
 		protected override double FromPixels (Target2DWrapper<CGContextWrapper> target, View2D view, double sizeInPixels)
 		{
-			double scaleX = target.Width / view.Width;
-
-			return sizeInPixels / scaleX;
+			return sizeInPixels / _scaleX;
 		}
 
 		/// <summary>
@@ -96,9 +101,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="sceneSize">Scene size.</param>
 		private float ToPixels(double sceneSize)
 		{
-			double scaleX = _target.Width / _view.Width;
-
-			return (float)(sceneSize * scaleX);
+			return (float)sceneSize * _scaleX;
 		}
 
         /// <summary>
@@ -111,6 +114,15 @@ namespace OsmSharp.iOS.UI
         {
             return _view.ToViewPort(_target.Width, _target.Height, x, y);
         }
+
+		/// <summary>
+		/// Transform the specified x and y.
+		/// </summary>
+		/// <param name="x">The x coordinates.</param>
+		/// <param name="y">The y coordinates.</param>
+		private double[][] TransformAll(double[] x, double[] y) {
+			return _view.ToViewPort(_target.Width, _target.Height, x, y);
+		}
 
 		/// <summary>
 		/// Draws the backcolor.
@@ -169,15 +181,17 @@ namespace OsmSharp.iOS.UI
 				}
 				target.Target.CGContext.SetLineDash (0.0f, intervals);
 			}
-			target.Target.CGContext.BeginPath ();
 
+			// transform the points all at once.
+			double[][] transformed = this.TransformAll (x, y);
+
+			// construct path.
+			target.Target.CGContext.BeginPath ();
 			PointF[] points = new PointF[x.Length];
 			for(int idx = 0; idx < x.Length; idx++)
             {
-                double[] transformed = this.Tranform(x[idx], y[idx]);
-                points[idx] = new PointF((float)transformed[0], (float)transformed[1]);
+                points[idx] = new PointF((float)transformed[idx][0], (float)transformed[idx][1]);
 			}
-
 			target.Target.CGContext.AddLines (points);
 			target.Target.CGContext.DrawPath (CGPathDrawingMode.Stroke);
 		}
@@ -202,22 +216,21 @@ namespace OsmSharp.iOS.UI
 			                              simpleColor.A / 256.0f);
 			target.Target.CGContext.SetStrokeColor (simpleColor.R / 256.0f, simpleColor.G/ 256.0f, simpleColor.B/ 256.0f,
 			                            simpleColor.A / 256.0f);
-			//target.Target.SetLineDash (0, new float[0]);
-			target.Target.CGContext.BeginPath ();
 
+			// transform the points all at once.
+			double[][] transformed = this.TransformAll (x, y);
+
+			// build the path.
+			target.Target.CGContext.BeginPath ();
 			PointF[] points = new PointF[x.Length];
 			for(int idx = 0; idx < x.Length; idx++)
             {
-                double[] transformed = this.Tranform(x[idx], y[idx]);
-                points[idx] = new PointF((float)transformed[0], (float)transformed[1]);
+				points[idx] = new PointF((float)transformed[idx][0], (float)transformed[idx][1]);
 			}
 
 			target.Target.CGContext.AddLines (points);
 			target.Target.CGContext.ClosePath ();
-
-			//target.Target.DrawPath (CGPathDrawingMode.Stroke);
 			target.Target.CGContext.FillPath ();
-			//target.Target.E
 		}
 
 		/// <summary>
@@ -295,6 +308,12 @@ namespace OsmSharp.iOS.UI
 		/// <param name="tag">Tag.</param>
 		protected override object DrawImage (Target2DWrapper<CGContextWrapper> target, RectangleF2D bounds, byte[] imageData, object tag)
 		{
+			target.Target.CGContext.SetAllowsFontSubpixelQuantization (true);
+			target.Target.CGContext.SetAllowsFontSmoothing (true);
+			target.Target.CGContext.SetAllowsAntialiasing (true);
+			target.Target.CGContext.SetAllowsSubpixelPositioning (true);
+			target.Target.CGContext.SetShouldAntialias (true);
+
 			PointF2D bottomLeft = new PointF2D(this.Tranform (bounds.BottomLeft [0], bounds.BottomLeft [1]));
 			PointF2D bottomRight = new PointF2D(this.Tranform (bounds.BottomRight [0], bounds.BottomRight [1]));
 			PointF2D topLeft = new PointF2D(this.Tranform (bounds.TopLeft [0], bounds.TopLeft [1]));
@@ -319,37 +338,6 @@ namespace OsmSharp.iOS.UI
 			target.Target.CGContext.RestoreState ();
 
 			return tag;
-
-//			double[] bottomLeft = this.Tranform (bounds.BottomLeft [0], bounds.BottomLeft [1]);
-//			double[] bottomRight = this.Tranform (bounds.BottomLeft [0], bounds.BottomLeft [1]);
-//
-//			VectorF2D direction = bounds.DirectionY;
-//			//VectorF2D viewDirection = _view.Rectangle.Direction;
-//
-//
-//			//direction = direction.InverseY;
-//
-//			// transform the rectangle.
-//			RectangleF2D transformed = new RectangleF2D (bottomLeft [0], bottomLeft [1],
-//			                                            this.ToPixels (bounds.Width), this.ToPixels (bounds.Height), 
-//			                                             direction);
-//
-//			target.Target.CGContext.SaveState ();
-//			//target.Target.CGContext.TranslateCTM ((float)transformed.BottomLeft [0], (float)transformed.BottomLeft [1]);
-//			//target.Target.CGContext.RotateCTM ((float)((Radian)transformed.Angle).Value);
-//
-//			if (tag is CGImage) {
-//				CGImage image = tag as CGImage;
-//
-//				target.Target.CGContext.DrawImage (new RectangleF (0, 0, 
-//				                                                   (float)transformed.Width, (float)transformed.Height), image);
-//
-//			}
-//
-//			target.Target.CGContext.RestoreState ();
-//
-//			return tag;
-			//return this.DrawImage (target, bounds.BottomLeft [0], bounds.TopLeft [1], bounds.BottomRight [0], bounds.BottomRight [1], imageData, tag);
 		}
 
 		/// <summary>
