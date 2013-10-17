@@ -60,6 +60,39 @@ namespace OsmSharp.Geo.Geometries
         }
 
         /// <summary>
+        /// Returns true if the given vertex is convex.
+        /// </summary>
+        /// <param name="vertexIdx"></param>
+        /// <returns></returns>
+        public bool IsEar(int vertexIdx)
+        {
+            int previousIdx = vertexIdx == 0 ? this.Coordinates.Count - 1 : vertexIdx - 1;
+            int nextIdx = vertexIdx == this.Coordinates.Count - 1 ? 0 : vertexIdx + 1;
+
+            GeoCoordinate vertex = this.Coordinates[vertexIdx];
+            GeoCoordinate previous = this.Coordinates[previousIdx];
+            GeoCoordinate next = this.Coordinates[nextIdx];
+
+            GeoCoordinate between = (next + previous) / 2;
+
+            return (this.Contains(between));
+        }
+
+        /// <summary>
+        /// Returns the neighbours of the given vertex.
+        /// </summary>
+        /// <returns></returns>
+        public GeoCoordinate[] GetNeigbours(int vertexIdx)
+        {
+            int previousIdx = vertexIdx == 0 ? this.Coordinates.Count - 1 : vertexIdx - 1;
+            int nextIdx = vertexIdx == this.Coordinates.Count - 1 ? 0 : vertexIdx + 1;
+
+            GeoCoordinate previous = this.Coordinates[previousIdx];
+            GeoCoordinate next = this.Coordinates[nextIdx];
+            return new GeoCoordinate[] { previous, next };
+        }
+
+        /// <summary>
         /// Returns true if the given coordinate is contained in this ring.
         /// 
         /// See: http://geomalgorithms.com/a03-_inclusion.html

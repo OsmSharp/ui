@@ -108,6 +108,7 @@
     <Compile Include="Interpreter\Roads\IEdgeInterpreter.cs" />
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
     <Compile Include="IRouterExtensions.cs" />
+    <Compile Include="Navigation\RouteTracker.cs" />
     <Compile Include="Osm\Dykstra\DykstraRouting.cs" />
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
@@ -218,7 +219,6 @@
     <Compile Include="Route.cs" />
     <Compile Include="RouteEnumerable.cs" />
     <Compile Include="RouteGenerator.cs" />
-    <Compile Include="RouteTracker.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.Android.csproj">

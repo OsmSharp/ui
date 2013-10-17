@@ -1,5 +1,5 @@
 ﻿//// OsmSharp - OpenStreetMap (OSM) SDK
-//// Copyright (C) 2012 Abelshausen Ben
+//// Copyright (C) 2013 Abelshausen Ben
 //// 
 //// This file is part of OsmSharp.
 //// 
@@ -17,7 +17,7 @@
 //// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 //using NUnit.Framework;
-//using OsmSharp.Osm.Data.Xml.OsmSource;
+//using OsmSharp.Osm.Xml.OsmSource;
 //using OsmSharp.UnitTests.Routing;
 //using OsmSharp.Routing;
 //using System.Reflection;

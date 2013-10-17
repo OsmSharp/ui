@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -18,8 +18,8 @@
 
 using NUnit.Framework;
 using System.Reflection;
-using OsmSharp.Osm.Data.PBF.Processor;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.PBF.Processor;
+using OsmSharp.Osm.Streams;
 
 namespace OsmSharp.UnitTests.Data.Streams
 {

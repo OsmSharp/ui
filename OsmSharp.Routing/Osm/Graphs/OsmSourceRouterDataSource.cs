@@ -2,9 +2,9 @@
 //using System.Collections.Generic;
 //using System.Linq;
 //using OsmSharp.Osm.Data;
-//using OsmSharp.Osm.Data.Streams;
-//using OsmSharp.Osm.Data.Streams.Collections;
-//using OsmSharp.Osm.Data.Streams.Filters;
+//using OsmSharp.Osm.Streams;
+//using OsmSharp.Osm.Streams.Collections;
+//using OsmSharp.Osm.Streams.Filters;
 //using OsmSharp.Osm.Tiles;
 //using OsmSharp.Routing.Graph;
 //using OsmSharp.Routing.Graph.Router;

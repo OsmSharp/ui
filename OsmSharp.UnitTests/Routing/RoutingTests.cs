@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -18,15 +18,13 @@
 
 using System.Collections.Generic;
 using NUnit.Framework;
-using OsmSharp.Routing;
-using OsmSharp.Routing.Interpreter;
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Math.Primitives;
+using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Math;
-using OsmSharp.Routing.Routers;
-using OsmSharp.Math.Primitives;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.UnitTests.Routing
 {

@@ -472,7 +472,7 @@ namespace OsmSharp.Data.Oracle.Osm
         /// <summary>
         /// Drops objects in this schema.
         /// </summary>
-        /// <param name="_connection"></param>
+        /// <param name="connection"></param>
         public static void Drop(OracleConnection connection)
         {
             if (OracleSchemaTools.DetectNodeTable(connection))

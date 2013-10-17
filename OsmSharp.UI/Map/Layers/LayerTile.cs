@@ -19,13 +19,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
-using OsmSharp.Osm;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;

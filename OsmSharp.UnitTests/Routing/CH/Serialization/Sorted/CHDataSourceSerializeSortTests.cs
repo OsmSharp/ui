@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,20 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Osm.Data.Xml.Processor;
 using System.Reflection;
-using OsmSharp.Routing;
-using OsmSharp.Routing.CH.Serialization.Sorted;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.CH.PreProcessing;
+using NUnit.Framework;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Xml.Streams;
+using OsmSharp.Routing;
+using OsmSharp.Routing.CH;
+using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Serialization.Sorted;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.UnitTests.Routing.CH.Serialization.Sorted
@@ -40,6 +36,9 @@ namespace OsmSharp.UnitTests.Routing.CH.Serialization.Sorted
     [TestFixture]
     public class CHDataSourceSerializeSortTests
     {
+        /// <summary>
+        /// Tests a topological sorted datasource.
+        /// </summary>
         [Test]
         public void TestCHDataSourceTopologicalSortTest()
         {

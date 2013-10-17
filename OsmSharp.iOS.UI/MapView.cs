@@ -769,6 +769,17 @@ namespace OsmSharp.iOS.UI
 
 		#endregion
 
+        /// <summary>
+        /// Notifies a map change.
+        /// </summary>
+        /// <param name="pixelsWidth"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <param name="view"></param>
+        /// <param name="projection"></param>
+        public void NotifyMapChange(double pixelsWidth, double pixelsHeight, View2D view, Math.Geo.Projections.IProjection projection)
+        {
+
+        }
 	}
 }
 

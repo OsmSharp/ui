@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm;
 
-namespace OsmSharp.Osm.Sources
+namespace OsmSharp.Osm.Data
 {
     /// <summary>
     /// Represents any source of nodes.

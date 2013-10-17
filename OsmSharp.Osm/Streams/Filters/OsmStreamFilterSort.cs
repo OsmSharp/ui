@@ -19,7 +19,7 @@
 using System;
 using OsmSharp.Osm;
 
-namespace OsmSharp.Osm.Data.Streams.Filters
+namespace OsmSharp.Osm.Streams.Filters
 {
     /// <summary>
     /// An OSM stream filter sort.
@@ -36,12 +36,12 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         /// </summary>
         public override void Initialize()
         {
-            if (this.Reader == null)
+            if (this.Source == null)
             {
                 throw new Exception("No target registered!");
             }
             // no intialisation this filter does the same thing every time.
-            this.Reader.Initialize();
+            this.Source.Initialize();
         }
 
         /// <summary>
@@ -50,12 +50,12 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         /// <returns></returns>
         public override bool MoveNext()
         {
-            if (this.Reader.MoveNext())
+            if (this.Source.MoveNext())
             {
                 bool finished = false;
                 while (this.Current().Type != _currentType)
                 {
-                    if (!this.Reader.MoveNext())
+                    if (!this.Source.MoveNext())
                     {
                         finished = true;
                         break;
@@ -71,11 +71,11 @@ namespace OsmSharp.Osm.Data.Streams.Filters
             switch (_currentType)
             {
                 case OsmGeoType.Node:
-                    this.Reader.Reset();
+                    this.Source.Reset();
                     _currentType = OsmGeoType.Way;
                     return this.MoveNext();
                 case OsmGeoType.Way:
-                    this.Reader.Reset();
+                    this.Source.Reset();
                     _currentType = OsmGeoType.Relation;
                     return this.MoveNext();
                 case OsmGeoType.Relation:
@@ -90,7 +90,7 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         /// <returns></returns>
         public override OsmGeo Current()
         {
-            return this.Reader.Current();
+            return this.Source.Current();
         }
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         public override void Reset()
         {
             _currentType = OsmGeoType.Node;
-            this.Reader.Reset();
+            this.Source.Reset();
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace OsmSharp.Osm.Data.Streams.Filters
         {
             get
             {
-                return this.Reader.CanReset;
+                return this.Source.CanReset;
             }
         }
     }

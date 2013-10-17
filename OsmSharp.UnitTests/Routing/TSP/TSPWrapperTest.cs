@@ -15,8 +15,8 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Routing.TSP;
 using OsmSharp.Routing.TSP.Genetic;
 using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Osm.Data.Xml.Processor;
-using OsmSharp.Osm.Data.Streams.Filters;
+using OsmSharp.Osm.Streams.Filters;
+using OsmSharp.Osm.Xml.Streams;
 
 namespace OsmSharp.UnitTests.Routing.TSP
 {

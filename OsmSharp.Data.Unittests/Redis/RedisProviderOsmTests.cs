@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -24,7 +24,7 @@ using NUnit.Framework;
 using ServiceStack.Redis;
 using OsmSharp.Osm.Data;
 using OsmSharp.Data.Redis.Osm;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Data.Redis.Osm.Streams;
 
 namespace OsmSharp.Data.Unittests.Redis
@@ -102,6 +102,9 @@ namespace OsmSharp.Data.Unittests.Redis
 
         private RedisClient _client = null;
 
+        /// <summary>
+        /// Notifies that the current test expects an empty database.
+        /// </summary>
         public override void NotifyEmptyExpected()
         {
             _client = null;
@@ -117,11 +120,19 @@ namespace OsmSharp.Data.Unittests.Redis
             return _client;
         }
 
+        /// <summary>
+        /// Creates a data source for this test.
+        /// </summary>
+        /// <returns></returns>
         public override IDataSourceReadOnly CreateDataSource()
         {
             return new RedisDataSource(this.GetConnection());
         }
 
+        /// <summary>
+        /// Creates a stream target for this test.
+        /// </summary>
+        /// <returns></returns>
         public override OsmStreamTarget CreateDataStreamTarget()
         {
             return new RedisOsmStreamTarget(this.GetConnection());

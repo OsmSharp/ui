@@ -222,7 +222,6 @@ namespace OsmSharp.Data.Oracle.Osm
         /// Returns all ways containing the given nodes.
         /// </summary>
         /// <param name="ids"></param>
-        /// <param name="nodes"></param>
         /// <returns></returns>
         public override IList<Way> GetWays(IList<long> ids)
         {

@@ -244,7 +244,7 @@ namespace OsmSharp
                 {
                     float result_never_used;
                     string value_tested = value.Substring(0, c);
-                    if (float.TryParse(value_tested, out result_never_used))
+                    if (float.TryParse(value_tested, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out result_never_used))
                     {
                         if (value[c - 1] != '.')
                         {

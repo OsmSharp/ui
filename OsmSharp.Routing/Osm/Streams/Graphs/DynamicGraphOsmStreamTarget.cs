@@ -20,7 +20,7 @@ using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Interpreter.Roads;
@@ -144,6 +144,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         }
 
         /// <summary>
+        /// Holds the bounds of the nodes that have been added up until now.
+        /// </summary>
+        private GeoCoordinateBox _bounds = null;
+
+        /// <summary>
         /// Holds the coordinates.
         /// </summary>
         private OsmSharp.Collections.HugeDictionary<long, float[]> _coordinates;
@@ -187,6 +192,19 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             _preIndex.Clear();
                             _preIndex = null;
                         }
+
+                        if (_bounds == null)
+                        { // create bounds.
+                            _bounds = new GeoCoordinateBox(
+                                new GeoCoordinate(node.Latitude.Value, node.Longitude.Value),
+                                new GeoCoordinate(node.Latitude.Value, node.Longitude.Value));
+                        }
+                        else
+                        { // expand bounds.
+                            _bounds = _bounds + new GeoCoordinateBox(
+                                new GeoCoordinate(node.Latitude.Value, node.Longitude.Value),
+                                new GeoCoordinate(node.Latitude.Value, node.Longitude.Value));
+                        }
                     }
                 }
             }
@@ -196,6 +214,17 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// Holds a list of nodes used twice or more.
         /// </summary>
         private readonly HashSet<long> _usedTwiceOrMore;
+
+        /// <summary>
+        /// Returns the boundingbox of all accepted nodes.
+        /// </summary>
+        public GeoCoordinateBox Box
+        {
+            get
+            {
+                return _bounds;
+            }
+        }
 
         /// <summary>
         /// Adds a given way.
@@ -360,7 +389,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         {
             if (_preIndexMode)
             {
-                this.Reader.Reset();
+                this.Source.Reset();
                 _preIndexMode = false;
                 this.Pull();
             }

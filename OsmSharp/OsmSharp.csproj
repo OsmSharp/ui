@@ -120,8 +120,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.640\lib\net40\protobuf-net.dll</HintPath>
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -179,9 +180,9 @@
     <Compile Include="Geo\Geometries\MultiPolygon.cs" />
     <Compile Include="Geo\Geometries\Point.cs" />
     <Compile Include="Geo\Geometries\Polygon.cs" />
-    <Compile Include="Geo\IO\Gpx\GpxGeometryStreamSource.cs" />
-    <Compile Include="Geo\IO\Kml\KmlGeometryStreamSource.cs" />
     <Compile Include="Geo\Streams\GeoCollectionStreamSource.cs" />
+    <Compile Include="Geo\Streams\Gpx\GpxGeoStreamSource.cs" />
+    <Compile Include="Geo\Streams\Kml\KmlGeoStreamSource.cs" />
     <Compile Include="IO\ByteCache\DiskByteCache.cs" />
     <Compile Include="IO\ByteCache\IByteCache.cs" />
     <Compile Include="IO\ByteCache\MemoryByteCache.cs" />
@@ -243,6 +244,7 @@
     <Compile Include="Geo\Projections\WebMercator.cs" />
     <Compile Include="Geo\Simple\GeoCoordinateCompact.cs" />
     <Compile Include="Geo\Simple\GeoCoordinateSimple.cs" />
+    <Compile Include="Math\Algorithms\Tessellation\LineairRingTessellator.cs" />
     <Compile Include="Math\ILocationObject.cs" />
     <Compile Include="Math\ITaggedObject.cs" />
     <Compile Include="Collections\Tags\ITagsIndex.cs" />

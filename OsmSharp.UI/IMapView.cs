@@ -19,6 +19,8 @@
 using OsmSharp.Math.Geo;
 using OsmSharp.Units.Angle;
 using OsmSharp.UI.Animations;
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.UI.Renderer;
 
 namespace OsmSharp.UI
 {
@@ -69,5 +71,19 @@ namespace OsmSharp.UI
         /// Gets or sets the MapZoom.
         /// </summary>
         float MapZoom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Map.
+        /// </summary>
+        Map.Map Map { get; set; }
+
+        /// <summary>
+        /// Notifies a map change.
+        /// </summary>
+        /// <param name="pixelsWidth"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <param name="view"></param>
+        /// <param name="projection"></param>
+        void NotifyMapChange(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
     }
 }

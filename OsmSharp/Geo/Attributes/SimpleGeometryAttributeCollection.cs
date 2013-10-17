@@ -40,13 +40,16 @@ namespace OsmSharp.Geo.Attributes
         public SimpleGeometryAttributeCollection(IEnumerable<OsmSharp.Collections.Tags.Tag> tags)
         {
             _attributes = new List<GeometryAttribute>();
-            foreach (OsmSharp.Collections.Tags.Tag tag in tags)
+            if (tags != null)
             {
-                _attributes.Add(new GeometryAttribute()
+                foreach (OsmSharp.Collections.Tags.Tag tag in tags)
                 {
-                    Key = tag.Key,
-                    Value = tag.Value
-                });
+                    _attributes.Add(new GeometryAttribute()
+                    {
+                        Key = tag.Key,
+                        Value = tag.Value
+                    });
+                }
             }
         }
 

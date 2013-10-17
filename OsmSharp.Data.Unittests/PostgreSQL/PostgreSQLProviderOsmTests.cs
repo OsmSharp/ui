@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Data;
 using OsmSharp.Data.PostgreSQL.Osm;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Data.PostgreSQL.Osm.Streams;
 using NUnit.Framework;
 using Npgsql;
@@ -102,6 +102,9 @@ namespace OsmSharp.Data.Unittests.PostgreSQL
 
         private NpgsqlConnection _connection = null;
 
+        /// <summary>
+        /// Notifies that the current test expects and empty database.
+        /// </summary>
         public override void NotifyEmptyExpected()
         {
             if (_connection != null)
@@ -124,11 +127,19 @@ namespace OsmSharp.Data.Unittests.PostgreSQL
             return _connection;
         }
 
+        /// <summary>
+        /// Creates a data source for this test.
+        /// </summary>
+        /// <returns></returns>
         public override IDataSourceReadOnly CreateDataSource()
         {
             return new PostgreSQLDataSource(this.GetConnection());
         }
 
+        /// <summary>
+        /// Creates a stream target for this test.
+        /// </summary>
+        /// <returns></returns>
         public override OsmStreamTarget CreateDataStreamTarget()
         {
             return new PostgreSQLOsmStreamTarget(this.GetConnection());

@@ -23,14 +23,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 using System.Data.SqlClient;
 
 namespace OsmSharp.Data.Unittests.SQLServer
 {
-    public class SQLServerDDLChecksStreamTarget : OsmStreamTarget
+    /// <summary>
+    /// Helper stream target class for SQLServer.
+    /// </summary>
+    internal class SQLServerDDLChecksStreamTarget : OsmStreamTarget
     {
         private SqlConnection _connection;
         private readonly string _connectionString;

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -17,11 +17,10 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using OsmSharp.Osm.Data.Streams.Collections;
 using OsmSharp.Osm;
 using System.Collections;
 
-namespace OsmSharp.Osm.Data.Streams
+namespace OsmSharp.Osm.Streams
 {
     /// <summary>
     /// Base class for any (streamable) source of osm data (Nodes, Ways and Relations).
@@ -66,28 +65,6 @@ namespace OsmSharp.Osm.Data.Streams
         {
             get;
         }
-
-        #region Pull Command
-
-        /// <summary>
-        /// Pulls all objects from this source into a collection.
-        /// </summary>
-        /// <returns></returns>
-        public ICollection<OsmGeo> PullToCollection()
-        {
-            // create collection.
-            var collection = new List<OsmGeo>();
-
-            // create the collection target and pull the data into it.
-            var collectionTarget = new OsmCollectionStreamWriter(
-                collection);
-            collectionTarget.RegisterSource(this);
-            collectionTarget.Pull();
-
-            return collection;
-        }
-
-        #endregion
 
         #region IEnumerator/IEnumerable Implementation
 

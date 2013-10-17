@@ -21,6 +21,13 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
+using System.IO;
+using OsmSharp.Routing;
+using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.UI.Map.Styles;
+using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Osm.Data;
 
 namespace OsmSharp.UI.Map
 {
@@ -166,6 +173,85 @@ namespace OsmSharp.UI.Map
                 this.MapChanged();
             }
         }
+
+        #region Layer Helpers
+
+        /// <summary>
+        /// Adds a new tile layer.
+        /// </summary>
+        /// <param name="tileUrl"></param>
+        public LayerTile AddLayerTile(string tileUrl)
+        {
+            LayerTile layerTile = new LayerTile(tileUrl);
+            this.AddLayer(layerTile);
+            return layerTile;
+        }
+
+        /// <summary>
+        /// Adds a new gpx layer for the given gpx-stream.
+        /// </summary>
+        /// <param name="gpxStream"></param>
+        public LayerGpx AddLayerGpx(Stream gpxStream)
+        {
+            LayerGpx layerGpx = new LayerGpx(this.Projection);
+            layerGpx.AddGpx(gpxStream);
+            this.AddLayer(layerGpx);
+            return layerGpx;
+        }
+
+        /// <summary>
+        /// Adds a new route layer with the given route loaded.
+        /// </summary>
+        /// <param name="route"></param>
+        /// <returns></returns>
+        public LayerRoute AddLayerRoute(Route route)
+        {
+            LayerRoute layerRoute = new LayerRoute(this.Projection);
+            layerRoute.AddRoute(route);
+            this.AddLayer(layerRoute);
+            return layerRoute;
+        }
+
+        /// <summary>
+        /// Adds a new scene layer with the given primitives source as it's source.
+        /// </summary>
+        /// <param name="scene"></param>
+        /// <returns></returns>
+        public LayerScene AddLayerScene(IScene2DPrimitivesSource scene)
+        {
+            LayerScene layerScene = new LayerScene(scene);
+            this.AddLayer(layerScene);
+            return layerScene;
+        }
+
+        /// <summary>
+        /// Adds a graph layer with the given data and style.
+        /// </summary>
+        /// <param name="dataSource"></param>
+        /// <param name="styleInterpreter"></param>
+        /// <returns></returns>
+        public LayerDynamicGraphLiveEdge AddLayerGraph(IBasicRouterDataSource<LiveEdge> dataSource,
+            StyleInterpreter styleInterpreter)
+        {
+            LayerDynamicGraphLiveEdge layerGraph = new LayerDynamicGraphLiveEdge(dataSource, styleInterpreter);
+            this.AddLayer(layerGraph);
+            return layerGraph;
+        }
+
+        /// <summary>
+        /// Adds a layer displaying osm data from a given data source using the given style.
+        /// </summary>
+        /// <param name="dataSource"></param>
+        /// <param name="styleInterpreter"></param>
+        /// <returns></returns>
+        public LayerOsm AddLayerOsm(IDataSourceReadOnly dataSource, StyleInterpreter styleInterpreter)
+        {
+            LayerOsm layerOsm = new LayerOsm(dataSource, styleInterpreter, this.Projection);
+            this.AddLayer(layerOsm);
+            return layerOsm;
+        }
+
+        #endregion
 
         #endregion
     }

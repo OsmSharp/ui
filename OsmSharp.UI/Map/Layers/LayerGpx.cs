@@ -1,17 +1,27 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Osm.Data;
-using OsmSharp.Math.Geo;
-using OsmSharp.UI.Map.Styles;
-using OsmSharp.UI.Renderer;
-using OsmSharp.Xml.Gpx;
-using OsmSharp.Xml.Sources;
-using OsmSharp.Osm.Filters;
-using OsmSharp.Osm;
+// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System.IO;
+using OsmSharp.Geo.Geometries;
+using OsmSharp.Geo.Streams.Gpx;
+using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
+using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Layers
@@ -24,7 +34,7 @@ namespace OsmSharp.UI.Map.Layers
 		/// <summary>
 		/// Holds the projection.
 		/// </summary>
-//		private readonly IProjection _projection;
+		private readonly IProjection _projection;
 
 		/// <summary>
 		/// Creates a new OSM data layer.
@@ -32,7 +42,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="projection"></param>
 		public LayerGpx(IProjection projection)
 		{			
-//			_projection = projection;
+			_projection = projection;
 
             this.Scene = new Scene2DSimple();
 			this.Scene.BackColor = SimpleColor.FromKnownColor(KnownColor.Transparent).Value;
@@ -88,51 +98,71 @@ namespace OsmSharp.UI.Map.Layers
 		/// Adds a new GPX.
 		/// </summary>
 		/// <param name="stream">Stream.</param>
-		public void AddGpx(Stream stream)
+		public GeoCoordinateBox AddGpx(Stream stream)
 		{
-            //var gpxDocument = new GpxDocument(
-            //    new XmlStreamSource(stream));
-            //var gpxDataSource = new GpxDataSource(
-            //    gpxDocument);
+            GeoCoordinateBox bounds = null;
+            var gpxStream = new GpxGeoStreamSource(stream);
+            foreach (var geometry in gpxStream)
+            {
+                if (geometry is Point)
+                { // add the point.
+                    var point = (geometry as Point);
 
-            //// query all objects.
-            //IList<OsmBase> objects = gpxDataSource.Get(
-            //    Filter.Any());
+                    // get x/y.
+                    var x = _projection.LongitudeToX(point.Coordinate.Longitude);
+                    var y = _projection.LatitudeToY(point.Coordinate.Latitude);
 
-            //foreach(var osmBase in objects)
-            //{
-            //    if(osmBase is Node)
-            //    {
+                    // set the default color if none is given.
+                    SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
+                    SimpleColor transparantBlue = SimpleColor.FromArgb(128,
+                                                                       blue.R, blue.G, blue.B);
 
-            //    }
-            //    else if(osmBase is Way)
-            //    { // the actual route.
-            //        var way = (osmBase as Way);
+                    this.Scene.AddPoint(float.MinValue, float.MaxValue, x, y,
+                                       transparantBlue.Value, 8);
 
-            //        // get x/y.
-            //        var x = new double[way.Nodes.Count];
-            //        var y = new double[way.Nodes.Count];
-            //        for (int idx = 0; idx < way.Nodes.Count; idx++)
-            //        {
-            //            x[idx] = _projection.LongitudeToX(
-            //                way.Nodes[idx].Coordinate.Longitude);
-            //            y[idx] = _projection.LatitudeToY(
-            //                way.Nodes[idx].Coordinate.Latitude);
-            //        }
+                    if (bounds == null)
+                    { // create box.
+                        bounds = point.Box;
+                    }
+                    else
+                    { // add to the current box.
+                        bounds = bounds + point.Box;
+                    }
+                }
+                else if (geometry is LineString)
+                { // add the lineString.
+                    var lineString = (geometry as LineString);
 
-            //        // set the default color if none is given.
-            //        SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
-            //        SimpleColor transparantBlue = SimpleColor.FromArgb(128,
-            //                                                           blue.R, blue.G, blue.B);
+                    // get x/y.
+                    var x = new double[lineString.Coordinates.Count];
+                    var y = new double[lineString.Coordinates.Count];
+                    for (int idx = 0; idx < lineString.Coordinates.Count; idx++)
+                    {
+                        x[idx] = _projection.LongitudeToX(
+                            lineString.Coordinates[idx].Longitude);
+                        y[idx] = _projection.LatitudeToY(
+                            lineString.Coordinates[idx].Latitude);
+                    }
 
-            //        this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
-            //                           transparantBlue.Value, 8);
-            //    }
-            //    else if(osmBase is Relation)
-            //    {
-            //        // hmm relations in a GPX are impossible.
-            //    }
-            //}
+                    // set the default color if none is given.
+                    SimpleColor blue = SimpleColor.FromKnownColor(KnownColor.Blue);
+                    SimpleColor transparantBlue = SimpleColor.FromArgb(128,
+                                                                       blue.R, blue.G, blue.B);
+
+                    this.Scene.AddLine(float.MinValue, float.MaxValue, x, y,
+                                       transparantBlue.Value, 8);
+
+                    if (bounds == null)
+                    { // create box.
+                        bounds = lineString.Box;
+                    }
+                    else
+                    { // add to the current box.
+                        bounds = bounds + lineString.Box;
+                    }
+                }
+            }
+            return bounds;
 		}
 		
 		#endregion

@@ -39,57 +39,58 @@
       <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.640\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
+    <Folder Include="Xml\Streams\Processor\ChangeSets\" />
+    <Folder Include="Xml\Streams\Processor\Replication\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Change.cs" />
     <Compile Include="ChangeSet.cs" />
     <Compile Include="ChangeSetInfo.cs" />
+    <Compile Include="Complete\CompleteChange.cs" />
+    <Compile Include="Complete\CompleteChangeSet.cs" />
+    <Compile Include="Complete\CompleteNode.cs" />
+    <Compile Include="Complete\CompleteOsmBase.cs" />
+    <Compile Include="Complete\CompleteOsmGeo.cs" />
+    <Compile Include="Complete\CompleteOsmGeoType.cs" />
+    <Compile Include="Complete\CompleteRelation.cs" />
+    <Compile Include="Complete\CompleteRelationMember.cs" />
+    <Compile Include="Complete\CompleteUser.cs" />
+    <Compile Include="Complete\CompleteWay.cs" />
+    <Compile Include="Complete\OsmBaseIdGenerator.cs" />
+    <Compile Include="Data\IOsmGeoSource.cs" />
     <Compile Include="Node.cs" />
     <Compile Include="OsmGeo.cs" />
     <Compile Include="OsmGeoType.cs" />
+    <Compile Include="PBF\Dense\Compressor.cs" />
+    <Compile Include="PBF\Dense\Decompressor.cs" />
+    <Compile Include="PBF\fileformat.cs" />
+    <Compile Include="PBF\IPBFOsmPrimitiveConsumer.cs" />
+    <Compile Include="PBF\IPBFPrimitiveBlockConsumer.cs" />
+    <Compile Include="PBF\osmformat.cs" />
+    <Compile Include="PBF\PBFReader.cs" />
+    <Compile Include="PBF\PBFWriter.cs" />
+    <Compile Include="PBF\Processor\PBFOsmStreamSource.cs" />
+    <Compile Include="PBF\Processor\PBFOsmStreamTarget.cs" />
     <Compile Include="Relation.cs" />
     <Compile Include="RelationMember.cs" />
+    <Compile Include="Streams\Collections\OsmEnumerableStreamSource.cs" />
+    <Compile Include="Streams\Complete\OsmCompleteStreamSource.cs" />
+    <Compile Include="Streams\Complete\OsmCompleteStreamTarget.cs" />
+    <Compile Include="Streams\Complete\OsmSimpleCompleteStreamSource.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterBase.cs" />
     <Compile Include="Way.cs" />
-    <Compile Include="Interpreter\Complete\CompleteChange.cs" />
-    <Compile Include="Interpreter\Complete\CompleteChangeSet.cs" />
-    <Compile Include="Interpreter\Complete\CompleteNode.cs" />
-    <Compile Include="Interpreter\Complete\CompleteOsmBase.cs" />
-    <Compile Include="Interpreter\Complete\CompleteOsmGeo.cs" />
-    <Compile Include="Interpreter\Complete\CompleteOsmGeoType.cs" />
-    <Compile Include="Interpreter\Complete\CompleteRelation.cs" />
-    <Compile Include="Interpreter\Complete\CompleteRelationMember.cs" />
-    <Compile Include="Interpreter\Complete\CompleteUser.cs" />
-    <Compile Include="Interpreter\Complete\CompleteWay.cs" />
-    <Compile Include="Interpreter\Complete\OsmBaseIdGenerator.cs" />
     <Compile Include="Interpreter\GeometryInterpreter.cs" />
     <Compile Include="Interpreter\SimpleGeometryInterpreter.cs" />
     <Compile Include="Cache\OsmDataCache.cs" />
-    <Compile Include="Cache\OsmDataCacheDefault.cs" />
     <Compile Include="Cache\OsmDataCacheMemory.cs" />
-    <Compile Include="Cache\OsmDiskCache.cs" />
     <Compile Include="Data\Cache\DataSourceCache.cs" />
     <Compile Include="Data\Memory\MemoryDataSource.cs" />
-    <Compile Include="Data\PBF\Dense\Compressor.cs" />
-    <Compile Include="Data\PBF\Dense\Decompressor.cs" />
-    <Compile Include="Data\PBF\Processor\PBFOsmStreamSource.cs" />
-    <Compile Include="Data\PBF\Processor\PBFOsmStreamTarget.cs" />
-    <Compile Include="Data\PBF\fileformat.cs" />
-    <Compile Include="Data\PBF\IPBFOsmPrimitiveConsumer.cs" />
-    <Compile Include="Data\PBF\IPBFPrimitiveBlockConsumer.cs" />
-    <Compile Include="Data\PBF\osmformat.cs" />
-    <Compile Include="Data\PBF\PBFReader.cs" />
-    <Compile Include="Data\PBF\PBFWriter.cs" />
-    <Compile Include="Data\Xml\OsmSource\OsmDataSource.cs" />
-    <Compile Include="Data\Xml\Processor\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
-    <Compile Include="Data\Xml\Processor\Replication\Replicator.cs" />
-    <Compile Include="Data\Xml\Processor\XmlFragmentWriter.cs" />
-    <Compile Include="Data\Xml\Processor\XmlSimpleConverter.cs" />
     <Compile Include="Data\IDataSource.cs" />
     <Compile Include="Data\IDataSourceReadOnly.cs" />
     <Compile Include="Data\INodeSource.cs" />
@@ -102,21 +103,17 @@
     <Compile Include="Streams\ChangeSets\DataProcessorChangeSetSource.cs" />
     <Compile Include="Streams\ChangeSets\DataProcessorChangeSetTarget.cs" />
     <Compile Include="Streams\Collections\OsmCollectionStreamWriter.cs" />
-    <Compile Include="Streams\Collections\OsmEnumerableStreamReader.cs" />
-    <Compile Include="Streams\Collections\OsmGeoEnumerableStreamReader.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterBoundingBox.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterSort.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterTags.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterWithEvents.cs" />
-    <Compile Include="Streams\OsmGeoStream\IOsmGeoStreamTarget.cs" />
     <Compile Include="Streams\OsmStreamExtensions.cs" />
     <Compile Include="Streams\OsmStreamFilter.cs" />
     <Compile Include="Streams\OsmStreamSource.cs" />
     <Compile Include="Streams\OsmStreamSourceEmpty.cs" />
     <Compile Include="Streams\OsmStreamTarget.cs" />
     <Compile Include="Streams\OsmStreamTargetEmpty.cs" />
-    <Compile Include="Streams\OsmStreamTargetOsmGeo.cs" />
     <Compile Include="Filters\Tags\FilterTagCount.cs" />
     <Compile Include="Filters\Tags\FilterTagExists.cs" />
     <Compile Include="Filters\Tags\FilterTagMatch.cs" />
@@ -128,13 +125,18 @@
     <Compile Include="Filters\FilterType.cs" />
     <Compile Include="Tiles\Tile.cs" />
     <Compile Include="Tiles\TileRange.cs" />
+    <Compile Include="Xml\OsmSource\OsmDataSource.cs" />
+    <Compile Include="Xml\Streams\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
+    <Compile Include="Xml\Streams\Replication\Replicator.cs" />
+    <Compile Include="Xml\Streams\XmlFragmentWriter.cs" />
+    <Compile Include="Xml\Streams\XmlOsmStreamSource.cs" />
+    <Compile Include="Xml\Streams\XmlOsmStreamTarget.cs" />
+    <Compile Include="Xml\Streams\XmlSimpleConverter.cs" />
     <Compile Include="Xml\v0_6\Extensions.cs" />
     <Compile Include="Xml\v0_6\osm.cs" />
     <Compile Include="Xml\OsmDocument.cs" />
     <Compile Include="TagExtensions.cs" />
     <Compile Include="Data\DataSourceReadOnlyBase.cs" />
-    <Compile Include="Data\Xml\Processor\XmlOsmStreamSource.cs" />
-    <Compile Include="Data\Xml\Processor\XmlOsmStreamTarget.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp\OsmSharp.iOS.csproj">
@@ -143,8 +145,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\PBF\fileformat.proto" />
-    <None Include="Data\PBF\osmformat.proto" />
+    <None Include="PBF\fileformat.proto" />
+    <None Include="PBF\osmformat.proto" />
     <None Include="Xml\v0_6\osm.xsd" />
   </ItemGroup>
 </Project>

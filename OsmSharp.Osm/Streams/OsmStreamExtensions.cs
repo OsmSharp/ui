@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -17,10 +17,10 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using OsmSharp.Osm.Data.Streams.Collections;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Streams.Collections;
 
-namespace OsmSharp.Osm.Data.Streams
+namespace OsmSharp.Osm.Streams
 {
     /// <summary>
     /// Contains extensions for common OsmStreamReader/Writer/Filter implementations.
@@ -31,9 +31,9 @@ namespace OsmSharp.Osm.Data.Streams
         /// Returns an OSM stream reader for the objects in this enumerable.
         /// </summary>
         /// <param name="enumerable"></param>
-        public static OsmStreamSource ToOsmStreamReader(this IEnumerable<OsmGeo> enumerable)
+        public static OsmStreamSource ToOsmStreamSource(this IEnumerable<OsmGeo> enumerable)
         {
-            return new OsmEnumerableStreamReader(enumerable);
+            return new OsmEnumerableStreamSource(enumerable);
         }
     }
 }

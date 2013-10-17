@@ -42,20 +42,21 @@
       <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.640\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <Compile Include="Animations\MapViewAnimator.cs" />
+    <Compile Include="Animations\Navigation\RouteTrackerAnimator.cs" />
     <Compile Include="IMapView.cs" />
     <Compile Include="Map\Layers\ILayer.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
+    <Compile Include="Map\Layers\LayerGpx.cs" />
     <Compile Include="Map\Layers\LayerOsm.cs" />
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
     <Compile Include="Map\Layers\LayerScene.cs" />
     <Compile Include="Map\Layers\LayerTile.cs" />
-    <Compile Include="Map\Styles\MapCSS\Streams\MapCSSSceneOsmStreamTarget.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\Declaration.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationAntiAliasing.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\Domain\DeclarationCustom.cs" />
@@ -90,6 +91,8 @@
     <Compile Include="Map\Styles\MapCSS\MapCSSDictionaryImageSource.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSDirectoryImageSource.cs" />
     <Compile Include="Map\Styles\MapCSS\MapCSSInterpreter.cs" />
+    <Compile Include="Map\Styles\Streams\StyleOsmStreamFilter.cs" />
+    <Compile Include="Map\Styles\Streams\StyleOsmStreamSceneTarget.cs" />
     <Compile Include="Map\Styles\StyleInterpreter.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\MapRenderer.cs" />

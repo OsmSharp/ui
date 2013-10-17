@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using Oracle.ManagedDataAccess.Client;
 using OsmSharp.Osm;
 using OsmSharp.Data.Oracle.Osm;
@@ -159,6 +159,7 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
         /// Creates a new oracle simple data processor target.
         /// </summary>
         /// <param name="connectionString"></param>
+        /// <param name="createAndDetectSchema"></param>
         public OracleOsmStreamTarget(string connectionString, bool createAndDetectSchema)
         {
             _connectionString = connectionString;
@@ -179,6 +180,7 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
         /// Creates a new oracle simple data processor target.
         /// </summary>
         /// <param name="connection"></param>
+        /// <param name="createAndDetectSchema"></param>
         public OracleOsmStreamTarget(OracleConnection connection, bool createAndDetectSchema)
         {
             _connection = connection;

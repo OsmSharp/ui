@@ -38,7 +38,7 @@
     <Reference Include="System.Core" />
     <Reference Include="monotouch" />
     <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.640\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +73,25 @@
     <Compile Include="Collections\SortedList.cs" />
     <Compile Include="Collections\SortedSet.cs" />
     <Compile Include="Collections\SparseArray.cs" />
+    <Compile Include="Geo\Streams\Gpx\GpxGeoStreamSource.cs" />
+    <Compile Include="Geo\Streams\Kml\KmlGeoStreamSource.cs" />
+    <Compile Include="IO\Xml\Gpx\GpxDocument.cs" />
+    <Compile Include="IO\Xml\Gpx\v1_0\gpx.cs">
+      <DependentUpon>gpx.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Gpx\v1_1\gpx.cs">
+      <DependentUpon>gpx.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Kml\KmlDocument.cs" />
+    <Compile Include="IO\Xml\Kml\v2_0\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Kml\v2_0_response\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="IO\Xml\Kml\v2_1\kml.cs">
+      <DependentUpon>kml.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Math\AI\Genetic\Fitness\IFitnessCalculator.cs" />
     <Compile Include="Math\AI\Genetic\Operations\CombinedMutationOperation.cs" />
     <Compile Include="Math\AI\Genetic\Operations\ICrossOverOperation.cs" />
@@ -304,5 +323,22 @@
     <Compile Include="Math\Primitives\RectangleF2D.cs" />
     <Compile Include="Collections\Tags\ITagsSource.cs" />
     <Compile Include="Math\Algorithms\Rotation.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="IO\Xml\Gpx\v1_0\gpx.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="IO\Xml\Gpx\v1_1\gpx.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="IO\Xml\Kml\v2_0\kml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="IO\Xml\Kml\v2_0_response\kml.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="IO\Xml\Kml\v2_1\kml.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
 </Project>

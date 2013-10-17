@@ -18,7 +18,7 @@
 
 using OsmSharp.Osm;
 
-namespace OsmSharp.Osm.Data.Streams
+namespace OsmSharp.Osm.Streams
 {
     /// <summary>
     /// An empty stream reader.

@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
-using OsmSharp.Osm.Data.Xml.Processor;
+using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Osm;
 using OsmSharp;
 using OsmSharp.Math.Geo;
@@ -51,7 +51,7 @@ namespace OsmSharp.WinForms.UI.Sample
             Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
                 "OsmSharp.WinForms.UI.Sample.test.osm");
             var xmlDataProcessorSource = new XmlOsmStreamSource(stream);
-            ICollection<OsmGeo> osmList = xmlDataProcessorSource.PullToCollection();
+            ICollection<OsmGeo> osmList = new List<OsmGeo>(xmlDataProcessorSource);
 
             // build a scene using spherical mercator.
             IProjection sphericalMercator = new WebMercator();

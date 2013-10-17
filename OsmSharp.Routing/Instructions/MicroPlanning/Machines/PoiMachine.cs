@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -139,6 +140,8 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
 
         public override void Succes()
         {
+            OsmSharp.Routing.ArcAggregation.Output.AggregatedPoint poisPoint = (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point;
+            
             List<Routing.ArcAggregation.Output.PointPoi> pois = 
                 (this.FinalMessages[this.FinalMessages.Count - 1] as MicroPlannerMessagePoint).Point.Points;
 
@@ -149,7 +152,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
                 new GeoCoordinate(point1.Latitude + 0.001f, point1.Longitude + 0.001f));
 
             // let the scentence planner generate the correct information.
-            this.Planner.SentencePlanner.GeneratePoi(box, pois, null);
+            this.Planner.SentencePlanner.GeneratePoi(poisPoint.EntryIdx, box, pois, null);
         }
 
         public override bool Equals(object obj)

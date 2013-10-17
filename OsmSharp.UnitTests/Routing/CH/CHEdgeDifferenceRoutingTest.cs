@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -16,19 +16,19 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using NUnit.Framework;
 using System.Reflection;
-using OsmSharp.Osm.Data.Streams.Filters;
-using OsmSharp.Osm.Data.Xml.Processor;
+using NUnit.Framework;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.Streams.Filters;
+using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Witnesses;
-using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Collections.Tags;
+using OsmSharp.Routing.CH.PreProcessing.Witnesses;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.UnitTests.Routing.CH
@@ -39,14 +39,6 @@ namespace OsmSharp.UnitTests.Routing.CH
     [TestFixture]
     public class CHEdgeDifferenceRoutingTest : SimpleRoutingTests<CHEdgeData>
     {
-        /// <summary>
-        /// Creates an instance of the edge difference tests.
-        /// </summary>
-        public CHEdgeDifferenceRoutingTest()
-        {
-
-        }
-
         /// <summary>
         /// Returns a new router.
         /// </summary>

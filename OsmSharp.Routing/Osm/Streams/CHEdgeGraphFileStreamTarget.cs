@@ -18,7 +18,7 @@
 
 using System.IO;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;

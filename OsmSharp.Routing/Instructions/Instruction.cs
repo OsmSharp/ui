@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,10 +15,8 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
-using System;
+
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.ArcAggregation.Output;
 
@@ -32,19 +30,23 @@ namespace OsmSharp.Routing.Instructions
         /// <summary>
         /// Creates a new instruction with only a location.
         /// </summary>
+        /// <param name="entryIdx"></param>
         /// <param name="location"></param>
-        public Instruction(GeoCoordinateBox location)
+        public Instruction(int entryIdx, GeoCoordinateBox location)
         {
+            this.EntryIdx = entryIdx;
             this.Location = location;
         }
 
         /// <summary>
         /// Creates a new instruction with a location and points of interest.
         /// </summary>
+        /// <param name="entryIdx"></param>
         /// <param name="location"></param>
         /// <param name="pois"></param>
-        public Instruction(GeoCoordinateBox location, List<PointPoi> pois)
+        public Instruction(int entryIdx, GeoCoordinateBox location, List<PointPoi> pois)
         {
+            this.EntryIdx = entryIdx;
             this.Location = location;
             this.Pois = pois;
         }
@@ -58,6 +60,11 @@ namespace OsmSharp.Routing.Instructions
         /// The location of this instruction.
         /// </summary>
         public GeoCoordinateBox Location { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the entry idx.
+        /// </summary>
+        public int EntryIdx { get; private set; }
 
         /// <summary>
         /// The instruction text.

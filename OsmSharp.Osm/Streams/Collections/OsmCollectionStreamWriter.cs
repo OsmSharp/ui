@@ -18,10 +18,8 @@
 
 using System;
 using System.Collections.Generic;
-using OsmSharp.Osm.Data.Core.Processor;
-using OsmSharp.Osm;
 
-namespace OsmSharp.Osm.Data.Streams.Collections
+namespace OsmSharp.Osm.Streams.Collections
 {
     /// <summary>
     /// A data processor target for regular SimpleOsmBase objects.

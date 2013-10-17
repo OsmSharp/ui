@@ -13,9 +13,7 @@ using OsmSharp.UI;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
-using OsmSharp.Osm.Data.PBF.Processor;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Data.Xml.Processor;
 using OsmSharp.Routing;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Graphs.Serialization;
@@ -24,6 +22,12 @@ using OsmSharp.Routing.CH.Serialization;
 using OsmSharp.Osm.Data.Memory;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Animations;
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Math;
+using OsmSharp.Math.Primitives;
+using System.Timers;
+using OsmSharp.Routing.Navigation;
+using OsmSharp.UI.Animations.Navigation;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -33,15 +37,15 @@ namespace OsmSharp.Android.UI.Sample
 	[Activity]
     public class MainActivity : Activity
 	{
-        ///// <summary>
-        ///// Holds the router.
-        ///// </summary>
-        //private Router _router;
+        /// <summary>
+        /// Holds the router.
+        /// </summary>
+        private Router _router;
 
-        ///// <summary>
-        ///// Holds the route layer.
-        ///// </summary>
-        //private LayerOsmSharpRoute _routeLayer;
+        /// <summary>
+        /// Holds the route layer.
+        /// </summary>
+        private LayerRoute _routeLayer;
 
 		/// <summary>
 		/// Raises the create event.
@@ -100,27 +104,24 @@ namespace OsmSharp.Android.UI.Sample
 //				graphSerialized,
 //				new OsmRoutingInterpreter());
 
-//            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
-//            var graphDeserialized = routingSerializer.Deserialize(
-//                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.routing"), true);
+            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+            var graphDeserialized = routingSerializer.Deserialize(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.routing"), true);
 
-//            _router = Router.CreateCHFrom(
-//                graphDeserialized, new CHRouter(graphDeserialized),
-//                new OsmRoutingInterpreter());
+            _router = Router.CreateCHFrom(
+                graphDeserialized, new CHRouter(graphDeserialized),
+                new OsmRoutingInterpreter());
+            GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
+            GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
+            RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
+            RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
+            Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
+            RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
+            _enumerator = route1.GetRouteEnumerable(20).GetEnumerator();
 
-//            GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
-//            GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
-//            RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
-//            RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
-//            Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-
-
-//            _routeLayer = new LayerOsmSharpRoute(map.Projection);
-//            _routeLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
-////			osmSharpLayer.AddRoute (route2, SimpleColor.FromKnownColor(KnownColor.Red).Value);
-////			osmSharpLayer.AddRoute (route3, SimpleColor.FromKnownColor(KnownColor.YellowGreen).Value);
-//            map.AddLayer(_routeLayer);
-
+            _routeLayer = new LayerRoute(map.Projection);
+            _routeLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
+            map.AddLayer(_routeLayer);
 
 //			// create gpx layer.
 //			LayerGpx gpxLayer = new LayerGpx(map.Projection);
@@ -143,34 +144,58 @@ namespace OsmSharp.Android.UI.Sample
 //			var mapView = new OpenGLRenderer2D(
 //				this, null);
 
-            //var mapGLView = new MapGLView(this);
+//            _mapView = new MapView<MapGLView>(this, new MapGLView(this));
 
-			var mapLayout = new MapView (this);
-			mapLayout.Map = map;
-			
-			mapLayout.MapMaxZoomLevel = 20;
-			mapLayout.MapMinZoomLevel = 12;
-			mapLayout.MapTilt = 0;
-			//var mapView = new MapGLView (this);
-			mapLayout.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
-			//mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
-			//mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
-			//mapView.Center = new GeoCoordinate(51.156803, 2.958887);
-            mapLayout.MapZoom = 17;
+            _mapView = new MapView<MapViewSurface>(this, new MapViewSurface(this));
+            _mapView.Map = map;
+
+            (_mapView as IMapView).AutoInvalidate = true;
+            _mapView.MapMaxZoomLevel = 20;
+            _mapView.MapMinZoomLevel = 12;
+            _mapView.MapTilt = 0;
+            //var mapView = new MapGLView (this);
+            _mapView.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
+            //mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
+            //mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
+            //mapView.Center = new GeoCoordinate(51.156803, 2.958887);
+            _mapView.MapZoom = 17;
             //MapViewAnimator mapViewAnimator = new MapViewAnimator(mapLayout);
-            mapLayout.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
+            _mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
             {
                 //mapViewAnimator.Stop();
                 //mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
-			};
+            };
 
 			//Create the user interface in code
 			var layout = new RelativeLayout (this);
+            layout.AddView(_mapView);
 
-			//layout.AddView(mapGLView);
-			layout.AddView (mapLayout);
+            _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker);
+
+            Timer timer = new Timer(1000);
+            timer.Elapsed += new ElapsedEventHandler(TimerHandler);
+            timer.Start();
 
 			SetContentView (layout);
 		}
+
+        private MapView<MapViewSurface> _mapView;
+
+        private RouteTrackerAnimator _routeTrackerAnimator;
+
+        private IEnumerator<GeoCoordinate> _enumerator;
+
+        private void TimerHandler(object sender, ElapsedEventArgs e)
+        {
+            this.MoveNext();
+        }
+
+        private void MoveNext()
+        {
+            if (_enumerator.MoveNext())
+            {
+                _routeTrackerAnimator.Track(_enumerator.Current);
+            }
+        }
 	}
 }

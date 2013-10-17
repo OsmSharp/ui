@@ -18,7 +18,7 @@
 
 using OsmSharp.Osm;
 
-namespace OsmSharp.Osm.Data.Streams
+namespace OsmSharp.Osm.Streams
 {
     /// <summary>
     /// Any target of osm data (Nodes, Ways and Relations).
@@ -28,7 +28,7 @@ namespace OsmSharp.Osm.Data.Streams
         /// <summary>
         /// Holds the source for this target.
         /// </summary>
-        private OsmStreamSource _reader;
+        private OsmStreamSource _source;
 
         /// <summary>
         /// Creates a new target.
@@ -64,20 +64,20 @@ namespace OsmSharp.Osm.Data.Streams
         /// <summary>
         /// Registers a reader on this writer.
         /// </summary>
-        /// <param name="reader"></param>
-        public void RegisterSource(OsmStreamSource reader)
+        /// <param name="source"></param>
+        public void RegisterSource(OsmStreamSource source)
         {
-            _reader = reader;
+            _source = source;
         }
 
         /// <summary>
         /// Returns the registered reader.
         /// </summary>
-        protected OsmStreamSource Reader
+        protected OsmStreamSource Source
         {
             get
             {
-                return _reader;
+                return _source;
             }
         }
 
@@ -86,11 +86,11 @@ namespace OsmSharp.Osm.Data.Streams
         /// </summary>
         public void Pull()
         {
-            _reader.Initialize();
+            _source.Initialize();
             this.Initialize();
-            while (_reader.MoveNext())
+            while (_source.MoveNext())
             {
-                object sourceObject = _reader.Current();
+                object sourceObject = _source.Current();
                 if (sourceObject is Node)
                 {
                     this.AddNode(sourceObject as Node);
@@ -114,9 +114,9 @@ namespace OsmSharp.Osm.Data.Streams
         /// <returns></returns>
         public bool PullNext()
         {
-            if (_reader.MoveNext())
+            if (_source.MoveNext())
             {
-                object sourceObject = _reader.Current();
+                object sourceObject = _source.Current();
                 if (sourceObject is Node)
                 {
                     this.AddNode(sourceObject as Node);

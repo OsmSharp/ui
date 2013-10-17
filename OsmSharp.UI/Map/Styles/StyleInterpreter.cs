@@ -71,5 +71,12 @@ namespace OsmSharp.UI.Map.Styles
         /// <param name="scene">The scene to fill with the resulting geometries.</param>
         /// <returns></returns>
         public abstract void Translate(Scene2D scene, IProjection projection, CompleteOsmGeo osmGeo);
+
+        /// <summary>
+        /// Returns true if this style applies to the given object.
+        /// </summary>
+        /// <param name="osmGeo"></param>
+        /// <returns></returns>
+        public abstract bool AppliesTo(OsmGeo osmGeo);
     }
 }

@@ -39,13 +39,13 @@ namespace OsmSharp.Android.UI
 	/// <summary>
 	/// Map view handling the map display and pan-zoon markers and touch-events.
 	/// </summary>
-	public class MapView : FrameLayout, IMapView
+	public class MapView<T> : FrameLayout, IMapMarkerHost, IMapView
+		where T : View, IMapViewSurface
 	{
 		/// <summary>
 		/// Holds the mapview.
 		/// </summary>
-		private MapViewSurface  _mapView;
-
+		private T _mapView;
 		/// <summary>
 		/// Holds the markers.
 		/// </summary>
@@ -55,34 +55,35 @@ namespace OsmSharp.Android.UI
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapLayout"/> class.
 		/// </summary>
 		/// <param name="context">Context.</param>
-		public MapView (Context context)
+		/// <param name="surface">Surface.</param>
+		public MapView (Context context, T surface)
 			: base(context)
 		{
-			this.Initialize ();
-
+			_mapView = surface;
+            _mapView.Initialize(this);
 			_markers = new List<MapMarker> ();
-		}
 
-		public delegate void MapTapEventDelegate(GeoCoordinate geoCoordinate);
+			this.Initialize ();
+		}
 
 		/// <summary>
 		/// Occurs when the map was tapped at a certain location.
 		/// </summary>
-		public event MapTapEventDelegate MapTapEvent;
+		public event MapViewEvents.MapTapEventDelegate MapTapEvent;
 
 		/// <summary>
 		/// Returns the mapmarkers list.
 		/// </summary>
 		/// <value>The markers.</value>
-		public void AddMarker(MapMarker marker)
+		public void AddMarker (MapMarker marker)
 		{
 			_markers.Add (marker); // add to marker list.
-			marker.AttachTo(this); // attach to this view.
+			marker.AttachTo (this); // attach to this view.
 
-			var layoutParams = new FrameLayout.LayoutParams(marker.Image.Width, marker.Image.Height + 5);
+			var layoutParams = new FrameLayout.LayoutParams (marker.Image.Width, marker.Image.Height + 5);
 			layoutParams.LeftMargin = -1;
 			layoutParams.TopMargin = -1;
-			layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left ;
+			layoutParams.Gravity = GravityFlags.Top | GravityFlags.Left;
 			this.AddView (marker, layoutParams);
 
 			_mapView.Change ();
@@ -93,38 +94,32 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <returns>The marker.</returns>
 		/// <param name="coordinate">Coordinate.</param>
-		public MapMarker AddMarker(GeoCoordinate coordinate)
+		public MapMarker AddMarker (GeoCoordinate coordinate)
 		{
 			MapMarker marker = new MapMarker (this.Context, coordinate);
 			this.AddMarker (marker);
 			return marker;
 		}
 
-        /// <summary>
-        /// Notifies this MapView that a map marker has changed.
-        /// </summary>
-        /// <param name="mapMarker"></param>
-        internal void NotifyMarkerChange(MapMarker mapMarker)
-        {
+		/// <summary>
+		/// Notifies this MapView that a map marker has changed.
+		/// </summary>
+		/// <param name="mapMarker"></param>
+		public void NotifyMarkerChange (MapMarker mapMarker)
+		{
 			// notify map layout of changes.
 			if (_mapView.Width > 0 && _mapView.Height > 0) {
 				View2D view = _mapView.CreateView ();
 
 				this.NotifyMapChangeToMarker (this.Width, this.Height, view, this.Map.Projection, mapMarker);
 			}
-        }
+		}
 
 		/// <summary>
 		/// Initialize this instance.
 		/// </summary>
-		private void Initialize()
+		private void Initialize ()
 		{			
-			_mapView = new MapViewSurface (this.Context, this);
-			_mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate) {
-				if (this.MapTapEvent != null) {
-					this.MapTapEvent (geoCoordinate);
-				}
-			};
 			this.AddView (_mapView);
 		}
 
@@ -133,8 +128,8 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <value>The map zoom level.</value>
 		public float MapZoom {
-			get { return _mapView.MapZoomLevel; }
-			set { _mapView.MapZoomLevel = value; }
+			get { return _mapView.MapZoom; }
+			set { _mapView.MapZoom = value; }
 		}
 
 		/// <summary>
@@ -154,17 +149,16 @@ namespace OsmSharp.Android.UI
 			get { return _mapView.MapMaxZoomLevel; }
 			set { _mapView.MapMaxZoomLevel = value; }
 		}
-		
 
 		/// <summary>
 		/// Gets or sets the map.
 		/// </summary>
 		/// <value>The map.</value>
 		public Map Map {
-			get{
+			get {
 				return _mapView.Map;
 			}
-			set{
+			set {
 				_mapView.Map = value;
 			}
 		}
@@ -175,11 +169,11 @@ namespace OsmSharp.Android.UI
 		/// <value>The map center.</value>
 		public GeoCoordinate MapCenter {
 			get { 
-                return _mapView.MapCenter; 
-            }
+				return _mapView.MapCenter; 
+			}
 			set { 
-                _mapView.MapCenter = value; 
-            }
+				_mapView.MapCenter = value; 
+			}
 		}
 
 		/// <summary>
@@ -187,16 +181,15 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <value>The map tilt.</value>
 		public Degree MapTilt {
-			get{
+			get {
 				return _mapView.MapTilt;
 			}
-			set{
+			set {
 				_mapView.MapTilt = value;
 			}
 		}
 
 		#region IMapView implementation
-
 		/// <summary>
 		/// Holds the map view animator.
 		/// </summary>
@@ -231,10 +224,9 @@ namespace OsmSharp.Android.UI
 				return _mapView.AutoInvalidate;
 			}
 			set {
-				_mapView.AutoInvalidate = false;
+				_mapView.AutoInvalidate = value;
 			}
 		}
-
 		#endregion
 
 		/// <summary>
@@ -244,34 +236,36 @@ namespace OsmSharp.Android.UI
 		/// <param name="pixelsHeight">Pixels height.</param>
 		/// <param name="view">View.</param>
 		/// <param name="projection">Projection.</param>
-		internal void NotifyMapChange(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
+		public void NotifyMapChange (double pixelsWidth, double pixelsHeight, View2D view, IProjection projection)
 		{
 			if (_markers != null) {
 				foreach (var marker in _markers) {
-                    this.NotifyMapChangeToMarker(pixelsWidth, pixelsHeight, view, projection, marker);
+					this.NotifyMapChangeToMarker (pixelsWidth, pixelsHeight, view, projection, marker);
 				}
 			}
 		}
 
-        /// <summary>
-        /// Notifies the map change.
-        /// </summary>
-        /// <param name="pixelWidth"></param>
-        /// <param name="pixelsHeight"></param>
-        /// <param name="view"></param>
-        /// <param name="projection"></param>
-        /// <param name="mapMarker"></param>
-        internal void NotifyMapChangeToMarker(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, MapMarker mapMarker)
-        {
-            if (mapMarker != null)
-            {
-                this.RemoveView(mapMarker);
-                if (mapMarker.SetLayout(pixelsWidth, pixelsHeight, view, projection))
-                {
-                    this.AddView(mapMarker, mapMarker.LayoutParameters);
-                }
-            }
-        }
-	}
-}
+		/// <summary>
+		/// Notifies the map change.
+		/// </summary>
+		/// <param name="pixelWidth"></param>
+		/// <param name="pixelsHeight"></param>
+		/// <param name="view"></param>
+		/// <param name="projection"></param>
+		/// <param name="mapMarker"></param>
+		internal void NotifyMapChangeToMarker (double pixelsWidth, double pixelsHeight, View2D view, IProjection projection, MapMarker mapMarker)
+		{
+			if (mapMarker != null) {
+				this.RemoveView (mapMarker);
+				if (mapMarker.SetLayout (pixelsWidth, pixelsHeight, view, projection)) {
+					this.AddView (mapMarker, mapMarker.LayoutParameters);
+				}
+			}
+		}
 
+        void IMapView.Invalidate()
+        {
+            _mapView.Change();
+        }
+    }
+}

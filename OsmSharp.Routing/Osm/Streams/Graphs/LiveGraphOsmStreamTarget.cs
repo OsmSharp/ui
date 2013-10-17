@@ -20,7 +20,7 @@ using System;
 using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
@@ -34,11 +34,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
     /// </summary>
     public class LiveGraphOsmStreamTarget : DynamicGraphOsmStreamWriter<LiveEdge>
     {
-        /// <summary>
-        /// Holds the data source.
-        /// </summary>
-//        private readonly IDynamicGraphRouterDataSource<LiveEdge> _dynamicDataSource;
-
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>

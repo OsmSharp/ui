@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -150,6 +150,46 @@ namespace OsmSharp.Math.Geo
             double distance = radius_earth.Value * c;
 
             return distance;
+        }
+
+        #endregion
+
+        #region Operators
+
+        /// <summary>
+        /// Adds two geo coordinates.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static GeoCoordinate operator +(GeoCoordinate a, GeoCoordinate b)
+        {
+            double[] c = new double[2];
+
+            for (int idx = 0; idx < 2; idx++)
+            {
+                c[idx] = a[idx] + b[idx];
+            }
+
+            return new GeoCoordinate(c);
+        }
+
+        /// <summary>
+        /// Divides the given geo coordinate with the given value.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static GeoCoordinate operator /(GeoCoordinate a, double value)
+        {
+            double[] c = new double[2];
+
+            for (int idx = 0; idx < 2; idx++)
+            {
+                c[idx] = a[idx] / value;
+            }
+
+            return new GeoCoordinate(c);
         }
 
         #endregion

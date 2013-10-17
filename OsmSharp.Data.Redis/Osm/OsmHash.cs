@@ -39,6 +39,12 @@ namespace OsmSharp.Data.Redis.Osm
             return OsmHash.GetOsmHashAsString(coordinate.Latitude, coordinate.Longitude);
         }
 
+        /// <summary>
+        /// Returns the osm hash as a string.
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <returns></returns>
         public static string GetOsmHashAsString(double latitude, double longitude)
         {
             return OsmHash.GetOsmHashAsString(
@@ -46,6 +52,12 @@ namespace OsmSharp.Data.Redis.Osm
                 OsmHash.lat2y(latitude));
         }
 
+        /// <summary>
+        /// Returns the osm hash as a string.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static string GetOsmHashAsString(uint x, uint y)
         {
             return "oh:" + x + ":" + y;
@@ -53,6 +65,12 @@ namespace OsmSharp.Data.Redis.Osm
 
         #region Tile Calculations
 
+        /// <summary>
+        /// Returns a hashed version based on the x- and y-coordinate.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
         public static uint xy2tile(uint x, uint y)
         {
             uint tile = 0;
@@ -67,11 +85,21 @@ namespace OsmSharp.Data.Redis.Osm
             return tile;
         }
 
+        /// <summary>
+        /// Converts the given lon to a tiled x-coordinate.
+        /// </summary>
+        /// <param name="lon"></param>
+        /// <returns></returns>
         public static uint lon2x(double lon)
         {
             return (uint)System.Math.Floor(((lon + 180.0) * 65536.0 / 360.0));
         }
 
+        /// <summary>
+        /// Converts the given lat to a tiled y-coordinate.
+        /// </summary>
+        /// <param name="lat"></param>
+        /// <returns></returns>
         public static uint lat2y(double lat)
         {
             return (uint)System.Math.Floor(((lat + 90.0) * 65536.0 / 180.0));

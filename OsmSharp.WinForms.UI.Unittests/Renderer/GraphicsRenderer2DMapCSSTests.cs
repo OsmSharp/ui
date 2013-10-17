@@ -139,7 +139,7 @@ namespace OsmSharp.WinForms.UI.Unittests.Renderer
 
             // create map.
             OsmSharp.UI.Map.Map map = new OsmSharp.UI.Map.Map();
-            map.AddLayer(new OsmLayer(dataSource, new MapCSSInterpreter(mapCSS), projection));
+            map.AddLayer(new LayerOsm(dataSource, new MapCSSInterpreter(mapCSS), projection));
             
             // notify the map that there was a view change!
             map.ViewChanged((float)view.CalculateZoom(100, 100), new Math.Geo.GeoCoordinate(0, 0), view);

@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,9 @@ using System.Text;
 
 namespace OsmSharp.Data.Redis.Osm
 {
-
+    /// <summary>
+    /// Implements a custom geohash for redis.
+    /// </summary>
     public static class GeoHash
     {
         private static readonly char[] chars = {
@@ -41,6 +44,12 @@ namespace OsmSharp.Data.Redis.Osm
                 map.Add(chars[i], i);
         }
 
+        /// <summary>
+        /// Encodes to a geohash string.
+        /// </summary>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <returns></returns>
         public static String Encode(double latitude, double longitude)
         {
             double[] latInterval = { -90.0, 90.0 };
@@ -96,6 +105,11 @@ namespace OsmSharp.Data.Redis.Osm
             return geohash.ToString();
         }
 
+        /// <summary>
+        /// Decodes a geohash string.
+        /// </summary>
+        /// <param name="geohash"></param>
+        /// <returns></returns>
         public static double[] Decode(String geohash)
         {
             double[] ge = DecodeExactly(geohash);
@@ -113,6 +127,11 @@ namespace OsmSharp.Data.Redis.Osm
             return new[] { lat, lon };
         }
 
+        /// <summary>
+        /// Decodes a geohash string.
+        /// </summary>
+        /// <param name="geohash"></param>
+        /// <returns></returns>
         public static double[] DecodeExactly(String geohash)
         {
             double[] latInterval = { -90.0, 90.0 };
@@ -159,6 +178,12 @@ namespace OsmSharp.Data.Redis.Osm
             return new[] { latitude, longitude, latErr, lonErr };
         }
 
+        /// <summary>
+        /// Returns the precision.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="precision"></param>
+        /// <returns></returns>
         public static double GetPrecision(double x, double precision)
         {
             double @base = System.Math.Pow(10, -precision);

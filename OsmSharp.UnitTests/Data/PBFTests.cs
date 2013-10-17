@@ -1,5 +1,5 @@
 ﻿//// OsmSharp - OpenStreetMap (OSM) SDK
-//// Copyright (C) 2012 Abelshausen Ben
+//// Copyright (C) 2013 Abelshausen Ben
 //// 
 //// This file is part of OsmSharp.
 //// 
@@ -21,7 +21,7 @@
 //using OsmSharp.Osm;
 //using OsmSharp.Osm.Data;
 //using OsmSharp.Osm.Data.Core.Memory;
-//using OsmSharp.Osm.Data.PBF.Processor;
+//using OsmSharp.Osm.PBF.Processor;
 
 //namespace OsmSharp.UnitTests.Data
 //{

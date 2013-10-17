@@ -13,10 +13,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
     public class MapCSSObject : ITagsSource
     {
         /// <summary>
+        /// Creates a new MapCSS object with a compete osmgeo object.
+        /// </summary>
+        /// <param name="osmGeoComplete"></param>
+        public MapCSSObject(CompleteOsmGeo osmGeoComplete)
+        {
+            if (osmGeoComplete == null) throw new ArgumentNullException();
+
+            this.OsmGeoComplete = osmGeoComplete;
+        }
+
+        /// <summary>
         /// Creates a new MapCSS object with an osmgeo object.
         /// </summary>
-        /// <param name="geo"></param>
-        public MapCSSObject(CompleteOsmGeo osmGeo)
+        /// <param name="osmGeo"></param>
+        public MapCSSObject(OsmGeo osmGeo)
         {
             if (osmGeo == null) throw new ArgumentNullException();
 
@@ -43,9 +54,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         }
 
         /// <summary>
-        /// Gets the osmgeo object.
+        /// Gets the complete osm geo object.
         /// </summary>
-        public CompleteOsmGeo OsmGeo { get; private set; }
+        public CompleteOsmGeo OsmGeoComplete { get; private set; }
+
+        /// <summary>
+        /// Gets the osm geo object.
+        /// </summary>
+        public OsmGeo OsmGeo { get; private set; }
 
         /// <summary>
         /// Gets the geometry object.
@@ -59,7 +75,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         {
             get
             {
-                return this.OsmGeo != null;
+                return this.OsmGeoComplete != null ||
+                    this.OsmGeo != null;
             }
         }
 
@@ -83,14 +100,29 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             {
                 if (this.IsOsm)
                 {
-                    switch (this.OsmGeo.Type)
+                    if (this.OsmGeoComplete != null)
                     {
-                        case CompleteOsmType.Node:
-                            return MapCSS.MapCSSType.Node;
-                        case CompleteOsmType.Way:
-                            return MapCSS.MapCSSType.Way;
-                        case CompleteOsmType.Relation:
-                            return MapCSS.MapCSSType.Relation;
+                        switch (this.OsmGeoComplete.Type)
+                        {
+                            case CompleteOsmType.Node:
+                                return MapCSS.MapCSSType.Node;
+                            case CompleteOsmType.Way:
+                                return MapCSS.MapCSSType.Way;
+                            case CompleteOsmType.Relation:
+                                return MapCSS.MapCSSType.Relation;
+                        }
+                    }
+                    else
+                    {
+                        switch (this.OsmGeo.Type)
+                        {
+                            case OsmGeoType.Node:
+                                return MapCSS.MapCSSType.Node;
+                            case OsmGeoType.Way:
+                                return MapCSS.MapCSSType.Way;
+                            case OsmGeoType.Relation:
+                                return MapCSS.MapCSSType.Relation;
+                        }
                     }
                 }
                 else
@@ -110,19 +142,23 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             }
         }
 
-        /// <summary>
-        /// Returns true if the object set in this mapcss object is of the given type.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        public bool IsType(Type type)
-        {
-            if (this.IsGeo)
-            {
-                return type.IsInstanceOfType(this.Geometry);
-            }
-            return type.IsInstanceOfType(this.OsmGeo);
-        }
+        ///// <summary>
+        ///// Returns true if the object set in this mapcss object is of the given type.
+        ///// </summary>
+        ///// <param name="type"></param>
+        ///// <returns></returns>
+        //public bool IsType(Type type)
+        //{
+        //    if (this.IsGeo)
+        //    {
+        //        return type.IsInstanceOfType(this.Geometry);
+        //    }
+        //    if (this.OsmGeoComplete != null)
+        //    {
+        //        return type.IsInstanceOfType(this.OsmGeoComplete);
+        //    }
+        //    return type.IsInstanceOfType(this.OsmGeo);
+        //}
 
         /// <summary>
         /// Returns true if the tags- or attributecollection contains the given key.
@@ -135,6 +171,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
             {
                 return this.Geometry.Attributes != null &&
                     this.Geometry.Attributes.ContainsKey(key);
+            }
+            if (this.OsmGeoComplete != null)
+            {
+                return this.OsmGeoComplete.Tags != null &&
+                    this.OsmGeoComplete.Tags.ContainsKey(key);
             }
             return this.OsmGeo.Tags != null &&
                 this.OsmGeo.Tags.ContainsKey(key);
@@ -165,6 +206,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 return false;
             }
             tagValue = string.Empty;
+            if (this.OsmGeoComplete != null)
+            {
+                return this.OsmGeoComplete.Tags != null &&
+                    this.OsmGeoComplete.Tags.TryGetValue(key, out tagValue);
+            }
             return this.OsmGeo.Tags != null &&
                 this.OsmGeo.Tags.TryGetValue(key, out tagValue);
         }

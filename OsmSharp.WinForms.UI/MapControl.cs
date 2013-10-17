@@ -160,7 +160,8 @@ namespace OsmSharp.WinForms.UI
             if (_quickMode)
             { // only render the cached scene.
                 //_renderer.Render(g, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
-                _renderer.RenderCache(g, this.Map, view);
+                //_renderer.RenderCache(g, this.Map, view)
+                _renderer.Render(g, this.Map, view);
             }
             else
             { // render the entire scene.
@@ -642,5 +643,17 @@ namespace OsmSharp.WinForms.UI
 		}
 
 		#endregion
+
+        /// <summary>
+        /// Notifies a map change.
+        /// </summary>
+        /// <param name="pixelsWidth"></param>
+        /// <param name="pixelsHeight"></param>
+        /// <param name="view"></param>
+        /// <param name="projection"></param>
+        public void NotifyMapChange(double pixelsWidth, double pixelsHeight, View2D view, Math.Geo.Projections.IProjection projection)
+        {
+
+        }
     }
 }

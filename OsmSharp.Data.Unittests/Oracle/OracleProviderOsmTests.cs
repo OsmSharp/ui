@@ -22,7 +22,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using Oracle.ManagedDataAccess.Client;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Data.Oracle.Osm.Streams;
 using OsmSharp.Data.Oracle.Osm;
 using OsmSharp.Osm.Data;
@@ -102,6 +102,9 @@ namespace OsmSharp.Data.Unittests.Oracle
 
         private OracleConnection _connection = null;
 
+        /// <summary>
+        /// Notifies that the current test expects an empty database.
+        /// </summary>
         public override void NotifyEmptyExpected()
         {
             if (_connection != null)
@@ -125,11 +128,19 @@ namespace OsmSharp.Data.Unittests.Oracle
             return _connection;
         }
 
+        /// <summary>
+        /// Creates a data source for this test.
+        /// </summary>
+        /// <returns></returns>
         public override IDataSourceReadOnly CreateDataSource()
         {
             return new OracleDataSource(this.GetConnection());
         }
 
+        /// <summary>
+        /// Creates a stream target for this test.
+        /// </summary>
+        /// <returns></returns>
         public override OsmStreamTarget CreateDataStreamTarget()
         {
             return new OracleOsmStreamTarget(this.GetConnection(), true);

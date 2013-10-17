@@ -29,7 +29,7 @@ namespace OsmSharp.UI.Map.Layers
     /// <summary>
     /// A layer drawing OSM data.
     /// </summary>
-    public class OsmLayer : ILayer
+    public class LayerOsm : ILayer
     {
         /// <summary>
         /// Holds the source of the OSM raw data.
@@ -46,7 +46,7 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
-        public OsmLayer(IDataSourceReadOnly dataSource, StyleInterpreter styleInterpreter, IProjection projection)
+        public LayerOsm(IDataSourceReadOnly dataSource, StyleInterpreter styleInterpreter, IProjection projection)
         {
             // build the zoom-level cutoffs.
             List<float> zoomLevelCutoffs = new List<float>();

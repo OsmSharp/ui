@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -21,11 +21,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Osm.Data;
-using OsmSharp.Osm.Data.Streams;
+using OsmSharp.Osm.Streams;
 using OsmSharp.Osm;
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Osm.Data.PBF.Processor;
+using OsmSharp.Osm.PBF.Processor;
 using System.Reflection;
 using OsmSharp.Osm.Data.Memory;
 using OsmSharp.Math.Geo;
@@ -53,12 +53,6 @@ namespace OsmSharp.Data.Unittests
         /// </summary>
         /// <returns></returns>
         public abstract OsmStreamTarget CreateDataStreamTarget();
-
-        /// <summary>
-        /// Creates a data stream source for the current provider.
-        /// </summary>
-        /// <returns></returns>
-        //public abstract OsmStreamSource CreateDataStreamSource();
 
         /// <summary>
         /// Tests read/writing a node.

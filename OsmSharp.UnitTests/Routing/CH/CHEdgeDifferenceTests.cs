@@ -1,5 +1,5 @@
 ﻿// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2012 Abelshausen Ben
+// Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
 // 
@@ -18,15 +18,15 @@
 
 using System.Reflection;
 using NUnit.Framework;
-using OsmSharp.Osm.Data.Streams.Filters;
-using OsmSharp.Osm.Data.Xml.Processor;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.Streams.Filters;
+using OsmSharp.Osm.Xml.Streams;
+using OsmSharp.Routing;
 using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Routing;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.UnitTests.Routing.CH

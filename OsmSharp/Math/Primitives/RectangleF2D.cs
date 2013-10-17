@@ -247,11 +247,69 @@ namespace OsmSharp.Math.Primitives
 			}
 		}
 
-		/// <summary>
-		/// Returns true if this box contains the specified x, y.
-		/// </summary>
-		/// <param name="point">The point.</param>
-		public bool Contains(PointF2D point){
+        /// <summary>
+        /// Fits this rectangle to the given points.
+        /// </summary>
+        /// <param name="points">The points to wrap the rectangle around.</param>
+        /// <param name="percentage">The margin in percentage.</param>
+        /// <returns></returns>
+        public RectangleF2D Fit(PointF2D[] points, double percentage)
+        {
+            if (points == null) { throw new ArgumentNullException("points"); }
+            if (points.Length < 2) { throw new ArgumentOutOfRangeException("Rectangle fit needs at least two points."); }
+
+            // calculate the center.
+            double[] center = new double[] { points[0][0], points[0][1] };
+            for (int idx = 1; idx < points.Length; idx++)
+            {
+                center[0] = center[0] + points[idx][0];
+                center[1] = center[1] + points[idx][1];
+            }
+            center[0] = center[0] / points.Length;
+            center[1] = center[1] / points.Length;
+            PointF2D centerPoint = new PointF2D(center);
+
+            LineF2D line = null;
+            // calculate the width.
+            double width = 0;
+            for (int idx = 0; idx < points.Length; idx++)
+            {
+                line = new LineF2D(points[idx], points[idx] + this._vectorY);
+                double distance = line.Distance(centerPoint);
+                if (distance > width)
+                { // the distance is larger.
+                    width = distance;
+                }
+            }
+            width = width * 2;
+
+            // calculate the height.
+            double height = 0;
+            for (int idx = 0; idx < points.Length; idx++)
+            {
+                line = new LineF2D(points[idx], points[idx] + this._vectorX);
+                double distance = line.Distance(centerPoint);
+                if (distance > height)
+                { // this distance is larger.
+                    height = distance;
+                }
+            }
+            height = height * 2;
+
+            // expand with the given percentage.
+            width = width + (width / 100.0 * percentage);
+            height = height + (height / 100.0 * percentage);
+
+            return RectangleF2D.FromBoundsAndCenter(width, height, centerPoint[0], centerPoint[1],
+                this.DirectionY);
+        }
+
+        /// <summary>
+        /// Returns true if this box contains the specified x, y.
+        /// </summary>
+        /// <param name="point">The point.</param>
+        public bool Contains(PointF2D point)
+        {
 			double[] coordinates = this.TransformTo (100, 100, false, false, point);
 			return (coordinates [0] >= 0 && coordinates [0] <= 100 &&
 				coordinates [1] >= 0 && coordinates [1] <= 100);
@@ -318,7 +376,6 @@ namespace OsmSharp.Math.Primitives
 			return new RectangleF2D (cornersRotated [2], this.Width, this.Height,	
 			                        cornersRotated [0] - cornersRotated [2]);
 		}
-
 
 		#region Affine Transformations
 
@@ -565,4 +622,3 @@ namespace OsmSharp.Math.Primitives
 		#endregion
 	}
 }
-

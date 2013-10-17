@@ -23,6 +23,7 @@ using System.Text;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Osm.Data;
 using OsmSharp.Osm.Interpreter;
+using OsmSharp.Collections.Tags;
 
 namespace OsmSharp.Osm
 {
@@ -82,6 +83,24 @@ namespace OsmSharp.Osm
             node.Id = id;
             node.Latitude = latitude;
             node.Longitude = longitude;
+            return node;
+        }
+
+        /// <summary>
+        /// Creates a new node.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="tags"></param>
+        /// <param name="latitude"></param>
+        /// <param name="longitude"></param>
+        /// <returns></returns>
+        public static Node Create(long id, TagsCollection tags, double latitude, double longitude)
+        {
+            Node node = new Node();
+            node.Id = id;
+            node.Latitude = latitude;
+            node.Longitude = longitude;
+            node.Tags = tags;
             return node;
         }
 
