@@ -39,6 +39,9 @@ namespace OsmSharp.WinForms.UI
             _position = position;
         }
 
+        /// <summary>
+        /// Returns the position this event occured at.
+        /// </summary>
         public GeoCoordinate Position
         {
             get

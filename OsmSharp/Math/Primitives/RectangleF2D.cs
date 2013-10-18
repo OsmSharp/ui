@@ -308,6 +308,7 @@ namespace OsmSharp.Math.Primitives
         /// Fits this rectangle to this given points and keeps aspect ratio.
         /// </summary>
         /// <param name="points"></param>
+        /// <param name="percentage"></param>
         /// <returns></returns>
         public RectangleF2D FitAndKeepAspectRatio(PointF2D[] points, double percentage)
         {
