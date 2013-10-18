@@ -50,15 +50,45 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum DeclarationFloatEnum
     {
+        /// <summary>
+        /// Width option.
+        /// </summary>
         Width,
+        /// <summary>
+        /// Fill opacity option.
+        /// </summary>
         FillOpacity,
+        /// <summary>
+        /// Opacity option.
+        /// </summary>
         Opacity,
+        /// <summary>
+        /// Casing opacity option.
+        /// </summary>
         CasingOpacity,
+        /// <summary>
+        /// Extrude edge opacity.
+        /// </summary>
         ExtrudeEdgeOpacity,
+        /// <summary>
+        /// Extrude face opacity.
+        /// </summary>
         ExtrudeFaceOpacity,
+        /// <summary>
+        /// Extrude edge width opacity.
+        /// </summary>
         ExtrudeEdgeWidth,
+        /// <summary>
+        /// Icon opacity.
+        /// </summary>
         IconOpacity,
+        /// <summary>
+        /// Text opacity.
+        /// </summary>
         TextOpacity,
+        /// <summary>
+        /// Casing width opacity.
+        /// </summary>
         CasingWidth
     }
 }

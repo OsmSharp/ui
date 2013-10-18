@@ -311,38 +311,36 @@ namespace OsmSharp.Math.Primitives
         /// <returns></returns>
         public RectangleF2D FitAndKeepAspectRatio(PointF2D[] points, double percentage)
         {
-            double delta = 0.0001;
             RectangleF2D fitted = this.Fit(points, percentage);
+
+            // although this may seem a strange approach, think about
+            // numerical stability before change this!            
+
             double width = fitted.Width;
             double height = fitted.Height;
-            if (fitted.Height > delta)
+            double targetRatio = this.Width / this.Height; // this is the target ratio.
+            if (fitted.Height > fitted.Width)
             { // the height is bigger.
-                double ratio = this.Width / this.Height;
-                double fittedRatio = fitted.Width / fitted.Height;
-                if (ratio > fittedRatio)
-                { // the ratio (width/height) is bigger for the existing rectangle.
-                    // increase width.
-                    width = (ratio / fittedRatio) * fitted.Width;
+                double targetWidth = fitted.Height * targetRatio;
+                if (targetWidth < fitted.Width)
+                { // increase height instead.
+                    height = fitted.Width / targetRatio;
                 }
                 else
-                { // the fittedRatio (width/height) is bigger for the existing rectangle.
-                    // increase height.
-                    height = (fittedRatio / ratio) * this.Height;
+                { // ok, the width is increased and ratio's match now.
+                    width = targetWidth;
                 }
             }
-            else if (fitted.Width > delta)
+            else
             { // the width is bigger.
-                double ratio = this.Height / this.Width;
-                double fittedRatio = fitted.Height / fitted.Width;
-                if (ratio > fittedRatio)
-                { // the ratio (height/width) is bigger for the existing rectangle.
-                    // increase width.
-                    height = (fittedRatio / ratio) * this.Height;
+                double targetHeight = fitted.Width / targetRatio;
+                if (targetHeight < fitted.Height)
+                { // increase width instead.
+                    width = fitted.Height * targetRatio;
                 }
                 else
-                { // the fittedRatio (width/height) is bigger for the existing rectangle.
-                    // increase height.
-                    width = (ratio / fittedRatio) * fitted.Width;
+                { // ok, the height is increase and ratio's match now.
+                    height = targetHeight;
                 }
             }
             return RectangleF2D.FromBoundsAndCenter(width, height,

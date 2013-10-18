@@ -40,11 +40,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         private readonly Vehicle _vehicle;
 
         /// <summary>
-        /// Holds the data source.
-        /// </summary>
-//        private readonly IDynamicGraphRouterDataSource<CHEdgeData> _dynamicDataSource;
-
-        /// <summary>
         /// Creates a CH data processing target.
         /// </summary>
         /// <param name="dynamicGraph"></param>

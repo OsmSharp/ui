@@ -28,16 +28,6 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
     public class EdgeDifferenceContracted : INodeWeightCalculator
     {
         /// <summary>
-        /// Holds the graph.
-        /// </summary>
-//        private INodeWitnessCalculator _witness_calculator;
-
-        /// <summary>
-        /// Holds the contracted count.
-        /// </summary>
-//        private Dictionary<long, long> _contraction_count;
-
-        /// <summary>
         /// Creates a new edge difference calculator.
         /// </summary>
         /// <param name="witness_calculator"></param>

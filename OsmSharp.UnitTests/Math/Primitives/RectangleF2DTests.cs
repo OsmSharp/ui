@@ -392,12 +392,12 @@ namespace OsmSharp.UnitTests.Math.Primitives
             rectangle = RectangleF2D.FromBoundsAndCenter(System.Math.Sqrt(2) * 2,
                                                          System.Math.Sqrt(2) * 2, 0, 0, 45);
             fitted = rectangle.FitAndKeepAspectRatio(points, 0);
-            Assert.AreEqual(0, fitted.Width, delta);
+            Assert.AreEqual(System.Math.Sqrt(2), fitted.Width, delta);
             Assert.AreEqual(System.Math.Sqrt(2), fitted.Height, delta);
-            Assert.AreEqual(1, fitted.BottomLeft[0], delta);
-            Assert.AreEqual(1, fitted.BottomLeft[1], delta);
-            Assert.AreEqual(2, fitted.TopRight[0], delta);
-            Assert.AreEqual(2, fitted.TopRight[1], delta);
+            Assert.AreEqual(0.5, fitted.BottomLeft[0], delta);
+            Assert.AreEqual(1.5, fitted.BottomLeft[1], delta);
+            Assert.AreEqual(2.5, fitted.TopRight[0], delta);
+            Assert.AreEqual(1.5, fitted.TopRight[1], delta);
         }
 	}
 }

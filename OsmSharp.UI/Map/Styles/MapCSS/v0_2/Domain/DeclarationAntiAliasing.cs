@@ -19,6 +19,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum QualifierAntiAliasingEnum
     {
+        /// <summary>
+        /// Anti aliasing option.
+        /// </summary>
         AntiAliasing
     }
 
@@ -27,8 +30,17 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum AntiAliasingEnum
     {
+        /// <summary>
+        /// Full option.
+        /// </summary>
         Full,
+        /// <summary>
+        /// Test option.
+        /// </summary>
         Text,
+        /// <summary>
+        /// None option.
+        /// </summary>
         None
     }
 }

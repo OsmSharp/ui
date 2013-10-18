@@ -591,7 +591,7 @@ namespace OsmSharp.Data.SQLServer.Osm
         /// <summary>
         /// Returns all ways using the given node.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         public override IList<Way> GetWaysFor(long id)
         {
@@ -603,7 +603,7 @@ namespace OsmSharp.Data.SQLServer.Osm
         /// <summary>
         /// Returns all ways using any of the given nodes.
         /// </summary>
-        /// <param name="nodes"></param>
+        /// <param name="ids"></param>
         /// <returns></returns>
         public IList<Way> GetWaysFor(List<long> ids)
         {

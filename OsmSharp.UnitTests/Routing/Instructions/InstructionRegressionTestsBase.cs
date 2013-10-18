@@ -43,7 +43,7 @@ namespace OsmSharp.UnitTests.Routing.Instructions
         /// <summary>
         /// Creates a router based on the resource.
         /// </summary>
-        /// <param name="routingInterpreter"></param>
+        /// <param name="interpreter"></param>
         /// <param name="manifestResourceName"></param>
         /// <returns></returns>
         protected Router CreateReferenceRouter(IRoutingInterpreter interpreter, string manifestResourceName)

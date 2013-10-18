@@ -45,11 +45,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         private CHEdgeDataComparer _comparer;
 
         /// <summary>
-        /// Holds a flag telling the pre-processor to keep reverse edges.
-        /// </summary>
-//        private bool _keepReverseEdges = false;
-
-        /// <summary>
         /// Creates a new pre-processor.
         /// </summary>
         /// <param name="target"></param>
