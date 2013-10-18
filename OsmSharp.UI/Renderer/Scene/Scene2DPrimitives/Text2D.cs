@@ -62,7 +62,11 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="text"></param>
+        /// <param name="color"></param>
         /// <param name="size"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
+        /// <param name="font"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
         public Text2D(double x, double y, string text, int color, double size, int? haloColor, int? haloRadius, string font,

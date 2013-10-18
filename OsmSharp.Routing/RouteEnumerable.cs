@@ -54,6 +54,7 @@ namespace OsmSharp.Routing
         /// Creates a new OsmSharpRoute enumerable.
         /// </summary>
         /// <param name="route"></param>
+        /// <param name="interval"></param>
         internal RouteEnumerable(Route route, Meter interval)
         {
             _route = route;
@@ -98,6 +99,7 @@ namespace OsmSharp.Routing
         /// Creates a new OsmSharpRoute enumerator.
         /// </summary>
         /// <param name="route"></param>
+        /// <param name="intervalMeter"></param>
         public OsmSharpRouteEnumerator(Route route, double intervalMeter)
         {
             _route = route;

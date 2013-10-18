@@ -18,7 +18,8 @@
 #pragma warning disable 1591
 // CLS compliance checking will not be performed on 'type' because it is not visible from outside this assembly.
 #pragma warning disable 3019
-
+// remove always false warning.
+#pragma warning disable 472
 
 using System.Collections.Generic;
 using Antlr.Runtime;
