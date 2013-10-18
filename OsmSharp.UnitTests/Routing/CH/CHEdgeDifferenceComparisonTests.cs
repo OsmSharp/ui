@@ -31,6 +31,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.UnitTests.Routing.CH
 {
@@ -51,7 +52,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="embeddedName"></param>
         /// <returns></returns>
-        public override Router BuildRouter(IRoutingInterpreter interpreter, string embeddedName)
+        public override Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName)
         {
             if (_data == null)
             {

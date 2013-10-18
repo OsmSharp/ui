@@ -28,6 +28,7 @@ using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.UnitTests.Routing.Instructions
 {
@@ -43,7 +44,7 @@ namespace OsmSharp.UnitTests.Routing.Instructions
         /// <param name="interpreter"></param>
         /// <param name="manifestResourceName"></param>
         /// <returns></returns>
-        protected override Router CreateRouter(IRoutingInterpreter interpreter, string manifestResourceName)
+        protected override Router CreateRouter(IOsmRoutingInterpreter interpreter, string manifestResourceName)
         {
             SimpleTagsIndex tagsIndex = new SimpleTagsIndex();
 

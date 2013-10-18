@@ -29,6 +29,7 @@ using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.UnitTests.Routing
 {
@@ -41,14 +42,14 @@ namespace OsmSharp.UnitTests.Routing
         /// Returns a router test object.
         /// </summary>
         /// <returns></returns>
-        public abstract Router BuildRouter(IRoutingInterpreter interpreter, string embeddedName);
+        public abstract Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName);
 
         /// <summary>
         /// Builds a raw data source.
         /// </summary>
         /// <returns></returns>
         public DynamicGraphRouterDataSource<LiveEdge> BuildDykstraDataSource(
-            IRoutingInterpreter interpreter, string embeddedName)
+            IOsmRoutingInterpreter interpreter, string embeddedName)
         {
             var tagsIndex = new SimpleTagsIndex();
 
@@ -84,7 +85,7 @@ namespace OsmSharp.UnitTests.Routing
         public void TestCompareAll(string embeddedName)
         {
             // build the routing settings.
-            IRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
+            IOsmRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
 
             // get the osm data source.
             IBasicRouterDataSource<LiveEdge> data = this.BuildDykstraDataSource(interpreter, embeddedName);

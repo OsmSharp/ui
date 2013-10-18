@@ -57,7 +57,7 @@ namespace OsmSharp.UnitTests.Routing
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public abstract IBasicRouterDataSource<TEdgeData> BuildData(IRoutingInterpreter interpreter, 
+        public abstract IBasicRouterDataSource<TEdgeData> BuildData(IOsmRoutingInterpreter interpreter, 
             string embeddedString);
 
         /// <summary>

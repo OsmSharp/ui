@@ -32,10 +32,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
 	{
 		/// <summary>
 		/// Evalues the value in this declaration or returns the regular value when there is no eval function.
-		/// </summary>
-		/// <param name="tags"></param>
+        /// </summary>
+        /// <param name="mapCSSObject">Map CSS object.</param>
 		/// <returns></returns>
-		/// <param name="mapCSSObject">Map CSS object.</param>
 		public override float Eval (MapCSSObject mapCSSObject)
 		{
 			if (!string.IsNullOrWhiteSpace (this.EvalFunction)) {

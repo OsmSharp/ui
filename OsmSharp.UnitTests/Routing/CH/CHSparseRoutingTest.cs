@@ -30,6 +30,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.UnitTests.Routing.CH
 {
@@ -68,7 +69,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter,
+        public override IBasicRouterDataSource<CHEdgeData> BuildData(IOsmRoutingInterpreter interpreter,
             string embeddedString)
         {
             var tagsIndex = new SimpleTagsIndex();

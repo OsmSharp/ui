@@ -16,53 +16,38 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Routing.Constraints;
-using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Interpreter.Roads;
-using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Osm;
+using OsmSharp.Routing.Interpreter;
 
-namespace OsmSharp.Routing.Interpreter
+namespace OsmSharp.Routing.Osm.Interpreter
 {
     /// <summary>
-    /// Interprets routing data abstracting the type of data.
+    /// An abstract representation of an osm routing interpreter.
     /// </summary>
-    public interface IRoutingInterpreter
+    public interface IOsmRoutingInterpreter : IRoutingInterpreter
     {
         /// <summary>
-        /// Returns true if the given tag is relevant, false otherwise.
+        /// Returns true if the given object possibly presents a restriction for any vehicle.
         /// </summary>
-        /// <param name="tag"></param>
+        /// <param name="type"></param>
+        /// <param name="tags"></param>
         /// <returns></returns>
-        bool IsRelevant(string tag);
+        bool IsRestriction(OsmGeoType type, TagsCollection tags);
 
         /// <summary>
-        /// Returns true if the given vertices can be traversed in the given order.
+        /// Calculates all restrictions for the given node.
         /// </summary>
-        /// <param name="from"></param>
-        /// <param name="along"></param>
-        /// <param name="to"></param>
+        /// <param name="node"></param>
         /// <returns></returns>
-        bool CanBeTraversed(long from, long along, long to);
+        List<Vehicle> CalculateRestrictions(Node node);
 
         /// <summary>
-        /// Returns the edge interpreter.
+        /// Calculates all restrictions for a given relation.
         /// </summary>
-        IEdgeInterpreter EdgeInterpreter
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Returns the routing constraints.
-        /// </summary>
-        IRoutingConstraints Constraints
-        {
-            get;
-        }
+        /// <param name="completeRelation"></param>
+        /// <returns></returns>
+        List<KeyValuePair<Vehicle, long[]>> CalculateRestrictions(CompleteRelation completeRelation);
     }
 }

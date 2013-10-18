@@ -51,5 +51,37 @@ namespace OsmSharp.Routing.Graph.Router
         {
             get;
         }
+
+
+        /// <summary>
+        /// Adds a restriction to this graph by prohibiting the given route.
+        /// </summary>
+        /// <param name="route"></param>
+        void AddRestriction(uint[] route);
+
+        /// <summary>
+        /// Adds a restriction to this graph by prohibiting the given route for the given vehicle.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="route"></param>
+        void AddRestriction(Vehicle vehicle, uint[] route);
+
+        /// <summary>
+        /// Returns all restricted routes that start in the given vertex.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="vertex"></param>
+        /// <param name="routes"></param>
+        /// <returns></returns>
+        bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes);
+
+        /// <summary>
+        /// Returns true if there is a restriction that ends with the given vertex.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="vertex"></param>
+        /// <param name="routes"></param>
+        /// <returns></returns>
+        bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes);
     }
 }

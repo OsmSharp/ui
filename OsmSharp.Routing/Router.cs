@@ -29,6 +29,7 @@ using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Routers;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.Routing
 {
@@ -59,7 +60,7 @@ namespace OsmSharp.Routing
         /// <param name="reader">The OSM-stream reader.</param>
         /// <param name="interpreter">The routing interpreter.</param>
         /// <returns></returns>
-        public static Router CreateLiveFrom(OsmStreamSource reader, IRoutingInterpreter interpreter)
+        public static Router CreateLiveFrom(OsmStreamSource reader, IOsmRoutingInterpreter interpreter)
         {
             var tagsIndex = new SimpleTagsIndex(); // creates a tagged index.
 

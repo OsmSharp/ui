@@ -45,7 +45,7 @@ namespace OsmSharp.UnitTests.Routing
         /// <param name="basicRouter"></param>
         /// <returns></returns>
         public abstract Router BuildRouter(IBasicRouterDataSource<TEdgeData> data,
-            IRoutingInterpreter interpreter, IBasicRouter<TEdgeData> basicRouter);
+            IOsmRoutingInterpreter interpreter, IBasicRouter<TEdgeData> basicRouter);
 
         /// <summary>
         /// Builds the basic router.
@@ -58,7 +58,7 @@ namespace OsmSharp.UnitTests.Routing
         /// Builds the data.
         /// </summary>
         /// <returns></returns>
-        public abstract IBasicRouterDataSource<TEdgeData> BuildData(IRoutingInterpreter interpreter,
+        public abstract IBasicRouterDataSource<TEdgeData> BuildData(IOsmRoutingInterpreter interpreter,
             string embeddedString, Vehicle vehicle);
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace OsmSharp.UnitTests.Routing
         /// <param name="to"></param>
         /// <param name="interpreter"></param>
         protected bool DoTestForVehicle(Vehicle vehicle, GeoCoordinate from, GeoCoordinate to,
-            IRoutingInterpreter interpreter)
+            IOsmRoutingInterpreter interpreter)
         {
             IBasicRouterDataSource<TEdgeData> data = 
                 this.BuildData(interpreter, "OsmSharp.UnitTests.test_segments.osm", vehicle);

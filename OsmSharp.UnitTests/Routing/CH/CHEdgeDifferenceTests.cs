@@ -28,6 +28,7 @@ using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.UnitTests.Routing.CH
 {
@@ -41,7 +42,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// Builds the data source.
         /// </summary>
         /// <returns></returns>
-        private DynamicGraphRouterDataSource<CHEdgeData> BuildData(IRoutingInterpreter interpreter)
+        private DynamicGraphRouterDataSource<CHEdgeData> BuildData(IOsmRoutingInterpreter interpreter)
         {
             DynamicGraphRouterDataSource<CHEdgeData> data = null;
             if (data == null)
@@ -65,7 +66,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <summary>
         /// Builds the edge difference.
         /// </summary>
-        private EdgeDifference BuildEdgeDifference(IRoutingInterpreter interpreter)
+        private EdgeDifference BuildEdgeDifference(IOsmRoutingInterpreter interpreter)
         {
             DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
 
@@ -78,7 +79,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <summary>
         /// Builds the edge difference.
         /// </summary>
-        private CHPreProcessor BuildCHPreProcessor(IRoutingInterpreter interpreter)
+        private CHPreProcessor BuildCHPreProcessor(IOsmRoutingInterpreter interpreter)
         {
             DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
 
@@ -98,7 +99,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         [Test]
         public void TestCHEdgeDifferenceNonContracted()
         {
-            IRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
+            IOsmRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
             EdgeDifference edgeDifference = this.BuildEdgeDifference(interpreter);
 
             Assert.AreEqual(1, edgeDifference.Calculate(1)); // witness paths from 2<->4.
@@ -132,7 +133,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         [Test]
         public void TestCHEdgeDifferenceContractions()
         {
-            IRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
+            IOsmRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
             CHPreProcessor processor = this.BuildCHPreProcessor(interpreter);
             //processor.InitializeQueue();
             INodeWeightCalculator edgeDifference = processor.NodeWeightCalculator;

@@ -46,7 +46,7 @@ namespace OsmSharp.UnitTests.Routing.Instructions
         /// <param name="interpreter"></param>
         /// <param name="manifestResourceName"></param>
         /// <returns></returns>
-        protected Router CreateReferenceRouter(IRoutingInterpreter interpreter, string manifestResourceName)
+        protected Router CreateReferenceRouter(IOsmRoutingInterpreter interpreter, string manifestResourceName)
         {
             SimpleTagsIndex tagsIndex = new SimpleTagsIndex();
 
@@ -72,7 +72,7 @@ namespace OsmSharp.UnitTests.Routing.Instructions
         /// <param name="interpreter"></param>
         /// <param name="manifestResourceName"></param>
         /// <returns></returns>
-        protected abstract Router CreateRouter(IRoutingInterpreter interpreter, string manifestResourceName);
+        protected abstract Router CreateRouter(IOsmRoutingInterpreter interpreter, string manifestResourceName);
 
         /// <summary>
         /// Issue with generation instructions but where streetnames seem to be stripped.

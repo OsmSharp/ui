@@ -53,7 +53,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the supported vehicle profiles.
         /// </summary>
-        private readonly HashSet<Vehicle> _supportedVehicles; 
+        private readonly HashSet<Vehicle> _supportedVehicles;
 
         /// <summary>
         /// Creates a new osm memory router data source.
@@ -244,5 +244,98 @@ namespace OsmSharp.Routing.Graph
         {
             get { return _graph.VertexCount; }
         }
+
+        #region Restriction
+
+        /// <summary>
+        /// Holds the restricted routes that apply to all vehicles.
+        /// </summary>
+        private Dictionary<uint, List<uint[]>> _restrictedRoutes;
+
+        /// <summary>
+        /// Holds the restricted routes that apply to one vehicle profile.
+        /// </summary>
+        private Dictionary<Vehicle, Dictionary<uint, List<uint[]>>> _restricedRoutesPerVehicle;
+
+        /// <summary>
+        /// Adds a restriction to this graph by prohibiting the given route.
+        /// </summary>
+        /// <param name="route"></param>
+        public void AddRestriction(uint[] route)
+        {
+            if (route == null) { throw new ArgumentNullException(); }
+            if (route.Length == 0) { throw new ArgumentOutOfRangeException("Restricted route has to contain at least one vertex."); }
+
+            if (_restrictedRoutes == null)
+            { // create dictionary.
+                _restrictedRoutes = new Dictionary<uint, List<uint[]>>();
+            }
+            List<uint[]> routes;
+            if (!_restrictedRoutes.TryGetValue(route[0], out routes))
+            {
+                routes = new List<uint[]>();
+                _restrictedRoutes.Add(route[0], routes);
+            }
+            routes.Add(route);
+        }
+
+        /// <summary>
+        /// Adds a restriction to this graph by prohibiting the given route for the given vehicle.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="route"></param>
+        public void AddRestriction(Vehicle vehicle, uint[] route)
+        {
+            if (route == null) { throw new ArgumentNullException(); }
+            if (route.Length == 0) { throw new ArgumentOutOfRangeException("Restricted route has to contain at least one vertex."); }
+
+            if (_restricedRoutesPerVehicle == null)
+            { // create dictionary.
+                _restricedRoutesPerVehicle = new Dictionary<Vehicle, Dictionary<uint, List<uint[]>>>();
+            }
+            Dictionary<uint, List<uint[]>> restrictedRoutes;
+            if (!_restricedRoutesPerVehicle.TryGetValue(vehicle, out restrictedRoutes))
+            { // the vehicle does not have any restrictions yet.
+                restrictedRoutes = new Dictionary<uint, List<uint[]>>();
+                _restricedRoutesPerVehicle.Add(vehicle, restrictedRoutes);
+            }
+            List<uint[]> routes;
+            if (!restrictedRoutes.TryGetValue(route[0], out routes))
+            {
+                routes = new List<uint[]>();
+                restrictedRoutes.Add(route[0], routes);
+            }
+            routes.Add(route);
+        }
+
+        /// <summary>
+        /// Returns all restricted routes that start in the given vertex.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="vertex"></param>
+        /// <param name="routes"></param>
+        /// <returns></returns>
+        public bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes)
+        {
+            Dictionary<uint, List<uint[]>> restrictedRoutes;
+            routes = null;
+            return _restricedRoutesPerVehicle.TryGetValue(vehicle, out restrictedRoutes) &&
+                restrictedRoutes.TryGetValue(vertex, out routes);
+        }
+
+        /// <summary>
+        /// Returns true if there is a restriction that ends with the given vertex.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="vertex"></param>
+        /// <param name="routes"></param>
+        /// <returns></returns>
+        public bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes)
+        {
+            routes = null;
+            return false;
+        }
+
+        #endregion
     }
 }

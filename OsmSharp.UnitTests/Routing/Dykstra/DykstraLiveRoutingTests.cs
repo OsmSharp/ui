@@ -28,6 +28,7 @@ using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.UnitTests.Routing.Dykstra
 {
@@ -64,7 +65,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         /// <param name="interpreter"></param>
         /// <param name="embeddedString"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<LiveEdge> BuildData(IRoutingInterpreter interpreter,
+        public override IBasicRouterDataSource<LiveEdge> BuildData(IOsmRoutingInterpreter interpreter,
             string embeddedString)
         {
             string key = string.Format("Dykstra.Routing.IBasicRouterDataSource<SimpleWeighedEdge>.OSM.{0}",

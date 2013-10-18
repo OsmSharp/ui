@@ -85,7 +85,7 @@ namespace OsmSharp.UnitTests.Routing.CH
         /// <summary>
         /// Holds the interpreter.
         /// </summary>
-        private IRoutingInterpreter _interpreter;
+        private IOsmRoutingInterpreter _interpreter;
 
         /// <summary>
         /// Executes the CH contractions while verifying each step.

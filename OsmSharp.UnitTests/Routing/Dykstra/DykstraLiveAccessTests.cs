@@ -28,6 +28,7 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Osm.Xml.Streams;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.UnitTests.Routing.Dykstra
 {
@@ -41,8 +42,8 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         /// Builds a router.
         /// </summary>
         /// <returns></returns>
-        public override Router BuildRouter(IBasicRouterDataSource<LiveEdge> data, 
-            IRoutingInterpreter interpreter,
+        public override Router BuildRouter(IBasicRouterDataSource<LiveEdge> data,
+            IOsmRoutingInterpreter interpreter,
                 IBasicRouter<LiveEdge> basicRouter)
         {
             // initialize the router.
@@ -66,7 +67,7 @@ namespace OsmSharp.UnitTests.Routing.Dykstra
         /// <param name="embeddedString"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public override IBasicRouterDataSource<LiveEdge> BuildData(IRoutingInterpreter interpreter,
+        public override IBasicRouterDataSource<LiveEdge> BuildData(IOsmRoutingInterpreter interpreter,
                                                                             string embeddedString, Vehicle vehicle)
         {
             var tagsIndex = new SimpleTagsIndex();
