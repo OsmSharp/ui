@@ -31,6 +31,27 @@ namespace OsmSharp.Logging
         private static TraceSource _source = new TraceSource("OsmSharp", SourceLevels.All);
 
         /// <summary>
+        /// Holds the logging enabled flag.
+        /// </summary>
+        private static bool _loggingEnabled = true;
+
+        /// <summary>
+        /// Disables all logging.
+        /// </summary>
+        public static void Disable()
+        {
+            _loggingEnabled = false;
+        }
+
+        /// <summary>
+        /// Enables all logging.
+        /// </summary>
+        public static void Enable()
+        {
+            _loggingEnabled = true;
+        }
+
+        /// <summary>
         /// Writes a trace event message.
         /// </summary>
         /// <param name="name"></param>
@@ -38,7 +59,10 @@ namespace OsmSharp.Logging
         /// <param name="message"></param>
         public static void TraceEvent(string name, TraceEventType type, string message)
         {
-            _source.TraceEvent(type, 0, message);
+            if (_loggingEnabled)
+            {
+                _source.TraceEvent(type, 0, message);
+            }
         }
 
         /// <summary>
@@ -50,7 +74,10 @@ namespace OsmSharp.Logging
         /// <param name="args"></param>
         public static void TraceEvent(string name, TraceEventType type, string message, params object[] args)
         {
-            _source.TraceEvent(type, 0, message, args);
+            if (_loggingEnabled)
+            {
+                _source.TraceEvent(type, 0, message, args);
+            }
         }
 
         /// <summary>
@@ -59,7 +86,10 @@ namespace OsmSharp.Logging
         /// <param name="listener"></param>
         public static void RegisterListener(TraceListener listener)
         {
-            _source.Listeners.Add(listener);
+            if (_loggingEnabled)
+            {
+                _source.Listeners.Add(listener);
+            }
         }
 
 #if !(WINDOWS_PHONE || __ANDROID__ || IOS)

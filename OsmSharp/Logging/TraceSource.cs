@@ -115,6 +115,9 @@ namespace System.Diagnostics
 			this.TraceEvent (type, id, message);
         }
 
+        /// <summary>
+        /// The list of listeners.
+        /// </summary>
         public List<TraceListener> Listeners { get; set; }
     }
 
