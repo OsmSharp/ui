@@ -136,5 +136,14 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
                     string.Format("Deserialized from scene at zoom {0} and idx {1}.", zoomFactor, idx));
             }
         }
+
+		/// <summary>
+		/// Clears all information in this source.
+		/// </summary>
+		public void Clear() {
+			if (_loadedScenes != null) {
+				_loadedScenes.Clear ();
+			}
+		}
     }
 }
