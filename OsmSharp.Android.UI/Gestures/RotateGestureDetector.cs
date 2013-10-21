@@ -78,45 +78,64 @@ namespace Android.Views
 		/// <param name="e">E.</param>
 		protected override void HandleInProgressEvent (MotionEventActions actionCode, MotionEvent e)
 		{
-			switch (actionCode) {
-			case MotionEventActions.PointerDown:
-				// At least the second finger is on the screen now.
+            if (e.PointerCount > 1)
+            {
+                switch (actionCode)
+                {
+                    case MotionEventActions.PointerDown:
+                        // At least the second finger is on the screen now.
 
-				ResetState ();
-				_previousEvent = MotionEvent.Obtain (e);
-				_timeDelta = 0;
+                        ResetState();
+                        _previousEvent = MotionEvent.Obtain(e);
+                        _timeDelta = 0;
 
-				UpdateStateByEvent (e);
+                        UpdateStateByEvent(e);
 
-				// See if we have a sloppy gesture.
-				_sloppyGesture = this.IsSloppyGesture (e);
-				if (!_sloppyGesture) {
-					// No, start gesture now.
-					_gestureInProgress = _listener.OnRotateBegin (this);
-				}
-				break;
-			case MotionEventActions.Move:
-				if (!_sloppyGesture) {
-					break;
-				}
+                        // See if we have a sloppy gesture.
+                        _sloppyGesture = this.IsSloppyGesture(e);
+                        if (!_sloppyGesture)
+                        {
+                            // No, start gesture now.
+                            _gestureInProgress = _listener.OnRotateBegin(this);
+                        }
+                        break;
+                    case MotionEventActions.Move:
+                        if (!_sloppyGesture)
+                        {
+                            break;
+                        }
 
-				// See if we still have a sloppy gesture
-				_sloppyGesture = this.IsSloppyGesture (e);
-				if (!_sloppyGesture) {
-					_gestureInProgress = _listener.OnRotateBegin (this);
-				}
+                        // See if we still have a sloppy gesture
+                        _sloppyGesture = this.IsSloppyGesture(e);
+                        if (!_sloppyGesture)
+                        {
+                            _gestureInProgress = _listener.OnRotateBegin(this);
+                        }
 
-				break;
-			case MotionEventActions.PointerUp:
-				if (!_sloppyGesture) {
-					break;
-				}
+                        break;
+                    case MotionEventActions.PointerUp:
+                        if (!_sloppyGesture)
+                        {
+                            break;
+                        }
 
-				break;
-			}
+                        break;
+                }
+            }
+            else
+            { // the gesture has to stop!
+                _gestureInProgress = false;
+                _listener.OnRotateEnd(this);
+
+                ResetState();
+            }
 		}
 
-
+        /// <summary>
+        /// Called when the current event occurred when a gesture has to be started.
+        /// </summary>
+        /// <param name="actionCode"></param>
+        /// <param name="e"></param>
 		protected override void HandleStartProgressEvent (MotionEventActions actionCode, MotionEvent e)
 		{
 			switch (actionCode) {

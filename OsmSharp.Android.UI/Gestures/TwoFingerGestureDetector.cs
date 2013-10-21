@@ -179,6 +179,17 @@ namespace Android.Views
 			}
 			return false;
 		}
+
+        protected override void ResetState()
+        {
+            _previousEvent = null;
+            _prevFingerDiffX = 0;
+            _prevFingerDiffY = 0;
+            _currFingerDiffX = 0;
+            _currFingerDiffY = 0;
+
+            base.ResetState();
+        }
 	}
 }
 

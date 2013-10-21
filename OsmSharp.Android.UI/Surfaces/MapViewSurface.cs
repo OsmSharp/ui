@@ -5,13 +5,6 @@
 // 
 // OsmSharp is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
-// OsmSharp - OpenStreetMap (OSM) SDK
-// Copyright (C) 2013 Abelshausen Ben
-// 
-// This file is part of OsmSharp.
-// 
-// OsmSharp is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 2 of the License, or
 // (at your option) any later version.
 // 
@@ -555,6 +548,10 @@ namespace OsmSharp.Android.UI
 		public bool OnRotate (RotateGestureDetector detector)
 		{
 			_deltaDegrees = detector.RotationDegreesDelta;
+
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+                string.Format("OnRotate:[{0},{1}] {2}s {3}d", _deltaX, _deltaY, _deltaScale, _deltaDegrees));
+
 			return true;
 		}
 
@@ -563,7 +560,10 @@ namespace OsmSharp.Android.UI
 			_deltaScale = 1;
 			_deltaDegrees = 0;
 			_deltaX = 0;
-			_deltaY = 0;
+            _deltaY = 0;
+
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+                string.Format("OnRotateBegin"));
 
 			return true;
 		}
@@ -571,6 +571,9 @@ namespace OsmSharp.Android.UI
 		public void OnRotateEnd (RotateGestureDetector detector)
         {
             _deltaDegrees = 0;
+
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+                string.Format("OnRotateEnd"));
 		}
 
 		#endregion
@@ -607,9 +610,6 @@ namespace OsmSharp.Android.UI
 
         public bool OnTap(TapGestureDetector detector)
         {
-            OsmSharp.Logging.Log.TraceEvent("MapViewSurface", System.Diagnostics.TraceEventType.Information,
-                "Some message...");
-
             if (this.MapTapEvent != null)
             {
                 // recreate the view.
@@ -667,8 +667,8 @@ namespace OsmSharp.Android.UI
 				// stop the animation.
                 this.StopCurrentAnimation();
 
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-                    string.Format("OnTouch:[{0},{1}] {2}s {3}d", _deltaX, _deltaY, _deltaScale, _deltaDegrees));
+                //OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+                //    string.Format("OnTouch:[{0},{1}] {2}s {3}d", _deltaX, _deltaY, _deltaScale, _deltaDegrees));
 
 				// recreate the view.
 				View2D view = this.CreateView ();
@@ -689,6 +689,11 @@ namespace OsmSharp.Android.UI
 					View2D rotatedView = view.RotateAroundCenter ((Degree)(-_deltaDegrees));
 					_mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
 				}
+
+                _deltaScale = 1;
+                _deltaDegrees = 0;
+                _deltaX = 0;
+                _deltaY = 0;
 
 				this.NotifyMovement ();
             }
