@@ -23,6 +23,8 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
 using System;
+using OsmSharp.Units.Distance;
+using OsmSharp.Routing.Instructions;
 
 namespace OsmSharp.UI.Animations.Navigation
 {
@@ -99,6 +101,28 @@ namespace OsmSharp.UI.Animations.Navigation
             // animate to the given parameter (zoom, location, tilt).
             _animator.Stop();
             _animator.Start(center, zoom, tilt, lastTrackInterval.Subtract(new TimeSpan(0, 0, 0, 0, 50)));
+        }
+
+        /// <summary>
+        /// Returns the distance between the current position and the route.
+        /// </summary>
+        public Meter DistanceNextInstruction
+        {
+            get
+            {
+                return _routeTracker.DistanceNextInstruction;
+            }
+        }
+
+        /// <summary>
+        /// Returns the next instruction.
+        /// </summary>
+        public Instruction NextInstruction
+        {
+            get
+            {
+                return _routeTracker.NextInstruction;
+            }
         }
     }
 }
