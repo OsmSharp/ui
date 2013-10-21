@@ -76,7 +76,7 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Holds the maplayout.
 		/// </summary>
-		private IMapView _mapLayout;
+		private MapView _mapView;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.Android.UI.MapViewSurface"/> class.
@@ -100,42 +100,43 @@ namespace OsmSharp.Android.UI
 
 		}
 
-		/// <summary>
-		/// Initialize this instance.
-		/// </summary>
-		public void Initialize (IMapView mapLayout)
-		{
-			_mapLayout = mapLayout;
-			this.SetWillNotDraw (false);
+        /// <summary>
+        /// Initialize implementation from IMapView.
+        /// </summary>
+        /// <param name="mapLayout"></param>
+        void IMapViewSurface.Initialize(MapView mapLayout)
+        {
+            _mapView = mapLayout;
+            this.SetWillNotDraw(false);
 
-			this.MapMinZoomLevel = 10;
-			this.MapMaxZoomLevel = 20;
+            this.MapMinZoomLevel = 10;
+            this.MapMaxZoomLevel = 20;
 
-			_renderer = new MapRenderer<global::Android.Graphics.Canvas>(
-				new CanvasRenderer2D());
+            _renderer = new MapRenderer<global::Android.Graphics.Canvas>(
+                new CanvasRenderer2D());
 
-			// initialize the gesture detection.
-			this.SetOnTouchListener(this);
-			_scaleGestureDetector = new ScaleGestureDetector(
-				this.Context, this);
-			_rotateGestureDetector = new RotateGestureDetector (
-				this.Context, this);
-			_moveGestureDetector = new MoveGestureDetector (
-				this.Context, this);
+            // initialize the gesture detection.
+            this.SetOnTouchListener(this);
+            _scaleGestureDetector = new ScaleGestureDetector(
+                this.Context, this);
+            _rotateGestureDetector = new RotateGestureDetector(
+                this.Context, this);
+            _moveGestureDetector = new MoveGestureDetector(
+                this.Context, this);
             _tagGestureDetector = new TapGestureDetector(
                 this.Context, this);
 
-			_makerLayer = new LayerPrimitives(
-				new WebMercator());
-			
-			// initialize all the caching stuff.
-			_cacheRenderer = new MapRenderer<global::Android.Graphics.Canvas>(
-				new CanvasRenderer2D());
-			_scene = new Scene2DSimple ();
-			_scene.BackColor = SimpleColor.FromKnownColor (KnownColor.White).Value;
+            _makerLayer = new LayerPrimitives(
+                new WebMercator());
 
-			new Timer(InvalidateSimple, null, 0, 50);
-		}
+            // initialize all the caching stuff.
+            _cacheRenderer = new MapRenderer<global::Android.Graphics.Canvas>(
+                new CanvasRenderer2D());
+            _scene = new Scene2DSimple();
+            _scene.BackColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
+
+            new Timer(InvalidateSimple, null, 0, 50);
+        }
 
 		/// <summary>
 		/// Holds the cached scene.
@@ -173,16 +174,6 @@ namespace OsmSharp.Android.UI
 
 			_render = true;
 		}
-
-		/// <summary>
-		/// Occurs when the map was tapped at a certain location.
-		/// </summary>
-		public event MapViewEvents.MapTapEventDelegate MapTapEvent;
-
-		/// <summary>
-		/// Occurs when the map was touched for a longer time at a certain location.
-		/// </summary>
-		public event MapViewEvents.MapTapEventDelegate MapHoldEvent;
 
 		/// <summary>
 		/// Invalidates while rendering.
@@ -496,7 +487,7 @@ namespace OsmSharp.Android.UI
 			if (this.Width > 0 && this.Height > 0) {
 				View2D view = this.CreateView ();
 
-				_mapLayout.NotifyMapChange (this.Width, this.Height, view, this.Map.Projection);
+				_mapView.NotifyMapChange (this.Width, this.Height, view, this.Map.Projection);
 			}
 		}
 
@@ -608,24 +599,27 @@ namespace OsmSharp.Android.UI
 
         #region IOnTapGestureListener implementation
 
+        /// <summary>
+        /// Called when a tab is detected.
+        /// </summary>
+        /// <param name="detector"></param>
+        /// <returns></returns>
         public bool OnTap(TapGestureDetector detector)
         {
-            if (this.MapTapEvent != null)
-            {
-                // recreate the view.
-                View2D view = this.CreateView();
+            // recreate the view.
+            View2D view = this.CreateView();
 
-                // calculate the new center in pixels.
-                double x = detector.X;
-                double y = detector.Y;
+            // calculate the new center in pixels.
+            double x = detector.X;
+            double y = detector.Y;
 
-                // calculate the new center from the view.
-                double[] sceneCenter = view.FromViewPort(this.Width, this.Height,
-                                                          x, y);
+            // calculate the new center from the view.
+            double[] sceneCenter = view.FromViewPort(this.Width, this.Height,
+                                                      x, y);
 
-                // convert to the projected center.
-                this.MapTapEvent(this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]));
-            }
+            // convert to the projected center.
+            _mapView.RaiseMapTapEvent(this.Map.Projection.ToGeoCoordinates(sceneCenter[0], sceneCenter[1]));
+
             return true;
         }
 

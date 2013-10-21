@@ -18,34 +18,29 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI;
+using OsmSharp.UI.Animations;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Units.Angle;
-using OsmSharp.UI.Animations;
 
 namespace OsmSharp.Android.UI
 {
 	/// <summary>
 	/// Map view handling the map display and pan-zoon markers and touch-events.
 	/// </summary>
-	public class MapView<T> : FrameLayout, IMapMarkerHost, IMapView
-		where T : View, IMapViewSurface
+    public class MapView : FrameLayout, IMapMarkerHost, IMapView
 	{
 		/// <summary>
 		/// Holds the mapview.
 		/// </summary>
-		private T _mapView;
+        private IMapViewSurface _mapView;
+
 		/// <summary>
 		/// Holds the markers.
 		/// </summary>
@@ -56,7 +51,7 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <param name="context">Context.</param>
 		/// <param name="surface">Surface.</param>
-		public MapView (Context context, T surface)
+		public MapView (Context context, IMapViewSurface surface)
 			: base(context)
 		{
 			_mapView = surface;
@@ -69,7 +64,24 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Occurs when the map was tapped at a certain location.
 		/// </summary>
-		public event MapViewEvents.MapTapEventDelegate MapTapEvent;
+        public event MapViewEvents.MapTapEventDelegate MapTapEvent;
+
+        /// <summary>
+        /// Occurs when the map was touched for a longer time at a certain location.
+        /// </summary>
+        public event MapViewEvents.MapTapEventDelegate MapHoldEvent;
+
+        /// <summary>
+        /// Raises the map tap event.
+        /// </summary>
+        /// <param name="coordinate"></param>
+        internal void RaiseMapTapEvent(GeoCoordinate coordinate)
+        {
+            if (this.MapTapEvent != null)
+            {
+                this.MapTapEvent(coordinate);
+            }
+        }
 
 		/// <summary>
 		/// Returns the mapmarkers list.
@@ -154,7 +166,7 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		private void Initialize ()
 		{			
-			this.AddView (_mapView);
+			this.AddView (_mapView as View);
 		}
 
 		/// <summary>
@@ -297,6 +309,9 @@ namespace OsmSharp.Android.UI
 			}
 		}
 
+        /// <summary>
+        /// Invalidates.
+        /// </summary>
         void IMapView.Invalidate()
         {
             _mapView.Change();

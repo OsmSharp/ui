@@ -8,7 +8,7 @@ namespace OsmSharp.Android.UI
 	/// </summary>
 	public static class MapViewEvents
 	{
-		public delegate void MapTapEventDelegate(GeoCoordinate geoCoordinate);
+		public delegate void MapTapEventDelegate(GeoCoordinate coordinate);
 	}
 }
 

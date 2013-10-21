@@ -28,13 +28,13 @@ namespace OsmSharp.Android.UI
 	/// <summary>
 	/// Abstract version of a map view surface.
 	/// </summary>
-	public interface IMapViewSurface
+    public interface IMapViewSurface
 	{
         /// <summary>
         /// Initializes this map view surface.
         /// </summary>
         /// <param name="mapLayout"></param>
-        void Initialize(IMapView mapLayout);
+        void Initialize(MapView mapLayout);
 
 		/// <summary>
 		/// Notifies change.

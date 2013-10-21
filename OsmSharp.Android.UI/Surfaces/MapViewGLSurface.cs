@@ -413,7 +413,7 @@ namespace OsmSharp.Android.UI
 
 		#endregion
 
-        public void Initialize(IMapView mapLayout)
+        public void Initialize(MapView mapLayout)
         {
 
         }
