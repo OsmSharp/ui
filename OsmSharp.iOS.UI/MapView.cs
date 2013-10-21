@@ -368,24 +368,28 @@ namespace OsmSharp.iOS.UI
 					this.Change (); // notifies change.
 				} else if (pan.State == UIGestureRecognizerState.Began) {
 					_beforePan = this.MapCenter;
-				} else if (pan.State == UIGestureRecognizerState.Cancelled ||
-					pan.State == UIGestureRecognizerState.Failed) {
-					_beforePan = null;
-				} else if(_beforePan != null) {
-					this.MapCenter = _beforePan;
+                }
+                else if (pan.State == UIGestureRecognizerState.Cancelled ||
+                  pan.State == UIGestureRecognizerState.Failed)
+                {
+                    _beforePan = null;
+                }
+                else if (pan.State == UIGestureRecognizerState.Changed)
+                {
+                    this.MapCenter = _beforePan;
 
-					View2D view = this.CreateView (_rect);
-					double centerXPixels = _rect.Width / 2.0f - offset.X;
-					double centerYPixels = _rect.Height / 2.0f - offset.Y;
+                    View2D view = this.CreateView(_rect);
+                    double centerXPixels = _rect.Width / 2.0f - offset.X;
+                    double centerYPixels = _rect.Height / 2.0f - offset.Y;
 
-					double[] sceneCenter = view.FromViewPort (_rect.Width, _rect.Height, 
-					                                          centerXPixels, centerYPixels);
+                    double[] sceneCenter = view.FromViewPort(_rect.Width, _rect.Height,
+                                                              centerXPixels, centerYPixels);
 
-					this.MapCenter = this.Map.Projection.ToGeoCoordinates (
-						sceneCenter [0], sceneCenter [1]);
-					
-					this.InvokeOnMainThread (InvalidateMap);
-				}
+                    this.MapCenter = this.Map.Projection.ToGeoCoordinates(
+                        sceneCenter[0], sceneCenter[1]);
+
+                    this.InvokeOnMainThread(InvalidateMap);
+                }
 			}
 		}
 

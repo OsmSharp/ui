@@ -55,6 +55,8 @@ namespace OsmSharp.Android.UI.Sample
 		{
 			base.OnCreate (bundle);
 
+            OsmSharp.Logging.Log.Enable();
+
 //			OsmSharp.IO.Output.OutputStreamHost.RegisterOutputStream (
 //				new OsmSharp.Android.UI.IO.Output.ConsoleOutputStream ());
 			
@@ -146,7 +148,7 @@ namespace OsmSharp.Android.UI.Sample
 
 //            _mapView = new MapView<MapGLView>(this, new MapGLView(this));
 
-            _mapView = new MapView<MapViewSurface>(this, new MapViewSurface(this));
+            _mapView = new MapView(this, new MapViewSurface(this));
             _mapView.Map = map;
 
             (_mapView as IMapView).AutoInvalidate = true;
@@ -162,6 +164,7 @@ namespace OsmSharp.Android.UI.Sample
             //MapViewAnimator mapViewAnimator = new MapViewAnimator(mapLayout);
             _mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
             {
+                _mapView.AddMarker(geoCoordinate).Click += new EventHandler(MainActivity_Click);
                 //mapViewAnimator.Stop();
                 //mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
             };
@@ -172,14 +175,23 @@ namespace OsmSharp.Android.UI.Sample
 
             _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker);
 
-            Timer timer = new Timer(1000);
-            timer.Elapsed += new ElapsedEventHandler(TimerHandler);
-            timer.Start();
+            //Timer timer = new Timer(1000);
+            //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
+            //timer.Start();
 
 			SetContentView (layout);
 		}
 
-        private MapView<MapViewSurface> _mapView;
+        void MainActivity_Click(object sender, EventArgs e)
+        {
+            if (sender is MapMarker)
+            {
+                var marker = sender as MapMarker;
+                _mapView.RemoveMarker(marker);
+            }
+        }
+
+        private MapView _mapView;
 
         private RouteTrackerAnimator _routeTrackerAnimator;
 
