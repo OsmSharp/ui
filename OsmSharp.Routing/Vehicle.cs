@@ -346,8 +346,11 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("residential", string.Empty);
             AccessibleTags.Add("unclassified", string.Empty);
             AccessibleTags.Add("secondary", string.Empty);
+            AccessibleTags.Add("secondary_link", string.Empty);
             AccessibleTags.Add("primary", string.Empty);
+            AccessibleTags.Add("primary_link", string.Empty);
             AccessibleTags.Add("tertiary", string.Empty);
+            AccessibleTags.Add("tertiary_link", string.Empty);
             AccessibleTags.Add("trunk", string.Empty);
             AccessibleTags.Add("motorway", string.Empty);
         }
