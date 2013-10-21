@@ -56,11 +56,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         private const int BlockVertexSize = 100;
 
         /// <summary>
-        /// Holds the compression flag.
-        /// </summary>
-//        private readonly bool _compress;
-
-        /// <summary>
         /// Holds the runtime type model.
         /// </summary>
         private readonly RuntimeTypeModel _runtimeTypeModel;

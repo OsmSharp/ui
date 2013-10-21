@@ -88,7 +88,7 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
         /// <summary>
         /// Create a SQLServerSimpleSchemaDataProcessorTarget
         /// </summary>
-        /// <param name="connectionString">Connection to the database</param>
+        /// <param name="connection">Connection to the database</param>
         public SQLServerOsmStreamTarget(SqlConnection connection)
         {
             _connection = connection;
@@ -98,7 +98,7 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
         /// <summary>
         /// Create a SQLServerSimpleSchemaDataProcessorTarget
         /// </summary>
-        /// <param name="connectionString">Connection to the database</param>
+        /// <param name="connection">Connection to the database</param>
         /// <param name="createSchema">If true, will drop and re-create the schema</param>
         public SQLServerOsmStreamTarget(SqlConnection connection, bool createSchema)
         {

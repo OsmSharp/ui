@@ -143,6 +143,7 @@
     <Compile Include="Graph\IDynamicGraphEdgeData.cs" />
     <Compile Include="Graph\IDynamicGraphReadOnly.cs" />
     <Compile Include="Graph\MemoryDynamicGraph.cs" />
+    <Compile Include="Graph\Restrictions\GraphRestriction.cs" />
     <Compile Include="Navigation\RouteTracker.cs" />
     <Compile Include="Osm\Graphs\MemoryDynamicGraphSimpleWeighed.cs" />
     <Compile Include="Osm\Graphs\LiveEdge.cs" />
@@ -179,6 +180,7 @@
     <Compile Include="Interpreter\Constraints\RoutingLabel.cs" />
     <Compile Include="Interpreter\Roads\IEdgeInterpreter.cs" />
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
+    <Compile Include="Osm\Interpreter\IOsmRoutingInterpreter.cs" />
     <Compile Include="Osm\Streams\CHEdgeGraphFileStreamTarget.cs" />
     <Compile Include="Router.cs" />
     <Compile Include="IRouterExtensions.cs" />

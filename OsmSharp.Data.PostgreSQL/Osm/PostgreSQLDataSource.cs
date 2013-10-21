@@ -78,7 +78,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// <summary>
         /// Creates a datasource.
         /// </summary>
-        /// <param name="_connection"></param>
+        /// <param name="connection"></param>
         public PostgreSQLDataSource(NpgsqlConnection connection)
         {
             _connection = connection;
@@ -455,7 +455,6 @@ namespace OsmSharp.Data.PostgreSQL.Osm
         /// Returns all ways but use the existing nodes to fill the Nodes-lists.
         /// </summary>
         /// <param name="ids"></param>
-        /// <param name="nodes"></param>
         /// <returns></returns>
         public override IList<Way> GetWays(IList<long> ids)
         {

@@ -32,10 +32,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
 	{
 		/// <summary>
 		/// Evalues the value in this declaration or returns the regular value when there is no eval function.
-		/// </summary>
-		/// <param name="tags"></param>
+        /// </summary>
+        /// <param name="mapCSSObject">Map CSS object.</param>
 		/// <returns></returns>
-		/// <param name="mapCSSObject">Map CSS object.</param>
 		public override float Eval (MapCSSObject mapCSSObject)
 		{
 			if (!string.IsNullOrWhiteSpace (this.EvalFunction)) {
@@ -50,15 +49,45 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum DeclarationFloatEnum
     {
+        /// <summary>
+        /// Width option.
+        /// </summary>
         Width,
+        /// <summary>
+        /// Fill opacity option.
+        /// </summary>
         FillOpacity,
+        /// <summary>
+        /// Opacity option.
+        /// </summary>
         Opacity,
+        /// <summary>
+        /// Casing opacity option.
+        /// </summary>
         CasingOpacity,
+        /// <summary>
+        /// Extrude edge opacity.
+        /// </summary>
         ExtrudeEdgeOpacity,
+        /// <summary>
+        /// Extrude face opacity.
+        /// </summary>
         ExtrudeFaceOpacity,
+        /// <summary>
+        /// Extrude edge width opacity.
+        /// </summary>
         ExtrudeEdgeWidth,
+        /// <summary>
+        /// Icon opacity.
+        /// </summary>
         IconOpacity,
+        /// <summary>
+        /// Text opacity.
+        /// </summary>
         TextOpacity,
+        /// <summary>
+        /// Casing width opacity.
+        /// </summary>
         CasingWidth
     }
 }

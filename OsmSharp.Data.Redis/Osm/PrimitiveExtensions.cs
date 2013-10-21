@@ -58,7 +58,6 @@ namespace OsmSharp.Data.Redis.Osm
         /// Converts the given way to a redis way.
         /// </summary>
         /// <param name="way"></param>
-        /// <param name="nodes"></param>
         /// <returns></returns>
         public static RedisWay ConvertTo(Way way)
         {
@@ -180,7 +179,6 @@ namespace OsmSharp.Data.Redis.Osm
         /// Converts the given way from a redis way.
         /// </summary>
         /// <param name="redisWay"></param>
-        /// <param name="nodes"></param>
         /// <returns></returns>
         public static Way ConvertFrom(RedisWay redisWay)
         {
@@ -337,7 +335,7 @@ namespace OsmSharp.Data.Redis.Osm
         /// <summary>
         /// Builds a redis key for this given way.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="way"></param>
         /// <returns></returns>
         public static string GetRedisKey(this Way way)
         {
@@ -357,7 +355,7 @@ namespace OsmSharp.Data.Redis.Osm
         /// <summary>
         /// Builds a redis key for this given relation.
         /// </summary>
-        /// <param name="node"></param>
+        /// <param name="relation"></param>
         /// <returns></returns>
         public static string GetRedisKey(this Relation relation)
         {

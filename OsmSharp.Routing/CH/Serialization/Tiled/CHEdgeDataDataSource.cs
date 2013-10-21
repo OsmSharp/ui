@@ -460,5 +460,26 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         }
 
         #endregion
+
+
+        public void AddRestriction(uint[] route)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void AddRestriction(Vehicle vehicle, uint[] route)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetRestrictionAsStart(Vehicle vehicle, uint vertex, out List<uint[]> routes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetRestrictionAsEnd(Vehicle vehicle, uint vertex, out List<uint[]> routes)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

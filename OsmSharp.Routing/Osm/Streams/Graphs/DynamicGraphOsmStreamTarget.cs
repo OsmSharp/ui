@@ -22,8 +22,10 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Interpreter.Roads;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Osm.Cache;
+using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
@@ -36,17 +38,22 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds the dynamic graph.
         /// </summary>
-        private readonly IDynamicGraph<TEdgeData> _dynamicGraph;
+        private readonly IDynamicGraphRouterDataSource<TEdgeData> _dynamicGraph;
 
         /// <summary>
         /// The interpreter for osm data.
         /// </summary>
-        private readonly IRoutingInterpreter _interpreter;
+        private readonly IOsmRoutingInterpreter _interpreter;
 
         /// <summary>
         /// Holds the tags index.
         /// </summary>
         private readonly ITagsIndex _tagsIndex;
+
+        /// <summary>
+        /// Holds the osm data cache.
+        /// </summary>
+        private readonly OsmDataCache _dataCache;
 
         /// <summary>
         /// True when this target is in pre-index mode.
@@ -69,8 +76,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="dynamicGraph">The graph that will be filled.</param>
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
         /// <param name="edgeComparer"></param>
-        protected DynamicGraphOsmStreamWriter(IDynamicGraph<TEdgeData> dynamicGraph,
-            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer)
+        protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
+            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer)
             : this(dynamicGraph, interpreter, edgeComparer, new SimpleTagsIndex(), new Dictionary<long, uint>())
         {
 
@@ -83,8 +90,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="interpreter">The interpreter to generate the edge data.</param>
         /// <param name="edgeComparer"></param>
         /// <param name="tagsIndex"></param>
-        protected DynamicGraphOsmStreamWriter(IDynamicGraph<TEdgeData> dynamicGraph,
-            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsIndex tagsIndex)
+        protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
+            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsIndex tagsIndex)
             : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new Dictionary<long, uint>())
         {
 
@@ -98,8 +105,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="edgeComparer"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
-        protected DynamicGraphOsmStreamWriter(IDynamicGraph<TEdgeData> dynamicGraph,
-            IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsIndex tagsIndex,
+        protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
+            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsIndex tagsIndex,
             IDictionary<long, uint> idTransformations)
             : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, idTransformations, null)
         {
@@ -116,7 +123,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="idTransformations"></param>
         /// <param name="box"></param>
         protected DynamicGraphOsmStreamWriter(
-            IDynamicGraph<TEdgeData> dynamicGraph, IRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, 
+            IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, 
             ITagsIndex tagsIndex, IDictionary<long, uint> idTransformations,
             GeoCoordinateBox box)
         {
@@ -130,6 +137,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             _preIndexMode = true;
             _preIndex = new HashSet<long>();
             _usedTwiceOrMore = new HashSet<long>();
+
+            _dataCache = new OsmDataCacheMemory();
         }
 
         /// <summary>
@@ -179,6 +188,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         {
             if (!_preIndexMode)
             {
+                if (_nodesToCache != null &&
+                    _nodesToCache.Contains(node.Id.Value))
+                { // cache this node?
+                    _dataCache.AddNode(node);
+                }
+
                 if (_preIndex != null && _preIndex.Contains(node.Id.Value))
                 { // only save the coordinates for relevant nodes.
                     // save the node-coordinates.
@@ -204,6 +219,29 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                             _bounds = _bounds + new GeoCoordinateBox(
                                 new GeoCoordinate(node.Latitude.Value, node.Longitude.Value),
                                 new GeoCoordinate(node.Latitude.Value, node.Longitude.Value));
+                        }
+
+                        // add the node as a possible restriction.
+                        if (_interpreter.IsRestriction(OsmGeoType.Node, node.Tags))
+                        { // tests quickly if a given node is possibly a restriction.
+                            List<Vehicle> vehicles = _interpreter.CalculateRestrictions(node);
+                            if(vehicles != null &&
+                                vehicles.Count > 0)
+                            { // add all the restrictions.
+                                uint vertexId = this.AddRoadNode(node.Id.Value).Value; // will always exists, has just been added to coordinates.
+                                uint[] restriction = new uint[] { vertexId };
+                                if (vehicles.Contains(null))
+                                { // restriction is valid for all vehicles.
+                                    _dynamicGraph.AddRestriction(restriction);
+                                }
+                                else
+                                { // restriction is restricted to some vehicles only.
+                                    foreach (Vehicle vehicle in vehicles)
+                                    {
+                                        _dynamicGraph.AddRestriction(vehicle, restriction);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -232,6 +270,12 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="way"></param>
         public override void AddWay(Way way)
         {
+            if (!_preIndexMode && _waysToCache != null &&
+                _waysToCache.Contains(way.Id.Value))
+            { // cache this way?
+               _dataCache.AddWay(way);
+            }
+
             // initialize the way interpreter.
             if (_interpreter.EdgeInterpreter.IsRoutable(way.Tags))
             { // the way is a road.
@@ -374,25 +418,104 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                               TagsCollection tags);
 
         /// <summary>
+        /// Holds the ways to cache to complete the restriction reations.
+        /// </summary>
+        private HashSet<long> _waysToCache;
+
+        /// <summary>
+        /// Holds the node to cache to complete the restriction relations.
+        /// </summary>
+        private HashSet<long> _nodesToCache;
+
+        /// <summary>
         /// Adds a given relation.
         /// </summary>
         /// <param name="relation"></param>
         public override void AddRelation(Relation relation)
         {
+            if (_interpreter.IsRestriction(OsmGeoType.Relation, relation.Tags))
+            {
+                // add the node as a possible restriction.
+                if (!_preIndexMode)
+                { // tests quickly if a given node is possibly a restriction.
+                    // this relation is a relation that represents a restriction all members should have been cached.
+                    CompleteRelation completeRelation = CompleteRelation.CreateFrom(relation, _dataCache);
+                    if (completeRelation == null) 
+                    {
+                        OsmSharp.Logging.Log.TraceEvent("DynamicGraphOsmStreamTarget", System.Diagnostics.TraceEventType.Warning,
+                            string.Format("Relation restriction found with it's members, restriction possibly invalid: {0}", relation.ToString()));
+                        return;
+                    }
 
+                    // interpret the restriction using the complete object.
+                    List<KeyValuePair<Vehicle, long[]>> vehicleRestrictions = _interpreter.CalculateRestrictions(completeRelation);
+                    if (vehicleRestrictions != null &&
+                        vehicleRestrictions.Count > 0)
+                    { // add all the restrictions.
+                        foreach (KeyValuePair<Vehicle, long[]> vehicleRestriction in vehicleRestrictions)
+                        {
+                            // build the restricted route.
+                            uint[] restriction = new uint[vehicleRestriction.Value.Length];
+                            for (int idx = 0; idx < vehicleRestriction.Value.Length; idx++)
+                            {
+                                restriction[idx] = this.AddRoadNode(vehicleRestriction.Value[idx]).Value;
+                            }
+                            if (vehicleRestriction.Key == null)
+                            { // this restriction is for all vehicles.
+                                _dynamicGraph.AddRestriction(restriction);
+                            }
+                            else
+                            { // this restriction is just for the given vehicle.
+                                _dynamicGraph.AddRestriction(vehicleRestriction.Key, restriction);
+                            }
+                        }
+                    }
+                }
+                else
+                { // pre-index mode.
+                    if (relation.Members != null && relation.Members.Count > 0)
+                    { // there are members, keep them!
+                        foreach (RelationMember member in relation.Members)
+                        {
+                            switch (member.MemberType.Value)
+                            {
+                                case OsmGeoType.Node:
+                                    if (_nodesToCache == null)
+                                    {
+                                        _nodesToCache = new HashSet<long>();
+                                    }
+                                    _nodesToCache.Add(member.MemberId.Value);
+                                    break;
+                                case OsmGeoType.Way:
+                                    if (_waysToCache == null)
+                                    {
+                                        _waysToCache = new HashSet<long>();
+                                    }
+                                    _waysToCache.Add(member.MemberId.Value);
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
-        /// Closes this target.
+        /// Called right before pull and right after initialization.
         /// </summary>
-        public override void Close()
+        /// <returns></returns>
+        public override bool OnBeforePull()
         {
-            if (_preIndexMode)
-            {
-                this.Source.Reset();
-                _preIndexMode = false;
-                this.Pull();
-            }
+            // do the pull.
+            this.DoPull();
+
+            // reset the source.
+            this.Source.Reset();
+
+            // move out of pre-index mode.
+            _preIndexMode = false;
+
+            return true;
         }
     }
 }

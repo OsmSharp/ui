@@ -111,6 +111,7 @@
     <Compile Include="Navigation\RouteTracker.cs" />
     <Compile Include="Osm\Dykstra\DykstraRouting.cs" />
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
+    <Compile Include="Osm\Interpreter\IOsmRoutingInterpreter.cs" />
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
     <Compile Include="Osm\IRoutingProgressConsumer.cs" />
     <Compile Include="Osm\Router.cs" />

@@ -36,7 +36,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
         /// <summary>
         /// Evalues the value in this declaration or returns the regular value when there is no eval function.
         /// </summary>
-        /// <param name="tags"></param>
+        /// <param name="mapCSSObject"></param>
         /// <returns></returns>
         public virtual TValue Eval(MapCSSObject mapCSSObject)
         {

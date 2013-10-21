@@ -63,11 +63,6 @@ namespace OsmSharp.Routing.VRP.WithDepot.MaxTime.CheapestInsertion
         private readonly bool _useSeedCost;
 
         /// <summary>
-        /// The threshold percentage.
-        /// </summary>
-//        private readonly float _thresholdPercentage;
-
-        /// <summary>
         /// Creates a new best placement min max no depot vrp router.
         /// </summary>
         /// <param name="router"></param>

@@ -556,6 +556,10 @@ namespace OsmSharp.WinForms.UI
             }
         }
 
+        /// <summary>
+        /// Called on mouse double click.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnMouseDoubleClick(MouseEventArgs e)
         {
             this.RaiseOnMapMouseDoubleClick(e);
@@ -607,6 +611,10 @@ namespace OsmSharp.WinForms.UI
             }
         }
 
+        /// <summary>
+        /// Called on mouse click.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnMouseClick(MouseEventArgs e)
         {
             this.RaiseOnMapMouseClick(e);

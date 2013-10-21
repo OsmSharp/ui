@@ -84,11 +84,6 @@ namespace OsmSharp.Routing.Navigation
         private int _nextInstructionIdx = -1;
 
         /// <summary>
-        /// Holds the distance to the next instruction.
-        /// </summary>
-        private Meter _nextInstructionDistance;
-
-        /// <summary>
         /// Returns the position on the route closest to the current position.
         /// </summary>
         public GeoCoordinate PositionRoute

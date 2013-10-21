@@ -37,11 +37,6 @@ namespace OsmSharp.Routing.Osm.Streams
     public class CHEdgeGraphFileStreamTarget : OsmStreamTarget
     {
         /// <summary>
-        /// Holds the vehicle.
-        /// </summary>
-        private Vehicle _vehicle;
-
-        /// <summary>
         /// Holds the graph output stream.
         /// </summary>
         private Stream _graphStream;

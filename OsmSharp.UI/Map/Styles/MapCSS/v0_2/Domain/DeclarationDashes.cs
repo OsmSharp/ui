@@ -19,7 +19,13 @@ namespace OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain
     /// </summary>
     public enum DeclarationDashesEnum
     {
+        /// <summary>
+        /// Dashes option.
+        /// </summary>
         Dashes,
+        /// <summary>
+        /// Casing dashes option.
+        /// </summary>
         CasingDashes
     }
 }

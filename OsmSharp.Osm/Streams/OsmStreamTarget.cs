@@ -88,21 +88,10 @@ namespace OsmSharp.Osm.Streams
         {
             _source.Initialize();
             this.Initialize();
-            while (_source.MoveNext())
+            if (this.OnBeforePull())
             {
-                object sourceObject = _source.Current();
-                if (sourceObject is Node)
-                {
-                    this.AddNode(sourceObject as Node);
-                }
-                else if (sourceObject is Way)
-                {
-                    this.AddWay(sourceObject as Way);
-                }
-                else if (sourceObject is Relation)
-                {
-                    this.AddRelation(sourceObject as Relation);
-                }
+                this.DoPull();
+                this.OnAfterPull();
             }
             this.Flush();
             this.Close();
@@ -132,6 +121,45 @@ namespace OsmSharp.Osm.Streams
                 return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Does the pull operation until source is exhausted.
+        /// </summary>
+        protected void DoPull()
+        {
+            while (_source.MoveNext())
+            {
+                object sourceObject = _source.Current();
+                if (sourceObject is Node)
+                {
+                    this.AddNode(sourceObject as Node);
+                }
+                else if (sourceObject is Way)
+                {
+                    this.AddWay(sourceObject as Way);
+                }
+                else if (sourceObject is Relation)
+                {
+                    this.AddRelation(sourceObject as Relation);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Called right before pull and right after initialization.
+        /// </summary>
+        public virtual bool OnBeforePull()
+        {
+            return true;
+        }
+
+        /// <summary>
+        /// Called right after pull and right before flush.
+        /// </summary>
+        public virtual void OnAfterPull()
+        {
+
         }
 
         /// <summary>

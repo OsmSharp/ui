@@ -43,11 +43,6 @@ namespace OsmSharp.Routing.VRP.NoDepot.MaxTime.VNS
         private readonly float _lambda;
 
         /// <summary>
-        /// Holds the sigma value.
-        /// </summary>
-//        private float _sigma;
-
-        /// <summary>
         /// The threshold percentage.
         /// </summary>
         private readonly float _thresholdPercentage;

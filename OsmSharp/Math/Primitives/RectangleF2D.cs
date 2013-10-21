@@ -305,6 +305,50 @@ namespace OsmSharp.Math.Primitives
         }
 
         /// <summary>
+        /// Fits this rectangle to this given points and keeps aspect ratio.
+        /// </summary>
+        /// <param name="points"></param>
+        /// <param name="percentage"></param>
+        /// <returns></returns>
+        public RectangleF2D FitAndKeepAspectRatio(PointF2D[] points, double percentage)
+        {
+            RectangleF2D fitted = this.Fit(points, percentage);
+
+            // although this may seem a strange approach, think about
+            // numerical stability before change this!            
+
+            double width = fitted.Width;
+            double height = fitted.Height;
+            double targetRatio = this.Width / this.Height; // this is the target ratio.
+            if (fitted.Height > fitted.Width)
+            { // the height is bigger.
+                double targetWidth = fitted.Height * targetRatio;
+                if (targetWidth < fitted.Width)
+                { // increase height instead.
+                    height = fitted.Width / targetRatio;
+                }
+                else
+                { // ok, the width is increased and ratio's match now.
+                    width = targetWidth;
+                }
+            }
+            else
+            { // the width is bigger.
+                double targetHeight = fitted.Width / targetRatio;
+                if (targetHeight < fitted.Height)
+                { // increase width instead.
+                    width = fitted.Height * targetRatio;
+                }
+                else
+                { // ok, the height is increase and ratio's match now.
+                    height = targetHeight;
+                }
+            }
+            return RectangleF2D.FromBoundsAndCenter(width, height,
+                fitted.Center[0], fitted.Center[1], fitted.DirectionY);
+        }
+
+        /// <summary>
         /// Returns true if this box contains the specified x, y.
         /// </summary>
         /// <param name="point">The point.</param>
@@ -620,5 +664,6 @@ namespace OsmSharp.Math.Primitives
 		}
 
 		#endregion
-	}
+
+    }
 }

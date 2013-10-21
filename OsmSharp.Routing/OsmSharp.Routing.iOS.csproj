@@ -50,6 +50,7 @@
     <Compile Include="IEdgeMatcher.cs" />
     <Compile Include="IRouterExtensions.cs" />
     <Compile Include="Navigation\RouteTracker.cs" />
+    <Compile Include="Osm\Interpreter\IOsmRoutingInterpreter.cs" />
     <Compile Include="Osm\Streams\CHEdgeGraphFileStreamTarget.cs" />
     <Compile Include="Osm\Streams\Graphs\CHEdgeGraphOsmStreamTarget.cs" />
     <Compile Include="Osm\Streams\Graphs\DynamicGraphOsmStreamTarget.cs" />

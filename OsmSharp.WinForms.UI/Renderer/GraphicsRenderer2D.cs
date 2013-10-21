@@ -371,7 +371,11 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="text"></param>
+        /// <param name="color"></param>
         /// <param name="size"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
+        /// <param name="fontName"></param>
         protected override void DrawText(Target2DWrapper<Graphics> target, double x, double y, string text, int color, double size,
             int? haloColor, int? haloRadius, string fontName)
         {
@@ -409,8 +413,12 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="target"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
+        /// <param name="text"></param>
         /// <param name="color"></param>
         /// <param name="size"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
+        /// <param name="fontName"></param>
         protected override void DrawLineText(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color, 
             double size, int? haloColor, int? haloRadius, string fontName)
         {
@@ -456,7 +464,25 @@ namespace OsmSharp.WinForms.UI.Renderer
             }
         }
 
-        public void DrawLineTextSegment(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color,
+        /// <summary>
+        /// Draws text along a line segment.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="text"></param>
+        /// <param name="color"></param>
+        /// <param name="size"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
+        /// <param name="middlePosition"></param>
+        /// <param name="characterWidths"></param>
+        /// <param name="textLength"></param>
+        /// <param name="font"></param>
+        /// <param name="characterHeight"></param>
+        /// <param name="haloBrush"></param>
+        /// <param name="brush"></param>
+        private void DrawLineTextSegment(Target2DWrapper<Graphics> target, double[] x, double[] y, string text, int color,
             double size, int? haloColor, int? haloRadius, double middlePosition, float[] characterWidths, double textLength,
             Font font, float characterHeight, Brush haloBrush, Brush brush)
         {

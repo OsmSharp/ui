@@ -81,6 +81,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Animations\MapViewAnimator.cs" />
+    <Compile Include="Animations\Navigation\RouteTrackerAnimator.cs" />
     <Compile Include="IMapView.cs" />
     <Compile Include="KnownColor.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
