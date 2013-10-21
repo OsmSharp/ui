@@ -182,6 +182,28 @@ namespace OsmSharp.Routing.Navigation
         }
 
         /// <summary>
+        /// Returns the next instruction index.
+        /// </summary>
+        public int NextInstructionIdx
+        {
+            get
+            {
+                return _nextInstructionIdx;
+            }
+        }
+
+        /// <summary>
+        /// Returns the instruction list that 
+        /// </summary>
+        public List<Instruction> NextInstructionList
+        {
+            get
+            {
+                return _instructions;
+            }
+        }
+
+        /// <summary>
         /// Updates the tracker with the given location.
         /// </summary>
         /// <param name="location"></param>

@@ -25,6 +25,7 @@ using OsmSharp.Math.Primitives;
 using System;
 using OsmSharp.Units.Distance;
 using OsmSharp.Routing.Instructions;
+using System.Collections.Generic;
 
 namespace OsmSharp.UI.Animations.Navigation
 {
@@ -122,6 +123,28 @@ namespace OsmSharp.UI.Animations.Navigation
             get
             {
                 return _routeTracker.NextInstruction;
+            }
+        }
+
+        /// <summary>
+        /// Returns the next instruction index.
+        /// </summary>
+        public int NextInstructionIdx
+        {
+            get
+            {
+                return _routeTracker.NextInstructionIdx;
+            }
+        }
+
+        /// <summary>
+        /// Returns the instruction list that 
+        /// </summary>
+        public List<Instruction> NextInstructionList
+        {
+            get
+            {
+                return _routeTracker.NextInstructionList;
             }
         }
     }
