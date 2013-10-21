@@ -1,4 +1,4 @@
-// OsmSharp - OpenStreetMap (OSM) SDK
+
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
@@ -416,7 +416,8 @@ namespace OsmSharp.UI.Renderer
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="color"></param>
-        /// <param name="size"></param>
+		/// <param name="size"></param>
+		/// <param name="text"></param>
         protected abstract void DrawLineText(Target2DWrapper<TTarget> target, double[] x, double[] y, string text, int color, 
 		                                     double size, int? haloColor, int? haloRadius, string fontName);
 	}

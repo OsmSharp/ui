@@ -531,7 +531,11 @@ namespace OsmSharp.Android.UI
 		/// <param name="detector">Detector.</param>
 		public bool OnScaleBegin (ScaleGestureDetector detector)
 		{
-            _deltaScale = 1;
+			_deltaScale = 1;
+			_deltaDegrees = 0;
+			_deltaX = 0;
+			_deltaY = 0;
+
 			return true;
 		}
 		
@@ -556,7 +560,11 @@ namespace OsmSharp.Android.UI
 
 		public bool OnRotateBegin (RotateGestureDetector detector)
 		{
-            _deltaDegrees = 0;
+			_deltaScale = 1;
+			_deltaDegrees = 0;
+			_deltaX = 0;
+			_deltaY = 0;
+
 			return true;
 		}
 
@@ -580,6 +588,8 @@ namespace OsmSharp.Android.UI
 
 		public bool OnMoveBegin (MoveGestureDetector detector)
 		{
+			_deltaScale = 1;
+			_deltaDegrees = 0;
 			_deltaX = 0;
 			_deltaY = 0;
 

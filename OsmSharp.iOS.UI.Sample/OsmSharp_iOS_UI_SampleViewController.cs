@@ -32,7 +32,7 @@ namespace OsmSharp.iOS.UI.Sample
 		/// <summary>
 		/// Holds the route layer.
 		/// </summary>
-		private LayerOsmSharpRoute _routeLayer;
+		private LayerRoute _routeLayer;
 
 		public OsmSharp_iOS_UI_SampleViewController () : base ("OsmSharp_iOS_UI_SampleViewController", null)
 		{
@@ -114,7 +114,7 @@ namespace OsmSharp.iOS.UI.Sample
 				_enumeratorNext.MoveNext ();
 			}
 //
-			_routeLayer = new LayerOsmSharpRoute(map.Projection);
+			_routeLayer = new LayerRoute(map.Projection);
 			_routeLayer.AddRoute (route1);
 			map.AddLayer(_routeLayer);
 
