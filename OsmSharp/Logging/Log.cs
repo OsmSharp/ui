@@ -33,7 +33,7 @@ namespace OsmSharp.Logging
         /// <summary>
         /// Holds the logging enabled flag.
         /// </summary>
-        private static bool _loggingEnabled = true;
+        private static bool _loggingEnabled = false;
 
         /// <summary>
         /// Disables all logging.
