@@ -76,7 +76,9 @@ namespace OsmSharp.Android.UI
 		/// </summary>
 		/// <value>The markers.</value>
 		public void AddMarker (MapMarker marker)
-		{
+        {
+            if (marker == null) { throw new ArgumentNullException("marker"); };
+
 			_markers.Add (marker); // add to marker list.
 			marker.AttachTo (this); // attach to this view.
 
@@ -93,13 +95,45 @@ namespace OsmSharp.Android.UI
 		/// Adds the marker.
 		/// </summary>
 		/// <returns>The marker.</returns>
-		/// <param name="coordinate">Coordinate.</param>
-		public MapMarker AddMarker (GeoCoordinate coordinate)
-		{
-			MapMarker marker = new MapMarker (this.Context, coordinate);
+        /// <param name="location">Coordinate.</param>
+        public MapMarker AddMarker(GeoCoordinate location)
+        {
+            if (location == null) { throw new ArgumentNullException("location"); };
+
+            MapMarker marker = new MapMarker(this.Context, location);
 			this.AddMarker (marker);
 			return marker;
 		}
+
+        /// <summary>
+        /// Clears all map markers.
+        /// </summary>
+        public void ClearMarkers()
+        {
+            if (_markers != null)
+            {
+                foreach (MapMarker marker in _markers)
+                {
+                    this.RemoveView(marker);
+                }
+                _markers.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Removes the given map marker.
+        /// </summary>
+        /// <param name="marker"></param>
+        /// <returns></returns>
+        public bool RemoveMarker(MapMarker marker)
+        {
+            if (marker != null)
+            {
+                this.RemoveView(marker);
+                return _markers.Remove(marker);
+            }
+            return false;
+        }
 
 		/// <summary>
 		/// Notifies this MapView that a map marker has changed.

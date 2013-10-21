@@ -96,13 +96,21 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		private MapView _mapView;
 
-		/// <summary>
-		/// Attaches this button to the given map view.
+        /// <summary>
+        /// Attaches this map marker from the given map view.
 		/// </summary>
 		/// <param name="mapView">Map view.</param>
 		internal void AttachTo(MapView mapView){
 			_mapView = mapView;
 		}
+
+        /// <summary>
+        /// Detaches this map marker from the given map view.
+        /// </summary>
+        /// <param name="mapView"></param>
+        internal void DetachFrom(MapView mapView){
+            _mapView = null;
+        }
 
 		/// <summary>
 		/// Holds this markers location.

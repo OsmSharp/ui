@@ -513,7 +513,27 @@ namespace OsmSharp.iOS.UI
 
 				this.InvokeOnMainThread (InvalidateMap);
 			}
-		}
+        }
+
+        /// <summary>
+        /// Gets or sets the map max zoom level.
+        /// </summary>
+        /// <value>The map max zoom level.</value>
+        public float MapMaxZoomLevel
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the map minimum zoom level.
+        /// </summary>
+        /// <value>The map minimum zoom level.</value>
+        public float MapMinZoomLevel
+        {
+            get;
+            set;
+        }
 
 		/// <summary>
 		/// Holds the map tilte angle.
@@ -700,6 +720,8 @@ namespace OsmSharp.iOS.UI
 		/// <value>The markers.</value>
 		public void AddMarker(MapMarker marker)
 		{
+            if (marker == null) { throw new ArgumentNullException("marker"); };
+
 			marker.AttachTo (this); // attach this view to the marker.
 			_markers.Add (marker); // add to markers list.
 			this.Add (marker); // add to this view.
@@ -716,11 +738,44 @@ namespace OsmSharp.iOS.UI
 		/// <returns>The marker.</returns>
 		/// <param name="location">Location.</param>
 		public MapMarker AddMarker(GeoCoordinate location)
-		{
+        {
+            if (location == null) { throw new ArgumentNullException("location"); };
+
 			MapMarker marker = new MapMarker (location);
 			this.AddMarker (marker);
 			return marker;
 		}
+
+        /// <summary>
+        /// Clears all map markers.
+        /// </summary>
+        public void ClearMarkers()
+        {
+            if (_markers != null)
+            {
+                foreach (MapMarker marker in _markers)
+                {
+                    marker.DetachFrom(this);
+                    marker.RemoveFromSuperview();
+                }
+                _markers.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Removes the given map marker.
+        /// </summary>
+        /// <param name="marker"></param>
+        public bool RemoveMarker(MapMarker marker)
+        {
+            if (marker == null)
+            {
+                marker.DetachFrom(this); // remove the map view.
+                marker.RemoveFromSuperview();
+                return _markers.Remove(marker);
+            }
+            return false;
+        }
 
 		/// <summary>
 		/// Notifies the map change to markers.
