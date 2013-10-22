@@ -379,10 +379,12 @@ namespace OsmSharp.Android.UI
 		public float MapZoom {
 			get { return _mapZoomLevel; }
 			set { 
-				if (value > this.MapMaxZoomLevel) {
-					_mapZoomLevel = this.MapMaxZoomLevel;
-				} else if (value < this.MapMinZoomLevel) {
-					_mapZoomLevel = this.MapMinZoomLevel;
+				if (this.MapMaxZoomLevel.HasValue &&
+                    value > this.MapMaxZoomLevel) {
+					_mapZoomLevel = this.MapMaxZoomLevel.Value;
+				} else if (this.MapMinZoomLevel.HasValue &&
+                    value < this.MapMinZoomLevel) {
+					_mapZoomLevel = this.MapMinZoomLevel.Value;
 				} else {
 					_mapZoomLevel = value;
                 }
@@ -397,7 +399,7 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map max zoom level.
 		/// </summary>
 		/// <value>The map max zoom level.</value>
-		public float MapMaxZoomLevel {
+		public float? MapMaxZoomLevel {
 			get;
 			set;
 		}
@@ -406,7 +408,7 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map minimum zoom level.
 		/// </summary>
 		/// <value>The map minimum zoom level.</value>
-		public float MapMinZoomLevel {
+		public float? MapMinZoomLevel {
 			get;
 			set;
 		}

@@ -103,7 +103,7 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map minimum zoom level.
 		/// </summary>
 		/// <value>The map minimum zoom level.</value>
-		float MapMinZoomLevel {
+		float? MapMinZoomLevel {
 			get;
 			set;
 		}
@@ -112,7 +112,7 @@ namespace OsmSharp.Android.UI
 		/// Gets or sets the map max zoom level.
 		/// </summary>
 		/// <value>The map max zoom level.</value>
-		float MapMaxZoomLevel {
+		float? MapMaxZoomLevel {
 			get;
 			set;
 		}

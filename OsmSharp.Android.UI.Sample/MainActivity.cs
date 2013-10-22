@@ -149,6 +149,7 @@ namespace OsmSharp.Android.UI.Sample
 //            _mapView = new MapView<MapGLView>(this, new MapGLView(this));
 
             _mapView = new MapView(this, new MapViewSurface(this));
+            //_mapView = new MapView(this, new MapViewGLSurface(this));
             _mapView.Map = map;
 
             (_mapView as IMapView).AutoInvalidate = true;
@@ -164,7 +165,7 @@ namespace OsmSharp.Android.UI.Sample
             //MapViewAnimator mapViewAnimator = new MapViewAnimator(mapLayout);
             _mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
             {
-                _mapView.AddMarker(geoCoordinate).Click += new EventHandler(MainActivity_Click);
+                //_mapView.AddMarker(geoCoordinate).Click += new EventHandler(MainActivity_Click);
                 //mapViewAnimator.Stop();
                 //mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
             };
@@ -206,7 +207,8 @@ namespace OsmSharp.Android.UI.Sample
         {
             if (_enumerator.MoveNext())
             {
-                _routeTrackerAnimator.Track(_enumerator.Current);
+                GeoCoordinate other = _enumerator.Current.OffsetRandom(20);
+                _routeTrackerAnimator.Track(other);
             }
         }
 	}
