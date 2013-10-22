@@ -31,6 +31,8 @@ namespace OsmSharp.iOS.UI.Sample
 		/// </summary>
 		private Router _router;
 
+		private MapView _mapView;
+
 		/// <summary>
 		/// Holds the route layer.
 		/// </summary>
@@ -47,6 +49,7 @@ namespace OsmSharp.iOS.UI.Sample
 			
 			// Release any cached data, images, etc that aren't in use.
 		}
+
 		public override void LoadView ()
 		{
 			OsmSharp.Logging.Log.Enable ();
@@ -61,6 +64,7 @@ namespace OsmSharp.iOS.UI.Sample
 
 			// Perform any additional setup after loading the view, typically from a nib.
 			MapView mapView = new MapView ();
+			_mapView = mapView;
 			//mapViewAnimator = new MapViewAnimator (mapView);
 			mapView.Map = map;
 			mapView.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
@@ -117,10 +121,15 @@ namespace OsmSharp.iOS.UI.Sample
 			map.AddLayer(_routeLayer);
 
 			View = mapView;
-			
 
-//			mapView.AddMarker(new GeoCoordinate(51.1612, 2.9795));
-//			mapView.AddMarker(new GeoCoordinate(51.1447, 2.9483));
+			mapView.AddMarker(new GeoCoordinate(51.1612, 2.9795));
+			mapView.AddMarker(new GeoCoordinate(51.1447, 2.9483));
+			mapView.AddMarker(point1);
+			mapView.AddMarker(point2);
+			mapView.AddMarker(new GeoCoordinate(51.1612, 2.9795));
+			mapView.AddMarker(new GeoCoordinate(51.1447, 2.9483));
+			mapView.AddMarker(new GeoCoordinate(51.1612, 2.9795));
+			mapView.AddMarker(new GeoCoordinate(51.1447, 2.9483));
 //
 //			//mapView.ZoomToMarkers();
 
@@ -129,7 +138,7 @@ namespace OsmSharp.iOS.UI.Sample
 			mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
 			{
 				//_routeTrackerAnimator.Track(box.GenerateRandomIn());
-				//mapView.ZoomToMarkers();
+
 				//_mapView.AddMarker(geoCoordinate).Click += new EventHandler(MainActivity_Click);
 				//mapViewAnimator.Stop();
 				//mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
@@ -138,11 +147,49 @@ namespace OsmSharp.iOS.UI.Sample
 			RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
 			_routeTrackerAnimator = new RouteTrackerAnimator(mapView, routeTracker);
 
-			Timer timer = new Timer (1000);
-			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
-			timer.Start ();
+//				Timer timer = new Timer (1000);
+//				timer.Elapsed += new ElapsedEventHandler (TimerHandler);
+//				timer.Start ();
 
-			mapView.SetNeedsDisplay ();
+			//_mapView.ZoomToMarkers();
+
+			//mapView.SetNeedsDisplay ();
+			
+
+			//
+
+		}
+
+//		public override void ViewDidLoad ()
+//		{
+//			base.ViewDidLoad ();
+//
+//						// initialize a test-map.
+//						var map = new Map ();
+//						map.AddLayer (new LayerScene (Scene2DLayered.Deserialize (
+//							Assembly.GetExecutingAssembly ().GetManifestResourceStream ("OsmSharp.iOS.UI.Sample.wvl.map"), 
+//								true)));
+//
+//			var mapView = new MapView ();
+//			mapView.Frame = this.View.Frame;
+//			mapView.AutoresizingMask = this.View.AutoresizingMask;
+//						_mapView = mapView;
+//						//mapViewAnimator = new MapViewAnimator (mapView);
+//						mapView.Map = map;
+//						mapView.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
+//			
+//						mapView.MapZoom = 18;
+//						mapView.MapTilt = 30;
+//
+//			mapView.SetNeedsDisplay ();
+//
+//		}
+
+		public override void ViewDidAppear (bool animated)
+		{
+			base.ViewDidAppear (animated);
+			
+			_mapView.ZoomToMarkers();
 		}
 
 		private RouteTrackerAnimator _routeTrackerAnimator;
@@ -160,17 +207,17 @@ namespace OsmSharp.iOS.UI.Sample
 			{
 				GeoCoordinate other = _enumerator.Current.OffsetRandom(20);
 				_routeTrackerAnimator.Track(other);
+
+				if (_routeTrackerAnimator.NextInstruction != null) {
+					OsmSharp.Logging.Log.TraceEvent ("SampleView", System.Diagnostics.TraceEventType.Information,
+					                                _routeTrackerAnimator.NextInstruction.Text);
+				}
 			}
 		}
 
 		private void IncreaseMapTilt()
 		{
 			//(this.View as MapView).MapTilt = (this.View as MapView).MapTilt + 5;
-		}
-
-		public override void ViewDidLoad ()
-		{
-			base.ViewDidLoad ();
 		}
 
 		public override bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation)
