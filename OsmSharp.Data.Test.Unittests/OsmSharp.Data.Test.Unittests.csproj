@@ -131,6 +131,10 @@
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
       <Name>OsmSharp.Osm</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Test.UnitTests\OsmSharp.Test.Unittests.csproj">
+      <Project>{73BE366F-133A-4C7B-8775-6FA3E7C8452F}</Project>
+      <Name>OsmSharp.Test.Unittests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
       <Name>OsmSharp</Name>
@@ -141,6 +145,7 @@
     <Compile Include="Oracle\OracleProviderOsmTests.cs" />
     <Compile Include="PostgreSQL\PostgreSQLProviderOsmTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Redis\RedisDataCacheTests.cs" />
     <Compile Include="Redis\RedisProviderOsmTests.cs" />
     <Compile Include="SQLite\SQLiteProviderOsmTests.cs" />
     <Compile Include="SQLServer\Osm\SQLServerDDLChecks.cs" />

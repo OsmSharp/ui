@@ -18,29 +18,48 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using OsmSharp.Osm.Streams;
-using OsmSharp.Osm.Xml.Streams;
+using System.Linq;
+using System.Text;
+using OsmSharp.Osm.Cache;
+using ServiceStack.Redis;
+using OsmSharp.Osm;
+using OsmSharp.Data.Redis.Osm.Streams;
+using ServiceStack.Redis.Generic;
+using OsmSharp.Data.Redis.Osm.Primitives;
 
-namespace OsmSharp.Osm.Cache
+namespace OsmSharp.Data.Redis.Osm.Cache
 {
     /// <summary>
-    /// An osm data cache for simple OSM objects kept in memory.
+    /// An implementation of the OsmDataCache with a Redis database as backend.
     /// </summary>
-    public class OsmDataCacheDisk : OsmDataCache, IDisposable
+    public class OsmDataCacheRedis : OsmDataCache, IDisposable
     {
-        /// <summary>
-        /// The disk cache folder.
-        /// </summary>
-        private DirectoryInfo _cacheDirectory;
+        private RedisClient _client;
+        private IRedisTypedClient<RedisNode> _clientNode = null;
+        private IRedisTypedClient<RedisWay> _clientWay = null;
+        private IRedisTypedClient<RedisRelation> _clientRelation = null;
 
         /// <summary>
         /// Creates a new osm data cache for simple OSM objects kept in memory.
         /// </summary>
-        public OsmDataCacheDisk()
+        public OsmDataCacheRedis()
         {
-            _cacheDirectory = new DirectoryInfo(Path.Combine(Path.GetTempPath() + Guid.NewGuid().ToString()));
-            _cacheDirectory.Create();
+            _client = new RedisClient();
+            _clientNode = _client.As<RedisNode>();
+            _clientWay = _client.As<RedisWay>();
+            _clientRelation = _client.As<RedisRelation>();
+        }
+
+        /// <summary>
+        /// Creates a new osm data cache for simple OSM objects kept in memory.
+        /// </summary>
+        /// <param name="redisClient"></param>
+        public OsmDataCacheRedis(RedisClient redisClient)
+        {
+            _client = redisClient;
+            _clientNode = _client.As<RedisNode>();
+            _clientWay = _client.As<RedisWay>();
+            _clientRelation = _client.As<RedisRelation>(); ;
         }
 
         /// <summary>
@@ -87,15 +106,6 @@ namespace OsmSharp.Osm.Cache
             return false;
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <returns></returns>
-        //public override IEnumerable<Node> GetNodes()
-        //{
-        //    return _nodes.Values;
-        //}
-
         /// <summary>
         /// 
         /// </summary>
@@ -139,15 +149,6 @@ namespace OsmSharp.Osm.Cache
             way = null;
             return false;
         }
-
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <returns></returns>
-        //public override IEnumerable<Way> GetWays()
-        //{
-        //    return _ways.Values;
-        //}
 
         /// <summary>
         /// 
@@ -193,58 +194,30 @@ namespace OsmSharp.Osm.Cache
             return false;
         }
 
-        ///// <summary>
-        ///// 
-        ///// </summary>
-        ///// <returns></returns>
-        //public override IEnumerable<Relation> GetRelations()
-        //{
-        //    throw new NotifyFilters()
-        //}
-
-        /// <summary>
-        /// Returns the storage file name for this given object type and id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="type"></param>
-        /// <returns></returns>
-        private string StoreFileName(long id, OsmGeoType type)
-        {
-            switch (type)
-            {
-                case OsmGeoType.Node:
-                    return Path.Combine(_cacheDirectory.FullName, string.Format("{0}.node", id.ToString()));
-                case OsmGeoType.Way:
-                    return Path.Combine(_cacheDirectory.FullName, string.Format("{0}.way", id.ToString()));
-                case OsmGeoType.Relation:
-                    return Path.Combine(_cacheDirectory.FullName, string.Format("{0}.relation", id.ToString()));
-            }
-            throw new ArgumentOutOfRangeException();
-        }
-
-        /// <summary>
-        /// Returns the storage file name for this given object.
-        /// </summary>
-        /// <param name="osmGeo"></param>
-        /// <returns></returns>
-        private string StoreFileName(OsmGeo osmGeo)
-        {
-            return this.StoreFileName(osmGeo.Id.Value, osmGeo.Type);
-        }
-
         /// <summary>
         /// Stores an osmGeo object to disk.
         /// </summary>
         /// <param name="osmGeo"></param>
         private void Store(OsmGeo osmGeo)
         {
-            StreamWriter writer = new StreamWriter(
-                new Ionic.Zlib.GZipStream(
-                    File.OpenWrite(this.StoreFileName(osmGeo)), Ionic.Zlib.CompressionMode.Compress));
-            XmlOsmStreamTarget target = new XmlOsmStreamTarget(writer);
-            target.RegisterSource(new OsmGeo[] { osmGeo }.ToOsmStreamSource());
-            target.Pull();
-            target.Flush();
+            switch (osmGeo.Type)
+            {
+                case OsmGeoType.Node:
+                    Node node = osmGeo as Node;
+                    string nodeKey = node.GetRedisKey();
+                    _clientNode.SetEntry(nodeKey, PrimitiveExtensions.ConvertTo(node));
+                    break;
+                case OsmGeoType.Way:
+                    Way way = osmGeo as Way;
+                    string wayKey = way.GetRedisKey();
+                    _clientWay.SetEntry(wayKey, PrimitiveExtensions.ConvertTo(way));
+                    break;
+                case OsmGeoType.Relation:
+                    Relation relation = osmGeo as Relation;
+                    string relationKey = relation.GetRedisKey();
+                    _clientRelation.SetEntry(relationKey, PrimitiveExtensions.ConvertTo(relation));
+                    break;
+            }
         }
 
         /// <summary>
@@ -254,16 +227,37 @@ namespace OsmSharp.Osm.Cache
         /// <param name="type"></param>
         private OsmGeo Read(long id, OsmGeoType type)
         {
-            XmlOsmStreamSource source = new XmlOsmStreamSource(new Ionic.Zlib.GZipStream(
-                    File.OpenWrite(this.StoreFileName(id, type)), Ionic.Zlib.CompressionMode.Decompress));
-            List<OsmGeo> readObjects = new List<OsmGeo>(source);
-            source.Dispose();
-
-            if (readObjects != null && readObjects.Count == 1)
+            switch (type)
             {
-                return readObjects[0];
+                case OsmGeoType.Node:
+                    string nodeKey = PrimitiveExtensions.BuildNodeRedisKey(id);
+                    RedisNode redisNode = _clientNode.GetValue(nodeKey);
+                    Node node = null;
+                    if (redisNode != null)
+                    {
+                        node = PrimitiveExtensions.ConvertFrom(redisNode);
+                    }
+                    return node;
+                case OsmGeoType.Way:
+                    string wayKey = PrimitiveExtensions.BuildWayRedisKey(id);
+                    RedisWay redisWay = _clientWay.GetValue(wayKey);
+                    Way way = null;
+                    if (redisWay != null)
+                    {
+                        way = PrimitiveExtensions.ConvertFrom(redisWay);
+                    }
+                    return way;
+                case OsmGeoType.Relation:
+                    string relationKey = PrimitiveExtensions.BuildRelationRedisKey(id);
+                    RedisRelation redisRelation = _clientRelation.GetValue(relationKey);
+                    Relation relation = null;
+                    if (redisRelation != null)
+                    {
+                        relation = PrimitiveExtensions.ConvertFrom(redisRelation);
+                    }
+                    return relation;
             }
-            throw new InvalidDataException("Invalid cached file read, make sure not to modify the cached while in use or to synchonize access.");
+            throw new ArgumentOutOfRangeException("type");
         }
 
         /// <summary>
@@ -273,7 +267,24 @@ namespace OsmSharp.Osm.Cache
         /// <param name="type"></param>
         private void Delete(long id, OsmGeoType type)
         {
-            File.Delete(this.StoreFileName(id, type));
+            switch (type)
+            {
+                case OsmGeoType.Node:
+                    string nodeKey = PrimitiveExtensions.BuildNodeRedisKey(id);
+                    _client.Del(nodeKey);
+                    //_clientNode.DeleteById(nodeKey);
+                    break;
+                case OsmGeoType.Way:
+                    string wayKey = PrimitiveExtensions.BuildWayRedisKey(id);
+                    //_clientWay.DeleteById(wayKey);
+                    _client.Del(wayKey);
+                    break;
+                case OsmGeoType.Relation:
+                    string relationKey = PrimitiveExtensions.BuildRelationRedisKey(id);
+                    //_clientRelation.DeleteById(relationKey);
+                    _client.Del(relationKey);
+                    break;
+            }
         }
 
         /// <summary>
@@ -284,7 +295,19 @@ namespace OsmSharp.Osm.Cache
         /// <returns></returns>
         private bool Exist(long id, OsmGeoType type)
         {
-            return File.Exists(this.StoreFileName(id, type));
+            switch (type)
+            {
+                case OsmGeoType.Node:
+                    string nodeKey = PrimitiveExtensions.BuildNodeRedisKey(id);
+                    return _clientNode.ContainsKey(nodeKey);
+                case OsmGeoType.Way:
+                    string wayKey = PrimitiveExtensions.BuildWayRedisKey(id);
+                    return _clientWay.ContainsKey(wayKey);
+                case OsmGeoType.Relation:
+                    string relationKey = PrimitiveExtensions.BuildRelationRedisKey(id);
+                    return _clientRelation.ContainsKey(relationKey);
+            }
+            throw new ArgumentOutOfRangeException("type");
         }
 
         /// <summary>
@@ -292,7 +315,11 @@ namespace OsmSharp.Osm.Cache
         /// </summary>
         public void Dispose()
         {
-            _cacheDirectory.Delete(true);
+            _clientNode.Dispose();
+            _clientWay.Dispose();
+            _clientRelation.Dispose();
+
+            _client.Dispose();
         }
 
         /// <summary>
@@ -300,10 +327,7 @@ namespace OsmSharp.Osm.Cache
         /// </summary>
         public override void Clear()
         {
-            _cacheDirectory.Delete(true);
-            
-            _cacheDirectory = new DirectoryInfo(Path.Combine(Path.GetTempPath() + Guid.NewGuid().ToString()));
-            _cacheDirectory.Create();
+            _client.FlushDb();
         }
     }
 }
