@@ -238,10 +238,7 @@ namespace OsmSharp.Osm.Cache
         /// <param name="osmGeo"></param>
         private void Store(OsmGeo osmGeo)
         {
-            StreamWriter writer = new StreamWriter(
-                new Ionic.Zlib.GZipStream(
-                    File.OpenWrite(this.StoreFileName(osmGeo)), Ionic.Zlib.CompressionMode.Compress));
-            XmlOsmStreamTarget target = new XmlOsmStreamTarget(writer);
+            XmlOsmStreamTarget target = new XmlOsmStreamTarget(this.StoreFileName(osmGeo));
             target.RegisterSource(new OsmGeo[] { osmGeo }.ToOsmStreamSource());
             target.Pull();
             target.Flush();
@@ -254,8 +251,7 @@ namespace OsmSharp.Osm.Cache
         /// <param name="type"></param>
         private OsmGeo Read(long id, OsmGeoType type)
         {
-            XmlOsmStreamSource source = new XmlOsmStreamSource(new Ionic.Zlib.GZipStream(
-                    File.OpenWrite(this.StoreFileName(id, type)), Ionic.Zlib.CompressionMode.Decompress));
+            XmlOsmStreamSource source = new XmlOsmStreamSource(this.StoreFileName(id, type));
             List<OsmGeo> readObjects = new List<OsmGeo>(source);
             source.Dispose();
 
