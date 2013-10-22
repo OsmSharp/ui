@@ -265,16 +265,29 @@ namespace OsmSharp.Routing.Navigation
             List<GeoCoordinate> points = route.GetPoints();
             for (int idx = 0; idx < points.Count - 1; idx++)
             {
-                GeoCoordinateLine line = new GeoCoordinateLine(points[idx], points[idx + 1]);
-                PointF2D projectedPoint = line.ProjectOn(coordinates);
-                GeoCoordinate projected = new GeoCoordinate(projectedPoint[1], projectedPoint[0]);
-                double currentDistance = coordinates.Distance(projected);
-                if (currentDistance < distance)
-                {
-                    closest = projected;
-                    closestIdx = idx + 1;
-                    distance = currentDistance;
-                }
+                GeoCoordinateLine line = new GeoCoordinateLine(points[idx], points[idx + 1], true, true);
+				PointF2D projectedPoint = line.ProjectOn(coordinates);
+				GeoCoordinate projected;
+				double currentDistance;
+				if (projectedPoint != null) {
+					projected = new GeoCoordinate(projectedPoint[1], projectedPoint[0]);
+					currentDistance = coordinates.Distance(projected);
+					if (currentDistance < distance)
+					{
+						closest = projected;
+						closestIdx = idx + 1;
+						distance = currentDistance;
+					}
+				}
+				projected = points[idx];
+				currentDistance = coordinates.Distance(projected);
+				if (currentDistance < distance)
+				{
+					closest = projected;
+					closestIdx = idx;
+					distance = currentDistance;
+				}
+
             }
             return new KeyValuePair<int,GeoCoordinate>(closestIdx, closest);
         }

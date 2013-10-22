@@ -228,6 +228,7 @@
     <Compile Include="Math\Algorithms\SimplifyCurveTests.cs" />
     <Compile Include="Math\Primitives\BoxF2DTests.cs" />
     <Compile Include="Math\Algorithms\RotationTests.cs" />
+    <Compile Include="Units\AngleUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="test_network.osm" />

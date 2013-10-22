@@ -19,6 +19,8 @@ using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.TSP.Genetic;
 using OsmSharp.UI.Animations;
+using OsmSharp.UI.Animations.Navigation;
+using OsmSharp.Routing.Navigation;
 
 namespace OsmSharp.iOS.UI.Sample
 {
@@ -47,6 +49,8 @@ namespace OsmSharp.iOS.UI.Sample
 		}
 		public override void LoadView ()
 		{
+			OsmSharp.Logging.Log.Enable ();
+
 			base.LoadView ();
 
 			// initialize a test-map.
@@ -106,13 +110,7 @@ namespace OsmSharp.iOS.UI.Sample
 			RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
 			RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
 			Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-			_enumerator = route1.GetRouteEnumerable(2).GetEnumerator();
-			_enumeratorNext = route1.GetRouteEnumerable(2).GetEnumerator();
-			for (int idx = 0; idx < 20; idx++) {
-				_enumeratorNext.MoveNext ();
-				_enumeratorNext.MoveNext ();
-				_enumeratorNext.MoveNext ();
-			}
+			_enumerator = route1.GetRouteEnumerable(20).GetEnumerator();
 //
 			_routeLayer = new LayerRoute(map.Projection);
 			_routeLayer.AddRoute (route1);
@@ -121,52 +119,35 @@ namespace OsmSharp.iOS.UI.Sample
 			View = mapView;
 			
 
-			mapView.AddMarker(new GeoCoordinate(51.1612, 2.9795));
-			mapView.AddMarker(new GeoCoordinate(51.1447, 2.9483));
+//			mapView.AddMarker(new GeoCoordinate(51.1612, 2.9795));
+//			mapView.AddMarker(new GeoCoordinate(51.1447, 2.9483));
+//
+//			//mapView.ZoomToMarkers();
 
-			//mapView.ZoomToMarkers();
-
+			GeoCoordinateBox box = new GeoCoordinateBox (new GeoCoordinate[] { point1, point2 });
+//
 			mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
 			{
-				mapView.ZoomToMarkers();
+				//_routeTrackerAnimator.Track(box.GenerateRandomIn());
+				//mapView.ZoomToMarkers();
 				//_mapView.AddMarker(geoCoordinate).Click += new EventHandler(MainActivity_Click);
 				//mapViewAnimator.Stop();
 				//mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
 			};
+			
+			RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
+			_routeTrackerAnimator = new RouteTrackerAnimator(mapView, routeTracker);
 
-//			Timer timer = new Timer (150);
-//			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
-//			timer.Start ();
+			Timer timer = new Timer (1000);
+			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
+			timer.Start ();
 
 			mapView.SetNeedsDisplay ();
 		}
 
-		private IEnumerator<GeoCoordinate> _enumeratorNext;
+		private RouteTrackerAnimator _routeTrackerAnimator;
 
 		private IEnumerator<GeoCoordinate> _enumerator;
-
-		/// <summary>
-		/// Holds the previous router point.
-		/// </summary>
-		private RouterPoint _previousRouterPoint = null;
-
-		private void MapMarkerClicked(object sender, EventArgs e)
-		{
-			if (sender is MapMarker) {
-				MapMarker marker = (sender as MapMarker);
-				lock (_router) {
-					RouterPoint resolved = _router.Resolve (Vehicle.Car, marker.Location);
-					if (_previousRouterPoint != null) {
-						Route route = _router.Calculate (Vehicle.Car, _previousRouterPoint, resolved);
-						_routeLayer.Clear ();
-						_routeLayer.AddRoute (route, SimpleColor.FromKnownColor (KnownColor.Blue, 75).Value, 16);
-
-						(this.View as IMapView).Invalidate ();
-					}
-					_previousRouterPoint = resolved;
-				}
-			}
-		}
 
 		private void TimerHandler(object sender, ElapsedEventArgs e)
 		{
@@ -175,19 +156,10 @@ namespace OsmSharp.iOS.UI.Sample
 
 		private void MoveNext()
 		{
-			if (_enumerator.MoveNext ()) {
-				(this.View as MapView).MapCenter = _enumerator.Current;
-
-				if (_enumeratorNext.MoveNext ()) {
-					IProjection projection = (this.View as MapView).Map.Projection;
-
-					VectorF2D direction = new PointF2D(projection.ToPixel(_enumeratorNext.Current)) - 
-						new PointF2D(projection.ToPixel(_enumerator.Current));
-					
-					(this.View as MapView).MapTilt = direction.Angle (new VectorF2D (0, -1));
-				}
-
-				(this.View as MapView).SetNeedsDisplay ();
+			if (_enumerator.MoveNext())
+			{
+				GeoCoordinate other = _enumerator.Current.OffsetRandom(20);
+				_routeTrackerAnimator.Track(other);
 			}
 		}
 

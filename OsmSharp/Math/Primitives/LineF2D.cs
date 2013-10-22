@@ -618,7 +618,7 @@ namespace OsmSharp.Math.Primitives
 
                 // intersect.
                 PrimitiveF2D primitive =
-                    this.Intersection(line, false);
+                    this.Intersection(line, true);
 
                 if (primitive == null)
                 {

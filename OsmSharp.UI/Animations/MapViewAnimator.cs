@@ -213,8 +213,12 @@ namespace OsmSharp.UI.Animations
                 _stepCenter = new GeoCoordinate(
                     (_targetCenter.Latitude - _mapView.MapCenter.Latitude) / _maxSteps,
                     (_targetCenter.Longitude - _mapView.MapCenter.Longitude) / _maxSteps);
-                _stepTilt = (Degree)((_targetTilt.Value - _mapView.MapTilt.Value) / _maxSteps);
                 _stepZoom = (float)((_targetZoom - _mapView.MapZoom) / _maxSteps);
+
+				// calculate the map tilt, make sure it turns along the smallest corner.
+				double 
+				// double diff = (_
+				_stepTilt = (Degree)((_targetTilt.Value - _mapView.MapTilt.Value) / _maxSteps);
 
                 //OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", System.Diagnostics.TraceEventType.Verbose,
                 //    string.Format("Started new animation with steps z:{0} t:{1} c:{2} to z:{3} t:{4} c:{5}.",

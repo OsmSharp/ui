@@ -93,7 +93,15 @@ namespace OsmSharp.UI.Animations.Navigation
             // calculate all map view parameters (zoom, location, tilt) to display the route/direction correctly.
             float zoom = _zoom; // TODO: do something smarter here to allow the zoom level to be customized.
             GeoCoordinate center = _routeTracker.PositionRoute;
-            GeoCoordinate next = _routeTracker.PositionIn(100); // TODO: make the dependent on the zoom level/current view.
+			double nextDistance = 100;
+			GeoCoordinate next = _routeTracker.PositionIn(nextDistance);
+			while (next == null) {
+				nextDistance = nextDistance - 10;
+				if (nextDistance <= 0) {
+					next = center;
+				}
+				next = _routeTracker.PositionIn(nextDistance);
+			}
             IProjection projection = _mapView.Map.Projection;
             VectorF2D direction = new PointF2D(projection.ToPixel(next)) -
                         new PointF2D(projection.ToPixel(center));

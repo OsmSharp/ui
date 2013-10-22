@@ -43,10 +43,14 @@ namespace OsmSharp.Units.Angle
 
         }
 
+		/// <summary>
+		/// Normalize the specified value.
+		/// </summary>
+		/// <param name="value">Value.</param>
         private static double Normalize(double value)
         {
-            int count_360 = (int)System.Math.Floor(value / 360.0);
-            return value - (count_360 * 360.0);
+            int count360 = (int)System.Math.Floor(value / 360.0);
+            return value - (count360 * 360.0);
         }
 
 		/// <summary>
