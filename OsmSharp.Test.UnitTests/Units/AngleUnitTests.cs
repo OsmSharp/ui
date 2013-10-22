@@ -42,14 +42,31 @@ namespace OsmSharp.Test.Unittests
 		}
 
         /// <summary>
+        /// Tests angle range.
+        /// </summary>
+        [Test]
+        public void TestDegreeRang180()
+        {
+            Assert.AreEqual(30, ((Degree)390).Range180());
+            Assert.AreEqual(30, ((Degree)30).Range180());
+            Assert.AreEqual(-90, ((Degree)270).Range180());
+        }
+
+
+        /// <summary>
         /// Tests angle subtraction.
         /// </summary>
         [Test]
         public void TestDegreeSubstract180()
         {
             Degree angle = 30;
-            Assert.AreEqual(-60, angle.Subtract180(330));
-            Assert.AreEqual(60, angle.Subtract180(90));
+            Assert.AreEqual(60, angle.Subtract180(330));
+            Assert.AreEqual(-60, angle.Subtract180(90));
+
+            Assert.AreEqual(-20, ((Degree)350).Subtract180(10));
+            Assert.AreEqual(20, ((Degree)10).Subtract180(350));
+            Assert.AreEqual(20, ((Degree)350).Subtract180(330));
+            Assert.AreEqual(20, ((Degree)40).Subtract180(20));
         }
 	}
 }

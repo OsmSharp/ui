@@ -63,22 +63,26 @@ namespace OsmSharp.Units.Angle
 		}
 
         /// <summary>
+        /// Converts the given angle to the range -180, +180.
+        /// </summary>
+        /// <returns></returns>
+        public double Range180()
+        {
+            if (this.Value > 180)
+            {
+                return this.Value - 360;
+            }
+            return this.Value;
+        }
+
+        /// <summary>
         /// Substracts the two angles returning an angle in the range -180, +180
         /// </summary>
         /// <param name="angle"></param>
         /// <returns></returns>
         public double Subtract180(Degree angle)
         {
-            double diff = angle.Value - this.Value;
-            if (diff > 180)
-            { // move range.
-                diff = -(360 - diff);
-            }
-            else if (diff < -180)
-            {
-                diff = -(360 + diff);
-            }
-            return diff;
+            return -angle.Range180() + this.Range180();
         }
 
         #region Conversion
