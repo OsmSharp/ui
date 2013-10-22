@@ -736,7 +736,7 @@ namespace OsmSharp.Android.UI
 		{
 			_mapCenter = center;
 			_mapTilt = mapTilt;
-			_mapZoomLevel = mapZoom;
+			this.MapZoom = mapZoom;
 
 			(this.Context as Activity).RunOnUiThread(Invalidate);
 		}
