@@ -18,10 +18,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Osm.Cache;
-using OsmSharp.Collections.LongIndex.LongIndex;
 
 namespace OsmSharp.Osm.Streams.Complete
 {
@@ -348,7 +345,7 @@ namespace OsmSharp.Osm.Streams.Complete
             { // the way was used for the last time.
                 Way way = _dataCache.GetWay(wayId); // get the way before it is removed.
                 _dataCache.RemoveWay(wayId); // remove from cache.
-                if (way.Nodes != null)
+                if (way != null && way.Nodes != null)
                 { // report usage.
                     way.Nodes.ForEach(x => this.ReportNodeUsage(x));
                 }
