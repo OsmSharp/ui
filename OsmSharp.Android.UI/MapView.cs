@@ -152,7 +152,15 @@ namespace OsmSharp.Android.UI
         /// </summary>
         public void ZoomToMarkers()
         {
-            this.ZoomToMarkers(_markers);
+            this.ZoomToMarkers(15);
+        }
+
+        /// <summary>
+        /// Zoom to the current markers.
+        /// </summary>
+        public void ZoomToMarkers(double percentage)
+        {
+            this.ZoomToMarkers(_markers, 15);
         }
 
         /// <summary>
@@ -161,7 +169,16 @@ namespace OsmSharp.Android.UI
         /// <param name="marker"></param>
         public void ZoomToMarkers(List<MapMarker> markers)
         {
-            _mapView.ZoomToMarkers(markers);
+            this.ZoomToMarkers(markers, 15);
+        }
+
+        /// <summary>
+        /// Zoom to the given makers list.
+        /// </summary>
+        /// <param name="marker"></param>
+        public void ZoomToMarkers(List<MapMarker> markers, double percentage)
+        {
+            _mapView.ZoomToMarkers(markers, percentage);
         }
 
 		/// <summary>
@@ -253,6 +270,7 @@ namespace OsmSharp.Android.UI
 		}
 
 		#region IMapView implementation
+
 		/// <summary>
 		/// Holds the map view animator.
 		/// </summary>

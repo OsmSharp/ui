@@ -411,7 +411,17 @@ namespace OsmSharp.UI.Renderer
         /// <returns></returns>
         public View2D Fit(PointF2D[] points)
         {
-            RectangleF2D rotated = this.Rectangle.FitAndKeepAspectRatio(points, 0);
+            return this.Fit(points, 0);
+        }
+
+        /// <summary>
+        /// Fites this view around the given points but keeps aspect ratio and 
+        /// </summary>
+        /// <param name="points"></param>
+        /// <returns></returns>
+        public View2D Fit(PointF2D[] points, double percentage)
+        {
+            RectangleF2D rotated = this.Rectangle.FitAndKeepAspectRatio(points, percentage);
             return new View2D(rotated, _invertX, _invertY);
         }
 

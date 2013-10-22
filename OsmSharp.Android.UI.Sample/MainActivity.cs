@@ -165,6 +165,7 @@ namespace OsmSharp.Android.UI.Sample
             //MapViewAnimator mapViewAnimator = new MapViewAnimator(mapLayout);
             _mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
             {
+                _mapView.ZoomToMarkers();
                 //_mapView.AddMarker(geoCoordinate).Click += new EventHandler(MainActivity_Click);
                 //mapViewAnimator.Stop();
                 //mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
@@ -174,9 +175,14 @@ namespace OsmSharp.Android.UI.Sample
 			var layout = new RelativeLayout (this);
             layout.AddView(_mapView);
 
+            _mapView.AddMarker(new GeoCoordinate(51.1612, 2.9795));
+            _mapView.AddMarker(new GeoCoordinate(51.1447, 2.9483));
+
+            _mapView.ZoomToMarkers();
+
             _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker);
 
-            //Timer timer = new Timer(1000);
+            //Timer timer = new Timer(3000);
             //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
             //timer.Start();
 
@@ -200,7 +206,8 @@ namespace OsmSharp.Android.UI.Sample
 
         private void TimerHandler(object sender, ElapsedEventArgs e)
         {
-            this.MoveNext();
+            _mapView.ZoomToMarkers();
+            //this.MoveNext();
         }
 
         private void MoveNext()

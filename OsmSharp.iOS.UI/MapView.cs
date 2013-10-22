@@ -801,27 +801,47 @@ namespace OsmSharp.iOS.UI
         }
 
         /// <summary>
+        /// Zoom to the current markers.
+        /// </summary>
+        public void ZoomToMarkers(double percentage)
+        {
+            this.ZoomToMarkers(_markers, percentage);
+        }
+
+        /// <summary>
+        /// Zoom to the current markers.
+        /// </summary>
+        public void ZoomToMarkers(List<MapMarker> markers)
+        {
+            this.ZoomToMarkers(markers, 15);
+        }
+
+        /// <summary>
         /// Zoom to the given makers list.
         /// </summary>
         /// <param name="marker"></param>
-        public void ZoomToMarkers(List<MapMarker> markers)
-        {			
-            if (_rect.Width > 0)
+        public void ZoomToMarkers(List<MapMarker> markers, double percentage)
+        {
+            float height = _rect.Height;
+            float width = _rect.Width;
+            if (width > 0)
             {
                 PointF2D[] points = new PointF2D[markers.Count];
-                for(int idx = 0; idx < markers.Count; idx++)
+                for (int idx = 0; idx < markers.Count; idx++)
                 {
-                    points[idx] = markers[idx].Location;
+                    points[idx] = new PointF2D(this.Map.Projection.ToPixel(markers[idx].Location));
                 }
                 View2D view = this.CreateView(_rect);
-                View2D fittedView = view.Fit(points);
+                View2D fittedView = view.Fit(points, percentage);
 
                 float zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
-                    _rect.Width, _rect.Height));
+                    width, height));
                 GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
-                    view.Center[0], view.Center[1]);
+                    fittedView.Center[0], fittedView.Center[1]);
 
                 (this as IMapView).SetMapView(center, this.MapTilt, zoom);
+                //this.NotifyMovement();
+                //this.Change();
             }
         }
 

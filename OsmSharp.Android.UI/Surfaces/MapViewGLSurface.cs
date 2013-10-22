@@ -699,7 +699,7 @@ namespace OsmSharp.Android.UI
         /// Zooms to the given list of markers.
         /// </summary>
         /// <param name="markers"></param>
-        public void ZoomToMarkers(List<MapMarker> markers)
+        public void ZoomToMarkers(List<MapMarker> markers, double percentage)
         {
             float height = this.LayoutParameters.Height;
             float width = this.LayoutParameters.Width;

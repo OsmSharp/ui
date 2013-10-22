@@ -135,6 +135,7 @@ namespace OsmSharp.Android.UI
         /// Zooms to the given list of markers.
         /// </summary>
         /// <param name="markers"></param>
-        void ZoomToMarkers(List<MapMarker> markers);
+        /// <param name="percentage"></param>
+        void ZoomToMarkers(List<MapMarker> markers, double percentage);
     }
 }
