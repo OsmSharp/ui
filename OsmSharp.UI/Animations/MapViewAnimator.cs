@@ -216,9 +216,8 @@ namespace OsmSharp.UI.Animations
                 _stepZoom = (float)((_targetZoom - _mapView.MapZoom) / _maxSteps);
 
 				// calculate the map tilt, make sure it turns along the smallest corner.
-				double 
-				// double diff = (_
-				_stepTilt = (Degree)((_targetTilt.Value - _mapView.MapTilt.Value) / _maxSteps);
+				double diff = _mapView.MapTilt.Subtract180(_targetTilt);
+				_stepTilt = (Degree)(diff / _maxSteps);
 
                 //OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", System.Diagnostics.TraceEventType.Verbose,
                 //    string.Format("Started new animation with steps z:{0} t:{1} c:{2} to z:{3} t:{4} c:{5}.",

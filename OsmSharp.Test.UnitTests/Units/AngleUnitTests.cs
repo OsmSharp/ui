@@ -32,14 +32,25 @@ namespace OsmSharp.Test.Unittests
 		/// Tests the angle normalization.
 		/// </summary>
 		[Test]
-		public void TestAngleNormalization()
+		public void TestDegreeNormalization()
 		{
 			double angle = 30;
-			Assert.AreEqual (angle, ((Degree)angle + 360).Value);
-			Assert.AreEqual (angle, ((Degree)angle - 360).Value);
-			Assert.AreEqual (angle, ((Degree)angle + 360 + 360).Value);
-			Assert.AreEqual (angle, ((Degree)angle - 360 - 360).Value);
+			Assert.AreEqual (angle, ((Degree)(angle + 360)).Value);
+			Assert.AreEqual (angle, ((Degree)(angle - 360)).Value);
+			Assert.AreEqual (angle, ((Degree)(angle + 360 + 360)).Value);
+			Assert.AreEqual (angle, ((Degree)(angle - 360 - 360)).Value);
 		}
+
+        /// <summary>
+        /// Tests angle subtraction.
+        /// </summary>
+        [Test]
+        public void TestDegreeSubstract180()
+        {
+            Degree angle = 30;
+            Assert.AreEqual(-60, angle.Subtract180(330));
+            Assert.AreEqual(60, angle.Subtract180(90));
+        }
 	}
 }
 
