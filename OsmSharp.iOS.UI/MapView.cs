@@ -513,7 +513,15 @@ namespace OsmSharp.iOS.UI
 				return _mapZoom;
 			}
 			set{
-				_mapZoom = value;
+				if (this.MapMaxZoomLevel.HasValue && 
+				    value > this.MapMaxZoomLevel.Value) {
+					_mapZoom = this.MapMaxZoomLevel.Value;
+				} else if (this.MapMinZoomLevel.HasValue &&
+					value < this.MapMinZoomLevel.Value) {
+					_mapZoom = this.MapMinZoomLevel.Value;
+				} else {
+					_mapZoom = value;
+				}
 
 				this.InvokeOnMainThread (InvalidateMap);
 			}
@@ -523,7 +531,7 @@ namespace OsmSharp.iOS.UI
         /// Gets or sets the map max zoom level.
         /// </summary>
         /// <value>The map max zoom level.</value>
-        public float MapMaxZoomLevel
+        public float? MapMaxZoomLevel
         {
             get;
             set;
@@ -533,7 +541,7 @@ namespace OsmSharp.iOS.UI
         /// Gets or sets the map minimum zoom level.
         /// </summary>
         /// <value>The map minimum zoom level.</value>
-        public float MapMinZoomLevel
+        public float? MapMinZoomLevel
         {
             get;
             set;
@@ -572,7 +580,7 @@ namespace OsmSharp.iOS.UI
 		{
 			_mapCenter = center;
 			_mapTilt = mapTilt;
-			_mapZoom = mapZoom;
+			this.MapZoom = mapZoom;
 
 			this.InvokeOnMainThread (InvalidateMap);
 		}
