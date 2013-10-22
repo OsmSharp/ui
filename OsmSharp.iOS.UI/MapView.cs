@@ -841,7 +841,7 @@ namespace OsmSharp.iOS.UI
 
                 (this as IMapView).SetMapView(center, this.MapTilt, zoom);
                 //this.NotifyMovement();
-                //this.Change();
+                this.Change();
             }
         }
 

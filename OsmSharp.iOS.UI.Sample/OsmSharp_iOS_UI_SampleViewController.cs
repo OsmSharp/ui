@@ -60,9 +60,9 @@ namespace OsmSharp.iOS.UI.Sample
 			//mapViewAnimator = new MapViewAnimator (mapView);
 			mapView.Map = map;
 			mapView.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
-			mapView.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {
-				mapView.AddMarker(geoCoordinate).TouchDown  += MapMarkerClicked;
-			};
+//			mapView.MapTapEvent+= delegate(GeoCoordinate geoCoordinate) {
+//				mapView.AddMarker(geoCoordinate).TouchDown  += MapMarkerClicked;
+//			};
 
 			mapView.MapZoom = 18;
 			mapView.MapTilt = 30;
@@ -119,10 +119,24 @@ namespace OsmSharp.iOS.UI.Sample
 			map.AddLayer(_routeLayer);
 
 			View = mapView;
+			
 
-			Timer timer = new Timer (150);
-			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
-			timer.Start ();
+			mapView.AddMarker(new GeoCoordinate(51.1612, 2.9795));
+			mapView.AddMarker(new GeoCoordinate(51.1447, 2.9483));
+
+			//mapView.ZoomToMarkers();
+
+			mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
+			{
+				mapView.ZoomToMarkers();
+				//_mapView.AddMarker(geoCoordinate).Click += new EventHandler(MainActivity_Click);
+				//mapViewAnimator.Stop();
+				//mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
+			};
+
+//			Timer timer = new Timer (150);
+//			timer.Elapsed += new ElapsedEventHandler (TimerHandler);
+//			timer.Start ();
 
 			mapView.SetNeedsDisplay ();
 		}
