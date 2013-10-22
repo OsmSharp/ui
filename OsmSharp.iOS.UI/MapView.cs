@@ -792,6 +792,45 @@ namespace OsmSharp.iOS.UI
             return false;
         }
 
+        /// <summary>
+        /// Zoom to the current markers.
+        /// </summary>
+        public void ZoomToMarkers()
+        {
+            this.ZoomToMarkers(_markers);
+        }
+
+        /// <summary>
+        /// Zoom to the given makers list.
+        /// </summary>
+        /// <param name="marker"></param>
+        public void ZoomToMarkers(List<MapMarker> markers)
+        {			
+            //double[] sceneCenter = this.Map.Projection.ToPixel (this.MapCenter.Latitude, this.MapCenter.Longitude);
+            //float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor (this.MapZoom);
+
+            //return View2D.CreateFrom (sceneCenter [0], sceneCenter [1],
+            //                         rect.Width, rect.Height, sceneZoomFactor,
+            //                         _invertX, _invertY, this.MapTilt);
+            if (_rect.Width > 0)
+            {
+                PointF2D[] points = new PointF2D[markers.Count];
+                for(int idx = 0; idx < markers.Count; idx++)
+                {
+                    points[idx] = markers[idx].Location;
+                }
+                View2D view = this.CreateView(_rect);
+                View2D fittedView = view.Fit(points);
+
+                float zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
+                    _rect.Width, _rect.Height));
+                GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
+                    view.Center[0], view.Center[1]);
+
+                (this as IMapView).SetMapView(center, this.MapTilt, zoom);
+            }
+        }
+
 		/// <summary>
 		/// Notifies the map change to markers.
 		/// </summary>

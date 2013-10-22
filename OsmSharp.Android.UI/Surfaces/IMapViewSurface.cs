@@ -22,6 +22,7 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Units.Angle;
 using OsmSharp.UI.Map;
 using OsmSharp.UI;
+using System.Collections.Generic;
 
 namespace OsmSharp.Android.UI
 {
@@ -129,5 +130,11 @@ namespace OsmSharp.Android.UI
         /// Gets or sets the auto invalidate flag.
         /// </summary>
         bool AutoInvalidate { get; set; }
-	}
+
+        /// <summary>
+        /// Zooms to the given list of markers.
+        /// </summary>
+        /// <param name="markers"></param>
+        void ZoomToMarkers(List<MapMarker> markers);
+    }
 }

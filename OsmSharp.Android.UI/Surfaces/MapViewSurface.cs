@@ -755,5 +755,11 @@ namespace OsmSharp.Android.UI
 				_autoInvalidate = value;
 			}
 		}
+
+
+        public void ZoomToMarkers(List<MapMarker> markers)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

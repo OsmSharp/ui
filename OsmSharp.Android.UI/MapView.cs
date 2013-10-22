@@ -147,6 +147,23 @@ namespace OsmSharp.Android.UI
             return false;
         }
 
+        /// <summary>
+        /// Zoom to the current markers.
+        /// </summary>
+        public void ZoomToMarkers()
+        {
+            this.ZoomToMarkers(_markers);
+        }
+
+        /// <summary>
+        /// Zoom to the given makers list.
+        /// </summary>
+        /// <param name="marker"></param>
+        public void ZoomToMarkers(List<MapMarker> markers)
+        {
+            _mapView.ZoomToMarkers(markers);
+        }
+
 		/// <summary>
 		/// Notifies this MapView that a map marker has changed.
 		/// </summary>

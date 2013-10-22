@@ -33,6 +33,7 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
+using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Android.UI
 {
@@ -691,6 +692,33 @@ namespace OsmSharp.Android.UI
             set
             {
                 _autoInvalidate = value;
+            }
+        }
+
+        /// <summary>
+        /// Zooms to the given list of markers.
+        /// </summary>
+        /// <param name="markers"></param>
+        public void ZoomToMarkers(List<MapMarker> markers)
+        {
+            float height = this.LayoutParameters.Height;
+            float width = this.LayoutParameters.Width;
+            if (width > 0)
+            {
+                PointF2D[] points = new PointF2D[markers.Count];
+                for (int idx = 0; idx < markers.Count; idx++)
+                {
+                    points[idx] = markers[idx].Location;
+                }
+                View2D view = this.CreateView();
+                View2D fittedView = view.Fit(points);
+
+                float zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
+                    width, height));
+                GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
+                    view.Center[0], view.Center[1]);
+
+                (this as IMapView).SetMapView(center, this.MapTilt, zoom);
             }
         }
     }

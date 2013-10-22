@@ -57,6 +57,17 @@ namespace OsmSharp.UI.Renderer
 			_rectangle = rectangle;
 		}
 
+        /// <summary>
+        /// Returns the center of this view.
+        /// </summary>
+        public PointF2D Center {
+            get
+            {
+                return _rectangle.Center;
+            }
+        }
+
+
 		/// <summary>
 		/// Gets the width.
 		/// </summary>
