@@ -78,5 +78,26 @@ namespace OsmSharp.UI.Test.Unittests
             Assert.AreEqual(0, simpleColor.G);
             Assert.AreEqual(0, simpleColor.B);
         }
+
+		/// <summary>
+		/// Tests the simple color from hex.
+		/// </summary>
+		[Test]
+		public void TestSimpleColorFromHex() {
+			SimpleColor color = SimpleColor.FromKnownColor (KnownColor.Red);
+			Assert.AreEqual (color.Value, SimpleColor.FromHex (color.HexRgb).Value);
+
+			color = SimpleColor.FromKnownColor (KnownColor.Blue);
+			Assert.AreEqual (color.Value, SimpleColor.FromHex (color.HexRgb).Value);
+
+			color = SimpleColor.FromKnownColor (KnownColor.Yellow);
+			Assert.AreEqual (color.Value, SimpleColor.FromHex (color.HexRgb).Value);
+
+			color = SimpleColor.FromKnownColor (KnownColor.Green);
+			Assert.AreEqual (color.Value, SimpleColor.FromHex (color.HexRgb).Value);
+
+			color = SimpleColor.FromKnownColor (KnownColor.White);
+			Assert.AreEqual (color.Value, SimpleColor.FromHex (color.HexRgb).Value);
+		}
     }
 }

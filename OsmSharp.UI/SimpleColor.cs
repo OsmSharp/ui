@@ -179,6 +179,35 @@ namespace OsmSharp.UI
             return SimpleColor.FromArgb(alpha, knownColor.R, knownColor.G, knownColor.B);
         }
 
+		/// <summary>
+		/// Gets the 32-bit ARGB simple color from the given hex string.
+		/// </summary>
+		/// <returns>The hex.</returns>
+		/// <param name="hex">Hex.</param>
+		public static SimpleColor FromHex(string hex)
+		{
+			if (hex == null) {
+				throw new ArgumentNullException ("hex");
+			}
+			if (hex.Length < 9) {
+				throw new ArgumentOutOfRangeException ("hex", 
+					string.Format("The given string can never be a color: {0} too short.", hex));
+			}
+
+			if (hex.Length == 9) {
+				return SimpleColor.FromArgb (
+					Int32.Parse (hex.Replace ("#", ""), System.Globalization.NumberStyles.HexNumber, 
+					             System.Globalization.CultureInfo.InvariantCulture));
+			} else if (hex.Length == 10) {
+				return SimpleColor.FromArgb (
+					Int32.Parse (hex.Replace ("0x", ""), System.Globalization.NumberStyles.HexNumber, 
+					             System.Globalization.CultureInfo.InvariantCulture));
+			} else {
+				throw new ArgumentOutOfRangeException ("hex", 
+				                                       string.Format("The given string can is not a hex-color: {0}.", hex));
+			}
+		}
+
         /// <summary>
         /// Contains know colors.
         /// </summary>
