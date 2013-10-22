@@ -110,7 +110,7 @@ namespace OsmSharp.iOS.UI.Sample
 			RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
 			RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
 			Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-			_enumerator = route1.GetRouteEnumerable(20).GetEnumerator();
+			_enumerator = route1.GetRouteEnumerable(40).GetEnumerator();
 //
 			_routeLayer = new LayerRoute(map.Projection);
 			_routeLayer.AddRoute (route1);

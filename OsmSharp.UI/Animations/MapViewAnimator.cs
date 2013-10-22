@@ -157,7 +157,7 @@ namespace OsmSharp.UI.Animations
         /// <summary>
         /// Holds the step tilt.
         /// </summary>
-        private Degree _stepTilt;
+        private double _stepTilt;
 
         /// <summary>
         /// Holds the step center.
@@ -216,12 +216,15 @@ namespace OsmSharp.UI.Animations
                 _stepZoom = (float)((_targetZoom - _mapView.MapZoom) / _maxSteps);
 
 				// calculate the map tilt, make sure it turns along the smallest corner.
-				double diff = _mapView.MapTilt.Subtract180(_targetTilt);
-				_stepTilt = (Degree)(diff / _maxSteps);
+				double diff = _targetTilt.Subtract180(_mapView.MapTilt);
+				OsmSharp.Logging.Log.TraceEvent ("MapViewAnimator", System.Diagnostics.TraceEventType.Information, diff.ToString());
+				_stepTilt = (diff / _maxSteps);
 
-                //OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", System.Diagnostics.TraceEventType.Verbose,
-                //    string.Format("Started new animation with steps z:{0} t:{1} c:{2} to z:{3} t:{4} c:{5}.",
-                //        _stepZoom, _stepTilt, _stepCenter.ToString(), _targetZoom, _targetTilt, _targetCenter.ToString()));
+                OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", System.Diagnostics.TraceEventType.Verbose,
+				                                string.Format("Started new animation with steps z:{0} t:{1} c:{2} to z:{3} t:{4} c:{5} from z:{6} t:{7} c:{8}.",
+                        		_stepZoom, _stepTilt, _stepCenter.ToString(), 
+				              _targetZoom, _targetTilt, _targetCenter.ToString(), 
+				              _mapView.MapZoom, _mapView.MapTilt, _mapView.MapCenter.ToString()));
 
 				// disable auto invalidate.
 				_mapView.AutoInvalidate = false;
