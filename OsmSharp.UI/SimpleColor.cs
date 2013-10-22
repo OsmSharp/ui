@@ -189,12 +189,17 @@ namespace OsmSharp.UI
 			if (hex == null) {
 				throw new ArgumentNullException ("hex");
 			}
-			if (hex.Length < 9) {
+			if (hex.Length < 7) {
 				throw new ArgumentOutOfRangeException ("hex", 
 					string.Format("The given string can never be a color: {0} too short.", hex));
 			}
 
-			if (hex.Length == 9) {
+            if (hex.Length == 7) {
+                return SimpleColor.FromArgb(
+                    Int32.Parse("FF" + hex.Replace("#", ""), System.Globalization.NumberStyles.HexNumber,
+                                 System.Globalization.CultureInfo.InvariantCulture));
+            } 
+			else if (hex.Length == 9) {
 				return SimpleColor.FromArgb (
 					Int32.Parse (hex.Replace ("#", ""), System.Globalization.NumberStyles.HexNumber, 
 					             System.Globalization.CultureInfo.InvariantCulture));
