@@ -806,12 +806,6 @@ namespace OsmSharp.iOS.UI
         /// <param name="marker"></param>
         public void ZoomToMarkers(List<MapMarker> markers)
         {			
-            //double[] sceneCenter = this.Map.Projection.ToPixel (this.MapCenter.Latitude, this.MapCenter.Longitude);
-            //float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor (this.MapZoom);
-
-            //return View2D.CreateFrom (sceneCenter [0], sceneCenter [1],
-            //                         rect.Width, rect.Height, sceneZoomFactor,
-            //                         _invertX, _invertY, this.MapTilt);
             if (_rect.Width > 0)
             {
                 PointF2D[] points = new PointF2D[markers.Count];
