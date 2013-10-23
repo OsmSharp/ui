@@ -25,6 +25,9 @@
     <MtouchDebug>true</MtouchDebug>
     <MtouchProfiling>true</MtouchProfiling>
     <MtouchUseSGen>true</MtouchUseSGen>
+    <MtouchI18n>
+    </MtouchI18n>
+    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>full</DebugType>
@@ -139,10 +142,10 @@
     <BundleResource Include="Resources\Icon-72%402x.png" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\..\..\Dropbox\SharpSoftware\Projects\Westtour WOI\wvl.routing">
+    <EmbeddedResource Include="..\..\..\..\Dropbox\SharpSoftware\Projects\Westtour WOI\wvl\wvl.routing">
       <Link>wvl.routing</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="..\..\..\..\osmosis\bin\wvl.map">
+    <EmbeddedResource Include="..\..\..\..\Dropbox\SharpSoftware\Projects\Westtour WOI\wvl\wvl.map">
       <Link>wvl.map</Link>
     </EmbeddedResource>
   </ItemGroup>

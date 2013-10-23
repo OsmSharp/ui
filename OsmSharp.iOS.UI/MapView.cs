@@ -31,6 +31,7 @@ using OsmSharp.Math.Primitives;
 using OsmSharp.Units.Angle;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Animations;
+using System.Threading;
 
 namespace OsmSharp.iOS.UI
 {
@@ -128,11 +129,6 @@ namespace OsmSharp.iOS.UI
 				new CGContextRenderer ());
 			_cachedScene = new Scene2DSimple ();
 			_cachedScene.BackColor = SimpleColor.FromKnownColor (KnownColor.White).Value;
-
-			// create invalidation timer.
-			_render = true;
-
-			new System.Threading.Timer (InvalidateSimple, new object(), 0, 50);
 		}
 
 		/// <summary>
@@ -144,11 +140,6 @@ namespace OsmSharp.iOS.UI
 		{
 			return true;
 		}
-
-		/// <summary>
-		/// Holds the rendering flag.
-		/// </summary>
-		private bool _render;
 
 		/// <summary>
 		/// Holds the cache renderer.
@@ -166,124 +157,145 @@ namespace OsmSharp.iOS.UI
 		private Scene2D _cachedScene;
 
 		/// <summary>
-		/// Invalidates while rendering.
+		/// Holds the rendering thread.
 		/// </summary>
-		/// <param name="state">State.</param>
-		private void InvalidateSimple(object state) {
-			lock (state) {
-				if (_render) {
-					if (_cacheRenderer.IsRunning) {
-						_cacheRenderer.Cancel ();
-					}
-
-					this.Render ();
-				}
-			}
-		}
+		private Thread _renderingThread;
 
 		/// <summary>
 		/// Notifies change.
 		/// </summary>
 		internal void Change()
 		{
-			if (_cacheRenderer.IsRunning) {
-				_cacheRenderer.Cancel ();
+			if (this.Frame.Width == 0) {
+				return;
 			}
 
-			// set the rendering flag.
-			_rect = this.Frame;
-			_render = true;
+			lock (_cacheRenderer) {
+				// create the view that would be use for rendering.
+				View2D view = _cacheRenderer.Create ((int)(this.Frame.Width * _extra), (int)(this.Frame.Height * _extra),
+				                                    this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoom), 
+				                                    this.MapCenter, _invertX, _invertY, this.MapTilt);
+
+				// ... and compare to the previous rendered view.
+				if (_previousRenderedZoom != null &&
+				   view.Equals (_previousRenderedZoom)) {
+					return;
+				}
+				_previousRenderedZoom = view;
+
+				// end existing rendering thread.
+				if (_renderingThread != null &&
+				   _renderingThread.IsAlive) {
+					_renderingThread.Abort ();
+				}
+
+				// set the rendering frame.
+				_rect = this.Frame;
+
+				// start new rendering thread.
+				_renderingThread = new Thread (new ThreadStart (Render));
+				_renderingThread.Start ();
+			}
 		}
 
+		private float _extra = 1.4f;
+
 		private byte[] _bytescache;
+
+		private View2D _previousRenderedZoom;
 
 		/// <summary>
 		/// Render the current complete scene.
 		/// </summary>
 		void Render(){
-			
 			RectangleF rect = _rect;
 			//RectangleF rect = this.Frame;
 
 			if (_cacheRenderer.IsRunning) {
 				_cacheRenderer.CancelAndWait ();
 			}
+			
+			//lock (_cacheRenderer) { // make sure only on thread at the same time is using the renderer.
+			// create the view.
+			View2D view = _cacheRenderer.Create ((int)(rect.Width * _extra), (int)(rect.Height * _extra),
+			                                      this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoom), 
+			                                      this.MapCenter, _invertX, _invertY, this.MapTilt);
+
+			if (view.Equals (_previousRenderedZoom)) {
+				return;
+			}
 
 			if (rect.Width == 0) { // only render if a proper size is known.
 				return;
 			}
 
-			lock (_cacheRenderer) { // make sure only on thread at the same time is using the renderer.
-				_render = false;
+			OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+			                                 "Before lock.");
 
-				long before = DateTime.Now.Ticks;
+			long before = DateTime.Now.Ticks;
 //				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
 //				                                "Rendering Start");
 
-				float extra = 1.4f;
+			// build the layers list.
+			var layers = new List<ILayer> ();
+			for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++) {
+				layers.Add (this.Map [layerIdx]);
+			}
 
-				// build the layers list.
-				var layers = new List<ILayer> ();
-				for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++) {
-					layers.Add (this.Map [layerIdx]);
+			// add the internal layer.
+			// TODO: create marker layer.
+
+			// create a new bitmap context.
+			CGColorSpace space = CGColorSpace.CreateDeviceRGB ();
+			int bytesPerPixel = 4;
+			int bytesPerRow = bytesPerPixel * (int)(rect.Width * _extra);
+			int bitsPerComponent = 8;
+			if (_bytescache == null) {
+				_bytescache = new byte[bytesPerRow * (int)(rect.Height * _extra)];
+			}
+			CGBitmapContext gctx = new CGBitmapContext (null, (int)(rect.Width * _extra), (int)(rect.Height * _extra),
+			                                             bitsPerComponent, bytesPerRow,
+			                                             space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
+			                                             CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
+
+			// notify the map that the view has changed.
+			this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor (this.MapZoom), this.MapCenter, 
+			                       view);
+			long afterViewChanged = DateTime.Now.Ticks;
+			OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+			                                 "View change took: {0}ms @ zoom level {1}",
+			                                 (new TimeSpan (afterViewChanged - before).TotalMilliseconds), this.MapZoom);
+			// does the rendering.
+			bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx, 
+			                                                              new RectangleF (0, 0, (int)(rect.Width * _extra), (int)(rect.Height * _extra))), 
+			                                        layers, view);
+
+			long afterRendering = DateTime.Now.Ticks;
+			OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+			                                 "Rendering took: {0}ms @ zoom level {1}",
+			                                 (new TimeSpan (afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
+			if (complete) { // there was no cancellation, the rendering completely finished.
+				// add the result to the scene cache.
+				lock (_cachedScene) {
+					// add the newly rendered image again.
+					_cachedScene.Clear ();
+					_cachedScene.AddImage (0, float.MinValue, float.MaxValue, view.Rectangle, new byte[0], gctx.ToImage ());
 				}
+				this.InvokeOnMainThread (InvalidateMap);
 
-				// add the internal layer.
-				// TODO: create marker layer.
+				// store the previous view.
+				_previousRenderedZoom = view;
+			}
 
-				// create a new bitmap context.
-				CGColorSpace space = CGColorSpace.CreateDeviceRGB ();
-				int bytesPerPixel = 4;
-				int bytesPerRow = bytesPerPixel * (int)(rect.Width * extra);
-				int bitsPerComponent = 8;
-				if (_bytescache == null) {
-					_bytescache = new byte[bytesPerRow * (int)(rect.Height * extra)];
-				}
-				CGBitmapContext gctx = new CGBitmapContext (null, (int)(rect.Width * extra), (int)(rect.Height * extra),
-				                                           bitsPerComponent, bytesPerRow,
-				                                            space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
-				                                            CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
-
-				// create the view.
-				View2D view = _cacheRenderer.Create ((int)(rect.Width * extra), (int)(rect.Height * extra),
-				                                     this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoom), 
-				                                     this.MapCenter, _invertX, _invertY, this.MapTilt);
-
-				// notify the map that the view has changed.
-				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, 
-				                      view);
-				long afterViewChanged = DateTime.Now.Ticks;
-				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-				                                "View change took: {0}ms @ zoom level {1}",
-				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
-				// does the rendering.
-				bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx, 
-				                                                             new RectangleF(0,0,(int)(rect.Width * extra), (int)(rect.Height * extra))), 
-				                                       layers, view);
-
-				long afterRendering = DateTime.Now.Ticks;
-				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-				                                "Rendering took: {0}ms @ zoom level {1}",
-				                                (new TimeSpan(afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
-				if (complete) { // there was no cancellation, the rendering completely finished.
-					// add the result to the scene cache.
-					lock (_cachedScene) {
-						// add the newly rendered image again.
-						_cachedScene.Clear ();
-						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, view.Rectangle, new byte[0], gctx.ToImage ());
-					}
-					this.InvokeOnMainThread (InvalidateMap);
-				}
-
-				long after = DateTime.Now.Ticks;
+			long after = DateTime.Now.Ticks;
 //				if (!complete) {
 //					OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering CANCELLED!", 
 //					                                new TimeSpan (after - before).TotalMilliseconds);
 //				} else {
-					OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-				                                "Rendering in {0}ms", new TimeSpan (after - before).TotalMilliseconds);
-//				}
-			}
+			OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+			                                  "Rendering in {0}ms", new TimeSpan (after - before).TotalMilliseconds);
+			//				}
+			//}
 		}
 
 		/// <summary>
@@ -304,7 +316,7 @@ namespace OsmSharp.iOS.UI
 					View2D rotatedView = _mapViewBefore.RotateAroundCenter ((Radian)rotation.Rotation);
 					_mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
 					PointF2D sceneCenter = rotatedView.Rectangle.Center;
-					this.MapCenter = this.Map.Projection.ToGeoCoordinates (
+					_mapCenter = this.Map.Projection.ToGeoCoordinates (
 						sceneCenter [0], sceneCenter [1]);
 					this.Change ();
 
@@ -316,7 +328,7 @@ namespace OsmSharp.iOS.UI
 					View2D rotatedView = _mapViewBefore.RotateAroundCenter ((Radian)rotation.Rotation);
 					_mapTilt = (float)((Degree)rotatedView.Rectangle.Angle).Value;
 					PointF2D sceneCenter = rotatedView.Rectangle.Center;
-					this.MapCenter = this.Map.Projection.ToGeoCoordinates (
+					_mapCenter = this.Map.Projection.ToGeoCoordinates (
 						sceneCenter [0], sceneCenter [1]);
 
 					this.InvokeOnMainThread (InvalidateMap);
@@ -340,7 +352,7 @@ namespace OsmSharp.iOS.UI
 			if (rect.Width > 0) {
 				this.StopCurrentAnimation ();
 				if (pinch.State == UIGestureRecognizerState.Ended) {
-					this.MapZoom = _mapZoomLevelBefore.Value;
+					_mapZoom = _mapZoomLevelBefore.Value;
 
 					double zoomFactor = this.Map.Projection.ToZoomFactor (this.MapZoom);
 					zoomFactor = zoomFactor * pinch.Scale;
@@ -353,11 +365,11 @@ namespace OsmSharp.iOS.UI
 					_mapZoomLevelBefore = this.MapZoom;
 				}
 				else {
-					this.MapZoom = _mapZoomLevelBefore.Value;
+					_mapZoom = _mapZoomLevelBefore.Value;
 
-					double zoomFactor = this.Map.Projection.ToZoomFactor (this.MapZoom);
+					double zoomFactor = this.Map.Projection.ToZoomFactor (_mapZoom);
 					zoomFactor = zoomFactor * pinch.Scale;
-					this.MapZoom = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
+					_mapZoom = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
 
 					this.InvokeOnMainThread (InvalidateMap);
 				}
@@ -394,7 +406,7 @@ namespace OsmSharp.iOS.UI
                 }
                 else if (pan.State == UIGestureRecognizerState.Changed)
                 {
-                    this.MapCenter = _beforePan;
+                    _mapCenter = _beforePan;
 
 					View2D view = this.CreateView(rect);
                     double centerXPixels = rect.Width / 2.0f - offset.X;
@@ -403,7 +415,7 @@ namespace OsmSharp.iOS.UI
                     double[] sceneCenter = view.FromViewPort(rect.Width, rect.Height,
                                                               centerXPixels, centerYPixels);
 
-                    this.MapCenter = this.Map.Projection.ToGeoCoordinates(
+					_mapCenter = this.Map.Projection.ToGeoCoordinates(
                         sceneCenter[0], sceneCenter[1]);
 
                     this.InvokeOnMainThread(InvalidateMap);
@@ -711,15 +723,6 @@ namespace OsmSharp.iOS.UI
 		/// <param name="rect">Rect.</param>
 		public override void Draw (System.Drawing.RectangleF rect)
 		{
-//			if (_rect.Width == 0) {
-//				_rect = rect;
-//				this.Render ();
-//			}
-//			_rect = rect;
-			if (_render) {
-				this.Render ();
-			}
-
 			base.Draw (rect);
 
 			lock (_cachedScene) {
