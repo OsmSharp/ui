@@ -4,14 +4,7 @@
 <dict>
 	<key>UIDeviceFamily</key>
 	<array>
-		<integer>2</integer>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
+		<integer>1</integer>
 	</array>
 	<key>MinimumOSVersion</key>
 	<string>3.2</string>

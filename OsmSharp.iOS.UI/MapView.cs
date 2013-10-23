@@ -98,31 +98,77 @@ namespace OsmSharp.iOS.UI
 
 			_markers = new List<MapMarker> ();
 
-			var panGesture = new UIPanGestureRecognizer (Pan);
-			panGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
-			this.AddGestureRecognizer (panGesture);
+			Version version = new Version (MonoTouch.Constants.Version);
+			if (version > new Version (7, 0)) {
+				var panGesture = new UIPanGestureRecognizer (Pan);
+				panGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { 
+					return true; 
+				};
+				// TODO: workaround for xamarin bug, remove later!
+				panGesture.ShouldRequireFailureOf = (a, b) => { return false; };
+				panGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
+				this.AddGestureRecognizer (panGesture);
 
-			var pinchGesture = new UIPinchGestureRecognizer (Pinch);
-			pinchGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
-			this.AddGestureRecognizer (pinchGesture);
+				var pinchGesture = new UIPinchGestureRecognizer (Pinch);
+				pinchGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { 
+					return true; 
+				};
+				// TODO: workaround for xamarin bug, remove later!
+				pinchGesture.ShouldRequireFailureOf = (a, b) => { return false; };
+				pinchGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
+				this.AddGestureRecognizer (pinchGesture);
 
-			var rotationGesture = new UIRotationGestureRecognizer (Rotate);
-			rotationGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
-			this.AddGestureRecognizer (rotationGesture);
+				var rotationGesture = new UIRotationGestureRecognizer (Rotate);
+				rotationGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { 
+					return true; 
+				};
+				// TODO: workaround for xamarin bug, remove later!
+				rotationGesture.ShouldRequireFailureOf = (a, b) => { return false; };
+				rotationGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
+				this.AddGestureRecognizer (rotationGesture);
 
-			var singleTapGesture = new UITapGestureRecognizer (SingleTap);
-			singleTapGesture.NumberOfTapsRequired = 1;
-			//singleTapGesture.ShouldRecognizeSimultaneously += ShouldRecognizeSimultaneouslySingle;
-			//singleTapGesture.ShouldBeRequiredToFailBy += ShouldRecognizeSimultaneouslySingle;
+				var singleTapGesture = new UITapGestureRecognizer (SingleTap);
+				singleTapGesture.NumberOfTapsRequired = 1;
+				// TODO: workaround for xamarin bug, remove later!
+				singleTapGesture.ShouldRequireFailureOf = (a, b) => { return false; };
+				singleTapGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
 
-			var doubleTapGesture = new UITapGestureRecognizer (DoubleTap);
-			doubleTapGesture.NumberOfTapsRequired = 2;
-			//doubleTapGesture.ShouldRecognizeSimultaneously += ShouldRecognizeSimultaneouslySingle;
-			//doubleTapGesture.ShouldBeRequiredToFailBy += ShouldRecognizeSimultaneouslyDouble;
-			
-			singleTapGesture.RequireGestureRecognizerToFail (doubleTapGesture);
-			this.AddGestureRecognizer (singleTapGesture);
-			this.AddGestureRecognizer (doubleTapGesture);
+				var doubleTapGesture = new UITapGestureRecognizer (DoubleTap);
+				doubleTapGesture.NumberOfTapsRequired = 2;
+				// TODO: workaround for xamarin bug, remove later!
+				doubleTapGesture.ShouldRequireFailureOf = (a, b) => { return false; };
+				doubleTapGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
+
+				//singleTapGesture.RequireGestureRecognizerToFail (doubleTapGesture);
+				this.AddGestureRecognizer (singleTapGesture);
+				this.AddGestureRecognizer (doubleTapGesture);
+			} else {
+				var panGesture = new UIPanGestureRecognizer (Pan);
+				panGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
+				this.AddGestureRecognizer (panGesture);
+
+				var pinchGesture = new UIPinchGestureRecognizer (Pinch);
+				pinchGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
+				this.AddGestureRecognizer (pinchGesture);
+
+				var rotationGesture = new UIRotationGestureRecognizer (Rotate);
+				rotationGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { return true; };
+				this.AddGestureRecognizer (rotationGesture);
+
+				var singleTapGesture = new UITapGestureRecognizer (SingleTap);
+				singleTapGesture.NumberOfTapsRequired = 1;
+				//singleTapGesture.ShouldRecognizeSimultaneously += ShouldRecognizeSimultaneouslySingle;
+				//singleTapGesture.ShouldBeRequiredToFailBy += ShouldRecognizeSimultaneouslySingle;
+
+				var doubleTapGesture = new UITapGestureRecognizer (DoubleTap);
+				doubleTapGesture.NumberOfTapsRequired = 2;
+				//doubleTapGesture.ShouldRecognizeSimultaneously += ShouldRecognizeSimultaneouslySingle;
+				//doubleTapGesture.ShouldBeRequiredToFailBy += ShouldRecognizeSimultaneouslyDouble;
+
+				singleTapGesture.RequireGestureRecognizerToFail (doubleTapGesture);
+				this.AddGestureRecognizer (singleTapGesture);
+				this.AddGestureRecognizer (doubleTapGesture);
+			}
 
 			// create the cache renderer.
 			_cacheRenderer = new MapRenderer<CGContextWrapper> (
@@ -387,6 +433,9 @@ namespace OsmSharp.iOS.UI
 		/// <param name="some">Some.</param>
 		private void Pan(UIPanGestureRecognizer pan)
 		{
+			OsmSharp.Logging.Log.TraceEvent ("MapView", System.Diagnostics.TraceEventType.Error, 
+			                                 string.Format("{0} ", pan.State.ToString()));
+
 			//RectangleF2D rect = _rect;
 			RectangleF rect = this.Frame;
 			if (rect.Width > 0) {
@@ -416,7 +465,7 @@ namespace OsmSharp.iOS.UI
                                                               centerXPixels, centerYPixels);
 
 					_mapCenter = this.Map.Projection.ToGeoCoordinates(
-                        sceneCenter[0], sceneCenter[1]);
+						sceneCenter[0], sceneCenter[1]);
 
                     this.InvokeOnMainThread(InvalidateMap);
                 }
