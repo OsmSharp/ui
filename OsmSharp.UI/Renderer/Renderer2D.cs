@@ -120,6 +120,7 @@ namespace OsmSharp.UI.Renderer
 				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", System.Diagnostics.TraceEventType.Error, 
 				                                 ex.Message);
 				this.SetRunning (false);
+				throw ex;
 			}
 			return false;
 		}
@@ -164,6 +165,7 @@ namespace OsmSharp.UI.Renderer
 				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", System.Diagnostics.TraceEventType.Error, 
 				                                 ex.Message);
 				this.SetRunning (false);
+				throw ex;
 			}
 			return false;
         }
@@ -286,7 +288,8 @@ namespace OsmSharp.UI.Renderer
 			}
 			catch(Exception ex) {
 				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", System.Diagnostics.TraceEventType.Error, 
-				                                ex.Message);
+				                                 ex.Message);
+				throw ex;
 			}
 			return false;
         }

@@ -22,6 +22,7 @@ using OsmSharp.UI.Animations;
 using OsmSharp.UI.Animations.Navigation;
 using OsmSharp.Routing.Navigation;
 using OsmSharp.Routing.Instructions;
+using System.Threading.Tasks;
 
 namespace OsmSharp.iOS.UI.Sample
 {
@@ -53,7 +54,7 @@ namespace OsmSharp.iOS.UI.Sample
 
 		public override void LoadView ()
 		{
-			//OsmSharp.Logging.Log.Enable ();
+			OsmSharp.Logging.Log.Enable ();
 
 			base.LoadView ();
 
@@ -151,14 +152,19 @@ namespace OsmSharp.iOS.UI.Sample
 			
 			RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
 			_routeTrackerAnimator = new RouteTrackerAnimator(mapView, routeTracker, 5);
-
+//
 				Timer timer = new Timer (150);
 				timer.Elapsed += new ElapsedEventHandler (TimerHandler);
 				timer.Start ();
-
-			//_mapView.ZoomToMarkers();
-
-			mapView.SetNeedsDisplay ();
+//
+//			Task.Factory.StartNew (() => {
+//				System.Threading.Thread.Sleep(200); // do something.
+//				InvokeOnMainThread (() => {
+//					mapView.ZoomToMarkers ();
+//				});
+//			});
+//
+//			mapView.SetNeedsDisplay ();
 			
 
 			//

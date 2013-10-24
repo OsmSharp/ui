@@ -939,9 +939,10 @@ namespace OsmSharp.iOS.UI
                     width, height));
                 GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
                     fittedView.Center[0], fittedView.Center[1]);
+				
+				_mapCenter = center;
+				this.MapZoom = zoom;
 
-                (this as IMapView).SetMapView(center, this.MapTilt, zoom);
-                //this.NotifyMovement();
                 this.Change(false);
             }
         }

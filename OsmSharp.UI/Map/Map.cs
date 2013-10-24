@@ -92,7 +92,7 @@ namespace OsmSharp.UI.Map
         {
             foreach (var layer in _layers)
             {
-                layer.ViewChanged(this, zoomFactor, center, view);
+				layer.ViewChanged (this, zoomFactor, center, view);
             }
         }
 
