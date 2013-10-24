@@ -74,6 +74,8 @@ namespace OsmSharp.iOS.UI.Sample
 //				mapView.AddMarker(geoCoordinate).TouchDown  += MapMarkerClicked;
 //			};
 
+			mapView.MapMaxZoomLevel = 18;
+			mapView.MapMinZoomLevel = 12;
 			mapView.MapZoom = 18;
 			mapView.MapTilt = 30;
 
@@ -153,9 +155,9 @@ namespace OsmSharp.iOS.UI.Sample
 			RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
 			_routeTrackerAnimator = new RouteTrackerAnimator(mapView, routeTracker, 5);
 //
-				Timer timer = new Timer (150);
-				timer.Elapsed += new ElapsedEventHandler (TimerHandler);
-				timer.Start ();
+//				Timer timer = new Timer (150);
+//				timer.Elapsed += new ElapsedEventHandler (TimerHandler);
+//				timer.Start ();
 //
 //			Task.Factory.StartNew (() => {
 //				System.Threading.Thread.Sleep(200); // do something.

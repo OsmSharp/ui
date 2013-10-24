@@ -410,13 +410,15 @@ namespace OsmSharp.iOS.UI
 
 					double zoomFactor = this.Map.Projection.ToZoomFactor (this.MapZoom);
 					zoomFactor = zoomFactor * pinch.Scale;
-					this.MapZoom = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
+					_mapZoom = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
+
+					this.NormalizeZoom ();
 
 					this.Change (true); // notifies change.
 
 					_mapZoomLevelBefore = null;
 				} else if (pinch.State == UIGestureRecognizerState.Began) {
-					_mapZoomLevelBefore = this.MapZoom;
+					_mapZoomLevelBefore = _mapZoom;
 				}
 				else {
 					_mapZoom = _mapZoomLevelBefore.Value;
@@ -424,6 +426,8 @@ namespace OsmSharp.iOS.UI
 					double zoomFactor = this.Map.Projection.ToZoomFactor (_mapZoom);
 					zoomFactor = zoomFactor * pinch.Scale;
 					_mapZoom = (float)this.Map.Projection.ToZoomLevel (zoomFactor);
+
+					this.NormalizeZoom ();
 
 					this.InvokeOnMainThread (InvalidateMap);
 				}
@@ -613,19 +617,26 @@ namespace OsmSharp.iOS.UI
 				return _mapZoom;
 			}
 			set{
-				if (this.MapMaxZoomLevel.HasValue && 
-				    value > this.MapMaxZoomLevel.Value) {
-					_mapZoom = this.MapMaxZoomLevel.Value;
-				} else if (this.MapMinZoomLevel.HasValue &&
-					value < this.MapMinZoomLevel.Value) {
-					_mapZoom = this.MapMinZoomLevel.Value;
-				} else {
-					_mapZoom = value;
-				}
+				_mapZoom = value;
+
+				this.NormalizeZoom ();
 
 				this.InvokeOnMainThread (InvalidateMap);
 			}
         }
+
+		/// <summary>
+		/// Normalizes the zoom and fits it inside the min/max bounds.
+		/// </summary>
+		private void NormalizeZoom() {
+			if (this.MapMaxZoomLevel.HasValue &&
+			    _mapZoom > this.MapMaxZoomLevel.Value) {
+				_mapZoom = this.MapMaxZoomLevel.Value;
+			} else if (this.MapMinZoomLevel.HasValue &&
+			           _mapZoom < this.MapMinZoomLevel.Value) {
+				_mapZoom = this.MapMinZoomLevel.Value;
+			}
+		}
 
         /// <summary>
         /// Gets or sets the map max zoom level.
