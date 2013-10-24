@@ -98,8 +98,7 @@ namespace OsmSharp.iOS.UI
 
 			_markers = new List<MapMarker> ();
 
-			Version version = new Version (MonoTouch.Constants.Version);
-			if (version > new Version (7, 0)) {
+			if (UIDevice.CurrentDevice.CheckSystemVersion (7, 0)) {
 				var panGesture = new UIPanGestureRecognizer (Pan);
 				panGesture.ShouldRecognizeSimultaneously += (UIGestureRecognizer r, UIGestureRecognizer other) => { 
 					return true; 
@@ -130,14 +129,14 @@ namespace OsmSharp.iOS.UI
 				var singleTapGesture = new UITapGestureRecognizer (SingleTap);
 				singleTapGesture.NumberOfTapsRequired = 1;
 				// TODO: workaround for xamarin bug, remove later!
-				singleTapGesture.ShouldRequireFailureOf = (a, b) => { return false; };
-				singleTapGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
+//				singleTapGesture.ShouldRequireFailureOf = (a, b) => { return false; };
+//				singleTapGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
 
 				var doubleTapGesture = new UITapGestureRecognizer (DoubleTap);
 				doubleTapGesture.NumberOfTapsRequired = 2;
 				// TODO: workaround for xamarin bug, remove later!
-				doubleTapGesture.ShouldRequireFailureOf = (a, b) => { return false; };
-				doubleTapGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
+//				doubleTapGesture.ShouldRequireFailureOf = (a, b) => { return false; };
+//				doubleTapGesture.ShouldBeRequiredToFailBy = (a, b) => { return false; };
 
 				//singleTapGesture.RequireGestureRecognizerToFail (doubleTapGesture);
 				this.AddGestureRecognizer (singleTapGesture);
@@ -311,6 +310,9 @@ namespace OsmSharp.iOS.UI
 			OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
 			                                 "View change took: {0}ms @ zoom level {1}",
 			                                 (new TimeSpan (afterViewChanged - before).TotalMilliseconds), this.MapZoom);
+
+			System.Threading.Thread.Sleep (1000);
+
 			// does the rendering.
 			bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx, 
 			                                                              new RectangleF (0, 0, (int)(rect.Width * _extra), (int)(rect.Height * _extra))), 
