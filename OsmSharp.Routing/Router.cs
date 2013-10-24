@@ -27,9 +27,9 @@ using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Routers;
-using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.Routing
 {

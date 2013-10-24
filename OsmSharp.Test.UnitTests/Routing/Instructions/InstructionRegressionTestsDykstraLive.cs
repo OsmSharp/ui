@@ -25,10 +25,9 @@ using OsmSharp.Routing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Router.Dykstra;
-using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Graphs;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {
@@ -65,13 +64,22 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         }
 
         /// <summary>
-        /// Issue with generation instructions but where streetnames seem to be stripped.
+        /// Issue with generating instructions but where streetnames seem to be stripped.
         /// Some streetnames are missing from the instructions.
         /// </summary>
         [Test]
         public void InstructionRegressionDykstraLiveTest1()
         {
             this.DoInstructionRegressionTest1();
+        }
+
+        /// <summary>
+        /// Issue with generating instructions.
+        /// </summary>
+        [Test]
+        public void InstructionRegressionDykstraLiveTest2()
+        {
+            this.DoInstructionRegressionTest2();
         }
     }
 }
