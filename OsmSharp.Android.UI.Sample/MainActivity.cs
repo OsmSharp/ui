@@ -180,7 +180,7 @@ namespace OsmSharp.Android.UI.Sample
 
             _mapView.ZoomToMarkers();
 
-            _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker);
+            _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5);
 
             //Timer timer = new Timer(3000);
             //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
