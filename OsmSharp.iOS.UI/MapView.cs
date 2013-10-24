@@ -311,8 +311,6 @@ namespace OsmSharp.iOS.UI
 			                                 "View change took: {0}ms @ zoom level {1}",
 			                                 (new TimeSpan (afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
-			System.Threading.Thread.Sleep (1000);
-
 			// does the rendering.
 			bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx, 
 			                                                              new RectangleF (0, 0, (int)(rect.Width * _extra), (int)(rect.Height * _extra))), 
