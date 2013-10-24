@@ -27,9 +27,8 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {
@@ -78,6 +77,15 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         public void InstructionRegressionCHTest1()
         {
             this.DoInstructionRegressionTest1();
+        }
+
+        /// <summary>
+        /// Issue with generating instructions.
+        /// </summary>
+        [Test]
+        public void InstructionRegressionCHTest2()
+        {
+            this.DoInstructionRegressionTest2();
         }
     }
 }

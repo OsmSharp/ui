@@ -17,9 +17,9 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using OsmSharp.Units.Angle;
 using System.Collections.Generic;
 using OsmSharp.Math.Algorithms;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Math.Primitives
 {

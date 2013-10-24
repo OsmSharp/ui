@@ -19,16 +19,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using OsmSharp.Routing.CH.Routing;
-using OsmSharp.Routing.Graph;
+using OsmSharp.Collections.PriorityQueues;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Primitives;
 using OsmSharp.Routing.CH.PreProcessing;
+using OsmSharp.Routing.CH.Routing;
+using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
-using OsmSharp.Math;
-using OsmSharp.Collections.PriorityQueues;
-using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Routing.CH
 {

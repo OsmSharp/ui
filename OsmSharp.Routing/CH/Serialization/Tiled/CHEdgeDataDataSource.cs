@@ -461,7 +461,6 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
 
         #endregion
 
-
         public void AddRestriction(uint[] route)
         {
             throw new NotImplementedException();

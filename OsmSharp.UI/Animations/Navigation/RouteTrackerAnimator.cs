@@ -16,16 +16,16 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Routing.Navigation;
-using OsmSharp.Math.Geo;
-using OsmSharp.Units.Angle;
-using OsmSharp.Math.Geo.Projections;
-using OsmSharp.Math;
-using OsmSharp.Math.Primitives;
 using System;
-using OsmSharp.Units.Distance;
-using OsmSharp.Routing.Instructions;
 using System.Collections.Generic;
+using OsmSharp.Math;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Math.Primitives;
+using OsmSharp.Routing.Instructions;
+using OsmSharp.Routing.Navigation;
+using OsmSharp.Units.Angle;
+using OsmSharp.Units.Distance;
 
 namespace OsmSharp.UI.Animations.Navigation
 {
