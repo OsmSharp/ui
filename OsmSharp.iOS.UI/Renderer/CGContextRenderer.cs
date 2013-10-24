@@ -17,29 +17,46 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Linq;
-using OsmSharp.UI.Renderer;
-using MonoTouch.CoreGraphics;
-using OsmSharp.UI;
 using System.Drawing;
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
-using MonoTouch.UIKit;
-using MonoTouch.Foundation;
+using System.Linq;
+using MonoTouch.CoreGraphics;
 using MonoTouch.CoreText;
-using OsmSharp.Math.Primitives;
+using MonoTouch.Foundation;
+using MonoTouch.UIKit;
 using OsmSharp.Math;
+using OsmSharp.Math.Primitives;
+using OsmSharp.UI;
+using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 using OsmSharp.Units.Angle;
 
 namespace OsmSharp.iOS.UI
 {
+	/// <summary>
+	/// CG context renderer.
+	/// </summary>
 	public class CGContextRenderer : Renderer2D<CGContextWrapper>
 	{
 		/// <summary>
+		/// Holds the scale factor to enable higher resolution renderings.
+		/// </summary>
+		private float _scaleFactor;
+
+		/// <summary>
 		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.CGContextRenderer"/> class.
 		/// </summary>
-		public CGContextRenderer ()
-		{
+		public CGContextRenderer()
+			:this(1) {
 
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="OsmSharp.iOS.UI.CGContextRenderer"/> class.
+		/// </summary>
+		/// <param name="scaleFactor">Scale factor.</param>
+		public CGContextRenderer (float scaleFactor)
+		{
+			_scaleFactor = scaleFactor;
 		}
 
 		#region implemented abstract members of Renderer2D
@@ -91,7 +108,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="sizeInPixels">Size in pixels.</param>
 		protected override double FromPixels (Target2DWrapper<CGContextWrapper> target, View2D view, double sizeInPixels)
 		{
-			return sizeInPixels / _scaleX;
+			return sizeInPixels / (_scaleX);
 		}
 
 		/// <summary>
@@ -112,7 +129,7 @@ namespace OsmSharp.iOS.UI
         /// <returns></returns>
         private double[] Tranform(double x, double y)
         {
-            return _view.ToViewPort(_target.Width, _target.Height, x, y);
+			return _view.ToViewPort(_target.Width  * _scaleFactor, _target.Height * _scaleFactor, x, y);
         }
 
 		/// <summary>
@@ -121,7 +138,7 @@ namespace OsmSharp.iOS.UI
 		/// <param name="x">The x coordinates.</param>
 		/// <param name="y">The y coordinates.</param>
 		private double[][] TransformAll(double[] x, double[] y) {
-			return _view.ToViewPort(_target.Width, _target.Height, x, y);
+			return _view.ToViewPort(_target.Width * _scaleFactor, _target.Height * _scaleFactor, x, y);
 		}
 
 		/// <summary>
@@ -135,7 +152,7 @@ namespace OsmSharp.iOS.UI
 			target.Target.CGContext.SetFillColor (backColorSimple.R / 256.0f, backColorSimple.G / 256.0f, backColorSimple.B / 256.0f,
 			                            backColorSimple.A / 256.0f);
 			target.Target.CGContext.FillRect (new RectangleF (0, 0, 
-			                                                target.Width, target.Height));
+			                                                  target.Width * _scaleFactor, target.Height * _scaleFactor));
 		}
 
 		/// <summary>
@@ -164,7 +181,7 @@ namespace OsmSharp.iOS.UI
 		protected override void DrawLine (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, int color, double width, 
 		                                  LineJoin lineJoin, int[] dashes)
 		{
-			float widthInPixels = this.ToPixels (width);
+			float widthInPixels = this.ToPixels (width) * _scaleFactor;
 
 			SimpleColor simpleColor = SimpleColor.FromArgb(color);
 			target.Target.CGContext.SetLineJoin (CGLineJoin.Round);
@@ -208,7 +225,7 @@ namespace OsmSharp.iOS.UI
 		protected override void DrawPolygon (Target2DWrapper<CGContextWrapper> target, double[] x, double[] y, int color, double width, 
 		                                     bool fill)
 		{
-			float widthInPixels = this.ToPixels (width);
+			float widthInPixels = this.ToPixels (width) * _scaleFactor;
 
 			SimpleColor simpleColor = SimpleColor.FromArgb(color);
 			target.Target.CGContext.SetLineWidth (widthInPixels);
@@ -331,8 +348,7 @@ namespace OsmSharp.iOS.UI
 				CGImage image = tag as CGImage;
 
 				target.Target.CGContext.DrawImage (new RectangleF (0, 0, 
-				                                                   (float)transformed.Width, (float)transformed.Height), image);
-
+					(float)transformed.Width, (float)transformed.Height), image);
 			}
 
 			target.Target.CGContext.RestoreState ();
@@ -355,7 +371,7 @@ namespace OsmSharp.iOS.UI
             double[] transformed = this.Tranform(x, y);
             float xPixels = (float)transformed[0];
             float yPixels = (float)transformed[1];
-            float textSize = this.ToPixels(size);
+			float textSize = this.ToPixels(size) * _scaleFactor;
 
 			// get the glyhps/paths from the font.
 			if (string.IsNullOrWhiteSpace (fontName)) {
@@ -422,7 +438,7 @@ namespace OsmSharp.iOS.UI
 		protected override void DrawLineText (Target2DWrapper<CGContextWrapper> target, double[] xa, double[] ya, string text, int color, 
 		                                      double size, int? haloColor, int? haloRadius, string fontName)
         {
-            float textSize = this.ToPixels(size);
+			float textSize = this.ToPixels(size) * _scaleFactor;
 			
 			// transform first.
 			double[] xTransformed = new double[xa.Length];

@@ -76,7 +76,7 @@ namespace OsmSharp.iOS.UI.Sample
 
 			mapView.MapMaxZoomLevel = 18;
 			mapView.MapMinZoomLevel = 12;
-			mapView.MapZoom = 18;
+			mapView.MapZoom = 16;
 			mapView.MapTilt = 30;
 
 			var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
@@ -165,8 +165,6 @@ namespace OsmSharp.iOS.UI.Sample
 //					mapView.ZoomToMarkers ();
 //				});
 //			});
-//
-//			mapView.SetNeedsDisplay ();
 			
 
 			//
@@ -194,7 +192,6 @@ namespace OsmSharp.iOS.UI.Sample
 //						mapView.MapZoom = 18;
 //						mapView.MapTilt = 30;
 //
-//			mapView.SetNeedsDisplay ();
 //
 //		}
 
@@ -202,7 +199,9 @@ namespace OsmSharp.iOS.UI.Sample
 		{
 			base.ViewDidAppear (animated);
 			
-			_mapView.ZoomToMarkers();
+			//_mapView.ZoomToMarkers();
+			//
+			(_mapView as IMapView).Invalidate ();
 		}
 
 		private RouteTrackerAnimator _routeTrackerAnimator;
