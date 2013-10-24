@@ -21,6 +21,7 @@ using OsmSharp.Routing.TSP.Genetic;
 using OsmSharp.UI.Animations;
 using OsmSharp.UI.Animations.Navigation;
 using OsmSharp.Routing.Navigation;
+using OsmSharp.Routing.Instructions;
 
 namespace OsmSharp.iOS.UI.Sample
 {
@@ -107,14 +108,18 @@ namespace OsmSharp.iOS.UI.Sample
 //
 //			OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Routing & TSP in {0}ms", 
 //			                                new TimeSpan (after - before).TotalMilliseconds);
-
-
+			// 51.160477" lon="2.961497
 			GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
 			GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
+
+			//GeoCoordinate point1 = new GeoCoordinate(51.159132, 2.958755);
+			//GeoCoordinate point2 = new GeoCoordinate(51.160477, 2.961497);
 			RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
 			RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
 			Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-			_enumerator = route1.GetRouteEnumerable(40).GetEnumerator();
+			_enumerator = route1.GetRouteEnumerable(20).GetEnumerator();
+
+			//List<Instruction> instructions = InstructionGenerator.Generate(route1, new OsmRoutingInterpreter());
 //
 			_routeLayer = new LayerRoute(map.Projection);
 			_routeLayer.AddRoute (route1);
@@ -133,7 +138,7 @@ namespace OsmSharp.iOS.UI.Sample
 //
 //			//mapView.ZoomToMarkers();
 
-			GeoCoordinateBox box = new GeoCoordinateBox (new GeoCoordinate[] { point1, point2 });
+			//GeoCoordinateBox box = new GeoCoordinateBox (new GeoCoordinate[] { point1, point2 });
 //
 			mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
 			{
@@ -145,15 +150,15 @@ namespace OsmSharp.iOS.UI.Sample
 			};
 			
 			RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
-			_routeTrackerAnimator = new RouteTrackerAnimator(mapView, routeTracker);
+			_routeTrackerAnimator = new RouteTrackerAnimator(mapView, routeTracker, 5);
 
-//				Timer timer = new Timer (1000);
-//				timer.Elapsed += new ElapsedEventHandler (TimerHandler);
-//				timer.Start ();
+				Timer timer = new Timer (1000);
+				timer.Elapsed += new ElapsedEventHandler (TimerHandler);
+				timer.Start ();
 
 			//_mapView.ZoomToMarkers();
 
-			//mapView.SetNeedsDisplay ();
+			mapView.SetNeedsDisplay ();
 			
 
 			//
