@@ -53,6 +53,10 @@ namespace OsmSharp.UI.Animations.Navigation
 		/// <param name="restartAfterTouch">The time in second to wait before resuming tracking after the mapview is touched.</param>
         public RouteTrackerAnimator(IMapView mapView, RouteTracker routeTracker, Second restartAfterTouch)
         {
+			this.MinZoom = 16;
+			this.MaxZoom = 30;
+			this.DefaultZoom = 17.5f;
+
             _mapView = mapView;
             _animator = new MapViewAnimator(mapView);
             _routeTracker = routeTracker;
@@ -75,7 +79,11 @@ namespace OsmSharp.UI.Animations.Navigation
 		/// <param name="newTilt">New tilt.</param>
 		/// <param name="newCenter">New center.</param>
 		private void MapViewMapTouched(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter){
-			_lastTouch = DateTime.Now.Ticks;
+			if (newZoom > this.MinZoom) {
+				this.DefaultZoom = System.Math.Min (newZoom, this.MaxZoom);
+			} else {
+				_lastTouch = DateTime.Now.Ticks;
+			}
 		}
 
 		/// <summary>
@@ -87,15 +95,37 @@ namespace OsmSharp.UI.Animations.Navigation
 			set;
 		}
 
+		/// <summary>
+		/// Gets or sets the minimum navigation zoom level.
+		/// </summary>
+		/// <value>The minimum zoom.</value>
+		public float MinZoom {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the maximum navigation zoom level.
+		/// </summary>
+		/// <value>The minimum zoom.</value>
+		public float MaxZoom {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the default zoom level.
+		/// </summary>
+		/// <value>The default zoom.</value>
+		public float DefaultZoom {
+			get;
+			set;
+		}
+
         /// <summary>
         /// Holds the map view animator.
         /// </summary>
         private readonly MapViewAnimator _animator;
-
-        /// <summary>
-        /// Holds the zoom level to use.
-        /// </summary>
-        private float _zoom = 17;
 
         /// <summary>
         /// Holds the latest ticks 
@@ -135,7 +165,7 @@ namespace OsmSharp.UI.Animations.Navigation
             _routeTracker.Track(location);
 
             // calculate all map view parameters (zoom, location, tilt) to display the route/direction correctly.
-            float zoom = _zoom; // TODO: do something smarter here to allow the zoom level to be customized.
+            float zoom = this.DefaultZoom;
             GeoCoordinate center = _routeTracker.PositionRoute;
 			double nextDistance = 100;
 			GeoCoordinate next = _routeTracker.PositionIn(nextDistance);

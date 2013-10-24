@@ -298,48 +298,39 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
                 _cachedIndexes.Add(position, index); // add to cache.
                 position = stream.Position;
                 int leafs = 0;
-                for (int idx = 0; idx < index.Key.IsLeaf.Length; idx++)
-                {
-					var localBox = new BoxF2D(index.Key.MinX[idx], index.Key.MinY[idx],
-                        index.Key.MaxX[idx], index.Key.MaxY[idx]);
-                    if (localBox.Overlaps(box))
-                    { // there will be data in one of the children.
-                        if (index.Key.IsLeaf[idx])
-                        { // deserialize and search the leaf-data.
-                            // calculate size.
-                            int size;
-                            if (idx == index.Key.IsLeaf.Length - 1)
-                            { // the last index.
-                                size = index.Key.End - index.Key.Starts[idx] - 1;
-                            }
-                            else
-                            { // not the last index.
-                                size = index.Key.Starts[idx + 1] -
-                                    index.Key.Starts[idx] - 1;
-                            }
-                            long offset = position + index.Key.Starts[idx] + 1;
-                            if (!_cachedLeaves.TryGet(offset, out leaf))
-                            { // the leaf was not cached!
-                                leaf = this.SearchInLeaf(stream, offset,
-                                    size);
-                            }
-                            for (int dataidx = 0; dataidx < leaf.Key.Count; dataidx++)
-                            { // check each overlapping box.
-                                if (leaf.Key[dataidx].Overlaps(box))
-                                { // adds the object to the result set.
-                                    result.Add(leaf.Value[dataidx]);
-                                }
-                            }
-                            leafs++;
-                        }
-                        else
-                        { // deserialize the node and the children.
-                            stream.Seek(position + index.Key.Starts[idx], SeekOrigin.Begin);
+				if (index.Key.IsLeaf != null) {
+					for (int idx = 0; idx < index.Key.IsLeaf.Length; idx++) {
+						var localBox = new BoxF2D (index.Key.MinX [idx], index.Key.MinY [idx],
+						                         index.Key.MaxX [idx], index.Key.MaxY [idx]);
+						if (localBox.Overlaps (box)) { // there will be data in one of the children.
+							if (index.Key.IsLeaf [idx]) { // deserialize and search the leaf-data.
+								// calculate size.
+								int size;
+								if (idx == index.Key.IsLeaf.Length - 1) { // the last index.
+									size = index.Key.End - index.Key.Starts [idx] - 1;
+								} else { // not the last index.
+									size = index.Key.Starts [idx + 1] -
+									index.Key.Starts [idx] - 1;
+								}
+								long offset = position + index.Key.Starts [idx] + 1;
+								if (!_cachedLeaves.TryGet (offset, out leaf)) { // the leaf was not cached!
+									leaf = this.SearchInLeaf (stream, offset,
+									                                                size);
+								}
+								for (int dataidx = 0; dataidx < leaf.Key.Count; dataidx++) { // check each overlapping box.
+									if (leaf.Key [dataidx].Overlaps (box)) { // adds the object to the result set.
+										result.Add (leaf.Value [dataidx]);
+									}
+								}
+								leafs++;
+							} else { // deserialize the node and the children.
+								stream.Seek (position + index.Key.Starts [idx], SeekOrigin.Begin);
 
-                            this.Search(stream, box, result);
-                        }
-                    }
-                }
+								this.Search (stream, box, result);
+							}
+						}
+					}
+				}
                 return;
             }
             throw new Exception("Cannot deserialize node!");
