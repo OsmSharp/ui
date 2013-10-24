@@ -60,6 +60,7 @@ namespace OsmSharp.UI.Animations.Navigation
             _mapView = mapView;
             _animator = new MapViewAnimator(mapView);
             _routeTracker = routeTracker;
+			_minimumTrackGap = new TimeSpan (0, 0, 0, 0, 500).Ticks;
 
 			this.RestartAfterTouch = restartAfterTouch;
 
@@ -132,6 +133,16 @@ namespace OsmSharp.UI.Animations.Navigation
         /// </summary>
         private long? _lastTicks;
 
+		/// <summary>
+		/// Holds the minimum gap between two track events.
+		/// </summary>
+		private long _minimumTrackGap;
+
+		/// <summary>
+		/// Holds the last track ticks.
+		/// </summary>
+		private long? _lastTrack;
+
         /// <summary>
         /// Starts tracking at a given location.
         /// </summary>
@@ -150,6 +161,15 @@ namespace OsmSharp.UI.Animations.Navigation
 				}
 			}
 
+			// check if the minimum gap between tracking events is respected.
+			long now = DateTime.Now.Ticks;
+			if (_lastTrack.HasValue) {
+				if (_minimumTrackGap > now - _lastTrack.Value) {
+					return; // too fast!
+				}
+			}
+			_lastTrack = now;
+
 			// animate the next step(s).
             TimeSpan lastTrackInterval = new TimeSpan(0, 0, 0, 0, 750);
             long ticks = DateTime.Now.Ticks;
@@ -167,7 +187,7 @@ namespace OsmSharp.UI.Animations.Navigation
             // calculate all map view parameters (zoom, location, tilt) to display the route/direction correctly.
             float zoom = this.DefaultZoom;
             GeoCoordinate center = _routeTracker.PositionRoute;
-			double nextDistance = 100;
+			double nextDistance = 20;
 			GeoCoordinate next = _routeTracker.PositionIn(nextDistance);
 			while (next == null) {
 				nextDistance = nextDistance - 10;

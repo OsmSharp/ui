@@ -53,7 +53,7 @@ namespace OsmSharp.iOS.UI.Sample
 
 		public override void LoadView ()
 		{
-			OsmSharp.Logging.Log.Enable ();
+			//OsmSharp.Logging.Log.Enable ();
 
 			base.LoadView ();
 
@@ -117,7 +117,7 @@ namespace OsmSharp.iOS.UI.Sample
 			RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
 			RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
 			Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
-			_enumerator = route1.GetRouteEnumerable(20).GetEnumerator();
+			_enumerator = route1.GetRouteEnumerable(10).GetEnumerator();
 
 			//List<Instruction> instructions = InstructionGenerator.Generate(route1, new OsmRoutingInterpreter());
 //
@@ -152,7 +152,7 @@ namespace OsmSharp.iOS.UI.Sample
 			RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
 			_routeTrackerAnimator = new RouteTrackerAnimator(mapView, routeTracker, 5);
 
-				Timer timer = new Timer (1000);
+				Timer timer = new Timer (150);
 				timer.Elapsed += new ElapsedEventHandler (TimerHandler);
 				timer.Start ();
 
@@ -210,7 +210,7 @@ namespace OsmSharp.iOS.UI.Sample
 		{
 			if (_enumerator.MoveNext())
 			{
-				GeoCoordinate other = _enumerator.Current.OffsetRandom(20);
+				GeoCoordinate other = _enumerator.Current.OffsetRandom(10);
 				_routeTrackerAnimator.Track(other);
 
 				if (_routeTrackerAnimator.NextInstruction != null) {
