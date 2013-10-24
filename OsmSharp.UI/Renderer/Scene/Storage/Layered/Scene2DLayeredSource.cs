@@ -110,31 +110,31 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
         /// <param name="zoomFactor"></param>
         public void Get(Scene2DSimple scene, View2D view, float zoomFactor)
         {
-            // check what is in the non-simplified scene.
-            IScene2DPrimitivesSource simpleSource = this.GetNonSimplifiedStream();
-            simpleSource.Get(scene, view, zoomFactor);
+			lock (_stream) { // make sure there is only synchonous access to the stream.
+				// check what is in the non-simplified scene.
+				IScene2DPrimitivesSource simpleSource = this.GetNonSimplifiedStream ();
+				simpleSource.Get (scene, view, zoomFactor);
 
-            // check what index this zoomfactor is for.
-            int idx = this.SearchForScene(zoomFactor);
-            if (idx >= 0)
-            { // the index was found.
-                if (!_loadedScenes.TryGetValue(idx, out simpleSource))
-                { // the scene was not found.
-                    long position = _index.SceneIndexes[idx];
-                    _stream.Seek(position, SeekOrigin.Begin);
-                    LimitedStream stream = new LimitedStream(_stream);
-                    //Scene2DRTreeSerializer serializer = new Scene2DRTreeSerializer(true);
-                    //simpleSource = new Scene2DPrimitivesSource(serializer.Deserialize(stream));
-                    OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DStyledSerializer serializer =
-                        new Styled.Scene2DStyledSerializer();
-                    simpleSource = serializer.Deserialize(stream, true);
-                    _loadedScenes.Add(idx, simpleSource);
-                }
-                simpleSource.Get(scene, view, zoomFactor);
+				// check what index this zoomfactor is for.
+				int idx = this.SearchForScene (zoomFactor);
+				if (idx >= 0) { // the index was found.
+					if (!_loadedScenes.TryGetValue (idx, out simpleSource)) { // the scene was not found.
+						long position = _index.SceneIndexes [idx];
+						_stream.Seek (position, SeekOrigin.Begin);
+						LimitedStream stream = new LimitedStream (_stream);
+						//Scene2DRTreeSerializer serializer = new Scene2DRTreeSerializer(true);
+						//simpleSource = new Scene2DPrimitivesSource(serializer.Deserialize(stream));
+						OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DStyledSerializer serializer =
+							new Styled.Scene2DStyledSerializer ();
+						simpleSource = serializer.Deserialize (stream, true);
+						_loadedScenes.Add (idx, simpleSource);
+					}
+					simpleSource.Get (scene, view, zoomFactor);
 
-                OsmSharp.Logging.Log.TraceEvent("Scene2DLayeredSource", System.Diagnostics.TraceEventType.Verbose,
-                    string.Format("Deserialized from scene at zoom {0} and idx {1}.", zoomFactor, idx));
-            }
+					OsmSharp.Logging.Log.TraceEvent ("Scene2DLayeredSource", System.Diagnostics.TraceEventType.Verbose,
+						string.Format ("Deserialized from scene at zoom {0} and idx {1} synchronized.", zoomFactor, idx));
+				}
+			}
         }
 
 		/// <summary>
