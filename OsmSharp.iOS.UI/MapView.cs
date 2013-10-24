@@ -174,9 +174,12 @@ namespace OsmSharp.iOS.UI
 				this.AddGestureRecognizer (doubleTapGesture);
 			}
 
+			// set scalefactor.
+			_scaleFactor = this.ContentScaleFactor;
+
 			// create the cache renderer.
 			_cacheRenderer = new MapRenderer<CGContextWrapper> (
-				new CGContextRenderer ());
+				new CGContextRenderer (_scaleFactor));
 			_cachedScene = new Scene2DSimple ();
 			_cachedScene.BackColor = SimpleColor.FromKnownColor (KnownColor.White).Value;
 		}
@@ -251,6 +254,14 @@ namespace OsmSharp.iOS.UI
 			}
 		}
 
+		/// <summary>
+		/// Holds the scale factor.
+		/// </summary>
+		private float _scaleFactor = 1;
+
+		/// <summary>
+		/// Holds the extra border.
+		/// </summary>
 		private float _extra = 1.4f;
 
 		private byte[] _bytescache;
@@ -297,16 +308,18 @@ namespace OsmSharp.iOS.UI
 
 			// add the internal layer.
 			// TODO: create marker layer.
+			int imageWidth = (int)(rect.Width * _extra * _scaleFactor);
+			int imageHeight = (int)(rect.Height * _extra * _scaleFactor);
 
 			// create a new bitmap context.
 			CGColorSpace space = CGColorSpace.CreateDeviceRGB ();
 			int bytesPerPixel = 4;
-			int bytesPerRow = bytesPerPixel * (int)(rect.Width * _extra);
+			int bytesPerRow = bytesPerPixel * imageWidth;
 			int bitsPerComponent = 8;
 			if (_bytescache == null) {
-				_bytescache = new byte[bytesPerRow * (int)(rect.Height * _extra)];
+				_bytescache = new byte[bytesPerRow * imageHeight];
 			}
-			CGBitmapContext gctx = new CGBitmapContext (null, (int)(rect.Width * _extra), (int)(rect.Height * _extra),
+			CGBitmapContext gctx = new CGBitmapContext (null, imageWidth, imageHeight,
 			                                             bitsPerComponent, bytesPerRow,
 			                                             space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
 			                                             CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
@@ -320,14 +333,15 @@ namespace OsmSharp.iOS.UI
 			                                 (new TimeSpan (afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
 			// does the rendering.
-			bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx, 
-			                                                              new RectangleF (0, 0, (int)(rect.Width * _extra), (int)(rect.Height * _extra))), 
+			bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx,
+			                                                new RectangleF (0, 0, (int)(rect.Width * _extra), (int)(rect.Height * _extra))), 
 			                                        layers, view);
 
 			long afterRendering = DateTime.Now.Ticks;
 			OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
 			                                 "Rendering took: {0}ms @ zoom level {1}",
 			                                 (new TimeSpan (afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
+
 			if (complete) { // there was no cancellation, the rendering completely finished.
 				// add the result to the scene cache.
 				lock (_cachedScene) {
@@ -819,7 +833,7 @@ namespace OsmSharp.iOS.UI
 					context.SetAlpha (1);
 
 					long afterViewChanged = DateTime.Now.Ticks;
-					CGContextRenderer renderer = new CGContextRenderer ();
+					CGContextRenderer renderer = new CGContextRenderer (1);
 //					renderer.Render (new CGContextWrapper (context, _rect),
 					//					                _cachedScene, view);
 					renderer.Render (new CGContextWrapper (context, this.Frame),
