@@ -18,13 +18,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Osm;
-using OsmSharp.Osm.Cache;
 using OsmSharp.Osm.Data;
 
 namespace OsmSharp.Osm
@@ -293,9 +289,14 @@ namespace OsmSharp.Osm
                 {
                     case OsmGeoType.Node:
                         Node simpleNode = osmGeoSource.GetNode(memberId);
-                        if (simpleNode != null)
+                        if(simpleNode == null)
                         {
-                            member.Member = CompleteNode.CreateFrom(simpleNode);
+                            return null;
+                        }
+                        CompleteNode completeNode = CompleteNode.CreateFrom(simpleNode);
+                        if (completeNode != null)
+                        {
+                            member.Member = completeNode;
                         }
                         else
                         {
@@ -304,9 +305,14 @@ namespace OsmSharp.Osm
                         break;
                     case OsmGeoType.Way:
                         Way simpleWay = osmGeoSource.GetWay(memberId);
-                        if (simpleWay != null)
+                        if(simpleWay == null)
                         {
-                            member.Member = CompleteWay.CreateFrom(simpleWay, osmGeoSource);
+                            return null;
+                        }
+                        CompleteWay completeWay = CompleteWay.CreateFrom(simpleWay, osmGeoSource);
+                        if (completeWay != null)
+                        {
+                            member.Member = completeWay;
                         }
                         else
                         {
@@ -315,9 +321,14 @@ namespace OsmSharp.Osm
                         break;
                     case OsmGeoType.Relation:
                         Relation simpleRelationMember = osmGeoSource.GetRelation(memberId);
-                        if (simpleRelationMember != null)
+                        if(simpleRelationMember == null)
                         {
-                            member.Member = CompleteRelation.CreateFrom(simpleRelationMember, osmGeoSource);
+                            return null;
+                        }
+                        CompleteRelation completeRelation = CompleteRelation.CreateFrom(simpleRelationMember, osmGeoSource);
+                        if (completeRelation != null)
+                        {
+                            member.Member = completeRelation;
                         }
                         else
                         {

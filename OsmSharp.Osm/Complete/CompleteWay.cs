@@ -260,9 +260,14 @@ namespace OsmSharp.Osm
             {
                 long nodeId = simpleWay.Nodes[idx];
                 Node node = nodeSource.GetNode(nodeId);
-                if (node != null)
+                if (node == null)
                 {
-                    way.Nodes.Add(CompleteNode.CreateFrom(node));
+                    return null;
+                }
+                CompleteNode completeNode = CompleteNode.CreateFrom(node);
+                if (completeNode != null)
+                {
+                    way.Nodes.Add(completeNode);
                 }
                 else
                 {
