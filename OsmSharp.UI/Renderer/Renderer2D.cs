@@ -1,4 +1,3 @@
-
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
