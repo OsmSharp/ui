@@ -16,10 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Streams;
@@ -286,6 +284,99 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
                 (x as CompleteWay).Nodes[1].Id == 4 &&
                 (x as CompleteWay).Nodes[1].Coordinate.Latitude == 1 &&
                 (x as CompleteWay).Nodes[1].Coordinate.Longitude == 1)));
+        }
+
+        /// <summary>
+        /// Tests simple to complete with nested relations.
+        /// </summary>
+        [Test]
+        public void TestSimpleToCompleteMultipleUsages()
+        {
+            // execute
+            List<CompleteOsmGeo> completeList = this.PullToCompleteList(new OsmGeo[] {
+                Node.Create(1, 0, 0),
+                Node.Create(2, 1, 0),
+                Node.Create(3, 0, 1),
+                Node.Create(4, 2, 0),
+                Node.Create(5, 0, 2),
+                Way.Create(1, 1, 2, 3),
+                Way.Create(2, 1, 4, 5),
+                Way.Create(3, 3, 2, 5),
+                Way.Create(5, 10, 11, 12),
+                Relation.Create(1,
+                    RelationMember.Create(1, "way", OsmGeoType.Way)),
+                Relation.Create(2,
+                    RelationMember.Create(1, "way", OsmGeoType.Way),
+                    RelationMember.Create(1, "relation", OsmGeoType.Relation)),
+                Relation.Create(3,
+                    RelationMember.Create(1, "node", OsmGeoType.Node),
+                    RelationMember.Create(2, "node", OsmGeoType.Node),
+                    RelationMember.Create(3, "node", OsmGeoType.Node)),
+                Relation.Create(4,
+                    RelationMember.Create(10, "node", OsmGeoType.Node),
+                    RelationMember.Create(11, "node", OsmGeoType.Node),
+                    RelationMember.Create(12, "node", OsmGeoType.Node))});
+
+            // verify.
+            Assert.IsNotNull(completeList);
+            Assert.AreEqual(11, completeList.Count);
+            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteNode) &&
+                (x as CompleteNode).Coordinate.Latitude == 0 &&
+                (x as CompleteNode).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is CompleteNode) &&
+                (x as CompleteNode).Coordinate.Latitude == 1 &&
+                (x as CompleteNode).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is CompleteNode) &&
+                (x as CompleteNode).Coordinate.Latitude == 0 &&
+                (x as CompleteNode).Coordinate.Longitude == 1)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 4 && (x is CompleteNode) &&
+                (x as CompleteNode).Coordinate.Latitude == 2 &&
+                (x as CompleteNode).Coordinate.Longitude == 0)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 5 && (x is CompleteNode) &&
+                (x as CompleteNode).Coordinate.Latitude == 0 &&
+                (x as CompleteNode).Coordinate.Longitude == 2)));
+
+            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteWay) &&
+                (x as CompleteWay).Nodes.Count == 3 &&
+                (x as CompleteWay).Nodes[0].Id == 1 &&
+                (x as CompleteWay).Nodes[0].Coordinate.Latitude == 0 &&
+                (x as CompleteWay).Nodes[0].Coordinate.Longitude == 0 &&
+                (x as CompleteWay).Nodes[1].Id == 2 &&
+                (x as CompleteWay).Nodes[1].Coordinate.Latitude == 1 &&
+                (x as CompleteWay).Nodes[1].Coordinate.Longitude == 0 &&
+                (x as CompleteWay).Nodes[2].Id == 3 &&
+                (x as CompleteWay).Nodes[2].Coordinate.Latitude == 0 &&
+                (x as CompleteWay).Nodes[2].Coordinate.Longitude == 1)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is CompleteWay) &&
+                (x as CompleteWay).Nodes.Count == 3 &&
+                (x as CompleteWay).Nodes[0].Id == 1 &&
+                (x as CompleteWay).Nodes[0].Coordinate.Latitude == 0 &&
+                (x as CompleteWay).Nodes[0].Coordinate.Longitude == 0 &&
+                (x as CompleteWay).Nodes[1].Id == 4 &&
+                (x as CompleteWay).Nodes[1].Coordinate.Latitude == 2 &&
+                (x as CompleteWay).Nodes[1].Coordinate.Longitude == 0 &&
+                (x as CompleteWay).Nodes[2].Id == 5 &&
+                (x as CompleteWay).Nodes[2].Coordinate.Latitude == 0 &&
+                (x as CompleteWay).Nodes[2].Coordinate.Longitude == 2)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is CompleteWay) &&
+                (x as CompleteWay).Nodes.Count == 3 &&
+                (x as CompleteWay).Nodes[0].Id == 3 &&
+                (x as CompleteWay).Nodes[0].Coordinate.Latitude == 0 &&
+                (x as CompleteWay).Nodes[0].Coordinate.Longitude == 1 &&
+                (x as CompleteWay).Nodes[1].Id == 2 &&
+                (x as CompleteWay).Nodes[1].Coordinate.Latitude == 1 &&
+                (x as CompleteWay).Nodes[1].Coordinate.Longitude == 0 &&
+                (x as CompleteWay).Nodes[2].Id == 5 &&
+                (x as CompleteWay).Nodes[2].Coordinate.Latitude == 0 &&
+                (x as CompleteWay).Nodes[2].Coordinate.Longitude == 2)));
+            Assert.IsFalse(completeList.Any(x => (x.Id == 5 && (x is CompleteWay))));
+
+            Assert.IsTrue(completeList.Any(x => (x.Id == 1 && (x is CompleteRelation) &&
+                (x as CompleteRelation).Members.Count == 1)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 2 && (x is CompleteRelation) &&
+                (x as CompleteRelation).Members.Count == 2)));
+            Assert.IsTrue(completeList.Any(x => (x.Id == 3 && (x is CompleteRelation) &&
+                (x as CompleteRelation).Members.Count == 3)));
         }
 
         /// <summary>
