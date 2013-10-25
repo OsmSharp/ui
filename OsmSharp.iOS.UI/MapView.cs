@@ -240,7 +240,14 @@ namespace OsmSharp.iOS.UI
 				// end existing rendering thread.
 				if (_renderingThread != null &&
 				   _renderingThread.IsAlive) {
+					if (_cacheRenderer.IsRunning) {
+						_cacheRenderer.CancelAndWait ();
+					}
+
 					_renderingThread.Abort ();
+					// wait and make sure.
+					while (_renderingThread.IsAlive) {
+					}
 				}
 
 				// start new rendering thread.
@@ -271,13 +278,13 @@ namespace OsmSharp.iOS.UI
 		/// <summary>
 		/// Render the current complete scene.
 		/// </summary>
-		void Render(){
+		void Render() {
 			RectangleF rect = _rect;
 			//RectangleF rect = this.Frame;
 
-			if (_cacheRenderer.IsRunning) {
-				_cacheRenderer.CancelAndWait ();
-			}
+
+
+			lock (this.Map) {
 			
 			//lock (_cacheRenderer) { // make sure only on thread at the same time is using the renderer.
 			// create the view.
@@ -364,6 +371,7 @@ namespace OsmSharp.iOS.UI
 			                                  "Rendering in {0}ms", new TimeSpan (after - before).TotalMilliseconds);
 			//				}
 			//}
+			}
 		}
 
 		/// <summary>
