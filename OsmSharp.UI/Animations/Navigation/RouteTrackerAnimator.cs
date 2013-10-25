@@ -188,18 +188,14 @@ namespace OsmSharp.UI.Animations.Navigation
             float zoom = this.DefaultZoom;
             GeoCoordinate center = _routeTracker.PositionRoute;
 			double nextDistance = 20;
+			Degree tilt = _mapView.MapTilt;
 			GeoCoordinate next = _routeTracker.PositionIn(nextDistance);
-			while (next == null) {
-				nextDistance = nextDistance - 10;
-				if (nextDistance <= 0) {
-					next = center;
-				}
-				next = _routeTracker.PositionIn(nextDistance);
+			if (next != null) {
+				IProjection projection = _mapView.Map.Projection;
+				VectorF2D direction = new PointF2D(projection.ToPixel(next)) -
+					new PointF2D(projection.ToPixel(center));
+				tilt = direction.Angle(new VectorF2D(0, -1));
 			}
-            IProjection projection = _mapView.Map.Projection;
-            VectorF2D direction = new PointF2D(projection.ToPixel(next)) -
-                        new PointF2D(projection.ToPixel(center));
-            Degree tilt = direction.Angle(new VectorF2D(0, -1));
             
             // animate to the given parameter (zoom, location, tilt).
             _animator.Stop();
