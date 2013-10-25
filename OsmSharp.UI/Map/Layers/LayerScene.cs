@@ -34,6 +34,8 @@ namespace OsmSharp.UI.Map.Layers
     /// </summary>
     public class LayerScene : ILayer
     {
+		private static object _sync = new object ();
+
 		/// <summary>
 		/// Holds the scene.
 		/// </summary>
@@ -138,7 +140,9 @@ namespace OsmSharp.UI.Map.Layers
 
             // get from the index.
             this.Scene.BackColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
-			_index.Get(_scene2DSimple, view, zoomFactor);
+			lock (_sync) {
+				_index.Get (_scene2DSimple, view, zoomFactor);
+			}
         }
 
         #endregion
