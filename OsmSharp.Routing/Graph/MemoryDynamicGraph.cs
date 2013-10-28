@@ -152,7 +152,7 @@ namespace OsmSharp.Routing.Graph
                     for (int arcIdx = 0; arcIdx < arcs.Length; arcIdx++)
                     {
                         if (arcs[arcIdx].Key == to &&
-                            comparer != null && comparer.Overlaps(arcs[arcIdx].Value, data))
+                            comparer != null && comparer.Overlaps(data, arcs[arcIdx].Value))
                         { // an arc was found that represents the same directional information.
                             arcs[arcIdx] = new KeyValuePair<uint, TEdgeData>(
                                 to, data);

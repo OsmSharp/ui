@@ -147,11 +147,11 @@ namespace OsmSharp.Routing
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public virtual double Weight(TagsCollection tags, GeoCoordinate from, GeoCoordinate to)
+        public virtual float Weight(TagsCollection tags, GeoCoordinate from, GeoCoordinate to)
         {
             var distance = from.DistanceEstimate(to).Value;
 
-            return distance / (MaxSpeed(tags).Value) * 3.6;
+            return (float)(distance / (MaxSpeed(tags).Value) * 3.6);
         }
 
         /// <summary>

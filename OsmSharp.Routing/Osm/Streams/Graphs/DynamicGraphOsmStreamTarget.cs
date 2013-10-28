@@ -20,11 +20,11 @@ using System.Collections.Generic;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Cache;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Graph.Router;
-using OsmSharp.Osm.Cache;
+using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs

@@ -189,7 +189,6 @@
     <Compile Include="Osm\Streams\Graphs\CHEdgeGraphOsmStreamTarget.cs" />
     <Compile Include="Osm\Streams\Graphs\DynamicGraphOsmStreamTarget.cs" />
     <Compile Include="Osm\Streams\Graphs\LiveGraphOsmStreamTarget.cs" />
-    <Compile Include="Osm\Dykstra\DykstraRouting.cs" />
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
     <Compile Include="Osm\IRoutingProgressConsumer.cs" />
