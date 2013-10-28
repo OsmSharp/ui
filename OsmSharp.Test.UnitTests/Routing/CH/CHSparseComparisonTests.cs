@@ -28,9 +28,8 @@ using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Routing.Osm.Streams.Graphs;
 
 namespace OsmSharp.Test.Unittests.Routing.CH
 {
@@ -104,13 +103,13 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             this.TestCompareAll("test_network_oneway.osm", true);
         }
 
-        ///// <summary>
-        ///// Compares all routes possible against a reference implementation.
-        ///// </summary>
-        //[Test]
-        //public void TestCHSparseAgainstReferenceRealNetwork()
-        //{
-        //    this.TestCompareAll("test_network_real1.osm", true);
-        //}
+        /// <summary>
+        /// Compares all routes possible against a reference implementation.
+        /// </summary>
+        [Test]
+        public void TestCHSparseAgainstReferenceRealNetwork()
+        {
+            this.TestCompareAll("test_network_real1.osm", true);
+        }
     }
 }
