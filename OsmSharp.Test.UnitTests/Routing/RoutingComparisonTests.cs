@@ -153,24 +153,29 @@ namespace OsmSharp.Test.Unittests.Routing
                     resolved[idx - 1].Location.Longitude, 0.0001);
             }
 
+            // limit tests to a fixed number.
+            int maxTestCount = 1000;
+            int testEveryOther = (resolved.Length * resolved.Length) / maxTestCount;
+
             // check all the routes having the same weight(s).
             for (int fromIdx = 0; fromIdx < resolved.Length; fromIdx++)
             {
                 for (int toIdx = 0; toIdx < resolved.Length; toIdx++)
                 {
-                    Route referenceRoute = referenceRouter.Calculate(Vehicle.Car, 
-                        resolvedReference[fromIdx], resolvedReference[toIdx]);
-                    Route route = router.Calculate(Vehicle.Car, 
-                        resolved[fromIdx], resolved[toIdx]);
-
-                    if (referenceRoute != null)
+                    int testNumber = fromIdx * resolved.Length + toIdx;
+                    if (testNumber % testEveryOther == 0)
                     {
-                        Assert.IsNotNull(referenceRoute);
-                        Assert.IsNotNull(route);
-                        this.CompareRoutes(referenceRoute, route);
-                        //Assert.AreEqual(referenceRoute.TotalDistance, route.TotalDistance, 0.0001);
-                        // TODO: meta data is missing in some CH routing; see issue 
-                        //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
+                        Route referenceRoute = referenceRouter.Calculate(Vehicle.Car,
+                            resolvedReference[fromIdx], resolvedReference[toIdx]);
+                        Route route = router.Calculate(Vehicle.Car,
+                            resolved[fromIdx], resolved[toIdx]);
+
+                        if (referenceRoute != null)
+                        {
+                            Assert.IsNotNull(referenceRoute);
+                            Assert.IsNotNull(route);
+                            this.CompareRoutes(referenceRoute, route);
+                        }
                     }
                 }
             }
