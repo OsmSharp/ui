@@ -185,7 +185,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
-            Assert.AreEqual(6, route.Entries.Length);
+            Assert.AreEqual(7, route.Entries.Length);
         }
 
         /// <summary>
@@ -203,7 +203,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
-            Assert.AreEqual(6, route.Entries.Length);
+            Assert.AreEqual(7, route.Entries.Length);
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
-            Assert.AreEqual(6, route.Entries.Length);
+            Assert.AreEqual(7, route.Entries.Length);
         }
 
         /// <summary>
@@ -239,7 +239,7 @@ namespace OsmSharp.Test.Unittests.Routing
 
             Route route = router.Calculate(Vehicle.Car, source, target);
             Assert.IsNotNull(route);
-            Assert.AreEqual(6, route.Entries.Length);
+            Assert.AreEqual(7, route.Entries.Length);
         }
 
         /// <summary>
