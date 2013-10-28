@@ -120,7 +120,7 @@
     <Compile Include="ArcAggregation\Output\Aggregated.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
-    <Compile Include="CH\PreProcessing\CHEdgeData.cs" />
+    <Compile Include="CH\CHEdgeData.cs" />
     <Compile Include="CH\PreProcessing\CHPreProcessor.cs" />
     <Compile Include="CH\PreProcessing\CHPriorityQueue.cs" />
     <Compile Include="CH\PreProcessing\INodeWeightCalculator.cs" />
