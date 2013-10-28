@@ -26,7 +26,7 @@ namespace OsmSharp.UI.Renderer.Scene
     /// <summary>
     /// Abstracts a source of scene primitives.
     /// </summary>
-    public interface IScene2DPrimitivesSource
+    public interface IScene2DPrimitivesSource : IDisposable
     {
         /// <summary>
         /// Adds all primitives inside the given box for the given zoom.
@@ -36,5 +36,10 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="zoomFactor"></param>
         /// <returns></returns>
 		void Get(Scene2DSimple scene, View2D view, float zoomFactor);
+
+        /// <summary>
+        /// Clears all cached information from this source.
+        /// </summary>
+        void Clear();
     }
 }

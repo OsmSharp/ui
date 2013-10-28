@@ -163,13 +163,13 @@ namespace OsmSharp.Android.UI.Sample
             //mapView.Center = new GeoCoordinate(51.156803, 2.958887);
             _mapView.MapZoom = 17;
             //MapViewAnimator mapViewAnimator = new MapViewAnimator(mapLayout);
-            _mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
-            {
-                _mapView.ZoomToMarkers();
-                //_mapView.AddMarker(geoCoordinate).Click += new EventHandler(MainActivity_Click);
-                //mapViewAnimator.Stop();
-                //mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
-            };
+            //_mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
+            //{
+            //    _mapView.ZoomToMarkers();
+            //    //_mapView.AddMarker(geoCoordinate).Click += new EventHandler(MainActivity_Click);
+            //    //mapViewAnimator.Stop();
+            //    //mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
+            //};
 
 			//Create the user interface in code
 			var layout = new RelativeLayout (this);

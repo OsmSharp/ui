@@ -62,5 +62,21 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.RTree
                 scene.AddPrimitive(scene2DEntry.Layer, scene2DEntry.Id, scene2DEntry.Scene2DPrimitive);
             }
         }
+
+        /// <summary>
+        /// Clears all cached data from this source.
+        /// </summary>
+        public void Clear()
+        {
+
+        }
+
+        /// <summary>
+        /// Disposes all resources associated with this source.
+        /// </summary>
+        public void Dispose()
+        {
+
+        }
     }
 }

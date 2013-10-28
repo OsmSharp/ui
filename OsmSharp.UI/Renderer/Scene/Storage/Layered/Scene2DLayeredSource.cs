@@ -143,7 +143,15 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
 		public void Clear() {
 			if (_loadedScenes != null) {
 				_loadedScenes.Clear ();
-			}
-		}
+            }
+        }
+
+        /// <summary>
+        /// Disposes all resources associated with this source.
+        /// </summary>
+        public void Dispose()
+        {
+
+        }
     }
 }
