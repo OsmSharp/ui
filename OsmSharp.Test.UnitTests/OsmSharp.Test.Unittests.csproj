@@ -165,6 +165,7 @@
     <Compile Include="Routes\MultiRouteTest.cs" />
     <Compile Include="Routes\RouteTest.cs" />
     <Compile Include="Routes\SimpleAsymmetricRouteTests.cs" />
+    <Compile Include="Routing\CH\CHEdgeDataTests.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceComparisonTests.cs" />
     <Compile Include="Routing\CH\CHVerifiedContractionBaseTests.cs" />
     <Compile Include="Routing\CH\Contraction\CHContractionTests.cs" />

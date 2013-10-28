@@ -51,7 +51,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="embeddedName"></param>
         /// <returns></returns>
-        public override Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName)
+        public override Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName, bool contract)
         {
             if (_data == null)
             {
@@ -92,7 +92,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestCHSparseAgainstReference()
         {
-            this.TestCompareAll("test_network.osm");
+            this.TestCompareAll("test_network.osm", true);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestCHSparseOneWayAgainstReference()
         {
-            this.TestCompareAll("test_network_oneway.osm");
+            this.TestCompareAll("test_network_oneway.osm", true);
         }
 
         ///// <summary>
@@ -110,7 +110,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         //[Test]
         //public void TestCHSparseAgainstReferenceRealNetwork()
         //{
-        //    this.TestCompareAll("test_network_real1.osm");
+        //    this.TestCompareAll("test_network_real1.osm", true);
         //}
     }
 }

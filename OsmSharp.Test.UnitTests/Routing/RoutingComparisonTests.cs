@@ -42,7 +42,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// Returns a router test object.
         /// </summary>
         /// <returns></returns>
-        public abstract Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName);
+        public abstract Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName, bool contract);
 
         /// <summary>
         /// Builds a raw data source.
@@ -80,9 +80,43 @@ namespace OsmSharp.Test.Unittests.Routing
         }
 
         /// <summary>
+        /// Tests one route.
+        /// </summary>
+        /// <param name="embeddedName"></param>
+        /// <param name="contract"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public void TestCompareOne(string embeddedName, bool contract, GeoCoordinate from, GeoCoordinate to)
+        {
+            // build the routing settings.
+            IOsmRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
+
+            // get the osm data source.
+            IBasicRouterDataSource<LiveEdge> data = this.BuildDykstraDataSource(interpreter, embeddedName);
+
+            // build the reference router.;
+            Router referenceRouter = this.BuildDykstraRouter(
+                this.BuildDykstraDataSource(interpreter, embeddedName), interpreter,
+                    new DykstraRoutingLive(data.TagsIndex));
+
+            // build the router to be tested.
+            Router router = this.BuildRouter(interpreter, embeddedName, contract);
+
+            RouterPoint referenceResolvedFrom = referenceRouter.Resolve(Vehicle.Car, from);
+            RouterPoint referenceResolvedTo = referenceRouter.Resolve(Vehicle.Car, to);
+            RouterPoint resolvedFrom = router.Resolve(Vehicle.Car, from);
+            RouterPoint resolvedTo = router.Resolve(Vehicle.Car, to);
+
+            Route referenceRoute = referenceRouter.Calculate(Vehicle.Car, referenceResolvedFrom, referenceResolvedTo);
+            Route route = router.Calculate(Vehicle.Car, resolvedFrom, resolvedTo);
+
+            this.CompareRoutes(referenceRoute, route);
+        }
+
+        /// <summary>
         /// Compares all routes against the reference router.
         /// </summary>
-        public void TestCompareAll(string embeddedName)
+        public void TestCompareAll(string embeddedName, bool contract)
         {
             // build the routing settings.
             IOsmRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
@@ -96,7 +130,7 @@ namespace OsmSharp.Test.Unittests.Routing
                     new DykstraRoutingLive(data.TagsIndex));
 
             // build the router to be tested.
-            Router router = this.BuildRouter(interpreter, embeddedName);
+            Router router = this.BuildRouter(interpreter, embeddedName, contract);
 
             // loop over all nodes and resolve their locations.
             var resolvedReference = new RouterPoint[data.VertexCount - 1];
@@ -133,10 +167,45 @@ namespace OsmSharp.Test.Unittests.Routing
                     {
                         Assert.IsNotNull(referenceRoute);
                         Assert.IsNotNull(route);
-                        Assert.AreEqual(referenceRoute.TotalDistance, route.TotalDistance, 0.0001);
+                        this.CompareRoutes(referenceRoute, route);
+                        //Assert.AreEqual(referenceRoute.TotalDistance, route.TotalDistance, 0.0001);
                         // TODO: meta data is missing in some CH routing; see issue 
                         //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
                     }
+                }
+            }
+        }
+
+
+
+        /// <summary>
+        /// Compares the two given routes.
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="route"></param>
+        protected void CompareRoutes(Route reference, Route route)
+        {
+            if (reference.Entries == null)
+            {
+                Assert.IsNull(route.Entries);
+            }
+            else
+            {
+                Assert.AreEqual(reference.Entries.Length, route.Entries.Length);
+                for (int idx = 0; idx < reference.Entries.Length; idx++)
+                {
+                    Assert.AreEqual(reference.Entries[idx].Distance,
+                        route.Entries[idx].Distance);
+                    Assert.AreEqual(reference.Entries[idx].Latitude,
+                        route.Entries[idx].Latitude);
+                    Assert.AreEqual(reference.Entries[idx].Longitude,
+                        route.Entries[idx].Longitude);
+                    Assert.AreEqual(reference.Entries[idx].Time,
+                        route.Entries[idx].Time);
+                    Assert.AreEqual(reference.Entries[idx].Type,
+                        route.Entries[idx].Type);
+                    Assert.AreEqual(reference.Entries[idx].WayFromName,
+                        route.Entries[idx].WayFromName);
                 }
             }
         }

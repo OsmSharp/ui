@@ -30,10 +30,84 @@ namespace OsmSharp.Routing.CH.PreProcessing
     public class CHEdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
-        /// Direction flag to higher vertex: (0=bidirectional, 1=forward, 2=backward, 3=nothing).
-        ///                to lower  vertex: (4=bidirectional, 5=forward, 6=backward, 7=nothing).
+        /// Creates an empty CHEdge data class.
+        /// </summary>
+        public CHEdgeData()
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new CHEdge data class.
+        /// </summary>
+        /// <param name="weight"></param>
+        /// <param name="forward"></param>
+        /// <param name="backward"></param>
+        public CHEdgeData(float weight, bool forward, bool backward)
+        {
+            this.Weight = weight;
+            this.SetDirection(forward, backward);
+        }
+
+        /// <summary>
+        /// Creates a new CHEdge data class.
+        /// </summary>
+        /// <param name="weight"></param>
+        /// <param name="forward"></param>
+        /// <param name="backward"></param>
+        /// <param name="toHigher"></param>
+        public CHEdgeData(float weight, bool forward, bool backward, bool toHigher)
+        {
+            this.Weight = weight;
+            this.SetDirection(forward, backward, toHigher);
+        }
+
+        /// <summary>
+        /// Creates a new CHEdge data class.
+        /// </summary>
+        /// <param name="weight"></param>
+        /// <param name="forward"></param>
+        /// <param name="backward"></param>
+        /// <param name="toHigher"></param>
+        public CHEdgeData(float weight, bool forward, bool backward, bool toHigher, uint contractedVertexId, uint tags)
+        {
+            this.Weight = weight;
+            this.SetDirection(forward, backward, toHigher);
+            this.ContractedVertexId = contractedVertexId;
+            this.Tags = tags;
+        }
+
+        /// <summary>
+        /// Direction flag to higher vertex: (0=bidirectional, 1=forward,  2=backward,  3=not forward and not backward).
+        ///                to lower  vertex: (4=bidirectional, 5=forward,  6=backward,  7=not forward and not backward).
+        ///                no low/high info: (8=bidirectional, 9=forward, 10=backward, 11=not forward and not backward).
         /// </summary>
         public byte Direction { get; set; }
+
+        /// <summary>
+        /// Sets the direction without lower/higher info.
+        /// </summary>
+        /// <param name="forward"></param>
+        /// <param name="backward"></param>
+        public void SetDirection(bool forward, bool backward)
+        {
+            if (forward && backward)
+            {
+                this.Direction = 8;
+            }
+            else if (forward)
+            {
+                this.Direction = 9;
+            }
+            else if (backward)
+            {
+                this.Direction = 10;
+            }
+            else
+            {
+                this.Direction = 11;
+            }
+        }
 
         /// <summary>
         /// Sets the direction.
@@ -92,8 +166,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
             {
                 return this.Direction == 0 
                     || this.Direction == 1 
-                    || this.Direction == 4 
-                    || this.Direction == 5;
+                    || this.Direction == 4
+                    || this.Direction == 5
+                    || this.Direction == 8
+                    || this.Direction == 9;
             }
         }
 
@@ -106,8 +182,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
             {
                 return this.Direction == 0 
                     || this.Direction == 2
-                    || this.Direction == 4 
-                    || this.Direction == 6;
+                    || this.Direction == 4
+                    || this.Direction == 6
+                    || this.Direction == 8
+                    || this.Direction == 10;
             }
         }
 
@@ -122,6 +200,20 @@ namespace OsmSharp.Routing.CH.PreProcessing
                     || this.Direction == 1 
                     || this.Direction == 2 
                     || this.Direction == 3;
+            }
+        }
+
+        /// <summary>
+        /// Gets the to lower flag.
+        /// </summary>
+        public bool ToLower
+        {
+            get
+            {
+                return this.Direction == 4
+                    || this.Direction == 5
+                    || this.Direction == 6
+                    || this.Direction == 7;
             }
         }
 

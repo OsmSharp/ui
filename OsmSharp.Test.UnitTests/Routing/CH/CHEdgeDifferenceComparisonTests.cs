@@ -25,10 +25,8 @@ using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.PreProcessing.Ordering.LimitedLevelOrdering;
 using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
-using OsmSharp.Routing.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.CH.PreProcessing.Ordering;
 using OsmSharp.Routing.Osm.Interpreter;
@@ -51,8 +49,9 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="interpreter"></param>
         /// <param name="embeddedName"></param>
+        /// <param name="contract"></param>
         /// <returns></returns>
-        public override Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName)
+        public override Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName, bool contract)
         {
             if (_data == null)
             {
@@ -76,11 +75,14 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 targetData.RegisterSource(sorter);
                 targetData.Pull();
 
-                // do the pre-processing part.
-                var witnessCalculator = new DykstraWitnessCalculator(data);
-                var preProcessor = new CHPreProcessor(data,
-                    new EdgeDifference(data, witnessCalculator), witnessCalculator);
-                preProcessor.Start();
+                if (contract)
+                {
+                    // do the pre-processing part.
+                    var witnessCalculator = new DykstraWitnessCalculator(data);
+                    var preProcessor = new CHPreProcessor(data,
+                        new EdgeDifference(data, witnessCalculator), witnessCalculator);
+                    preProcessor.Start();
+                }
 
                 _data[embeddedName] = data;
             }
@@ -94,8 +96,17 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestCHEdgeDifferenceAgainstReference()
         {
-            this.TestCompareAll("test_network.osm");
+            this.TestCompareAll("test_network.osm", true);
         }
+
+        ///// <summary>
+        ///// Compares all routes possible against a reference implementation.
+        ///// </summary>
+        //[Test]
+        //public void TestCHEdgeDifferenceAgainstReferenceBig()
+        //{
+        //    this.TestCompareAll("test_network_big.osm");
+        //}
 
         /// <summary>
         /// Compares all routes possible against a reference implementation.
@@ -103,7 +114,36 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         [Test]
         public void TestCHEdgeDifferenceOneWayAgainstReference()
         {
-            this.TestCompareAll("test_network_oneway.osm");
+            this.TestCompareAll("test_network_oneway.osm", true);
+        }
+
+        /// <summary>
+        /// Compares all routes possible against a reference implementation.
+        /// </summary>
+        [Test]
+        public void TestCHEdgeDifferenceRegression1()
+        {
+            this.TestCompareAll("test_routing_regression1.osm", true);
+        }
+
+        /// <summary>
+        /// Tests one failing route specifically again.
+        /// </summary>
+        [Test]
+        public void TestCHEdgeDifferenceRegression2Regression1()
+        {
+            this.TestCompareOne("test_routing_regression2.osm", false, new OsmSharp.Math.Geo.GeoCoordinate(51.0219654, 3.9911377),
+                new OsmSharp.Math.Geo.GeoCoordinate(51.0206158, 3.9932989));
+        }
+
+        /// <summary>
+        /// Tests one failing route specifically again.
+        /// </summary>
+        [Test]
+        public void TestCHEdgeDifferenceRegression2Regression2()
+        {
+            this.TestCompareOne("test_routing_regression2.osm", false, new OsmSharp.Math.Geo.GeoCoordinate(51.0204852, 3.993617),
+                new OsmSharp.Math.Geo.GeoCoordinate(51.0219591301773, 3.99107989102905));
         }
 
         ///// <summary>
@@ -112,7 +152,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         //[Test]
         //public void TestCHEdgeDifferenceRegression2()
         //{
-        //    this.TestCompareAll("test_routing_regression2.osm");
+        //    this.TestCompareAll("test_routing_regression2.osm", true);
         //}
 
         ///// <summary>
