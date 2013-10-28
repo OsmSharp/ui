@@ -62,19 +62,20 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         public Instruction GenerateDirectTurn(Instruction instruction, int street_count_before_turn,
             TagsCollection street_to, RelativeDirectionEnum direction, List<PointPoi> list)
         {
-            if (street_count_before_turn == 1)
-            {
-                instruction.Text = string.Format("Neem de 1ste afslag {0}, de {1} op.",
-                    TurnDirection(direction),
-                    this.GetName("nl", street_to));
-            }
-            else
-            {
-                instruction.Text = string.Format("Neem de {0}de afslag {1}, de {2} op.",
-                    street_count_before_turn,
-                    TurnDirection(direction),
-                    this.GetName("nl", street_to));
-            }
+//            if (street_count_before_turn == 1)
+//            {
+//                instruction.Text = string.Format("Neem de 1ste afslag {0}, de {1} op.",
+//                    TurnDirection(direction),
+//                    this.GetName("nl", street_to));
+//            }
+//            else
+//            {
+//                instruction.Text = string.Format("Neem de {0}de afslag {1}, de {2} op.",
+//                    street_count_before_turn,
+//                    TurnDirection(direction),
+//                    this.GetName("nl", street_to));
+//            }
+			instruction.Text = string.Format ("Draai {0}", TurnDirection (direction));
 
             // returns the instruction with text.
             return instruction;
@@ -93,10 +94,12 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         public Instruction GenerateIndirectTurn(Instruction instruction, int street_count_turn, int street_count_before_turn,
             TagsCollection street_to, RelativeDirectionEnum direction, List<PointPoi> list)
         {
-            instruction.Text = string.Format("Neem de {0}de afslag {1}, de {2} op.",
-                street_count_before_turn,
-                TurnDirection(direction),
-                this.GetName("nl", street_to));
+//            instruction.Text = string.Format("Neem de {0}de afslag {1}, de {2} op.",
+//                street_count_before_turn,
+//                TurnDirection(direction),
+//                this.GetName("nl", street_to));
+			
+			instruction.Text = string.Format ("Draai {0}", TurnDirection (direction));
 
             // returns the instruction with text.
             return instruction;
@@ -111,14 +114,15 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         /// <returns></returns>
         public Instruction GeneratePoi(Instruction instruction, List<PointPoi> list, RelativeDirectionEnum? direction)
         {
-            if (direction == null)
-            {
-                instruction.Text = string.Format("Poi");
-            }
-            else
-            {
-                instruction.Text = string.Format("Poi:{0}", direction);
-            }
+//            if (direction == null)
+//            {
+//                instruction.Text = string.Format("Poi");
+//            }
+//            else
+//            {
+//                instruction.Text = string.Format("Poi:{0}", direction);
+//            }
+			instruction.Text = "Aangekomst";
 
             // returns the instruction with text.
             return instruction;
@@ -137,19 +141,20 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
             TagsCollection street_to, 
             RelativeDirectionEnum direction, List<PointPoi> list)
         {
-            if (street_count_before_turn == 1)
-            {
-                instruction.Text = string.Format("Sla {1}af om op {0} te blijven.",
-                    this.GetName("nl", street_to),
-                    TurnDirection(direction));
-            }
-            else
-            {
-                instruction.Text = string.Format("Neem de {1}de straat {2} om op {0} te blijven.",
-                    this.GetName("nl", street_to),
-                    street_count_before_turn,
-                    TurnDirection(direction));
-            }
+//            if (street_count_before_turn == 1)
+//            {
+//                instruction.Text = string.Format("Sla {1}af om op {0} te blijven.",
+//                    this.GetName("nl", street_to),
+//                    TurnDirection(direction));
+//            }
+//            else
+//            {
+//                instruction.Text = string.Format("Neem de {1}de straat {2} om op {0} te blijven.",
+//                    this.GetName("nl", street_to),
+//                    street_count_before_turn,
+//                    TurnDirection(direction));
+			//            }
+			instruction.Text = string.Format ("Draai {0}", TurnDirection (direction));
 
             // returns the instruction with text.
             return instruction;
@@ -168,19 +173,21 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         public Instruction GenerateIndirectFollowTurn(Instruction instruction, int street_count_turn, int street_count_before_turn, TagsCollection street_to, 
             RelativeDirectionEnum direction, List<PointPoi> list)
         {
-            if (street_count_before_turn == 1)
-            {
-                instruction.Text = string.Format("Sla {1}af om op {0} te blijven.",
-                    this.GetName("nl",  street_to),
-                    TurnDirection(direction));
-            }
-            else
-            {
-                instruction.Text = string.Format("Neem de {1}de straat {2} om op {0} te blijven.",
-                    this.GetName("nl", street_to),
-                    street_count_before_turn,
-                    TurnDirection(direction));
-            }
+//            if (street_count_before_turn == 1)
+//            {
+//                instruction.Text = string.Format("Sla {1}af om op {0} te blijven.",
+//                    this.GetName("nl",  street_to),
+//                    TurnDirection(direction));
+//            }
+//            else
+//            {
+//                instruction.Text = string.Format("Neem de {1}de straat {2} om op {0} te blijven.",
+//                    this.GetName("nl", street_to),
+//                    street_count_before_turn,
+//                    TurnDirection(direction));
+//            }
+			
+			instruction.Text = string.Format ("Draai {0}", TurnDirection (direction));
 
             // returns the instruction with text.
             return instruction;
@@ -199,23 +206,26 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         public Instruction GenerateImmidiateTurn(Instruction instruction, int first_street_count_to, TagsCollection first_street_to,
             RelativeDirection first_direction, TagsCollection second_street_to, RelativeDirection second_direction)
         {
-            if (first_street_count_to == 1)
-            {
-                instruction.Text = string.Format("Neem de 1ste afslag {0}, de {1} op, en ga onmiddellijk {2} op de {3}.",
-                    TurnDirection(first_direction.Direction),
-                    this.GetName("nl", first_street_to),
-                    TurnDirection(second_direction.Direction),
-                    this.GetName("nl", second_street_to));
-            }
-            else
-            {
-                instruction.Text = string.Format("Neem de {4}de afslag {0}, de {1} op, en ga onmiddellijk {2} op de {3}.",
-                    TurnDirection(first_direction.Direction),
-                    this.GetName("nl", first_street_to),
-                    TurnDirection(second_direction.Direction),
-                    this.GetName("nl", second_street_to),
-                    first_street_count_to);
-            }
+//            if (first_street_count_to == 1)
+//            {
+//                instruction.Text = string.Format("Neem de 1ste afslag {0}, de {1} op, en ga onmiddellijk {2} op de {3}.",
+//                    TurnDirection(first_direction.Direction),
+//                    this.GetName("nl", first_street_to),
+//                    TurnDirection(second_direction.Direction),
+//                    this.GetName("nl", second_street_to));
+//            }
+//            else
+//            {
+//                instruction.Text = string.Format("Neem de {4}de afslag {0}, de {1} op, en ga onmiddellijk {2} op de {3}.",
+//                    TurnDirection(first_direction.Direction),
+//                    this.GetName("nl", first_street_to),
+//                    TurnDirection(second_direction.Direction),
+//                    this.GetName("nl", second_street_to),
+//                    first_street_count_to);
+			//            }
+			instruction.Text = string.Format ("Draai {0} en daarna direct {1}", 
+			                                  TurnDirection(first_direction.Direction),
+			                                  TurnDirection(second_direction.Direction));
 
             // returns the instruction with text.
             return instruction;
@@ -230,9 +240,8 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         /// <returns></returns>
         public Instruction GenerateRoundabout(Instruction instruction, int count, TagsCollection next_street)
         {
-            instruction.Text = string.Format("Neem de {0}de afslag op het volgende rondpunt naar de {1}.",
-                count,
-                this.GetName("nl", next_street));
+            instruction.Text = string.Format("Neem de {0} de afslag op het volgende rondpunt",
+                count);
 
             // returns the instruction with text.
             return instruction;

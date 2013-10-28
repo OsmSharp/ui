@@ -17,21 +17,21 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using MonoTouch.UIKit;
-using MonoTouch.CoreGraphics;
-using OsmSharp.UI.Map;
-using OsmSharp.Math.Geo;
-using OsmSharp.UI.Renderer;
-using System.Drawing;
-using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.UI;
 using System.Collections.Generic;
-using OsmSharp.UI.Map.Layers;
-using OsmSharp.Math.Primitives;
-using OsmSharp.Units.Angle;
-using OsmSharp.Math.Geo.Projections;
-using OsmSharp.UI.Animations;
+using System.Drawing;
 using System.Threading;
+using MonoTouch.CoreGraphics;
+using MonoTouch.UIKit;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Math.Primitives;
+using OsmSharp.UI;
+using OsmSharp.UI.Animations;
+using OsmSharp.UI.Map;
+using OsmSharp.UI.Map.Layers;
+using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.iOS.UI
 {
@@ -281,9 +281,6 @@ namespace OsmSharp.iOS.UI
 		void Render() {
 			try {
 				RectangleF rect = _rect;
-				//RectangleF rect = this.Frame;
-
-
 
 				lock (this.Map) {
 				
@@ -375,7 +372,7 @@ namespace OsmSharp.iOS.UI
 				}
 			}
 			catch(Exception ex) {
-
+				_cacheRenderer.Reset ();
 			}
 		}
 
@@ -1052,6 +1049,21 @@ namespace OsmSharp.iOS.UI
 			if (this.MapTouched != null) {
 				this.MapTouched (this, this.MapZoom, this.MapTilt, this.MapCenter);
 			}
+		}
+
+		/// <summary>
+		/// Dispose the specified disposing.
+		/// </summary>
+		/// <param name="disposing">If set to <c>true</c> disposing.</param>
+		protected override void Dispose (bool disposing)
+		{
+			base.Dispose (disposing);
+
+			_cachedScene.Clear ();
+			_cachedScene = null;
+			_renderingThread.Abort ();
+			_renderingThread = null;
+			_bytescache = null;
 		}
 	}
 }
