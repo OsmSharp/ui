@@ -128,9 +128,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         protected override bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter,
             ITagsIndex tagsIndex, TagsCollection tags)
         {
-            // TODO: remove later!!!!!
-            return Vehicle.Car.CanTraverse(tags);
-            //return edgeInterpreter.IsRoutable(tags);
+            return edgeInterpreter.IsRoutable(tags);
         }
 
         #region Static Processing Functions

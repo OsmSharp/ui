@@ -292,9 +292,17 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="forward"></param>
         /// <returns></returns>
         private PathSegment<long>[] DoCalculation(IDynamicGraphReadOnly<LiveEdge> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            PathSegmentVisitList source, PathSegmentVisitList[] targets, double weight,
+            PathSegmentVisitList sourceList, PathSegmentVisitList[] targetList, double weight,
             bool stopAtFirst, bool returnAtWeight, bool forward)
         {
+            // make copies of the target and source visitlist.
+            PathSegmentVisitList source = sourceList.Clone() as PathSegmentVisitList;
+            PathSegmentVisitList[] targets = new PathSegmentVisitList[targetList.Length];
+            for (int targetIdx = 0; targetIdx < targetList.Length; targetIdx++)
+            {
+                targets[targetIdx] = targetList[targetIdx].Clone() as PathSegmentVisitList;
+            }
+
             //  initialize the result data structures.
             var segmentsAtWeight = new List<PathSegment<long>>();
             var segmentsToTarget = new PathSegment<long>[targets.Length]; // the resulting target segments.
