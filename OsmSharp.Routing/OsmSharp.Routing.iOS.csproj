@@ -47,6 +47,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
+    <Compile Include="CH\CHEdgeData.cs" />
     <Compile Include="IEdgeMatcher.cs" />
     <Compile Include="IRouterExtensions.cs" />
     <Compile Include="Navigation\RouteTracker.cs" />
@@ -69,7 +70,6 @@
     <Compile Include="CH\PreProcessing\Ordering\EdgeDifferenceContractedSearchSpace.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\CHRouterWitnessCalculator.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
-    <Compile Include="CH\PreProcessing\CHEdgeData.cs" />
     <Compile Include="CH\PreProcessing\CHPreProcessor.cs" />
     <Compile Include="CH\PreProcessing\CHPriorityQueue.cs" />
     <Compile Include="CH\PreProcessing\INodeWeightCalculator.cs" />
@@ -114,7 +114,6 @@
     <Compile Include="Interpreter\Roads\IEdgeInterpreter.cs" />
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
     <Compile Include="Interpreter\IRoutingInterpreter.cs" />
-    <Compile Include="Osm\Dykstra\DykstraRouting.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
     <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
     <Compile Include="Osm\Graphs\LiveEdge.cs" />
