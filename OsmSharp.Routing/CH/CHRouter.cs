@@ -1377,15 +1377,15 @@ namespace OsmSharp.Routing.CH
                     var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
                     distance = coordinate.Distance(fromCoordinates);
 
-                    if (distance < 0.00001)
-                    { // the distance is smaller than the tolerance value.
-                        closestWithoutMatch = new SearchClosestResult(
-                            distance, arc.Key);
-                        break;
+                    //if (distance < 0.00001)
+                    //{ // the distance is smaller than the tolerance value.
+                    //    closestWithoutMatch = new SearchClosestResult(
+                    //        distance, arc.Key);
+                    //    break;
 
-                        // try and match.
-                        //if(matcher.Match(_
-                    }
+                    //    // try and match.
+                    //    //if(matcher.Match(_
+                    //}
 
                     if (distance < closestWithoutMatch.Distance)
                     { // the distance is smaller.

@@ -194,6 +194,24 @@ namespace OsmSharp.Routing.Graph.Router
         }
 
         /// <summary>
+        /// Removes the path to the given vertex.
+        /// </summary>
+        /// <param name="vertex"></param>
+        /// <returns></returns>
+        public void Remove(long vertex)
+        {
+            double weight = _visited[vertex];
+            _visited.Remove(vertex);
+            Dictionary<long, PathSegment<long>> paths_at_weight =
+                _visit_list[weight];
+            paths_at_weight.Remove(vertex);
+            if (paths_at_weight.Count == 0)
+            {
+                _visit_list.Remove(weight);
+            }
+        }
+
+        /// <summary>
         /// Returns the element count in this list.
         /// </summary>
         public int Count

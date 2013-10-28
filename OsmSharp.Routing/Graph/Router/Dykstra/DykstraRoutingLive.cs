@@ -118,7 +118,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
             Vehicle vehicle, PathSegmentVisitList from, PathSegmentVisitList[] targets, double max)
         {
             PathSegment<long>[] result = this.DoCalculation(graph, interpreter, vehicle,
-                from, targets, max, true, false);
+                from, targets, max, false, false);
             if (result != null && result.Length == 1)
             {
                 return result[0];
@@ -577,16 +577,24 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                             // check if routing is finished.
                             if (segmentsToTarget[idx] == null)
                             { // make sure only the first route is set.
-                                foundTargets++;
                                 segmentsToTarget[idx] = toPath;
-                                if (foundTargets == targets.Length)
-                                { // routing is finished!
-                                    return segmentsToTarget.ToArray();
-                                }
                             }
                             else if (segmentsToTarget[idx].Weight > toPath.Weight)
                             { // check if the second, third or later is shorter.
                                 segmentsToTarget[idx] = toPath;
+                            }
+
+                            // remove this vertex from this target's paths.
+                            target.Remove(current.VertexId);
+
+                            // if this target is empty it's optimal route has been found.
+                            if (target.Count == 0)
+                            { // now the shortest route has been found for sure!
+                                foundTargets++;
+                                if (foundTargets == targets.Length)
+                                { // routing is finished!
+                                    return segmentsToTarget.ToArray();
+                                }
                             }
                         }
                     }
