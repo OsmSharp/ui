@@ -136,7 +136,11 @@ namespace OsmSharp.UI.Map.Layers
 			_lastZoom = zoomLevel;
 
             // reset the scene.
-			_scene2DSimple = new Scene2DSimple();
+            if (_scene2DSimple == null)
+            {
+                _scene2DSimple = new Scene2DSimple();
+            }
+            _scene2DSimple.Clear();
 
             // get from the index.
             this.Scene.BackColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
