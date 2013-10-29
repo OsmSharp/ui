@@ -78,9 +78,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
         }
 
         /// <summary>
-        /// Direction flag to higher vertex: (0=bidirectional, 1=forward,  2=backward,  3=not forward and not backward).
-        ///                to lower  vertex: (4=bidirectional, 5=forward,  6=backward,  7=not forward and not backward).
-        ///                no low/high info: (8=bidirectional, 9=forward, 10=backward, 11=not forward and not backward).
+        /// Direction flag to higher vertex: ( 0=bidirectional,  1=forward,  2=backward,  3=not forward and not backward).
+        ///                to lower  vertex: ( 4=bidirectional,  5=forward,  6=backward,  7=not forward and not backward).
+        ///                no low/high info: ( 8=bidirectional,  9=forward, 10=backward, 11=not forward and not backward).
+        ///                only informative: (12=bidirectional, 13=forward, 14=backward, 15=not forward and not backward).
         /// </summary>
         public byte Direction { get; set; }
 
@@ -242,6 +243,58 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// Returns the tags (0 means no tags). 
         /// </summary>
         public uint Tags { get; set; }
+
+        /// <summary>
+        /// Returns true if this edge represents a neighbour-relation.
+        /// </summary>
+        public bool RepresentsNeighbourRelations
+        {
+            get { return !this.HasContractedVertex; }
+        }
+
+        /// <summary>
+        /// Returns true if this edge is informative.
+        /// </summary>
+        public bool IsInformative
+        {
+            get
+            {
+                return this.Direction >= 12;
+            }
+        }
+
+        /// <summary>
+        /// Converts this given edge to a purely informative edge.
+        /// </summary>
+        /// <returns></returns>
+        public CHEdgeData ConvertToInformative()
+        {
+            CHEdgeData informativeData = new CHEdgeData();
+            informativeData.Direction = this.Direction;
+            informativeData.ContractedVertexId = this.ContractedVertexId;
+            informativeData.Tags = this.Tags;
+            informativeData.Weight = this.Weight;
+
+            // convert the direction.
+            if (informativeData.Direction <= 3)
+            {
+                informativeData.Direction = (byte)(informativeData.Direction + 12);
+            }
+            else if (informativeData.Direction <= 7)
+            {
+                informativeData.Direction = (byte)(informativeData.Direction + 8);
+            }
+            else if (informativeData.Direction <= 11)
+            {
+                informativeData.Direction = (byte)(informativeData.Direction + 4);
+            }
+            else
+            { // edge was already informative.
+                throw new InvalidCastException("Edge was already informative!");
+            }
+
+            return informativeData;
+        }
     }
 
     /// <summary>
@@ -282,6 +335,39 @@ namespace OsmSharp.Routing.CH.PreProcessing
     /// </summary>
     public static class CHExtensions
     {
+        /// <summary>
+        /// Removes all informative edges.
+        /// </summary>
+        /// <param name="edges"></param>
+        public static KeyValuePair<uint, CHEdgeData>[] RemoveInformativeEdges(this KeyValuePair<uint, CHEdgeData>[] edges)
+        {
+            List<KeyValuePair<uint, CHEdgeData>> result = new List<KeyValuePair<uint, CHEdgeData>>();
+            foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
+            {
+                if (!edge.Value.IsInformative)
+                {
+                    result.Add(edge);
+                }
+            }
+            return result.ToArray();
+        }
+        /// <summary>
+        /// Removes all informative edges.
+        /// </summary>
+        /// <param name="edges"></param>
+        public static KeyValuePair<uint, CHEdgeData>[] KeepInformativeEdges(this KeyValuePair<uint, CHEdgeData>[] edges)
+        {
+            List<KeyValuePair<uint, CHEdgeData>> result = new List<KeyValuePair<uint, CHEdgeData>>();
+            foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
+            {
+                if (edge.Value.IsInformative)
+                {
+                    result.Add(edge);
+                }
+            }
+            return result.ToArray();
+        }
+
         /// <summary>
         /// Adds all downward edges.
         /// </summary>

@@ -149,14 +149,17 @@ namespace OsmSharp.Routing.Graph
                 int idx = -1;
                 if (arcs != null)
                 { // check for an existing edge first.
-                    for (int arcIdx = 0; arcIdx < arcs.Length; arcIdx++)
-                    {
-                        if (arcs[arcIdx].Key == to &&
-                            comparer != null && comparer.Overlaps(data, arcs[arcIdx].Value))
-                        { // an arc was found that represents the same directional information.
-                            arcs[arcIdx] = new KeyValuePair<uint, TEdgeData>(
-                                to, data);
-                            return;
+                    if (comparer != null)
+                    { // there is no comparer, just skip this check.
+                        for (int arcIdx = 0; arcIdx < arcs.Length; arcIdx++)
+                        {
+                            if (arcs[arcIdx].Key == to &&
+                                comparer != null && comparer.Overlaps(data, arcs[arcIdx].Value))
+                            { // an arc was found that represents the same directional information.
+                                arcs[arcIdx] = new KeyValuePair<uint, TEdgeData>(
+                                    to, data);
+                                return;
+                            }
                         }
                     }
                     
@@ -234,7 +237,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasNeighbour(uint vertexId, uint neighbour)
+        public bool HasArc(uint vertexId, uint neighbour)
         {
             if (_vertices.Length > vertexId)
             {

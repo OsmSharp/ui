@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -59,6 +60,9 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         {
             // get the neighbours.
             KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(vertex);
+
+            // remove all informative edges.
+            neighbours = neighbours.RemoveInformativeEdges();
 
             // simulate the construction of new edges.
             int new_edges = 0;

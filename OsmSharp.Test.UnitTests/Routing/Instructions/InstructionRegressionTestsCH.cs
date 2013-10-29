@@ -79,13 +79,13 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             this.DoInstructionRegressionTest1();
         }
 
-//        /// <summary>
-//        /// Issue with generating instructions.
-//        /// </summary>
-//        [Test]
-//        public void InstructionRegressionCHTest2()
-//        {
-//            this.DoInstructionRegressionTest2();
-//        }
+        /// <summary>
+        /// Issue with generating instructions.
+        /// </summary>
+        [Test]
+        public void InstructionRegressionCHTest2()
+        {
+            this.DoInstructionRegressionTest2();
+        }
     }
 }

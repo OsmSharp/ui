@@ -19,6 +19,8 @@
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter;
+using System.Collections.Generic;
+using System;
 
 namespace OsmSharp.Routing.Routers
 {
@@ -49,6 +51,17 @@ namespace OsmSharp.Routing.Routers
         {
             // TODO: ask interpreter.
             return true;
+        }
+
+        /// <summary>
+        /// Returns all the arcs representing neighbours for the given vertex.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <returns></returns>
+        protected override KeyValuePair<uint, CHEdgeData>[] GetNeighboursUndirected(long vertex1)
+        {
+            KeyValuePair<uint, CHEdgeData>[] arcs = this.Data.GetArcs(Convert.ToUInt32(vertex1));
+            return arcs.KeepInformativeEdges();
         }
     }
 }

@@ -166,7 +166,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasNeighbour(uint vertexId, uint neighbour)
+        public bool HasArc(uint vertexId, uint neighbour)
         {
             throw new NotImplementedException();
         }

@@ -25,5 +25,13 @@ namespace OsmSharp.Routing.Osm.Graphs
             get;
             set;
         }
+
+        /// <summary>
+        /// Returns true if this edge represents a neighbour-relation.
+        /// </summary>
+        public bool RepresentsNeighbourRelations
+        {
+            get { return true; }
+        }
     }
 }

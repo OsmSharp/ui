@@ -18,9 +18,7 @@
 
 using System;
 using System.Collections.Generic;
-using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
-using OsmSharp.Math;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Structures;
 using OsmSharp.Math.Structures.QTree;
@@ -170,9 +168,9 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        public bool HasNeighbour(uint vertexId, uint neighbour)
+        public bool HasArc(uint vertexId, uint neighbour)
         {
-            return _graph.HasNeighbour(vertexId, neighbour);
+            return _graph.HasArc(vertexId, neighbour);
         }
 
         /// <summary>

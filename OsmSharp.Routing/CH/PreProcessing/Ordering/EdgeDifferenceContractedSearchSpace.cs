@@ -75,6 +75,9 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
             // get the neighbours.
             KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(vertex);
 
+            // remove all informative edges.
+            neighbours = neighbours.RemoveInformativeEdges();
+
             // simulate the construction of new edges.
             int new_edges = 0;
             int removed = neighbours.Length;

@@ -47,7 +47,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="vertexId"></param>
         /// <param name="neighbour"></param>
         /// <returns></returns>
-        bool HasNeighbour(uint vertexId, uint neighbour);
+        bool HasArc(uint vertexId, uint neighbour);
 
         /// <summary>
         /// Returns the total number of vertices.

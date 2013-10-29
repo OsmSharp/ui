@@ -80,6 +80,14 @@ namespace OsmSharp.Routing.Routers
         }
 
         /// <summary>
+        /// Returns the data.
+        /// </summary>
+        protected IBasicRouterDataSource<TEdgeData> Data
+        {
+            get { return _dataGraph; }
+        }
+
+        /// <summary>
         /// Returns true if the given vehicle is supported.
         /// </summary>
         /// <param name="vehicle"></param>
@@ -492,7 +500,8 @@ namespace OsmSharp.Routing.Routers
 
                 // STEP2: Get the side streets
                 IList<RoutePointEntrySideStreet> sideStreets = new List<RoutePointEntrySideStreet>();
-                Dictionary<long, IDynamicGraphEdgeData> neighbours = this.GetNeighboursUndirectedWithEdges(vehicle, nodeCurrent);
+                Dictionary<long, IDynamicGraphEdgeData> neighbours = this.GetNeighboursUndirectedWithEdges(
+                    vehicle, nodeCurrent);
                 if (neighbours.Count > 2)
                 {
                     // construct neighbours list.
@@ -570,7 +579,7 @@ namespace OsmSharp.Routing.Routers
             var neighbours = new Dictionary<long, IDynamicGraphEdgeData>();
             if (vertex1 > 0)
             {
-                KeyValuePair<uint, TEdgeData>[] arcs = _dataGraph.GetArcs(Convert.ToUInt32(vertex1));
+                KeyValuePair<uint, TEdgeData>[] arcs = this.GetNeighboursUndirected(vertex1);
                 foreach (KeyValuePair<uint, TEdgeData> arc in arcs)
                 {
                     neighbours[arc.Key] = arc.Value;
@@ -585,6 +594,16 @@ namespace OsmSharp.Routing.Routers
                 }
             }
             return neighbours;
+        }
+
+        /// <summary>
+        /// Returns all the arcs representing neighbours for the given vertex.
+        /// </summary>
+        /// <param name="vertex1"></param>
+        /// <returns></returns>
+        protected virtual KeyValuePair<uint, TEdgeData>[] GetNeighboursUndirected(long vertex1)
+        {
+            return _dataGraph.GetArcs(Convert.ToUInt32(vertex1));
         }
 
         /// <summary>

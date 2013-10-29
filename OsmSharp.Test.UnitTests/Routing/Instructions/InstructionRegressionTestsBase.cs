@@ -202,16 +202,16 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
 
             // resolve the three points in question.
             GeoCoordinate point35 = new GeoCoordinate(51.01257, 4.000753);
-            RouterPoint point35resolved = router.Resolve(Vehicle.Car, point35);
+            RouterPoint point35resolved = router.Resolve(Vehicle.Car, point35, true);
             GeoCoordinate point45 = new GeoCoordinate(51.01315, 3.999588);
-            RouterPoint point45resolved = router.Resolve(Vehicle.Car, point45);
+            RouterPoint point45resolved = router.Resolve(Vehicle.Car, point45, true);
             GeoCoordinate point40 = new GeoCoordinate(51.01250, 4.000013);
-            RouterPoint point40resolved = router.Resolve(Vehicle.Car, point40);
+            RouterPoint point40resolved = router.Resolve(Vehicle.Car, point40, true);
 
             // calculate two smaller routes.
             Route route3545 = router.Calculate(Vehicle.Car, point35resolved, point45resolved);
             Route route4540 = router.Calculate(Vehicle.Car, point45resolved, point40resolved);
-            Route route3540concatenated = Route.Concatenate(route3545, route4540);
+            Route route3540concatenated = Route.Concatenate(route3545, route4540, true);
 
             Route route3540 = router.Calculate(Vehicle.Car, point35resolved, point40resolved);
 
@@ -335,9 +335,9 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
 
             // resolve the three points in question.
             GeoCoordinate point1 = new GeoCoordinate(51.01257, 4.000753);
-            RouterPoint point1resolved = router.Resolve(Vehicle.Car, point1);
+            RouterPoint point1resolved = router.Resolve(Vehicle.Car, point1, true);
             GeoCoordinate point2 = new GeoCoordinate(51.01250, 4.000013);
-            RouterPoint point2resolved = router.Resolve(Vehicle.Car, point2);
+            RouterPoint point2resolved = router.Resolve(Vehicle.Car, point2, true);
 
             // calculate two smaller routes.
             Route route12 = router.Calculate(Vehicle.Car, 
@@ -345,9 +345,9 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
 
             // resolve the three points in question.
             GeoCoordinate pointReference1 = new GeoCoordinate(51.01257, 4.000753);
-            RouterPoint pointReference1resolved = referenceRouter.Resolve(Vehicle.Car, point1);
+            RouterPoint pointReference1resolved = referenceRouter.Resolve(Vehicle.Car, point1, true);
             GeoCoordinate pointReference2 = new GeoCoordinate(51.01250, 4.000013);
-            RouterPoint pointReference2resolved = referenceRouter.Resolve(Vehicle.Car, point2);
+            RouterPoint pointReference2resolved = referenceRouter.Resolve(Vehicle.Car, point2, true);
 
             // calculate two smaller routes.
             Route routeReference12 = referenceRouter.Calculate(Vehicle.Car, 

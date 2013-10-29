@@ -29,6 +29,11 @@ namespace OsmSharp.Routing.Graph
         bool Forward { get; }
 
         /// <summary>
+        /// Returns true if this edge represents a neighbour relation.
+        /// </summary>
+        bool RepresentsNeighbourRelations { get; }
+
+        /// <summary>
         /// Returns the tags identifier.
         /// </summary>
         uint Tags
