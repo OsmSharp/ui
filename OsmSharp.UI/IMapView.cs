@@ -21,6 +21,7 @@ using OsmSharp.Units.Angle;
 using OsmSharp.UI.Animations;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Renderer;
+using System;
 
 namespace OsmSharp.UI
 {
@@ -29,6 +30,11 @@ namespace OsmSharp.UI
     /// </summary>
     public interface IMapView
     {
+		/// <summary>
+		/// Occurs when map was touched and things have been moved around.
+		/// </summary>
+		event MapViewDelegates.MapTouchedDelegate MapTouched;
+
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="OsmSharp.UI.IMapView"/> auto invalidate.
 		/// </summary>
@@ -86,4 +92,12 @@ namespace OsmSharp.UI
         /// <param name="projection"></param>
         void NotifyMapChange(double pixelsWidth, double pixelsHeight, View2D view, IProjection projection);
     }
+
+	/// <summary>
+	/// Map view delegates.
+	/// </summary>
+	public static class MapViewDelegates 
+	{
+		public delegate void MapTouchedDelegate(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter);
+	}
 }

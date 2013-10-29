@@ -26,6 +26,7 @@ using OsmSharp.Routing.Instructions;
 using OsmSharp.Routing.Navigation;
 using OsmSharp.Units.Angle;
 using OsmSharp.Units.Distance;
+using OsmSharp.Units.Time;
 
 namespace OsmSharp.UI.Animations.Navigation
 {
@@ -47,14 +48,80 @@ namespace OsmSharp.UI.Animations.Navigation
         /// <summary>
         /// Creates a new route tracker animator.
         /// </summary>
-        /// <param name="mapView"></param>
-        /// <param name="routeTracker"></param>
-        public RouteTrackerAnimator(IMapView mapView, RouteTracker routeTracker)
+        /// <param name="mapView">The mapview.</param>
+		/// <param name="routeTracker">The tracker tracking the route.</param>
+		/// <param name="restartAfterTouch">The time in second to wait before resuming tracking after the mapview is touched.</param>
+        public RouteTrackerAnimator(IMapView mapView, RouteTracker routeTracker, Second restartAfterTouch)
         {
+			this.MinZoom = 16;
+			this.MaxZoom = 30;
+			this.DefaultZoom = 17.5f;
+
             _mapView = mapView;
             _animator = new MapViewAnimator(mapView);
             _routeTracker = routeTracker;
+			_minimumTrackGap = new TimeSpan (0, 0, 0, 0, 500).Ticks;
+
+			this.RestartAfterTouch = restartAfterTouch;
+
+			_mapView.MapTouched += MapViewMapTouched;
         }
+
+		/// <summary>
+		/// Holds the last touch time.
+		/// </summary>
+		private long? _lastTouch;
+
+		/// <summary>
+		/// Maps the view map touched.
+		/// </summary>
+		/// <param name="mapView">Map view.</param>
+		/// <param name="newZoom">New zoom.</param>
+		/// <param name="newTilt">New tilt.</param>
+		/// <param name="newCenter">New center.</param>
+		private void MapViewMapTouched(IMapView mapView, float newZoom, Degree newTilt, GeoCoordinate newCenter){
+			if (newZoom > this.MinZoom) {
+				this.DefaultZoom = System.Math.Min (newZoom, this.MaxZoom);
+			} else {
+				_lastTouch = DateTime.Now.Ticks;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the restart after touch period.
+		/// </summary>
+		/// <value>The restart after touch.</value>
+		public Second RestartAfterTouch {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the minimum navigation zoom level.
+		/// </summary>
+		/// <value>The minimum zoom.</value>
+		public float MinZoom {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the maximum navigation zoom level.
+		/// </summary>
+		/// <value>The minimum zoom.</value>
+		public float MaxZoom {
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Gets or sets the default zoom level.
+		/// </summary>
+		/// <value>The default zoom.</value>
+		public float DefaultZoom {
+			get;
+			set;
+		}
 
         /// <summary>
         /// Holds the map view animator.
@@ -62,14 +129,19 @@ namespace OsmSharp.UI.Animations.Navigation
         private readonly MapViewAnimator _animator;
 
         /// <summary>
-        /// Holds the zoom level to use.
-        /// </summary>
-        private float _zoom = 18;
-
-        /// <summary>
         /// Holds the latest ticks 
         /// </summary>
         private long? _lastTicks;
+
+		/// <summary>
+		/// Holds the minimum gap between two track events.
+		/// </summary>
+		private long _minimumTrackGap;
+
+		/// <summary>
+		/// Holds the last track ticks.
+		/// </summary>
+		private long? _lastTrack;
 
         /// <summary>
         /// Starts tracking at a given location.
@@ -77,6 +149,28 @@ namespace OsmSharp.UI.Animations.Navigation
         /// <param name="location"></param>
         public void Track(GeoCoordinate location)
         {
+			if (_lastTouch.HasValue) {
+				// is tracking disabled now?
+				TimeSpan timeFromLastTouch = new TimeSpan (DateTime.Now.Ticks - _lastTouch.Value);
+				if (timeFromLastTouch.TotalSeconds >= this.RestartAfterTouch.Value) {
+					// ok, the animator has waited long enough.
+					_lastTouch = null;
+				} else {
+					// ok, the animator still has to wait for user-input.
+					return;
+				}
+			}
+
+			// check if the minimum gap between tracking events is respected.
+			long now = DateTime.Now.Ticks;
+			if (_lastTrack.HasValue) {
+				if (_minimumTrackGap > now - _lastTrack.Value) {
+					return; // too fast!
+				}
+			}
+			_lastTrack = now;
+
+			// animate the next step(s).
             TimeSpan lastTrackInterval = new TimeSpan(0, 0, 0, 0, 750);
             long ticks = DateTime.Now.Ticks;
             if (_lastTicks.HasValue)
@@ -91,25 +185,21 @@ namespace OsmSharp.UI.Animations.Navigation
             _routeTracker.Track(location);
 
             // calculate all map view parameters (zoom, location, tilt) to display the route/direction correctly.
-            float zoom = _zoom; // TODO: do something smarter here to allow the zoom level to be customized.
+            float zoom = this.DefaultZoom;
             GeoCoordinate center = _routeTracker.PositionRoute;
-			double nextDistance = 100;
+			double nextDistance = 20;
+			Degree tilt = _mapView.MapTilt;
 			GeoCoordinate next = _routeTracker.PositionIn(nextDistance);
-			while (next == null) {
-				nextDistance = nextDistance - 10;
-				if (nextDistance <= 0) {
-					next = center;
-				}
-				next = _routeTracker.PositionIn(nextDistance);
+			if (next != null) {
+				IProjection projection = _mapView.Map.Projection;
+				VectorF2D direction = new PointF2D(projection.ToPixel(next)) -
+					new PointF2D(projection.ToPixel(center));
+				tilt = direction.Angle(new VectorF2D(0, -1));
 			}
-            IProjection projection = _mapView.Map.Projection;
-            VectorF2D direction = new PointF2D(projection.ToPixel(next)) -
-                        new PointF2D(projection.ToPixel(center));
-            Degree tilt = direction.Angle(new VectorF2D(0, -1));
             
             // animate to the given parameter (zoom, location, tilt).
             _animator.Stop();
-            _animator.Start(center, zoom, tilt, lastTrackInterval.Subtract(new TimeSpan(0, 0, 0, 0, 50)));
+            _animator.Start(center, zoom, tilt, lastTrackInterval.Subtract(new TimeSpan(0, 0, 0, 0, 150)));
         }
 
         /// <summary>

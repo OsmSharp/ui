@@ -42,6 +42,8 @@ namespace OsmSharp.WinForms.UI
     /// </summary>
     public partial class MapControl : UserControl, IMapView
     {
+		public event MapViewDelegates.MapTouchedDelegate MapTouched;
+
         /// <summary>
         /// Creates a new map control.
         /// </summary>

@@ -120,7 +120,7 @@ namespace OsmSharp.Osm.Streams.Complete
                 _cachingDone = true;
             }
 
-            if (_simpleSource.MoveNext())
+            while (_simpleSource.MoveNext())
             { // there is data.
                 OsmGeo currentSimple = _simpleSource.Current();
 
@@ -181,7 +181,10 @@ namespace OsmSharp.Osm.Streams.Complete
                         }
                         break;
                 }
-                return true;
+                if (_current != null)
+                { // only return complete objects.
+                    return true;
+                }
             }
             return false;
         }

@@ -78,7 +78,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         /// <returns></returns>
         public Scene2DStyledSource Deserialize(Stream stream, bool lazy = true)
         {
-            // read index bytes.
+			// read index bytes.
             byte[] indexSizeBytes = new byte[4];
             stream.Read(indexSizeBytes, 0, 4);
             int length = BitConverter.ToInt32(indexSizeBytes, 0);
@@ -103,7 +103,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
                 typeModel.Deserialize(cappedStream, null, typeof(Scene2DStyledIndex)) as Scene2DStyledIndex;
 
             // initialize the serializer.
-            Scene2DRTreeSerializer serializer = new Scene2DRTreeSerializer(true, styleIndex);
+			Scene2DRTreeSerializer serializer = new Scene2DRTreeSerializer(true, styleIndex);
             return new Scene2DStyledSource(
                 serializer.Deserialize(new LimitedStream(stream), true));
         }

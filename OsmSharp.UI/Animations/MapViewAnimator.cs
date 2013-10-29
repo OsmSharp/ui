@@ -193,7 +193,7 @@ namespace OsmSharp.UI.Animations
                 // stop the previous timer.
                 if (_timer != null)
                 { // timer exists.
-                    _mapView.Invalidate();
+                    //_mapView.Invalidate();
 
                     _timer.Stop();
                     _timer.Dispose();
@@ -227,7 +227,7 @@ namespace OsmSharp.UI.Animations
 				              _mapView.MapZoom, _mapView.MapTilt, _mapView.MapCenter.ToString()));
 
 				// disable auto invalidate.
-				_mapView.AutoInvalidate = false;
+				//_mapView.AutoInvalidate = false;
 				_mapView.RegisterAnimator (this);
 
                 // start the timer.
@@ -283,8 +283,8 @@ namespace OsmSharp.UI.Animations
 			}
 
 			// enable auto invalidate.
-			_mapView.Invalidate ();
-			_mapView.AutoInvalidate = true;
+			//_mapView.Invalidate ();
+			//_mapView.AutoInvalidate = true;
 			_mapView.RegisterAnimator (null);
             _timer.Stop(); // stop the timer.
         }
