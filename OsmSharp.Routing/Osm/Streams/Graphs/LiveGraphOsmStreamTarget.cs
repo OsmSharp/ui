@@ -36,6 +36,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
     public class LiveGraphOsmStreamTarget : DynamicGraphOsmStreamWriter<LiveEdge>
     {
         /// <summary>
+        /// Holds the list of vehicle profiles to build routing information for.
+        /// </summary>
+        private HashSet<Vehicle> _vehicles;
+
+        /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
         /// <param name="dynamicGraph"></param>
@@ -57,7 +62,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="idTransformations"></param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, IDictionary<long, uint> idTransformations)
-            : this(dynamicGraph, interpreter, tagsIndex, idTransformations, null)
+            : this(dynamicGraph, interpreter, tagsIndex, idTransformations, null, null)
         {
 
         }
@@ -71,7 +76,48 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="box"></param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, GeoCoordinateBox box)
-            : this(dynamicGraph, interpreter, tagsIndex, new Dictionary<long, uint>(), box)
+            : this(dynamicGraph, interpreter, tagsIndex, new Dictionary<long, uint>(), box, null)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new osm edge data processing target.
+        /// </summary>
+        /// <param name="dynamicGraph"></param>
+        /// <param name="interpreter">Inteprets the OSM-data.</param>
+        /// <param name="tagsIndex">Holds all the tags.</param>
+        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, IEnumerable<Vehicle> vehicles)
+            : this(dynamicGraph, interpreter, tagsIndex, new Dictionary<long, uint>(), vehicles)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new osm edge data processing target.
+        /// </summary>
+        /// <param name="dynamicGraph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="tagsIndex"></param>
+        /// <param name="idTransformations"></param>
+        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, IDictionary<long, uint> idTransformations, IEnumerable<Vehicle> vehicles)
+            : this(dynamicGraph, interpreter, tagsIndex, idTransformations, null, vehicles)
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new osm edge data processing target.
+        /// </summary>
+        /// <param name="dynamicGraph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="tagsIndex"></param>
+        /// <param name="box"></param>
+        public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
+            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, GeoCoordinateBox box, IEnumerable<Vehicle> vehicles)
+            : this(dynamicGraph, interpreter, tagsIndex, new Dictionary<long, uint>(), box, vehicles)
         {
 
         }
@@ -84,12 +130,20 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         /// <param name="box"></param>
+        /// <param name="vehicles">The vehicle profiles to build routing information for.</param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
             IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, IDictionary<long, uint> idTransformations, 
-            GeoCoordinateBox box)
+            GeoCoordinateBox box, IEnumerable<Vehicle> vehicles)
             : base(dynamicGraph, interpreter, null, tagsIndex, idTransformations, box)
         {
-//            _dynamicDataSource = dynamicGraph;
+            _vehicles = new HashSet<Vehicle>();
+            if (vehicles != null)
+            {
+                foreach (Vehicle vehicle in vehicles)
+                {
+                    _vehicles.Add(vehicle);
+                }
+            }
         }
 
         /// <summary>
@@ -128,6 +182,17 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         protected override bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter,
             ITagsIndex tagsIndex, TagsCollection tags)
         {
+            if (_vehicles.Count > 0)
+            { // limit only to vehicles in this list.
+                foreach (Vehicle vehicle in _vehicles)
+                {
+                    if (vehicle.CanTraverse(tags))
+                    { // one of them is enough.
+                        return true;
+                    }
+                }
+                return false;
+            }
             return edgeInterpreter.IsRoutable(tags);
         }
 

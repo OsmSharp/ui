@@ -32,6 +32,10 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Routing.Graph.Router.Dykstra;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Test.Unittests.Routing.CH
 {
@@ -44,24 +48,11 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <summary>
         /// Executes the tests.
         /// </summary>
-        public static void Execute()
-        {
-            //CHVerifiedContractionBaseTests.ExecuteSparse("OsmSharp.Routing.Osm.Test.TestData.matrix.osm");
-            CHVerifiedContractionBaseTests.ExecuteEdgeDifference("OsmSharp.Routing.Osm.Test.TestData.matrix.osm");
-            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Routing.Osm.Test.TestData.matrix_big_area.osm");
-            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Routing.Osm.Test.TestData.lebbeke.osm");
-            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Routing.Osm.Test.TestData.eeklo.osm");
-            //CHVerifiedContractionBaseTests.Execute("OsmSharp.Routing.Osm.Test.TestData.moscow.osm");
-        }
-
-        /// <summary>
-        /// Executes the tests.
-        /// </summary>
         /// <param name="xml"></param>
         private static void ExecuteEdgeDifference(string xml)
         {
             CHVerifiedContractionBaseTests tester = new CHVerifiedContractionBaseTests();
-            tester.DoTestCHEdgeDifferenceVerifiedContraction(xml);
+            tester.DoTestCHEdgeDifferenceVerifiedContraction(xml, false);
         }
 
         /// <summary>
@@ -71,7 +62,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         private static void ExecuteSparse(string xml)
         {
             CHVerifiedContractionBaseTests tester = new CHVerifiedContractionBaseTests();
-            tester.DoTestCHSparseVerifiedContraction(xml);
+            tester.DoTestCHSparseVerifiedContraction(xml, false);
         }
 
         #region Testing Code
@@ -87,11 +78,46 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         private IOsmRoutingInterpreter _interpreter;
 
         /// <summary>
+        /// Holds the reference router.
+        /// </summary>
+        private Router _referenceRouter;
+
+        /// <summary>
+        /// Builds a raw router to compare against.
+        /// </summary>
+        /// <returns></returns>
+        public void BuildDykstraRouter(string embeddedName,
+            IOsmRoutingInterpreter interpreter)
+        {
+            var tagsIndex = new SimpleTagsIndex();
+
+            // do the data processing.
+            var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
+            var targetData = new LiveGraphOsmStreamTarget(
+                data, interpreter, data.TagsIndex, new Vehicle[] { Vehicle.Car });
+            var dataProcessorSource = new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedName));
+            var sorter = new OsmStreamFilterSort();
+            sorter.RegisterSource(dataProcessorSource);
+            targetData.RegisterSource(sorter);
+            targetData.Pull();
+
+            // initialize the router.
+            _referenceRouter = Router.CreateLiveFrom(data, new DykstraRoutingLive(data.TagsIndex), interpreter);
+        }
+
+        /// <summary>
         /// Executes the CH contractions while verifying each step.
         /// </summary>
         /// <param name="xml"></param>
-        private void DoTestCHSparseVerifiedContraction(string xml)
+        /// <param name="crazyVerification"></param>
+        private void DoTestCHSparseVerifiedContraction(string xml, bool crazyVerification)
         {
+            _referenceRouter = null;
+            if (crazyVerification)
+            {
+                this.BuildDykstraRouter(xml, new OsmRoutingInterpreter());
+            }
             this.DoTestCHSparseVerifiedContraction(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(xml));
         }
@@ -100,6 +126,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// Executes the CH contractions while verifying each step.
         /// </summary>
         /// <param name="stream"></param>
+        /// <param name="crazyVerification"></param>
         public void DoTestCHSparseVerifiedContraction(Stream stream)
         {
             _interpreter = new OsmRoutingInterpreter();
@@ -130,8 +157,14 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// Executes the CH contractions while verifying each step.
         /// </summary>
         /// <param name="xml"></param>
-        private void DoTestCHEdgeDifferenceVerifiedContraction(string xml)
+        /// <param name="crazyVerification"></param>
+        internal void DoTestCHEdgeDifferenceVerifiedContraction(string xml, bool crazyVerification)
         {
+            _referenceRouter = null;
+            if (crazyVerification)
+            {
+                this.BuildDykstraRouter(xml, new OsmRoutingInterpreter());
+            }
             this.DoTestCHSparseVerifiedContraction(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(xml));
         }
@@ -206,6 +239,91 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                     { // the route match!
                         Assert.Fail("Routes are different before/after contraction!");
                     }
+                }
+            }
+
+            if (_referenceRouter != null)
+            { // do crazy verification!
+                Router chRouter = Router.CreateCHFrom(_data, router, new OsmRoutingInterpreter());
+
+                // loop over all nodes and resolve their locations.
+                var resolvedReference = new RouterPoint[_data.VertexCount - 1];
+                var resolved = new RouterPoint[_data.VertexCount - 1];
+                for (uint idx = 1; idx < _data.VertexCount; idx++)
+                { // resolve each vertex.
+                    float latitude, longitude;
+                    if (_data.GetVertex(idx, out latitude, out longitude))
+                    {
+                        resolvedReference[idx - 1] = _referenceRouter.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+                        resolved[idx - 1] = chRouter.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+                    }
+
+                    Assert.IsNotNull(resolvedReference[idx - 1]);
+                    Assert.IsNotNull(resolved[idx - 1]);
+
+                    Assert.AreEqual(resolvedReference[idx - 1].Location.Latitude,
+                        resolved[idx - 1].Location.Latitude, 0.0001);
+                    Assert.AreEqual(resolvedReference[idx - 1].Location.Longitude,
+                        resolved[idx - 1].Location.Longitude, 0.0001);
+                }
+
+                // limit tests to a fixed number.
+                int maxTestCount = 100;
+                int testEveryOther = (resolved.Length * resolved.Length) / maxTestCount;
+                testEveryOther = System.Math.Max(testEveryOther, 1);
+
+                // check all the routes having the same weight(s).
+                for (int fromIdx = 0; fromIdx < resolved.Length; fromIdx++)
+                {
+                    for (int toIdx = 0; toIdx < resolved.Length; toIdx++)
+                    {
+                        int testNumber = fromIdx * resolved.Length + toIdx;
+                        if (testNumber % testEveryOther == 0)
+                        {
+                            Route referenceRoute = _referenceRouter.Calculate(Vehicle.Car,
+                                resolvedReference[fromIdx], resolvedReference[toIdx]);
+                            Route route = chRouter.Calculate(Vehicle.Car,
+                                resolved[fromIdx], resolved[toIdx]);
+
+                            if (referenceRoute != null)
+                            {
+                                Assert.IsNotNull(referenceRoute);
+                                Assert.IsNotNull(route);
+                                this.CompareRoutes(referenceRoute, route);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        /// <summary>
+        /// Compares the two given routes.
+        /// </summary>
+        /// <param name="reference"></param>
+        /// <param name="route"></param>
+        protected void CompareRoutes(Route reference, Route route)
+        {
+            if (reference.Entries == null)
+            {
+                Assert.IsNull(route.Entries);
+            }
+            else
+            {
+                Assert.AreEqual(reference.Entries.Length, route.Entries.Length);
+                for (int idx = 0; idx < reference.Entries.Length; idx++)
+                {
+                    Assert.AreEqual(reference.Entries[idx].Distance,
+                        route.Entries[idx].Distance);
+                    Assert.AreEqual(reference.Entries[idx].Latitude,
+                        route.Entries[idx].Latitude);
+                    Assert.AreEqual(reference.Entries[idx].Longitude,
+                        route.Entries[idx].Longitude);
+                    Assert.AreEqual(reference.Entries[idx].Time,
+                        route.Entries[idx].Time);
+                    Assert.AreEqual(reference.Entries[idx].Type,
+                        route.Entries[idx].Type);
+                    Assert.AreEqual(reference.Entries[idx].WayFromName,
+                        route.Entries[idx].WayFromName);
                 }
             }
         }

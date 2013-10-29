@@ -146,14 +146,14 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 new OsmSharp.Math.Geo.GeoCoordinate(51.0219591301773, 3.99107989102905));
         }
 
-        ///// <summary>
-        ///// Compares all routes possible against a reference implementation.
-        ///// </summary>
-        //[Test]
-        //public void TestCHEdgeDifferenceRegression2()
-        //{
-        //    this.TestCompareAll("test_routing_regression2.osm", true);
-        //}
+        /// <summary>
+        /// Compares all routes possible against a reference implementation.
+        /// </summary>
+        [Test]
+        public void TestCHEdgeDifferenceRegression2()
+        {
+            this.TestCompareAll("test_routing_regression2.osm", true);
+        }
 
         ///// <summary>
         ///// Compares all routes possible against a reference implementation.
