@@ -245,9 +245,6 @@ namespace OsmSharp.iOS.UI
 					}
 
 					_renderingThread.Abort ();
-					// wait and make sure.
-					while (_renderingThread.IsAlive) {
-					}
 				}
 
 				// start new rendering thread.
