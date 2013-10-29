@@ -33,17 +33,12 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
     public class DykstraWitnessCalculator : INodeWitnessCalculator
     {
         /// <summary>
-        /// Holds the data target.
-        /// </summary>
-        private IDynamicGraph<CHEdgeData> _data;
-
-        /// <summary>
         /// Creates a new witness calculator.
         /// </summary>
         /// <param name="data"></param>
-        public DykstraWitnessCalculator(IDynamicGraph<CHEdgeData> data)
+        public DykstraWitnessCalculator()
         {
-            _data = data;
+
         }
 
         /// <summary>
@@ -55,9 +50,9 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="weight"></param>
         /// <param name="max_settles"></param>
         /// <returns></returns>
-        public bool Exists(uint from, uint to, uint via, float weight, int max_settles)
+        public bool Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, uint via, float weight, int max_settles)
         {
-            if (this.CalculateWeight(from, to, via, weight, max_settles) <= weight)
+            if (this.CalculateWeight(graph, from, to, via, weight, max_settles) <= weight)
             { // do verification.
                 //CHRouter router = new CHRouter(_data);
                 //if (!(router.CalculateWeight(from, to, via, weight, max_settles) <= weight))
@@ -78,7 +73,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="max_weight"></param>
         /// <param name="max_settles"></param>
         /// <returns></returns>
-        private float CalculateWeight(uint from, uint to, uint via, float max_weight, int max_settles)
+        private float CalculateWeight(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, uint via, float max_weight, int max_settles)
         {
             int max_hops = 5;
             float weight = float.MaxValue;
@@ -115,7 +110,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
                         }
 
                         // get the neighbours.
-                        KeyValuePair<uint, CHEdgeData>[] neighbours = _data.GetArcs(current.VertexId);
+                        KeyValuePair<uint, CHEdgeData>[] neighbours = graph.GetArcs(current.VertexId);
                         for (int idx = 0; idx < neighbours.Length; idx++)
                         {
                             if (neighbours[idx].Value.Forward && (neighbours[idx].Key == to || !settled.Contains(neighbours[idx].Key)))

@@ -59,7 +59,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             target_data.RegisterSource(sorter);
             target_data.Pull();
 
-            IBasicRouter<LiveEdge> basicRouter = new DykstraRoutingLive(memoryData.TagsIndex);
+            IBasicRouter<LiveEdge> basicRouter = new DykstraRoutingLive();
             return Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
         }
 

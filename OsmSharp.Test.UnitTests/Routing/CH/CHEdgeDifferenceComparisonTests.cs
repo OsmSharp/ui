@@ -78,7 +78,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 if (contract)
                 {
                     // do the pre-processing part.
-                    var witnessCalculator = new DykstraWitnessCalculator(data);
+                    var witnessCalculator = new DykstraWitnessCalculator();
                     var preProcessor = new CHPreProcessor(data,
                         new EdgeDifference(data, witnessCalculator), witnessCalculator);
                     preProcessor.Start();
@@ -86,8 +86,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
                 _data[embeddedName] = data;
             }
-            return Router.CreateCHFrom(data, new CHRouter(
-                data), interpreter);
+            return Router.CreateCHFrom(data, new CHRouter(), interpreter);
         }
 
         /// <summary>

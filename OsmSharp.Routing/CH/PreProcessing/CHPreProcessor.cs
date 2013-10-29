@@ -26,6 +26,7 @@ using System.Diagnostics;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Collections;
+using OsmSharp.Routing.Graph.Router;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -37,7 +38,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Holds the data target.
         /// </summary>
-        private IDynamicGraph<CHEdgeData> _target;
+        private IDynamicGraphRouterDataSource<CHEdgeData> _target;
 
         /// <summary>
         /// Holds the edge comparer.
@@ -51,7 +52,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="calculator"></param>
         /// <param name="witnessCalculator"></param>
         /// <param name="keepReverseEdges"></param>
-        public CHPreProcessor(IDynamicGraph<CHEdgeData> target,
+        public CHPreProcessor(IDynamicGraphRouterDataSource<CHEdgeData> target,
                 INodeWeightCalculator calculator,
                 INodeWitnessCalculator witnessCalculator,
                 bool keepReverseEdges)
@@ -74,7 +75,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="target"></param>
         /// <param name="calculator"></param>
         /// <param name="witnessCalculator"></param>
-        public CHPreProcessor(IDynamicGraph<CHEdgeData> target,
+        public CHPreProcessor(IDynamicGraphRouterDataSource<CHEdgeData> target,
                 INodeWeightCalculator calculator,
                 INodeWitnessCalculator witnessCalculator)
             : this(target, calculator, witnessCalculator, false) { }
@@ -186,8 +187,10 @@ namespace OsmSharp.Routing.CH.PreProcessing
                         (yEdge.Value.Backward && xEdge.Value.Forward)) &&
                         (xEdge.Key != yEdge.Key))
                     { // there is a connection from x to y and there is no witness path.
-                        bool witnessXToY = _witnessCalculator.Exists(xEdge.Key, yEdge.Key, vertex, weight, 100);
-                        bool witnessYToX = _witnessCalculator.Exists(yEdge.Key, xEdge.Key, vertex, weight, 100);
+                        bool witnessXToY = _witnessCalculator.Exists(_target, xEdge.Key, 
+                            yEdge.Key, vertex, weight, 100);
+                        bool witnessYToX = _witnessCalculator.Exists(_target, yEdge.Key, 
+                            xEdge.Key, vertex, weight, 100);
 
                         // create x-to-y data and edge.
                         CHEdgeData dataXToY = new CHEdgeData();
@@ -250,7 +253,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
             if (_contracted.Length <= vertex)
             {
                 Array.Resize<bool>(ref _contracted, (int)vertex + 1000);
-                Debug.WriteLine("Contracted {0}", vertex);
             }
             _contracted[vertex] = true;
         }

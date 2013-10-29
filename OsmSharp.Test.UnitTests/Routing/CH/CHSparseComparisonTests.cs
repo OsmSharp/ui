@@ -76,13 +76,12 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
                 // do the pre-processing part.
                 var preProcessor = new CHPreProcessor(data,
-                    new SparseOrdering(data), new DykstraWitnessCalculator(data));
+                    new SparseOrdering(data), new DykstraWitnessCalculator());
                 preProcessor.Start();
 
                 _data[embeddedName] = data;
             }
-            return Router.CreateCHFrom(data, new CHRouter(
-                data), interpreter);
+            return Router.CreateCHFrom(data, new CHRouter(), interpreter);
         }
 
         /// <summary>

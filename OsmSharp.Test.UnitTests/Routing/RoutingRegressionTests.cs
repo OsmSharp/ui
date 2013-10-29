@@ -63,7 +63,7 @@ namespace OsmSharp.Test.Unittests.Routing
             target_data.RegisterSource(sorter);
             target_data.Pull();
 
-            IBasicRouter<LiveEdge> basic_router = new DykstraRoutingLive(memory_data.TagsIndex);
+            IBasicRouter<LiveEdge> basic_router = new DykstraRoutingLive();
             Router router = Router.CreateLiveFrom(memory_data, basic_router, interpreter);
 
             // resolve the three points in question.
@@ -108,7 +108,7 @@ namespace OsmSharp.Test.Unittests.Routing
             target_data.RegisterSource(sorter);
             target_data.Pull();
 
-            IBasicRouter<LiveEdge> basic_router = new DykstraRoutingLive(memory_data.TagsIndex);
+            IBasicRouter<LiveEdge> basic_router = new DykstraRoutingLive();
             Router router = Router.CreateLiveFrom(memory_data, basic_router, interpreter);
 
             // build coordinates list of resolved points.
@@ -226,7 +226,7 @@ namespace OsmSharp.Test.Unittests.Routing
             target_data.RegisterSource(sorter);
             target_data.Pull();
 
-            IBasicRouter<LiveEdge> basic_router = new DykstraRoutingLive(memory_data.TagsIndex);
+            IBasicRouter<LiveEdge> basic_router = new DykstraRoutingLive();
             Router router = Router.CreateLiveFrom(memory_data, basic_router, interpreter);
 
             // build coordinates list of resolved points.

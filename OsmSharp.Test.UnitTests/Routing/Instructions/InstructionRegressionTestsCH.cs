@@ -60,13 +60,13 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             targetData.Pull();
 
             // do the pre-processing part.
-            var witnessCalculator = new DykstraWitnessCalculator(data);
+            var witnessCalculator = new DykstraWitnessCalculator();
             var preProcessor = new CHPreProcessor(data,
                 new EdgeDifference(data, witnessCalculator), witnessCalculator);
             preProcessor.Start();
 
             //IBasicRouter<LiveEdge> basicRouter = new DykstraRoutingLive(memoryData.TagsIndex);
-            return Router.CreateCHFrom(data, new CHRouter(data), interpreter);
+            return Router.CreateCHFrom(data, new CHRouter(), interpreter);
         }
 
         /// <summary>

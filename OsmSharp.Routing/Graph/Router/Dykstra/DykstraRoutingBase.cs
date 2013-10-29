@@ -31,28 +31,11 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         where TEdgeData : IDynamicGraphEdgeData
     {
         /// <summary>
-        /// Holds the tags index.
-        /// </summary>
-        private readonly ITagsIndex _tagsIndex;
-
-        /// <summary>
         /// Creates a new basic dykstra router.
         /// </summary>
-        /// <param name="tagsIndex"></param>
-        protected DykstraRoutingBase(ITagsIndex tagsIndex)
+        protected DykstraRoutingBase()
         {
-            _tagsIndex = tagsIndex;
-        }
 
-        /// <summary>
-        /// Returns the tags index.
-        /// </summary>
-        protected ITagsIndex TagsIndex
-        {
-            get
-            {
-                return _tagsIndex;
-            }
         }
 
         #region Search Closest
@@ -106,7 +89,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 // loop over all.
                 foreach (KeyValuePair<uint, KeyValuePair<uint, TEdgeData>> arc in arcs)
                 {
-                    TagsCollection arcTags = _tagsIndex.Get(arc.Value.Value.Tags);
+                    TagsCollection arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
                     bool canBeTraversed = vehicle.CanTraverse(arcTags);
                     if (canBeTraversed)
                     { // the edge can be traversed.
@@ -143,7 +126,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                             { // the distance is smaller for the with match.
                                 if (matcher == null ||
                                     (pointTags == null || pointTags.Count == 0) ||
-                                    matcher.MatchWithEdge(vehicle, pointTags, _tagsIndex.Get(arc.Value.Value.Tags)))
+                                    matcher.MatchWithEdge(vehicle, pointTags, graph.TagsIndex.Get(arc.Value.Value.Tags)))
                                 {
                                     closestWithMatch = new SearchClosestResult(
                                         distance, arc.Key);

@@ -97,7 +97,7 @@ namespace OsmSharp.Test.Unittests.Routing
             // build the reference router.;
             Router referenceRouter = this.BuildDykstraRouter(
                 this.BuildDykstraDataSource(interpreter, embeddedName), interpreter,
-                    new DykstraRoutingLive(data.TagsIndex));
+                    new DykstraRoutingLive());
 
             // build the router to be tested.
             Router router = this.BuildRouter(interpreter, embeddedName, contract);
@@ -127,7 +127,7 @@ namespace OsmSharp.Test.Unittests.Routing
             // build the reference router.;
             Router referenceRouter = this.BuildDykstraRouter(
                 this.BuildDykstraDataSource(interpreter, embeddedName), interpreter, 
-                    new DykstraRoutingLive(data.TagsIndex));
+                    new DykstraRoutingLive());
 
             // build the router to be tested.
             Router router = this.BuildRouter(interpreter, embeddedName, contract);

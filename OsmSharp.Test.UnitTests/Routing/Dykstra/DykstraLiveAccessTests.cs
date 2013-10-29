@@ -57,7 +57,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         /// <returns></returns>
         public override IBasicRouter<LiveEdge> BuildBasicRouter(IBasicRouterDataSource<LiveEdge> data)
         {
-            return new DykstraRoutingLive(data.TagsIndex);
+            return new DykstraRoutingLive();
         }
 
         /// <summary>

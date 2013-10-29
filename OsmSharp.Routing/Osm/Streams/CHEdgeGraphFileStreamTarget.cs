@@ -111,7 +111,7 @@ namespace OsmSharp.Routing.Osm.Streams
             base.Flush();            
             
             // compress the graph.
-            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator(_graph);
+            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator();
             var edgeDifference = new EdgeDifference(
                 _graph, witnessCalculator);
             var preProcessor = new CHPreProcessor(

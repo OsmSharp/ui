@@ -103,7 +103,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             targetData.Pull();
 
             // initialize the router.
-            _referenceRouter = Router.CreateLiveFrom(data, new DykstraRoutingLive(data.TagsIndex), interpreter);
+            _referenceRouter = Router.CreateLiveFrom(data, new DykstraRoutingLive(), interpreter);
         }
 
         /// <summary>
@@ -145,7 +145,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
             // do the pre-processing part.
             //INodeWitnessCalculator witness_calculator = new CHRouterWitnessCalculator(_data);
-            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator(_data);
+            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator();
             var preProcessor = new CHPreProcessor(_data,
                 new EdgeDifferenceContractedSearchSpace(_data, witnessCalculator), witnessCalculator);
             preProcessor.OnBeforeContractionEvent += new CHPreProcessor.VertexDelegate(pre_processor_OnBeforeContractionEvent);
@@ -190,8 +190,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             targetData.Pull();
 
             // do the pre-processing part.
-            var witnessCalculator = new DykstraWitnessCalculator(
-                _data);
+            var witnessCalculator = new DykstraWitnessCalculator();
             var preProcessor = new CHPreProcessor(_data,
                 new EdgeDifference(_data, witnessCalculator), witnessCalculator);
             preProcessor.OnBeforeContractionEvent += 
@@ -214,7 +213,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         void pre_processor_OnAfterContractionEvent(uint vertex, KeyValuePair<uint, CHEdgeData>[] edges)
         {
             // create a new CHRouter
-            var router = new CHRouter(_data);
+            var router = new CHRouter();
 
             // calculate all the routes between the neighbours of the contracted vertex.
             foreach (KeyValuePair<uint, CHEdgeData> from in edges)
@@ -336,7 +335,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         void pre_processor_OnBeforeContractionEvent(uint vertex, KeyValuePair<uint, CHEdgeData>[] edges)
         {
             // create a new CHRouter
-            var router = new CHRouter(_data);
+            var router = new CHRouter();
 
             // calculate all the routes between the neighbours of the contracted vertex.
             _pathsBeforeContraction =

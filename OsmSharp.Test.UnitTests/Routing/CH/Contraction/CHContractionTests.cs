@@ -56,7 +56,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
                 "OsmSharp.Test.Unittests.Routing.CH.Contraction.contraction_test1.osm"));
 
             // build the witness calculator.
-            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);
+            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator();
 
             // test the ordering operators.
             SparseOrdering sparse_ordering = new SparseOrdering(
@@ -101,7 +101,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
                 "OsmSharp.Test.Unittests.Routing.CH.Contraction.contraction_test2.osm"));
 
             // build the witness calculator.
-            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);
+            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator();
 
             // test the ordering operators.
             SparseOrdering sparse_ordering = new SparseOrdering(
@@ -142,7 +142,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
                 "OsmSharp.Test.Unittests.Routing.CH.Contraction.contraction_test3.osm"));
 
             // build the witness calculator.
-            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator(data);
+            INodeWitnessCalculator witness_calculator = new DykstraWitnessCalculator();
 
             // test the ordering operators.
             SparseOrdering sparse_ordering = new SparseOrdering(

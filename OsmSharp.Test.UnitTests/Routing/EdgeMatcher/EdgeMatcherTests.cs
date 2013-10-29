@@ -253,8 +253,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             IRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 
             // creates the data.
-            IBasicRouter<LiveEdge> router = new DykstraRoutingLive(
-                data.TagsIndex);
+            IBasicRouter<LiveEdge> router = new DykstraRoutingLive();
 
             var nonameLocation = new GeoCoordinate(
                 (fromNoname.Latitude + toNoname.Latitude) / 2.0,

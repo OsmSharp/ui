@@ -184,7 +184,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
             // try to do some routing on the deserialized version.
-            var basicRouter = new DykstraRoutingLive(deserializedVersion.TagsIndex);
+            var basicRouter = new DykstraRoutingLive();
             Router router = Router.CreateLiveFrom(deserializedVersion, basicRouter, interpreter);
             RouterPoint source = router.Resolve(Vehicle.Car,
                 new GeoCoordinate(51.0578532, 3.7192229));
@@ -274,7 +274,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
 
             // try to do some routing on the deserialized version.
-            var basicRouter = new DykstraRoutingLive(deserializedVersion.TagsIndex);
+            var basicRouter = new DykstraRoutingLive();
             Router router = Router.CreateLiveFrom(deserializedVersion, basicRouter, interpreter);
             RouterPoint source = router.Resolve(Vehicle.Car,
                 new GeoCoordinate(51.0578532, 3.7192229));
@@ -426,7 +426,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                                                                Vehicle.Car);
 
             // create the original routing.
-            var basicRouterOriginal = new CHRouter(original);
+            var basicRouterOriginal = new CHRouter();
             Router referenceRouter = Router.CreateCHFrom(
                 original, basicRouterOriginal, interpreter);
 
@@ -458,7 +458,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
 
             // try to do some routing on the deserialized version.
             var basicRouter =
-                new CHRouter(deserializedVersion);
+                new CHRouter();
             Router router = Router.CreateCHFrom(
                 deserializedVersion, basicRouter, interpreter);
 
@@ -552,13 +552,13 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,
                                                                Vehicle.Car);
-            var basicRouterOriginal = new CHRouter(original);
+            var basicRouterOriginal = new CHRouter();
             Router referenceRouter = Router.CreateCHFrom(
                 original, basicRouterOriginal, interpreter);
 
             // try to do some routing on the deserialized version.
             var basicRouter =
-                new CHRouter(deserializedVersion);
+                new CHRouter();
             Router router = Router.CreateCHFrom(
                 deserializedVersion, basicRouter, interpreter);
 

@@ -70,7 +70,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
 
             // do the pre-processing part.
-            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator(data);
+            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator();
             return new EdgeDifference(
                 data, witnessCalculator);
         }
@@ -83,7 +83,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             DynamicGraphRouterDataSource<CHEdgeData> data = this.BuildData(interpreter);
 
             // do the pre-processing part.
-            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator(data);
+            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator();
             var edgeDifference = new EdgeDifference(
                 data, witnessCalculator);
 

@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OsmSharp.Routing.Graph.Router;
 
 namespace OsmSharp.Routing.CH.PreProcessing
 {
@@ -36,6 +37,6 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="weight"></param>
         /// <param name="max_settles"></param>
         /// <returns></returns>
-        bool Exists(uint from, uint to, uint via, float weight, int max_settles);
+        bool Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, uint via, float weight, int max_settles);
     }
 }

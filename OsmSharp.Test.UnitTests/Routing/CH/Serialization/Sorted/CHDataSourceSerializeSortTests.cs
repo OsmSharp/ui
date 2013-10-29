@@ -59,13 +59,13 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,
                                                                Vehicle.Car);
-            var basicRouterOriginal = new CHRouter(original);
+            var basicRouterOriginal = new CHRouter();
             Router referenceRouter = Router.CreateCHFrom(
                 original, basicRouterOriginal, interpreter);
 
             // try to do some routing on the deserialized version.
             var basicRouter =
-                new CHRouter(sortedGraph);
+                new CHRouter();
             Router router = Router.CreateCHFrom(
                 new DynamicGraphRouterDataSource<CHEdgeData>(sortedGraph, original.TagsIndex), basicRouter, interpreter);
 

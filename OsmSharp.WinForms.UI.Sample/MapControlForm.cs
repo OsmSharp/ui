@@ -162,8 +162,7 @@ namespace OsmSharp.WinForms.UI.Sample
 
             //IBasicRouterDataSource<CHEdgeData> deserializedVersion =
             //    routingSerializer.Deserialize(stream);
-            var basicRouter =
-                new CHRouter(original);
+            var basicRouter = new CHRouter();
             _router = Router.CreateCHFrom(
                 original, basicRouter, interpreter);
 

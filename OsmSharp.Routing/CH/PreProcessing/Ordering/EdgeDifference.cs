@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
 
 namespace OsmSharp.Routing.CH.PreProcessing.Ordering
 {
@@ -36,14 +37,14 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private IDynamicGraph<CHEdgeData> _data;
+        private IDynamicGraphRouterDataSource<CHEdgeData> _data;
 
         /// <summary>
         /// Creates a new edge difference calculator.
         /// </summary>
         /// <param name="data"></param>
         /// <param name="witness_calculator"></param>
-        public EdgeDifference(IDynamicGraph<CHEdgeData> data, INodeWitnessCalculator witness_calculator)
+        public EdgeDifference(IDynamicGraphRouterDataSource<CHEdgeData> data, INodeWitnessCalculator witness_calculator)
         {
             _data = data;
             _witness_calculator = witness_calculator;
@@ -71,7 +72,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                     if (to.Key != from.Key)
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
-                        if (!_witness_calculator.Exists(from.Key, to.Key, vertex,
+                        if (!_witness_calculator.Exists(_data, from.Key, to.Key, vertex,
                             (float)from.Value.Weight + (float)to.Value.Weight, int.MaxValue))
                         { // no witness exists.
                             new_edges++;

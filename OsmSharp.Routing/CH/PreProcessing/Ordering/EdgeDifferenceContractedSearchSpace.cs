@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
 
 namespace OsmSharp.Routing.CH.PreProcessing.Ordering
 {
@@ -36,7 +37,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// <summary>
         /// Holds the data.
         /// </summary>
-        private IDynamicGraph<CHEdgeData> _data;
+        private IDynamicGraphRouterDataSource<CHEdgeData> _data;
 
         /// <summary>
         /// Holds the contracted count.
@@ -53,7 +54,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
         /// </summary>
         /// <param name="data"></param>
         /// <param name="witness_calculator"></param>
-        public EdgeDifferenceContractedSearchSpace(IDynamicGraph<CHEdgeData> data, INodeWitnessCalculator witness_calculator)
+        public EdgeDifferenceContractedSearchSpace(IDynamicGraphRouterDataSource<CHEdgeData> data, INodeWitnessCalculator witness_calculator)
         {
             _data = data;
             _witness_calculator = witness_calculator;
@@ -86,7 +87,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Ordering
                     if (to.Key != from.Key)
                     { // the neighbours point to different vertices.
                         // a new edge is needed.
-                        if (!_witness_calculator.Exists(from.Key, to.Key, vertex,
+                        if (!_witness_calculator.Exists(_data, from.Key, to.Key, vertex,
                             (float)from.Value.Weight + (float)to.Value.Weight, 50))
                         { // no witness exists.
                             new_edges++;

@@ -74,7 +74,7 @@ namespace OsmSharp.Routing
 
             // creates the live edge router.
             var liveEdgeRouter = new TypedRouterLiveEdge(
-                memoryData, interpreter, new DykstraRoutingLive(tagsIndex));
+                memoryData, interpreter, new DykstraRoutingLive());
 
             return new Router(liveEdgeRouter); // create the actual router.
         }
@@ -89,7 +89,7 @@ namespace OsmSharp.Routing
         {
             // creates the live edge router.
             var liveEdgeRouter = new TypedRouterLiveEdge(
-                data, interpreter, new DykstraRoutingLive(data.TagsIndex));
+                data, interpreter, new DykstraRoutingLive());
 
             return new Router(liveEdgeRouter); // create the actual router.
         }

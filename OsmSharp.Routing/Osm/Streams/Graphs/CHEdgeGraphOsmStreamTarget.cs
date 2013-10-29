@@ -135,7 +135,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             targetData.Pull();
 
             // compress the graph.
-            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator(dynamicGraphRouterDataSource);
+            INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator();
             var edgeDifference = new EdgeDifference(
                 dynamicGraphRouterDataSource, witnessCalculator);
             var preProcessor = new CHPreProcessor(

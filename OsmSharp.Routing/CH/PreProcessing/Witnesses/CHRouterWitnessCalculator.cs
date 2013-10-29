@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Routing.CH.Routing;
 using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
 
 namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
 {
@@ -21,9 +22,9 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// Creates a new witness calculator.
         /// </summary>
         /// <param name="data"></param>
-        public CHRouterWitnessCalculator(IDynamicGraph<CHEdgeData> data)
+        public CHRouterWitnessCalculator()
         {
-            _router = new CHRouter(data);
+            _router = new CHRouter();
         }
 
         /// <summary>
@@ -35,9 +36,9 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <param name="weight"></param>
         /// <param name="max_settles"></param>
         /// <returns></returns>
-        public bool Exists(uint from, uint to, uint via, float weight, int max_settles)
+        public bool Exists(IBasicRouterDataSource<CHEdgeData> graph, uint from, uint to, uint via, float weight, int max_settles)
         {
-            return _router.CalculateWeight(from, to, via, weight, max_settles) <= weight;
+            return _router.CalculateWeight(graph, from, to, via, weight, max_settles) <= weight;
         }
     }
 }

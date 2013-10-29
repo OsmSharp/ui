@@ -60,7 +60,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// <returns></returns>
         public override IBasicRouter<CHEdgeData> BuildBasicRouter(IBasicRouterDataSource<CHEdgeData> data)
         {
-            return new CHRouter(data);
+            return new CHRouter();
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
 
             // do the pre-processing part.
             var preProcessor = new CHPreProcessor(memoryData,
-                new SparseOrdering(memoryData), new DykstraWitnessCalculator(memoryData));
+                new SparseOrdering(memoryData), new DykstraWitnessCalculator());
             preProcessor.Start();
 
             return memoryData;
