@@ -111,7 +111,7 @@ namespace OsmSharp.Android.UI.Sample
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.routing"), true);
 
             _router = Router.CreateCHFrom(
-                graphDeserialized, new CHRouter(graphDeserialized),
+                graphDeserialized, new CHRouter(),
                 new OsmRoutingInterpreter());
             GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
             GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
