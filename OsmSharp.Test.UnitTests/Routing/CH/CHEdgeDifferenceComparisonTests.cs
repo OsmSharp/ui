@@ -99,14 +99,14 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             this.TestCompareAll("test_network.osm", true);
         }
 
-        ///// <summary>
-        ///// Compares all routes possible against a reference implementation.
-        ///// </summary>
-        //[Test]
-        //public void TestCHEdgeDifferenceAgainstReferenceBig()
-        //{
-        //    this.TestCompareAll("test_network_big.osm");
-        //}
+        /// <summary>
+        /// Compares all routes possible against a reference implementation.
+        /// </summary>
+        [Test]
+        public void TestCHEdgeDifferenceAgainstReferenceBig()
+        {
+            this.TestCompareAll("test_network_big.osm", true);
+        }
 
         /// <summary>
         /// Compares all routes possible against a reference implementation.
@@ -155,22 +155,22 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             this.TestCompareAll("test_routing_regression2.osm", true);
         }
 
-        ///// <summary>
-        ///// Compares all routes possible against a reference implementation.
-        ///// </summary>
-        //[Test]
-        //public void TestCHEdgeDifferenceBig()
-        //{
-        //    this.TestCompareAll("test_network_big.osm", true);
-        //}
+        /// <summary>
+        /// Compares all routes possible against a reference implementation.
+        /// </summary>
+        [Test]
+        public void TestCHEdgeDifferenceBig()
+        {
+            this.TestCompareAll("test_network_big.osm", true);
+        }
 
-        ///// <summary>
-        ///// Compares all routes possible against a reference implementation.
-        ///// </summary>
-        //[Test]
-        //public void TestCHEdgeDifferenceAgainstReferenceRealNetwork()
-        //{
-        //    this.TestCompareAll("test_network_real1.osm", true);
-        //}
+        /// <summary>
+        /// Compares all routes possible against a reference implementation.
+        /// </summary>
+        [Test]
+        public void TestCHEdgeDifferenceAgainstReferenceRealNetwork()
+        {
+            this.TestCompareAll("test_network_real1.osm", true);
+        }
     }
 }

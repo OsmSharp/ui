@@ -1349,8 +1349,26 @@ namespace OsmSharp.Routing.CH
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="pointTags"></param>
-        public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter, 
+        /// <param name="verticesOnly"></param>
+        public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags)
+        {
+            return this.SearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, false);
+        }
+
+        /// <summary>
+        /// Searches the data for a point on an edge closest to the given coordinate.
+        /// </summary>
+        /// <param name="vehicle"></param>
+        /// <param name="coordinate"></param>
+        /// <param name="delta"></param>
+        /// <param name="matcher"></param>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="pointTags"></param>
+        /// <param name="verticesOnly"></param>
+        public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags, bool verticesOnly)
         {
             double searchBoxSize = delta;
             // build the search box.
@@ -1365,125 +1383,156 @@ namespace OsmSharp.Routing.CH
             // loop over all.
             var closestWithMatch = new SearchClosestResult(double.MaxValue, 0);
             var closestWithoutMatch = new SearchClosestResult(double.MaxValue, 0);
-            foreach (KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> arc in arcs)
+            if (!verticesOnly)
             {
-                TagsCollection arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
-                // test the two points.
-                float fromLatitude, fromLongitude;
-                float toLatitude, toLongitude;
-                double distance;
-                if (graph.GetVertex(arc.Key, out fromLatitude, out fromLongitude) &&
-                    graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
-                { // return the vertex.
-                    var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
-                    distance = coordinate.Distance(fromCoordinates);
+                foreach (KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> arc in arcs)
+                {
+                    TagsCollection arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
+                    // test the two points.
+                    float fromLatitude, fromLongitude;
+                    float toLatitude, toLongitude;
+                    double distance;
+                    if (graph.GetVertex(arc.Key, out fromLatitude, out fromLongitude) &&
+                        graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
+                    { // return the vertex.
+                        var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
+                        distance = coordinate.Distance(fromCoordinates);
 
-                    if (distance < 0.00001)
-                    { // the distance is smaller than the tolerance value.
-                        closestWithoutMatch = new SearchClosestResult(
-                            distance, arc.Key);
-                        if (matcher == null ||
-                            (pointTags == null || pointTags.Count == 0) ||
-                            matcher.MatchWithEdge(vehicle, pointTags, arcTags))
-                        {
-                            closestWithMatch = new SearchClosestResult(
+                        if (distance < 0.00001)
+                        { // the distance is smaller than the tolerance value.
+                            closestWithoutMatch = new SearchClosestResult(
                                 distance, arc.Key);
-                            break;
-                        }
-                    }
-
-                    if (distance < closestWithoutMatch.Distance)
-                    { // the distance is smaller.
-                        closestWithoutMatch = new SearchClosestResult(
-                            distance, arc.Key);
-
-                        // try and match.
-                        //if(matcher.Match(_
-                    }
-                    var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
-                    distance = coordinate.Distance(toCoordinates);
-
-                    if (distance < closestWithoutMatch.Distance)
-                    { // the distance is smaller.
-                        closestWithoutMatch = new SearchClosestResult(
-                            distance, arc.Value.Key);
-
-                        // try and match.
-                        //if(matcher.Match(_
-                    }
-
-                    // get the uncontracted arc from the contracted vertex.
-                    KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> uncontracted = arc;
-                    while (uncontracted.Value.Value.HasContractedVertex)
-                    { // try to inflate the contracted vertex.
-                        KeyValuePair<uint, CHEdgeData>[] contractedArcs = 
-                            _data.GetArcs(uncontracted.Value.Value.ContractedVertexId);
-
-                        foreach (KeyValuePair<uint, CHEdgeData> contractedArc in contractedArcs)
-                        { // loop over all contracted arcs.
-                            if (contractedArc.Key == uncontracted.Key)
-                            { // the edge is and edge to the target.
-                                var data = new CHEdgeData();
-                                data.Direction = contractedArc.Value.Direction;
-                                data.ContractedVertexId = contractedArc.Value.ContractedVertexId;
-                                data.Tags = contractedArc.Value.Tags;
-                                data.Weight = contractedArc.Value.Weight;
-
-                                uncontracted = new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
-                                    uncontracted.Key, new KeyValuePair<uint, CHEdgeData>(
-                                        contractedArc.Key, data));
+                            if (matcher == null ||
+                                (pointTags == null || pointTags.Count == 0) ||
+                                matcher.MatchWithEdge(vehicle, pointTags, arcTags))
+                            {
+                                closestWithMatch = new SearchClosestResult(
+                                    distance, arc.Key);
                                 break;
                             }
                         }
-                    }
-                    // try the to-vertex of the non-contracted arc.
-                    if (arc.Value.Key != uncontracted.Value.Key)
-                    { // the to-vertex was contracted, not anymore!
-                        if (graph.GetVertex(uncontracted.Value.Key, out toLatitude, out toLongitude))
-                        { // the to vertex was found
-                            toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
-                            distance = coordinate.Distance(toCoordinates);
-
-                            if (distance < closestWithoutMatch.Distance)
-                            { // the distance is smaller.
-                                closestWithoutMatch = new SearchClosestResult(
-                                    distance, arc.Key);
-
-                                // try and match.
-                                //if(matcher.Match(_
-                            }
-                        }
-                        else
-                        { // the to vertex was not found!
-                            break;
-                        }
-                    }
-
-                    // by now the arc is uncontracted.
-                    // create a line.
-                    double distanceTotal = fromCoordinates.Distance(toCoordinates);
-                    if (distanceTotal > 0)
-                    { // the from/to are not the same location.
-                        var line = new GeoCoordinateLine(fromCoordinates, toCoordinates, true, true);
-                        distance = line.Distance(coordinate);
 
                         if (distance < closestWithoutMatch.Distance)
                         { // the distance is smaller.
-                            PointF2D projectedPoint =
-                                line.ProjectOn(coordinate);
+                            closestWithoutMatch = new SearchClosestResult(
+                                distance, arc.Key);
 
-                            // calculate the position.
-                            if (projectedPoint != null)
-                            { // calculate the distance
-                                double distancePoint = fromCoordinates.Distance(projectedPoint);
-                                double position = distancePoint / distanceTotal;
+                            // try and match.
+                            //if(matcher.Match(_
+                        }
+                        var toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
+                        distance = coordinate.Distance(toCoordinates);
 
-                                closestWithoutMatch = new SearchClosestResult(
-                                    distance, uncontracted.Key, uncontracted.Value.Key, position);
+                        if (distance < closestWithoutMatch.Distance)
+                        { // the distance is smaller.
+                            closestWithoutMatch = new SearchClosestResult(
+                                distance, arc.Value.Key);
 
-                                // try and match.
-                                //if(matcher.Match(_
+                            // try and match.
+                            //if(matcher.Match(_
+                        }
+
+                        // get the uncontracted arc from the contracted vertex.
+                        KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> uncontracted = arc;
+                        while (uncontracted.Value.Value.HasContractedVertex)
+                        { // try to inflate the contracted vertex.
+                            KeyValuePair<uint, CHEdgeData>[] contractedArcs =
+                                _data.GetArcs(uncontracted.Value.Value.ContractedVertexId);
+
+                            foreach (KeyValuePair<uint, CHEdgeData> contractedArc in contractedArcs)
+                            { // loop over all contracted arcs.
+                                if (contractedArc.Key == uncontracted.Key)
+                                { // the edge is and edge to the target.
+                                    var data = new CHEdgeData();
+                                    data.Direction = contractedArc.Value.Direction;
+                                    data.ContractedVertexId = contractedArc.Value.ContractedVertexId;
+                                    data.Tags = contractedArc.Value.Tags;
+                                    data.Weight = contractedArc.Value.Weight;
+
+                                    uncontracted = new KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>>(
+                                        uncontracted.Key, new KeyValuePair<uint, CHEdgeData>(
+                                            contractedArc.Key, data));
+                                    break;
+                                }
                             }
+                        }
+                        // try the to-vertex of the non-contracted arc.
+                        if (arc.Value.Key != uncontracted.Value.Key)
+                        { // the to-vertex was contracted, not anymore!
+                            if (graph.GetVertex(uncontracted.Value.Key, out toLatitude, out toLongitude))
+                            { // the to vertex was found
+                                toCoordinates = new GeoCoordinate(toLatitude, toLongitude);
+                                distance = coordinate.Distance(toCoordinates);
+
+                                if (distance < closestWithoutMatch.Distance)
+                                { // the distance is smaller.
+                                    closestWithoutMatch = new SearchClosestResult(
+                                        distance, arc.Key);
+
+                                    // try and match.
+                                    //if(matcher.Match(_
+                                }
+                            }
+                            else
+                            { // the to vertex was not found!
+                                break;
+                            }
+                        }
+
+                        // by now the arc is uncontracted.
+                        // create a line.
+                        double distanceTotal = fromCoordinates.Distance(toCoordinates);
+                        if (distanceTotal > 0)
+                        { // the from/to are not the same location.
+                            var line = new GeoCoordinateLine(fromCoordinates, toCoordinates, true, true);
+                            distance = line.Distance(coordinate);
+
+                            if (distance < closestWithoutMatch.Distance)
+                            { // the distance is smaller.
+                                PointF2D projectedPoint =
+                                    line.ProjectOn(coordinate);
+
+                                // calculate the position.
+                                if (projectedPoint != null)
+                                { // calculate the distance
+                                    double distancePoint = fromCoordinates.Distance(projectedPoint);
+                                    double position = distancePoint / distanceTotal;
+
+                                    closestWithoutMatch = new SearchClosestResult(
+                                        distance, uncontracted.Key, uncontracted.Value.Key, position);
+
+                                    // try and match.
+                                    //if(matcher.Match(_
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            { // only find closest vertices.
+                // loop over all.
+                foreach (KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> arc in arcs)
+                {
+                    float fromLatitude, fromLongitude;
+                    float toLatitude, toLongitude;
+                    if (graph.GetVertex(arc.Key, out fromLatitude, out fromLongitude) &&
+                        graph.GetVertex(arc.Value.Key, out toLatitude, out toLongitude))
+                    {
+                        var vertexCoordinate = new GeoCoordinate(fromLatitude, fromLongitude);
+                        double distance = coordinate.Distance(vertexCoordinate);
+                        if (distance < closestWithoutMatch.Distance)
+                        { // the distance found is closer.
+                            closestWithoutMatch = new SearchClosestResult(
+                                distance, arc.Key);
+                        }
+
+                        vertexCoordinate = new GeoCoordinate(toLatitude, toLongitude);
+                        distance = coordinate.Distance(vertexCoordinate);
+                        if (distance < closestWithoutMatch.Distance)
+                        { // the distance found is closer.
+                            closestWithoutMatch = new SearchClosestResult(
+                                distance, arc.Value.Key);
                         }
                     }
                 }

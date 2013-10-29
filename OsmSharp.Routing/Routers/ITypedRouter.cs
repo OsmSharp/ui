@@ -160,8 +160,9 @@ namespace OsmSharp.Routing.Routers
         /// </summary>
         /// <param name="vehicle">The vehicle profile.</param>
         /// <param name="coordinate">The location of the point to resolve.</param>
+        /// <param name="verticesOnly">When true only vertices are returned.</param>
         /// <returns></returns>
-        RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate);
+        RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, bool verticesOnly);
 
         /// <summary>
         /// Resolves a point.

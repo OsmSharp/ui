@@ -57,14 +57,14 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network_oneway.osm"));
         }
 
-        /// <summary>
-        /// Executes the CH contractions while verifying each step.
-        /// </summary>
-        [Test]
-        public void TestCHVerifiedContractionTestNetworkRoutingRegression2()
-        {
-            this.DoTestCHEdgeDifferenceVerifiedContraction("OsmSharp.Test.Unittests.test_routing_regression2.osm",
-                true);
-        }
+        ///// <summary>
+        ///// Executes the CH contractions while verifying each step.
+        ///// </summary>
+        //[Test]
+        //public void TestCHVerifiedContractionTestNetworkRoutingRegression2()
+        //{
+        //    this.DoTestCHEdgeDifferenceVerifiedContraction("OsmSharp.Test.Unittests.test_routing_regression2.osm",
+        //        true);
+        //}
     }
 }

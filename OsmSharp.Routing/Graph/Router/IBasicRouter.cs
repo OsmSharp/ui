@@ -150,6 +150,21 @@ namespace OsmSharp.Routing.Graph.Router
         /// <returns></returns>
         SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
             GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags);
+
+        /// <summary>
+        /// Searches for the closest routable point.
+        /// </summary>
+        /// <param name="graph">The graph to search.</param>
+        /// <param name="interpreter">The routing interpreter.</param>
+        /// <param name="vehicle">The vehicle to search for.</param>
+        /// <param name="coordinate">The coordinate to search around.</param>
+        /// <param name="delta">The size of the box to search in.</param>
+        /// <param name="matcher">The matcher to match to edges.</param>
+        /// <param name="pointTags">The properties of the point to match.</param>
+        /// <param name="verticesOnly">Only match vertices.</param>
+        /// <returns></returns>
+        SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags, bool verticesOnly);
     }
 
     /// <summary>

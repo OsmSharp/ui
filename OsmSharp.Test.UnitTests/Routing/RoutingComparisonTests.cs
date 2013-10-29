@@ -140,8 +140,8 @@ namespace OsmSharp.Test.Unittests.Routing
                 float latitude, longitude;
                 if(data.GetVertex(idx, out latitude, out longitude))
                 {
-                    resolvedReference[idx - 1] = referenceRouter.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
-                    resolved[idx - 1] = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude));
+                    resolvedReference[idx - 1] = referenceRouter.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude), true);
+                    resolved[idx - 1] = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude), true);
                 }
 
                 Assert.IsNotNull(resolvedReference[idx - 1]);
