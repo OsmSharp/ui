@@ -216,6 +216,15 @@ namespace OsmSharp.UI.Renderer
 		}
 
 		/// <summary>
+		/// Reset this instance.
+		/// </summary>
+		public void Reset ()
+		{
+			_cancelFlag = false;
+			_running = false;
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this renderer is running.
 		/// </summary>
 		/// <value><c>true</c> if this instance is running; otherwise, <c>false</c>.</value>

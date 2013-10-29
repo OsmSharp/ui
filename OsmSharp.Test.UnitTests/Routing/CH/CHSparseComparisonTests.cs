@@ -103,13 +103,13 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             this.TestCompareAll("test_network_oneway.osm", true);
         }
 
-        /// <summary>
-        /// Compares all routes possible against a reference implementation.
-        /// </summary>
-        [Test]
-        public void TestCHSparseAgainstReferenceRealNetwork()
-        {
-            this.TestCompareAll("test_network_real1.osm", true);
-        }
+        ///// <summary>
+        ///// Compares all routes possible against a reference implementation.
+        ///// </summary>
+        //[Test]
+        //public void TestCHSparseAgainstReferenceRealNetwork()
+        //{
+        //    this.TestCompareAll("test_network_real1.osm", true);
+        //}
     }
 }

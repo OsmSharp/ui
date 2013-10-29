@@ -16,6 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -24,7 +25,7 @@ namespace OsmSharp.Routing.Graph.Router
     /// <summary>
     /// Internal data structure reprenting a visit list,
     /// </summary>
-    public class PathSegmentVisitList
+    public class PathSegmentVisitList : ICloneable
     {
         /// <summary>
         /// Holds all visited nodes sorted by weight.
@@ -35,7 +36,6 @@ namespace OsmSharp.Routing.Graph.Router
         /// Holds all visited vertices.
         /// </summary>
         private Dictionary<long, double> _visited;
-        //private PathSegmentVisitList source;
 
         /// <summary>
         /// Creates a new visit list.
@@ -247,6 +247,15 @@ namespace OsmSharp.Routing.Graph.Router
         public IEnumerable<long> GetVertices()
         {
             return _visited.Keys;
+        }
+
+        /// <summary>
+        /// Creates a copy of this path segment visit list.
+        /// </summary>
+        /// <returns></returns>
+        public object Clone()
+        {
+            return new PathSegmentVisitList(this);
         }
     }
 }

@@ -1367,6 +1367,7 @@ namespace OsmSharp.Routing.CH
             var closestWithoutMatch = new SearchClosestResult(double.MaxValue, 0);
             foreach (KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> arc in arcs)
             {
+                TagsCollection arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
                 // test the two points.
                 float fromLatitude, fromLongitude;
                 float toLatitude, toLongitude;
@@ -1377,15 +1378,19 @@ namespace OsmSharp.Routing.CH
                     var fromCoordinates = new GeoCoordinate(fromLatitude, fromLongitude);
                     distance = coordinate.Distance(fromCoordinates);
 
-                    //if (distance < 0.00001)
-                    //{ // the distance is smaller than the tolerance value.
-                    //    closestWithoutMatch = new SearchClosestResult(
-                    //        distance, arc.Key);
-                    //    break;
-
-                    //    // try and match.
-                    //    //if(matcher.Match(_
-                    //}
+                    if (distance < 0.00001)
+                    { // the distance is smaller than the tolerance value.
+                        closestWithoutMatch = new SearchClosestResult(
+                            distance, arc.Key);
+                        if (matcher == null ||
+                            (pointTags == null || pointTags.Count == 0) ||
+                            matcher.MatchWithEdge(vehicle, pointTags, arcTags))
+                        {
+                            closestWithMatch = new SearchClosestResult(
+                                distance, arc.Key);
+                            break;
+                        }
+                    }
 
                     if (distance < closestWithoutMatch.Distance)
                     { // the distance is smaller.

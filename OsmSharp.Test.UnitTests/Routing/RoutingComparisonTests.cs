@@ -156,6 +156,7 @@ namespace OsmSharp.Test.Unittests.Routing
             // limit tests to a fixed number.
             int maxTestCount = 1000;
             int testEveryOther = (resolved.Length * resolved.Length) / maxTestCount;
+            testEveryOther = System.Math.Max(testEveryOther, 1);
 
             // check all the routes having the same weight(s).
             for (int fromIdx = 0; fromIdx < resolved.Length; fromIdx++)

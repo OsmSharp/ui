@@ -58,7 +58,7 @@
     <Compile Include="ArcAggregation\Output\Aggregated.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
-    <Compile Include="CH\PreProcessing\CHEdgeData.cs" />
+    <Compile Include="CH\CHEdgeData.cs" />
     <Compile Include="CH\PreProcessing\CHPreProcessor.cs" />
     <Compile Include="CH\PreProcessing\CHPriorityQueue.cs" />
     <Compile Include="CH\PreProcessing\INodeWeightCalculator.cs" />
@@ -109,7 +109,6 @@
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
     <Compile Include="IRouterExtensions.cs" />
     <Compile Include="Navigation\RouteTracker.cs" />
-    <Compile Include="Osm\Dykstra\DykstraRouting.cs" />
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
     <Compile Include="Osm\Interpreter\IOsmRoutingInterpreter.cs" />
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />

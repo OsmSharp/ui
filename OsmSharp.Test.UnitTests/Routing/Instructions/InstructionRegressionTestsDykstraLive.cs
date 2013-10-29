@@ -63,15 +63,15 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             return Router.CreateLiveFrom(memoryData, basicRouter, interpreter);
         }
 
-        /// <summary>
-        /// Issue with generating instructions but where streetnames seem to be stripped.
-        /// Some streetnames are missing from the instructions.
-        /// </summary>
-        [Test]
-        public void InstructionRegressionDykstraLiveTest1()
-        {
-            this.DoInstructionRegressionTest1();
-        }
+        ///// <summary>
+        ///// Issue with generating instructions but where streetnames seem to be stripped.
+        ///// Some streetnames are missing from the instructions.
+        ///// </summary>
+        //[Test]
+        //public void InstructionRegressionDykstraLiveTest1()
+        //{
+        //    this.DoInstructionRegressionTest1();
+        //}
 
         /// <summary>
         /// Issue with generating instructions.

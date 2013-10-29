@@ -180,6 +180,14 @@ namespace OsmSharp.UI.Map
 				return _renderer.IsRunning;
 			}
 		}
+
+		/// <summary>
+		/// Reset this instance.
+		/// </summary>
+		public void Reset ()
+		{
+			_renderer.Reset ();
+		}
 	
 		/// <summary>
 		/// Cancels the current run.
