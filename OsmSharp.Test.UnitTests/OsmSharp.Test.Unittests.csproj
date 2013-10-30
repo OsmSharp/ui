@@ -203,6 +203,7 @@
     <Compile Include="Routing\RoutingComparisonTests.cs" />
     <Compile Include="Routing\RoutingRegressionTests.cs" />
     <Compile Include="Routing\RoutingTests.cs" />
+    <Compile Include="Routing\Serialization\RoutingSerializationComparisonTests.cs" />
     <Compile Include="Routing\Serialization\RoutingSerializationTests.cs" />
     <Compile Include="Routing\TSP\TSPWrapperTest.cs" />
     <Compile Include="StaticDictionary.cs" />

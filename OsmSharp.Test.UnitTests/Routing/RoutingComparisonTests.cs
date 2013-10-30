@@ -86,7 +86,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <param name="contract"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        public void TestCompareOne(string embeddedName, bool contract, GeoCoordinate from, GeoCoordinate to)
+        protected void TestCompareOne(string embeddedName, bool contract, GeoCoordinate from, GeoCoordinate to)
         {
             // build the routing settings.
             IOsmRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
@@ -116,7 +116,7 @@ namespace OsmSharp.Test.Unittests.Routing
         /// <summary>
         /// Compares all routes against the reference router.
         /// </summary>
-        public void TestCompareAll(string embeddedName, bool contract)
+        protected void TestCompareAll(string embeddedName, bool contract)
         {
             // build the routing settings.
             IOsmRoutingInterpreter interpreter = new OsmSharp.Routing.Osm.Interpreter.OsmRoutingInterpreter();
@@ -132,13 +132,25 @@ namespace OsmSharp.Test.Unittests.Routing
             // build the router to be tested.
             Router router = this.BuildRouter(interpreter, embeddedName, contract);
 
+            this.TestCompareAll(data, referenceRouter, router);
+        }
+
+        /// <summary>
+        /// Tests the the given router class by comparing calculated routes agains a given reference router.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="referenceRouter"></param>
+        /// <param name="router"></param>
+        protected void TestCompareAll<TEdgeData>(IBasicRouterDataSource<TEdgeData> data, Router referenceRouter, Router router)
+            where TEdgeData : IDynamicGraphEdgeData
+        {       
             // loop over all nodes and resolve their locations.
             var resolvedReference = new RouterPoint[data.VertexCount - 1];
             var resolved = new RouterPoint[data.VertexCount - 1];
             for (uint idx = 1; idx < data.VertexCount; idx++)
             { // resolve each vertex.
                 float latitude, longitude;
-                if(data.GetVertex(idx, out latitude, out longitude))
+                if (data.GetVertex(idx, out latitude, out longitude))
                 {
                     resolvedReference[idx - 1] = referenceRouter.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude), true);
                     resolved[idx - 1] = router.Resolve(Vehicle.Car, new GeoCoordinate(latitude, longitude), true);
@@ -181,8 +193,6 @@ namespace OsmSharp.Test.Unittests.Routing
                 }
             }
         }
-
-
 
         /// <summary>
         /// Compares the two given routes.
