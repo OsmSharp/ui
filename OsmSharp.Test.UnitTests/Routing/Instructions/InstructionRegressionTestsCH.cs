@@ -29,6 +29,7 @@ using OsmSharp.Routing.CH.PreProcessing.Witnesses;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Test.Unittests.Routing.Instructions
 {
@@ -85,7 +86,31 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         [Test]
         public void InstructionRegressionCHTest2()
         {
-            this.DoInstructionRegressionTest2();
+            this.DoInstructionComparisonTest("OsmSharp.Test.Unittests.test_routing_regression1.osm", 
+                new GeoCoordinate(51.01257, 4.000753),
+                new GeoCoordinate(51.01250, 4.000013));
+        }
+
+        /// <summary>
+        /// Issue with generating instructions.
+        /// </summary>
+        [Test]
+        public void InstructionRegressionCHTest3()
+        {
+            this.DoInstructionComparisonTest("OsmSharp.Test.Unittests.test_routing_regression1.osm",
+                new GeoCoordinate(51.01177, 4.00249),
+                new GeoCoordinate(51.01250, 4.000013));
+        }
+
+        /// <summary>
+        /// Issue with generating instructions.
+        /// </summary>
+        [Test]
+        public void InstructionRegressionCHTest4()
+        {
+            this.DoInstructionComparisonTest("OsmSharp.Test.Unittests.test_routing_regression1.osm",
+                new GeoCoordinate(51.01173, 4.00246),
+                new GeoCoordinate(51.01250, 4.000013));
         }
     }
 }

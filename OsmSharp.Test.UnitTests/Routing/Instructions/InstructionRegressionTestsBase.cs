@@ -322,35 +322,34 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         }
 
         /// <summary>
-        /// Issue with generation of instruction between different algorithms.
+        /// Calculates routes, generates instructions and compares instructions.
         /// </summary>
-        protected void DoInstructionRegressionTest2()
+        /// <param name="embeddedXml"></param>
+        /// <param name="point1"></param>
+        /// <param name="point2"></param>
+        protected void DoInstructionComparisonTest(string embeddedXml, GeoCoordinate point1, GeoCoordinate point2)
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 
-            Router router = this.CreateRouter(interpreter, 
-                "OsmSharp.Test.Unittests.test_routing_regression1.osm");
-            Router referenceRouter = this.CreateReferenceRouter(interpreter, 
-                "OsmSharp.Test.Unittests.test_routing_regression1.osm");
+            Router router = this.CreateRouter(interpreter,
+                embeddedXml);
+            Router referenceRouter = this.CreateReferenceRouter(interpreter,
+                embeddedXml);
 
             // resolve the three points in question.
-            GeoCoordinate point1 = new GeoCoordinate(51.01257, 4.000753);
             RouterPoint point1resolved = router.Resolve(Vehicle.Car, point1, true);
-            GeoCoordinate point2 = new GeoCoordinate(51.01250, 4.000013);
             RouterPoint point2resolved = router.Resolve(Vehicle.Car, point2, true);
 
             // calculate two smaller routes.
-            Route route12 = router.Calculate(Vehicle.Car, 
+            Route route12 = router.Calculate(Vehicle.Car,
                 point1resolved, point2resolved);
 
             // resolve the three points in question.
-            GeoCoordinate pointReference1 = new GeoCoordinate(51.01257, 4.000753);
             RouterPoint pointReference1resolved = referenceRouter.Resolve(Vehicle.Car, point1, true);
-            GeoCoordinate pointReference2 = new GeoCoordinate(51.01250, 4.000013);
             RouterPoint pointReference2resolved = referenceRouter.Resolve(Vehicle.Car, point2, true);
 
             // calculate two smaller routes.
-            Route routeReference12 = referenceRouter.Calculate(Vehicle.Car, 
+            Route routeReference12 = referenceRouter.Calculate(Vehicle.Car,
                 pointReference1resolved, pointReference2resolved);
 
             // compares the two routes.
