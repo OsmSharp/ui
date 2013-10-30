@@ -153,5 +153,13 @@ namespace OsmSharp.Collections.Tags
 
             #endregion
         }
+
+        /// <summary>
+        /// Returns maximum possible number of tags in this index.
+        /// </summary>
+        public uint Count
+        {
+            get { return _tagsTable.Count; }
+        }
     }
 }

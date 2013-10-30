@@ -70,15 +70,15 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             return Router.CreateCHFrom(data, new CHRouter(), interpreter);
         }
 
-        /// <summary>
-        /// Issue with generation instructions but where streetnames seem to be stripped.
-        /// Some streetnames are missing from the instructions.
-        /// </summary>
-        [Test]
-        public void InstructionRegressionCHTest1()
-        {
-            this.DoInstructionRegressionTest1();
-        }
+        ///// <summary>
+        ///// Issue with generation instructions but where streetnames seem to be stripped.
+        ///// Some streetnames are missing from the instructions.
+        ///// </summary>
+        //[Test]
+        //public void InstructionRegressionCHTest1()
+        //{
+        //    this.DoInstructionRegressionTest1();
+        //}
 
         /// <summary>
         /// Issue with generating instructions.

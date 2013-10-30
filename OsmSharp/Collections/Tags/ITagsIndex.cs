@@ -24,6 +24,14 @@ namespace OsmSharp.Collections.Tags
     public interface ITagsIndex
     {
         /// <summary>
+        /// Returns the maxium possible number of tags in this index.
+        /// </summary>
+        uint Count
+        {
+            get;
+        }
+
+        /// <summary>
         /// Returns the tags that belong to the given id.
         /// </summary>
         /// <param name="tagsId"></param>

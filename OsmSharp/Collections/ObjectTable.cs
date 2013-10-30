@@ -74,6 +74,19 @@ namespace OsmSharp.Collections
             }
         }
 
+        /// <summary>
+        /// Clears all data from this object table.
+        /// </summary>
+        public void Clear()
+        {
+            _strings = new Type[_init_capacity];
+            _next_idx = 0;
+            if (_reverse_index != null)
+            {
+                _reverse_index.Clear();
+            }
+        }
+
         #region Reverse Index
 
         /// <summary>
@@ -124,6 +137,17 @@ namespace OsmSharp.Collections
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns the highest id in this object table.
+        /// </summary>
+        public uint Count
+        {
+            get
+            {
+                return _next_idx;
+            }
+        }
 
         /// <summary>
         /// Returns an index for the given string.
