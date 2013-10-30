@@ -21,13 +21,21 @@ namespace OsmSharp.Collections.Tags
     /// <summary>
     /// Abstracts an index containing tags.
     /// </summary>
-    public interface ITagsIndex : ITagsIndexReadonly
+    public interface ITagsIndexReadonly
     {
         /// <summary>
-        /// Adds new tags.
+        /// Returns the maxium possible number of tags in this index.
         /// </summary>
-        /// <param name="tags"></param>
+        uint Count
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns the tags that belong to the given id.
+        /// </summary>
+        /// <param name="tagsId"></param>
         /// <returns></returns>
-        uint Add(TagsCollection tags);
+        TagsCollection Get(uint tagsId);
     }
 }

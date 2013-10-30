@@ -162,6 +162,7 @@
     <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializer.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializerStream.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />
+    <Compile Include="Collections\Tags\ITagsIndexReadonly.cs" />
     <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
     <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
     <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />

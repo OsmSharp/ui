@@ -142,6 +142,7 @@
     <Compile Include="Collections\SpatialIndexes\IndexReferenceImplementation.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndexTests.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeStreamIndexTests.cs" />
+    <Compile Include="Collections\Tags\Serializer\TagIndexSerializerTests.cs" />
     <Compile Include="Geo\GeoCoordinateTests.cs" />
     <Compile Include="Geo\Geometries\LineairRingTests.cs" />
     <Compile Include="Geo\Geometries\PolygonTests.cs" />

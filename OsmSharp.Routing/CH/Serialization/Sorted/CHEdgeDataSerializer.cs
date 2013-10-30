@@ -20,16 +20,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Ionic.Zlib;
-using OsmSharp.Osm;
+using OsmSharp.IO;
+using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Graph.Serialization;
-using OsmSharp.Collections.Tags;
-using OsmSharp.IO;
-using OsmSharp.Math.Geo;
-using ProtoBuf;
 using ProtoBuf.Meta;
 
 namespace OsmSharp.Routing.CH.Serialization.Sorted
@@ -394,9 +391,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
 
                 var memoryStream = new MemoryStream(buffer);
                 var gZipStream = new GZipStream(memoryStream, CompressionMode.Decompress);
-                return (CHBlock)_runtimeTypeModel.Deserialize(gZipStream
-                                                                             , null,
-                                                                             typeof(CHBlock));
+                return (CHBlock)_runtimeTypeModel.Deserialize(gZipStream, null, typeof(CHBlock));
             }
             return (CHBlock)_runtimeTypeModel.Deserialize(
                 new CappedStream(stream, offset, length), null,

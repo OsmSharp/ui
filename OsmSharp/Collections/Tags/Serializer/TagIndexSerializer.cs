@@ -109,9 +109,84 @@ namespace OsmSharp.Collections.Tags.Serializer
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public static ITagsIndex Deserialize(Stream stream)
+        public static ITagsIndexReadonly Deserialize(Stream stream)
         {
-            throw new NotImplementedException();
+            byte[] intBytes = new byte[4];
+            stream.Read(intBytes, 0, 4);
+            int startOfTags = BitConverter.ToInt32(intBytes, 0);
+            stream.Read(intBytes, 0, 4);
+            int endOfFile = BitConverter.ToInt32(intBytes, 0);
+
+            RuntimeTypeModel typeModel = TagIndexSerializer.CreateTypeModel();
+            byte[] stringTableBytes = new byte[startOfTags - 8];
+            stream.Read(stringTableBytes, 0, stringTableBytes.Length);
+            MemoryStream memoryStream = new MemoryStream(stringTableBytes);
+            List<string> strings = typeModel.Deserialize(memoryStream, null, typeof(List<string>)) as List<string>;
+            memoryStream.Dispose();
+
+            byte[] tagsIndexBytes = new byte[endOfFile - startOfTags];
+            stream.Read(tagsIndexBytes, 0, tagsIndexBytes.Length);
+            memoryStream = new MemoryStream(tagsIndexBytes);
+            List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexTableList = typeModel.Deserialize(memoryStream, null,
+                typeof(List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>)) as List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>;
+            memoryStream.Dispose();
+
+            List<SimpleTagsCollection> tagsIndexList = new List<SimpleTagsCollection>();
+            for(int idx = 0; idx < tagsIndexTableList.Count; idx++)
+            {
+                KeyValuePair<uint, List<KeyValuePair<uint, uint>>> serializedTagsCollection = 
+                    tagsIndexTableList[idx];
+                SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+                if (serializedTagsCollection.Value != null)
+                {
+                    foreach (KeyValuePair<uint, uint> pair in serializedTagsCollection.Value)
+                    {
+                        tagsCollection.Add(
+                            new Tag(strings[(int)pair.Key], strings[(int)pair.Value]));
+                    }
+                }
+                tagsIndexList.Add(tagsCollection);
+            }
+
+            return new TagsIndexReadonly(tagsIndexList);
+        }
+
+        /// <summary>
+        /// Creates a tags index readonly.
+        /// </summary>
+        private class TagsIndexReadonly : ITagsIndexReadonly
+        {
+            /// <summary>
+            /// Holds tags list.
+            /// </summary>
+            private List<SimpleTagsCollection> _tags;
+
+            /// <summary>
+            /// Creates a new tags index readonly.
+            /// </summary>
+            /// <param name="tags"></param>
+            public TagsIndexReadonly(List<SimpleTagsCollection> tags)
+            {
+                _tags = tags;
+            }
+
+            /// <summary>
+            /// Returns the maximum amount of tags in this tags index.
+            /// </summary>
+            public uint Count
+            {
+                get { return (uint)_tags.Count; }
+            }
+
+            /// <summary>
+            /// Returns the tags collection at the given tags id.
+            /// </summary>
+            /// <param name="tagsId"></param>
+            /// <returns></returns>
+            public TagsCollection Get(uint tagsId)
+            {
+                return _tags[(int)tagsId];
+            }
         }
     }
 }

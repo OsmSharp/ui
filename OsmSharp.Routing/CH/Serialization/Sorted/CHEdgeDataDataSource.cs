@@ -19,12 +19,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using OsmSharp.Collections;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
-using OsmSharp.Math.Structures;
-using OsmSharp.Math.Structures.QTree;
-using OsmSharp.Osm;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.Routing.CH.PreProcessing;
 using OsmSharp.Routing.Graph.Router;
