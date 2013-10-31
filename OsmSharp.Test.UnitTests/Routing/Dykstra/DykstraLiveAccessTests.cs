@@ -76,7 +76,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
             var memoryData =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                memoryData, interpreter, memoryData.TagsIndex);
+                memoryData, interpreter, tagsIndex);
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
             var sorter = new OsmStreamFilterSort();

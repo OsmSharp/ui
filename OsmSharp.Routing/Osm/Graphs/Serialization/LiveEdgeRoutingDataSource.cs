@@ -166,7 +166,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        public ITagsIndex TagsIndex
+        public ITagsIndexReadonly TagsIndex
         {
             get { return _tagsIndex; }
         }

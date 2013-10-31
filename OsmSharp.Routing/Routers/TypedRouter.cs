@@ -805,6 +805,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="delta"></param>
         /// <param name="coordinate"></param>
         /// <param name="pointTags"></param>
+        /// <param name="verticesOnly"></param>
         /// <returns></returns>
         public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate, TagsCollection pointTags, bool verticesOnly)
         {

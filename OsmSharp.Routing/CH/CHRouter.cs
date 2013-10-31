@@ -718,6 +718,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Calculates the weight from from to to.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="exception"></param>
@@ -730,6 +731,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Calculates the weight from from to to.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="exception"></param>
@@ -751,6 +753,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Calculates the weight from from to to.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="exception"></param>
@@ -773,6 +776,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Checks connectivity of a vertex.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="source"></param>
         /// <param name="max"></param>
         /// <returns></returns>
@@ -784,6 +788,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Checks connectivity of a vertex.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="source"></param>
         /// <param name="maxSettles"></param>
         /// <returns></returns>
@@ -795,6 +800,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Calculates a shortest path between the two given vertices.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="exception"></param>
@@ -885,6 +891,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Checks if the given vertex is connected to others.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="source"></param>
         /// <param name="max"></param>
         /// <param name="maxSettles"></param>
@@ -1010,6 +1017,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Do one forward search step.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="settledQueue"></param>
         /// <param name="queue"></param>
         /// <param name="exception"></param>
@@ -1083,6 +1091,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Do one backward search step.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="settledQueue"></param>
         /// <param name="queue"></param>
         /// <param name="exception"></param>
@@ -1161,6 +1170,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Expands a ch results into an expanded path segment.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="result"></param>
         /// <returns></returns>
         private PathSegment<long> ExpandBestResult(IBasicRouterDataSource<CHEdgeData> graph, CHResult result)
@@ -1182,6 +1192,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Converts the CH paths to complete paths in the orginal network.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="path"></param>
         /// <returns></returns>
         private PathSegment<long> ExpandPath(IBasicRouterDataSource<CHEdgeData> graph, PathSegment<long> path)
@@ -1221,6 +1232,7 @@ namespace OsmSharp.Routing.CH
         /// <summary>
         /// Converts the given edge and expands it if needed.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="edge"></param>
         /// <returns></returns>
         private PathSegment<long> ConvertArc(IBasicRouterDataSource<CHEdgeData> graph, PathSegment<long> edge)
@@ -1345,7 +1357,6 @@ namespace OsmSharp.Routing.CH
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="pointTags"></param>
-        /// <param name="verticesOnly"></param>
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags)
         {

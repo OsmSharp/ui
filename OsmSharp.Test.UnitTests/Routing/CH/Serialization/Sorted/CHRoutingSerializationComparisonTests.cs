@@ -16,31 +16,33 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using NUnit.Framework;
-using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.Routing;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.Serialization.Sorted;
-using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
 {
     /// <summary>
-    /// Holds test for the toplogical sorting of a graph.
+    /// Tests comparing routing before/after serilization.
     /// </summary>
     [TestFixture]
-    public class CHDataSourceSerializeSortTests
+    public class CHRoutingSerializationComparisonTests : RoutingComparisonTests
     {
         /// <summary>
-        /// Tests a topological sorted datasource.
+        /// Tests serializing/deserializing RoutingSerializationRoutingComparisonTest using the V1 routing serializer.
         /// </summary>
         [Test]
-        public void TestCHDataSourceTopologicalSortTest()
+        public void RoutingSerializationCHSortedRoutingComparisonTest()
         {
             const string embeddedString = "OsmSharp.Test.Unittests.test_network_real1.osm";
 
@@ -53,7 +55,34 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,
                                                                Vehicle.Car);
-            var sortedGraph = CHEdgeDataDataSourceSerializer.SortGraph(original);
+
+            // create serializer.
+            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(true);
+
+            // serialize/deserialize.
+            byte[] byteArray;
+            using (var stream = new MemoryStream())
+            {
+                try
+                {
+                    routingSerializer.Serialize(stream, original);
+                    byteArray = stream.ToArray();
+                }
+                catch (Exception)
+                {
+                    if (Debugger.IsAttached)
+                    {
+                        Debugger.Break();
+                    }
+                    throw;
+                }
+            }
+
+            IBasicRouterDataSource<CHEdgeData> deserializedVersion =
+                routingSerializer.Deserialize(new MemoryStream(byteArray));
+            Assert.AreEqual(original.TagsIndex.Get(0), deserializedVersion.TagsIndex.Get(0));
+
+            // create reference router.
             original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
                                                                    Assembly.GetExecutingAssembly()
                                                                            .GetManifestResourceStream(embeddedString)),
@@ -66,7 +95,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
             // try to do some routing on the deserialized version.
             var basicRouter = new CHRouter();
             Router router = Router.CreateCHFrom(
-                new DynamicGraphRouterDataSource<CHEdgeData>(sortedGraph, original.TagsIndex), basicRouter, interpreter);
+                deserializedVersion, basicRouter, interpreter);
 
             // loop over all nodes and resolve their locations.
             var resolvedReference = new RouterPoint[original.VertexCount];
@@ -83,29 +112,41 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
                 Assert.IsNotNull(resolvedReference[idx - 1]);
                 Assert.IsNotNull(resolved[idx - 1]);
 
-                //Assert.AreEqual(resolvedReference[idx - 1].Location.Latitude,
-                //    resolved[idx - 1].Location.Latitude, 0.0001);
-                //Assert.AreEqual(resolvedReference[idx - 1].Location.Longitude,
-                //    resolved[idx - 1].Location.Longitude, 0.0001);
+                Assert.AreEqual(resolvedReference[idx - 1].Location.Latitude,
+                    resolved[idx - 1].Location.Latitude, 0.0001);
+                Assert.AreEqual(resolvedReference[idx - 1].Location.Longitude,
+                    resolved[idx - 1].Location.Longitude, 0.0001);
             }
 
-            //// check all the routes having the same weight(s).
-            //for (int fromIdx = 0; fromIdx < resolved.Length; fromIdx++)
-            //{
-            //    for (int toIdx = 0; toIdx < resolved.Length; toIdx++)
+            //    // check all the routes having the same weight(s).
+            //    for (int fromIdx = 0; fromIdx < resolved.Length; fromIdx++)
             //    {
-            //        OsmSharpRoute referenceRoute = referenceRouter.Calculate(Vehicle.Car,
-            //            resolvedReference[fromIdx], resolvedReference[toIdx]);
-            //        OsmSharpRoute route = router.Calculate(Vehicle.Car,
-            //            resolved[fromIdx], resolved[toIdx]);
+            //        for (int toIdx = 0; toIdx < resolved.Length; toIdx++)
+            //        {
+            //            OsmSharpRoute referenceRoute = referenceRouter.Calculate(VehicleEnum.Car,
+            //                resolvedReference[fromIdx], resolvedReference[toIdx]);
+            //            OsmSharpRoute route = router.Calculate(VehicleEnum.Car,
+            //                resolved[fromIdx], resolved[toIdx]);
 
-            //        Assert.IsNotNull(referenceRoute);
-            //        Assert.IsNotNull(route);
-            //        //Assert.AreEqual(referenceRoute.TotalDistance, route.TotalDistance, 0.1);
-            //        // TODO: meta data is missing in some CH routing; see issue 
-            //        //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
+            //            Assert.IsNotNull(referenceRoute);
+            //            Assert.IsNotNull(route);
+            //            //Assert.AreEqual(referenceRoute.TotalDistance, route.TotalDistance, 0.1);
+            //            // TODO: meta data is missing in some CH routing; see issue 
+            //            //Assert.AreEqual(reference_route.TotalTime, route.TotalTime, 0.0001);
+            //        }
             //    }
-            //}
+        }
+
+        /// <summary>
+        /// Not needed here.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="embeddedName"></param>
+        /// <param name="contract"></param>
+        /// <returns></returns>
+        public override Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName, bool contract)
+        {
+            throw new NotImplementedException();
         }
     }
 }

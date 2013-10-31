@@ -20,13 +20,13 @@ using System.Reflection;
 using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Xml.Streams;
-using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.PreProcessing;
-using OsmSharp.Routing.CH.Serialization.Sorted;
-using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
+using OsmSharp.Routing;
+using OsmSharp.Routing.CH.Serialization.Sorted.v2;
+using OsmSharp.Routing.CH;
+using OsmSharp.Routing.Graph;
+using OsmSharp.Routing.CH.PreProcessing;
 
 namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
 {
@@ -34,7 +34,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
     /// Holds test for the toplogical sorting of a graph.
     /// </summary>
     [TestFixture]
-    public class CHDataSourceSerializeSortTests
+    public class CHDataSourceSerializeSortv2Tests
     {
         /// <summary>
         /// Tests a topological sorted datasource.

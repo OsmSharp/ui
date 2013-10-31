@@ -66,7 +66,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 data =
                     new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
                 var targetData = new CHEdgeGraphOsmStreamTarget(
-                    data, interpreter, data.TagsIndex, Vehicle.Car);
+                    data, interpreter, tagsIndex, Vehicle.Car);
                 var dataProcessorSource = new XmlOsmStreamSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(string.Format(
                     "OsmSharp.Test.Unittests.{0}", embeddedName)));

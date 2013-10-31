@@ -52,7 +52,7 @@ namespace OsmSharp.Collections.Tags.Serializer
         /// <param name="stream"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="blockSize"></param>
-        public static void SerializeBlocks(Stream stream, ITagsIndex tagsIndex, uint blockSize)
+        public static void SerializeBlocks(Stream stream, ITagsIndexReadonly tagsIndex, uint blockSize)
         {
             int begin = (int)stream.Position;
 
@@ -124,7 +124,7 @@ namespace OsmSharp.Collections.Tags.Serializer
         /// <param name="tagsIndex"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        public static void Serialize(Stream stream, ITagsIndex tagsIndex, uint from, uint to)
+        public static void Serialize(Stream stream, ITagsIndexReadonly tagsIndex, uint from, uint to)
         {
             int begin = (int)stream.Position;
 
@@ -493,7 +493,13 @@ namespace OsmSharp.Collections.Tags.Serializer
                 }
 
                 // load another block.
-                int blockIdx = (int)System.Math.Ceiling((float)tagsId / (float)_blockSize);
+                int blockIdx = (int)System.Math.Floor((float)tagsId / (float)_blockSize);
+
+                // check if outside of the scope of this index.
+                if (blockIdx >= _blockPositions.Length)
+                {
+                    return new SimpleTagsCollection();
+                }
 
                 // deserialize block.
                 this.DeserializeBlock(blockIdx);

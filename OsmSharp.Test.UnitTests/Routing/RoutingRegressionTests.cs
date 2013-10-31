@@ -55,7 +55,7 @@ namespace OsmSharp.Test.Unittests.Routing
             DynamicGraphRouterDataSource<LiveEdge> memory_data =
                 new DynamicGraphRouterDataSource<LiveEdge>(tags_index);
             LiveGraphOsmStreamTarget target_data = new LiveGraphOsmStreamTarget(
-                memory_data, interpreter, memory_data.TagsIndex);
+                memory_data, interpreter, tags_index);
             XmlOsmStreamSource data_processor_source = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_routing_regression1.osm"));
             OsmStreamFilterSort sorter = new OsmStreamFilterSort();
@@ -100,7 +100,7 @@ namespace OsmSharp.Test.Unittests.Routing
             DynamicGraphRouterDataSource<LiveEdge> memory_data =
                 new DynamicGraphRouterDataSource<LiveEdge>(tags_index);
             LiveGraphOsmStreamTarget target_data = new LiveGraphOsmStreamTarget(
-                memory_data, interpreter, memory_data.TagsIndex);
+                memory_data, interpreter, tags_index);
             XmlOsmStreamSource data_processor_source = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
             OsmStreamFilterSort sorter = new OsmStreamFilterSort();
@@ -218,7 +218,7 @@ namespace OsmSharp.Test.Unittests.Routing
             DynamicGraphRouterDataSource<LiveEdge> memory_data =
                 new DynamicGraphRouterDataSource<LiveEdge>(tags_index);
             LiveGraphOsmStreamTarget target_data = new LiveGraphOsmStreamTarget(
-                memory_data, interpreter, memory_data.TagsIndex);
+                memory_data, interpreter, tags_index);
             XmlOsmStreamSource data_processor_source = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Test.Unittests.test_network.osm"));
             OsmStreamFilterSort sorter = new OsmStreamFilterSort();

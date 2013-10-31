@@ -83,7 +83,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 // do the data processing.
                 var memoryData = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
                 var targetData = new CHEdgeGraphOsmStreamTarget(
-                    memoryData, interpreter, memoryData.TagsIndex, Vehicle.Car);
+                    memoryData, interpreter, tagsIndex, Vehicle.Car);
                 var dataProcessorSource = new XmlOsmStreamSource(
                     Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString));
                 var sorter = new OsmStreamFilterSort();

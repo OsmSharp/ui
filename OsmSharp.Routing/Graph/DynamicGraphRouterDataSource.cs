@@ -46,7 +46,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private readonly ITagsIndex _tagsIndex;
+        private readonly ITagsIndexReadonly _tagsIndex;
 
         /// <summary>
         /// Holds the supported vehicle profiles.
@@ -57,7 +57,7 @@ namespace OsmSharp.Routing.Graph
         /// Creates a new osm memory router data source.
         /// </summary>
         /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(ITagsIndex tagsIndex)
+        public DynamicGraphRouterDataSource(ITagsIndexReadonly tagsIndex)
         {
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
 
@@ -74,7 +74,7 @@ namespace OsmSharp.Routing.Graph
         /// <param name="graph"></param>
         /// <param name="tagsIndex"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public DynamicGraphRouterDataSource(IDynamicGraph<TEdgeData> graph, ITagsIndex tagsIndex)
+        public DynamicGraphRouterDataSource(IDynamicGraph<TEdgeData> graph, ITagsIndexReadonly tagsIndex)
         {
             if (graph == null) throw new ArgumentNullException("graph");
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
@@ -227,7 +227,7 @@ namespace OsmSharp.Routing.Graph
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        public ITagsIndex TagsIndex
+        public ITagsIndexReadonly TagsIndex
         {
             get
             {

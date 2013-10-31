@@ -123,7 +123,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="idTransformations"></param>
         /// <param name="box"></param>
         protected DynamicGraphOsmStreamWriter(
-            IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, 
+            IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer,
             ITagsIndex tagsIndex, IDictionary<long, uint> idTransformations,
             GeoCoordinateBox box)
         {

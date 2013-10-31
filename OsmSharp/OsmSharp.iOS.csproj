@@ -57,6 +57,7 @@
     <Compile Include="Collections\SpatialIndexes\ISpatialIndexReadonly.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />
     <Compile Include="Collections\Tags\ITagsIndex.cs" />
+    <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
     <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
     <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />

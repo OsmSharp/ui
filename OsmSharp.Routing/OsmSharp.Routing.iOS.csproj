@@ -48,6 +48,9 @@
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
     <Compile Include="CH\CHEdgeData.cs" />
+    <Compile Include="CH\Serialization\Sorted\v2\CHBlock.cs" />
+    <Compile Include="CH\Serialization\Sorted\v2\CHEdgeDataDataSource.cs" />
+    <Compile Include="CH\Serialization\Sorted\v2\CHEdgeDataSerializer.cs" />
     <Compile Include="IEdgeMatcher.cs" />
     <Compile Include="IRouterExtensions.cs" />
     <Compile Include="Navigation\RouteTracker.cs" />

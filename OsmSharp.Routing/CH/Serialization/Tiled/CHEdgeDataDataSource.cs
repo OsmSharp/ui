@@ -167,7 +167,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        public ITagsIndex TagsIndex
+        public ITagsIndexReadonly TagsIndex
         {
             get { return _tagsIndex; }
         }

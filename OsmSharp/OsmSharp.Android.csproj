@@ -57,6 +57,7 @@
     <Compile Include="Collections\LongIndex\LongIndexLeaf.cs" />
     <Compile Include="Collections\LongIndex\LongIndexNode.cs" />
     <Compile Include="Collections\Tags\ITagsIndex.cs" />
+    <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
     <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
     <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />

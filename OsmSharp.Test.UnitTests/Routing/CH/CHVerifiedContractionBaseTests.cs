@@ -94,7 +94,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             // do the data processing.
             var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             var targetData = new LiveGraphOsmStreamTarget(
-                data, interpreter, data.TagsIndex, new Vehicle[] { Vehicle.Car });
+                data, interpreter, tagsIndex, new Vehicle[] { Vehicle.Car });
             var dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedName));
             var sorter = new OsmStreamFilterSort();
@@ -135,7 +135,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
-                _data, _interpreter, _data.TagsIndex, Vehicle.Car);
+                _data, _interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
             var sorter = new OsmStreamFilterSort();
             sorter.RegisterSource(dataProcessorSource);
@@ -181,7 +181,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
-                _data, _interpreter, _data.TagsIndex, Vehicle.Car);
+                _data, _interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
             var sorter = new OsmStreamFilterSort();
             sorter.RegisterSource(dataProcessorSource);

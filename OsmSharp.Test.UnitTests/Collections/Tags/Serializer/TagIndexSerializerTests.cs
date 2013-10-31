@@ -21,6 +21,7 @@ using System.Linq;
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Serializer;
+using OsmSharp.IO;
 
 namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
 {
@@ -44,6 +45,28 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             uint tagsId = tagsIndex.Add(tagsCollection);
 
             ITagsIndexReadonly tagsIndexReadonly = this.SerializeDeserialize(tagsIndex);
+            Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
+            for (uint idx = 0; idx < tagsIndex.Max; idx++)
+            {
+                this.CompareTagsCollections(tagsIndex.Get(idx),
+                    tagsIndexReadonly.Get(idx));
+            }
+        }
+
+        /// <summary>
+        /// Tests a simple tag serialization using a limited stream..
+        /// </summary>
+        [Test]
+        public void TestSimpleTagSerializatonLimitedStreamRegression()
+        {
+            SimpleTagsIndex tagsIndex = new SimpleTagsIndex();
+
+            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            tagsCollection.Add("key1", "value1");
+
+            uint tagsId = tagsIndex.Add(tagsCollection);
+
+            ITagsIndexReadonly tagsIndexReadonly = this.SerializeDeserializeLimitedStream(tagsIndex, 132);
             Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
             for (uint idx = 0; idx < tagsIndex.Max; idx++)
             {
@@ -97,6 +120,37 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             }
 
             ITagsIndexReadonly tagsIndexReadonly = this.SerializeDeserialize(tagsIndex);
+            Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
+            for (uint idx = 0; idx < tagsIndex.Max; idx++)
+            {
+                this.CompareTagsCollections(tagsIndex.Get(idx),
+                    tagsIndexReadonly.Get(idx));
+            }
+        }
+
+        /// <summary>
+        /// Tests a simple tag serialization.
+        /// </summary>
+        [Test]
+        public void TestRandomTagSerializatonLimitedStreamRegression()
+        {
+            SimpleTagsIndex tagsIndex = new SimpleTagsIndex();
+
+            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            for (int i = 0; i < 100; i++)
+            {
+                int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10) + 1;
+                for (int idx = 0; idx < tagCollectionSize; idx++)
+                {
+                    int tagValue = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10);
+                    tagsCollection.Add(
+                        string.Format("key_{0}", tagValue),
+                        string.Format("value_{0}", tagValue));
+                }
+                uint tagsId = tagsIndex.Add(tagsCollection);
+            }
+
+            ITagsIndexReadonly tagsIndexReadonly = this.SerializeDeserializeLimitedStream(tagsIndex, 132);
             Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
             for (uint idx = 0; idx < tagsIndex.Max; idx++)
             {
@@ -276,6 +330,37 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         }
 
         /// <summary>
+        /// Tests a blocked tag serialization but not when the stream is at position zero.
+        /// </summary>
+        [Test]
+        public void TestRandomBlockTagSerializatonNonBeginPositionLimitedStreamRegression()
+        {
+            SimpleTagsIndex tagsIndex = new SimpleTagsIndex();
+
+            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            for (int i = 0; i < 101; i++)
+            {
+                int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10) + 1;
+                for (int idx = 0; idx < tagCollectionSize; idx++)
+                {
+                    int tagValue = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10);
+                    tagsCollection.Add(
+                        string.Format("key_{0}", tagValue),
+                        string.Format("value_{0}", tagValue));
+                }
+                uint tagsId = tagsIndex.Add(tagsCollection);
+            }
+
+            ITagsIndexReadonly tagsIndexReadonly = this.SerializeDeserializeBlockLimitedStream(tagsIndex, 10, 123);
+            Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
+            for (uint idx = 0; idx < tagsIndex.Max; idx++)
+            {
+                this.CompareTagsCollections(tagsIndex.Get(idx),
+                    tagsIndexReadonly.Get(idx));
+            }
+        }
+
+        /// <summary>
         /// Compares two tags collections.
         /// </summary>
         /// <param name="reference"></param>
@@ -297,6 +382,24 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         private ITagsIndexReadonly SerializeDeserialize(ITagsIndex index)
         {
             MemoryStream stream = new MemoryStream();
+            TagIndexSerializer.Serialize(stream, index);
+            stream.Seek(0, SeekOrigin.Begin);
+
+            return TagIndexSerializer.Deserialize(stream);
+        }
+
+        /// <summary>
+        /// Serialize/deserialize index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        private ITagsIndexReadonly SerializeDeserializeLimitedStream(ITagsIndex index, int position)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            memoryStream.Seek(position, SeekOrigin.Begin);
+
+            LimitedStream stream = new LimitedStream(memoryStream);
             TagIndexSerializer.Serialize(stream, index);
             stream.Seek(0, SeekOrigin.Begin);
 
@@ -347,6 +450,26 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         {
             MemoryStream stream = new MemoryStream();
 
+            stream.Seek(position, SeekOrigin.Begin);
+            TagIndexSerializer.SerializeBlocks(stream, index, blockSize);
+
+            stream.Seek(position, SeekOrigin.Begin);
+            return TagIndexSerializer.DeserializeBlocks(stream);
+        }
+
+        /// <summary>
+        /// Serialize/deserialize index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="blockSize"></param>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        private ITagsIndexReadonly SerializeDeserializeBlockLimitedStream(ITagsIndex index, uint blockSize, int position)
+        {
+            MemoryStream memoryStream = new MemoryStream();
+            memoryStream.Seek(position, SeekOrigin.Begin);
+
+            LimitedStream stream = new LimitedStream(memoryStream);
             stream.Seek(position, SeekOrigin.Begin);
             TagIndexSerializer.SerializeBlocks(stream, index, blockSize);
 

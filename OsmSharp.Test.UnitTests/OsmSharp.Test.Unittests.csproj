@@ -182,7 +182,11 @@
     <Compile Include="Routing\CH\CHEdgeDifferenceRoutingTest.cs" />
     <Compile Include="Routing\CH\CHVerifiedContractionTests.cs" />
     <Compile Include="Routing\CH\Serialization\Sorted\CHDataSourceSerializeSortTests.cs" />
+    <Compile Include="Routing\CH\Serialization\Sorted\CHDataSourceSerializeSortv2Tests.cs" />
     <Compile Include="Routing\CH\Serialization\Sorted\CHDepthFirstEnumeratorTests.cs" />
+    <Compile Include="Routing\CH\Serialization\Sorted\CHRoutingSerializationComparisonTests.cs" />
+    <Compile Include="Routing\CH\Serialization\Sorted\CHRoutingSerializationv2ComparizonTests.cs" />
+    <Compile Include="Routing\CH\Serialization\Tiles\CHRoutingSerializationComparisonTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsBase.cs" />
     <Compile Include="Routing\Instructions\InstructionBaseTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsCH.cs" />

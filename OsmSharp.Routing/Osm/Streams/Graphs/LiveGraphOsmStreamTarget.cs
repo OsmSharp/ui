@@ -211,7 +211,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         {
             var dynamicGraphRouterDataSource =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
-            var targetData = new LiveGraphOsmStreamTarget(dynamicGraphRouterDataSource, interpreter, dynamicGraphRouterDataSource.TagsIndex);
+            var targetData = new LiveGraphOsmStreamTarget(dynamicGraphRouterDataSource, interpreter,
+                tagsIndex);
             targetData.RegisterSource(reader);
             targetData.Pull();
 

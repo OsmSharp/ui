@@ -53,7 +53,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             DynamicGraphRouterDataSource<LiveEdge> memoryData =
                 new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
             LiveGraphOsmStreamTarget target_data = new LiveGraphOsmStreamTarget(
-                memoryData, interpreter, memoryData.TagsIndex);
+                memoryData, interpreter, tagsIndex);
             XmlOsmStreamSource dataProcessorSource = new XmlOsmStreamSource(
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(manifestResourceName));
             OsmStreamFilterSort sorter = new OsmStreamFilterSort();

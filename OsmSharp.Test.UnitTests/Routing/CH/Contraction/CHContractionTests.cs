@@ -187,7 +187,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
             // do the data processing.
             var data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
-                data, interpreter, data.TagsIndex, Vehicle.Car);
+                data, interpreter, tagsIndex, Vehicle.Car);
             var dataProcessorSource = new XmlOsmStreamSource(stream);
             var sorter = new OsmStreamFilterSort();
             sorter.RegisterSource(dataProcessorSource);

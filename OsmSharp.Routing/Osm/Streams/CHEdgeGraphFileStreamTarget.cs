@@ -54,7 +54,7 @@ namespace OsmSharp.Routing.Osm.Streams
             var interpreter = new OsmRoutingInterpreter();
             _graph = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
             _graphTarget = new CHEdgeGraphOsmStreamTarget(
-                _graph, interpreter, _graph.TagsIndex, vehicle);
+                _graph, interpreter, tagsIndex, vehicle);
         }
 
         /// <summary>

@@ -137,6 +137,9 @@
     <Compile Include="CH\Serialization\Sorted\CHDepthFirstEnumerator.cs" />
     <Compile Include="CH\Serialization\Sorted\CHEdgeDataDataSource.cs" />
     <Compile Include="CH\Serialization\Sorted\CHEdgeDataSerializer.cs" />
+    <Compile Include="CH\Serialization\Sorted\v2\CHBlock.cs" />
+    <Compile Include="CH\Serialization\Sorted\v2\CHEdgeDataDataSource.cs" />
+    <Compile Include="CH\Serialization\Sorted\v2\CHEdgeDataSerializer.cs" />
     <Compile Include="CH\Serialization\Tiled\CHEdgeDataDataSource.cs" />
     <Compile Include="CH\Serialization\Tiled\CHEdgeDataSerializer.cs" />
     <Compile Include="Graph\IDynamicGraph.cs" />

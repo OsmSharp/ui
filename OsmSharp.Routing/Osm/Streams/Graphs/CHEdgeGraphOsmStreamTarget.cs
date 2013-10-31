@@ -130,7 +130,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             var dynamicGraphRouterDataSource =
                 new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
             var targetData = new CHEdgeGraphOsmStreamTarget(
-                dynamicGraphRouterDataSource, interpreter, dynamicGraphRouterDataSource.TagsIndex, vehicle);
+                dynamicGraphRouterDataSource, interpreter, tagsIndex, vehicle);
             targetData.RegisterSource(reader);
             targetData.Pull();
 
