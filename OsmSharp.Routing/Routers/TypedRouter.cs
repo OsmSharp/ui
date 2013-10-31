@@ -818,7 +818,6 @@ namespace OsmSharp.Routing.Routers
         /// <param name="coordinate"></param>
         /// <param name="matcher"></param>
         /// <param name="matchingTags"></param>
-        /// <param name="verticesOnly"></param>
         /// <returns></returns>
         public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate,
             IEdgeMatcher matcher, TagsCollection matchingTags)

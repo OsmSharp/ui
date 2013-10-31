@@ -35,7 +35,6 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <summary>
         /// Creates a new witness calculator.
         /// </summary>
-        /// <param name="data"></param>
         public DykstraWitnessCalculator()
         {
 
@@ -44,6 +43,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <summary>
         /// Returns true if the given vertex has a witness calculator.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="via"></param>
@@ -67,6 +67,7 @@ namespace OsmSharp.Routing.CH.PreProcessing.Witnesses
         /// <summary>
         /// Implements a very simple dykstra version.
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="via"></param>

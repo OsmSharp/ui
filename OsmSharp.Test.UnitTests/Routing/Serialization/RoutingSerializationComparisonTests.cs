@@ -102,6 +102,13 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             //this.TestCompareAll(original, referenceRouter, router);
         }
 
+        /// <summary>
+        /// Not needed here.
+        /// </summary>
+        /// <param name="interpreter"></param>
+        /// <param name="embeddedName"></param>
+        /// <param name="contract"></param>
+        /// <returns></returns>
         public override Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName, bool contract)
         {
             throw new NotImplementedException("Not needed here!");

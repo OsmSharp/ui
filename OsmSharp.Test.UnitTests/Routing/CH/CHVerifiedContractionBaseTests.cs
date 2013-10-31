@@ -126,7 +126,6 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// Executes the CH contractions while verifying each step.
         /// </summary>
         /// <param name="stream"></param>
-        /// <param name="crazyVerification"></param>
         public void DoTestCHSparseVerifiedContraction(Stream stream)
         {
             _interpreter = new OsmRoutingInterpreter();

@@ -49,6 +49,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="interpreter"></param>
         /// <param name="embeddedName"></param>
+        /// <param name="contract"></param>
         /// <returns></returns>
         public override Router BuildRouter(IOsmRoutingInterpreter interpreter, string embeddedName, bool contract)
         {

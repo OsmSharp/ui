@@ -411,6 +411,7 @@ namespace OsmSharp.Collections.Tags.Serializer
             /// <summary>
             /// Creates a new reaonly index.
             /// </summary>
+            /// <param name="stream"></param>
             /// <param name="begin"></param>
             /// <param name="blockSize"></param>
             /// <param name="blockPositions"></param>

@@ -282,8 +282,8 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="graph"></param>
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
-        /// <param name="source"></param>
-        /// <param name="targets"></param>
+        /// <param name="sourceList"></param>
+        /// <param name="targetList"></param>
         /// <param name="weight"></param>
         /// <param name="stopAtFirst"></param>
         /// <param name="returnAtWeight"></param>

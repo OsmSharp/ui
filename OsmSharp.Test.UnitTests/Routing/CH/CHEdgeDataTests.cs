@@ -118,6 +118,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         /// </summary>
         /// <param name="overapping"></param>
         /// <param name="overlappee"></param>
+        /// <param name="result"></param>
         private void DoTestCompare(CHEdgeData overapping, CHEdgeData overlappee, bool result)
         {
             CHEdgeDataComparer comparer = new CHEdgeDataComparer();

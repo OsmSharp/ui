@@ -31,6 +31,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <summary>
         /// Return true if a witness exists for the given graph vertex 
         /// </summary>
+        /// <param name="graph"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="via"></param>

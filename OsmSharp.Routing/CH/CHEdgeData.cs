@@ -69,6 +69,8 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="forward"></param>
         /// <param name="backward"></param>
         /// <param name="toHigher"></param>
+        /// <param name="contractedVertexId"></param>
+        /// <param name="tags"></param>
         public CHEdgeData(float weight, bool forward, bool backward, bool toHigher, uint contractedVertexId, uint tags)
         {
             this.Weight = weight;
