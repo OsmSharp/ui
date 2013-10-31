@@ -310,6 +310,7 @@ namespace OsmSharp.Android.UI
 				_mapView.AutoInvalidate = value;
 			}
 		}
+
 		#endregion
 
 		/// <summary>
@@ -352,6 +353,27 @@ namespace OsmSharp.Android.UI
         void IMapView.Invalidate()
         {
             _mapView.Change();
-        }
+		}
+
+		private class MapViewMarkerZoomEvent
+		{
+			/// <summary>
+			/// Gets or sets the markers.
+			/// </summary>
+			/// <value>The markers.</value>
+			public List<MapMarker> Markers {
+				get;
+				set;
+			}
+
+			/// <summary>
+			/// Gets or sets the percentage.
+			/// </summary>
+			/// <value>The percentage.</value>
+			public float Percentage {
+				get;
+				set;
+			}
+		}
     }
 }

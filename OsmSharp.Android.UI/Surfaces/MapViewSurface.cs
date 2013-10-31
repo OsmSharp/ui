@@ -470,6 +470,14 @@ namespace OsmSharp.Android.UI
 		/// <param name="bottom">Bottom.</param>
 		protected override void OnLayout (bool changed, int left, int top, int right, int bottom)
 		{
+			// execute suspended events.
+			if (_latestZoomCall != null)
+			{ // there was a suspended call.
+				this.ZoomToMarkers(
+					_latestZoomCall.Markers,
+					_latestZoomCall.Percentage, false);
+			}
+
 			// notify there was movement.
 			this.NotifyMovement();
 
@@ -482,7 +490,7 @@ namespace OsmSharp.Android.UI
 		/// Notifies that there was movement.
 		/// </summary>
 		private void NotifyMovement()
-		{		
+		{
 			// invalidate the current view.
 			this.Invalidate ();
 
@@ -735,13 +743,27 @@ namespace OsmSharp.Android.UI
 		/// <param name="center">Center.</param>
 		/// <param name="mapTilt">Map tilt.</param>
 		/// <param name="mapZoom">Map zoom.</param>
-		public void SetMapView (GeoCoordinate center, Degree mapTilt, float mapZoom)
+		/// <param name="invalidate">If set to <c>true</c> invalidate.</param>
+		public void SetMapView (GeoCoordinate center, Degree mapTilt, float mapZoom, bool invalidate)
 		{
 			_mapCenter = center;
 			_mapTilt = mapTilt;
 			this.MapZoom = mapZoom;
 
-			(this.Context as Activity).RunOnUiThread(Invalidate);
+			if(invalidate) {
+				(this.Context as Activity).RunOnUiThread(Invalidate);
+			}
+		}
+
+		/// <summary>
+		/// Sets the map view.
+		/// </summary>
+		/// <param name="center">Center.</param>
+		/// <param name="mapTilt">Map tilt.</param>
+		/// <param name="mapZoom">Map zoom.</param>
+		public void SetMapView (GeoCoordinate center, Degree mapTilt, float mapZoom)
+		{
+			this.SetMapView (center, mapTilt, mapZoom, true);
 		}
 
 		/// <summary>
@@ -757,33 +779,77 @@ namespace OsmSharp.Android.UI
 			}
 		}
 
+		/// <summary>
+		/// Holds a suspended call to zoom to markers.
+		/// </summary>
+		private MapViewMarkerZoomEvent _latestZoomCall;
+
         /// <summary>
         /// Zooms to the given list of markers.
         /// </summary>
         /// <param name="markers"></param>
-        public void ZoomToMarkers(List<MapMarker> markers, double percentage)
+        /// <param name="percentage"></param>
+        public void ZoomToMarkers(List<MapMarker> markers, double percentage) 
+        {
+            this.ZoomToMarkers(markers, percentage, true);
+        }
+
+        /// <summary>
+        /// Zooms to the given list of markers.
+        /// </summary>
+        /// <param name="markers"></param>
+        public void ZoomToMarkers(List<MapMarker> markers, double percentage, bool notifyChange)
         {
             float height = this.Height;
             float width = this.Width;
-            if (width > 0)
-            {
-                PointF2D[] points = new PointF2D[markers.Count];
-                for (int idx = 0; idx < markers.Count; idx++)
+			if (width > 0) {
+				PointF2D[] points = new PointF2D[markers.Count];
+				for (int idx = 0; idx < markers.Count; idx++) {
+					points [idx] = new PointF2D (this.Map.Projection.ToPixel (markers [idx].Location));
+				}
+				View2D view = this.CreateView ();
+				View2D fittedView = view.Fit (points, percentage);
+
+				float zoom = (float)this.Map.Projection.ToZoomLevel (fittedView.CalculateZoom (
+					                         width, height));
+				GeoCoordinate center = this.Map.Projection.ToGeoCoordinates (
+					                                   fittedView.Center [0], fittedView.Center [1]);
+
+				if (notifyChange) {
+					this.SetMapView (center, this.MapTilt, zoom, true);
+					this.NotifyMovement ();
+					this.Change ();
+				} else {
+					this.SetMapView (center, this.MapTilt, zoom, false);
+				}
+			} else {
+                _latestZoomCall = new MapViewMarkerZoomEvent()
                 {
-                    points[idx] = new PointF2D(this.Map.Projection.ToPixel(markers[idx].Location));
-                }
-                View2D view = this.CreateView();
-                View2D fittedView = view.Fit(points, percentage);
-
-                float zoom = (float)this.Map.Projection.ToZoomLevel(fittedView.CalculateZoom(
-                    width, height));
-                GeoCoordinate center = this.Map.Projection.ToGeoCoordinates(
-                    fittedView.Center[0], fittedView.Center[1]);
-
-                (this as IMapViewSurface).SetMapView(center, this.MapTilt, zoom);
-                this.NotifyMovement();
-                this.Change();
-            }
+                    Markers = markers,
+                    Percentage = percentage
+                };
+			}
         }
+		
+		private class MapViewMarkerZoomEvent
+		{
+			/// <summary>
+			/// Gets or sets the markers.
+			/// </summary>
+			/// <value>The markers.</value>
+			public List<MapMarker> Markers {
+				get;
+				set;
+			}
+
+			/// <summary>
+			/// Gets or sets the percentage.
+			/// </summary>
+			/// <value>The percentage.</value>
+			public double Percentage {
+				get;
+				set;
+			}
+		}
     }
 }
