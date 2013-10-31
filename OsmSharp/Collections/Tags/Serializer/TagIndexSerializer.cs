@@ -46,6 +46,83 @@ namespace OsmSharp.Collections.Tags.Serializer
         }
 
         /// <summary>
+        /// Serializes the tags between the given two indexes.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="tagsIndex"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public static void Serialize(Stream stream, ITagsIndex tagsIndex, uint from, uint to)
+        {
+            // build a string index.
+            ObjectTable<string> stringTable = new ObjectTable<string>(false);
+
+            // convert tag collections to simpler objects.
+            List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexList = new List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>();
+            for (uint tagId = from; tagId < to; tagId++)
+            {
+                TagsCollection tagsCollection = tagsIndex.Get(tagId);
+                if (tagsCollection != null)
+                { // convert the tags collection to a list and add to the tag index.
+                    List<KeyValuePair<uint, uint>> tagsList = new List<KeyValuePair<uint, uint>>();
+                    foreach (Tag tag in tagsCollection)
+                    {
+                        uint keyId = stringTable.Add(tag.Key);
+                        uint valueId = stringTable.Add(tag.Value);
+
+                        tagsList.Add(new KeyValuePair<uint, uint>(
+                            keyId, valueId));
+                    }
+                    tagsIndexList.Add(new KeyValuePair<uint, List<KeyValuePair<uint, uint>>>(tagId, tagsList));
+                }
+            }
+
+            // do the serialization.
+            TagIndexSerializer.Serialize(stream, tagsIndexList, stringTable);
+
+            // clear everything.
+            tagsIndexList.Clear();
+        }
+
+        /// <summary>
+        /// Serializes the given tags in the given index. This serialization preserves the id's of each tag collection.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="tagsIndex"></param>
+        /// <param name="toSerialize"></param>
+        public static void Serialize(Stream stream, ITagsIndex tagsIndex, HashSet<uint> toSerialize)
+        {
+            // build a string index.
+            ObjectTable<string> stringTable = new ObjectTable<string>(false);
+
+            // convert tag collections to simpler objects.
+            List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexList = new List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>();
+            foreach(uint tagId in toSerialize)
+            {
+                TagsCollection tagsCollection = tagsIndex.Get(tagId);
+                if (tagsCollection != null)
+                { // convert the tags collection to a list and add to the tag index.
+                    List<KeyValuePair<uint, uint>> tagsList = new List<KeyValuePair<uint, uint>>();
+                    foreach (Tag tag in tagsCollection)
+                    {
+                        uint keyId = stringTable.Add(tag.Key);
+                        uint valueId = stringTable.Add(tag.Value);
+
+                        tagsList.Add(new KeyValuePair<uint, uint>(
+                            keyId, valueId));
+                    }
+                    tagsIndexList.Add(new KeyValuePair<uint, List<KeyValuePair<uint, uint>>>(tagId, tagsList));
+                }
+            }
+
+            // do the serialization.
+            TagIndexSerializer.Serialize(stream, tagsIndexList, stringTable);
+
+            // clear everything.
+            tagsIndexList.Clear();
+        }
+
+        /// <summary>
         /// Serializes all the tags in the given index. This serialization preserves the id's of each tag collection.
         /// </summary>
         /// <param name="stream">The target stream.</param>
@@ -56,7 +133,7 @@ namespace OsmSharp.Collections.Tags.Serializer
             ObjectTable<string> stringTable = new ObjectTable<string>(false);
 
             // convert tag collections to simpler objects.
-            List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagIndex = new List<KeyValuePair<uint,List<KeyValuePair<uint,uint>>>>();
+            List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexList = new List<KeyValuePair<uint,List<KeyValuePair<uint,uint>>>>();
             for (uint tagId = 0; tagId < tagsIndex.Count; tagId++)
             {
                 TagsCollection tagsCollection = tagsIndex.Get(tagId);
@@ -71,10 +148,23 @@ namespace OsmSharp.Collections.Tags.Serializer
                         tagsList.Add(new KeyValuePair<uint, uint>(
                             keyId, valueId));
                     }
-                    tagIndex.Add(new KeyValuePair<uint, List<KeyValuePair<uint, uint>>>(tagId, tagsList));
+                    tagsIndexList.Add(new KeyValuePair<uint, List<KeyValuePair<uint, uint>>>(tagId, tagsList));
                 }
             }
 
+            // do the serialization.
+            TagIndexSerializer.Serialize(stream, tagsIndexList, stringTable);
+            
+            // clear everything.
+            tagsIndexList.Clear();
+        }
+
+        /// <summary>
+        /// Does the actual serialization of the given data structures.
+        /// </summary>
+        private static void Serialize(Stream stream, List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagIndex,
+            ObjectTable<string> stringTable)
+        {
             RuntimeTypeModel typeModel = TagIndexSerializer.CreateTypeModel();
 
             // move until after the index (index contains two int's, startoftagindex, endoffile).
@@ -99,9 +189,6 @@ namespace OsmSharp.Collections.Tags.Serializer
             stream.Seek(0, SeekOrigin.Begin);
             stream.Write(BitConverter.GetBytes((int)startOfTagsIndex), 0, 4); // write start position of tagindex.
             stream.Write(BitConverter.GetBytes((int)endOfFile), 0, 4); // write size of complete file.
-            
-            // clear everything.
-            tagIndex.Clear();
         }
 
         /// <summary>
