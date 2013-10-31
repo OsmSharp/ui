@@ -157,7 +157,7 @@ namespace OsmSharp.Collections.Tags
         /// <summary>
         /// Returns maximum possible number of tags in this index.
         /// </summary>
-        public uint Count
+        public uint Max
         {
             get { return _tagsTable.Count; }
         }
