@@ -36,7 +36,21 @@ namespace OsmSharp.Android.UI
 	/// </summary>
     public class MapView : FrameLayout, IMapMarkerHost, IMapView
 	{
-		public event MapViewDelegates.MapTouchedDelegate MapTouched;
+        /// <summary>
+        /// Map touched events.
+        /// </summary>
+        public event MapViewDelegates.MapTouchedDelegate MapTouched;
+
+        /// <summary>
+        /// Raises the map touched event.
+        /// </summary>
+        internal void RaiseMapTouched()
+        {
+            if (this.MapTouched != null)
+            {
+                this.MapTouched(this, this.MapZoom, this.MapTilt, this.MapCenter);
+            }
+        }
 
 		/// <summary>
 		/// Holds the mapview.
@@ -269,7 +283,7 @@ namespace OsmSharp.Android.UI
 			set {
 				_mapView.MapTilt = value;
 			}
-		}
+        }
 
 		#region IMapView implementation
 

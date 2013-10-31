@@ -178,13 +178,13 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.AddMarker(new GeoCoordinate(51.1612, 2.9795));
             _mapView.AddMarker(new GeoCoordinate(51.1447, 2.9483));
 
-            _mapView.ZoomToMarkers();
+            //_mapView.ZoomToMarkers();
 
             _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5);
 
-            //Timer timer = new Timer(3000);
-            //timer.Elapsed += new ElapsedEventHandler(TimerHandler);
-            //timer.Start();
+            Timer timer = new Timer(250);
+            timer.Elapsed += new ElapsedEventHandler(TimerHandler);
+            timer.Start();
 
 			SetContentView (layout);
 		}
@@ -206,8 +206,8 @@ namespace OsmSharp.Android.UI.Sample
 
         private void TimerHandler(object sender, ElapsedEventArgs e)
         {
-            _mapView.ZoomToMarkers();
-            //this.MoveNext();
+            //_mapView.ZoomToMarkers();
+            this.MoveNext();
         }
 
         private void MoveNext()

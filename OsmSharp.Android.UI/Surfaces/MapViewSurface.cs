@@ -314,15 +314,24 @@ namespace OsmSharp.Android.UI
             {
                 _mapCenter = value;
                 (this.Context as Activity).RunOnUiThread(Invalidate);
-				if (_autoInvalidate) {
-					if (_previousRenderingMapCenter == null ||
-						_previousRenderingMapCenter.DistanceReal (_mapCenter).Value > 20) { // TODO: update this with a more resonable measure depending on the zoom.
-						if (!_render && !_cacheRenderer.IsRunning) {
-							this.Change ();
-							_previousRenderingMapCenter = _mapCenter;
-						}
-					}
-				}
+                this.InvalidateMapCenter();
+            }
+        }
+
+        /// <summary>
+        /// Invalidates the map center.
+        /// </summary>
+        private void InvalidateMapCenter()
+        {
+            if (_autoInvalidate)
+            {
+                if (_previousRenderingMapCenter == null ||
+                 _previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 40)
+                {
+                    // TODO: update this with a more resonable measure depending on the zoom.
+                    this.Change();
+                    _previousRenderingMapCenter = _mapCenter;
+                }
             }
         }
 
@@ -700,6 +709,9 @@ namespace OsmSharp.Android.UI
                 _deltaX = 0;
                 _deltaY = 0;
 
+                // notify touch.
+                _mapView.RaiseMapTouched();
+
 				this.NotifyMovement ();
             }
 			return true;
@@ -752,6 +764,7 @@ namespace OsmSharp.Android.UI
 
 			if(invalidate) {
 				(this.Context as Activity).RunOnUiThread(Invalidate);
+                this.InvalidateMapCenter();
 			}
 		}
 
