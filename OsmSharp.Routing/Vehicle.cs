@@ -21,6 +21,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Math.Geo;
 using OsmSharp.Units.Speed;
 using OsmSharp.Routing.Interpreter.Roads;
+using OsmSharp.Osm;
 
 namespace OsmSharp.Routing
 {
@@ -33,34 +34,42 @@ namespace OsmSharp.Routing
         /// Default Car
         /// </summary>
         public static readonly Vehicle Car = new Car();
+
         /// <summary>
         /// Default Pedestrian
         /// </summary>
         public static readonly Vehicle Pedestrian = new Pedestrian();
+
         /// <summary>
         /// Default Bicycle
         /// </summary>
         public static readonly Vehicle Bicycle = new Bicycle();
+
         /// <summary>
         /// Default Moped
         /// </summary>
         public static readonly Vehicle Moped = new Moped();
+
         /// <summary>
         /// Default MotorCycle
         /// </summary>
         public static readonly Vehicle MotorCycle = new MotorCycle();
+
         /// <summary>
         /// Default SmallTruck
         /// </summary>
         public static readonly Vehicle SmallTruck = new SmallTruck();
+
         /// <summary>
         /// Default BigTruck
         /// </summary>
         public static readonly Vehicle BigTruck = new BigTruck();
+
         /// <summary>
         /// Default BigTruck
         /// </summary>
         public static readonly Vehicle Bus = new Bus();
+
         /// <summary>
         /// Contains Accessiblity Rules
         /// </summary>
@@ -90,48 +99,70 @@ namespace OsmSharp.Routing
             }
             return false;
         }
+
         /// <summary>
         /// Returns the Max Speed for the highwaytype in Km/h
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected abstract KilometerPerHour MaxSpeed(string highwayType);
+        protected abstract KilometerPerHour MaxSpeedAllowed(string highwayType);
 
         /// <summary>
-        ///     Returns the maximum speed.
+        /// Returns the max speed this vehicle can handle.
         /// </summary>
         /// <returns></returns>
-        public KilometerPerHour MaxSpeed(TagsCollection tags)
+        protected abstract KilometerPerHour MaxSpeed();
+
+        /// <summary>
+        /// Returns the maximum speed.
+        /// </summary>
+        /// <returns></returns>
+        public KilometerPerHour MaxSpeedAllowed(TagsCollection tags)
         {
             // THESE ARE THE MAX SPEEDS FOR BELGIUM. 
             // TODO: Find a way to make this all configurable.
             KilometerPerHour speed = 5;
 
             // get max-speed tag if any.
-            var maxSpeedValue = tags.GetNumericValue("maxspeed");
-            if (maxSpeedValue.HasValue)
+            if(tags.TryGetMaxSpeed(out speed))
             {
-                return maxSpeedValue.Value;
+                return speed;
             }
 
             string highwayType;
             if (TryGetHighwayType(tags, out highwayType))
             {
-                speed = MaxSpeed(highwayType);
+                speed = this.MaxSpeedAllowed(highwayType);
             }
 
             return speed;
         }
 
         /// <summary>
-        ///     Returns true if the edges with the given properties are equal for the vehicle.
+        /// Estimates the probable speed of this vehicle on a way with the given tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <returns></returns>
+        public virtual KilometerPerHour ProbableSpeed(TagsCollection tags)
+        {
+            KilometerPerHour maxSpeedAllowed = this.MaxSpeedAllowed(tags);
+            KilometerPerHour maxSpeed = this.MaxSpeed();
+            if (maxSpeed.Value < maxSpeedAllowed.Value)
+            {
+                return maxSpeed;
+            }
+            return maxSpeedAllowed;
+        }
+
+        /// <summary>
+        /// Returns true if the edges with the given properties are equal for the vehicle.
         /// </summary>
         /// <param name="tags1"></param>
         /// <param name="tags2"></param>
         /// <returns></returns>
         public virtual bool IsEqualFor(TagsCollection tags1, TagsCollection tags2)
         {
-            if (GetName(tags1) != GetName(tags2))
+            if (this.GetName(tags1) != this.GetName(tags2))
             {
                 // the name have to be equal.
                 return false;
@@ -141,7 +172,7 @@ namespace OsmSharp.Routing
         }
 
         /// <summary>
-        ///     Returns the weight between two points on an edge with the given tags for the vehicle.
+        /// Returns the weight between two points on an edge with the given tags for the vehicle.
         /// </summary>
         /// <param name="tags"></param>
         /// <param name="from"></param>
@@ -151,7 +182,7 @@ namespace OsmSharp.Routing
         {
             var distance = from.DistanceEstimate(to).Value;
 
-            return (float)(distance / (MaxSpeed(tags).Value) * 3.6);
+            return (float)(distance / (this.ProbableSpeed(tags).Value) * 3.6);
         }
 
         /// <summary>
@@ -170,17 +201,24 @@ namespace OsmSharp.Routing
                 }
                 return false;
             }
+            string junction;
+            if (tags.TryGetValue("junction", out junction))
+            {
+                if (junction == "roundabout")
+                {
+                    return true;
+                }
+            }
             return null;
         }
 
         /// <summary>
-        ///     Returns the name of a given way.
+        /// Returns the name of a given way.
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
         private string GetName(TagsCollection tags)
         {
-            //TODO: Maybe passing tags around isn't the right way to do this
             var name = string.Empty;
             if (tags.ContainsKey("name"))
             {
@@ -188,6 +226,7 @@ namespace OsmSharp.Routing
             }
             return name;
         }
+
         /// <summary>
         /// Returns true if the vehicle is allowed on the way represented by these tags
         /// </summary>
@@ -198,16 +237,17 @@ namespace OsmSharp.Routing
     }
 
     /// <summary>
-    ///     Represents a pedestrian
+    /// Represents a pedestrian
     /// </summary>
     public class Pedestrian : Vehicle
     {
         /// <summary>
-        ///     Default Constructor
+        /// Default Constructor
         /// </summary>
         public Pedestrian()
         {
             AccessibleTags.Add("footway", string.Empty);
+            AccessibleTags.Add("cycleway", string.Empty);
             AccessibleTags.Add("path", string.Empty);
             AccessibleTags.Add("road", string.Empty);
             AccessibleTags.Add("pedestrian", string.Empty);
@@ -215,10 +255,14 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("residential", string.Empty);
             AccessibleTags.Add("unclassified", string.Empty);
             AccessibleTags.Add("secondary", string.Empty);
+            AccessibleTags.Add("secondary_link", string.Empty);
             AccessibleTags.Add("primary", string.Empty);
+            AccessibleTags.Add("primary_link", string.Empty);
             AccessibleTags.Add("tertiary", string.Empty);
-            AccessibleTags.Add("trunk", string.Empty);
+            AccessibleTags.Add("tertiary_link", string.Empty);
+            //AccessibleTags.Add("trunk", string.Empty);
         }
+
         /// <summary>
         /// Returns true if the vehicle is allowed on the way represented by these tags
         /// </summary>
@@ -242,17 +286,55 @@ namespace OsmSharp.Routing
                     return false; // no for foot
                 }
             }
+            if (tags.ContainsKey("bicycle"))
+            {
+                if (tags["bicycle"] == "designated")
+                {
+                    return false; // designated bicycle
+                }
+            }
             return AccessibleTags.ContainsKey(highwayType);
         }
+
         /// <summary>
-        /// Returns the Max Speed for the highwaytype in Km/h
+        /// Returns the Max Speed for the highwaytype in Km/h.
+        /// 
+        /// This does not take into account how fast this vehicle can go just the max possible speed.
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed(string highwayType)
+        protected override KilometerPerHour MaxSpeedAllowed(string highwayType)
         {
-            return 5;
+            switch (highwayType)
+            {
+                case "services":
+                case "proposed":
+                case "cycleway":
+                case "pedestrian":
+                case "steps":
+                case "path":
+                case "footway":
+                case "living_street":
+                    return 5;
+                case "track":
+                case "road":
+                    return 30;
+                case "residential":
+                case "unclassified":
+                    return 50;
+                case "motorway":
+                case "motorway_link":
+                    return 120;
+                case "trunk":
+                case "trunk_link":
+                case "primary":
+                case "primary_link":
+                    return 90;
+                default:
+                    return 70;
+            }
         }
+
         /// <summary>
         ///     Returns true if the edge is one way forward, false if backward, null if bidirectional.
         /// </summary>
@@ -262,15 +344,24 @@ namespace OsmSharp.Routing
         {
             return null;
         }
+
+        /// <summary>
+        /// Returns the maximum possible speed this vehicle can achieve.
+        /// </summary>
+        /// <returns></returns>
+        protected override KilometerPerHour MaxSpeed()
+        {
+            return 5;
+        }
     }
 
     /// <summary>
-    ///     Represents a bicycle
+    /// Represents a bicycle
     /// </summary>
     public class Bicycle : Vehicle
     {
         /// <summary>
-        ///     Default Constructor
+        /// Default Constructor
         /// </summary>
         public Bicycle()
         {
@@ -281,10 +372,14 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("residential", string.Empty);
             AccessibleTags.Add("unclassified", string.Empty);
             AccessibleTags.Add("secondary", string.Empty);
+            AccessibleTags.Add("secondary_link", string.Empty);
             AccessibleTags.Add("primary", string.Empty);
+            AccessibleTags.Add("primary_link", string.Empty);
             AccessibleTags.Add("tertiary", string.Empty);
-            AccessibleTags.Add("trunk", string.Empty);
+            AccessibleTags.Add("tertiary_link", string.Empty);
+            //AccessibleTags.Add("trunk", string.Empty);
         }
+
         /// <summary>
         /// Returns true if the vehicle is allowed on the way represented by these tags
         /// </summary>
@@ -309,19 +404,57 @@ namespace OsmSharp.Routing
                     return false; //  no for bicycle
                 }
             }
+            if (tags.ContainsKey("foot"))
+            {
+                if (tags["foot"] == "designated")
+                {
+                    return false; // designated foot
+                }
+            }
             return AccessibleTags.ContainsKey(highwayType);
         }
+
         /// <summary>
-        /// Returns the Max Speed for the highwaytype in Km/h
+        /// Returns the Max Speed for the highwaytype in Km/h.
+        /// 
+        /// This does not take into account how fast this vehicle can go just the max possible speed.
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed(string highwayType)
+        protected override KilometerPerHour MaxSpeedAllowed(string highwayType)
         {
-            return 15;
+            switch (highwayType)
+            {
+                case "services":
+                case "proposed":
+                case "cycleway":
+                case "pedestrian":
+                case "steps":
+                case "path":
+                case "footway":
+                case "living_street":
+                    return 5;
+                case "track":
+                case "road":
+                    return 30;
+                case "residential":
+                case "unclassified":
+                    return 50;
+                case "motorway":
+                case "motorway_link":
+                    return 120;
+                case "trunk":
+                case "trunk_link":
+                case "primary":
+                case "primary_link":
+                    return 90;
+                default:
+                    return 70;
+            }
         }
+
         /// <summary>
-        ///     Returns true if the edge is one way forward, false if backward, null if bidirectional.
+        /// Returns true if the edge is one way forward, false if backward, null if bidirectional.
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
@@ -329,10 +462,19 @@ namespace OsmSharp.Routing
         {
             return null;
         }
+
+        /// <summary>
+        /// Returns the maximum possible speed this vehicle can achieve.
+        /// </summary>
+        /// <returns></returns>
+        protected override KilometerPerHour MaxSpeed()
+        {
+            return 15;
+        }
     }
 
     /// <summary>
-    ///     Represents a MotorVehicle
+    /// Represents a MotorVehicle
     /// </summary>
     public abstract class MotorVehicle : Vehicle
     {
@@ -352,8 +494,11 @@ namespace OsmSharp.Routing
             AccessibleTags.Add("tertiary", string.Empty);
             AccessibleTags.Add("tertiary_link", string.Empty);
             AccessibleTags.Add("trunk", string.Empty);
+            AccessibleTags.Add("trunk_link", string.Empty);
             AccessibleTags.Add("motorway", string.Empty);
+            AccessibleTags.Add("motorway_link", string.Empty);
         }
+
         /// <summary>
         /// Returns true if the vehicle is allowed on the way represented by these tags
         /// </summary>
@@ -369,14 +514,31 @@ namespace OsmSharp.Routing
                     return false;
                 }
             }
+            if (tags.ContainsKey("foot"))
+            {
+                if (tags["foot"] == "designated")
+                {
+                    return false; // designated foot
+                }
+            }
+            if (tags.ContainsKey("bicycle"))
+            {
+                if (tags["bicycle"] == "designated")
+                {
+                    return false; // designated bicycle
+                }
+            }
             return AccessibleTags.ContainsKey(highwayType);
         }
+
         /// <summary>
-        /// Returns the Max Speed for the highwaytype in Km/h
+        /// Returns the Max Speed for the highwaytype in Km/h.
+        /// 
+        /// This does not take into account how fast this vehicle can go just the max possible speed.
         /// </summary>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed(string highwayType)
+        protected override KilometerPerHour MaxSpeedAllowed(string highwayType)
         {
             switch (highwayType)
             {
@@ -387,10 +549,13 @@ namespace OsmSharp.Routing
                 case "steps":
                 case "path":
                 case "footway":
+                case "living_street":
                     return 5;
                 case "track":
-                    return 40;
+                case "road":
+                    return 30;
                 case "residential":
+                case "unclassified":
                     return 50;
                 case "motorway":
                 case "motorway_link":
@@ -404,74 +569,78 @@ namespace OsmSharp.Routing
                     return 70;
             }
         }
+
+        /// <summary>
+        /// Returns the maximum possible speed this vehicle can achieve.
+        /// </summary>
+        /// <returns></returns>
+        protected override KilometerPerHour MaxSpeed()
+        {
+            return 200;
+        }
     }
 
     /// <summary>
-    ///     Represents a moped
+    /// Represents a moped
     /// </summary>
     public class Moped : MotorVehicle
     {
         /// <summary>
-        ///     Default Constructor
+        /// Default Constructor
         /// </summary>
         public Moped()
         {
             AccessibleTags.Remove("motorway");
+            AccessibleTags.Remove("motorway_link");
         }
+
         /// <summary>
-        /// Returns the Max Speed for the highwaytype in Km/h
+        /// Returns the maximum possible speed this vehicle can achieve.
         /// </summary>
-        /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed(string highwayType)
+        protected override KilometerPerHour MaxSpeed()
         {
-            //TODO: This is wrong but consistent with old code
-            return 5;
+            return 40;
         }
     }
 
     /// <summary>
-    ///     Represents a MotorCycle
+    /// Represents a MotorCycle
     /// </summary>
     public class MotorCycle : MotorVehicle
     {
-        /// <summary>
-        /// Returns the Max Speed for the highwaytype in Km/h
-        /// </summary>
-        /// <param name="highwayType"></param>
-        /// <returns></returns>
-        protected override KilometerPerHour MaxSpeed(string highwayType)
-        {
-            //TODO: This is wrong but consistent with old code
-            return 5;
-        }
+
     }
 
     /// <summary>
-    ///     Represents a Car
+    /// Represents a Car
     /// </summary>
     public class Car : MotorVehicle
     {
+
     }
 
     /// <summary>
-    ///     Represents a SmallTruck
+    /// Represents a SmallTruck
     /// </summary>
     public class SmallTruck : MotorVehicle
     {
+
     }
 
     /// <summary>
-    ///     Represents a BigTruck
+    /// Represents a BigTruck
     /// </summary>
     public class BigTruck : MotorVehicle
     {
+
     }
 
     /// <summary>
-    ///     Represents a Bus
+    /// Represents a Bus
     /// </summary>
     public class Bus : MotorVehicle
     {
+
     }
 }

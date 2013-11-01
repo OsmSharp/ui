@@ -35,7 +35,7 @@ namespace OsmSharp.Test.Unittests.Routing.Interpreter
             Assert.IsFalse(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Bus));
 
             tags["highway"] = "cycleway";
-            Assert.IsFalse(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Pedestrian));
+            Assert.IsTrue(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Pedestrian));
             Assert.IsTrue(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Bicycle));
             Assert.IsFalse(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Moped));
             Assert.IsFalse(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.MotorCycle));
@@ -145,8 +145,8 @@ namespace OsmSharp.Test.Unittests.Routing.Interpreter
             Assert.IsTrue(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Bus));
 
             tags["highway"] = "trunk";
-            Assert.IsTrue(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Pedestrian));
-            Assert.IsTrue(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Bicycle));
+            Assert.IsFalse(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Pedestrian));
+            Assert.IsFalse(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Bicycle));
             Assert.IsTrue(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Moped));
             Assert.IsTrue(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.MotorCycle));
             Assert.IsTrue(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Car));

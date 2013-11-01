@@ -211,6 +211,15 @@
     <Compile Include="Routing\Serialization\RoutingSerializationComparisonTests.cs" />
     <Compile Include="Routing\Serialization\RoutingSerializationTests.cs" />
     <Compile Include="Routing\TSP\TSPWrapperTest.cs" />
+    <Compile Include="Routing\VehicleBaseTests.cs" />
+    <Compile Include="Routing\VehicleBicycleTests.cs" />
+    <Compile Include="Routing\VehicleBigTruckTests.cs" />
+    <Compile Include="Routing\VehicleBusTests.cs" />
+    <Compile Include="Routing\VehicleCarTests.cs" />
+    <Compile Include="Routing\VehicleMopedTests.cs" />
+    <Compile Include="Routing\VehicleMotorCycleTests.cs" />
+    <Compile Include="Routing\VehiclePedestrianTests.cs" />
+    <Compile Include="Routing\VehicleSmallTruckTests.cs" />
     <Compile Include="StaticDictionary.cs" />
     <Compile Include="Osm\Tiles\TilesTests.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeapTests.cs" />

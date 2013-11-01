@@ -66,7 +66,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             IEdgeMatcher matc = new DefaultEdgeMatcher();
 
             this.TestResolveOnEdge(name, "footway", Vehicle.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "cycleway", Vehicle.Pedestrian, matc, false);
+            this.TestResolveOnEdge(name, "cycleway", Vehicle.Pedestrian, matc, true);
             this.TestResolveOnEdge(name, "bridleway", Vehicle.Pedestrian, matc, false);
             this.TestResolveOnEdge(name, "path", Vehicle.Pedestrian, matc, true);
             this.TestResolveOnEdge(name, "pedestrian", Vehicle.Pedestrian, matc, true);
@@ -77,7 +77,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             this.TestResolveOnEdge(name, "tertiary", Vehicle.Pedestrian, matc, true);
             this.TestResolveOnEdge(name, "secondary", Vehicle.Pedestrian, matc, true);
             this.TestResolveOnEdge(name, "primary", Vehicle.Pedestrian, matc, true);
-            this.TestResolveOnEdge(name, "trunk", Vehicle.Pedestrian, matc, true);
+            this.TestResolveOnEdge(name, "trunk", Vehicle.Pedestrian, matc, false);
             this.TestResolveOnEdge(name, "motorway", Vehicle.Pedestrian, matc, false);
 
             this.TestResolveOnEdge(name, "footway", Vehicle.Bicycle, matc, false);
@@ -92,7 +92,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             this.TestResolveOnEdge(name, "tertiary", Vehicle.Bicycle, matc, true);
             this.TestResolveOnEdge(name, "secondary", Vehicle.Bicycle, matc, true);
             this.TestResolveOnEdge(name, "primary", Vehicle.Bicycle, matc, true);
-            this.TestResolveOnEdge(name, "trunk", Vehicle.Bicycle, matc, true);
+            this.TestResolveOnEdge(name, "trunk", Vehicle.Bicycle, matc, false);
             this.TestResolveOnEdge(name, "motorway", Vehicle.Bicycle, matc, false);
 
             this.TestResolveOnEdge(name, "footway", Vehicle.Moped, matc, false);

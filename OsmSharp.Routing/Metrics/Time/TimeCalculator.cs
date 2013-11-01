@@ -149,7 +149,7 @@ namespace OsmSharp.Routing.Metrics.Time
             result[DISTANCE_KEY] = result[DISTANCE_KEY] + arc.Distance.Value;
 
             // update the time.
-            KilometerPerHour speed = vehicle.MaxSpeed(arc.Tags);
+            KilometerPerHour speed = vehicle.ProbableSpeed(arc.Tags);
             Second time = arc.Distance / speed;
 
             // FOR NOW USE A METRIC OF 75% MAX SPEED.

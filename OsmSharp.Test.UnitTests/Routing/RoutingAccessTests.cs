@@ -116,7 +116,7 @@ namespace OsmSharp.Test.Unittests.Routing
             // pedestrian
             Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 footwayFrom, footwayTo, interpreter));
-            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Pedestrian,
+            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 cyclewayFrom, cyclewayTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(Vehicle.Pedestrian,
                 bridlewayFrom, bridlewayTo, interpreter));
@@ -138,7 +138,7 @@ namespace OsmSharp.Test.Unittests.Routing
                 secondaryFrom, secondaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
                 primaryFrom, primaryTo, interpreter));
-            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Pedestrian,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Pedestrian,
                 trunkFrom, trunkTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(Vehicle.Pedestrian,
                 motorwayFrom, motorwayTo, interpreter));
@@ -168,7 +168,7 @@ namespace OsmSharp.Test.Unittests.Routing
                 secondaryFrom, secondaryTo, interpreter));
             Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
                 primaryFrom, primaryTo, interpreter));
-            Assert.IsTrue(this.DoTestForVehicle(Vehicle.Bicycle,
+            Assert.IsFalse(this.DoTestForVehicle(Vehicle.Bicycle,
                 trunkFrom, trunkTo, interpreter));
             Assert.IsFalse(this.DoTestForVehicle(Vehicle.Bicycle,
                 motorwayFrom, motorwayTo, interpreter));

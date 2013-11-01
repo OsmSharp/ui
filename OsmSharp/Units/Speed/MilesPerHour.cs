@@ -59,6 +59,16 @@ namespace OsmSharp.Units.Speed
             return new MilesPerHour(value);
         }
 
+        /// <summary>
+        /// Converts a given value to miles per hour.
+        /// </summary>
+        /// <param name="kph"></param>
+        /// <returns></returns>
+        public static implicit operator MilesPerHour(KilometerPerHour kph)
+        {
+            return kph.Value * 0.621371192;
+        }
+
         #endregion
 
         #region Parsing

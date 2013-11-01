@@ -24,6 +24,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Units.Speed;
+using OsmSharp.Units.Weight;
+using OsmSharp.Units.Distance;
 
 namespace OsmSharp.Osm
 {
@@ -40,8 +43,8 @@ namespace OsmSharp.Osm
         private const string REGEX_UNIT_TONNES = @"\s*(t|to|tonnes|tonnen)?\s*";
         private const string REGEX_UNIT_METERS = @"\s*(m|meters|metres|meter)?\s*";
         private const string REGEX_UNIT_KILOMETERS = @"\s*(km)?\s*";
-        private const string REGEX_UNIT_KILOMETERS_PER_HOUR = @"\s*(kmh|km/h|kph)?\s*";
-        private const string REGEX_UNIT_MILES_PER_HOUR = @"\s*(mph)?\s*";
+        //private const string REGEX_UNIT_KILOMETERS_PER_HOUR = @"\s*(kmh|km/h|kph)?\s*";
+        //private const string REGEX_UNIT_MILES_PER_HOUR = @"\s*(mph)?\s*";
 
         /// <summary>
         /// Returns true if the given tags key has an associated value that can be interpreted as true.
@@ -100,6 +103,23 @@ namespace OsmSharp.Osm
         #region Reading Tags
 
         /// <summary>
+        /// Searches for a maxspeed tag and returns the associated value.
+        /// 
+        ///  http://wiki.openstreetmap.org/wiki/Key:maxspeed
+        /// </summary>
+        /// <param name="tags">The tags to search.</param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static bool TryGetMaxSpeed(this TagsCollection tags, out KilometerPerHour result)
+        {
+            result = double.MaxValue;
+            string tagValue;
+            if (tags == null || !tags.TryGetValue("maxspeed", out tagValue) || string.IsNullOrWhiteSpace(tagValue))
+                return false;
+            return TagExtensions.TryParseSpeed(tagValue, out result);
+        }
+
+        /// <summary>
         /// Searches for a maxweight tag and returns the associated value.
         /// 
         ///  http://wiki.openstreetmap.org/wiki/Key:maxweight
@@ -107,13 +127,13 @@ namespace OsmSharp.Osm
         /// <param name="tags">The tags to search.</param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryGetMaxWeight(this TagsCollection tags, out double result)
+        public static bool TryGetMaxWeight(this TagsCollection tags, out Kilogram result)
         {
             result = double.MaxValue;
             string tagValue;
             if (tags == null || !tags.TryGetValue("maxweight", out tagValue) || string.IsNullOrWhiteSpace(tagValue))
                 return false;
-            return TryParseWeight(tagValue, out result);
+            return TagExtensions.TryParseWeight(tagValue, out result);
         }
 
         /// <summary>
@@ -124,13 +144,13 @@ namespace OsmSharp.Osm
         /// <param name="tags">The tags to search.</param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryGetMaxAxleLoad(this TagsCollection tags, out double result)
+        public static bool TryGetMaxAxleLoad(this TagsCollection tags, out Kilogram result)
         {
             result = double.MaxValue;
             string tagValue;
             if (tags == null || !tags.TryGetValue("maxaxleload", out tagValue) || string.IsNullOrWhiteSpace(tagValue))
                 return false;
-            return TryParseWeight(tagValue, out result);
+            return TagExtensions.TryParseWeight(tagValue, out result);
         }
 
         /// <summary>
@@ -141,7 +161,7 @@ namespace OsmSharp.Osm
         /// <param name="tags">The tags to search.</param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryGetMaxHeight(this TagsCollection tags, out double result)
+        public static bool TryGetMaxHeight(this TagsCollection tags, out Meter result)
         {
             result = double.MaxValue;
 
@@ -149,7 +169,7 @@ namespace OsmSharp.Osm
             if (tags == null || !tags.TryGetValue("maxheight", out tagValue) || string.IsNullOrWhiteSpace(tagValue))
                 return false;
 
-            return TryParseLength(tagValue, out result);
+            return TagExtensions.TryParseLength(tagValue, out result);
         }
 
         /// <summary>
@@ -160,13 +180,13 @@ namespace OsmSharp.Osm
         /// <param name="tags">The tags to search.</param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryGetMaxWidth(this IDictionary<string, string> tags, out double result)
+        public static bool TryGetMaxWidth(this TagsCollection tags, out Meter result)
         {
             result = double.MaxValue;
             string tagValue;
             if (tags == null || !tags.TryGetValue("maxwidth", out tagValue) || string.IsNullOrWhiteSpace(tagValue))
                 return false;
-            return TryParseLength(tagValue, out result);
+            return TagExtensions.TryParseLength(tagValue, out result);
         }
 
         /// <summary>
@@ -177,7 +197,7 @@ namespace OsmSharp.Osm
         /// <param name="tags">The tags to search.</param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryGetMaxLength(this IDictionary<string, string> tags, out double result)
+        public static bool TryGetMaxLength(this IDictionary<string, string> tags, out Meter result)
         {
             result = double.MaxValue;
 
@@ -185,7 +205,7 @@ namespace OsmSharp.Osm
             if (tags == null || !tags.TryGetValue("maxlength", out tagValue) || string.IsNullOrWhiteSpace(tagValue))
                 return false;
 
-            return TryParseLength(tagValue, out result);
+            return TagExtensions.TryParseLength(tagValue, out result);
         }
 
         #endregion
@@ -193,12 +213,62 @@ namespace OsmSharp.Osm
         #region Parsing Units
 
         /// <summary>
+        /// Tries to parse a speed value from a given tag-value.
+        /// </summary>
+        /// <param name="s"></param>
+        /// <param name="result"></param>
+        /// <returns></returns>
+        public static bool TryParseSpeed(string s, out KilometerPerHour result)
+        {
+            result = double.MaxValue;
+
+            if (string.IsNullOrWhiteSpace(s))
+                return false;
+
+            if(s.Contains(','))
+            { // refuse comma as a decimal seperator or anywhere else in the number.
+                return false;
+            }
+
+            // try regular speed: convention in OSM is km/h in this case.
+            double kmphDouble;
+            if (double.TryParse(s, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out kmphDouble))
+            {
+                result = kmphDouble;
+            }
+
+            // try km/h
+            if (KilometerPerHour.TryParse(s, out result))
+            {
+                return true;
+            }
+
+            // try mph.
+            MilesPerHour resultMph;
+            if(MilesPerHour.TryParse(s, out resultMph))
+            {
+                result = resultMph;
+                return true;
+            }
+
+            // try knots.
+            Knots resultKnots;
+            if (Knots.TryParse(s, out resultKnots))
+            {
+                result = resultKnots;
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Tries to parse a weight value from a given tag-value.
         /// </summary>
         /// <param name="s"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryParseWeight(string s, out double result)
+        public static bool TryParseWeight(string s, out Kilogram result)
         {
             result = double.MaxValue;
 
@@ -209,7 +279,7 @@ namespace OsmSharp.Osm
             Match tonnesMatch = tonnesRegex.Match(s);
             if (tonnesMatch.Success)
             {
-                result = double.Parse(tonnesMatch.Groups[1].Value, CultureInfo.InvariantCulture);
+                result = (Kilogram)(double.Parse(tonnesMatch.Groups[1].Value, CultureInfo.InvariantCulture) * 1000);
                 return true;
             }
 
@@ -222,7 +292,7 @@ namespace OsmSharp.Osm
         /// <param name="s"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryParseLength(string s, out double result)
+        public static bool TryParseLength(string s, out Meter result)
         {
             result = double.MaxValue;
 
