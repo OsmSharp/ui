@@ -727,7 +727,7 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Holds the auto invalidate flag.
 		/// </summary>
-		private bool _autoInvalidate = false;
+		private bool _autoInvalidate = true;
 
         /// <summary>
         /// Stops the current animation.
