@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Osm;
+using System.Collections.Generic;
 
 namespace OsmSharp.Osm.Streams
 {
@@ -45,6 +46,15 @@ namespace OsmSharp.Osm.Streams
         public virtual void RegisterSource(OsmStreamSource source)
         {
             _source = source;
+        }
+
+        /// <summary>
+        /// Registers a reader as the source to filter.
+        /// </summary>
+        /// <param name="source"></param>
+        public virtual void RegisterSource(IEnumerable<OsmGeo> source)
+        {
+            _source = source.ToOsmStreamSource();
         }
 
         /// <summary>

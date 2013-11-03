@@ -18,14 +18,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Routing.CH.PreProcessing.Ordering;
-using OsmSharp.Routing.CH.Routing;
 using System.Diagnostics;
-using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Graph;
-using OsmSharp.Collections;
 using OsmSharp.Routing.Graph.Router;
 
 namespace OsmSharp.Routing.CH.PreProcessing
@@ -46,18 +39,26 @@ namespace OsmSharp.Routing.CH.PreProcessing
         private CHEdgeDataComparer _comparer;
 
         /// <summary>
+        /// Holds the keep direct neighbours flag.
+        /// </summary>
+        private bool _keepDirectNeighbours = true;
+
+
+        /// <summary>
         /// Creates a new pre-processor.
         /// </summary>
         /// <param name="target"></param>
         /// <param name="calculator"></param>
         /// <param name="witnessCalculator"></param>
-        /// <param name="keepReverseEdges"></param>
+        /// <param name="keepDirectNeighbours"></param>
         public CHPreProcessor(IDynamicGraphRouterDataSource<CHEdgeData> target,
                 INodeWeightCalculator calculator,
-                INodeWitnessCalculator witnessCalculator,
-                bool keepReverseEdges)
+                INodeWitnessCalculator witnessCalculator, 
+                bool keepDirectNeighbours)
         {
             _comparer = new CHEdgeDataComparer();
+
+            _keepDirectNeighbours = keepDirectNeighbours;
 
             _target = target;
 
@@ -77,7 +78,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         public CHPreProcessor(IDynamicGraphRouterDataSource<CHEdgeData> target,
                 INodeWeightCalculator calculator,
                 INodeWitnessCalculator witnessCalculator)
-            : this(target, calculator, witnessCalculator, false) { }
+            : this(target, calculator, witnessCalculator, true) { }
 
         #region Contraction
 
@@ -103,38 +104,43 @@ namespace OsmSharp.Routing.CH.PreProcessing
             uint total = _target.VertexCount;
             uint current = 1;
 
-            for(uint current_vertex = 1; current_vertex < total; current_vertex++)
+            float latestProgress = 0;
+            for(uint current_vertex = 1; current_vertex <= total; current_vertex++)
             {
                 float priority = _calculator.Calculate(current_vertex);
-                lock (_queue)
-                {
+                //lock (_queue)
+                //{
                     _queue.Enqueue(current_vertex, priority);
 
-                    if (current % 1000 == 0)
+                    float progress = (float)System.Math.Round((((double)current / (double)total) * 100), 2);
+                    if (progress != latestProgress)
                     {
                         OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
-                            "Building CH Queue...");
+                            "Building CH Queue... {0}%", progress);
+                        latestProgress = progress;
                     }
                     current++;
-                }
+                //}
             }
 
             // loop over the priority queue until it's empty.
             current = 1;
             uint? vertex = this.SelectNext();
-            //uint? lastestContracted = 0;
+            latestProgress = 0;
             while (vertex != null)
             {
                 // contract the nodes.
                 this.Contract(vertex.Value);
-                //lastestContracted = vertex;
 
                 // select the next vertex.
                 vertex = this.SelectNext();
 
-                if (current % 1000 == 0)
+                float progress = (float)System.Math.Round((((double)current / (double)total) * 100), 2);
+                if (progress != latestProgress)
                 {
-                    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information, "Pre-processing... {0}%", (int)(((float)current / (float)total) * 100));
+                    OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
+                        "Pre-processing... {0}%", progress);
+                    latestProgress = progress;
                 }
                 current++;
             }
@@ -170,7 +176,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 _target.DeleteArc(edge.Key, vertex);
 
                 // keep the neighbour.
-                if (!edge.Value.HasContractedVertex)
+                if (_keepDirectNeighbours && !edge.Value.HasContractedVertex)
                 { // edge does represent a neighbour relation.
                     neighbours.Add(
                         new KeyValuePair<uint, CHEdgeData>(edge.Key, edge.Value.ConvertToInformative()));
@@ -241,9 +247,12 @@ namespace OsmSharp.Routing.CH.PreProcessing
             _calculator.NotifyContracted(vertex);
 
             // add contracted neighbour edges again.
-            foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
+            if (_keepDirectNeighbours)
             {
-                _target.AddArc(neighbour.Key, vertex, neighbour.Value, null);
+                foreach (KeyValuePair<uint, CHEdgeData> neighbour in neighbours)
+                {
+                    _target.AddArc(neighbour.Key, vertex, neighbour.Value, null);
+                }
             }
 
             // report the after contraction event.

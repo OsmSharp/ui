@@ -75,8 +75,8 @@
     <Compile Include="PBF\osmformat.cs" />
     <Compile Include="PBF\PBFReader.cs" />
     <Compile Include="PBF\PBFWriter.cs" />
-    <Compile Include="PBF\Processor\PBFOsmStreamSource.cs" />
-    <Compile Include="PBF\Processor\PBFOsmStreamTarget.cs" />
+    <Compile Include="PBF\Streams\PBFOsmStreamSource.cs" />
+    <Compile Include="PBF\Streams\PBFOsmStreamTarget.cs" />
     <Compile Include="Relation.cs" />
     <Compile Include="RelationMember.cs" />
     <Compile Include="Streams\Collections\OsmEnumerableStreamSource.cs" />
@@ -84,6 +84,7 @@
     <Compile Include="Streams\Complete\OsmCompleteStreamTarget.cs" />
     <Compile Include="Streams\Complete\OsmSimpleCompleteStreamSource.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterBase.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterTagsFilter.cs" />
     <Compile Include="Way.cs" />
     <Compile Include="Interpreter\GeometryInterpreter.cs" />
     <Compile Include="Interpreter\SimpleGeometryInterpreter.cs" />

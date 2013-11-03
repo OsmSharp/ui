@@ -49,7 +49,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private readonly ITagsIndex _tagsIndex;
+        private readonly ITagsCollectionIndex _tagsIndex;
 
         /// <summary>
         /// Holds the vertex index.
@@ -71,7 +71,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
             int zoom, CHEdgeDataDataSourceSerializer v1RoutingDataSourceSerializer,
             int initialCapacity = 1000)
         {
-            _tagsIndex = new SimpleTagsIndex();
+            _tagsIndex = new SimpleTagsCollectionIndex();
             _vertices = new SparseArray<Vertex>(initialCapacity);
             _coordinates = new SparseArray<Location>(initialCapacity);
 
@@ -167,7 +167,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        public ITagsIndexReadonly TagsIndex
+        public ITagsCollectionIndexReadonly TagsIndex
         {
             get { return _tagsIndex; }
         }

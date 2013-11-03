@@ -228,7 +228,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             tags["highway"] = highway;
             //tags["name"] = name;
 
-            var tagsIndex = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsCollectionIndex();
 
             // do the data processing.
             var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);

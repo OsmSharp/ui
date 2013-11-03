@@ -182,7 +182,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Contraction
         private DynamicGraphRouterDataSource<CHEdgeData> BuildData(Stream stream)
         {
             var interpreter = new OsmRoutingInterpreter();
-            var tagsIndex = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsCollectionIndex();
 
             // do the data processing.
             var data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);

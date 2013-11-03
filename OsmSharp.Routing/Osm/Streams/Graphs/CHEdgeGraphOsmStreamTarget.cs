@@ -47,11 +47,10 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="vehicle"></param>
         public CHEdgeGraphOsmStreamTarget(IDynamicGraphRouterDataSource<CHEdgeData> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, ITagsIndex tagsIndex, Vehicle vehicle)
+            IOsmRoutingInterpreter interpreter, ITagsCollectionIndex tagsIndex, Vehicle vehicle)
             :base(dynamicGraph, interpreter, new CHEdgeDataComparer(), tagsIndex)
         {
             _vehicle = vehicle;
-//            _dynamicDataSource = dynamicGraph;
         }
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex, 
+        protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, 
             TagsCollection tags, bool directionForward, GeoCoordinate from, GeoCoordinate to)
         {
             double weight = _vehicle.Weight(tags, from, to);
@@ -104,7 +103,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tags"></param>
         /// <returns></returns>
         protected override bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter, 
-            ITagsIndex tagsIndex, TagsCollection tags)
+            ITagsCollectionIndex tagsIndex, TagsCollection tags)
         {
             return _vehicle.CanTraverse(tags);
         }
@@ -118,13 +117,10 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="interpreter"></param>
         /// <param name="vehicle"></param>
-        /// <param name="leaveReverseEdges"></param>
+        /// <param name="keepDirectNeighbours"></param>
         /// <returns></returns>
         public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
-                                                                        ITagsIndex tagsIndex,
-                                                                        IOsmRoutingInterpreter interpreter,
-                                                                        Vehicle vehicle,
-                                                                        bool leaveReverseEdges)
+            ITagsCollectionIndex tagsIndex, IOsmRoutingInterpreter interpreter, Vehicle vehicle, bool keepDirectNeighbours)
         {
             // pull in the data.
             var dynamicGraphRouterDataSource =
@@ -137,9 +133,9 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
             // compress the graph.
             INodeWitnessCalculator witnessCalculator = new DykstraWitnessCalculator();
             var edgeDifference = new EdgeDifference(
-                dynamicGraphRouterDataSource, witnessCalculator);
+                    dynamicGraphRouterDataSource, witnessCalculator);
             var preProcessor = new CHPreProcessor(
-                dynamicGraphRouterDataSource, edgeDifference, witnessCalculator);
+                dynamicGraphRouterDataSource, edgeDifference, witnessCalculator, keepDirectNeighbours);
             preProcessor.Start();
 
             return dynamicGraphRouterDataSource;
@@ -155,11 +151,11 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="vehicle"></param>
         /// <returns></returns>
         public static DynamicGraphRouterDataSource<CHEdgeData> Preprocess(OsmStreamSource reader,
-                                                                        ITagsIndex tagsIndex,
+                                                                        ITagsCollectionIndex tagsIndex,
                                                                         IOsmRoutingInterpreter interpreter,
                                                                         Vehicle vehicle)
         {
-            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, tagsIndex, interpreter, vehicle, false);
+            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, tagsIndex, interpreter, vehicle, true);
         }
 
         /// <summary>
@@ -173,7 +169,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                                                         IOsmRoutingInterpreter interpreter,
                                                                         Vehicle vehicle)
         {
-            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new SimpleTagsIndex(), interpreter, vehicle);
+            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new SimpleTagsCollectionIndex(), interpreter, vehicle);
         }
 
         #endregion

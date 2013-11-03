@@ -226,8 +226,8 @@
     </Compile>
     <Compile Include="PBF\PBFReader.cs" />
     <Compile Include="PBF\PBFWriter.cs" />
-    <Compile Include="PBF\Processor\PBFOsmStreamSource.cs" />
-    <Compile Include="PBF\Processor\PBFOsmStreamTarget.cs">
+    <Compile Include="PBF\Streams\PBFOsmStreamSource.cs" />
+    <Compile Include="PBF\Streams\PBFOsmStreamTarget.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Streams\ChangeSets\DataProcessorChangeSetFilter.cs" />
@@ -237,6 +237,7 @@
     <Compile Include="Streams\Complete\OsmCompleteStreamTarget.cs" />
     <Compile Include="Streams\Complete\OsmSimpleCompleteStreamSource.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterBase.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterTagsFilter.cs" />
     <Compile Include="Streams\OsmStreamExtensions.cs" />
     <Compile Include="Streams\OsmStreamFilter.cs" />
     <Compile Include="Streams\OsmStreamSource.cs" />
@@ -252,6 +253,7 @@
     <Compile Include="Streams\Collections\OsmEnumerableStreamSource.cs" />
     <Compile Include="Streams\Collections\OsmCollectionStreamWriter.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
+    <Compile Include="Streams\OsmStreamTargetTags.cs" />
     <Compile Include="Xml\OsmSource\OsmDataSource.cs" />
     <Compile Include="Xml\Streams\ChangeSets\XmlDataProcessorChangeSetSource.cs" />
     <Compile Include="Xml\Streams\Replication\Replicator.cs" />

@@ -26,8 +26,8 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Data;
 using OsmSharp.Osm.Data.Memory;
-using OsmSharp.Osm.PBF.Processor;
 using OsmSharp.Osm.Streams;
+using OsmSharp.Osm.PBF.Streams;
 
 namespace OsmSharp.Data.Test.Unittests
 {

@@ -62,7 +62,7 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public static Router CreateLiveFrom(OsmStreamSource reader, IOsmRoutingInterpreter interpreter)
         {
-            var tagsIndex = new SimpleTagsIndex(); // creates a tagged index.
+            var tagsIndex = new SimpleTagsCollectionIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
             var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);

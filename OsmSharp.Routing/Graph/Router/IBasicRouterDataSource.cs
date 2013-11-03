@@ -47,7 +47,7 @@ namespace OsmSharp.Routing.Graph.Router
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        ITagsIndexReadonly TagsIndex
+        ITagsCollectionIndexReadonly TagsIndex
         {
             get;
         }

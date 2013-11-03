@@ -65,7 +65,7 @@ namespace OsmSharp.Osm.Streams
         /// Registers a reader on this writer.
         /// </summary>
         /// <param name="source"></param>
-        public void RegisterSource(OsmStreamSource source)
+        public virtual void RegisterSource(OsmStreamSource source)
         {
             _source = source;
         }

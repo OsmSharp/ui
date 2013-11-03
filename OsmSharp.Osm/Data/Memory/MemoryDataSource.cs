@@ -614,7 +614,7 @@ namespace OsmSharp.Osm.Data.Memory
         /// <returns></returns>
         public static MemoryDataSource CreateFromPBFStream(Stream stream)
         {
-            return MemoryDataSource.CreateFrom(new PBF.Processor.PBFOsmStreamSource(stream));
+            return MemoryDataSource.CreateFrom(new OsmSharp.Osm.PBF.Streams.PBFOsmStreamSource(stream));
         }
 
         #endregion

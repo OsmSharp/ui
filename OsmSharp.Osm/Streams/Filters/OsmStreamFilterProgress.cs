@@ -29,10 +29,16 @@ namespace OsmSharp.Osm.Streams.Filters
     {
         private readonly OsmStreamSource _reader;
 
-        private long _start;
+        private OsmGeoType? _lastType = OsmGeoType.Node;
+        private long _lastTypeStart;
+
         private long _node;
+        private long _nodeTicks;
         private long _way;
+        private long _wayTicks;
         private long _relation;
+        private long _relationTicks;
+
 
         /// <summary>
         /// Creates a new progress reporting source.
@@ -50,10 +56,15 @@ namespace OsmSharp.Osm.Streams.Filters
         {
             _reader.Initialize();
 
-            _start = DateTime.Now.Ticks;
+            _lastTypeStart = 0;
+            _lastType = null;
+
             _node = 0;
+            _nodeTicks = 0;
             _way = 0;
+            _wayTicks = 0;
             _relation = 0;
+            _relationTicks = 0;
         }
 
         /// <summary>
@@ -73,6 +84,35 @@ namespace OsmSharp.Osm.Streams.Filters
         {
             OsmGeo current = _reader.Current();
 
+            // keep the start ticks.
+            long ticksStart = DateTime.Now.Ticks;
+
+            if (!_lastType.HasValue)
+            { // has a last type.
+                _lastTypeStart = DateTime.Now.Ticks;
+                _lastType = current.Type;
+            }
+
+            if (_lastType != current.Type)
+            { // the last type has changed.
+                long lastTicks = ticksStart - _lastTypeStart;
+                switch (_lastType)
+                {
+                    case OsmGeoType.Node:
+                        _nodeTicks = _nodeTicks + lastTicks;
+                        break;
+                    case OsmGeoType.Way:
+                        _wayTicks = _wayTicks + lastTicks;
+                        break;
+                    case OsmGeoType.Relation:
+                        _relationTicks = _relationTicks + lastTicks;
+                        break;
+                }
+                // start new ticks.
+                _lastTypeStart = DateTime.Now.Ticks;
+                _lastType = current.Type;
+            }
+
             switch (current.Type)
             {
                 case OsmGeoType.Node:
@@ -80,20 +120,17 @@ namespace OsmSharp.Osm.Streams.Filters
 
                     if ((_node % 10000) == 0)
                     {
+                        TimeSpan nodeSpan = new TimeSpan(_nodeTicks + (ticksStart - _lastTypeStart));
+                        double nodePerSecond = System.Math.Round((double)_node / nodeSpan.TotalSeconds, 2);
 #if !WINDOWS_PHONE
                         Process p = Process.GetCurrentProcess();
-                        long stop = DateTime.Now.Ticks;
-                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
-                        if ((_node % 1000000) == 0) { GC.Collect(); }
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
-                            "Node[{0}]: {1}nodes/s @ {2}MB",  _node, (int)((double)_node / seconds), p.PrivateMemorySize64 / 1024 / 1024);
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
+                            "Node[{0}]: {1}nodes/s @ {2}MB", _node, nodePerSecond, 
+                            p.PrivateMemorySize64 / 1024 / 1024);
 #endif
 #if WINDOWS_PHONE
-                        long stop = DateTime.Now.Ticks;
-                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
-                        if ((_node % 1000000) == 0) { GC.Collect(); }
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
-                            "Node[{0}]: {1}nodes/s",  _node, (int)((double)_node / seconds));
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
+                            "Node[{0}]: {1}nodes/s", _node, nodePerSecond);
 #endif
                     }
                     break;
@@ -102,20 +139,17 @@ namespace OsmSharp.Osm.Streams.Filters
 
                     if ((_relation % 1000) == 0)
                     {
+                        TimeSpan relationSpan = new TimeSpan(_relationTicks + (ticksStart - _lastTypeStart));
+                        double relationPerSecond = System.Math.Round((double)_relation / relationSpan.TotalSeconds, 2);
 #if !WINDOWS_PHONE
                         Process p = Process.GetCurrentProcess();
-                        long stop = DateTime.Now.Ticks;
-                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
-                        if ((_relation % 10000) == 0) { GC.Collect(); }
                         OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
-                            "Relation[{0}]: {1}relations/s @ {2}MB", _relation, (int)((double)_relation / seconds), p.PrivateMemorySize64 / 1024 / 1024);
+                            "Relation[{0}]: {1}relations/s @ {2}MB", _relation, relationPerSecond, 
+                            p.PrivateMemorySize64 / 1024 / 1024);
 #endif
 #if WINDOWS_PHONE
-                        long stop = DateTime.Now.Ticks;
-                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
-                        if ((_relation % 10000) == 0) { GC.Collect(); }
                         OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
-                            "Relation[{0}]: {1}relations/s", _relation, (int)((double)_relation / seconds));
+                            "Relation[{0}]: {1}relations/s @ {2}MB", _relation, relationPerSecond);
 #endif
                     }
                     break;
@@ -124,20 +158,17 @@ namespace OsmSharp.Osm.Streams.Filters
 
                     if ((_way % 10000) == 0)
                     {
+                        TimeSpan waySpan = new TimeSpan(_wayTicks + (ticksStart - _lastTypeStart));
+                        double wayPerSecond = System.Math.Round((double)_way / waySpan.TotalSeconds, 2);
 #if !WINDOWS_PHONE
                         Process p = Process.GetCurrentProcess();
-                        long stop = DateTime.Now.Ticks;
-                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
-                        if ((_way % 100000) == 0) { GC.Collect(); }
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
-                            "Way[{0}]: {1}ways/s @ {2}MB", _way, (int)((double)_way / seconds), p.PrivateMemorySize64 / 1024 / 1024);
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
+                            "Way[{0}]: {1}ways/s @ {2}MB", _way, wayPerSecond, 
+                            p.PrivateMemorySize64 / 1024 / 1024);
 #endif
 #if WINDOWS_PHONE
-                        long stop = DateTime.Now.Ticks;
-                        float seconds = ((float)(stop - _start)) / (float)TimeSpan.TicksPerSecond;
-                        if ((_way % 100000) == 0) { GC.Collect(); }
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
-                            "Way[{0}]: {1}ways/s", _way, (int)((double)_way / seconds));
+                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
+                            "Way[{0}]: {1}ways/s @ {2}MB", _way, wayPerSecond);
 #endif
                     }
                     break;
@@ -151,10 +182,15 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         public override void Reset()
         {
-            _start = DateTime.Now.Ticks;
+            _lastTypeStart = 0;
+            _lastType = null;
+
             _node = 0;
+            _nodeTicks = 0;
             _way = 0;
+            _wayTicks = 0;
             _relation = 0;
+            _relationTicks = 0;
 
             _reader.Reset();
         }

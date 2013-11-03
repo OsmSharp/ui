@@ -17,41 +17,42 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
-using OsmSharp.Collections.Tags;
+using System.Reflection;
+using OsmSharp.Osm.Streams;
+using OsmSharp.Osm.PBF.Streams;
 
-namespace OsmSharp.Test.Unittests.Tags
+namespace OsmSharp.Test.Unittests.Osm.PBF.Streams
 {
     /// <summary>
-    /// Contains tests for the SimpleTagsCollection.
+    /// Contains tests for the PBF osm streams.
     /// </summary>
     [TestFixture]
-    public class SimpleTagsCollectionTests : TagsCollectionTests
+    public class PBFOsmStreamsTests
     {
         /// <summary>
-        /// Creates a test tags collection.
-        /// </summary>
-        /// <returns></returns>
-        protected override TagsCollection CreateTagsCollection()
-        {
-            return new SimpleTagsCollection();
-        }
-
-        /// <summary>
-        /// Tests a simple tags collection.
+        /// A regression test on resetting a PBF osm stream.
         /// </summary>
         [Test]
-        public void TestSimpleTagsCollectionEmpty()
+        public void PBFOsmStreamReaderReset()
         {
-            this.TestTagsCollectionEmpty();
-        }
+            // generate the source.
+            var source = new PBFOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    "OsmSharp.Test.Unittests.api.osm.pbf"));
 
-        /// <summary>
-        /// Tests a simple tags collection.
-        /// </summary>
-        [Test]
-        public void TestSimpleTagsCollectionSimple()
-        {
-            this.TestTagsCollectionSimple();
+            // pull the data out.
+            var target = new OsmStreamTargetEmpty();
+            target.RegisterSource(source);
+            target.Pull();
+
+            // reset the source.
+            if (source.CanReset)
+            {
+                source.Reset();
+
+                // pull the data again.
+                target.Pull();
+            }
         }
     }
 }

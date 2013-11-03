@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private ITagsIndex _tagsIndex;
+        private ITagsCollectionIndex _tagsIndex;
 
         /// <summary>
         /// Holds the stream.
@@ -63,7 +63,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
 
             _blocks = new LRUCache<uint, CHBlock>(1000);
             _regions = new LRUCache<ulong, CHVertexRegion>(1000);
-            _tagsIndex = new SimpleTagsIndex();
+            _tagsIndex = new SimpleTagsCollectionIndex();
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        public ITagsIndexReadonly TagsIndex
+        public ITagsCollectionIndexReadonly TagsIndex
         {
             get { return _tagsIndex; }
         }

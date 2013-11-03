@@ -114,7 +114,8 @@ namespace OsmSharp.Osm
         {
             result = double.MaxValue;
             string tagValue;
-            if (tags == null || !tags.TryGetValue("maxspeed", out tagValue) || string.IsNullOrWhiteSpace(tagValue))
+            if (tags == null || !tags.TryGetValue("maxspeed", out tagValue) || string.IsNullOrWhiteSpace(tagValue) ||
+                tagValue == "none" || tagValue == "signals" || tagValue == "signs" || tagValue == "no")
                 return false;
             return TagExtensions.TryParseSpeed(tagValue, out result);
         }
@@ -224,6 +225,12 @@ namespace OsmSharp.Osm
 
             if (string.IsNullOrWhiteSpace(s))
                 return false;
+
+            if (s[0] != '0' && s[0] != '1' && s[0] != '2' && s[0] != '3' && s[0] != '4' &&
+                s[0] != '5' && s[0] != '6' && s[0] != '7' && s[0] != '8' && s[0] != '9')
+            { // performance inprovement, quick negative answer.
+                return false;
+            }
 
             if(s.Contains(','))
             { // refuse comma as a decimal seperator or anywhere else in the number.

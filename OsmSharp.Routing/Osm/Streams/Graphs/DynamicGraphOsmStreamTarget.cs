@@ -26,6 +26,7 @@ using OsmSharp.Routing.Graph;
 using OsmSharp.Routing.Graph.Router;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Osm.Streams.Filters;
 
 namespace OsmSharp.Routing.Osm.Streams.Graphs
 {
@@ -48,7 +49,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private readonly ITagsIndex _tagsIndex;
+        private readonly ITagsCollectionIndex _tagsIndex;
 
         /// <summary>
         /// Holds the osm data cache.
@@ -78,7 +79,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="edgeComparer"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer)
-            : this(dynamicGraph, interpreter, edgeComparer, new SimpleTagsIndex(), new Dictionary<long, uint>())
+            : this(dynamicGraph, interpreter, edgeComparer, new SimpleTagsCollectionIndex(), new Dictionary<long, uint>())
         {
 
         }
@@ -91,7 +92,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="edgeComparer"></param>
         /// <param name="tagsIndex"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsIndex tagsIndex)
+            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex)
             : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, new Dictionary<long, uint>())
         {
 
@@ -106,7 +107,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="idTransformations"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
-            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsIndex tagsIndex,
+            IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer, ITagsCollectionIndex tagsIndex,
             IDictionary<long, uint> idTransformations)
             : this(dynamicGraph, interpreter, edgeComparer, tagsIndex, idTransformations, null)
         {
@@ -124,7 +125,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="box"></param>
         protected DynamicGraphOsmStreamWriter(
             IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph, IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer,
-            ITagsIndex tagsIndex, IDictionary<long, uint> idTransformations,
+            ITagsCollectionIndex tagsIndex, IDictionary<long, uint> idTransformations,
             GeoCoordinateBox box)
         {
             _dynamicGraph = dynamicGraph;
@@ -144,7 +145,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        public ITagsIndex TagsIndex
+        public ITagsCollectionIndex TagsIndex
         {
             get
             {
@@ -304,19 +305,8 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     { // loop over all edges.
                         if (way.Nodes != null && way.Nodes.Count > 1)
                         { // way has at least two nodes.
-                            // keep the relevant tags.
-                            TagsCollection relevantTags = new SimpleTagsCollection();
-                            foreach (var relevantTag in way.Tags)
-                            {
-                                if (_interpreter.IsRelevant(relevantTag.Key))
-                                {
-                                    relevantTags.Add(relevantTag);
-                                }
-                            }
-
-
                             if (this.CalculateIsTraversable(_interpreter.EdgeInterpreter, _tagsIndex,
-                                relevantTags))
+                                way.Tags))
                             { // the edge is traversable, add the edges.
                                 uint? from = this.AddRoadNode(way.Nodes[0]);
                                 for (int idx = 1; idx < way.Nodes.Count; idx++)
@@ -325,9 +315,9 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                     // add the edge(s).
                                     if (from.HasValue && to.HasValue)
                                     { // add a road edge.
-                                        if (!this.AddRoadEdge(relevantTags, true, from.Value, to.Value))
+                                        if (!this.AddRoadEdge(way.Tags, true, from.Value, to.Value))
                                         { // add the reverse too if it has been indicated that this was needed.
-                                            this.AddRoadEdge(relevantTags, false, to.Value, from.Value);
+                                            this.AddRoadEdge(way.Tags, false, to.Value, from.Value);
                                         }
                                     }
                                     from = to; // the to node becomes the from.
@@ -404,7 +394,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// Calculates the edge data.
         /// </summary>
         /// <returns></returns>
-        protected abstract TEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex, TagsCollection tags,
+        protected abstract TEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, TagsCollection tags,
             bool directionForward, GeoCoordinate from, GeoCoordinate to);
 
         /// <summary>
@@ -414,7 +404,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tagsIndex"></param>
         /// <param name="tags"></param>
         /// <returns></returns>
-        protected abstract bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter, ITagsIndex tagsIndex,
+        protected abstract bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
                                               TagsCollection tags);
 
         /// <summary>
@@ -442,8 +432,6 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     CompleteRelation completeRelation = CompleteRelation.CreateFrom(relation, _dataCache);
                     if (completeRelation == null) 
                     {
-                        OsmSharp.Logging.Log.TraceEvent("DynamicGraphOsmStreamTarget", System.Diagnostics.TraceEventType.Warning,
-                            string.Format("Relation restriction found with it's members, restriction possibly invalid: {0}", relation.ToString()));
                         return;
                     }
 
@@ -498,6 +486,34 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Registers the source for this target.
+        /// </summary>
+        /// <param name="source"></param>
+        public override void RegisterSource(OsmStreamSource source)
+        {
+            // add filter to remove all irrelevant tags.
+            OsmStreamFilterTagsFilter tagsFilter = new OsmStreamFilterTagsFilter((TagsCollection tags) =>
+            {
+                List<Tag> tagsToRemove = new List<Tag>();
+                foreach (Tag tag in tags)
+                {
+                    if (!_interpreter.IsRelevant(tag.Key))
+                    {
+                        tagsToRemove.Add(tag);
+                    }
+                }
+                foreach (Tag tag in tagsToRemove)
+                {
+                    tags.RemoveKeyValue(tag.Key, tag.Value);
+                }
+            });
+            tagsFilter.RegisterSource(source);
+
+            base.RegisterSource(tagsFilter);
+            //base.RegisterSource(source);
         }
 
         /// <summary>

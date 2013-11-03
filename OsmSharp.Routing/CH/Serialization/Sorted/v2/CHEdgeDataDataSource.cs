@@ -36,7 +36,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private ITagsIndexReadonly _tagsIndex;
+        private ITagsCollectionIndexReadonly _tagsIndex;
 
         /// <summary>
         /// Holds the stream.
@@ -54,7 +54,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
         public CHEdgeDataDataSource(Stream stream, CHEdgeDataDataSourceSerializer serializer,
             int startOfRegions, CHVertexRegionIndex regionIndex, int zoom,
             int startOfBlocks, CHBlockIndex blockIndex, uint blockSize,
-            ITagsIndexReadonly tagsIndex)
+            ITagsCollectionIndexReadonly tagsIndex)
         {
             _stream = stream;
             _serializer = serializer;
@@ -121,7 +121,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        public ITagsIndexReadonly TagsIndex
+        public ITagsCollectionIndexReadonly TagsIndex
         {
             get { return _tagsIndex; }
         }
@@ -417,7 +417,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
                 blockSize = _blocksIndex.LocationIndex[blockIdx] - _blocksIndex.LocationIndex[blockIdx - 1];
             }
 
-            return _serializer.DeserializeBlock(_stream, blockOffset, blockSize, false);
+            return _serializer.DeserializeBlock(_stream, blockOffset, blockSize, true);
         }
 
         #endregion

@@ -21,7 +21,7 @@ namespace OsmSharp.Collections.Tags
     /// <summary>
     /// Abstracts an index containing tags.
     /// </summary>
-    public interface ITagsIndexReadonly
+    public interface ITagsCollectionIndexReadonly
     {
         /// <summary>
         /// Returns the maxium possible number of tags in this index.

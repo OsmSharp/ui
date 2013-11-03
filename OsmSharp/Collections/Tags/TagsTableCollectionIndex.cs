@@ -25,19 +25,25 @@ namespace OsmSharp.Collections.Tags
     /// <summary>
     /// An osm tags index.
     /// </summary>
-    public class SimpleTagsIndex : ITagsIndex
+    public class TagsTableCollectionIndex : ITagsCollectionIndex
     {
         /// <summary>
         /// Holds all the tags objects.
         /// </summary>
-        private readonly ObjectTable<OsmTags> _tagsTable;
+        private readonly ObjectTable<OsmTags> _tagsCollectionTable;
+
+        /// <summary>
+        /// Holds all the tags objects.
+        /// </summary>
+        private readonly ObjectTable<Tag> _tagsTable;
 
         /// <summary>
         /// Creates a new tags index with a given strings table.
         /// </summary>
-        public SimpleTagsIndex()
+        public TagsTableCollectionIndex()
         {
-            _tagsTable = new ObjectTable<OsmTags>(true);
+            _tagsTable = new ObjectTable<Tag>(true);
+            _tagsCollectionTable = new ObjectTable<OsmTags>(true);
 
             this.Add(new SimpleTagsCollection());
         }
@@ -49,10 +55,16 @@ namespace OsmSharp.Collections.Tags
         /// <returns></returns>
         public TagsCollection Get(uint tagsId)
         {
-            OsmTags osmTags = _tagsTable.Get(tagsId);
+            OsmTags osmTags = _tagsCollectionTable.Get(tagsId);
             if (osmTags != null)
             {
-                return new SimpleTagsCollection(osmTags.Tags);
+                SimpleTagsCollection collection = new SimpleTagsCollection();
+                for (int idx = 0; idx < osmTags.Tags.Length; idx++)
+                {
+                    collection.Add(
+                        _tagsTable.Get(osmTags.Tags[idx]));
+                }
+                return collection;
             }
             return null;
         }
@@ -64,10 +76,17 @@ namespace OsmSharp.Collections.Tags
         /// <returns></returns>
         public uint Add(TagsCollection tags)
         {
-            var osmTags = new OsmTags(tags);
+            int idx = 0;
+            uint[] tagsArray = new uint[tags.Count];
+            foreach (Tag tag in tags)
+            {
+                tagsArray[idx] = _tagsTable.Add(tag);
+                idx++;
+            }
+            var osmTags = new OsmTags(tagsArray);
             if (osmTags != null)
             {
-                return _tagsTable.Add(osmTags);
+                return _tagsCollectionTable.Add(osmTags);
             }
             throw new ArgumentNullException("tags", "Tags dictionary cannot be null or empty!");
         }
@@ -80,21 +99,21 @@ namespace OsmSharp.Collections.Tags
             /// <summary>
             /// Holds all the tags.
             /// </summary>
-            private readonly Tag[] _tags;
+            private readonly uint[] _tags;
 
             /// <summary>
             /// Creates a new tags object.
             /// </summary>
             /// <param name="tags"></param>
-            public OsmTags(IEnumerable<Tag> tags)
+            public OsmTags(uint[] tags)
             {
-                _tags = tags.ToArray();
+                _tags = tags;
             }
 
             /// <summary>
             /// Returns the tags array.
             /// </summary>
-            public Tag[] Tags
+            public uint[] Tags
             {
                 get { return _tags; }
             }
@@ -118,17 +137,15 @@ namespace OsmSharp.Collections.Tags
                             // make sure all object in the first are in the second and vice-versa.
                             for (int idx1 = 0; idx1 < this._tags.GetLength(0); idx1++)
                             {
-                                bool found = false;
-                                for (int idx2 = 0; idx2 < other._tags.GetLength(0); idx2++)
+                                if(!other._tags.Contains(this._tags[idx1]))
                                 {
-                                    if (this._tags[idx1].Key == other._tags[idx2].Key &&
-                                        this._tags[idx1].Value == other._tags[idx2].Value)
-                                    {
-                                        found = true;
-                                        break;
-                                    }
+                                    return false;
                                 }
-                                if (!found)
+                            }
+                            // make sure all object in the first are in the second and vice-versa.
+                            for (int idx1 = 0; idx1 < other._tags.GetLength(0); idx1++)
+                            {
+                                if (!this._tags.Contains(other._tags[idx1]))
                                 {
                                     return false;
                                 }
@@ -147,8 +164,8 @@ namespace OsmSharp.Collections.Tags
             /// <returns></returns>
             public override int GetHashCode()
             {
-                return _tags.Aggregate(_tags.Length, 
-                    (current, tag) => current ^ tag.Key.GetHashCode() ^ tag.Value.GetHashCode());
+                return _tags.Aggregate(_tags.Length,
+                    (current, tag) => current ^ tag.GetHashCode());
             }
 
             #endregion

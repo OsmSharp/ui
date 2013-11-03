@@ -136,6 +136,9 @@
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Configuration" />
+    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\Cache\LRUCache.cs" />
@@ -162,13 +165,14 @@
     <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializer.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializerStream.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />
-    <Compile Include="Collections\Tags\ITagsIndexReadonly.cs" />
+    <Compile Include="Collections\Tags\ITagsCollectionIndexReadonly.cs" />
     <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
     <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
-    <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />
+    <Compile Include="Collections\Tags\SimpleTagsCollectionIndex.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
     <Compile Include="Collections\Tags\TagsCollection.cs" />
+    <Compile Include="Collections\Tags\TagsTableCollectionIndex.cs" />
     <Compile Include="Geo\Attributes\GeometryAttribute.cs" />
     <Compile Include="Geo\Attributes\GeometryAttributeCollection.cs" />
     <Compile Include="Geo\Attributes\IGeometryAttributesIndex.cs" />
@@ -249,7 +253,7 @@
     <Compile Include="Math\Algorithms\Tessellation\LineairRingTessellator.cs" />
     <Compile Include="Math\ILocationObject.cs" />
     <Compile Include="Math\ITaggedObject.cs" />
-    <Compile Include="Collections\Tags\ITagsIndex.cs" />
+    <Compile Include="Collections\Tags\ITagsCollectionIndex.cs" />
     <Compile Include="Math\Primitives\PointF2D.cs" />
     <Compile Include="Math\PrimitiveF2D.cs" />
     <Compile Include="Math\Primitives\Enumerators\Lines\ILineList.cs" />
@@ -315,6 +319,18 @@
     <Compile Include="Math\TSP\RandomizedArbitraryInsertion\RandomizedArbitraryInsertionSolver.cs" />
     <Compile Include="Math\TSP\Random\RandomSolver.cs" />
     <Compile Include="Math\TSP\SolverBase.cs" />
+    <Compile Include="Progress\EmptyProgressReporter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Progress\IProgressEnabled.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Progress\IProgressReporter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Progress\ProgressStatus.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Units\Angle\Degree.cs" />
     <Compile Include="Units\Angle\Radian.cs" />
     <Compile Include="Units\Distance\Kilometer.cs" />
@@ -389,10 +405,6 @@
     <Compile Include="Math\VRP\MultiSalesman\Genetic\Operations\Mutation\TakeOutMutationOperation.cs" />
     <Compile Include="Math\VRP\MultiSalesman\Genetic\Problem.cs" />
     <Compile Include="Math\VRP\MultiSalesman\Problems\IProblem.cs" />
-    <Compile Include="Progress\EmptyProgressReporter.cs" />
-    <Compile Include="Progress\IProgressEnabled.cs" />
-    <Compile Include="Progress\IProgressReporter.cs" />
-    <Compile Include="Progress\ProgressStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Range.cs" />
     <Compile Include="Geo\Streams\IGeoStreamSource.cs" />

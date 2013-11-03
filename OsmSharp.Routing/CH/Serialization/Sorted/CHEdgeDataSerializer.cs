@@ -224,22 +224,28 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
 
             // sort the topologically ordered vertices into bins representing a certain height range.
             List<uint>[] heightBins = new List<uint>[1000];
+            HashSet<uint> vertices = new HashSet<uint>();
             foreach (var vertexDepth in new CHDepthFirstEnumerator(graph))
             { // enumerates all vertixes depth-first.
-                int binIdx = (int)(vertexDepth.Depth / HeightBinSize);
-                if (heightBins.Length < binIdx)
-                { // resize bin array if needed.
-                    Array.Resize(ref heightBins, System.Math.Max(heightBins.Length + 1000, binIdx + 1));
-                }
+                if (!vertices.Contains(vertexDepth.VertexId))
+                {
+                    vertices.Add(vertexDepth.VertexId);
 
-                // add to the current bin.
-                List<uint> bin = heightBins[binIdx];
-                if (bin == null)
-                { // create new bin.
-                    bin = new List<uint>();
-                    heightBins[binIdx] = bin;
+                    int binIdx = (int)(vertexDepth.Depth / HeightBinSize);
+                    if (heightBins.Length < binIdx)
+                    { // resize bin array if needed.
+                        Array.Resize(ref heightBins, System.Math.Max(heightBins.Length + 1000, binIdx + 1));
+                    }
+
+                    // add to the current bin.
+                    List<uint> bin = heightBins[binIdx];
+                    if (bin == null)
+                    { // create new bin.
+                        bin = new List<uint>();
+                        heightBins[binIdx] = bin;
+                    }
+                    bin.Add(vertexDepth.VertexId);
                 }
-                bin.Add(vertexDepth.VertexId);
             }
 
             // temp test.

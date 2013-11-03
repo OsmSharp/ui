@@ -23,7 +23,7 @@ using System.Text;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Osm.Streams;
 
-namespace OsmSharp.Osm.PBF.Processor
+namespace OsmSharp.Osm.PBF.Streams
 {
     /// <summary>
     /// A source of PBF formatted OSM data.

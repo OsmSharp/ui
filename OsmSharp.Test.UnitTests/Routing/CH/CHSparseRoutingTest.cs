@@ -72,7 +72,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         public override IBasicRouterDataSource<CHEdgeData> BuildData(IOsmRoutingInterpreter interpreter,
             string embeddedString)
         {
-            var tagsIndex = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsCollectionIndex();
 
             // do the data processing.
             var memoryData = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);

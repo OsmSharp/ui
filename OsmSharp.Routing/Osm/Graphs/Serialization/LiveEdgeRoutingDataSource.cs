@@ -48,7 +48,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// Holds the tags index.
         /// </summary>
-        private readonly ITagsIndex _tagsIndex;
+        private readonly ITagsCollectionIndex _tagsIndex;
 
         /// <summary>
         /// Holds the vertex index.
@@ -70,7 +70,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             int zoom, V2RoutingDataSourceLiveEdgeSerializer v1RoutingDataSourceSerializer,
             int initialCapacity = 1000)
         {
-            _tagsIndex = new SimpleTagsIndex();
+            _tagsIndex = new SimpleTagsCollectionIndex();
             _vertices = new SparseArray<Vertex>(initialCapacity);
             _coordinates = new SparseArray<Location>(initialCapacity);
 
@@ -166,7 +166,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
         /// <summary>
         /// Returns the tags index.
         /// </summary>
-        public ITagsIndexReadonly TagsIndex
+        public ITagsCollectionIndexReadonly TagsIndex
         {
             get { return _tagsIndex; }
         }

@@ -51,7 +51,7 @@ namespace OsmSharp.Test.Unittests.Routing
         public DynamicGraphRouterDataSource<LiveEdge> BuildDykstraDataSource(
             IOsmRoutingInterpreter interpreter, string embeddedName)
         {
-            var tagsIndex = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsCollectionIndex();
 
             // do the data processing.
             var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);

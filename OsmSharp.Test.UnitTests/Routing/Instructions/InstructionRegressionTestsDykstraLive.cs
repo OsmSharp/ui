@@ -46,7 +46,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         /// <returns></returns>
         protected override Router CreateRouter(IOsmRoutingInterpreter interpreter, string manifestResourceName)
         {
-            SimpleTagsIndex tagsIndex = new SimpleTagsIndex();
+            SimpleTagsCollectionIndex tagsIndex = new SimpleTagsCollectionIndex();
 
             // do the data processing.
             DynamicGraphRouterDataSource<LiveEdge> memoryData =

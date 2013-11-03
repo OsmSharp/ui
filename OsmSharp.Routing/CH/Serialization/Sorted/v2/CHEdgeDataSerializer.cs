@@ -196,7 +196,12 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
                 block.Vertices = blockVertices.ToArray(); // TODO: get rid of the list and create an array to begin with.
 
                 // write blocks.
-                _runtimeTypeModel.Serialize(memoryStream, block);
+                MemoryStream blockStream = new MemoryStream();
+                _runtimeTypeModel.Serialize(blockStream, block);
+                byte[] compressed = GZipStream.CompressBuffer(blockStream.ToArray());
+                blockStream.Dispose();
+
+                memoryStream.Write(compressed, 0, compressed.Length);
                 blockLocations.Add((int)memoryStream.Position);
             }
             CHBlockIndex blockIndex = new CHBlockIndex();
@@ -385,7 +390,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted.v2
 
             // deserialize tags.
             stream.Seek(startOfTags, SeekOrigin.Begin);
-            ITagsIndexReadonly tagsIndex = TagIndexSerializer.DeserializeBlocks(stream);
+            ITagsCollectionIndexReadonly tagsIndex = TagIndexSerializer.DeserializeBlocks(stream);
 
             return new v2.CHEdgeDataDataSource(stream, this, sizeRegionIndex + 12,
                 chVertexRegionIndex, RegionZoom, startOfBlocks + sizeBlockIndex + 4, chBlockIndex, BlockVertexSize,

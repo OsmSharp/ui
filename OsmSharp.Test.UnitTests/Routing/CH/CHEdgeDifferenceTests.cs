@@ -46,7 +46,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
             DynamicGraphRouterDataSource<CHEdgeData> data = null;
             if (data == null)
             {
-                var tagsIndex = new SimpleTagsIndex();
+                var tagsIndex = new SimpleTagsCollectionIndex();
 
                 // do the data processing.
                 data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);

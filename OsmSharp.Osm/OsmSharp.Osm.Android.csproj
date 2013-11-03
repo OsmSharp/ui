@@ -93,8 +93,8 @@
     <Compile Include="PBF\osmformat.cs" />
     <Compile Include="PBF\PBFReader.cs" />
     <Compile Include="PBF\PBFWriter.cs" />
-    <Compile Include="PBF\Processor\PBFOsmStreamSource.cs" />
-    <Compile Include="PBF\Processor\PBFOsmStreamTarget.cs" />
+    <Compile Include="PBF\Streams\PBFOsmStreamSource.cs" />
+    <Compile Include="PBF\Streams\PBFOsmStreamTarget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Relation.cs" />
     <Compile Include="RelationMember.cs" />
@@ -103,6 +103,7 @@
     <Compile Include="Streams\Complete\OsmCompleteStreamTarget.cs" />
     <Compile Include="Streams\Complete\OsmSimpleCompleteStreamSource.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterBase.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterTagsFilter.cs" />
     <Compile Include="TagExtensions.cs" />
     <Compile Include="Tiles\Tile.cs" />
     <Compile Include="Tiles\TileRange.cs" />

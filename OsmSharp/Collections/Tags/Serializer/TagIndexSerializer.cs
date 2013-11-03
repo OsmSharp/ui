@@ -52,7 +52,7 @@ namespace OsmSharp.Collections.Tags.Serializer
         /// <param name="stream"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="blockSize"></param>
-        public static void SerializeBlocks(Stream stream, ITagsIndexReadonly tagsIndex, uint blockSize)
+        public static void SerializeBlocks(Stream stream, ITagsCollectionIndexReadonly tagsIndex, uint blockSize)
         {
             int begin = (int)stream.Position;
 
@@ -76,7 +76,13 @@ namespace OsmSharp.Collections.Tags.Serializer
                 uint from = blockIdx * blockSize;
                 uint to = from + blockSize;
 
-                TagIndexSerializer.Serialize(stream, tagsIndex, from, to);
+                MemoryStream memoryStream = new MemoryStream();
+                TagIndexSerializer.Serialize(memoryStream, tagsIndex, from, to);
+                byte[] compressed = Ionic.Zlib.GZipStream.CompressBuffer(memoryStream.ToArray());
+                memoryStream.Dispose();
+
+                stream.Write(compressed, 0, compressed.Length);
+
                 blockPositions[blockIdx] = (int)stream.Position - beginBlocks;
             }
 
@@ -93,7 +99,7 @@ namespace OsmSharp.Collections.Tags.Serializer
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public static ITagsIndexReadonly DeserializeBlocks(Stream stream)
+        public static ITagsCollectionIndexReadonly DeserializeBlocks(Stream stream)
         {
             int begin = (int)stream.Position;
 
@@ -124,7 +130,7 @@ namespace OsmSharp.Collections.Tags.Serializer
         /// <param name="tagsIndex"></param>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        public static void Serialize(Stream stream, ITagsIndexReadonly tagsIndex, uint from, uint to)
+        public static void Serialize(Stream stream, ITagsCollectionIndexReadonly tagsIndex, uint from, uint to)
         {
             int begin = (int)stream.Position;
 
@@ -170,7 +176,7 @@ namespace OsmSharp.Collections.Tags.Serializer
         /// <param name="stream"></param>
         /// <param name="tagsIndex"></param>
         /// <param name="toSerialize"></param>
-        public static void Serialize(Stream stream, ITagsIndex tagsIndex, HashSet<uint> toSerialize)
+        public static void Serialize(Stream stream, ITagsCollectionIndex tagsIndex, HashSet<uint> toSerialize)
         {
             int begin = (int)stream.Position;
 
@@ -209,7 +215,7 @@ namespace OsmSharp.Collections.Tags.Serializer
         /// </summary>
         /// <param name="stream">The target stream.</param>
         /// <param name="tagsIndex">The tags index to serialize.</param>
-        public static void Serialize(Stream stream, ITagsIndex tagsIndex)
+        public static void Serialize(Stream stream, ITagsCollectionIndex tagsIndex)
         {
             int begin = (int)stream.Position;
 
@@ -282,7 +288,7 @@ namespace OsmSharp.Collections.Tags.Serializer
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public static ITagsIndexReadonly Deserialize(Stream stream)
+        public static ITagsCollectionIndexReadonly Deserialize(Stream stream)
         {
             byte[] intBytes = new byte[4];
             stream.Read(intBytes, 0, 4);
@@ -327,7 +333,7 @@ namespace OsmSharp.Collections.Tags.Serializer
         /// <summary>
         /// Represents a tags index readonly.
         /// </summary>
-        private class TagsIndexReadonly : ITagsIndexReadonly
+        private class TagsIndexReadonly : ITagsCollectionIndexReadonly
         {
             /// <summary>
             /// Holds tags list.
@@ -386,7 +392,7 @@ namespace OsmSharp.Collections.Tags.Serializer
         /// <summary>
         /// Represents a tags index readonly with a blocked index.
         /// </summary>
-        private class TagsBlockedIndexReadonly : ITagsIndexReadonly
+        private class TagsBlockedIndexReadonly : ITagsCollectionIndexReadonly
         {
             /// <summary>
             /// Holds the beginning of the blocks.
@@ -436,7 +442,7 @@ namespace OsmSharp.Collections.Tags.Serializer
             /// <summary>
             /// Holds the current block.
             /// </summary>
-            private ITagsIndexReadonly _currentBlock;
+            private ITagsCollectionIndexReadonly _currentBlock;
 
             /// <summary>
             /// Deserializes a block.
@@ -458,7 +464,8 @@ namespace OsmSharp.Collections.Tags.Serializer
                 _stream.Seek(blockOffset + _begin, SeekOrigin.Begin);
 
                 // deserialize this block.
-                _currentBlock = TagIndexSerializer.Deserialize(_stream);
+                Ionic.Zlib.GZipStream gzipStream = new Ionic.Zlib.GZipStream(_stream, Ionic.Zlib.CompressionMode.Decompress);
+                _currentBlock = TagIndexSerializer.Deserialize(gzipStream);
             }
 
             /// <summary>

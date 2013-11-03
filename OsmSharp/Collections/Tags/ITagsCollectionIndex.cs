@@ -21,7 +21,7 @@ namespace OsmSharp.Collections.Tags
     /// <summary>
     /// Abstracts an index containing tags.
     /// </summary>
-    public interface ITagsIndex : ITagsIndexReadonly
+    public interface ITagsCollectionIndex : ITagsCollectionIndexReadonly
     {
         /// <summary>
         /// Adds new tags.

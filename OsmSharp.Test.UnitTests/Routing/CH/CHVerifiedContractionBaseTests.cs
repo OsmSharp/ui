@@ -89,7 +89,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         public void BuildDykstraRouter(string embeddedName,
             IOsmRoutingInterpreter interpreter)
         {
-            var tagsIndex = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsCollectionIndex();
 
             // do the data processing.
             var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
@@ -130,7 +130,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         {
             _interpreter = new OsmRoutingInterpreter();
 
-            var tagsIndex = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsCollectionIndex();
 
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
@@ -176,7 +176,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
         {
             _interpreter = new OsmRoutingInterpreter();
 
-            var tagsIndex = new SimpleTagsIndex();
+            var tagsIndex = new SimpleTagsCollectionIndex();
 
             // do the data processing.
             _data = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);

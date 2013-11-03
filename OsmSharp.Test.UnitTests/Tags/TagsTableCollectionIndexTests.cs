@@ -17,42 +17,23 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using NUnit.Framework;
-using System.Reflection;
-using OsmSharp.Osm.PBF.Processor;
-using OsmSharp.Osm.Streams;
+using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Test.Unittests.Data.Streams
+namespace OsmSharp.Test.Unittests.Tags
 {
     /// <summary>
-    /// Contains tests for the PBF osm streams.
+    /// Contains tests for the SimpleTagsCollectionIndexTests.
     /// </summary>
     [TestFixture]
-    public class PBFOsmStreamsTests
+    public class TagsTableCollectionIndexTests : TagsCollectionIndexTests
     {
         /// <summary>
-        /// A regression test on resetting a PBF osm stream.
+        /// Tests the simple tags collection index.
         /// </summary>
         [Test]
-        public void PBFOsmStreamReaderReset()
+        public void SimpleTestTagsCollectionIndex()
         {
-            // generate the source.
-            var source = new PBFOsmStreamSource(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                    "OsmSharp.Test.Unittests.api.osm.pbf"));
-
-            // pull the data out.
-            var target = new OsmStreamTargetEmpty();
-            target.RegisterSource(source);
-            target.Pull();
-
-            // reset the source.
-            if (source.CanReset)
-            {
-                source.Reset();
-
-                // pull the data again.
-                target.Pull();
-            }
+            this.TestTagsCollectionIndex(new TagsTableCollectionIndex());
         }
     }
 }

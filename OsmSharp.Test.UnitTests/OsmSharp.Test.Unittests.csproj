@@ -158,6 +158,7 @@
     <Compile Include="Osm\Streams\Complete\OsmSimpleCompleteStreamSourceTests.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterBaseTests.cs" />
     <Compile Include="Osm\Streams\Filters\OsmStreamFilterReference.cs" />
+    <Compile Include="Osm\Streams\Filters\OsmStreamFilterTagsFilterTest.cs" />
     <Compile Include="Osm\TagParsingTests.cs" />
     <Compile Include="Routes\DepotRouteTests.cs" />
     <Compile Include="API\APITests.cs" />
@@ -172,8 +173,8 @@
     <Compile Include="Routing\CH\Contraction\CHContractionTests.cs" />
     <Compile Include="Data\NodeTests.cs" />
     <Compile Include="Data\PBFTests.cs" />
-    <Compile Include="Data\Streams\PBFDataProcessingSourceTests.cs" />
-    <Compile Include="Data\Streams\XmlDataProcessorSourceTests.cs" />
+    <Compile Include="Osm\PBF\Streams\PBFDataProcessingSourceTests.cs" />
+    <Compile Include="Osm\Xml\Streams\XmlDataProcessorSourceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Data\MemoryDataSourceTests.cs" />
     <Compile Include="Routing\CH\CHEdgeDifferenceTests.cs" />
@@ -224,6 +225,9 @@
     <Compile Include="Osm\Tiles\TilesTests.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeapTests.cs" />
     <Compile Include="IntegrationTests\GZipStreamTests.cs" />
+    <Compile Include="Tags\SimpleTagsCollectionIndexTests.cs" />
+    <Compile Include="Tags\TagsCollectionIndexTests.cs" />
+    <Compile Include="Tags\TagsTableCollectionIndexTests.cs" />
     <Compile Include="Units\SpeedUnitTests.cs" />
     <Compile Include="UtilitiesTest.cs" />
     <Compile Include="Osm\Tiles\WebMercatorTests.cs" />
@@ -302,7 +306,9 @@
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Data\Streams\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
