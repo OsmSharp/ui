@@ -20,16 +20,24 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NUnit.Framework;
+using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Test.Performance.Osm.PBF
+namespace OsmSharp.Test.Performance.Tags.Collections
 {
     /// <summary>
-    /// Tests performance of PBF reads.
+    /// Tests for the simple tags collection index.
     /// </summary>
-    [TestFixture]
-    public class PBFStreamSourceTest
+    public static class TagsTableCollectionIndexTests
     {
+        /// <summary>
+        /// Executes the tests.
+        /// </summary>
+        public static void Test()
+        {
+            TagsTableCollectionIndex index = new TagsTableCollectionIndex();
 
+            // execute the standard tests on this index.
+            ITagCollectionIndexTests.Test("Table", index, 100000, 10000000);
+        }
     }
 }

@@ -61,7 +61,7 @@ namespace OsmSharp.Logging
         {
             if (_loggingEnabled)
             {
-                _source.TraceEvent(type, 0, message);
+                _source.TraceEvent(type, 0, "[" + name + "]: " + message);
             }
         }
 
@@ -76,7 +76,7 @@ namespace OsmSharp.Logging
         {
             if (_loggingEnabled)
             {
-                _source.TraceEvent(type, 0, message, args);
+                _source.TraceEvent(type, 0, "[" + name + "]: " + message, args);
             }
         }
 

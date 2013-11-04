@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace OsmSharp.Test.Performance
 {
@@ -57,13 +58,43 @@ namespace OsmSharp.Test.Performance
         private long? _ticks;
 
         /// <summary>
+        /// Holds the amount of memory before start.
+        /// </summary>
+        private long? _memory;
+
+        /// <summary>
         /// Reports the start of the process/time period to measure.
         /// </summary>
         public void Start()
         {
+            GC.Collect();
+
+            Process p = Process.GetCurrentProcess();
+            _memory = p.PrivateMemorySize64;
             _ticks = DateTime.Now.Ticks;
             OsmSharp.Logging.Log.TraceEvent("Performance:" + _name, System.Diagnostics.TraceEventType.Information,
                 string.Format("Started at {0}.", new DateTime(_ticks.Value).ToShortTimeString()));
+        }
+
+        /// <summary>
+        /// Reports a message in the middle of progress.
+        /// </summary>
+        /// <param name="message"></param>
+        public void Report(string message)
+        {
+            OsmSharp.Logging.Log.TraceEvent("Performance:" + _name, System.Diagnostics.TraceEventType.Information,
+                message);
+        }
+
+        /// <summary>
+        /// Reports a message in the middle of progress.
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="args"></param>
+        public void Report(string message, params object[] args)
+        {
+            OsmSharp.Logging.Log.TraceEvent("Performance:" + _name, System.Diagnostics.TraceEventType.Information,
+                message, args);
         }
 
         /// <summary>
@@ -73,10 +104,16 @@ namespace OsmSharp.Test.Performance
         {
             if (_ticks.HasValue)
             {
+                double seconds = new TimeSpan(DateTime.Now.Ticks - _ticks.Value).TotalMilliseconds / 1000.0;
+
+                GC.Collect();
+                Process p = Process.GetCurrentProcess();
+                double memoryDiff = System.Math.Round((p.PrivateMemorySize64 - _memory.Value) / 1024.0 / 1024.0, 4);
+
                 OsmSharp.Logging.Log.TraceEvent("Performance:" + _name, System.Diagnostics.TraceEventType.Information,
-                    string.Format("Ended at at {0}, spent {1}s.", 
+                    string.Format("Ended at at {0}, spent {1}s and {2}MB of memory diff.",
                         new DateTime(_ticks.Value).ToShortTimeString(),
-                        new TimeSpan(DateTime.Now.Ticks - _ticks.Value).TotalMilliseconds / 1000.0));
+                        seconds, memoryDiff));
             }
         }
     }
