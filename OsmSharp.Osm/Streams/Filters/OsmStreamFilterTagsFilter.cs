@@ -60,14 +60,6 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         private OsmGeo _current;
 
-        private long _totalTags = 0;
-
-        private long _totalTagsAfter = 0;
-
-        private float _percentageDropped = 0;
-
-        private float _previousStatus = 0;
-
         /// <summary>
         /// Moves to the next object.
         /// </summary>
@@ -82,18 +74,7 @@ namespace OsmSharp.Osm.Streams.Filters
                 if (_current.Tags != null &&
                     _current.Tags.Count > 0)
                 { // only filter tags when there are tags to be filtered.
-                    //_totalTags = _totalTags + _current.Tags.Count;
                     _filter.Invoke(_current.Tags);
-                    //_totalTagsAfter = _totalTagsAfter + _current.Tags.Count;
-
-                    //_percentageDropped = (float)System.Math.Round((double)_totalTagsAfter / (double)_totalTags * 100, 0);
-                    //if(_percentageDropped != _previousStatus)
-                    //{
-                    //    OsmSharp.Logging.Log.TraceEvent("DynamicGraphOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
-                    //        string.Format("Percentage dropped: {0} ({1}/{2}).",
-                    //            _percentageDropped.ToString(), _totalTagsAfter, _totalTags));
-                    //    _previousStatus = _percentageDropped;
-                    //}
                 }
                 return true;
             }

@@ -85,6 +85,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// Creates a new osm edge data processing target.
         /// </summary>
         /// <param name="dynamicGraph"></param>
+        /// <param name="vehicles"></param>
         /// <param name="interpreter">Inteprets the OSM-data.</param>
         /// <param name="tagsIndex">Holds all the tags.</param>
         public LiveGraphOsmStreamTarget(IDynamicGraphRouterDataSource<LiveEdge> dynamicGraph,
@@ -97,6 +98,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
+        /// <param name="vehicles"></param>
         /// <param name="dynamicGraph"></param>
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>
@@ -111,6 +113,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <summary>
         /// Creates a new osm edge data processing target.
         /// </summary>
+        /// <param name="vehicles"></param>
         /// <param name="dynamicGraph"></param>
         /// <param name="interpreter"></param>
         /// <param name="tagsIndex"></param>

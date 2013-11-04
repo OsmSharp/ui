@@ -60,10 +60,11 @@
     <Compile Include="Collections\SpatialIndexes\ISpatialIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\ISpatialIndexReadonly.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndex.cs" />
-    <Compile Include="Collections\Tags\ITagsIndex.cs" />
+    <Compile Include="Collections\Tags\ITagsCollectionIndex.cs" />
+    <Compile Include="Collections\Tags\ITagsCollectionIndexReadonly.cs" />
     <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
     <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
-    <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />
+    <Compile Include="Collections\Tags\SimpleTagsCollectionIndex.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
     <Compile Include="Collections\Tags\TagsCollection.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Collections\SortedList.cs" />
     <Compile Include="Collections\SortedSet.cs" />
     <Compile Include="Collections\SparseArray.cs" />
+    <Compile Include="Collections\Tags\TagsTableCollectionIndex.cs" />
     <Compile Include="Geo\Streams\Gpx\GpxGeoStreamSource.cs" />
     <Compile Include="Geo\Streams\Kml\KmlGeoStreamSource.cs" />
     <Compile Include="IO\Xml\Gpx\GpxDocument.cs" />
@@ -328,7 +330,6 @@
     <Compile Include="Math\Primitives\RectangleF2D.cs" />
     <Compile Include="Collections\Tags\ITagsSource.cs" />
     <Compile Include="Math\Algorithms\Rotation.cs" />
-    <Compile Include="Collections\Tags\ITagsIndexReadonly.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="IO\Xml\Gpx\v1_0\gpx.xsd">

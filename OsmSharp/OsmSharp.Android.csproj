@@ -60,13 +60,15 @@
     <Compile Include="Collections\LongIndex\LongIndex.cs" />
     <Compile Include="Collections\LongIndex\LongIndexLeaf.cs" />
     <Compile Include="Collections\LongIndex\LongIndexNode.cs" />
-    <Compile Include="Collections\Tags\ITagsIndex.cs" />
+    <Compile Include="Collections\Tags\ITagsCollectionIndex.cs" />
+    <Compile Include="Collections\Tags\ITagsCollectionIndexReadonly.cs" />
     <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
     <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
-    <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />
+    <Compile Include="Collections\Tags\SimpleTagsCollectionIndex.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
     <Compile Include="Collections\Tags\TagsCollection.cs" />
+    <Compile Include="Collections\Tags\TagsTableCollectionIndex.cs" />
     <Compile Include="GeoCoding\AccuracyEnum.cs" />
     <Compile Include="GeoCoding\Facade.cs" />
     <Compile Include="GeoCoding\IGeoCoder.cs" />
@@ -331,7 +333,6 @@
     <Compile Include="Math\Primitives\RectangleF2D.cs" />
     <Compile Include="Collections\Tags\ITagsSource.cs" />
     <Compile Include="Math\Algorithms\Rotation.cs" />
-    <Compile Include="Collections\Tags\ITagsIndexReadonly.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="IO\Xml\Gpx\v1_0\gpx.xsd" />
