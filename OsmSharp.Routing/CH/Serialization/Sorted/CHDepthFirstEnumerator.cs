@@ -29,7 +29,6 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
     /// <summary>
     /// Enumerates all vertices in a CH graph in a depth-first manner starting with the vertex at the highest level.
     /// </summary>
-    /// <remarks>This enumerator assumes higher-level nodes have higher ids.</remarks>
     public class CHDepthFirstEnumerator : IEnumerator<CHDepthFirstVertex>, IEnumerable<CHDepthFirstVertex>
     {
         /// <summary>
@@ -82,7 +81,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
             arcIdx++;
             while (arcIdx < edges.Length)
             { // check if it is 'lower'.
-                if (!edges[arcIdx].Value.ToHigher && 
+                if (edges[arcIdx].Value.ToLower && 
                     !_index.Contains(edges[arcIdx].Key))
                 { // yes the arc is 'lower' take it!
                     _current.ArcIdx = arcIdx; // move the arcIdx.

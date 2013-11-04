@@ -52,6 +52,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
                                                                            .GetManifestResourceStream(embeddedString)),
                                                                interpreter,
                                                                Vehicle.Car);
+
             // add the downward edges.
             original.AddDownwardEdges();
 
@@ -62,7 +63,11 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
                 enumerator.Select(x => x.VertexId));
             for (uint vertexId = 1; vertexId < original.VertexCount + 1; vertexId++)
             {
-                Assert.IsTrue(vertices.Contains(vertexId));
+                float latitude, longitude;
+                if (original.GetVertex(vertexId, out latitude, out longitude))
+                {
+                    Assert.IsTrue(vertices.Contains(vertexId));
+                }
             }
         }
     }

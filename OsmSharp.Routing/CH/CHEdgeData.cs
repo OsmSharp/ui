@@ -376,7 +376,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
         /// <param name="graph"></param>
         public static void AddDownwardEdges(this IDynamicGraph<CHEdgeData> graph)
         { // add the reverse edges to get a easy depth-first search.
-            for (uint vertexId = 1; vertexId < graph.VertexCount; vertexId++)
+            for (uint vertexId = 1; vertexId < graph.VertexCount + 1; vertexId++)
             {
                 List<KeyValuePair<uint, CHEdgeData>> arcs =
                     new List<KeyValuePair<uint, CHEdgeData>>(graph.GetArcs(vertexId));
