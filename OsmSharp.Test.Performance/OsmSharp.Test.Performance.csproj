@@ -20,30 +20,30 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>Output\Debug\x86\</OutputPath>
+    <OutputPath>..\Output\Debug\x86\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>Output\Debug\x86\OsmSharp.Test.Performance.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\x86\OsmSharp.Test.Performance.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>Output\Release\x86\</OutputPath>
+    <OutputPath>..\Output\Release\x86\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>Output\Release\x86\OsmSharp.Test.Performance.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Release\x86\OsmSharp.Test.Performance.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>Output\Debug\Any CPU\</OutputPath>
+    <OutputPath>..\Output\Debug\Any CPU\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>Output\Debug\Any CPU\OsmSharp.Test.Performance.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\Any CPU\OsmSharp.Test.Performance.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisLogFile>bin\Debug\OsmSharp.Test.Performance.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -58,9 +58,9 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
-    <OutputPath>Output\Release\Any CPU\</OutputPath>
+    <OutputPath>..\Output\Release\Any CPU\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>Output\Release\Any CPU\OsmSharp.Test.Performance.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Release\Any CPU\OsmSharp.Test.Performance.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -76,9 +76,9 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>Output\Debug\x64\</OutputPath>
+    <OutputPath>..\Output\Debug\x64\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>Output\Debug\x64\OsmSharp.Test.Performance.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Debug\x64\OsmSharp.Test.Performance.XML</DocumentationFile>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <CodeAnalysisLogFile>bin\Debug\OsmSharp.Test.Performance.exe.CodeAnalysisLog.xml</CodeAnalysisLogFile>
@@ -90,9 +90,9 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>Output\Release\x64\</OutputPath>
+    <OutputPath>..\Output\Release\x64\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>Output\Release\x64\OsmSharp.Test.Performance.XML</DocumentationFile>
+    <DocumentationFile>..\Output\Release\x64\OsmSharp.Test.Performance.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
