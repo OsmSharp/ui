@@ -56,7 +56,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.Streams
 
             result = this.FilterUsingStyleInterpreter(new OsmGeo[] {
                 Node.Create(1, 0, 0),
-                Node.Create(2, new SimpleTagsCollection(
+                Node.Create(2, new TagsCollection(
                     Tag.Create("amenity", "bar")), 1, 1)}.ToOsmStreamSource(),
                 "node[amenity] { " +
                 "   color: black; " +
@@ -80,7 +80,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.Streams
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
-                Way.Create(1, new SimpleTagsCollection(
+                Way.Create(1, new TagsCollection(
                         Tag.Create("highway", "residential")), 1, 2, 3) }.ToOsmStreamSource(),
                 "way { " +
                 "   color: black; " +
@@ -113,7 +113,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.Streams
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
                 Node.Create(4, 1, 1),
-                Way.Create(1, new SimpleTagsCollection(
+                Way.Create(1, new TagsCollection(
                         Tag.Create("highway", "residential")), 1, 2, 3),
                 Way.Create(2, 1, 2, 4) }.ToOsmStreamSource(),
                 "way[highway] { " +
@@ -194,7 +194,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.Streams
                 Way.Create(1, 1, 2, 3),
                 Way.Create(2, 1, 2, 4),
                 Relation.Create(1, RelationMember.Create(1, "way", OsmGeoType.Way)),
-                Relation.Create(2, new SimpleTagsCollection(
+                Relation.Create(2, new TagsCollection(
                     Tag.Create("boundary", "yes")), RelationMember.Create(2, "way", OsmGeoType.Way)) }.ToOsmStreamSource(),
                 "relation[boundary] { " +
                 "   color: black; " +
@@ -238,7 +238,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.Streams
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
-                Way.Create(1, new SimpleTagsCollection(
+                Way.Create(1, new TagsCollection(
                         Tag.Create("area", "yes")), 1, 2, 3, 1) }.ToOsmStreamSource(),
                 "area { " +
                 "   color: black; " +
@@ -272,7 +272,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.Streams
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
                 Node.Create(4, 1, 1),
-                Way.Create(1, new SimpleTagsCollection(
+                Way.Create(1, new TagsCollection(
                         Tag.Create("area", "yes")), 1, 2, 3, 1),
                 Way.Create(2, 1, 2, 4, 1) }.ToOsmStreamSource(),
                 "area { " +
@@ -314,7 +314,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.Streams
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
                 Way.Create(1, 1, 2, 3),
-                Relation.Create(1, new SimpleTagsCollection(
+                Relation.Create(1, new TagsCollection(
                     Tag.Create("type", "multipolygon")), 
                     RelationMember.Create(1, "way", OsmGeoType.Way)) }.ToOsmStreamSource(),
                 "area { " +
@@ -356,7 +356,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.Streams
                 Way.Create(1, 1, 2, 3),
                 Way.Create(2, 1, 2, 4),
                 Relation.Create(1, RelationMember.Create(1, "way", OsmGeoType.Way)),
-                Relation.Create(2, new SimpleTagsCollection(
+                Relation.Create(2, new TagsCollection(
                     Tag.Create("type", "boundary")), RelationMember.Create(2, "way", OsmGeoType.Way)) }.ToOsmStreamSource(),
                 "area { " +
                 "   color: black; " +

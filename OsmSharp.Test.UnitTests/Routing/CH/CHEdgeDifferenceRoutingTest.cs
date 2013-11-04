@@ -78,7 +78,7 @@ namespace OsmSharp.Test.Unittests.Routing.CH
                 key);
             if (data == null)
             {
-                var tagsIndex = new SimpleTagsCollectionIndex();
+                var tagsIndex = new TagsTableCollectionIndex();
 
                 // do the data processing.
                 var memoryData = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);

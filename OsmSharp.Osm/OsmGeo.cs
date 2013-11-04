@@ -45,7 +45,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// The tags.
         /// </summary>
-        public TagsCollection Tags { get; set; }
+        public TagsCollectionBase Tags { get; set; }
 
         /// <summary>
         /// The changeset id.

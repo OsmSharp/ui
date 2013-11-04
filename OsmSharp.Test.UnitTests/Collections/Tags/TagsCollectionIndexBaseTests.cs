@@ -20,12 +20,12 @@ using System.Collections.Generic;
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Test.Unittests.Tags
+namespace OsmSharp.Test.Unittests.Collections.Tags
 {
     /// <summary>
     /// Abstract class containing tests for the tags collection index.
     /// </summary>
-    public abstract class TagsCollectionIndexTests
+    public abstract class TagsCollectionIndexBaseTests
     {
         /// <summary>
         /// Tests the given tags collection index.
@@ -33,10 +33,10 @@ namespace OsmSharp.Test.Unittests.Tags
         /// <param name="tagsCollectionIndex"></param>
         protected void TestTagsCollectionIndex(ITagsCollectionIndex tagsCollectionIndex)
         {
-            Dictionary<uint, TagsCollection> addedTags = new Dictionary<uint, TagsCollection>();
+            List<KeyValuePair<uint, TagsCollectionBase>> addedTags = new List<KeyValuePair<uint, TagsCollectionBase>>();
             for (int i = 0; i < 100; i++)
             {
-                SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+                TagsCollection tagsCollection = new TagsCollection();
                 int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(3) + 1;
                 for (int idx = 0; idx < tagCollectionSize; idx++)
                 {
@@ -49,9 +49,9 @@ namespace OsmSharp.Test.Unittests.Tags
                 for (int idx = 0; idx < addCount; idx++)
                 {
                     uint tagsId = tagsCollectionIndex.Add(tagsCollection);
-                    addedTags[tagsId] = tagsCollection;
+                    addedTags.Add(new KeyValuePair<uint, TagsCollectionBase>(tagsId, tagsCollection));
 
-                    TagsCollection indexTags = tagsCollectionIndex.Get(tagsId);
+                    TagsCollectionBase indexTags = tagsCollectionIndex.Get(tagsId);
                     Assert.AreEqual(tagsCollection.Count, indexTags.Count);
                     foreach (Tag tag in tagsCollection)
                     {
@@ -61,13 +61,17 @@ namespace OsmSharp.Test.Unittests.Tags
             }
 
             // check the index.
-            foreach (KeyValuePair<uint, TagsCollection> pair in addedTags)
+            foreach (KeyValuePair<uint, TagsCollectionBase> pair in addedTags)
             {
-                TagsCollection indexTags = tagsCollectionIndex.Get(pair.Key);
+                TagsCollectionBase indexTags = tagsCollectionIndex.Get(pair.Key);
                 Assert.AreEqual(pair.Value.Count, indexTags.Count);
                 foreach (Tag tag in pair.Value)
                 {
                     Assert.IsTrue(indexTags.ContainsKeyValue(tag.Key, tag.Value));
+                }
+                foreach (Tag tag in indexTags)
+                {
+                    Assert.IsTrue(pair.Value.ContainsKeyValue(tag.Key, tag.Value));
                 }
             }
         }

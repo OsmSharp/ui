@@ -132,7 +132,7 @@ namespace OsmSharp.Osm.PBF.Streams
                     + ((double)block.granularity * (double)node.lon));
                 if (node.keys.Count > 0)
                 {
-                    simpleNode.Tags = new SimpleTagsCollection();
+                    simpleNode.Tags = new TagsCollection();
                     for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
                     {
                         string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
@@ -170,7 +170,7 @@ namespace OsmSharp.Osm.PBF.Streams
                 }
                 if (way.keys.Count > 0)
                 {
-                    simple_way.Tags = new SimpleTagsCollection();
+                    simple_way.Tags = new TagsCollection();
                     for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
                     {
                         string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
@@ -231,7 +231,7 @@ namespace OsmSharp.Osm.PBF.Streams
                 }
                 if (relation.keys.Count > 0)
                 {
-                    simple_relation.Tags = new SimpleTagsCollection();
+                    simple_relation.Tags = new TagsCollection();
                     for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
                     {
                         string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);

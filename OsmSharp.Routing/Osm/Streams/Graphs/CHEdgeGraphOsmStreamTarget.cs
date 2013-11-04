@@ -64,7 +64,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="to"></param>
         /// <returns></returns>
         protected override CHEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, 
-            TagsCollection tags, bool directionForward, GeoCoordinate from, GeoCoordinate to)
+            TagsCollectionBase tags, bool directionForward, GeoCoordinate from, GeoCoordinate to)
         {
             double weight = _vehicle.Weight(tags, from, to);
             bool? direction = _vehicle.IsOneWay(tags);
@@ -103,7 +103,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tags"></param>
         /// <returns></returns>
         protected override bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter, 
-            ITagsCollectionIndex tagsIndex, TagsCollection tags)
+            ITagsCollectionIndex tagsIndex, TagsCollectionBase tags)
         {
             return _vehicle.CanTraverse(tags);
         }
@@ -169,7 +169,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                                                                         IOsmRoutingInterpreter interpreter,
                                                                         Vehicle vehicle)
         {
-            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new SimpleTagsCollectionIndex(), interpreter, vehicle);
+            return CHEdgeGraphOsmStreamTarget.Preprocess(reader, new TagsTableCollectionIndex(), interpreter, vehicle);
         }
 
         #endregion

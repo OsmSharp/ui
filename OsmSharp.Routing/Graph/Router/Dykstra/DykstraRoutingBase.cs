@@ -51,7 +51,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="pointTags"></param>
         /// <param name="interpreter"></param>
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags)
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags)
         {
             return this.SearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, false);
         }
@@ -68,7 +68,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
         /// <param name="interpreter"></param>
         /// <param name="verticesOnly"></param>
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<TEdgeData> graph, IRoutingInterpreter interpreter, Vehicle vehicle,
-            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags, bool verticesOnly)
+            GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly)
         {
             var closestWithMatch = new SearchClosestResult(double.MaxValue, 0);
             var closestWithoutMatch = new SearchClosestResult(double.MaxValue, 0);
@@ -88,7 +88,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 // loop over all.
                 foreach (KeyValuePair<uint, KeyValuePair<uint, TEdgeData>> arc in arcs)
                 {
-                    TagsCollection arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
+                    TagsCollectionBase arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
                     bool canBeTraversed = vehicle.CanTraverse(arcTags);
                     if (canBeTraversed)
                     { // the edge can be traversed.

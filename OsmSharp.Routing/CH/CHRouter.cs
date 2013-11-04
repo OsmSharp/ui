@@ -1358,7 +1358,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="interpreter"></param>
         /// <param name="pointTags"></param>
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
-            Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags)
+            Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags)
         {
             return this.SearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, false);
         }
@@ -1375,7 +1375,7 @@ namespace OsmSharp.Routing.CH
         /// <param name="pointTags"></param>
         /// <param name="verticesOnly"></param>
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
-            Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollection pointTags, bool verticesOnly)
+            Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly)
         {
             double searchBoxSize = delta;
             // build the search box.
@@ -1394,7 +1394,7 @@ namespace OsmSharp.Routing.CH
             {
                 foreach (KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> arc in arcs)
                 {
-                    TagsCollection arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
+                    TagsCollectionBase arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
                     // test the two points.
                     float fromLatitude, fromLongitude;
                     float toLatitude, toLongitude;

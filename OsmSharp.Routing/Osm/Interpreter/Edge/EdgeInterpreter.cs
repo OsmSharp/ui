@@ -15,7 +15,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public bool IsOnlyLocalAccessible(TagsCollection tags)
+        public bool IsOnlyLocalAccessible(TagsCollectionBase tags)
         {
             string tag;
             if (tags.TryGetValue("highway", out tag))
@@ -40,7 +40,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public bool IsRoutable(TagsCollection tags)
+        public bool IsRoutable(TagsCollectionBase tags)
         {
             if (tags != null && tags.Count > 0)
             {
@@ -54,7 +54,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public string GetName(TagsCollection tags)
+        public string GetName(TagsCollectionBase tags)
         {
             var name = string.Empty;
             if (tags.ContainsKey("name"))
@@ -69,7 +69,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public Dictionary<string, string> GetNamesInAllLanguages(TagsCollection tags)
+        public Dictionary<string, string> GetNamesInAllLanguages(TagsCollectionBase tags)
         {
             var names = new Dictionary<string, string>();
             if (tags != null)
@@ -91,7 +91,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public bool IsRoundabout(TagsCollection tags)
+        public bool IsRoundabout(TagsCollectionBase tags)
         {
             string junction;
             return (tags != null && tags.TryGetValue("junction", out junction) && junction == "roundabout");
@@ -103,7 +103,7 @@ namespace OsmSharp.Routing.Osm.Interpreter.Edge
         /// <param name="tags"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        public bool CanBeTraversedBy(TagsCollection tags, Vehicle vehicle)
+        public bool CanBeTraversedBy(TagsCollectionBase tags, Vehicle vehicle)
         {
             return vehicle.CanTraverse(tags);
         }

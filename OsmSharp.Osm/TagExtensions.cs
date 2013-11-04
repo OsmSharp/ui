@@ -52,7 +52,7 @@ namespace OsmSharp.Osm
         /// <param name="tags"></param>
         /// <param name="tagKey"></param>
         /// <returns></returns>
-        public static bool IsTrue(this TagsCollection tags, string tagKey)
+        public static bool IsTrue(this TagsCollectionBase tags, string tagKey)
         {
             if (tags == null || string.IsNullOrWhiteSpace(tagKey))
                 return false;
@@ -70,7 +70,7 @@ namespace OsmSharp.Osm
         /// <param name="tags"></param>
         /// <param name="tagKey"></param>
         /// <returns></returns>
-        public static bool IsFalse(this TagsCollection tags, string tagKey)
+        public static bool IsFalse(this TagsCollectionBase tags, string tagKey)
         {
             if (tags == null || string.IsNullOrWhiteSpace(tagKey))
                 return false;
@@ -87,7 +87,7 @@ namespace OsmSharp.Osm
         /// <param name="tags">The tags to search.</param>
         /// <param name="accessTagHierachy">The hierarchy of <c>Access</c>-Tags for different vehicle types.</param>
         /// <returns>The best fitting value is returned.</returns>
-        public static string GetAccessTag(this TagsCollection tags, IEnumerable<string> accessTagHierachy)
+        public static string GetAccessTag(this TagsCollectionBase tags, IEnumerable<string> accessTagHierachy)
         {
             if (tags == null)
                 return null;
@@ -110,7 +110,7 @@ namespace OsmSharp.Osm
         /// <param name="tags">The tags to search.</param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryGetMaxSpeed(this TagsCollection tags, out KilometerPerHour result)
+        public static bool TryGetMaxSpeed(this TagsCollectionBase tags, out KilometerPerHour result)
         {
             result = double.MaxValue;
             string tagValue;
@@ -128,7 +128,7 @@ namespace OsmSharp.Osm
         /// <param name="tags">The tags to search.</param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryGetMaxWeight(this TagsCollection tags, out Kilogram result)
+        public static bool TryGetMaxWeight(this TagsCollectionBase tags, out Kilogram result)
         {
             result = double.MaxValue;
             string tagValue;
@@ -145,7 +145,7 @@ namespace OsmSharp.Osm
         /// <param name="tags">The tags to search.</param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryGetMaxAxleLoad(this TagsCollection tags, out Kilogram result)
+        public static bool TryGetMaxAxleLoad(this TagsCollectionBase tags, out Kilogram result)
         {
             result = double.MaxValue;
             string tagValue;
@@ -162,7 +162,7 @@ namespace OsmSharp.Osm
         /// <param name="tags">The tags to search.</param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryGetMaxHeight(this TagsCollection tags, out Meter result)
+        public static bool TryGetMaxHeight(this TagsCollectionBase tags, out Meter result)
         {
             result = double.MaxValue;
 
@@ -181,7 +181,7 @@ namespace OsmSharp.Osm
         /// <param name="tags">The tags to search.</param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public static bool TryGetMaxWidth(this TagsCollection tags, out Meter result)
+        public static bool TryGetMaxWidth(this TagsCollectionBase tags, out Meter result)
         {
             result = double.MaxValue;
             string tagValue;

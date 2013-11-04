@@ -35,7 +35,7 @@ namespace OsmSharp.Routing.Constraints
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        RoutingLabel GetLabelFor(TagsCollection tags);
+        RoutingLabel GetLabelFor(TagsCollectionBase tags);
 
         /// <summary>
         /// Returns true if a given (forward) sequence of labels is allowed under these constraints.

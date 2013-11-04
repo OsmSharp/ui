@@ -249,7 +249,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
-                Way.Create(1, new SimpleTagsCollection(
+                Way.Create(1, new TagsCollection(
                         Tag.Create("area", "yes")), 1, 2, 3, 1));
 
             // test closed way.
@@ -285,7 +285,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
                 Node.Create(1, 0, 0),
                 Node.Create(2, 1, 0),
                 Node.Create(3, 0, 1),
-                Way.Create(1, new SimpleTagsCollection(
+                Way.Create(1, new TagsCollection(
                         Tag.Create("area", "yes")), 1, 2, 3, 1));
 
             // test closed way.
@@ -324,7 +324,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 				Node.Create(1, 0, 0),
 				Node.Create(2, 1, 0),
 				Node.Create(3, 0, 1),
-				Way.Create(1, new SimpleTagsCollection(
+				Way.Create(1, new TagsCollection(
 				Tag.Create("width", "10")), 1, 2, 3, 1));
 
 			// test closed way.

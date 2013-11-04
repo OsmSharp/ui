@@ -54,7 +54,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
             // create the tags index.
-            var tagsIndex = new SimpleTagsCollectionIndex();
+            var tagsIndex = new TagsTableCollectionIndex();
 
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();
@@ -142,7 +142,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
             // create the tags index.
-            var tagsIndex = new SimpleTagsCollectionIndex();
+            var tagsIndex = new TagsTableCollectionIndex();
 
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();
@@ -232,7 +232,7 @@ namespace OsmSharp.Test.Unittests.Routing.Serialization
             const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
 
             // create the tags index.
-            var tagsIndex = new SimpleTagsCollectionIndex();
+            var tagsIndex = new TagsTableCollectionIndex();
 
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();

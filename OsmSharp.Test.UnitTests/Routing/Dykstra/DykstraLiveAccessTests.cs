@@ -70,7 +70,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
         public override IBasicRouterDataSource<LiveEdge> BuildData(IOsmRoutingInterpreter interpreter,
                                                                             string embeddedString, Vehicle vehicle)
         {
-            var tagsIndex = new SimpleTagsCollectionIndex();
+            var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
             var memoryData =

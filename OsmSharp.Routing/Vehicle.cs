@@ -80,7 +80,7 @@ namespace OsmSharp.Routing
         /// <param name="tags"></param>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected bool TryGetHighwayType(TagsCollection tags, out string highwayType)
+        protected bool TryGetHighwayType(TagsCollectionBase tags, out string highwayType)
         {
             return tags.TryGetValue("highway", out highwayType);
         }
@@ -90,7 +90,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public virtual bool CanTraverse(TagsCollection tags)
+        public virtual bool CanTraverse(TagsCollectionBase tags)
         {
             string highwayType;
             if (TryGetHighwayType(tags, out highwayType))
@@ -117,7 +117,7 @@ namespace OsmSharp.Routing
         /// Returns the maximum speed.
         /// </summary>
         /// <returns></returns>
-        public KilometerPerHour MaxSpeedAllowed(TagsCollection tags)
+        public KilometerPerHour MaxSpeedAllowed(TagsCollectionBase tags)
         {
             // THESE ARE THE MAX SPEEDS FOR BELGIUM. 
             // TODO: Find a way to make this all configurable.
@@ -143,7 +143,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public virtual KilometerPerHour ProbableSpeed(TagsCollection tags)
+        public virtual KilometerPerHour ProbableSpeed(TagsCollectionBase tags)
         {
             KilometerPerHour maxSpeedAllowed = this.MaxSpeedAllowed(tags);
             KilometerPerHour maxSpeed = this.MaxSpeed();
@@ -160,7 +160,7 @@ namespace OsmSharp.Routing
         /// <param name="tags1"></param>
         /// <param name="tags2"></param>
         /// <returns></returns>
-        public virtual bool IsEqualFor(TagsCollection tags1, TagsCollection tags2)
+        public virtual bool IsEqualFor(TagsCollectionBase tags1, TagsCollectionBase tags2)
         {
             if (this.GetName(tags1) != this.GetName(tags2))
             {
@@ -178,7 +178,7 @@ namespace OsmSharp.Routing
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <returns></returns>
-        public virtual float Weight(TagsCollection tags, GeoCoordinate from, GeoCoordinate to)
+        public virtual float Weight(TagsCollectionBase tags, GeoCoordinate from, GeoCoordinate to)
         {
             var distance = from.DistanceEstimate(to).Value;
 
@@ -190,7 +190,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public virtual bool? IsOneWay(TagsCollection tags)
+        public virtual bool? IsOneWay(TagsCollectionBase tags)
         {
             string oneway;
             if (tags.TryGetValue("oneway", out oneway))
@@ -217,7 +217,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        private string GetName(TagsCollection tags)
+        private string GetName(TagsCollectionBase tags)
         {
             var name = string.Empty;
             if (tags.ContainsKey("name"))
@@ -233,7 +233,7 @@ namespace OsmSharp.Routing
         /// <param name="tags"></param>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected abstract bool IsVehicleAllowed(TagsCollection tags, string highwayType);
+        protected abstract bool IsVehicleAllowed(TagsCollectionBase tags, string highwayType);
     }
 
     /// <summary>
@@ -269,7 +269,7 @@ namespace OsmSharp.Routing
         /// <param name="tags"></param>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override bool IsVehicleAllowed(TagsCollection tags, string highwayType)
+        protected override bool IsVehicleAllowed(TagsCollectionBase tags, string highwayType)
         {
             if (tags.ContainsKey("foot"))
             {
@@ -340,7 +340,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public override bool? IsOneWay(TagsCollection tags)
+        public override bool? IsOneWay(TagsCollectionBase tags)
         {
             return null;
         }
@@ -386,7 +386,7 @@ namespace OsmSharp.Routing
         /// <param name="tags"></param>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override bool IsVehicleAllowed(TagsCollection tags, string highwayType)
+        protected override bool IsVehicleAllowed(TagsCollectionBase tags, string highwayType)
         {
             // do the designated tags.
             if (tags.ContainsKey("bicycle"))
@@ -458,7 +458,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public override bool? IsOneWay(TagsCollection tags)
+        public override bool? IsOneWay(TagsCollectionBase tags)
         {
             return null;
         }
@@ -505,7 +505,7 @@ namespace OsmSharp.Routing
         /// <param name="tags"></param>
         /// <param name="highwayType"></param>
         /// <returns></returns>
-        protected override bool IsVehicleAllowed(TagsCollection tags, string highwayType)
+        protected override bool IsVehicleAllowed(TagsCollectionBase tags, string highwayType)
         {
             if (tags.ContainsKey("motor_vehicle"))
             {

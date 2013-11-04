@@ -24,7 +24,7 @@ namespace OsmSharp.Collections.Tags
     /// <summary>
     /// A dictionary that uses a string table behind.
     /// </summary>
-    public class StringTableTagsCollection : TagsCollection
+    public class StringTableTagsCollection : TagsCollectionBase
     {
         /// <summary>
         /// Holds the list of encoded tags.

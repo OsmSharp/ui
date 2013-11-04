@@ -139,7 +139,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <param name="type"></param>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public bool IsRestriction(OsmGeoType type, TagsCollection tags)
+        public bool IsRestriction(OsmGeoType type, TagsCollectionBase tags)
         {
             return true;
         }

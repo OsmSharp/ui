@@ -35,7 +35,7 @@ namespace OsmSharp.Test.Unittests.Osm.Cache
         /// <param name="cache"></param>
         public void DoOsmDataCacheTestNode(OsmDataCache cache)
         {
-            Node node = Node.Create(1, new SimpleTagsCollection(
+            Node node = Node.Create(1, new TagsCollection(
                 Tag.Create("node", "yes")), 1, 2);
 
             // test invalid stuff.
@@ -75,7 +75,7 @@ namespace OsmSharp.Test.Unittests.Osm.Cache
         /// <param name="cache"></param>
         public void DoOsmDataCacheTestWay(OsmDataCache cache)
         {
-            Way way = Way.Create(1, new SimpleTagsCollection(
+            Way way = Way.Create(1, new TagsCollection(
                 Tag.Create("way", "yes")), 1, 2);
 
             // test invalid stuff.
@@ -111,7 +111,7 @@ namespace OsmSharp.Test.Unittests.Osm.Cache
         /// <param name="cache"></param>
         public void DoOsmDataCacheTestRelation(OsmDataCache cache)
         {
-            Relation relation = Relation.Create(1, new SimpleTagsCollection(
+            Relation relation = Relation.Create(1, new TagsCollection(
                 Tag.Create("relation", "yes")), RelationMember.Create(1, "something", OsmGeoType.Node));
 
             // test invalid stuff.
@@ -147,11 +147,11 @@ namespace OsmSharp.Test.Unittests.Osm.Cache
         /// <param name="cache"></param>
         public void DoOsmDataCacheTestClear(OsmDataCache cache)
         {
-            Node node = Node.Create(1, new SimpleTagsCollection(
+            Node node = Node.Create(1, new TagsCollection(
                 Tag.Create("node", "yes")), 1, 2);
-            Way way = Way.Create(1, new SimpleTagsCollection(
+            Way way = Way.Create(1, new TagsCollection(
                 Tag.Create("way", "yes")), 1, 2);
-            Relation relation = Relation.Create(1, new SimpleTagsCollection(
+            Relation relation = Relation.Create(1, new TagsCollection(
                 Tag.Create("relation", "yes")), RelationMember.Create(1, "something", OsmGeoType.Node));
 
             cache.AddNode(node);

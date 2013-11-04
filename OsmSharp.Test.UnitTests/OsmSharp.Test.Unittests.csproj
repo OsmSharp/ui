@@ -142,7 +142,7 @@
     <Compile Include="Collections\SpatialIndexes\IndexReferenceImplementation.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeMemoryIndexTests.cs" />
     <Compile Include="Collections\SpatialIndexes\RTreeStreamIndexTests.cs" />
-    <Compile Include="Collections\Tags\Serializer\TagIndexSerializerTests.cs" />
+    <Compile Include="Collections\Tags\Serializer\TagsCollectionIndexSerializerTests.cs" />
     <Compile Include="Geo\GeoCoordinateTests.cs" />
     <Compile Include="Geo\Geometries\LineairRingTests.cs" />
     <Compile Include="Geo\Geometries\PolygonTests.cs" />
@@ -225,9 +225,8 @@
     <Compile Include="Osm\Tiles\TilesTests.cs" />
     <Compile Include="Collections\PriorityQueues\BinairyHeapTests.cs" />
     <Compile Include="IntegrationTests\GZipStreamTests.cs" />
-    <Compile Include="Tags\SimpleTagsCollectionIndexTests.cs" />
-    <Compile Include="Tags\TagsCollectionIndexTests.cs" />
-    <Compile Include="Tags\TagsTableCollectionIndexTests.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionIndexBaseTests.cs" />
+    <Compile Include="Collections\Tags\TagsTableCollectionIndexTests.cs" />
     <Compile Include="Units\SpeedUnitTests.cs" />
     <Compile Include="UtilitiesTest.cs" />
     <Compile Include="Osm\Tiles\WebMercatorTests.cs" />
@@ -242,8 +241,8 @@
     <Compile Include="Collections\PermutationEnumerationTests.cs" />
     <Compile Include="Collections\StringTableTests.cs" />
     <Compile Include="Math\Structures\StringTrees\StringTreeDictionaryTest.cs" />
-    <Compile Include="Tags\SimpleTagsCollectionTests.cs" />
-    <Compile Include="Tags\TagsCollectionTests.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionTests.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionBaseTests.cs" />
     <Compile Include="Routing\TSP\BruteForceTSPTest.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurveTests.cs" />
     <Compile Include="Math\Primitives\BoxF2DTests.cs" />
@@ -308,6 +307,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Streams\" />
+    <Folder Include="Tags\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

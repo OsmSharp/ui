@@ -16,135 +16,164 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Linq;
+using System.Text;
 
 namespace OsmSharp.Collections.Tags
 {
     /// <summary>
-    /// Represents a generic tags collection.
+    /// Represents a simple tags collection based on a list.
     /// </summary>
-    public abstract class TagsCollection : IEnumerable<Tag>, IEnumerable<KeyValuePair<string, string>>, ITagsSource
+    public class TagsCollection : TagsCollectionBase
     {
+        /// <summary>
+        /// Holds the tags.
+        /// </summary>
+        private readonly List<Tag> _tags;
+
+        /// <summary>
+        /// Creates a new tags collection.
+        /// </summary>
+        public TagsCollection()
+        {
+            _tags = new List<Tag>();
+        }
+
+        /// <summary>
+        /// Creates a new tags collection.
+        /// </summary>
+        public TagsCollection(params Tag[] tags)
+        {
+            _tags = new List<Tag>(tags);
+        }
+
+        /// <summary>
+        /// Creates a new tags collection initialized with the given existing tags.
+        /// </summary>
+        /// <param name="tags"></param>
+        public TagsCollection(IEnumerable<Tag> tags)
+        {
+            _tags = new List<Tag>();
+            _tags.AddRange(tags);
+        }
+
         /// <summary>
         /// Returns the number of tags in this collection.
         /// </summary>
-        public abstract int Count { get; }
+        public override int Count
+        {
+            get { return _tags.Count; }
+        }
 
         /// <summary>
-        /// Adds a key-value pair to this tags collection.
+        /// Adds a new tag (key-value pair) to this tags collection.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public abstract void Add(string key, string value);
+        public override void Add(string key, string value)
+        {
+            _tags.Add(new Tag()
+            {
+                Key = key,
+                Value = value
+            });
+        }
 
         /// <summary>
-        /// Adds a tag.
+        /// Adds a new tag to this collection.
         /// </summary>
         /// <param name="tag"></param>
-        public abstract void Add(Tag tag);
-
-        /// <summary>
-        /// Adds all tags from the given collection.
-        /// </summary>
-        /// <param name="tagsCollection"></param>
-        public void Add(TagsCollection tagsCollection)
+        public override void Add(Tag tag)
         {
-            foreach (Tag tag in tagsCollection)
-            {
-                this.Add(tag);
-            }
+            _tags.Add(tag);
         }
 
         /// <summary>
-        /// Adds the tags or replaces the existing value if any.
-        /// </summary>
-        /// <param name="tagsCollection"></param>
-        public void AddOrReplace(TagsCollection tagsCollection)
-        {
-            foreach (Tag tag in tagsCollection)
-            {
-                this.AddOrReplace(tag);
-            }
-        }
-
-        /// <summary>
-        /// Adds a tag or replace the existing value if any.
+        /// Adds a new tag (key-value pair) to this tags collection.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public abstract void AddOrReplace(string key, string value);
+        public override void AddOrReplace(string key, string value)
+        {
+            for(int idx = 0; idx < _tags.Count; idx++)
+            {
+                Tag tag = _tags[idx];
+                if (tag.Key == key)
+                {
+                    tag.Value = value;
+                    _tags[idx] = tag;
+                    return;
+                }
+            }
+            this.Add(key, value);
+        }
 
         /// <summary>
-        /// Adds a tag or replace the existing value if any.
+        /// Adds a new tag to this collection.
         /// </summary>
         /// <param name="tag"></param>
-        public abstract void AddOrReplace(Tag tag);
-
-        /// <summary>
-        /// Returns true if the given tag exists.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns></returns>
-        public abstract bool ContainsKey(string key);
-
-        /// <summary>
-        /// Returns true if the given tag exists.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public abstract bool TryGetValue(string key, out string value);
-
-        /// <summary>
-        /// Returns true if the given tags exists with the given value.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public abstract bool ContainsKeyValue(string key, string value);
-
-        /// <summary>
-        /// Returns the value associated with the given key.
-        /// </summary>
-        /// <param name="key"></param>
-        /// <returns>Throws a KeyNotFoundException when the key does not exists. Use TryGetValue.</returns>
-        public virtual string this[string key]
+        public override void AddOrReplace(Tag tag)
         {
-            get
-            {
-                string value;
-                if (this.TryGetValue(key, out value))
-                {
-                    return value;
-                }
-                throw new KeyNotFoundException();
-            }
-            set
-            {
-                this.AddOrReplace(key, value);
-            }
+            this.AddOrReplace(tag.Key, tag.Value);
         }
 
         /// <summary>
-        /// Returns a parsed numeric value if available.
+        /// Returns true if the given key is found in this tags collection.
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public double? GetNumericValue(string key)
+        public override bool ContainsKey(string key)
         {
-            string value;
-            if (this.TryGetValue(key, out value))
+            return _tags.Any(tag => tag.Key == key);
+        }
+
+        /// <summary>
+        /// Returns true if the given key exists and sets the value parameter.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public override bool TryGetValue(string key, out string value)
+        {
+            foreach(var tag in _tags)
             {
-                double numericValue;
-                if (double.TryParse(value, NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture,
-                                    out numericValue))
+                if(tag.Key == key)
                 {
-                    return numericValue;
+                    value = tag.Value;
+                    return true;
                 }
             }
-            return null;
+            value = string.Empty;
+            return false;
+        }
+
+        /// <summary>
+        /// Returns true if the given key-value pair is found in this tags collection.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public override bool ContainsKeyValue(string key, string value)
+        {
+            return _tags.Any(tag => tag.Key == key && tag.Value == value);
+        }
+
+        /// <summary>
+        /// Clears all tags.
+        /// </summary>
+        public override void Clear()
+        {
+            _tags.Clear();
+        }
+
+        /// <summary>
+        /// Returns the enumerator for this tags collection.
+        /// </summary>
+        /// <returns></returns>
+        public override IEnumerator<Tag> GetEnumerator()
+        {
+            return _tags.GetEnumerator();
         }
 
         /// <summary>
@@ -152,99 +181,39 @@ namespace OsmSharp.Collections.Tags
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public abstract bool RemoveKey(string key);
-
-        /// <summary>
-        /// Removes the given tag.
-        /// </summary>
-        /// <param name="tag"></param>
-        /// <returns></returns>
-        public virtual bool RemoveKeyValue(Tag tag)
+        public override bool RemoveKey(string key)
         {
-            return this.RemoveKeyValue(tag.Key, tag.Value);
+            return _tags.RemoveAll(tag => tag.Key == key) > 0;
         }
 
         /// <summary>
-        /// Removes all tags with the given key-values.
+        /// Removes all tags with given key and value.
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public abstract bool RemoveKeyValue(string key, string value);
-
-        /// <summary>
-        /// Clears all tags.
-        /// </summary>
-        public abstract void Clear();
-
-        #region IEnumerable<Tag>
-
-        /// <summary>
-        /// Returns the enumerator for this enumerable.
-        /// </summary>
-        /// <returns></returns>
-        public abstract IEnumerator<Tag> GetEnumerator();
-
-        /// <summary>
-        /// Returns the enumerator for this enumerable.
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator IEnumerable.GetEnumerator()
+        public override bool RemoveKeyValue(string key, string value)
         {
-            return this.GetEnumerator();
+            return _tags.RemoveAll(tag => tag.Key == key && tag.Value == value) > 0;
         }
 
-        #endregion
-
         /// <summary>
-        /// Returns the enumerable for KeyValuePairs.
+        /// Returns a string that represents this tags collection.
         /// </summary>
         /// <returns></returns>
-        #region IEnumerable<KeyValuePair<string, string>>
-
-        IEnumerator<KeyValuePair<string, string>> IEnumerable<KeyValuePair<string, string>>.GetEnumerator()
+        public override string ToString()
         {
-            throw new System.NotImplementedException();
+            StringBuilder tags = new StringBuilder();
+            foreach (Tag tag in this)
+            {
+                tags.Append(tag.ToString());
+                tags.Append(',');
+            }
+            if (tags.Length > 0)
+            {
+                return tags.ToString(0, tags.Length - 1);
+            }
+            return "empty";
         }
-        
-        /// <summary>
-        /// A KeyValuePair enumerator wrapper around a IEnumerator tag enumerator.
-        /// </summary>
-        private class KeyValuePairEnumerator : IEnumerator<KeyValuePair<string, string>>
-        {
-            private IEnumerator<Tag> _tagEnumerator;
-
-            public KeyValuePairEnumerator(IEnumerator<Tag> tagEnumerator)
-            {
-                _tagEnumerator = tagEnumerator;
-            }
-
-            public KeyValuePair<string, string> Current
-            {
-                get { return new KeyValuePair<string,string>(_tagEnumerator.Current.Key, _tagEnumerator.Current.Value); }
-            }
-
-            public void Dispose()
-            {
-                _tagEnumerator.Dispose();
-            }
-
-            object IEnumerator.Current
-            {
-                get { return this.Current; }
-            }
-
-            public bool MoveNext()
-            {
-                return _tagEnumerator.MoveNext();
-            }
-
-            public void Reset()
-            {
-                _tagEnumerator.Reset();
-            }
-        }
-
-        #endregion
     }
 }

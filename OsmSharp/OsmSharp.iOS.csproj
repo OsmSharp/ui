@@ -63,8 +63,6 @@
     <Compile Include="Collections\Tags\ITagsCollectionIndex.cs" />
     <Compile Include="Collections\Tags\ITagsCollectionIndexReadonly.cs" />
     <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
-    <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
-    <Compile Include="Collections\Tags\SimpleTagsCollectionIndex.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
     <Compile Include="Collections\Tags\TagsCollection.cs" />
@@ -79,6 +77,8 @@
     <Compile Include="Collections\SortedList.cs" />
     <Compile Include="Collections\SortedSet.cs" />
     <Compile Include="Collections\SparseArray.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionBase.cs" />
+    <Compile Include="Collections\Tags\TagsTableCollection.cs" />
     <Compile Include="Collections\Tags\TagsTableCollectionIndex.cs" />
     <Compile Include="Geo\Streams\Gpx\GpxGeoStreamSource.cs" />
     <Compile Include="Geo\Streams\Kml\KmlGeoStreamSource.cs" />

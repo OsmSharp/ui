@@ -334,7 +334,7 @@ namespace OsmSharp.Data.Oracle.Osm
                             {
                                 if (way.Tags == null)
                                 {
-                                    way.Tags = new SimpleTagsCollection();
+                                    way.Tags = new TagsCollection();
                                 }
                                 way.Tags.Add(key, val);
                             }
@@ -529,7 +529,7 @@ namespace OsmSharp.Data.Oracle.Osm
                             {
                                 if (relation.Tags == null)
                                 {
-                                    relation.Tags = new SimpleTagsCollection();
+                                    relation.Tags = new TagsCollection();
                                 }
                                 relation.Tags.Add(key, value);
                             }
@@ -795,7 +795,7 @@ namespace OsmSharp.Data.Oracle.Osm
                             {
                                 if (node.Tags == null)
                                 {
-                                    node.Tags = new SimpleTagsCollection();
+                                    node.Tags = new TagsCollection();
                                 }
                                 node.Tags.Add(key, val);
                             }

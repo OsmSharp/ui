@@ -33,7 +33,7 @@ namespace OsmSharp.Test.Performance.Tags.Collections
         {
             for (int i = 0; i < collectionCount; i++)
             {
-                SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+                TagsCollection tagsCollection = new TagsCollection();
                 int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(3) + 1;
                 for (int idx = 0; idx < tagCollectionSize; idx++)
                 {
@@ -86,7 +86,7 @@ namespace OsmSharp.Test.Performance.Tags.Collections
             for (int idx = 0; idx < testCount; idx++)
             {
                 uint collectionIndex = (uint)OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(index.Max);
-                TagsCollection collection = index.Get(collectionIndex);
+                TagsCollectionBase collection = index.Get(collectionIndex);
             }
 
             performanceInfo.Stop();

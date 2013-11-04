@@ -182,7 +182,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
         RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate,
-            IEdgeMatcher matcher, TagsCollection matchingTags);
+            IEdgeMatcher matcher, TagsCollectionBase matchingTags);
 
         /// <summary>
         /// Resolves a point.
@@ -194,7 +194,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
         RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate,
-            IEdgeMatcher matcher, TagsCollection matchingTags);
+            IEdgeMatcher matcher, TagsCollectionBase matchingTags);
 
         /// <summary>
         /// Resolves all the given points.
@@ -222,7 +222,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
         RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinates,
-            IEdgeMatcher matcher, TagsCollection[] matchingTags);
+            IEdgeMatcher matcher, TagsCollectionBase[] matchingTags);
 
         /// <summary>
         /// Resolves all the given points.
@@ -234,7 +234,7 @@ namespace OsmSharp.Routing.Routers
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
         RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinates,
-            IEdgeMatcher matcher, TagsCollection[] matchingTags);
+            IEdgeMatcher matcher, TagsCollectionBase[] matchingTags);
 
         #region Search
 

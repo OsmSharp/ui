@@ -74,7 +74,7 @@ namespace OsmSharp.Test.Unittests.Routing.Dykstra
                 key);
             if (data == null)
             {
-                var tagsIndex = new SimpleTagsCollectionIndex();
+                var tagsIndex = new TagsTableCollectionIndex();
 
                 // do the data processing.
                 var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);

@@ -76,7 +76,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <param name="list"></param>
         internal void GenerateTurn(int entryIdx, GeoCoordinateBox box,
             RelativeDirection direction, int streetCountTurn, int streetCountBeforeTurn,
-            TagsCollection streetFrom, TagsCollection streetTo, List<PointPoi> list)
+            TagsCollectionBase streetFrom, TagsCollectionBase streetTo, List<PointPoi> list)
         {
             // create a new instruction first.
             Instruction instruction = new Instruction(entryIdx, box, list);
@@ -171,8 +171,8 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <param name="second_street_to"></param>
         /// <param name="list"></param>
         internal void GenerateImmidiateTurn(int entryIdx, GeoCoordinateBox box,
-            TagsCollection before_name, RelativeDirection first_direction, int first_street_count_to,
-            RelativeDirection second_direction, TagsCollection first_street_to, TagsCollection second_street_to, List<PointPoi> list)
+            TagsCollectionBase before_name, RelativeDirection first_direction, int first_street_count_to,
+            RelativeDirection second_direction, TagsCollectionBase first_street_to, TagsCollectionBase second_street_to, List<PointPoi> list)
         {
             // create a new instruction first.
             Instruction instruction = new Instruction(entryIdx, box);
@@ -192,7 +192,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration
         /// <param name="box"></param>
         /// <param name="count"></param>
         /// <param name="next_street"></param>
-        internal void GenerateRoundabout(int entryIdx, GeoCoordinateBox box, int count, TagsCollection next_street)
+        internal void GenerateRoundabout(int entryIdx, GeoCoordinateBox box, int count, TagsCollectionBase next_street)
         {
             // create a new instruction first.
             Instruction instruction = new Instruction(entryIdx, box);

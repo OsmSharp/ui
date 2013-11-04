@@ -39,13 +39,13 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Filters
         {
             // execute
             List<OsmGeo> filtered = this.Filter(new OsmGeo[] {
-                Node.Create(1, new SimpleTagsCollection(
+                Node.Create(1, new TagsCollection(
                     Tag.Create("tag1", "value1")), 0, 0),
-                Node.Create(2, new SimpleTagsCollection(
+                Node.Create(2, new TagsCollection(
                     Tag.Create("tag2", "value2")), 1, 0),
-                Node.Create(3, new SimpleTagsCollection(
+                Node.Create(3, new TagsCollection(
                     Tag.Create("tag3", "value3")), 0, 1) },
-                ((TagsCollection tags) => {}));
+                ((TagsCollectionBase tags) => {}));
 
             // verify.
             Assert.IsNotNull(filtered);
@@ -66,13 +66,13 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Filters
         {
             // execute
             List<OsmGeo> filtered = this.Filter(new OsmGeo[] {
-                Node.Create(1, new SimpleTagsCollection(
+                Node.Create(1, new TagsCollection(
                     Tag.Create("tag1", "value1")), 0, 0),
-                Node.Create(2, new SimpleTagsCollection(
+                Node.Create(2, new TagsCollection(
                     Tag.Create("tag2", "value2")), 1, 0),
-                Node.Create(3, new SimpleTagsCollection(
+                Node.Create(3, new TagsCollection(
                     Tag.Create("tag3", "value3")), 0, 1) },
-                ((TagsCollection tags) => {
+                ((TagsCollectionBase tags) => {
                     tags.RemoveKey("tag2");
                 }));
 

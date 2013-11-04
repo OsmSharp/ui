@@ -28,6 +28,6 @@ namespace OsmSharp.Collections.Tags
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        uint Add(TagsCollection tags);
+        uint Add(TagsCollectionBase tags);
     }
 }

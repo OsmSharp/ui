@@ -110,52 +110,52 @@ namespace OsmSharp.Test.Unittests.Osm
         public void TestBooleanParsing()
         {
             // test IsTrue.
-            TagsCollection tags = new SimpleTagsCollection();
+            TagsCollectionBase tags = new TagsCollection();
             tags.Add("area", "yes");
             Assert.IsTrue(tags.IsTrue("area"));
 
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags.Add("area", "1");
             Assert.IsTrue(tags.IsTrue("area"));
 
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags.Add("area", "true");
             Assert.IsTrue(tags.IsTrue("area"));
 
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags.Add("area", "false");
             Assert.IsFalse(tags.IsTrue("area"));
 
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags.Add("area", "0");
             Assert.IsFalse(tags.IsTrue("area"));
 
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags.Add("area", "no");
             Assert.IsFalse(tags.IsTrue("area"));
 
             // test IsFalse.
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags.Add("area", "yes");
             Assert.IsFalse(tags.IsFalse("area"));
 
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags.Add("area", "1");
             Assert.IsFalse(tags.IsFalse("area"));
 
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags.Add("area", "true");
             Assert.IsFalse(tags.IsFalse("area"));
 
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags.Add("area", "false");
             Assert.IsTrue(tags.IsFalse("area"));
 
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags.Add("area", "0");
             Assert.IsTrue(tags.IsFalse("area"));
 
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags.Add("area", "no");
             Assert.IsTrue(tags.IsFalse("area"));
         }
@@ -196,25 +196,25 @@ namespace OsmSharp.Test.Unittests.Osm
         {
             KilometerPerHour result;
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new SimpleTagsCollection(Tag.Create("maxspeed","30")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new TagsCollection(Tag.Create("maxspeed","30")), out result));
             Assert.AreEqual(30, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new SimpleTagsCollection(Tag.Create("maxspeed", "30.8")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new TagsCollection(Tag.Create("maxspeed", "30.8")), out result));
             Assert.AreEqual(30.8, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new SimpleTagsCollection(Tag.Create("maxspeed", "30 mph")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new TagsCollection(Tag.Create("maxspeed", "30 mph")), out result));
             Assert.AreEqual(30, ((MilesPerHour)result).Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new SimpleTagsCollection(Tag.Create("maxspeed", "30.8 mph")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new TagsCollection(Tag.Create("maxspeed", "30.8 mph")), out result));
             Assert.AreEqual(30.8, ((MilesPerHour)result).Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new SimpleTagsCollection(Tag.Create("maxspeed", "30 knots")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new TagsCollection(Tag.Create("maxspeed", "30 knots")), out result));
             Assert.AreEqual(30, ((Knots)result).Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new SimpleTagsCollection(Tag.Create("maxspeed", "30.8 knots")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxSpeed(new TagsCollection(Tag.Create("maxspeed", "30.8 knots")), out result));
             Assert.AreEqual(30.8, ((Knots)result).Value);
 
-            Assert.AreEqual(false, TagExtensions.TryGetMaxSpeed(new SimpleTagsCollection(Tag.Create("max", "30.8 knots")), out result));
+            Assert.AreEqual(false, TagExtensions.TryGetMaxSpeed(new TagsCollection(Tag.Create("max", "30.8 knots")), out result));
         }
 
         /// <summary>
@@ -225,19 +225,19 @@ namespace OsmSharp.Test.Unittests.Osm
         {
             Kilogram result;
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxWeight(new SimpleTagsCollection(Tag.Create("maxweight", "30")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxWeight(new TagsCollection(Tag.Create("maxweight", "30")), out result));
             Assert.AreEqual(30 * 1000, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxWeight(new SimpleTagsCollection(Tag.Create("maxweight", "30.8")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxWeight(new TagsCollection(Tag.Create("maxweight", "30.8")), out result));
             Assert.AreEqual(30.8 * 1000, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxWeight(new SimpleTagsCollection(Tag.Create("maxweight", "30 t")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxWeight(new TagsCollection(Tag.Create("maxweight", "30 t")), out result));
             Assert.AreEqual(30 * 1000, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxWeight(new SimpleTagsCollection(Tag.Create("maxweight", "30.8 t")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxWeight(new TagsCollection(Tag.Create("maxweight", "30.8 t")), out result));
             Assert.AreEqual(30.8 * 1000, result.Value);
 
-            Assert.AreEqual(false, TagExtensions.TryGetMaxWeight(new SimpleTagsCollection(Tag.Create("max", "30.8 t")), out result));
+            Assert.AreEqual(false, TagExtensions.TryGetMaxWeight(new TagsCollection(Tag.Create("max", "30.8 t")), out result));
         }
 
         /// <summary>
@@ -248,19 +248,19 @@ namespace OsmSharp.Test.Unittests.Osm
         {
             Kilogram result;
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxAxleLoad(new SimpleTagsCollection(Tag.Create("maxaxleload", "30")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxAxleLoad(new TagsCollection(Tag.Create("maxaxleload", "30")), out result));
             Assert.AreEqual(30 * 1000, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxAxleLoad(new SimpleTagsCollection(Tag.Create("maxaxleload", "30.8")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxAxleLoad(new TagsCollection(Tag.Create("maxaxleload", "30.8")), out result));
             Assert.AreEqual(30.8 * 1000, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxAxleLoad(new SimpleTagsCollection(Tag.Create("maxaxleload", "30 t")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxAxleLoad(new TagsCollection(Tag.Create("maxaxleload", "30 t")), out result));
             Assert.AreEqual(30 * 1000, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxAxleLoad(new SimpleTagsCollection(Tag.Create("maxaxleload", "30.8 t")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxAxleLoad(new TagsCollection(Tag.Create("maxaxleload", "30.8 t")), out result));
             Assert.AreEqual(30.8 * 1000, result.Value);
 
-            Assert.AreEqual(false, TagExtensions.TryGetMaxAxleLoad(new SimpleTagsCollection(Tag.Create("max", "30.8 t")), out result));
+            Assert.AreEqual(false, TagExtensions.TryGetMaxAxleLoad(new TagsCollection(Tag.Create("max", "30.8 t")), out result));
         }
 
         /// <summary>
@@ -271,16 +271,16 @@ namespace OsmSharp.Test.Unittests.Osm
         {
             Meter result;
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxHeight(new SimpleTagsCollection(Tag.Create("maxheight", "3")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxHeight(new TagsCollection(Tag.Create("maxheight", "3")), out result));
             Assert.AreEqual(3, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxHeight(new SimpleTagsCollection(Tag.Create("maxheight", "3.8")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxHeight(new TagsCollection(Tag.Create("maxheight", "3.8")), out result));
             Assert.AreEqual(3.8, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxHeight(new SimpleTagsCollection(Tag.Create("maxheight", "6'7\"")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxHeight(new TagsCollection(Tag.Create("maxheight", "6'7\"")), out result));
             Assert.AreEqual(6 * 0.3048 + 7 * 0.0254, result.Value);
 
-            Assert.AreEqual(false, TagExtensions.TryGetMaxHeight(new SimpleTagsCollection(Tag.Create("max", "6'7\"")), out result));
+            Assert.AreEqual(false, TagExtensions.TryGetMaxHeight(new TagsCollection(Tag.Create("max", "6'7\"")), out result));
         }
 
         /// <summary>
@@ -291,16 +291,16 @@ namespace OsmSharp.Test.Unittests.Osm
         {
             Meter result;
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxWidth(new SimpleTagsCollection(Tag.Create("maxwidth", "3")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxWidth(new TagsCollection(Tag.Create("maxwidth", "3")), out result));
             Assert.AreEqual(3, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxWidth(new SimpleTagsCollection(Tag.Create("maxwidth", "3.8")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxWidth(new TagsCollection(Tag.Create("maxwidth", "3.8")), out result));
             Assert.AreEqual(3.8, result.Value);
 
-            Assert.AreEqual(true, TagExtensions.TryGetMaxWidth(new SimpleTagsCollection(Tag.Create("maxwidth", "6'7\"")), out result));
+            Assert.AreEqual(true, TagExtensions.TryGetMaxWidth(new TagsCollection(Tag.Create("maxwidth", "6'7\"")), out result));
             Assert.AreEqual(6 * 0.3048 + 7 * 0.0254, result.Value);
 
-            Assert.AreEqual(false, TagExtensions.TryGetMaxWidth(new SimpleTagsCollection(Tag.Create("max", "6'7\"")), out result));
+            Assert.AreEqual(false, TagExtensions.TryGetMaxWidth(new TagsCollection(Tag.Create("max", "6'7\"")), out result));
         }
     }
 }

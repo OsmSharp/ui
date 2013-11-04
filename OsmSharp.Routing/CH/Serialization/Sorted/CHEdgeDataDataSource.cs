@@ -63,7 +63,7 @@ namespace OsmSharp.Routing.CH.Serialization.Sorted
 
             _blocks = new LRUCache<uint, CHBlock>(1000);
             _regions = new LRUCache<ulong, CHVertexRegion>(1000);
-            _tagsIndex = new SimpleTagsCollectionIndex();
+            _tagsIndex = new TagsTableCollectionIndex();
         }
 
         /// <summary>

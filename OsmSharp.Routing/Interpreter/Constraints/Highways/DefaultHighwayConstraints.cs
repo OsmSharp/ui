@@ -60,7 +60,7 @@ namespace OsmSharp.Routing.Interpreter.Constraints.Highways
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public RoutingLabel GetLabelFor(TagsCollection tags)
+        public RoutingLabel GetLabelFor(TagsCollectionBase tags)
         {
             if (_edge_intepreter.IsOnlyLocalAccessible(tags))
             {

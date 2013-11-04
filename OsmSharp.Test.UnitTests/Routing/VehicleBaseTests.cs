@@ -33,7 +33,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void TestVehicleCanTranverse(Vehicle vehicle, bool result, params string[] tags)
         {
             // build tags collection.
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             for (int idx = 0; idx < tags.Length; idx = idx + 2)
             {
                 tagsCollection.Add(tags[idx], tags[idx + 1]);
@@ -58,7 +58,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void TextMaxSpeed(Vehicle vehicle, double speed, params string[] tags)
         {
             // build tags collection.
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             for (int idx = 0; idx < tags.Length; idx = idx + 2)
             {
                 tagsCollection.Add(tags[idx], tags[idx + 1]);
@@ -76,7 +76,7 @@ namespace OsmSharp.Test.Unittests.Routing
         protected void TextProbableSpeed(Vehicle vehicle, double speed, params string[] tags)
         {
             // build tags collection.
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             for (int idx = 0; idx < tags.Length; idx = idx + 2)
             {
                 tagsCollection.Add(tags[idx], tags[idx + 1]);

@@ -32,7 +32,7 @@ namespace OsmSharp.Osm.Streams.Filters
         /// </summary>
         /// <param name="collection"></param>
         /// <returns></returns>
-        public delegate void TagsFilterDelegate(TagsCollection collection);
+        public delegate void TagsFilterDelegate(TagsCollectionBase collection);
 
         /// <summary>
         /// The tags filter.

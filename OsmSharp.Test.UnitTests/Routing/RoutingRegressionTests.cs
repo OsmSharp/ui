@@ -49,7 +49,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 
-            SimpleTagsCollectionIndex tags_index = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tags_index = new TagsTableCollectionIndex();
 
             // do the data processing.
             DynamicGraphRouterDataSource<LiveEdge> memory_data =
@@ -94,7 +94,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 
-            SimpleTagsCollectionIndex tags_index = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tags_index = new TagsTableCollectionIndex();
 
             // do the data processing.
             DynamicGraphRouterDataSource<LiveEdge> memory_data =
@@ -212,7 +212,7 @@ namespace OsmSharp.Test.Unittests.Routing
         {
             OsmRoutingInterpreter interpreter = new OsmRoutingInterpreter();
 
-            SimpleTagsCollectionIndex tags_index = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tags_index = new TagsTableCollectionIndex();
 
             // do the data processing.
             DynamicGraphRouterDataSource<LiveEdge> memory_data =

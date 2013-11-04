@@ -104,7 +104,7 @@ namespace OsmSharp.Data.Redis.Osm
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public static List<RedisTag> ConvertTo(TagsCollection tags)
+        public static List<RedisTag> ConvertTo(TagsCollectionBase tags)
         {
             List<RedisTag> redisTags =null;
             if (tags != null)
@@ -225,12 +225,12 @@ namespace OsmSharp.Data.Redis.Osm
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public static TagsCollection ConvertFrom(List<RedisTag> tags)
+        public static TagsCollectionBase ConvertFrom(List<RedisTag> tags)
         {
-            TagsCollection redisTags = null;
+            TagsCollectionBase redisTags = null;
             if (tags != null)
             {
-                redisTags = new SimpleTagsCollection();
+                redisTags = new TagsCollection();
                 if (tags != null)
                 {
                     foreach (RedisTag redisTag in tags)

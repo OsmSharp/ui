@@ -196,7 +196,7 @@ namespace OsmSharp.Data.Test.Unittests
             node.Visible = true;
             node.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
                 DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            node.Tags = new SimpleTagsCollection();
+            node.Tags = new TagsCollection();
             node.Tags.Add("tag", "value");
 
             // create a target, add the node, create a source and verify node in db.
@@ -339,7 +339,7 @@ namespace OsmSharp.Data.Test.Unittests
             way.Visible = true;
             way.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
                 DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            way.Tags = new SimpleTagsCollection();
+            way.Tags = new TagsCollection();
             way.Tags.Add("tag", "value");
 
             // create a target, add the way, create a source and verify way in db.
@@ -508,7 +508,7 @@ namespace OsmSharp.Data.Test.Unittests
             relation.Visible = true;
             relation.TimeStamp = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day,
                 DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second);
-            relation.Tags = new SimpleTagsCollection();
+            relation.Tags = new TagsCollection();
             relation.Tags.Add("tag", "value");
 
             // create a target, add the relation, create a source and verify relation in db.
@@ -945,7 +945,7 @@ namespace OsmSharp.Data.Test.Unittests
         /// </summary>
         /// <param name="expectedTags"></param>
         /// <param name="foundTags"></param>
-        private void CompareTags(TagsCollection expectedTags, TagsCollection foundTags)
+        private void CompareTags(TagsCollectionBase expectedTags, TagsCollectionBase foundTags)
         {
             if (expectedTags == null)
             {

@@ -519,23 +519,23 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
             return (decimal)scalar == 1;
         }
 
-        private void ModifyTags(long id, TagsCollection neTags, string table, string refColumn)
+        private void ModifyTags(long id, TagsCollectionBase neTags, string table, string refColumn)
         {
             OracleCommand command;
 
-            TagsCollection tagsToInsert = null;
+            TagsCollectionBase tagsToInsert = null;
             if (neTags == null)
             {
-                tagsToInsert = new SimpleTagsCollection();
+                tagsToInsert = new TagsCollection();
             }
             else
             {
-                tagsToInsert = new SimpleTagsCollection(neTags);
+                tagsToInsert = new TagsCollection(neTags);
             }
 
             // suppose there are no tags present yet.
-            TagsCollection tags_to_update = new SimpleTagsCollection();
-            TagsCollection tags_to_delete = new SimpleTagsCollection();            
+            TagsCollectionBase tags_to_update = new TagsCollection();
+            TagsCollectionBase tags_to_delete = new TagsCollection();            
 
             // adjust the data based on the tags already present.
             command = this.CreateCommand(string.Format("select * from {0} where {1}=:{1}",table,refColumn));
@@ -813,19 +813,19 @@ namespace OsmSharp.Data.Oracle.Osm.Streams
         /// <param name="new_tags"></param>
         /// <param name="table"></param>
         /// <param name="ref_column"></param>
-        public void CreateTags(long id, TagsCollection new_tags, string table, string ref_column)
+        public void CreateTags(long id, TagsCollectionBase new_tags, string table, string ref_column)
         {
             OracleCommand command;
 
             // copy the source tags dictionary.
-            TagsCollection tagsToInsert;
+            TagsCollectionBase tagsToInsert;
             if (new_tags == null)
             {
-                tagsToInsert = new SimpleTagsCollection();
+                tagsToInsert = new TagsCollection();
             }
             else
             {
-                tagsToInsert = new SimpleTagsCollection(new_tags);
+                tagsToInsert = new TagsCollection(new_tags);
             }
 
             // insert tags.

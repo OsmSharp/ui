@@ -63,7 +63,7 @@ namespace OsmSharp.Osm
             }
             else
             {
-                this.Tags = new SimpleTagsCollection();
+                this.Tags = new TagsCollection();
             }
         }
 
@@ -133,7 +133,7 @@ namespace OsmSharp.Osm
         /// <summary>
         /// Returns the tags dictionary.
         /// </summary>
-        public TagsCollection Tags { get; protected set; }
+        public TagsCollectionBase Tags { get; protected set; }
 
         /// <summary>
         /// Returns true if a and b represent the same object.

@@ -44,7 +44,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         /// <returns></returns>
         public Instruction GenerateDirectTurn(Instruction instruction,
             int streetCountBeforeTurn,
-            TagsCollection streetTo,
+            TagsCollectionBase streetTo,
             RelativeDirectionEnum direction,
             List<PointPoi> list)
         {
@@ -73,7 +73,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         public Instruction GenerateIndirectTurn(Instruction instruction,
             int streetCountTurn,
             int streetCountBeforeTurn,
-            TagsCollection streetTo,
+            TagsCollectionBase streetTo,
             RelativeDirectionEnum direction,
             List<PointPoi> list)
         {
@@ -130,7 +130,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         /// <returns></returns>
         public Instruction GenerateDirectFollowTurn(Instruction instruction,
             int streetCountBeforeTurn,
-            TagsCollection streetTo,
+            TagsCollectionBase streetTo,
             RelativeDirectionEnum direction,
             List<PointPoi> list)
         {
@@ -159,7 +159,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         public Instruction GenerateIndirectFollowTurn(Instruction instruction,
             int streetCountTurn,
             int streetCountBeforeTurn,
-            TagsCollection streetTo,
+            TagsCollectionBase streetTo,
             RelativeDirectionEnum direction,
             List<PointPoi> list)
         {
@@ -189,9 +189,9 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         /// <returns></returns>
         public Instruction GenerateImmidiateTurn(Instruction instruction,
             int firstStreetCountTo,
-            TagsCollection firstStreetTo,
+            TagsCollectionBase firstStreetTo,
             OsmSharp.Math.Geo.Meta.RelativeDirection firstDirection,
-            TagsCollection secondStreetTo,
+            TagsCollectionBase secondStreetTo,
             RelativeDirection secondDirection)
         {
             instruction.Text = string.Format("GenerateImmidiateTurn:{0}_{1}_{2}_{3}",
@@ -217,7 +217,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         /// <param name="nextStreet"></param>
         /// <returns></returns>
         public Instruction GenerateRoundabout(Instruction instruction,
-            int count, TagsCollection nextStreet)
+            int count, TagsCollectionBase nextStreet)
         {
             instruction.Text = string.Format("GenerateRoundabout:{0}",
                                              count);

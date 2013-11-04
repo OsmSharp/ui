@@ -36,7 +36,7 @@ namespace OsmSharp.Test.Performance.Tags.Collections
         /// </summary>
         public static void Test()
         {
-            SimpleTagsCollectionIndex index = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex index = new TagsTableCollectionIndex();
 
             // first fill the index.
             ITagCollectionIndexTests.FillIndex(index, 100000);

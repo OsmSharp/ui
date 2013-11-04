@@ -160,7 +160,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="edgeInterpreter"></param>
         /// <returns></returns>
         protected override LiveEdge CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, 
-            TagsCollection tags, bool directionForward, GeoCoordinate from, GeoCoordinate to)
+            TagsCollectionBase tags, bool directionForward, GeoCoordinate from, GeoCoordinate to)
         {
             if (edgeInterpreter == null) throw new ArgumentNullException("edgeInterpreter");
             if (tagsIndex == null) throw new ArgumentNullException("tagsIndex");
@@ -183,7 +183,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tags"></param>
         /// <returns></returns>
         protected override bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter,
-            ITagsCollectionIndex tagsIndex, TagsCollection tags)
+            ITagsCollectionIndex tagsIndex, TagsCollectionBase tags)
         {
             if (_vehicles.Count > 0)
             { // limit only to vehicles in this list.
@@ -231,7 +231,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         public static DynamicGraphRouterDataSource<LiveEdge> Preprocess(OsmStreamSource reader,
                                                                         IOsmRoutingInterpreter interpreter)
         {
-            return LiveGraphOsmStreamTarget.Preprocess(reader, new SimpleTagsCollectionIndex(), interpreter);
+            return LiveGraphOsmStreamTarget.Preprocess(reader, new TagsTableCollectionIndex(), interpreter);
         }
 
         #endregion

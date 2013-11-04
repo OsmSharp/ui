@@ -68,7 +68,7 @@ namespace OsmSharp.Osm.Interpreter
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public abstract bool IsPotentiallyArea(TagsCollection tags);
+        public abstract bool IsPotentiallyArea(TagsCollectionBase tags);
 
         /// <summary>
         /// Interprets an OSM-object and returns the correctponding geometry.

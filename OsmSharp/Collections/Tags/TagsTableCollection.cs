@@ -23,39 +23,57 @@ using System.Text;
 namespace OsmSharp.Collections.Tags
 {
     /// <summary>
-    /// Represents a simple tags collection based on a list.
+    /// Represents a tags collection based on a backing tags table.
     /// </summary>
-    public class SimpleTagsCollection : TagsCollection
+    public class TagsTableCollection : TagsCollectionBase
     {
         /// <summary>
         /// Holds the tags.
         /// </summary>
-        private readonly List<Tag> _tags;
+        private readonly List<uint> _tags;
+
+        /// <summary>
+        /// Holds all the tags objects.
+        /// </summary>
+        private readonly ObjectTable<Tag> _tagsTable;
 
         /// <summary>
         /// Creates a new tags collection.
         /// </summary>
-        public SimpleTagsCollection()
+        /// <param name="tagsTable"></param>
+        public TagsTableCollection(ObjectTable<Tag> tagsTable)
         {
-            _tags = new List<Tag>();
-        }
-
-        /// <summary>
-        /// Creates a new tags collection.
-        /// </summary>
-        public SimpleTagsCollection(params Tag[] tags)
-        {
-            _tags = new List<Tag>(tags);
+            _tags = new List<uint>();
         }
 
         /// <summary>
         /// Creates a new tags collection initialized with the given existing tags.
         /// </summary>
+        /// <param name="tagsTable"></param>
         /// <param name="tags"></param>
-        public SimpleTagsCollection(IEnumerable<Tag> tags)
+        public TagsTableCollection(ObjectTable<Tag> tagsTable, params Tag[] tags)
         {
-            _tags = new List<Tag>();
-            _tags.AddRange(tags);
+            _tagsTable = tagsTable;
+            _tags = new List<uint>();
+            foreach(Tag tag in tags)
+            {
+                _tags.Add(_tagsTable.Add(tag));
+            }
+        }
+
+        /// <summary>
+        /// Creates a new tags collection initialized with the given existing tags.
+        /// </summary>
+        /// <param name="tagsTable"></param>
+        /// <param name="tags"></param>
+        public TagsTableCollection(ObjectTable<Tag> tagsTable, IEnumerable<Tag> tags)
+        {
+            _tagsTable = tagsTable;
+            _tags = new List<uint>();
+            foreach(Tag tag in tags)
+            {
+                _tags.Add(_tagsTable.Add(tag));
+            }
         }
 
         /// <summary>
@@ -73,7 +91,7 @@ namespace OsmSharp.Collections.Tags
         /// <param name="value"></param>
         public override void Add(string key, string value)
         {
-            _tags.Add(new Tag()
+            this.Add(new Tag()
             {
                 Key = key,
                 Value = value
@@ -86,7 +104,7 @@ namespace OsmSharp.Collections.Tags
         /// <param name="tag"></param>
         public override void Add(Tag tag)
         {
-            _tags.Add(tag);
+            _tags.Add(_tagsTable.Add(tag));
         }
 
         /// <summary>
@@ -96,13 +114,13 @@ namespace OsmSharp.Collections.Tags
         /// <param name="value"></param>
         public override void AddOrReplace(string key, string value)
         {
-            for(int idx = 0; idx < _tags.Count; idx++)
+            for (int idx = 0; idx < _tags.Count; idx++)
             {
-                Tag tag = _tags[idx];
+                Tag tag = _tagsTable.Get(_tags[idx]);
                 if (tag.Key == key)
                 {
                     tag.Value = value;
-                    _tags[idx] = tag;
+                    _tags[idx] = _tagsTable.Add(tag);
                     return;
                 }
             }
@@ -125,7 +143,10 @@ namespace OsmSharp.Collections.Tags
         /// <returns></returns>
         public override bool ContainsKey(string key)
         {
-            return _tags.Any(tag => tag.Key == key);
+            return _tags.Any((tagId) =>
+                {
+                    return _tagsTable.Get(tagId).Key == key;
+                });
         }
 
         /// <summary>
@@ -136,9 +157,10 @@ namespace OsmSharp.Collections.Tags
         /// <returns></returns>
         public override bool TryGetValue(string key, out string value)
         {
-            foreach(var tag in _tags)
+            foreach (var tagId in _tags)
             {
-                if(tag.Key == key)
+                Tag tag = _tagsTable.Get(tagId);
+                if (tag.Key == key)
                 {
                     value = tag.Value;
                     return true;
@@ -156,7 +178,11 @@ namespace OsmSharp.Collections.Tags
         /// <returns></returns>
         public override bool ContainsKeyValue(string key, string value)
         {
-            return _tags.Any(tag => tag.Key == key && tag.Value == value);
+            return _tags.Any((tagId) =>
+            {
+                Tag tag = _tagsTable.Get(tagId);
+                return tag.Key == key && tag.Value == value;
+            });
         }
 
         /// <summary>
@@ -173,7 +199,10 @@ namespace OsmSharp.Collections.Tags
         /// <returns></returns>
         public override IEnumerator<Tag> GetEnumerator()
         {
-            return _tags.GetEnumerator();
+            return _tags.Select<uint, Tag>((tagId) =>
+            {
+                return _tagsTable.Get(tagId);
+            }).GetEnumerator();
         }
 
         /// <summary>
@@ -183,7 +212,10 @@ namespace OsmSharp.Collections.Tags
         /// <returns></returns>
         public override bool RemoveKey(string key)
         {
-            return _tags.RemoveAll(tag => tag.Key == key) > 0;
+            return _tags.RemoveAll((tagId) => 
+                {
+                    return _tagsTable.Get(tagId).Key == key;
+                }) > 0;
         }
 
         /// <summary>
@@ -194,7 +226,11 @@ namespace OsmSharp.Collections.Tags
         /// <returns></returns>
         public override bool RemoveKeyValue(string key, string value)
         {
-            return _tags.RemoveAll(tag => tag.Key == key && tag.Value == value) > 0;
+            return _tags.RemoveAll((tagId) =>
+            {
+                Tag tag = _tagsTable.Get(tagId);
+                return tag.Key == key && tag.Value == value;
+            }) > 0;
         }
 
         /// <summary>

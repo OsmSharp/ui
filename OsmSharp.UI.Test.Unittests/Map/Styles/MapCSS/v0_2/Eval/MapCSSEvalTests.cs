@@ -21,7 +21,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2.Eval
         public void MapCSSEvalTagTest()
         {
             string function = "tag('width')";
-            TagsCollection tags = new SimpleTagsCollection();
+            TagsCollectionBase tags = new TagsCollection();
             tags.Add("width", "2");
 
             Assert.AreEqual(2, EvalInterpreter.Instance.InterpretDouble(function, tags));

@@ -784,7 +784,7 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public static RouteTags[] ConvertFrom(this TagsCollection tags)
+        public static RouteTags[] ConvertFrom(this TagsCollectionBase tags)
         {
             var tagsList = new List<RouteTags>();
             foreach (Tag pair in tags)
@@ -802,9 +802,9 @@ namespace OsmSharp.Routing
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public static TagsCollection ConvertToTagsCollection(this RouteTags[] tags)
+        public static TagsCollectionBase ConvertToTagsCollection(this RouteTags[] tags)
         {
-            var tagsList = new SimpleTagsCollection();
+            var tagsList = new TagsCollection();
             if (tags != null)
             {
                 foreach (RouteTags pair in tags)

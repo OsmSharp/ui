@@ -19,25 +19,25 @@
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Test.Unittests.Tags
+namespace OsmSharp.Test.Unittests.Collections.Tags
 {
     /// <summary>
     /// Contains tags collection tests.
     /// </summary>
-    public abstract class TagsCollectionTests
+    public abstract class TagsCollectionBaseTests
     {
         /// <summary>
         /// Creates a tags collection.
         /// </summary>
         /// <returns></returns>
-        protected abstract TagsCollection CreateTagsCollection();
+        protected abstract TagsCollectionBase CreateTagsCollection();
 
         /// <summary>
         /// Tests an empty tags collection.
         /// </summary>
         protected void TestTagsCollectionEmpty()
         {
-            TagsCollection collection = new SimpleTagsCollection();
+            TagsCollectionBase collection = new TagsCollection();
 
             Assert.AreEqual(0, collection.Count);
         }
@@ -47,7 +47,7 @@ namespace OsmSharp.Test.Unittests.Tags
         /// </summary>
         protected void TestTagsCollectionSimple()
         {
-            TagsCollection collection = new SimpleTagsCollection();
+            TagsCollectionBase collection = new TagsCollection();
 
             collection["simple"] = "yes";
 

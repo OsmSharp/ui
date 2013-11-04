@@ -131,7 +131,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                                 serializableGraphArcs.Forward[idx] = arc.Value.Forward;
 
                                 // get the tags.
-                                TagsCollection tagsCollection = 
+                                TagsCollectionBase tagsCollection = 
                                     graph.TagsIndex.Get(arc.Value.Tags);
                                 if (tagsCollection != null)
                                 {

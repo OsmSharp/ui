@@ -164,7 +164,7 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
                     {
                         if (relation.Tags == null)
                         {
-                            relation.Tags = new SimpleTagsCollection();
+                            relation.Tags = new TagsCollection();
                         }
                         string key = _relationTagReader.GetString(1);
                         string value = _relationTagReader.GetString(2);
@@ -366,7 +366,7 @@ namespace OsmSharp.Data.SQLite.Osm.Streams
                     {
                         if (way.Tags == null)
                         {
-                            way.Tags = new SimpleTagsCollection();
+                            way.Tags = new TagsCollection();
                         }
                         string key = _wayTagReader.GetString(1);
                         string value = _wayTagReader.GetString(2);

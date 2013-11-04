@@ -469,7 +469,7 @@ namespace OsmSharp.Routing.Graph.Router.Dykstra
                 foreach (KeyValuePair<uint, LiveEdge> neighbour in arcs)
                 {
                     // check the tags against the interpreter.
-                    TagsCollection tags = graph.TagsIndex.Get(neighbour.Value.Tags);
+                    TagsCollectionBase tags = graph.TagsIndex.Get(neighbour.Value.Tags);
                     if (vehicle.CanTraverse(tags))
                     { // it's ok; the edge can be traversed by the given vehicle.
                         bool? oneWay = vehicle.IsOneWay(tags);

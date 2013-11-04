@@ -147,7 +147,7 @@ namespace OsmSharp.Collections.Tags.Serializer
             List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexList = new List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>();
             for (uint tagId = from; tagId < to; tagId++)
             {
-                TagsCollection tagsCollection = tagsIndex.Get(tagId);
+                TagsCollectionBase tagsCollection = tagsIndex.Get(tagId);
                 if (tagsCollection != null)
                 { // convert the tags collection to a list and add to the tag index.
                     List<KeyValuePair<uint, uint>> tagsList = new List<KeyValuePair<uint, uint>>();
@@ -187,7 +187,7 @@ namespace OsmSharp.Collections.Tags.Serializer
             List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexList = new List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>();
             foreach(uint tagId in toSerialize)
             {
-                TagsCollection tagsCollection = tagsIndex.Get(tagId);
+                TagsCollectionBase tagsCollection = tagsIndex.Get(tagId);
                 if (tagsCollection != null)
                 { // convert the tags collection to a list and add to the tag index.
                     List<KeyValuePair<uint, uint>> tagsList = new List<KeyValuePair<uint, uint>>();
@@ -226,7 +226,7 @@ namespace OsmSharp.Collections.Tags.Serializer
             List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>> tagsIndexList = new List<KeyValuePair<uint,List<KeyValuePair<uint,uint>>>>();
             for (uint tagId = 0; tagId < tagsIndex.Max; tagId++)
             {
-                TagsCollection tagsCollection = tagsIndex.Get(tagId);
+                TagsCollectionBase tagsCollection = tagsIndex.Get(tagId);
                 if (tagsCollection != null)
                 { // convert the tags collection to a list and add to the tag index.
                     List<KeyValuePair<uint, uint>> tagsList = new List<KeyValuePair<uint, uint>>();
@@ -310,12 +310,12 @@ namespace OsmSharp.Collections.Tags.Serializer
                 typeof(List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>)) as List<KeyValuePair<uint, List<KeyValuePair<uint, uint>>>>;
             memoryStream.Dispose();
 
-            Dictionary<uint, SimpleTagsCollection> tagsIndexList = new Dictionary<uint, SimpleTagsCollection>();
+            Dictionary<uint, TagsCollection> tagsIndexList = new Dictionary<uint, TagsCollection>();
             for(int idx = 0; idx < tagsIndexTableList.Count; idx++)
             {
                 KeyValuePair<uint, List<KeyValuePair<uint, uint>>> serializedTagsCollection = 
                     tagsIndexTableList[idx];
-                SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+                TagsCollection tagsCollection = new TagsCollection();
                 if (serializedTagsCollection.Value != null)
                 {
                     foreach (KeyValuePair<uint, uint> pair in serializedTagsCollection.Value)
@@ -338,7 +338,7 @@ namespace OsmSharp.Collections.Tags.Serializer
             /// <summary>
             /// Holds tags list.
             /// </summary>
-            private Dictionary<uint, SimpleTagsCollection> _tags;
+            private Dictionary<uint, TagsCollection> _tags;
 
             /// <summary>
             /// Holds the max.
@@ -349,7 +349,7 @@ namespace OsmSharp.Collections.Tags.Serializer
             /// Creates a new tags index readonly.
             /// </summary>
             /// <param name="tags"></param>
-            public TagsIndexReadonly(Dictionary<uint, SimpleTagsCollection> tags)
+            public TagsIndexReadonly(Dictionary<uint, TagsCollection> tags)
             {
                 if (tags == null) { throw new ArgumentNullException(); }
 
@@ -378,9 +378,9 @@ namespace OsmSharp.Collections.Tags.Serializer
             /// </summary>
             /// <param name="tagsId"></param>
             /// <returns></returns>
-            public TagsCollection Get(uint tagsId)
+            public TagsCollectionBase Get(uint tagsId)
             {
-                SimpleTagsCollection collection;
+                TagsCollection collection;
                 if (_tags.TryGetValue(tagsId, out collection))
                 {
                     return collection;
@@ -487,7 +487,7 @@ namespace OsmSharp.Collections.Tags.Serializer
             /// </summary>
             /// <param name="tagsId"></param>
             /// <returns></returns>
-            public TagsCollection Get(uint tagsId)
+            public TagsCollectionBase Get(uint tagsId)
             {
                 // check bounds of current block.
                 if (_currentBlock != null)
@@ -505,7 +505,7 @@ namespace OsmSharp.Collections.Tags.Serializer
                 // check if outside of the scope of this index.
                 if (blockIdx >= _blockPositions.Length)
                 {
-                    return new SimpleTagsCollection();
+                    return new TagsCollection();
                 }
 
                 // deserialize block.

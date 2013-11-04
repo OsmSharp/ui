@@ -154,7 +154,7 @@ namespace OsmSharp.Routing.CH.Serialization.Tiled
                                 serializableGraphArcs.Weight[idx] = arc.Value.Weight;
 
                                 // get the tags.
-                                TagsCollection tagsCollection =
+                                TagsCollectionBase tagsCollection =
                                     graph.TagsIndex.Get(arc.Value.Tags);
                                 if (tagsCollection != null)
                                 {

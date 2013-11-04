@@ -63,7 +63,7 @@ namespace OsmSharp.Routing.ArcAggregation.Output
         /// <summary>
         /// The tags/properties.
         /// </summary>
-        public TagsCollection Tags { get; set; }
+        public TagsCollectionBase Tags { get; set; }
 
         #endregion
     }

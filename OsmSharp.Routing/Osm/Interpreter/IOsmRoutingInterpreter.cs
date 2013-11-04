@@ -34,7 +34,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
         /// <param name="type"></param>
         /// <param name="tags"></param>
         /// <returns></returns>
-        bool IsRestriction(OsmGeoType type, TagsCollection tags);
+        bool IsRestriction(OsmGeoType type, TagsCollectionBase tags);
 
         /// <summary>
         /// Calculates all restrictions for the given node.

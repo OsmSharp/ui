@@ -81,7 +81,7 @@ namespace OsmSharp.Osm
         /// <param name="tags"></param>
         /// <param name="members"></param>
         /// <returns></returns>
-        public static Relation Create(long id, TagsCollection tags, params RelationMember[] members)
+        public static Relation Create(long id, TagsCollectionBase tags, params RelationMember[] members)
         {
             Relation relation = new Relation();
             relation.Id = id;

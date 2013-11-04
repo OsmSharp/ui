@@ -155,9 +155,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
                 new GeoCoordinate(point1.Latitude + 0.001f, point1.Longitude + 0.001f));
 
             // get all the names/direction/counts.
-            TagsCollection nextName = latestPoint.Next.Tags;
-            TagsCollection betweenName = latestArc.Tags;
-            TagsCollection beforeName = secondLatestArc.Tags;
+            TagsCollectionBase nextName = latestPoint.Next.Tags;
+            TagsCollectionBase betweenName = latestArc.Tags;
+            TagsCollectionBase beforeName = secondLatestArc.Tags;
 
             int firstCount = count;
 

@@ -47,7 +47,7 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
             way.Nodes.Add(2);
             way.Nodes.Add(3);
             way.Nodes.Add(1);
-            way.Tags = new SimpleTagsCollection();
+            way.Tags = new TagsCollection();
             way.Tags.Add("area", "yes");
 
             MemoryDataSource source = new MemoryDataSource();
@@ -96,7 +96,7 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
             way.Nodes.Add(2);
             way.Nodes.Add(3);
             way.Nodes.Add(1);
-            way.Tags = new SimpleTagsCollection();
+            way.Tags = new TagsCollection();
             way.Tags.Add("natural", "water");
 
             MemoryDataSource source = new MemoryDataSource();
@@ -132,7 +132,7 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
                 Node.Create(3, 0, 1),
                 Way.Create(1, 1, 2, 3, 1),
                 Relation.Create(1, 
-                    new SimpleTagsCollection(
+                    new TagsCollection(
                         Tag.Create("type", "multipolygon")),
                     RelationMember.Create(1, "outer", OsmGeoType.Way)));
 
@@ -166,7 +166,7 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
                 Way.Create(1, 1, 2, 3, 4, 1),
                 Way.Create(2, 5, 6, 7, 8, 5),
                 Relation.Create(1,
-                    new SimpleTagsCollection(
+                    new TagsCollection(
                         Tag.Create("type", "multipolygon")),
                     RelationMember.Create(1, "outer", OsmGeoType.Way),
                     RelationMember.Create(2, "inner", OsmGeoType.Way)));
@@ -209,7 +209,7 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
                 Way.Create(2, 5, 6, 7, 8, 5),
                 Way.Create(3, 9, 10, 11, 12, 9),
                 Relation.Create(1,
-                    new SimpleTagsCollection(
+                    new TagsCollection(
                         Tag.Create("type", "multipolygon")),
                     RelationMember.Create(1, "outer", OsmGeoType.Way),
                     RelationMember.Create(2, "inner", OsmGeoType.Way),
@@ -249,7 +249,7 @@ namespace OsmSharp.Test.Unittests.Osm.Interpreter
                 Way.Create(2, 5, 6, 7),
                 Way.Create(3, 7, 8, 5),
                 Relation.Create(1,
-                    new SimpleTagsCollection(
+                    new TagsCollection(
                         Tag.Create("type", "multipolygon")),
                     RelationMember.Create(1, "outer", OsmGeoType.Way),
                     RelationMember.Create(2, "inner", OsmGeoType.Way),

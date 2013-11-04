@@ -41,13 +41,13 @@ namespace OsmSharp.Osm.Interpreter
             // contains hardcoded all relevant tags.
 
             GeometryCollection collection = new GeometryCollection();
-            TagsCollection tags;
+            TagsCollectionBase tags;
             if (osmObject != null)
             {
                 switch (osmObject.Type)
                 {
                     case CompleteOsmType.Node:
-                        SimpleTagsCollection newCollection = new SimpleTagsCollection(
+                        TagsCollection newCollection = new TagsCollection(
                             osmObject.Tags);
                         newCollection.RemoveKey("FIXME");
                         newCollection.RemoveKey("node");
@@ -139,7 +139,7 @@ namespace OsmSharp.Osm.Interpreter
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public override bool IsPotentiallyArea(TagsCollection tags)
+        public override bool IsPotentiallyArea(TagsCollectionBase tags)
         {
             if (tags == null || tags.Count == 0) { return false; } // no tags, assume no area.
 

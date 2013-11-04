@@ -31,11 +31,11 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             IEdgeMatcher matcher = new DefaultEdgeMatcher();
 
             // create edge tags.
-            var edgeTags = new SimpleTagsCollection();
+            var edgeTags = new TagsCollection();
             //edge_tags["highway"] = "footway";
 
             // create point tags.
-            var pointTags = new SimpleTagsCollection();
+            var pointTags = new TagsCollection();
             //point_tags["highway"] = "footway";
 
             // test with empty point tags.
@@ -221,14 +221,14 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
             var fromNoname = new GeoCoordinate(51.0, 4.0007);
             var toNoname = new GeoCoordinate(51.0, 4.0008);
 
-            TagsCollection pointTags = new SimpleTagsCollection();
+            TagsCollectionBase pointTags = new TagsCollection();
             pointTags["name"] = pointName;
 
-            TagsCollection tags = new SimpleTagsCollection();
+            TagsCollectionBase tags = new TagsCollection();
             tags["highway"] = highway;
             //tags["name"] = name;
 
-            var tagsIndex = new SimpleTagsCollectionIndex();
+            var tagsIndex = new TagsTableCollectionIndex();
 
             // do the data processing.
             var data = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
@@ -239,7 +239,7 @@ namespace OsmSharp.Test.Unittests.Routing.EdgeMatcher
                 Forward = true,
                 Tags = tagsIndex.Add(tags)
             }, null);
-            tags = new SimpleTagsCollection();
+            tags = new TagsCollection();
             tags["highway"] = highway;
             tags["name"] = name;
             uint vertexName1 = data.AddVertex((float)fromName.Latitude, (float)fromName.Longitude);

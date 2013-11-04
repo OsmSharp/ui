@@ -79,7 +79,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="edgeComparer"></param>
         protected DynamicGraphOsmStreamWriter(IDynamicGraphRouterDataSource<TEdgeData> dynamicGraph,
             IOsmRoutingInterpreter interpreter, IDynamicGraphEdgeComparer<TEdgeData> edgeComparer)
-            : this(dynamicGraph, interpreter, edgeComparer, new SimpleTagsCollectionIndex(), new Dictionary<long, uint>())
+            : this(dynamicGraph, interpreter, edgeComparer, new TagsTableCollectionIndex(), new Dictionary<long, uint>())
         {
 
         }
@@ -366,7 +366,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="from"></param>
         /// <param name="to"></param>
         /// <param name="tags"></param>
-        private bool AddRoadEdge(TagsCollection tags, bool forward, uint from, uint to)
+        private bool AddRoadEdge(TagsCollectionBase tags, bool forward, uint from, uint to)
         {
             float latitude;
             float longitude;
@@ -394,7 +394,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// Calculates the edge data.
         /// </summary>
         /// <returns></returns>
-        protected abstract TEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, TagsCollection tags,
+        protected abstract TEdgeData CalculateEdgeData(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex, TagsCollectionBase tags,
             bool directionForward, GeoCoordinate from, GeoCoordinate to);
 
         /// <summary>
@@ -405,7 +405,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         /// <param name="tags"></param>
         /// <returns></returns>
         protected abstract bool CalculateIsTraversable(IEdgeInterpreter edgeInterpreter, ITagsCollectionIndex tagsIndex,
-                                              TagsCollection tags);
+                                              TagsCollectionBase tags);
 
         /// <summary>
         /// Holds the ways to cache to complete the restriction reations.
@@ -495,7 +495,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
         public override void RegisterSource(OsmStreamSource source)
         {
             // add filter to remove all irrelevant tags.
-            OsmStreamFilterTagsFilter tagsFilter = new OsmStreamFilterTagsFilter((TagsCollection tags) =>
+            OsmStreamFilterTagsFilter tagsFilter = new OsmStreamFilterTagsFilter((TagsCollectionBase tags) =>
             {
                 List<Tag> tagsToRemove = new List<Tag>();
                 foreach (Tag tag in tags)

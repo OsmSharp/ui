@@ -60,7 +60,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         /// <param name="list"></param>
         /// <returns></returns>
         public Instruction GenerateDirectTurn(Instruction instruction, int street_count_before_turn,
-            TagsCollection street_to, RelativeDirectionEnum direction, List<PointPoi> list)
+            TagsCollectionBase street_to, RelativeDirectionEnum direction, List<PointPoi> list)
         {
 //            if (street_count_before_turn == 1)
 //            {
@@ -92,7 +92,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         /// <param name="list"></param>
         /// <returns></returns>
         public Instruction GenerateIndirectTurn(Instruction instruction, int street_count_turn, int street_count_before_turn,
-            TagsCollection street_to, RelativeDirectionEnum direction, List<PointPoi> list)
+            TagsCollectionBase street_to, RelativeDirectionEnum direction, List<PointPoi> list)
         {
 //            instruction.Text = string.Format("Neem de {0}de afslag {1}, de {2} op.",
 //                street_count_before_turn,
@@ -138,7 +138,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         /// <param name="list"></param>
         /// <returns></returns>
         public Instruction GenerateDirectFollowTurn(Instruction instruction, int street_count_before_turn,
-            TagsCollection street_to, 
+            TagsCollectionBase street_to, 
             RelativeDirectionEnum direction, List<PointPoi> list)
         {
 //            if (street_count_before_turn == 1)
@@ -170,7 +170,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         /// <param name="direction"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        public Instruction GenerateIndirectFollowTurn(Instruction instruction, int street_count_turn, int street_count_before_turn, TagsCollection street_to, 
+        public Instruction GenerateIndirectFollowTurn(Instruction instruction, int street_count_turn, int street_count_before_turn, TagsCollectionBase street_to, 
             RelativeDirectionEnum direction, List<PointPoi> list)
         {
 //            if (street_count_before_turn == 1)
@@ -203,8 +203,8 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         /// <param name="second_street_to"></param>
         /// <param name="second_direction"></param>
         /// <returns></returns>
-        public Instruction GenerateImmidiateTurn(Instruction instruction, int first_street_count_to, TagsCollection first_street_to,
-            RelativeDirection first_direction, TagsCollection second_street_to, RelativeDirection second_direction)
+        public Instruction GenerateImmidiateTurn(Instruction instruction, int first_street_count_to, TagsCollectionBase first_street_to,
+            RelativeDirection first_direction, TagsCollectionBase second_street_to, RelativeDirection second_direction)
         {
 //            if (first_street_count_to == 1)
 //            {
@@ -238,7 +238,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
         /// <param name="count"></param>
         /// <param name="next_street"></param>
         /// <returns></returns>
-        public Instruction GenerateRoundabout(Instruction instruction, int count, TagsCollection next_street)
+        public Instruction GenerateRoundabout(Instruction instruction, int count, TagsCollectionBase next_street)
         {
             instruction.Text = string.Format("Neem de {0} de afslag op het volgende rondpunt",
                 count);
@@ -262,7 +262,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
 
         #endregion
 
-        private string GetName(string language_key, TagsCollection tags)
+        private string GetName(string language_key, TagsCollectionBase tags)
         {
             language_key = language_key.ToLower();
 

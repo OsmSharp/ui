@@ -942,7 +942,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// </summary>
         /// <param name="tagsCollection"></param>
         /// <returns></returns>
-        private bool AppliesToArea(TagsCollection tagsCollection)
+        private bool AppliesToArea(TagsCollectionBase tagsCollection)
         {
             LineairRing ring = new LineairRing();
             ring.Attributes = new SimpleGeometryAttributeCollection(tagsCollection);

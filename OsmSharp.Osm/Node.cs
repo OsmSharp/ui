@@ -94,7 +94,7 @@ namespace OsmSharp.Osm
         /// <param name="latitude"></param>
         /// <param name="longitude"></param>
         /// <returns></returns>
-        public static Node Create(long id, TagsCollection tags, double latitude, double longitude)
+        public static Node Create(long id, TagsCollectionBase tags, double latitude, double longitude)
         {
             Node node = new Node();
             node.Id = id;

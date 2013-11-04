@@ -36,6 +36,6 @@ namespace OsmSharp.Collections.Tags
         /// </summary>
         /// <param name="tagsId"></param>
         /// <returns></returns>
-        TagsCollection Get(uint tagsId);
+        TagsCollectionBase Get(uint tagsId);
     }
 }

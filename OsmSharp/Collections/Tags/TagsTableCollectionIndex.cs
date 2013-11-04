@@ -45,7 +45,19 @@ namespace OsmSharp.Collections.Tags
             _tagsTable = new ObjectTable<Tag>(true);
             _tagsCollectionTable = new ObjectTable<OsmTags>(true);
 
-            this.Add(new SimpleTagsCollection());
+            this.Add(new TagsCollection());
+        }
+
+        /// <summary>
+        /// Creates a new tags index with a given strings table.
+        /// </summary>
+        /// <param name="tagsTable"></param>
+        public TagsTableCollectionIndex(ObjectTable<Tag> tagsTable)
+        {
+            _tagsTable = tagsTable;
+            _tagsCollectionTable = new ObjectTable<OsmTags>(true);
+
+            this.Add(new TagsCollection());
         }
 
         /// <summary>
@@ -53,12 +65,12 @@ namespace OsmSharp.Collections.Tags
         /// </summary>
         /// <param name="tagsId"></param>
         /// <returns></returns>
-        public TagsCollection Get(uint tagsId)
+        public TagsCollectionBase Get(uint tagsId)
         {
             OsmTags osmTags = _tagsCollectionTable.Get(tagsId);
             if (osmTags != null)
             {
-                SimpleTagsCollection collection = new SimpleTagsCollection();
+                TagsCollection collection = new TagsCollection();
                 for (int idx = 0; idx < osmTags.Tags.Length; idx++)
                 {
                     collection.Add(
@@ -74,7 +86,7 @@ namespace OsmSharp.Collections.Tags
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public uint Add(TagsCollection tags)
+        public uint Add(TagsCollectionBase tags)
         {
             int idx = 0;
             uint[] tagsArray = new uint[tags.Count];
@@ -176,7 +188,7 @@ namespace OsmSharp.Collections.Tags
         /// </summary>
         public uint Max
         {
-            get { return _tagsTable.Count; }
+            get { return _tagsCollectionTable.Count; }
         }
     }
 }

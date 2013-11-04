@@ -81,7 +81,7 @@ namespace OsmSharp.Osm
         /// <param name="nodes"></param>
         /// <param name="tags"></param>
         /// <returns></returns>
-        public static Way Create(long id, TagsCollection tags, params long[] nodes)
+        public static Way Create(long id, TagsCollectionBase tags, params long[] nodes)
         {
             Way way = new Way();
             way.Id = id;

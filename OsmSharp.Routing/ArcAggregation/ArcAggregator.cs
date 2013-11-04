@@ -174,12 +174,12 @@ namespace OsmSharp.Routing.ArcAggregation
                 return true;
             }
             // create tag interpreters for arcs to try and work out if the arcs are different for the given vehicle.
-            TagsCollection previousTagsDic = new SimpleTagsCollection();
+            TagsCollectionBase previousTagsDic = new TagsCollection();
             foreach (Tag pair in previous_arc.Tags)
             {
                 previousTagsDic.Add(pair.Key, pair.Value);
             }
-            var nextTagsDic = new SimpleTagsCollection();
+            var nextTagsDic = new TagsCollection();
             foreach (Tag pair in next_arc.Tags)
             {
                 nextTagsDic.Add(pair.Key, pair.Value);

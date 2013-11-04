@@ -189,7 +189,7 @@ namespace OsmSharp.Data.SQLite.Osm
                                     {
                                         if (node.Tags == null)
                                         {
-                                            node.Tags = new SimpleTagsCollection();
+                                            node.Tags = new TagsCollection();
                                         }
                                         string key = reader.GetString(6);
                                         string value = reader.GetString(7);
@@ -335,7 +335,7 @@ namespace OsmSharp.Data.SQLite.Osm
                             {
                                 if (relation.Tags == null)
                                 {
-                                    relation.Tags = new SimpleTagsCollection();
+                                    relation.Tags = new TagsCollection();
                                 }
                                 relation.Tags.Add(key, value);
                             }
@@ -534,7 +534,7 @@ namespace OsmSharp.Data.SQLite.Osm
 							{
                                 if (way.Tags == null)
                                 {
-                                    way.Tags = new SimpleTagsCollection();
+                                    way.Tags = new TagsCollection();
                                 }
 								way.Tags.Add(key, value);
 							}
@@ -853,7 +853,7 @@ namespace OsmSharp.Data.SQLite.Osm
                             {
                                 if (node.Tags == null)
                                 {
-                                    node.Tags = new SimpleTagsCollection();
+                                    node.Tags = new TagsCollection();
                                 }
                                 node.Tags.Add(key, value);
                             }

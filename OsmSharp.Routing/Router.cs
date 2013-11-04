@@ -62,7 +62,7 @@ namespace OsmSharp.Routing
         /// <returns></returns>
         public static Router CreateLiveFrom(OsmStreamSource reader, IOsmRoutingInterpreter interpreter)
         {
-            var tagsIndex = new SimpleTagsCollectionIndex(); // creates a tagged index.
+            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
 
             // read from the OSM-stream.
             var memoryData = new DynamicGraphRouterDataSource<LiveEdge>(tagsIndex);
@@ -340,7 +340,7 @@ namespace OsmSharp.Routing
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
         public RouterPoint Resolve(Vehicle vehicle, GeoCoordinate coordinate, IEdgeMatcher matcher, 
-            TagsCollection matchingTags)
+            TagsCollectionBase matchingTags)
         {
             return _router.Resolve(vehicle, coordinate, matcher, matchingTags);
         }
@@ -355,7 +355,7 @@ namespace OsmSharp.Routing
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
         public RouterPoint Resolve(Vehicle vehicle, float delta, GeoCoordinate coordinate, 
-            IEdgeMatcher matcher, TagsCollection matchingTags)
+            IEdgeMatcher matcher, TagsCollectionBase matchingTags)
         {
             return _router.Resolve(vehicle, delta, coordinate, matcher, matchingTags);
         }
@@ -392,7 +392,7 @@ namespace OsmSharp.Routing
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
         public RouterPoint[] Resolve(Vehicle vehicle, GeoCoordinate[] coordinates, IEdgeMatcher matcher, 
-            TagsCollection[] matchingTags)
+            TagsCollectionBase[] matchingTags)
         {
             return _router.Resolve(vehicle, coordinates, matcher, matchingTags);
         }
@@ -407,7 +407,7 @@ namespace OsmSharp.Routing
         /// <param name="matchingTags">Extra matching data.</param>
         /// <returns></returns>
         public RouterPoint[] Resolve(Vehicle vehicle, float delta, GeoCoordinate[] coordinates, 
-            IEdgeMatcher matcher, TagsCollection[] matchingTags)
+            IEdgeMatcher matcher, TagsCollectionBase[] matchingTags)
         {
             return _router.Resolve(vehicle, delta, coordinates, matcher, matchingTags);
         }

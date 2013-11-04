@@ -70,7 +70,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
             int zoom, V2RoutingDataSourceLiveEdgeSerializer v1RoutingDataSourceSerializer,
             int initialCapacity = 1000)
         {
-            _tagsIndex = new SimpleTagsCollectionIndex();
+            _tagsIndex = new TagsTableCollectionIndex();
             _vertices = new SparseArray<Vertex>(initialCapacity);
             _coordinates = new SparseArray<Location>(initialCapacity);
 
@@ -410,7 +410,7 @@ namespace OsmSharp.Routing.Osm.Graphs.Serialization
                             for (int idx = 0; idx < tileData.Arcs[vertexIdx].DestinationId.Length; idx++)
                             {
                                 // create the tags collection.
-                                TagsCollection tagsCollection = new SimpleTagsCollection();
+                                TagsCollectionBase tagsCollection = new TagsCollection();
                                 for (int tagsIdx = 0;
                                      tagsIdx < tileData.Arcs[vertexIdx].Tags[idx].Keys.Length;
                                      tagsIdx++)

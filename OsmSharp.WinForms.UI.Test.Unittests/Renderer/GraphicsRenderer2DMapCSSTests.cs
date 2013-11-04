@@ -80,7 +80,7 @@ namespace OsmSharp.WinForms.UI.Test.Unittests.Renderer
             MemoryDataSource source = new MemoryDataSource(
                 Node.Create(1, 1, 1),
                 Node.Create(2, -1, -1),
-                Way.Create(1, new SimpleTagsCollection(Tag.Create("highway", "residential")), 1, 2));
+                Way.Create(1, new TagsCollection(Tag.Create("highway", "residential")), 1, 2));
 
             // create CSS.
             string css = "canvas { " +

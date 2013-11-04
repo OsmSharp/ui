@@ -23,7 +23,7 @@ namespace OsmSharp.Test.Unittests.Routing.Interpreter
         {
             var interpreter = new OsmRoutingInterpreter();
 
-            TagsCollection tags = new SimpleTagsCollection();
+            TagsCollectionBase tags = new TagsCollection();
             tags["highway"] = "footway";
             Assert.IsTrue(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Pedestrian));
             Assert.IsFalse(interpreter.EdgeInterpreter.CanBeTraversedBy(tags, Vehicle.Bicycle));

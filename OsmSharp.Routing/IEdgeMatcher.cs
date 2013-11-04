@@ -38,7 +38,7 @@ namespace OsmSharp.Routing
         /// <param name="pointTags"></param>
         /// <param name="edgeTags"></param>
         /// <returns></returns>
-        bool MatchWithEdge(Vehicle vehicle, TagsCollection pointTags, TagsCollection edgeTags);
+        bool MatchWithEdge(Vehicle vehicle, TagsCollectionBase pointTags, TagsCollectionBase edgeTags);
     }
 
     /// <summary>
@@ -54,7 +54,7 @@ namespace OsmSharp.Routing
         /// <param name="edgeTags"></param>
         /// <returns></returns>
         public bool MatchWithEdge(Vehicle vehicle,
-            TagsCollection pointTags, TagsCollection edgeTags)
+            TagsCollectionBase pointTags, TagsCollectionBase edgeTags)
         {
             if (pointTags == null || pointTags.Count == 0)
             { // when the point has no tags it has no requirements.
@@ -89,7 +89,7 @@ namespace OsmSharp.Routing
         /// <param name="edgeTags"></param>
         /// <returns></returns>
         public bool MatchWithEdge(Vehicle vehicle,
-            TagsCollection pointTags, TagsCollection edgeTags)
+            TagsCollectionBase pointTags, TagsCollectionBase edgeTags)
         {
             if (pointTags == null || pointTags.Count == 0)
             { // when the point has no tags it has no requirements.

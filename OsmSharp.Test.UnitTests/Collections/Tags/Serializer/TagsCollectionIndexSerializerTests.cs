@@ -29,7 +29,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
     /// Tests tag index serializer.
     /// </summary>
     [TestFixture]
-    public class TagIndexSerializerTests
+    public class TagsCollectionIndexSerializerTests
     {
         /// <summary>
         /// Tests a simple tag serialization.
@@ -37,9 +37,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         [Test]
         public void TestSimpleTagSerializaton()
         {
-            SimpleTagsCollectionIndex tagsIndex = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             tagsCollection.Add("key1", "value1");
 
             uint tagsId = tagsIndex.Add(tagsCollection);
@@ -59,9 +59,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         [Test]
         public void TestSimpleTagSerializatonLimitedStreamRegression()
         {
-            SimpleTagsCollectionIndex tagsIndex = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             tagsCollection.Add("key1", "value1");
 
             uint tagsId = tagsIndex.Add(tagsCollection);
@@ -81,9 +81,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         [Test]
         public void TestSimpleTagSerializatonNonBeginPosition()
         {
-            SimpleTagsCollectionIndex tagsIndex = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             tagsCollection.Add("key1", "value1");
 
             uint tagsId = tagsIndex.Add(tagsCollection);
@@ -103,9 +103,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         [Test]
         public void TestRandomTagSerializaton()
         {
-            SimpleTagsCollectionIndex tagsIndex = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             for (int i = 0; i < 100; i++)
             {
                 int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10) + 1;
@@ -134,9 +134,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         [Test]
         public void TestRandomTagSerializatonLimitedStreamRegression()
         {
-            SimpleTagsCollectionIndex tagsIndex = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             for (int i = 0; i < 100; i++)
             {
                 int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10) + 1;
@@ -165,9 +165,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         [Test]
         public void TestRandomTagSerializatonNonBeginPosition()
         {
-            SimpleTagsCollectionIndex tagsIndex = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             for (int i = 0; i < 100; i++)
             {
                 int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10) + 1;
@@ -196,9 +196,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         [Test]
         public void TestRandomPartialTagSerializaton()
         {
-            SimpleTagsCollectionIndex tagsIndex = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             for (int i = 0; i < 100; i++)
             {
                 int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10) + 1;
@@ -273,9 +273,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         [Test]
         public void TestRandomBlockTagSerializaton()
         {
-            SimpleTagsCollectionIndex tagsIndex = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             for (int i = 0; i < 100; i++)
             {
                 int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10) + 1;
@@ -304,9 +304,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         [Test]
         public void TestRandomBlockTagSerializatonNonBeginPosition()
         {
-            SimpleTagsCollectionIndex tagsIndex = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             for (int i = 0; i < 100; i++)
             {
                 int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10) + 1;
@@ -335,9 +335,9 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         [Test]
         public void TestRandomBlockTagSerializatonNonBeginPositionLimitedStreamRegression()
         {
-            SimpleTagsCollectionIndex tagsIndex = new SimpleTagsCollectionIndex();
+            TagsTableCollectionIndex tagsIndex = new TagsTableCollectionIndex();
 
-            SimpleTagsCollection tagsCollection = new SimpleTagsCollection();
+            TagsCollection tagsCollection = new TagsCollection();
             for (int i = 0; i < 101; i++)
             {
                 int tagCollectionSize = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10) + 1;
@@ -365,12 +365,16 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
         /// </summary>
         /// <param name="reference"></param>
         /// <param name="collection"></param>
-        private void CompareTagsCollections(TagsCollection reference, TagsCollection collection)
+        private void CompareTagsCollections(TagsCollectionBase reference, TagsCollectionBase collection)
         {
             Assert.AreEqual(reference.Count, collection.Count);
             foreach (Tag tag in reference)
             {
                 Assert.IsTrue(collection.Contains(tag));
+            }
+            foreach (Tag tag in collection)
+            {
+                Assert.IsTrue(reference.Contains(tag));
             }
         }
 

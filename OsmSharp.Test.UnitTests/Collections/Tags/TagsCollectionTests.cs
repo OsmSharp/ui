@@ -19,21 +19,39 @@
 using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 
-namespace OsmSharp.Test.Unittests.Tags
+namespace OsmSharp.Test.Unittests.Collections.Tags
 {
     /// <summary>
-    /// Contains tests for the SimpleTagsCollectionIndexTests.
+    /// Contains tests for the SimpleTagsCollection.
     /// </summary>
     [TestFixture]
-    public class TagsTableCollectionIndexTests : TagsCollectionIndexTests
+    public class TagsCollectionTests : TagsCollectionBaseTests
     {
         /// <summary>
-        /// Tests the simple tags collection index.
+        /// Creates a test tags collection.
+        /// </summary>
+        /// <returns></returns>
+        protected override TagsCollectionBase CreateTagsCollection()
+        {
+            return new TagsCollection();
+        }
+
+        /// <summary>
+        /// Tests a simple tags collection.
         /// </summary>
         [Test]
-        public void SimpleTestTagsCollectionIndex()
+        public void TestSimpleTagsCollectionEmpty()
         {
-            this.TestTagsCollectionIndex(new TagsTableCollectionIndex());
+            this.TestTagsCollectionEmpty();
+        }
+
+        /// <summary>
+        /// Tests a simple tags collection.
+        /// </summary>
+        [Test]
+        public void TestSimpleTagsCollectionSimple()
+        {
+            this.TestTagsCollectionSimple();
         }
     }
 }

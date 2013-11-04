@@ -712,7 +712,7 @@ namespace OsmSharp.Osm.API
 
             if (xml_node.tag != null)
             {
-                node.Tags = new SimpleTagsCollection();
+                node.Tags = new TagsCollection();
                 foreach (Osm.Xml.v0_6.tag xml_tag in xml_node.tag)
                 {
                     node.Tags.Add(xml_tag.k, xml_tag.v);
@@ -741,7 +741,7 @@ namespace OsmSharp.Osm.API
 
             if (xml_way.tag != null)
             {
-                way.Tags = new SimpleTagsCollection();
+                way.Tags = new TagsCollection();
                 foreach (Osm.Xml.v0_6.tag xml_tag in xml_way.tag)
                 {
                     way.Tags.Add(xml_tag.k, xml_tag.v);
@@ -779,7 +779,7 @@ namespace OsmSharp.Osm.API
 
             if (xml_relation.tag != null)
             {
-                relation.Tags = new SimpleTagsCollection();
+                relation.Tags = new TagsCollection();
                 foreach (Osm.Xml.v0_6.tag xml_tag in xml_relation.tag)
                 {
                     relation.Tags.Add(xml_tag.k, xml_tag.v);

@@ -16,7 +16,7 @@ namespace OsmSharp.Routing.Interpreter.Roads
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        bool IsRoutable(TagsCollection tags);
+        bool IsRoutable(TagsCollectionBase tags);
 
         /// <summary>
         /// Returns true if the edge with given tags can be traversed by the given vehicle.
@@ -24,14 +24,14 @@ namespace OsmSharp.Routing.Interpreter.Roads
         /// <param name="tags"></param>
         /// <param name="vehicle"></param>
         /// <returns></returns>
-        bool CanBeTraversedBy(TagsCollection tags, Vehicle vehicle);
+        bool CanBeTraversedBy(TagsCollectionBase tags, Vehicle vehicle);
 
         /// <summary>
         /// Returns true if the edge is only locally accessible.
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        bool IsOnlyLocalAccessible(TagsCollection tags);
+        bool IsOnlyLocalAccessible(TagsCollectionBase tags);
 
         ///// <summary>
         ///// Returns the weight between two points on the given edge.
@@ -49,14 +49,14 @@ namespace OsmSharp.Routing.Interpreter.Roads
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        string GetName(TagsCollection tags);
+        string GetName(TagsCollectionBase tags);
 
         /// <summary>
         /// Returns the names of the edge represented by the tags in each available language.
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        Dictionary<string, string> GetNamesInAllLanguages(TagsCollection tags);
+        Dictionary<string, string> GetNamesInAllLanguages(TagsCollectionBase tags);
 
         ///// <summary>
         ///// Returns true if the tags (or a subset of) represent the same edge type for the given vehicle.
@@ -80,6 +80,6 @@ namespace OsmSharp.Routing.Interpreter.Roads
         /// </summary>
         /// <param name="tags"></param>
         /// <returns></returns>
-        bool IsRoundabout(TagsCollection tags);
+        bool IsRoundabout(TagsCollectionBase tags);
     }
 }

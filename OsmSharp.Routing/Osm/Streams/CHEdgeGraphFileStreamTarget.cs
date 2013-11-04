@@ -49,7 +49,7 @@ namespace OsmSharp.Routing.Osm.Streams
         {
             _graphStream = stream;
 
-            var tagsIndex = new SimpleTagsCollectionIndex();
+            var tagsIndex = new TagsTableCollectionIndex();
             var interpreter = new OsmRoutingInterpreter();
             _graph = new DynamicGraphRouterDataSource<CHEdgeData>(tagsIndex);
             _graphTarget = new CHEdgeGraphOsmStreamTarget(

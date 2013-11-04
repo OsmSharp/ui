@@ -362,7 +362,7 @@ namespace OsmSharp.Osm.Xml.Streams
             _textWriter.Write(_textWriter.NewLine);
         }
 
-        private OsmSharp.Osm.Xml.v0_6.tag[] ConvertToXmlTags(TagsCollection tags)
+        private OsmSharp.Osm.Xml.v0_6.tag[] ConvertToXmlTags(TagsCollectionBase tags)
         {
             if (tags != null)
             {

@@ -380,12 +380,12 @@ namespace OsmSharp.Osm.Xml.Streams
             return relation;
         }
 
-        private static TagsCollection ConvertToTags(Osm.Xml.v0_6.tag[] tag)
+        private static TagsCollectionBase ConvertToTags(Osm.Xml.v0_6.tag[] tag)
         {
-            TagsCollection tags = null;
+            TagsCollectionBase tags = null;
             if (tag != null && tag.Length > 0)
             {
-                tags = new SimpleTagsCollection();
+                tags = new TagsCollection();
                 foreach (Osm.Xml.v0_6.tag t in tag)
                 {
                     tags.Add(t.k, t.v);

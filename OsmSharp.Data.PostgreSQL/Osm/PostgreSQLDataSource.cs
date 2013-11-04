@@ -373,7 +373,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                             {
                                 if (relation.Tags == null)
                                 {
-                                    relation.Tags = new SimpleTagsCollection();
+                                    relation.Tags = new TagsCollection();
                                 }
                                 relation.Tags.Add(key, value);
                             }
@@ -574,7 +574,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                             {
                                 if (way.Tags == null)
                                 {
-                                    way.Tags = new SimpleTagsCollection();
+                                    way.Tags = new TagsCollection();
                                 }
                                 way.Tags.Add(key, value);
                             }
@@ -877,7 +877,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm
                                 }
                                 if(node.Tags == null)
                                 {
-                                    node.Tags = new SimpleTagsCollection();
+                                    node.Tags = new TagsCollection();
                                 }
 
                                 nodes[returned_id].Tags.Add(key, value);

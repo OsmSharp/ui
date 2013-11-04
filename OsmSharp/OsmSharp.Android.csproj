@@ -63,11 +63,11 @@
     <Compile Include="Collections\Tags\ITagsCollectionIndex.cs" />
     <Compile Include="Collections\Tags\ITagsCollectionIndexReadonly.cs" />
     <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
-    <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
-    <Compile Include="Collections\Tags\SimpleTagsCollectionIndex.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
     <Compile Include="Collections\Tags\TagsCollection.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionBase.cs" />
+    <Compile Include="Collections\Tags\TagsTableCollection.cs" />
     <Compile Include="Collections\Tags\TagsTableCollectionIndex.cs" />
     <Compile Include="GeoCoding\AccuracyEnum.cs" />
     <Compile Include="GeoCoding\Facade.cs" />
