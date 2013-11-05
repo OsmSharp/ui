@@ -500,7 +500,7 @@ namespace OsmSharp.Routing.Osm.Streams.Graphs
                 List<Tag> tagsToRemove = new List<Tag>();
                 foreach (Tag tag in tags)
                 {
-                    if (!_interpreter.IsRelevant(tag.Key))
+                    if (!_interpreter.IsRelevant(tag.Key, tag.Value))
                     {
                         tagsToRemove.Add(tag);
                     }

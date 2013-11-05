@@ -118,6 +118,7 @@ namespace OsmSharp.Routing.Osm.Interpreter
                     case "maxspeed":
                         return TagExtensions.TryParseSpeed(value, out speed);
                 }
+                return true;
             }
             return false;
         }
