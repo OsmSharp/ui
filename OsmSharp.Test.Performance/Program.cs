@@ -36,8 +36,10 @@ namespace OsmSharp.Test.Performance
             OsmSharp.Logging.Log.Enable();
             OsmSharp.Logging.Log.RegisterConsoleListener();
 
+            // test streams.
+            Osm.PBF.PBFStreamSourceTest.Test();
+
             // test the tags collection.
-            SimpleTagsCollectionIndexTests.Test();
             TagsTableCollectionIndexTests.Test();
             BlockedTagsCollectionIndexTests.Test();
 

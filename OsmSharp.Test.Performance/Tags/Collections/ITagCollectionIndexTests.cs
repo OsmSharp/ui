@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Osm.Streams;
+using System.IO;
+using OsmSharp.Osm.PBF.Streams;
 
 namespace OsmSharp.Test.Performance.Tags.Collections
 {
@@ -22,6 +25,20 @@ namespace OsmSharp.Test.Performance.Tags.Collections
 
             // tests random access.
             ITagCollectionIndexTests.TestRandomAccess(name, index, accessCount);
+        }
+
+        /// <summary>
+        /// Executes a test adding tags from a PBF file.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="index"></param>
+        /// <param name="pbfFile"></param>
+        public static void Test(string name, ITagsCollectionIndex index, string pbfFile)
+        {
+            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\{0}",pbfFile));
+            Stream stream = testFile.OpenRead();
+            PBFOsmStreamSource source = new PBFOsmStreamSource(stream);
+            ITagCollectionIndexTests.TestAdd(name, index, source);
         }
 
         /// <summary>
@@ -53,6 +70,18 @@ namespace OsmSharp.Test.Performance.Tags.Collections
         /// <summary>
         /// Tests adding simple tags to the given index.
         /// </summary>
+        /// <param name="index"></param>
+        /// <param name="source"></param>
+        public static void FillIndex(ITagsCollectionIndex index, OsmStreamSource source)
+        {
+            OsmStreamTargetTags tagsTarget = new OsmStreamTargetTags(index);
+            tagsTarget.RegisterSource(source);
+            tagsTarget.Pull();
+        }
+
+        /// <summary>
+        /// Tests adding simple tags to the given index.
+        /// </summary>
         /// <param name="name"></param>
         /// <param name="index"></param>
         /// <param name="collectionCount"></param>
@@ -64,6 +93,26 @@ namespace OsmSharp.Test.Performance.Tags.Collections
             performanceInfo.Report("Adding {0} tag collections...", collectionCount);
 
             ITagCollectionIndexTests.FillIndex(index, collectionCount);
+
+            performanceInfo.Stop();
+
+            Console.Write("", index.Max);
+        }
+
+        /// <summary>
+        /// Tests adding simple tags to the given index.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="index"></param>
+        /// <param name="source"></param>
+        public static void TestAdd(string name, ITagsCollectionIndex index,
+            OsmStreamSource source)
+        {
+            PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer(string.Format("{0}.Add", name));
+            performanceInfo.Start();
+            performanceInfo.Report("Adding tags from {0}...", source.ToString());
+
+            ITagCollectionIndexTests.FillIndex(index, source);
 
             performanceInfo.Stop();
 

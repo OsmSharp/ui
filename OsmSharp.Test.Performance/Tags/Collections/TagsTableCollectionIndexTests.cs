@@ -38,6 +38,12 @@ namespace OsmSharp.Test.Performance.Tags.Collections
 
             // execute the standard tests on this index.
             ITagCollectionIndexTests.Test("Table", index, 100000, 10000000);
+
+            // start over.
+            index = new TagsTableCollectionIndex();
+
+            // execute the standard tests on this index.
+            ITagCollectionIndexTests.Test("Table", index, "kempen-big.osm.pbf");
         }
     }
 }

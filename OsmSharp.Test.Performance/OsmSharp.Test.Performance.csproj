@@ -123,14 +123,28 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tags\Collections\BlockedTagsCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\ITagCollectionIndexTests.cs" />
-    <Compile Include="Tags\Collections\SimpleTagsCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\TagsTableCollectionIndexTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\OsmSharpTestFiles\kempen-big.osm.pbf">
+      <Link>TestFiles\kempen-big.osm.pbf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\OsmSharpTestFiles\kempen.osm.pbf">
+      <Link>TestFiles\kempen.osm.pbf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="..\OsmSharpTestFiles\kempen-big.osm.pbf.txt">
+      <Link>TestFiles\kempen-big.osm.pbf.txt</Link>
+    </Content>
+    <Content Include="..\OsmSharpTestFiles\kempen.osm.pbf.txt">
+      <Link>TestFiles\kempen.osm.pbf.txt</Link>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>

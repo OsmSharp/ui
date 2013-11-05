@@ -21,15 +21,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
+using OsmSharp.Osm.PBF.Streams;
+using System.IO;
+using OsmSharp.Osm.Streams;
 
 namespace OsmSharp.Test.Performance.Osm.PBF
 {
     /// <summary>
     /// Tests performance of PBF reads.
     /// </summary>
-    [TestFixture]
-    public class PBFStreamSourceTest
+    public static class PBFStreamSourceTest
     {
+        /// <summary>
+        /// Executes reading tests.
+        /// </summary>
+        public static void Test()
+        {
+            FileInfo testFile = new FileInfo(@".\TestFiles\kempen-big.osm.pbf");
+            Stream stream = testFile.OpenRead();
+            PBFOsmStreamSource source = new PBFOsmStreamSource(stream);
+            OsmStreamTargetEmpty emptyTarget = new OsmStreamTargetEmpty();
+            emptyTarget.RegisterSource(source);
 
+            PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("PBFOsmStreamSource.Pull");
+            performanceInfo.Start();
+            performanceInfo.Report("Pulling from {0}...", testFile.Name);
+
+            emptyTarget.Pull();
+            stream.Dispose();
+
+            performanceInfo.Stop();
+        }
     }
 }
