@@ -25,6 +25,7 @@ using OsmSharp.Routing.Constraints;
 using OsmSharp.Routing.Interpreter.Roads;
 using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Units.Speed;
 
 namespace OsmSharp.Routing.Osm.Interpreter
 {
@@ -97,6 +98,28 @@ namespace OsmSharp.Routing.Osm.Interpreter
         public bool IsRelevant(string key)
         {
             return _relevantKeys.Contains(key);
+        }
+
+        /// <summary>
+        /// Returns true if the given key value pair is relevant.
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public bool IsRelevant(string key, string value)
+        {
+            KilometerPerHour speed;
+            if (this.IsRelevant(key))
+            { // check the value.
+                switch(value)
+                {
+                    case "oneway":
+                        return value == "yes" || value == "reverse";
+                    case "maxspeed":
+                        return TagExtensions.TryParseSpeed(value, out speed);
+                }
+            }
+            return false;
         }
 
         /// <summary>
