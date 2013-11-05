@@ -124,6 +124,7 @@
     <Compile Include="Tags\Collections\BlockedTagsCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\ITagCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\TagsTableCollectionIndexTests.cs" />
+    <Compile Include="UI\Scene\Scene2DTests.cs" />
     <Compile Include="UI\Styles\MapCSS\MapCSSInterpreterTests.cs" />
   </ItemGroup>
   <ItemGroup>

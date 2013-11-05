@@ -26,6 +26,7 @@ using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Math.Geo.Projections;
 using System.IO;
 using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Test.Performance.UI.Scene;
 
 namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
 {
@@ -39,8 +40,16 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
         /// </summary>
         public static void Test()
         {
+            // create a layered scene.
+            Scene2D scene = new Scene2DLayered(new List<float>(new float[] {
+                5, 8, 13, 15, 17
+            }));
+
             // tests map css interpreter.
-            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\complete.mapcss", "kempen.osm.pbf");
+            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\complete.mapcss", scene, "kempen.osm.pbf");
+
+            // tests serialization of the scene.
+            Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\complete.map", scene, true);
         }
 
         /// <summary>
@@ -48,14 +57,15 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
         /// </summary>
         /// <param name="name"></param>
         /// <param name="mapCSS"></param>
+        /// <param name="scene"></param>
         /// <param name="pbfSource"></param>
-        public static void TestInterpret(string name, string mapCSS, string pbfSource)
+        public static void TestInterpret(string name, string mapCSS, Scene2D scene, string pbfSource)
         {
             FileInfo cssFile = new FileInfo(string.Format(@".\TestFiles\{0}", mapCSS));
             Stream cssStream = cssFile.OpenRead();
             MapCSSInterpreter interpreter = new MapCSSInterpreter(cssStream, new MapCSSDictionaryImageSource());
 
-            MapCSSInterpreterTests.TestInterpret(name, interpreter, pbfSource);
+            MapCSSInterpreterTests.TestInterpret(name, interpreter, scene, pbfSource);
 
             cssStream.Dispose();
         }
@@ -64,11 +74,11 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
         /// Tests interpreting all data from a given pbf source.
         /// </summary>
         /// <param name="name"></param>
+        /// <param name="scene"></param>
         /// <param name="interpreter"></param>
         /// <param name="pbfSource"></param>
-        public static void TestInterpret(string name, MapCSSInterpreter interpreter, string pbfSource)
+        public static void TestInterpret(string name, MapCSSInterpreter interpreter, Scene2D scene, string pbfSource)
         {
-            Scene2D scene = new Scene2DSimple();
             StyleOsmStreamSceneTarget target = new StyleOsmStreamSceneTarget(
                 interpreter, scene, new WebMercator());
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\{0}", pbfSource));
