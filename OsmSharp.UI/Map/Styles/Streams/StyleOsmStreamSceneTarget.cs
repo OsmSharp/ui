@@ -35,11 +35,6 @@ namespace OsmSharp.UI.Map.Styles.Streams
         private StyleInterpreter _mapCSSInterpreter;
 
         /// <summary>
-        /// Holds the scene output stream.
-        /// </summary>
-        private Stream _sceneStream;
-
-        /// <summary>
         /// Holds the scene.
         /// </summary>
         private Scene2D _scene;
@@ -53,15 +48,13 @@ namespace OsmSharp.UI.Map.Styles.Streams
         /// Creates a new MapCSS scene target.
         /// </summary>
         /// <param name="mapCSSInterpreter"></param>
-        /// <param name="sceneStream"></param>
         /// <param name="scene"></param>
         /// <param name="projection"></param>
-        public StyleOsmStreamSceneTarget(StyleInterpreter mapCSSInterpreter, Stream sceneStream, 
+        public StyleOsmStreamSceneTarget(StyleInterpreter mapCSSInterpreter, 
             Scene2D scene, IProjection projection)
         {
             _projection = projection;
             _scene = scene;
-            _sceneStream = sceneStream;
             _mapCSSInterpreter = mapCSSInterpreter;
         }
 
@@ -70,7 +63,7 @@ namespace OsmSharp.UI.Map.Styles.Streams
         /// </summary>
         public override void Initialize()
         {
-            _sceneStream.Seek(0, SeekOrigin.Begin);
+
         }
 
         /// <summary>
@@ -106,10 +99,6 @@ namespace OsmSharp.UI.Map.Styles.Streams
         public override void Flush()
         {
             base.Flush();
-
-            // create the stream.
-            _scene.Serialize(_sceneStream, true);
-            _sceneStream.Flush();
         }
     }
 }

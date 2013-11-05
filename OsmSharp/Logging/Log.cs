@@ -17,6 +17,7 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace OsmSharp.Logging
 {
@@ -36,6 +37,11 @@ namespace OsmSharp.Logging
         private static bool _loggingEnabled = false;
 
         /// <summary>
+        /// Holds the sources to ignore.
+        /// </summary>
+        private static HashSet<string> _ignore = new HashSet<string>();
+
+        /// <summary>
         /// Disables all logging.
         /// </summary>
         public static void Disable()
@@ -52,6 +58,32 @@ namespace OsmSharp.Logging
         }
 
         /// <summary>
+        /// Clears the ignore list.
+        /// </summary>
+        public static void ClearIgnore()
+        {
+            _ignore.Clear();
+        }
+
+        /// <summary>
+        /// Adds the given name to the ignore list.
+        /// </summary>
+        /// <param name="name"></param>
+        public static void Ignore(string name)
+        {
+            _ignore.Add(name);
+        }
+
+        /// <summary>
+        /// Removes the given name from the ignore list.
+        /// </summary>
+        /// <param name="name"></param>
+        public static void DontIgnore(string name)
+        {
+            _ignore.Remove(name);
+        }
+
+        /// <summary>
         /// Writes a trace event message.
         /// </summary>
         /// <param name="name"></param>
@@ -59,7 +91,7 @@ namespace OsmSharp.Logging
         /// <param name="message"></param>
         public static void TraceEvent(string name, TraceEventType type, string message)
         {
-            if (_loggingEnabled)
+            if (_loggingEnabled && !_ignore.Contains(name))
             {
                 _source.TraceEvent(type, 0, "[" + name + "]: " + message);
             }
@@ -74,7 +106,7 @@ namespace OsmSharp.Logging
         /// <param name="args"></param>
         public static void TraceEvent(string name, TraceEventType type, string message, params object[] args)
         {
-            if (_loggingEnabled)
+            if (_loggingEnabled && !_ignore.Contains(name))
             {
                 _source.TraceEvent(type, 0, "[" + name + "]: " + message, args);
             }
