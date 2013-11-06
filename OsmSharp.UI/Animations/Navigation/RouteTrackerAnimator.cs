@@ -67,6 +67,29 @@ namespace OsmSharp.UI.Animations.Navigation
 			_mapView.MapTouched += MapViewMapTouched;
         }
 
+        /// <summary>
+        /// Creates a new route tracker animator.
+        /// </summary>
+        /// <param name="mapView">The mapview.</param>
+        /// <param name="routeTracker">The tracker tracking the route.</param>
+        /// <param name="restartAfterTouch">The time in second to wait before resuming tracking after the mapview is touched.</param>
+        /// <param name="defaultZoom">The default zoom.</param>
+        public RouteTrackerAnimator(IMapView mapView, RouteTracker routeTracker, Second restartAfterTouch, float defaultZoom)
+        {
+            this.MinZoom = 16;
+            this.MaxZoom = 30;
+            this.DefaultZoom = defaultZoom;
+
+            _mapView = mapView;
+            _animator = new MapViewAnimator(mapView);
+            _routeTracker = routeTracker;
+            _minimumTrackGap = new TimeSpan(0, 0, 0, 0, 500).Ticks;
+
+            this.RestartAfterTouch = restartAfterTouch;
+
+            _mapView.MapTouched += MapViewMapTouched;
+        }
+
 		/// <summary>
 		/// Holds the last touch time.
 		/// </summary>
