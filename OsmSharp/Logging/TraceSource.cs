@@ -49,7 +49,7 @@ namespace System.Diagnostics
 #endif
 #if __ANDROID__
 	/// <summary>
-    /// Another class for compatibility with windows phone.
+    /// Compatibility class with .NET to use the tracing facilities. 
     /// </summary>
     public class TraceSource
     {
@@ -65,6 +65,7 @@ namespace System.Diagnostics
         public TraceSource(string name)
 		{
 			_tag = name;
+            this.Listeners = new List<TraceListener>();
         }
 
 		/// <summary>
@@ -74,7 +75,8 @@ namespace System.Diagnostics
 		/// <param name="level">Level.</param>
         public TraceSource(string name, SourceLevels level)
 		{
-			_tag = name;
+            _tag = name;
+            this.Listeners = new List<TraceListener>();
         }
 
         /// <summary>
@@ -88,18 +90,36 @@ namespace System.Diagnostics
 			switch (type) {
 			case TraceEventType.Critical:
 			case TraceEventType.Error:
-				Android.Util.Log.Error (_tag, string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-				                                             DateTime.Now.Ticks));
+                //Android.Util.Log.Error (_tag, string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
+                //                                             DateTime.Now.Ticks));
+                this.WriteLine(string.Format("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
+                                                             DateTime.Now.Ticks));
 				break;
 			case TraceEventType.Warning:
-				Android.Util.Log.Warn (_tag, string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-				                                            DateTime.Now.Ticks));
+                //Android.Util.Log.Warn (_tag, string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
+                //                                            DateTime.Now.Ticks));
+                this.WriteLine(string.Format("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
+                                                            DateTime.Now.Ticks));
 				break;
 			default:
-				Android.Util.Log.Info (_tag, string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
-				                                            DateTime.Now.Ticks));
+                //Android.Util.Log.Info (_tag, string.Format ("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
+                //                                            DateTime.Now.Ticks));
+                this.WriteLine(string.Format("[{0}:{2}@{3}]:{1}", id, message, type.ToString(),
+                                                            DateTime.Now.Ticks));
 				break;
 			}
+        }
+
+        /// <summary>
+        /// Writes the message to all listeners.
+        /// </summary>
+        /// <param name="message"></param>
+        private void WriteLine(string message)
+        {
+            foreach (TraceListener listener in this.Listeners)
+            {
+                listener.WriteLine(message);
+            }
         }
 
         /// <summary>
@@ -118,7 +138,7 @@ namespace System.Diagnostics
         /// <summary>
         /// The list of listeners.
         /// </summary>
-        public List<TraceListener> Listeners { get; set; }
+        public List<TraceListener> Listeners { get; private set; }
     }
 
 #endif
