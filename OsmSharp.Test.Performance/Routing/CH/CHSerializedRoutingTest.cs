@@ -43,19 +43,32 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 "kempen-big.osm.pbf.routing", box, 1000);
         }
 
+        /// <summary>
+        /// Tests routing from a serialized routing file.
+        /// </summary>
+        /// <param name="stream"></param>
+        public static void Test(Stream stream, int testCount)
+        {
+            GeoCoordinateBox box = new GeoCoordinateBox(
+                new GeoCoordinate(51.20190, 4.66540),
+                new GeoCoordinate(51.30720, 4.89820));
+            CHSerializedRoutingTest.TestSerializedRouting("CHSerializedRouting",
+                stream, box, testCount);
+        }
 
         /// <summary>
-        /// Tests preprocessing data from a PBF file.
+        /// Tests routing from a serialized routing file.
         /// </summary>
-        public static void TestSerializedRouting(string name, string routeFile, 
+        /// <param name="name"></param>
+        /// <param name="stream"></param>
+        /// <param name="box"></param>
+        /// <param name="testCount"></param>
+        public static void TestSerializedRouting(string name, Stream stream,
             GeoCoordinateBox box, int testCount)
         {
-            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\routing\{0}", routeFile));
-            Stream stream = testFile.OpenRead();
-
             PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("CHSerializedRouting");
             performanceInfo.Start();
-            performanceInfo.Report("Routing {0} routes based on {1}...", testCount, testFile.Name);
+            performanceInfo.Report("Routing {0} routes...", testCount);
 
             var routingSerializer = new CHEdgeDataDataSourceSerializer(true);
             var graphDeserialized = routingSerializer.Deserialize(
@@ -65,6 +78,8 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 graphDeserialized, new CHRouter(),
                 new OsmRoutingInterpreter());
 
+            int successCount = 0;
+            int totalCount = testCount;
             while (testCount > 0)
             {
                 GeoCoordinate from = box.GenerateRandomIn();
@@ -76,13 +91,33 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 if (fromPoint != null && toPoint != null)
                 {
                     Route route = router.Calculate(Vehicle.Car, fromPoint, toPoint);
+                    if (route != null)
+                    {
+                        successCount++;
+                    }
                 }
 
                 testCount--;
             }
-            stream.Dispose();
 
             performanceInfo.Stop();
+
+            OsmSharp.Logging.Log.TraceEvent("CHSerializedRouting", System.Diagnostics.TraceEventType.Information,
+                string.Format("{0}/{1} routes successfull!", successCount, totalCount));
+        }
+
+        /// <summary>
+        /// Tests routing from a serialized routing file.
+        /// </summary>
+        public static void TestSerializedRouting(string name, string routeFile, 
+            GeoCoordinateBox box, int testCount)
+        {
+            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\routing\{0}", routeFile));
+            Stream stream = testFile.OpenRead();
+
+            CHSerializedRoutingTest.TestSerializedRouting(name, stream, box, testCount);
+
+            stream.Dispose();
         }
     }
 }

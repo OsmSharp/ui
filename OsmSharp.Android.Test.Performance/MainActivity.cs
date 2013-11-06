@@ -22,6 +22,9 @@ using Android.App;
 using Android.OS;
 using Android.Widget;
 using OsmSharp.Android.UI.Log;
+using System.Reflection;
+using System.Threading;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Android.Test.Performance
 {
@@ -40,16 +43,43 @@ namespace OsmSharp.Android.Test.Performance
             OsmSharp.Logging.Log.RegisterListener(
                 new TextViewTraceListener(this, FindViewById<TextView>(Resource.Id.textView1)));
 
-			// test console output.
-			Timer timer = new Timer (300);
-			timer.Elapsed += Elapsed;
-			timer.Start ();
+            // do some testing here.
+            Thread thread = new Thread(
+                new ThreadStart(Test));
+            thread.Start();
 		}
 
-		private void Elapsed(object sender, EventArgs args)
-		{
-            OsmSharp.Logging.Log.TraceEvent("Timer", System.Diagnostics.TraceEventType.Information,
-                string.Format ("Some new line test at {0}.", DateTime.Now.ToLongTimeString()));
-		}
+        /// <summary>
+        /// Executes performance tests.
+        /// </summary>
+        private void Test()
+        {
+            this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
+        }
+
+        /// <summary>
+        /// Executes routing performance tests.
+        /// </summary>
+        private void TestRouting(string embeddedResource)
+        {
+            Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information,
+                "Testing: 1 route.");
+            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource),
+                    1);
+            Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information,
+                "Testing: 2 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource),
+                    2);
+            Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information,
+                "Testing: 100 routes.");
+            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.Test(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource),
+                    100);
+        }
 	}
 }

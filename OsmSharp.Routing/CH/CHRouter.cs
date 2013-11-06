@@ -1377,6 +1377,31 @@ namespace OsmSharp.Routing.CH
         public SearchClosestResult SearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
             Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly)
         {
+            // first try a very small area.
+            SearchClosestResult result = this.DoSearchClosest(graph, interpreter,
+                vehicle, coordinate, delta / 10, matcher, pointTags, verticesOnly);
+            if (result.Distance < double.MaxValue)
+            { // success!
+                return result;
+            }
+            return this.DoSearchClosest(graph, interpreter, vehicle, coordinate, delta, matcher, pointTags, verticesOnly);
+        }
+
+        /// <summary>
+        /// Searches the data for a point on an edge closest to the given coordinate.
+        /// </summary>
+        /// <param name="graph"></param>
+        /// <param name="interpreter"></param>
+        /// <param name="vehicle"></param>
+        /// <param name="coordinate"></param>
+        /// <param name="delta"></param>
+        /// <param name="matcher"></param>
+        /// <param name="pointTags"></param>
+        /// <param name="verticesOnly"></param>
+        /// <returns></returns>
+        private SearchClosestResult DoSearchClosest(IBasicRouterDataSource<CHEdgeData> graph, IRoutingInterpreter interpreter,
+            Vehicle vehicle, GeoCoordinate coordinate, float delta, IEdgeMatcher matcher, TagsCollectionBase pointTags, bool verticesOnly)
+        {
             double searchBoxSize = delta;
             // build the search box.
             var searchBox = new GeoCoordinateBox(new GeoCoordinate(
