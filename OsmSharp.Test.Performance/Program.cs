@@ -20,7 +20,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using OsmSharp.Test.Performance.Tags.Collections;
 
 namespace OsmSharp.Test.Performance
 {
@@ -35,11 +34,19 @@ namespace OsmSharp.Test.Performance
             // enable logging and use the console as output.
             OsmSharp.Logging.Log.Enable();
             OsmSharp.Logging.Log.RegisterConsoleListener();
+            
+            // add the to-ignore list.
+            OsmSharp.Logging.Log.Ignore("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter");
+
+            // test streams.
+            Osm.PBF.PBFStreamSourceTest.Test();
 
             // test the tags collection.
-            SimpleTagsCollectionIndexTests.Test();
-            TagsTableCollectionIndexTests.Test();
-            BlockedTagsCollectionIndexTests.Test();
+            Tags.Collections.TagsTableCollectionIndexTests.Test();
+            Tags.Collections.BlockedTagsCollectionIndexTests.Test();
+
+            // tests the mapcss interpretation.
+            UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
 
             // wait for an exit.
             OsmSharp.Logging.Log.TraceEvent("Program", System.Diagnostics.TraceEventType.Information,

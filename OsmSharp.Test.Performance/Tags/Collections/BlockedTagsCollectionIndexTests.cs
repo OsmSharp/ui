@@ -52,7 +52,7 @@ namespace OsmSharp.Test.Performance.Tags.Collections
             writeStream.Dispose();
 
             OsmSharp.Logging.Log.TraceEvent("Blocked", System.Diagnostics.TraceEventType.Information,
-                string.Format("Serialize file: {0}KB", testFile.Length / 1024));
+                string.Format("Serialized file: {0}KB", testFile.Length / 1024));
 
 
             // deserialize the index.

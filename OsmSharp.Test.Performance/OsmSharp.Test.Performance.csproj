@@ -123,18 +123,42 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tags\Collections\BlockedTagsCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\ITagCollectionIndexTests.cs" />
-    <Compile Include="Tags\Collections\SimpleTagsCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\TagsTableCollectionIndexTests.cs" />
+    <Compile Include="UI\Scene\Scene2DTests.cs" />
+    <Compile Include="UI\Styles\MapCSS\MapCSSInterpreterTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\OsmSharpTestFiles\kempen-big.osm.pbf">
+      <Link>TestFiles\kempen-big.osm.pbf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\OsmSharpTestFiles\kempen.osm.pbf">
+      <Link>TestFiles\kempen.osm.pbf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\OsmSharpTestFiles\mapcss\complete.mapcss">
+      <Link>TestFiles\mapcss\complete.mapcss</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="..\OsmSharpTestFiles\kempen-big.osm.pbf.txt">
+      <Link>TestFiles\kempen-big.osm.pbf.txt</Link>
+    </Content>
+    <Content Include="..\OsmSharpTestFiles\kempen.osm.pbf.txt">
+      <Link>TestFiles\kempen.osm.pbf.txt</Link>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
       <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
       <Name>OsmSharp.Osm</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.csproj">
+      <Project>{76BD9027-A67C-4D1B-8439-BE25E533C50D}</Project>
+      <Name>OsmSharp.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
