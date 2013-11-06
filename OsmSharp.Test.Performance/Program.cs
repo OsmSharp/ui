@@ -37,16 +37,22 @@ namespace OsmSharp.Test.Performance
             
             // add the to-ignore list.
             OsmSharp.Logging.Log.Ignore("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter");
+            OsmSharp.Logging.Log.Ignore("CHPreProcessor");
 
-            // test streams.
-            Osm.PBF.PBFStreamSourceTest.Test();
+            //// test streams.
+            //Osm.PBF.PBFStreamSourceTest.Test();
 
-            // test the tags collection.
-            Tags.Collections.TagsTableCollectionIndexTests.Test();
-            Tags.Collections.BlockedTagsCollectionIndexTests.Test();
+            //// test the tags collection.
+            //Tags.Collections.TagsTableCollectionIndexTests.Test();
+            //Tags.Collections.BlockedTagsCollectionIndexTests.Test();
 
-            // tests the mapcss interpretation.
-            UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
+            //// tests the mapcss interpretation.
+            //UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
+
+            // test the routing pre-processor.
+            //Routing.CH.CHPreProcessorTest.Test();
+            //Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
+            Routing.CH.CHSerializedRoutingTest.Test();
 
             // wait for an exit.
             OsmSharp.Logging.Log.TraceEvent("Program", System.Diagnostics.TraceEventType.Information,

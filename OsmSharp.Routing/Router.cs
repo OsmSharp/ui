@@ -30,6 +30,7 @@ using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.Osm.Streams.Graphs;
 using OsmSharp.Routing.Routers;
+using OsmSharp.Routing.CH;
 
 namespace OsmSharp.Routing
 {
@@ -124,6 +125,29 @@ namespace OsmSharp.Routing
             // creates the live edge router.
             var liveEdgeRouter = new TypedRouterCHEdge(
                 data, interpreter, basicRouter);
+
+            return new Router(liveEdgeRouter); // create the actual router.
+        }
+
+        /// <summary>
+        /// Creates a router using live interpreted edges.
+        /// </summary>
+        /// <param name="reader">The data to route on.</param>
+        /// <param name="interpreter">The routing interpreter.</param>
+        /// <param name="vehicle">The vehicle profile.</param>
+        /// <returns></returns>
+        public static Router CreateCHFrom(OsmStreamSource reader,
+            IOsmRoutingInterpreter interpreter, Vehicle vehicle)
+        {
+            var tagsIndex = new TagsTableCollectionIndex(); // creates a tagged index.
+
+            // read from the OSM-stream.
+            DynamicGraphRouterDataSource<CHEdgeData> data = CHEdgeGraphOsmStreamTarget.Preprocess(
+                reader, interpreter, vehicle);
+
+            // creates the live edge router.
+            var liveEdgeRouter = new TypedRouterCHEdge(
+                data, interpreter, new CHRouter());
 
             return new Router(liveEdgeRouter); // create the actual router.
         }

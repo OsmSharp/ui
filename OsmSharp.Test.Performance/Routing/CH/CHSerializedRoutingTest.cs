@@ -1,0 +1,88 @@
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
+using OsmSharp.Routing;
+using System.IO;
+using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.Math.Geo;
+using OsmSharp.Routing.CH.Serialization.Sorted.v2;
+using OsmSharp.Routing.CH;
+
+namespace OsmSharp.Test.Performance.Routing.CH
+{
+    /// <summary>
+    /// Contains test for the CH routing.
+    /// </summary>
+    public static class CHSerializedRoutingTest
+    {
+        /// <summary>
+        /// Tests the CH pre-processor.
+        /// </summary>
+        public static void Test()
+        {
+            GeoCoordinateBox box = new GeoCoordinateBox(
+                new GeoCoordinate(51.20190, 4.66540),
+                new GeoCoordinate(51.30720, 4.89820));
+            CHSerializedRoutingTest.TestSerializedRouting("CHSerializedRouting", 
+                "kempen-big.osm.pbf.routing", box, 1000);
+        }
+
+
+        /// <summary>
+        /// Tests preprocessing data from a PBF file.
+        /// </summary>
+        public static void TestSerializedRouting(string name, string routeFile, 
+            GeoCoordinateBox box, int testCount)
+        {
+            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\routing\{0}", routeFile));
+            Stream stream = testFile.OpenRead();
+
+            PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("CHSerializedRouting");
+            performanceInfo.Start();
+            performanceInfo.Report("Routing {0} routes based on {1}...", testCount, testFile.Name);
+
+            var routingSerializer = new CHEdgeDataDataSourceSerializer(true);
+            var graphDeserialized = routingSerializer.Deserialize(
+                stream, true);
+
+            var router = Router.CreateCHFrom(
+                graphDeserialized, new CHRouter(),
+                new OsmRoutingInterpreter());
+
+            while (testCount > 0)
+            {
+                GeoCoordinate from = box.GenerateRandomIn();
+                GeoCoordinate to = box.GenerateRandomIn();
+
+                RouterPoint fromPoint = router.Resolve(Vehicle.Car, from);
+                RouterPoint toPoint = router.Resolve(Vehicle.Car, to);
+
+                if (fromPoint != null && toPoint != null)
+                {
+                    Route route = router.Calculate(Vehicle.Car, fromPoint, toPoint);
+                }
+
+                testCount--;
+            }
+            stream.Dispose();
+
+            performanceInfo.Stop();
+        }
+    }
+}

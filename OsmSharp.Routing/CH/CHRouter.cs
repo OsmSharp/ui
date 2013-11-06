@@ -1394,7 +1394,6 @@ namespace OsmSharp.Routing.CH
             {
                 foreach (KeyValuePair<uint, KeyValuePair<uint, CHEdgeData>> arc in arcs)
                 {
-                    TagsCollectionBase arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
                     // test the two points.
                     float fromLatitude, fromLongitude;
                     float toLatitude, toLongitude;
@@ -1409,6 +1408,7 @@ namespace OsmSharp.Routing.CH
                         { // the distance is smaller than the tolerance value.
                             closestWithoutMatch = new SearchClosestResult(
                                 distance, arc.Key);
+                            TagsCollectionBase arcTags = graph.TagsIndex.Get(arc.Value.Value.Tags);
                             if (matcher == null ||
                                 (pointTags == null || pointTags.Count == 0) ||
                                 matcher.MatchWithEdge(vehicle, pointTags, arcTags))

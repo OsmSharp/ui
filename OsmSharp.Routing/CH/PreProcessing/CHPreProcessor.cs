@@ -112,7 +112,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 //{
                     _queue.Enqueue(current_vertex, priority);
 
-                    float progress = (float)System.Math.Round((((double)current / (double)total) * 100), 2);
+                    float progress = (float)System.Math.Round((((double)current / (double)total) * 100));
                     if (progress != latestProgress)
                     {
                         OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
@@ -135,7 +135,7 @@ namespace OsmSharp.Routing.CH.PreProcessing
                 // select the next vertex.
                 vertex = this.SelectNext();
 
-                float progress = (float)System.Math.Round((((double)current / (double)total) * 100), 2);
+                float progress = (float)System.Math.Round((((double)current / (double)total) * 100));
                 if (progress != latestProgress)
                 {
                     OsmSharp.Logging.Log.TraceEvent("CHPreProcessor", TraceEventType.Information,
