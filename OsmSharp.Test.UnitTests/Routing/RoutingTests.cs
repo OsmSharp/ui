@@ -383,7 +383,7 @@ namespace OsmSharp.Test.Unittests.Routing
             IBasicRouterDataSource<TEdgeData> data = this.BuildData(interpreter, "OsmSharp.Test.Unittests.test_network.osm");
             IBasicRouter<TEdgeData> basicRouter = this.BuildBasicRouter(data);
 
-           const float delta = 0.001f;
+           const float delta = 0.01f;
             SearchClosestResult result = basicRouter.SearchClosest(data, interpreter, Vehicle.Car, new GeoCoordinate(51.0578761, 3.7193972), delta, null, null);
             Assert.IsTrue((result.Vertex1 == 20 && result.Vertex2 == 21) ||
                 (result.Vertex1 == 21 && result.Vertex2 == 20));

@@ -222,6 +222,28 @@ namespace OsmSharp.Test.Unittests.Routing
                         route.Entries[idx].Type);
                     Assert.AreEqual(reference.Entries[idx].WayFromName,
                         route.Entries[idx].WayFromName);
+
+                    if (reference.Entries[idx].SideStreets == null ||
+                        reference.Entries[idx].SideStreets.Length == 0)
+                    {
+                        Assert.IsTrue(route.Entries[idx].SideStreets == null ||
+                            route.Entries[idx].SideStreets.Length == 0);
+                    }
+                    else
+                    {
+                        Assert.AreEqual(reference.Entries[idx].SideStreets.Length,
+                            route.Entries[idx].SideStreets.Length);
+                        //for (int sideStreetIdx = 0; sideStreetIdx < reference.Entries[idx].SideStreets.Length; 
+                        //    sideStreetIdx++)
+                        //{
+                        //    Assert.AreEqual(reference.Entries[idx].SideStreets[sideStreetIdx].Latitude,
+                        //        route.Entries[idx].SideStreets[sideStreetIdx].Latitude);
+                        //    Assert.AreEqual(reference.Entries[idx].SideStreets[sideStreetIdx].Longitude,
+                        //        route.Entries[idx].SideStreets[sideStreetIdx].Longitude);
+                        //    Assert.AreEqual(reference.Entries[idx].SideStreets[sideStreetIdx].WayName,
+                        //        route.Entries[idx].SideStreets[sideStreetIdx].WayName);
+                        //}
+                    }
                 }
             }
         }

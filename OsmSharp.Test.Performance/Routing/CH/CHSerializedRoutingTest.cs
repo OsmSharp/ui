@@ -23,6 +23,8 @@ using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing.CH.Serialization.Sorted.v2;
 using OsmSharp.Routing.CH;
+using OsmSharp.Routing.Instructions;
+using System.Collections.Generic;
 
 namespace OsmSharp.Test.Performance.Routing.CH
 {
@@ -41,12 +43,30 @@ namespace OsmSharp.Test.Performance.Routing.CH
                 new GeoCoordinate(51.30720, 4.89820));
             CHSerializedRoutingTest.TestSerializedRouting("CHSerializedRouting", 
                 "kempen-big.osm.pbf.routing", box, 1000);
+
+            // test instructions.
+            CHSerializedRoutingTest.TestInstructions("CHSerializedRouting");
+        }
+
+        /// <summary>
+        /// Tests the instructions.
+        /// </summary>
+        public static void TestInstructions(string name)
+        {
+            FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\routing\{0}", 
+                "kempen-big.osm.pbf.routing"));
+            Stream stream = testFile.OpenRead();
+            //
+            //
+            CHSerializedRoutingTest.TestSerializeRoutingInstrictions(
+                name, stream,
+                new GeoCoordinate(51.261203, 4.780760),
+                new GeoCoordinate(51.267797, 4.801362));
         }
 
         /// <summary>
         /// Tests routing from a serialized routing file.
         /// </summary>
-        /// <param name="stream"></param>
         public static void Test(Stream stream, int testCount)
         {
             GeoCoordinateBox box = new GeoCoordinateBox(
@@ -118,6 +138,59 @@ namespace OsmSharp.Test.Performance.Routing.CH
             CHSerializedRoutingTest.TestSerializedRouting(name, stream, box, testCount);
 
             stream.Dispose();
+        }
+
+        /// <summary>
+        /// Tests routing between two points and the associated instructions.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="stream"></param>
+        /// <param name="from"></param>
+        /// <param name="to"></param>
+        public static void TestSerializeRoutingInstrictions(string name, Stream stream,
+            GeoCoordinate from, GeoCoordinate to)
+        {
+            PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("CHSerializedRouting");
+            performanceInfo.Start();
+            performanceInfo.Report("Routing & generating instructions...");
+
+            var routingSerializer = new CHEdgeDataDataSourceSerializer(true);
+            var graphDeserialized = routingSerializer.Deserialize(
+                stream, true);
+
+            var interpreter = new OsmRoutingInterpreter();
+            var router = Router.CreateCHFrom(
+                graphDeserialized, new CHRouter(),
+                interpreter);
+
+            RouterPoint fromPoint = router.Resolve(Vehicle.Car, from);
+            RouterPoint toPoint = router.Resolve(Vehicle.Car, to);
+
+            List<Instruction> instructions = new List<Instruction>();
+            if (fromPoint != null && toPoint != null)
+            {
+                Route route = router.Calculate(Vehicle.Car, fromPoint, toPoint);
+                if (route != null)
+                {
+                    instructions = InstructionGenerator.Generate(route, interpreter);
+                }
+            }
+
+            performanceInfo.Stop();
+
+            if (instructions.Count == 0)
+            {
+                OsmSharp.Logging.Log.TraceEvent("CHSerializedRouting", System.Diagnostics.TraceEventType.Information,
+                    "Routing unsuccesfull!");
+            }
+            else
+            {
+                foreach (Instruction instruction in instructions)
+                {
+                    OsmSharp.Logging.Log.TraceEvent("CHSerializedRouting", System.Diagnostics.TraceEventType.Information,
+                        instruction.Text);
+                }
+            }
         }
     }
 }

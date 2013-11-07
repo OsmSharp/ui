@@ -39,7 +39,20 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
     public class CHRoutingSerializationv2ComparizonTests : RoutingComparisonTests
     {
         /// <summary>
-        /// Tests serializing/deserializing RoutingSerializationRoutingComparisonTest using the V3 routing serializer.
+        /// Tests serializing/deserializing RoutingSerializationRoutingComparisonTest using the 
+        /// V3 routing serializer.
+        /// </summary>
+        [Test]
+        public void RoutingSerializationV2CHRoutingV2ComparisonTestNetwork()
+        {
+            const string embeddedString = "OsmSharp.Test.Unittests.test_network.osm";
+
+            this.DoRoutingSerializationV2CHRoutingV2ComparisonTest(embeddedString);
+        }
+
+        /// <summary>
+        /// Tests serializing/deserializing RoutingSerializationRoutingComparisonTest using the 
+        /// V3 routing serializer.
         /// </summary>
         [Test]
         public void RoutingSerializationV2CHRoutingV2ComparisonTestRealNetwork1()
@@ -66,16 +79,13 @@ namespace OsmSharp.Test.Unittests.Routing.CH.Serialization.Sorted
         /// <param name="embeddedString"></param>
         private void DoRoutingSerializationV2CHRoutingV2ComparisonTest(string embeddedString)
         {
-
             // creates a new interpreter.
             var interpreter = new OsmRoutingInterpreter();
 
             // do the data processing.
             var original = CHEdgeGraphOsmStreamTarget.Preprocess(new XmlOsmStreamSource(
-                                                                   Assembly.GetExecutingAssembly()
-                                                                           .GetManifestResourceStream(embeddedString)),
-                                                               interpreter,
-                                                               Vehicle.Car);
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedString)),
+                    interpreter, Vehicle.Car);
 
             // create serializer.
             var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.v2.CHEdgeDataDataSourceSerializer(true);

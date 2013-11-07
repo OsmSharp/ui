@@ -502,26 +502,31 @@ namespace OsmSharp.Routing.Routers
                 IList<RoutePointEntrySideStreet> sideStreets = new List<RoutePointEntrySideStreet>();
                 Dictionary<long, IDynamicGraphEdgeData> neighbours = this.GetNeighboursUndirectedWithEdges(
                     vehicle, nodeCurrent);
+                HashSet<long> consideredNeighbours = new HashSet<long>();
                 if (neighbours.Count > 2)
                 {
                     // construct neighbours list.
                     foreach (var neighbour in neighbours)
                     {
-                        if (neighbour.Key != nodePrevious && neighbour.Key != vertices[idx + 1])
+                        if (!consideredNeighbours.Contains(neighbour.Key))
                         {
-                            var sideStreet = new RoutePointEntrySideStreet();
+                            if (neighbour.Key != nodePrevious && neighbour.Key != vertices[idx + 1])
+                            {
+                                var sideStreet = new RoutePointEntrySideStreet();
 
-                            GeoCoordinate neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
-                            TagsCollectionBase tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
+                                GeoCoordinate neighbourCoordinate = this.GetCoordinate(vehicle, neighbour.Key);
+                                TagsCollectionBase tags = _dataGraph.TagsIndex.Get(neighbour.Value.Tags);
 
-                            sideStreet.Latitude = (float)neighbourCoordinate.Latitude;
-                            sideStreet.Longitude = (float)neighbourCoordinate.Longitude;
-                            sideStreet.Tags = tags.ConvertFrom();
-                            sideStreet.WayName = _interpreter.EdgeInterpreter.GetName(tags);
-                            sideStreet.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
+                                sideStreet.Latitude = (float)neighbourCoordinate.Latitude;
+                                sideStreet.Longitude = (float)neighbourCoordinate.Longitude;
+                                sideStreet.Tags = tags.ConvertFrom();
+                                sideStreet.WayName = _interpreter.EdgeInterpreter.GetName(tags);
+                                sideStreet.WayNames = _interpreter.EdgeInterpreter.GetNamesInAllLanguages(tags).ConvertFrom();
 
-                            sideStreets.Add(sideStreet);
+                                sideStreets.Add(sideStreet);
+                            }
                         }
+                        consideredNeighbours.Add(neighbour.Key);
                     }
                 }
 

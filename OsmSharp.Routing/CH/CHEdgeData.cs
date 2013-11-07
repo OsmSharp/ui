@@ -353,8 +353,9 @@ namespace OsmSharp.Routing.CH.PreProcessing
             }
             return result.ToArray();
         }
+
         /// <summary>
-        /// Removes all informative edges.
+        /// Removes all uninformative edges.
         /// </summary>
         /// <param name="edges"></param>
         public static KeyValuePair<uint, CHEdgeData>[] KeepInformativeEdges(this KeyValuePair<uint, CHEdgeData>[] edges)
@@ -363,6 +364,23 @@ namespace OsmSharp.Routing.CH.PreProcessing
             foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
             {
                 if (edge.Value.IsInformative)
+                {
+                    result.Add(edge);
+                }
+            }
+            return result.ToArray();
+        }
+
+        /// <summary>
+        /// Removes all contracted edges.
+        /// </summary>
+        /// <param name="edges"></param>
+        public static KeyValuePair<uint, CHEdgeData>[] KeepUncontracted(this KeyValuePair<uint, CHEdgeData>[] edges)
+        {
+            List<KeyValuePair<uint, CHEdgeData>> result = new List<KeyValuePair<uint, CHEdgeData>>();
+            foreach (KeyValuePair<uint, CHEdgeData> edge in edges)
+            {
+                if (!edge.Value.HasContractedVertex)
                 {
                     result.Add(edge);
                 }

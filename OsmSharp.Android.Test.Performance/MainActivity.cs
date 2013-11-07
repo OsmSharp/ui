@@ -25,6 +25,7 @@ using OsmSharp.Android.UI.Log;
 using System.Reflection;
 using System.Threading;
 using OsmSharp.Logging;
+using OsmSharp.Math.Geo;
 
 namespace OsmSharp.Android.Test.Performance
 {
@@ -55,6 +56,8 @@ namespace OsmSharp.Android.Test.Performance
         private void Test()
         {
             this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
+
+            this.TestInstructions("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
         }
 
         /// <summary>
@@ -80,6 +83,22 @@ namespace OsmSharp.Android.Test.Performance
                 Assembly.GetExecutingAssembly().GetManifestResourceStream(
                     embeddedResource),
                     100);
+        }
+
+        /// <summary>
+        /// Executes routing instruction generation tests.
+        /// </summary>
+        /// <param name="embeddedResource"></param>
+        private void TestInstructions(string embeddedResource)
+        {
+            Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information,
+                "Testing: Instruction generation.");
+            OsmSharp.Test.Performance.Routing.CH.CHSerializedRoutingTest.TestSerializeRoutingInstrictions(
+                "CHInstructions",
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource),
+                new GeoCoordinate(51.261203, 4.780760),
+                new GeoCoordinate(51.267797, 4.801362));
         }
 	}
 }

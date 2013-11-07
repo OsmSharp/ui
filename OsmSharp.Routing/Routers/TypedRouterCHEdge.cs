@@ -61,7 +61,7 @@ namespace OsmSharp.Routing.Routers
         protected override KeyValuePair<uint, CHEdgeData>[] GetNeighboursUndirected(long vertex1)
         {
             KeyValuePair<uint, CHEdgeData>[] arcs = this.Data.GetArcs(Convert.ToUInt32(vertex1));
-            return arcs.KeepInformativeEdges();
+            return arcs.KeepUncontracted();
         }
     }
 }

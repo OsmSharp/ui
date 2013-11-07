@@ -21,10 +21,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Math;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Units.Distance;
-using OsmSharp.Math;
 
 namespace OsmSharp.Routing
 {
@@ -772,6 +772,16 @@ namespace OsmSharp.Routing
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns a System.String that represents the current System.Object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("{0}:{1}",
+                this.Key, this.Value);
+        }
     }
 
     /// <summary>
