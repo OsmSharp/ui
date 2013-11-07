@@ -274,7 +274,7 @@ namespace OsmSharp.Routing.Instructions.LanguageGeneration.Defaults
                 }
                 if (tag.Key != null && tag.Key.ToLower() == "name")
                 {
-                    name = tag.Key;
+                    name = tag.Value;
                 }
             }
             return name;

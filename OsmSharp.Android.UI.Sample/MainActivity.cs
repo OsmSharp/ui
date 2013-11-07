@@ -1,33 +1,21 @@
 using System;
-using Android.App;
-using Android.Content;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Android.OS;
-using OsmSharp.UI.Renderer;
-using System.Reflection;
-using System.IO;
 using System.Collections.Generic;
-using OsmSharp.UI;
-using OsmSharp.UI.Map.Styles.MapCSS;
-using OsmSharp.UI.Map;
-using OsmSharp.UI.Map.Layers;
+using System.Reflection;
+using System.Timers;
+using Android.App;
+using Android.OS;
+using Android.Widget;
 using OsmSharp.Math.Geo;
 using OsmSharp.Routing;
-using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.Routing.Osm.Graphs.Serialization;
 using OsmSharp.Routing.CH;
-using OsmSharp.Routing.CH.Serialization;
-using OsmSharp.Osm.Data.Memory;
-using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.UI.Animations;
-using OsmSharp.Math.Geo.Projections;
-using OsmSharp.Math;
-using OsmSharp.Math.Primitives;
-using System.Timers;
 using OsmSharp.Routing.Navigation;
+using OsmSharp.Routing.Osm.Interpreter;
+using OsmSharp.UI;
 using OsmSharp.UI.Animations.Navigation;
+using OsmSharp.UI.Map;
+using OsmSharp.UI.Map.Layers;
+using OsmSharp.UI.Map.Styles.MapCSS;
+using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.Android.UI.Sample
 {
@@ -47,6 +35,11 @@ namespace OsmSharp.Android.UI.Sample
         /// </summary>
         private LayerRoute _routeLayer;
 
+        /// <summary>
+        /// Holds the text view.
+        /// </summary>
+        private TextView _textView;
+
 		/// <summary>
 		/// Raises the create event.
 		/// </summary>
@@ -56,9 +49,8 @@ namespace OsmSharp.Android.UI.Sample
 			base.OnCreate (bundle);
 
             OsmSharp.Logging.Log.Enable();
-
-//			OsmSharp.IO.Output.OutputStreamHost.RegisterOutputStream (
-//				new OsmSharp.Android.UI.IO.Output.ConsoleOutputStream ());
+            OsmSharp.Logging.Log.RegisterListener(
+                new OsmSharp.Android.UI.Log.LogTraceListener());
 			
 			// create the MapCSS image source.
 			var imageSource = new MapCSSDictionaryImageSource();
@@ -91,7 +83,8 @@ namespace OsmSharp.Android.UI.Sample
 			map.AddLayer(
 				new LayerScene(
 				Scene2DLayered.Deserialize(
-					Assembly.GetExecutingAssembly().GetManifestResourceStream(@"OsmSharp.Android.UI.Sample.wvl.map"), true)));
+					Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                        @"OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.scene.layered"), true)));
 
 //			var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
 //			var graphSerialized = routingSerializer.Deserialize(
@@ -104,19 +97,22 @@ namespace OsmSharp.Android.UI.Sample
 //			// calculate route.            
 //			Router router = Router.CreateLiveFrom(
 //				graphSerialized,
-//				new OsmRoutingInterpreter());
+            //				new OsmRoutingInterpreter());
 
-            var routingSerializer = new OsmSharp.Routing.CH.Serialization.Sorted.CHEdgeDataDataSourceSerializer(false);
+            var from = new GeoCoordinate(51.261203, 4.780760);
+            var to = new GeoCoordinate(51.267797, 4.801362);
+
+            var routingSerializer = 
+                new OsmSharp.Routing.CH.Serialization.Sorted.v2.CHEdgeDataDataSourceSerializer(false);
             var graphDeserialized = routingSerializer.Deserialize(
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.routing"), true);
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    "OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.routing"), true);
 
             _router = Router.CreateCHFrom(
                 graphDeserialized, new CHRouter(),
                 new OsmRoutingInterpreter());
-            GeoCoordinate point1 = new GeoCoordinate(51.158075, 2.961545);
-            GeoCoordinate point2 = new GeoCoordinate(51.190503, 3.004793);
-            RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, point1);
-            RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, point2);
+            RouterPoint routerPoint1 = _router.Resolve(Vehicle.Car, from);
+            RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, to);
             Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
             RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
             _enumerator = route1.GetRouteEnumerable(20).GetEnumerator();
@@ -156,33 +152,27 @@ namespace OsmSharp.Android.UI.Sample
             _mapView.MapMaxZoomLevel = 20;
             _mapView.MapMinZoomLevel = 12;
             _mapView.MapTilt = 0;
-            //var mapView = new MapGLView (this);
-            _mapView.MapCenter = new GeoCoordinate(51.158075, 2.961545); // gistel
-            //mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
-            //mapLayout.MapCenter = new GeoCoordinate(51.26337, 4.78739);
-            //mapView.Center = new GeoCoordinate(51.156803, 2.958887);
+            _mapView.MapCenter = new GeoCoordinate(51.26371, 4.78601);
             _mapView.MapZoom = 17;
-            //MapViewAnimator mapViewAnimator = new MapViewAnimator(mapLayout);
-            //_mapView.MapTapEvent += delegate(GeoCoordinate geoCoordinate)
-            //{
-            //    _mapView.ZoomToMarkers();
-            //    //_mapView.AddMarker(geoCoordinate).Click += new EventHandler(MainActivity_Click);
-            //    //mapViewAnimator.Stop();
-            //    //mapViewAnimator.Start(geoCoordinate, 15, new TimeSpan(0, 0, 2));
-            //};
+
+            _textView = new TextView(this);
+            _textView.SetBackgroundColor(global::Android.Graphics.Color.White);
+            _textView.SetTextColor(global::Android.Graphics.Color.Black);
 
 			//Create the user interface in code
-			var layout = new RelativeLayout (this);
+            var layout = new LinearLayout(this);
+            layout.Orientation = Orientation.Vertical;
+            layout.AddView(_textView);
             layout.AddView(_mapView);
 
-            _mapView.AddMarker(new GeoCoordinate(51.1612, 2.9795));
-            _mapView.AddMarker(new GeoCoordinate(51.1447, 2.9483));
+            _mapView.AddMarker(from);
+            _mapView.AddMarker(to);
 
             //_mapView.ZoomToMarkers();
 
             _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5);
 
-            Timer timer = new Timer(250);
+            Timer timer = new Timer(500);
             timer.Elapsed += new ElapsedEventHandler(TimerHandler);
             timer.Start();
 
@@ -214,8 +204,15 @@ namespace OsmSharp.Android.UI.Sample
         {
             if (_enumerator.MoveNext())
             {
-                GeoCoordinate other = _enumerator.Current.OffsetRandom(20);
+                GeoCoordinate other = _enumerator.Current.OffsetRandom(10);
                 _routeTrackerAnimator.Track(other);
+                if (_routeTrackerAnimator.NextInstruction != null)
+                {
+                    this.RunOnUiThread(() =>
+                    {
+                        _textView.Text = _routeTrackerAnimator.NextInstruction.Text;
+                    });
+                }
             }
         }
 	}

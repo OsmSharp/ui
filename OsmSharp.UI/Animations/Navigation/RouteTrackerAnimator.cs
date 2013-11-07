@@ -55,7 +55,7 @@ namespace OsmSharp.UI.Animations.Navigation
         {
 			this.MinZoom = 16;
 			this.MaxZoom = 30;
-			this.DefaultZoom = 17.5f;
+			this.DefaultZoom = 18.5f;
 
             _mapView = mapView;
             _animator = new MapViewAnimator(mapView);
