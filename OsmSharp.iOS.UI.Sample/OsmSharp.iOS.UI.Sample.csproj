@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">iPhoneSimulator</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CC6E330A-88C4-4A78-B24D-C19DCADD1F69}</ProjectGuid>
+    <ProjectGuid>{CE41D202-1FE4-4169-9A35-7319491FBC7B}</ProjectGuid>
     <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Exe</OutputType>
     <RootNamespace>OsmSharp.iOS.UI.Sample</RootNamespace>
@@ -17,20 +17,15 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhoneSimulator\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
-    <MtouchProfiling>true</MtouchProfiling>
-    <MtouchUseSGen>true</MtouchUseSGen>
-    <MtouchI18n>
-    </MtouchI18n>
-    <MtouchArch>ARMv7</MtouchArch>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhoneSimulator\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
@@ -43,22 +38,15 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\iPhone\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <MtouchDebug>true</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <IpaPackageName>
-    </IpaPackageName>
-    <MtouchI18n>
-    </MtouchI18n>
-    <MtouchArch>ARMv7</MtouchArch>
-    <MtouchProfiling>true</MtouchProfiling>
-    <MtouchUseSGen>true</MtouchUseSGen>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhone' ">
-    <DebugType>full</DebugType>
+    <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\iPhone\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
@@ -67,57 +55,46 @@
     <CodesignKey>iPhone Developer</CodesignKey>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Ad-Hoc|iPhone' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
     <OutputPath>bin\iPhone\Ad-Hoc</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <BuildIpa>true</BuildIpa>
-    <ConsolePause>false</ConsolePause>
+    <ConsolePause>False</ConsolePause>
     <CodesignKey>iPhone Distribution</CodesignKey>
-    <CodesignProvision>Automatic:AdHoc</CodesignProvision>
+    <BuildIpa>True</BuildIpa>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <Optimize>True</Optimize>
     <OutputPath>bin\iPhone\AppStore</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <ConsolePause>False</ConsolePause>
     <CodesignKey>iPhone Distribution</CodesignKey>
-    <ConsolePause>false</ConsolePause>
-    <CodesignProvision>Automatic:AppStore</CodesignProvision>
   </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Core" />
-    <Reference Include="monotouch" />
-    <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Resources\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Info.plist" />
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
-    <Compile Include="OsmSharp_iOS_UI_SampleViewController.cs" />
-    <Compile Include="OsmSharp_iOS_UI_SampleViewController.designer.cs">
-      <DependentUpon>OsmSharp_iOS_UI_SampleViewController.cs</DependentUpon>
-    </Compile>
+    <EmbeddedResource Include="..\OsmSharpTestFiles\map\kempen-big.osm.pbf.scene.layered">
+      <Link>kempen-big.osm.pbf.scene.layered</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.routing">
+      <Link>kempen-big.osm.pbf.routing</Link>
+    </EmbeddedResource>
+    <None Include="Info.plist" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <InterfaceDefinition Include="OsmSharp_iOS_UI_SampleViewController.xib" />
+    <Compile Include="MyViewController.cs" />
+    <BundleResource Include="Resources\Default.png" />
+    <BundleResource Include="Resources\Default@2x.png" />
+    <BundleResource Include="Resources\Default-568h@2x.png" />
   </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\OsmSharp\OsmSharp.iOS.csproj">
-      <Project>{CF2AE65D-56A8-4577-807B-6FC9B1630489}</Project>
-      <Name>OsmSharp.iOS</Name>
+    <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.csproj">
+      <Project>{2308AF80-AF15-4CBE-8222-E499DF12DCC4}</Project>
+      <Name>OsmSharp.iOS.UI</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.iOS.csproj">
       <Project>{1F1A6D47-3499-47F5-8FDA-98C0BCBAFD5F}</Project>
@@ -131,22 +108,16 @@
       <Project>{1943198A-45C1-44CD-9D5B-2F3417D6E3C6}</Project>
       <Name>OsmSharp.UI.iOS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.csproj">
-      <Project>{2308AF80-AF15-4CBE-8222-E499DF12DCC4}</Project>
-      <Name>OsmSharp.iOS.UI</Name>
+    <ProjectReference Include="..\OsmSharp\OsmSharp.iOS.csproj">
+      <Project>{CF2AE65D-56A8-4577-807B-6FC9B1630489}</Project>
+      <Name>OsmSharp.iOS</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="monotouch" />
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
-  <ItemGroup>
-    <BundleResource Include="Resources\Icon-72.png" />
-    <BundleResource Include="Resources\Icon-72%402x.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.routing">
-      <Link>kempen-big.osm.pbf.routing</Link>
-    </EmbeddedResource>
-    <EmbeddedResource Include="..\OsmSharpTestFiles\map\kempen-big.osm.pbf.scene.layered">
-      <Link>kempen-big.osm.pbf.scene.layered</Link>
-    </EmbeddedResource>
-  </ItemGroup>
 </Project>

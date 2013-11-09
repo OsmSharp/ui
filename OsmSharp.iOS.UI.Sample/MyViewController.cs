@@ -1,34 +1,30 @@
 using System;
-using System.Drawing;
-using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using OsmSharp.UI.Map;
-using OsmSharp.UI.Map.Layers;
-using System.Reflection;
-using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene;
-using System.Timers;
-using OsmSharp.Math.Geo;
+using System.Drawing;
 using OsmSharp.Routing;
+using OsmSharp.UI.Map.Layers;
+using OsmSharp.UI.Map;
+using OsmSharp.UI.Renderer.Scene;
+using System.Reflection;
+using OsmSharp.Math.Geo;
 using OsmSharp.Routing.CH;
 using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.UI;
-using System.Collections.Generic;
-using OsmSharp.Math;
-using OsmSharp.Math.Geo.Projections;
-using OsmSharp.Math.Primitives;
-using OsmSharp.Routing.TSP.Genetic;
-using OsmSharp.UI.Animations;
-using OsmSharp.UI.Animations.Navigation;
 using OsmSharp.Routing.Navigation;
-using OsmSharp.Routing.Instructions;
-using System.Threading.Tasks;
+using System.Timers;
+using OsmSharp.UI;
+using OsmSharp.UI.Animations.Navigation;
+using System.Collections.Generic;
 
-namespace OsmSharp.iOS.UI.Sample
+namespace OsmSharp.iOS.UI.Sample1
 {
-	public partial class OsmSharp_iOS_UI_SampleViewController : UIViewController
-	{
-		/// <summary>
+    public class MyViewController : UIViewController
+    {
+        public MyViewController()
+        {
+
+        }
+
+        		/// <summary>
 		/// Holds the router.
 		/// </summary>
 		private Router _router;
@@ -39,10 +35,6 @@ namespace OsmSharp.iOS.UI.Sample
 		/// Holds the route layer.
 		/// </summary>
 		private LayerRoute _routeLayer;
-
-		public OsmSharp_iOS_UI_SampleViewController () : base ("OsmSharp_iOS_UI_SampleViewController", null)
-		{
-		}
 
 		public override void DidReceiveMemoryWarning ()
 		{
@@ -157,5 +149,6 @@ namespace OsmSharp.iOS.UI.Sample
 			// Return true for supported orientations
 			return true;
 		}
-	}
+    }
 }
+
