@@ -92,11 +92,45 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Info.plist" />
-    <None Include="Entitlements.plist" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
+    <Compile Include="OsmSharp_iOS_UI_SampleViewController.cs" />
+    <Compile Include="OsmSharp_iOS_UI_SampleViewController.designer.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
+  <ItemGroup>
+    <InterfaceDefinition Include="OsmSharp_iOS_UI_SampleViewController.xib" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OsmSharp\OsmSharp.iOS.csproj">
+      <Project>{CF2AE65D-56A8-4577-807B-6FC9B1630489}</Project>
+      <Name>OsmSharp.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.iOS.UI\OsmSharp.iOS.UI.csproj">
+      <Project>{2308AF80-AF15-4CBE-8222-E499DF12DCC4}</Project>
+      <Name>OsmSharp.iOS.UI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.iOS.csproj">
+      <Project>{1F1A6D47-3499-47F5-8FDA-98C0BCBAFD5F}</Project>
+      <Name>OsmSharp.Osm.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Routing\OsmSharp.Routing.iOS.csproj">
+      <Project>{2CE94153-EEFD-4D25-AF5E-9234F5EEF4AE}</Project>
+      <Name>OsmSharp.Routing.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.UI\OsmSharp.UI.iOS.csproj">
+      <Project>{1943198A-45C1-44CD-9D5B-2F3417D6E3C6}</Project>
+      <Name>OsmSharp.UI.iOS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.Test.Performance\OsmSharp.Test.Performance.iOS.csproj">
+      <Project>{5627E042-8851-48AC-8399-8FE48B69D5FD}</Project>
+      <Name>OsmSharp.Test.Performance.iOS</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Icon-72.png" />
+    <BundleResource Include="Resources\Icon-72%402x.png" />
+  </ItemGroup>
 </Project>
