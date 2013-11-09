@@ -380,6 +380,15 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         }
 
         /// <summary>
+        /// Tests simple to complete of osm_network.
+        /// </summary>
+        [Test]
+        public void TestSimpleToCompleteOsmNetwork()
+        {
+
+        }
+
+        /// <summary>
         /// Execute the simple-to-complete code.
         /// </summary>
         /// <param name="osmGeoList"></param>
