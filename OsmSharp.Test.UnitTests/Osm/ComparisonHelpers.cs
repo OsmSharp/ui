@@ -36,14 +36,21 @@ namespace OsmSharp.Test.Unittests.Osm
         /// <param name="actual"></param>
         public static void CompareTags(TagsCollectionBase expected, TagsCollectionBase actual)
         {
-            Assert.AreEqual(expected.Count, actual.Count);
-            foreach (Tag tag in expected)
+            if (expected == null)
             {
-                Assert.IsTrue(actual.Contains(tag));
+                Assert.IsNull(actual);
             }
-            foreach (Tag tag in actual)
+            else
             {
-                Assert.IsTrue(expected.Contains(tag));
+                Assert.AreEqual(expected.Count, actual.Count);
+                foreach (Tag tag in expected)
+                {
+                    Assert.IsTrue(actual.Contains(tag));
+                }
+                foreach (Tag tag in actual)
+                {
+                    Assert.IsTrue(expected.Contains(tag));
+                }
             }
         }
 
