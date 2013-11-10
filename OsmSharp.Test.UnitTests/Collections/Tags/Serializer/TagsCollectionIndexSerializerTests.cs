@@ -22,6 +22,7 @@ using NUnit.Framework;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Collections.Tags.Serializer;
 using OsmSharp.IO;
+using OsmSharp.Test.Unittests.Osm;
 
 namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
 {
@@ -48,7 +49,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
             for (uint idx = 0; idx < tagsIndex.Max; idx++)
             {
-                this.CompareTagsCollections(tagsIndex.Get(idx),
+                ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                     tagsIndexReadonly.Get(idx));
             }
         }
@@ -70,7 +71,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
             for (uint idx = 0; idx < tagsIndex.Max; idx++)
             {
-                this.CompareTagsCollections(tagsIndex.Get(idx),
+                ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                     tagsIndexReadonly.Get(idx));
             }
         }
@@ -92,7 +93,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
             for (uint idx = 0; idx < tagsIndex.Max; idx++)
             {
-                this.CompareTagsCollections(tagsIndex.Get(idx),
+                ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                     tagsIndexReadonly.Get(idx));
             }
         }
@@ -123,7 +124,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
             for (uint idx = 0; idx < tagsIndex.Max; idx++)
             {
-                this.CompareTagsCollections(tagsIndex.Get(idx),
+                ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                     tagsIndexReadonly.Get(idx));
             }
         }
@@ -154,7 +155,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
             for (uint idx = 0; idx < tagsIndex.Max; idx++)
             {
-                this.CompareTagsCollections(tagsIndex.Get(idx),
+                ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                     tagsIndexReadonly.Get(idx));
             }
         }
@@ -185,7 +186,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
             for (uint idx = 0; idx < tagsIndex.Max; idx++)
             {
-                this.CompareTagsCollections(tagsIndex.Get(idx),
+                ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                     tagsIndexReadonly.Get(idx));
             }
         }
@@ -221,7 +222,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             {
                 if (idx >= from && idx < to)
                 {
-                    this.CompareTagsCollections(tagsIndex.Get(idx),
+                    ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                         tagsIndexReadonly.Get(idx));
                 }
                 else
@@ -239,7 +240,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             {
                 if (idx >= from && idx < to)
                 {
-                    this.CompareTagsCollections(tagsIndex.Get(idx),
+                    ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                         tagsIndexReadonly.Get(idx));
                 }
                 else
@@ -257,7 +258,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             {
                 if (idx >= from && idx < to)
                 {
-                    this.CompareTagsCollections(tagsIndex.Get(idx),
+                    ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                         tagsIndexReadonly.Get(idx));
                 }
                 else
@@ -293,7 +294,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
             for (uint idx = 0; idx < tagsIndex.Max; idx++)
             {
-                this.CompareTagsCollections(tagsIndex.Get(idx),
+                ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                     tagsIndexReadonly.Get(idx));
             }
         }
@@ -324,7 +325,7 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
             for (uint idx = 0; idx < tagsIndex.Max; idx++)
             {
-                this.CompareTagsCollections(tagsIndex.Get(idx),
+                ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                     tagsIndexReadonly.Get(idx));
             }
         }
@@ -355,26 +356,8 @@ namespace OsmSharp.Test.Unittests.Collections.Tags.Serializer
             Assert.AreEqual(tagsIndex.Max, tagsIndexReadonly.Max);
             for (uint idx = 0; idx < tagsIndex.Max; idx++)
             {
-                this.CompareTagsCollections(tagsIndex.Get(idx),
+                ComparisonHelpers.CompareTags(tagsIndex.Get(idx),
                     tagsIndexReadonly.Get(idx));
-            }
-        }
-
-        /// <summary>
-        /// Compares two tags collections.
-        /// </summary>
-        /// <param name="reference"></param>
-        /// <param name="collection"></param>
-        private void CompareTagsCollections(TagsCollectionBase reference, TagsCollectionBase collection)
-        {
-            Assert.AreEqual(reference.Count, collection.Count);
-            foreach (Tag tag in reference)
-            {
-                Assert.IsTrue(collection.Contains(tag));
-            }
-            foreach (Tag tag in collection)
-            {
-                Assert.IsTrue(reference.Contains(tag));
             }
         }
 

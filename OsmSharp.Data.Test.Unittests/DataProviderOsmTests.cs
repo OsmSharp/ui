@@ -28,6 +28,7 @@ using OsmSharp.Osm.Data;
 using OsmSharp.Osm.Data.Memory;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Test.Unittests.Osm;
 
 namespace OsmSharp.Data.Test.Unittests
 {
@@ -74,7 +75,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             var dataSource = this.CreateDataSource();
             Node foundNode = dataSource.GetNode(1);
-            this.CompareNodes(node, foundNode);
+            ComparisonHelpers.CompareSimple(node, foundNode);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -93,7 +94,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
-            this.CompareNodes(node, foundNode);
+            ComparisonHelpers.CompareSimple(node, foundNode);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -113,7 +114,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
-            this.CompareNodes(node, foundNode);
+            ComparisonHelpers.CompareSimple(node, foundNode);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -134,7 +135,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
-            this.CompareNodes(node, foundNode);
+            ComparisonHelpers.CompareSimple(node, foundNode);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -156,7 +157,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
-            this.CompareNodes(node, foundNode);
+            ComparisonHelpers.CompareSimple(node, foundNode);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -180,7 +181,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
-            this.CompareNodes(node, foundNode);
+            ComparisonHelpers.CompareSimple(node, foundNode);
 
 
             this.NotifyEmptyExpected(); // empty test database.
@@ -207,7 +208,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundNode = dataSource.GetNode(1);
-            this.CompareNodes(node, foundNode);
+            ComparisonHelpers.CompareSimple(node, foundNode);
         }
 
         /// <summary>
@@ -229,7 +230,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             var dataSource = this.CreateDataSource();
             Way foundWay = dataSource.GetWay(1);
-            this.CompareWays(way, foundWay);
+            ComparisonHelpers.CompareSimple(way, foundWay);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -246,7 +247,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
-            this.CompareWays(way, foundWay);
+            ComparisonHelpers.CompareSimple(way, foundWay);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -264,7 +265,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
-            this.CompareWays(way, foundWay);
+            ComparisonHelpers.CompareSimple(way, foundWay);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -283,7 +284,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
-            this.CompareWays(way, foundWay);
+            ComparisonHelpers.CompareSimple(way, foundWay);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -303,7 +304,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
-            this.CompareWays(way, foundWay);
+            ComparisonHelpers.CompareSimple(way, foundWay);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -325,7 +326,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
-            this.CompareWays(way, foundWay);
+            ComparisonHelpers.CompareSimple(way, foundWay);
 
 
             this.NotifyEmptyExpected(); // empty test database.
@@ -350,7 +351,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
-            this.CompareWays(way, foundWay);
+            ComparisonHelpers.CompareSimple(way, foundWay);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -377,7 +378,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundWay = dataSource.GetWay(1);
-            this.CompareWays(way, foundWay);
+            ComparisonHelpers.CompareSimple(way, foundWay);
         }
 
         /// <summary>
@@ -399,7 +400,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             var dataSource = this.CreateDataSource();
             Relation foundRelation = dataSource.GetRelation(1);
-            this.CompareRelations(relation, foundRelation);
+            ComparisonHelpers.CompareSimple(relation, foundRelation);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -416,7 +417,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
-            this.CompareRelations(relation, foundRelation);
+            ComparisonHelpers.CompareSimple(relation, foundRelation);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -434,7 +435,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
-            this.CompareRelations(relation, foundRelation);
+            ComparisonHelpers.CompareSimple(relation, foundRelation);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -453,7 +454,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
-            this.CompareRelations(relation, foundRelation);
+            ComparisonHelpers.CompareSimple(relation, foundRelation);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -473,7 +474,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
-            this.CompareRelations(relation, foundRelation);
+            ComparisonHelpers.CompareSimple(relation, foundRelation);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -495,7 +496,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
-            this.CompareRelations(relation, foundRelation);
+            ComparisonHelpers.CompareSimple(relation, foundRelation);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -519,7 +520,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
-            this.CompareRelations(relation, foundRelation);
+            ComparisonHelpers.CompareSimple(relation, foundRelation);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -546,7 +547,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
-            this.CompareRelations(relation, foundRelation);
+            ComparisonHelpers.CompareSimple(relation, foundRelation);
 
             this.NotifyEmptyExpected(); // empty test database.
 
@@ -570,7 +571,7 @@ namespace OsmSharp.Data.Test.Unittests
             target.Close();
             dataSource = this.CreateDataSource();
             foundRelation = dataSource.GetRelation(1);
-            this.CompareRelations(relation, foundRelation);
+            ComparisonHelpers.CompareSimple(relation, foundRelation);
         }
 
         /// <summary>
@@ -592,17 +593,17 @@ namespace OsmSharp.Data.Test.Unittests
             foreach (Node node in memorySource.GetNodes())
             {
                 Node dbNode = dataSource.GetNode(node.Id.Value);
-                this.CompareNodes(node, dbNode);
+                ComparisonHelpers.CompareSimple(node, dbNode);
             }
             foreach (Way way in memorySource.GetWays())
             {
                 Way dbWay = dataSource.GetWay(way.Id.Value);
-                this.CompareWays(way, dbWay);
+                ComparisonHelpers.CompareSimple(way, dbWay);
             }
             foreach (Relation relation in memorySource.GetRelations())
             {
                 Relation dbRelation = dataSource.GetRelation(relation.Id.Value);
-                this.CompareRelations(relation, dbRelation);
+                ComparisonHelpers.CompareSimple(relation, dbRelation);
             }
         }
 
@@ -818,146 +819,19 @@ namespace OsmSharp.Data.Test.Unittests
                     switch (osmGeo.Type)
                     {
                         case OsmGeoType.Node:
-                            this.CompareNodes(refOsmGeo as Node, osmGeo as Node);
+                            ComparisonHelpers.CompareSimple(refOsmGeo as Node, osmGeo as Node);
                             break;
                         case OsmGeoType.Way:
-                            this.CompareWays(refOsmGeo as Way, osmGeo as Way);
+                            ComparisonHelpers.CompareSimple(refOsmGeo as Way, osmGeo as Way);
                             break;
                         case OsmGeoType.Relation:
-                            this.CompareRelations(refOsmGeo as Relation, osmGeo as Relation);
+                            ComparisonHelpers.CompareSimple(refOsmGeo as Relation, osmGeo as Relation);
                             break;
                     }
                 }
                 else
                 {
                     Assert.Fail("Reference data not found!");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Compares a found node to an expected node.
-        /// </summary>
-        /// <param name="expected"></param>
-        /// <param name="found"></param>
-        private void CompareNodes(Node expected, Node found)
-        {
-            Assert.IsNotNull(expected);
-            Assert.IsNotNull(found);
-            Assert.AreEqual(expected.Id, found.Id);
-            Assert.AreEqual(expected.ChangeSetId, found.ChangeSetId);
-            Assert.AreEqual((float)expected.Latitude, (float)found.Latitude);
-            Assert.AreEqual((float)expected.Longitude, (float)found.Longitude);
-            Assert.AreEqual(expected.TimeStamp, found.TimeStamp);
-            Assert.AreEqual(expected.Type, found.Type);
-            Assert.AreEqual(expected.UserId, found.UserId);
-            Assert.AreEqual(expected.UserName, found.UserName);
-            Assert.AreEqual(expected.Version, found.Version);
-            Assert.AreEqual(expected.Visible, found.Visible);
-
-            this.CompareTags(expected.Tags, found.Tags);
-        }
-
-        /// <summary>
-        /// Compares a found way to an expected way.
-        /// </summary>
-        /// <param name="expected"></param>
-        /// <param name="found"></param>
-        private void CompareWays(Way expected, Way found)
-        {
-            Assert.IsNotNull(expected);
-            Assert.IsNotNull(found);
-            Assert.AreEqual(expected.Id, found.Id);
-            Assert.AreEqual(expected.ChangeSetId, found.ChangeSetId);
-            Assert.AreEqual(expected.TimeStamp, found.TimeStamp);
-            Assert.AreEqual(expected.Type, found.Type);
-            Assert.AreEqual(expected.UserId, found.UserId);
-            Assert.AreEqual(expected.UserName, found.UserName);
-            Assert.AreEqual(expected.Version, found.Version);
-            Assert.AreEqual(expected.Visible, found.Visible);
-
-            if (expected.Nodes == null)
-            {
-                Assert.IsNull(found.Nodes);
-            }
-            else
-            {
-                Assert.IsNotNull(found.Nodes);
-                Assert.AreEqual(expected.Nodes.Count, found.Nodes.Count);
-                for (int idx = 0; idx < expected.Nodes.Count; idx++)
-                {
-                    Assert.AreEqual(expected.Nodes[idx], found.Nodes[idx]);
-                }
-            }
-
-            this.CompareTags(expected.Tags, found.Tags);
-        }
-
-        /// <summary>
-        /// Compares a found relation to an expected relation.
-        /// </summary>
-        /// <param name="expected"></param>
-        /// <param name="found"></param>
-        private void CompareRelations(Relation expected, Relation found)
-        {
-            Assert.IsNotNull(expected);
-            Assert.IsNotNull(found);
-            Assert.AreEqual(expected.Id, found.Id);
-            Assert.AreEqual(expected.ChangeSetId, found.ChangeSetId);
-            Assert.AreEqual(expected.TimeStamp, found.TimeStamp);
-            Assert.AreEqual(expected.Type, found.Type);
-            Assert.AreEqual(expected.UserId, found.UserId);
-            Assert.AreEqual(expected.UserName, found.UserName);
-            Assert.AreEqual(expected.Version, found.Version);
-            Assert.AreEqual(expected.Visible, found.Visible);
-
-            if (expected.Members == null)
-            {
-                Assert.IsNull(found.Members);
-            }
-            else
-            {
-                Assert.IsNotNull(found.Members);
-                Assert.AreEqual(expected.Members.Count, found.Members.Count);
-                for (int idx = 0; idx < expected.Members.Count; idx++)
-                {
-                    Assert.AreEqual(expected.Members[idx].MemberId, found.Members[idx].MemberId);
-                    // the oracle database converts empty strings to null and does not follow standards.
-                    // this is why there is this ugly code here matching empty strings to null.
-                    if (expected.Members[idx].MemberRole == string.Empty &&
-                        found.Members[idx].MemberRole == null)
-                    { // only for oracle!
-                        Assert.AreEqual(null, found.Members[idx].MemberRole);
-                    }
-                    else
-                    { 
-                        Assert.AreEqual(expected.Members[idx].MemberRole, found.Members[idx].MemberRole);
-                    }
-                    Assert.AreEqual(expected.Members[idx].MemberType, found.Members[idx].MemberType);
-                }
-            }
-
-            this.CompareTags(expected.Tags, found.Tags);
-        }
-
-        /// <summary>
-        /// Compares two tag collection for indentical content.
-        /// </summary>
-        /// <param name="expectedTags"></param>
-        /// <param name="foundTags"></param>
-        private void CompareTags(TagsCollectionBase expectedTags, TagsCollectionBase foundTags)
-        {
-            if (expectedTags == null)
-            {
-                Assert.IsNull(foundTags);
-            }
-            else
-            {
-                Assert.IsNotNull(foundTags);
-                Assert.AreEqual(expectedTags.Count, foundTags.Count);
-                foreach (Tag expectedTag in expectedTags)
-                {
-                    Assert.IsTrue(foundTags.ContainsKeyValue(expectedTag.Key, expectedTag.Value));
                 }
             }
         }

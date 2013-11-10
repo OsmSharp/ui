@@ -18,10 +18,14 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using NUnit.Framework;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Data;
+using OsmSharp.Osm.Data.Memory;
 using OsmSharp.Osm.Streams;
 using OsmSharp.Osm.Streams.Complete;
+using OsmSharp.Osm.Xml.Streams;
 
 namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
 {
@@ -385,7 +389,25 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
         [Test]
         public void TestSimpleToCompleteOsmNetwork()
         {
+            this.TestSimpleToCompleteOn("OsmSharp.Test.Unittests.test_network.osm");
+        }
 
+        /// <summary>
+        /// Tests simple to complete of test_network_big.
+        /// </summary>
+        [Test]
+        public void TestSimpleToCompleteOsmNetworkBig()
+        {
+            this.TestSimpleToCompleteOn("OsmSharp.Test.Unittests.test_network_big.osm");
+        }
+
+        /// <summary>
+        /// Tests simple to complete of test_network_real1.
+        /// </summary>
+        [Test]
+        public void TestSimpleToCompleteOsmNetworkReal1()
+        {
+            this.TestSimpleToCompleteOn("OsmSharp.Test.Unittests.test_network_real1.osm");
         }
 
         /// <summary>
@@ -398,6 +420,62 @@ namespace OsmSharp.Test.Unittests.Osm.Streams.Complete
             return new List<CompleteOsmGeo>( // pull into collection.
                 new OsmSimpleCompleteStreamSource( // create complete source.
                     osmGeoList.ToOsmStreamSource())); // create the basic stream.
+        }
+
+        /// <summary>
+        /// Test simple to complete conversion on the given resource.
+        /// </summary>
+        /// <param name="embeddedResource"></param>
+        private void TestSimpleToCompleteOn(string embeddedResource)
+        {
+            var dataProcessorSource = new XmlOsmStreamSource(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(embeddedResource));
+
+            // fill the memory data source with source-data.
+            var referenceSource = MemoryDataSource.CreateFrom(dataProcessorSource);
+
+            // pull the complete objects.
+            dataProcessorSource.Reset();
+            var list = this.PullToCompleteList(dataProcessorSource);
+
+            // compare the two.
+            this.Compare(referenceSource, list);
+        }
+
+        /// <summary>
+        /// Compares what is in the complete list against the objects in the reference source.
+        /// </summary>
+        /// <param name="expected"></param>
+        /// <param name="actual"></param>
+        private void Compare(MemoryDataSource expected, List<CompleteOsmGeo> actual)
+        {
+            List<CompleteOsmGeo> exectedList = new List<CompleteOsmGeo>();
+            foreach (Node node in expected.GetNodes())
+            {
+                CompleteNode completeNode = CompleteNode.CreateFrom(node);
+                if (completeNode != null)
+                {
+                    exectedList.Add(completeNode);
+                }
+            }
+            foreach (Way way in expected.GetWays())
+            {
+                CompleteWay completeWay = CompleteWay.CreateFrom(way, expected);
+                if (completeWay != null)
+                {
+                    exectedList.Add(completeWay);
+                }
+            }
+            foreach (Relation relation in expected.GetRelations())
+            {
+                CompleteRelation completeRelation = CompleteRelation.CreateFrom(relation, expected);
+                if (completeRelation != null)
+                {
+                    exectedList.Add(completeRelation);
+                }
+            }
+
+            ComparisonHelpers.CompareComplete(exectedList, actual);
         }
     }
 }
