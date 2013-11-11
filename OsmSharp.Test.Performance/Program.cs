@@ -35,6 +35,8 @@ namespace OsmSharp.Test.Performance
             // add the to-ignore list.
             OsmSharp.Logging.Log.Ignore("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter");
             OsmSharp.Logging.Log.Ignore("CHPreProcessor");
+            OsmSharp.Logging.Log.Ignore("RTreeStreamIndex");
+            OsmSharp.Logging.Log.Ignore("Scene2DLayeredSource");
 
             // test streams.
             Osm.PBF.PBFStreamSourceTest.Test();
@@ -50,6 +52,9 @@ namespace OsmSharp.Test.Performance
             Routing.CH.CHPreProcessorTest.Test();
             Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
             Routing.CH.CHSerializedRoutingTest.Test();
+            
+            // test some rendering implementations.
+            UI.Rendering.RenderingSerializedSceneTests.Test();
 
             // wait for an exit.
             OsmSharp.Logging.Log.TraceEvent("Program", System.Diagnostics.TraceEventType.Information,

@@ -110,6 +110,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -127,6 +128,7 @@
     <Compile Include="Tags\Collections\BlockedTagsCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\ITagCollectionIndexTests.cs" />
     <Compile Include="Tags\Collections\TagsTableCollectionIndexTests.cs" />
+    <Compile Include="UI\Rendering\RenderingSerializedSceneTests.cs" />
     <Compile Include="UI\Scene\Scene2DTests.cs" />
     <Compile Include="UI\Styles\MapCSS\MapCSSInterpreterTests.cs" />
   </ItemGroup>
@@ -141,6 +143,10 @@
     </None>
     <None Include="..\OsmSharpTestFiles\mapcss\complete.mapcss">
       <Link>TestFiles\mapcss\complete.mapcss</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\OsmSharpTestFiles\map\kempen-big.osm.pbf.scene.layered">
+      <Link>TestFiles\map\kempen-big.osm.pbf.scene.layered</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.routing">
@@ -171,11 +177,16 @@
       <Project>{76BD9027-A67C-4D1B-8439-BE25E533C50D}</Project>
       <Name>OsmSharp.UI</Name>
     </ProjectReference>
+    <ProjectReference Include="..\OsmSharp.WinForms.UI\OsmSharp.WinForms.UI.csproj">
+      <Project>{1433D177-B342-463C-8128-8399720A35AF}</Project>
+      <Name>OsmSharp.WinForms.UI</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
       <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
