@@ -56,8 +56,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\routing\{0}", 
                 "kempen-big.osm.pbf.routing"));
             Stream stream = testFile.OpenRead();
-            //
-            //
+
             CHSerializedRoutingTest.TestSerializeRoutingInstrictions(
                 name, stream,
                 new GeoCoordinate(51.261203, 4.780760),

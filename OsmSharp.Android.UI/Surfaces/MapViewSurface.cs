@@ -25,6 +25,7 @@ using Android.Util;
 using Android.Views;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Math.Primitives;
 using OsmSharp.UI;
 using OsmSharp.UI.Animations;
 using OsmSharp.UI.Map;
@@ -32,7 +33,6 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
-using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Android.UI
 {
@@ -196,6 +196,32 @@ namespace OsmSharp.Android.UI
 			}
 		}
 
+        private float _surfaceWidth = 0;
+
+        /// <summary>
+        /// Returns the width of this rendering surface.
+        /// </summary>
+        private float SurfaceWidth
+        {
+            get
+            {
+                return _surfaceWidth;
+            }
+        }
+
+        private float _surfaceHeight = 0;
+
+        /// <summary>
+        /// Returns the height of this rendering surface.
+        /// </summary>
+        private float SurfaceHeight
+        {
+            get
+            {
+                return _surfaceHeight;
+            }
+        }
+
 		/// <summary>
 		/// Renders the current complete scene.
 		/// </summary>
@@ -207,7 +233,8 @@ namespace OsmSharp.Android.UI
 
 			// make sure only on thread at the same time is using the renderer.
 			lock (_cacheRenderer) {
-				double extra = 1.25;
+                double extra = 1.25;
+                //double extra = 1;
 
 				// build the layers list.
 				var layers = new List<ILayer> ();
@@ -221,12 +248,13 @@ namespace OsmSharp.Android.UI
 
 				// create a new cache if size has changed.
 				if (_canvasBitmap == null || 
-				    _canvasBitmap.Width != (int)(this.Width * extra) || 
-				    _canvasBitmap.Height != (int)(this.Height * extra)) {
+				    _canvasBitmap.Width != (int)(this.SurfaceWidth * extra) ||
+                    _canvasBitmap.Height != (int)(this.SurfaceHeight * extra))
+                {
 					// create a bitmap and render there.
-					_canvasBitmap = global::Android.Graphics.Bitmap.CreateBitmap ((int)(this.Width * extra), 
-					                                                              (int)(this.Height * extra),
-					                                                             global::Android.Graphics.Bitmap.Config.Argb8888);
+                    _canvasBitmap = global::Android.Graphics.Bitmap.CreateBitmap((int)(this.SurfaceWidth * extra),
+                        (int)(this.SurfaceHeight * extra),
+                        global::Android.Graphics.Bitmap.Config.Argb8888);
 				} else {
 					// clear the cache???
 				}
@@ -242,7 +270,7 @@ namespace OsmSharp.Android.UI
 
                 // create the view for this control.
                 View2D view = View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-                                         this.Width * extra, this.Height * extra, sceneZoomFactor,
+                                         this.SurfaceWidth * extra, this.SurfaceHeight * extra, sceneZoomFactor,
                                          _invertX, _invertY, this.MapTilt);
 
 				long before = DateTime.Now.Ticks;
@@ -326,7 +354,7 @@ namespace OsmSharp.Android.UI
             if (_autoInvalidate)
             {
                 if (_previousRenderingMapCenter == null ||
-                 _previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 40)
+                 _previousRenderingMapCenter.DistanceReal(_mapCenter).Value > 30)
                 {
                     // TODO: update this with a more resonable measure depending on the zoom.
                     this.Change();
@@ -436,6 +464,17 @@ namespace OsmSharp.Android.UI
 		{
 			base.OnDraw (canvas);
 
+            // set the height/width.
+            if (_surfaceHeight != canvas.Height ||
+                _surfaceWidth != canvas.Width)
+            {
+                _surfaceHeight = canvas.Height;
+                _surfaceWidth = canvas.Width;
+
+                // notify change.
+                this.Change();
+            }
+
 			// render only the cached scene.
 			lock(_scene)
 			{
@@ -456,8 +495,10 @@ namespace OsmSharp.Android.UI
 		/// <returns></returns>
 		public View2D CreateView()
 		{
-			float height = this.LayoutParameters.Height;
-			float width = this.LayoutParameters.Width;
+            //float height = this.LayoutParameters.Height;
+            //float width = this.LayoutParameters.Width;
+            float height = this.SurfaceHeight;
+            float width = this.SurfaceWidth;
 
 			// calculate the center/zoom in scene coordinates.
 			double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
@@ -465,7 +506,7 @@ namespace OsmSharp.Android.UI
 
 			// create the view for this control.
 			return View2D.CreateFrom((float)sceneCenter[0], (float)sceneCenter[1],
-			                         this.Width, this.Height, sceneZoomFactor, 
+			                         width, height, sceneZoomFactor, 
 			                         _invertX, _invertY, this.MapTilt);
 		}
 
@@ -504,10 +545,11 @@ namespace OsmSharp.Android.UI
 			this.Invalidate ();
 
 			// notify map layout of changes.
-			if (this.Width > 0 && this.Height > 0) {
+            if (this.SurfaceWidth > 0 && this.SurfaceHeight > 0)
+            {
 				View2D view = this.CreateView ();
 
-				_mapView.NotifyMapChange (this.Width, this.Height, view, this.Map.Projection);
+                _mapView.NotifyMapChange(this.SurfaceWidth, this.SurfaceHeight, view, this.Map.Projection);
 			}
 		}
 
@@ -634,7 +676,7 @@ namespace OsmSharp.Android.UI
             double y = detector.Y;
 
             // calculate the new center from the view.
-            double[] sceneCenter = view.FromViewPort(this.Width, this.Height,
+            double[] sceneCenter = view.FromViewPort(this.SurfaceWidth, this.SurfaceHeight,
                                                       x, y);
 
             // convert to the projected center.
@@ -688,11 +730,11 @@ namespace OsmSharp.Android.UI
 				View2D view = this.CreateView ();
 							
 				// calculate the new center in pixels.
-				double centerXPixels = this.Width / 2.0f - _deltaX;
-				double centerYPixles = this.Height / 2.0f - _deltaY;
+                double centerXPixels = this.SurfaceWidth / 2.0f - _deltaX;
+                double centerYPixles = this.SurfaceHeight / 2.0f - _deltaY;
 							
 				// calculate the new center from the view.
-				double[] sceneCenter = view.FromViewPort (this.Width, this.Height, 
+                double[] sceneCenter = view.FromViewPort(this.SurfaceWidth, this.SurfaceHeight, 
 				                                          centerXPixels, centerYPixles);
 				
 				// convert to the projected center.
@@ -813,8 +855,8 @@ namespace OsmSharp.Android.UI
         /// <param name="markers"></param>
         public void ZoomToMarkers(List<MapMarker> markers, double percentage, bool notifyChange)
         {
-            float height = this.Height;
-            float width = this.Width;
+            float height = this.SurfaceHeight;
+            float width = this.SurfaceWidth;
 			if (width > 0) {
 				PointF2D[] points = new PointF2D[markers.Count];
 				for (int idx = 0; idx < markers.Count; idx++) {
@@ -864,5 +906,15 @@ namespace OsmSharp.Android.UI
 				set;
 			}
 		}
+
+        int IMapViewSurface.Width
+        {
+            get { return (int)this.SurfaceWidth; }
+        }
+
+        int IMapViewSurface.Height
+        {
+            get { return (int)this.SurfaceHeight; }
+        }
     }
 }

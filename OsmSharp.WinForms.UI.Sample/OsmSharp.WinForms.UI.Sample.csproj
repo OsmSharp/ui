@@ -127,8 +127,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="..\OsmSharpTestFiles\map\kempen-big.osm.pbf.scene.layered">
+      <Link>kempen-big.osm.pbf.scene.layered</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="app.config" />
-    <EmbeddedResource Include="test.mapcss" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -139,10 +142,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <EmbeddedResource Include="test.osm" />
-    <EmbeddedResource Include="test.gpx" />
-    <EmbeddedResource Include="test.osm.pbf.routing.3" />
-    <EmbeddedResource Include="wvl.osm.pbf.routing.ch.4" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="images\parking.png" />

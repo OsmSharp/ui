@@ -113,11 +113,16 @@ namespace OsmSharp.Math.Algorithms
                 throw new ArgumentNullException("points");
             if(points.Length != 2)
                 throw new ArgumentException();
-            if (epsilon <= 0)
+            if (epsilon < 0)
                 throw new ArgumentOutOfRangeException("epsilon");
             if (first > last)
                 throw new ArgumentException(string.Format("first[{0}] must be smaller or equal than last[{1}]!",
                                                           first, last));
+
+            if (epsilon == 0)
+            { // no simplification is possible.
+                return points;
+            }
             if (first == last)
             { // first and last are equal, no simplification possible.
                 return new double[][] 

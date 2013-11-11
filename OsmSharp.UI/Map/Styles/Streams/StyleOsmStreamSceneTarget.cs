@@ -81,6 +81,10 @@ namespace OsmSharp.UI.Map.Styles.Streams
         /// <param name="way"></param>
         public override void AddWay(CompleteWay way)
         {
+            if (way.Id == 198214128)
+            {
+                System.Diagnostics.Debug.WriteLine("");
+            }
             _mapCSSInterpreter.Translate(_scene, _projection, way);
         }
 

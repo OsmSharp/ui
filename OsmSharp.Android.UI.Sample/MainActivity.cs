@@ -1,3 +1,21 @@
+// OsmSharp - OpenStreetMap (OSM) SDK
+// Copyright (C) 2013 Abelshausen Ben
+// 
+// This file is part of OsmSharp.
+// 
+// OsmSharp is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 2 of the License, or
+// (at your option) any later version.
+// 
+// OsmSharp is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU General Public License for more details.
+// 
+// You should have received a copy of the GNU General Public License
+// along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -51,28 +69,6 @@ namespace OsmSharp.Android.UI.Sample
             OsmSharp.Logging.Log.Enable();
             OsmSharp.Logging.Log.RegisterListener(
                 new OsmSharp.Android.UI.Log.LogTraceListener());
-			
-			// create the MapCSS image source.
-			var imageSource = new MapCSSDictionaryImageSource();
-			imageSource.Add("styles/default/parking.png",
-			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.parking.png"));
-			imageSource.Add("styles/default/bus.png",
-			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.bus.png"));
-			imageSource.Add("styles/default/postbox.png",
-			                Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.images.postbox.png"));
-
-//			// load mapcss style interpreter.
-//			var mapCSSInterpreter = new MapCSSInterpreter(
-//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.mapcss"),
-//				imageSource);
-			
-			// initialize the data source.
-			//var dataSource = new MemoryDataSource();
-//			var source = new XmlOsmStreamReader(
-//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm"));
-//			var source = new PBFOsmStreamReader(
-//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.pbf"));
-//			dataSource.PullFromSource(source);
 
 			// initialize map.
 			var map = new Map();
@@ -85,19 +81,6 @@ namespace OsmSharp.Android.UI.Sample
 				Scene2DLayered.Deserialize(
 					Assembly.GetExecutingAssembly().GetManifestResourceStream(
                         @"OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.scene.layered"), true)));
-
-//			var routingSerializer = new V2RoutingDataSourceLiveEdgeSerializer(true);
-//			var graphSerialized = routingSerializer.Deserialize(
-//				//Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.osm.pbf.routing.3"));
-//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.pbf.routing.4"));
-////
-////			var graphLayer = new LayerDynamicGraphLiveEdge(graphSerialized, mapCSSInterpreter);
-////			map.AddLayer(graphLayer);
-//			
-//			// calculate route.            
-//			Router router = Router.CreateLiveFrom(
-//				graphSerialized,
-            //				new OsmRoutingInterpreter());
 
             var from = new GeoCoordinate(51.261203, 4.780760);
             var to = new GeoCoordinate(51.267797, 4.801362);
@@ -115,34 +98,11 @@ namespace OsmSharp.Android.UI.Sample
             RouterPoint routerPoint2 = _router.Resolve(Vehicle.Car, to);
             Route route1 = _router.Calculate(Vehicle.Car, routerPoint1, routerPoint2);
             RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
-            _enumerator = route1.GetRouteEnumerable(20).GetEnumerator();
+            _enumerator = route1.GetRouteEnumerable(10).GetEnumerator();
 
             _routeLayer = new LayerRoute(map.Projection);
-            _routeLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue).Value);
+            _routeLayer.AddRoute (route1, SimpleColor.FromKnownColor(KnownColor.Blue, 125).Value, 12);
             map.AddLayer(_routeLayer);
-
-//			// create gpx layer.
-//			LayerGpx gpxLayer = new LayerGpx(map.Projection);
-//			gpxLayer.AddGpx(
-//				Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.test.gpx"));
-//			map.AddLayer(gpxLayer);
-			
-//			// set control properties.
-//			var mapView = new MapView(this);
-//			mapView.MapMaxZoomLevel = 20;
-//			mapView.MapMinZoomLevel = 12;
-//			//var mapView = new MapGLView (this);
-//			mapView.Map = map;
-//			//mapView.Center = new GeoCoordinate(51.158075, 2.961545); // gistel
-//			//mapView.MapCenter = new GeoCoordinate (50.88672, 3.23899);
-//			mapView.MapCenter = new GeoCoordinate(51.26337, 4.78739);
-//			//mapView.Center = new GeoCoordinate(51.156803, 2.958887);
-//			mapView.MapZoomLevel = 15;
-
-//			var mapView = new OpenGLRenderer2D(
-//				this, null);
-
-//            _mapView = new MapView<MapGLView>(this, new MapGLView(this));
 
             _mapView = new MapView(this, new MapViewSurface(this));
             //_mapView = new MapView(this, new MapViewGLSurface(this));
@@ -150,10 +110,10 @@ namespace OsmSharp.Android.UI.Sample
 
             (_mapView as IMapView).AutoInvalidate = true;
             _mapView.MapMaxZoomLevel = 20;
-            _mapView.MapMinZoomLevel = 12;
+            _mapView.MapMinZoomLevel = 10;
             _mapView.MapTilt = 0;
             _mapView.MapCenter = new GeoCoordinate(51.26371, 4.78601);
-            _mapView.MapZoom = 17;
+            _mapView.MapZoom = 16;
 
             _textView = new TextView(this);
             _textView.SetBackgroundColor(global::Android.Graphics.Color.White);
@@ -165,12 +125,12 @@ namespace OsmSharp.Android.UI.Sample
             layout.AddView(_textView);
             layout.AddView(_mapView);
 
-            _mapView.AddMarker(from);
-            _mapView.AddMarker(to);
+            //_mapView.AddMarker(from);
+            //_mapView.AddMarker(to);
 
             //_mapView.ZoomToMarkers();
 
-            _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5);
+            _routeTrackerAnimator = new RouteTrackerAnimator(_mapView, routeTracker, 5, 17);
 
             Timer timer = new Timer(500);
             timer.Elapsed += new ElapsedEventHandler(TimerHandler);
@@ -204,7 +164,7 @@ namespace OsmSharp.Android.UI.Sample
         {
             if (_enumerator.MoveNext())
             {
-                GeoCoordinate other = _enumerator.Current.OffsetRandom(10);
+                GeoCoordinate other = _enumerator.Current.OffsetRandom(1);
                 _routeTrackerAnimator.Track(other);
                 if (_routeTrackerAnimator.NextInstruction != null)
                 {

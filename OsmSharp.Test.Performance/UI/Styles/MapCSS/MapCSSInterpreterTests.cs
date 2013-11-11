@@ -18,15 +18,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Osm.PBF.Streams;
+using OsmSharp.Test.Performance.UI.Scene;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Map.Styles.Streams;
 using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.Math.Geo.Projections;
-using System.IO;
-using OsmSharp.Osm.PBF.Streams;
-using OsmSharp.Test.Performance.UI.Scene;
 
 namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
 {

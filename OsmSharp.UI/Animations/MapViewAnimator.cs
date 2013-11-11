@@ -261,9 +261,6 @@ namespace OsmSharp.UI.Animations
         /// <param name="e"></param>
         void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            //OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", System.Diagnostics.TraceEventType.Verbose,
-            //    string.Format("Animation Step BEGIN: z:{0} -c:{1} - t:{2}", _mapView.MapZoom, _mapView.MapCenter, _mapView.MapTilt));
-
             _currentStep++;
             if (_currentStep < _maxSteps)
 			{ // there is still need for a change.

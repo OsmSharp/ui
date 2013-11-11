@@ -308,7 +308,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\Streams\" />
-    <Folder Include="Tags\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

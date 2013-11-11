@@ -110,13 +110,17 @@ namespace OsmSharp.Osm.Streams.Complete
             this.Initialize();
             while (_source.MoveNext())
             {
-                object sourceObject = _source.Current();
+                CompleteOsmGeo sourceObject = _source.Current();
                 if (sourceObject is CompleteNode)
                 {
                     this.AddNode(sourceObject as CompleteNode);
                 }
                 else if (sourceObject is CompleteWay)
                 {
+                    if (sourceObject.Id == 198214128)
+                    {
+                        System.Diagnostics.Debug.WriteLine("");
+                    }
                     this.AddWay(sourceObject as CompleteWay);
                 }
                 else if (sourceObject is CompleteRelation)

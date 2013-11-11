@@ -16,17 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using OsmSharp.Math.Geo;
-using OsmSharp.Routing.Interpreter;
-using OsmSharp.Routing.Instructions.LanguageGeneration;
-using OsmSharp.Routing.Instructions;
-using OsmSharp.Units.Distance;
 using OsmSharp.Math.Primitives;
+using OsmSharp.Routing.Instructions;
+using OsmSharp.Routing.Instructions.LanguageGeneration;
+using OsmSharp.Routing.Interpreter;
+using OsmSharp.Units.Distance;
 
 namespace OsmSharp.Routing.Navigation
 {
@@ -220,7 +216,7 @@ namespace OsmSharp.Routing.Navigation
             for (int instructionIdx = 0; instructionIdx < _instructions.Count; instructionIdx++)
             {
                 Instruction instruction = _instructions[instructionIdx];
-                if (instruction.EntryIdx > projectedResult.Key)
+                if (instruction.EntryIdx >= projectedResult.Key)
                 { // stop here!
                     _nextInstructionIdx = instructionIdx;
                     break;
@@ -228,7 +224,8 @@ namespace OsmSharp.Routing.Navigation
             }
 
             // calculate the distance to the next instruction.
-            GeoCoordinate previous = (new GeoCoordinate(_route.Entries[projectedResult.Key].Latitude, _route.Entries[projectedResult.Key].Longitude));
+            GeoCoordinate previous = (new GeoCoordinate(_route.Entries[projectedResult.Key].Latitude, 
+                _route.Entries[projectedResult.Key].Longitude));
             Meter distance = previous.DistanceReal(projectedResult.Value);
             for (int idx = projectedResult.Key; idx < _instructions[_nextInstructionIdx].EntryIdx - 1; idx++)
             {

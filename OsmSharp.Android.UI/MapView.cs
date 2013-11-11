@@ -207,7 +207,7 @@ namespace OsmSharp.Android.UI
 			if (_mapView.Width > 0 && _mapView.Height > 0) {
 				View2D view = _mapView.CreateView ();
 
-				this.NotifyMapChangeToMarker (this.Width, this.Height, view, this.Map.Projection, mapMarker);
+                this.NotifyMapChangeToMarker(_mapView.Width, _mapView.Height, view, this.Map.Projection, mapMarker);
 			}
 		}
 

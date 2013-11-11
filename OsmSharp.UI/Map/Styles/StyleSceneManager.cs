@@ -63,7 +63,7 @@ namespace OsmSharp.UI.Map.Styles
         /// Creates a new style scene manager.
         /// </summary>
         /// <param name="interpreter">The intepreter converting OSM-objects into scene-objects.</param>
-        public StyleSceneManager(StyleInterpreter interpreter, List<float> zoomLevelCutoffs) : this(
+        public StyleSceneManager(StyleInterpreter interpreter, List<float> zoomLevelCutoffs, IProjection projection) : this(
             new Scene2DLayered(zoomLevelCutoffs), interpreter) { }
 
         /// <summary>

@@ -124,6 +124,11 @@ namespace OsmSharp.Osm.Streams.Complete
             { // there is data.
                 OsmGeo currentSimple = _simpleSource.Current();
 
+                if (currentSimple.Id == 198214128 || currentSimple.Id == 1014892489)
+                {
+                    System.Diagnostics.Debug.WriteLine("");
+                }
+
                 switch (currentSimple.Type)
                 {
                     case OsmGeoType.Node:
@@ -231,6 +236,10 @@ namespace OsmSharp.Osm.Streams.Complete
                     case OsmGeoType.Way:
                         foreach (long nodeId in (osmGeo as Way).Nodes)
                         {
+                            if (nodeId == 1014892489)
+                            {
+                                System.Diagnostics.Debug.WriteLine("");
+                            }
                             this.MarkNodeAsChild(nodeId);
                         }
                         break;
@@ -316,6 +325,11 @@ namespace OsmSharp.Osm.Streams.Complete
                     nodeCount = 1;
                     _nodesUsedTwiceOrMore.Add(nodeId, nodeCount);
                 }
+                else
+                { // increase the count.
+                    nodeCount++;
+                    _nodesUsedTwiceOrMore[nodeId] = nodeCount;
+                }
             }
             else
             {
@@ -368,6 +382,11 @@ namespace OsmSharp.Osm.Streams.Complete
                 { // the way is used twice or more.
                     wayCount = 1;
                     _waysUsedTwiceOrMore.Add(wayId, wayCount);
+                }
+                else
+                { // increase the count. 
+                    wayCount++;
+                    _waysUsedTwiceOrMore[wayId] = wayCount;
                 }
             }
             else
@@ -436,6 +455,11 @@ namespace OsmSharp.Osm.Streams.Complete
                 { // the relation is used twice or more.
                     relationCount = 1;
                     _relationsUsedTwiceOrMore.Add(relationId, relationCount);
+                }
+                else
+                { // increase the count.
+                    relationCount++;
+                    _relationsUsedTwiceOrMore[relationId] = relationCount;
                 }
             }
             else
