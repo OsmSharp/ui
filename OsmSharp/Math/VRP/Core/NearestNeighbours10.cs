@@ -26,7 +26,7 @@ namespace OsmSharp.Math.VRP.Core
     /// <summary>
     /// A collection of nearest neighbours.
     /// </summary>
-    [Serializable]
+   // [Serializable]
     public class NearestNeighbours10 : HashSet<int>
     {
         /// <summary>

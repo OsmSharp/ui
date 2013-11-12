@@ -16,8 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-#if !WINDOWS_PHONE
-using System.Collections.Concurrent;
+//#if !WINDOWS_PHONE
+//using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace OsmSharp.Collections.Cache
@@ -29,7 +29,7 @@ namespace OsmSharp.Collections.Cache
     /// <typeparam name="TValue"></typeparam>
     public class LRUCache<TKey, TValue>
     {
-        private ConcurrentDictionary<TKey, CacheEntry> _data;
+        private Dictionary<TKey, CacheEntry> _data;
 
         private long _id;
 
@@ -43,7 +43,7 @@ namespace OsmSharp.Collections.Cache
         {
             _id = long.MinValue;
             _last_id = _id;
-            _data = new ConcurrentDictionary<TKey, CacheEntry>();
+            _data = new Dictionary<TKey, CacheEntry>();
 
             this.Capacity = capacity;
         }
@@ -126,7 +126,12 @@ namespace OsmSharp.Collections.Cache
         public void Remove(TKey id)
         {
             CacheEntry entry;
-            _data.TryRemove(id, out entry);
+            lock (_data)
+            {
+
+                if (_data.TryGetValue(id, out entry))
+                    _data.Remove(id);
+            }
         }
 
         /// <summary>
@@ -148,7 +153,8 @@ namespace OsmSharp.Collections.Cache
                     }
                 }
                 CacheEntry entry;
-                _data.TryRemove(minKey, out entry);
+                if (_data.TryGetValue(minKey, out entry))
+                    _data.Remove(minKey);
 
                 // update the 'last_id'
                 _last_id++;
@@ -200,4 +206,4 @@ namespace OsmSharp.Collections.Cache
         }
     }
 }
-#endif
+//#endif

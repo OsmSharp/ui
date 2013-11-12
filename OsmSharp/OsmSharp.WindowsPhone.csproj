@@ -47,9 +47,9 @@
     <DocumentationFile>..\OutputWindowsPhone\OsmSharp.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="protobuf-net, Version=2.0.0.651, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\protobuf-net-read-only\protobuf-net_Phone7\Bin\Debug\protobuf-net.dll</HintPath>
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
@@ -58,6 +58,10 @@
     <Reference Include="System.Net" />
     <Reference Include="mscorlib.extensions" />
     <Reference Include="System.Xml.Serialization" />
+    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\Cache\LRUCache.cs" />
@@ -87,12 +91,22 @@
     <Compile Include="Collections\SpatialIndexes\Serialization\SpatialIndexSerializerStream.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamIndex.cs" />
     <Compile Include="Collections\SpatialIndexes\Serialization\v1\RTreeStreamSerializer.cs" />
-    <Compile Include="Collections\Tags\ITagsIndex.cs" />
-    <Compile Include="Collections\Tags\SimpleTagsCollection.cs" />
-    <Compile Include="Collections\Tags\SimpleTagsIndex.cs" />
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamIndex.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\SpatialIndexes\Serialization\v2\RTreeStreamSerializer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Collections\Tags\ITagsCollectionIndex.cs" />
+    <Compile Include="Collections\Tags\ITagsCollectionIndexReadonly.cs" />
+    <Compile Include="Collections\Tags\ITagsSource.cs" />
+    <Compile Include="Collections\Tags\Serializer\TagIndexSerializer.cs" />
     <Compile Include="Collections\Tags\StringTableTagsCollection.cs" />
     <Compile Include="Collections\Tags\Tag.cs" />
     <Compile Include="Collections\Tags\TagsCollection.cs" />
+    <Compile Include="Collections\Tags\TagsCollectionBase.cs" />
+    <Compile Include="Collections\Tags\TagsTableCollection.cs" />
+    <Compile Include="Collections\Tags\TagsTableCollectionIndex.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Encoding\ASCIIEncoding.cs" />
     <Compile Include="GeoCoding\AccuracyEnum.cs" />
@@ -172,10 +186,12 @@
     <Compile Include="Math\AI\Genetic\Solvers\Solver.cs" />
     <Compile Include="Math\AI\Genetic\Solvers\SolverSettings.cs" />
     <Compile Include="Math\Algorithms\ConvexHull.cs" />
+    <Compile Include="Math\Algorithms\Rotation.cs" />
     <Compile Include="Math\Algorithms\SimplifyCurve.cs" />
     <Compile Include="Math\ILocationObject.cs" />
     <Compile Include="Math\ITaggedObject.cs" />
     <Compile Include="Math\PrimitiveF2D.cs" />
+    <Compile Include="Math\Primitives\BoxF2D.cs" />
     <Compile Include="Math\Primitives\Enumerators\Lines\ILineList.cs" />
     <Compile Include="Math\Primitives\Enumerators\Lines\LineEnumerable.cs" />
     <Compile Include="Math\Primitives\Enumerators\Lines\LineEnumerator.cs" />

@@ -47,9 +47,9 @@
     <DocumentationFile>..\OutputWindowsPhone\OsmSharp.Osm.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="protobuf-net, Version=2.0.0.651, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+    <Reference Include="protobuf-net, Version=2.0.0.668, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\protobuf-net-read-only\protobuf-net_Phone7\Bin\Debug\protobuf-net.dll</HintPath>
+      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
@@ -58,42 +58,36 @@
     <Reference Include="System.Net" />
     <Reference Include="mscorlib.extensions" />
     <Reference Include="System.Xml.Serialization" />
-    <Reference Include="Zlib.Portable">
+    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cache\OsmDataCache.cs" />
-    <Compile Include="Cache\OsmDataCacheDefault.cs" />
     <Compile Include="Cache\OsmDataCacheMemory.cs" />
-    <Compile Include="Cache\OsmDiskCache.cs" />
     <Compile Include="Change.cs" />
     <Compile Include="ChangeSet.cs" />
     <Compile Include="ChangeSetInfo.cs" />
+    <Compile Include="Complete\CompleteChange.cs" />
+    <Compile Include="Complete\CompleteChangeSet.cs" />
+    <Compile Include="Complete\CompleteNode.cs" />
+    <Compile Include="Complete\CompleteOsmBase.cs" />
+    <Compile Include="Complete\CompleteOsmGeo.cs" />
+    <Compile Include="Complete\CompleteOsmGeoType.cs" />
+    <Compile Include="Complete\CompleteRelation.cs" />
+    <Compile Include="Complete\CompleteRelationMember.cs" />
+    <Compile Include="Complete\CompleteUser.cs" />
+    <Compile Include="Complete\CompleteWay.cs" />
+    <Compile Include="Complete\OsmBaseIdGenerator.cs" />
     <Compile Include="Data\DataSourceReadOnlyBase.cs" />
     <Compile Include="Data\IDataSource.cs" />
     <Compile Include="Data\IDataSourceReadOnly.cs" />
+    <Compile Include="Data\INodeSource.cs" />
+    <Compile Include="Data\IOsmGeoSource.cs" />
+    <Compile Include="Data\IRelationSource.cs" />
+    <Compile Include="Data\IWaySource.cs" />
     <Compile Include="Data\KeyGenerator.cs" />
-    <Compile Include="Data\Memory\MemoryDataSource.cs" />
-    <Compile Include="Data\PBF\Dense\Compressor.cs" />
-    <Compile Include="Data\PBF\Dense\Decompressor.cs" />
-    <Compile Include="Data\PBF\fileformat.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>fileformat.proto</DependentUpon>
-    </Compile>
-    <Compile Include="Data\PBF\IPBFOsmPrimitiveConsumer.cs" />
-    <Compile Include="Data\PBF\IPBFPrimitiveBlockConsumer.cs" />
-    <Compile Include="Data\PBF\osmformat.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>osmformat.proto</DependentUpon>
-    </Compile>
-    <Compile Include="Data\PBF\PBFReader.cs" />
-    <Compile Include="Data\PBF\Processor\PBFOsmStreamSource.cs" />
-    <Compile Include="Data\PBF\Processor\PBFOsmStreamTarget.cs" />
     <Compile Include="Filters\Filter.cs" />
     <Compile Include="Filters\FilterAny.cs" />
     <Compile Include="Filters\FilterBox.cs" />
@@ -103,17 +97,6 @@
     <Compile Include="Filters\Tags\FilterTagCount.cs" />
     <Compile Include="Filters\Tags\FilterTagExists.cs" />
     <Compile Include="Filters\Tags\FilterTagMatch.cs" />
-    <Compile Include="Interpreter\Complete\CompleteChange.cs" />
-    <Compile Include="Interpreter\Complete\CompleteChangeSet.cs" />
-    <Compile Include="Interpreter\Complete\CompleteNode.cs" />
-    <Compile Include="Interpreter\Complete\CompleteOsmBase.cs" />
-    <Compile Include="Interpreter\Complete\CompleteOsmGeo.cs" />
-    <Compile Include="Interpreter\Complete\CompleteOsmGeoType.cs" />
-    <Compile Include="Interpreter\Complete\CompleteRelation.cs" />
-    <Compile Include="Interpreter\Complete\CompleteRelationMember.cs" />
-    <Compile Include="Interpreter\Complete\CompleteUser.cs" />
-    <Compile Include="Interpreter\Complete\CompleteWay.cs" />
-    <Compile Include="Interpreter\Complete\OsmBaseIdGenerator.cs" />
     <Compile Include="Interpreter\GeometryInterpreter.cs" />
     <Compile Include="Interpreter\SimpleGeometryInterpreter.cs" />
     <Compile Include="Node.cs" />
@@ -128,23 +111,26 @@
     <Compile Include="Streams\ChangeSets\Filters\BoundingBox\DataProcessorChangeSetFilterBoundingBox.cs" />
     <Compile Include="Streams\ChangeSets\Filters\BoundingBox\IChangeSetFilterListener.cs" />
     <Compile Include="Streams\Collections\OsmCollectionStreamWriter.cs" />
-    <Compile Include="Streams\Collections\OsmEnumerableStreamReader.cs" />
-    <Compile Include="Streams\Collections\OsmGeoEnumerableStreamReader.cs" />
+    <Compile Include="Streams\Collections\OsmEnumerableStreamSource.cs" />
+    <Compile Include="Streams\Complete\OsmCompleteStreamSource.cs" />
+    <Compile Include="Streams\Complete\OsmCompleteStreamTarget.cs" />
+    <Compile Include="Streams\Complete\OsmSimpleCompleteStreamSource.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterBase.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterBoundingBox.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterProgress.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterSort.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterTags.cs" />
+    <Compile Include="Streams\Filters\OsmStreamFilterTagsFilter.cs" />
     <Compile Include="Streams\Filters\OsmStreamFilterWithEvents.cs" />
-    <Compile Include="Streams\OsmGeoStream\IOsmGeoStreamTarget.cs" />
     <Compile Include="Streams\OsmStreamExtensions.cs" />
     <Compile Include="Streams\OsmStreamFilter.cs" />
     <Compile Include="Streams\OsmStreamSource.cs" />
     <Compile Include="Streams\OsmStreamSourceEmpty.cs" />
     <Compile Include="Streams\OsmStreamTarget.cs" />
     <Compile Include="Streams\OsmStreamTargetEmpty.cs" />
-    <Compile Include="Streams\OsmStreamTargetOsmGeo.cs" />
     <Compile Include="TagExtensions.cs" />
     <Compile Include="Tiles\Tile.cs" />
+    <Compile Include="Tiles\TileDefaultsForRouting.cs" />
     <Compile Include="Tiles\TileRange.cs" />
     <Compile Include="Way.cs" />
   </ItemGroup>
@@ -155,14 +141,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\PBF\fileformat.proto">
-      <Generator>ProtoBufTool</Generator>
-      <LastGenOutput>fileformat1.cs</LastGenOutput>
-    </None>
-    <None Include="Data\PBF\osmformat.proto">
-      <Generator>ProtoBufTool</Generator>
-      <LastGenOutput>osmformat1.cs</LastGenOutput>
-    </None>
+    <Folder Include="Data\Cache\" />
+    <Folder Include="Data\Memory\" />
+    <Folder Include="Data\PBF\Dense\" />
+    <Folder Include="Data\PBF\Processor\" />
+    <Folder Include="Interpreter\Complete\" />
+    <Folder Include="Streams\OsmGeoStream\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
