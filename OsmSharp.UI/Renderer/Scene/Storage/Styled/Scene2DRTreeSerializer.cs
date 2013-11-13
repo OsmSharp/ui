@@ -18,15 +18,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
-using OsmSharp.Collections.SpatialIndexes.Serialization.v2;
-using ProtoBuf.Meta;
-using ProtoBuf;
-using OsmSharp.Math.Primitives;
 using System.IO;
 using Ionic.Zlib;
+using OsmSharp.Collections.SpatialIndexes.Serialization.v2;
+using OsmSharp.Math.Primitives;
+using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
+using ProtoBuf;
+using ProtoBuf.Meta;
 
 namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
 {
@@ -259,7 +257,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
                     Icon2D icon = primitive.To(style);
                     primitives.Add(new Scene2DEntry()
                     {
-                        Id = primitive.Id,
+                        //Id = primitive.Id,
                         Layer = style.Layer,
                         Scene2DPrimitive = icon
                     });
@@ -273,7 +271,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
                     Image2D image = primitive.To(style);
                     primitives.Add(new Scene2DEntry()
                     {
-                        Id = primitive.Id,
+                        //Id = primitive.Id,
                         Layer = style.Layer,
                         Scene2DPrimitive = image
                     });
@@ -287,7 +285,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
                     Line2D line = primitive.To(style);
                     primitives.Add(new Scene2DEntry()
                     {
-                        Id = primitive.Id,
+                        //Id = primitive.Id,
                         Layer = style.Layer,
                         Scene2DPrimitive = line
                     });
@@ -301,7 +299,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
                     Point2D point = primitive.To(style);
                     primitives.Add(new Scene2DEntry()
                     {
-                        Id = primitive.Id,
+                        //Id = primitive.Id,
                         Layer = style.Layer,
                         Scene2DPrimitive = point
                     });
@@ -315,7 +313,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
                     Polygon2D polygon = primitive.To(style);
                     primitives.Add(new Scene2DEntry()
                     {
-                        Id = primitive.Id,
+                        //Id = primitive.Id,
                         Layer = style.Layer,
                         Scene2DPrimitive = polygon
                     });
@@ -329,7 +327,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
                     Text2D text = primitive.To(style);
                     primitives.Add(new Scene2DEntry()
                     {
-                        Id = primitive.Id,
+                        //Id = primitive.Id,
                         Layer = style.Layer,
                         Scene2DPrimitive = text
                     });
@@ -343,7 +341,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
                     LineText2D lineText = primitive.To(style);
                     primitives.Add(new Scene2DEntry()
                     {
-                        Id = primitive.Id,
+                        //Id = primitive.Id,
                         Layer = style.Layer,
                         Scene2DPrimitive = lineText
                     });
@@ -366,30 +364,30 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
     [ProtoContract]
     public class Icon2DEntry
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        [ProtoMember(1)]
-        public uint Id { get; set; }
+        ///// <summary>
+        ///// Gets or sets the id.
+        ///// </summary>
+        //[ProtoMember(1)]
+        //public uint Id { get; set; }
 
         /// <summary>
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-        [ProtoMember(2)]
+        [ProtoMember(1)]
         public double X { get; set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public double Y { get; set; }
 
         /// <summary>
         /// Gets or sets the style id.
         /// </summary>
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public ushort StyleId { get; set; }
 
         /// <summary>
@@ -402,7 +400,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         internal static Icon2DEntry From(uint id, Icon2D icon, ushort styleId)
         {
             Icon2DEntry entry = new Icon2DEntry();
-            entry.Id = id;
+            //entry.Id = id;
             entry.X = icon.X;
             entry.Y = icon.Y;
             entry.StyleId = styleId;
@@ -432,46 +430,46 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
     [ProtoContract]
     public class Image2DEntry
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        [ProtoMember(1)]
-        public uint Id { get; set; }
+        ///// <summary>
+        ///// Gets or sets the id.
+        ///// </summary>
+        //[ProtoMember(1)]
+        //public uint Id { get; set; }
 
         /// <summary>
         /// Gets the image data.
         /// </summary>
-        [ProtoMember(2)]
+        [ProtoMember(1)]
         public byte[] ImageData { get; set; }
 
         /// <summary>
         /// Gets the left.
         /// </summary>
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public double Left { get; set; }
 
         /// <summary>
         /// Gets the right.
         /// </summary>
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public double Right { get; set; }
 
         /// <summary>
         /// Gets the top.
         /// </summary>
-        [ProtoMember(5)]
+        [ProtoMember(4)]
         public double Top { get; set; }
 
         /// <summary>
         /// Gets the bottom.
         /// </summary>
-        [ProtoMember(6)]
+        [ProtoMember(5)]
         public double Bottom { get; set; }
 
         /// <summary>
         /// Gets or sets the style id.
         /// </summary>
-        [ProtoMember(7)]
+        [ProtoMember(6)]
         public ushort StyleId { get; set; }
 
         /// <summary>
@@ -484,7 +482,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         internal static Image2DEntry From(uint id, Image2D image, ushort styleId)
         {
             Image2DEntry entry = new Image2DEntry();
-            entry.Id = id;
+            //entry.Id = id;
             entry.ImageData = image.ImageData;
             entry.Bottom = image.Bottom;
             entry.Left = image.Left;
@@ -519,17 +517,17 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
     [ProtoContract]
     public class Line2DEntry
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        [ProtoMember(1)]
-        public uint Id { get; set; }
+        ///// <summary>
+        ///// Gets or sets the id.
+        ///// </summary>
+        //[ProtoMember(1)]
+        //public uint Id { get; set; }
 
         /// <summary>
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-        [ProtoMember(2)]
+        [ProtoMember(1)]
         public double[] X
         {
             get;
@@ -540,7 +538,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public double[] Y
         {
             get;
@@ -550,7 +548,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         /// <summary>
         /// Gets or sets the style id.
         /// </summary>
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public int StyleId { get; set; }
 
         /// <summary>
@@ -563,7 +561,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         internal static Line2DEntry From(uint id, Line2D line, ushort styleId)
         {
             Line2DEntry entry = new Line2DEntry();
-            entry.Id = id;
+            //entry.Id = id;
             entry.X = line.X;
             entry.Y = line.Y;
             entry.StyleId = styleId;
@@ -624,36 +622,36 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
     [ProtoContract]
     public class LineText2DEntry
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        [ProtoMember(1)]
-        public uint Id { get; set; }
+        ///// <summary>
+        ///// Gets or sets the id.
+        ///// </summary>
+        //[ProtoMember(1)]
+        //public uint Id { get; set; }
 
         /// <summary>
         /// Gets or sets the text.
         /// </summary>
-        [ProtoMember(2)]
+        [ProtoMember(1)]
         public string Text { get; set; }
 
         /// <summary>
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public double[] X { get; set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public double[] Y { get; set; }
 
         /// <summary>
         /// Gets or sets the style id.
         /// </summary>
-        [ProtoMember(5)]
+        [ProtoMember(4)]
         public ushort StyleId { get; set; }
 
         /// <summary>
@@ -666,7 +664,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         internal static LineText2DEntry From(uint id, LineText2D lineText, ushort styleId)
         {
             LineText2DEntry entry = new LineText2DEntry();
-            entry.Id = id;
+            //entry.Id = id;
             entry.Text = lineText.Text;
             entry.X = lineText.X;
             entry.Y = lineText.Y;
@@ -730,30 +728,30 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
     [ProtoContract]
     public class Point2DEntry
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        [ProtoMember(1)]
-        public uint Id { get; set; }
+        ///// <summary>
+        ///// Gets or sets the id.
+        ///// </summary>
+        //[ProtoMember(1)]
+        //public uint Id { get; set; }
 
         /// <summary>
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-        [ProtoMember(2)]
+        [ProtoMember(1)]
         public double X { get; set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public double Y { get; set; }
 
         /// <summary>
         /// Gets or sets the style id.
         /// </summary>
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public ushort StyleId { get; set; }
 
         /// <summary>
@@ -766,7 +764,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         internal static Point2DEntry From(uint id, Point2D point, ushort styleId)
         {
             Point2DEntry entry = new Point2DEntry();
-            entry.Id = id;
+            //entry.Id = id;
             entry.X = point.X;
             entry.Y = point.Y;
             entry.StyleId = styleId;
@@ -798,30 +796,30 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
     [ProtoContract]
     public class Polygon2DEntry
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        [ProtoMember(1)]
-        public uint Id { get; set; }
+        ///// <summary>
+        ///// Gets or sets the id.
+        ///// </summary>
+        //[ProtoMember(1)]
+        //public uint Id { get; set; }
 
         /// <summary>
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-        [ProtoMember(2)]
+        [ProtoMember(1)]
         public double[] X { get; set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public double[] Y { get; set; }
 
         /// <summary>
         /// Gets or sets the style id.
         /// </summary>
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public ushort StyleId { get; set; }
 
         /// <summary>
@@ -834,7 +832,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         internal static Polygon2DEntry From(uint id, Polygon2D polygon, ushort styleId)
         {
             Polygon2DEntry entry = new Polygon2DEntry();
-            entry.Id = id;
+            //entry.Id = id;
             entry.X = polygon.X;
             entry.Y = polygon.Y;
             entry.StyleId = styleId;
@@ -893,37 +891,37 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
     [ProtoContract]
     public class Text2DEntry
     {
-        /// <summary>
-        /// Gets or sets the id.
-        /// </summary>
-        [ProtoMember(1)]
-        public uint Id { get; set; }
+        ///// <summary>
+        ///// Gets or sets the id.
+        ///// </summary>
+        //[ProtoMember(1)]
+        //public uint Id { get; set; }
 
         /// <summary>
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-        [ProtoMember(2)]
+        [ProtoMember(1)]
         public double X { get; set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public double Y { get; set; }
 
         /// <summary>
         /// Gets the text.
         /// </summary>
         /// <value>The text.</value>
-        [ProtoMember(4)]
+        [ProtoMember(3)]
         public string Text { get; set; }
 
         /// <summary>
         /// Gets or sets the style id.
         /// </summary>
-        [ProtoMember(5)]
+        [ProtoMember(4)]
         public ushort StyleId { get; set; }
 
         /// <summary>
@@ -936,7 +934,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         internal static Text2DEntry From(uint id, Text2D text, ushort styleId)
         {
             Text2DEntry entry = new Text2DEntry();
-            entry.Id = id;
+            //entry.Id = id;
             entry.Text = text.Text;
             entry.X = text.X;
             entry.Y = text.Y;
