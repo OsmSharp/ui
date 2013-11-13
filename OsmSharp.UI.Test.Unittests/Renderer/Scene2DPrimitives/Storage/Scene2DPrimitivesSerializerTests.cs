@@ -98,10 +98,11 @@ namespace OsmSharp.UI.Test.Unittests.Renderer.Scene2DPrimitives.Storage
 
             // create the stream.
             var stream = new MemoryStream();
-            scene.Serialize(stream, false);
+            scene.Serialize(stream, true);
 
             // deserialize the stream.
-            IScene2DPrimitivesSource sceneSource = Scene2DSimple.Deserialize(stream, false);
+            stream.Seek(0, SeekOrigin.Begin);
+            IScene2DPrimitivesSource sceneSource = Scene2DSimple.Deserialize(stream, true);
 
             if (box != null)
             {

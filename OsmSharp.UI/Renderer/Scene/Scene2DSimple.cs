@@ -423,9 +423,9 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="color"></param>
-        /// <param name="fontSize"></param>
+        /// <param name="font_size"></param>
         /// <param name="text"></param>
-        public override uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, float fontSize,
+        public override uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, float font_size,
             string text, int? haloColor, int? haloRadius)
         {
             if (text == null)
@@ -436,7 +436,7 @@ namespace OsmSharp.UI.Renderer.Scene
                 uint id = _nextId;
                 _nextId++;
 
-                this.AddPrimitive(layer, id, new LineText2D(x, y, color, fontSize, text, haloColor, haloRadius, minZoom, maxZoom));
+                this.AddPrimitive(layer, id, new LineText2D(x, y, color, font_size, text, haloColor, haloRadius, minZoom, maxZoom));
                 return id;
             }
         }
@@ -514,7 +514,7 @@ namespace OsmSharp.UI.Renderer.Scene
             }
 
             // create the serializer.
-            var serializer = new OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DStyledSerializer();
+            var serializer = new OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DStyledSerializer(compress);
             serializer.Serialize(stream, index);
         }
 
@@ -527,7 +527,7 @@ namespace OsmSharp.UI.Renderer.Scene
         public static IScene2DPrimitivesSource DeserializeStyled(Stream stream, bool compressed)
         {
             // create the serializer.
-            var serializer = new OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DStyledSerializer();
+            var serializer = new OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DStyledSerializer(compressed);
             return serializer.Deserialize(stream);
         }
 

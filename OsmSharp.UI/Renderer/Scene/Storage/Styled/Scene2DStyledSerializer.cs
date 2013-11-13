@@ -32,6 +32,20 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
     class Scene2DStyledSerializer
     {
         /// <summary>
+        /// Holds the compress flag.
+        /// </summary>
+        private bool _compress;
+
+        /// <summary>
+        /// Creates a new styled serializer.
+        /// </summary>
+        /// <param name="compress"></param>
+        public Scene2DStyledSerializer(bool compress)
+        {
+            _compress = compress;
+        }
+
+        /// <summary>
         /// Serializes a stream with a style index.
         /// </summary>
         /// <param name="stream"></param>
@@ -39,7 +53,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         public void Serialize(Stream stream, RTreeMemoryIndex<Scene2DEntry> index)
         {
             Scene2DStyledIndex styleIndex = new Scene2DStyledIndex();
-            Scene2DRTreeSerializer serializer = new Scene2DRTreeSerializer(true, styleIndex);
+            Scene2DRTreeSerializer serializer = new Scene2DRTreeSerializer(_compress, styleIndex);
 
             // serialize the tree and fill the styleindex.
             MemoryStream rTreeStream = new MemoryStream();
@@ -103,7 +117,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
                 typeModel.Deserialize(cappedStream, null, typeof(Scene2DStyledIndex)) as Scene2DStyledIndex;
 
             // initialize the serializer.
-			Scene2DRTreeSerializer serializer = new Scene2DRTreeSerializer(true, styleIndex);
+            Scene2DRTreeSerializer serializer = new Scene2DRTreeSerializer(_compress, styleIndex);
             return new Scene2DStyledSource(
                 serializer.Deserialize(new LimitedStream(stream), true));
         }
