@@ -38,6 +38,8 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         /// </summary>
         private bool _compress;
 
+        internal static int ConversionFactor = 1000000;
+
         /// <summary>
         /// Holds the style index.
         /// </summary>
@@ -528,7 +530,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         /// </summary>
         /// <value>The x.</value>
         [ProtoMember(1)]
-        public double[] X
+        public long[] X
         {
             get;
             set;
@@ -539,7 +541,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         /// </summary>
         /// <value>The y.</value>
         [ProtoMember(2)]
-        public double[] Y
+        public long[] Y
         {
             get;
             set;
@@ -562,8 +564,8 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         {
             Line2DEntry entry = new Line2DEntry();
             //entry.Id = id;
-            entry.X = line.X;
-            entry.Y = line.Y;
+            entry.X = line.X.ConvertToLongArray(Scene2DRTreeSerializer.ConversionFactor).EncodeDelta();
+            entry.Y = line.Y.ConvertToLongArray(Scene2DRTreeSerializer.ConversionFactor).EncodeDelta();
             entry.StyleId = styleId;
             return entry;
         }
@@ -583,8 +585,8 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
             line.MinZoom = style.MinZoom;
             line.Width = style.Width;
 
-            line.X = this.X;
-            line.Y = this.Y;
+            line.X = this.X.DecodeDelta().ConvertFromLongArray(Scene2DRTreeSerializer.ConversionFactor);
+            line.Y = this.Y.DecodeDelta().ConvertFromLongArray(Scene2DRTreeSerializer.ConversionFactor);
 
             line.MinX = int.MaxValue;
             line.MaxX = int.MinValue;
@@ -639,14 +641,14 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         /// </summary>
         /// <value>The x.</value>
         [ProtoMember(2)]
-        public double[] X { get; set; }
+        public long[] X { get; set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
         [ProtoMember(3)]
-        public double[] Y { get; set; }
+        public long[] Y { get; set; }
 
         /// <summary>
         /// Gets or sets the style id.
@@ -666,8 +668,8 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
             LineText2DEntry entry = new LineText2DEntry();
             //entry.Id = id;
             entry.Text = lineText.Text;
-            entry.X = lineText.X;
-            entry.Y = lineText.Y;
+            entry.X = lineText.X.ConvertToLongArray(Scene2DRTreeSerializer.ConversionFactor).EncodeDelta();
+            entry.Y = lineText.Y.ConvertToLongArray(Scene2DRTreeSerializer.ConversionFactor).EncodeDelta();
             entry.StyleId = styleId;
             return entry;
         }
@@ -688,8 +690,8 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
             lineText.Size = style.Size;
 
             lineText.Text = this.Text;
-            lineText.X = this.X;
-            lineText.Y = this.Y;
+            lineText.X = this.X.DecodeDelta().ConvertFromLongArray(Scene2DRTreeSerializer.ConversionFactor);
+            lineText.Y = this.Y.DecodeDelta().ConvertFromLongArray(Scene2DRTreeSerializer.ConversionFactor);
 
             lineText.MinX = int.MaxValue;
             lineText.MaxX = int.MinValue;
@@ -807,14 +809,14 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         /// </summary>
         /// <value>The x.</value>
         [ProtoMember(1)]
-        public double[] X { get; set; }
+        public long[] X { get; set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
         [ProtoMember(2)]
-        public double[] Y { get; set; }
+        public long[] Y { get; set; }
 
         /// <summary>
         /// Gets or sets the style id.
@@ -833,8 +835,8 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         {
             Polygon2DEntry entry = new Polygon2DEntry();
             //entry.Id = id;
-            entry.X = polygon.X;
-            entry.Y = polygon.Y;
+            entry.X = polygon.X.ConvertToLongArray(Scene2DRTreeSerializer.ConversionFactor).EncodeDelta();
+            entry.Y = polygon.Y.ConvertToLongArray(Scene2DRTreeSerializer.ConversionFactor).EncodeDelta();
             entry.StyleId = styleId;
             return entry;
         }
@@ -852,8 +854,8 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
             polygon.MaxZoom = style.MaxZoom;
             polygon.MinZoom = style.MinZoom;
             polygon.Width = style.Width;
-            polygon.X = this.X;
-            polygon.Y = this.Y;
+            polygon.X = this.X.DecodeDelta().ConvertFromLongArray(Scene2DRTreeSerializer.ConversionFactor);
+            polygon.Y = this.Y.DecodeDelta().ConvertFromLongArray(Scene2DRTreeSerializer.ConversionFactor);
 
             polygon.MinX = int.MaxValue;
             polygon.MaxX = int.MinValue;

@@ -25,7 +25,6 @@ using OsmSharp.Collections.SpatialIndexes;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 using OsmSharp.UI.Renderer.Scene.Storage;
-using OsmSharp.UI.Renderer.Scene.Storage.RTree;
 
 namespace OsmSharp.UI.Renderer.Scene
 {
@@ -424,9 +423,9 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="color"></param>
-        /// <param name="font_size"></param>
+        /// <param name="fontSize"></param>
         /// <param name="text"></param>
-        public override uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double font_size,
+        public override uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, float fontSize,
             string text, int? haloColor, int? haloRadius)
         {
             if (text == null)
@@ -437,7 +436,7 @@ namespace OsmSharp.UI.Renderer.Scene
                 uint id = _nextId;
                 _nextId++;
 
-                this.AddPrimitive(layer, id, new LineText2D(x, y, color, font_size, text, haloColor, haloRadius, minZoom, maxZoom));
+                this.AddPrimitive(layer, id, new LineText2D(x, y, color, fontSize, text, haloColor, haloRadius, minZoom, maxZoom));
                 return id;
             }
         }
@@ -451,24 +450,25 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="compress"></param>
         public override void Serialize(Stream stream, bool compress)
         {
-            // build the index.
-            var index = new RTreeMemoryIndex<Scene2DEntry>();
-            foreach (var primitiveLayer in _primitives)
-            {
-                foreach (var primitive in primitiveLayer.Value)
-                {
-                    index.Add(primitive.GetBox(), new Scene2DEntry()
-                    {
-                        Layer = primitiveLayer.Key,
-                        Id = 0,
-                        Scene2DPrimitive = primitive
-                    });
-                }
-            }
+            this.SerializeStyled(stream, compress);
+            //// build the index.
+            //var index = new RTreeMemoryIndex<Scene2DEntry>();
+            //foreach (var primitiveLayer in _primitives)
+            //{
+            //    foreach (var primitive in primitiveLayer.Value)
+            //    {
+            //        index.Add(primitive.GetBox(), new Scene2DEntry()
+            //        {
+            //            Layer = primitiveLayer.Key,
+            //            Id = 0,
+            //            Scene2DPrimitive = primitive
+            //        });
+            //    }
+            //}
 
-            // create the serializer.
-            var serializer = new Scene2DRTreeSerializer(compress);
-            serializer.Serialize(stream, index);
+            //// create the serializer.
+            //var serializer = new OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DRTreeSerializer(compress);
+            //serializer.Serialize(stream, index);
         }
 
         /// <summary>
@@ -479,11 +479,12 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <returns></returns>
         public static IScene2DPrimitivesSource Deserialize(Stream stream, bool compressed)
         {
-            // create the serializer.
-            var serializer = new Scene2DRTreeSerializer(compressed);
-            ISpatialIndexReadonly<Scene2DEntry> index = serializer.Deserialize(stream);
+            return Scene2DSimple.DeserializeStyled(stream, compressed);
+            //// create the serializer.
+            //var serializer = new OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DRTreeSerializer(compressed);
+            //ISpatialIndexReadonly<Scene2DEntry> index = serializer.Deserialize(stream);
 
-            return new Scene2DPrimitivesSource(index);
+            //return new Scene2DPrimitivesSource(index);
         }
 
         #endregion

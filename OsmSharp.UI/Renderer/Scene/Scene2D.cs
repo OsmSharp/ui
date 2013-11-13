@@ -270,9 +270,9 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="color"></param>
-        /// <param name="font_size"></param>
+        /// <param name="fontSize"></param>
         /// <param name="text"></param>
-        public abstract uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double font_size,
+        public abstract uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, float fontSize,
             string text, int? haloColor, int? haloRadius);
         
         /// <summary>

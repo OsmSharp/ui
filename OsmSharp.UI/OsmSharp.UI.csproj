@@ -144,8 +144,6 @@
     <Compile Include="Renderer\Scene\Storage\Layered\Scene2DLayeredSerializer.cs" />
     <Compile Include="Renderer\Scene\Storage\Layered\Scene2DLayeredSource.cs" />
     <Compile Include="Renderer\Scene\Scene2DPrimitives\Text2D.cs" />
-    <Compile Include="Renderer\Scene\Storage\RTree\Scene2DRTreeSerializer.cs" />
-    <Compile Include="Renderer\Scene\Storage\RTree\Scene2DRTreeSource.cs" />
     <Compile Include="Renderer\Scene\Storage\Scene2DEntry.cs" />
     <Compile Include="Renderer\Scene\Storage\Styled\Scene2DRTreeSerializer.cs" />
     <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledIndex.cs" />

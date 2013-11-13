@@ -325,6 +325,74 @@ namespace OsmSharp
             }
             return obj.ToString();
         }
+
+        /// <summary>
+        /// Converts an array of double to long using a factor value.
+        /// </summary>
+        /// <param name="doubleArray">The double array.</param>
+        /// <param name="factor">A factor to use to convert to doubles.</param>
+        /// <returns></returns>
+        public static long[] ConvertToLongArray(this double[] doubleArray, int factor)
+        {
+            long[] longArray = new long[doubleArray.Length];
+            for (int idx = 0; idx < doubleArray.Length; idx++)
+            {
+                longArray[idx] = (long)(doubleArray[idx] * factor);
+            }
+            return longArray;
+        }
+
+
+        /// <summary>
+        /// Converts an array of longs back to doubles using a factor value.
+        /// </summary>
+        /// <param name="longArray">The long array.</param>
+        /// <param name="factor">A factor to use to convert the long values.</param>
+        /// <returns></returns>
+        public static double[] ConvertFromLongArray(this long[] longArray, int factor)
+        {
+            double[] doubleArray = new double[longArray.Length];
+            for (int idx = 0; idx < doubleArray.Length; idx++)
+            {
+                doubleArray[idx] = (longArray[idx] / (double)factor);
+            }
+            return doubleArray;
+        }
+
+        /// <summary>
+        /// Delta encodes an array.
+        /// </summary>
+        /// <param name="longArray"></param>
+        public static long[] EncodeDelta(this long[] longArray)
+        {
+            if (longArray.Length > 0)
+            { // there is data!
+                long previous = longArray[0];
+                for (int idx = 1; idx < longArray.Length; idx++)
+                {
+                    long delta = longArray[idx] - previous;
+                    previous = longArray[idx];
+                    longArray[idx] = delta;
+                }
+            }
+            return longArray;
+        }
+
+        /// <summary>
+        /// Delta decodes an array.
+        /// </summary>
+        /// <param name="longArray"></param>
+        public static long[] DecodeDelta(this long[] longArray)
+        {
+            if (longArray.Length > 0)
+            { // there is data!
+                for (int idx = 1; idx < longArray.Length; idx++)
+                {
+                    longArray[idx] = longArray[idx - 1] + longArray[idx];
+                }
+            }
+            return longArray;
+        }
     }
 
     /// <summary>

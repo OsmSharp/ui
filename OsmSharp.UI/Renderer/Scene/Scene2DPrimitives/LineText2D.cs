@@ -97,7 +97,7 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// <param name="dashes"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public LineText2D(double[] x, double[] y, int color, double size, string text, int? haloColor, int? haloRadius,
+        public LineText2D(double[] x, double[] y, int color, float size, string text, int? haloColor, int? haloRadius,
             float minZoom, float maxZoom)
             : this()
         {
@@ -152,7 +152,7 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// <param name="maxX"></param>
         /// <param name="minY"></param>
         /// <param name="maxY"></param>
-        public LineText2D(double[] x, double[] y, int color, double size, string text,
+        public LineText2D(double[] x, double[] y, int color, float size, string text,
             int minX, int maxX, int minY, int maxY)
             : this()
         {
@@ -219,7 +219,7 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// Gets or sets the size.
         /// </summary>
         /// <value>The size.</value>
-		public double Size { get; set; }
+		public float Size { get; set; }
 
 		/// <summary>
 		/// Gets or sets the font name.

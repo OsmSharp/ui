@@ -632,7 +632,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         /// </summary>
         /// <value>The size.</value>
         [ProtoMember(5)]
-        public double Size { get; set; }
+        public float Size { get; set; }
 
         /// <summary>
         /// The minimum zoom.

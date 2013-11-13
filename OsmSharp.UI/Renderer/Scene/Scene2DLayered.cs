@@ -82,7 +82,7 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="zoomFactor">Zoom factor.</param>
 		private float CalculateSimplificationEpsilon(float zoomFactor)
 		{
-            double pixelWidth = 1 / zoomFactor;
+            double pixelWidth = 1 / zoomFactor * 4;
             return (float)pixelWidth;
 		}
 
@@ -413,13 +413,13 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="x"></param>
 		/// <param name="y"></param>
 		/// <param name="color"></param>
-		/// <param name="font_size"></param>
+        /// <param name="fontSize"></param>
 		/// <param name="text"></param>
 		/// <returns>The text line.</returns>
 		/// <param name="haloColor">Halo color.</param>
 		/// <param name="haloRadius">Halo radius.</param>
 		public override uint AddTextLine (int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, 
-		                                  double font_size, string text, int? haloColor, int? haloRadius)
+		                                  float fontSize, string text, int? haloColor, int? haloRadius)
 		{ // add the textline but simplify it for higher zoom levels.
 			float currentMaxZoom = float.MaxValue;
 			for (int idx = 0; idx < _zoomLevelCutoffs.Count; idx++) {
@@ -438,7 +438,7 @@ namespace OsmSharp.UI.Renderer.Scene
                     {
                         _scenes[idx] = new Scene2DSimple();
                     }
-                    _scenes[idx].AddTextLine(layer, thisMinZoom, thisMaxZoom, simplified[0], simplified[1], color, font_size, text,
+                    _scenes[idx].AddTextLine(layer, thisMinZoom, thisMaxZoom, simplified[0], simplified[1], color, fontSize, text,
                                               haloColor, haloRadius);
                     //}
                 }

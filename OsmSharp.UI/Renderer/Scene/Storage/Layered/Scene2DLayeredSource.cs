@@ -22,7 +22,6 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using OsmSharp.IO;
-using OsmSharp.UI.Renderer.Scene.Storage.RTree;
 
 namespace OsmSharp.UI.Renderer.Scene.Storage.Layered
 {
