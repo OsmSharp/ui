@@ -17,6 +17,9 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using OsmSharp.WinForms.UI.Renderer;
 
 namespace OsmSharp.Test.Performance
 {
@@ -54,7 +57,22 @@ namespace OsmSharp.Test.Performance
             Routing.CH.CHSerializedRoutingTest.Test();
             
             // test some rendering implementations.
-            UI.Rendering.RenderingSerializedSceneTests.Test();
+            UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.Test(
+                (width, height) =>
+                {
+                    // build the target to render to.
+                    Bitmap imageTarget = new Bitmap(UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.TargetWidth, 
+                        UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.TargetHeight);
+                    Graphics target = Graphics.FromImage(imageTarget);
+                    target.SmoothingMode = SmoothingMode.HighQuality;
+                    target.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    target.CompositingQuality = CompositingQuality.HighQuality;
+                    target.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    return target;
+                },
+                () => {
+                    return new GraphicsRenderer2D();
+                });
 
             // wait for an exit.
             OsmSharp.Logging.Log.TraceEvent("Program", System.Diagnostics.TraceEventType.Information,

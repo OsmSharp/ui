@@ -16,25 +16,25 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.IO;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Map;
+using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.WinForms.UI.Renderer;
-using System;
-using System.Drawing.Imaging;
-using OsmSharp.UI.Map.Layers;
-using System.Drawing.Drawing2D;
 
 namespace OsmSharp.Test.Performance.UI.Rendering
 {
     /// <summary>
     /// Contains serialization tests.
     /// </summary>
-    public static class RenderingSerializedSceneTests
+    public static class RenderingSerializedSceneTests<TTarget>
     {
         /// <summary>
         /// Holds the target width.
@@ -52,15 +52,31 @@ namespace OsmSharp.Test.Performance.UI.Rendering
         public static bool WriteResults = false;
 
         /// <summary>
+        /// Delegate signature to create a target to render to.
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public delegate TTarget CreateTarget(int width, int height);
+
+        /// <summary>
+        /// Delegate signature to create a renderer.
+        /// </summary>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public delegate Renderer2D<TTarget> CreateRenderer();
+
+        /// <summary>
         /// Runs all rendering tests.
         /// </summary>
-        public static void Test()
+        public static void Test(CreateTarget createTarget, CreateRenderer createRenderer)
         {
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\map\{0}", "kempen-big.osm.pbf.scene.layered"));
             Stream stream = testFile.OpenRead();
 
             // do some of the testing.
-            RenderingSerializedSceneTests.TestRenderScene(stream, new GeoCoordinateBox(
+            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
                 new GeoCoordinate(51.20190, 4.66540),
                 new GeoCoordinate(51.30720, 4.89820)), 10);
         }
@@ -71,7 +87,8 @@ namespace OsmSharp.Test.Performance.UI.Rendering
         /// <param name="stream"></param>
         /// <param name="box"></param>
         /// <param name="testCount"></param>
-        public static void TestRenderScene(Stream stream, GeoCoordinateBox box, int testCount)
+        public static void TestRenderScene(CreateTarget createTarget, CreateRenderer createRenderer, 
+            Stream stream, GeoCoordinateBox box, int testCount)
         {
             WebMercator projection = new WebMercator();
 
@@ -80,15 +97,10 @@ namespace OsmSharp.Test.Performance.UI.Rendering
             IScene2DPrimitivesSource sceneSource = Scene2DLayered.Deserialize(stream, true);
             LayerScene layerScene = map.AddLayerScene(sceneSource);
 
-            // build the target to render to.
-            Bitmap imageTarget = new Bitmap(TargetWidth, TargetHeight);
-            Graphics target = Graphics.FromImage(imageTarget);
-            target.SmoothingMode = SmoothingMode.HighQuality;
-            target.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            target.CompositingQuality = CompositingQuality.HighQuality;
-            target.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            MapRenderer<Graphics> mapRenderer = new MapRenderer<Graphics>(
-                new GraphicsRenderer2D());
+            // build the target and renderer.
+            TTarget target = createTarget.Invoke(TargetWidth, TargetHeight);
+            MapRenderer<TTarget> mapRenderer = new MapRenderer<TTarget>(
+                createRenderer.Invoke());
 
             // render the map.
             PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("Scene2DLayeredRendering");
@@ -107,10 +119,10 @@ namespace OsmSharp.Test.Performance.UI.Rendering
 
                 mapRenderer.Render(target, map, view);
 
-                if (WriteResults)
-                {
-                    imageTarget.Save(Guid.NewGuid().ToString() + ".png", ImageFormat.Png);
-                }
+                //if (WriteResults)
+                //{
+                //    imageTarget.Save(Guid.NewGuid().ToString() + ".png", ImageFormat.Png);
+                //}
 
                 testCount--;
             }
