@@ -244,7 +244,7 @@ namespace OsmSharp.iOS.UI
 						_cacheRenderer.CancelAndWait ();
 					}
 
-					_renderingThread.Abort ();
+					//_renderingThread.Abort ();
 				}
 
 				// start new rendering thread.
@@ -268,9 +268,15 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		private float _extra = 1.4f;
 
-		private byte[] _bytescache;
-
+        /// <summary>
+        /// Holds the previous rendered zoom.
+        /// </summary>
 		private View2D _previousRenderedZoom;
+
+        /// <summary>
+        /// Holds the pervious image.
+        /// </summary>
+        private CGImage _previousImage;
 
 		/// <summary>
 		/// Render the current complete scene.
@@ -318,56 +324,62 @@ namespace OsmSharp.iOS.UI
 				int bytesPerPixel = 4;
 				int bytesPerRow = bytesPerPixel * imageWidth;
 				int bitsPerComponent = 8;
-				if (_bytescache == null) {
-					_bytescache = new byte[bytesPerRow * imageHeight];
-				}
+//				if (_bytescache == null) {
+//					_bytescache = new byte[bytesPerRow * imageHeight];
+//				}
 				CGBitmapContext gctx = new CGBitmapContext (null, imageWidth, imageHeight,
 				                                             bitsPerComponent, bytesPerRow,
 				                                             space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
 				                                             CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
+                try {
+    				// notify the map that the view has changed.
+    				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor (this.MapZoom), this.MapCenter, 
+    				                       view);
+    				long afterViewChanged = DateTime.Now.Ticks;
+    				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+    				                                 "View change took: {0}ms @ zoom level {1}",
+    				                                 (new TimeSpan (afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
-				// notify the map that the view has changed.
-				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor (this.MapZoom), this.MapCenter, 
-				                       view);
-				long afterViewChanged = DateTime.Now.Ticks;
-				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-				                                 "View change took: {0}ms @ zoom level {1}",
-				                                 (new TimeSpan (afterViewChanged - before).TotalMilliseconds), this.MapZoom);
+    				// does the rendering.
+    				bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx,
+    				                                                new RectangleF (0, 0, (int)(rect.Width * _extra), (int)(rect.Height * _extra))), 
+    				                                        layers, view);
 
-				// does the rendering.
-				bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx,
-				                                                new RectangleF (0, 0, (int)(rect.Width * _extra), (int)(rect.Height * _extra))), 
-				                                        layers, view);
+    				long afterRendering = DateTime.Now.Ticks;
+    				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
+    				                                 "Rendering took: {0}ms @ zoom level {1}",
+    				                                 (new TimeSpan (afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
 
-				long afterRendering = DateTime.Now.Ticks;
-				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-				                                 "Rendering took: {0}ms @ zoom level {1}",
-				                                 (new TimeSpan (afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
+    				if (complete) { // there was no cancellation, the rendering completely finished.
+    					// add the result to the scene cache.
+    					lock (_cachedScene) {
+    						// add the newly rendered image again.
+    						_cachedScene.Clear ();
+                            if(_previousImage != null)
+                            {
+                                _previousImage.Dispose();
+                            }
+                            _previousImage = gctx.ToImage ();
+    						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, view.Rectangle, new byte[0], 
+                                                       _previousImage);
+    					}
+    					this.InvokeOnMainThread (InvalidateMap);
 
-				if (complete) { // there was no cancellation, the rendering completely finished.
-					// add the result to the scene cache.
-					lock (_cachedScene) {
-						// add the newly rendered image again.
-						_cachedScene.Clear ();
-						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, view.Rectangle, new byte[0], gctx.ToImage ());
-					}
-					this.InvokeOnMainThread (InvalidateMap);
+    					// store the previous view.
+    					_previousRenderedZoom = view;
+    				}
 
-					// store the previous view.
-					_previousRenderedZoom = view;
-				}
-
-				long after = DateTime.Now.Ticks;
-	//				if (!complete) {
-	//					OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,"Rendering CANCELLED!", 
-	//					                                new TimeSpan (after - before).TotalMilliseconds);
-	//				} else {
-				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-				                                  "Rendering in {0}ms", new TimeSpan (after - before).TotalMilliseconds);
-				//				}
-				//}
-				}
-			}
+    				long after = DateTime.Now.Ticks;
+    				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.iOS.UI.MapView", System.Diagnostics.TraceEventType.Information,
+    				                                  "Rendering in {0}ms", new TimeSpan (after - before).TotalMilliseconds);
+    				//				}
+    				//}
+                    }
+                    finally{
+                        gctx.Dispose();
+                    }
+                }
+            }
 			catch(Exception ex) {
 				_cacheRenderer.Reset ();
 			}
@@ -1060,7 +1072,7 @@ namespace OsmSharp.iOS.UI
 			_cachedScene = null;
 			_renderingThread.Abort ();
 			_renderingThread = null;
-			_bytescache = null;
+			//_bytescache = null;
 		}
 	}
 }

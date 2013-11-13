@@ -46,7 +46,12 @@ namespace OsmSharp.iOS.UI.Log
         /// <param name="message"></param>
         public override void Write(string message)
         {
-            _textView.Text = _textView.Text + message;
+            _textView.InvokeOnMainThread(() =>
+            {
+                _textView.Text = _textView.Text + message;
+                _textView.ScrollRangeToVisible(
+                    new MonoTouch.Foundation.NSRange(_textView.Text.Length, 0));
+            });
         }
 
         /// <summary>
@@ -55,7 +60,12 @@ namespace OsmSharp.iOS.UI.Log
         /// <param name="message"></param>
         public override void WriteLine(string message)
         {
-            _textView.Text = _textView.Text + message + System.Environment.NewLine;
+            _textView.InvokeOnMainThread(() =>
+            {
+                _textView.Text = _textView.Text + message + System.Environment.NewLine;
+                _textView.ScrollRangeToVisible(
+                    new MonoTouch.Foundation.NSRange(_textView.Text.Length, 0));
+            });
         }
     }
 }

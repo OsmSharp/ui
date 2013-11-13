@@ -16,10 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.IO;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
@@ -27,7 +23,6 @@ using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.WinForms.UI.Renderer;
 
 namespace OsmSharp.Test.Performance.UI.Rendering
 {
@@ -75,10 +70,19 @@ namespace OsmSharp.Test.Performance.UI.Rendering
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\map\{0}", "kempen-big.osm.pbf.scene.layered"));
             Stream stream = testFile.OpenRead();
 
+            Test(stream, createTarget, createRenderer);
+        }
+
+        /// <summary>
+        /// Runs all rendering tests.
+        /// </summary>
+        public static void Test(Stream stream, CreateTarget createTarget, CreateRenderer createRenderer)
+        {
+
             // do some of the testing.
             RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
                 new GeoCoordinate(51.20190, 4.66540),
-                new GeoCoordinate(51.30720, 4.89820)), 10);
+                new GeoCoordinate(51.30720, 4.89820)), 100);
         }
 
         /// <summary>
@@ -115,14 +119,13 @@ namespace OsmSharp.Test.Performance.UI.Rendering
                 View2D view = mapRenderer.Create(TargetWidth, TargetHeight, map,
                     (float)projection.ToZoomFactor(zoom), center, false, true);
 
+                OsmSharp.Logging.Log.TraceEvent("Scene2DLayeredRendering", System.Diagnostics.TraceEventType.Information,
+                                            string.Format("Rendering at z{0} l{1}.", 
+                                                          zoom, center));
+
                 layerScene.ViewChanged(map, (float)projection.ToZoomFactor(zoom), center, view);
 
                 mapRenderer.Render(target, map, view);
-
-                //if (WriteResults)
-                //{
-                //    imageTarget.Save(Guid.NewGuid().ToString() + ".png", ImageFormat.Png);
-                //}
 
                 testCount--;
             }

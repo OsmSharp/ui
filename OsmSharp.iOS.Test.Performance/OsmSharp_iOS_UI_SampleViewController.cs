@@ -1,31 +1,32 @@
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Timers;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
-using OsmSharp.UI.Map;
-using OsmSharp.UI.Map.Layers;
-using System.Reflection;
-using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene;
-using System.Timers;
-using OsmSharp.Math.Geo;
-using OsmSharp.Routing;
-using OsmSharp.Routing.CH;
-using OsmSharp.Routing.Osm.Interpreter;
-using OsmSharp.UI;
-using System.Collections.Generic;
+using OsmSharp.Logging;
 using OsmSharp.Math;
+using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
+using OsmSharp.Routing;
+using OsmSharp.Routing.CH;
+using OsmSharp.Routing.Instructions;
+using OsmSharp.Routing.Navigation;
+using OsmSharp.Routing.Osm.Interpreter;
 using OsmSharp.Routing.TSP.Genetic;
+using OsmSharp.UI;
 using OsmSharp.UI.Animations;
 using OsmSharp.UI.Animations.Navigation;
-using OsmSharp.Routing.Navigation;
-using OsmSharp.Routing.Instructions;
-using System.Threading.Tasks;
+using OsmSharp.UI.Map;
+using OsmSharp.UI.Map.Layers;
+using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.iOS.UI;
-using OsmSharp.Logging;
-using System.Threading;
+using MonoTouch.CoreGraphics;
 
 namespace OsmSharp.iOS.Test.Performance
 {
@@ -50,6 +51,9 @@ namespace OsmSharp.iOS.Test.Performance
 			OsmSharp.Logging.Log.Enable ();
             OsmSharp.Logging.Log.RegisterListener(
                 new OsmSharp.iOS.UI.Log.TextViewTraceListener(textView));
+
+            //OsmSharp.Logging.Log.Ignore("RTreeStreamIndex");
+            //OsmSharp.Logging.Log.Ignore("Scene2DLayeredSource");
 
 			base.LoadView ();
 
@@ -82,9 +86,11 @@ namespace OsmSharp.iOS.Test.Performance
         /// </summary>
         private void Test()
         {
-            this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
+            //this.TestRouting("OsmSharp.iOS.Test.Performance.kempen-big.osm.pbf.routing");
 
-            this.TestInstructions("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
+            //this.TestInstructions("OsmSharp.iOS.Test.Performance.kempen-big.osm.pbf.routing");
+            
+            this.TestRendering("OsmSharp.iOS.Test.Performance.kempen-big.osm.pbf.scene.layered");
         }
 
         /// <summary>
@@ -126,6 +132,40 @@ namespace OsmSharp.iOS.Test.Performance
                 embeddedResource),
                 new GeoCoordinate(51.261203, 4.780760),
                 new GeoCoordinate(51.267797, 4.801362));
+        }
+
+        /// <summary>
+        /// Executes rendering tests.
+        /// </summary>
+        /// <param name="embeddedResource">Embedded resource.</param>
+        private void TestRendering(string embeddedResource) 
+        {
+            Log.TraceEvent("Test", System.Diagnostics.TraceEventType.Information,
+                           "Testing rendering.");
+
+            OsmSharp.Test.Performance.UI.Rendering.RenderingSerializedSceneTests<CGContextWrapper>.Test(
+                Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                    embeddedResource),
+                (width, height) =>
+                {
+                    CGColorSpace space = CGColorSpace.CreateDeviceRGB ();
+                    int bytesPerPixel = 4;
+                    int bytesPerRow = bytesPerPixel * width;
+                    int bitsPerComponent = 8;
+                    CGBitmapContext target = new CGBitmapContext (null, width, height,
+                        bitsPerComponent, bytesPerRow,
+                        space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
+                        CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
+                    target.InterpolationQuality = CGInterpolationQuality.None;
+                    target.SetShouldAntialias (false);
+                    target.SetBlendMode (CGBlendMode.Copy);
+                    target.SetAlpha (1);
+                    return new CGContextWrapper(target, new RectangleF(
+                        0, 0, width, height));
+                },
+                () => {
+                    return new CGContextRenderer (1);
+                });
         }
 	}
 }

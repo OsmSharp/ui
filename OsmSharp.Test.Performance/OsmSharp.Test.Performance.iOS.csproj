@@ -95,6 +95,7 @@
   <ItemGroup>
     <Compile Include="Routing\CH\CHSerializedRoutingTest.cs" />
     <Compile Include="PerformanceInfoConsumer.cs" />
+    <Compile Include="UI\Rendering\RenderingSerializedSceneTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Info.plist" />
