@@ -24,7 +24,7 @@ using System.Text;
 using OsmSharp.Collections.SpatialIndexes;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
-using OsmSharp.UI.Renderer.Scene.Storage;
+using OsmSharp.Collections;
 
 namespace OsmSharp.UI.Renderer.Scene
 {
@@ -34,32 +34,192 @@ namespace OsmSharp.UI.Renderer.Scene
     public class Scene2DSimple : Scene2D
     {
         /// <summary>
-        /// Holds all primitives indexed per layer and by id.
+        /// Holds the string table.
         /// </summary>
-        private readonly SortedDictionary<int,
-            List<IScene2DPrimitive>> _primitives;
+        private ObjectTable<string> _stringTable;
 
         /// <summary>
-        /// Holds the next primitive id.
+        /// Holds the zoom ranges.
         /// </summary>
-        private uint _nextId = 0;
+        private ObjectTable<ZoomRanges> _zoomRanges;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OsmSharp.UI.Renderer.Scene2DSimple"/> class.
+        /// Holds the index of point.
+        /// </summary>
+        private List<KeyValuePair<double, double>> _pointIndex;
+
+        /// <summary>
+        /// Holds the point styles.
+        /// </summary>
+        private ObjectTable<StylePoint> _pointStyles;
+
+        /// <summary>
+        /// Holds the text styles.
+        /// </summary>
+        private ObjectTable<StyleText> _textStyles;
+
+        /// <summary>
+        /// Holds the line styles.
+        /// </summary>
+        private ObjectTable<StyleLine> _lineStyles;
+
+        /// <summary>
+        /// Holds the polygon styles.
+        /// </summary>
+        private ObjectTable<StylePolygon> _polygonStyles;
+
+        /// <summary>
+        /// Holds the points.
+        /// </summary>
+        private List<SceneObject> _points;
+
+        /// <summary>
+        /// Holds the icons.
+        /// </summary>
+        private List<SceneObject> _icons;
+
+        /// <summary>
+        /// Holds the text objects.
+        /// </summary>
+        private List<TextObject> _texts;
+
+        /// <summary>
+        /// Holds the line text objects.
+        /// </summary>
+        private List<TextObject> _lineTexts;
+
+        /// <summary>
+        /// Holds the line objects.
+        /// </summary>
+        private List<SceneObject> _lines;
+
+        /// <summary>
+        /// Holds the polygon objects.
+        /// </summary>
+        private List<SceneObject> _polygons;
+
+        /// <summary>
+        /// Holds the index of points.
+        /// </summary>
+        private List<KeyValuePair<double[], double[]>> _pointsIndex;
+
+        /// <summary>
+        /// Holds the index of images.
+        /// </summary>
+        private List<byte[]> _imageIndex;
+
+        /// <summary>
+        /// Creates a new simple scene.
         /// </summary>
         public Scene2DSimple()
         {
-            _primitives = new SortedDictionary<int, List<IScene2DPrimitive>>();
+            // string table.
+            _stringTable = new ObjectTable<string>(true);
 
-            this.BackColor = SimpleColor.FromArgb(0, 255, 255, 255).Value; // fully transparent.
+            // zoom ranges.
+            _zoomRanges = new ObjectTable<ZoomRanges>(true);
+
+            // styles.
+            _pointStyles = new ObjectTable<StylePoint>(true);
+            _textStyles = new ObjectTable<StyleText>(true);
+            _lineStyles = new ObjectTable<StyleLine>(true);
+            _polygonStyles = new ObjectTable<StylePolygon>(true);
+
+            // geo indexes.
+            _pointIndex = new List<KeyValuePair<double, double>>();
+            _pointsIndex = new List<KeyValuePair<double[], double[]>>();
+
+            // scene objects.
+            _points = new List<SceneObject>();
+            _icons = new List<SceneObject>();
+            _texts = new List<TextObject>();
+            _lineTexts = new List<TextObject>();
+            _lines = new List<SceneObject>();
+            _polygons = new List<SceneObject>();
+
+            // lines/polygons.
+            _imageIndex = new List<byte[]>();
         }
 
         /// <summary>
-        /// Clear this instance.
+        /// Adds the given point.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public override uint AddPoint(double x, double y)
+        {
+            uint id = (uint)_pointIndex.Count;
+            _pointIndex.Add(new KeyValuePair<double, double>(x, y));
+            return id;
+        }
+
+        /// <summary>
+        /// Adds the given points.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public override uint AddPoints(double[] x, double[] y)
+        {
+            uint id = (uint)_pointsIndex.Count;
+            _pointsIndex.Add(new KeyValuePair<double[], double[]>(x, y));
+            return id;
+        }
+
+        /// <summary>
+        /// Adds the given image.
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public override uint AddImage(byte[] data)
+        {
+            uint id = (uint)_imageIndex.Count;
+            _imageIndex.Add(data);
+            return id;
+        }
+
+        /// <summary>
+        /// Serializes the given scene.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="compress"></param>
+        public override void Serialize(Stream stream, bool compress)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Clears all data from this scene.
         /// </summary>
         public override void Clear()
-        {
-            _primitives.Clear();
+        {            
+            // string table.
+            _stringTable.Clear();
+
+            // zoom ranges.
+            _zoomRanges.Clear();
+
+            // styles.
+            _pointStyles.Clear();
+            _textStyles.Clear();
+            _lineStyles.Clear();
+            _polygonStyles.Clear();
+
+            // geo indexes.
+            _pointIndex.Clear();
+            _pointsIndex.Clear();
+
+            // scene objects.
+            _points.Clear();
+            _icons.Clear();
+            _texts.Clear();
+            _lineTexts.Clear();
+            _lines.Clear();
+            _polygons.Clear();
+
+            // lines/polygons.
+            _imageIndex.Clear();
         }
 
         /// <summary>
@@ -69,468 +229,434 @@ namespace OsmSharp.UI.Renderer.Scene
         {
             get
             {
-                int count = 0;
-                foreach (KeyValuePair<int, List<IScene2DPrimitive>> keyValuePair in _primitives)
-                {
-                    count = count + keyValuePair.Value.Count;
-                }
-                return count;
+                return _points.Count +
+                _icons.Count +
+                _texts.Count +
+                _lineTexts.Count +
+                _lines.Count +
+                _polygons.Count;
             }
         }
 
         /// <summary>
-        /// Returns the layer count.
+        /// Returns the objects in this scene inside the given view.
         /// </summary>
-        public int LayerCount
-        {
-            get
-            {
-                return _primitives.Count;
-            }
-        }
-
-        /// <summary>
-        /// Gets all objects in this scene for the specified view.
-        /// </summary>
-        /// <param name="view">View.</param>
+        /// <param name="view"></param>
         /// <param name="zoom"></param>
+        /// <returns></returns>
         public override IEnumerable<Scene2DPrimitive> Get(View2D view, float zoom)
         {
-            var primitivesInView = new List<Scene2DPrimitive>();
+            throw new NotImplementedException();
+        }
 
-            lock (_primitives)
+        #region Styles
+
+        /// <summary>
+        /// Adds the given style to the given point.
+        /// </summary>
+        /// <param name="pointId"></param>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="size"></param>
+        public override void AddStylePoint(uint pointId, uint layer, float minZoom, float maxZoom, int color, float size)
+        {
+            // build the zoom range.
+            ZoomRanges zoomRange = new ZoomRanges()
             {
-                foreach (var layer in _primitives)
-                { // loop over all layers in order.
-                    foreach (IScene2DPrimitive primitivePair in layer.Value)
-                    { // loop over all primitives in order.
-                        if (primitivePair.IsVisibleIn(view, zoom))
+                MinZoom = minZoom,
+                MaxZoom = maxZoom
+            };
+            uint zoomRangeId = _zoomRanges.Add(zoomRange);
+
+            // build the style.
+            StylePoint style = new StylePoint()
+            {
+                Color = color,
+                Size = size
+            };
+            uint styleId = _pointStyles.Add(style);
+
+            // add the scene object.
+            _points.Add(new SceneObject() { StyleId = styleId, Layer = layer, GeoId = pointId, ZoomRangeId = zoomRangeId });
+        }
+
+        /// <summary>
+        /// Adds a new icon at the location of the given point.
+        /// </summary>
+        /// <param name="pointId"></param>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="imageId"></param>
+        /// <returns></returns>
+        public override void AddIcon(uint pointId, uint layer, float minZoom, float maxZoom, uint imageId)
+        {
+            // build the zoom range.
+            ZoomRanges zoomRange = new ZoomRanges()
+            {
+                MinZoom = minZoom,
+                MaxZoom = maxZoom
+            };
+            uint zoomRangeId = _zoomRanges.Add(zoomRange);
+
+            // add the scene object.
+            _icons.Add(new SceneObject() { StyleId = imageId, Layer = layer, GeoId = pointId, ZoomRangeId = zoomRangeId });
+        }
+
+        /// <summary>
+        /// Adds text at the position of the given point.
+        /// </summary>
+        /// <param name="pointId"></param>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="size"></param>
+        /// <param name="text"></param>
+        /// <param name="color"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
+        /// <param name="font"></param>
+        /// <returns></returns>
+        public override void AddText(uint pointId, uint layer, float minZoom, float maxZoom, float size, string text, int color, 
+            int? haloColor, int? haloRadius, string font)
+        {
+            // add to stringtable.
+            uint textId = _stringTable.Add(text);
+
+            // build the zoom range.
+            ZoomRanges zoomRange = new ZoomRanges()
+            {
+                MinZoom = minZoom,
+                MaxZoom = maxZoom
+            };
+            uint zoomRangeId = _zoomRanges.Add(zoomRange);
+
+            // build the style.
+            StyleText style = new StyleText()
+            {
+                Color = color,
+                Size = size,
+                Font = font,
+                HaloColor = haloColor,
+                HaloRadius = haloRadius
+            };
+            uint styleId = _textStyles.Add(style);
+
+            // add the scene object.
+            _texts.Add(new TextObject() { StyleId = styleId, Layer = layer, GeoId = pointId, ZoomRangeId = zoomRangeId, TextId = textId });
+        }
+
+        /// <summary>
+        /// Adds a line with the given points and style.
+        /// </summary>
+        /// <param name="pointsId"></param>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="width"></param>
+        /// <param name="lineJoin"></param>
+        /// <param name="dashes"></param>
+        public override void AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, LineJoin lineJoin, int[] dashes)
+        {
+            // build the zoom range.
+            ZoomRanges zoomRange = new ZoomRanges()
+            {
+                MinZoom = minZoom,
+                MaxZoom = maxZoom
+            };
+            uint zoomRangeId = _zoomRanges.Add(zoomRange);
+
+            // build the style.
+            StyleLine style = new StyleLine()
+            {
+                Color = color,
+                Dashes = dashes,
+                LineJoin = lineJoin,
+                Width = width
+            };
+            uint styleId = _lineStyles.Add(style);
+
+            // add the scene object.
+            _lines.Add(new SceneObject() { StyleId = styleId, Layer = layer, GeoId = pointsId, ZoomRangeId = zoomRangeId });
+        }
+
+        /// <summary>
+        /// Adds a line text with the given points and style.
+        /// </summary>
+        /// <param name="pointsId"></param>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="size"></param>
+        /// <param name="text"></param>
+        /// <param name="font"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
+        public override void AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float size, string text, string font,
+            int? haloColor, int? haloRadius)
+        {
+            // add to stringtable.
+            uint textId = _stringTable.Add(text);
+
+            // build the zoom range.
+            ZoomRanges zoomRange = new ZoomRanges()
+            {
+                MinZoom = minZoom,
+                MaxZoom = maxZoom
+            };
+            uint zoomRangeId = _zoomRanges.Add(zoomRange);
+
+            // build the style.
+            StyleText style = new StyleText()
+            {
+                Color = color,
+                Size = size,
+                Font = font,
+                HaloColor = haloColor,
+                HaloRadius = haloRadius
+            };
+            uint styleId = _textStyles.Add(style);
+
+            // add the scene object.
+            _texts.Add(new TextObject() { StyleId = styleId, Layer = layer, GeoId = pointsId, ZoomRangeId = zoomRangeId, TextId = textId });
+        }
+
+        /// <summary>
+        /// Adds a polygon with the given points and style.
+        /// </summary>
+        /// <param name="pointsId"></param>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="width"></param>
+        /// <param name="fill"></param>
+        public override void AddStylePolygon(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, bool fill)
+        {
+            // build the zoom range.
+            ZoomRanges zoomRange = new ZoomRanges()
+            {
+                MinZoom = minZoom,
+                MaxZoom = maxZoom
+            };
+            uint zoomRangeId = _zoomRanges.Add(zoomRange);
+
+            // build the style.
+            StylePolygon style = new StylePolygon()
+            {
+                Color = color,
+                Fill = fill,
+                Width = width
+            };
+            uint styleId = _polygonStyles.Add(style);
+
+            // add the scene object.
+            _polygons.Add(new SceneObject() { StyleId = styleId, Layer = layer, GeoId = pointsId, ZoomRangeId = zoomRangeId });
+        }
+
+        #endregion
+
+        private struct SceneObject
+        {
+            public uint Layer { get; set; }
+
+            public uint GeoId { get; set; }
+
+            public uint StyleId { get; set; }
+
+            public uint ZoomRangeId { get; set; }
+        }
+
+        private struct TextObject
+        {
+            public uint Layer { get; set; }
+
+            public uint GeoId { get; set; }
+
+            public uint StyleId { get; set; }
+
+            public uint ZoomRangeId { get; set; }
+
+            public uint TextId { get; set; }
+        }
+        
+        private class ZoomRanges
+        {
+            public float MinZoom { get; set; }
+
+            public float MaxZoom { get; set; }
+
+            public override int GetHashCode()
+            {
+                return this.MinZoom.GetHashCode() ^
+                    this.MaxZoom.GetHashCode();
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is ZoomRanges)
+                {
+                    return (obj as ZoomRanges).MaxZoom == this.MaxZoom &&
+                        (obj as ZoomRanges).MinZoom == this.MinZoom;
+                }
+                return false;
+            }
+        }
+        
+        private class StylePoint
+        {
+            public int Color { get; set; }
+
+            public float Size { get; set; }
+
+            public override int GetHashCode()
+            {
+                return this.Color.GetHashCode() ^
+                    this.Size.GetHashCode();
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is StylePoint)
+                {
+                    return (obj as StylePoint).Color == this.Color &&
+                        (obj as StylePoint).Size == this.Size;
+                }
+                return false;
+            }
+        }
+
+        private class StyleLine
+        {
+            public int Color { get; set; }
+
+            public float Width { get; set; }
+
+            public LineJoin LineJoin { get; set; }
+
+            public int[] Dashes { get; set; }
+
+            public override int GetHashCode()
+            {
+                if (this.Dashes == null)
+                {
+                    return this.Color.GetHashCode() ^
+                        this.Width.GetHashCode() ^
+                        this.LineJoin.GetHashCode();
+                }
+                int hashcode = this.Color.GetHashCode() ^
+                    this.Width.GetHashCode() ^
+                    this.LineJoin.GetHashCode();
+                foreach(int dash in this.Dashes)
+                {
+                    hashcode = hashcode ^ dash.GetHashCode();
+                }
+                return hashcode;
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (obj is StyleLine)
+                {
+                    if ((obj as StyleLine).Color == this.Color &&
+                        (obj as StyleLine).Width == this.Width &&
+                        (obj as StyleLine).LineJoin == this.LineJoin)
+                    {
+                        if (this.Dashes != null)
                         {
-                            primitivesInView.Add(new Scene2DPrimitive() 
-                                { Layer = layer.Key, Primitive = primitivePair });
+                            if (this.Dashes.Length == (obj as StyleLine).Dashes.Length)
+                            {
+                                for (int idx = 0; idx < this.Dashes.Length; idx++)
+                                {
+                                    if (this.Dashes[idx] != (obj as StyleLine).Dashes[idx])
+                                    {
+                                        return false;
+                                    }
+                                }
+                                return true;
+                            }
+                        }
+                        else
+                        {
+                            return (obj as StyleLine).Dashes == null;
                         }
                     }
                 }
+                return false;
             }
-            return primitivesInView;
         }
 
-        /// <summary>
-        /// Returns the readonly flag.
-        /// </summary>
-        public override bool IsReadOnly
+        private class StyleText
         {
-            get { return false; }
-        }
+            public float Size { get; set; }
 
-        /// <summary>
-        /// Returns the primitives with the given id if andy.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public override List<IScene2DPrimitive> Get(uint id)
-        {
-            List<IScene2DPrimitive> primitives = new List<IScene2DPrimitive>();
-            foreach (var layer in _primitives)
+            public int Color { get; set; }
+
+            public int? HaloColor { get; set; }
+
+            public int? HaloRadius { get; set; }
+
+            public string Font { get; set; }
+
+            public override int GetHashCode()
             {
-                foreach (var primitive in layer.Value)
+                if (this.Font == null)
                 {
-                    if (primitive.Id == id)
-                    {
-                        primitives.Add(primitive);
-                    }
+                    return this.Color.GetHashCode() ^
+                        this.Size.GetHashCode() ^
+                        this.HaloColor.GetHashCode() ^
+                        this.HaloRadius.GetHashCode();
                 }
+                return this.Color.GetHashCode() ^
+                    this.Size.GetHashCode() ^
+                    this.HaloColor.GetHashCode() ^
+                    this.HaloRadius.GetHashCode() ^
+                    this.Font.GetHashCode();
             }
-            return primitives;
-        }
 
-        /// <summary>
-        /// Removes the primitive with the given id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public override bool Remove(uint id)
-        {
-            List<IScene2DPrimitive> primitives = this.Get(id);
-            bool removed = false;
-            foreach (var layer in _primitives)
+            public override bool Equals(object obj)
             {
-                removed = removed || 
-                    layer.Value.RemoveAll(x => primitives.Contains(x)) > 0;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// Adds a new primitive with a given id and layer.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="id"></param>
-        /// <param name="primitive"></param>
-        internal void AddPrimitive(int layer, uint id, IScene2DPrimitive primitive)
-        {
-            primitive.Id = id;
-            List<IScene2DPrimitive> layerList;
-            if (!_primitives.TryGetValue(layer, out layerList))
-            {
-                layerList = new List<IScene2DPrimitive>();
-                _primitives.Add(layer, layerList);
-            }
-            layerList.Add(primitive);
-        }
-
-        /// <summary>
-        /// Adds a point.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="maxZoom"></param>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="y">The y coordinate.</param>
-        /// <param name="color">Color.</param>
-        /// <param name="size">Size.</param>
-        /// <param name="minZoom"></param>
-        public override uint AddPoint(int layer, float minZoom, float maxZoom, double x, double y, int color, double size)
-        {
-            uint id = _nextId;
-            _nextId++;
-
-            lock (_primitives)
-            {
-                this.AddPrimitive(layer, id, new Point2D()
+                if (obj is StyleText)
                 {
-                    Color = color,
-                    X = x,
-                    Y = y,
-                    Size = size,
-                    MinZoom = minZoom,
-                    MaxZoom = maxZoom
-                });
-            }
-            return id;
-        }
-
-        /// <summary>
-        /// Adds a line.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="maxZoom"></param>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="y">The y coordinate.</param>
-        /// <param name="color">Color.</param>
-        /// <param name="width">Width.</param>
-        /// <param name="lineJoin"></param>
-        /// <param name="dashes"></param>
-        /// <param name="minZoom"></param>
-        public override uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width,
-            LineJoin lineJoin, int[] dashes)
-        {
-            if (y == null)
-                throw new ArgumentNullException("y");
-            if (x == null)
-                throw new ArgumentNullException("x");
-            if (x.Length != y.Length)
-                throw new ArgumentException("x and y arrays have different lenghts!");
-
-            uint id = _nextId;
-            _nextId++;
-
-            lock (_primitives)
-            {
-                this.AddPrimitive(layer, id, new Line2D(x, y, color, width, lineJoin, dashes, minZoom, maxZoom));
-            }
-            return id;
-        }
-
-        /// <summary>
-        /// Adds the polygon.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="maxZoom"></param>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="y">The y coordinate.</param>
-        /// <param name="color">Color.</param>
-        /// <param name="width">Width.</param>
-        /// <param name="fill">If set to <c>true</c> fill.</param>
-        /// <param name="minZoom"></param>
-        public override uint AddPolygon(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width, bool fill)
-        {
-            if (y == null)
-                throw new ArgumentNullException("y");
-            if (x == null)
-                throw new ArgumentNullException("x");
-            if (x.Length != y.Length)
-                throw new ArgumentException("x and y arrays have different lenghts!");
-
-
-            lock (_primitives)
-            {
-                uint id = _nextId;
-                _nextId++;
-
-                this.AddPrimitive(layer, id, new Polygon2D(x, y, color, width, fill, minZoom, maxZoom));
-                return id;
-            }
-        }
-
-        /// <summary>
-        /// Adds an icon.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="maxZoom"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="iconImage"></param>
-        /// <param name="minZoom"></param>
-        /// <returns></returns>
-        public override uint AddIcon(int layer, float minZoom, float maxZoom, double x, double y, byte[] iconImage)
-        {
-            if (iconImage == null)
-                throw new ArgumentNullException("iconImage");
-
-
-            lock (_primitives)
-            {
-                uint id = _nextId;
-                _nextId++;
-
-                this.AddPrimitive(layer, id, new Icon2D(x, y, iconImage, minZoom, maxZoom));
-                return id;
-            }
-        }
-
-        /// <summary>
-        /// Adds an image.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="minZoom"></param>
-        /// <param name="maxZoom"></param>
-        /// <param name="left"></param>
-        /// <param name="top"></param>
-        /// <param name="right"></param>
-        /// <param name="bottom"></param>
-        /// <param name="imageData"></param>
-        /// <returns></returns>
-        public override uint AddImage(int layer, float minZoom, float maxZoom, double left, double top, double right, double bottom,
-                             byte[] imageData)
-        {
-            if (imageData == null)
-                throw new ArgumentNullException("imageData");
-
-
-            lock (_primitives)
-            {
-                uint id = _nextId;
-                _nextId++;
-
-                this.AddPrimitive(layer, id, new Image2D(left, top, bottom, right, imageData, minZoom, maxZoom));
-                return id;
-            }
-        }
-
-		/// <summary>
-		/// Adds the image.
-		/// </summary>
-		/// <returns>The image.</returns>
-		/// <param name="layer">Layer.</param>
-		/// <param name="minZoom">Minimum zoom.</param>
-		/// <param name="maxZoom">Max zoom.</param>
-		/// <param name="rectangle">Rectangle.</param>
-		/// <param name="imageData">Image data.</param>
-		/// <param name="tag">Tag.</param>
-		public override uint AddImage (int layer, float minZoom, float maxZoom, RectangleF2D rectangle, byte[] imageData, object tag)
-		{
-			if (imageData == null)
-				throw new ArgumentNullException("imageData");
-
-
-			lock (_primitives)
-			{
-				uint id = _nextId;
-				_nextId++;
-
-				var imageTilted2D = new ImageTilted2D (rectangle, imageData, minZoom, maxZoom);
-				imageTilted2D.Tag = tag;
-				this.AddPrimitive(layer, id, imageTilted2D);
-				return id;
-			}
-		}
-
-        /// <summary>
-        /// Adds the image.
-        /// </summary>
-        /// <returns>The image.</returns>
-        /// <param name="layer">Layer.</param>
-        /// <param name="minZoom">Minimum zoom.</param>
-        /// <param name="maxZoom">Max zoom.</param>
-        /// <param name="left">Left.</param>
-        /// <param name="top">Top.</param>
-        /// <param name="right">Right.</param>
-        /// <param name="bottom">Bottom.</param>
-        /// <param name="imageData">Image data.</param>
-        public override uint AddImage(int layer, float minZoom, float maxZoom, double left, double top, double right, double bottom,
-                             byte[] imageData, object tag)
-        {
-            if (imageData == null)
-                throw new ArgumentNullException("imageData");
-
-            Image2D image = new Image2D(left, top, bottom, right, imageData, minZoom, maxZoom);
-            image.Tag = tag;
-
-            lock (_primitives)
-            {
-
-                uint id = _nextId;
-                _nextId++;
-
-                this.AddPrimitive(layer, id, image);
-                return id;
-            }
-        }
-
-        /// <summary>
-        /// Adds texts.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="maxZoom"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="size"></param>
-        /// <param name="text"></param>
-        /// <param name="minZoom"></param>
-        /// <returns></returns>
-        public override uint AddText(int layer, float minZoom, float maxZoom, double x, double y, double size, string text, int color,
-            int? haloColor, int? haloRadius, string font)
-        {
-            if (text == null)
-                throw new ArgumentNullException("text");
-
-            lock (_primitives)
-            {
-                uint id = _nextId;
-                _nextId++;
-
-                this.AddPrimitive(layer, id, new Text2D(x, y, text, color, size, haloColor, haloRadius, font, minZoom, maxZoom));
-                return id;
-            }
-        }
-
-        /// <summary>
-        /// Adds a text along a line to this scene.
-        /// </summary>
-        /// <param name="layer"></param>
-        /// <param name="minZoom"></param>
-        /// <param name="maxZoom"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="color"></param>
-        /// <param name="font_size"></param>
-        /// <param name="text"></param>
-        public override uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, float font_size,
-            string text, int? haloColor, int? haloRadius)
-        {
-            if (text == null)
-                throw new ArgumentNullException("text");
-
-            lock (_primitives)
-            {
-                uint id = _nextId;
-                _nextId++;
-
-                this.AddPrimitive(layer, id, new LineText2D(x, y, color, font_size, text, haloColor, haloRadius, minZoom, maxZoom));
-                return id;
-            }
-        }
-
-        #region Serialization/Deserialization
-
-        /// <summary>
-        /// Serializes this scene2D to the given stream.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="compress"></param>
-        public override void Serialize(Stream stream, bool compress)
-        {
-            this.SerializeStyled(stream, compress);
-            //// build the index.
-            //var index = new RTreeMemoryIndex<Scene2DEntry>();
-            //foreach (var primitiveLayer in _primitives)
-            //{
-            //    foreach (var primitive in primitiveLayer.Value)
-            //    {
-            //        index.Add(primitive.GetBox(), new Scene2DEntry()
-            //        {
-            //            Layer = primitiveLayer.Key,
-            //            Id = 0,
-            //            Scene2DPrimitive = primitive
-            //        });
-            //    }
-            //}
-
-            //// create the serializer.
-            //var serializer = new OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DRTreeSerializer(compress);
-            //serializer.Serialize(stream, index);
-        }
-
-        /// <summary>
-        /// Deserialize a Scene2D from the given stream.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="compressed"></param>
-        /// <returns></returns>
-        public static IScene2DPrimitivesSource Deserialize(Stream stream, bool compressed)
-        {
-            return Scene2DSimple.DeserializeStyled(stream, compressed);
-            //// create the serializer.
-            //var serializer = new OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DRTreeSerializer(compressed);
-            //ISpatialIndexReadonly<Scene2DEntry> index = serializer.Deserialize(stream);
-
-            //return new Scene2DPrimitivesSource(index);
-        }
-
-        #endregion
-
-        #region Serialization/Deserialization
-
-        /// <summary>
-        /// Serializes this scene2D to the given stream.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="compress"></param>
-        public void SerializeStyled(Stream stream, bool compress)
-        {
-            // build the index.
-            var index = new RTreeMemoryIndex<Scene2DEntry>();
-            foreach (var primitiveLayer in _primitives)
-            {
-                foreach (var primitive in primitiveLayer.Value)
-                {
-                    index.Add(primitive.GetBox(), new Scene2DEntry()
-                    {
-                        Layer = primitiveLayer.Key,
-                        Id = 0,
-                        Scene2DPrimitive = primitive
-                    });
+                    return (obj as StyleText).Size == this.Size &&
+                        (obj as StyleText).Color == this.Color &&
+                        (obj as StyleText).HaloRadius == this.HaloRadius &&
+                        (obj as StyleText).HaloColor == this.HaloColor &&
+                        (obj as StyleText).Font == this.Font;
                 }
+                return false;
+            }
+        }
+
+        private class StylePolygon
+        {
+            public float Width { get; set; }
+
+            public int Color { get; set; }
+
+            public bool Fill { get; set; }
+
+            public override int GetHashCode()
+            {
+                return this.Width.GetHashCode() ^
+                    this.Color.GetHashCode() ^
+                    this.Fill.GetHashCode();
             }
 
-            // create the serializer.
-            var serializer = new OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DStyledSerializer(compress);
-            serializer.Serialize(stream, index);
+            public override bool Equals(object obj)
+            {
+                if (obj is StylePolygon)
+                {
+                    return (obj as StylePolygon).Width == this.Width &&
+                        (obj as StylePolygon).Color == this.Color &&
+                        (obj as StylePolygon).Fill == this.Fill;
+                }
+                return false;
+            }
         }
-
-        /// <summary>
-        /// Deserialize a Scene2D from the given stream.
-        /// </summary>
-        /// <param name="stream"></param>
-        /// <param name="compressed"></param>
-        /// <returns></returns>
-        public static IScene2DPrimitivesSource DeserializeStyled(Stream stream, bool compressed)
-        {
-            // create the serializer.
-            var serializer = new OsmSharp.UI.Renderer.Scene.Storage.Styled.Scene2DStyledSerializer(compressed);
-            return serializer.Deserialize(stream);
-        }
-
-        #endregion
     }
 }

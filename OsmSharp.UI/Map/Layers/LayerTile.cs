@@ -156,14 +156,7 @@ namespace OsmSharp.UI.Map.Layers
                             // data was read create the scene object.
                             lock (this.Scene)
                             {
-                                float minZoom = (float) projection.ToZoomFactor(tile.Zoom - 0.5f);
-                                float maxZoom = (float) projection.ToZoomFactor(tile.Zoom + 0.5f);
-                                float left = (float) projection.LongitudeToX(tile.TopLeft.Longitude);
-                                float right = (float) projection.LongitudeToX(tile.BottomRight.Longitude);
-                                float bottom = (float) projection.LatitudeToY(tile.BottomRight.Latitude);
-                                float top = (float) projection.LatitudeToY(tile.TopLeft.Latitude);
-                                this.Scene.AddImage(0, minZoom, maxZoom, left, top, right, bottom,
-                                                    image);
+                                throw new NotImplementedException();
                             }
 
                             if (this.LayerChanged != null)

@@ -57,15 +57,13 @@ namespace OsmSharp.UI.Map.Layers
 		/// <returns>The point.</returns>
 		/// <param name="coordinate">Coordinate.</param>
 		/// <param name="sizePixels">Size pixels.</param>
-		public uint AddPoint(GeoCoordinate coordinate, float sizePixels, int color)
+		public void AddPoint(GeoCoordinate coordinate, float sizePixels, int color)
 		{
 			double[] projectedCoordinates = _projection.ToPixel(
 				coordinate);
-			uint id = _scene.AddPoint(float.MinValue, float.MaxValue, 
-			                       projectedCoordinates[0], projectedCoordinates[1],
-			                       color, sizePixels);
+            uint pointId = _scene.AddPoint(projectedCoordinates[0], projectedCoordinates[1]);
+            _scene.AddStylePoint(pointId, float.MinValue, float.MaxValue, color, sizePixels);
 			this.RaiseLayerChanged();
-			return id;
 		}
 
         /// <summary>
@@ -76,7 +74,7 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="sizePixels"></param>
         /// <param name="color"></param>
         /// <returns></returns>
-        public uint AddLine(GeoCoordinate point1, GeoCoordinate point2, float sizePixels, int color)
+        public void AddLine(GeoCoordinate point1, GeoCoordinate point2, float sizePixels, int color)
         {
             double[] projected1 = _projection.ToPixel(point1);
             double[] projected2 = _projection.ToPixel(point2);
@@ -84,10 +82,9 @@ namespace OsmSharp.UI.Map.Layers
             double[] x = new double[] { projected1[0], projected2[0] };
             double[] y = new double[] { projected1[1], projected2[1] };
 
-            uint id = _scene.AddLine(float.MinValue, float.MaxValue, x, y,
-                                   color, sizePixels);
+            uint pointsId = _scene.AddPoints(x, y);
+            _scene.AddStyleLine(pointsId, float.MinValue, float.MaxValue, color, sizePixels);
             this.RaiseLayerChanged();
-            return id;
         }
 
         /// <summary>

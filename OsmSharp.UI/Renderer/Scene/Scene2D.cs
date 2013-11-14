@@ -16,12 +16,8 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using OsmSharp.Collections.SpatialIndexes;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 
@@ -30,250 +26,203 @@ namespace OsmSharp.UI.Renderer.Scene
 	/// <summary>
 	/// Contains all objects that need to be rendered.
 	/// </summary>
-    public abstract class Scene2D
+    public abstract class Scene2D : Scene2DReadonly
 	{
-		/// <summary>
-		/// Clear this instance.
-		/// </summary>
-        public abstract void Clear();
-
-        /// <summary>
-        /// Returns the number of objects in this scene.
-        /// </summary>
-        public abstract int Count
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets/sets the backcolor of the scene.
-        /// </summary>
-        public int BackColor { get; set; }
-
         /// <summary>
         /// Returns true if this scene is readonly.
         /// </summary>
-        public abstract bool IsReadOnly { get; }
-
-	    /// <summary>
-	    /// Gets all objects in this scene for the specified view sorted according to layer number.
-	    /// </summary>
-	    /// <param name="view">View.</param>
-	    /// <param name="zoom"></param>
-        public abstract IEnumerable<Scene2DPrimitive> Get(View2D view, float zoom);
+        public override bool IsReadOnly
+        {
+            get
+            {
+                return false;
+            }
+        }
 
         /// <summary>
-        /// Returns the primitive with the given id if any.
+        /// Adds a point to the scene returning the id of the geometry.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         /// <returns></returns>
-        public abstract List<IScene2DPrimitive> Get(uint id);
+        public abstract uint AddPoint(double x, double y);
 
         /// <summary>
-        /// Removes all primitives associated with the given id.
+        /// Adds a series of points to the scene returning the id of the geometry.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         /// <returns></returns>
-        public abstract bool Remove(uint id);
-
-	    /// <summary>
-	    /// Adds a point.
-	    /// </summary>
-	    /// <param name="layer"></param>
-	    /// <param name="maxZoom"></param>
-	    /// <param name="x">The x coordinate.</param>
-	    /// <param name="y">The y coordinate.</param>
-	    /// <param name="color">Color.</param>
-	    /// <param name="size">Size.</param>
-	    /// <param name="minZoom"></param>
-        public abstract uint AddPoint(int layer, float minZoom, float maxZoom, double x, double y, int color, double size);
-
-		/// <summary>
-		/// Adds a point.
-		/// </summary>
-		/// <param name="maxZoom"></param>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="size">Size.</param>
-		/// <param name="minZoom"></param>
-		public virtual uint AddPoint(float minZoom, float maxZoom, double x, double y, int color, double size)
-		{
-			return this.AddPoint(0, minZoom, maxZoom, x, y, color, size);
-		}
-
-		/// <summary>
-		/// Adds a line.
-		/// </summary>
-		/// <param name="maxZoom"></param>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="width">Width.</param>
-        /// <param name="minZoom"></param>
-        public virtual uint AddLine(float minZoom, float maxZoom, double[] x, double[] y, int color, double width)
-		{
-			return this.AddLine(0, minZoom, maxZoom, x, y, color, width);
-		}
-
-		/// <summary>
-		/// Adds a line.
-		/// </summary>§
-		/// <param name="maxZoom"></param>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="width">Width.</param>
-		/// <param name="lineJoin"></param>
-		/// <param name="dashes"></param>
-        /// <param name="minZoom"></param>
-        public virtual uint AddLine(float minZoom, float maxZoom, double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes)
-		{
-            return this.AddLine(0, minZoom, maxZoom, x, y, color, width, lineJoin, dashes);
-		}
-
-		/// <summary>
-		/// Adds a line.
-		/// </summary>
-		/// <param name="layer"></param>
-		/// <param name="maxZoom"></param>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="width">Width.</param>
-        /// <param name="minZoom"></param>
-		/// <returns></returns>
-        public virtual uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width)
-		{
-            return this.AddLine(layer, minZoom, maxZoom, x, y, color, width, LineJoin.None, null);
-		}
-
-	    /// <summary>
-	    /// Adds a line.
-	    /// </summary>
-	    /// <param name="layer"></param>
-	    /// <param name="maxZoom"></param>
-	    /// <param name="x">The x coordinate.</param>
-	    /// <param name="y">The y coordinate.</param>
-	    /// <param name="color">Color.</param>
-	    /// <param name="width">Width.</param>
-	    /// <param name="lineJoin"></param>
-	    /// <param name="dashes"></param>
-        /// <param name="minZoom"></param>
-        /// <param name="casingWidth"></param>
-        /// <param name="casingColor"></param>
-        public abstract uint AddLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width,
-            LineJoin lineJoin, int[] dashes);
-
-		/// <summary>
-		/// Adds the polygon.
-		/// </summary>
-		/// <param name="maxZoom"></param>
-		/// <param name="x">The x coordinate.</param>
-		/// <param name="y">The y coordinate.</param>
-		/// <param name="color">Color.</param>
-		/// <param name="width">Width.</param>
-		/// <param name="fill">If set to <c>true</c> fill.</param>
-		/// <param name="minZoom"></param>
-		public virtual uint AddPolygon(float minZoom, float maxZoom, double[] x, double[] y, int color, double width, bool fill)
-		{
-			return this.AddPolygon(0, minZoom, maxZoom, x, y, color, width, fill);
-		}
-
-	    /// <summary>
-	    /// Adds the polygon.
-	    /// </summary>
-	    /// <param name="layer"></param>
-	    /// <param name="maxZoom"></param>
-	    /// <param name="x">The x coordinate.</param>
-	    /// <param name="y">The y coordinate.</param>
-	    /// <param name="color">Color.</param>
-	    /// <param name="width">Width.</param>
-	    /// <param name="fill">If set to <c>true</c> fill.</param>
-	    /// <param name="minZoom"></param>
-        public abstract uint AddPolygon(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, double width, bool fill);
-
-	    /// <summary>
-	    /// Adds an icon.
-	    /// </summary>
-	    /// <param name="layer"></param>
-	    /// <param name="maxZoom"></param>
-	    /// <param name="x"></param>
-	    /// <param name="y"></param>
-	    /// <param name="iconImage"></param>
-	    /// <param name="minZoom"></param>
-	    /// <returns></returns>
-        public abstract uint AddIcon(int layer, float minZoom, float maxZoom, double x, double y, byte[] iconImage);
-
-	    /// <summary>
-	    /// Adds an image.
-	    /// </summary>
-	    /// <param name="layer"></param>
-	    /// <param name="minZoom"></param>
-	    /// <param name="maxZoom"></param>
-	    /// <param name="left"></param>
-	    /// <param name="top"></param>
-	    /// <param name="right"></param>
-	    /// <param name="bottom"></param>
-	    /// <param name="imageData"></param>
-	    /// <returns></returns>
-        public abstract uint AddImage(int layer, float minZoom, float maxZoom, double left, double top, double right, double bottom,
-                             byte[] imageData);
-
-		/// <summary>
-		/// Adds the image.
-		/// </summary>
-		/// <returns>The image.</returns>
-		/// <param name="layer">Layer.</param>
-		/// <param name="minZoom">Minimum zoom.</param>
-		/// <param name="maxZoom">Max zoom.</param>
-		/// <param name="left">Left.</param>
-		/// <param name="top">Top.</param>
-		/// <param name="right">Right.</param>
-		/// <param name="bottom">Bottom.</param>
-		/// <param name="imageData">Image data.</param>
-        public abstract uint AddImage(int layer, float minZoom, float maxZoom, double left, double top, double right, double bottom,
-                             byte[] imageData, object tag);
-
-		/// <summary>
-		/// Adds the image.
-		/// </summary>
-		/// <returns>The image.</returns>
-		/// <param name="layer">Layer.</param>
-		/// <param name="minZoom">Minimum zoom.</param>
-		/// <param name="maxZoom">Max zoom.</param>
-		/// <param name="rectangle">Rectangle.</param>
-		/// <param name="imageData">Image data.</param>
-		/// <param name="tag">Tag.</param>
-		public abstract uint AddImage (int layer, float minZoom, float maxZoom, RectangleF2D rectangle, byte[] imageData, object tag);
-
-	    /// <summary>
-	    /// Adds texts.
-	    /// </summary>
-	    /// <param name="layer"></param>
-	    /// <param name="maxZoom"></param>
-	    /// <param name="x"></param>
-	    /// <param name="y"></param>
-	    /// <param name="size"></param>
-	    /// <param name="text"></param>
-	    /// <param name="minZoom"></param>
-	    /// <returns></returns>
-        public abstract uint AddText(int layer, float minZoom, float maxZoom, double x, double y, double size, string text, int color,
-            int? haloColor, int? haloRadius, string font);
+        public abstract uint AddPoints(double[] x, double[] y);
 
         /// <summary>
-        /// Adds a text along a line to this scene.
+        /// Adds the given byte array as an image and returns and id.
         /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        public abstract uint AddImage(byte[] data);
+
+        #region Styles
+
+        /// <summary>
+        /// Adds a style to the given point.
+        /// </summary>
+        /// <param name="pointId"></param>
         /// <param name="layer"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="size"></param>
+        public abstract void AddStylePoint(uint pointId, uint layer, float minZoom, float maxZoom, int color, float size);
+
+        /// <summary>
+        /// Adds a style to the given point.
+        /// </summary>
+        /// <param name="pointId"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="size"></param>
+        public virtual void AddStylePoint(uint pointId, float minZoom, float maxZoom, int color, float size)
+		{
+            this.AddStylePoint(0, minZoom, maxZoom, color, size);
+		}
+
+        /// <summary>
+        /// Adds an icon.
+        /// </summary>
+        /// <param name="layer"></param>
+        /// <param name="maxZoom"></param>
         /// <param name="x"></param>
         /// <param name="y"></param>
+        /// <param name="iconImage"></param>
+        /// <param name="minZoom"></param>
+        /// <returns></returns>
+        public abstract void AddIcon(uint pointId, uint layer, float minZoom, float maxZoom, uint imageId);
+
+        /// <summary>
+        /// Adds texts at the given location.
+        /// </summary>
+        /// <param name="pointId"></param>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="size"></param>
+        /// <param name="text"></param>
+        /// <param name="color"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
+        /// <param name="font"></param>
+        /// <returns></returns>
+        public abstract void AddText(uint pointId, uint layer, float minZoom, float maxZoom, float size, string text, int color,
+            int? haloColor, int? haloRadius, string font);
+
+        /// <summary>
+        /// Adds the style properties to the given line with the given id.
+        /// </summary>
+        /// <param name="pointsId"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="width"></param>
+        /// <returns></returns>
+        public virtual void AddStyleLine(uint pointsId, float minZoom, float maxZoom, int color, double width)
+		{
+            this.AddStyleLine(0, minZoom, maxZoom, color, width);
+		}
+
+        /// <summary>
+        /// Adds the style properties to the given line with the given id.
+        /// </summary>
+        /// <param name="pointsId"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="width"></param>
+        /// <param name="lineJoin"></param>
+        /// <param name="dashes"></param>
+        /// <returns></returns>
+        public virtual void AddStyleLine(uint pointsId, float minZoom, float maxZoom, int color, double width, LineJoin lineJoin, int[] dashes)
+		{
+            this.AddStyleLine(0, minZoom, maxZoom, color, width, lineJoin, dashes);
+		}
+
+        /// <summary>
+        /// Adds the style properties to the given line with the given id.
+        /// </summary>
+        /// <param name="pointsId"></param>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="width"></param>
+        /// <returns></returns>
+        public virtual void AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width)
+		{
+            this.AddStyleLine(pointsId, layer, minZoom, maxZoom, color, width, LineJoin.None, null);
+		}
+
+        /// <summary>
+        /// Adds the style properties to the given line with the given id.
+        /// </summary>
+        /// <param name="pointsId"></param>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="width"></param>
+        /// <param name="lineJoin"></param>
+        /// <param name="dashes"></param>
+        /// <returns></returns>
+        public abstract void AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width,
+            LineJoin lineJoin, int[] dashes);
+
+        /// <summary>
+        /// Adds the style properties to the given line with the given id.
+        /// </summary>
+        /// <param name="pointsId"></param>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
         /// <param name="color"></param>
         /// <param name="fontSize"></param>
         /// <param name="text"></param>
-        public abstract uint AddTextLine(int layer, float minZoom, float maxZoom, double[] x, double[] y, int color, float fontSize,
-            string text, int? haloColor, int? haloRadius);
+        /// <param name="font"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
+        /// <returns></returns>
+        public abstract void AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float fontSize,
+            string text, string font, int? haloColor, int? haloRadius);
+
+        /// <summary>
+        /// Adds the given style properties to the polygon with the given id.
+        /// </summary>
+        /// <param name="pointsId"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="width"></param>
+        /// <param name="fill"></param>
+        /// <returns></returns>
+        public virtual void AddStylePolygon(uint pointsId, float minZoom, float maxZoom, int color, float width, bool fill)
+		{
+            this.AddStylePolygon(pointsId, 0, minZoom, maxZoom, color, width, fill);
+		}
+
+        /// <summary>
+        /// Adds the given style properties to the polygon with the given id.
+        /// </summary>
+        /// <param name="pointsId"></param>
+        /// <param name="layer"></param>
+        /// <param name="minZoom"></param>
+        /// <param name="maxZoom"></param>
+        /// <param name="color"></param>
+        /// <param name="width"></param>
+        /// <param name="fill"></param>
+        /// <returns></returns>
+        public abstract void AddStylePolygon(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, bool fill);
+
+        #endregion
         
         /// <summary>
         /// Serializes this scene2D to the given stream.

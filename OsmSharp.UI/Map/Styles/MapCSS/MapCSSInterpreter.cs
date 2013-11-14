@@ -242,8 +242,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     _mapCSSFile.DefaultPoints)
                 { // apply default points style.
                     CompleteNode node = (osmGeo as CompleteNode);
-                    scene.AddPoint(this.CalculateSceneLayer(OffsetPoint, 0), float.MinValue, float.MaxValue, 
-                        projection.LongitudeToX(node.Coordinate.Longitude), projection.LatitudeToY(node.Coordinate.Latitude),
+                    uint pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude), projection.LatitudeToY(node.Coordinate.Latitude));
+                    scene.AddStylePoint(pointId, this.CalculateSceneLayer(OffsetPoint, 0), float.MinValue, float.MaxValue, 
                         SimpleColor.FromKnownColor(KnownColor.Black).Value, 2);
                 }
                 else if (osmGeo.Type == CompleteOsmType.Way &&
@@ -273,8 +273,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             y = simplified[1];
                         }
                     }
-                    scene.AddLine(this.CalculateSceneLayer(OffsetLine, 0), float.MinValue, float.MaxValue, 
-                        x, y, SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, null);
+                    uint points = scene.AddPoints(x, y);
+                    scene.AddStyleLine(points, this.CalculateSceneLayer(OffsetLine, 0), float.MinValue, float.MaxValue, 
+                        SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, null);
                 }
             }
         }
@@ -308,30 +309,35 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 float minZoom = (float)projection.ToZoomFactor(rule.MinZoom);
                 float maxZoom = (float)projection.ToZoomFactor(rule.MaxZoom);
 
+                uint? pointId = null;
                 int color;
                 if (rule.TryGetProperty<int>("color", out color))
                 {
                     float width;
                     if (rule.TryGetProperty<float>("width", out width))
                     {
-                        scene.AddPoint(this.CalculateSceneLayer(OffsetPoint, zIndex), minZoom, maxZoom, projection.LongitudeToX(node.Coordinate.Longitude),
-                                       projection.LatitudeToY(node.Coordinate.Latitude),
-                                       color, width);
+                        pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude),
+                                       projection.LatitudeToY(node.Coordinate.Latitude));
+                        scene.AddStylePoint(pointId.Value, this.CalculateSceneLayer(OffsetPoint, zIndex), minZoom, maxZoom, color, width);
                     }
                     else
                     {
-                        scene.AddPoint(this.CalculateSceneLayer(OffsetPoint, zIndex), minZoom, maxZoom, projection.LongitudeToX(node.Coordinate.Longitude),
-                                       projection.LatitudeToY(node.Coordinate.Latitude),
-                                       color, 1);
+                        pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude),
+                                       projection.LatitudeToY(node.Coordinate.Latitude));
+                        scene.AddStylePoint(pointId.Value, this.CalculateSceneLayer(OffsetPoint, zIndex), minZoom, maxZoom, color, 1);
                     }
                 }
                 byte[] iconImage;
                 if (rule.TryGetProperty("iconImage", out iconImage))
                 {
+                    if (!pointId.HasValue)
+                    {
+                        pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude),
+                                       projection.LatitudeToY(node.Coordinate.Latitude));
+                    }
                     // an icon is to be drawn!
-                    scene.AddIcon(this.CalculateSceneLayer(OffsetPoint, zIndex), minZoom, maxZoom, projection.LongitudeToX(node.Coordinate.Longitude),
-                                  projection.LatitudeToY(node.Coordinate.Latitude),
-                                  iconImage);
+                    uint imageId = scene.AddImage(iconImage);
+                    scene.AddIcon(pointId.Value, this.CalculateSceneLayer(OffsetPoint, zIndex), minZoom, maxZoom, imageId);
                 }
 
                 string text;
@@ -368,8 +374,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                     string value;
                     if (node.Tags.TryGetValue(text, out value))
                     {
-                        scene.AddText(this.CalculateSceneLayer(OffsetPointText, zIndex), minZoom, maxZoom, projection.LongitudeToX(node.Coordinate.Longitude),
-                                      projection.LatitudeToY(node.Coordinate.Latitude), fontSize, value, textColor, 
+                        if (!pointId.HasValue)
+                        {
+                            pointId = scene.AddPoint(projection.LongitudeToX(node.Coordinate.Longitude),
+                                           projection.LatitudeToY(node.Coordinate.Latitude));
+                        }
+                        scene.AddText(pointId.Value, this.CalculateSceneLayer(OffsetPointText, zIndex), minZoom, maxZoom, fontSize, value, textColor, 
 						              haloColorNullable, haloRadiusNullable, fontFamily);
                     }
                 }
@@ -438,10 +448,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         int fillColor;
                         if (rule.TryGetProperty("fillColor", out fillColor))
                         { // render as an area.
-                            scene.AddPolygon(this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, x, y, fillColor, 1, true);
+                            uint pointsId = scene.AddPoints(x, y);
+                            scene.AddStylePolygon(pointsId, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
                             if (rule.TryGetProperty("color", out color))
                             {
-                                scene.AddPolygon(this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, x, y, color, 1, false);
+                                scene.AddStylePolygon(pointsId, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
                             }
                         }
                     }
@@ -474,20 +485,21 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         {
                             width = 1;
                         }
+                        uint pointsId = scene.AddPoints(x, y);
                         if (casingWidth > 0)
                         { // adds the casing
-                            scene.AddLine(this.CalculateSceneLayer(OffsetCasing, zIndex),
-                                minZoom, maxZoom, x, y, casingColor, width + (casingWidth * 2), lineJoin, dashes);
+                            scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetCasing, zIndex),
+                                minZoom, maxZoom, casingColor, width + (casingWidth * 2), lineJoin, dashes);
                         }
                         if (dashes == null)
                         { // dashes not set, use line offset.
-                            scene.AddLine(this.CalculateSceneLayer(OffsetLine, zIndex),
-                                minZoom, maxZoom, x, y, color, width, lineJoin, dashes);
+                            scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLine, zIndex),
+                                minZoom, maxZoom, color, width, lineJoin, dashes);
                         }
                         else
                         { // dashes set, use line pattern offset.
-                            scene.AddLine(this.CalculateSceneLayer(OffsetLinePattern, zIndex),
-                                minZoom, maxZoom, x, y, color, width, lineJoin, dashes);
+                            scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
+                                minZoom, maxZoom, color, width, lineJoin, dashes);
                         }
 
                         int textColor;
@@ -512,11 +524,16 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             {
                                 haloRadiusNullable = haloRadius;
                             }
+                            string fontFamily;
+                            if (!rule.TryGetProperty("fontFamily", out fontFamily))
+                            {
+                                fontFamily = "Arial"; // just some default font.
+                            }
                             string name;
                             if (way.Tags.TryGetValue(nameTag, out name))
                             {
-                                scene.AddTextLine(this.CalculateSceneLayer(OffsetLineText, zIndex),
-                                    minZoom, maxZoom, x, y, textColor, fontSize, name, haloColorNullable, haloRadiusNullable);
+                                scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLineText, zIndex),
+                                    minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
                             }
                         }
                     }
@@ -638,10 +655,11 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             fillColor = SimpleColor.FromArgb((int)(255 * fillOpacity), 
                                 simpleFillColor.R, simpleFillColor.G, simpleFillColor.B).Value;
                         }
-                        scene.AddPolygon(this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, x, y, fillColor, 1, true);
+                        uint pointsId = scene.AddPoints(x, y);
+                        scene.AddStylePolygon(pointsId, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
                         if (rule.TryGetProperty("color", out color))
                         {
-                            scene.AddPolygon(this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, x, y, color, 1, false);
+                            scene.AddStylePolygon(pointsId, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
                         }
                     }
                 }
@@ -654,9 +672,9 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
         /// <param name="majorZIndex">The major parameter.</param>
         /// <param name="zIndex">The minor parameters.</param>
         /// <returns></returns>
-        private int CalculateSceneLayer(float majorZIndex, float zIndex)
+        private uint CalculateSceneLayer(float majorZIndex, float zIndex)
         {
-            return (int)(majorZIndex * 1000000 + zIndex * 1000);
+            return (uint)(majorZIndex * 1000000 + zIndex * 1000);
         }
 
         #region Build Rules

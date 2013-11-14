@@ -59,8 +59,8 @@ namespace OsmSharp.UI.Map.Layers
             zoomLevelCutoffs.Add((float)projection.ToZoomFactor(0));
 
             _dataSource = dataSource;
-            _styleSceneManager = new StyleSceneManager(styleInterpreter, zoomLevelCutoffs, projection);
-            //_styleSceneManager = new StyleSceneManager(styleInterpreter);
+            //_styleSceneManager = new StyleSceneManager(styleInterpreter, zoomLevelCutoffs, projection);
+            _styleSceneManager = new StyleSceneManager(styleInterpreter);
         }
 
         /// <summary>
