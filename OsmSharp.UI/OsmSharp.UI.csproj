@@ -135,9 +135,6 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSLexer.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParser.cs" />
     <Compile Include="Renderer\Scene\IScene2DPrimitivesSource.cs" />
-    <Compile Include="Renderer\Scene\Scene2DLayered.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Renderer\Scene\Scene2DReadonly.cs" />
     <Compile Include="Renderer\Scene\Scene2DPrimitive.cs" />
     <Compile Include="Renderer\Scene\Scene2DPrimitiveEnumerable.cs" />
@@ -145,6 +142,10 @@
     <Compile Include="Renderer\Scene\Scene2DPrimitives\Image2D.cs" />
     <Compile Include="Renderer\Scene\Scene2DPrimitives\LineText2D.cs" />
     <Compile Include="Renderer\Scene\Scene2DPrimitives\Text2D.cs" />
+    <Compile Include="Renderer\Scene\Storage\Scene2DEntry.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DRTreeSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledIndex.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledSerializer.cs" />
     <Compile Include="Renderer\Target2DWrapper.cs" />
     <Compile Include="Renderer\View2D.cs" />
     <Compile Include="Renderer\Scene\Scene2DSimple.cs" />
