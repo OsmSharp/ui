@@ -52,6 +52,13 @@ namespace OsmSharp.UI.Renderer.Scene
         public abstract bool IsReadOnly { get; }
 
         /// <summary>
+        /// Returns the primitive with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public abstract List<IScene2DPrimitive> Get(uint id);
+
+        /// <summary>
         /// Gets all objects in this scene for the specified view sorted according to layer number.
         /// </summary>
         /// <param name="view">View.</param>

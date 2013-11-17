@@ -38,14 +38,15 @@ namespace OsmSharp.WinForms.UI.Sample
             // initialize a test-scene.
             var scene2D = new Scene2DSimple();
             scene2D.BackColor = Color.White.ToArgb();
-            scene2D.AddPoint(float.MinValue, float.MaxValue, 0, 0, Color.Blue.ToArgb(), 1);
+            uint pointId = scene2D.AddPoint(0, 0);
+            scene2D.AddStylePoint(pointId, float.MinValue, float.MaxValue, Color.Blue.ToArgb(), 1);
 
             bool fill = false;
             int color = Color.White.ToArgb();
             int width = 1;
 
-            scene2D.AddPolygon(float.MinValue, float.MaxValue, 
-                new double[] { 50, -80, 70 }, new double[] { 20, -10, -70 }, color, width, fill);
+            uint pointsId = scene2D.AddPoints(new double[] { 50, -80, 70 }, new double[] { 20, -10, -70 });
+            scene2D.AddStylePolygon(pointsId, float.MinValue, float.MaxValue, color, width, fill);
 
             // load test osm file.
             Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(
@@ -65,9 +66,8 @@ namespace OsmSharp.WinForms.UI.Sample
                         simplenode.Latitude.Value, simplenode.Longitude.Value);
                     nodes.Add(simplenode.Id.Value, 
                         new GeoCoordinate(simplenode.Latitude.Value, simplenode.Longitude.Value));
-                    scene2D.AddPoint(float.MinValue, float.MaxValue, (float)point[0], (float)point[1],
-                                     Color.Yellow.ToArgb(),
-                                     2);
+                    pointId = scene2D.AddPoint(point[0], point[1]);
+                    scene2D.AddStylePoint(pointId, float.MinValue, float.MaxValue, Color.Yellow.ToArgb(), 2);
                 }
                 else if (simpleOsmGeo is Way)
                 {
@@ -89,8 +89,8 @@ namespace OsmSharp.WinForms.UI.Sample
 
                     if (x.Count > 0)
                     {
-                        scene2D.AddLine(float.MinValue, float.MaxValue, x.ToArray(), y.ToArray(),
-                            Color.Blue.ToArgb(), 2);
+                        pointsId = scene2D.AddPoints(x.ToArray(), y.ToArray());
+                        scene2D.AddStyleLine(pointsId, float.MinValue, float.MaxValue, Color.Blue.ToArgb(), 2);
                     }
                 }
             }

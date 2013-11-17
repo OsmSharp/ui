@@ -127,8 +127,20 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="..\OsmSharpTestFiles\kempen.osm.pbf">
+      <Link>kempen.osm.pbf</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\OsmSharpTestFiles\mapcss\complete.mapcss">
+      <Link>complete.mapcss</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\OsmSharpTestFiles\map\kempen-big.osm.pbf.scene.layered">
       <Link>kempen-big.osm.pbf.scene.layered</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\OsmSharpTestFiles\routing\kempen-big.osm.pbf.routing">
+      <Link>kempen-big.osm.pbf.routing</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="app.config" />

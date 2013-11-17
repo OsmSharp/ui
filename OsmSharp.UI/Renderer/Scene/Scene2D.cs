@@ -73,7 +73,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="maxZoom"></param>
         /// <param name="color"></param>
         /// <param name="size"></param>
-        public abstract void AddStylePoint(uint pointId, uint layer, float minZoom, float maxZoom, int color, float size);
+        public abstract uint AddStylePoint(uint pointId, uint layer, float minZoom, float maxZoom, int color, float size);
 
         /// <summary>
         /// Adds a style to the given point.
@@ -83,9 +83,9 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="maxZoom"></param>
         /// <param name="color"></param>
         /// <param name="size"></param>
-        public virtual void AddStylePoint(uint pointId, float minZoom, float maxZoom, int color, float size)
+        public virtual uint AddStylePoint(uint pointId, float minZoom, float maxZoom, int color, float size)
 		{
-            this.AddStylePoint(0, minZoom, maxZoom, color, size);
+            return this.AddStylePoint(0, minZoom, maxZoom, color, size);
 		}
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="iconImage"></param>
         /// <param name="minZoom"></param>
         /// <returns></returns>
-        public abstract void AddIcon(uint pointId, uint layer, float minZoom, float maxZoom, uint imageId);
+        public abstract uint AddIcon(uint pointId, uint layer, float minZoom, float maxZoom, uint imageId);
 
         /// <summary>
         /// Adds texts at the given location.
@@ -114,7 +114,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="haloRadius"></param>
         /// <param name="font"></param>
         /// <returns></returns>
-        public abstract void AddText(uint pointId, uint layer, float minZoom, float maxZoom, float size, string text, int color,
+        public abstract uint AddText(uint pointId, uint layer, float minZoom, float maxZoom, float size, string text, int color,
             int? haloColor, int? haloRadius, string font);
 
         /// <summary>
@@ -126,9 +126,9 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <returns></returns>
-        public virtual void AddStyleLine(uint pointsId, float minZoom, float maxZoom, int color, double width)
+        public virtual uint AddStyleLine(uint pointsId, float minZoom, float maxZoom, int color, double width)
 		{
-            this.AddStyleLine(0, minZoom, maxZoom, color, width);
+            return this.AddStyleLine(0, minZoom, maxZoom, color, width);
 		}
 
         /// <summary>
@@ -142,9 +142,9 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="lineJoin"></param>
         /// <param name="dashes"></param>
         /// <returns></returns>
-        public virtual void AddStyleLine(uint pointsId, float minZoom, float maxZoom, int color, double width, LineJoin lineJoin, int[] dashes)
+        public virtual uint AddStyleLine(uint pointsId, float minZoom, float maxZoom, int color, double width, LineJoin lineJoin, int[] dashes)
 		{
-            this.AddStyleLine(0, minZoom, maxZoom, color, width, lineJoin, dashes);
+            return this.AddStyleLine(0, minZoom, maxZoom, color, width, lineJoin, dashes);
 		}
 
         /// <summary>
@@ -157,9 +157,9 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <returns></returns>
-        public virtual void AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width)
+        public virtual uint AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width)
 		{
-            this.AddStyleLine(pointsId, layer, minZoom, maxZoom, color, width, LineJoin.None, null);
+            return this.AddStyleLine(pointsId, layer, minZoom, maxZoom, color, width, LineJoin.None, null);
 		}
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="lineJoin"></param>
         /// <param name="dashes"></param>
         /// <returns></returns>
-        public abstract void AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width,
+        public abstract uint AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width,
             LineJoin lineJoin, int[] dashes);
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="haloColor"></param>
         /// <param name="haloRadius"></param>
         /// <returns></returns>
-        public abstract void AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float fontSize,
+        public abstract uint AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float fontSize,
             string text, string font, int? haloColor, int? haloRadius);
 
         /// <summary>
@@ -204,9 +204,9 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="width"></param>
         /// <param name="fill"></param>
         /// <returns></returns>
-        public virtual void AddStylePolygon(uint pointsId, float minZoom, float maxZoom, int color, float width, bool fill)
+        public virtual uint AddStylePolygon(uint pointsId, float minZoom, float maxZoom, int color, float width, bool fill)
 		{
-            this.AddStylePolygon(pointsId, 0, minZoom, maxZoom, color, width, fill);
+            return this.AddStylePolygon(pointsId, 0, minZoom, maxZoom, color, width, fill);
 		}
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="width"></param>
         /// <param name="fill"></param>
         /// <returns></returns>
-        public abstract void AddStylePolygon(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, bool fill);
+        public abstract uint AddStylePolygon(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, bool fill);
 
         #endregion
         

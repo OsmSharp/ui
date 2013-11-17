@@ -314,6 +314,44 @@ namespace OsmSharp.UI.Renderer
 			return false;
 		}
 
+        /// <summary>
+        /// Returns true if an object with the given coordinates is visible with this view.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="closed"></param>
+        /// <returns></returns>
+        public bool IsVisible(double[] x, double[] y, bool closed)
+        {
+            double MinX = double.MaxValue;
+            double MaxX = double.MinValue;
+            for (int idx = 0; idx < x.Length; idx++)
+            {
+                if (x[idx] > MaxX)
+                {
+                    MaxX = x[idx];
+                }
+                if (x[idx] < MinX)
+                {
+                    MinX = x[idx];
+                }
+            }
+            double MinY = double.MaxValue;
+            double MaxY = double.MinValue;
+            for (int idx = 0; idx < y.Length; idx++)
+            {
+                if (y[idx] > MaxY)
+                {
+                    MaxY = y[idx];
+                }
+                if (y[idx] < MinY)
+                {
+                    MinY = y[idx];
+                }
+            }
+            return this.OverlapsWithBox(MinX, MinY, MaxX, MaxY);
+        }
+
 		/// <summary>
 		/// Returns true if the given rectangle overlaps with this view.
 		/// </summary>

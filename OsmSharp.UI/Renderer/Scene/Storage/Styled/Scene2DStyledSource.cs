@@ -58,7 +58,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
 
             foreach (var scene2DEntry in entries)
             {
-                scene.AddPrimitive(scene2DEntry.Layer, scene2DEntry.Id, scene2DEntry.Scene2DPrimitive);
+                //scene.AddPrimitive(scene2DEntry.Layer, scene2DEntry.Id, scene2DEntry.Scene2DPrimitive);
             }
         }
 

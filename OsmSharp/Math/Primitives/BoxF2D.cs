@@ -58,6 +58,16 @@ namespace OsmSharp.Math.Primitives
         /// Creates a new box.
         /// </summary>
         /// <param name="a"></param>
+        public BoxF2D(PointF2D a)
+            : this(new PointF2D[] { a })
+        {
+
+        }
+
+        /// <summary>
+        /// Creates a new box.
+        /// </summary>
+        /// <param name="a"></param>
         /// <param name="b"></param>
 		public BoxF2D(PointF2D a, PointF2D b)
             :this(new PointF2D[] { a, b })

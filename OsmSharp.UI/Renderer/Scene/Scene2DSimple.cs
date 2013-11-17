@@ -19,12 +19,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
+using OsmSharp.Collections;
 using OsmSharp.Collections.SpatialIndexes;
+using OsmSharp.Collections.SpatialIndexes.Serialization.v2;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
-using OsmSharp.Collections;
+using ProtoBuf;
+using ProtoBuf.Meta;
 
 namespace OsmSharp.UI.Renderer.Scene
 {
@@ -69,34 +70,9 @@ namespace OsmSharp.UI.Renderer.Scene
         private ObjectTable<StylePolygon> _polygonStyles;
 
         /// <summary>
-        /// Holds the points.
+        /// Holds the scene objects per layer.
         /// </summary>
-        private List<SceneObject> _points;
-
-        /// <summary>
-        /// Holds the icons.
-        /// </summary>
-        private List<SceneObject> _icons;
-
-        /// <summary>
-        /// Holds the text objects.
-        /// </summary>
-        private List<TextObject> _texts;
-
-        /// <summary>
-        /// Holds the line text objects.
-        /// </summary>
-        private List<TextObject> _lineTexts;
-
-        /// <summary>
-        /// Holds the line objects.
-        /// </summary>
-        private List<SceneObject> _lines;
-
-        /// <summary>
-        /// Holds the polygon objects.
-        /// </summary>
-        private List<SceneObject> _polygons;
+        private List<SceneObject> _sceneObjects;
 
         /// <summary>
         /// Holds the index of points.
@@ -130,12 +106,7 @@ namespace OsmSharp.UI.Renderer.Scene
             _pointsIndex = new List<KeyValuePair<double[], double[]>>();
 
             // scene objects.
-            _points = new List<SceneObject>();
-            _icons = new List<SceneObject>();
-            _texts = new List<TextObject>();
-            _lineTexts = new List<TextObject>();
-            _lines = new List<SceneObject>();
-            _polygons = new List<SceneObject>();
+            _sceneObjects = new List<SceneObject>();
 
             // lines/polygons.
             _imageIndex = new List<byte[]>();
@@ -186,6 +157,40 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="compress"></param>
         public override void Serialize(Stream stream, bool compress)
         {
+            // index into r-tree.
+            RTreeMemoryIndex<int> memoryIndex = new RTreeMemoryIndex<int>();
+            for(int id = 0; id < _sceneObjects.Count; id++)
+            { // loop over all primitives in order.
+                SceneObject sceneObject = _sceneObjects[id];
+                switch (sceneObject.Enum)
+                {
+                    case SceneObjectType.IconObject:
+                    case SceneObjectType.PointObject:
+                    case SceneObjectType.TextObject:
+                        KeyValuePair<double, double> geo = _pointIndex[(int)sceneObject.GeoId];
+                        PointF2D point = new PointF2D(geo.Key, geo.Value);
+                        memoryIndex.Add(new BoxF2D(point), id);
+                        break;
+                    case SceneObjectType.LineObject:
+                    case SceneObjectType.LineTextObject:
+                    case SceneObjectType.PolygonObject:
+                        KeyValuePair<double[], double[]> geos = _pointsIndex[(int)sceneObject.GeoId];
+                        memoryIndex.Add(new BoxF2D(geos.Key, geos.Value), id);
+                        break;
+                }
+            }
+
+
+        }
+
+        /// <summary>
+        /// Deserializes the given stream into scene.
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <param name="compressed"></param>
+        /// <returns></returns>
+        public static IScene2DPrimitivesSource Deserialize(Stream stream, bool compressed)
+        {
             throw new NotImplementedException();
         }
 
@@ -211,12 +216,7 @@ namespace OsmSharp.UI.Renderer.Scene
             _pointsIndex.Clear();
 
             // scene objects.
-            _points.Clear();
-            _icons.Clear();
-            _texts.Clear();
-            _lineTexts.Clear();
-            _lines.Clear();
-            _polygons.Clear();
+            _sceneObjects.Clear();
 
             // lines/polygons.
             _imageIndex.Clear();
@@ -229,13 +229,56 @@ namespace OsmSharp.UI.Renderer.Scene
         {
             get
             {
-                return _points.Count +
-                _icons.Count +
-                _texts.Count +
-                _lineTexts.Count +
-                _lines.Count +
-                _polygons.Count;
+                return _sceneObjects.Count;
             }
+        }
+
+        /// <summary>
+        /// Returns the object with the given id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public override List<IScene2DPrimitive> Get(uint id)
+        {
+            List<IScene2DPrimitive> primitives = new List<IScene2DPrimitive>(); 
+            SceneObject sceneObject = _sceneObjects[(int)id];
+
+            KeyValuePair<double, double> point;
+            KeyValuePair<double[], double[]> points;
+            switch (sceneObject.Enum)
+            {
+                case SceneObjectType.IconObject:
+                    IconObject icon = sceneObject as IconObject;
+                    point = _pointIndex[(int)icon.GeoId];
+                    primitives.Add(this.ConvertToPrimitive((uint)id, icon).Primitive);
+                    break;
+                case SceneObjectType.LineObject:
+                    LineObject line = sceneObject as LineObject;
+                    points = _pointsIndex[(int)line.GeoId];
+                    primitives.Add(this.ConvertToPrimitive((uint)id, line).Primitive);
+                    break;
+                case SceneObjectType.LineTextObject:
+                    LineTextObject lineText = sceneObject as LineTextObject;
+                    points = _pointsIndex[(int)lineText.GeoId];
+                    primitives.Add(this.ConvertToPrimitive((uint)id, lineText).Primitive);
+                    break;
+                case SceneObjectType.PointObject:
+                    PointObject pointObject = sceneObject as PointObject;
+                    point = _pointIndex[(int)pointObject.GeoId];
+                    primitives.Add(this.ConvertToPrimitive((uint)id, pointObject).Primitive);
+                    break;
+                case SceneObjectType.PolygonObject:
+                    PolygonObject polygonObject = sceneObject as PolygonObject;
+                    points = _pointsIndex[(int)polygonObject.GeoId];
+                    primitives.Add(this.ConvertToPrimitive((uint)id, polygonObject).Primitive);
+                    break;
+                case SceneObjectType.TextObject:
+                    TextObject textObject = sceneObject as TextObject;
+                    point = _pointIndex[(int)textObject.GeoId];
+                    primitives.Add(this.ConvertToPrimitive((uint)id, textObject).Primitive);
+                    break;
+            }
+            return primitives;
         }
 
         /// <summary>
@@ -246,7 +289,110 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <returns></returns>
         public override IEnumerable<Scene2DPrimitive> Get(View2D view, float zoom)
         {
-            throw new NotImplementedException();
+            SortedSet<Scene2DPrimitive> primitives = new SortedSet<Scene2DPrimitive>(
+                LayerComparer.GetInstance());
+
+            for(int id = 0; id < _sceneObjects.Count; id++)
+            { // loop over all primitives in order.
+                SceneObject sceneObject = _sceneObjects[id];
+
+                KeyValuePair<double, double> point;
+                KeyValuePair<double[], double[]> points;
+                switch (sceneObject.Enum)
+                {
+                    case SceneObjectType.IconObject:
+                        IconObject icon = sceneObject as IconObject;
+                        if (_zoomRanges.Get(icon.ZoomRangeId).Contains(zoom))
+                        {
+                            point = _pointIndex[(int)icon.GeoId];
+                            if (view.Contains(point.Key, point.Value))
+                            {
+                                primitives.Add(this.ConvertToPrimitive((uint)id, icon));
+                            }
+                        }
+                        break;
+                    case SceneObjectType.LineObject:
+                        LineObject line = sceneObject as LineObject;
+                        points = _pointsIndex[(int)line.GeoId];
+                        if (_zoomRanges.Get(line.ZoomRangeId).Contains(zoom))
+                        {
+                            if (view.IsVisible(points.Key, points.Value, false))
+                            {
+                                primitives.Add(this.ConvertToPrimitive((uint)id, line));
+                            }
+                        }
+                        break;
+                    case SceneObjectType.LineTextObject:
+                        LineTextObject lineText = sceneObject as LineTextObject;
+                        points = _pointsIndex[(int)lineText.GeoId];
+                        if (_zoomRanges.Get(lineText.ZoomRangeId).Contains(zoom))
+                        {
+                            if (view.IsVisible(points.Key, points.Value, false))
+                            {
+                                primitives.Add(this.ConvertToPrimitive((uint)id, lineText));
+                            }
+                        }
+                        break;
+                    case SceneObjectType.PointObject:
+                        PointObject pointObject = sceneObject as PointObject;
+                        point = _pointIndex[(int)pointObject.GeoId];
+                        if (_zoomRanges.Get(pointObject.ZoomRangeId).Contains(zoom))
+                        {
+                            if (view.Contains(point.Key, point.Value))
+                            {
+                                primitives.Add(this.ConvertToPrimitive((uint)id, pointObject));
+                            }
+                        }
+                        break;
+                    case SceneObjectType.PolygonObject:
+                        PolygonObject polygonObject = sceneObject as PolygonObject;
+                        points = _pointsIndex[(int)polygonObject.GeoId];
+                        if (_zoomRanges.Get(polygonObject.ZoomRangeId).Contains(zoom))
+                        {
+                            if (view.IsVisible(points.Key, points.Value, false))
+                            {
+                                primitives.Add(this.ConvertToPrimitive((uint)id, polygonObject));
+                            }
+                        }
+                        break;
+                    case SceneObjectType.TextObject:
+                        TextObject textObject = sceneObject as TextObject;
+                        point = _pointIndex[(int)textObject.GeoId];
+                        if (_zoomRanges.Get(textObject.ZoomRangeId).Contains(zoom))
+                        {
+                            if (view.Contains(point.Key, point.Value))
+                            {
+                                primitives.Add(this.ConvertToPrimitive((uint)id, textObject));
+                            }
+                        }
+                        break;
+                }
+            }
+
+            return primitives;
+        }
+
+        private class LayerComparer : IComparer<Scene2DPrimitive>
+        {
+            private static LayerComparer _instance = null;
+
+            public static LayerComparer GetInstance()
+            {
+                if (_instance == null)
+                {
+                    _instance = new LayerComparer();
+                }
+                return _instance;
+            }
+
+            public int Compare(Scene2DPrimitive x, Scene2DPrimitive y)
+            {
+                if (x.Layer == y.Layer)
+                { // objects with same layer, assume different.
+                    return -1;
+                }
+                return x.Layer.CompareTo(y.Layer);
+            }
         }
 
         #region Styles
@@ -260,7 +406,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="maxZoom"></param>
         /// <param name="color"></param>
         /// <param name="size"></param>
-        public override void AddStylePoint(uint pointId, uint layer, float minZoom, float maxZoom, int color, float size)
+        public override uint AddStylePoint(uint pointId, uint layer, float minZoom, float maxZoom, int color, float size)
         {
             // build the zoom range.
             ZoomRanges zoomRange = new ZoomRanges()
@@ -279,7 +425,38 @@ namespace OsmSharp.UI.Renderer.Scene
             uint styleId = _pointStyles.Add(style);
 
             // add the scene object.
-            _points.Add(new SceneObject() { StyleId = styleId, Layer = layer, GeoId = pointId, ZoomRangeId = zoomRangeId });
+            uint id = (uint)_sceneObjects.Count;
+            _sceneObjects.Add(new PointObject() { StyleId = styleId, Layer = layer, GeoId = pointId, ZoomRangeId = zoomRangeId });
+            return id;
+        }
+
+        /// <summary>
+        /// Converts the given object to a Scene2DPrimitive.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sceneObject"></param>
+        /// <returns></returns>
+        private Scene2DPrimitive ConvertToPrimitive(uint id, PointObject sceneObject)
+        {
+            Point2D point = new Point2D();
+            point.Id = id;
+
+            // convert zoom range.
+            ZoomRanges zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
+            point.MaxZoom = zoomRange.MaxZoom;
+            point.MinZoom = zoomRange.MinZoom;
+
+            // convert style.
+            StylePoint style = _pointStyles.Get(sceneObject.StyleId);
+            point.Color = style.Color;
+            point.Size = style.Size;
+
+            // get the geo.
+            KeyValuePair<double, double> geo = _pointIndex[(int)sceneObject.GeoId];
+            point.X = geo.Key;
+            point.Y = geo.Value;
+
+            return new Scene2DPrimitive() { Layer = (int)sceneObject.Layer, Primitive = point };
         }
 
         /// <summary>
@@ -291,7 +468,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="maxZoom"></param>
         /// <param name="imageId"></param>
         /// <returns></returns>
-        public override void AddIcon(uint pointId, uint layer, float minZoom, float maxZoom, uint imageId)
+        public override uint AddIcon(uint pointId, uint layer, float minZoom, float maxZoom, uint imageId)
         {
             // build the zoom range.
             ZoomRanges zoomRange = new ZoomRanges()
@@ -302,7 +479,37 @@ namespace OsmSharp.UI.Renderer.Scene
             uint zoomRangeId = _zoomRanges.Add(zoomRange);
 
             // add the scene object.
-            _icons.Add(new SceneObject() { StyleId = imageId, Layer = layer, GeoId = pointId, ZoomRangeId = zoomRangeId });
+            uint id = (uint)_sceneObjects.Count;
+            _sceneObjects.Add(new IconObject() { StyleId = imageId, Layer = layer, GeoId = pointId, ZoomRangeId = zoomRangeId });
+            return id;
+        }
+
+        /// <summary>
+        /// Converts the given object to a Scene2DPrimitive.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sceneObject"></param>
+        /// <returns></returns>
+        private Scene2DPrimitive ConvertToPrimitive(uint id, IconObject sceneObject)
+        {
+            Icon2D primitive = new Icon2D();
+            primitive.Id = id;
+
+            // convert zoom range.
+            ZoomRanges zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
+            primitive.MaxZoom = zoomRange.MaxZoom;
+            primitive.MinZoom = zoomRange.MinZoom;
+
+            // convert image.
+            byte[] style = _imageIndex[(int)sceneObject.StyleId];
+            primitive.Image = style;
+
+            // get the geo.
+            KeyValuePair<double, double> geo = _pointIndex[(int)sceneObject.GeoId];
+            primitive.X = geo.Key;
+            primitive.Y = geo.Value;
+
+            return new Scene2DPrimitive() { Layer = (int)sceneObject.Layer, Primitive = primitive };
         }
 
         /// <summary>
@@ -319,7 +526,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="haloRadius"></param>
         /// <param name="font"></param>
         /// <returns></returns>
-        public override void AddText(uint pointId, uint layer, float minZoom, float maxZoom, float size, string text, int color, 
+        public override uint AddText(uint pointId, uint layer, float minZoom, float maxZoom, float size, string text, int color, 
             int? haloColor, int? haloRadius, string font)
         {
             // add to stringtable.
@@ -345,7 +552,44 @@ namespace OsmSharp.UI.Renderer.Scene
             uint styleId = _textStyles.Add(style);
 
             // add the scene object.
-            _texts.Add(new TextObject() { StyleId = styleId, Layer = layer, GeoId = pointId, ZoomRangeId = zoomRangeId, TextId = textId });
+            uint id = (uint)_sceneObjects.Count;
+            _sceneObjects.Add(new TextObject() { StyleId = styleId, Layer = layer, GeoId = pointId, ZoomRangeId = zoomRangeId, TextId = textId });
+            return id;
+        }
+
+        /// <summary>
+        /// Converts the given object to a Scene2DPrimitive.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sceneObject"></param>
+        /// <returns></returns>
+        private Scene2DPrimitive ConvertToPrimitive(uint id, TextObject sceneObject)
+        {
+            Text2D primitive = new Text2D();
+            primitive.Id = id;
+
+            // convert zoom range.
+            ZoomRanges zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
+            primitive.MaxZoom = zoomRange.MaxZoom;
+            primitive.MinZoom = zoomRange.MinZoom;
+
+            // convert image.
+            StyleText style = _textStyles.Get(sceneObject.StyleId);
+            primitive.Color = style.Color;
+            primitive.Font = style.Font;
+            primitive.HaloColor = style.HaloColor;
+            primitive.HaloRadius = style.HaloRadius;
+            primitive.Size = style.Size;
+
+            // get the text.
+            primitive.Text = _stringTable.Get(sceneObject.TextId);
+
+            // get the geo.
+            KeyValuePair<double, double> geo = _pointIndex[(int)sceneObject.GeoId];
+            primitive.X = geo.Key;
+            primitive.Y = geo.Value;
+
+            return new Scene2DPrimitive() { Layer = (int)sceneObject.Layer, Primitive = primitive };
         }
 
         /// <summary>
@@ -359,7 +603,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="width"></param>
         /// <param name="lineJoin"></param>
         /// <param name="dashes"></param>
-        public override void AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, LineJoin lineJoin, int[] dashes)
+        public override uint AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, LineJoin lineJoin, int[] dashes)
         {
             // build the zoom range.
             ZoomRanges zoomRange = new ZoomRanges()
@@ -380,7 +624,40 @@ namespace OsmSharp.UI.Renderer.Scene
             uint styleId = _lineStyles.Add(style);
 
             // add the scene object.
-            _lines.Add(new SceneObject() { StyleId = styleId, Layer = layer, GeoId = pointsId, ZoomRangeId = zoomRangeId });
+            uint id = (uint)_sceneObjects.Count;
+            _sceneObjects.Add(new LineObject() { StyleId = styleId, Layer = layer, GeoId = pointsId, ZoomRangeId = zoomRangeId });
+            return id;
+        }
+
+        /// <summary>
+        /// Converts the given object to a Scene2DPrimitive.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sceneObject"></param>
+        /// <returns></returns>
+        private Scene2DPrimitive ConvertToPrimitive(uint id, LineObject sceneObject)
+        {
+            Line2D primitive = new Line2D();
+            primitive.Id = id;
+
+            // convert zoom range.
+            ZoomRanges zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
+            primitive.MaxZoom = zoomRange.MaxZoom;
+            primitive.MinZoom = zoomRange.MinZoom;
+
+            // convert image.
+            StyleLine style = _lineStyles.Get(sceneObject.StyleId);
+            primitive.Color = style.Color;
+            primitive.LineJoin = style.LineJoin;
+            primitive.Width = style.Width;
+            primitive.Dashes = style.Dashes;
+
+            // get the geo.
+            KeyValuePair<double[], double[]> geo = _pointsIndex[(int)sceneObject.GeoId];
+            primitive.X = geo.Key;
+            primitive.Y = geo.Value;
+
+            return new Scene2DPrimitive() { Layer = (int)sceneObject.Layer, Primitive = primitive };
         }
 
         /// <summary>
@@ -396,7 +673,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="font"></param>
         /// <param name="haloColor"></param>
         /// <param name="haloRadius"></param>
-        public override void AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float size, string text, string font,
+        public override uint AddStyleLine(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float size, string text, string font,
             int? haloColor, int? haloRadius)
         {
             // add to stringtable.
@@ -422,7 +699,44 @@ namespace OsmSharp.UI.Renderer.Scene
             uint styleId = _textStyles.Add(style);
 
             // add the scene object.
-            _texts.Add(new TextObject() { StyleId = styleId, Layer = layer, GeoId = pointsId, ZoomRangeId = zoomRangeId, TextId = textId });
+            uint id = (uint)_sceneObjects.Count;
+            _sceneObjects.Add(new LineTextObject() { StyleId = styleId, Layer = layer, GeoId = pointsId, ZoomRangeId = zoomRangeId, TextId = textId });
+            return id;
+        }
+
+        /// <summary>
+        /// Converts the given object to a Scene2DPrimitive.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sceneObject"></param>
+        /// <returns></returns>
+        private Scene2DPrimitive ConvertToPrimitive(uint id, LineTextObject sceneObject)
+        {
+            LineText2D primitive = new LineText2D();
+            primitive.Id = id;
+
+            // convert zoom range.
+            ZoomRanges zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
+            primitive.MaxZoom = zoomRange.MaxZoom;
+            primitive.MinZoom = zoomRange.MinZoom;
+
+            // convert image.
+            StyleText style = _textStyles.Get(sceneObject.StyleId);
+            primitive.Color = style.Color;
+            primitive.Font = style.Font;
+            primitive.HaloColor = style.HaloColor;
+            primitive.HaloRadius = style.HaloRadius;
+            primitive.Size = style.Size;
+
+            // get the text.
+            primitive.Text = _stringTable.Get(sceneObject.TextId);
+
+            // get the geo.
+            KeyValuePair<double[], double[]> geo = _pointsIndex[(int)sceneObject.GeoId];
+            primitive.X = geo.Key;
+            primitive.Y = geo.Value;
+
+            return new Scene2DPrimitive() { Layer = (int)sceneObject.Layer, Primitive = primitive };
         }
 
         /// <summary>
@@ -435,7 +749,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="color"></param>
         /// <param name="width"></param>
         /// <param name="fill"></param>
-        public override void AddStylePolygon(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, bool fill)
+        public override uint AddStylePolygon(uint pointsId, uint layer, float minZoom, float maxZoom, int color, float width, bool fill)
         {
             // build the zoom range.
             ZoomRanges zoomRange = new ZoomRanges()
@@ -455,13 +769,59 @@ namespace OsmSharp.UI.Renderer.Scene
             uint styleId = _polygonStyles.Add(style);
 
             // add the scene object.
-            _polygons.Add(new SceneObject() { StyleId = styleId, Layer = layer, GeoId = pointsId, ZoomRangeId = zoomRangeId });
+            uint id = (uint)_sceneObjects.Count;
+            _sceneObjects.Add(new PolygonObject() { StyleId = styleId, Layer = layer, GeoId = pointsId, ZoomRangeId = zoomRangeId });
+            return id;
+        }
+
+        /// <summary>
+        /// Converts the given object to a Scene2DPrimitive.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="sceneObject"></param>
+        /// <returns></returns>
+        private Scene2DPrimitive ConvertToPrimitive(uint id, PolygonObject sceneObject)
+        {
+            Polygon2D primitive = new Polygon2D();
+            primitive.Id = id;
+
+            // convert zoom range.
+            ZoomRanges zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
+            primitive.MaxZoom = zoomRange.MaxZoom;
+            primitive.MinZoom = zoomRange.MinZoom;
+
+            // convert image.
+            StylePolygon style = _polygonStyles.Get(sceneObject.StyleId);
+            primitive.Color = style.Color;
+            primitive.Fill = style.Fill;
+            primitive.Width = style.Width;
+
+            // get the geo.
+            KeyValuePair<double[], double[]> geo = _pointsIndex[(int)sceneObject.GeoId];
+            primitive.X = geo.Key;
+            primitive.Y = geo.Value;
+
+            return new Scene2DPrimitive() { Layer = (int)sceneObject.Layer, Primitive = primitive };
         }
 
         #endregion
 
-        private struct SceneObject
+        #region Helper Objects
+
+        private enum SceneObjectType
         {
+            TextObject,
+            PolygonObject,
+            LineObject,
+            LineTextObject,
+            PointObject,
+            IconObject
+        }
+
+        private abstract class SceneObject
+        {
+            public SceneObjectType Enum { get; protected set; }
+
             public uint Layer { get; set; }
 
             public uint GeoId { get; set; }
@@ -471,17 +831,56 @@ namespace OsmSharp.UI.Renderer.Scene
             public uint ZoomRangeId { get; set; }
         }
 
-        private struct TextObject
+        private class TextObject : SceneObject
         {
-            public uint Layer { get; set; }
-
-            public uint GeoId { get; set; }
-
-            public uint StyleId { get; set; }
-
-            public uint ZoomRangeId { get; set; }
+            public TextObject()
+            {
+                this.Enum = SceneObjectType.TextObject;
+            }
 
             public uint TextId { get; set; }
+        }
+
+        private class PolygonObject : SceneObject
+        {
+            public PolygonObject()
+            {
+                this.Enum = SceneObjectType.PolygonObject;
+            }
+        }
+
+        private class LineObject : SceneObject
+        {
+            public LineObject()
+            {
+                this.Enum = SceneObjectType.LineObject;
+            }
+        }
+
+        private class LineTextObject : SceneObject
+        {
+            public LineTextObject()
+            {
+                this.Enum = SceneObjectType.LineTextObject;
+            }
+
+            public uint TextId { get; set; }
+        }
+
+        private class PointObject : SceneObject
+        {
+            public PointObject()
+            {
+                this.Enum = SceneObjectType.PointObject;
+            }
+        }
+
+        private class IconObject : SceneObject
+        {
+            public IconObject()
+            {
+                this.Enum = SceneObjectType.IconObject;
+            }
         }
         
         private class ZoomRanges
@@ -504,6 +903,15 @@ namespace OsmSharp.UI.Renderer.Scene
                         (obj as ZoomRanges).MinZoom == this.MinZoom;
                 }
                 return false;
+            }
+
+            internal bool Contains(float zoom)
+            {
+                if (this.MinZoom > zoom || this.MaxZoom < zoom)
+                { // outside of zoom bounds!
+                    return false;
+                }
+                return true;
             }
         }
         
@@ -657,6 +1065,280 @@ namespace OsmSharp.UI.Renderer.Scene
                 }
                 return false;
             }
+        }
+
+        #endregion
+
+        private class RTreeSerializer : RTreeStreamSerializer<int>
+        {
+            private Scene2DSimple _scene;
+
+            protected override void BuildRuntimeTypeModel(RuntimeTypeModel typeModel)
+            {
+
+            }
+
+            protected override byte[] Serialize(RuntimeTypeModel typeModel, 
+                List<int> data, List<BoxF2D> boxes)
+            {
+                int scaleFactor = 1000000;
+
+                Dictionary<uint, int> addedPoint = new Dictionary<uint,int>();
+                Dictionary<uint, int> addedPoints = new Dictionary<uint,int>();
+
+                RTreeLeaf leafData = new RTreeLeaf();
+
+                leafData.PointX = new List<long>();
+                leafData.PointY = new List<long>();
+                leafData.PointsX = new List<long[]>();
+                leafData.PointsY = new List<long[]>();
+
+                leafData.IconPointId = new List<int>();
+                leafData.IconImageId = new List<uint>();
+                leafData.IconZoomRangeId = new List<uint>();
+
+                leafData.LinePointsId= new List<int>();
+                leafData.LineStyleId = new List<uint>();
+                leafData.LineZoomRangeId = new List<uint>();
+
+                leafData.LineTextPointsId = new List<int>();
+                leafData.LineTextStyleId = new List<uint>();
+                leafData.LineTextText = new List<string>();
+                leafData.LineTextZoomRangeId = new List<uint>();
+
+                leafData.PointPointId = new List<int>();
+                leafData.PointStyleId = new List<uint>();
+                leafData.PointZoomRangeId = new List<uint>();
+
+                leafData.PolygonPointsId = new List<int>();
+                leafData.PolygonStyleId = new List<uint>();
+                leafData.PolygonZoomRangeId = new List<uint>();
+
+                leafData.TextPointPointId = new List<int>();
+                leafData.TextPointStyleId = new List<uint>();
+                leafData.TextPointText = new List<string>();
+                leafData.TextPointZoomRangeId = new List<uint>();
+
+                foreach(int id in data)
+                {
+                    SceneObject sceneObject = _scene._sceneObjects[id];
+
+                    int geoId = -1;
+                    KeyValuePair<double, double> point;
+                    KeyValuePair<double[], double[]> points;
+                    switch (sceneObject.Enum)
+                    {
+                        case SceneObjectType.IconObject:
+                            // get point.
+                            point = _scene._pointIndex[(int)sceneObject.GeoId];
+
+                            // set point data and keep id.
+                            if(!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointX.Count;
+                                leafData.PointX.Add((long)(scaleFactor * point.Key));
+                                leafData.PointY.Add((long)(scaleFactor * point.Value));
+                                addedPoint.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.IconPointId.Add(geoId); // add point.
+
+                            // add zoom range.
+                            leafData.IconZoomRangeId.Add(sceneObject.ZoomRangeId);
+
+                            // add image id.
+                            leafData.IconImageId.Add(sceneObject.StyleId); 
+                            break;
+                        case SceneObjectType.PointObject:
+                            // get point.
+                            point = _scene._pointIndex[(int)sceneObject.GeoId];
+
+                            // set point data and keep id.
+                            if(!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointX.Count;
+                                leafData.PointX.Add((long)(scaleFactor * point.Key));
+                                leafData.PointY.Add((long)(scaleFactor * point.Value));
+                                addedPoint.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.PointPointId.Add(geoId);
+
+                            // add zoom range.
+                            leafData.PointZoomRangeId.Add(sceneObject.ZoomRangeId);
+
+                            // add point style.
+                            leafData.PointStyleId.Add(sceneObject.StyleId);
+                            break;
+                        case SceneObjectType.TextObject:
+                            // get point.
+                            point = _scene._pointIndex[(int)sceneObject.GeoId];
+
+                            // set point data and keep id.
+                            if (!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointX.Count;
+                                leafData.PointX.Add((long)(scaleFactor * point.Key));
+                                leafData.PointY.Add((long)(scaleFactor * point.Value));
+                                addedPoint.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.TextPointPointId.Add(geoId);
+
+                            // add zoom range.
+                            leafData.TextPointZoomRangeId.Add(sceneObject.ZoomRangeId);
+
+                            // add point style.
+                            leafData.TextPointStyleId.Add(sceneObject.StyleId);
+
+                            // add text.
+                            leafData.TextPointText.Add(
+                                _scene._stringTable.Get((sceneObject as TextObject).TextId));
+                            break;
+                        case SceneObjectType.LineObject:
+                            // get points.
+                            points = _scene._pointsIndex[(int)sceneObject.GeoId];
+
+                            // set points data and keep id.
+                            if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointsX.Count;
+                                leafData.PointsX.Add(points.Key.ConvertToLongArray(scaleFactor));
+                                leafData.PointsY.Add(points.Value.ConvertToLongArray(scaleFactor));
+                                addedPoint.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.LinePointsId.Add(geoId);
+
+                            // add zoom range.
+                            leafData.LineZoomRangeId.Add(sceneObject.ZoomRangeId);
+
+                            // add point style.
+                            leafData.LineStyleId.Add(sceneObject.StyleId);
+                            break;
+                        case SceneObjectType.LineTextObject:
+                            // get points.
+                            points = _scene._pointsIndex[(int)sceneObject.GeoId];
+
+                            // set points data and keep id.
+                            if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointsX.Count;
+                                leafData.PointsX.Add(points.Key.ConvertToLongArray(scaleFactor));
+                                leafData.PointsY.Add(points.Value.ConvertToLongArray(scaleFactor));
+                                addedPoint.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.LineTextPointsId.Add(geoId);
+
+                            // add zoom range.
+                            leafData.LineTextZoomRangeId.Add(sceneObject.ZoomRangeId);
+
+                            // add point style.
+                            leafData.LineTextStyleId.Add(sceneObject.StyleId);
+
+                            // add text.
+                            leafData.LineTextText.Add(
+                                _scene._stringTable.Get((sceneObject as LineTextObject).TextId));
+                            break;
+                        case SceneObjectType.PolygonObject:
+                            // get points.
+                            points = _scene._pointsIndex[(int)sceneObject.GeoId];
+
+                            // set points data and keep id.
+                            if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointsX.Count;
+                                leafData.PointsX.Add(points.Key.ConvertToLongArray(scaleFactor));
+                                leafData.PointsY.Add(points.Value.ConvertToLongArray(scaleFactor));
+                                addedPoint.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.PolygonPointsId.Add(geoId);
+
+                            // add zoom range.
+                            leafData.PolygonZoomRangeId.Add(sceneObject.ZoomRangeId);
+
+                            // add point style.
+                            leafData.PolygonStyleId.Add(sceneObject.StyleId);
+                            break;
+                    }
+                }
+
+                // delta-encode.
+                leafData.PointX.EncodeDelta();
+                leafData.PointY.EncodeDelta();
+                for (int idx = 0; idx < leafData.PointsX.Count; idx++)
+                {
+                    leafData.PointsX[idx] = leafData.PointsX[idx].EncodeDelta();
+                    leafData.PointsY[idx] = leafData.PointsY[idx].EncodeDelta();
+                }
+
+                // serialize.
+                
+            }
+
+            protected override List<int> DeSerialize(RuntimeTypeModel typeModel, 
+                byte[] data, out List<BoxF2D> boxes)
+            {
+                throw new NotImplementedException();
+            }
+
+            public override string VersionString
+            {
+                get { return "RTreeScene"; }
+            }
+        }
+
+        private class RTreeLeaf
+        {
+            public List<long> PointX { get; set; }
+
+            public List<long> PointY { get; set; }
+            
+            public List<long[]> PointsX { get; set; }
+
+            public List<long[]> PointsY { get; set; }
+
+
+            public List<uint> PointStyleId { get; set; }
+
+            public List<int> PointPointId { get; set; }
+
+            public List<uint> PointZoomRangeId { get; set; }
+
+
+            public List<uint> TextPointStyleId { get; set; }
+
+            public List<int> TextPointPointId { get; set; }
+
+            public List<string> TextPointText { get; set; }
+
+            public List<uint> TextPointZoomRangeId { get; set; }
+
+
+            public List<uint> LineStyleId { get; set; }
+
+            public List<int> LinePointsId { get; set; }
+
+            public List<uint> LineZoomRangeId { get; set; }
+
+
+            public List<uint> PolygonStyleId { get; set; }
+
+            public List<int> PolygonPointsId { get; set; }
+
+            public List<uint> PolygonZoomRangeId { get; set; }
+
+
+            public List<uint> LineTextStyleId { get; set; }
+
+            public List<int> LineTextPointsId { get; set; }
+
+            public List<string> LineTextText { get; set; }
+
+            public List<uint> LineTextZoomRangeId { get; set; }
+
+
+            public List<uint> IconImageId { get; set; }
+
+            public List<int> IconPointId { get; set; }
+
+            public List<uint> IconZoomRangeId { get; set; }
         }
     }
 }

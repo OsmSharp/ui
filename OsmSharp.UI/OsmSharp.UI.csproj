@@ -143,9 +143,16 @@
     <Compile Include="Renderer\Scene\Scene2DPrimitives\LineText2D.cs" />
     <Compile Include="Renderer\Scene\Scene2DPrimitives\Text2D.cs" />
     <Compile Include="Renderer\Scene\Storage\Scene2DEntry.cs" />
-    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DRTreeSerializer.cs" />
-    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledIndex.cs" />
-    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DRTreeSerializer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledIndex.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledSerializer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledSource.cs" />
     <Compile Include="Renderer\Target2DWrapper.cs" />
     <Compile Include="Renderer\View2D.cs" />
     <Compile Include="Renderer\Scene\Scene2DSimple.cs" />

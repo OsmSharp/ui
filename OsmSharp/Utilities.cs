@@ -378,6 +378,26 @@ namespace OsmSharp
             return longArray;
         }
 
+
+        /// <summary>
+        /// Delta encodes an array.
+        /// </summary>
+        /// <param name="longArray"></param>
+        public static List<long> EncodeDelta(this List<long> longArray)
+        {
+            if (longArray.Count > 0)
+            { // there is data!
+                long previous = longArray[0];
+                for (int idx = 1; idx < longArray.Count; idx++)
+                {
+                    long delta = longArray[idx] - previous;
+                    previous = longArray[idx];
+                    longArray[idx] = delta;
+                }
+            }
+            return longArray;
+        }
+
         /// <summary>
         /// Delta decodes an array.
         /// </summary>
@@ -387,6 +407,22 @@ namespace OsmSharp
             if (longArray.Length > 0)
             { // there is data!
                 for (int idx = 1; idx < longArray.Length; idx++)
+                {
+                    longArray[idx] = longArray[idx - 1] + longArray[idx];
+                }
+            }
+            return longArray;
+        }
+
+        /// <summary>
+        /// Delta decodes an array.
+        /// </summary>
+        /// <param name="longArray"></param>
+        public static List<long> DecodeDelta(this List<long> longArray)
+        {
+            if (longArray.Count > 0)
+            { // there is data!
+                for (int idx = 1; idx < longArray.Count; idx++)
                 {
                     longArray[idx] = longArray[idx - 1] + longArray[idx];
                 }
