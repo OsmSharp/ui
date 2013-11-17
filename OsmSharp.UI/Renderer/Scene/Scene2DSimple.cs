@@ -1071,13 +1071,36 @@ namespace OsmSharp.UI.Renderer.Scene
 
         private class RTreeSerializer : RTreeStreamSerializer<int>
         {
+            /// <summary>
+            /// Holds the simple scene.
+            /// </summary>
             private Scene2DSimple _scene;
 
-            protected override void BuildRuntimeTypeModel(RuntimeTypeModel typeModel)
+            /// <summary>
+            /// Creates a new RTreeSerializer.
+            /// </summary>
+            /// <param name="scene"></param>
+            public RTreeSerializer(Scene2DSimple scene)
             {
-
+                _scene = scene;
             }
 
+            /// <summary>
+            /// Builds the protobuf runtime type model.
+            /// </summary>
+            /// <param name="typeModel"></param>
+            protected override void BuildRuntimeTypeModel(RuntimeTypeModel typeModel)
+            {
+                typeModel.Add(typeof(RTreeLeaf), true);
+            }
+
+            /// <summary>
+            /// Serializes one leaf.
+            /// </summary>
+            /// <param name="typeModel"></param>
+            /// <param name="data"></param>
+            /// <param name="boxes"></param>
+            /// <returns></returns>
             protected override byte[] Serialize(RuntimeTypeModel typeModel, 
                 List<int> data, List<BoxF2D> boxes)
             {
@@ -1269,13 +1292,191 @@ namespace OsmSharp.UI.Renderer.Scene
                 }
 
                 // serialize.
-                
+                MemoryStream stream = new MemoryStream();
+                typeModel.Serialize(stream, leafData);
+                return stream.ToArray();
             }
 
+            /// <summary>
+            /// Deserializes the given leaf.
+            /// </summary>
+            /// <param name="typeModel"></param>
+            /// <param name="data"></param>
+            /// <param name="boxes"></param>
+            /// <returns></returns>
             protected override List<int> DeSerialize(RuntimeTypeModel typeModel, 
                 byte[] data, out List<BoxF2D> boxes)
             {
-                throw new NotImplementedException();
+                List<int> dataLists = new List<int>();
+
+                int scaleFactor = 1000000;
+
+                Dictionary<int, uint> point = new Dictionary<int, uint>();
+                Dictionary<int, uint> points = new Dictionary<int, uint>();
+
+                // Assume the following stuff already exists in the current scene:
+                // - ZoomRanges
+                // - Styles
+
+                // deserialize the leaf data.
+                RTreeLeaf leafData = typeModel.Deserialize(
+                    new MemoryStream(data), null, typeof(RTreeLeaf)) as RTreeLeaf;
+
+                // delta-decode.
+                leafData.PointX = leafData.PointX.DecodeDelta();
+                leafData.PointY = leafData.PointY.DecodeDelta();
+                for (int idx = 0; idx < leafData.PointsX.Count; idx++)
+                {
+                    leafData.PointsX[idx] = leafData.PointsX[idx].DecodeDelta();
+                    leafData.PointsY[idx] = leafData.PointsY[idx].DecodeDelta();
+                }
+
+                // loop over all points.
+                for (int idx = 0; idx < leafData.PointPointId.Count; idx++)
+                {
+                    // add point.
+                    int pointId = leafData.PointPointId[idx];
+                    uint scenePointId = 0;
+                    if (!point.TryGetValue(pointId, out scenePointId))
+                    { // point was not yet added to the scene.
+                        scenePointId = (uint)_scene._pointIndex.Count;
+                        _scene._pointIndex.Add(new KeyValuePair<double, double>(
+                            (double)leafData.PointX[leafData.PointPointId[idx]] / (double)scaleFactor,
+                            (double)leafData.PointY[leafData.PointPointId[idx]] / (double)scaleFactor));
+                        point.Add(pointId, scenePointId);
+                    }
+                    // build the point object.
+                    PointObject pointObject = new PointObject();
+                    pointObject.GeoId = scenePointId;
+                    pointObject.StyleId = leafData.PointStyleId[idx];
+                    pointObject.ZoomRangeId = leafData.PointZoomRangeId[idx];
+                    // pointObject.Layer = ?
+                    dataLists.Add(_scene._sceneObjects.Count);
+                    _scene._sceneObjects.Add(pointObject);
+                }
+
+                // loop over all text-points.
+                for (int idx = 0; idx < leafData.TextPointPointId.Count; idx++)
+                {
+                    // add point.
+                    int pointId = leafData.TextPointPointId[idx];
+                    uint scenePointId = 0;
+                    if (!point.TryGetValue(pointId, out scenePointId))
+                    { // point was not yet added to the scene.
+                        scenePointId = (uint)_scene._pointIndex.Count;
+                        _scene._pointIndex.Add(new KeyValuePair<double, double>(
+                            (double)leafData.PointX[pointId] / (double)scaleFactor,
+                            (double)leafData.PointY[pointId] / (double)scaleFactor));
+                        point.Add(pointId, scenePointId);
+                    }
+                    // build the point object.
+                    TextObject textObject = new TextObject();
+                    textObject.GeoId = scenePointId;
+                    textObject.StyleId = leafData.TextPointStyleId[idx];
+                    textObject.ZoomRangeId = leafData.TextPointZoomRangeId[idx];
+                    textObject.TextId = _scene._stringTable.Add(leafData.TextPointText[idx]);
+                    // textObject.Layer = ?
+                    dataLists.Add(_scene._sceneObjects.Count);
+                    _scene._sceneObjects.Add(textObject);
+                }
+
+                // loop over all icons.
+                for (int idx = 0; idx < leafData.IconPointId.Count; idx++)
+                {
+                    // add point.
+                    int pointId = leafData.IconPointId[idx];
+                    uint scenePointId = 0;
+                    if (!point.TryGetValue(pointId, out scenePointId))
+                    { // point was not yet added to the scene.
+                        scenePointId = (uint)_scene._pointIndex.Count;
+                        _scene._pointIndex.Add(new KeyValuePair<double, double>(
+                            (double)leafData.PointX[pointId] / (double)scaleFactor,
+                            (double)leafData.PointY[pointId] / (double)scaleFactor));
+                        point.Add(pointId, scenePointId);
+                    }
+                    // build the point object.
+                    IconObject iconObject = new IconObject();
+                    iconObject.GeoId = scenePointId;
+                    iconObject.StyleId = leafData.IconImageId[idx];
+                    iconObject.ZoomRangeId = leafData.IconZoomRangeId[idx];
+                    // textObject.Layer = ?
+                    dataLists.Add(_scene._sceneObjects.Count);
+                    _scene._sceneObjects.Add(iconObject);
+                }
+
+                // loop over all lines.
+                for (int idx = 0; idx < leafData.LinePointsId.Count; idx++)
+                {
+                    // add point.
+                    int pointsId = leafData.LinePointsId[idx];
+                    uint scenePointId = 0;
+                    if (!points.TryGetValue(pointsId, out scenePointId))
+                    { // point was not yet added to the scene.
+                        scenePointId = (uint)_scene._pointsIndex.Count;
+                        _scene._pointsIndex.Add(new KeyValuePair<double[], double[]>(
+                            leafData.PointsX[pointsId].ConvertFromLongArray(scaleFactor),
+                            leafData.PointsY[pointsId].ConvertFromLongArray(scaleFactor)));
+                        points.Add(pointsId, scenePointId);
+                    }
+                    // build the point object.
+                    LineObject lineObject = new LineObject();
+                    lineObject.GeoId = scenePointId;
+                    lineObject.StyleId = leafData.LineStyleId[idx];
+                    lineObject.ZoomRangeId = leafData.LineZoomRangeId[idx];
+                    // textObject.Layer = ?
+                    dataLists.Add(_scene._sceneObjects.Count);
+                    _scene._sceneObjects.Add(lineObject);
+                }
+
+                // loop over all polygons.
+                for (int idx = 0; idx < leafData.PolygonPointsId.Count; idx++)
+                {
+                    // add point.
+                    int pointsId = leafData.PolygonPointsId[idx];
+                    uint scenePointId = 0;
+                    if (!points.TryGetValue(pointsId, out scenePointId))
+                    { // point was not yet added to the scene.
+                        scenePointId = (uint)_scene._pointsIndex.Count;
+                        _scene._pointsIndex.Add(new KeyValuePair<double[], double[]>(
+                            leafData.PointsX[pointsId].ConvertFromLongArray(scaleFactor),
+                            leafData.PointsY[pointsId].ConvertFromLongArray(scaleFactor)));
+                        points.Add(pointsId, scenePointId);
+                    }
+                    // build the point object.
+                    PolygonObject polygonObject = new PolygonObject();
+                    polygonObject.GeoId = scenePointId;
+                    polygonObject.StyleId = leafData.PolygonStyleId[idx];
+                    polygonObject.ZoomRangeId = leafData.PolygonZoomRangeId[idx];
+                    // textObject.Layer = ?
+                    dataLists.Add(_scene._sceneObjects.Count);
+                    _scene._sceneObjects.Add(polygonObject);
+                }
+
+                // loop over all line-texts.
+                for (int idx = 0; idx < leafData.LineTextPointsId.Count; idx++)
+                {
+                    // add point.
+                    int pointsId = leafData.LineTextPointsId[idx];
+                    uint scenePointId = 0;
+                    if (!points.TryGetValue(pointsId, out scenePointId))
+                    { // point was not yet added to the scene.
+                        scenePointId = (uint)_scene._pointsIndex.Count;
+                        _scene._pointsIndex.Add(new KeyValuePair<double[], double[]>(
+                            leafData.PointsX[pointsId].ConvertFromLongArray(scaleFactor),
+                            leafData.PointsY[pointsId].ConvertFromLongArray(scaleFactor)));
+                        points.Add(pointsId, scenePointId);
+                    }
+                    // build the point object.
+                    LineTextObject lineTextObject = new LineTextObject();
+                    lineTextObject.GeoId = scenePointId;
+                    lineTextObject.StyleId = leafData.LineTextStyleId[idx];
+                    lineTextObject.ZoomRangeId = leafData.LineTextZoomRangeId[idx];
+                    lineTextObject.TextId = _scene._stringTable.Add(leafData.LineTextText[idx]);
+                    // textObject.Layer = ?
+                    dataLists.Add(_scene._sceneObjects.Count);
+                    _scene._sceneObjects.Add(lineTextObject);
+                }
+                return dataLists;
             }
 
             public override string VersionString
