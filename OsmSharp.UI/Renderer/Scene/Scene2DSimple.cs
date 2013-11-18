@@ -24,8 +24,9 @@ using OsmSharp.Collections.SpatialIndexes;
 using OsmSharp.Collections.SpatialIndexes.Serialization.v2;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
-using ProtoBuf;
 using ProtoBuf.Meta;
+using Ionic.Zlib;
+using ProtoBuf;
 
 namespace OsmSharp.UI.Renderer.Scene
 {
@@ -151,14 +152,52 @@ namespace OsmSharp.UI.Renderer.Scene
         }
 
         /// <summary>
+        /// Build the runtime type model.
+        /// </summary>
+        /// <returns></returns>
+        private static RuntimeTypeModel BuildRuntimeTypeModel()
+        {
+            // build protobuf runtime type model.
+            RuntimeTypeModel typeModel = RuntimeTypeModel.Create();
+            typeModel.Add(typeof(StylePoint), true);
+            typeModel.Add(typeof(StyleLine), true);
+            typeModel.Add(typeof(StylePolygon), true);
+            typeModel.Add(typeof(StyleText), true);
+            typeModel.Add(typeof(ZoomRanges), true);
+            typeModel.Add(typeof(SceneIndex), true);
+            return typeModel;
+        }
+
+        /// <summary>
         /// Serializes the given scene.
         /// </summary>
         /// <param name="stream"></param>
         /// <param name="compress"></param>
         public override void Serialize(Stream stream, bool compress)
         {
+            RuntimeTypeModel typeModel = Scene2DSimple.BuildRuntimeTypeModel();
+
+            // index index.
+            SceneIndex sceneIndex = new SceneIndex();
+            sceneIndex.LineStyles = _lineStyles.ToArray();
+            sceneIndex.PointStyles = _pointStyles.ToArray();
+            sceneIndex.PolygonStyles = _polygonStyles.ToArray();
+            sceneIndex.TextStyles = _textStyles.ToArray();
+            sceneIndex.ZoomRanges = _zoomRanges.ToArray();
+
+            // serialize and write.
+            stream.Seek(4, SeekOrigin.Begin);
+            long indexStart = stream.Position;
+            typeModel.Serialize(stream, sceneIndex);
+
+            // write size.
+            long indexSize = stream.Position - indexStart;
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.Write(BitConverter.GetBytes(indexSize), 0, 4);
+            stream.Seek(4 + indexSize, SeekOrigin.Begin);
+
             // index into r-tree.
-            RTreeMemoryIndex<int> memoryIndex = new RTreeMemoryIndex<int>();
+            RTreeMemoryIndex<int> memoryIndex = new RTreeMemoryIndex<int>(100, 250);
             for(int id = 0; id < _sceneObjects.Count; id++)
             { // loop over all primitives in order.
                 SceneObject sceneObject = _sceneObjects[id];
@@ -180,17 +219,35 @@ namespace OsmSharp.UI.Renderer.Scene
                 }
             }
 
-
+            // serialize the r-tree.
+            RTreeSerializer serializer = new RTreeSerializer(this, compress);
+            serializer.Serialize(stream, memoryIndex);
         }
 
         /// <summary>
         /// Deserializes the given stream into scene.
         /// </summary>
         /// <param name="stream"></param>
-        /// <param name="compressed"></param>
+        /// <param name="isCompressed"></param>
         /// <returns></returns>
-        public static IScene2DPrimitivesSource Deserialize(Stream stream, bool compressed)
+        public static IScene2DPrimitivesSource Deserialize(Stream stream, bool isCompressed)
         {
+            //RuntimeTypeModel typeModel = Scene2DSimple.BuildRuntimeTypeModel();
+            
+            //// get the index data.
+            //byte[] indexLengthBytes = new byte[4];
+            //stream.Read(indexLengthBytes, 0, 4);
+            //int indexLength = BitConverter.ToInt32(indexLengthBytes, 0);
+            //byte[] indexBytes = new byte[indexLength];
+            //stream.Read(indexBytes, 0, indexLength);
+            //MemoryStream indexStream = new MemoryStream(indexBytes);
+            //SceneIndex sceneIndex = typeModel.Deserialize(indexStream, null, typeof(SceneIndex)) as SceneIndex;
+
+            //// serialize the r-tree.
+            //RTreeSerializer serializer = new RTreeSerializer(sceneIndex, isCompressed);
+            //ISpatialIndexReadonly<int> index = serializer.Deserialize(stream, true);
+
+            //return new Scene2DPrimitivesSource(index, sceneIndex);
             throw new NotImplementedException();
         }
 
@@ -818,19 +875,26 @@ namespace OsmSharp.UI.Renderer.Scene
             IconObject
         }
 
+        [ProtoContract]
         private abstract class SceneObject
         {
+            [ProtoMember(1)]
             public SceneObjectType Enum { get; protected set; }
 
+            [ProtoMember(2)]
             public uint Layer { get; set; }
 
+            [ProtoMember(3)]
             public uint GeoId { get; set; }
 
+            [ProtoMember(4)]
             public uint StyleId { get; set; }
 
+            [ProtoMember(5)]
             public uint ZoomRangeId { get; set; }
         }
 
+        [ProtoContract]
         private class TextObject : SceneObject
         {
             public TextObject()
@@ -841,6 +905,7 @@ namespace OsmSharp.UI.Renderer.Scene
             public uint TextId { get; set; }
         }
 
+        [ProtoContract]
         private class PolygonObject : SceneObject
         {
             public PolygonObject()
@@ -849,6 +914,7 @@ namespace OsmSharp.UI.Renderer.Scene
             }
         }
 
+        [ProtoContract]
         private class LineObject : SceneObject
         {
             public LineObject()
@@ -857,6 +923,7 @@ namespace OsmSharp.UI.Renderer.Scene
             }
         }
 
+        [ProtoContract]
         private class LineTextObject : SceneObject
         {
             public LineTextObject()
@@ -864,9 +931,11 @@ namespace OsmSharp.UI.Renderer.Scene
                 this.Enum = SceneObjectType.LineTextObject;
             }
 
+            [ProtoMember(6)]
             public uint TextId { get; set; }
         }
 
+        [ProtoContract]
         private class PointObject : SceneObject
         {
             public PointObject()
@@ -875,6 +944,7 @@ namespace OsmSharp.UI.Renderer.Scene
             }
         }
 
+        [ProtoContract]
         private class IconObject : SceneObject
         {
             public IconObject()
@@ -883,10 +953,16 @@ namespace OsmSharp.UI.Renderer.Scene
             }
         }
         
+        /// <summary>
+        /// Zoom ranges.
+        /// </summary>
+        [ProtoContract]
         private class ZoomRanges
         {
+            [ProtoMember(1)]
             public float MinZoom { get; set; }
 
+            [ProtoMember(2)]
             public float MaxZoom { get; set; }
 
             public override int GetHashCode()
@@ -914,7 +990,11 @@ namespace OsmSharp.UI.Renderer.Scene
                 return true;
             }
         }
-        
+
+        /// <summary>
+        /// Style for a point.
+        /// </summary>
+        [ProtoContract]
         private class StylePoint
         {
             public int Color { get; set; }
@@ -938,14 +1018,22 @@ namespace OsmSharp.UI.Renderer.Scene
             }
         }
 
+        /// <summary>
+        /// Style for a line.
+        /// </summary>
+        [ProtoContract]
         private class StyleLine
         {
+            [ProtoMember(1)]
             public int Color { get; set; }
 
+            [ProtoMember(3)]
             public float Width { get; set; }
 
+            [ProtoMember(4)]
             public LineJoin LineJoin { get; set; }
 
+            [ProtoMember(5, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public int[] Dashes { get; set; }
 
             public override int GetHashCode()
@@ -997,17 +1085,26 @@ namespace OsmSharp.UI.Renderer.Scene
                 return false;
             }
         }
-
+        
+        /// <summary>
+        /// Style for a point with text.
+        /// </summary>
+        [ProtoContract]
         private class StyleText
         {
+            [ProtoMember(1)]
             public float Size { get; set; }
 
+            [ProtoMember(2)]
             public int Color { get; set; }
 
+            [ProtoMember(3)]
             public int? HaloColor { get; set; }
 
+            [ProtoMember(4)]
             public int? HaloRadius { get; set; }
 
+            [ProtoMember(5)]
             public string Font { get; set; }
 
             public override int GetHashCode()
@@ -1040,12 +1137,19 @@ namespace OsmSharp.UI.Renderer.Scene
             }
         }
 
+        /// <summary>
+        /// Style for a polygon.
+        /// </summary>
+        [ProtoContract]
         private class StylePolygon
         {
+            [ProtoMember(1)]
             public float Width { get; set; }
 
+            [ProtoMember(2)]
             public int Color { get; set; }
 
+            [ProtoMember(3)]
             public bool Fill { get; set; }
 
             public override int GetHashCode()
@@ -1069,6 +1173,9 @@ namespace OsmSharp.UI.Renderer.Scene
 
         #endregion
 
+        /// <summary>
+        /// Holds an R-tree serializer.
+        /// </summary>
         private class RTreeSerializer : RTreeStreamSerializer<int>
         {
             /// <summary>
@@ -1077,11 +1184,18 @@ namespace OsmSharp.UI.Renderer.Scene
             private Scene2DSimple _scene;
 
             /// <summary>
+            /// Holds the compressed flag.
+            /// </summary>
+            private bool _compressed;
+
+            /// <summary>
             /// Creates a new RTreeSerializer.
             /// </summary>
             /// <param name="scene"></param>
-            public RTreeSerializer(Scene2DSimple scene)
+            /// <param name="compressed"></param>
+            public RTreeSerializer(Scene2DSimple scene, bool compressed)
             {
+                _compressed = compressed;
                 _scene = scene;
             }
 
@@ -1111,10 +1225,9 @@ namespace OsmSharp.UI.Renderer.Scene
 
                 RTreeLeaf leafData = new RTreeLeaf();
 
-                leafData.PointX = new List<long>();
-                leafData.PointY = new List<long>();
-                leafData.PointsX = new List<long[]>();
-                leafData.PointsY = new List<long[]>();
+                leafData.PointsIndexes = new List<int>();
+                leafData.PointsX = new List<long>();
+                leafData.PointsY = new List<long>();
 
                 leafData.IconPointId = new List<int>();
                 leafData.IconImageId = new List<uint>();
@@ -1158,9 +1271,10 @@ namespace OsmSharp.UI.Renderer.Scene
                             // set point data and keep id.
                             if(!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
                             { // the point was not added yet. 
-                                geoId = leafData.PointX.Count;
-                                leafData.PointX.Add((long)(scaleFactor * point.Key));
-                                leafData.PointY.Add((long)(scaleFactor * point.Value));
+                                geoId = leafData.PointsX.Count;
+                                leafData.PointsIndexes.Add(geoId);
+                                leafData.PointsX.Add((long)(scaleFactor * point.Key));
+                                leafData.PointsY.Add((long)(scaleFactor * point.Value));
                                 addedPoint.Add(sceneObject.GeoId, geoId);
                             }
                             leafData.IconPointId.Add(geoId); // add point.
@@ -1178,9 +1292,10 @@ namespace OsmSharp.UI.Renderer.Scene
                             // set point data and keep id.
                             if(!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
                             { // the point was not added yet. 
-                                geoId = leafData.PointX.Count;
-                                leafData.PointX.Add((long)(scaleFactor * point.Key));
-                                leafData.PointY.Add((long)(scaleFactor * point.Value));
+                                geoId = leafData.PointsX.Count;
+                                leafData.PointsX.Add((long)(scaleFactor * point.Key));
+                                leafData.PointsY.Add((long)(scaleFactor * point.Value));
+                                leafData.PointsIndexes.Add(leafData.PointsY.Count);
                                 addedPoint.Add(sceneObject.GeoId, geoId);
                             }
                             leafData.PointPointId.Add(geoId);
@@ -1198,9 +1313,10 @@ namespace OsmSharp.UI.Renderer.Scene
                             // set point data and keep id.
                             if (!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
                             { // the point was not added yet. 
-                                geoId = leafData.PointX.Count;
-                                leafData.PointX.Add((long)(scaleFactor * point.Key));
-                                leafData.PointY.Add((long)(scaleFactor * point.Value));
+                                geoId = leafData.PointsX.Count;
+                                leafData.PointsX.Add((long)(scaleFactor * point.Key));
+                                leafData.PointsY.Add((long)(scaleFactor * point.Value));
+                                leafData.PointsIndexes.Add(leafData.PointsY.Count);
                                 addedPoint.Add(sceneObject.GeoId, geoId);
                             }
                             leafData.TextPointPointId.Add(geoId);
@@ -1223,9 +1339,10 @@ namespace OsmSharp.UI.Renderer.Scene
                             if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
                             { // the point was not added yet. 
                                 geoId = leafData.PointsX.Count;
-                                leafData.PointsX.Add(points.Key.ConvertToLongArray(scaleFactor));
-                                leafData.PointsY.Add(points.Value.ConvertToLongArray(scaleFactor));
-                                addedPoint.Add(sceneObject.GeoId, geoId);
+                                leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
+                                leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
+                                leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                addedPoints.Add(sceneObject.GeoId, geoId);
                             }
                             leafData.LinePointsId.Add(geoId);
 
@@ -1243,8 +1360,9 @@ namespace OsmSharp.UI.Renderer.Scene
                             if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
                             { // the point was not added yet. 
                                 geoId = leafData.PointsX.Count;
-                                leafData.PointsX.Add(points.Key.ConvertToLongArray(scaleFactor));
-                                leafData.PointsY.Add(points.Value.ConvertToLongArray(scaleFactor));
+                                leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
+                                leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
+                                leafData.PointsIndexes.Add(leafData.PointsY.Count);
                                 addedPoint.Add(sceneObject.GeoId, geoId);
                             }
                             leafData.LineTextPointsId.Add(geoId);
@@ -1267,9 +1385,10 @@ namespace OsmSharp.UI.Renderer.Scene
                             if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
                             { // the point was not added yet. 
                                 geoId = leafData.PointsX.Count;
-                                leafData.PointsX.Add(points.Key.ConvertToLongArray(scaleFactor));
-                                leafData.PointsY.Add(points.Value.ConvertToLongArray(scaleFactor));
-                                addedPoint.Add(sceneObject.GeoId, geoId);
+                                leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
+                                leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
+                                leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                addedPoints.Add(sceneObject.GeoId, geoId);
                             }
                             leafData.PolygonPointsId.Add(geoId);
 
@@ -1283,18 +1402,19 @@ namespace OsmSharp.UI.Renderer.Scene
                 }
 
                 // delta-encode.
-                leafData.PointX.EncodeDelta();
-                leafData.PointY.EncodeDelta();
-                for (int idx = 0; idx < leafData.PointsX.Count; idx++)
-                {
-                    leafData.PointsX[idx] = leafData.PointsX[idx].EncodeDelta();
-                    leafData.PointsY[idx] = leafData.PointsY[idx].EncodeDelta();
-                }
+                leafData.PointsX.EncodeDelta();
+                leafData.PointsY.EncodeDelta();
 
                 // serialize.
                 MemoryStream stream = new MemoryStream();
                 typeModel.Serialize(stream, leafData);
-                return stream.ToArray();
+                byte[] serializedData = stream.ToArray();
+                stream.Dispose();
+                if (_compressed)
+                { // compress.
+                    serializedData = GZipStream.CompressBuffer(serializedData);
+                }
+                return serializedData;
             }
 
             /// <summary>
@@ -1307,11 +1427,16 @@ namespace OsmSharp.UI.Renderer.Scene
             protected override List<int> DeSerialize(RuntimeTypeModel typeModel, 
                 byte[] data, out List<BoxF2D> boxes)
             {
+                if (_compressed)
+                { // decompress if needed.
+                    data = GZipStream.UncompressBuffer(data);
+                }
+
                 List<int> dataLists = new List<int>();
+                boxes = new List<BoxF2D>();
 
                 int scaleFactor = 1000000;
 
-                Dictionary<int, uint> point = new Dictionary<int, uint>();
                 Dictionary<int, uint> points = new Dictionary<int, uint>();
 
                 // Assume the following stuff already exists in the current scene:
@@ -1323,13 +1448,8 @@ namespace OsmSharp.UI.Renderer.Scene
                     new MemoryStream(data), null, typeof(RTreeLeaf)) as RTreeLeaf;
 
                 // delta-decode.
-                leafData.PointX = leafData.PointX.DecodeDelta();
-                leafData.PointY = leafData.PointY.DecodeDelta();
-                for (int idx = 0; idx < leafData.PointsX.Count; idx++)
-                {
-                    leafData.PointsX[idx] = leafData.PointsX[idx].DecodeDelta();
-                    leafData.PointsY[idx] = leafData.PointsY[idx].DecodeDelta();
-                }
+                leafData.PointsX = leafData.PointsX.DecodeDelta();
+                leafData.PointsY = leafData.PointsY.DecodeDelta();
 
                 // loop over all points.
                 for (int idx = 0; idx < leafData.PointPointId.Count; idx++)
@@ -1337,13 +1457,13 @@ namespace OsmSharp.UI.Renderer.Scene
                     // add point.
                     int pointId = leafData.PointPointId[idx];
                     uint scenePointId = 0;
-                    if (!point.TryGetValue(pointId, out scenePointId))
+                    if (!points.TryGetValue(pointId, out scenePointId))
                     { // point was not yet added to the scene.
                         scenePointId = (uint)_scene._pointIndex.Count;
                         _scene._pointIndex.Add(new KeyValuePair<double, double>(
-                            (double)leafData.PointX[leafData.PointPointId[idx]] / (double)scaleFactor,
-                            (double)leafData.PointY[leafData.PointPointId[idx]] / (double)scaleFactor));
-                        point.Add(pointId, scenePointId);
+                            (double)leafData.PointsX[pointId] / (double)scaleFactor,
+                            (double)leafData.PointsY[pointId] / (double)scaleFactor));
+                        points.Add(pointId, scenePointId);
                     }
                     // build the point object.
                     PointObject pointObject = new PointObject();
@@ -1353,6 +1473,9 @@ namespace OsmSharp.UI.Renderer.Scene
                     // pointObject.Layer = ?
                     dataLists.Add(_scene._sceneObjects.Count);
                     _scene._sceneObjects.Add(pointObject);
+                    // calculate box and add.
+                    KeyValuePair<double, double> geoData = _scene._pointIndex[(int)pointObject.GeoId];
+                    boxes.Add(new BoxF2D(new PointF2D(geoData.Key, geoData.Value)));
                 }
 
                 // loop over all text-points.
@@ -1361,13 +1484,13 @@ namespace OsmSharp.UI.Renderer.Scene
                     // add point.
                     int pointId = leafData.TextPointPointId[idx];
                     uint scenePointId = 0;
-                    if (!point.TryGetValue(pointId, out scenePointId))
+                    if (!points.TryGetValue(pointId, out scenePointId))
                     { // point was not yet added to the scene.
                         scenePointId = (uint)_scene._pointIndex.Count;
                         _scene._pointIndex.Add(new KeyValuePair<double, double>(
-                            (double)leafData.PointX[pointId] / (double)scaleFactor,
-                            (double)leafData.PointY[pointId] / (double)scaleFactor));
-                        point.Add(pointId, scenePointId);
+                            (double)leafData.PointsX[pointId] / (double)scaleFactor,
+                            (double)leafData.PointsY[pointId] / (double)scaleFactor));
+                        points.Add(pointId, scenePointId);
                     }
                     // build the point object.
                     TextObject textObject = new TextObject();
@@ -1378,6 +1501,9 @@ namespace OsmSharp.UI.Renderer.Scene
                     // textObject.Layer = ?
                     dataLists.Add(_scene._sceneObjects.Count);
                     _scene._sceneObjects.Add(textObject);
+                    // calculate box and add.
+                    KeyValuePair<double, double> geoData = _scene._pointIndex[(int)textObject.GeoId];
+                    boxes.Add(new BoxF2D(new PointF2D(geoData.Key, geoData.Value)));
                 }
 
                 // loop over all icons.
@@ -1386,13 +1512,13 @@ namespace OsmSharp.UI.Renderer.Scene
                     // add point.
                     int pointId = leafData.IconPointId[idx];
                     uint scenePointId = 0;
-                    if (!point.TryGetValue(pointId, out scenePointId))
+                    if (!points.TryGetValue(pointId, out scenePointId))
                     { // point was not yet added to the scene.
                         scenePointId = (uint)_scene._pointIndex.Count;
                         _scene._pointIndex.Add(new KeyValuePair<double, double>(
-                            (double)leafData.PointX[pointId] / (double)scaleFactor,
-                            (double)leafData.PointY[pointId] / (double)scaleFactor));
-                        point.Add(pointId, scenePointId);
+                            (double)leafData.PointsX[pointId] / (double)scaleFactor,
+                            (double)leafData.PointsY[pointId] / (double)scaleFactor));
+                        points.Add(pointId, scenePointId);
                     }
                     // build the point object.
                     IconObject iconObject = new IconObject();
@@ -1402,6 +1528,9 @@ namespace OsmSharp.UI.Renderer.Scene
                     // textObject.Layer = ?
                     dataLists.Add(_scene._sceneObjects.Count);
                     _scene._sceneObjects.Add(iconObject);
+                    // calculate box and add.
+                    KeyValuePair<double, double> geoData = _scene._pointIndex[(int)iconObject.GeoId];
+                    boxes.Add(new BoxF2D(new PointF2D(geoData.Key, geoData.Value)));
                 }
 
                 // loop over all lines.
@@ -1409,13 +1538,14 @@ namespace OsmSharp.UI.Renderer.Scene
                 {
                     // add point.
                     int pointsId = leafData.LinePointsId[idx];
+                    int pointsEndId = leafData.PointsIndexes[pointsId];
                     uint scenePointId = 0;
                     if (!points.TryGetValue(pointsId, out scenePointId))
                     { // point was not yet added to the scene.
                         scenePointId = (uint)_scene._pointsIndex.Count;
                         _scene._pointsIndex.Add(new KeyValuePair<double[], double[]>(
-                            leafData.PointsX[pointsId].ConvertFromLongArray(scaleFactor),
-                            leafData.PointsY[pointsId].ConvertFromLongArray(scaleFactor)));
+                            leafData.PointsX.GetRange(pointsId, pointsEndId).ConvertFromLongArray(scaleFactor),
+                            leafData.PointsY.GetRange(pointsId, pointsEndId).ConvertFromLongArray(scaleFactor)));
                         points.Add(pointsId, scenePointId);
                     }
                     // build the point object.
@@ -1426,6 +1556,9 @@ namespace OsmSharp.UI.Renderer.Scene
                     // textObject.Layer = ?
                     dataLists.Add(_scene._sceneObjects.Count);
                     _scene._sceneObjects.Add(lineObject);
+                    // calculate box and add.
+                    KeyValuePair<double[], double[]> geoData = _scene._pointsIndex[(int)lineObject.GeoId];
+                    boxes.Add(new BoxF2D(geoData.Key, geoData.Value));
                 }
 
                 // loop over all polygons.
@@ -1433,13 +1566,14 @@ namespace OsmSharp.UI.Renderer.Scene
                 {
                     // add point.
                     int pointsId = leafData.PolygonPointsId[idx];
+                    int pointsEndId = leafData.PointsIndexes[pointsId];
                     uint scenePointId = 0;
                     if (!points.TryGetValue(pointsId, out scenePointId))
                     { // point was not yet added to the scene.
                         scenePointId = (uint)_scene._pointsIndex.Count;
                         _scene._pointsIndex.Add(new KeyValuePair<double[], double[]>(
-                            leafData.PointsX[pointsId].ConvertFromLongArray(scaleFactor),
-                            leafData.PointsY[pointsId].ConvertFromLongArray(scaleFactor)));
+                            leafData.PointsX.GetRange(pointsId, pointsEndId).ConvertFromLongArray(scaleFactor),
+                            leafData.PointsY.GetRange(pointsId, pointsEndId).ConvertFromLongArray(scaleFactor)));
                         points.Add(pointsId, scenePointId);
                     }
                     // build the point object.
@@ -1450,6 +1584,9 @@ namespace OsmSharp.UI.Renderer.Scene
                     // textObject.Layer = ?
                     dataLists.Add(_scene._sceneObjects.Count);
                     _scene._sceneObjects.Add(polygonObject);
+                    // calculate box and add.
+                    KeyValuePair<double[], double[]> geoData = _scene._pointsIndex[(int)polygonObject.GeoId];
+                    boxes.Add(new BoxF2D(geoData.Key, geoData.Value));
                 }
 
                 // loop over all line-texts.
@@ -1457,13 +1594,14 @@ namespace OsmSharp.UI.Renderer.Scene
                 {
                     // add point.
                     int pointsId = leafData.LineTextPointsId[idx];
+                    int pointsEndId = leafData.PointsIndexes[pointsId];
                     uint scenePointId = 0;
                     if (!points.TryGetValue(pointsId, out scenePointId))
                     { // point was not yet added to the scene.
                         scenePointId = (uint)_scene._pointsIndex.Count;
                         _scene._pointsIndex.Add(new KeyValuePair<double[], double[]>(
-                            leafData.PointsX[pointsId].ConvertFromLongArray(scaleFactor),
-                            leafData.PointsY[pointsId].ConvertFromLongArray(scaleFactor)));
+                            leafData.PointsX.GetRange(pointsId, pointsEndId).ConvertFromLongArray(scaleFactor),
+                            leafData.PointsY.GetRange(pointsId, pointsEndId).ConvertFromLongArray(scaleFactor)));
                         points.Add(pointsId, scenePointId);
                     }
                     // build the point object.
@@ -1475,6 +1613,9 @@ namespace OsmSharp.UI.Renderer.Scene
                     // textObject.Layer = ?
                     dataLists.Add(_scene._sceneObjects.Count);
                     _scene._sceneObjects.Add(lineTextObject);
+                    // calculate box and add.
+                    KeyValuePair<double[], double[]> geoData = _scene._pointsIndex[(int)lineTextObject.GeoId];
+                    boxes.Add(new BoxF2D(geoData.Key, geoData.Value));
                 }
                 return dataLists;
             }
@@ -1485,60 +1626,177 @@ namespace OsmSharp.UI.Renderer.Scene
             }
         }
 
+        /// <summary>
+        /// Scene 2D primitive source.
+        /// </summary>
+        private class Scene2DPrimitivesSource : IScene2DPrimitivesSource
+        {
+            /// <summary>
+            /// Holds the serializer.
+            /// </summary>
+            private readonly ISpatialIndexReadonly<int> _index;
+
+            /// <summary>
+            /// Holds the scene index.
+            /// </summary>
+            private readonly SceneIndex _sceneIndex;
+
+            /// <summary>
+            /// Creates a new primitives source index.
+            /// </summary>
+            /// <param name="index"></param>
+            /// <param name="sceneIndex"></param>
+            public Scene2DPrimitivesSource(ISpatialIndexReadonly<int> index,
+                SceneIndex sceneIndex)
+            {
+                _index = index;
+                _sceneIndex = sceneIndex;
+            }
+
+            /// <summary>
+            /// Adds the objects in the given view to the given scene for the given zoomFactor.
+            /// </summary>
+            /// <param name="scene"></param>
+            /// <param name="view"></param>
+            /// <param name="zoomFactor"></param>
+            public void Get(Scene2DSimple scene, View2D view, float zoomFactor)
+            {
+                _index.Get(view.OuterBox);
+            }
+
+            /// <summary>
+            /// Removes all cached info from this scene.
+            /// </summary>
+            public void Clear()
+            {
+
+            }
+
+            /// <summary>
+            /// Disposes all resources associated with this primitive source.
+            /// </summary>
+            public void Dispose()
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// Scene index.
+        /// </summary>
+        [ProtoContract]
+        private class SceneIndex
+        {
+            /// <summary>
+            /// Holds the point styles.
+            /// </summary>
+            [ProtoMember(1)]
+            public StylePoint[] PointStyles { get; set; }
+
+            /// <summary>
+            /// Holds the text styles.
+            /// </summary>
+            [ProtoMember(2)]
+            public StyleText[] TextStyles { get; set; }
+
+            /// <summary>
+            /// Holds the line styles.
+            /// </summary>
+            [ProtoMember(3)]
+            public StyleLine[] LineStyles { get; set; }
+
+            /// <summary>
+            /// Holds the polygon styles.
+            /// </summary>
+            [ProtoMember(4)]
+            public StylePolygon[] PolygonStyles { get; set; }
+
+            /// <summary>
+            /// Holds the zoom ranges.
+            /// </summary>
+            [ProtoMember(5)]
+            public ZoomRanges[] ZoomRanges { get; set; }
+        }
+
+        /// <summary>
+        /// Serializable leaf.
+        /// </summary>
+        [ProtoContract]
         private class RTreeLeaf
         {
-            public List<long> PointX { get; set; }
+            [ProtoMember(1, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            public List<int> PointsIndexes { get; set; }
 
-            public List<long> PointY { get; set; }
-            
-            public List<long[]> PointsX { get; set; }
+            [ProtoMember(2, Options = global::ProtoBuf.MemberSerializationOptions.Packed, DataFormat = global::ProtoBuf.DataFormat.ZigZag)]
+            public List<long> PointsX { get; set; }
 
-            public List<long[]> PointsY { get; set; }
+            [ProtoMember(3, Options = global::ProtoBuf.MemberSerializationOptions.Packed, DataFormat = global::ProtoBuf.DataFormat.ZigZag)]
+            public List<long> PointsY { get; set; }
 
 
+            [ProtoMember(4, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> PointStyleId { get; set; }
 
+            [ProtoMember(5, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> PointPointId { get; set; }
 
+            [ProtoMember(6, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> PointZoomRangeId { get; set; }
 
 
+            [ProtoMember(7, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> TextPointStyleId { get; set; }
 
+            [ProtoMember(8, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> TextPointPointId { get; set; }
 
+            [ProtoMember(9)]
             public List<string> TextPointText { get; set; }
 
+            [ProtoMember(10, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> TextPointZoomRangeId { get; set; }
 
 
+            [ProtoMember(11, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> LineStyleId { get; set; }
 
+            [ProtoMember(12, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> LinePointsId { get; set; }
 
+            [ProtoMember(13, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> LineZoomRangeId { get; set; }
 
 
+            [ProtoMember(14, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> PolygonStyleId { get; set; }
 
+            [ProtoMember(15, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> PolygonPointsId { get; set; }
 
+            [ProtoMember(16, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> PolygonZoomRangeId { get; set; }
 
 
+            [ProtoMember(17, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> LineTextStyleId { get; set; }
 
+            [ProtoMember(18, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> LineTextPointsId { get; set; }
 
+            [ProtoMember(19)]
             public List<string> LineTextText { get; set; }
 
+            [ProtoMember(20, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> LineTextZoomRangeId { get; set; }
 
 
+            [ProtoMember(21, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> IconImageId { get; set; }
 
+            [ProtoMember(22, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> IconPointId { get; set; }
 
+            [ProtoMember(23, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> IconZoomRangeId { get; set; }
         }
     }

@@ -342,7 +342,6 @@ namespace OsmSharp
             return longArray;
         }
 
-
         /// <summary>
         /// Converts an array of longs back to doubles using a factor value.
         /// </summary>
@@ -352,6 +351,22 @@ namespace OsmSharp
         public static double[] ConvertFromLongArray(this long[] longArray, int factor)
         {
             double[] doubleArray = new double[longArray.Length];
+            for (int idx = 0; idx < doubleArray.Length; idx++)
+            {
+                doubleArray[idx] = (longArray[idx] / (double)factor);
+            }
+            return doubleArray;
+        }
+
+        /// <summary>
+        /// Converts an array of longs back to doubles using a factor value.
+        /// </summary>
+        /// <param name="longArray">The long array.</param>
+        /// <param name="factor">A factor to use to convert the long values.</param>
+        /// <returns></returns>
+        public static double[] ConvertFromLongArray(this List<long> longArray, int factor)
+        {
+            double[] doubleArray = new double[longArray.Count];
             for (int idx = 0; idx < doubleArray.Length; idx++)
             {
                 doubleArray[idx] = (longArray[idx] / (double)factor);

@@ -19,19 +19,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 using NUnit.Framework;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm;
+using OsmSharp.Osm.Data.Memory;
 using OsmSharp.Osm.Xml.Streams;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.Osm.Data.Memory;
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 
 namespace OsmSharp.UI.Test.Unittests.Renderer.Scene2DPrimitives.Storage
 {

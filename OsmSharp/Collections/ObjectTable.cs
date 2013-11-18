@@ -36,24 +36,24 @@ namespace OsmSharp.Collections
         /// <summary>
         /// A dictionary containing the index of each string.
         /// </summary>
-        private Dictionary<Type, uint> _reverse_index;
+        private Dictionary<Type, uint> _reverseIndex;
 
         /// <summary>
         /// Holds the initial capacity and is also used as an allocation step.
         /// </summary>
-        private int _init_capacity;
+        private int _initCapacity;
 
         /// <summary>
         /// Holds the next idx.
         /// </summary>
-        private uint _next_idx = 0;
+        private uint _nextIdx = 0;
 
         /// <summary>
         /// Creates a new string table.
         /// </summary>
-        /// <param name="reverse_index">The reverse index is enable if true.</param>
-        public ObjectTable(bool reverse_index)
-            :this(reverse_index, 1000)
+        /// <param name="reverseIndex">The reverse index is enable if true.</param>
+        public ObjectTable(bool reverseIndex)
+            :this(reverseIndex, 1000)
         {
 
         }
@@ -61,14 +61,14 @@ namespace OsmSharp.Collections
         /// <summary>
         /// Creates a new string table.
         /// </summary>
-        /// <param name="reverse_index">The reverse index is enable if true.</param>
-        /// <param name="init_capacity"></param>
-        public ObjectTable(bool reverse_index, int init_capacity)
+        /// <param name="reverseIndex">The reverse index is enable if true.</param>
+        /// <param name="initCapacity"></param>
+        public ObjectTable(bool reverseIndex, int initCapacity)
         {
-            _strings = new Type[init_capacity];
-            _init_capacity = init_capacity;
+            _strings = new Type[initCapacity];
+            _initCapacity = initCapacity;
 
-            if (reverse_index)
+            if (reverseIndex)
             {
                 this.BuildReverseIndex();
             }
@@ -79,11 +79,11 @@ namespace OsmSharp.Collections
         /// </summary>
         public void Clear()
         {
-            _strings = new Type[_init_capacity];
-            _next_idx = 0;
-            if (_reverse_index != null)
+            _strings = new Type[_initCapacity];
+            _nextIdx = 0;
+            if (_reverseIndex != null)
             {
-                _reverse_index.Clear();
+                _reverseIndex.Clear();
             }
         }
 
@@ -94,13 +94,13 @@ namespace OsmSharp.Collections
         /// </summary>
         public void BuildReverseIndex()
         {
-            _reverse_index = new Dictionary<Type, uint>();
+            _reverseIndex = new Dictionary<Type, uint>();
             for(uint idx = 0; idx < _strings.Length; idx++)
             {
                 Type value = _strings[idx];
                 if (value != null)
                 {
-                    _reverse_index[value] = idx;
+                    _reverseIndex[value] = idx;
                 }
             }
         }
@@ -110,7 +110,7 @@ namespace OsmSharp.Collections
         /// </summary>
         public void DropReverseIndex()
         {
-            _reverse_index = null;
+            _reverseIndex = null;
         }
 
         #endregion
@@ -119,20 +119,20 @@ namespace OsmSharp.Collections
 
         private uint AddString(Type value)
         {
-            uint value_int = _next_idx;
+            uint value_int = _nextIdx;
 
-            if (_strings.Length <= _next_idx)
+            if (_strings.Length <= _nextIdx)
             { // the string table is not big enough anymore.
-                Array.Resize<Type>(ref _strings, _strings.Length + _init_capacity);
+                Array.Resize<Type>(ref _strings, _strings.Length + _initCapacity);
             }
-            _strings[_next_idx] = value;
+            _strings[_nextIdx] = value;
 
-            if (_reverse_index != null)
+            if (_reverseIndex != null)
             {
-                _reverse_index[value] = _next_idx;
+                _reverseIndex[value] = _nextIdx;
             }
 
-            _next_idx++;
+            _nextIdx++;
             return value_int;
         }
 
@@ -145,7 +145,7 @@ namespace OsmSharp.Collections
         {
             get
             {
-                return _next_idx;
+                return _nextIdx;
             }
         }
 
@@ -156,12 +156,12 @@ namespace OsmSharp.Collections
         /// <returns></returns>
         public uint Add(Type value)
         {
-            uint value_int;
-            if (_reverse_index != null)
+            uint valueInt;
+            if (_reverseIndex != null)
             { // add string based on the reverse index, is faster.
-                if (!_reverse_index.TryGetValue(value, out value_int))
+                if (!_reverseIndex.TryGetValue(value, out valueInt))
                 { // string was not found.
-                    value_int = this.AddString(value);
+                    valueInt = this.AddString(value);
                 }
             }
             else
@@ -169,24 +169,38 @@ namespace OsmSharp.Collections
                 int idx = Array.IndexOf<Type>(_strings, value); // this is O(n), a lot worse compared to the best-case O(1).
                 if (idx < 0)
                 { // string was not found.
-                    value_int = this.AddString(value);
+                    valueInt = this.AddString(value);
                 }
                 else
                 { // string was found.
-                    value_int = (uint)idx;
+                    valueInt = (uint)idx;
                 }
             }
-            return value_int;
+            return valueInt;
         }
 
         /// <summary>
         /// Returns a string given it's encoded index.
         /// </summary>
-        /// <param name="value_idx"></param>
+        /// <param name="valueIdx"></param>
         /// <returns></returns>
-        public Type Get(uint value_idx)
+        public Type Get(uint valueIdx)
         {
-            return _strings[value_idx];
+            return _strings[valueIdx];
+        }
+
+        /// <summary>
+        /// Returns a copy of all data in this object table.
+        /// </summary>
+        /// <returns></returns>
+        public Type[] ToArray()
+        {
+            Type[] copy = new Type[_nextIdx];
+            for (int idx = 0; idx < _nextIdx; idx++)
+            {
+                copy[idx] = _strings[idx];
+            }
+            return copy;
         }
     }
 }

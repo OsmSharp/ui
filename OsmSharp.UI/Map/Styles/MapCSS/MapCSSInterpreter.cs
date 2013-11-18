@@ -443,6 +443,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                 if (x != null)
                 { // there is a valid interpretation of this way.
                     int color;
+                    bool renderAsLine = true;
                     if (way.IsOfType(MapCSSTypes.Area))
                     { // the way is an area. check if it can be rendered as an area.
                         int fillColor;
@@ -455,85 +456,89 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                 scene.AddStylePolygon(pointsId, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
                             }
                         }
+                        renderAsLine = false; // was validly rendered als a line.
                     }
 
-                    // the way has to rendered as a line.
-                    LineJoin lineJoin;
-                    if (!rule.TryGetProperty("lineJoin", out lineJoin))
-                    {
-                        lineJoin = LineJoin.Miter;
-                    }
-                    int[] dashes;
-                    if (!rule.TryGetProperty("dashes", out dashes))
-                    {
-                        dashes = null;
-                    }
-                    if (rule.TryGetProperty("color", out color))
-                    {
-                        float casingWidth;
-                        int casingColor;
-                        if (!rule.TryGetProperty("casingWidth", out casingWidth))
+                    if (renderAsLine)
+                    { // was not rendered as an area.
+                        // the way has to rendered as a line.
+                        LineJoin lineJoin;
+                        if (!rule.TryGetProperty("lineJoin", out lineJoin))
                         {
-                            casingWidth = 0;
+                            lineJoin = LineJoin.Miter;
                         }
-                        if(!rule.TryGetProperty("casingColor", out casingColor))
-                        { // casing: use the casing layer.
-                            casingColor = -1;
-                        }
-                        float width;
-                        if (!rule.TryGetProperty("width", out width))
+                        int[] dashes;
+                        if (!rule.TryGetProperty("dashes", out dashes))
                         {
-                            width = 1;
+                            dashes = null;
                         }
-                        uint pointsId = scene.AddPoints(x, y);
-                        if (casingWidth > 0)
-                        { // adds the casing
-                            scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetCasing, zIndex),
-                                minZoom, maxZoom, casingColor, width + (casingWidth * 2), lineJoin, dashes);
-                        }
-                        if (dashes == null)
-                        { // dashes not set, use line offset.
-                            scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLine, zIndex),
-                                minZoom, maxZoom, color, width, lineJoin, dashes);
-                        }
-                        else
-                        { // dashes set, use line pattern offset.
-                            scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
-                                minZoom, maxZoom, color, width, lineJoin, dashes);
-                        }
+                        if (rule.TryGetProperty("color", out color))
+                        {
+                            float casingWidth;
+                            int casingColor;
+                            if (!rule.TryGetProperty("casingWidth", out casingWidth))
+                            {
+                                casingWidth = 0;
+                            }
+                            if (!rule.TryGetProperty("casingColor", out casingColor))
+                            { // casing: use the casing layer.
+                                casingColor = -1;
+                            }
+                            float width;
+                            if (!rule.TryGetProperty("width", out width))
+                            {
+                                width = 1;
+                            }
+                            uint pointsId = scene.AddPoints(x, y);
+                            if (casingWidth > 0)
+                            { // adds the casing
+                                scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetCasing, zIndex),
+                                    minZoom, maxZoom, casingColor, width + (casingWidth * 2), lineJoin, dashes);
+                            }
+                            if (dashes == null)
+                            { // dashes not set, use line offset.
+                                scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLine, zIndex),
+                                    minZoom, maxZoom, color, width, lineJoin, dashes);
+                            }
+                            else
+                            { // dashes set, use line pattern offset.
+                                scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
+                                    minZoom, maxZoom, color, width, lineJoin, dashes);
+                            }
 
-                        int textColor;
-                        int fontSize;
-                        string nameTag;
-                        if (!rule.TryGetProperty("fontSize", out fontSize))
-                        {
-                            fontSize = 10;
-                        }
-                        if (rule.TryGetProperty("text", out nameTag) &&
-                            rule.TryGetProperty("textColor", out textColor))
-                        {
-                            int haloColor;
-                            int? haloColorNullable = null;
-                            if (rule.TryGetProperty("textHaloColor", out haloColor))
+                            int textColor;
+                            int fontSize;
+                            string nameTag;
+                            if (!rule.TryGetProperty("fontSize", out fontSize))
                             {
-                                haloColorNullable = haloColor;
+                                fontSize = 10;
                             }
-                            int haloRadius;
-                            int? haloRadiusNullable = null;
-                            if (rule.TryGetProperty("textHaloRadius", out haloRadius))
+                            if (rule.TryGetProperty("text", out nameTag) &&
+                                rule.TryGetProperty("textColor", out textColor))
                             {
-                                haloRadiusNullable = haloRadius;
-                            }
-                            string fontFamily;
-                            if (!rule.TryGetProperty("fontFamily", out fontFamily))
-                            {
-                                fontFamily = "Arial"; // just some default font.
-                            }
-                            string name;
-                            if (way.Tags.TryGetValue(nameTag, out name))
-                            {
-                                scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLineText, zIndex),
-                                    minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
+                                int haloColor;
+                                int? haloColorNullable = null;
+                                if (rule.TryGetProperty("textHaloColor", out haloColor))
+                                {
+                                    haloColorNullable = haloColor;
+                                }
+                                int haloRadius;
+                                int? haloRadiusNullable = null;
+                                if (rule.TryGetProperty("textHaloRadius", out haloRadius))
+                                {
+                                    haloRadiusNullable = haloRadius;
+                                }
+                                string fontFamily;
+                                if (!rule.TryGetProperty("fontFamily", out fontFamily))
+                                {
+                                    fontFamily = "Arial"; // just some default font.
+                                }
+                                string name;
+                                if (way.Tags.TryGetValue(nameTag, out name))
+                                {
+                                    scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLineText, zIndex),
+                                        minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
+                                }
                             }
                         }
                     }
