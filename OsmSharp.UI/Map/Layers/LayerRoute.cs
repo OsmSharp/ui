@@ -138,8 +138,11 @@ namespace OsmSharp.UI.Map.Layers
 
 				// set the default color if none is given.
 				SimpleColor color = SimpleColor.FromArgb (argb);
-                uint pointsId = this.Scene.AddPoints(x, y);
-				this.Scene.AddStyleLine(pointsId, float.MinValue, float.MaxValue, color.Value, width);
+                uint? pointsId = this.Scene.AddPoints(x, y);
+                if (pointsId.HasValue)
+                {
+                    this.Scene.AddStyleLine(pointsId.Value, float.MinValue, float.MaxValue, color.Value, width);
+                }
 			}
 		}
 

@@ -67,7 +67,7 @@ namespace OsmSharp.WinForms.UI.Sample
             // set control properties.
             this.mapControl1.Map = map;
             this.mapControl1.MapCenter = new GeoCoordinate(51.26371, 4.7854); // wechel
-            this.mapControl1.MapZoom = 19;
+            this.mapControl1.MapZoom = 16;
         }
     }
 }

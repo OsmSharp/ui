@@ -149,16 +149,20 @@ namespace OsmSharp.UI.Map.Layers
                     SimpleColor transparantBlue = SimpleColor.FromArgb(128,
                                                                        blue.R, blue.G, blue.B);
 
-                    uint points = this.Scene.AddPoints(x, y);
-                    this.Scene.AddStyleLine(points, float.MinValue, float.MaxValue, transparantBlue.Value, 8);
+                    uint? pointsId = this.Scene.AddPoints(x, y);
+                    if (pointsId.HasValue)
+                    {
+                        this.Scene.AddStyleLine(pointsId.Value, float.MinValue, float.MaxValue, transparantBlue.Value, 8);
 
-                    if (bounds == null)
-                    { // create box.
-                        bounds = lineString.Box;
-                    }
-                    else
-                    { // add to the current box.
-                        bounds = bounds + lineString.Box;
+                        if (bounds == null)
+                        { // create box.
+                            bounds = lineString.Box;
+                        }
+                        else
+                        { // add to the current box.
+                            bounds = bounds + lineString.Box;
+
+                        }
                     }
                 }
             }

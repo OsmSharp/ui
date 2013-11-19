@@ -44,7 +44,7 @@ namespace OsmSharp.Test.Performance.UI.Scene
             stream.Dispose();
 
             OsmSharp.Logging.Log.TraceEvent(name, System.Diagnostics.TraceEventType.Information,
-                string.Format("Serialized file: {0}KB", testFile.Length / 1024));
+                string.Format("Serialized file: {0}B", testFile.Length));
 
             testFile.Delete();
         }

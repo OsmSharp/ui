@@ -82,9 +82,12 @@ namespace OsmSharp.UI.Map.Layers
             double[] x = new double[] { projected1[0], projected2[0] };
             double[] y = new double[] { projected1[1], projected2[1] };
 
-            uint pointsId = _scene.AddPoints(x, y);
-            _scene.AddStyleLine(pointsId, float.MinValue, float.MaxValue, color, sizePixels);
-            this.RaiseLayerChanged();
+            uint? pointsId = _scene.AddPoints(x, y);
+            if (pointsId.HasValue)
+            {
+                _scene.AddStyleLine(pointsId.Value, float.MinValue, float.MaxValue, color, sizePixels);
+                this.RaiseLayerChanged();
+            }
         }
 
         /// <summary>

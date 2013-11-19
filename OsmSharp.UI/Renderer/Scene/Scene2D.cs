@@ -53,7 +53,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public abstract uint AddPoints(double[] x, double[] y);
+        public abstract uint? AddPoints(double[] x, double[] y);
 
         /// <summary>
         /// Adds the given byte array as an image and returns and id.

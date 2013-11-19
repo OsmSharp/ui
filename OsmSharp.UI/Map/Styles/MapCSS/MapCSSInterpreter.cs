@@ -273,9 +273,12 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             y = simplified[1];
                         }
                     }
-                    uint points = scene.AddPoints(x, y);
-                    scene.AddStyleLine(points, this.CalculateSceneLayer(OffsetLine, 0), float.MinValue, float.MaxValue, 
-                        SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, null);
+                    uint? points = scene.AddPoints(x, y);
+                    if (points.HasValue)
+                    {
+                        scene.AddStyleLine(points.Value, this.CalculateSceneLayer(OffsetLine, 0), float.MinValue, float.MaxValue,
+                            SimpleColor.FromKnownColor(KnownColor.Red).Value, 1, LineJoin.Round, null);
+                    }
                 }
             }
         }
@@ -449,11 +452,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                         int fillColor;
                         if (rule.TryGetProperty("fillColor", out fillColor))
                         { // render as an area.
-                            uint pointsId = scene.AddPoints(x, y);
-                            scene.AddStylePolygon(pointsId, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
-                            if (rule.TryGetProperty("color", out color))
+                            uint? pointsId = scene.AddPoints(x, y);
+                            if (pointsId.HasValue)
                             {
-                                scene.AddStylePolygon(pointsId, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
+                                scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
+                                if (rule.TryGetProperty("color", out color))
+                                {
+                                    scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
+                                }
                             }
                         }
                         renderAsLine = false; // was validly rendered als a line.
@@ -489,55 +495,58 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             {
                                 width = 1;
                             }
-                            uint pointsId = scene.AddPoints(x, y);
-                            if (casingWidth > 0)
-                            { // adds the casing
-                                scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetCasing, zIndex),
-                                    minZoom, maxZoom, casingColor, width + (casingWidth * 2), lineJoin, dashes);
-                            }
-                            if (dashes == null)
-                            { // dashes not set, use line offset.
-                                scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLine, zIndex),
-                                    minZoom, maxZoom, color, width, lineJoin, dashes);
-                            }
-                            else
-                            { // dashes set, use line pattern offset.
-                                scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
-                                    minZoom, maxZoom, color, width, lineJoin, dashes);
-                            }
+                            uint? pointsId = scene.AddPoints(x, y);
+                            if (pointsId.HasValue)
+                            {
+                                if (casingWidth > 0)
+                                { // adds the casing
+                                    scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex),
+                                        minZoom, maxZoom, casingColor, width + (casingWidth * 2), lineJoin, dashes);
+                                }
+                                if (dashes == null)
+                                { // dashes not set, use line offset.
+                                    scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLine, zIndex),
+                                        minZoom, maxZoom, color, width, lineJoin, dashes);
+                                }
+                                else
+                                { // dashes set, use line pattern offset.
+                                    scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLinePattern, zIndex),
+                                        minZoom, maxZoom, color, width, lineJoin, dashes);
+                                }
 
-                            int textColor;
-                            int fontSize;
-                            string nameTag;
-                            if (!rule.TryGetProperty("fontSize", out fontSize))
-                            {
-                                fontSize = 10;
-                            }
-                            if (rule.TryGetProperty("text", out nameTag) &&
-                                rule.TryGetProperty("textColor", out textColor))
-                            {
-                                int haloColor;
-                                int? haloColorNullable = null;
-                                if (rule.TryGetProperty("textHaloColor", out haloColor))
+                                int textColor;
+                                int fontSize;
+                                string nameTag;
+                                if (!rule.TryGetProperty("fontSize", out fontSize))
                                 {
-                                    haloColorNullable = haloColor;
+                                    fontSize = 10;
                                 }
-                                int haloRadius;
-                                int? haloRadiusNullable = null;
-                                if (rule.TryGetProperty("textHaloRadius", out haloRadius))
+                                if (rule.TryGetProperty("text", out nameTag) &&
+                                    rule.TryGetProperty("textColor", out textColor))
                                 {
-                                    haloRadiusNullable = haloRadius;
-                                }
-                                string fontFamily;
-                                if (!rule.TryGetProperty("fontFamily", out fontFamily))
-                                {
-                                    fontFamily = "Arial"; // just some default font.
-                                }
-                                string name;
-                                if (way.Tags.TryGetValue(nameTag, out name))
-                                {
-                                    scene.AddStyleLine(pointsId, this.CalculateSceneLayer(OffsetLineText, zIndex),
-                                        minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
+                                    int haloColor;
+                                    int? haloColorNullable = null;
+                                    if (rule.TryGetProperty("textHaloColor", out haloColor))
+                                    {
+                                        haloColorNullable = haloColor;
+                                    }
+                                    int haloRadius;
+                                    int? haloRadiusNullable = null;
+                                    if (rule.TryGetProperty("textHaloRadius", out haloRadius))
+                                    {
+                                        haloRadiusNullable = haloRadius;
+                                    }
+                                    string fontFamily;
+                                    if (!rule.TryGetProperty("fontFamily", out fontFamily))
+                                    {
+                                        fontFamily = "Arial"; // just some default font.
+                                    }
+                                    string name;
+                                    if (way.Tags.TryGetValue(nameTag, out name))
+                                    {
+                                        scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
+                                            minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
+                                    }
                                 }
                             }
                         }
@@ -660,11 +669,14 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                             fillColor = SimpleColor.FromArgb((int)(255 * fillOpacity), 
                                 simpleFillColor.R, simpleFillColor.G, simpleFillColor.B).Value;
                         }
-                        uint pointsId = scene.AddPoints(x, y);
-                        scene.AddStylePolygon(pointsId, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
-                        if (rule.TryGetProperty("color", out color))
+                        uint? pointsId = scene.AddPoints(x, y);
+                        if (pointsId.HasValue)
                         {
-                            scene.AddStylePolygon(pointsId, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
+                            scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetArea, zIndex), minZoom, maxZoom, fillColor, 1, true);
+                            if (rule.TryGetProperty("color", out color))
+                            {
+                                scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
+                            }
                         }
                     }
                 }

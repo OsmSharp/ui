@@ -19,14 +19,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Ionic.Zlib;
 using OsmSharp.Collections;
 using OsmSharp.Collections.SpatialIndexes;
 using OsmSharp.Collections.SpatialIndexes.Serialization.v2;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
-using ProtoBuf.Meta;
-using Ionic.Zlib;
 using ProtoBuf;
+using ProtoBuf.Meta;
 
 namespace OsmSharp.UI.Renderer.Scene
 {
@@ -86,10 +86,17 @@ namespace OsmSharp.UI.Renderer.Scene
         private List<byte[]> _imageIndex;
 
         /// <summary>
+        /// Holds the simplification zoom factor.
+        /// </summary>
+        private float _simplifyAt;
+
+        /// <summary>
         /// Creates a new simple scene.
         /// </summary>
         public Scene2DSimple()
         {
+            _simplifyAt = (float)new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16);
+
             // string table.
             _stringTable = new ObjectTable<string>(true);
 
@@ -114,6 +121,17 @@ namespace OsmSharp.UI.Renderer.Scene
         }
 
         /// <summary>
+        /// Calculates the simplification epsilon.
+        /// </summary>
+        /// <returns>The simplification epsilon.</returns>
+        /// <param name="zoomFactor">Zoom factor.</param>
+        private float CalculateSimplificationEpsilon(float zoomFactor)
+        {
+            double pixelWidth = 1 / zoomFactor * 4;
+            return (float)pixelWidth;
+        }
+
+        /// <summary>
         /// Adds the given point.
         /// </summary>
         /// <param name="x"></param>
@@ -131,12 +149,36 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        /// <returns></returns>
-        public override uint AddPoints(double[] x, double[] y)
+        /// <returns>The id of the given points-series or null when the geometry is not visible in this scene.</returns>
+        public override uint? AddPoints(double[] x, double[] y)
         {
             uint id = (uint)_pointsIndex.Count;
-            _pointsIndex.Add(new KeyValuePair<double[], double[]>(x, y));
-            return id;
+
+            // simplify the algorithm.
+            double epsilon = this.CalculateSimplificationEpsilon(_simplifyAt);
+            double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
+                                                            epsilon);
+            BoxF2D rectangle = new BoxF2D(x, y);
+            if (rectangle.Delta[0] < epsilon && rectangle.Delta[1] < epsilon)
+            {
+                return null;
+            }
+            double distance = epsilon * 2;
+            if (simplified[0].Length == 2)
+            { // check if the simplified version is smaller than epsilon.
+                OsmSharp.Math.Primitives.PointF2D point1 = new OsmSharp.Math.Primitives.PointF2D(
+                    simplified[0][0], simplified[0][1]);
+                OsmSharp.Math.Primitives.PointF2D point2 = new OsmSharp.Math.Primitives.PointF2D(
+                    simplified[1][0], simplified[0][1]);
+                distance = point1.Distance(point2);
+            }
+            if (distance >= epsilon)
+            {
+                _pointsIndex.Add(new KeyValuePair<double[], double[]>(simplified[0], simplified[1]));
+
+                return id;
+            }
+            return null;
         }
 
         /// <summary>
@@ -1225,7 +1267,7 @@ namespace OsmSharp.UI.Renderer.Scene
 
                 RTreeLeaf leafData = new RTreeLeaf();
 
-                leafData.PointsIndexes = new List<int>();
+                //leafData.PointsIndexes = new List<int>();
                 leafData.PointsX = new List<long>();
                 leafData.PointsY = new List<long>();
 
@@ -1272,7 +1314,7 @@ namespace OsmSharp.UI.Renderer.Scene
                             if(!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
                             { // the point was not added yet. 
                                 geoId = leafData.PointsX.Count;
-                                leafData.PointsIndexes.Add(geoId);
+                                //leafData.PointsIndexes.Add(geoId);
                                 leafData.PointsX.Add((long)(scaleFactor * point.Key));
                                 leafData.PointsY.Add((long)(scaleFactor * point.Value));
                                 addedPoint.Add(sceneObject.GeoId, geoId);
@@ -1295,7 +1337,7 @@ namespace OsmSharp.UI.Renderer.Scene
                                 geoId = leafData.PointsX.Count;
                                 leafData.PointsX.Add((long)(scaleFactor * point.Key));
                                 leafData.PointsY.Add((long)(scaleFactor * point.Value));
-                                leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
                                 addedPoint.Add(sceneObject.GeoId, geoId);
                             }
                             leafData.PointPointId.Add(geoId);
@@ -1316,7 +1358,7 @@ namespace OsmSharp.UI.Renderer.Scene
                                 geoId = leafData.PointsX.Count;
                                 leafData.PointsX.Add((long)(scaleFactor * point.Key));
                                 leafData.PointsY.Add((long)(scaleFactor * point.Value));
-                                leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
                                 addedPoint.Add(sceneObject.GeoId, geoId);
                             }
                             leafData.TextPointPointId.Add(geoId);
@@ -1341,7 +1383,7 @@ namespace OsmSharp.UI.Renderer.Scene
                                 geoId = leafData.PointsX.Count;
                                 leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
                                 leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
-                                leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
                                 addedPoints.Add(sceneObject.GeoId, geoId);
                             }
                             leafData.LinePointsId.Add(geoId);
@@ -1362,7 +1404,7 @@ namespace OsmSharp.UI.Renderer.Scene
                                 geoId = leafData.PointsX.Count;
                                 leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
                                 leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
-                                leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
                                 addedPoint.Add(sceneObject.GeoId, geoId);
                             }
                             leafData.LineTextPointsId.Add(geoId);
@@ -1387,7 +1429,7 @@ namespace OsmSharp.UI.Renderer.Scene
                                 geoId = leafData.PointsX.Count;
                                 leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
                                 leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
-                                leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
                                 addedPoints.Add(sceneObject.GeoId, geoId);
                             }
                             leafData.PolygonPointsId.Add(geoId);
@@ -1538,7 +1580,7 @@ namespace OsmSharp.UI.Renderer.Scene
                 {
                     // add point.
                     int pointsId = leafData.LinePointsId[idx];
-                    int pointsEndId = leafData.PointsIndexes[pointsId];
+                    int pointsEndId = 0;//leafData.PointsIndexes[pointsId];
                     uint scenePointId = 0;
                     if (!points.TryGetValue(pointsId, out scenePointId))
                     { // point was not yet added to the scene.
@@ -1566,7 +1608,7 @@ namespace OsmSharp.UI.Renderer.Scene
                 {
                     // add point.
                     int pointsId = leafData.PolygonPointsId[idx];
-                    int pointsEndId = leafData.PointsIndexes[pointsId];
+                    int pointsEndId = 0; // leafData.PointsIndexes[pointsId];
                     uint scenePointId = 0;
                     if (!points.TryGetValue(pointsId, out scenePointId))
                     { // point was not yet added to the scene.
@@ -1594,7 +1636,7 @@ namespace OsmSharp.UI.Renderer.Scene
                 {
                     // add point.
                     int pointsId = leafData.LineTextPointsId[idx];
-                    int pointsEndId = leafData.PointsIndexes[pointsId];
+                    int pointsEndId = 0; // leafData.PointsIndexes[pointsId];
                     uint scenePointId = 0;
                     if (!points.TryGetValue(pointsId, out scenePointId))
                     { // point was not yet added to the scene.
@@ -1724,79 +1766,76 @@ namespace OsmSharp.UI.Renderer.Scene
         [ProtoContract]
         private class RTreeLeaf
         {
-            [ProtoMember(1, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-            public List<int> PointsIndexes { get; set; }
-
-            [ProtoMember(2, Options = global::ProtoBuf.MemberSerializationOptions.Packed, DataFormat = global::ProtoBuf.DataFormat.ZigZag)]
+            [ProtoMember(1, Options = global::ProtoBuf.MemberSerializationOptions.Packed, DataFormat = global::ProtoBuf.DataFormat.ZigZag)]
             public List<long> PointsX { get; set; }
 
-            [ProtoMember(3, Options = global::ProtoBuf.MemberSerializationOptions.Packed, DataFormat = global::ProtoBuf.DataFormat.ZigZag)]
+            [ProtoMember(2, Options = global::ProtoBuf.MemberSerializationOptions.Packed, DataFormat = global::ProtoBuf.DataFormat.ZigZag)]
             public List<long> PointsY { get; set; }
 
 
-            [ProtoMember(4, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(3, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> PointStyleId { get; set; }
 
-            [ProtoMember(5, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(4, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> PointPointId { get; set; }
 
-            [ProtoMember(6, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(5, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> PointZoomRangeId { get; set; }
 
 
-            [ProtoMember(7, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(6, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> TextPointStyleId { get; set; }
 
-            [ProtoMember(8, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(7, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> TextPointPointId { get; set; }
 
-            [ProtoMember(9)]
+            [ProtoMember(8)]
             public List<string> TextPointText { get; set; }
 
-            [ProtoMember(10, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(9, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> TextPointZoomRangeId { get; set; }
 
 
-            [ProtoMember(11, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(10, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> LineStyleId { get; set; }
 
-            [ProtoMember(12, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(11, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> LinePointsId { get; set; }
 
-            [ProtoMember(13, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(12, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> LineZoomRangeId { get; set; }
 
 
-            [ProtoMember(14, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(13, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> PolygonStyleId { get; set; }
 
-            [ProtoMember(15, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(14, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> PolygonPointsId { get; set; }
 
-            [ProtoMember(16, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(15, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> PolygonZoomRangeId { get; set; }
 
 
-            [ProtoMember(17, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(16, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> LineTextStyleId { get; set; }
 
-            [ProtoMember(18, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(17, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> LineTextPointsId { get; set; }
 
-            [ProtoMember(19)]
+            [ProtoMember(18)]
             public List<string> LineTextText { get; set; }
 
-            [ProtoMember(20, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(19, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> LineTextZoomRangeId { get; set; }
 
 
-            [ProtoMember(21, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(20, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> IconImageId { get; set; }
 
-            [ProtoMember(22, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(21, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<int> IconPointId { get; set; }
 
-            [ProtoMember(23, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+            [ProtoMember(22, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
             public List<uint> IconZoomRangeId { get; set; }
         }
     }
