@@ -20,9 +20,8 @@ using System;
 using System.IO;
 using System.Windows.Forms;
 using OsmSharp.Math.Geo;
-using OsmSharp.UI.Map.Layers;
-using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Osm.Data.Memory;
+using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles.MapCSS;
 
 namespace OsmSharp.WinForms.UI.Sample
@@ -48,7 +47,6 @@ namespace OsmSharp.WinForms.UI.Sample
         {
             base.OnLoad(e);
 
-
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
 
@@ -58,11 +56,6 @@ namespace OsmSharp.WinForms.UI.Sample
                 new FileInfo(@"complete.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
             map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
             //map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
-            //map.AddLayer(new LayerMBTile(@""));
-            //map.AddLayer(
-            //    new LayerScene(
-            //        Scene2DSimple.Deserialize(
-            //            new FileInfo(@"kempen-big.osm.pbf.scene.layered").OpenRead(), true)));
 
             // set control properties.
             this.mapControl1.Map = map;

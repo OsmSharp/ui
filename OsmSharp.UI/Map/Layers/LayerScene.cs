@@ -53,7 +53,8 @@ namespace OsmSharp.UI.Map.Layers
         public LayerScene(IScene2DPrimitivesSource index)
         {
             _index = index;
-			_scene2DSimple = new Scene2DSimple();
+            _scene2DSimple = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
         }
 
         /// <summary>
@@ -138,7 +139,8 @@ namespace OsmSharp.UI.Map.Layers
             // reset the scene.
             if (_scene2DSimple == null)
             {
-                _scene2DSimple = new Scene2DSimple();
+                _scene2DSimple = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
             }
             _scene2DSimple.Clear();
 

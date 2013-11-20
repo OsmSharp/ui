@@ -48,7 +48,8 @@ namespace OsmSharp.UI.Map.Layers
 		{
 			_projection = projection;
 
-            _scene = new Scene2DSimple();
+            _scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
 		}
 
 		/// <summary>

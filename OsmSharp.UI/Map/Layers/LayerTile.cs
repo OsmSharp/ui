@@ -46,7 +46,8 @@ namespace OsmSharp.UI.Map.Layers
         {
             _tilesURL = tilesURL;
 
-            this.Scene = new Scene2DSimple();
+            this.Scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
             _lastAccessed = new Dictionary<Tile, DateTime>();
             _primitivePerTile = new Dictionary<Tile, uint>();
             _tilesStack = new Stack<Tile>();

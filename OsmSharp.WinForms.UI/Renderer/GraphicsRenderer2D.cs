@@ -91,7 +91,8 @@ namespace OsmSharp.WinForms.UI.Renderer
         protected override Scene2D BuildSceneCache(Target2DWrapper<Graphics> target, Scene2D currentCache, 
             List<Scene2D> currentScenes, View2D view)
         {
-            var scene = new Scene2DSimple();
+            var scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
 //            scene.BackColor = currentScenes[0].BackColor;
 //
 //	        var bitmap = target.Tag as Bitmap;

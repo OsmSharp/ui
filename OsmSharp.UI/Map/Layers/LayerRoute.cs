@@ -42,7 +42,8 @@ namespace OsmSharp.UI.Map.Layers
         {
             _projection = projection;
 
-            this.Scene = new Scene2DSimple();
+            this.Scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
             this.Scene.BackColor = 
                 SimpleColor.FromKnownColor(KnownColor.Transparent).Value;
         }

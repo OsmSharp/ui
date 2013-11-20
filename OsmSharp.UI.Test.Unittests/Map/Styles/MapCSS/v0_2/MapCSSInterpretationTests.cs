@@ -78,7 +78,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2DSimple();
+            Scene2D scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(string.Empty,
@@ -128,7 +129,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2DSimple();
+            Scene2D scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -180,7 +182,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2DSimple scene = new Scene2DSimple();
+            Scene2DSimple scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -194,10 +197,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
             Assert.AreEqual(SimpleColor.FromKnownColor(KnownColor.White).Value, scene.BackColor);
 
             // test the scene point 1.
-            List<IScene2DPrimitive> primitives = scene.Get(0);
-            Assert.IsNotNull(primitives);
-            Assert.AreEqual(1, primitives.Count);
-            IScene2DPrimitive primitive = primitives[0];
+            IScene2DPrimitive primitive = scene.Get(0);
             Assert.IsNotNull(primitive);
             Assert.IsInstanceOf<Point2D>(primitive);
             Point2D point = primitive as Point2D;
@@ -207,10 +207,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
             Assert.AreEqual(mercator.LatitudeToY(1), point.Y);
 
             // test the scene point 2.
-            primitives = scene.Get(1);
-            Assert.IsNotNull(primitives);
-            Assert.AreEqual(1, primitives.Count);
-            primitive = primitives[0];
+            primitive = scene.Get(1);
             Assert.IsNotNull(primitive);
             Assert.IsInstanceOf<Point2D>(primitive);
             point = primitive as Point2D;
@@ -220,10 +217,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
             Assert.AreEqual(mercator.LatitudeToY(2), point.Y);
 
             // test the scene line 2.
-            primitives = scene.Get(2);
-            Assert.IsNotNull(primitives);
-            Assert.AreEqual(1, primitives.Count);
-            primitive = primitives[0];
+            primitive = scene.Get(2);
             Assert.IsNotNull(primitive);
             Assert.IsInstanceOf<Line2D>(primitive);
             Line2D line = primitive as Line2D;
@@ -259,7 +253,8 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2DSimple();
+            Scene2D scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -268,10 +263,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // test the scene contents.
             Assert.AreEqual(1, scene.Count);
-            List<IScene2DPrimitive> primitives = scene.Get(0);
-            Assert.IsNotNull(primitives);
-            Assert.AreEqual(1, primitives.Count);
-            IScene2DPrimitive primitive = primitives[0];
+            IScene2DPrimitive primitive = scene.Get(0);
             Assert.IsInstanceOf<Polygon2D>(primitive);
         }
 
@@ -295,10 +287,12 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2DSimple();            
+            Scene2D scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));            
 
             // create the projection and scene objects.
-            scene = new Scene2DSimple();
+            scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -307,10 +301,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // test the scene contents.
             Assert.AreEqual(1, scene.Count);
-            List<IScene2DPrimitive> primitives = scene.Get(0);
-            Assert.IsNotNull(primitives);
-            Assert.AreEqual(1, primitives.Count);
-            IScene2DPrimitive primitive = primitives[0];
+            IScene2DPrimitive primitive = scene.Get(0);
             Assert.IsInstanceOf<Polygon2D>(primitive);
         }
 
@@ -335,10 +326,12 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
 			// create the projection and scene objects.
 			var mercator = new WebMercator();
-			Scene2D scene = new Scene2DSimple();            
+            Scene2D scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));            
 
 			// create the projection and scene objects.
-			scene = new Scene2DSimple();
+            scene = new Scene2DSimple(
+                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
 
 			// create the interpreter.
 			MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -347,10 +340,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
 			// test the scene contents.
 			Assert.AreEqual(1, scene.Count);
-			List<IScene2DPrimitive> primitives = scene.Get(0);
-			Assert.IsNotNull(primitives);
-			Assert.AreEqual(1, primitives.Count);
-			IScene2DPrimitive primitive = primitives[0];
+            IScene2DPrimitive primitive = scene.Get(0);
 			Assert.IsInstanceOf<Line2D>(primitive);
 			Line2D line = (primitive as Line2D);
 			Assert.AreEqual (10, line.Width);

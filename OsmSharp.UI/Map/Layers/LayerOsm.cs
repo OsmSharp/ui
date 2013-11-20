@@ -46,21 +46,18 @@ namespace OsmSharp.UI.Map.Layers
         /// </summary>
         /// <param name="dataSource"></param>
         /// <param name="styleInterpreter"></param>
+        /// <param name="projection"></param>
         public LayerOsm(IDataSourceReadOnly dataSource, StyleInterpreter styleInterpreter, IProjection projection)
         {
             // build the zoom-level cutoffs.
-            List<float> zoomLevelCutoffs = new List<float>();
-            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(18));
-            //zoomLevelCutoffs.Add((float)projection.ToZoomFactor(16));
-            //zoomLevelCutoffs.Add((float)projection.ToZoomFactor(14));
-            //zoomLevelCutoffs.Add((float)projection.ToZoomFactor(12));
-            //zoomLevelCutoffs.Add((float)projection.ToZoomFactor(10));
-            //zoomLevelCutoffs.Add((float)projection.ToZoomFactor(8));
-            zoomLevelCutoffs.Add((float)projection.ToZoomFactor(0));
+            List<float> zoomFactors = new List<float>();
+            zoomFactors.Add((float)projection.ToZoomFactor(16));
+            zoomFactors.Add((float)projection.ToZoomFactor(14));
+            zoomFactors.Add((float)projection.ToZoomFactor(12));
+            zoomFactors.Add((float)projection.ToZoomFactor(10));
 
             _dataSource = dataSource;
-            //_styleSceneManager = new StyleSceneManager(styleInterpreter, zoomLevelCutoffs, projection);
-            _styleSceneManager = new StyleSceneManager(styleInterpreter);
+            _styleSceneManager = new StyleSceneManager(styleInterpreter, zoomFactors);
         }
 
         /// <summary>

@@ -56,7 +56,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public abstract List<IScene2DPrimitive> Get(uint id);
+        public abstract IScene2DPrimitive Get(uint id);
 
         /// <summary>
         /// Gets all objects in this scene for the specified view sorted according to layer number.

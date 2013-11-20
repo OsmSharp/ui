@@ -59,20 +59,13 @@ namespace OsmSharp.UI.Map.Styles
         /// </summary>
         private LongIndex _interpretedWays;
 
-        ///// <summary>
-        ///// Creates a new style scene manager.
-        ///// </summary>
-        ///// <param name="interpreter">The intepreter converting OSM-objects into scene-objects.</param>
-        //public StyleSceneManager(StyleInterpreter interpreter, List<float> zoomLevelCutoffs, IProjection projection)
-        //    : this(
-        //        new Scene2DLayered(zoomLevelCutoffs), interpreter) { }
-
         /// <summary>
         /// Creates a new style scene manager.
         /// </summary>
         /// <param name="interpreter">The intepreter converting OSM-objects into scene-objects.</param>
-        public StyleSceneManager(StyleInterpreter interpreter)
-            : this(new Scene2DSimple(), interpreter) { }
+        /// <param name="zoomFactors"></param>
+        public StyleSceneManager(StyleInterpreter interpreter, List<float> zoomFactors)
+            : this(new Scene2DSimple(zoomFactors), interpreter) { }
 
         /// <summary>
         /// Creates a new style scene manager.
