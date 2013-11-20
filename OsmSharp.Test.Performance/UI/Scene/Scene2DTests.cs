@@ -37,6 +37,8 @@ namespace OsmSharp.Test.Performance.UI.Scene
         public static void TestSerialize(string name, string outputFile, Scene2D scene, bool compress)
         {
             FileInfo testFile = new FileInfo(string.Format(@".\TestFiles\{0}", outputFile));
+            testFile.Delete();
+
             Stream stream = testFile.OpenWrite();
 
             Scene2DTests.TestSerialize(name, stream, scene, compress);
@@ -46,7 +48,7 @@ namespace OsmSharp.Test.Performance.UI.Scene
             OsmSharp.Logging.Log.TraceEvent(name, System.Diagnostics.TraceEventType.Information,
                 string.Format("Serialized file: {0}B", testFile.Length));
 
-            //testFile.Delete();
+            testFile.Delete();
         }
 
         /// <summary>

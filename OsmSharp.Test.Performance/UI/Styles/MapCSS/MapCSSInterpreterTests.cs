@@ -47,7 +47,7 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
                 (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
 
             // tests map css interpreter.
-            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\complete.mapcss", scene, "belgium-latest.osm.pbf");
+            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\complete.mapcss", scene, "kempen.osm.pbf");
 
             // tests serialization of the scene.
             Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\complete.map", scene, true);

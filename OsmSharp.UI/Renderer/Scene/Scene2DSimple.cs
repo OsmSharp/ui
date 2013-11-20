@@ -251,53 +251,68 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="compress"></param>
         public override void Serialize(Stream stream, bool compress)
         {
-            //RuntimeTypeModel typeModel = Scene2DSimple.BuildRuntimeTypeModel();
+            RuntimeTypeModel typeModel = Scene2DSimple.BuildRuntimeTypeModel();
 
-            //// index index.
-            //SceneIndex sceneIndex = new SceneIndex();
-            //sceneIndex.LineStyles = _lineStyles.ToArray();
-            //sceneIndex.PointStyles = _pointStyles.ToArray();
-            //sceneIndex.PolygonStyles = _polygonStyles.ToArray();
-            //sceneIndex.TextStyles = _textStyles.ToArray();
-            //sceneIndex.ZoomRanges = _zoomRanges.ToArray();
+            // index index.
+            SceneIndex sceneIndex = new SceneIndex();
+            sceneIndex.LineStyles = _lineStyles.ToArray();
+            sceneIndex.PointStyles = _pointStyles.ToArray();
+            sceneIndex.PolygonStyles = _polygonStyles.ToArray();
+            sceneIndex.TextStyles = _textStyles.ToArray();
+            sceneIndex.ZoomRanges = _zoomRanges.ToArray();
+            sceneIndex.ZoomFactors = _zoomFactors.ToArray();
 
-            //// serialize and write.
-            //stream.Seek(4, SeekOrigin.Begin);
-            //long indexStart = stream.Position;
-            //typeModel.Serialize(stream, sceneIndex);
+            // serialize and write.
+            stream.Seek(4, SeekOrigin.Begin);
+            long indexStart = stream.Position;
+            typeModel.Serialize(stream, sceneIndex);
 
-            //// write size.
-            //long indexSize = stream.Position - indexStart;
-            //stream.Seek(0, SeekOrigin.Begin);
-            //stream.Write(BitConverter.GetBytes(indexSize), 0, 4);
-            //stream.Seek(4 + indexSize, SeekOrigin.Begin);
+            // add scene positions.
+            stream.Seek(4 * sceneIndex.ZoomFactors.Length, SeekOrigin.Begin);
 
-            //// index into r-tree.
-            //RTreeMemoryIndex<int> memoryIndex = new RTreeMemoryIndex<int>(100, 250);
-            //for(int id = 0; id < _sceneObjects.Count; id++)
-            //{ // loop over all primitives in order.
-            //    SceneObject sceneObject = _sceneObjects[id];
-            //    switch (sceneObject.Enum)
-            //    {
-            //        case SceneObjectType.IconObject:
-            //        case SceneObjectType.PointObject:
-            //        case SceneObjectType.TextObject:
-            //            ScenePoint geo = _pointIndex.Get(sceneObject.GeoId);
-            //            PointF2D point = new PointF2D(geo.Key, geo.Value);
-            //            memoryIndex.Add(new BoxF2D(point), id);
-            //            break;
-            //        case SceneObjectType.LineObject:
-            //        case SceneObjectType.LineTextObject:
-            //        case SceneObjectType.PolygonObject:
-            //            ScenePoints geos = _pointsIndex.Get(sceneObject.GeoId);
-            //            memoryIndex.Add(new BoxF2D(geos.Key, geos.Value), id);
-            //            break;
-            //    }
-            //}
+            // write size.
+            long indexSize = stream.Position - indexStart;
+            stream.Seek(0, SeekOrigin.Begin);
+            stream.Write(BitConverter.GetBytes(indexSize), 0, 4);
+            stream.Seek(4 * sceneIndex.ZoomFactors.Length, SeekOrigin.Begin);
 
-            //// serialize the r-tree.
-            //RTreeSerializer serializer = new RTreeSerializer(this, compress);
-            //serializer.Serialize(stream, memoryIndex);
+            // index into r-trees and serialize.
+            int[] lengths = new int[sceneIndex.ZoomFactors.Length];
+            for (int idx = 0; idx < lengths.Length; idx++)
+            {
+                long position = stream.Position;
+
+                Dictionary<uint, SceneObject> sceneAtZoom = _sceneObjects[idx];
+                RTreeMemoryIndex<int> memoryIndex = new RTreeMemoryIndex<int>(100, 250);
+                foreach (KeyValuePair<uint, SceneObject> sceneObjectPair in sceneAtZoom)
+                { // loop over all primitives in order.
+                    SceneObject sceneObject = sceneObjectPair.Value;
+                    uint id = sceneObjectPair.Key;
+
+                    switch (sceneObject.Enum)
+                    {
+                        case SceneObjectType.IconObject:
+                        case SceneObjectType.PointObject:
+                        case SceneObjectType.TextObject:
+                            ScenePoint geo = _pointIndex.Get(sceneObject.GeoId);
+                            PointF2D point = new PointF2D(geo.Key, geo.Value);
+                            memoryIndex.Add(new BoxF2D(point), (int)id);
+                            break;
+                        case SceneObjectType.LineObject:
+                        case SceneObjectType.LineTextObject:
+                        case SceneObjectType.PolygonObject:
+                            ScenePoints geos = _pointsIndex.Get(sceneObject.GeoId);
+                            memoryIndex.Add(new BoxF2D(geos.Key, geos.Value), (int)id);
+                            break;
+                    }
+                }
+
+                // serialize the r-tree.
+                RTreeSerializer serializer = new RTreeSerializer(this, compress, idx);
+                serializer.Serialize(stream, memoryIndex);
+
+                lengths[idx] = (int)(stream.Position - position);
+            }
         }
 
         /// <summary>
@@ -1657,12 +1672,19 @@ namespace OsmSharp.UI.Renderer.Scene
             private bool _compressed;
 
             /// <summary>
+            /// Holds the scene at index.
+            /// </summary>
+            private int _sceneAt;
+
+            /// <summary>
             /// Creates a new RTreeSerializer.
             /// </summary>
             /// <param name="scene"></param>
             /// <param name="compressed"></param>
-            public RTreeSerializer(Scene2DSimple scene, bool compressed)
+            /// <param name="sceneAt"></param>
+            public RTreeSerializer(Scene2DSimple scene, bool compressed, int sceneAt)
             {
+                _sceneAt = sceneAt;
                 _compressed = compressed;
                 _scene = scene;
             }
@@ -1686,196 +1708,202 @@ namespace OsmSharp.UI.Renderer.Scene
             protected override byte[] Serialize(RuntimeTypeModel typeModel, 
                 List<int> data, List<BoxF2D> boxes)
             {
-                //int scaleFactor = 1000000;
+                int scaleFactor = 1000000;
 
-                //Dictionary<uint, int> addedPoint = new Dictionary<uint,int>();
-                //Dictionary<uint, int> addedPoints = new Dictionary<uint,int>();
+                Dictionary<uint, SceneObject> sceneAtZoom = _scene._sceneObjects[_sceneAt];
 
-                //RTreeLeaf leafData = new RTreeLeaf();
+                Dictionary<uint, int> addedPoint = new Dictionary<uint, int>();
+                Dictionary<uint, int> addedPoints = new Dictionary<uint, int>();
 
-                ////leafData.PointsIndexes = new List<int>();
-                //leafData.PointsX = new List<long>();
-                //leafData.PointsY = new List<long>();
+                RTreeLeaf leafData = new RTreeLeaf();
 
-                //leafData.IconPointId = new List<int>();
-                //leafData.IconImageId = new List<uint>();
-                //leafData.IconZoomRangeId = new List<uint>();
+                //leafData.PointsIndexes = new List<int>();
+                leafData.PointsX = new List<long>();
+                leafData.PointsY = new List<long>();
 
-                //leafData.LinePointsId= new List<int>();
-                //leafData.LineStyleId = new List<uint>();
-                //leafData.LineZoomRangeId = new List<uint>();
+                leafData.IconPointId = new List<int>();
+                leafData.IconImageId = new List<uint>();
+                leafData.IconZoomRangeId = new List<uint>();
 
-                //leafData.LineTextPointsId = new List<int>();
-                //leafData.LineTextStyleId = new List<uint>();
-                //leafData.LineTextText = new List<string>();
-                //leafData.LineTextZoomRangeId = new List<uint>();
+                leafData.LinePointsId = new List<int>();
+                leafData.LineStyleId = new List<uint>();
+                leafData.LineZoomRangeId = new List<uint>();
 
-                //leafData.PointPointId = new List<int>();
-                //leafData.PointStyleId = new List<uint>();
-                //leafData.PointZoomRangeId = new List<uint>();
+                leafData.LineTextPointsId = new List<int>();
+                leafData.LineTextStyleId = new List<uint>();
+                leafData.LineTextText = new List<string>();
+                leafData.LineTextZoomRangeId = new List<uint>();
 
-                //leafData.PolygonPointsId = new List<int>();
-                //leafData.PolygonStyleId = new List<uint>();
-                //leafData.PolygonZoomRangeId = new List<uint>();
+                leafData.PointPointId = new List<int>();
+                leafData.PointStyleId = new List<uint>();
+                leafData.PointZoomRangeId = new List<uint>();
 
-                //leafData.TextPointPointId = new List<int>();
-                //leafData.TextPointStyleId = new List<uint>();
-                //leafData.TextPointText = new List<string>();
-                //leafData.TextPointZoomRangeId = new List<uint>();
+                leafData.PolygonPointsId = new List<int>();
+                leafData.PolygonStyleId = new List<uint>();
+                leafData.PolygonZoomRangeId = new List<uint>();
 
-                //foreach(int id in data)
-                //{
-                //    SceneObject sceneObject = _scene._sceneObjects[id];
+                leafData.TextPointPointId = new List<int>();
+                leafData.TextPointStyleId = new List<uint>();
+                leafData.TextPointText = new List<string>();
+                leafData.TextPointZoomRangeId = new List<uint>();
 
-                //    int geoId = -1;
-                //    ScenePoint point;
-                //    ScenePoints points;
-                //    switch (sceneObject.Enum)
-                //    {
-                //        case SceneObjectType.IconObject:
-                //            // get point.
-                //            point = _scene._pointIndex.Get(sceneObject.GeoId);
+                foreach (int id in data)
+                {
+                    SceneObject sceneObject = null;
+                    if (!sceneAtZoom.TryGetValue((uint)id, out sceneObject))
+                    {
+                        continue;
+                    }
 
-                //            // set point data and keep id.
-                //            if(!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
-                //            { // the point was not added yet. 
-                //                geoId = leafData.PointsX.Count;
-                //                //leafData.PointsIndexes.Add(geoId);
-                //                leafData.PointsX.Add((long)(scaleFactor * point.Key));
-                //                leafData.PointsY.Add((long)(scaleFactor * point.Value));
-                //                addedPoint.Add(sceneObject.GeoId, geoId);
-                //            }
-                //            leafData.IconPointId.Add(geoId); // add point.
+                    int geoId = -1;
+                    ScenePoint point;
+                    ScenePoints points;
+                    switch (sceneObject.Enum)
+                    {
+                        case SceneObjectType.IconObject:
+                            // get point.
+                            point = _scene._pointIndex.Get(sceneObject.GeoId);
 
-                //            // add zoom range.
-                //            leafData.IconZoomRangeId.Add(sceneObject.ZoomRangeId);
+                            // set point data and keep id.
+                            if (!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointsX.Count;
+                                //leafData.PointsIndexes.Add(geoId);
+                                leafData.PointsX.Add((long)(scaleFactor * point.Key));
+                                leafData.PointsY.Add((long)(scaleFactor * point.Value));
+                                addedPoint.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.IconPointId.Add(geoId); // add point.
 
-                //            // add image id.
-                //            leafData.IconImageId.Add(sceneObject.StyleId); 
-                //            break;
-                //        case SceneObjectType.PointObject:
-                //            // get point.
-                //            point = _scene._pointIndex.Get(sceneObject.GeoId);
+                            // add zoom range.
+                            leafData.IconZoomRangeId.Add(sceneObject.ZoomRangeId);
 
-                //            // set point data and keep id.
-                //            if(!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
-                //            { // the point was not added yet. 
-                //                geoId = leafData.PointsX.Count;
-                //                leafData.PointsX.Add((long)(scaleFactor * point.Key));
-                //                leafData.PointsY.Add((long)(scaleFactor * point.Value));
-                //                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
-                //                addedPoint.Add(sceneObject.GeoId, geoId);
-                //            }
-                //            leafData.PointPointId.Add(geoId);
+                            // add image id.
+                            leafData.IconImageId.Add(sceneObject.StyleId);
+                            break;
+                        case SceneObjectType.PointObject:
+                            // get point.
+                            point = _scene._pointIndex.Get(sceneObject.GeoId);
 
-                //            // add zoom range.
-                //            leafData.PointZoomRangeId.Add(sceneObject.ZoomRangeId);
+                            // set point data and keep id.
+                            if (!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointsX.Count;
+                                leafData.PointsX.Add((long)(scaleFactor * point.Key));
+                                leafData.PointsY.Add((long)(scaleFactor * point.Value));
+                                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                addedPoint.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.PointPointId.Add(geoId);
 
-                //            // add point style.
-                //            leafData.PointStyleId.Add(sceneObject.StyleId);
-                //            break;
-                //        case SceneObjectType.TextObject:
-                //            // get point.
-                //            point = _scene._pointIndex.Get(sceneObject.GeoId);
+                            // add zoom range.
+                            leafData.PointZoomRangeId.Add(sceneObject.ZoomRangeId);
 
-                //            // set point data and keep id.
-                //            if (!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
-                //            { // the point was not added yet. 
-                //                geoId = leafData.PointsX.Count;
-                //                leafData.PointsX.Add((long)(scaleFactor * point.Key));
-                //                leafData.PointsY.Add((long)(scaleFactor * point.Value));
-                //                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
-                //                addedPoint.Add(sceneObject.GeoId, geoId);
-                //            }
-                //            leafData.TextPointPointId.Add(geoId);
+                            // add point style.
+                            leafData.PointStyleId.Add(sceneObject.StyleId);
+                            break;
+                        case SceneObjectType.TextObject:
+                            // get point.
+                            point = _scene._pointIndex.Get(sceneObject.GeoId);
 
-                //            // add zoom range.
-                //            leafData.TextPointZoomRangeId.Add(sceneObject.ZoomRangeId);
+                            // set point data and keep id.
+                            if (!addedPoint.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointsX.Count;
+                                leafData.PointsX.Add((long)(scaleFactor * point.Key));
+                                leafData.PointsY.Add((long)(scaleFactor * point.Value));
+                                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                addedPoint.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.TextPointPointId.Add(geoId);
 
-                //            // add point style.
-                //            leafData.TextPointStyleId.Add(sceneObject.StyleId);
+                            // add zoom range.
+                            leafData.TextPointZoomRangeId.Add(sceneObject.ZoomRangeId);
 
-                //            // add text.
-                //            leafData.TextPointText.Add(
-                //                _scene._stringTable.Get((sceneObject as TextObject).TextId));
-                //            break;
-                //        case SceneObjectType.LineObject:
-                //            // get points.
-                //            points = _scene._pointsIndex.Get(sceneObject.GeoId);
+                            // add point style.
+                            leafData.TextPointStyleId.Add(sceneObject.StyleId);
 
-                //            // set points data and keep id.
-                //            if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
-                //            { // the point was not added yet. 
-                //                geoId = leafData.PointsX.Count;
-                //                leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
-                //                leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
-                //                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
-                //                addedPoints.Add(sceneObject.GeoId, geoId);
-                //            }
-                //            leafData.LinePointsId.Add(geoId);
+                            // add text.
+                            leafData.TextPointText.Add(
+                                _scene._stringTable.Get((sceneObject as TextObject).TextId));
+                            break;
+                        case SceneObjectType.LineObject:
+                            // get points.
+                            points = _scene._pointsIndex.Get(sceneObject.GeoId);
 
-                //            // add zoom range.
-                //            leafData.LineZoomRangeId.Add(sceneObject.ZoomRangeId);
+                            // set points data and keep id.
+                            if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointsX.Count;
+                                leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
+                                leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
+                                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                addedPoints.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.LinePointsId.Add(geoId);
 
-                //            // add point style.
-                //            leafData.LineStyleId.Add(sceneObject.StyleId);
-                //            break;
-                //        case SceneObjectType.LineTextObject:
-                //            // get points.
-                //            points = _scene._pointsIndex.Get(sceneObject.GeoId);
+                            // add zoom range.
+                            leafData.LineZoomRangeId.Add(sceneObject.ZoomRangeId);
 
-                //            // set points data and keep id.
-                //            if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
-                //            { // the point was not added yet. 
-                //                geoId = leafData.PointsX.Count;
-                //                leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
-                //                leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
-                //                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
-                //                addedPoint.Add(sceneObject.GeoId, geoId);
-                //            }
-                //            leafData.LineTextPointsId.Add(geoId);
+                            // add point style.
+                            leafData.LineStyleId.Add(sceneObject.StyleId);
+                            break;
+                        case SceneObjectType.LineTextObject:
+                            // get points.
+                            points = _scene._pointsIndex.Get(sceneObject.GeoId);
 
-                //            // add zoom range.
-                //            leafData.LineTextZoomRangeId.Add(sceneObject.ZoomRangeId);
+                            // set points data and keep id.
+                            if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointsX.Count;
+                                leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
+                                leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
+                                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                addedPoint.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.LineTextPointsId.Add(geoId);
 
-                //            // add point style.
-                //            leafData.LineTextStyleId.Add(sceneObject.StyleId);
+                            // add zoom range.
+                            leafData.LineTextZoomRangeId.Add(sceneObject.ZoomRangeId);
 
-                //            // add text.
-                //            leafData.LineTextText.Add(
-                //                _scene._stringTable.Get((sceneObject as LineTextObject).TextId));
-                //            break;
-                //        case SceneObjectType.PolygonObject:
-                //            // get points.
-                //            points = _scene._pointsIndex.Get(sceneObject.GeoId);
+                            // add point style.
+                            leafData.LineTextStyleId.Add(sceneObject.StyleId);
 
-                //            // set points data and keep id.
-                //            if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
-                //            { // the point was not added yet. 
-                //                geoId = leafData.PointsX.Count;
-                //                leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
-                //                leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
-                //                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
-                //                addedPoints.Add(sceneObject.GeoId, geoId);
-                //            }
-                //            leafData.PolygonPointsId.Add(geoId);
+                            // add text.
+                            leafData.LineTextText.Add(
+                                _scene._stringTable.Get((sceneObject as LineTextObject).TextId));
+                            break;
+                        case SceneObjectType.PolygonObject:
+                            // get points.
+                            points = _scene._pointsIndex.Get(sceneObject.GeoId);
 
-                //            // add zoom range.
-                //            leafData.PolygonZoomRangeId.Add(sceneObject.ZoomRangeId);
+                            // set points data and keep id.
+                            if (!addedPoints.TryGetValue(sceneObject.GeoId, out geoId))
+                            { // the point was not added yet. 
+                                geoId = leafData.PointsX.Count;
+                                leafData.PointsX.AddRange(points.Key.ConvertToLongArray(scaleFactor));
+                                leafData.PointsY.AddRange(points.Value.ConvertToLongArray(scaleFactor));
+                                //leafData.PointsIndexes.Add(leafData.PointsY.Count);
+                                addedPoints.Add(sceneObject.GeoId, geoId);
+                            }
+                            leafData.PolygonPointsId.Add(geoId);
 
-                //            // add point style.
-                //            leafData.PolygonStyleId.Add(sceneObject.StyleId);
-                //            break;
-                //    }
-                //}
+                            // add zoom range.
+                            leafData.PolygonZoomRangeId.Add(sceneObject.ZoomRangeId);
 
-                //// delta-encode.
-                //leafData.PointsX.EncodeDelta();
-                //leafData.PointsY.EncodeDelta();
+                            // add point style.
+                            leafData.PolygonStyleId.Add(sceneObject.StyleId);
+                            break;
+                    }
+                }
+
+                // delta-encode.
+                leafData.PointsX.EncodeDelta();
+                leafData.PointsY.EncodeDelta();
 
                 // serialize.
                 MemoryStream stream = new MemoryStream();
-                //typeModel.Serialize(stream, leafData);
+                typeModel.Serialize(stream, leafData);
                 byte[] serializedData = stream.ToArray();
                 stream.Dispose();
                 if (_compressed)
@@ -2184,6 +2212,12 @@ namespace OsmSharp.UI.Renderer.Scene
             /// </summary>
             [ProtoMember(5)]
             public ZoomRanges[] ZoomRanges { get; set; }
+
+            /// <summary>
+            /// Holds the zoom factors.
+            /// </summary>
+            [ProtoMember(6)]
+            public float[] ZoomFactors { get; set; }
         }
 
         /// <summary>
