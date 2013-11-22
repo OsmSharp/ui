@@ -68,6 +68,44 @@ namespace OsmSharp.Test.Unittests.Routing.TSP
         }
 
         /// <summary>
+        /// Tests the a calculation with just one point.
+        /// </summary>
+        [Test]
+        public void TestTSPWrapperOne()
+        {
+            // calculate TSP.
+            Route route = this.CalculateTSP(Assembly.GetExecutingAssembly()
+                                                            .GetManifestResourceStream(
+                                                                @"OsmSharp.Test.Unittests.tsp_real.osm"),
+                                                    Assembly.GetExecutingAssembly()
+                                                            .GetManifestResourceStream(
+                                                                @"OsmSharp.Test.Unittests.tsp_one.csv"),
+                                                    false,
+                                                    Vehicle.Car);
+
+            Assert.IsNotNull(route);
+        }
+
+        /// <summary>
+        /// Tests the a calculation with just two points.
+        /// </summary>
+        [Test]
+        public void TestTSPWrapperTwo()
+        {
+            // calculate TSP.
+            Route route = this.CalculateTSP(Assembly.GetExecutingAssembly()
+                                                            .GetManifestResourceStream(
+                                                                @"OsmSharp.Test.Unittests.tsp_real.osm"),
+                                                    Assembly.GetExecutingAssembly()
+                                                            .GetManifestResourceStream(
+                                                                @"OsmSharp.Test.Unittests.tsp_two.csv"),
+                                                    false,
+                                                    Vehicle.Car);
+
+            Assert.IsNotNull(route);
+        }
+
+        /// <summary>
         /// Calculates the TSP.
         /// </summary>
         /// <param name="dataStream"></param>

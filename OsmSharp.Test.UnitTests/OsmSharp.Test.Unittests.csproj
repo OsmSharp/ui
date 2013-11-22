@@ -276,6 +276,8 @@
     <EmbeddedResource Include="Routing\CH\Contraction\contraction_test2.osm" />
     <EmbeddedResource Include="Routing\CH\Contraction\contraction_test1.osm" />
     <EmbeddedResource Include="test_segments.osm" />
+    <EmbeddedResource Include="tsp_one.csv" />
+    <EmbeddedResource Include="tsp_two.csv" />
     <None Include="packages.config" />
     <None Include="test_network.svg" />
     <EmbeddedResource Include="test.v1.0.gpx" />
