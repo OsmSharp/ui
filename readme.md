@@ -3,6 +3,10 @@ OsmSharp
 
 OsmSharp is an open-source mapping tool designed to work with OpenStreetMap. Most important features are offline rendering of vector-data and routing. All OsmSharp features are available on Android, iOS, Windows Phone (using the Xamarin products) and the regulars Linux, Windows, OSX (using Mono).
 
+Build status:
+
+<img src="http://osmsharp.com:8080/app/rest/builds/buildType:(id:bt16)/statusIcon"/>
+
 Features
 --------
 
