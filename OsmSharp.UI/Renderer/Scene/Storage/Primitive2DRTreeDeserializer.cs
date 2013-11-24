@@ -135,7 +135,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                     previous = idx;
                 }
             }
-            pointsBoundaries[previous] = pointsStarts.Length - 1 - previous;
+            pointsBoundaries[previous] = pointsStarts.Length - previous;
 
             // loop over all points.
             for (int idx = 0; idx < leafData.PointPointId.Count; idx++)
