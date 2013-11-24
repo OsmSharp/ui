@@ -16,70 +16,59 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Math.Primitives;
-
-namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
+namespace OsmSharp.UI.Renderer.Primitives
 {
     /// <summary>
-    /// A simple text.
+    /// Represents a simple 2D image.
     /// </summary>
-    internal class Text2D : IScene2DPrimitive
+    public class Image2D : Primitive2D
     {
         /// <summary>
-        /// Creates a new Text.
+        /// Creates a new Image2D.
         /// </summary>
-        public Text2D()
+        public Image2D()
         {
-            
+
         }
 
         /// <summary>
-        /// Creates a new icon.
+        /// Creates a new Image2D.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="text"></param>
-        /// <param name="size"></param>
-        public Text2D(float x, float y, string text, int color, float size)
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="bottom"></param>
+        /// <param name="right"></param>
+        /// <param name="imageData"></param>
+        public Image2D(float left, float top, float bottom, float right, byte[] imageData)
         {
-            this.X = x;
-            this.Y = y;
-            this.Text = text;
-            this.Size = size;
-            this.Color = color;
+            this.ImageData = imageData;
+            this.Left = left;
+            this.Right = right;
+            this.Top = top;
+            this.Bottom = bottom;
 
             this.MinZoom = float.MinValue;
             this.MaxZoom = float.MaxValue;
         }
 
         /// <summary>
-        /// Creates a new icon.
+        /// Creates a new Image2D.
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="text"></param>
-        /// <param name="color"></param>
-        /// <param name="size"></param>
-        /// <param name="haloColor"></param>
-        /// <param name="haloRadius"></param>
-        /// <param name="font"></param>
+        /// <param name="left"></param>
+        /// <param name="top"></param>
+        /// <param name="bottom"></param>
+        /// <param name="right"></param>
+        /// <param name="imageData"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public Text2D(double x, double y, string text, int color, double size, int? haloColor, int? haloRadius, string font,
-		              float minZoom, float maxZoom)
+        public Image2D(double left, double top, double bottom, double right, byte[] imageData, float minZoom, float maxZoom)
         {
-            this.X = x;
-            this.Y = y;
-            this.Text = text;
-            this.Size = size;
-            this.Color = color;
-            this.HaloColor = haloColor;
-            this.HaloRadius = haloRadius;
-			this.Font = font;
+            this.ImageData = imageData;
+            this.Left = left;
+            this.Right = right;
+            this.Top = top;
+            this.Bottom = bottom;
 
             this.MinZoom = minZoom;
             this.MaxZoom = maxZoom;
@@ -94,51 +83,36 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// Gets or sets the tag.
         /// </summary>
         /// <value>The tag.</value>
-        public object Tag { get; set; }
+        public object Tag
+        {
+            get;
+            set;
+        }
 
         /// <summary>
-        /// Gets/sets the color.
+        /// Gets the image data.
         /// </summary>
-        public int Color { get; set; }
+        public byte[] ImageData { get; set; }
 
         /// <summary>
-        /// Gets or sets the x.
+        /// Gets the left.
         /// </summary>
-        /// <value>The x.</value>
-		public double X { get; set; }
+        public double Left { get; set; }
 
         /// <summary>
-        /// Gets or sets the y.
+        /// Gets the right.
         /// </summary>
-        /// <value>The y.</value>
-		public double Y { get; set; }
+        public double Right { get; set; }
 
         /// <summary>
-        /// Gets the text.
+        /// Gets the top.
         /// </summary>
-        /// <value>The text.</value>
-        public string Text { get; set; }
+        public double Top { get; set; }
 
         /// <summary>
-        /// Gets or sets the halo size.
+        /// Gets the bottom.
         /// </summary>
-        public int? HaloRadius { get; set; }
-
-        /// <summary>
-        /// Gets or sets the halo color.
-        /// </summary>
-        public int? HaloColor { get; set; }
-
-        /// <summary>
-        /// Gets the size.
-        /// </summary>
-		public double Size { get; set; }
-
-		/// <summary>
-		/// Gets the font name.
-		/// </summary>
-		/// <value>The font.</value>
-		public string Font { get; set; }
+        public double Bottom { get; set; }
 
         /// <summary>
         /// The minimum zoom.
@@ -159,23 +133,23 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// <c>false</c>
         /// <param name="view">View.</param>
         /// <param name="zoom"></param>
-        public bool IsVisibleIn(View2D view, float zoom)
+        public override bool IsVisibleIn(View2D view, float zoom)
         {
             if (this.MinZoom > zoom || this.MaxZoom < zoom)
             { // outside of zoom bounds!
                 return false;
             }
 
-            return view.Contains(this.X, this.Y);
+            return view.OverlapsWithBox(this.Left, this.Top, this.Right, this.Bottom);
         }
 
         /// <summary>
         /// Returns the bounding box for this primitive.
         /// </summary>
         /// <returns></returns>
-		public BoxF2D GetBox()
+        public override BoxF2D GetBox()
         {
-			return new BoxF2D(this.X, this.Y, this.X, this.Y);
+            return new BoxF2D(this.Left, this.Top, this.Right, this.Bottom);
         }
 
         #endregion

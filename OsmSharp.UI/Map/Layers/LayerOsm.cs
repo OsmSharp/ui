@@ -18,18 +18,18 @@
 
 using System.Collections.Generic;
 using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Data;
 using OsmSharp.UI.Map.Styles;
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.Math.Geo.Projections;
+using OsmSharp.UI.Renderer.Primitives;
 
 namespace OsmSharp.UI.Map.Layers
 {
     /// <summary>
     /// A layer drawing OSM data.
     /// </summary>
-    public class LayerOsm : ILayer
+    public class LayerOsm : Layer
     {
         /// <summary>
         /// Holds the source of the OSM raw data.
@@ -61,46 +61,27 @@ namespace OsmSharp.UI.Map.Layers
         }
 
         /// <summary>
-        /// Gets the minimum zoom.
-        /// </summary>
-        public float? MinZoom { get; private set; }
-
-        /// <summary>
-        /// Gets the maximum zoom.
-        /// </summary>
-        public float? MaxZoom { get; private set; }
-
-        /// <summary>
-        /// Gets the scene of this layer containing the objects already projected.
-        /// </summary>
-        public Scene2D Scene { get { return _styleSceneManager.Scene; } }
-
-        /// <summary>
         /// Called when the view on the map containing this layer has changed.
         /// </summary>
         /// <param name="map"></param>
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
-        public void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view)
+        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view)
         {
             this.BuildScene(map, zoomFactor, center, view);
         }
 
         /// <summary>
-        /// Event raised when this layer's content has changed.
+        /// Returns all objects from this layer visible for the given parameters.
         /// </summary>
-        public event Map.LayerChanged LayerChanged;
-		
-		/// <summary>
-		/// Invalidates this layer.
-		/// </summary>
-		public void Invalidate()
-		{
-			if (this.LayerChanged != null) {
-				this.LayerChanged (this);
-			}
-		}
+        /// <param name="zoomFactor"></param>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        {
+            return _styleSceneManager.Scene.Get(view, zoomFactor);
+        }
 
         #region Scene Building
 

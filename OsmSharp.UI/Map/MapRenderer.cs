@@ -16,15 +16,13 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OsmSharp;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
 
@@ -55,22 +53,23 @@ namespace OsmSharp.UI.Map
 		/// <param name="target">Target.</param>
 		/// <param name="projection">Projection.</param>
 		/// <param name="layers">Layers.</param>
-		/// <param name="view">View</param>
-		public bool Render(TTarget target, List<ILayer> layers, View2D view)
+        /// <param name="view">View</param>
+        /// <param name="zoomFactor">View</param>
+		public bool Render(TTarget target, List<Layer> layers, View2D view, float zoomFactor)
 		{	
-			// create the view for this control.
-//			Target2DWrapper<TTarget> target2DWrapper = _renderer.CreateTarget2DWrapper(target);
-			
+			// create and concatenate primitives from all layers.
+            IEnumerable<Primitive2D> primitives = new List<Primitive2D>();
+
 			// draw all layers seperatly but in the correct order.
 			var scenes = new List<Scene2D>();
 			for (int layerIdx = 0; layerIdx < layers.Count; layerIdx++)
 			{
-				// get the layer.
-				scenes.Add(layers[layerIdx].Scene);
+                primitives = primitives.Concat(
+                    layers[layerIdx].Get(zoomFactor, view));
 			}
 			
 			// render the scenes.
-			return _renderer.Render(target, scenes, view);
+            return _renderer.Render(target, view, zoomFactor, primitives);
 		}
 
         /// <summary>
@@ -79,37 +78,22 @@ namespace OsmSharp.UI.Map
         /// <param name="target"></param>
         /// <param name="map"></param>
         /// <param name="view"></param>
-        public bool Render(TTarget target, Map map, View2D view)
+        /// <param name="zoomFactor"></param>
+        public bool Render(TTarget target, Map map, View2D view, float zoomFactor)
         {
+            // create and concatenate primitives from all layers.
+            IEnumerable<Primitive2D> primitives = new List<Primitive2D>();
+
             // draw all layers seperatly but in the correct order.
             var scenes = new List<Scene2D>();
             for (int layerIdx = 0; layerIdx < map.LayerCount; layerIdx++)
             {
-                // get the layer.
-                scenes.Add(map[layerIdx].Scene);
+                primitives = primitives.Concat(
+                    map[layerIdx].Get(zoomFactor, view));
             }
 
             // render the scenes.
-            return _renderer.Render(target, scenes, view);
-        }
-
-        /// <summary>
-        /// Renders the given map using the given zoom factor and center.
-        /// </summary>
-        /// <param name="target"></param>
-        /// <param name="map"></param>
-        /// <param name="view"></param>
-        public void RenderCache(TTarget target, Map map, View2D view)
-        {
-            // draw all layers seperatly but in the correct order.
-            for (int layerIdx = 0; layerIdx < map.LayerCount; layerIdx++)
-            {
-                // get the layer.
-                ILayer layer = map[layerIdx];
-
-                // render the scene for this layer.
-                _renderer.RenderCache(target, view);
-            }
+            return _renderer.Render(target, view, zoomFactor, primitives);
         }
 
         /// <summary>

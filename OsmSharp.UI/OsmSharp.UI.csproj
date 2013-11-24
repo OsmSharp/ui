@@ -86,7 +86,7 @@
     <Compile Include="KnownColor.cs" />
     <Compile Include="Map\Layers\LayerDynamicGraphLiveEdge.cs" />
     <Compile Include="Map\Layers\LayerGpx.cs" />
-    <Compile Include="Map\Layers\ILayer.cs" />
+    <Compile Include="Map\Layers\Layer.cs" />
     <Compile Include="Map\Layers\LayerOsm.cs" />
     <Compile Include="Map\Layers\LayerPrimitives.cs" />
     <Compile Include="Map\Layers\LayerScene.cs" />
@@ -134,36 +134,40 @@
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSDomainParser.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSLexer.cs" />
     <Compile Include="Map\Styles\MapCSS\v0_2\MapCSSParser.cs" />
-    <Compile Include="Renderer\Scene\IScene2DPrimitivesSource.cs" />
-    <Compile Include="Renderer\Scene\Scene2DReadonly.cs" />
-    <Compile Include="Renderer\Scene\Scene2DPrimitive.cs" />
-    <Compile Include="Renderer\Scene\Scene2DPrimitiveEnumerable.cs" />
-    <Compile Include="Renderer\Scene\Scene2DPrimitives\Icon2D.cs" />
-    <Compile Include="Renderer\Scene\Scene2DPrimitives\Image2D.cs" />
-    <Compile Include="Renderer\Scene\Scene2DPrimitives\LineText2D.cs" />
-    <Compile Include="Renderer\Scene\Scene2DPrimitives\Text2D.cs" />
-    <Compile Include="Renderer\Scene\Storage\Scene2DEntry.cs" />
-    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DRTreeSerializer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledIndex.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledSerializer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Renderer\Scene\Storage\Styled\Scene2DStyledSource.cs" />
+    <Compile Include="Renderer\IPrimitives2DSource.cs" />
+    <Compile Include="Renderer\Scene\Primitives\SceneIconObject.cs" />
+    <Compile Include="Renderer\Scene\Primitives\SceneLineObject.cs" />
+    <Compile Include="Renderer\Scene\Primitives\SceneLineTextObject.cs" />
+    <Compile Include="Renderer\Scene\Primitives\SceneObject.cs" />
+    <Compile Include="Renderer\Scene\Primitives\SceneObjectType.cs" />
+    <Compile Include="Renderer\Scene\Primitives\ScenePointObject.cs" />
+    <Compile Include="Renderer\Scene\Primitives\ScenePolygonObject.cs" />
+    <Compile Include="Renderer\Scene\Primitives\SceneTextObject.cs" />
+    <Compile Include="Renderer\Primitives\Icon2D.cs" />
+    <Compile Include="Renderer\Primitives\Image2D.cs" />
+    <Compile Include="Renderer\Primitives\LineText2D.cs" />
+    <Compile Include="Renderer\Primitives\Text2D.cs" />
+    <Compile Include="Renderer\Scene\Scene2DZoomRange.cs" />
+    <Compile Include="Renderer\Scene\Storage\Primitive2DRTreeDeserializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\Primitive2DSource.cs" />
+    <Compile Include="Renderer\Scene\Storage\SceneIndex.cs" />
+    <Compile Include="Renderer\Scene\Storage\SceneObjectBlock.cs" />
+    <Compile Include="Renderer\Scene\Storage\SceneObjectRTreeSerializer.cs" />
+    <Compile Include="Renderer\Scene\Storage\SceneSerializer.cs" />
+    <Compile Include="Renderer\Scene\Styles\StyleLine.cs" />
+    <Compile Include="Renderer\Scene\Styles\StylePoint.cs" />
+    <Compile Include="Renderer\Scene\Styles\StylePolygon.cs" />
+    <Compile Include="Renderer\Scene\Styles\StyleText.cs" />
     <Compile Include="Renderer\Target2DWrapper.cs" />
     <Compile Include="Renderer\View2D.cs" />
-    <Compile Include="Renderer\Scene\Scene2DSimple.cs" />
-    <Compile Include="SimpleColor.cs" />
-    <Compile Include="Renderer\Scene\Scene2DPrimitives\IScene2DPrimitive.cs" />
-    <Compile Include="Renderer\Scene\Scene2DPrimitives\Line2D.cs" />
-    <Compile Include="Renderer\Scene\Scene2DPrimitives\Point2D.cs" />
-    <Compile Include="Renderer\Scene\Scene2DPrimitives\Polygon2D.cs" />
-    <Compile Include="Renderer\Renderer2D.cs" />
     <Compile Include="Renderer\Scene\Scene2D.cs" />
-    <Compile Include="Renderer\Scene\Scene2DPrimitives\ImageTilted2D.cs" />
+    <Compile Include="SimpleColor.cs" />
+    <Compile Include="Renderer\Primitives\Primitive2D.cs" />
+    <Compile Include="Renderer\Primitives\Line2D.cs" />
+    <Compile Include="Renderer\Primitives\Point2D.cs" />
+    <Compile Include="Renderer\Primitives\Polygon2D.cs" />
+    <Compile Include="Renderer\Renderer2D.cs" />
+    <Compile Include="Renderer\Primitives\ImageTilted2D.cs" />
     <Compile Include="Map\Layers\LayerRoute.cs" />
   </ItemGroup>
   <ItemGroup>

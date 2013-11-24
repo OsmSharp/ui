@@ -23,13 +23,15 @@ using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
+using System.Collections.Generic;
+using OsmSharp.UI.Renderer.Primitives;
 
 namespace OsmSharp.UI.Map.Layers
 {
 	/// <summary>
 	/// A layer drawing GPX data.
 	/// </summary>
-	public class LayerGpx : ILayer
+	public class LayerGpx : Layer
 	{		
 		/// <summary>
 		/// Holds the projection.
@@ -44,26 +46,9 @@ namespace OsmSharp.UI.Map.Layers
 		{			
 			_projection = projection;
 
-            this.Scene = new Scene2DSimple(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
-			this.Scene.BackColor = SimpleColor.FromKnownColor(KnownColor.Transparent).Value;
+            _scene = new Scene2D((float)projection.ToZoomFactor(16));
 		}
-		
-		/// <summary>
-		/// Gets the minimum zoom.
-		/// </summary>
-		public float? MinZoom { get; private set; }
-		
-		/// <summary>
-		/// Gets the maximum zoom.
-		/// </summary>
-		public float? MaxZoom { get; private set; }
-		
-		/// <summary>
-		/// Gets the scene of this layer containing the objects already projected.
-		/// </summary>
-		public Scene2D Scene { get; private set; }
-		
+
 		/// <summary>
 		/// Called when the view on the map containing this layer has changed.
 		/// </summary>
@@ -71,29 +56,30 @@ namespace OsmSharp.UI.Map.Layers
 		/// <param name="zoomFactor"></param>
 		/// <param name="center"></param>
 		/// <param name="view"></param>
-		public void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view)
+		internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view)
 		{
 			// all data is pre-loaded for now.
 
 			// when displaying huge amounts of GPX-data use another approach.
 		}
-		
-		/// <summary>
-		/// Event raised when this layer's content has changed.
-		/// </summary>
-		public event Map.LayerChanged LayerChanged;
-		
-		/// <summary>
-		/// Invalidates this layer.
-		/// </summary>
-		public void Invalidate()
-		{
-			if (this.LayerChanged != null) {
-				this.LayerChanged (this);
-			}
-		}
 
-		#region Scene Building
+        /// <summary>
+        /// Returns all object in this layer that are visible for the given parameters.
+        /// </summary>
+        /// <param name="zoomFactor"></param>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        {
+            return _scene.Get(view, zoomFactor);
+        }
+
+        #region Scene Building
+
+        /// <summary>
+        /// Holds the scene.
+        /// </summary>
+        private Scene2D _scene;
 
 		/// <summary>
 		/// Adds a new GPX.
@@ -118,8 +104,8 @@ namespace OsmSharp.UI.Map.Layers
                     SimpleColor transparantBlue = SimpleColor.FromArgb(128,
                                                                        blue.R, blue.G, blue.B);
 
-                    uint pointId = this.Scene.AddPoint(x, y);
-                    this.Scene.AddStylePoint(pointId, float.MinValue, float.MaxValue, transparantBlue.Value, 8);
+                    uint pointId = _scene.AddPoint(x, y);
+                    _scene.AddStylePoint(pointId, 0, float.MinValue, float.MaxValue, transparantBlue.Value, 8);
 
                     if (bounds == null)
                     { // create box.
@@ -150,10 +136,10 @@ namespace OsmSharp.UI.Map.Layers
                     SimpleColor transparantBlue = SimpleColor.FromArgb(128,
                                                                        blue.R, blue.G, blue.B);
 
-                    uint? pointsId = this.Scene.AddPoints(x, y);
+                    uint? pointsId = _scene.AddPoints(x, y);
                     if (pointsId.HasValue)
                     {
-                        this.Scene.AddStyleLine(pointsId.Value, float.MinValue, float.MaxValue, transparantBlue.Value, 8);
+                        _scene.AddStyleLine(pointsId.Value, 0, float.MinValue, float.MaxValue, transparantBlue.Value, 8, Renderer.Primitives.LineJoin.Round, null);
 
                         if (bounds == null)
                         { // create box.
@@ -171,5 +157,5 @@ namespace OsmSharp.UI.Map.Layers
 		}
 		
 		#endregion
-	}
+    }
 }

@@ -26,6 +26,7 @@ using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math.Random;
 using ProtoBuf.Meta;
+using System.Linq;
 
 namespace OsmSharp.Test.Unittests.Collections.SpatialIndexes
 {

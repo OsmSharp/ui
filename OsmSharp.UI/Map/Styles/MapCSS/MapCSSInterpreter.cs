@@ -29,7 +29,7 @@ using OsmSharp.Osm.Interpreter;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2;
 using OsmSharp.UI.Map.Styles.MapCSS.v0_2.Domain;
 using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
+using OsmSharp.UI.Renderer.Primitives;
 
 namespace OsmSharp.UI.Map.Styles.MapCSS
 {
@@ -461,8 +461,8 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     scene.AddStylePolygon(pointsId.Value, this.CalculateSceneLayer(OffsetCasing, zIndex), minZoom, maxZoom, color, 1, false);
                                 }
                             }
+                            renderAsLine = false; // was validly rendered als a line.
                         }
-                        renderAsLine = false; // was validly rendered als a line.
                     }
 
                     if (renderAsLine)
@@ -544,7 +544,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                     string name;
                                     if (way.Tags.TryGetValue(nameTag, out name))
                                     {
-                                        scene.AddStyleLine(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
+                                        scene.AddStyleLineText(pointsId.Value, this.CalculateSceneLayer(OffsetLineText, zIndex),
                                             minZoom, maxZoom, textColor, fontSize, name, fontFamily, haloColorNullable, haloRadiusNullable);
                                     }
                                 }

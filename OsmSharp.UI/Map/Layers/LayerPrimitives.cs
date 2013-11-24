@@ -23,13 +23,15 @@ using OsmSharp.Math.Geo;
 using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Renderer.Primitives;
+using System.Collections.Generic;
 
 namespace OsmSharp.UI.Map.Layers
 {
 	/// <summary>
 	/// A layer containing several simple primitives.
 	/// </summary>
-	public class LayerPrimitives : ILayer
+	public class LayerPrimitives : Layer
 	{
 		/// <summary>
 		/// Holds the projection for this layer.
@@ -48,8 +50,7 @@ namespace OsmSharp.UI.Map.Layers
 		{
 			_projection = projection;
 
-            _scene = new Scene2DSimple(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+            _scene = new Scene2D((float)projection.ToZoomFactor(16));
 		}
 
 		/// <summary>
@@ -63,8 +64,8 @@ namespace OsmSharp.UI.Map.Layers
 			double[] projectedCoordinates = _projection.ToPixel(
 				coordinate);
             uint pointId = _scene.AddPoint(projectedCoordinates[0], projectedCoordinates[1]);
-            _scene.AddStylePoint(pointId, float.MinValue, float.MaxValue, color, sizePixels);
-			this.RaiseLayerChanged();
+            _scene.AddStylePoint(pointId, 0, float.MinValue, float.MaxValue, color, sizePixels);
+            this.RaiseLayerChanged();
 		}
 
         /// <summary>
@@ -86,7 +87,7 @@ namespace OsmSharp.UI.Map.Layers
             uint? pointsId = _scene.AddPoints(x, y);
             if (pointsId.HasValue)
             {
-                _scene.AddStyleLine(pointsId.Value, float.MinValue, float.MaxValue, color, sizePixels);
+                _scene.AddStyleLine(pointsId.Value, 0, float.MinValue, float.MaxValue, color, sizePixels, Renderer.Primitives.LineJoin.Round, null);
                 this.RaiseLayerChanged();
             }
         }
@@ -99,34 +100,6 @@ namespace OsmSharp.UI.Map.Layers
             _scene.Clear();
         }
 
-		#region ILayer implementation
-
-		/// <summary>
-		/// Raised when the content of this layer has changed.
-		/// </summary>
-		public event OsmSharp.UI.Map.Map.LayerChanged LayerChanged;
-		
-		/// <summary>
-		/// Invalidates this layer.
-		/// </summary>
-		public void Invalidate()
-		{
-			if (this.LayerChanged != null) {
-				this.LayerChanged (this);
-			}
-		}
-
-		/// <summary>
-		/// Raises the layer changed event.
-		/// </summary>
-		private void RaiseLayerChanged()
-		{
-			if(this.LayerChanged != null)
-			{
-				this.LayerChanged(this);
-			}
-		}
-
 		/// <summary>
 		/// Called when the view on the map has changed.
 		/// </summary>
@@ -134,43 +107,22 @@ namespace OsmSharp.UI.Map.Layers
 		/// <param name="zoomFactor"></param>
 		/// <param name="center"></param>
 		/// <param name="view"></param>
-		public void ViewChanged (Map map, float zoomFactor, GeoCoordinate center, View2D view)
-		{
+		internal override void ViewChanged (Map map, float zoomFactor, GeoCoordinate center, View2D view)
+        {
+            // all data is pre-loaded for now.
 
+            // when displaying huge amounts of GPX-data use another approach.
 		}
 
-		/// <summary>
-		/// The minimum zoom.
-		/// </summary>
-		/// <remarks>The minimum zoom is the 'highest'.</remarks>
-		/// <value>The minimum zoom.</value>
-		public float? MinZoom {
-			get {
-				throw new NotImplementedException ();
-			}
-		}
-
-		/// <summary>
-		/// The maximum zoom.
-		/// </summary>
-		/// <remarks>The maximum zoom is the 'lowest' or most detailed view.</remarks>
-		/// <value>The max zoom.</value>
-		public float? MaxZoom {
-			get {
-				throw new NotImplementedException ();
-			}
-		}
-
-		/// <summary>
-		/// Gets the scene.
-		/// </summary>
-		/// <value>The scene.</value>
-		public Scene2D Scene {
-			get {
-				return _scene;
-			}
-		}
-
-		#endregion
+        /// <summary>
+        /// Returns all the object from this layer visible for the given parameters.
+        /// </summary>
+        /// <param name="zoomFactor"></param>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        {
+            return _scene.Get(view, zoomFactor);
+        }
 	}
 }

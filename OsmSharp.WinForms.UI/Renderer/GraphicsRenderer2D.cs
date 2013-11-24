@@ -48,7 +48,7 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="target"></param>
         /// <param name="scenes"></param>
         /// <param name="view"></param>
-        protected override void OnBeforeRender(Target2DWrapper<Graphics> target, List<Scene2D> scenes, View2D view)
+        protected override void OnBeforeRender(Target2DWrapper<Graphics> target, View2D view)
         {
             // create a bitmap and render there.
             var bitmap = new Bitmap((int)target.Width, (int)target.Height);
@@ -69,7 +69,7 @@ namespace OsmSharp.WinForms.UI.Renderer
         /// <param name="target"></param>
         /// <param name="scenes"></param>
         /// <param name="view"></param>
-        protected override void OnAfterRender(Target2DWrapper<Graphics> target, List<Scene2D> scenes, View2D view)
+        protected override void OnAfterRender(Target2DWrapper<Graphics> target, View2D view)
         {
             target.Target.Flush();
             target.Target = target.BackTarget;
@@ -78,36 +78,6 @@ namespace OsmSharp.WinForms.UI.Renderer
             {
                 target.Target.DrawImageUnscaled(bitmap, 0, 0);
             }
-        }
-
-	    /// <summary>
-	    /// Builds the cached scene.
-	    /// </summary>
-	    /// <param name="target"></param>
-	    /// <param name="currentCache"></param>
-	    /// <param name="currentScenes"></param>
-	    /// <param name="view"></param>
-	    /// <returns></returns>
-        protected override Scene2D BuildSceneCache(Target2DWrapper<Graphics> target, Scene2D currentCache, 
-            List<Scene2D> currentScenes, View2D view)
-        {
-            var scene = new Scene2DSimple(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
-//            scene.BackColor = currentScenes[0].BackColor;
-//
-//	        var bitmap = target.Tag as Bitmap;
-//	        if (bitmap != null)
-//	        {
-//				
-//				// build the boundingbox.
-//				var viewBox = view.OuterBox;
-//				var box = new GeoCoordinateBox (map.Projection.ToGeoCoordinates (viewBox.Min [0], viewBox.Min [1]),
-//				                                map.Projection.ToGeoCoordinates (viewBox.Max [0], viewBox.Max [1]));
-//
-//	            scene.AddImage(0, float.MinValue, float.MaxValue,
-//                    view.Left, view.Top, view.Right, view.Bottom, new byte[0], bitmap);
-//	        }
-	        return scene;
         }
 
         #endregion
@@ -219,7 +189,7 @@ namespace OsmSharp.WinForms.UI.Renderer
 	    /// <param name="lineJoin"></param>
 	    /// <param name="dashes"></param>
 	    protected override void DrawLine(Target2DWrapper<Graphics> target, double[] x, double[] y, int color, double width, 
-            OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin lineJoin, int[] dashes)
+            OsmSharp.UI.Renderer.Primitives.LineJoin lineJoin, int[] dashes)
 	    {
 //	        float widthInPixels = this.ToPixels(width);
 
@@ -236,16 +206,16 @@ namespace OsmSharp.WinForms.UI.Renderer
             }
 		    switch (lineJoin)
 		    {
-                case OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin.Round:
+                case OsmSharp.UI.Renderer.Primitives.LineJoin.Round:
                     _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 		            break;
-                case OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin.Miter:
+                case OsmSharp.UI.Renderer.Primitives.LineJoin.Miter:
                     _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Miter;
 		            break;
-                case OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin.Bevel:
+                case OsmSharp.UI.Renderer.Primitives.LineJoin.Bevel:
                     _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Bevel;
 		            break;
-                case OsmSharp.UI.Renderer.Scene.Scene2DPrimitives.LineJoin.None:
+                case OsmSharp.UI.Renderer.Primitives.LineJoin.None:
 		            // just keep the default.
                     _pen.LineJoin = System.Drawing.Drawing2D.LineJoin.Round;
 		            break;

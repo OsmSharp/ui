@@ -56,7 +56,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         {
             _streamCache = new MemoryCachedStream();
 
-			_cachedLeaves = new LRUCache<long, KeyValuePair<List<BoxF2D>, List<T>>>(100);
+            _cachedLeaves = new LRUCache<long, KeyValuePair<List<BoxF2D>, List<T>>>(100);
             _cachedIndexes = new LRUCache<long, KeyValuePair<ChildrenIndex, long>>(100);
         }
 
@@ -236,13 +236,13 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         /// <param name="box"></param>
         /// <param name="result"></param>
         /// <returns></returns>
-        public void Search(SpatialIndexSerializerStream stream, 
-		                   BoxF2D box, HashSet<T> result)
+        public void Search(SpatialIndexSerializerStream stream,
+                           BoxF2D box, HashSet<T> result)
         {
             // check if the current leaf/index exists.
             long position = stream.Position;
             KeyValuePair<ChildrenIndex, long> index;
-			KeyValuePair<List<BoxF2D>, List<T>> leaf;
+            KeyValuePair<List<BoxF2D>, List<T>> leaf;
             if (_cachedIndexes.TryGet(position + 1 + 4, out index))
             { // at this position is an index.
                 stream.Seek(index.Value, SeekOrigin.Begin);
@@ -344,7 +344,7 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
         /// <param name="offset"></param>
         /// <param name="size"></param>
         /// <returns></returns>
-		protected KeyValuePair<List<BoxF2D>, List<T>> SearchInLeaf(SpatialIndexSerializerStream stream, long offset, long size)
+        protected KeyValuePair<List<BoxF2D>, List<T>> SearchInLeaf(SpatialIndexSerializerStream stream, long offset, long size)
         {
             // position the stream.
             stream.Seek(offset, SeekOrigin.Begin);
@@ -358,9 +358,9 @@ namespace OsmSharp.Collections.SpatialIndexes.Serialization.v2
                 stream.Read(dataBytes, 0, dataBytes.Length);
 				List<BoxF2D> boxes;
                 List<T> data = this.DeSerialize(typeModel, dataBytes, out boxes);
-				_cachedLeaves.Add(offset, new KeyValuePair<List<BoxF2D>, List<T>>(
+                _cachedLeaves.Add(offset, new KeyValuePair<List<BoxF2D>, List<T>>(
                     boxes, data)); // add to cache.
-				return new KeyValuePair<List<BoxF2D>,List<T>>(boxes, data);
+                return new KeyValuePair<List<BoxF2D>, List<T>>(boxes, data);
             }
             throw new Exception("Cannot deserialize node!");
         }

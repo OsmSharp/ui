@@ -23,6 +23,7 @@ using OsmSharp.Collections.SpatialIndexes;
 using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
 using OsmSharp.Math.Random;
+using System.Linq;
 
 namespace OsmSharp.Test.Unittests.Collections.SpatialIndexes
 {

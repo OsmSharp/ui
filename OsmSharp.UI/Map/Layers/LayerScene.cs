@@ -16,65 +16,39 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+using OsmSharp.Math.Geo;
+using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Renderer.Primitives;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using OsmSharp.Osm.Data;
-using OsmSharp.Math.Geo;
-using OsmSharp.UI.Map.Styles;
-using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
-using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.UI.Map.Layers
 {
     /// <summary>
     /// A layer drawing scene objects.
     /// </summary>
-    public class LayerScene : ILayer
+    public class LayerScene : Layer
     {
-		private static object _sync = new object ();
-
-		/// <summary>
-		/// Holds the scene.
-		/// </summary>
-		private Scene2DSimple _scene2DSimple;
-
         /// <summary>
         /// Holds the scene primitives source.
         /// </summary>
-        private IScene2DPrimitivesSource _index;
+        private IPrimitives2DSource _index;
+
+        /// <summary>
+        /// Holds the primitives.
+        /// </summary>
+        private IEnumerable<Primitive2D> _primitives;
 
         /// <summary>
         /// Creates a new scene layer.
         /// </summary>
         /// <param name="index"></param>
-        public LayerScene(IScene2DPrimitivesSource index)
+        public LayerScene(IPrimitives2DSource index)
         {
+            _primitives = new List<Primitive2D>();
             _index = index;
-            _scene2DSimple = new Scene2DSimple(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
         }
-
-        /// <summary>
-        /// Gets the minimum zoom.
-        /// </summary>
-        public float? MinZoom { get; private set; }
-
-        /// <summary>
-        /// Gets the maximum zoom.
-        /// </summary>
-        public float? MaxZoom { get; private set; }
-
-        /// <summary>
-        /// Gets the scene of this layer containing the objects already projected.
-        /// </summary>
-		public Scene2D Scene { 
-			get {
-				return _scene2DSimple;
-			}
-		}
 
         /// <summary>
         /// Called when the view on the map containing this layer has changed.
@@ -83,38 +57,23 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
-        public void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view)
+        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view)
         {
             this.BuildScene(map, zoomFactor, center, view);
         }
 
-        /// <summary>
-        /// Event raised when this layer's content has changed.
-        /// </summary>
-        public event Map.LayerChanged LayerChanged;
-		
-		/// <summary>
-		/// Invalidates this layer.
-		/// </summary>
-		public void Invalidate()
-		{
-			if (this.LayerChanged != null) {
-				this.LayerChanged (this);
-			}
-		}
-
         #region Scene Building
 
-		/// <summary>
-		/// Holds the last box.
-		/// </summary>
-		private GeoCoordinateBox _lastBox;
+        /// <summary>
+        /// Holds the last box.
+        /// </summary>
+        private GeoCoordinateBox _lastBox;
 
-		/// <summary>
-		/// Holds the last zoom level.
-		/// </summary>
-		private int _lastZoom;
-        
+        /// <summary>
+        /// Holds the last zoom level.
+        /// </summary>
+        private int _lastZoom;
+
         /// <summary>
         /// Builds the scene.
         /// </summary>
@@ -123,32 +82,38 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="center"></param>
         /// <param name="view"></param>
         private void BuildScene(Map map, float zoomFactor, GeoCoordinate center, View2D view)
-		{
-			// build the boundingbox.
-			var viewBox = view.OuterBox;
-			var box = new GeoCoordinateBox (map.Projection.ToGeoCoordinates (viewBox.Min [0], viewBox.Min [1]),
-			                                map.Projection.ToGeoCoordinates (viewBox.Max [0], viewBox.Max [1]));
-			var zoomLevel = (int)map.Projection.ToZoomLevel (zoomFactor);
-			if (_lastBox != null && _lastBox.Contains (box) &&
-			    zoomLevel == _lastZoom) {
-				return;
-			}
-			_lastBox = box;
-			_lastZoom = zoomLevel;
-
-            // reset the scene.
-            if (_scene2DSimple == null)
+        {
+            // build the boundingbox.
+            var viewBox = view.OuterBox;
+            var box = new GeoCoordinateBox(map.Projection.ToGeoCoordinates(viewBox.Min[0], viewBox.Min[1]),
+                                            map.Projection.ToGeoCoordinates(viewBox.Max[0], viewBox.Max[1]));
+            var zoomLevel = (int)map.Projection.ToZoomLevel(zoomFactor);
+            if (_lastBox != null && _lastBox.Contains(box) &&
+                zoomLevel == _lastZoom)
             {
-                _scene2DSimple = new Scene2DSimple(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+                return;
             }
-            _scene2DSimple.Clear();
+            _lastBox = box;
+            _lastZoom = zoomLevel;
 
-            // get from the index.
-            this.Scene.BackColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
-			lock (_sync) {
-				_index.Get (_scene2DSimple, view, zoomFactor);
-			}
+            lock (_index)
+            {
+                _primitives = _index.Get(view, zoomFactor);
+            }
+        }
+
+        /// <summary>
+        /// Returns all objects in this scene that are visible for the given parameters.
+        /// </summary>
+        /// <param name="zoomFactor"></param>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        {
+            return _primitives.Where((primitive) =>
+                {
+                    return primitive.IsVisibleIn(view, zoomFactor);
+                });
         }
 
         #endregion

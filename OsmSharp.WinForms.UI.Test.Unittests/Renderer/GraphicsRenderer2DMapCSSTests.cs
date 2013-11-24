@@ -145,7 +145,7 @@ namespace OsmSharp.WinForms.UI.Test.Unittests.Renderer
             map.ViewChanged((float)view.CalculateZoom(100, 100), new Math.Geo.GeoCoordinate(0, 0), view);
 
             // ... and finally do the actual rendering.
-            renderer.Render(Graphics.FromImage(rendering), map, view);
+            renderer.Render(Graphics.FromImage(rendering), map, view, (float)projection.ToZoomFactor(16));
 
             //rendering.Save(@"c:\temp\rendering.bmp");
 

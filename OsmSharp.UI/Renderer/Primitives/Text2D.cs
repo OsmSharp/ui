@@ -16,25 +16,21 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Math.Primitives;
 
-namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
+namespace OsmSharp.UI.Renderer.Primitives
 {
     /// <summary>
-    /// A simple icon.
+    /// A simple text.
     /// </summary>
-    internal class Icon2D : IScene2DPrimitive
+    public class Text2D : Primitive2D
     {
         /// <summary>
-        /// Creates a new icon.
+        /// Creates a new Text.
         /// </summary>
-        public Icon2D()
+        public Text2D()
         {
-            
+
         }
 
         /// <summary>
@@ -42,30 +38,44 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        /// <param name="image"></param>
-		public Icon2D(double x, double y, byte[] image)
+        /// <param name="text"></param>
+        /// <param name="size"></param>
+        public Text2D(float x, float y, string text, int color, float size)
         {
             this.X = x;
             this.Y = y;
-            this.Image = image;
+            this.Text = text;
+            this.Size = size;
+            this.Color = color;
 
             this.MinZoom = float.MinValue;
             this.MaxZoom = float.MaxValue;
-		}
+        }
 
         /// <summary>
         /// Creates a new icon.
         /// </summary>
         /// <param name="x"></param>
         /// <param name="y"></param>
-        /// <param name="image"></param>
+        /// <param name="text"></param>
+        /// <param name="color"></param>
+        /// <param name="size"></param>
+        /// <param name="haloColor"></param>
+        /// <param name="haloRadius"></param>
+        /// <param name="font"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-		public Icon2D(double x, double y, byte[] image, float minZoom, float maxZoom)
+        public Text2D(double x, double y, string text, int color, double size, int? haloColor, int? haloRadius, string font,
+                      float minZoom, float maxZoom)
         {
             this.X = x;
             this.Y = y;
-            this.Image = image;
+            this.Text = text;
+            this.Size = size;
+            this.Color = color;
+            this.HaloColor = haloColor;
+            this.HaloRadius = haloRadius;
+            this.Font = font;
 
             this.MinZoom = minZoom;
             this.MaxZoom = maxZoom;
@@ -75,33 +85,56 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// Gets or sets the id.
         /// </summary>
         public uint Id { get; set; }
-		
-		/// <summary>
-		/// Gets or sets the tag.
-		/// </summary>
-		/// <value>The tag.</value>
-		public object Tag {
-			get;
-			set;
-		}
+
+        /// <summary>
+        /// Gets or sets the tag.
+        /// </summary>
+        /// <value>The tag.</value>
+        public object Tag { get; set; }
+
+        /// <summary>
+        /// Gets/sets the color.
+        /// </summary>
+        public int Color { get; set; }
 
         /// <summary>
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-		public double X { get; set; }
+        public double X { get; set; }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-		public double Y { get; set; }
+        public double Y { get; set; }
 
         /// <summary>
-        /// Gets or sets the color.
+        /// Gets the text.
         /// </summary>
-        /// <value>The color.</value>
-        public byte[] Image { get; set; }
+        /// <value>The text.</value>
+        public string Text { get; set; }
+
+        /// <summary>
+        /// Gets or sets the halo size.
+        /// </summary>
+        public int? HaloRadius { get; set; }
+
+        /// <summary>
+        /// Gets or sets the halo color.
+        /// </summary>
+        public int? HaloColor { get; set; }
+
+        /// <summary>
+        /// Gets the size.
+        /// </summary>
+        public double Size { get; set; }
+
+        /// <summary>
+        /// Gets the font name.
+        /// </summary>
+        /// <value>The font.</value>
+        public string Font { get; set; }
 
         /// <summary>
         /// The minimum zoom.
@@ -122,7 +155,7 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// <c>false</c>
         /// <param name="view">View.</param>
         /// <param name="zoom"></param>
-        public bool IsVisibleIn(View2D view, float zoom)
+        public override bool IsVisibleIn(View2D view, float zoom)
         {
             if (this.MinZoom > zoom || this.MaxZoom < zoom)
             { // outside of zoom bounds!
@@ -136,9 +169,9 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// Returns the bounding box for this primitive.
         /// </summary>
         /// <returns></returns>
-		public BoxF2D GetBox()
+        public override BoxF2D GetBox()
         {
-			return new BoxF2D(this.X, this.Y, this.X, this.Y);
+            return new BoxF2D(this.X, this.Y, this.X, this.Y);
         }
 
         #endregion

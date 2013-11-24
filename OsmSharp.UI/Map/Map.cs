@@ -17,17 +17,16 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
+using System.IO;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
-using OsmSharp.UI.Map.Layers;
-using OsmSharp.UI.Renderer;
-using System.IO;
-using OsmSharp.Routing;
-using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.Routing.Graph.Router;
-using OsmSharp.UI.Map.Styles;
-using OsmSharp.Routing.Osm.Graphs;
 using OsmSharp.Osm.Data;
+using OsmSharp.Routing;
+using OsmSharp.Routing.Graph.Router;
+using OsmSharp.Routing.Osm.Graphs;
+using OsmSharp.UI.Map.Layers;
+using OsmSharp.UI.Map.Styles;
+using OsmSharp.UI.Renderer;
 
 namespace OsmSharp.UI.Map
 {
@@ -39,14 +38,14 @@ namespace OsmSharp.UI.Map
         /// <summary>
         /// Holds the layers list.
         /// </summary>
-        private readonly IList<ILayer> _layers;
+        private readonly IList<Layer> _layers;
 
         /// <summary>
         /// Creates a new map.
         /// </summary>
         public Map()
         {
-            _layers = new List<ILayer>();
+            _layers = new List<Layer>();
             this.Projection = new WebMercator();
         }
 
@@ -55,7 +54,7 @@ namespace OsmSharp.UI.Map
         /// </summary>
         public Map(IProjection projection)
         {
-            _layers = new List<ILayer>();
+            _layers = new List<Layer>();
             this.Projection = projection;
         }
 
@@ -75,7 +74,7 @@ namespace OsmSharp.UI.Map
         /// </summary>
         /// <param name="sender"></param>
         /// <returns></returns>
-        public delegate void LayerChanged(ILayer sender);
+        public delegate void LayerChanged(Layer sender);
 
         /// <summary>
         /// Gets the default projection this map is using.
@@ -102,7 +101,7 @@ namespace OsmSharp.UI.Map
         /// Adds a layer on top of the existing layers.
         /// </summary>
         /// <param name="layer"></param>
-        public void AddLayer(ILayer layer)
+        public void AddLayer(Layer layer)
         {
             layer.LayerChanged += new LayerChanged(layer_LayerChanged);
             _layers.Add(layer);
@@ -113,7 +112,7 @@ namespace OsmSharp.UI.Map
         /// </summary>
         /// <param name="idx"></param>
         /// <param name="layer"></param>
-        public void InsertLayer(int idx, ILayer layer)
+        public void InsertLayer(int idx, Layer layer)
         {
             layer.LayerChanged += new LayerChanged(layer_LayerChanged);
             _layers.Insert(idx, layer);
@@ -123,7 +122,7 @@ namespace OsmSharp.UI.Map
         /// Removes the given layer.
         /// </summary>
         /// <param name="layer"></param>
-        public bool RemoveLayer(ILayer layer)
+        public bool RemoveLayer(Layer layer)
         {
             if (_layers.Remove(layer))
             {
@@ -139,7 +138,7 @@ namespace OsmSharp.UI.Map
         /// <param name="idx"></param>
         public void RemoveLayerAt(int idx)
         {
-            ILayer layer = _layers[idx];
+            Layer layer = _layers[idx];
             layer.LayerChanged -= new LayerChanged(layer_LayerChanged); // remove event handler.
             _layers.RemoveAt(idx);
         }
@@ -149,7 +148,7 @@ namespace OsmSharp.UI.Map
         /// </summary>
         /// <param name="layerIdx"></param>
         /// <returns></returns>
-        public ILayer this[int layerIdx]
+        public Layer this[int layerIdx]
         {
             get { return _layers[layerIdx]; }
         }
@@ -166,7 +165,7 @@ namespace OsmSharp.UI.Map
         /// Called when a layer changed.
         /// </summary>
         /// <param name="sender"></param>
-        void layer_LayerChanged(ILayer sender)
+        void layer_LayerChanged(Layer sender)
         {
             if (MapChanged != null)
             {
@@ -212,17 +211,17 @@ namespace OsmSharp.UI.Map
             return layerRoute;
         }
 
-        /// <summary>
-        /// Adds a new scene layer with the given primitives source as it's source.
-        /// </summary>
-        /// <param name="scene"></param>
-        /// <returns></returns>
-        public LayerScene AddLayerScene(IScene2DPrimitivesSource scene)
-        {
-            LayerScene layerScene = new LayerScene(scene);
-            this.AddLayer(layerScene);
-            return layerScene;
-        }
+        ///// <summary>
+        ///// Adds a new scene layer with the given primitives source as it's source.
+        ///// </summary>
+        ///// <param name="scene"></param>
+        ///// <returns></returns>
+        //public LayerScene AddLayerScene(IScene2DPrimitivesSource scene)
+        //{
+        //    LayerScene layerScene = new LayerScene(scene);
+        //    this.AddLayer(layerScene);
+        //    return layerScene;
+        //}
 
         /// <summary>
         /// Adds a graph layer with the given data and style.

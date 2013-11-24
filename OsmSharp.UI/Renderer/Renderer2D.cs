@@ -17,12 +17,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
-using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Math.Primitives;
+using OsmSharp.UI.Renderer.Primitives;
+using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Renderer.Scene.Primitives;
+using OsmSharp.UI.Renderer.Scene.Styles;
 
 namespace OsmSharp.UI.Renderer
 {
@@ -39,78 +38,40 @@ namespace OsmSharp.UI.Renderer
 
 		}
 
-        /// <summary>
-        /// Contains simpler version or even cached images of the last rendering.
-        /// </summary>
-	    private Scene2D _cachedScene;
-		
-        /// <summary>
-        /// Renders the given scene on the given target for the given view.
-        /// </summary>
-        /// <param name="orginalTarget"></param>
-        /// <param name="scene">Scene.</param>
-        /// <param name="view">View.</param>
-	    public bool Render(TTarget orginalTarget, Scene2D scene, View2D view)
-	    {
-            var scenes = new List<Scene2D>();
-            scenes.Add(scene);
-            return this.Render(orginalTarget, scenes, view);
-	    }
-
 	    /// <summary>
 	    /// Renders the given scene on the given target for the given view.
 	    /// </summary>
-        /// <param name="orginalTarget"></param>
-	    /// <param name="scenes">Scene.</param>
-	    /// <param name="view">View.</param>
-        public bool Render(TTarget orginalTarget, List<Scene2D> scenes, View2D view)
+        /// <param name="orginalTarget">The target to render to.</param>
+	    /// <param name="primitives">The primitives to render.</param>
+	    /// <param name="view">The current view.</param>
+	    /// <param name="zoomFactor">The current zoom factor.</param>
+        public bool Render(TTarget orginalTarget, View2D view, float zoomFactor, IEnumerable<Primitive2D> primitives)
 		{
 			try {
-	            if (scenes == null ||
-	                scenes.Count == 0)
-	            { // there is nothing to render!
-	                return true;
-	            }
-
 				this.SetRunning (true);
 
 				if (view == null)
 					throw new ArgumentNullException ("view");
-				if (scenes == null)
-	                throw new ArgumentNullException("scenes");
-	            if (orginalTarget == null)
+                if (primitives == null)
+                    throw new ArgumentNullException("primitives");
+                if (orginalTarget == null)
 	                throw new ArgumentNullException("orginalTarget");
 
 	            // create the target wrapper.
 	            Target2DWrapper<TTarget> target = this.CreateTarget2DWrapper(orginalTarget);
 
 	            // the on before render event.
-	            this.OnBeforeRender(target, scenes, view);
+	            this.OnBeforeRender(target, view);
 
 				// transform the target coordinates or notify the target of the
 				// view coordinate system.
 	            this.Transform(target, view);
 
-	            // draw the backcolor.
-	            this.DrawBackColor(target, scenes[0].BackColor);
-
-				bool complete = true;
-		        foreach (var scene in scenes)
-		        {
-				    // render the primitives.
-					complete = complete  && 
-						this.RenderPrimitives(target, scene, view);
-
-					if (!complete) {
-						break;
-					}
-		        }
+                // render the primitives.
+                bool complete = this.RenderPrimitives(target, view, zoomFactor, primitives);
 
 		        // the on after render event.
-	            this.OnAfterRender(target, scenes, view);
-
-	            // build a cached version.
-	            _cachedScene = this.BuildSceneCache(target, _cachedScene, scenes, view);
+	            this.OnAfterRender(target, view);
 				
 				this.SetRunning (false);
 
@@ -124,51 +85,6 @@ namespace OsmSharp.UI.Renderer
 			}
 			return false;
 		}
-
-	    /// <summary>
-	    /// Renders the cached scene on the given target for the given view.
-	    /// </summary>
-        /// <param name="orginalTarget"></param>
-	    /// <param name="view"></param>
-	    public bool RenderCache(TTarget orginalTarget, View2D view)
-        {
-			try {
-	            if (_cachedScene != null)
-	            {
-					this.SetRunning (true);
-
-	                if (view == null)
-	                    throw new ArgumentNullException("view");
-	                if (orginalTarget == null)
-	                    throw new ArgumentNullException("orginalTarget");
-
-	                // create the target wrapper.
-	                Target2DWrapper<TTarget> target = this.CreateTarget2DWrapper(orginalTarget);
-
-	                // transform the target coordinates or notify the target of the
-	                // view coordinate system.
-	                this.Transform(target, view);
-
-	                // draw the backcolor.
-	                this.DrawBackColor(target, _cachedScene.BackColor);
-
-	                // render the primitives.
-					bool complete = this.RenderPrimitives(target, _cachedScene, view);
-
-					this.SetRunning (false);
-
-					return complete;
-	            }
-				return true;
-			}
-			catch(Exception ex) {
-				OsmSharp.Logging.Log.TraceEvent ("Renderer2D", System.Diagnostics.TraceEventType.Error, 
-				                                 ex.Message);
-				this.SetRunning (false);
-				throw ex;
-			}
-			return false;
-        }
 
 		#region Running/Cancelling/State
 
@@ -241,57 +157,82 @@ namespace OsmSharp.UI.Renderer
 	    /// Renders the primities for the given scene.
 	    /// </summary>
 	    /// <param name="target"></param>
-	    /// <param name="scene"></param>
-	    /// <param name="view"></param>
-        private bool RenderPrimitives(Target2DWrapper<TTarget> target, Scene2D scene, View2D view)
+        /// <param name="view"></param>
+        /// <param name="zoomFactor"></param>
+        /// <param name="primitives"></param>
+        private bool RenderPrimitives(Target2DWrapper<TTarget> target, View2D view, float zoomFactor, 
+            IEnumerable<Primitive2D> primitives)
         {
 			try {
-	            // TODO: calculate zoom.
-				float zoom = (float)view.CalculateZoom(target.Width, target.Height);
+                Icon2D icon;
+                Image2D image;
+                ImageTilted2D imageTilted;
+                Line2D line;
+                LineText2D lineText;
+                Point2D point;
+                Polygon2D polygon;
+                Text2D text;
 
 	            // loop over all primitives in the scene.
-	            foreach (Scene2DPrimitive scenePrimitive in scene.Get(view, zoom))
+                foreach (Primitive2D primitive in primitives)
 	            { // the primitive is visible.
-	                IScene2DPrimitive primitive = scenePrimitive.Primitive;
 					if (_cancelFlag) {
 						return false; // stop rendering on cancel and return false for an incomplete rendering.
 					}
 
-					if (primitive is Point2D) {
-						var point = (Point2D)(primitive);
-						this.DrawPoint (target, point.X, point.Y, point.Color, 
-						                              this.FromPixels (target, view, point.Size));
-					} else if (primitive is Line2D) {
-						var line = (Line2D)(primitive);
-						this.DrawLine (target, line.X, line.Y, line.Color,
-						                             this.FromPixels (target, view, line.Width), line.LineJoin, line.Dashes);
-					} else if (primitive is Polygon2D) {
-						var polygon = (Polygon2D)(primitive);
-						this.DrawPolygon (target, polygon.X, polygon.Y, polygon.Color, 
-						                                this.FromPixels (target, view, polygon.Width), polygon.Fill);
-					} else if (primitive is Icon2D) {
-						var icon = (Icon2D)(primitive);
-						this.DrawIcon (target, icon.X, icon.Y, icon.Image);
-					} else if (primitive is Image2D) {
-						var image = (Image2D)(primitive);
-						image.Tag = this.DrawImage (target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData, 
-						                                          image.Tag);
-					} else if (primitive is ImageTilted2D) {
-						var imageTilted = (ImageTilted2D)primitive;
-						imageTilted.Tag = this.DrawImage (target, imageTilted.Bounds, imageTilted.ImageData, imageTilted.Tag);
+                    line = (primitive as Line2D);
+                    if (line != null) {
+                        this.DrawLine(target, line.X, line.Y, line.Color,
+                            this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
+                        continue;
 					}
-	                else if (primitive is Text2D)
-	                {
-	                    var text = (Text2D)(primitive);
-	                    this.DrawText(target, text.X, text.Y, text.Text, text.Color,
-	                        this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius, text.Font);
-	                }
-	                else if (primitive is LineText2D)
-	                {
-	                    var lineText = (LineText2D)(primitive);
-	                    this.DrawLineText(target, lineText.X, lineText.Y, lineText.Text, lineText.Color,
-						                  this.FromPixels(target, view, lineText.Size), lineText.HaloColor, lineText.HaloRadius, lineText.Font);
-	                }
+                    polygon = (primitive as Polygon2D);
+                    if(polygon != null)
+                    {
+                        this.DrawPolygon(target, polygon.X, polygon.Y, polygon.Color,
+                            this.FromPixels(target, view, polygon.Width), polygon.Fill);
+                        continue;
+                    }
+                    lineText = (primitive as LineText2D);
+                    if(lineText != null)
+                    {
+                        this.DrawLineText(target, lineText.X, lineText.Y, lineText.Text, lineText.Color,
+                            this.FromPixels(target, view, lineText.Size), lineText.HaloColor, lineText.HaloRadius, lineText.Font);
+                        continue;
+                    }
+                    point = (primitive as Point2D);
+                    if(point != null)
+                    {
+                        this.DrawPoint(target, point.X, point.Y, point.Color,
+                            this.FromPixels(target, view, point.Size));
+                        continue;
+                    }
+                    icon = (primitive as Icon2D);
+                    if(icon != null)
+                    {
+                        this.DrawIcon(target, icon.X, icon.Y, icon.Image);
+                        continue;
+                    }
+                    imageTilted = (primitive as ImageTilted2D);
+                    if(imageTilted != null)
+                    {
+                        imageTilted.Tag = this.DrawImage (target, imageTilted.Bounds, imageTilted.ImageData, imageTilted.Tag);
+                        continue;
+                    }
+                    image = (primitive as Image2D);
+                    if(image != null)
+                    {
+                        image.Tag = this.DrawImage (target, image.Left, image.Top, image.Right, image.Bottom, image.ImageData, 
+                            image.Tag);
+                        continue;
+                    }
+                    text = (primitive as Text2D);
+                    if (text != null)
+                    {
+                        this.DrawText(target, text.X, text.Y, text.Text, text.Color,
+                            this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius, text.Font);
+                        continue;
+                    }
 	            }
 				return true;
 			}
@@ -300,42 +241,27 @@ namespace OsmSharp.UI.Renderer
 				                                 ex.Message);
 				throw ex;
 			}
-			return false;
         }
 
 	    /// <summary>
 	    /// Called before rendering starts.
 	    /// </summary>
 	    /// <param name="target"></param>
-	    /// <param name="scenes"></param>
 	    /// <param name="view"></param>
-        protected virtual void OnBeforeRender(Target2DWrapper<TTarget> target, List<Scene2D> scenes, View2D view)
+        protected virtual void OnBeforeRender(Target2DWrapper<TTarget> target, View2D view)
         {
             
         }
 
 	    /// <summary>
-	    /// Called after rendering stops.
+	    /// Called after rendering is finished or was stopped.
 	    /// </summary>
 	    /// <param name="target"></param>
-	    /// <param name="scenes"></param>
 	    /// <param name="view"></param>
-        protected virtual void OnAfterRender(Target2DWrapper<TTarget> target, List<Scene2D> scenes, View2D view)
+        protected virtual void OnAfterRender(Target2DWrapper<TTarget> target, View2D view)
         {
 
         }
-
-	    /// <summary>
-	    /// Builds the current cached scene.
-	    /// </summary>
-	    /// <param name="target"></param>
-	    /// <param name="currentCache"></param>
-	    /// <param name="currentScenes"></param>
-	    /// <param name="view"></param>
-        protected virtual Scene2D BuildSceneCache(Target2DWrapper<TTarget> target, Scene2D currentCache, List<Scene2D> currentScenes, View2D view)
-	    {
-	        return null;
-	    }
 
 	    /// <summary>
 	    /// Creates a wrapper for the target making it possible to drag along some properties.
@@ -400,7 +326,6 @@ namespace OsmSharp.UI.Renderer
 	    /// <param name="width">Width.</param>
 	    /// <param name="fill">If set to <c>true</c> fill.</param>
 		protected abstract void DrawPolygon(Target2DWrapper<TTarget> target, double[] x, double[] y, int color, double width, bool fill);
-
 
 	    /// <summary>
 	    /// Draws an icon on the target unscaled but centered at the given scene coordinates.

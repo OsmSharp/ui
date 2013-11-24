@@ -17,23 +17,15 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading;
 using System.Windows.Forms;
-using OsmSharp;
 using OsmSharp.Math.Geo;
-using OsmSharp.UI.Map;
-using OsmSharp.UI.Map.Layers;
-using OsmSharp.UI.Renderer;
-using OsmSharp.WinForms.UI.Renderer;
-using OsmSharp.Units.Angle;
 using OsmSharp.UI;
+using OsmSharp.UI.Map;
+using OsmSharp.UI.Renderer;
+using OsmSharp.Units.Angle;
+using OsmSharp.WinForms.UI.Renderer;
 
 namespace OsmSharp.WinForms.UI
 {
@@ -82,17 +74,18 @@ namespace OsmSharp.WinForms.UI
         {
             get { return _map; }
             set
-        {
-            if (_map != null)
             {
-                _map.MapChanged -= new OsmSharp.UI.Map.Map.MapChangedDelegate(_map_MapChanged);
+                if (_map != null)
+                {
+                    _map.MapChanged -= new OsmSharp.UI.Map.Map.MapChangedDelegate(_map_MapChanged);
+                }
+                _map = value;
+                if (_map != null)
+                {
+                    _map.MapChanged += new OsmSharp.UI.Map.Map.MapChangedDelegate(_map_MapChanged);
+                }
             }
-            _map = value;
-            if (_map != null)
-            {
-                _map.MapChanged += new OsmSharp.UI.Map.Map.MapChangedDelegate(_map_MapChanged);
-            }
-        }}
+        }
 
         /// <summary>
         /// Called when the map has changed.
@@ -161,13 +154,11 @@ namespace OsmSharp.WinForms.UI
                 (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true);
             if (_quickMode)
             { // only render the cached scene.
-                //_renderer.Render(g, this.Map, (float)this.Map.Projection.ToZoomFactor(this.ZoomLevel), this.Center);
-                //_renderer.RenderCache(g, this.Map, view)
-                _renderer.Render(g, this.Map, view);
+                _renderer.Render(g, this.Map, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
             }
             else
             { // render the entire scene.
-                _renderer.Render(g, this.Map, view);
+                _renderer.Render(g, this.Map, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
             }
 
             long ticksAfter = DateTime.Now.Ticks;
@@ -320,8 +311,9 @@ namespace OsmSharp.WinForms.UI
             if (this.Height == 0 || this.Width == 0) { return; }
 
             // notify the map.
-            this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, _renderer.Create(this.Width, this.Height, this.Map,
-                                                                                  (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true));
+            this.Map.ViewChanged((float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, 
+                _renderer.Create(this.Width, this.Height, this.Map,
+                (float)this.Map.Projection.ToZoomFactor(this.MapZoom), this.MapCenter, false, true));
 
             long ticksAfter = DateTime.Now.Ticks;
 

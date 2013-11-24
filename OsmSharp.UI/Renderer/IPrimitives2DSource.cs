@@ -17,21 +17,21 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.Collections.Generic;
-using OsmSharp.Math.Primitives;
+using OsmSharp.UI.Renderer.Primitives;
 
-namespace OsmSharp.Collections.SpatialIndexes
+namespace OsmSharp.UI.Renderer
 {
     /// <summary>
-    /// Abstract representation of a readonly spatial index.
+    /// Abstract representation of a primitives source.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface ISpatialIndexReadonly<T>
+    public interface IPrimitives2DSource
     {
         /// <summary>
-        /// Queries this index and returns all objects with overlapping bounding boxes.
+        /// Adds all primitives inside the given box for the given zoom.
         /// </summary>
-        /// <param name="box"></param>
+        /// <param name="view"></param>
+        /// <param name="zoomFactor"></param>
         /// <returns></returns>
-        IEnumerable<T> Get(BoxF2D box);
+        IEnumerable<Primitive2D> Get(View2D view, float zoomFactor);
     }
 }

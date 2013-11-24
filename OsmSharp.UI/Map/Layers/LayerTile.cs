@@ -16,23 +16,23 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Threading;
+using OsmSharp.Collections.Cache;
 using OsmSharp.Math.Geo;
 using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Osm.Tiles;
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Renderer.Primitives;
 
 namespace OsmSharp.UI.Map.Layers
 {
     /// <summary>
     /// A tile layer.
     /// </summary>
-    public class LayerTile : ILayer
+    public class LayerTile : Layer
     {
         /// <summary>
         /// Holds the tile url.
@@ -40,136 +40,160 @@ namespace OsmSharp.UI.Map.Layers
         private readonly string _tilesURL;
 
         /// <summary>
+        /// Holds the LRU cache.
+        /// </summary>
+        private readonly LRUCache<Tile, Image2D> _cache;
+
+        /// <summary>
+        /// Holds the offset to calculate the minimum zoom.
+        /// </summary>
+        private const float _zoomMinOffset = 0.5f;
+
+        /// <summary>
         /// Creates a new tiles layer.
         /// </summary>
+        /// <param name="tilesURL">The tiles URL.</param>
         public LayerTile(string tilesURL)
+            : this(tilesURL, 20)
         {
-            _tilesURL = tilesURL;
 
-            this.Scene = new Scene2DSimple(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
-            _lastAccessed = new Dictionary<Tile, DateTime>();
-            _primitivePerTile = new Dictionary<Tile, uint>();
-            _tilesStack = new Stack<Tile>();
         }
 
         /// <summary>
-        /// Gets the minimum zoom.
+        /// Creates a new tiles layer.
         /// </summary>
-        public float? MinZoom { get; private set; }
-
-        /// <summary>
-        /// Gets the maximum zoom.
-        /// </summary>
-        public float? MaxZoom { get; private set; }
-
-        /// <summary>
-        /// Gets the current scene.
-        /// </summary>
-        public Scene2D Scene { get; private set; }
-
-        /// <summary>
-        /// Holds the last accessed times.
-        /// </summary>
-        private readonly Dictionary<Tile, DateTime> _lastAccessed;
-
-        /// <summary>
-        /// Holds the primitive ids for the given tiles.
-        /// </summary>
-        private readonly Dictionary<Tile, uint> _primitivePerTile;
-
-        /// <summary>
-        /// Holds the current tiles stack.
-        /// </summary>
-        private readonly Stack<Tile> _tilesStack;
-
-        /// <summary>
-        /// Holds the previous zoom level.
-        /// </summary>
-        private int _previousZoomLevel = 0;
-
-        /// <summary>
-        /// Holds the tiles loading layer.
-        /// </summary>
-        private Thread _thread;
-
-        /// <summary>
-        /// Loads the tiles.
-        /// </summary>
-        private void TilesLoading(object projectionParam)
+        /// <param name="tilesURL">The tiles URL.</param>
+        /// <param name="tileCacheSize">The tile cache size.</param>
+        public LayerTile(string tilesURL, int tileCacheSize)
         {
-            IProjection projection = null;
-            if (projectionParam is IProjection)
-            { // the argument has to a projection.
-                projection = projectionParam as IProjection;
+            _tilesURL = tilesURL;
+            _cache = new LRUCache<Tile, Image2D>(tileCacheSize);
+        }
+
+        /// <summary>
+        /// Holds the tile range of the current view.
+        /// </summary>
+        private TileRange _tileRange = null;
+
+        /// <summary>
+        /// Holds the map projection.
+        /// </summary>
+        private IProjection _projection;
+
+        /// <summary>
+        /// Loads the tiles async.
+        /// </summary>
+        private void TilesLoading()
+        {
+            TileRange tileRange = null;
+
+            // build the tile range list.
+            List<Tile> tiles = null;
+            lock (_tileRange)
+            { // make sure the tile range does not change.
+                tiles = new List<Tile>(
+                    _tileRange);
+                tileRange = _tileRange;
             }
-            if (projection == null)
+            foreach (Tile tile in tiles)
             {
-                throw new ArgumentException("Argument not of type IProjection.");
-            }
-
-            while (true)
-            {
-                for (int idx = 0; idx < 10; idx++)
-                {
-                    Tile tile = null;
-                    lock (_tilesStack)
-                    {
-                        // load the stacked tiles.
-                        if (_tilesStack.Count > 0)
-                        {
-                            // the tiles stack contains at least some tiles.
-                            tile = _tilesStack.Pop();
-                        }
-                    }
-
-                    // load the tile 
-                    if (tile != null)
-                    {
-                        // a tile was found to load.
-                        string url = string.Format(_tilesURL,
-                                                   tile.Zoom,
-                                                   tile.X,
-                                                   tile.Y);
-
-                        // get file from tile server.
-                        var request = (HttpWebRequest) HttpWebRequest.Create(
-                            url);
-                        request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
-                        request.UserAgent = "OsmSharp/4.0";
-                        request.Timeout = 1000;
-
-                        WebResponse myResp = request.GetResponse();
-
-                        Stream stream = myResp.GetResponseStream();
-                        byte[] image = null;
-                        if (stream != null)
-                        {
-                            // there is data: read it.
-                            var memoryStream = new MemoryStream();
-                            stream.CopyTo(memoryStream);
-
-                            image = memoryStream.ToArray();
-                        }
-
-                        if (image != null)
-                        {
-                            // data was read create the scene object.
-                            lock (this.Scene)
-                            {
-                                throw new NotImplementedException();
-                            }
-
-                            if (this.LayerChanged != null)
-                            {
-                                this.LayerChanged(this);
-                            }
-                        }
-                    }
+                if (_tileRange != tileRange)
+                { // keep looping until a new different tile range is requested.
+                    break;
                 }
 
-                System.Threading.Thread.Sleep(100);
+                // check if tile is cached.
+                lock (_cache)
+                {
+                    Image2D image;
+                    if (!_cache.TryGet(tile, out image))
+                    { // the tile has to be loaded.
+                        ThreadPool.QueueUserWorkItem(
+                            new WaitCallback(LoadTile), 
+                            new KeyValuePair<TileRange, Tile>(tileRange, tile));
+                    }
+                }
             }
+        }
+
+        /// <summary>
+        /// Loads one tile.
+        /// </summary>
+        private void LoadTile(object state)
+        {
+            // get job.
+            KeyValuePair<TileRange, Tile> job = (KeyValuePair<TileRange, Tile>)state;
+
+            if (_tileRange != job.Key)
+            { // only load tile if range is unchanged.
+                return;
+            }
+
+            // a tile was found to load.
+            Tile tile = job.Value;
+            Image2D image2D;
+            lock (_cache)
+            { // check again for the tile.
+                if (_cache.TryGet(tile, out image2D))
+                { // tile is already there!
+                    return;
+                }
+            }
+
+            // load the tile.
+            string url = string.Format(_tilesURL,
+                                       tile.Zoom,
+                                       tile.X,
+                                       tile.Y);
+            var request = (HttpWebRequest)HttpWebRequest.Create(
+                url);
+            request.Accept = "text/html, image/png, image/jpeg, image/gif, */*";
+            request.UserAgent = "OsmSharp/4.0";
+            request.Timeout = 1000;
+
+            WebResponse myResp = request.GetResponse();
+            Stream stream = myResp.GetResponseStream();
+            byte[] image = null;
+            if (stream != null)
+            {
+                // there is data: read it.
+                var memoryStream = new MemoryStream();
+                stream.CopyTo(memoryStream);
+
+                image = memoryStream.ToArray();
+                image2D = new Image2D(tile.Box.BottomLeft[0], tile.Box.TopLeft[1],
+                    tile.Box.BottomLeft[0], tile.BottomRight[1], image,
+                    (float)_projection.ToZoomFactor(tile.Zoom - _zoomMinOffset),
+                    (float)_projection.ToZoomFactor(tile.Zoom + (1 - _zoomMinOffset)));
+                
+                lock (_cache)
+                { // add the result to the cache.
+                    _cache.Add(tile, image2D);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns all primitives from this layer visible for the given parameters.
+        /// </summary>
+        /// <param name="zoomFactor"></param>
+        /// <param name="center"></param>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        {
+            List<Primitive2D> primitives = new List<Primitive2D>();
+            lock (_cache)
+            {
+                foreach (KeyValuePair<Tile, Image2D> tile in _cache)
+                {
+                    if (tile.Value.IsVisibleIn(view, zoomFactor))
+                    {
+                        primitives.Add(tile.Value);
+                    }
+                }
+            }
+            return primitives;
         }
 
         /// <summary>
@@ -179,62 +203,21 @@ namespace OsmSharp.UI.Map.Layers
         /// <param name="zoomFactor"></param>
         /// <param name="center"></param>
         /// <param name="view"></param>
-        public void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view)
+        internal override void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view)
         {
             // calculate the current zoom level.
             var zoomLevel = (int)System.Math.Round(map.Projection.ToZoomLevel(zoomFactor), 0);
 
-            // reset stack when zoom level changed.
-            if (_previousZoomLevel != zoomLevel)
-            {
-                _previousZoomLevel = zoomLevel;
-                _tilesStack.Clear();
-            }
-
-			// build the boundingbox.
 			// build the boundingbox.
 			var viewBox = view.OuterBox;
 			var box = new GeoCoordinateBox (map.Projection.ToGeoCoordinates (viewBox.Min [0], viewBox.Min [1]),
 			                                map.Projection.ToGeoCoordinates (viewBox.Max [0], viewBox.Max [1]));
 
-            // build the tile range.
-            TileRange range = TileRange.CreateAroundBoundingBox(box, zoomLevel);
-            DateTime now = DateTime.Now;
-            foreach (var tile in range)
-            {
-                if (_primitivePerTile.ContainsKey(tile))
-                { // the tile is here already.
-                    _lastAccessed[tile] = now;
-                }
-                else
-                { // queue the tile to be loaded.
-                    lock (_tilesStack)
-                    {
-                        _tilesStack.Push(tile);
-                    }
-                }
-            }
-
-            if (_thread == null)
-            { // the loading thread does not exist yet.
-                _thread = new Thread(TilesLoading);
-                _thread.Start(map.Projection);
+            // build the tile range.        
+            lock (_tileRange)
+            { // make sure the tile range is not in use.
+                _tileRange = TileRange.CreateAroundBoundingBox(box, zoomLevel);
             }
         }
-
-        /// <summary>
-        /// Event raised when this layer has changed.
-        /// </summary>
-        public event Map.LayerChanged LayerChanged;
-		
-		/// <summary>
-		/// Invalidates this layer.
-		/// </summary>
-		public void Invalidate()
-		{
-			if (this.LayerChanged != null) {
-				this.LayerChanged (this);
-			}
-		}
     }
 }

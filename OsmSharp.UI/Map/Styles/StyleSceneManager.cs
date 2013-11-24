@@ -65,7 +65,7 @@ namespace OsmSharp.UI.Map.Styles
         /// <param name="interpreter">The intepreter converting OSM-objects into scene-objects.</param>
         /// <param name="zoomFactors"></param>
         public StyleSceneManager(StyleInterpreter interpreter, List<float> zoomFactors)
-            : this(new Scene2DSimple(zoomFactors), interpreter) { }
+            : this(new Scene2D(zoomFactors), interpreter) { }
 
         /// <summary>
         /// Creates a new style scene manager.
@@ -83,7 +83,7 @@ namespace OsmSharp.UI.Map.Styles
             _interpretedRelations = new LongIndex();
 
             SimpleColor? color = _interpreter.GetCanvasColor();
-            this.Scene.BackColor = color.HasValue ? color.Value.Value : SimpleColor.FromArgb(0, 255, 255, 255).Value;
+            //this.Scene.BackColor = color.HasValue ? color.Value.Value : SimpleColor.FromArgb(0, 255, 255, 255).Value;
         }
 
         /// <summary>

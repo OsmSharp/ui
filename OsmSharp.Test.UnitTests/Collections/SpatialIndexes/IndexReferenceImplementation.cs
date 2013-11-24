@@ -48,7 +48,7 @@ namespace OsmSharp.Test.Unittests.Collections.SpatialIndexes
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-		public IEnumerable<T> Get(BoxF2D box)
+        public IEnumerable<T> Get(BoxF2D box)
         {
             var result = new HashSet<T>();
             foreach (var entry in _list)

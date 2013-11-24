@@ -17,17 +17,19 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using OsmSharp.Math.Geo;
-using OsmSharp.UI.Renderer;
 using OsmSharp.Math.Geo.Projections;
-using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Routing;
+using OsmSharp.UI.Renderer;
+using OsmSharp.UI.Renderer.Scene;
+using System.Collections.Generic;
+using OsmSharp.UI.Renderer.Primitives;
 
 namespace OsmSharp.UI.Map.Layers
 {
     /// <summary>
     /// A layer drawing OsmSharpRoute layer data.
     /// </summary>
-    public class LayerRoute : ILayer
+    public class LayerRoute : Layer
     {
         /// <summary>
         /// Holds the projection.
@@ -42,57 +44,16 @@ namespace OsmSharp.UI.Map.Layers
         {
             _projection = projection;
 
-            this.Scene = new Scene2DSimple(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
-            this.Scene.BackColor = 
-                SimpleColor.FromKnownColor(KnownColor.Transparent).Value;
+
+            _scene = new Scene2D((float)projection.ToZoomFactor(16));
         }
-
-        /// <summary>
-        /// Gets the minimum zoom.
-        /// </summary>
-        public float? MinZoom { get; private set; }
-
-        /// <summary>
-        /// Gets the maximum zoom.
-        /// </summary>
-        public float? MaxZoom { get; private set; }
-
-        /// <summary>
-        /// Gets the scene of this layer containing the objects already projected.
-        /// </summary>
-        public Scene2D Scene { get; private set; }
-
-        /// <summary>
-        /// Called when the view on the map containing this layer has changed.
-        /// </summary>
-        /// <param name="map"></param>
-        /// <param name="zoomFactor"></param>
-        /// <param name="center"></param>
-        /// <param name="view"></param>
-        public void ViewChanged(Map map, float zoomFactor, GeoCoordinate center, View2D view)
-        {
-            // all data is pre-loaded for now.
-
-            // when displaying huge amounts of GPX-data use another approach.
-        }
-
-        /// <summary>
-        /// Event raised when this layer's content has changed.
-        /// </summary>
-        public event Map.LayerChanged LayerChanged;
-		
-		/// <summary>
-		/// Invalidates this layer.
-		/// </summary>
-		public void Invalidate()
-		{
-			if (this.LayerChanged != null) {
-				this.LayerChanged (this);
-			}
-		}
 
         #region Scene Building
+
+        /// <summary>
+        /// Holds the scene.
+        /// </summary>
+        private Scene2D _scene;
 
         /// <summary>
         /// Adds a new OsmSharpRoute.
@@ -139,10 +100,11 @@ namespace OsmSharp.UI.Map.Layers
 
 				// set the default color if none is given.
 				SimpleColor color = SimpleColor.FromArgb (argb);
-                uint? pointsId = this.Scene.AddPoints(x, y);
+                uint? pointsId = _scene.AddPoints(x, y);
                 if (pointsId.HasValue)
                 {
-                    this.Scene.AddStyleLine(pointsId.Value, float.MinValue, float.MaxValue, color.Value, width);
+                    _scene.AddStyleLine(pointsId.Value, 0, float.MinValue, float.MaxValue, 
+                        color.Value, (float)width, Renderer.Primitives.LineJoin.Round, null);
                 }
 			}
 		}
@@ -150,11 +112,22 @@ namespace OsmSharp.UI.Map.Layers
         #endregion
 
         /// <summary>
+        /// Returns all objects in this layer visible for the given parameters.
+        /// </summary>
+        /// <param name="zoomFactor"></param>
+        /// <param name="view"></param>
+        /// <returns></returns>
+        internal override IEnumerable<Primitive2D> Get(float zoomFactor, View2D view)
+        {
+            return _scene.Get(view, zoomFactor);
+        }
+
+        /// <summary>
         /// Removes all objects from this layer.
         /// </summary>
         public void Clear()
         {
-			this.Scene.Clear();
+			_scene.Clear();
         }
     }
 }

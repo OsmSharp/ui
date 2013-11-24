@@ -53,7 +53,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage.Styled
         public void Get(Scene2DSimple scene, View2D view, float zoomFactor)
         {
             // get all primitives.
-            IEnumerable<Scene2DEntry> entries = 
+            IEnumerable<Scene2DEntry> entries =
                 _index.Get(view.OuterBox);
 
             foreach (var scene2DEntry in entries)

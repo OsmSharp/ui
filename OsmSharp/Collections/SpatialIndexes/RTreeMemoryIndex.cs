@@ -19,9 +19,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using OsmSharp.Math.Primitives;
 
 namespace OsmSharp.Collections.SpatialIndexes
@@ -116,7 +113,7 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// </summary>
         /// <param name="box"></param>
         /// <returns></returns>
-		public IEnumerable<T> Get(BoxF2D box)
+        public IEnumerable<T> Get(BoxF2D box)
         {
             var result = new HashSet<T>();
             RTreeMemoryIndex<T>.Get(_root, box, result);
@@ -173,7 +170,7 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// <param name="node"></param>
         /// <param name="box"></param>
         /// <param name="result"></param>
-		private static void Get(Node node, BoxF2D box, HashSet<T> result)
+        private static void Get(Node node, BoxF2D box, HashSet<T> result)
         {
             if (node.Children is List<Node>)
             {

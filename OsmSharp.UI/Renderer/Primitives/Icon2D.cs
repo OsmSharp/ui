@@ -16,64 +16,48 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using OsmSharp.Math.Primitives;
-
-namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
+namespace OsmSharp.UI.Renderer.Primitives
 {
     /// <summary>
-    /// Represents a simple 2D image.
+    /// A simple icon.
     /// </summary>
-    public class Image2D : IScene2DPrimitive
+    public class Icon2D : Primitive2D
     {
         /// <summary>
-        /// Creates a new Image2D.
+        /// Creates a new icon.
         /// </summary>
-        public Image2D()
+        public Icon2D()
         {
-            
+
         }
 
         /// <summary>
-        /// Creates a new Image2D.
+        /// Creates a new icon.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="top"></param>
-        /// <param name="bottom"></param>
-        /// <param name="right"></param>
-        /// <param name="imageData"></param>
-        public Image2D(float left, float top, float bottom, float right, byte[] imageData)
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="image"></param>
+        public Icon2D(double x, double y, byte[] image)
         {
-            this.ImageData = imageData;
-            this.Left = left;
-            this.Right = right;
-            this.Top = top;
-            this.Bottom = bottom;
-
-            this.MinZoom = float.MinValue;
-            this.MaxZoom = float.MaxValue;
+            this.X = x;
+            this.Y = y;
+            this.Image = image;
         }
 
         /// <summary>
-        /// Creates a new Image2D.
+        /// Creates a new icon.
         /// </summary>
-        /// <param name="left"></param>
-        /// <param name="top"></param>
-        /// <param name="bottom"></param>
-        /// <param name="right"></param>
-        /// <param name="imageData"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="image"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-		public Image2D(double left, double top, double bottom, double right, byte[] imageData, float minZoom, float maxZoom)
+        public Icon2D(double x, double y, byte[] image, float minZoom, float maxZoom)
         {
-            this.ImageData = imageData;
-            this.Left = left;
-            this.Right = right;
-            this.Top = top;
-            this.Bottom = bottom;
+            this.X = x;
+            this.Y = y;
+            this.Image = image;
 
             this.MinZoom = minZoom;
             this.MaxZoom = maxZoom;
@@ -84,39 +68,33 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// </summary>
         public uint Id { get; set; }
 
-		/// <summary>
-		/// Gets or sets the tag.
-		/// </summary>
-		/// <value>The tag.</value>
-		public object Tag {
-			get;
-			set;
-		}
+        /// <summary>
+        /// Gets or sets the tag.
+        /// </summary>
+        /// <value>The tag.</value>
+        public object Tag
+        {
+            get;
+            set;
+        }
 
         /// <summary>
-        /// Gets the image data.
+        /// Gets or sets the x.
         /// </summary>
-        public byte[] ImageData { get; set; }
+        /// <value>The x.</value>
+        public double X { get; set; }
 
         /// <summary>
-        /// Gets the left.
+        /// Gets or sets the y.
         /// </summary>
-		public double Left { get; set; }
+        /// <value>The y.</value>
+        public double Y { get; set; }
 
         /// <summary>
-        /// Gets the right.
+        /// Gets or sets the color.
         /// </summary>
-		public double Right { get; set; }
-
-        /// <summary>
-        /// Gets the top.
-        /// </summary>
-		public double Top { get; set; }
-
-        /// <summary>
-        /// Gets the bottom.
-        /// </summary>
-		public double Bottom { get; set; }
+        /// <value>The color.</value>
+        public byte[] Image { get; set; }
 
         /// <summary>
         /// The minimum zoom.
@@ -137,23 +115,23 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// <c>false</c>
         /// <param name="view">View.</param>
         /// <param name="zoom"></param>
-        public bool IsVisibleIn(View2D view, float zoom)
+        public override bool IsVisibleIn(View2D view, float zoom)
         {
             if (this.MinZoom > zoom || this.MaxZoom < zoom)
             { // outside of zoom bounds!
                 return false;
             }
 
-			return view.OverlapsWithBox (this.Left, this.Top, this.Right, this.Bottom);
+            return view.Contains(this.X, this.Y);
         }
 
         /// <summary>
         /// Returns the bounding box for this primitive.
         /// </summary>
         /// <returns></returns>
-		public BoxF2D GetBox()
+        public override BoxF2D GetBox()
         {
-			return new BoxF2D(this.Left, this.Top, this.Right, this.Bottom);
+            return new BoxF2D(this.X, this.Y, this.X, this.Y);
         }
 
         #endregion

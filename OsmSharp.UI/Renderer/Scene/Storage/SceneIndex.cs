@@ -16,53 +16,58 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using OsmSharp.UI.Renderer.Scene.Styles;
+using ProtoBuf;
 using System.Collections.Generic;
-using System.IO;
-using OsmSharp.Math.Primitives;
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 
-namespace OsmSharp.UI.Renderer.Scene
+namespace OsmSharp.UI.Renderer.Scene.Storage
 {
     /// <summary>
-    /// Contains all objects that need to be rendered.
+    /// Scene index.
     /// </summary>
-    public abstract class Scene2DReadonly
+    [ProtoContract]
+    internal class SceneIndex
     {
         /// <summary>
-        /// Clear this instance.
+        /// Holds the point styles.
         /// </summary>
-        public abstract void Clear();
+        [ProtoMember(1)]
+        public StylePoint[] PointStyles { get; set; }
 
         /// <summary>
-        /// Returns the number of objects in this scene.
+        /// Holds the text styles.
         /// </summary>
-        public abstract int Count
-        {
-            get;
-        }
+        [ProtoMember(2)]
+        public StyleText[] TextStyles { get; set; }
 
         /// <summary>
-        /// Gets/sets the backcolor of the scene.
+        /// Holds the line styles.
         /// </summary>
-        public int BackColor { get; set; }
+        [ProtoMember(3)]
+        public StyleLine[] LineStyles { get; set; }
 
         /// <summary>
-        /// Returns true if this scene is readonly.
+        /// Holds the polygon styles.
         /// </summary>
-        public abstract bool IsReadOnly { get; }
+        [ProtoMember(4)]
+        public StylePolygon[] PolygonStyles { get; set; }
 
         /// <summary>
-        /// Returns the primitive with the given id.
+        /// Holds the zoom ranges.
         /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public abstract IScene2DPrimitive Get(uint id);
+        [ProtoMember(5)]
+        public Scene2DZoomRange[] ZoomRanges { get; set; }
 
         /// <summary>
-        /// Gets all objects in this scene for the specified view sorted according to layer number.
+        /// Holds the zoom factors.
         /// </summary>
-        /// <param name="view">View.</param>
-        /// <param name="zoom"></param>
-        public abstract IEnumerable<Scene2DPrimitive> Get(View2D view, float zoom);
+        [ProtoMember(6)]
+        public float[] ZoomFactors { get; set; }
+
+        /// <summary>
+        /// Holds the icon images.
+        /// </summary>
+        [ProtoMember(7)]
+        public List<byte[]> IconImage { get; set; }
     }
 }

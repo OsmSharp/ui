@@ -16,22 +16,28 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using OsmSharp.Math.Primitives;
+using ProtoBuf;
 
-namespace OsmSharp.Collections.SpatialIndexes
+namespace OsmSharp.UI.Renderer.Scene.Primitives
 {
     /// <summary>
-    /// Abstract representation of a readonly spatial index.
+    /// Represents a line text.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public interface ISpatialIndexReadonly<T>
+    [ProtoContract]
+    internal class SceneLineTextObject : SceneObject
     {
         /// <summary>
-        /// Queries this index and returns all objects with overlapping bounding boxes.
+        /// Creates a new line text object.
         /// </summary>
-        /// <param name="box"></param>
-        /// <returns></returns>
-        IEnumerable<T> Get(BoxF2D box);
+        public SceneLineTextObject()
+        {
+            this.Enum = SceneObjectType.LineTextObject;
+        }
+
+        /// <summary>
+        /// Gets or sets the text id.
+        /// </summary>
+        [ProtoMember(6)]
+        public uint TextId { get; set; }
     }
 }

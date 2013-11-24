@@ -1,4 +1,4 @@
-// OsmSharp - OpenStreetMap (OSM) SDK
+﻿// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
@@ -16,46 +16,36 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Math.Primitives;
-
-namespace OsmSharp.UI.Renderer.Scene
+namespace OsmSharp.UI.Renderer.Scene.Primitives
 {
     /// <summary>
-    /// A common interface for all scene primitives.
+    /// Represents an object type.
     /// </summary>
-    public interface IScene2DPrimitive
+    internal enum SceneObjectType
     {
         /// <summary>
-        /// Gets or sets the id.
+        /// Text object.
         /// </summary>
-        uint Id { get; set; }
-
+        TextObject,
         /// <summary>
-        /// Returns true if the object is visible on the view.
+        /// Polygon object.
         /// </summary>
-        /// <returns><c>true</c> if this instance is visible in the specified view; otherwise, <c>false</c>.</returns>
-        /// <param name="view">View.</param>
-        /// <param name="zoom"></param>
-        bool IsVisibleIn(View2D view, float zoom);
-
+        PolygonObject,
         /// <summary>
-        /// Returns the bounding box for this primitive.
+        /// Line object.
         /// </summary>
-        /// <returns></returns>
-		BoxF2D GetBox();
-
+        LineObject,
         /// <summary>
-        /// Gets or sets the tag.
+        /// Line text object.
         /// </summary>
-        /// <value>The tag.</value>
-        object Tag
-        {
-            get;
-            set;
-        }
+        LineTextObject,
+        /// <summary>
+        /// Point object.
+        /// </summary>
+        PointObject,
+        /// <summary>
+        /// Icon object.
+        /// </summary>
+        IconObject
     }
 }

@@ -19,6 +19,7 @@
 #if !WINDOWS_PHONE
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OsmSharp.Collections.Cache
 {
@@ -27,7 +28,7 @@ namespace OsmSharp.Collections.Cache
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
-    public class LRUCache<TKey, TValue>
+    public class LRUCache<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>>
     {
         private ConcurrentDictionary<TKey, CacheEntry> _data;
 
@@ -197,6 +198,31 @@ namespace OsmSharp.Collections.Cache
             /// The object being cached.
             /// </summary>
             public TValue Value { get; set; }
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns></returns>
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            return _data.Select<KeyValuePair<TKey, CacheEntry>, KeyValuePair<TKey, TValue>>(
+                (source) => {
+                    return new KeyValuePair<TKey, TValue>(source.Key, source.Value.Value);
+                }).GetEnumerator();
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns></returns>
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return _data.Select<KeyValuePair<TKey, CacheEntry>, KeyValuePair<TKey, TValue>>(
+                (source) =>
+                {
+                    return new KeyValuePair<TKey, TValue>(source.Key, source.Value.Value);
+                }).GetEnumerator();
         }
     }
 }

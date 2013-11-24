@@ -1,4 +1,4 @@
-﻿// OsmSharp - OpenStreetMap (OSM) SDK
+// OsmSharp - OpenStreetMap (OSM) SDK
 // Copyright (C) 2013 Abelshausen Ben
 // 
 // This file is part of OsmSharp.
@@ -16,24 +16,18 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
-
-namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
+namespace OsmSharp.UI.Renderer.Primitives
 {
     /// <summary>
     /// A simple 2D line.
     /// </summary>
-    internal class LineText2D : IScene2DPrimitive
+    public class Line2D : Primitive2D
     {
         /// <summary>
-        /// Creates a new LineText2D.
+        /// Creates a new line2D.
         /// </summary>
-        public LineText2D()
+        public Line2D()
         {
 
         }
@@ -47,13 +41,14 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// <param name="width"></param>
         /// <param name="lineJoin"></param>
         /// <param name="dashes"></param>
-        public LineText2D(double[] x, double[] y, int color, float size, string text)
+        public Line2D(double[] x, double[] y, int color, float width, LineJoin lineJoin, int[] dashes)
         {
             this.X = x;
             this.Y = y;
             this.Color = color;
-            this.Size = size;
-            this.Text = text;
+            this.Width = width;
+            this.LineJoin = lineJoin;
+            this.Dashes = dashes;
 
             MinX = int.MaxValue;
             MaxX = int.MinValue;
@@ -97,17 +92,16 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// <param name="dashes"></param>
         /// <param name="minZoom"></param>
         /// <param name="maxZoom"></param>
-        public LineText2D(double[] x, double[] y, int color, float size, string text, int? haloColor, int? haloRadius,
+        public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes,
             float minZoom, float maxZoom)
             : this()
         {
             this.X = x;
             this.Y = y;
             this.Color = color;
-            this.Size = size;
-            this.Text = text;
-            this.HaloColor = haloColor;
-            this.HaloRadius = haloRadius;
+            this.Width = width;
+            this.LineJoin = lineJoin;
+            this.Dashes = dashes;
 
             MinX = int.MaxValue;
             MaxX = int.MinValue;
@@ -152,15 +146,16 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// <param name="maxX"></param>
         /// <param name="minY"></param>
         /// <param name="maxY"></param>
-        public LineText2D(double[] x, double[] y, int color, float size, string text,
+        public Line2D(double[] x, double[] y, int color, double width, LineJoin lineJoin, int[] dashes,
             int minX, int maxX, int minY, int maxY)
             : this()
         {
             this.X = x;
             this.Y = y;
             this.Color = color;
-            this.Size = size;
-            this.Text = text;
+            this.Width = width;
+            this.LineJoin = lineJoin;
+            this.Dashes = dashes;
 
             MinX = minX;
             MaxX = maxX;
@@ -180,51 +175,61 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// Gets or sets the tag.
         /// </summary>
         /// <value>The tag.</value>
-        public object Tag { get; set; }
-
-        /// <summary>
-        /// Gets or sets the text.
-        /// </summary>
-        public string Text { get; set; }
+        public object Tag
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Gets or sets the x.
         /// </summary>
         /// <value>The x.</value>
-        public double[] X { get; set; }
+        public double[] X
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Gets or sets the y.
         /// </summary>
         /// <value>The y.</value>
-        public double[] Y { get; set; }
+        public double[] Y
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Gets or sets the color.
         /// </summary>
         /// <value>The color.</value>
-        public int Color { get; set; }
-
-        /// <summary>
-        /// Gets or sets the halo size.
-        /// </summary>
-        public int? HaloRadius { get; set; }
-
-        /// <summary>
-        /// Gets or sets the halo color.
-        /// </summary>
-        public int? HaloColor { get; set; }
+        public int Color
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Gets or sets the size.
         /// </summary>
         /// <value>The size.</value>
-		public float Size { get; set; }
+        public double Width
+        {
+            get;
+            set;
+        }
 
-		/// <summary>
-		/// Gets or sets the font name.
-		/// </summary>
-		public string Font { get; set; }
+        /// <summary>
+        /// Gets or sets the linejoin.
+        /// </summary>
+        public LineJoin LineJoin { get; set; }
+
+        /// <summary>
+        /// Gets or sets the line dashses.
+        /// </summary>
+        public int[] Dashes { get; set; }
 
         /// <summary>
         /// The minimum zoom.
@@ -250,28 +255,40 @@ namespace OsmSharp.UI.Renderer.Scene.Scene2DPrimitives
         /// <c>false</c>
         /// <param name="view">View.</param>
         /// <param name="zoom"></param>
-        public bool IsVisibleIn(View2D view, float zoom)
+        public override bool IsVisibleIn(View2D view, float zoom)
         {
             if (this.MinZoom > zoom || this.MaxZoom < zoom)
             { // outside of zoom bounds!
                 return false;
             }
 
-			if (view.OverlapsWithBox (MinX, MinY, MaxX, MaxY)) {
-				return true; // maybe a better hittest?
-			}
-			return false;
+            if (view.OverlapsWithBox(MinX, MinY, MaxX, MaxY))
+            {
+                return true; // maybe a better hittest?
+            }
+            return false;
         }
 
         /// <summary>
         /// Returns the bounding box for this primitive.
         /// </summary>
         /// <returns></returns>
-		public BoxF2D GetBox()
+        public override BoxF2D GetBox()
         {
-			return new BoxF2D(MinX, MinY, MaxX, MaxY);
+            return new BoxF2D(MinX, MinY, MaxX, MaxY);
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Enumerated the different linejoin options.
+    /// </summary>
+    public enum LineJoin
+    {
+        Round,
+        Miter,
+        Bevel,
+        None
     }
 }
