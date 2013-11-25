@@ -406,73 +406,79 @@ namespace OsmSharp.UI.Renderer.Scene
                     {
                         case SceneObjectType.IconObject:
                             SceneIconObject icon = sceneObject as SceneIconObject;
-                            if (_zoomRanges.Get(icon.ZoomRangeId).Contains(zoom))
-                            {
+                            byte[] iconStyle = _imageIndex[(int)icon.StyleId];
+                            //if (Scene2DZoomRange.Contains(zoom))
+                            //{
                                 point = _pointIndex.Get(icon.GeoId);
                                 if (view.Contains(point.X, point.Y))
                                 {
                                     primitives.Add(
-                                        this.ConvertToPrimitive(id, icon));
+                                        this.ConvertToPrimitive(id, icon, iconStyle));
                                 }
-                            }
+                            //}
                             break;
                         case SceneObjectType.LineObject:
                             SceneLineObject line = sceneObject as SceneLineObject;
+                            StyleLine styleLine = _lineStyles.Get(line.StyleId);
                             points = _pointsIndex.Get(line.GeoId);
-                            if (_zoomRanges.Get(line.ZoomRangeId).Contains(zoom))
+                            if (Scene2DZoomRange.Contains(styleLine.MinZoom, styleLine.MaxZoom, zoom))
                             {
                                 if (view.IsVisible(points.X, points.Y, false))
                                 {
                                     primitives.Add(
-                                        this.ConvertToPrimitive(id, line));
+                                        this.ConvertToPrimitive(id, line, styleLine));
                                 }
                             }
                             break;
                         case SceneObjectType.LineTextObject:
                             SceneLineTextObject lineText = sceneObject as SceneLineTextObject;
+                            StyleText lineTextStyle = _textStyles.Get(lineText.StyleId);
                             points = _pointsIndex.Get(lineText.GeoId);
-                            if (_zoomRanges.Get(lineText.ZoomRangeId).Contains(zoom))
+                            if (Scene2DZoomRange.Contains(lineTextStyle.MinZoom, lineTextStyle.MaxZoom, zoom))
                             {
                                 if (view.IsVisible(points.X, points.Y, false))
                                 {
                                     primitives.Add(
-                                        this.ConvertToPrimitive(id, lineText));
+                                        this.ConvertToPrimitive(id, lineText, lineTextStyle));
                                 }
                             }
                             break;
                         case SceneObjectType.PointObject:
                             ScenePointObject pointObject = sceneObject as ScenePointObject;
+                            StylePoint pointStyle = _pointStyles.Get(pointObject.StyleId);
                             point = _pointIndex.Get(pointObject.GeoId);
-                            if (_zoomRanges.Get(pointObject.ZoomRangeId).Contains(zoom))
+                            if (Scene2DZoomRange.Contains(pointStyle.MinZoom, pointStyle.MaxZoom, zoom))
                             {
                                 if (view.Contains(point.X, point.Y))
                                 {
                                     primitives.Add(
-                                        this.ConvertToPrimitive(id, pointObject));
+                                        this.ConvertToPrimitive(id, pointObject, pointStyle));
                                 }
                             }
                             break;
                         case SceneObjectType.PolygonObject:
                             ScenePolygonObject polygonObject = sceneObject as ScenePolygonObject;
+                            StylePolygon polygonStyle = _polygonStyles.Get(polygonObject.StyleId);
                             points = _pointsIndex.Get(polygonObject.GeoId);
-                            if (_zoomRanges.Get(polygonObject.ZoomRangeId).Contains(zoom))
+                            if (Scene2DZoomRange.Contains(polygonStyle.MinZoom, polygonStyle.MaxZoom, zoom))
                             {
                                 if (view.IsVisible(points.X, points.Y, false))
                                 {
                                     primitives.Add(
-                                        this.ConvertToPrimitive(id, polygonObject));
+                                        this.ConvertToPrimitive(id, polygonObject, polygonStyle));
                                 }
                             }
                             break;
                         case SceneObjectType.TextObject:
                             SceneTextObject textObject = sceneObject as SceneTextObject;
+                            StyleText textStyle = _textStyles.Get(textObject.StyleId);
                             point = _pointIndex.Get(textObject.GeoId);
-                            if (_zoomRanges.Get(textObject.ZoomRangeId).Contains(zoom))
+                            if (Scene2DZoomRange.Contains(textStyle.MinZoom, textStyle.MaxZoom, zoom))
                             {
                                 if (view.Contains(point.X, point.Y))
                                 {
                                     primitives.Add(
-                                        this.ConvertToPrimitive(id, textObject));
+                                        this.ConvertToPrimitive(id, textObject, textStyle));
                                 }
                             }
                             break;
@@ -683,27 +689,21 @@ namespace OsmSharp.UI.Renderer.Scene
                     minimumZoomFactor = System.Math.Max(minimumZoomFactor, minZoom);
                     maximumZoomFactor = System.Math.Min(maximumZoomFactor, maxZoom);
                     // add to the scene.
-                    // build the zoom range.
-                    Scene2DZoomRange zoomRange = new Scene2DZoomRange()
-                    {
-                        MinZoom = minimumZoomFactor,
-                        MaxZoom = maximumZoomFactor
-                    };
-                    ushort zoomRangeId = (ushort)_zoomRanges.Add(zoomRange);
-
                     // build the style.
                     StylePoint style = new StylePoint()
                     {
                         Color = color,
                         Size = size,
-                        Layer = layer
+                        Layer = layer,
+                        MinZoom = minimumZoomFactor,
+                        MaxZoom = maximumZoomFactor
                     };
                     ushort styleId = (ushort)_pointStyles.Add(style);
 
                     // add the scene object.
                     uint id = _nextId;
                     _sceneObjects[idx].Add(id, 
-                        new ScenePointObject() { StyleId = styleId, GeoId = pointId, ZoomRangeId = zoomRangeId });
+                        new ScenePointObject() { StyleId = styleId, GeoId = pointId });
                     _nextId++;
                     newIds.Add(id);
                 }
@@ -736,21 +736,17 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
         /// <returns></returns>
-        private Primitive2D ConvertToPrimitive(uint id, ScenePointObject sceneObject)
+        private Primitive2D ConvertToPrimitive(uint id, ScenePointObject sceneObject, StylePoint style)
         {
             Point2D point = new Point2D();
             point.Id = id;
 
-            // convert zoom range.
-            Scene2DZoomRange zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
-            point.MaxZoom = zoomRange.MaxZoom;
-            point.MinZoom = zoomRange.MinZoom;
-
             // convert style.
-            StylePoint style = _pointStyles.Get(sceneObject.StyleId);
             point.Color = style.Color;
             point.Size = style.Size;
             point.Layer = style.Layer;
+            point.MinZoom = style.MinZoom;
+            point.MaxZoom = style.MaxZoom;
 
             // get the geo.
             ScenePoint geo = _pointIndex.Get(sceneObject.GeoId);
@@ -802,17 +798,18 @@ namespace OsmSharp.UI.Renderer.Scene
                     maximumZoomFactor = System.Math.Min(maximumZoomFactor, maxZoom);
                     // add to the scene.
                     // build the zoom range.
-                    Scene2DZoomRange zoomRange = new Scene2DZoomRange()
-                    {
-                        MinZoom = minimumZoomFactor,
-                        MaxZoom = maximumZoomFactor
-                    };
-                    ushort zoomRangeId = (ushort)_zoomRanges.Add(zoomRange);
+                    // TODO: zoom and layer for icon.
+                    //Scene2DZoomRange zoomRange = new Scene2DZoomRange()
+                    //{
+                    //    MinZoom = minimumZoomFactor,
+                    //    MaxZoom = maximumZoomFactor
+                    //};
+                    //ushort zoomRangeId = (ushort)_zoomRanges.Add(zoomRange);
 
                     // add the scene object.
                     uint id = _nextId;
                     _sceneObjects[idx].Add(id, 
-                        new SceneIconObject() { StyleId = imageId, GeoId = pointId, ZoomRangeId = zoomRangeId });
+                        new SceneIconObject() { StyleId = imageId, GeoId = pointId });
                     _nextId++;
                     newIds.Add(id);
                 }
@@ -845,20 +842,15 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
         /// <returns></returns>
-        private Primitive2D ConvertToPrimitive(uint id, SceneIconObject sceneObject)
+        private Primitive2D ConvertToPrimitive(uint id, SceneIconObject sceneObject, byte[] style)
         {
             Icon2D primitive = new Icon2D();
             primitive.Id = id;
 
-            // convert zoom range.
-            Scene2DZoomRange zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
-            primitive.MaxZoom = zoomRange.MaxZoom;
-            primitive.MinZoom = zoomRange.MinZoom;
-
             // convert image.
-            byte[] style = _imageIndex[(int)sceneObject.StyleId];
             primitive.Image = style;
             primitive.Layer = 0; // TODO: image layers!!!
+            // TODO: zoom levels.
 
             // get the geo.
             ScenePoint geo = _pointIndex.Get(sceneObject.GeoId);
@@ -915,14 +907,6 @@ namespace OsmSharp.UI.Renderer.Scene
                     minimumZoomFactor = System.Math.Max(minimumZoomFactor, minZoom);
                     maximumZoomFactor = System.Math.Min(maximumZoomFactor, maxZoom);
                     // add to the scene.
-                    // build the zoom range.
-                    Scene2DZoomRange zoomRange = new Scene2DZoomRange()
-                    {
-                        MinZoom = minimumZoomFactor,
-                        MaxZoom = maximumZoomFactor
-                    };
-                    ushort zoomRangeId = (ushort)_zoomRanges.Add(zoomRange);
-
                     // add to stringtable.
                     uint textId = _stringTable.Add(text);
 
@@ -934,14 +918,16 @@ namespace OsmSharp.UI.Renderer.Scene
                         Font = font,
                         HaloColor = haloColor,
                         HaloRadius = haloRadius,
-                        Layer = layer
+                        Layer = layer,
+                        MinZoom = minimumZoomFactor,
+                        MaxZoom = maximumZoomFactor
                     };
                     ushort styleId = (ushort)_textStyles.Add(style);
 
                     // add the scene object.
                     uint id = _nextId;
                     _sceneObjects[idx].Add(id, 
-                        new SceneTextObject() { StyleId = styleId, GeoId = pointId, ZoomRangeId = zoomRangeId, TextId = textId });
+                        new SceneTextObject() { StyleId = styleId, GeoId = pointId, TextId = textId });
                     _nextId++;
                     newIds.Add(id);
                 }
@@ -974,24 +960,20 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
         /// <returns></returns>
-        private Primitive2D ConvertToPrimitive(uint id, SceneTextObject sceneObject)
+        private Primitive2D ConvertToPrimitive(uint id, SceneTextObject sceneObject, StyleText style)
         {
             Text2D primitive = new Text2D();
             primitive.Id = id;
 
-            // convert zoom range.
-            Scene2DZoomRange zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
-            primitive.MaxZoom = zoomRange.MaxZoom;
-            primitive.MinZoom = zoomRange.MinZoom;
-
             // convert image.
-            StyleText style = _textStyles.Get(sceneObject.StyleId);
             primitive.Color = style.Color;
             primitive.Font = style.Font;
             primitive.HaloColor = style.HaloColor;
             primitive.HaloRadius = style.HaloRadius;
             primitive.Size = style.Size;
             primitive.Layer = style.Layer;
+            primitive.MaxZoom = style.MaxZoom;
+            primitive.MinZoom = style.MinZoom;
 
             // get the text.
             primitive.Text = _stringTable.Get(sceneObject.TextId);
@@ -1072,14 +1054,6 @@ namespace OsmSharp.UI.Renderer.Scene
                         }
 
                         // add to the scene.
-                        // build the zoom range.
-                        Scene2DZoomRange zoomRange = new Scene2DZoomRange()
-                        {
-                            MinZoom = minimumZoomFactor,
-                            MaxZoom = maximumZoomFactor
-                        };
-                        ushort zoomRangeId = (ushort)_zoomRanges.Add(zoomRange);
-
                         // build the style.
                         StyleLine style = new StyleLine()
                         {
@@ -1087,14 +1061,16 @@ namespace OsmSharp.UI.Renderer.Scene
                             Dashes = dashes,
                             LineJoin = lineJoin,
                             Width = width,
-                            Layer = layer
+                            Layer = layer,
+                            MinZoom = minimumZoomFactor,
+                            MaxZoom = maximumZoomFactor
                         };
                         ushort styleId = (ushort)_lineStyles.Add(style);
 
                         // add the scene object.
                         uint id = _nextId;
                         _sceneObjects[idx].Add(id, 
-                            new SceneLineObject() { StyleId = styleId, GeoId = pointsId, ZoomRangeId = zoomRangeId });
+                            new SceneLineObject() { StyleId = styleId, GeoId = pointsId });
                         _nextId++;
                         newIds.Add(id);
                     }
@@ -1129,23 +1105,19 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
         /// <returns></returns>
-        private Primitive2D ConvertToPrimitive(uint id, SceneLineObject sceneObject)
+        private Primitive2D ConvertToPrimitive(uint id, SceneLineObject sceneObject, StyleLine style)
         {
             Line2D primitive = new Line2D();
             primitive.Id = id;
 
-            // convert zoom range.
-            Scene2DZoomRange zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
-            primitive.MaxZoom = zoomRange.MaxZoom;
-            primitive.MinZoom = zoomRange.MinZoom;
-
             // convert image.
-            StyleLine style = _lineStyles.Get(sceneObject.StyleId);
             primitive.Color = style.Color;
             primitive.LineJoin = style.LineJoin;
             primitive.Width = style.Width;
             primitive.Dashes = style.Dashes;
             primitive.Layer = style.Layer;
+            primitive.MaxZoom = style.MaxZoom;
+            primitive.MinZoom = style.MinZoom;
 
             // get the geo.
             ScenePoints geo = _pointsIndex.Get(sceneObject.GeoId);
@@ -1226,14 +1198,6 @@ namespace OsmSharp.UI.Renderer.Scene
                         }
 
                         // add to the scene.
-                        // build the zoom range.
-                        Scene2DZoomRange zoomRange = new Scene2DZoomRange()
-                        {
-                            MinZoom = minimumZoomFactor,
-                            MaxZoom = maximumZoomFactor
-                        };
-                        ushort zoomRangeId = (ushort)_zoomRanges.Add(zoomRange);
-
                         // add to stringtable.
                         uint textId = _stringTable.Add(text);
 
@@ -1245,14 +1209,16 @@ namespace OsmSharp.UI.Renderer.Scene
                             Font = font,
                             HaloColor = haloColor,
                             HaloRadius = haloRadius,
-                            Layer = layer
+                            Layer = layer,
+                            MinZoom = minimumZoomFactor,
+                            MaxZoom = maximumZoomFactor
                         };
                         ushort styleId = (ushort)_textStyles.Add(style);
 
                         // add the scene object.
                         uint id = _nextId;
                         _sceneObjects[idx].Add(id, 
-                            new SceneLineTextObject() { StyleId = styleId, GeoId = pointsId, ZoomRangeId = zoomRangeId, TextId = textId });
+                            new SceneLineTextObject() { StyleId = styleId, GeoId = pointsId, TextId = textId });
                         _nextId++;
                         newIds.Add(id);
                     }
@@ -1287,24 +1253,20 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
         /// <returns></returns>
-        private Primitive2D ConvertToPrimitive(uint id, SceneLineTextObject sceneObject)
+        private Primitive2D ConvertToPrimitive(uint id, SceneLineTextObject sceneObject, StyleText style)
         {
             LineText2D primitive = new LineText2D();
             primitive.Id = id;
 
-            // convert zoom range.
-            Scene2DZoomRange zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
-            primitive.MaxZoom = zoomRange.MaxZoom;
-            primitive.MinZoom = zoomRange.MinZoom;
-
             // convert image.
-            StyleText style = _textStyles.Get(sceneObject.StyleId);
             primitive.Color = style.Color;
             primitive.Font = style.Font;
             primitive.HaloColor = style.HaloColor;
             primitive.HaloRadius = style.HaloRadius;
             primitive.Size = style.Size;
             primitive.Layer = style.Layer;
+            primitive.MaxZoom = style.MaxZoom;
+            primitive.MinZoom = style.MinZoom;
 
             // get the text.
             primitive.Text = _stringTable.Get(sceneObject.TextId);
@@ -1384,28 +1346,22 @@ namespace OsmSharp.UI.Renderer.Scene
                         }
 
                         // add to the scene.
-                        // build the zoom range.
-                        Scene2DZoomRange zoomRange = new Scene2DZoomRange()
-                        {
-                            MinZoom = minimumZoomFactor,
-                            MaxZoom = maximumZoomFactor
-                        };
-                        ushort zoomRangeId = (ushort)_zoomRanges.Add(zoomRange);
-
                         // build the style.
                         StylePolygon style = new StylePolygon()
                         {
                             Color = color,
                             Fill = fill,
                             Width = width,
-                            Layer = layer
+                            Layer = layer,
+                            MinZoom = minimumZoomFactor,
+                            MaxZoom = maximumZoomFactor
                         };
                         ushort styleId = (ushort)_polygonStyles.Add(style);
 
                         // add the scene object.
                         uint id = _nextId;
                         _sceneObjects[idx].Add(id, 
-                            new ScenePolygonObject() { StyleId = styleId, GeoId = pointsId, ZoomRangeId = zoomRangeId });
+                            new ScenePolygonObject() { StyleId = styleId, GeoId = pointsId });
                         _nextId++;
                         newIds.Add(id);
                     }
@@ -1440,22 +1396,18 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="id"></param>
         /// <param name="sceneObject"></param>
         /// <returns></returns>
-        private Primitive2D ConvertToPrimitive(uint id, ScenePolygonObject sceneObject)
+        private Primitive2D ConvertToPrimitive(uint id, ScenePolygonObject sceneObject, StylePolygon style)
         {
             Polygon2D primitive = new Polygon2D();
             primitive.Id = id;
 
-            // convert zoom range.
-            Scene2DZoomRange zoomRange = _zoomRanges.Get(sceneObject.ZoomRangeId);
-            primitive.MaxZoom = zoomRange.MaxZoom;
-            primitive.MinZoom = zoomRange.MinZoom;
-
             // convert image.
-            StylePolygon style = _polygonStyles.Get(sceneObject.StyleId);
             primitive.Color = style.Color;
             primitive.Fill = style.Fill;
             primitive.Width = style.Width;
             primitive.Layer = style.Layer;
+            primitive.MaxZoom = style.MaxZoom;
+            primitive.MinZoom = style.MinZoom;
 
             // get the geo.
             ScenePoints geo = _pointsIndex.Get(sceneObject.GeoId);

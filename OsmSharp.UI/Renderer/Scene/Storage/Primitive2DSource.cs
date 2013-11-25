@@ -73,8 +73,12 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
             if (sceneAtZoom != null)
             {
-                return new SortedSet<Primitive2D>(sceneAtZoom.Get(view.OuterBox),
-                    LayerComparer.GetInstance());
+                var primitives = new SortedSet<Primitive2D>(LayerComparer.GetInstance());
+                foreach (var primitive in sceneAtZoom.Get(view.OuterBox))
+                {
+                    primitives.Add(primitive);
+                }
+                return primitives;
             }
             return new List<Primitive2D>();
         }

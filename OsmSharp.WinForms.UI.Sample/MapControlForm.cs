@@ -51,15 +51,15 @@ namespace OsmSharp.WinForms.UI.Sample
             // initialize map.
             var map = new OsmSharp.UI.Map.Map();
 
-            var dataSource = MemoryDataSource.CreateFromPBFStream(
-                new FileInfo(@"kempen.osm.pbf").OpenRead());
-            var mapCSSInterpreter = new MapCSSInterpreter(
-                new FileInfo(@"complete.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
-            map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
+            //var dataSource = MemoryDataSource.CreateFromPBFStream(
+            //    new FileInfo(@"kempen.osm.pbf").OpenRead());
+            //var mapCSSInterpreter = new MapCSSInterpreter(
+            //    new FileInfo(@"complete.mapcss").OpenRead(), new MapCSSDictionaryImageSource());
+            //map.AddLayer(new LayerOsm(dataSource, mapCSSInterpreter, map.Projection));
             ////map.AddLayer(new LayerTile(@"http://otile1.mqcdn.com/tiles/1.0.0/osm/{0}/{1}/{2}.png"));
-            //map.AddLayer(new LayerScene(
-            //    Scene2D.Deserialize(new FileInfo(@"kempen-big.osm.pbf.scene.layered").OpenRead(),
-            //        true)));
+            map.AddLayer(new LayerScene(
+                Scene2D.Deserialize(new FileInfo(@"kempen-big.osm.pbf.scene.layered").OpenRead(),
+                    true)));
 
             // set control properties.
             this.mapControl1.Map = map;

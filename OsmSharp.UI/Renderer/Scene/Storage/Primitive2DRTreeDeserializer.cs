@@ -94,7 +94,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             List<Primitive2D> dataLists = new List<Primitive2D>();
             boxes = new List<BoxF2D>();
 
-            int scaleFactor = 1000000;
+            int scaleFactor = SceneSerializer.ScaleFactor;
 
             // Assume the following stuff already exists in the current scene:
             // - ZoomRanges
@@ -103,10 +103,13 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             // deserialize the leaf data.
             SceneObjectBlock leafData = typeModel.Deserialize(
                 new MemoryStream(data), null, typeof(SceneObjectBlock)) as SceneObjectBlock;
-
-            // delta-decode.
-            leafData.PointsX = leafData.PointsX.DecodeDelta();
-            leafData.PointsY = leafData.PointsY.DecodeDelta();
+            
+            // decode
+            for (int idx = 0; idx < leafData.PointsX.Count; idx++)
+            {
+                leafData.PointsX[idx] = leafData.PointsX[idx] + leafData.PointsXMin;
+                leafData.PointsY[idx] = leafData.PointsY[idx] + leafData.PointsYMin;
+            }
 
             // store the next points.
             bool[] pointsStarts = new bool[leafData.PointsX.Count];
@@ -158,19 +161,17 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                 // get properties.
                 int pointId = leafData.PointPointId[idx];
                 uint styleId = leafData.PointStyleId[idx];
-                uint zoomRangeId = leafData.PointZoomRangeId[idx];
 
                 // get point/style/zoomrange.
                 double x = (double)leafData.PointsX[pointId] / (double)scaleFactor;
                 double y = (double)leafData.PointsY[pointId] / (double)scaleFactor;
-                Scene2DZoomRange zoomRange = _index.ZoomRanges[zoomRangeId];
                 StylePoint style = _index.PointStyles[styleId];
 
                 // build the primitive.
                 Point2D point = new Point2D(x, y, style.Color, style.Size);
                 point.Layer = style.Layer;
-                point.MinZoom = zoomRange.MinZoom;
-                point.MaxZoom = zoomRange.MaxZoom;
+                point.MinZoom = style.MinZoom;
+                point.MaxZoom = style.MaxZoom;
 
                 dataLists.Add(point);
                 boxes.Add(new BoxF2D(new PointF2D(x, y)));
@@ -182,20 +183,20 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                 // get properties.
                 int pointId = leafData.TextPointPointId[idx];
                 uint styleId = leafData.TextPointStyleId[idx];
-                uint zoomRangeId = leafData.TextPointZoomRangeId[idx];
                 string text = leafData.TextPointText[idx];
 
                 // get point/style/zoomrange.
                 float x = (float)leafData.PointsX[pointId] / (float)scaleFactor;
                 float y = (float)leafData.PointsY[pointId] / (float)scaleFactor;
-                Scene2DZoomRange zoomRange = _index.ZoomRanges[zoomRangeId];
                 StyleText style = _index.TextStyles[styleId];
 
                 // build the primitive.
                 Text2D text2D = new Text2D(x, y, text, style.Color, style.Size);
                 text2D.Layer = style.Layer;
-                text2D.MinZoom = zoomRange.MinZoom;
-                text2D.MaxZoom = zoomRange.MaxZoom;
+                text2D.HaloColor = style.HaloColor;
+                text2D.HaloRadius = style.HaloRadius;
+                text2D.MinZoom = style.MinZoom;
+                text2D.MaxZoom = style.MaxZoom;
 
                 dataLists.Add(text2D);
                 boxes.Add(new BoxF2D(new PointF2D(x, y)));
@@ -207,17 +208,16 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                 // get properties.
                 int pointId = leafData.IconPointId[idx];
                 uint imageId = leafData.IconImageId[idx];
-                uint zoomRangeId = leafData.IconZoomRangeId[idx];
 
                 // get point/style/zoomrange.
                 double x = (double)leafData.PointsX[pointId] / (double)scaleFactor;
                 double y = (double)leafData.PointsY[pointId] / (double)scaleFactor;
-                Scene2DZoomRange zoomRange = _index.ZoomRanges[zoomRangeId];
                 byte[] image = _index.IconImage[(int)imageId];
 
                 // build the primitive.
-                Icon2D icon = new Icon2D(x, y, image, zoomRange.MinZoom, zoomRange.MaxZoom);
+                Icon2D icon = new Icon2D(x, y, image);
                 icon.Layer = 0;
+                // TODO: layer and zoom level. style.MinZoom, style.MaxZoom
 
                 dataLists.Add(icon);
                 boxes.Add(new BoxF2D(new PointF2D(x, y)));
@@ -229,7 +229,6 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                 // get properties.
                 int pointsId = leafData.LinePointsId[idx];
                 uint styleId = leafData.LineStyleId[idx];
-                uint zoomRangeId = leafData.LineZoomRangeId[idx];
                 
                 // get points/style/zoomrange.
                 int pointsCount = pointsBoundaries[pointsId];
@@ -237,14 +236,13 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                     leafData.PointsX.GetRange(pointsId, pointsCount).ConvertFromLongArray(scaleFactor);
                 double[] y =
                     leafData.PointsY.GetRange(pointsId, pointsCount).ConvertFromLongArray(scaleFactor);
-                Scene2DZoomRange zoomRange = _index.ZoomRanges[zoomRangeId];
                 StyleLine style = _index.LineStyles[styleId];
 
                 // build the primitive.
                 Line2D line = new Line2D(x, y, style.Color, style.Width, style.LineJoin, style.Dashes);
                 line.Layer = style.Layer;
-                line.MinZoom = zoomRange.MinZoom;
-                line.MaxZoom = zoomRange.MaxZoom;
+                line.MinZoom = style.MinZoom;
+                line.MaxZoom = style.MaxZoom;
 
                 dataLists.Add(line);
                 boxes.Add(new BoxF2D(x, y));
@@ -256,7 +254,6 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                 // get properties.
                 int pointsId = leafData.PolygonPointsId[idx];
                 uint styleId = leafData.PolygonStyleId[idx];
-                uint zoomRangeId = leafData.PolygonZoomRangeId[idx];
 
                 // get points/style/zoomrange.
                 int pointsCount = pointsBoundaries[pointsId];
@@ -264,14 +261,13 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                     leafData.PointsX.GetRange(pointsId, pointsCount).ConvertFromLongArray(scaleFactor);
                 double[] y =
                     leafData.PointsY.GetRange(pointsId, pointsCount).ConvertFromLongArray(scaleFactor);
-                Scene2DZoomRange zoomRange = _index.ZoomRanges[zoomRangeId];
                 StylePolygon style = _index.PolygonStyles[styleId];
 
                 // build the primitive.
                 Polygon2D polygon = new Polygon2D(x, y, style.Color, style.Width, style.Fill);
                 polygon.Layer = style.Layer;
-                polygon.MaxZoom = zoomRange.MaxZoom;
-                polygon.MinZoom = zoomRange.MinZoom;
+                polygon.MaxZoom = style.MaxZoom;
+                polygon.MinZoom = style.MinZoom;
 
                 dataLists.Add(polygon);
                 boxes.Add(new BoxF2D(x, y));
@@ -283,7 +279,6 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                 // get properties.
                 int pointsId = leafData.LineTextPointsId[idx];
                 uint styleId = leafData.LineTextStyleId[idx];
-                uint zoomRangeId = leafData.LineTextZoomRangeId[idx];
                 string text = leafData.LineTextText[idx];
 
                 // get points/style/zoomrange.
@@ -292,7 +287,6 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                     leafData.PointsX.GetRange(pointsId, pointsCount).ConvertFromLongArray(scaleFactor);
                 double[] y =
                     leafData.PointsY.GetRange(pointsId, pointsCount).ConvertFromLongArray(scaleFactor);
-                Scene2DZoomRange zoomRange = _index.ZoomRanges[zoomRangeId];
                 StyleText style = _index.TextStyles[styleId];
 
                 // build the primitive.
@@ -301,6 +295,8 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                 lineText.Font = style.Font;
                 lineText.HaloColor = style.HaloColor;
                 lineText.HaloRadius = style.HaloRadius;
+                lineText.MinZoom = style.MinZoom;
+                lineText.MaxZoom = style.MaxZoom;
 
                 dataLists.Add(lineText);
                 boxes.Add(new BoxF2D(x, y));

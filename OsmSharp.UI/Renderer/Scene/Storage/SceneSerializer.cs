@@ -20,12 +20,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using OsmSharp.Collections.SpatialIndexes;
+using OsmSharp.IO;
 using OsmSharp.Math.Primitives;
+using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene.Primitives;
 using OsmSharp.UI.Renderer.Scene.Styles;
 using ProtoBuf.Meta;
-using OsmSharp.IO;
-using OsmSharp.UI.Renderer.Primitives;
 
 namespace OsmSharp.UI.Renderer.Scene.Storage
 {
@@ -34,6 +34,8 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
     /// </summary>
     internal static class SceneSerializer
     {
+        public static int ScaleFactor = 10000;
+
         /// <summary>
         /// Build the runtime type model.
         /// </summary>
@@ -180,8 +182,9 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             {
                 Primitive2DRTreeDeserializer deserializer = new Primitive2DRTreeDeserializer(
                     sceneIndex, compress);
+                long position = stream.Position;
                 rTrees[idx] = deserializer.Deserialize(new LimitedStream(stream), true);
-                stream.Seek(lengths[idx], SeekOrigin.Current);
+                stream.Seek(position + lengths[idx], SeekOrigin.Begin);
             }
 
             return new Primitive2DSource(sceneIndex.ZoomFactors, rTrees);

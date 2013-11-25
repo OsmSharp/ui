@@ -63,6 +63,18 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public uint Layer { get; set; }
 
         /// <summary>
+        /// Gets or sets the minzoom.
+        /// </summary>
+        [ProtoMember(7)]
+        public float MinZoom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minzoom.
+        /// </summary>
+        [ProtoMember(8)]
+        public float MaxZoom { get; set; }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns></returns>
@@ -74,14 +86,18 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                     this.Size.GetHashCode() ^
                     this.HaloColor.GetHashCode() ^
                     this.HaloRadius.GetHashCode() ^
-                    this.Layer.GetHashCode();
+                    this.Layer.GetHashCode() ^
+                    this.MinZoom.GetHashCode() ^
+                    this.MaxZoom.GetHashCode();
             }
             return this.Color.GetHashCode() ^
                 this.Size.GetHashCode() ^
                 this.HaloColor.GetHashCode() ^
                 this.HaloRadius.GetHashCode() ^
                 this.Font.GetHashCode() ^
-                this.Layer.GetHashCode();
+                this.Layer.GetHashCode() ^
+                this.MinZoom.GetHashCode() ^
+                this.MaxZoom.GetHashCode();
         }
 
         /// <summary>
@@ -98,7 +114,9 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                     (obj as StyleText).HaloRadius == this.HaloRadius &&
                     (obj as StyleText).HaloColor == this.HaloColor &&
                     (obj as StyleText).Font == this.Font &&
-                    (obj as StyleText).Layer == this.Layer;
+                    (obj as StyleText).Layer == this.Layer &&
+                    (obj as StyleText).MinZoom == this.MinZoom &&
+                    (obj as StyleText).MaxZoom == this.MaxZoom;
             }
             return false;
         }

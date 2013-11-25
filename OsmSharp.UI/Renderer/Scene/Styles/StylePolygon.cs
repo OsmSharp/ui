@@ -51,6 +51,18 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public uint Layer { get; set; }
 
         /// <summary>
+        /// Gets or sets the minzoom.
+        /// </summary>
+        [ProtoMember(5)]
+        public float MinZoom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minzoom.
+        /// </summary>
+        [ProtoMember(6)]
+        public float MaxZoom { get; set; }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns></returns>
@@ -59,7 +71,9 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
             return this.Width.GetHashCode() ^
                 this.Color.GetHashCode() ^
                 this.Fill.GetHashCode() ^
-                this.Layer.GetHashCode();
+                this.Layer.GetHashCode() ^
+                this.MinZoom.GetHashCode() ^
+                this.MaxZoom.GetHashCode();
         }
 
         /// <summary>
@@ -74,7 +88,9 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                 return (obj as StylePolygon).Width == this.Width &&
                     (obj as StylePolygon).Color == this.Color &&
                     (obj as StylePolygon).Fill == this.Fill &&
-                    (obj as StylePolygon).Layer == this.Layer;
+                    (obj as StylePolygon).Layer == this.Layer &&
+                    (obj as StylePolygon).MinZoom == this.MinZoom &&
+                    (obj as StylePolygon).MaxZoom == this.MaxZoom;
             }
             return false;
         }

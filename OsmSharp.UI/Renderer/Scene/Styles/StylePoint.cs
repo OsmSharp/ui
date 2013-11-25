@@ -45,6 +45,18 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public uint Layer { get; set; }
 
         /// <summary>
+        /// Gets or sets the minzoom.
+        /// </summary>
+        [ProtoMember(4)]
+        public float MinZoom { get; set; }
+
+        /// <summary>
+        /// Gets or sets the minzoom.
+        /// </summary>
+        [ProtoMember(5)]
+        public float MaxZoom { get; set; }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns></returns>
@@ -52,7 +64,9 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         {
             return this.Color.GetHashCode() ^
                 this.Size.GetHashCode() ^
-                this.Layer.GetHashCode();
+                this.Layer.GetHashCode() ^
+                this.MinZoom.GetHashCode() ^
+                this.MaxZoom.GetHashCode();
         }
 
         /// <summary>
@@ -66,7 +80,9 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
             {
                 return (obj as StylePoint).Color == this.Color &&
                     (obj as StylePoint).Size == this.Size &&
-                    (obj as StylePoint).Layer == this.Layer;
+                    (obj as StylePoint).Layer == this.Layer &&
+                    (obj as StylePoint).MinZoom == this.MinZoom &&
+                    (obj as StylePoint).MaxZoom == this.MaxZoom;
             }
             return false;
         }

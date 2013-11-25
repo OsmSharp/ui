@@ -27,76 +27,65 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
     [ProtoContract]
     internal class SceneObjectBlock
     {
-        [ProtoMember(1, Options = global::ProtoBuf.MemberSerializationOptions.Packed, DataFormat = global::ProtoBuf.DataFormat.ZigZag)]
+        [ProtoMember(1, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<long> PointsX { get; set; }
 
-        [ProtoMember(2, Options = global::ProtoBuf.MemberSerializationOptions.Packed, DataFormat = global::ProtoBuf.DataFormat.ZigZag)]
+        [ProtoMember(2, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<long> PointsY { get; set; }
 
 
         [ProtoMember(3, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<ushort> PointStyleId { get; set; }
+        public List<uint> PointStyleId { get; set; }
 
         [ProtoMember(4, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<int> PointPointId { get; set; }
 
-        [ProtoMember(5, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> PointZoomRangeId { get; set; }
 
+        [ProtoMember(5, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+        public List<uint> TextPointStyleId { get; set; }
 
         [ProtoMember(6, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<ushort> TextPointStyleId { get; set; }
-
-        [ProtoMember(7, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<int> TextPointPointId { get; set; }
 
-        [ProtoMember(8)]
+        [ProtoMember(7)]
         public List<string> TextPointText { get; set; }
 
+
+        [ProtoMember(8, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+        public List<uint> LineStyleId { get; set; }
+
         [ProtoMember(9, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> TextPointZoomRangeId { get; set; }
+        public List<int> LinePointsId { get; set; }
 
 
         [ProtoMember(10, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<ushort> LineStyleId { get; set; }
+        public List<uint> PolygonStyleId { get; set; }
 
         [ProtoMember(11, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<int> LinePointsId { get; set; }
-
-        [ProtoMember(12, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> LineZoomRangeId { get; set; }
-
-
-        [ProtoMember(13, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<ushort> PolygonStyleId { get; set; }
-
-        [ProtoMember(14, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<int> PolygonPointsId { get; set; }
 
-        [ProtoMember(15, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> PolygonZoomRangeId { get; set; }
 
+        [ProtoMember(12, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+        public List<uint> LineTextStyleId { get; set; }
 
-        [ProtoMember(16, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<ushort> LineTextStyleId { get; set; }
-
-        [ProtoMember(17, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+        [ProtoMember(13, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<int> LineTextPointsId { get; set; }
 
-        [ProtoMember(18)]
+        [ProtoMember(14)]
         public List<string> LineTextText { get; set; }
 
-        [ProtoMember(19, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> LineTextZoomRangeId { get; set; }
 
+        [ProtoMember(15, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+        public List<uint> IconImageId { get; set; }
 
-        [ProtoMember(20, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<ushort> IconImageId { get; set; }
-
-        [ProtoMember(21, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+        [ProtoMember(16, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<int> IconPointId { get; set; }
 
-        [ProtoMember(22, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> IconZoomRangeId { get; set; }
+
+        [ProtoMember(17, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+        public long PointsXMin { get; set; }
+
+        [ProtoMember(18, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
+        public long PointsYMin { get; set; }
     }
 }

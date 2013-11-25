@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Ionic.Zlib;
 using OsmSharp.Collections.SpatialIndexes.Serialization.v2;
 using OsmSharp.Math.Primitives;
@@ -79,7 +80,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         protected override byte[] Serialize(RuntimeTypeModel typeModel,
             List<SceneObject> data, List<BoxF2D> boxes)
         {
-            int scaleFactor = 1000000;
+            int scaleFactor = SceneSerializer.ScaleFactor;
 
             Dictionary<uint, int> addedPoint = new Dictionary<uint, int>();
             Dictionary<uint, int> addedPoints = new Dictionary<uint, int>();
@@ -91,30 +92,24 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             leafData.PointsY = new List<long>();
 
             leafData.IconPointId = new List<int>();
-            leafData.IconImageId = new List<ushort>();
-            leafData.IconZoomRangeId = new List<uint>();
+            leafData.IconImageId = new List<uint>();
 
             leafData.LinePointsId = new List<int>();
-            leafData.LineStyleId = new List<ushort>();
-            leafData.LineZoomRangeId = new List<uint>();
+            leafData.LineStyleId = new List<uint>();
 
             leafData.LineTextPointsId = new List<int>();
-            leafData.LineTextStyleId = new List<ushort>();
+            leafData.LineTextStyleId = new List<uint>();
             leafData.LineTextText = new List<string>();
-            leafData.LineTextZoomRangeId = new List<uint>();
 
             leafData.PointPointId = new List<int>();
-            leafData.PointStyleId = new List<ushort>();
-            leafData.PointZoomRangeId = new List<uint>();
+            leafData.PointStyleId = new List<uint>();
 
             leafData.PolygonPointsId = new List<int>();
-            leafData.PolygonStyleId = new List<ushort>();
-            leafData.PolygonZoomRangeId = new List<uint>();
+            leafData.PolygonStyleId = new List<uint>();
 
             leafData.TextPointPointId = new List<int>();
-            leafData.TextPointStyleId = new List<ushort>();
+            leafData.TextPointStyleId = new List<uint>();
             leafData.TextPointText = new List<string>();
-            leafData.TextPointZoomRangeId = new List<uint>();
 
             foreach (SceneObject sceneObject in data)
             {
@@ -138,9 +133,6 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                         }
                         leafData.IconPointId.Add(geoId); // add point.
 
-                        // add zoom range.
-                        leafData.IconZoomRangeId.Add(sceneObject.ZoomRangeId);
-
                         // add image id.
                         leafData.IconImageId.Add(sceneObject.StyleId);
                         break;
@@ -159,9 +151,6 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                         }
                         leafData.PointPointId.Add(geoId);
 
-                        // add zoom range.
-                        leafData.PointZoomRangeId.Add(sceneObject.ZoomRangeId);
-
                         // add point style.
                         leafData.PointStyleId.Add(sceneObject.StyleId);
                         break;
@@ -179,9 +168,6 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                             addedPoint.Add(sceneObject.GeoId, geoId);
                         }
                         leafData.TextPointPointId.Add(geoId);
-
-                        // add zoom range.
-                        leafData.TextPointZoomRangeId.Add(sceneObject.ZoomRangeId);
 
                         // add point style.
                         leafData.TextPointStyleId.Add(sceneObject.StyleId);
@@ -205,9 +191,6 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                         }
                         leafData.LinePointsId.Add(geoId);
 
-                        // add zoom range.
-                        leafData.LineZoomRangeId.Add(sceneObject.ZoomRangeId);
-
                         // add point style.
                         leafData.LineStyleId.Add(sceneObject.StyleId);
                         break;
@@ -225,9 +208,6 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                             addedPoints.Add(sceneObject.GeoId, geoId);
                         }
                         leafData.LineTextPointsId.Add(geoId);
-
-                        // add zoom range.
-                        leafData.LineTextZoomRangeId.Add(sceneObject.ZoomRangeId);
 
                         // add point style.
                         leafData.LineTextStyleId.Add(sceneObject.StyleId);
@@ -251,18 +231,22 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                         }
                         leafData.PolygonPointsId.Add(geoId);
 
-                        // add zoom range.
-                        leafData.PolygonZoomRangeId.Add(sceneObject.ZoomRangeId);
-
                         // add point style.
                         leafData.PolygonStyleId.Add(sceneObject.StyleId);
                         break;
                 }
             }
 
-            // delta-encode.
-            leafData.PointsX.EncodeDelta();
-            leafData.PointsY.EncodeDelta();
+            // get the mins.
+            leafData.PointsXMin = leafData.PointsX.Min();
+            leafData.PointsYMin = leafData.PointsY.Min();
+
+            // encode.
+            for(int idx = 0; idx < leafData.PointsX.Count; idx++)
+            {
+                leafData.PointsX[idx] = leafData.PointsX[idx] - leafData.PointsXMin;
+                leafData.PointsY[idx] = leafData.PointsY[idx] - leafData.PointsYMin;
+            }
 
             // serialize.
             MemoryStream stream = new MemoryStream();

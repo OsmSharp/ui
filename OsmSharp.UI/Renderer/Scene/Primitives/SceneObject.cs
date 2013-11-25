@@ -42,12 +42,6 @@ namespace OsmSharp.UI.Renderer.Scene.Primitives
         /// Gets or sets the style id.
         /// </summary>
         [ProtoMember(3)]
-        public ushort StyleId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the zoom range id.
-        /// </summary>
-        [ProtoMember(4)]
-        public ushort ZoomRangeId { get; set; }
+        public uint StyleId { get; set; }
     }
 }
