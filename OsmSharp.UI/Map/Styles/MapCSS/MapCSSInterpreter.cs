@@ -339,7 +339,7 @@ namespace OsmSharp.UI.Map.Styles.MapCSS
                                        projection.LatitudeToY(node.Coordinate.Latitude));
                     }
                     // an icon is to be drawn!
-                    uint imageId = scene.AddImage(iconImage);
+                    ushort imageId = scene.AddImage(iconImage);
                     scene.AddIcon(pointId.Value, this.CalculateSceneLayer(OffsetPoint, zIndex), minZoom, maxZoom, imageId);
                 }
 

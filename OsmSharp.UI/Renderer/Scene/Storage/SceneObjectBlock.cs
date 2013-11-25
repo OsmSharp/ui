@@ -35,7 +35,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
 
         [ProtoMember(3, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> PointStyleId { get; set; }
+        public List<ushort> PointStyleId { get; set; }
 
         [ProtoMember(4, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<int> PointPointId { get; set; }
@@ -45,7 +45,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
 
         [ProtoMember(6, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> TextPointStyleId { get; set; }
+        public List<ushort> TextPointStyleId { get; set; }
 
         [ProtoMember(7, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<int> TextPointPointId { get; set; }
@@ -58,7 +58,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
 
         [ProtoMember(10, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> LineStyleId { get; set; }
+        public List<ushort> LineStyleId { get; set; }
 
         [ProtoMember(11, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<int> LinePointsId { get; set; }
@@ -68,7 +68,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
 
         [ProtoMember(13, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> PolygonStyleId { get; set; }
+        public List<ushort> PolygonStyleId { get; set; }
 
         [ProtoMember(14, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<int> PolygonPointsId { get; set; }
@@ -78,7 +78,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
 
         [ProtoMember(16, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> LineTextStyleId { get; set; }
+        public List<ushort> LineTextStyleId { get; set; }
 
         [ProtoMember(17, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<int> LineTextPointsId { get; set; }
@@ -91,7 +91,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
 
         [ProtoMember(20, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
-        public List<uint> IconImageId { get; set; }
+        public List<ushort> IconImageId { get; set; }
 
         [ProtoMember(21, Options = global::ProtoBuf.MemberSerializationOptions.Packed)]
         public List<int> IconPointId { get; set; }

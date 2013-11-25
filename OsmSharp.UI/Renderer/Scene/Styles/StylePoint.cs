@@ -39,13 +39,20 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public float Size { get; set; }
 
         /// <summary>
+        /// Gets or sets the layer.
+        /// </summary>
+        [ProtoMember(3)]
+        public uint Layer { get; set; }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns></returns>
         public override int GetHashCode()
         {
             return this.Color.GetHashCode() ^
-                this.Size.GetHashCode();
+                this.Size.GetHashCode() ^
+                this.Layer.GetHashCode();
         }
 
         /// <summary>
@@ -58,7 +65,8 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
             if (obj is StylePoint)
             {
                 return (obj as StylePoint).Color == this.Color &&
-                    (obj as StylePoint).Size == this.Size;
+                    (obj as StylePoint).Size == this.Size &&
+                    (obj as StylePoint).Layer == this.Layer;
             }
             return false;
         }

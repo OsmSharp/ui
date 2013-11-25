@@ -52,6 +52,12 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public int[] Dashes { get; set; }
 
         /// <summary>
+        /// Gets or sets the layer.
+        /// </summary>
+        [ProtoMember(6)]
+        public uint Layer { get; set; }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns></returns>
@@ -61,11 +67,13 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
             {
                 return this.Color.GetHashCode() ^
                     this.Width.GetHashCode() ^
-                    this.LineJoin.GetHashCode();
+                    this.LineJoin.GetHashCode() ^
+                    this.Layer.GetHashCode();
             }
             int hashcode = this.Color.GetHashCode() ^
                 this.Width.GetHashCode() ^
-                this.LineJoin.GetHashCode();
+                this.LineJoin.GetHashCode() ^
+                this.Layer.GetHashCode();
             foreach (int dash in this.Dashes)
             {
                 hashcode = hashcode ^ dash.GetHashCode();
@@ -83,7 +91,8 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
             {
                 if ((obj as StyleLine).Color == this.Color &&
                     (obj as StyleLine).Width == this.Width &&
-                    (obj as StyleLine).LineJoin == this.LineJoin)
+                    (obj as StyleLine).LineJoin == this.LineJoin &&
+                    (obj as StyleLine).Layer == this.Layer)
                 {
                     if (this.Dashes != null)
                     {

@@ -91,28 +91,28 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             leafData.PointsY = new List<long>();
 
             leafData.IconPointId = new List<int>();
-            leafData.IconImageId = new List<uint>();
+            leafData.IconImageId = new List<ushort>();
             leafData.IconZoomRangeId = new List<uint>();
 
             leafData.LinePointsId = new List<int>();
-            leafData.LineStyleId = new List<uint>();
+            leafData.LineStyleId = new List<ushort>();
             leafData.LineZoomRangeId = new List<uint>();
 
             leafData.LineTextPointsId = new List<int>();
-            leafData.LineTextStyleId = new List<uint>();
+            leafData.LineTextStyleId = new List<ushort>();
             leafData.LineTextText = new List<string>();
             leafData.LineTextZoomRangeId = new List<uint>();
 
             leafData.PointPointId = new List<int>();
-            leafData.PointStyleId = new List<uint>();
+            leafData.PointStyleId = new List<ushort>();
             leafData.PointZoomRangeId = new List<uint>();
 
             leafData.PolygonPointsId = new List<int>();
-            leafData.PolygonStyleId = new List<uint>();
+            leafData.PolygonStyleId = new List<ushort>();
             leafData.PolygonZoomRangeId = new List<uint>();
 
             leafData.TextPointPointId = new List<int>();
-            leafData.TextPointStyleId = new List<uint>();
+            leafData.TextPointStyleId = new List<ushort>();
             leafData.TextPointText = new List<string>();
             leafData.TextPointZoomRangeId = new List<uint>();
 

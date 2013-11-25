@@ -133,10 +133,6 @@
     <Compile Include="UI\Styles\MapCSS\MapCSSInterpreterTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\..\..\..\OSM\bin\belgium-latest.osm.pbf">
-      <Link>TestFiles\belgium-latest.osm.pbf</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="..\OsmSharpTestFiles\kempen-big.osm.pbf">
       <Link>TestFiles\kempen-big.osm.pbf</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

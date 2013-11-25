@@ -57,6 +57,12 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public string Font { get; set; }
 
         /// <summary>
+        /// Gets or sets the layer.
+        /// </summary>
+        [ProtoMember(6)]
+        public uint Layer { get; set; }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns></returns>
@@ -67,13 +73,15 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                 return this.Color.GetHashCode() ^
                     this.Size.GetHashCode() ^
                     this.HaloColor.GetHashCode() ^
-                    this.HaloRadius.GetHashCode();
+                    this.HaloRadius.GetHashCode() ^
+                    this.Layer.GetHashCode();
             }
             return this.Color.GetHashCode() ^
                 this.Size.GetHashCode() ^
                 this.HaloColor.GetHashCode() ^
                 this.HaloRadius.GetHashCode() ^
-                this.Font.GetHashCode();
+                this.Font.GetHashCode() ^
+                this.Layer.GetHashCode();
         }
 
         /// <summary>
@@ -89,7 +97,8 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
                     (obj as StyleText).Color == this.Color &&
                     (obj as StyleText).HaloRadius == this.HaloRadius &&
                     (obj as StyleText).HaloColor == this.HaloColor &&
-                    (obj as StyleText).Font == this.Font;
+                    (obj as StyleText).Font == this.Font &&
+                    (obj as StyleText).Layer == this.Layer;
             }
             return false;
         }

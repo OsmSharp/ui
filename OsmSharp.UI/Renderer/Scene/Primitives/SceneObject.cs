@@ -33,27 +33,21 @@ namespace OsmSharp.UI.Renderer.Scene.Primitives
         public SceneObjectType Enum { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the layer.
-        /// </summary>
-        [ProtoMember(2)]
-        public uint Layer { get; set; }
-
-        /// <summary>
         /// Gets or sets the geometry id.
         /// </summary>
-        [ProtoMember(3)]
+        [ProtoMember(2)]
         public uint GeoId { get; set; }
 
         /// <summary>
         /// Gets or sets the style id.
         /// </summary>
-        [ProtoMember(4)]
-        public uint StyleId { get; set; }
+        [ProtoMember(3)]
+        public ushort StyleId { get; set; }
 
         /// <summary>
         /// Gets or sets the zoom range id.
         /// </summary>
-        [ProtoMember(5)]
-        public uint ZoomRangeId { get; set; }
+        [ProtoMember(4)]
+        public ushort ZoomRangeId { get; set; }
     }
 }

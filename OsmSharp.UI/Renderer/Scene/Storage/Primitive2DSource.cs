@@ -73,9 +73,36 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
             if (sceneAtZoom != null)
             {
-                return sceneAtZoom.Get(view.OuterBox);
+                return new SortedSet<Primitive2D>(sceneAtZoom.Get(view.OuterBox),
+                    LayerComparer.GetInstance());
             }
             return new List<Primitive2D>();
+        }
+
+        /// <summary>
+        /// Layer comparer to sort objects by layer.
+        /// </summary>
+        private class LayerComparer : IComparer<Primitive2D>
+        {
+            private static LayerComparer _instance = null;
+
+            public static LayerComparer GetInstance()
+            {
+                if (_instance == null)
+                {
+                    _instance = new LayerComparer();
+                }
+                return _instance;
+            }
+
+            public int Compare(Primitive2D x, Primitive2D y)
+            {
+                if (x.Layer == y.Layer)
+                { // objects with same layer, assume different.
+                    return -1;
+                }
+                return x.Layer.CompareTo(y.Layer);
+            }
         }
     }
 }

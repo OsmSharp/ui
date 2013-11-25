@@ -110,6 +110,21 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
             // store the next points.
             bool[] pointsStarts = new bool[leafData.PointsX.Count];
+            // loop over all points.
+            for (int idx = 0; idx < leafData.PointPointId.Count; idx++)
+            {
+                pointsStarts[leafData.PointPointId[idx]] = true;
+            }
+            // loop over all text-points.
+            for (int idx = 0; idx < leafData.TextPointPointId.Count; idx++)
+            {
+                pointsStarts[leafData.TextPointPointId[idx]] = true;
+            }
+            // loop over all icons.
+            for (int idx = 0; idx < leafData.IconPointId.Count; idx++)
+            {
+                pointsStarts[leafData.IconPointId[idx]] = true;
+            }
             // loop over all lines.
             for (int idx = 0; idx < leafData.LinePointsId.Count; idx++)
             {
@@ -153,6 +168,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
                 // build the primitive.
                 Point2D point = new Point2D(x, y, style.Color, style.Size);
+                point.Layer = style.Layer;
                 point.MinZoom = zoomRange.MinZoom;
                 point.MaxZoom = zoomRange.MaxZoom;
 
@@ -177,6 +193,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
                 // build the primitive.
                 Text2D text2D = new Text2D(x, y, text, style.Color, style.Size);
+                text2D.Layer = style.Layer;
                 text2D.MinZoom = zoomRange.MinZoom;
                 text2D.MaxZoom = zoomRange.MaxZoom;
 
@@ -200,6 +217,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
                 // build the primitive.
                 Icon2D icon = new Icon2D(x, y, image, zoomRange.MinZoom, zoomRange.MaxZoom);
+                icon.Layer = 0;
 
                 dataLists.Add(icon);
                 boxes.Add(new BoxF2D(new PointF2D(x, y)));
@@ -224,6 +242,9 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
                 // build the primitive.
                 Line2D line = new Line2D(x, y, style.Color, style.Width, style.LineJoin, style.Dashes);
+                line.Layer = style.Layer;
+                line.MinZoom = zoomRange.MinZoom;
+                line.MaxZoom = zoomRange.MaxZoom;
 
                 dataLists.Add(line);
                 boxes.Add(new BoxF2D(x, y));
@@ -247,9 +268,12 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                 StylePolygon style = _index.PolygonStyles[styleId];
 
                 // build the primitive.
-                Polygon2D line = new Polygon2D(x, y, style.Color, style.Width, style.Fill);
+                Polygon2D polygon = new Polygon2D(x, y, style.Color, style.Width, style.Fill);
+                polygon.Layer = style.Layer;
+                polygon.MaxZoom = zoomRange.MaxZoom;
+                polygon.MinZoom = zoomRange.MinZoom;
 
-                dataLists.Add(line);
+                dataLists.Add(polygon);
                 boxes.Add(new BoxF2D(x, y));
             }
 
@@ -273,13 +297,16 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
                 // build the primitive.
                 LineText2D lineText = new LineText2D(x, y, style.Color, style.Size, text);
+                lineText.Layer = style.Layer;
+                lineText.Font = style.Font;
+                lineText.HaloColor = style.HaloColor;
+                lineText.HaloRadius = style.HaloRadius;
 
                 dataLists.Add(lineText);
                 boxes.Add(new BoxF2D(x, y));
             }
             return dataLists;
         }
-
 
         /// <summary>
         /// Gets the version string.

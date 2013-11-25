@@ -45,6 +45,12 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         public bool Fill { get; set; }
 
         /// <summary>
+        /// Gets or sets the layer.
+        /// </summary>
+        [ProtoMember(4)]
+        public uint Layer { get; set; }
+
+        /// <summary>
         /// Returns the hashcode for this instance.
         /// </summary>
         /// <returns></returns>
@@ -52,7 +58,8 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
         {
             return this.Width.GetHashCode() ^
                 this.Color.GetHashCode() ^
-                this.Fill.GetHashCode();
+                this.Fill.GetHashCode() ^
+                this.Layer.GetHashCode();
         }
 
         /// <summary>
@@ -66,7 +73,8 @@ namespace OsmSharp.UI.Renderer.Scene.Styles
             {
                 return (obj as StylePolygon).Width == this.Width &&
                     (obj as StylePolygon).Color == this.Color &&
-                    (obj as StylePolygon).Fill == this.Fill;
+                    (obj as StylePolygon).Fill == this.Fill &&
+                    (obj as StylePolygon).Layer == this.Layer;
             }
             return false;
         }
