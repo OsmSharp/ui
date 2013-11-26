@@ -44,10 +44,10 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
             //    5, 8, 13, 15, 17
             //}));
             Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
-                16,15,13,8 }));
+                16, 13, 8 }));
 
             // tests map css interpreter.
-            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\complete.mapcss", scene, "kempen-big.osm.pbf");
+            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\complete.mapcss", scene, "kempen.osm.pbf");
 
             // tests serialization of the scene.
             Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\complete.map", scene, true);
