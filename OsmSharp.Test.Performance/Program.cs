@@ -34,6 +34,9 @@ namespace OsmSharp.Test.Performance
             // enable logging and use the console as output.
             OsmSharp.Logging.Log.Enable();
             OsmSharp.Logging.Log.RegisterConsoleListener();
+
+            // set the seed manually.
+            OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
             
             // add the to-ignore list.
             OsmSharp.Logging.Log.Ignore("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter");

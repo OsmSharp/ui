@@ -16,14 +16,12 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Timers;
+using System.Reflection;
+using System.Threading;
 using Android.App;
 using Android.OS;
 using Android.Widget;
 using OsmSharp.Android.UI.Log;
-using System.Reflection;
-using System.Threading;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
 
@@ -38,6 +36,9 @@ namespace OsmSharp.Android.Test.Performance
 
 			// Set our view from the "main" layout resource
 			SetContentView (Resource.Layout.Main);
+
+            // set the seed manually.
+            OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
 
             // register the textview listener
             OsmSharp.Logging.Log.Enable();

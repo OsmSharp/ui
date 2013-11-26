@@ -52,6 +52,9 @@ namespace OsmSharp.iOS.Test.Performance
             OsmSharp.Logging.Log.RegisterListener(
                 new OsmSharp.iOS.UI.Log.TextViewTraceListener(textView));
 
+            // set the seed manually.
+            OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
+
             //OsmSharp.Logging.Log.Ignore("RTreeStreamIndex");
             //OsmSharp.Logging.Log.Ignore("Scene2DLayeredSource");
 
