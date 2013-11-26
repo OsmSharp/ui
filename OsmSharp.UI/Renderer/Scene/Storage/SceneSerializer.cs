@@ -19,6 +19,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using OsmSharp;
 using OsmSharp.Collections.SpatialIndexes;
 using OsmSharp.IO;
 using OsmSharp.Math.Primitives;
@@ -26,6 +27,7 @@ using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene.Primitives;
 using OsmSharp.UI.Renderer.Scene.Styles;
 using ProtoBuf.Meta;
+using OsmSharp.Math.Geo.Projections;
 
 namespace OsmSharp.UI.Renderer.Scene.Storage
 {
@@ -34,7 +36,21 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
     /// </summary>
     internal static class SceneSerializer
     {
-        public static int ScaleFactor = 10000;
+        /// <summary>
+        /// Holds the default projection.
+        /// TODO: serialize this into the scene!
+        /// </summary>
+        public static IProjection DefaultProjection = new WebMercator(); // = 10000;
+
+        /// <summary>
+        /// Calculates the scalefactor to store the coordinates.
+        /// </summary>
+        /// <param name="zoomFactor"></param>
+        /// <returns></returns>
+        public static int CalculateScaleFactor(float zoomFactor)
+        {
+            return (1.0 / Scene2D.CalculateSimplificationEpsilon(DefaultProjection, zoomFactor)).Power10Floor() * 10;
+        }
 
         /// <summary>
         /// Build the runtime type model.
@@ -124,7 +140,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
                 // serialize the r-tree.
                 SceneObjectRTreeSerializer memoryIndexSerializer = new SceneObjectRTreeSerializer(
-                    scene, compress, idx);
+                    scene, compress, idx, SceneSerializer.CalculateScaleFactor(sceneIndex.ZoomFactors[idx]));
                 memoryIndexSerializer.Serialize(new LimitedStream(stream), memoryIndex);
 
                 lengths[idx] = (int)(stream.Position - position);
@@ -181,7 +197,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             for (int idx = 0; idx < lengths.Length; idx++)
             {
                 Primitive2DRTreeDeserializer deserializer = new Primitive2DRTreeDeserializer(
-                    sceneIndex, compress);
+                    sceneIndex, compress, SceneSerializer.CalculateScaleFactor(sceneIndex.ZoomFactors[idx]));
                 long position = stream.Position;
                 rTrees[idx] = deserializer.Deserialize(new LimitedStream(stream), true);
                 stream.Seek(position + lengths[idx], SeekOrigin.Begin);

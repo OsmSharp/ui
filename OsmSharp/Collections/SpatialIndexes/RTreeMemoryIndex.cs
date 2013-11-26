@@ -43,12 +43,12 @@ namespace OsmSharp.Collections.SpatialIndexes
         /// <summary>
         /// Holds the maximum leaf size M.
         /// </summary>
-        private readonly int _maxLeafSize = 50;
+        private readonly int _maxLeafSize = 200;
 
         /// <summary>
         /// Holds the minimum leaf size m.
         /// </summary>
-        private readonly int _minLeafSize = 20;
+        private readonly int _minLeafSize = 75;
 
         /// <summary>
         /// Creates a new index.

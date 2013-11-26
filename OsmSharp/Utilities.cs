@@ -30,6 +30,25 @@ namespace OsmSharp
     public static class Utilities
     {
         /// <summary>
+        /// Returns the largest power of 10 that is smaller than value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static int Power10Floor(this double value)
+        {
+            return (int)(System.Math.Pow(10.0, (System.Math.Floor(System.Math.Log10(value)))));
+        }
+        /// <summary>
+        /// Returns the largest power of 10 that is smaller than value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static int Power10Floor(this float value)
+        {
+            return Utilities.Power10Floor((double)value);
+        }
+
+        /// <summary>
         /// Shuffles the list using Fisher-Yates shuffle.
         /// </summary>
         /// <typeparam name="T"></typeparam>

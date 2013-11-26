@@ -58,8 +58,7 @@ namespace OsmSharp.UI.Map.Layers
             _dataSource = dataSource;
             _styleInterpreter = styleInterpreter;
 
-            _scene = new Scene2D(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+            _scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), 16);
             _interpretedObjects = new Dictionary<int, HashSet<ArcId>>();
         }
 

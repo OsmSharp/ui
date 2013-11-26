@@ -25,6 +25,10 @@ using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene.Primitives;
 using OsmSharp.UI.Renderer.Scene.Storage;
 using OsmSharp.UI.Renderer.Scene.Styles;
+using OsmSharp.Math.Geo.Projections;
+using System.Linq;
+using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Tiles;
 
 namespace OsmSharp.UI.Renderer.Scene
 {
@@ -94,13 +98,23 @@ namespace OsmSharp.UI.Renderer.Scene
         private List<float> _zoomFactors;
 
         /// <summary>
+        /// Holds the projection.
+        /// </summary>
+        private IProjection _projection;
+
+        /// <summary>
         /// Creates a new scene that keeps objects per zoom factor (and simplifies them accordingly).
         /// </summary>
-        /// <param name="zoomFactors"></param>
-        public Scene2D(List<float> zoomFactors)
+        /// <param name="projection"></param>
+        /// <param name="zoomLevels"></param>
+        public Scene2D(IProjection projection, List<float> zoomLevels)
         {
             _nextId = 0;
-            _zoomFactors = zoomFactors;
+            _projection = projection;
+            _zoomFactors = new List<float>(zoomLevels.Select((zoomLevel) =>
+            {
+                return (float)projection.ToZoomFactor(zoomLevel);
+            }));
 
             // string table.
             _stringTable = new ObjectTable<string>(true);
@@ -132,11 +146,44 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <summary>
         /// Creates a new scene that keeps objects (and simplifies) for one zoom-level.
         /// </summary>
-        /// <param name="zoomFactor">The zoomfactor relative to the projection of the objects in the scene.</param>
-        public Scene2D(float zoomFactor)
-            : this(new List<float>(new float[]{ zoomFactor }))
+        /// <param name="projection"></param>
+        /// <param name="zoomLevel">The zoom level.</param>
+        public Scene2D(IProjection projection, float zoomLevel)
+            : this(projection, new List<float>(new float[] { zoomLevel }))
         {
 
+        }
+
+        /// <summary>
+        /// Calculates the simplification epsilon.
+        /// </summary>
+        /// <param name="projection"></param>
+        /// <param name="zoomFactor"></param>
+        /// <returns></returns>
+        public static float CalculateSimplificationEpsilon(IProjection projection, float zoomFactor)
+        {
+            // calculate zoom level.
+            double zoomLevel = projection.ToZoomLevel(zoomFactor);
+
+            // choose location (accuracy will vary according to this selection).
+            // TODO: make location dependent on scene location.
+            GeoCoordinate coordinate = new GeoCoordinate(51, 4);
+            Tile tile = Tile.CreateAroundLocation(coordinate, (int)zoomLevel);
+
+            // get boundaries.
+            GeoCoordinate topLeft = tile.TopLeft;
+            GeoCoordinate bottomRight = tile.BottomRight;
+
+            // get diffs.
+            double xDiff = System.Math.Abs(projection.LongitudeToX(topLeft.Longitude) - projection.LongitudeToX(bottomRight.Longitude));
+            double yDiff = System.Math.Abs(projection.LatitudeToY(topLeft.Latitude) - projection.LatitudeToY(bottomRight.Latitude));
+
+            // divide by 256 (standard tile size).
+            xDiff = xDiff / 256.0;
+            yDiff = yDiff / 256.0;
+
+            // return (float)pixelWidth;
+            return (float)System.Math.Min(xDiff, yDiff) * 4;
         }
 
         /// <summary>
@@ -146,8 +193,7 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="zoomFactor">Zoom factor.</param>
         private float CalculateSimplificationEpsilon(float zoomFactor)
         {
-            double pixelWidth = (1 / zoomFactor) * 4;
-            return (float)pixelWidth;
+            return Scene2D.CalculateSimplificationEpsilon(_projection, zoomFactor);
         }
 
         /// <summary>

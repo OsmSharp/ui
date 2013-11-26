@@ -43,12 +43,8 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
             //Scene2D scene = new Scene2DLayered(new List<float>(new float[] {
             //    5, 8, 13, 15, 17
             //}));
-            Scene2D scene = new Scene2D(new List<float>(new float[] {
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)),
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(15)),
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(13)),
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(8))
-            }));
+            Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), new List<float>(new float[] {
+                16,15,13,8 }));
 
             // tests map css interpreter.
             MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\complete.mapcss", scene, "kempen-big.osm.pbf");

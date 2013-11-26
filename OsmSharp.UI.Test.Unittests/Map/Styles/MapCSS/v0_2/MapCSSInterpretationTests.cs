@@ -74,8 +74,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2D(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+            Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), 16);
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(string.Empty,
@@ -125,8 +124,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2D(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+            Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), 16);
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -178,8 +176,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2D(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+            Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), 16);
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -249,8 +246,7 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2D(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+            Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), 16);
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -283,12 +279,10 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2D(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+            Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), 16);
 
             // create the projection and scene objects.
-            scene = new Scene2D(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+            scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), 16);
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,
@@ -322,12 +316,10 @@ namespace OsmSharp.UI.Test.Unittests.Map.Styles.MapCSS.v0_2
 
             // create the projection and scene objects.
             var mercator = new WebMercator();
-            Scene2D scene = new Scene2D(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+            Scene2D scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), 16);
 
             // create the projection and scene objects.
-            scene = new Scene2D(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+            scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), 16);
 
             // create the interpreter.
             MapCSSInterpreter interpreter = new MapCSSInterpreter(css,

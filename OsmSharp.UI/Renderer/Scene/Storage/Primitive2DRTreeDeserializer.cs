@@ -44,12 +44,18 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         private SceneIndex _index;
 
         /// <summary>
+        /// Holds the scalefactor.
+        /// </summary>
+        private int _scaleFactor;
+
+        /// <summary>
         /// Creates a new RTreeSerializer.
         /// </summary>
         /// <param name="index"></param>
         /// <param name="compressed"></param>
-        public Primitive2DRTreeDeserializer(SceneIndex index, bool compressed)
+        public Primitive2DRTreeDeserializer(SceneIndex index, bool compressed, int scaleFactor)
         {
+            _scaleFactor = scaleFactor;
             _index = index;
             _compressed = compressed;
         }
@@ -94,7 +100,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
             List<Primitive2D> dataLists = new List<Primitive2D>();
             boxes = new List<BoxF2D>();
 
-            int scaleFactor = SceneSerializer.ScaleFactor;
+            int scaleFactor = _scaleFactor;
 
             // Assume the following stuff already exists in the current scene:
             // - ZoomRanges

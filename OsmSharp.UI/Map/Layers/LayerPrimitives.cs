@@ -50,7 +50,7 @@ namespace OsmSharp.UI.Map.Layers
 		{
 			_projection = projection;
 
-            _scene = new Scene2D((float)projection.ToZoomFactor(16));
+            _scene = new Scene2D(projection, 16);
 		}
 
 		/// <summary>

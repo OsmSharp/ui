@@ -62,8 +62,7 @@ namespace OsmSharp.UI.Test.Unittests.Renderer.Scene2DPrimitives.Storage
             MemoryDataSource source = MemoryDataSource.CreateFrom(xmlSource);
 
             // get data.
-            var scene = new Scene2D(
-                (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+            var scene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), 16);
             var projection = new WebMercator();
             GeoCoordinateBox box = null;
             foreach (var osmGeo in dataSource)
@@ -119,8 +118,7 @@ namespace OsmSharp.UI.Test.Unittests.Renderer.Scene2DPrimitives.Storage
                         projection.LongitudeToX(queryBox.MinLon),
                         projection.LatitudeToY(queryBox.MinLat),
                         projection.LongitudeToX(queryBox.MaxLon));
-                    var testScene = new Scene2D(
-                        (float)(new OsmSharp.Math.Geo.Projections.WebMercator().ToZoomFactor(16)));
+                    var testScene = new Scene2D(new OsmSharp.Math.Geo.Projections.WebMercator(), 16);
                     IEnumerable<Primitive2D> primitives = sceneSource.Get(testView, zoomFactor);
 
                     //                    var resultIndex = new HashSet<Scene2DPrimitive>(testScene.Get(testView, zoomFactor));

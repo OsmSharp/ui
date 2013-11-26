@@ -49,13 +49,19 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         private int _sceneAt;
 
         /// <summary>
+        /// Holds the scale factor.
+        /// </summary>
+        private int _scaleFactor;
+
+        /// <summary>
         /// Creates a new RTreeSerializer.
         /// </summary>
         /// <param name="scene"></param>
         /// <param name="compressed"></param>
         /// <param name="sceneAt"></param>
-        public SceneObjectRTreeSerializer(Scene2D scene, bool compressed, int sceneAt)
+        public SceneObjectRTreeSerializer(Scene2D scene, bool compressed, int sceneAt, int scaleFactor)
         {
+            _scaleFactor = scaleFactor;
             _sceneAt = sceneAt;
             _compressed = compressed;
             _scene = scene;
@@ -80,7 +86,7 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
         protected override byte[] Serialize(RuntimeTypeModel typeModel,
             List<SceneObject> data, List<BoxF2D> boxes)
         {
-            int scaleFactor = SceneSerializer.ScaleFactor;
+            int scaleFactor = _scaleFactor;
 
             Dictionary<uint, int> addedPoint = new Dictionary<uint, int>();
             Dictionary<uint, int> addedPoints = new Dictionary<uint, int>();
