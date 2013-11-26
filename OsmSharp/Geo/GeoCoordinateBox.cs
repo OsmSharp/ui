@@ -87,6 +87,20 @@ namespace OsmSharp.Math.Geo
 
             return new GeoCoordinate(this.MinLat + lat,
                 this.MinLon + lon);
+        }        
+        
+        /// <summary>
+        /// Generates a random point within this box.
+        /// </summary>
+        /// <param name="rand"></param>
+        /// <returns></returns>
+        public GeoCoordinate GenerateRandomIn(System.Random rand)
+        {
+            double lat = (double)rand.NextDouble() * this.DeltaLat;
+            double lon = (double)rand.NextDouble() * this.DeltaLon;
+
+            return new GeoCoordinate(this.MinLat + lat,
+                this.MinLon + lon);
         }
 
         /// <summary>

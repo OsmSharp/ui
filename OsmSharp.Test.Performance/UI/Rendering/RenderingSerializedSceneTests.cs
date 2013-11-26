@@ -82,7 +82,7 @@ namespace OsmSharp.Test.Performance.UI.Rendering
             // do some of the testing.
             RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
                 new GeoCoordinate(51.20190, 4.66540),
-                new GeoCoordinate(51.30720, 4.89820)), 100);
+                new GeoCoordinate(51.30720, 4.89820)), 10);
         }
 
         /// <summary>
@@ -109,12 +109,12 @@ namespace OsmSharp.Test.Performance.UI.Rendering
             // render the map.
             PerformanceInfoConsumer performanceInfo = new PerformanceInfoConsumer("Scene2DLayeredRendering");
             performanceInfo.Start();
-            performanceInfo.Report("Rendering {0} random images...", testCount);
+            //performanceInfo.Report("Rendering {0} random images...", testCount);
 
             while (testCount > 0)
             {
                 // randomize view.
-                int zoom = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(10) + 10;
+                int zoom = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(7) + 11;
                 GeoCoordinate center = box.GenerateRandomIn();
                 View2D view = mapRenderer.Create(TargetWidth, TargetHeight, map,
                     (float)projection.ToZoomFactor(zoom), center, false, true);
