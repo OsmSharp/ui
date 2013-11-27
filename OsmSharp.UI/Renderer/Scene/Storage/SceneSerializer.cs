@@ -115,6 +115,9 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
 
                 Dictionary<uint, SceneObject> sceneAtZoom = scene.GetObjectsAt(idx);
                 RTreeMemoryIndex<SceneObject> memoryIndex = new RTreeMemoryIndex<SceneObject>();
+
+                float latestProgress = 0;
+                int sceneObjectIdx = 0;
                 foreach (KeyValuePair<uint, SceneObject> sceneObjectPair in sceneAtZoom)
                 { // loop over all primitives in order.
                     SceneObject sceneObject = sceneObjectPair.Value;
@@ -136,9 +139,21 @@ namespace OsmSharp.UI.Renderer.Scene.Storage
                             memoryIndex.Add(new BoxF2D(geos.X, geos.Y), sceneObject);
                             break;
                     }
+
+                    float progress = (float)System.Math.Round((((double)sceneObjectIdx / (double)sceneAtZoom.Count) * 100));
+                    if (progress != latestProgress)
+                    {
+                        OsmSharp.Logging.Log.TraceEvent("SceneSerializer", System.Diagnostics.TraceEventType.Information,
+                            "Indexing scene objects at zoom {1} ({2}/{3})... {0}%", progress, sceneIndex.ZoomFactors[idx],
+                                sceneObjectIdx, sceneAtZoom.Count);
+                        latestProgress = progress;
+                    }
+                    sceneObjectIdx++;
                 }
 
                 // serialize the r-tree.
+                OsmSharp.Logging.Log.TraceEvent("SceneSerializer", System.Diagnostics.TraceEventType.Information,
+                    "Serializing RTRee...");
                 SceneObjectRTreeSerializer memoryIndexSerializer = new SceneObjectRTreeSerializer(
                     scene, compress, idx, SceneSerializer.CalculateScaleFactor(sceneIndex.ZoomFactors[idx]));
                 memoryIndexSerializer.Serialize(new LimitedStream(stream), memoryIndex);
