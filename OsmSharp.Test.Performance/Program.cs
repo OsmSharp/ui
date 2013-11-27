@@ -34,45 +34,49 @@ namespace OsmSharp.Test.Performance
             // enable logging and use the console as output.
             OsmSharp.Logging.Log.Enable();
             OsmSharp.Logging.Log.RegisterConsoleListener();
-            
-            //// add the to-ignore list.
-            //OsmSharp.Logging.Log.Ignore("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter");
-            //OsmSharp.Logging.Log.Ignore("CHPreProcessor");
-            //OsmSharp.Logging.Log.Ignore("RTreeStreamIndex");
-            //OsmSharp.Logging.Log.Ignore("Scene2DLayeredSource");
 
-            //// test streams.
-            //Osm.PBF.PBFStreamSourceTest.Test();
+            // set the seed manually.
+            OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
 
-            //// test the tags collection.
-            //Tags.Collections.TagsTableCollectionIndexTests.Test();
-            //Tags.Collections.BlockedTagsCollectionIndexTests.Test();
+            // add the to-ignore list.
+            OsmSharp.Logging.Log.Ignore("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter");
+            OsmSharp.Logging.Log.Ignore("CHPreProcessor");
+            OsmSharp.Logging.Log.Ignore("RTreeStreamIndex");
+            OsmSharp.Logging.Log.Ignore("Scene2DLayeredSource");
+
+            // test streams.
+            Osm.PBF.PBFStreamSourceTest.Test();
+
+            // test the tags collection.
+            Tags.Collections.TagsTableCollectionIndexTests.Test();
+            Tags.Collections.BlockedTagsCollectionIndexTests.Test();
 
             // tests the mapcss interpretation.
             UI.Styles.MapCSS.MapCSSInterpreterTests.Test();
 
-            //// test the routing pre-processor.
-            //Routing.CH.CHPreProcessorTest.Test();
-            //Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
-            //Routing.CH.CHSerializedRoutingTest.Test();
-            
-            //// test some rendering implementations.
-            //UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.Test(
-            //    (width, height) =>
-            //    {
-            //        // build the target to render to.
-            //        Bitmap imageTarget = new Bitmap(UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.TargetWidth, 
-            //            UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.TargetHeight);
-            //        Graphics target = Graphics.FromImage(imageTarget);
-            //        target.SmoothingMode = SmoothingMode.HighQuality;
-            //        target.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            //        target.CompositingQuality = CompositingQuality.HighQuality;
-            //        target.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            //        return target;
-            //    },
-            //    () => {
-            //        return new GraphicsRenderer2D();
-            //    });
+            // test the routing pre-processor.
+            Routing.CH.CHPreProcessorTest.Test();
+            Routing.CH.CHEdgeGraphFileStreamTargetTests.Test();
+            Routing.CH.CHSerializedRoutingTest.Test();
+
+            // test some rendering implementations.
+            UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.Test(
+                (width, height) =>
+                {
+                    // build the target to render to.
+                    Bitmap imageTarget = new Bitmap(UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.TargetWidth,
+                        UI.Rendering.RenderingSerializedSceneTests<System.Drawing.Graphics>.TargetHeight);
+                    Graphics target = Graphics.FromImage(imageTarget);
+                    target.SmoothingMode = SmoothingMode.HighQuality;
+                    target.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    target.CompositingQuality = CompositingQuality.HighQuality;
+                    target.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    return target;
+                },
+                () =>
+                {
+                    return new GraphicsRenderer2D();
+                });
 
             // wait for an exit.
             OsmSharp.Logging.Log.TraceEvent("Program", System.Diagnostics.TraceEventType.Information,

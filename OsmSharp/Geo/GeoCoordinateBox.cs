@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Math.Primitives;
+using OsmSharp.Math.Random;
 
 namespace OsmSharp.Math.Geo
 {
@@ -71,9 +72,23 @@ namespace OsmSharp.Math.Geo
         /// <returns></returns>
         public GeoCoordinate GenerateRandomIn()
         {
-            return this.GenerateRandomIn(new System.Random());
+            return this.GenerateRandomIn(OsmSharp.Math.Random.StaticRandomGenerator.Get());
         }
 
+        /// <summary>
+        /// Generates a random point within this box.
+        /// </summary>
+        /// <param name="rand"></param>
+        /// <returns></returns>
+        public GeoCoordinate GenerateRandomIn(IRandomGenerator rand)
+        {
+            double lat = (double)rand.Generate(1.0) * this.DeltaLat;
+            double lon = (double)rand.Generate(1.0) * this.DeltaLon;
+
+            return new GeoCoordinate(this.MinLat + lat,
+                this.MinLon + lon);
+        }        
+        
         /// <summary>
         /// Generates a random point within this box.
         /// </summary>

@@ -41,5 +41,14 @@ namespace OsmSharp.Math.Random
             }
             return _generator;
         }
+
+        /// <summary>
+        /// Sets the seed of the static generator.
+        /// </summary>
+        /// <param name="seed"></param>
+        public static void Set(int seed)
+        {
+            _generator = new RandomGenerator(seed);
+        }
     }
 }

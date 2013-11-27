@@ -21,6 +21,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Tiles;
 
 namespace OsmSharp.Data.Redis.Osm
 {
@@ -30,7 +31,7 @@ namespace OsmSharp.Data.Redis.Osm
     public static class OsmHash
     {
         /// <summary>
-        /// 
+        /// Returns the osm hash as a string.
         /// </summary>
         /// <param name="coordinate"></param>
         /// <returns></returns>
@@ -47,9 +48,10 @@ namespace OsmSharp.Data.Redis.Osm
         /// <returns></returns>
         public static string GetOsmHashAsString(double latitude, double longitude)
         {
+            Tile tile = Tile.CreateAroundLocation(latitude, longitude, 15);
             return OsmHash.GetOsmHashAsString(
-                OsmHash.lon2x(longitude),
-                OsmHash.lat2y(latitude));
+                tile.X,
+                tile.Y);
         }
 
         /// <summary>
@@ -58,53 +60,9 @@ namespace OsmSharp.Data.Redis.Osm
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <returns></returns>
-        public static string GetOsmHashAsString(uint x, uint y)
+        public static string GetOsmHashAsString(int x, int y)
         {
             return "oh:" + x + ":" + y;
         }
-
-        #region Tile Calculations
-
-        /// <summary>
-        /// Returns a hashed version based on the x- and y-coordinate.
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        public static uint xy2tile(uint x, uint y)
-        {
-            uint tile = 0;
-            int i;
-
-            for (i = 15; i >= 0; i--)
-            {
-                tile = (tile << 1) | ((x >> i) & 1);
-                tile = (tile << 1) | ((y >> i) & 1);
-            }
-
-            return tile;
-        }
-
-        /// <summary>
-        /// Converts the given lon to a tiled x-coordinate.
-        /// </summary>
-        /// <param name="lon"></param>
-        /// <returns></returns>
-        public static uint lon2x(double lon)
-        {
-            return (uint)System.Math.Floor(((lon + 180.0) * 65536.0 / 360.0));
-        }
-
-        /// <summary>
-        /// Converts the given lat to a tiled y-coordinate.
-        /// </summary>
-        /// <param name="lat"></param>
-        /// <returns></returns>
-        public static uint lat2y(double lat)
-        {
-            return (uint)System.Math.Floor(((lat + 90.0) * 65536.0 / 180.0));
-        }
-
-        #endregion
     }
 }

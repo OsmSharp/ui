@@ -72,8 +72,8 @@ namespace OsmSharp.Test.Performance
             Process p = Process.GetCurrentProcess();
             _memory = p.PrivateMemorySize64;
             _ticks = DateTime.Now.Ticks;
-            OsmSharp.Logging.Log.TraceEvent("PF:" + _name, System.Diagnostics.TraceEventType.Information,
-                string.Format("Started at {0}.", new DateTime(_ticks.Value).ToShortTimeString()));
+            //OsmSharp.Logging.Log.TraceEvent("PF:" + _name, System.Diagnostics.TraceEventType.Information,
+            //    string.Format("Started at {0}.", new DateTime(_ticks.Value).ToShortTimeString()));
         }
 
         /// <summary>

@@ -58,6 +58,7 @@
     <Compile Include="PerformanceInfoConsumer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Routing\CH\CHSerializedRoutingTest.cs" />
+    <Compile Include="UI\Rendering\RenderingSerializedSceneTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
