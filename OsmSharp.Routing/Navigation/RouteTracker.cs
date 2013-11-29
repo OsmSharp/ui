@@ -23,6 +23,7 @@ using OsmSharp.Routing.Instructions;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Interpreter;
 using OsmSharp.Units.Distance;
+using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Routing.Navigation
 {
@@ -202,7 +203,7 @@ namespace OsmSharp.Routing.Navigation
         /// <summary>
         /// Updates the tracker with the given location.
         /// </summary>
-        /// <param name="location"></param>
+        /// <param name="location">The measured location.</param>
         public void Track(GeoCoordinate location)
         {
             // project onto the route.
