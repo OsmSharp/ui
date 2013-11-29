@@ -98,6 +98,7 @@
     <Compile Include="IO\Xml\Kml\v2_1\kml.cs">
       <DependentUpon>kml.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Logging\ConsoleTraceListener.cs" />
     <Compile Include="Math\AI\Genetic\Fitness\IFitnessCalculator.cs" />
     <Compile Include="Math\AI\Genetic\Operations\CombinedMutationOperation.cs" />
     <Compile Include="Math\AI\Genetic\Operations\ICrossOverOperation.cs" />

@@ -81,6 +81,7 @@
     <Compile Include="Geo\Streams\Gpx\GpxGeoStreamSource.cs" />
     <Compile Include="Geo\Streams\Kml\KmlGeoStreamSource.cs" />
     <Compile Include="IO\LimitedStream.cs" />
+    <Compile Include="Logging\ConsoleTraceListener.cs" />
     <Compile Include="Logging\Log.cs" />
     <Compile Include="Logging\TraceSource.cs" />
     <Compile Include="Math\AI\Genetic\Fitness\IFitnessCalculator.cs" />
