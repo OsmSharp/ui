@@ -27,9 +27,9 @@ using OsmSharp.Osm;
 using OsmSharp.Collections.Tags;
 using OsmSharp.Xml.Sources;
 using OsmSharp.Osm.Xml;
-using System.Xml;
 using System.Xml.Serialization;
 using OsmSharp.Math.Geo;
+using System.Xml;
 
 namespace OsmSharp.Osm.API
 {

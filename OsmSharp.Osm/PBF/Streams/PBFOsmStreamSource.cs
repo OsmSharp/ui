@@ -135,8 +135,8 @@ namespace OsmSharp.Osm.PBF.Streams
                     simpleNode.Tags = new TagsCollection();
                     for (int tag_idx = 0; tag_idx < node.keys.Count; tag_idx++)
                     {
-                        string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
-                        string value = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)node.vals[tag_idx]]);
+                        string key = Encoding.UTF8.GetString(block.stringtable.s[(int)node.keys[tag_idx]]);
+                        string value = Encoding.UTF8.GetString(block.stringtable.s[(int)node.vals[tag_idx]]);
 
                         if (!simpleNode.Tags.ContainsKey(key))
                         {
@@ -149,7 +149,7 @@ namespace OsmSharp.Osm.PBF.Streams
                 simpleNode.Visible = true;
                 simpleNode.Version = (uint)node.info.version;
                 simpleNode.UserId = node.info.uid;
-                simpleNode.UserName = ASCIIEncoding.ASCII.GetString(block.stringtable.s[node.info.user_sid]);
+                simpleNode.UserName = Encoding.UTF8.GetString(block.stringtable.s[node.info.user_sid]);
                 simpleNode.Version = (ulong)node.info.version;
                 simpleNode.Visible = true;
 
@@ -173,8 +173,8 @@ namespace OsmSharp.Osm.PBF.Streams
                     simple_way.Tags = new TagsCollection();
                     for (int tag_idx = 0; tag_idx < way.keys.Count; tag_idx++)
                     {
-                        string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
-                        string value = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)way.vals[tag_idx]]);
+                        string key = Encoding.UTF8.GetString(block.stringtable.s[(int)way.keys[tag_idx]]);
+                        string value = Encoding.UTF8.GetString(block.stringtable.s[(int)way.vals[tag_idx]]);
 
                         if (!simple_way.Tags.ContainsKey(key))
                         {
@@ -188,7 +188,7 @@ namespace OsmSharp.Osm.PBF.Streams
                     simple_way.TimeStamp = Utilities.FromUnixTime((long)way.info.timestamp *
                         (long)block.date_granularity);
                     simple_way.UserId = way.info.uid;
-                    simple_way.UserName = ASCIIEncoding.ASCII.GetString(block.stringtable.s[way.info.user_sid]);
+                    simple_way.UserName = Encoding.UTF8.GetString(block.stringtable.s[way.info.user_sid]);
                     simple_way.Version = (ulong)way.info.version;
                 }
                 simple_way.Visible = true;
@@ -208,7 +208,7 @@ namespace OsmSharp.Osm.PBF.Streams
                     for (int member_idx = 0; member_idx < relation.types.Count; member_idx++)
                     {
                         member_id = member_id + relation.memids[member_idx];
-                        string role = ASCIIEncoding.ASCII.GetString(
+                        string role = Encoding.UTF8.GetString(
                             block.stringtable.s[relation.roles_sid[member_idx]]);
                         var member = new OsmSharp.Osm.RelationMember();
                         member.MemberId = member_id;
@@ -234,8 +234,8 @@ namespace OsmSharp.Osm.PBF.Streams
                     simple_relation.Tags = new TagsCollection();
                     for (int tag_idx = 0; tag_idx < relation.keys.Count; tag_idx++)
                     {
-                        string key = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
-                        string value = ASCIIEncoding.ASCII.GetString(block.stringtable.s[(int)relation.vals[tag_idx]]);
+                        string key = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.keys[tag_idx]]);
+                        string value = Encoding.UTF8.GetString(block.stringtable.s[(int)relation.vals[tag_idx]]);
 
                         if (!simple_relation.Tags.ContainsKey(key))
                         {
@@ -249,7 +249,7 @@ namespace OsmSharp.Osm.PBF.Streams
                     simple_relation.TimeStamp = Utilities.FromUnixTime((long)relation.info.timestamp *
                         (long)block.date_granularity);
                     simple_relation.UserId = relation.info.uid;
-                    simple_relation.UserName = ASCIIEncoding.ASCII.GetString(block.stringtable.s[relation.info.user_sid]);
+                    simple_relation.UserName = Encoding.UTF8.GetString(block.stringtable.s[relation.info.user_sid]);
                     simple_relation.Version = (ulong)relation.info.version;
                 }
                 simple_relation.Visible = true;
