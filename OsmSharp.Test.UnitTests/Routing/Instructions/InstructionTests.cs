@@ -38,6 +38,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         public void TestSimpleTurn()
         {
             Route route = new Route();
+            route.Vehicle = Vehicle.Car;
             route.Entries = new RoutePointEntry[3];
             route.Entries[0] = new RoutePointEntry()
             {
@@ -110,8 +111,6 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
         [Test]
         public void TestRoundabout()
         {
-            OsmSharp.Logging.Log.RegisterConsoleListener();
-
             GeoCoordinate westWest = new GeoCoordinate(51, 3.998);
             GeoCoordinate west = new GeoCoordinate(51, 3.999);
             GeoCoordinate eastEast = new GeoCoordinate(51, 4.002);
@@ -123,6 +122,7 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
             GeoCoordinate center = new GeoCoordinate(51, 4);
 
             Route route = new Route();
+            route.Vehicle = Vehicle.Car;
             route.Entries = new RoutePointEntry[5];
             route.Entries[0] = new RoutePointEntry()
             {
@@ -215,6 +215,156 @@ namespace OsmSharp.Test.Unittests.Routing.Instructions
                 }
             };
             route.Entries[4] = new RoutePointEntry()
+            {
+                Distance = 0,
+                Latitude = (float)northNorth.Latitude,
+                Longitude = (float)northNorth.Longitude,
+                Type = RoutePointEntryType.Stop,
+                Tags = new RouteTags[] {
+                    new RouteTags() { Key = "name", Value = "NorthStreet" },
+                    new RouteTags() { Key = "highway", Value = "residential" }
+                },
+                Points = new RoutePoint[] { 
+                    new RoutePoint() 
+                    {
+                        Latitude = (float)north.Latitude,
+                        Longitude = (float)north.Longitude,
+                        Name = "Stop"
+                    }}
+            };
+
+            // create the language generator.
+            var languageGenerator = new LanguageTestGenerator();
+
+            // generate instructions.
+            List<Instruction> instructions = InstructionGenerator.Generate(route, new OsmRoutingInterpreter(), languageGenerator);
+            Assert.AreEqual(3, instructions.Count);
+            Assert.AreEqual("GenerateRoundabout:1", instructions[1].Text);
+        }
+
+        /// <summary>
+        /// Tests a simple roundabout instruction but with an extra part of the route before the roundabout.
+        /// </summary>
+        [Test]
+        public void TestRoundaboutExtended()
+        {
+            GeoCoordinate westWest = new GeoCoordinate(51, 3.998);
+            GeoCoordinate west = new GeoCoordinate(51, 3.999);
+            GeoCoordinate eastEast = new GeoCoordinate(51, 4.002);
+            GeoCoordinate east = new GeoCoordinate(51, 4.001);
+            GeoCoordinate north = new GeoCoordinate(51.001, 4);
+            GeoCoordinate northNorth = new GeoCoordinate(51.002, 4);
+            GeoCoordinate south = new GeoCoordinate(50.999, 4);
+            GeoCoordinate southSouth = new GeoCoordinate(50.998, 4);
+            GeoCoordinate southSouthSouth = new GeoCoordinate(50.997, 4);
+            GeoCoordinate center = new GeoCoordinate(51, 4);
+
+            Route route = new Route();
+            route.Vehicle = Vehicle.Car;
+            route.Entries = new RoutePointEntry[6];
+            route.Entries[0] = new RoutePointEntry()
+            {
+                Distance = 0,
+                Latitude = (float)southSouth.Latitude,
+                Longitude = (float)southSouth.Longitude,
+                Points = new RoutePoint[] { 
+                    new RoutePoint() 
+                    {
+                        Latitude = (float)southSouthSouth.Latitude,
+                        Longitude = (float)southSouthSouth.Longitude,
+                        Name = "Start"
+                    }},
+                SideStreets = null,
+                Type = RoutePointEntryType.Start
+            };
+            route.Entries[1] = new RoutePointEntry()
+            {
+                Distance = 0,
+                Latitude = (float)southSouth.Latitude,
+                Longitude = (float)southSouth.Longitude,
+                Tags = new RouteTags[] {
+                    new RouteTags() { Key = "name", Value = "SouthStreet" },
+                    new RouteTags() { Key = "highway", Value = "residential" }
+                },
+                SideStreets = null,
+                Type = RoutePointEntryType.Along
+            };
+            route.Entries[2] = new RoutePointEntry()
+            {
+                Distance = 0,
+                Latitude = (float)south.Latitude,
+                Longitude = (float)south.Longitude,
+                Type = RoutePointEntryType.Along,
+                WayFromName = "SouthStreet",
+                Tags = new RouteTags[] {
+                    new RouteTags() { Key = "name", Value = "SouthStreet" },
+                    new RouteTags() { Key = "highway", Value = "residential" }
+                },
+                SideStreets = new RoutePointEntrySideStreet[] {
+                    new RoutePointEntrySideStreet() { 
+                        Latitude = (float)west.Latitude,
+                        Longitude = (float)west.Longitude,
+                        Tags = new RouteTags[] {
+                            new RouteTags() { Key = "junction", Value = "roundabout" },
+                            new RouteTags() { Key = "highway", Value = "residential" }
+                        },
+                        WayName = "Street B"
+                    },
+                    new RoutePointEntrySideStreet() { 
+                        Latitude = (float)east.Latitude,
+                        Longitude = (float)east.Longitude,
+                        Tags = new RouteTags[] {
+                            new RouteTags() { Key = "junction", Value = "roundabout" },
+                            new RouteTags() { Key = "highway", Value = "residential" }
+                        },
+                        WayName = "Street B"
+                    }
+                }
+            };
+            route.Entries[3] = new RoutePointEntry()
+            {
+                Distance = 0,
+                Latitude = (float)east.Latitude,
+                Longitude = (float)east.Longitude,
+                Type = RoutePointEntryType.Along,
+                Tags = new RouteTags[] {
+                    new RouteTags() { Key = "junction", Value = "roundabout" },
+                    new RouteTags() { Key = "highway", Value = "residential" }
+                },
+                SideStreets = new RoutePointEntrySideStreet[] {
+                    new RoutePointEntrySideStreet() { 
+                        Latitude = (float)eastEast.Latitude,
+                        Longitude = (float)eastEast.Longitude,
+                        Tags = new RouteTags[] {
+                            new RouteTags() { Key = "name", Value = "EastStreet" },
+                            new RouteTags() { Key = "highway", Value = "residential" }
+                        },
+                        WayName = "EastStreet"
+                    }
+                }
+            };
+            route.Entries[4] = new RoutePointEntry()
+            {
+                Distance = 0,
+                Latitude = (float)north.Latitude,
+                Longitude = (float)north.Longitude,
+                Type = RoutePointEntryType.Along,
+                Tags = new RouteTags[] {
+                    new RouteTags() { Key = "junction", Value = "roundabout" },
+                    new RouteTags() { Key = "highway", Value = "residential" }
+                },
+                SideStreets = new RoutePointEntrySideStreet[] {
+                    new RoutePointEntrySideStreet() { 
+                        Latitude = (float)west.Latitude,
+                        Longitude = (float)west.Longitude,
+                        Tags = new RouteTags[] {
+                            new RouteTags() { Key = "junction", Value = "roundabout" },
+                            new RouteTags() { Key = "highway", Value = "residential" }
+                        }
+                    }
+                }
+            };
+            route.Entries[5] = new RoutePointEntry()
             {
                 Distance = 0,
                 Latitude = (float)northNorth.Latitude,

@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
 using OsmSharp.Routing.Interpreter;
+using System;
 
 namespace OsmSharp.Routing.Instructions
 {
@@ -49,6 +50,11 @@ namespace OsmSharp.Routing.Instructions
         /// <returns></returns>
         public static List<Instruction> Generate(Route route, IRoutingInterpreter interpreter, ILanguageGenerator languageGenerator)
         {
+            if (route == null) { throw new ArgumentNullException("route"); }
+            if (route.Vehicle == null) { throw new InvalidOperationException("Vehicle not set on route: Cannot generate instruction for a route without a vehicle!"); }
+            if (interpreter == null) { throw new ArgumentNullException("interpreter"); }
+            if (languageGenerator == null) { throw new ArgumentNullException("languageGenerator"); }
+
             OsmSharp.Routing.ArcAggregation.ArcAggregator aggregator = 
                 new OsmSharp.Routing.ArcAggregation.ArcAggregator(interpreter);
             AggregatedPoint point = 
@@ -74,11 +80,15 @@ namespace OsmSharp.Routing.Instructions
         /// </summary>
         /// <param name="point"></param>
         /// <param name="interpreter"></param>
-        /// <param name="languagGenerator"></param>
+        /// <param name="languageGenerator"></param>
         /// <returns></returns>
-        public static List<Instruction> Generate(AggregatedPoint point, IRoutingInterpreter interpreter, ILanguageGenerator languagGenerator)
+        public static List<Instruction> Generate(AggregatedPoint point, IRoutingInterpreter interpreter, ILanguageGenerator languageGenerator)
         {
-            MicroPlanning.MicroPlanner planner = new MicroPlanning.MicroPlanner(languagGenerator, interpreter);
+            if (point == null) { throw new ArgumentNullException("route"); }
+            if (interpreter == null) { throw new ArgumentNullException("interpreter"); }
+            if (languageGenerator == null) { throw new ArgumentNullException("languageGenerator"); }
+
+            MicroPlanning.MicroPlanner planner = new MicroPlanning.MicroPlanner(languageGenerator, interpreter);
             return planner.Plan(point);
         }
     }
