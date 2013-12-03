@@ -16,23 +16,19 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
-using OsmSharp.Osm.Data;
 using System.Drawing;
-using OsmSharp.Osm.Data.Memory;
-using OsmSharp.Osm;
+using NUnit.Framework;
 using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo.Projections;
+using OsmSharp.Osm;
+using OsmSharp.Osm.Data;
+using OsmSharp.Osm.Data.Memory;
 using OsmSharp.UI;
-using OsmSharp.WinForms.UI.Renderer;
+using OsmSharp.UI.Map;
+using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Renderer;
-using OsmSharp.Math.Geo.Projections;
-using OsmSharp.UI.Map.Layers;
-using OsmSharp.UI.Map;
+using OsmSharp.WinForms.UI.Renderer;
 
 namespace OsmSharp.WinForms.UI.Test.Unittests.Renderer
 {

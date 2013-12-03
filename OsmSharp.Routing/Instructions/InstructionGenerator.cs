@@ -74,11 +74,11 @@ namespace OsmSharp.Routing.Instructions
         /// </summary>
         /// <param name="point"></param>
         /// <param name="interpreter"></param>
-        /// <param name="language_generator"></param>
+        /// <param name="languagGenerator"></param>
         /// <returns></returns>
-        public static List<Instruction> Generate(AggregatedPoint point, IRoutingInterpreter interpreter, ILanguageGenerator language_generator)
+        public static List<Instruction> Generate(AggregatedPoint point, IRoutingInterpreter interpreter, ILanguageGenerator languagGenerator)
         {
-            MicroPlanning.MicroPlanner planner = new MicroPlanning.MicroPlanner(language_generator, interpreter);
+            MicroPlanning.MicroPlanner planner = new MicroPlanning.MicroPlanner(languagGenerator, interpreter);
             return planner.Plan(point);
         }
     }
