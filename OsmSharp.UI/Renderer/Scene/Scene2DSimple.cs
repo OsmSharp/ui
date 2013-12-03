@@ -59,7 +59,10 @@ namespace OsmSharp.UI.Renderer.Scene
         /// </summary>
         public override void Clear()
         {
-            _primitives.Clear();
+            lock (_primitives)
+            {
+                _primitives.Clear();
+            }
         }
 
         /// <summary>
@@ -70,9 +73,12 @@ namespace OsmSharp.UI.Renderer.Scene
             get
             {
                 int count = 0;
-                foreach (KeyValuePair<int, List<IScene2DPrimitive>> keyValuePair in _primitives)
+                lock (_primitives)
                 {
-                    count = count + keyValuePair.Value.Count;
+                    foreach (KeyValuePair<int, List<IScene2DPrimitive>> keyValuePair in _primitives)
+                    {
+                        count = count + keyValuePair.Value.Count;
+                    }
                 }
                 return count;
             }
@@ -85,7 +91,10 @@ namespace OsmSharp.UI.Renderer.Scene
         {
             get
             {
-                return _primitives.Count;
+                lock (_primitives)
+                {
+                    return _primitives.Count;
+                }
             }
         }
 
@@ -131,13 +140,17 @@ namespace OsmSharp.UI.Renderer.Scene
         public override List<IScene2DPrimitive> Get(uint id)
         {
             List<IScene2DPrimitive> primitives = new List<IScene2DPrimitive>();
-            foreach (var layer in _primitives)
+            
+            lock (_primitives)
             {
-                foreach (var primitive in layer.Value)
+                foreach (var layer in _primitives)
                 {
-                    if (primitive.Id == id)
+                    foreach (var primitive in layer.Value)
                     {
-                        primitives.Add(primitive);
+                        if (primitive.Id == id)
+                        {
+                            primitives.Add(primitive);
+                        }
                     }
                 }
             }
@@ -152,11 +165,14 @@ namespace OsmSharp.UI.Renderer.Scene
         public override bool Remove(uint id)
         {
             List<IScene2DPrimitive> primitives = this.Get(id);
-            bool removed = false;
-            foreach (var layer in _primitives)
+            lock (_primitives)
             {
-                removed = removed || 
+                bool removed = false;
+                foreach (var layer in _primitives)
+                {
+                    removed = removed ||
                     layer.Value.RemoveAll(x => primitives.Contains(x)) > 0;
+                }
             }
             return false;
         }
@@ -169,14 +185,17 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="primitive"></param>
         internal void AddPrimitive(int layer, uint id, IScene2DPrimitive primitive)
         {
-            primitive.Id = id;
-            List<IScene2DPrimitive> layerList;
-            if (!_primitives.TryGetValue(layer, out layerList))
+            lock (_primitives)
             {
-                layerList = new List<IScene2DPrimitive>();
-                _primitives.Add(layer, layerList);
+                primitive.Id = id;
+                List<IScene2DPrimitive> layerList;
+                if (!_primitives.TryGetValue(layer, out layerList))
+                {
+                    layerList = new List<IScene2DPrimitive>();
+                    _primitives.Add(layer, layerList);
+                }
+                layerList.Add(primitive);
             }
-            layerList.Add(primitive);
         }
 
         /// <summary>
@@ -194,18 +213,15 @@ namespace OsmSharp.UI.Renderer.Scene
             uint id = _nextId;
             _nextId++;
 
-            lock (_primitives)
+            this.AddPrimitive(layer, id, new Point2D()
             {
-                this.AddPrimitive(layer, id, new Point2D()
-                {
-                    Color = color,
-                    X = x,
-                    Y = y,
-                    Size = size,
-                    MinZoom = minZoom,
-                    MaxZoom = maxZoom
-                });
-            }
+                Color = color,
+                X = x,
+                Y = y,
+                Size = size,
+                MinZoom = minZoom,
+                MaxZoom = maxZoom
+            });
             return id;
         }
 
@@ -234,10 +250,7 @@ namespace OsmSharp.UI.Renderer.Scene
             uint id = _nextId;
             _nextId++;
 
-            lock (_primitives)
-            {
-                this.AddPrimitive(layer, id, new Line2D(x, y, color, width, lineJoin, dashes, minZoom, maxZoom));
-            }
+            this.AddPrimitive(layer, id, new Line2D(x, y, color, width, lineJoin, dashes, minZoom, maxZoom));
             return id;
         }
 
@@ -261,15 +274,11 @@ namespace OsmSharp.UI.Renderer.Scene
             if (x.Length != y.Length)
                 throw new ArgumentException("x and y arrays have different lenghts!");
 
+            uint id = _nextId;
+            _nextId++;
 
-            lock (_primitives)
-            {
-                uint id = _nextId;
-                _nextId++;
-
-                this.AddPrimitive(layer, id, new Polygon2D(x, y, color, width, fill, minZoom, maxZoom));
-                return id;
-            }
+            this.AddPrimitive(layer, id, new Polygon2D(x, y, color, width, fill, minZoom, maxZoom));
+            return id;
         }
 
         /// <summary>
@@ -287,15 +296,11 @@ namespace OsmSharp.UI.Renderer.Scene
             if (iconImage == null)
                 throw new ArgumentNullException("iconImage");
 
+            uint id = _nextId;
+            _nextId++;
 
-            lock (_primitives)
-            {
-                uint id = _nextId;
-                _nextId++;
-
-                this.AddPrimitive(layer, id, new Icon2D(x, y, iconImage, minZoom, maxZoom));
-                return id;
-            }
+            this.AddPrimitive(layer, id, new Icon2D(x, y, iconImage, minZoom, maxZoom));
+            return id;
         }
 
         /// <summary>
@@ -316,15 +321,11 @@ namespace OsmSharp.UI.Renderer.Scene
             if (imageData == null)
                 throw new ArgumentNullException("imageData");
 
+            uint id = _nextId;
+            _nextId++;
 
-            lock (_primitives)
-            {
-                uint id = _nextId;
-                _nextId++;
-
-                this.AddPrimitive(layer, id, new Image2D(left, top, bottom, right, imageData, minZoom, maxZoom));
-                return id;
-            }
+            this.AddPrimitive(layer, id, new Image2D(left, top, bottom, right, imageData, minZoom, maxZoom));
+            return id;
         }
 
 		/// <summary>
@@ -338,22 +339,18 @@ namespace OsmSharp.UI.Renderer.Scene
 		/// <param name="imageData">Image data.</param>
 		/// <param name="tag">Tag.</param>
 		public override uint AddImage (int layer, float minZoom, float maxZoom, RectangleF2D rectangle, byte[] imageData, object tag)
-		{
-			if (imageData == null)
-				throw new ArgumentNullException("imageData");
+        {
+            if (imageData == null)
+                throw new ArgumentNullException("imageData");
 
+            uint id = _nextId;
+            _nextId++;
 
-			lock (_primitives)
-			{
-				uint id = _nextId;
-				_nextId++;
-
-				var imageTilted2D = new ImageTilted2D (rectangle, imageData, minZoom, maxZoom);
-				imageTilted2D.Tag = tag;
-				this.AddPrimitive(layer, id, imageTilted2D);
-				return id;
-			}
-		}
+            var imageTilted2D = new ImageTilted2D(rectangle, imageData, minZoom, maxZoom);
+            imageTilted2D.Tag = tag;
+            this.AddPrimitive(layer, id, imageTilted2D);
+            return id;
+        }
 
         /// <summary>
         /// Adds the image.
@@ -376,15 +373,11 @@ namespace OsmSharp.UI.Renderer.Scene
             Image2D image = new Image2D(left, top, bottom, right, imageData, minZoom, maxZoom);
             image.Tag = tag;
 
-            lock (_primitives)
-            {
+            uint id = _nextId;
+            _nextId++;
 
-                uint id = _nextId;
-                _nextId++;
-
-                this.AddPrimitive(layer, id, image);
-                return id;
-            }
+            this.AddPrimitive(layer, id, image);
+            return id;
         }
 
         /// <summary>
@@ -404,14 +397,11 @@ namespace OsmSharp.UI.Renderer.Scene
             if (text == null)
                 throw new ArgumentNullException("text");
 
-            lock (_primitives)
-            {
-                uint id = _nextId;
-                _nextId++;
+            uint id = _nextId;
+            _nextId++;
 
-                this.AddPrimitive(layer, id, new Text2D(x, y, text, color, size, haloColor, haloRadius, font, minZoom, maxZoom));
-                return id;
-            }
+            this.AddPrimitive(layer, id, new Text2D(x, y, text, color, size, haloColor, haloRadius, font, minZoom, maxZoom));
+            return id;
         }
 
         /// <summary>
@@ -431,14 +421,11 @@ namespace OsmSharp.UI.Renderer.Scene
             if (text == null)
                 throw new ArgumentNullException("text");
 
-            lock (_primitives)
-            {
-                uint id = _nextId;
-                _nextId++;
+            uint id = _nextId;
+            _nextId++;
 
-                this.AddPrimitive(layer, id, new LineText2D(x, y, color, font_size, text, haloColor, haloRadius, minZoom, maxZoom));
-                return id;
-            }
+            this.AddPrimitive(layer, id, new LineText2D(x, y, color, font_size, text, haloColor, haloRadius, minZoom, maxZoom));
+            return id;
         }
 
         #region Serialization/Deserialization
@@ -500,16 +487,19 @@ namespace OsmSharp.UI.Renderer.Scene
         {
             // build the index.
             var index = new RTreeMemoryIndex<Scene2DEntry>();
-            foreach (var primitiveLayer in _primitives)
+            lock (_primitives)
             {
-                foreach (var primitive in primitiveLayer.Value)
+                foreach (var primitiveLayer in _primitives)
                 {
-                    index.Add(primitive.GetBox(), new Scene2DEntry()
+                    foreach (var primitive in primitiveLayer.Value)
                     {
-                        Layer = primitiveLayer.Key,
-                        Id = 0,
-                        Scene2DPrimitive = primitive
-                    });
+                        index.Add(primitive.GetBox(), new Scene2DEntry()
+                        {
+                            Layer = primitiveLayer.Key,
+                            Id = 0,
+                            Scene2DPrimitive = primitive
+                        });
+                    }
                 }
             }
 
