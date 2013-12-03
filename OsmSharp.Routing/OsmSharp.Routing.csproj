@@ -146,6 +146,9 @@
     <Compile Include="Graph\IDynamicGraphReadOnly.cs" />
     <Compile Include="Graph\MemoryDynamicGraph.cs" />
     <Compile Include="Graph\Restrictions\GraphRestriction.cs" />
+    <Compile Include="Instructions\MicroPlanning\Machines\RoundaboutMachine.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Navigation\RouteTracker.cs" />
     <Compile Include="Osm\Graphs\MemoryDynamicGraphSimpleWeighed.cs" />
     <Compile Include="Osm\Graphs\LiveEdge.cs" />
@@ -167,7 +170,6 @@
     <Compile Include="Instructions\MicroPlanning\Machines\ImmidiateTurnMachine.cs" />
     <Compile Include="Instructions\MicroPlanning\Machines\PoiMachine.cs" />
     <Compile Include="Instructions\MicroPlanning\Machines\PoiWithTurnMachine.cs" />
-    <Compile Include="Instructions\MicroPlanning\Machines\RoundaboutMachine.cs" />
     <Compile Include="Instructions\MicroPlanning\Machines\TurnMachine.cs" />
     <Compile Include="Instructions\MicroPlanning\MicroPlanner.cs" />
     <Compile Include="Instructions\MicroPlanning\MicroPlannerException.cs" />

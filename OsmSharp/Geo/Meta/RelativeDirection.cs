@@ -37,5 +37,14 @@ namespace OsmSharp.Math.Geo.Meta
         /// The angle.
         /// </summary>
         public Degree Angle { get; set; }
+
+        /// <summary>
+        /// Returns a System.String that represents the current System.Object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("{0}@{1}", this.Direction, this.Angle);
+        }
     }
 }

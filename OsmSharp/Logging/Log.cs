@@ -130,6 +130,8 @@ namespace OsmSharp.Logging
         /// </summary>
         public static void RegisterConsoleListener()
         {
+            OsmSharp.Logging.Log.Enable();
+
             ConsoleTraceListener console =
                 new ConsoleTraceListener();
             console.Name = "console";
