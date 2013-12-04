@@ -82,7 +82,19 @@ namespace OsmSharp.Test.Performance.UI.Rendering
             // do some of the testing.
             RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
                 new GeoCoordinate(51.20190, 4.66540),
-                new GeoCoordinate(51.30720, 4.89820)), 10);
+                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 16);
+            // do some of the testing.
+            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
+                new GeoCoordinate(51.20190, 4.66540),
+                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 14);
+            // do some of the testing.
+            RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
+                new GeoCoordinate(51.20190, 4.66540),
+                new GeoCoordinate(51.30720, 4.89820)), 5, 2, 12);
+            //// do some of the testing.
+            //RenderingSerializedSceneTests<TTarget>.TestRenderScene(createTarget, createRenderer, stream, new GeoCoordinateBox(
+            //    new GeoCoordinate(51.20190, 4.66540),
+            //    new GeoCoordinate(51.30720, 4.89820)), 5, 2, 10);
         }
 
         /// <summary>
@@ -92,7 +104,7 @@ namespace OsmSharp.Test.Performance.UI.Rendering
         /// <param name="box"></param>
         /// <param name="testCount"></param>
         public static void TestRenderScene(CreateTarget createTarget, CreateRenderer createRenderer, 
-            Stream stream, GeoCoordinateBox box, int testCount)
+            Stream stream, GeoCoordinateBox box, int testCount, int range, int minZoom)
         {
             WebMercator projection = new WebMercator();
 
@@ -114,7 +126,7 @@ namespace OsmSharp.Test.Performance.UI.Rendering
             while (testCount > 0)
             {
                 // randomize view.
-                int zoom = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(7) + 11;
+                int zoom = OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(range) + minZoom;
                 GeoCoordinate center = box.GenerateRandomIn();
                 View2D view = mapRenderer.Create(TargetWidth, TargetHeight, map,
                     (float)projection.ToZoomFactor(zoom), center, false, true);
@@ -131,7 +143,7 @@ namespace OsmSharp.Test.Performance.UI.Rendering
             }
 
             performanceInfo.Stop();
-
+            stream.Seek(0, SeekOrigin.Begin);
         }
     }
 }
