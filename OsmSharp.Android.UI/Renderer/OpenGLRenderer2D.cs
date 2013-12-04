@@ -19,8 +19,8 @@
 using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 using System.Collections.Generic;
+using OsmSharp.UI.Renderer.Primitives;
 
 namespace OsmSharp.Android.UI
 {
@@ -47,9 +47,9 @@ namespace OsmSharp.Android.UI
         /// <param name="target"></param>
         /// <param name="scenes"></param>
         /// <param name="view"></param>
-        protected override void OnBeforeRender(Target2DWrapper<OpenGLTarget2D> target, System.Collections.Generic.List<OsmSharp.UI.Renderer.Scene.Scene2D> scenes, View2D view)
+        protected override void OnBeforeRender(Target2DWrapper<OpenGLTarget2D> target, View2D view)
         {
-            base.OnBeforeRender(target, scenes, view);
+            base.OnBeforeRender(target, view);
 
             _target.Target.Clear();
             _z = 0.0001f;

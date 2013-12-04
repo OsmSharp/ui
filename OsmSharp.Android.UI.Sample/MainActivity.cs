@@ -32,7 +32,6 @@ using OsmSharp.UI;
 using OsmSharp.UI.Animations.Navigation;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
-using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Renderer.Scene;
 
 namespace OsmSharp.Android.UI.Sample
@@ -78,9 +77,9 @@ namespace OsmSharp.Android.UI.Sample
 //							Assembly.GetExecutingAssembly().GetManifestResourceStream("OsmSharp.Android.UI.Sample.wvl.osm.pbf.scene.simple"), true)));
 			map.AddLayer(
 				new LayerScene(
-				Scene2DLayered.Deserialize(
-					Assembly.GetExecutingAssembly().GetManifestResourceStream(
-                        @"OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.scene.layered"), true)));
+				    Scene2D.Deserialize(
+					    Assembly.GetExecutingAssembly().GetManifestResourceStream(
+                            @"OsmSharp.Android.UI.Sample.kempen-big.osm.pbf.scene.layered"), true)));
 
             var from = new GeoCoordinate(51.261203, 4.780760);
             var to = new GeoCoordinate(51.267797, 4.801362);

@@ -31,7 +31,7 @@ using OsmSharp.UI.Animations;
 using OsmSharp.UI.Map;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.Units.Angle;
 
 namespace OsmSharp.Android.UI
@@ -131,10 +131,9 @@ namespace OsmSharp.Android.UI
                 new WebMercator());
 
             // initialize all the caching stuff.
+            _backgroundColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
             _cacheRenderer = new MapRenderer<global::Android.Graphics.Canvas>(
                 new CanvasRenderer2D());
-            _scene = new Scene2DSimple();
-            _scene.BackColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
 
             new Timer(InvalidateSimple, null, 0, 50);
         }
@@ -142,17 +141,12 @@ namespace OsmSharp.Android.UI
 		/// <summary>
 		/// Holds the cached scene.
 		/// </summary>
-		private Scene2D _scene;
+		private ImageTilted2D _renderCache;
 
-		/// <summary>
-		/// Holds the bitmap to draw on.
-		/// </summary>
-		private global::Android.Graphics.Bitmap _canvasBitmap;
-
-		/// <summary>
-		/// Holds the cache bitmap.
-		/// </summary>
-		private global::Android.Graphics.Bitmap _cache;
+        /// <summary>
+        /// Holds the background color.
+        /// </summary>
+        private int _backgroundColor;
 
 		/// <summary>
 		/// Holds the cache renderer.
@@ -237,7 +231,7 @@ namespace OsmSharp.Android.UI
                 //double extra = 1;
 
 				// build the layers list.
-				var layers = new List<ILayer> ();
+				var layers = new List<Layer> ();
 				for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++) {
 					// get the layer.
 					layers.Add (this.Map[layerIdx]);
@@ -246,21 +240,26 @@ namespace OsmSharp.Android.UI
 				// add the internal layers.
 				layers.Add (_makerLayer);
 
-				// create a new cache if size has changed.
-				if (_canvasBitmap == null || 
-				    _canvasBitmap.Width != (int)(this.SurfaceWidth * extra) ||
-                    _canvasBitmap.Height != (int)(this.SurfaceHeight * extra))
+				// get old image if available.
+                global::Android.Graphics.Bitmap image = null;
+				if (_renderCache != null)
                 {
-					// create a bitmap and render there.
-                    _canvasBitmap = global::Android.Graphics.Bitmap.CreateBitmap((int)(this.SurfaceWidth * extra),
-                        (int)(this.SurfaceHeight * extra),
-                        global::Android.Graphics.Bitmap.Config.Argb8888);
-				} else {
-					// clear the cache???
+                    image = _renderCache.Tag as global::Android.Graphics.Bitmap;
 				}
 
+                // resize image if needed.
+                if (image == null || 
+                    image.Width != (int)(this.SurfaceWidth * extra) ||
+                    image.Height != (int)(this.SurfaceHeight * extra))
+                {
+                    // create a bitmap and render there.
+                    image = global::Android.Graphics.Bitmap.CreateBitmap((int)(this.SurfaceWidth * extra),
+                        (int)(this.SurfaceHeight * extra),
+                        global::Android.Graphics.Bitmap.Config.Argb8888);
+                }
+
 				// create and reset the canvas.
-				global::Android.Graphics.Canvas canvas = new global::Android.Graphics.Canvas (_canvasBitmap);
+				global::Android.Graphics.Canvas canvas = new global::Android.Graphics.Canvas (image);
 				canvas.DrawColor (new global::Android.Graphics.Color(
 					SimpleColor.FromKnownColor(KnownColor.Transparent).Value));
 
@@ -286,12 +285,12 @@ namespace OsmSharp.Android.UI
 				                                "View change took: {0}ms @ zoom level {1}",
 				                                (new TimeSpan(afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
-				// add the current canvas to the scene.
-				_scene.AddImage (-1, float.MaxValue, float.MinValue, view.Rectangle,
-				                                 new byte[0], _canvasBitmap);
+                //// add the current canvas to the scene.
+                //_scene.AddImage (-1, float.MaxValue, float.MinValue, view.Rectangle,
+                //                                 new byte[0], _canvasBitmap);
 
 				// does the rendering.
-				bool complete = _cacheRenderer.Render (canvas, layers, view);
+                bool complete = _cacheRenderer.Render(canvas, layers, view, (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
 
 				long afterRendering = DateTime.Now.Ticks;
 				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
@@ -300,16 +299,12 @@ namespace OsmSharp.Android.UI
 				if(complete)
 				{ // there was no cancellation, the rendering completely finished.
 					// add the result to the scene cache.
-					lock (_scene) {
-						// add the newly rendered image again.
-						_scene.Clear ();
-						_scene.AddImage (0, float.MinValue, float.MaxValue, view.Rectangle, new byte[0], _canvasBitmap);
-
-						// switch cache and canvas to prevent re-allocation of bitmaps.
-						global::Android.Graphics.Bitmap newCanvas = _cache;
-						_cache = _canvasBitmap;
-						_canvasBitmap = newCanvas;
-					}
+                    //lock (_renderCache)
+                    //{
+                        // add the newly rendered image again.            
+                        _renderCache = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
+                        _renderCache.Tag = image;
+                    //}
 				}
 
 				this.PostInvalidate ();
@@ -476,14 +471,17 @@ namespace OsmSharp.Android.UI
             }
 
 			// render only the cached scene.
-			lock(_scene)
-			{
-				canvas.DrawColor (new global::Android.Graphics.Color(_scene.BackColor));
-				_renderer.SceneRenderer.Render (
-					canvas, 
-					_scene,
-					this.CreateView());
-			}
+            //lock(_renderCache)
+            //{
+                canvas.DrawColor(new global::Android.Graphics.Color(_backgroundColor));
+                View2D view = this.CreateView();
+                float zoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
+                _renderer.SceneRenderer.Render(
+                    canvas,
+                    view,
+                    zoomFactor,
+                    new Primitive2D[] { _renderCache });
+            //}
 		}
 		
 		/// <summary>
@@ -531,7 +529,7 @@ namespace OsmSharp.Android.UI
 			// notify there was movement.
 			this.NotifyMovement();
 
-			if (_canvasBitmap == null) {
+			if (_renderCache == null) {
 				this.Change (); // force a rendering on the first layout-event.
 			}
 		}

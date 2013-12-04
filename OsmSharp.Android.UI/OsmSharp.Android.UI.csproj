@@ -48,7 +48,6 @@
     <Compile Include="Log\TextViewTraceListener.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Renderer\CanvasRenderer2D.cs" />
-    <Compile Include="CanvasRenderer2DView.cs" />
     <Compile Include="Renderer\OpenGLRenderer2D.cs" />
     <Compile Include="Renderer\OpenGLTarget2D.cs" />
     <Compile Include="MapView.cs" />

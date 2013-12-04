@@ -47,7 +47,7 @@ namespace OsmSharp.Test.Performance.UI.Styles.MapCSS
                 16, 12, 10, 8 }));
 
             // tests map css interpreter.
-            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\complete.mapcss", scene, "belgium-latest.osm.pbf");
+            MapCSSInterpreterTests.TestInterpret("MapCSSInterpreter", @"mapcss\complete.mapcss", scene, "kempen-big.osm.pbf");
 
             // tests serialization of the scene.
             Scene2DTests.TestSerialize("Scene2DLayered", @"mapcss\complete.map", scene, true);

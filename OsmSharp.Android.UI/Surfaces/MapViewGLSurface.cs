@@ -146,7 +146,7 @@ namespace OsmSharp.Android.UI
             _makerLayer = new LayerPrimitives(
                 new WebMercator());
 
-            _scene = new Scene2DSimple();
+            _scene = new Scene2D(new WebMercator(), 16);
             _scene.BackColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
         }
 
@@ -169,7 +169,7 @@ namespace OsmSharp.Android.UI
                 this.SetOrtho(view);
 
                 // build the layers list.
-                var layers = new List<ILayer>();
+                var layers = new List<Layer>();
                 for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++)
                 {
                     // get the layer.
@@ -178,7 +178,8 @@ namespace OsmSharp.Android.UI
 
                 _renderer.Render(_target,
                      layers,
-                     view);
+                     view,
+                     (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
             }
         }
 
@@ -352,7 +353,7 @@ namespace OsmSharp.Android.UI
                          view);
 
             // build the layers list.
-            var layers = new List<ILayer>();
+            var layers = new List<Layer>();
             for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++)
             {
                 // get the layer.
@@ -361,7 +362,8 @@ namespace OsmSharp.Android.UI
 
             _renderer.Render(_target,
                  layers,
-                 view);
+                 view,
+                 (float)this.Map.Projection.ToZoomFactor(this.MapZoom));
         }
 
         /// <summary>

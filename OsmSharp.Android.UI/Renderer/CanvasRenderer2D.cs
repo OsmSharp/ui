@@ -35,7 +35,7 @@ using OsmSharp.Math;
 using Android.Graphics;
 using OsmSharp.Units.Angle;
 using OsmSharp.UI.Renderer.Scene;
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
+using OsmSharp.UI.Renderer.Primitives;
 
 namespace OsmSharp.Android.UI
 {
@@ -87,8 +87,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="target"></param>
 		/// <param name="scenes"></param>
 		/// <param name="view"></param>
-		protected override void OnBeforeRender(Target2DWrapper<global::Android.Graphics.Canvas> target, 
-		                                       List<Scene2D> scenes, View2D view)
+		protected override void OnBeforeRender(Target2DWrapper<global::Android.Graphics.Canvas> target, View2D view)
 		{
 //			if (_cache == null || _cache.Width != target.Width || _cache.Height != target.Height) {
 //				// create a bitmap and render there.
@@ -111,8 +110,7 @@ namespace OsmSharp.Android.UI
 		/// <param name="target"></param>
 		/// <param name="scenes"></param>
 		/// <param name="view"></param>
-		protected override void OnAfterRender(Target2DWrapper<global::Android.Graphics.Canvas> target, 
-		                                      List<Scene2D> scenes, View2D view)
+		protected override void OnAfterRender(Target2DWrapper<global::Android.Graphics.Canvas> target, View2D view)
 		{
 //			target.Target.Dispose(); // dispose of the old target.
 //			target.Target = target.BackTarget;
@@ -121,36 +119,6 @@ namespace OsmSharp.Android.UI
 //			{
 //				target.Target.DrawBitmap(bitmap, 0, 0, _paint);
 //			}
-		}
-		
-		/// <summary>
-		/// Builds the cached scene.
-		/// </summary>
-		/// <param name="target"></param>
-		/// <param name="currentCache"></param>
-		/// <param name="currentScenes"></param>
-		/// <param name="view"></param>
-		/// <returns></returns>
-		protected override Scene2D BuildSceneCache(Target2DWrapper<global::Android.Graphics.Canvas> target, Scene2D currentCache, 
-		                                           List<Scene2D> currentScenes, View2D view)
-		{
-			var scene = new Scene2DSimple();
-//			scene.BackColor = currentScenes[0].BackColor;
-//			
-//			var bitmap = target.Tag as global::Android.Graphics.Bitmap;
-//			if (bitmap != null)
-//			{
-//				byte[] imageData = null;
-//				using (var stream = new MemoryStream())
-//				{
-//					bitmap.Compress(global::Android.Graphics.Bitmap.CompressFormat.Png, 0, stream);
-//					
-//					imageData = stream.ToArray();
-//				}
-//				scene.AddImage(0, float.MinValue, float.MaxValue, 
-//				               view.Left, view.Top, view.Right, view.Bottom, imageData);
-//			}
-			return scene;
 		}
 		
 		#endregion
