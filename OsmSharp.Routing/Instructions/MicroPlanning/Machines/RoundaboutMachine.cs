@@ -137,7 +137,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning.Machines
                 MicroPlannerMessagePoint point = (test as MicroPlannerMessagePoint);
                 if (point.Point.Next != null)
                 {
-                    if ((machine as MicroPlannerMachine).Planner.Interpreter.EdgeInterpreter.IsRoundabout(point.Point.Next.Tags))
+                    if (!(machine as MicroPlannerMachine).Planner.Interpreter.EdgeInterpreter.IsRoundabout(point.Point.Next.Tags))
                     {
                         return true;
                     }

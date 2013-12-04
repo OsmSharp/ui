@@ -22,6 +22,29 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
     internal class MicroPlannerMessagePoint : MicroPlannerMessage
     {
+        /// <summary>
+        /// Gets or sets the aggregated point.
+        /// </summary>
         public AggregatedPoint Point { get; set; }
+
+        /// <summary>
+        /// Returns a System.String that represents the current System.Object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            int arcsNotTaken = 0;
+            if(this.Point.ArcsNotTaken != null)
+            { // arcs not taken.
+                arcsNotTaken = this.Point.ArcsNotTaken.Count;
+            }
+            int points = 0;
+            if (this.Point.Points != null)
+            {
+                points = this.Point.Points.Count;
+            }
+            return string.Format("Point:Angle={0},Location={1},ArcsNotTaken={2},Points={3}", 
+                this.Point.Angle, this.Point.Location, arcsNotTaken, points);
+        }
     }
 }

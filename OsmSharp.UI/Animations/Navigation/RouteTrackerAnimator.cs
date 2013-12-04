@@ -164,14 +164,26 @@ namespace OsmSharp.UI.Animations.Navigation
 		/// <summary>
 		/// Holds the last track ticks.
 		/// </summary>
-		private long? _lastTrack;
+        private long? _lastTrack;
 
         /// <summary>
-        /// Starts tracking at a given location.
+        /// Updates the tracker with the given location.
         /// </summary>
-        /// <param name="location"></param>
+        /// <param name="location">The measured location.</param>
         public void Track(GeoCoordinate location)
         {
+            this.Track(location, null);
+        }
+
+        /// <summary>
+        /// Updates the tracker with the given location and angle.
+        /// </summary>
+        /// <param name="location">The measured location.</param>
+        /// <param name="angle">The angle relative to the north measure clockwise.</param>
+        public void Track(GeoCoordinate location, Degree angle)
+        {
+            if (location == null) { throw new ArgumentNullException("location"); }
+
 			if (_lastTouch.HasValue) {
 				// is tracking disabled now?
 				TimeSpan timeFromLastTouch = new TimeSpan (DateTime.Now.Ticks - _lastTouch.Value);
@@ -219,6 +231,12 @@ namespace OsmSharp.UI.Animations.Navigation
 					new PointF2D(projection.ToPixel(center));
 				tilt = direction.Angle(new VectorF2D(0, -1));
 			}
+
+            // overwrite calculated tilt with the given degrees.
+            if (angle != null)
+            {
+                tilt = angle;
+            }
             
             // animate to the given parameter (zoom, location, tilt).
             _animator.Stop();

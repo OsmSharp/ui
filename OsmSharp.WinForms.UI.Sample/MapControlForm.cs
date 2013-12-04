@@ -24,6 +24,8 @@ using OsmSharp.Osm.Data.Memory;
 using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Map.Styles.MapCSS;
 using OsmSharp.UI.Renderer.Scene;
+using OsmSharp.Osm.Data.Memory;
+using OsmSharp.UI.Map.Styles.MapCSS;
 
 namespace OsmSharp.WinForms.UI.Sample
 {

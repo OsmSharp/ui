@@ -22,6 +22,18 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
 {
     internal class MicroPlannerMessageArc : MicroPlannerMessage
     {
+        /// <summary>
+        /// Gets or sets the aggregated arc.
+        /// </summary>
         public AggregatedArc Arc { get; set; }
+
+        /// <summary>
+        /// Returns a System.String that represents the current System.Object.
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return string.Format("Arc:Distance={0},Name={1},Tags={2}", this.Arc.Distance, this.Arc.Name, this.Arc.Tags);
+        }
     }
 }

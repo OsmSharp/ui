@@ -190,9 +190,9 @@
     <Compile Include="Routing\CH\Serialization\Sorted\CHRoutingSerializationv2ComparizonTests.cs" />
     <Compile Include="Routing\CH\Serialization\Tiles\CHRoutingSerializationComparisonTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsBase.cs" />
-    <Compile Include="Routing\Instructions\InstructionBaseTests.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsCH.cs" />
     <Compile Include="Routing\Instructions\InstructionRegressionTestsDykstraLive.cs" />
+    <Compile Include="Routing\Instructions\InstructionTests.cs" />
     <Compile Include="Routing\Instructions\LanguageGenerator\LanguageTestGenerator.cs" />
     <Compile Include="Routing\RoutingConditionalAccessTests.cs" />
     <Compile Include="Routing\Dykstra\DykstraLiveRoutingTests.cs" />

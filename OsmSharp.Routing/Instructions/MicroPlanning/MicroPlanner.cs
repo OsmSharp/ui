@@ -16,7 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using OsmSharp.Routing.ArcAggregation.Output;
 using OsmSharp.Routing.Instructions.LanguageGeneration;
@@ -87,13 +86,6 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             {
                 while (_current != null)
                 {
-                    if (_current is AggregatedPoint)
-                    {
-                        if ((_current as AggregatedPoint).Location.Latitude == 51.254875183105469)
-                        {
-                            Console.WriteLine("BINGO!");
-                        }
-                    }
                     // plan the current message.
                     this.PlanNewMessage(_current);
 
@@ -112,9 +104,9 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
                         _current = _current.GetNext();
                     }
                 }
-                else if(_messages_stack.Count > 0)
+                else if(_messagesStack.Count > 0)
                 { // no machine matches everything until the end of the route.
-                    throw new MicroPlannerException("No machine could be found matching the current stack of messages!", _messages_stack);
+                    throw new MicroPlannerException("No machine could be found matching the current stack of messages!", _messagesStack);
                 }
             }
 
@@ -176,7 +168,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <summary>
         /// Holds the current messages stack.
         /// </summary>
-        private List<MicroPlannerMessage> _messages_stack;
+        private List<MicroPlannerMessage> _messagesStack;
 
         /// <summary>
         /// Holds the current list of invalid machines.
@@ -213,7 +205,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         {
             _invalid_machines = new List<MicroPlannerMachine>();
             _valid_machines = new List<MicroPlannerMachine>();
-            _messages_stack = new List<MicroPlannerMessage>();
+            _messagesStack = new List<MicroPlannerMessage>();
             _latest_final = -1;
             _latest_machine = null;
         }
@@ -234,8 +226,11 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <param name="message"></param>
         private void Plan(MicroPlannerMessage message)
         {
+            OsmSharp.Logging.Log.TraceEvent("MicroPlanner", System.Diagnostics.TraceEventType.Information,
+                message.ToString());
+
             // add the message to the stack.
-            _messages_stack.Add(message);
+            _messagesStack.Add(message);
 
             // put the message through the machine.
             foreach (MicroPlannerMachine machine in _machines)
@@ -266,10 +261,13 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <param name="machine"></param>
         internal void Success(MicroPlannerMachine machine)
         {
+            OsmSharp.Logging.Log.TraceEvent("MicroPlanner", System.Diagnostics.TraceEventType.Information,
+                machine.ToString());
+
             // reset the current point/arc.
-            if (_messages_stack.Count > _latest_final + 1)
+            if (_messagesStack.Count > _latest_final + 1)
             {
-                MicroPlannerMessage message = _messages_stack[_latest_final];
+                MicroPlannerMessage message = _messagesStack[_latest_final];
                 if (message is MicroPlannerMessageArc)
                 {
                     _current = (message as MicroPlannerMessageArc).Arc;
@@ -321,7 +319,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
         /// <param name="messages"></param>
         internal void ReportFinal(MicroPlannerMachine machine, IList<MicroPlannerMessage> messages)
         {
-            if (_latest_final == _messages_stack.Count - 1)
+            if (_latest_final == _messagesStack.Count - 1)
             { // check if a machine with the same match length has higher priority.
                 if (_latest_machine.Priority >= machine.Priority)
                 { // the current machine has the same match length and has higher or the same priority.
@@ -330,7 +328,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             }
 
             // update the latest final value.
-            _latest_final = _messages_stack.Count - 1;
+            _latest_final = _messagesStack.Count - 1;
             _latest_machine = machine;
 
             // add the machine to the valid machines.
@@ -360,7 +358,7 @@ namespace OsmSharp.Routing.Instructions.MicroPlanning
             {
                 if(_latest_machine == null)
                 { // all machine went in error!
-                    throw new MicroPlannerException("No machine could be found matching the current stack of messages!", _messages_stack);
+                    throw new MicroPlannerException("No machine could be found matching the current stack of messages!", _messagesStack);
                 }
                 else
                 { // start all over with the current stack of messages.

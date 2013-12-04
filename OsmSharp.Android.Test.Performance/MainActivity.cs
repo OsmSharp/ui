@@ -21,10 +21,10 @@ using System.Threading;
 using Android.App;
 using Android.OS;
 using Android.Widget;
+using OsmSharp.Android.UI;
 using OsmSharp.Android.UI.Log;
 using OsmSharp.Logging;
 using OsmSharp.Math.Geo;
-using OsmSharp.Android.UI;
 using OsmSharp.Test.Performance.UI.Rendering;
 
 namespace OsmSharp.Android.Test.Performance
@@ -64,9 +64,9 @@ namespace OsmSharp.Android.Test.Performance
         /// </summary>
         private void Test()
         {
-            this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
+            //this.TestRouting("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
 
-            this.TestInstructions("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
+            //this.TestInstructions("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.routing");
 
             this.TestRendering("OsmSharp.Android.Test.Performance.kempen-big.osm.pbf.scene.layered");
         }
@@ -129,19 +129,6 @@ namespace OsmSharp.Android.Test.Performance
                     return new global::Android.Graphics.Canvas(
                         global::Android.Graphics.Bitmap.CreateBitmap(
                             width, height, global::Android.Graphics.Bitmap.Config.Argb4444));
-                    //int bytesPerPixel = 4;
-                    //int bytesPerRow = bytesPerPixel * width;
-                    //int bitsPerComponent = 8;
-                    //CGBitmapContext target = new CGBitmapContext(null, width, height,
-                    //    bitsPerComponent, bytesPerRow,
-                    //    space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
-                    //    CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
-                    //target.InterpolationQuality = CGInterpolationQuality.None;
-                    //target.SetShouldAntialias(false);
-                    //target.SetBlendMode(CGBlendMode.Copy);
-                    //target.SetAlpha(1);
-                    //return new CGContextWrapper(target, new RectangleF(
-                    //    0, 0, width, height));
                 },
                 () =>
                 {

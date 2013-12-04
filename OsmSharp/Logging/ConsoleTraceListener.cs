@@ -16,26 +16,40 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
+using System.Diagnostics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Mime;
-using System.Text;
 
-namespace OsmSharp.UI.Benchmark
+namespace OsmSharp.Logging
 {
     /// <summary>
-    /// Contains entry point of the application.
+    /// A log trace listener that writes message to the console.
     /// </summary>
-    static class Program
+    public class ConsoleTraceListener : TraceListener
     {
         /// <summary>
-        /// The main entry point for the application.
+        /// Creates a new console trace listener.
         /// </summary>
-        [STAThread]
-        static void Main()
+        public ConsoleTraceListener()
         {
 
+        }
+
+        /// <summary>
+        /// Writes the given message to the console.
+        /// </summary>
+        /// <param name="message"></param>
+        public override void Write(string message)
+        {
+            Console.Write(message);
+        }
+
+        /// <summary>
+        /// Writes the given message to the console.
+        /// </summary>
+        /// <param name="message"></param>
+        public override void WriteLine(string message)
+        {
+            Console.WriteLine(message);
         }
     }
 }

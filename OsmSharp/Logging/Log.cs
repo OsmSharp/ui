@@ -124,16 +124,16 @@ namespace OsmSharp.Logging
             }
         }
 
-#if !(WINDOWS_PHONE || __ANDROID__ || IOS)
+#if !(WINDOWS_PHONE)
         /// <summary>
         /// Registers a console trace listener.
         /// </summary>
         public static void RegisterConsoleListener()
         {
+            OsmSharp.Logging.Log.Enable();
+
             ConsoleTraceListener console =
-                new ConsoleTraceListener(false);
-            console.Filter =
-                new EventTypeFilter(SourceLevels.All);
+                new ConsoleTraceListener();
             console.Name = "console";
             _source.Listeners.Add(console);
         }
