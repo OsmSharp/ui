@@ -139,9 +139,14 @@ namespace OsmSharp.Android.UI
         }
 
 		/// <summary>
-		/// Holds the cached scene.
+		/// Holds the off screen buffered image.
 		/// </summary>
-		private ImageTilted2D _renderCache;
+        private ImageTilted2D _offScreenBuffer;
+
+        /// <summary>
+        /// Holds the on screen buffered image.
+        /// </summary>
+        private ImageTilted2D _onScreenBuffer;
 
         /// <summary>
         /// Holds the background color.
@@ -242,9 +247,9 @@ namespace OsmSharp.Android.UI
 
 				// get old image if available.
                 global::Android.Graphics.Bitmap image = null;
-				if (_renderCache != null)
+				if (_offScreenBuffer != null)
                 {
-                    image = _renderCache.Tag as global::Android.Graphics.Bitmap;
+                    image = _offScreenBuffer.Tag as global::Android.Graphics.Bitmap;
 				}
 
                 // resize image if needed.
@@ -261,7 +266,7 @@ namespace OsmSharp.Android.UI
 				// create and reset the canvas.
 				global::Android.Graphics.Canvas canvas = new global::Android.Graphics.Canvas (image);
 				canvas.DrawColor (new global::Android.Graphics.Color(
-					SimpleColor.FromKnownColor(KnownColor.Transparent).Value));
+					SimpleColor.FromKnownColor(KnownColor.White).Value));
 
 				// create the view.
                 double[] sceneCenter = this.Map.Projection.ToPixel(this.MapCenter.Latitude, this.MapCenter.Longitude);
@@ -302,8 +307,12 @@ namespace OsmSharp.Android.UI
                     //lock (_renderCache)
                     //{
                         // add the newly rendered image again.            
-                        _renderCache = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
-                        _renderCache.Tag = image;
+                    _offScreenBuffer = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
+                    _offScreenBuffer.Tag = image;
+
+                    var temp = _onScreenBuffer;
+                    _onScreenBuffer = _offScreenBuffer;
+                    _offScreenBuffer = temp;
                     //}
 				}
 
@@ -480,7 +489,7 @@ namespace OsmSharp.Android.UI
                     canvas,
                     view,
                     zoomFactor,
-                    new Primitive2D[] { _renderCache });
+                    new Primitive2D[] { _onScreenBuffer });
             //}
 		}
 		
@@ -529,7 +538,7 @@ namespace OsmSharp.Android.UI
 			// notify there was movement.
 			this.NotifyMovement();
 
-			if (_renderCache == null) {
+			if (_onScreenBuffer == null) {
 				this.Change (); // force a rendering on the first layout-event.
 			}
 		}

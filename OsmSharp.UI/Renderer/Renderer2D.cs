@@ -22,6 +22,7 @@ using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.UI.Renderer.Scene.Primitives;
 using OsmSharp.UI.Renderer.Scene.Styles;
+using OsmSharp.Math.Geo.Projections;
 
 namespace OsmSharp.UI.Renderer
 {
@@ -173,7 +174,12 @@ namespace OsmSharp.UI.Renderer
                 Polygon2D polygon;
                 Text2D text;
 
+                // calculate current simplification epsilon.
+                double epsilon = Scene2D.CalculateSimplificationEpsilon(new WebMercator(), zoomFactor);
+
 	            // loop over all primitives in the scene.
+                int simplifiedLines = 0;
+                int droppedLines = 0;
                 foreach (Primitive2D primitive in primitives)
 	            { // the primitive is visible.
 					if (_cancelFlag) {
@@ -182,7 +188,34 @@ namespace OsmSharp.UI.Renderer
 
                     line = (primitive as Line2D);
                     if (line != null) {
-                        this.DrawLine(target, line.X, line.Y, line.Color,
+                        double[] x = line.X;
+                        double[] y = line.Y;
+                        if (x.Length > 4)
+                        { // try and simplify.
+                            double[][] simplified = OsmSharp.Math.Algorithms.SimplifyCurve.Simplify(new double[][] { x, y },
+                                epsilon);
+                            if (simplified[0].Length < line.X.Length)
+                            {
+                                simplifiedLines++;
+                                x = simplified[0];
+                                y = simplified[1];
+                            }
+                            double distance = epsilon * 2;
+                            if (simplified[0].Length == 2)
+                            { // check if the simplified version is smaller than epsilon.
+                                OsmSharp.Math.Primitives.PointF2D point1 = new OsmSharp.Math.Primitives.PointF2D(
+                                    simplified[0][0], simplified[1][0]);
+                                OsmSharp.Math.Primitives.PointF2D point2 = new OsmSharp.Math.Primitives.PointF2D(
+                                    simplified[0][1], simplified[1][1]);
+                                distance = point1.Distance(point2);
+                            }
+                            if (distance < epsilon)
+                            {
+                                droppedLines++;
+                                continue;
+                            }
+                        }
+                        this.DrawLine(target, x, y, line.Color,
                             this.FromPixels(target, view, line.Width), line.LineJoin, line.Dashes);
                         continue;
 					}
@@ -233,7 +266,9 @@ namespace OsmSharp.UI.Renderer
                             this.FromPixels(target, view, text.Size), text.HaloColor, text.HaloRadius, text.Font);
                         continue;
                     }
-	            }
+                }
+                OsmSharp.Logging.Log.TraceEvent("Renderer2D", System.Diagnostics.TraceEventType.Error,
+                    string.Format("Rendering successfull: simplified {0}/{1} lines", simplifiedLines, droppedLines));
 				return true;
 			}
 			catch(Exception ex) {

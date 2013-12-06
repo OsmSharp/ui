@@ -19,16 +19,16 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using OsmSharp.Collections;
+using OsmSharp.Math.Geo;
+using OsmSharp.Math.Geo.Projections;
 using OsmSharp.Math.Primitives;
+using OsmSharp.Osm.Tiles;
 using OsmSharp.UI.Renderer.Primitives;
 using OsmSharp.UI.Renderer.Scene.Primitives;
 using OsmSharp.UI.Renderer.Scene.Storage;
 using OsmSharp.UI.Renderer.Scene.Styles;
-using OsmSharp.Math.Geo.Projections;
-using System.Linq;
-using OsmSharp.Math.Geo;
-using OsmSharp.Osm.Tiles;
 
 namespace OsmSharp.UI.Renderer.Scene
 {
@@ -1087,7 +1087,7 @@ namespace OsmSharp.UI.Renderer.Scene
                         OsmSharp.Math.Primitives.PointF2D point1 = new OsmSharp.Math.Primitives.PointF2D(
                             simplified[0][0], simplified[0][1]);
                         OsmSharp.Math.Primitives.PointF2D point2 = new OsmSharp.Math.Primitives.PointF2D(
-                            simplified[1][0], simplified[0][1]);
+                            simplified[1][0], simplified[1][1]);
                         distance = point1.Distance(point2);
                     }
                     if (distance >= epsilon)
