@@ -32,6 +32,7 @@ using OsmSharp.UI.Map.Layers;
 using OsmSharp.UI.Renderer;
 using OsmSharp.UI.Renderer.Scene;
 using OsmSharp.Units.Angle;
+using OsmSharp.UI.Renderer.Primitives;
 
 namespace OsmSharp.iOS.UI
 {
@@ -180,8 +181,7 @@ namespace OsmSharp.iOS.UI
 			// create the cache renderer.
 			_cacheRenderer = new MapRenderer<CGContextWrapper> (
 				new CGContextRenderer (_scaleFactor));
-			_cachedScene = new Scene2DSimple ();
-			_cachedScene.BackColor = SimpleColor.FromKnownColor (KnownColor.White).Value;
+            _backgroundColor = SimpleColor.FromKnownColor(KnownColor.White).Value;
 		}
 
 		/// <summary>
@@ -204,10 +204,25 @@ namespace OsmSharp.iOS.UI
 		/// </summary>
 		private RectangleF _rect;
 
-		/// <summary>
-		/// Holds the cached scene.
-		/// </summary>
-		private Scene2D _cachedScene;
+        /// <summary>
+        /// Holds the off screen context.
+        /// </summary>
+        private CGBitmapContext _offScreenContext;
+
+        /// <summary>
+        /// Holds the on screen context.
+        /// </summary>
+        private CGBitmapContext _onScreenContext;
+
+        /// <summary>
+        /// Holds the on screen buffered image.
+        /// </summary>
+        private ImageTilted2D _onScreenBuffer;
+
+        /// <summary>
+        /// Holds the background color.
+        /// </summary>
+        private int _backgroundColor;
 
 		/// <summary>
 		/// Holds the rendering thread.
@@ -285,9 +300,6 @@ namespace OsmSharp.iOS.UI
 			try {
 				RectangleF rect = _rect;
 
-				lock (this.Map) {
-				
-				//lock (_cacheRenderer) { // make sure only on thread at the same time is using the renderer.
 				// create the view.
 				View2D view = _cacheRenderer.Create ((int)(rect.Width * _extra), (int)(rect.Height * _extra),
 				                                      this.Map, (float)this.Map.Projection.ToZoomFactor (this.MapZoom), 
@@ -300,37 +312,45 @@ namespace OsmSharp.iOS.UI
 				if (rect.Width == 0) { // only render if a proper size is known.
 					return;
 				}
+                    
+                // TODO: create marker layer.
+                int imageWidth = (int)(rect.Width * _extra * _scaleFactor);
+                int imageHeight = (int)(rect.Height * _extra * _scaleFactor);
 
-				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-				                                 "Before lock.");
+                // create a new bitmap context.
+                CGColorSpace space = CGColorSpace.CreateDeviceRGB ();
+                int bytesPerPixel = 4;
+                int bytesPerRow = bytesPerPixel * imageWidth;
+                int bitsPerComponent = 8;
+
+                // get old image if available.
+                CGBitmapContext image = null;
+                if (_offScreenContext != null)
+                {
+                    image = _offScreenContext;
+                }
+
+                // resize image if needed.
+                if (image == null || 
+                    image.Width != (int)(this.SurfaceWidth * extra) ||
+                    image.Height != (int)(this.SurfaceHeight * extra))
+                {
+                    // create a bitmap and render there.
+                    image = new CGBitmapContext (null, imageWidth, imageHeight,
+                                               bitsPerComponent, bytesPerRow,
+                                               space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
+                                               CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
+                }
 
 				long before = DateTime.Now.Ticks;
-	//				OsmSharp.Logging.Log.TraceEvent("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
-	//				                                "Rendering Start");
 
 				// build the layers list.
-				var layers = new List<ILayer> ();
+				var layers = new List<Layer> ();
 				for (int layerIdx = 0; layerIdx < this.Map.LayerCount; layerIdx++) {
 					layers.Add (this.Map [layerIdx]);
 				}
 
 				// add the internal layer.
-				// TODO: create marker layer.
-				int imageWidth = (int)(rect.Width * _extra * _scaleFactor);
-				int imageHeight = (int)(rect.Height * _extra * _scaleFactor);
-
-				// create a new bitmap context.
-				CGColorSpace space = CGColorSpace.CreateDeviceRGB ();
-				int bytesPerPixel = 4;
-				int bytesPerRow = bytesPerPixel * imageWidth;
-				int bitsPerComponent = 8;
-//				if (_bytescache == null) {
-//					_bytescache = new byte[bytesPerRow * imageHeight];
-//				}
-				CGBitmapContext gctx = new CGBitmapContext (null, imageWidth, imageHeight,
-				                                             bitsPerComponent, bytesPerRow,
-				                                             space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
-				                                             CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
                 try {
     				// notify the map that the view has changed.
     				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor (this.MapZoom), this.MapCenter, 
@@ -340,10 +360,12 @@ namespace OsmSharp.iOS.UI
     				                                 "View change took: {0}ms @ zoom level {1}",
     				                                 (new TimeSpan (afterViewChanged - before).TotalMilliseconds), this.MapZoom);
 
+                    float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
+
     				// does the rendering.
     				bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx,
-    				                                                new RectangleF (0, 0, (int)(rect.Width * _extra), (int)(rect.Height * _extra))), 
-    				                                        layers, view);
+                        new RectangleF (0, 0, (int)(rect.Width * _extra), (int)(rect.Height * _extra))),
+                                                               layers, view, sceneZoomFactor);
 
     				long afterRendering = DateTime.Now.Ticks;
     				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.Android.UI.MapView", System.Diagnostics.TraceEventType.Information,
@@ -351,18 +373,21 @@ namespace OsmSharp.iOS.UI
     				                                 (new TimeSpan (afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
 
     				if (complete) { // there was no cancellation, the rendering completely finished.
-    					// add the result to the scene cache.
-    					lock (_cachedScene) {
-    						// add the newly rendered image again.
-    						_cachedScene.Clear ();
-                            if(_previousImage != null)
-                            {
-                                _previousImage.Dispose();
-                            }
-                            _previousImage = gctx.ToImage ();
-    						_cachedScene.AddImage (0, float.MinValue, float.MaxValue, view.Rectangle, new byte[0], 
-                                                       _previousImage);
-    					}
+
+                        if(_onScreenBuffer != null &&
+                           _onScreenBuffer.Tag != null) 
+                        { // on screen buffer.
+                            (_onScreenBuffer.Tag as UIImage).Dispose();
+                        }
+
+                        // add the newly rendered image again.           
+                        _onScreenBuffer = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
+                        _onScreenBuffer.Tag = _offScreenContext.ToImage();
+
+                        var temp = _offScreenContext;
+                        _offScreenContext = _onScreenContext;
+                        _onScreenContext = temp;
+
     					this.InvokeOnMainThread (InvalidateMap);
 
     					// store the previous view.
@@ -372,12 +397,9 @@ namespace OsmSharp.iOS.UI
     				long after = DateTime.Now.Ticks;
     				OsmSharp.Logging.Log.TraceEvent ("OsmSharp.iOS.UI.MapView", System.Diagnostics.TraceEventType.Information,
     				                                  "Rendering in {0}ms", new TimeSpan (after - before).TotalMilliseconds);
-    				//				}
-    				//}
-                    }
-                    finally{
-                        gctx.Dispose();
-                    }
+                }
+                finally{
+
                 }
             }
 			catch(Exception ex) {

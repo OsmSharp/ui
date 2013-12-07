@@ -27,8 +27,8 @@ using OsmSharp.Math;
 using OsmSharp.Math.Primitives;
 using OsmSharp.UI;
 using OsmSharp.UI.Renderer;
-using OsmSharp.UI.Renderer.Scene.Scene2DPrimitives;
 using OsmSharp.Units.Angle;
+using OsmSharp.UI.Renderer.Primitives;
 
 namespace OsmSharp.iOS.UI
 {
