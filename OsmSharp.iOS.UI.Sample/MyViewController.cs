@@ -53,7 +53,7 @@ namespace OsmSharp.iOS.UI.Sample1
 
 			// initialize a test-map.
 			var map = new Map ();
-			map.AddLayer (new LayerScene (Scene2DLayered.Deserialize (
+			map.AddLayer (new LayerScene (Scene2D.Deserialize (
 				Assembly.GetExecutingAssembly ().GetManifestResourceStream (
                     "OsmSharp.iOS.UI.Sample.kempen-big.osm.pbf.scene.layered"), 
 					    true)));
@@ -102,9 +102,9 @@ namespace OsmSharp.iOS.UI.Sample1
 			RouteTracker routeTracker = new RouteTracker(route1, new OsmRoutingInterpreter());
 			_routeTrackerAnimator = new RouteTrackerAnimator(mapView, routeTracker, 5);
 
-            Timer timer = new Timer (250);
-            timer.Elapsed += new ElapsedEventHandler (TimerHandler);
-            timer.Start ();
+//            Timer timer = new Timer (250);
+//            timer.Elapsed += new ElapsedEventHandler (TimerHandler);
+//            timer.Start ();
 		}
 
 		public override void ViewDidAppear (bool animated)

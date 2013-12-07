@@ -220,6 +220,11 @@ namespace OsmSharp.iOS.UI
         private ImageTilted2D _onScreenBuffer;
 
         /// <summary>
+        /// Holds the buffer synchonisation object.
+        /// </summary>
+        private object _bufferSynchonisation = new object();
+
+        /// <summary>
         /// Holds the background color.
         /// </summary>
         private int _backgroundColor;
@@ -313,7 +318,7 @@ namespace OsmSharp.iOS.UI
 					return;
 				}
                     
-                // TODO: create marker layer.
+                // calculate width/height.
                 int imageWidth = (int)(rect.Width * _extra * _scaleFactor);
                 int imageHeight = (int)(rect.Height * _extra * _scaleFactor);
 
@@ -332,14 +337,15 @@ namespace OsmSharp.iOS.UI
 
                 // resize image if needed.
                 if (image == null || 
-                    image.Width != (int)(this.SurfaceWidth * extra) ||
-                    image.Height != (int)(this.SurfaceHeight * extra))
+                    image.Width != imageWidth ||
+                    image.Height != imageHeight)
                 {
                     // create a bitmap and render there.
                     image = new CGBitmapContext (null, imageWidth, imageHeight,
                                                bitsPerComponent, bytesPerRow,
                                                space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
                                                CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
+                    _offScreenContext = image;
                 }
 
 				long before = DateTime.Now.Ticks;
@@ -363,7 +369,7 @@ namespace OsmSharp.iOS.UI
                     float sceneZoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
 
     				// does the rendering.
-    				bool complete = _cacheRenderer.Render (new CGContextWrapper (gctx,
+    				bool complete = _cacheRenderer.Render (new CGContextWrapper (image,
                         new RectangleF (0, 0, (int)(rect.Width * _extra), (int)(rect.Height * _extra))),
                                                                layers, view, sceneZoomFactor);
 
@@ -373,25 +379,27 @@ namespace OsmSharp.iOS.UI
     				                                 (new TimeSpan (afterRendering - afterViewChanged).TotalMilliseconds), this.MapZoom);
 
     				if (complete) { // there was no cancellation, the rendering completely finished.
+                        lock (_bufferSynchonisation)
+                        {
+                            if(_onScreenBuffer != null &&
+                               _onScreenBuffer.Tag != null) 
+                            { // on screen buffer.
+                                (_onScreenBuffer.Tag as UIImage).Dispose();
+                            }
 
-                        if(_onScreenBuffer != null &&
-                           _onScreenBuffer.Tag != null) 
-                        { // on screen buffer.
-                            (_onScreenBuffer.Tag as UIImage).Dispose();
+                            // add the newly rendered image again.           
+                            _onScreenBuffer = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
+                            _onScreenBuffer.Tag = _offScreenContext.ToImage();
+
+                            var temp = _offScreenContext;
+                            _offScreenContext = _onScreenContext;
+                            _onScreenContext = temp;
+
+        					this.InvokeOnMainThread (InvalidateMap);
+
+        					// store the previous view.
+        					_previousRenderedZoom = view;
                         }
-
-                        // add the newly rendered image again.           
-                        _onScreenBuffer = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
-                        _onScreenBuffer.Tag = _offScreenContext.ToImage();
-
-                        var temp = _offScreenContext;
-                        _offScreenContext = _onScreenContext;
-                        _onScreenContext = temp;
-
-    					this.InvokeOnMainThread (InvalidateMap);
-
-    					// store the previous view.
-    					_previousRenderedZoom = view;
     				}
 
     				long after = DateTime.Now.Ticks;
@@ -858,11 +866,12 @@ namespace OsmSharp.iOS.UI
 		{
 			_rect = rect;
 			base.Draw (rect);
-
-			lock (_cachedScene) {
+            
+            lock (_bufferSynchonisation)
+            {
 				// recreate the view.
-				//View2D view = this.CreateView (_rect);
 				View2D view = this.CreateView (this.Frame);
+                float zoomFactor = (float)this.Map.Projection.ToZoomFactor(this.MapZoom);
 
 				// call the canvas renderer.
 				CGContext context = UIGraphics.GetCurrentContext ();
@@ -875,10 +884,11 @@ namespace OsmSharp.iOS.UI
 
 					long afterViewChanged = DateTime.Now.Ticks;
 					CGContextRenderer renderer = new CGContextRenderer (1);
-//					renderer.Render (new CGContextWrapper (context, _rect),
-					//					                _cachedScene, view);
-					renderer.Render (new CGContextWrapper (context, this.Frame),
-						_cachedScene, view);
+                    renderer.Render(
+                        new CGContextWrapper(context, this.Frame),
+                        view,
+                        zoomFactor,
+                        new Primitive2D[] { _onScreenBuffer });
 					long afterRendering = DateTime.Now.Ticks;
 				}
 			}
@@ -1090,8 +1100,22 @@ namespace OsmSharp.iOS.UI
 		{
 			base.Dispose (disposing);
 
-			_cachedScene.Clear ();
-			_cachedScene = null;
+            if(_onScreenBuffer != null &&
+               _onScreenBuffer.Tag != null) 
+            {
+                (_onScreenBuffer.Tag as UIImage).Dispose();
+            }
+
+            if(_offScreenContext != null) 
+            {
+                _offScreenContext.Dispose();
+            }
+            
+            if(_onScreenContext != null) 
+            {
+                _onScreenContext.Dispose();
+            }
+
 			_renderingThread.Abort ();
 			_renderingThread = null;
 			//_bytescache = null;
