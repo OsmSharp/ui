@@ -205,16 +205,6 @@ namespace OsmSharp.iOS.UI
 		private RectangleF _rect;
 
         /// <summary>
-        /// Holds the off screen context.
-        /// </summary>
-        private CGBitmapContext _offScreenContext;
-
-        /// <summary>
-        /// Holds the on screen context.
-        /// </summary>
-        private CGBitmapContext _onScreenContext;
-
-        /// <summary>
         /// Holds the on screen buffered image.
         /// </summary>
         private ImageTilted2D _onScreenBuffer;
@@ -329,24 +319,10 @@ namespace OsmSharp.iOS.UI
                 int bitsPerComponent = 8;
 
                 // get old image if available.
-                CGBitmapContext image = null;
-                if (_offScreenContext != null)
-                {
-                    image = _offScreenContext;
-                }
-
-                // resize image if needed.
-                if (image == null || 
-                    image.Width != imageWidth ||
-                    image.Height != imageHeight)
-                {
-                    // create a bitmap and render there.
-                    image = new CGBitmapContext (null, imageWidth, imageHeight,
+                CGBitmapContext image = new CGBitmapContext (null, imageWidth, imageHeight,
                                                bitsPerComponent, bytesPerRow,
                                                space, // kCGBitmapByteOrder32Little | kCGImageAlphaNoneSkipLast
                                                CGBitmapFlags.PremultipliedFirst | CGBitmapFlags.ByteOrder32Big);
-                    _offScreenContext = image;
-                }
 
 				long before = DateTime.Now.Ticks;
 
@@ -358,6 +334,10 @@ namespace OsmSharp.iOS.UI
 
 				// add the internal layer.
                 try {
+                    image.SetRGBFillColor(1,1,1,1);
+                    image.FillRect(new RectangleF(
+                        0, 0, imageWidth, imageHeight));
+
     				// notify the map that the view has changed.
     				this.Map.ViewChanged ((float)this.Map.Projection.ToZoomFactor (this.MapZoom), this.MapCenter, 
     				                       view);
@@ -384,22 +364,18 @@ namespace OsmSharp.iOS.UI
                             if(_onScreenBuffer != null &&
                                _onScreenBuffer.Tag != null) 
                             { // on screen buffer.
-                                (_onScreenBuffer.Tag as UIImage).Dispose();
+                                (_onScreenBuffer.Tag as CGImage).Dispose();
                             }
 
                             // add the newly rendered image again.           
                             _onScreenBuffer = new ImageTilted2D(view.Rectangle, new byte[0], float.MinValue, float.MaxValue);
-                            _onScreenBuffer.Tag = _offScreenContext.ToImage();
-
-                            var temp = _offScreenContext;
-                            _offScreenContext = _onScreenContext;
-                            _onScreenContext = temp;
-
-        					this.InvokeOnMainThread (InvalidateMap);
+                            _onScreenBuffer.Tag = image.ToImage();
 
         					// store the previous view.
         					_previousRenderedZoom = view;
                         }
+
+                        this.InvokeOnMainThread (InvalidateMap);
     				}
 
     				long after = DateTime.Now.Ticks;
@@ -1104,16 +1080,6 @@ namespace OsmSharp.iOS.UI
                _onScreenBuffer.Tag != null) 
             {
                 (_onScreenBuffer.Tag as UIImage).Dispose();
-            }
-
-            if(_offScreenContext != null) 
-            {
-                _offScreenContext.Dispose();
-            }
-            
-            if(_onScreenContext != null) 
-            {
-                _onScreenContext.Dispose();
             }
 
 			_renderingThread.Abort ();
