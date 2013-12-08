@@ -473,5 +473,33 @@ namespace OsmSharp.UI.Renderer
 				return _rectangle.BoundingBox;
 			}
 		}
+
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="OsmSharp.UI.Renderer.View2D"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="OsmSharp.UI.Renderer.View2D"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
+        /// <see cref="OsmSharp.UI.Renderer.View2D"/>; otherwise, <c>false</c>.</returns>
+        public override bool Equals(object obj)
+        {
+            View2D view = obj as View2D;
+            if (view != null)
+            {
+                return view.Rectangle.Equals(
+                    this.Rectangle);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Serves as a hash function for a <see cref="OsmSharp.UI.Renderer.View2D"/> object.
+        /// </summary>
+        /// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
+        /// hash table.</returns>
+        public override int GetHashCode()
+        {
+            return "View2D".GetHashCode() ^
+                this.Rectangle.GetHashCode();
+        }
     }
 }

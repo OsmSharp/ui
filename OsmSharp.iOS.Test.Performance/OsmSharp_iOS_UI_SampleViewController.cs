@@ -55,8 +55,9 @@ namespace OsmSharp.iOS.Test.Performance
             // set the seed manually.
             OsmSharp.Math.Random.StaticRandomGenerator.Set(116542346);
 
-            //OsmSharp.Logging.Log.Ignore("RTreeStreamIndex");
-            //OsmSharp.Logging.Log.Ignore("Scene2DLayeredSource");
+            OsmSharp.Logging.Log.Ignore("RTreeStreamIndex");
+            OsmSharp.Logging.Log.Ignore("Scene2DLayeredSource");
+            OsmSharp.Logging.Log.Ignore("Renderer2D");
 
 			base.LoadView ();
 

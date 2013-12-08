@@ -665,5 +665,34 @@ namespace OsmSharp.Math.Primitives
 
 		#endregion
 
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object"/> is equal to the current <see cref="OsmSharp.Math.Primitives.RectangleF2D"/>.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object"/> to compare with the current <see cref="OsmSharp.Math.Primitives.RectangleF2D"/>.</param>
+        /// <returns><c>true</c> if the specified <see cref="System.Object"/> is equal to the current
+        /// <see cref="OsmSharp.Math.Primitives.RectangleF2D"/>; otherwise, <c>false</c>.</returns>
+        public override bool Equals(object obj)
+        {
+            RectangleF2D rectangle = (obj as RectangleF2D);
+            if (rectangle != null)
+            {
+                return rectangle.BottomLeft.Equals(this.BottomLeft) &&
+                    rectangle.DirectionX.Equals(this.DirectionX) &&
+                    rectangle.DirectionY.Equals(this.DirectionY);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Serves as a hash function for a <see cref="OsmSharp.Math.Primitives.RectangleF2D"/> object.
+        /// </summary>
+        /// <returns>A hash code for this instance that is suitable for use in hashing algorithms and data structures such as a
+        /// hash table.</returns>
+        public override int GetHashCode()
+        {
+            return this.BottomLeft.GetHashCode() ^
+                this.DirectionX.GetHashCode() ^
+                this.DirectionY.GetHashCode();
+        }
     }
 }
