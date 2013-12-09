@@ -437,14 +437,15 @@ namespace OsmSharp.Android.UI
 			RectangleF2D transformed = new RectangleF2D(bottomLeft, bottomLeft.Distance(bottomRight), bottomLeft.Distance(topLeft), 
 			                                            topLeft - bottomLeft);
 
-
+            _paint.AntiAlias = true;
+            _paint.FilterBitmap = true;
 			target.Target.Save ();
 			target.Target.Translate ((float)transformed.BottomLeft [0], (float)transformed.BottomLeft [1]);
 			target.Target.Rotate (-(float)((Degree)transformed.Angle).Value);
-			target.Target.DrawBitmap(image,new global::Android.Graphics.Rect(0, 0, image.Width, image.Height),
-			                         new global::Android.Graphics.RectF(0, 0, 
-			                                   (float)transformed.Width, (float)transformed.Height),
-			                         null);
+			target.Target.DrawBitmap(image,
+                new global::Android.Graphics.Rect(0, 0, image.Width, image.Height), 
+                new global::Android.Graphics.RectF(0, 0, (float)transformed.Width, (float)transformed.Height),
+			    _paint);
 			target.Target.Restore ();
 
 			return tag;
