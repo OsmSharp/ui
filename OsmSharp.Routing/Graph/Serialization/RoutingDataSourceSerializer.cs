@@ -145,6 +145,9 @@ namespace OsmSharp.Routing.Graph.Serialization
             if (stream == null)
                 throw new ArgumentNullException("stream");
 
+			// make sure the stream seeks to the beginning.
+			stream.Seek(0, SeekOrigin.Begin);
+
             if (this.CanDeSerialize(stream))
             {
                 // read/verify the current version header.

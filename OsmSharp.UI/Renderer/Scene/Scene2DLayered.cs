@@ -467,7 +467,10 @@ namespace OsmSharp.UI.Renderer.Scene
         /// <param name="compressed"></param>
         /// <returns></returns>
         public static IScene2DPrimitivesSource Deserialize(Stream stream, bool compressed)
-        {
+		{
+			// make sure the stream seeks to the beginning.
+			stream.Seek(0, SeekOrigin.Begin);
+
             Scene2DLayeredSerializer serializer = new Scene2DLayeredSerializer();
             return serializer.DeSerialize(stream);
         }
