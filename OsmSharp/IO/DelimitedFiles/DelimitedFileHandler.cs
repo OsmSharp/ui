@@ -39,9 +39,9 @@ namespace OsmSharp.IO.DelimitedFiles
         /// <param name="firstRowHasHeaders"></param>
         /// <returns></returns>
         public static string[][] ReadDelimitedFile(
-            IProgressReporter reporter, 
-            FileInfo file, 
-            DelimiterType delimiter, 
+            IProgressReporter reporter,
+            Stream stream,
+            DelimiterType delimiter,
             bool firstRowHasHeaders)
         {
             if (reporter == null)
@@ -54,73 +54,66 @@ namespace OsmSharp.IO.DelimitedFiles
             List<string[]> delimited_data_set;
             //int iCounter = 0;
             ProgressStatus status;
-            if (!file.Exists) 
-            {
-	            throw new FileNotFoundException(string.Format("Input file {0} not found!", file.FullName));
-            } 
-            else 
-            {
-	            // Build dataset
-                delimited_data_set = new List<string[]>();
-	            //Add the table               'Read the delimited file
 
-	            System.Text.Encoding enc = null;
-                enc = System.Text.Encoding.GetEncoding("iso-8859-1");
-	            FileStream fileStream = new FileStream(file.FullName, 
-                    FileMode.Open, FileAccess.Read, FileShare.Read);
-	            StringBuilder strBuild = new StringBuilder(Convert.ToInt32(fileStream.Length));
-                
+            // Build dataset
+            delimited_data_set = new List<string[]>();
+            //Add the table               'Read the delimited file
+
+            System.Text.Encoding enc = null;
+            enc = System.Text.Encoding.GetEncoding("iso-8859-1");
+            StringBuilder strBuild = new StringBuilder(Convert.ToInt32(stream.Length));
+
+            // report the status.
+            status = new ProgressStatus();
+            status.Status = ProgressStatus.ProgressStatusEnum.Busy;
+            status.CurrentNumber = 0;
+            status.Message = "Opening file...";
+
+            reporter.Report(status);
+
+            for (int i = 0; i <= Convert.ToInt32(stream.Length) - 1; i++)
+            {
+                byte[] bytes = new byte[] { Convert.ToByte(stream.ReadByte()) };
+                strBuild.Append(enc.GetString(bytes, 0, bytes.Length));
+            }
+
+            string str = strBuild.ToString();
+            StringReader strReader = new StringReader(str);
+            List<string> lines = new List<string>();
+            while ((strReader.Peek() > -1))
+            {
+                lines.Add(strReader.ReadLine());
+            }
+
+            // Now add in the Rows
+            // report the status.
+            status = new ProgressStatus();
+            status.Status = ProgressStatus.ProgressStatusEnum.Busy;
+            status.CurrentNumber = 0;
+            status.Message = "Reading file...";
+            reporter.Report(status);
+
+            int startLine = 0;
+            if (firstRowHasHeaders)
+            {
+                startLine = 1;
+            }
+
+            //Loop while there are rows in the delimited file
+            for (int l = startLine; l < lines.Count; l++)
+            {
+                string line = lines[l];
+
+                //Add the items to the DataSet
+                delimited_data_set.Add(line.Split(delimiterChar));
+
                 // report the status.
                 status = new ProgressStatus();
                 status.Status = ProgressStatus.ProgressStatusEnum.Busy;
-                status.CurrentNumber = 0;
-                status.Message = "Opening file...";
-     
-                reporter.Report(status);
-
-	            for (int i = 0; i <= Convert.ToInt32(fileStream.Length) - 1; i++)
-	            {
-	                byte[] bytes = new byte[] {Convert.ToByte(fileStream.ReadByte())};
-                    strBuild.Append(enc.GetString(bytes, 0, bytes.Length));
-	            }
-
-	            fileStream.Close();
-	            string str = strBuild.ToString();
-	            StringReader strReader = new StringReader(str);
-	            List<string> lines = new List<string>();
-	            while ((strReader.Peek() > -1)) {
-		            lines.Add(strReader.ReadLine());
-	            }
-
-	            // Now add in the Rows
-                // report the status.
-                status = new ProgressStatus();
-                status.Status = ProgressStatus.ProgressStatusEnum.Busy;
-                status.CurrentNumber = 0;
+                status.CurrentNumber = l;
+                status.TotalNumber = lines.Count - 1;
                 status.Message = "Reading file...";
                 reporter.Report(status);
-
-	            int startLine = 0;
-                if (firstRowHasHeaders)
-                {
-                    startLine = 1;
-                }
-
-	            //Loop while there are rows in the delimited file
-	            for (int l = startLine; l < lines.Count; l++) {
-		            string line = lines[l];
-
-		            //Add the items to the DataSet
-                    delimited_data_set.Add(line.Split(delimiterChar));
-
-                    // report the status.
-                    status = new ProgressStatus();
-                    status.Status = ProgressStatus.ProgressStatusEnum.Busy;
-                    status.CurrentNumber = l;
-                    status.TotalNumber = lines.Count - 1;
-                    status.Message = "Reading file...";
-                    reporter.Report(status);
-	            }
             }
 
             // report the status.
@@ -305,25 +298,6 @@ namespace OsmSharp.IO.DelimitedFiles
             DelimiterType delimiter_type)
         {
             WriteDelimitedFile(reporter, data, writer, delimiter_type, new DefaultDelimitedFormat());
-        }
-
-        /// <summary>
-        /// Writes a delimited file using a default format.
-        /// </summary>
-        /// <param name="reporter"></param>
-        /// <param name="data"></param>
-        /// <param name="file"></param>
-        /// <param name="delimiter_type"></param>
-        public static void WriteDelimitedFile(
-            IProgressReporter reporter,
-            string[][] data,
-            FileInfo file,
-            DelimiterType delimiter_type)
-        {
-            StreamWriter writer = new StreamWriter(file.OpenWrite());
-            WriteDelimitedFile(reporter, data, writer, delimiter_type, new DefaultDelimitedFormat());
-            writer.Flush();
-            writer.Close();
         }
     }
 }

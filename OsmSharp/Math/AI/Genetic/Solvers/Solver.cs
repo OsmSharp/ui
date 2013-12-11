@@ -22,6 +22,7 @@ using OsmSharp.Progress;
 using OsmSharp.Math.AI.Genetic.Operations;
 using OsmSharp.Math.AI.Genetic.Selectors;
 using OsmSharp.Math.AI.Genetic.Fitness;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Math.AI.Genetic.Solvers
 {
@@ -50,7 +51,7 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
         /// <summary>
         /// Operation used to cross over individuals.
         /// </summary>
-        private ICrossOverOperation<GenomeType, ProblemType, WeightType> _cross_over_operation;
+        private ICrossOverOperation<GenomeType, ProblemType, WeightType> _crossOverOperation;
         
         /// <summary>
         /// Operation used to cross over individuals.
@@ -116,7 +117,7 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
             _selector = selector;
             _generation_operation = generation;
             _mutation_operation = mutation;
-            _cross_over_operation = cross_over;
+            _crossOverOperation = cross_over;
             _fitness_calculator = fitness_calculator;
         }
 
@@ -147,7 +148,7 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
             _selector = selector;
             _generation_operation = generation;
             _mutation_operation = mutation;
-            _cross_over_operation = cross_over;
+            _crossOverOperation = cross_over;
             _fitness_calculator = fitness_calculator;
             _accept_only_better_on_cross_over = accept_only_better_cross_over;
             _accept_only_better_on_mutation = accept_only_better_mutation;
@@ -172,7 +173,7 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
             _settings = settings;
             _selector = selector;
             _mutation_operation = combined_operation;
-            _cross_over_operation = combined_operation;
+            _crossOverOperation = combined_operation;
             _generation_operation = combined_operation;
             _fitness_calculator = fitness_calculator;
         }
@@ -261,7 +262,7 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
         {
             get
             {
-                return _cross_over_operation;
+                return _crossOverOperation;
             }
         }
 
@@ -289,8 +290,6 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
 
         #endregion
 
-        private bool _parallel = false;
-
         /// <summary>
         /// Start the solver with an initial population.
         /// </summary>
@@ -300,33 +299,8 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
             WeightType fitness = default(WeightType);
 
             Population<GenomeType, ProblemType, WeightType> population = new Population<GenomeType, ProblemType, WeightType>(initial, true);
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.SolversSolver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.SolversSolver<GenomeType, ProblemType, WeightType>", TraceEventType.Information,
                 "Generating population...");
-
-            // use parallelism to generate population.
-#if !WINDOWS_PHONE
-            if (_parallel)
-            {
-                System.Threading.Tasks.Parallel.For(population.Count, _settings.PopulationSize, delegate(int i)
-                {
-                    // generate new.
-                    IGenerationOperation<GenomeType, ProblemType, WeightType> generation_operation = this.CreateGenerationOperation();
-                    Individual<GenomeType, ProblemType, WeightType> new_individual =
-                        generation_operation.Generate(this);
-
-                    // add to population.
-                    lock (population)
-                    {
-                        population.Add(new_individual);
-                    }
-
-                    // report population generation.
-                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.SolversSolver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
-                        "Generating population{0}/{1}...", population.Count, _settings.PopulationSize);
-                    this.ReportNew(string.Format("Generating population..."), population.Count, _settings.PopulationSize);
-                });
-            }
-#endif
 
             while (population.Count < _settings.PopulationSize)
             {
@@ -339,12 +313,12 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
                 population.Add(new_individual);
 
                 // report population generation.
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.SolversSolver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.SolversSolver<GenomeType, ProblemType, WeightType>", TraceEventType.Information,
                     "Generating population {0}/{1}...", population.Count, _settings.PopulationSize);
                 this.ReportNew(string.Format("Generating population..."), population.Count, _settings.PopulationSize);
             }
 
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.SolversSolver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information, 
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.SolversSolver<GenomeType, ProblemType, WeightType>", TraceEventType.Information, 
                 "Done!");
 
             // sort the initial population.
@@ -373,7 +347,7 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
                 // reset the stagnation count.
                 stagnation = 0;
 
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", TraceEventType.Information,
                     "New Fittest {0}" ,fittest.ToString());
             }
 
@@ -400,7 +374,7 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
 
                 // get the population fitness.
                 population.Sort(this, _fitness_calculator);
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", TraceEventType.Information,
                     "{0}->{1}", population[0].Fitness, population[population.Count - 1].Fitness);
 
                 // start next generation or stop.
@@ -417,7 +391,7 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
                     fitness = new_fitness;
                     fittest = population[0];
                     
-                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", TraceEventType.Information,
                         "New Fittest {0}-{1} {2}", generation_count, stagnation, fittest.ToString());
 
                     // reset the stagnation count.
@@ -446,19 +420,19 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
                     fittest.ToString()), stagnation, _settings.StagnationCount);
                 if (stagnation != 0 && stagnation % 1 == 0)
                 {
-                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", TraceEventType.Information,
                         "Generation {0}-{1} {2}",  generation_count,  stagnation, fittest.ToString());
                 }
             }
 
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", TraceEventType.Information,
                 "Result [{0}]:", fitness, fittest.ToString());
 
             // report the new generation.
             this.ReportNew(string.Format("Evolution finished @ generation {0}: {1}",
                 generation_count,
                 fittest.ToString()), generation_count, _settings.StagnationCount);
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Math.AI.Genetic.Solvers.Solver<GenomeType, ProblemType, WeightType>", TraceEventType.Information,
                 "Evolution finished @ generation {0}: {1}", generation_count, fittest.ToString());
 
             return fittest;
@@ -488,7 +462,7 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
         /// <returns></returns>
         protected virtual ICrossOverOperation<GenomeType, ProblemType, WeightType> CreateCrossoverOperation()
         {
-            return _cross_over_operation;
+            return _crossOverOperation;
         }
 
         /// <summary>
@@ -528,7 +502,7 @@ namespace OsmSharp.Math.AI.Genetic.Solvers
 
                 // cross-over.
                 Individual<GenomeType, ProblemType, WeightType> new_individual =
-                    _cross_over_operation.CrossOver(
+                    _crossOverOperation.CrossOver(
                     this,
                         individual1,
                         individual2);

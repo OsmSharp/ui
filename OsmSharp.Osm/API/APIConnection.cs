@@ -18,18 +18,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Net;
 using System.IO;
-using OsmSharp.Osm.Data.Core.API;
-using OsmSharp.Osm.Xml.v0_6;
-using OsmSharp.Osm;
-using OsmSharp.Collections.Tags;
-using OsmSharp.Xml.Sources;
-using OsmSharp.Osm.Xml;
-using System.Xml.Serialization;
-using OsmSharp.Math.Geo;
+using System.Net;
+using System.Text;
 using System.Xml;
+using System.Xml.Serialization;
+using OsmSharp.Collections.Tags;
+using OsmSharp.Math.Geo;
+using OsmSharp.Osm.Data.Core.API;
+using OsmSharp.Osm.Xml;
+using OsmSharp.Osm.Xml.v0_6;
+using OsmSharp.IO.Xml.Sources;
 
 namespace OsmSharp.Osm.API
 {

@@ -16,17 +16,17 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-namespace OsmSharp
+namespace OsmSharp.Logging
 {
     /// <summary>
-    /// IClonable interface to build for Windows Phone.
+    /// Represents different types of trace events.
     /// </summary>
-    public interface ICloneable
+    public enum TraceEventType
     {
-        /// <summary>
-        /// Creates a new object that is a copy of the current instance.
-        /// </summary>
-        /// <returns></returns>
-        object Clone();
+        Critical,
+        Error,
+        Warning,
+        Verbose,
+        Information
     }
 }

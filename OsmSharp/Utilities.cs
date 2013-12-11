@@ -18,9 +18,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Globalization;
-using System.Security.Cryptography;
+using System.Text;
 
 namespace OsmSharp
 {
@@ -75,8 +74,7 @@ namespace OsmSharp
         public static string RandomString(int length)
         {
             byte[] randBuffer = new byte[length];
-            RandomNumberGenerator generator = new RNGCryptoServiceProvider();
-            generator.GetBytes(randBuffer);
+            OsmSharp.Math.Random.StaticRandomGenerator.Get().Generate(randBuffer);
             return System.Convert.ToBase64String(randBuffer).Remove(length);
         }
 
@@ -201,7 +199,6 @@ namespace OsmSharp
         /// <returns></returns>
         public static string InitCap(this string value)
         {
-#if WINDOWS_PHONE
             // use other code, ToTileCase is not supported in windows phone.
             if (value == null)
                 return null;
@@ -218,12 +215,8 @@ namespace OsmSharp
                     result[i] = char.ToLower(result[i]);
             }
             return result.ToString();
-#else
-            return CultureInfo.InvariantCulture.TextInfo.ToTitleCase(value.ToLower());
-#endif
         }
 
-#if WINDOWS_PHONE
         /// <summary>
         /// Removes all objects that match the given predicate from the given list.
         /// </summary>
@@ -231,7 +224,6 @@ namespace OsmSharp
         /// <param name="list"></param>
         /// <param name="match"></param>
         /// <returns></returns>
-        /// <remarks>Added only for the windows phone project for compatibility purposes.</remarks>
         public static int RemoveAll<T>(this List<T> list, Predicate<T> match)
         {
             int removed = 0;
@@ -245,8 +237,6 @@ namespace OsmSharp
             }
             return removed;
         }
-#endif
-
 
         /// <summary>
         /// Returns the numeric part of the string for the beginning part of the string only.
@@ -470,54 +460,6 @@ namespace OsmSharp
     /// </summary>
     public static class EnumHelper
     {
-#if WINDOWS_PHONE
-        /// <summary>
-        /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object. A parameter
-        /// specifies whether the operation is case-sensitive. The return value indicates whether the conversion succeeded.
-        /// </summary>
-        /// <typeparam name="TEnum">The enumeration type to which to convert value.</typeparam>
-        /// <param name="value">The string representation of the enumeration name or underlying value to convert.</param>
-        /// <param name="result">When this method returns, contains an object of type TEnum whose value is represented by value. This parameter is passed uninitialized.</param>
-        /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
-        public static bool TryParse<TEnum>(string value, out TEnum result) where TEnum : struct
-        {
-            try
-            {
-                result = (TEnum)Enum.Parse(typeof(TEnum), value, false);
-                return true;
-            }
-            catch
-            {
-
-            }
-            result = default(TEnum);
-            return false;
-        }
-
-        /// <summary>
-        /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object. A parameter
-        /// specifies whether the operation is case-sensitive. The return value indicates whether the conversion succeeded.
-        /// </summary>
-        /// <typeparam name="TEnum">The enumeration type to which to convert value.</typeparam>
-        /// <param name="value">The string representation of the enumeration name or underlying value to convert.</param>
-        /// <param name="ignoreCase">true to ignore case; false to consider case.</param>
-        /// <param name="result">When this method returns, contains an object of type TEnum whose value is represented by value. This parameter is passed uninitialized.</param>
-        /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
-        public static bool TryParse<TEnum>(string value, bool ignoreCase, out TEnum result) where TEnum : struct
-        {
-            try
-            {
-                result = (TEnum)Enum.Parse(typeof(TEnum), value, ignoreCase);
-                return true;
-            }
-            catch
-            {
-
-            }
-            result = default(TEnum);
-            return false;
-        }
-#else
         /// <summary>
         /// Converts the string representation of the name or numeric value of one or more enumerated constants to an equivalent enumerated object. A parameter
         /// specifies whether the operation is case-sensitive. The return value indicates whether the conversion succeeded.
@@ -544,6 +486,5 @@ namespace OsmSharp
         {
             return Enum.TryParse<TEnum>(value, ignoreCase, out result);
         }
-#endif
     }
 }

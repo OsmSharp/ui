@@ -22,6 +22,7 @@ using OsmSharp.Collections.Tags;
 using OsmSharp.Geo.Attributes;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.Math.Geo;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Osm.Interpreter
 {
@@ -231,7 +232,7 @@ namespace OsmSharp.Osm.Interpreter
             List<KeyValuePair<bool, LineairRing>> rings;
             if (!this.AssignRings(ways, out rings))
             {
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", System.Diagnostics.TraceEventType.Error,
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", TraceEventType.Error,
                     string.Format("Ring assignment failed: invalid multipolygon relation [{0}] detected!", relation.Id));
             }
             // group the rings and create a multipolygon.
@@ -274,7 +275,7 @@ namespace OsmSharp.Osm.Interpreter
                     { // this ring is not contained in any other used rings.
                         if (!rings[idx].Key)
                         {
-                            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", System.Diagnostics.TraceEventType.Error,
+                            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", TraceEventType.Error,
                                 "Invalid multipolygon relation: an 'inner' ring was detected without an 'outer'.");
                         }
                         outerIdx = idx;
@@ -326,7 +327,7 @@ namespace OsmSharp.Osm.Interpreter
                 }
                 else
                 { // unused rings left but they cannot be designated as 'outer'.
-                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", System.Diagnostics.TraceEventType.Error,
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Interpreter.SimpleGeometryInterpreter", TraceEventType.Error,
                         "Invalid multipolygon relation: Unassigned rings left.");
                     break;
                 }

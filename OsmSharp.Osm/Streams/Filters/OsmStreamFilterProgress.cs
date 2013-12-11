@@ -19,6 +19,7 @@
 using System;
 using OsmSharp.Osm;
 using System.Diagnostics;
+using OsmSharp.Logging;
 
 namespace OsmSharp.Osm.Streams.Filters
 {
@@ -122,16 +123,8 @@ namespace OsmSharp.Osm.Streams.Filters
                     {
                         TimeSpan nodeSpan = new TimeSpan(_nodeTicks + (ticksStart - _lastTypeStart));
                         double nodePerSecond = System.Math.Round((double)_node / nodeSpan.TotalSeconds, 2);
-#if !WINDOWS_PHONE
-                        Process p = Process.GetCurrentProcess();
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
-                            "Node[{0}]: {1}nodes/s @ {2}MB", _node, nodePerSecond, 
-                            p.PrivateMemorySize64 / 1024 / 1024);
-#endif
-#if WINDOWS_PHONE
                         OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
                             "Node[{0}]: {1}nodes/s", _node, nodePerSecond);
-#endif
                     }
                     break;
                 case OsmGeoType.Relation:
@@ -141,16 +134,8 @@ namespace OsmSharp.Osm.Streams.Filters
                     {
                         TimeSpan relationSpan = new TimeSpan(_relationTicks + (ticksStart - _lastTypeStart));
                         double relationPerSecond = System.Math.Round((double)_relation / relationSpan.TotalSeconds, 2);
-#if !WINDOWS_PHONE
-                        Process p = Process.GetCurrentProcess();
                         OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
-                            "Relation[{0}]: {1}relations/s @ {2}MB", _relation, relationPerSecond, 
-                            p.PrivateMemorySize64 / 1024 / 1024);
-#endif
-#if WINDOWS_PHONE
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information, 
-                            "Relation[{0}]: {1}relations/s @ {2}MB", _relation, relationPerSecond);
-#endif
+                            "Relation[{0}]: {1}relations/s", _relation, relationPerSecond);
                     }
                     break;
                 case OsmGeoType.Way:
@@ -160,16 +145,8 @@ namespace OsmSharp.Osm.Streams.Filters
                     {
                         TimeSpan waySpan = new TimeSpan(_wayTicks + (ticksStart - _lastTypeStart));
                         double wayPerSecond = System.Math.Round((double)_way / waySpan.TotalSeconds, 2);
-#if !WINDOWS_PHONE
-                        Process p = Process.GetCurrentProcess();
                         OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
-                            "Way[{0}]: {1}ways/s @ {2}MB", _way, wayPerSecond, 
-                            p.PrivateMemorySize64 / 1024 / 1024);
-#endif
-#if WINDOWS_PHONE
-                        OsmSharp.Logging.Log.TraceEvent("OsmSharp.Osm.Data.Streams.Filters.OsmStreamFilterProgress", TraceEventType.Information,
-                            "Way[{0}]: {1}ways/s @ {2}MB", _way, wayPerSecond);
-#endif
+                            "Way[{0}]: {1}ways/s", _way, wayPerSecond);
                     }
                     break;
             }

@@ -16,9 +16,9 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using OsmSharp.Xml;
-using System.Xml.Serialization;
 using System.Xml;
+using System.Xml.Serialization;
+using OsmSharp.IO.Xml;
 
 namespace OsmSharp.Osm.Xml
 {

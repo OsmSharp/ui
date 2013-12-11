@@ -17,14 +17,10 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
 using System.Xml;
-using OsmSharp.Xml;
+using System.Xml.Serialization;
 
-namespace OsmSharp.Xml.Gpx
+namespace OsmSharp.IO.Xml.Gpx
 {
     /// <summary>
     /// Represents a gpx document.
@@ -55,18 +51,6 @@ namespace OsmSharp.Xml.Gpx
             _source = source;
             _version = GpxVersion.Unknown;
         }
-
-
-        ///// <summary>
-        ///// Returns the name of this document.
-        ///// </summary>
-        //public string Name
-        //{
-        //    get
-        //    {
-        //        return _source.Name;
-        //    }
-        //}
 
         /// <summary>
         /// Returns the readonly flag.
@@ -122,11 +106,11 @@ namespace OsmSharp.Xml.Gpx
         private void FindVersionFromObject()
         {
             _version = GpxVersion.Unknown;
-            if (_gpx_object is OsmSharp.Xml.Gpx.v1_0.gpx)
+            if (_gpx_object is OsmSharp.IO.Xml.Gpx.v1_0.gpx)
             {
                 _version = GpxVersion.Gpxv1_0;
             }
-            else if (_gpx_object is OsmSharp.Xml.Gpx.v1_1.gpxType)
+            else if (_gpx_object is OsmSharp.IO.Xml.Gpx.v1_1.gpxType)
             {
                 _version = GpxVersion.Gpxv1_1;
             }
@@ -160,7 +144,6 @@ namespace OsmSharp.Xml.Gpx
                 // check end conditions.
                 if (_version != GpxVersion.Unknown)
                 {
-                    reader.Close();
                     reader = null;
                     break;
                 }
@@ -181,10 +164,10 @@ namespace OsmSharp.Xml.Gpx
                 switch (_version)
                 {
                     case GpxVersion.Gpxv1_0:
-                        version_type = typeof(OsmSharp.Xml.Gpx.v1_0.gpx);
+                        version_type = typeof(OsmSharp.IO.Xml.Gpx.v1_0.gpx);
                         break;
                     case GpxVersion.Gpxv1_1:
-                        version_type = typeof(OsmSharp.Xml.Gpx.v1_1.gpxType);
+                        version_type = typeof(OsmSharp.IO.Xml.Gpx.v1_1.gpxType);
                         break;
                     case GpxVersion.Unknown:
                         throw new XmlException("Version could not be determined!");
@@ -195,15 +178,13 @@ namespace OsmSharp.Xml.Gpx
 
                 XmlReader reader = _source.GetReader();
                 _gpx_object = xmlSerializer.Deserialize(reader);
-
-                reader.Close();
             }
         }
 
         private void DoWriteGpx()
         {
             if (_gpx_object != null)
-            {                
+            {
                 // find the version.
                 Type version_type = null;
 
@@ -211,10 +192,10 @@ namespace OsmSharp.Xml.Gpx
                 switch (_version)
                 {
                     case GpxVersion.Gpxv1_0:
-                        version_type = typeof(OsmSharp.Xml.Gpx.v1_0.gpx);
+                        version_type = typeof(OsmSharp.IO.Xml.Gpx.v1_0.gpx);
                         break;
                     case GpxVersion.Gpxv1_1:
-                        version_type = typeof(OsmSharp.Xml.Gpx.v1_1.gpxType);
+                        version_type = typeof(OsmSharp.IO.Xml.Gpx.v1_1.gpxType);
                         break;
                     case GpxVersion.Unknown:
                         throw new XmlException("Version could not be determined!");
@@ -225,7 +206,6 @@ namespace OsmSharp.Xml.Gpx
                 XmlWriter writer = _source.GetWriter();
                 xmlSerializer.Serialize(writer, _gpx_object);
                 writer.Flush();
-                writer.Close();
 
                 xmlSerializer = null;
                 writer = null;

@@ -16,7 +16,6 @@
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
-using System.Diagnostics;
 using System.Collections.Generic;
 
 namespace OsmSharp.Logging
@@ -123,20 +122,5 @@ namespace OsmSharp.Logging
                 _source.Listeners.Add(listener);
             }
         }
-
-#if !(WINDOWS_PHONE)
-        /// <summary>
-        /// Registers a console trace listener.
-        /// </summary>
-        public static void RegisterConsoleListener()
-        {
-            OsmSharp.Logging.Log.Enable();
-
-            ConsoleTraceListener console =
-                new ConsoleTraceListener();
-            console.Name = "console";
-            _source.Listeners.Add(console);
-        }
-#endif
     }
 }

@@ -15,6 +15,7 @@
 // 
 // You should have received a copy of the GNU General Public License
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,10 +23,7 @@ using System.Linq;
 using System.Text;
 using OsmSharp.Collections;
 
-#if WINDOWS_PHONE
-// ReSharper disable CheckNamespace
-namespace OsmSharp
-// ReSharper restore CheckNamespace
+namespace OsmSharp.Collections
 {
     /// <summary>
     /// Represents a strongly typed list of objects that will be sorted using the IComparable interface.
@@ -139,40 +137,41 @@ namespace OsmSharp
         /// Adds an item to the <see cref="SortedSet{T}"/>.
         /// </summary>
         /// <param name="item"></param>
-        public void Add(T item)
+        public bool Add(T item)
         {
-                // intialize
-                int idx_lower = 0;
-                int idx_upper = this.Count;
-                bool up = true;
+            // intialize
+            int idxLower = 0;
+            int idxUpper = this.Count;
+            bool up = true;
 
-                // loop
-                int window_size;
-                int idx_to_test;
-                while (idx_upper - idx_lower > 0)
+            // loop
+            int windowSize;
+            int idxToTest;
+            while (idxUpper - idxLower > 0)
+            {
+                // (re)calculate the windowsize.
+                windowSize = idxUpper - idxLower;
+                // divide by two
+                // and round the value (Floor function).
+                idxToTest = (windowSize / 2) + idxLower;
+
+                // test the element at the given index.
+                up = _comparer.Compare(_elements[idxToTest], item) < 0;
+
+                // update the index
+                if (up)
                 {
-                    // (re)calculate the windowsize.
-                    window_size = idx_upper - idx_lower;
-                    // divide by two
-                    // and round the value (Floor function).
-                    idx_to_test = (window_size / 2) + idx_lower;
-
-                    // test the element at the given index.
-                    up = _comparer.Compare(_elements[idx_to_test], item) < 0;
-
-                    // update the index
-                    if (up)
-                    {
-                        idx_lower = idx_to_test + 1;
-                    }
-                    else
-                    {
-                        idx_upper = idx_to_test;
-                    }
+                    idxLower = idxToTest + 1;
                 }
+                else
+                {
+                    idxUpper = idxToTest;
+                }
+            }
 
-                // insert
-                _elements.Insert(idx_lower, item);
+            // insert
+            _elements.Insert(idxLower, item);
+            return false;
         }
 
         /// <summary>
@@ -504,6 +503,14 @@ namespace OsmSharp
         }
 
         #endregion
+
+        /// <summary>
+        /// Explicit implementation of the ICollection<typeparamref name="T"/>.Add method.
+        /// </summary>
+        /// <param name="item"></param>
+        void ICollection<T>.Add(T item)
+        {
+            this.Add(item);
+        }
     }
 }
-#endif

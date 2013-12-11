@@ -216,11 +216,6 @@ namespace OsmSharp.Osm.PBF
         {
             reader = new ZlibStream(stream, CompressionMode.Decompress);
         }
-        public override void Close()
-        {
-            reader.Close();
-            base.Close();
-        }
         protected override int ReadNextBlock(byte[] buffer, int offset, int count)
         {
             return reader.Read(buffer, offset, count);

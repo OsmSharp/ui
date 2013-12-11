@@ -1,118 +1,37 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <MinimumVisualStudioVersion>10.0</MinimumVisualStudioVersion>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{87A55F64-1162-4DF3-8B68-800E66D019EC}</ProjectGuid>
+    <ProjectGuid>{2F4D2B40-D557-4640-96E1-693D598012A6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OsmSharp.Routing</RootNamespace>
     <AssemblyName>OsmSharp.Routing</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile147</TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\Output\Debug\Any CPU\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\Debug\Any CPU\OsmSharp.Routing.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\Output\Release\Any CPU\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Output\Release\Any CPU\OsmSharp.Routing.XML</DocumentationFile>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Output\Debug\x86\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <DocumentationFile>..\Output\Debug\x86\OsmSharp.Routing.XML</DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>..\Output\Release\x86\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <DocumentationFile>..\Output\Release\x86\OsmSharp.Routing.XML</DocumentationFile>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\Output\Debug\x64\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Debug\Osm.Routing.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\Debug\x64\OsmSharp.Routing.XML</DocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>..\Output\Release\x64\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <CodeAnalysisLogFile>bin\Release\Osm.Routing.Core.dll.CodeAnalysisLog.xml</CodeAnalysisLogFile>
-    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
-    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
-    <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
-    <DocumentationFile>..\Output\Release\x64\OsmSharp.Routing.XML</DocumentationFile>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Zlib.Portable, Version=1.9.1.9000, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\packages\Zlib.Portable.1.9.2\lib\portable-net4+sl4+wp71+win8\Zlib.Portable.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
-    </Reference>
-  </ItemGroup>
   <ItemGroup>
     <Compile Include="ArcAggregation\AggregatedHelper.cs" />
     <Compile Include="ArcAggregation\ArcAggregator.cs" />
@@ -120,6 +39,8 @@
     <Compile Include="ArcAggregation\Output\AggregatedArc.cs" />
     <Compile Include="ArcAggregation\Output\AggregatedPoint.cs" />
     <Compile Include="CH\CHEdgeData.cs" />
+    <Compile Include="CH\CHQueue.cs" />
+    <Compile Include="CH\CHRouter.cs" />
     <Compile Include="CH\PreProcessing\CHPreProcessor.cs" />
     <Compile Include="CH\PreProcessing\CHPriorityQueue.cs" />
     <Compile Include="CH\PreProcessing\INodeWeightCalculator.cs" />
@@ -130,8 +51,6 @@
     <Compile Include="CH\PreProcessing\Ordering\LimitedLevelOrdering\SparseOrdering.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\CHRouterWitnessCalculator.cs" />
     <Compile Include="CH\PreProcessing\Witnesses\DykstraWitnessCalculator.cs" />
-    <Compile Include="CH\CHQueue.cs" />
-    <Compile Include="CH\CHRouter.cs" />
     <Compile Include="CH\Serialization\Sorted\CHBlock.cs" />
     <Compile Include="CH\Serialization\Sorted\CHDepthFirstEnumerator.cs" />
     <Compile Include="CH\Serialization\Sorted\CHEdgeDataDataSource.cs" />
@@ -141,26 +60,21 @@
     <Compile Include="CH\Serialization\Sorted\v2\CHEdgeDataSerializer.cs" />
     <Compile Include="CH\Serialization\Tiled\CHEdgeDataDataSource.cs" />
     <Compile Include="CH\Serialization\Tiled\CHEdgeDataSerializer.cs" />
+    <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
     <Compile Include="Graph\IDynamicGraph.cs" />
     <Compile Include="Graph\IDynamicGraphEdgeData.cs" />
     <Compile Include="Graph\IDynamicGraphReadOnly.cs" />
     <Compile Include="Graph\MemoryDynamicGraph.cs" />
     <Compile Include="Graph\Restrictions\GraphRestriction.cs" />
-    <Compile Include="Instructions\MicroPlanning\Machines\RoundaboutMachine.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Navigation\RouteTracker.cs" />
-    <Compile Include="Osm\Graphs\MemoryDynamicGraphSimpleWeighed.cs" />
-    <Compile Include="Osm\Graphs\LiveEdge.cs" />
-    <Compile Include="Graph\Router\PathSegment.cs" />
-    <Compile Include="Graph\Router\PathSegmentVisitList.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingBase.cs" />
     <Compile Include="Graph\Router\Dykstra\DykstraRoutingLive.cs" />
     <Compile Include="Graph\Router\IBasicRouter.cs" />
+    <Compile Include="Graph\Router\IBasicRouterDataSource.cs" />
     <Compile Include="Graph\Router\IDynamicGraphRouterDataSource.cs" />
+    <Compile Include="Graph\Router\PathSegment.cs" />
+    <Compile Include="Graph\Router\PathSegmentVisitList.cs" />
     <Compile Include="Graph\Serialization\RoutingDataSourceSerializer.cs" />
-    <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
-    <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
+    <Compile Include="IEdgeMatcher.cs" />
     <Compile Include="Instructions\Instruction.cs" />
     <Compile Include="Instructions\InstructionGenerator.cs" />
     <Compile Include="Instructions\LanguageGeneration\Defaults\SimpleDutchLanguageGenerator.cs" />
@@ -170,6 +84,7 @@
     <Compile Include="Instructions\MicroPlanning\Machines\ImmidiateTurnMachine.cs" />
     <Compile Include="Instructions\MicroPlanning\Machines\PoiMachine.cs" />
     <Compile Include="Instructions\MicroPlanning\Machines\PoiWithTurnMachine.cs" />
+    <Compile Include="Instructions\MicroPlanning\Machines\RoundaboutMachine.cs" />
     <Compile Include="Instructions\MicroPlanning\Machines\TurnMachine.cs" />
     <Compile Include="Instructions\MicroPlanning\MicroPlanner.cs" />
     <Compile Include="Instructions\MicroPlanning\MicroPlannerException.cs" />
@@ -182,31 +97,40 @@
     <Compile Include="Interpreter\Constraints\Highways\DefaultHighwayConstraints.cs" />
     <Compile Include="Interpreter\Constraints\IRoutingConstraints.cs" />
     <Compile Include="Interpreter\Constraints\RoutingLabel.cs" />
+    <Compile Include="Interpreter\IRoutingInterpreter.cs" />
     <Compile Include="Interpreter\Roads\IEdgeInterpreter.cs" />
     <Compile Include="Interpreter\Roads\TagsExtensions.cs" />
-    <Compile Include="Osm\Interpreter\IOsmRoutingInterpreter.cs" />
-    <Compile Include="Osm\Streams\CHEdgeGraphFileStreamTarget.cs" />
-    <Compile Include="Router.cs" />
+    <Compile Include="IO\Gpx\RouteGpx.cs" />
+    <Compile Include="IO\Kml\RouteKml.cs" />
     <Compile Include="IRouterExtensions.cs" />
-    <Compile Include="Interpreter\IRoutingInterpreter.cs" />
+    <Compile Include="Metrics\RouteMetricCalculator.cs" />
+    <Compile Include="Metrics\Time\TimeCalculator.cs" />
+    <Compile Include="Navigation\RouteTracker.cs" />
+    <Compile Include="Osm\Graphs\LiveEdge.cs" />
+    <Compile Include="Osm\Graphs\MemoryDynamicGraphSimpleWeighed.cs" />
     <Compile Include="Osm\Graphs\OsmSourceRouterDataSource.cs" />
-    <Compile Include="Osm\Streams\Graphs\CHEdgeGraphOsmStreamTarget.cs" />
-    <Compile Include="Osm\Streams\Graphs\DynamicGraphOsmStreamTarget.cs" />
-    <Compile Include="Osm\Streams\Graphs\LiveGraphOsmStreamTarget.cs" />
+    <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSource.cs" />
+    <Compile Include="Osm\Graphs\Serialization\LiveEdgeRoutingDataSourceSerializer.cs" />
     <Compile Include="Osm\Interpreter\Edge\EdgeInterpreter.cs" />
+    <Compile Include="Osm\Interpreter\IOsmRoutingInterpreter.cs" />
     <Compile Include="Osm\Interpreter\OsmRoutingInterpreter.cs" />
     <Compile Include="Osm\IRoutingProgressConsumer.cs" />
     <Compile Include="Osm\Router.cs" />
+    <Compile Include="Osm\Streams\CHEdgeGraphFileStreamTarget.cs" />
+    <Compile Include="Osm\Streams\Graphs\CHEdgeGraphOsmStreamTarget.cs" />
+    <Compile Include="Osm\Streams\Graphs\DynamicGraphOsmStreamTarget.cs" />
+    <Compile Include="Osm\Streams\Graphs\LiveGraphOsmStreamTarget.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Graph\Router\IBasicRouterDataSource.cs" />
-    <Compile Include="Graph\DynamicGraphRouterDataSource.cs" />
-    <Compile Include="IEdgeMatcher.cs" />
+    <Compile Include="Route.cs" />
+    <Compile Include="RouteEnumerable.cs" />
+    <Compile Include="RouteGenerator.cs" />
+    <Compile Include="Router.cs" />
     <Compile Include="RouterPoint.cs" />
     <Compile Include="Routers\ITypedRouter.cs" />
-    <Compile Include="Routers\TypedRouterCHEdge.cs" />
-    <Compile Include="Routers\TypedRouterResolvedGraph.cs" />
     <Compile Include="Routers\TypedRouter.cs" />
+    <Compile Include="Routers\TypedRouterCHEdge.cs" />
     <Compile Include="Routers\TypedRouterLiveEdge.cs" />
+    <Compile Include="Routers\TypedRouterResolvedGraph.cs" />
     <Compile Include="TSP\Genetic\RouterTSPAEXGenetic.cs" />
     <Compile Include="TSP\Genetic\RouterTSPGenetic.cs" />
     <Compile Include="TSP\RandomizedArbitraryInsertion\RouteTSPRAI.cs" />
@@ -279,29 +203,23 @@
     <Compile Include="VRP\WithDepot\MaxTime\MaxTimeSolution.cs" />
     <Compile Include="VRP\WithDepot\MaxTime\VNS\GuidedVNS.cs" />
     <Compile Include="VRP\WithDepot\RouterDepot.cs" />
-    <Compile Include="Metrics\RouteMetricCalculator.cs" />
-    <Compile Include="Metrics\Time\TimeCalculator.cs" />
-    <Compile Include="Route.cs" />
-    <Compile Include="RouteEnumerable.cs" />
-    <Compile Include="RouteGenerator.cs" />
-    <Compile Include="IO\Gpx\RouteGpx.cs" />
-    <Compile Include="IO\Kml\RouteKml.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml.Serialization" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OsmSharp.Osm\OsmSharp.Osm.csproj">
-      <Project>{249DCEC1-615D-40AA-93FF-BCE2178DFF83}</Project>
+      <Project>{E20DC51A-431E-49F7-8018-53FE0DE80386}</Project>
       <Name>OsmSharp.Osm</Name>
     </ProjectReference>
     <ProjectReference Include="..\OsmSharp\OsmSharp.csproj">
-      <Project>{95C32F29-5537-4FB7-8C85-B754BC9903A9}</Project>
+      <Project>{077997FD-A61D-4DC0-B4B0-7429BF9824E8}</Project>
       <Name>OsmSharp</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -309,5 +227,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup />
 </Project>

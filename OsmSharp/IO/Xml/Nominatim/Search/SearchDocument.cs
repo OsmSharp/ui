@@ -19,10 +19,10 @@
 using System;
 using System.Xml;
 using System.Xml.Serialization;
-using OsmSharp.Xml;
+using OsmSharp.IO.Xml;
 using OsmSharp.IO.Xml.Nominatim.Search.v1;
 
-namespace OsmSharp.Xml.Nominatim.Search
+namespace OsmSharp.IO.Xml.Nominatim.Search
 {
     /// <summary>
     /// Search document.
@@ -144,7 +144,6 @@ namespace OsmSharp.Xml.Nominatim.Search
                 // check end conditions.
                 if (_version != SearchVersion.Unknown)
                 {
-                    reader.Close();
                     reader = null;
                     break;
                 }
@@ -176,8 +175,6 @@ namespace OsmSharp.Xml.Nominatim.Search
                 XmlSerializer xmlSerializer = null;
                 xmlSerializer = new XmlSerializer(version_type);
                 _search_object = xmlSerializer.Deserialize(reader);
-
-                reader.Close();
             }
         }
 
@@ -202,7 +199,6 @@ namespace OsmSharp.Xml.Nominatim.Search
                 XmlWriter writer = _source.GetWriter();
                 xmlSerializer.Serialize(writer, _search_object);
                 writer.Flush();
-                writer.Close();
 
                 xmlSerializer = null;
                 writer = null;

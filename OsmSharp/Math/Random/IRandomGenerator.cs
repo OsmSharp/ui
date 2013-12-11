@@ -40,5 +40,11 @@ namespace OsmSharp.Math.Random
         /// <param name="max"></param>
         /// <returns></returns>
         double Generate(double max);
+
+        /// <summary>
+        /// Sets the seed of the static generator.
+        /// </summary>
+        /// <param name="buffer"></param>
+        void Generate(byte[] buffer);
     }
 }

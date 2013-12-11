@@ -17,11 +17,11 @@
 // along with OsmSharp. If not, see <http://www.gnu.org/licenses/>.
 
 using System.IO;
-using System.IO.Compression;
 using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using OsmSharp.Osm.Streams;
+using Ionic.Zlib;
 
 namespace OsmSharp.Osm.Xml.Streams
 {
@@ -49,16 +49,6 @@ namespace OsmSharp.Osm.Xml.Streams
         private readonly bool _disposeStream = false;
 
         /// <summary>
-        /// Creates a new Xml data processor source.
-        /// </summary>
-        /// <param name="fileName"></param>
-        public XmlOsmStreamSource(string fileName) :
-            this(fileName,false)
-        {
-
-        }
-
-        /// <summary>
         /// Creates a new OSM Xml processor source.
         /// </summary>
         /// <param name="stream"></param>
@@ -80,18 +70,6 @@ namespace OsmSharp.Osm.Xml.Streams
         }
 
         /// <summary>
-        /// Creates a new OSM XML processor source.
-        /// </summary>
-        /// <param name="fileName"></param>
-        /// <param name="gzip"></param>
-        public XmlOsmStreamSource(string fileName, bool gzip)
-        {
-            _disposeStream = true;
-            _fileName = fileName;
-            _gzip = gzip;
-        }
-
-        /// <summary>
         /// Initializes this source.
         /// </summary>
         public override void Initialize()
@@ -108,7 +86,7 @@ namespace OsmSharp.Osm.Xml.Streams
         /// Resets this source.
         /// </summary>
         public override void Reset()
-        {            
+        {
             // create the xml reader settings.
             var settings = new XmlReaderSettings();
             settings.CloseInput = true;
@@ -117,18 +95,10 @@ namespace OsmSharp.Osm.Xml.Streams
             settings.IgnoreProcessingInstructions = true;
             //settings.IgnoreWhitespace = true;
 
-            // create the stream.
-            if (_stream != null)
-            { // take the preset stream.
-                // seek to the beginning of the stream.
-                if (_stream.CanSeek)
-                { // if a non-seekable stream is given resetting is disabled.
-                    _stream.Seek(0, SeekOrigin.Begin);
-                }
-            }
-            else
-            { // create a file stream.
-                _stream = new FileInfo(_fileName).OpenRead();
+            // seek to the beginning of the stream.
+            if (_stream.CanSeek)
+            { // if a non-seekable stream is given resetting is disabled.
+                _stream.Seek(0, SeekOrigin.Begin);
             }
 
             // decompress if needed.
@@ -138,7 +108,7 @@ namespace OsmSharp.Osm.Xml.Streams
             }
 
             TextReader textReader = new StreamReader(_stream, Encoding.UTF8);
-            _reader = XmlReader.Create(textReader, settings);     
+            _reader = XmlReader.Create(textReader, settings);
         }
 
         /// <summary>
@@ -224,9 +194,6 @@ namespace OsmSharp.Osm.Xml.Streams
 
             if (_disposeStream)
             {
-                _reader.Close();
-
-                _stream.Close();
                 _stream.Dispose();
             }
         }
