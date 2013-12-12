@@ -376,7 +376,7 @@ namespace OsmSharp.Data.PostgreSQL.Osm.Streams
                     cin.End();
                 }
 
-                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.PostgreSQL.Osm.Streams.PostgeSQLOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
+                OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.PostgreSQL.Osm.Streams.PostgeSQLOsmStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                     "Inserted {0} records into {1}!", table.Rows.Count, table_name);
             }
         }

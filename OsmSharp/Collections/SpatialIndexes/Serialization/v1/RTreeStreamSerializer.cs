@@ -319,7 +319,7 @@
 //                        result.Add(data[idx]);
 //                    }
 //                }
-//                //OsmSharp.Logging.Log.TraceEvent("RTreeStreamSerializer", System.Diagnostics.TraceEventType.Verbose,
+//                //OsmSharp.Logging.Log.TraceEvent("RTreeStreamSerializer", OsmSharp.Logging.TraceEventType.Verbose,
 //                //    string.Format("Deserialized leaf@{1} and added {0} objects.", result.Count - before,
 //                //        offset));
 //                return;

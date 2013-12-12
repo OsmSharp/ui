@@ -217,10 +217,10 @@ namespace OsmSharp.UI.Animations
 
 				// calculate the map tilt, make sure it turns along the smallest corner.
 				double diff = _targetTilt.Subtract180(_mapView.MapTilt);
-				OsmSharp.Logging.Log.TraceEvent ("MapViewAnimator", System.Diagnostics.TraceEventType.Information, diff.ToString());
+				OsmSharp.Logging.Log.TraceEvent ("MapViewAnimator", OsmSharp.Logging.TraceEventType.Information, diff.ToString());
 				_stepTilt = (diff / _maxSteps);
 
-                OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", System.Diagnostics.TraceEventType.Verbose,
+                OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", OsmSharp.Logging.TraceEventType.Verbose,
 				                                string.Format("Started new animation with steps z:{0} t:{1} c:{2} to z:{3} t:{4} c:{5} from z:{6} t:{7} c:{8}.",
                         		_stepZoom, _stepTilt, _stepCenter.ToString(), 
 				              _targetZoom, _targetTilt, _targetCenter.ToString(), 
@@ -270,7 +270,7 @@ namespace OsmSharp.UI.Animations
 				float mapZoom = _mapView.MapZoom + _stepZoom; // update zoom.
 				Degree mapTilt = _mapView.MapTilt + _stepTilt; // update tilt.
 				_mapView.SetMapView (center, mapTilt, mapZoom);
-                //OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", System.Diagnostics.TraceEventType.Verbose,
+                //OsmSharp.Logging.Log.TraceEvent("MapViewAnimator", OsmSharp.Logging.TraceEventType.Verbose,
                 //                                string.Format("Animation Step END: z:{0} -c:{1} - t:{2}", _mapView.MapZoom, _mapView.MapCenter, _mapView.MapTilt));
                 return;
             }

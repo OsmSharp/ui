@@ -233,13 +233,13 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
 
                 try
                 {
-                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                         "Inserting {0} records into {1}.", table.Rows.Count, tableName);
                     bulkCopy.WriteToServer(table);
                 }
                 catch (Exception e)
                 {
-                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Error,
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", OsmSharp.Logging.TraceEventType.Error,
                         e.ToString());
                 }
             }
@@ -448,7 +448,7 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
         /// </summary>
         public override void Flush()
         {
-            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                 "Flushing remaining data");
             BulkCopy(_nodeTable, "node");
             BulkCopy(_nodeTagsTable, "node_tags");
@@ -487,7 +487,7 @@ namespace OsmSharp.Data.SQLServer.Osm.Streams
                 {
                     _connection.Close();
                     _connection.Dispose();
-                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", System.Diagnostics.TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("OsmSharp.Data.SQLServer.Osm.Streams.SQLServerOsmStreamTarget", OsmSharp.Logging.TraceEventType.Information,
                         "Database connection closed");
                 }
             }

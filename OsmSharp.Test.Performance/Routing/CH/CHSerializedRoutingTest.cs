@@ -121,7 +121,7 @@ namespace OsmSharp.Test.Performance.Routing.CH
 
             performanceInfo.Stop();
 
-            OsmSharp.Logging.Log.TraceEvent("CHSerializedRouting", System.Diagnostics.TraceEventType.Information,
+            OsmSharp.Logging.Log.TraceEvent("CHSerializedRouting", OsmSharp.Logging.TraceEventType.Information,
                 string.Format("{0}/{1} routes successfull!", successCount, totalCount));
         }
 
@@ -179,14 +179,14 @@ namespace OsmSharp.Test.Performance.Routing.CH
 
             if (instructions.Count == 0)
             {
-                OsmSharp.Logging.Log.TraceEvent("CHSerializedRouting", System.Diagnostics.TraceEventType.Information,
+                OsmSharp.Logging.Log.TraceEvent("CHSerializedRouting", OsmSharp.Logging.TraceEventType.Information,
                     "Routing unsuccesfull!");
             }
             else
             {
                 foreach (Instruction instruction in instructions)
                 {
-                    OsmSharp.Logging.Log.TraceEvent("CHSerializedRouting", System.Diagnostics.TraceEventType.Information,
+                    OsmSharp.Logging.Log.TraceEvent("CHSerializedRouting", OsmSharp.Logging.TraceEventType.Information,
                         instruction.Text);
                 }
             }
