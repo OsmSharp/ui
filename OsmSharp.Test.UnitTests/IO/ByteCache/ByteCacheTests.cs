@@ -48,40 +48,40 @@ namespace OsmSharp.Test.Unittests.IO.ByteCache
             }
         }
 
-        /// <summary>
-        /// Does simple byte cache disk tests.
-        /// </summary>
-        [Test]
-        public void ByteCacheDiskSimpleTests()
-        {
-            int total = 1000;
-            var stringArrayRef = new string[total];
-            var memoryByteCache = new DiskByteCache();
+        ///// <summary>
+        ///// Does simple byte cache disk tests.
+        ///// </summary>
+        //[Test]
+        //public void ByteCacheDiskSimpleTests()
+        //{
+        //    int total = 1000;
+        //    var stringArrayRef = new string[total];
+        //    var memoryByteCache = new DiskByteCache();
 
-            var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
-            for (int idx = 0; idx < total; idx++)
-            {
-                if (randomGenerator.Generate(2.0) > 1)
-                { // add data.
-                    stringArrayRef[idx] = idx.ToString();
-                    memoryByteCache.Add(ASCIIEncoding.ASCII.GetBytes(idx.ToString()));
-                }
-                else
-                {
-                    stringArrayRef[idx] = "null";
-                    memoryByteCache.Add(ASCIIEncoding.ASCII.GetBytes("null"));
-                }
-            }
+        //    var randomGenerator = new RandomGenerator(66707770); // make this deterministic 
+        //    for (int idx = 0; idx < total; idx++)
+        //    {
+        //        if (randomGenerator.Generate(2.0) > 1)
+        //        { // add data.
+        //            stringArrayRef[idx] = idx.ToString();
+        //            memoryByteCache.Add(ASCIIEncoding.ASCII.GetBytes(idx.ToString()));
+        //        }
+        //        else
+        //        {
+        //            stringArrayRef[idx] = "null";
+        //            memoryByteCache.Add(ASCIIEncoding.ASCII.GetBytes("null"));
+        //        }
+        //    }
 
-            for (uint idx = 0; idx < total; idx++)
-            {
-                string content = ASCIIEncoding.ASCII.GetString(memoryByteCache.Get(idx + 1));
-                memoryByteCache.Remove(idx + 1);
-                Assert.AreEqual(total - idx - 1, memoryByteCache.Size);
-                Assert.AreEqual(stringArrayRef[idx], content);
-            }
+        //    for (uint idx = 0; idx < total; idx++)
+        //    {
+        //        string content = ASCIIEncoding.ASCII.GetString(memoryByteCache.Get(idx + 1));
+        //        memoryByteCache.Remove(idx + 1);
+        //        Assert.AreEqual(total - idx - 1, memoryByteCache.Size);
+        //        Assert.AreEqual(stringArrayRef[idx], content);
+        //    }
 
-            memoryByteCache.Dispose();
-        }
+        //    memoryByteCache.Dispose();
+        //}
     }
 }

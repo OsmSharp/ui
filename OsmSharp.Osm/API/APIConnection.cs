@@ -24,11 +24,11 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using OsmSharp.Collections.Tags;
+using OsmSharp.IO.Xml.Sources;
 using OsmSharp.Math.Geo;
 using OsmSharp.Osm.Data.Core.API;
 using OsmSharp.Osm.Xml;
 using OsmSharp.Osm.Xml.v0_6;
-using OsmSharp.IO.Xml.Sources;
 
 namespace OsmSharp.Osm.API
 {
@@ -191,7 +191,7 @@ namespace OsmSharp.Osm.API
         private void SetBasicAuthHeader(WebRequest req)
         {
             string authInfo = _user + ":" + _pass;
-            authInfo = Convert.ToBase64String(Encoding.Unicode.GetBytes(authInfo));
+            authInfo = Convert.ToBase64String(Encoding.UTF8.GetBytes(authInfo));
             req.Headers["Authorization"] = "Basic " + authInfo;
         }
 
